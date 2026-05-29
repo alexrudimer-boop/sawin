@@ -9,6 +9,7 @@ from ybe_domination import (
     endpoint_coordinate_readout_audit,
     endpoint_longitude_expression_audit,
     endpoint_product_longitude_expression_audit,
+    endpoint_residual_action_audit,
     endpoint_residual_readout_audit,
 )
 
@@ -198,6 +199,86 @@ class EndpointFactorizationTests(unittest.TestCase):
             residual.identity_longitudes_kill_residual_tuple_by_expression
         )
 
+    def test_residual_action_audit_records_complete_supplied_rows(self):
+        c2 = cyclic_group(2)
+        product_audit = endpoint_product_longitude_expression_audit(
+            (c2,),
+            n=2,
+            braid_word=(1,) * 4,
+            endpoints=(0,),
+            assignments=((1, 0),),
+            expressions=((),),
+        )
+        readout = endpoint_residual_readout_audit(
+            (endpoint_coordinate_readout_audit(product_audit, "a", "a"),)
+        )
+
+        action = endpoint_residual_action_audit(
+            2,
+            (1,) * 4,
+            (readout,),
+            expected_row_count=1,
+        )
+
+        self.assertEqual(action.row_count, 1)
+        self.assertTrue(action.covers_expected_rows)
+        self.assertTrue(action.braid_data_consistent)
+        self.assertTrue(action.all_identity_endpoints_fix_rows)
+        self.assertTrue(action.all_identity_longitudes_kill_rows_by_expression)
+        self.assertTrue(action.residual_action_identity_on_supplied_rows)
+        self.assertTrue(action.proves_supplied_rows_detector_implication)
+        self.assertTrue(action.proves_complete_residual_action_implication)
+
+    def test_residual_action_audit_requires_expected_row_coverage(self):
+        c2 = cyclic_group(2)
+        product_audit = endpoint_product_longitude_expression_audit(
+            (c2,),
+            n=2,
+            braid_word=(1,) * 4,
+            endpoints=(0,),
+            assignments=((1, 0),),
+            expressions=((),),
+        )
+        readout = endpoint_residual_readout_audit(
+            (endpoint_coordinate_readout_audit(product_audit, "a", "a"),)
+        )
+
+        action = endpoint_residual_action_audit(
+            2,
+            (1,) * 4,
+            (readout,),
+            expected_row_count=2,
+        )
+
+        self.assertFalse(action.covers_expected_rows)
+        self.assertTrue(action.proves_supplied_rows_detector_implication)
+        self.assertFalse(action.proves_complete_residual_action_implication)
+
+    def test_residual_action_audit_rejects_inconsistent_braid_data(self):
+        c2 = cyclic_group(2)
+        product_audit = endpoint_product_longitude_expression_audit(
+            (c2,),
+            n=2,
+            braid_word=(1, 1),
+            endpoints=(1,),
+            assignments=((1, 0),),
+            expressions=(((1, 1),),),
+        )
+        readout = endpoint_residual_readout_audit(
+            (endpoint_coordinate_readout_audit(product_audit, "a", "a"),)
+        )
+
+        action = endpoint_residual_action_audit(
+            2,
+            (1,) * 4,
+            (readout,),
+            expected_row_count=1,
+        )
+
+        self.assertFalse(action.braid_data_consistent)
+        self.assertFalse(action.proves_supplied_rows_detector_implication)
+        self.assertFalse(action.proves_complete_residual_action_implication)
+
     def test_readout_implication_is_vacuous_for_visible_product_longitudes(self):
         c2 = cyclic_group(2)
         product_audit = endpoint_product_longitude_expression_audit(
@@ -216,6 +297,41 @@ class EndpointFactorizationTests(unittest.TestCase):
         self.assertFalse(readout.coordinate_fixed)
         self.assertTrue(readout.identity_endpoints_fix_coordinate)
         self.assertTrue(readout.identity_longitudes_kill_coordinate_by_expression)
+
+    def test_residual_action_audit_rejects_unfaithful_identity_endpoint_row(self):
+        c2 = cyclic_group(2)
+        product_audit = endpoint_product_longitude_expression_audit(
+            (c2,),
+            n=2,
+            braid_word=(1,) * 4,
+            endpoints=(0,),
+            assignments=((1, 0),),
+            expressions=((),),
+        )
+        readout = endpoint_residual_readout_audit(
+            (endpoint_coordinate_readout_audit(product_audit, "a", "b"),)
+        )
+
+        action = endpoint_residual_action_audit(
+            2,
+            (1,) * 4,
+            (readout,),
+            expected_row_count=1,
+        )
+
+        self.assertFalse(action.all_identity_endpoints_fix_rows)
+        self.assertFalse(action.all_identity_longitudes_kill_rows_by_expression)
+        self.assertFalse(action.residual_action_identity_on_supplied_rows)
+        self.assertFalse(action.proves_supplied_rows_detector_implication)
+
+    def test_residual_action_audit_rejects_negative_expected_row_count(self):
+        with self.assertRaises(ValueError):
+            endpoint_residual_action_audit(
+                2,
+                (1, 1),
+                (),
+                expected_row_count=-1,
+            )
 
 
 if __name__ == "__main__":

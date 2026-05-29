@@ -331,6 +331,10 @@ endpoint_coordinate_readout_audit(
 )
 
 endpoint_residual_readout_audit(coordinate_audits)
+
+endpoint_residual_action_audit(
+    n,beta,residual_readouts,expected_row_count=None
+)
 ```
 
 The first helper checks one displayed endpoint expression in a fixed finite
@@ -356,6 +360,13 @@ coordinate checks and records whether identity finite product-longitude data
 kills the whole residual tuple by expression.  These are still row-level proof
 objects: a complete corridor proof must construct such faithful readout rows
 uniformly for every `n`, `beta`, `z`, `x`, and output coordinate.
+The residual-action helper bundles the supplied residual rows for one braid
+word.  It checks that all endpoint certificates use the same braid data, that
+identity finite product-longitude data kills every supplied row, and, when an
+`expected_row_count` is supplied, that the displayed row table has the claimed
+size.  This is still not a finite-search proof of the corridor theorem: the
+all-`n` proof must explain why the supplied rows cover every relevant
+`(z,x)` uniformly.
 
 These helpers do not produce the missing endpoint expressions.  They verify the
 last algebraic and faithful-readout steps once a symbolic corridor proof has

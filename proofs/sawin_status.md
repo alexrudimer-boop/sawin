@@ -787,6 +787,12 @@ corresponding residual coordinate, and coordinate rows bundle into a
 residual-tuple implication.  This closes the executable shape of the
 endpoint-factorization proposition while leaving the uniform construction of
 the endpoint expressions as the open theorem.
+The row bundle helper `endpoint_residual_action_audit(...)` now records the
+fixed-braid residual-action implication for supplied rows.  It checks
+braid-data consistency, endpoint-controlled killing of all supplied rows, and
+an optional expected row count.  This keeps a finite readout table honest:
+passing supplied rows is not confused with the missing all-`n` proof that such
+rows cover every residual input.
 The single-endpoint route audit
 `unit_composite_longitude_route_audit(monoid,n,beta,factors)` now records the
 same ladder used in product-label work: endpoint identity, one evaluated

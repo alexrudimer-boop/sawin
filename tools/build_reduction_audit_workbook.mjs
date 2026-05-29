@@ -418,7 +418,7 @@ const rows = [
   [
     "Bi-free endpoint factorization",
     "Assemble corridor endpoint-longitude expressions into one fixed product detector.",
-    "Proof note plus endpoint expression/readout helpers build literal product witnesses and verify the identity-endpoint faithful-readout gate.",
+    "Endpoint expression/readout/action helpers build product witnesses, verify faithful rows, and separate supplied-row proof from row-coverage claims.",
     "Assembly lemma",
     "Prove the endpoint longitudinalization lemma for every target interval.",
   ],

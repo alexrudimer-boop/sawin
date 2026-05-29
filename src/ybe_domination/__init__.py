@@ -407,10 +407,12 @@ from .endpoint_factorization import (
     EndpointCoordinateReadoutAudit,
     EndpointLongitudeExpressionAudit,
     EndpointProductExpressionAudit,
+    EndpointResidualActionAudit,
     EndpointResidualReadoutAudit,
     endpoint_coordinate_readout_audit,
     endpoint_longitude_expression_audit,
     endpoint_product_longitude_expression_audit,
+    endpoint_residual_action_audit,
     endpoint_residual_readout_audit,
 )
 from .small_search import (
@@ -512,6 +514,7 @@ __all__ = [
     "EndpointCoordinateReadoutAudit",
     "EndpointLongitudeExpressionAudit",
     "EndpointProductExpressionAudit",
+    "EndpointResidualActionAudit",
     "EndpointResidualReadoutAudit",
     "ExactImageAudit",
     "ExactDetectorReadoutAudit",
@@ -704,6 +707,7 @@ __all__ = [
     "endpoint_coordinate_readout_audit",
     "endpoint_longitude_expression_audit",
     "endpoint_product_longitude_expression_audit",
+    "endpoint_residual_action_audit",
     "endpoint_residual_readout_audit",
     "evaluate_direct_product_label_word",
     "evaluate_swapped_product_label_word",

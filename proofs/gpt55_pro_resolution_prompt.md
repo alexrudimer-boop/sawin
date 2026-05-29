@@ -447,6 +447,9 @@ Also check the faithful-readout helpers
 `endpoint_residual_readout_audit(...)`: they only verify that identity endpoint
 tuples fix the residual coordinates in supplied rows.  They do not replace the
 uniform all-`n` construction of those rows.
+`endpoint_residual_action_audit(...)` adds braid-data and supplied-row coverage
+bookkeeping for one fixed braid word; treat it as an audit of displayed rows,
+not as finite-search evidence for arbitrary `n`.
 
 Important warning from `proofs/product_longitude_witness_audit.md`: one common
 homomorphism `F_n -> H_prod` need not realize all coordinate labels at once.

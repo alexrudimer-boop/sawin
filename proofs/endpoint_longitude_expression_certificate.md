@@ -230,6 +230,10 @@ endpoint_coordinate_readout_audit(
 )
 
 endpoint_residual_readout_audit(coordinate_audits)
+
+endpoint_residual_action_audit(
+    n,beta,residual_readouts,expected_row_count=None
+)
 ```
 
 They implement the certificate layer of
@@ -242,6 +246,11 @@ The readout helpers record the faithful-readout clause: when the endpoint
 tuple is identity, the corresponding residual coordinate or tuple must
 actually be fixed.  They are the executable row format for the final implication
 from killed endpoints to killed residual motion.
+The residual-action helper packages a supplied finite table of such rows for a
+single braid word.  It checks braid-data consistency and, if requested, the
+claimed row count.  It is a proof-table verifier, not a substitute for the
+uniform theorem that constructs the rows for all braid indices and all
+residual fibre inputs.
 
 ## Role In The Master Local Theorem
 

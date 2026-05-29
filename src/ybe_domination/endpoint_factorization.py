@@ -20,6 +20,8 @@ from .finite_group import FiniteGroup, GroupElement, direct_product_group
 class EndpointLongitudeExpressionAudit:
     """Expression certificate for one endpoint in a fixed finite group."""
 
+    n: int
+    braid_word: Tuple[int, ...]
     artin_permutation: Tuple[int, ...]
     group_order: int
     endpoint: GroupElement
@@ -57,6 +59,8 @@ class EndpointLongitudeExpressionAudit:
 class EndpointProductExpressionAudit:
     """Assemble endpoint expression certificates into one product detector."""
 
+    n: int
+    braid_word: Tuple[int, ...]
     factor_audits: Tuple[EndpointLongitudeExpressionAudit, ...]
     product_endpoint: Tuple[GroupElement, ...]
     group_orders: Tuple[int, ...]
@@ -170,6 +174,62 @@ class EndpointResidualReadoutAudit:
         )
 
 
+@dataclass(frozen=True)
+class EndpointResidualActionAudit:
+    """Supplied-row audit for a residual action controlled by endpoints."""
+
+    n: int
+    braid_word: Tuple[int, ...]
+    residual_readouts: Tuple[EndpointResidualReadoutAudit, ...]
+    expected_row_count: int | None = None
+
+    @property
+    def row_count(self) -> int:
+        return len(self.residual_readouts)
+
+    @property
+    def covers_expected_rows(self) -> bool:
+        return self.expected_row_count is None or self.row_count == self.expected_row_count
+
+    @property
+    def braid_data_consistent(self) -> bool:
+        for readout in self.residual_readouts:
+            for coordinate in readout.coordinate_audits:
+                endpoint = coordinate.endpoint_audit
+                if endpoint.n != self.n or endpoint.braid_word != self.braid_word:
+                    return False
+        return True
+
+    @property
+    def all_identity_endpoints_fix_rows(self) -> bool:
+        return all(
+            readout.identity_endpoints_fix_all_coordinates
+            for readout in self.residual_readouts
+        )
+
+    @property
+    def all_identity_longitudes_kill_rows_by_expression(self) -> bool:
+        return all(
+            readout.identity_longitudes_kill_residual_tuple_by_expression
+            for readout in self.residual_readouts
+        )
+
+    @property
+    def residual_action_identity_on_supplied_rows(self) -> bool:
+        return all(readout.residual_tuple_fixed for readout in self.residual_readouts)
+
+    @property
+    def proves_supplied_rows_detector_implication(self) -> bool:
+        return (
+            self.braid_data_consistent
+            and self.all_identity_longitudes_kill_rows_by_expression
+        )
+
+    @property
+    def proves_complete_residual_action_implication(self) -> bool:
+        return self.proves_supplied_rows_detector_implication and self.covers_expected_rows
+
+
 def endpoint_longitude_expression_audit(
     group: FiniteGroup,
     n: int,
@@ -204,6 +264,8 @@ def endpoint_longitude_expression_audit(
         )
     data = artin_longitudes(n, braid_word)
     return EndpointLongitudeExpressionAudit(
+        n=n,
+        braid_word=tuple(braid_word),
         artin_permutation=data.permutation,
         group_order=len(group.elements),
         endpoint=endpoint,
@@ -290,6 +352,8 @@ def endpoint_product_longitude_expression_audit(
             product_witness,
         )
     return EndpointProductExpressionAudit(
+        n=n,
+        braid_word=tuple(braid_word),
         factor_audits=factor_audits,
         product_endpoint=endpoint_tuple,
         group_orders=tuple(len(group.elements) for group in group_tuple),
@@ -320,3 +384,22 @@ def endpoint_residual_readout_audit(
     """Bundle endpoint-controlled coordinates into one residual-tuple audit."""
 
     return EndpointResidualReadoutAudit(coordinate_audits=tuple(coordinate_audits))
+
+
+def endpoint_residual_action_audit(
+    n: int,
+    braid_word: BraidWord,
+    residual_readouts: Sequence[EndpointResidualReadoutAudit],
+    *,
+    expected_row_count: int | None = None,
+) -> EndpointResidualActionAudit:
+    """Bundle supplied residual rows for the endpoint detector implication."""
+
+    if expected_row_count is not None and expected_row_count < 0:
+        raise ValueError("expected row count must be nonnegative")
+    return EndpointResidualActionAudit(
+        n=n,
+        braid_word=tuple(braid_word),
+        residual_readouts=tuple(residual_readouts),
+        expected_row_count=expected_row_count,
+    )
