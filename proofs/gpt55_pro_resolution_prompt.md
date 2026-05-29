@@ -224,6 +224,11 @@ The chain-level wrapper `assemble_congruence_chain_rack(Q_m, groups)` iterates
 this constructor along the supplied finite detector groups and records
 `|Q_i|=|Q_{i+1}|*2*|G_i|^2`.  It has no braid-index input; audit it only as
 the formal assembly layer once the local groups have been proved.
+For the current local-ledger interface, require
+`closed_local_detector_chain(summaries)` to succeed before using the assembly
+wrapper.  It demands one explicit interval-level product group
+`closed_detector_product_group` from each closed local summary and reports
+open verdicts or delegated detector gaps instead of silently building a rack.
 
 3. Congruence-chain induction.
 
@@ -422,8 +427,15 @@ Fibre-size-two affine product details are currently marked as delegated to
 `proofs/fibre2_product_branch.md`; do not treat that delegation as a local
 `C_2` proof unless you supply the missing all-`n` affine detector argument.
 For closed local rows, use `closed_detector_groups` and
-`closed_detector_gaps` on the summary to check whether the current archive
-actually provides finite group objects ready for congruence-chain assembly.
+`closed_detector_product_group` together with `closed_detector_gaps` on the
+summary to check whether the current archive actually provides one finite
+group object per interval ready for congruence-chain assembly.
+For the remaining bi-free corridor branch, also read
+`proofs/bifree_corridor_endpoint_factorization.md`.  It proves only the
+assembly implication from factorwise endpoint-longitude expressions to one
+fixed product detector `H(pi,Q)`.  Do not count it as proof of the Master Local
+Theorem unless the missing endpoint longitudinalization lemma is supplied for
+arbitrary local-minimal target intervals.
 
 Important warning from `proofs/product_longitude_witness_audit.md`: one common
 homomorphism `F_n -> H_prod` need not realize all coordinate labels at once.

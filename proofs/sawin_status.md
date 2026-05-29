@@ -87,6 +87,13 @@ The chain-level assembly is also executable as
 `sharp_obstruction_rack` down a supplied finite detector list, records every
 factor `2*|G_i|^2`, and exposes the final rack object without accepting any
 braid-index input.
+The summary-level wrapper `closed_local_detector_chain(summaries)` now checks
+the step immediately before this construction: each closed local bottleneck
+row must supply one actual interval group `G_i`, obtained by producting any
+closed detector factors for that same interval.  The wrapper
+`assemble_closed_local_detector_chain_rack(Q_m,summaries)` refuses open
+product/corridor verdicts and delegated detector gaps, so the global rack
+assembly cannot accidentally hide an unproved local theorem step.
 
 There is also a direct rack-action version of the same principle.  For a
 finite rack `Y`, the left translations generate a finite inner group
@@ -751,6 +758,19 @@ failure flag; it becomes B only after a normalized-law diagonalization
 defeating every finite group.  Conversely, endpoint membership in the product
 longitude-value subgroup is exactly the A-side condition for that semigroup
 branch.
+
+The bi-free corridor endpoint factorization note
+`proofs/bifree_corridor_endpoint_factorization.md` now packages this endpoint
+logic at the final corridor level.  It proves the algebraic implication:
+factorwise endpoint-longitude expressions in the fixed groups of `H(pi,Q)`
+assemble into one product-detector witness, and identity
+`Lambda_{H(pi,Q),n}` kills the corresponding faithful residual readout.  Thus
+the remaining corridor theorem has been narrowed to the endpoint
+longitudinalization lemma: every group-like atom-trivial Green/corridor
+completed-context endpoint must be displayed as a finite product of recursive
+Artin-longitude evaluations in fixed factors of `H(pi,Q)`, uniformly in braid
+index.  This note is an A-side assembly lemma, not a proof that the endpoint
+expressions always exist.
 The single-endpoint route audit
 `unit_composite_longitude_route_audit(monoid,n,beta,factors)` now records the
 same ladder used in product-label work: endpoint identity, one evaluated
@@ -1019,6 +1039,13 @@ The merged summary accessors `closed_detector_groups` and
 known-total/nondegenerate branch detectors.  Consequently a closed local
 verdict now has a direct programmatic path from the audited local table to the
 finite groups that should be supplied to the congruence-chain rack assembly.
+The path has been tightened further: `closed_detector_product_group` returns
+the one finite product group `G_i` for the interval, and
+`closed_local_detector_chain()` collects exactly one such group per local row
+before `assemble_closed_local_detector_chain_rack()` calls the rack
+constructor.  If a row is an open bottleneck, or if a delegated branch such as
+fibre-size-two affine has no explicit group object in the local wrapper, the
+chain audit records a gap instead of constructing `Q_0`.
 
 Those failures are no longer just booleans.  The holonomy summaries
 `swapped_product_holonomy_summary()` and

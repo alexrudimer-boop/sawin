@@ -54,7 +54,7 @@ const rows = [
   [
     "Congruence chain",
     "Local detectors compose down congruence chain.",
-    "Cover/local extraction implemented; assemble_congruence_chain_rack iterates Q_i=Q_{i+1} x A_{G_i} and records |Q_i|=|Q_{i+1}|*2*|G_i|^2 without an n parameter.",
+    "Cover/local extraction implemented; closed_local_detector_chain requires one fixed product group per closed interval before assemble_congruence_chain_rack builds Q_i=Q_{i+1} x A_{G_i}.",
     "Executable audit",
     "Check detector independence from n.",
   ],
@@ -404,7 +404,7 @@ const rows = [
   [
     "Local bottleneck",
     "Route each local interval to a branch verdict.",
-    "Router now records explicit known/product detector groups and merged closed_detector_groups/closed_detector_gaps handoff.",
+    "Router records explicit known/product detectors, one product group per closed row, and closed_detector_gaps for delegated/open rows.",
     "Reduction ledger",
     "Prove genuinely-coloured product or bi-free corridor factorization, or realize B there.",
   ],
@@ -414,6 +414,13 @@ const rows = [
     "Target note added; false rack/Hurwitz shortcuts excluded; corridor helpers now accept fixed extra detector factors for quotient/known/unit components of H(pi,Q).",
     "Open theorem target",
     "Prove all-n H(pi,Q) factorization or build normalized-law escape.",
+  ],
+  [
+    "Bi-free endpoint factorization",
+    "Assemble corridor endpoint-longitude expressions into one fixed product detector.",
+    "proofs/bifree_corridor_endpoint_factorization.md proves factorwise endpoint witnesses in H_s combine in H(pi,Q) and identity product longitudes kill faithful endpoint readouts.",
+    "Assembly lemma",
+    "Prove the endpoint longitudinalization lemma for every target interval.",
   ],
   [
     "Bi-free subgroup certificate",

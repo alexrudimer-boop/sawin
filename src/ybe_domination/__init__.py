@@ -70,9 +70,15 @@ from .artin_longitudes import (
     sharp_obstruction_rack,
 )
 from .chain_rack import (
+    CLOSED_LOCAL_DETECTOR_VERDICTS,
+    ClosedLocalDetectorChain,
+    ClosedLocalDetectorGap,
+    ClosedLocalDetectorSummary,
     CongruenceChainRackAssembly,
     CongruenceChainRackStep,
+    assemble_closed_local_detector_chain_rack,
     assemble_congruence_chain_rack,
+    closed_local_detector_chain,
 )
 from .local_interval import (
     LocalInterval,
@@ -472,6 +478,10 @@ __all__ = [
     "BiFreeCorridorDetectorTarget",
     "BiFreeCorridorProductSubgroupAudit",
     "BiFreeCorridorWordCertificate",
+    "CLOSED_LOCAL_DETECTOR_VERDICTS",
+    "ClosedLocalDetectorChain",
+    "ClosedLocalDetectorGap",
+    "ClosedLocalDetectorSummary",
     "CongruenceInterval",
     "CongruenceChainRackAssembly",
     "CongruenceChainRackStep",
@@ -588,6 +598,7 @@ __all__ = [
     "artin_longitude_exponent_matrix",
     "artin_longitude_row_column_sums",
     "all_tuples",
+    "assemble_closed_local_detector_chain_rack",
     "assemble_congruence_chain_rack",
     "atom_action_summary",
     "atom_descent_closure_summary",
@@ -617,6 +628,7 @@ __all__ = [
     "bifree_corridor_exact_image_audit",
     "bifree_corridor_product_subgroup_audit",
     "bifree_corridor_word_certificate",
+    "closed_local_detector_chain",
     "common_refinement",
     "compose_transformation_word",
     "commutator",

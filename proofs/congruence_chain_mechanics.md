@@ -105,6 +105,27 @@ The constructor deliberately takes no braid degree.  Therefore it checks the
 formal requirement that, after the still-open local theorem has provided the
 fixed groups `G_i`, the global rack is finite and independent of `n`.
 
+The local-summary handoff is now executable as well.  A closed bottleneck
+summary exposes `closed_detector_product_group`, which is the single finite
+group for that interval: a lone group is returned unchanged, while several
+closed factors are multiplied into `prod_j G_{i,j}`.  The helper
+
+```text
+closed_local_detector_chain(summaries)
+```
+
+collects these one-per-interval groups and records any row that is still an
+open product/corridor verdict or has a delegated detector gap.  The wrapper
+
+```text
+assemble_closed_local_detector_chain_rack(Q_m, summaries)
+```
+
+therefore refuses to build `Q_0` unless every local row has supplied an actual
+fixed finite group.  This makes the congruence-chain induction audit
+construction-shaped without pretending that the remaining Master Local-Minimal
+Residual Theorem has been proved.
+
 ## Limitation
 
 The congruence code enumerates finite partitions only for small examples.  It

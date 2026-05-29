@@ -10,7 +10,7 @@ from .context_retraction import (
     product_permutation_witness,
 )
 from .detector_candidates import two_sided_green_detector_groups
-from .finite_group import FiniteGroup, cyclic_group
+from .finite_group import FiniteGroup, cyclic_group, direct_product_group
 from .group_laws import group_exponent
 from .label_detectors import direct_product_label_group, swapped_product_label_group
 from .local_interval import (
@@ -151,6 +151,26 @@ class LocalMasterBottleneckSummary:
     @property
     def closed_detector_group_orders(self) -> Tuple[int, ...]:
         return tuple(len(group.elements) for group in self.closed_detector_groups)
+
+    @property
+    def closed_detector_product_group(self) -> FiniteGroup | None:
+        """Return the single interval detector group when the row is closed."""
+
+        if self.closed_detector_gaps:
+            return None
+        groups = self.closed_detector_groups
+        if not groups:
+            return None
+        if len(groups) == 1:
+            return groups[0]
+        return direct_product_group(groups)
+
+    @property
+    def closed_detector_product_group_order(self) -> int | None:
+        group = self.closed_detector_product_group
+        if group is None:
+            return None
+        return len(group.elements)
 
     @property
     def closed_detector_gaps(self) -> Tuple[str, ...]:
