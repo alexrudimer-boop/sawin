@@ -815,6 +815,32 @@ inside one fixed detector factor `H_s` is a certificate that
 theorem; it reduces the missing corridor statement to proving such
 Artin-defect displays for the elementary Green kernel-block, Schutzenberger,
 atom-inner, and endpoint-unit generators in fixed factors of `H(pi,Q)`.
+The detector-lift criterion
+`proofs/artin_detector_lift_criterion.md` proves the corresponding
+unbounded braid-recursion step.  For a fixed finite group factor `U`, if an
+endpoint observer carries live-strand pairs `(m_k,u_k)` and its positive and
+negative crossing rows are exactly
+
+```text
+(m_i,u_i),(m_j,u_j)
+  -> (m_i m_j m_i^-1, m_i u_j),(m_i,u_i)
+```
+
+and
+
+```text
+(m_i,u_i),(m_j,u_j)
+  -> (m_j,u_j),(m_j^-1 m_i m_j, m_j^-1 u_i),
+```
+
+then induction gives `u_k(beta)=phi(L_k(beta))` for the initial meridian
+assignment `phi(x_k)=m_k(1)`.  Thus any signed product of terminal `u`-labels
+is a literal endpoint-longitude expression in `U`.  The code now exposes
+`artin_detector_lift_transition_audit(...)` for the finite local row check and
+`artin_detector_lift_braid_audit(...)` for the global recursion convention.
+This shifts the remaining A-route burden to verifying these finite row
+identities for each Green/corridor observer row in the fixed factors of
+`H(pi,Q)`.
 The single-endpoint route audit
 `unit_composite_longitude_route_audit(monoid,n,beta,factors)` now records the
 same ladder used in product-label work: endpoint identity, one evaluated

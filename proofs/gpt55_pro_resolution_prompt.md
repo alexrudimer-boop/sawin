@@ -107,14 +107,15 @@ nondegeneracy to the total solution.
 38. `proofs/bifree_universal_corridor_factorization_target.md`
 39. `proofs/bifree_corridor_endpoint_factorization.md`
 40. `proofs/artin_defect_longitudinalization_sieve.md`
-41. `proofs/bifree_corridor_subgroup_certificate.md`
-42. `proofs/bifree_corridor_certificate_audit.md`
-43. `proofs/bifree_corridor_exact_audit.md`
-44. `proofs/local_minimal_green_audit.md`
-45. `proofs/dual_green_symmetry.md`
-46. `proofs/opposite_detectability_closure.md`
-47. `proofs/finite_semigroup_holonomy_route.md`
-48. `proofs/unit_holonomy_longitude_gate.md`
+41. `proofs/artin_detector_lift_criterion.md`
+42. `proofs/bifree_corridor_subgroup_certificate.md`
+43. `proofs/bifree_corridor_certificate_audit.md`
+44. `proofs/bifree_corridor_exact_audit.md`
+45. `proofs/local_minimal_green_audit.md`
+46. `proofs/dual_green_symmetry.md`
+47. `proofs/opposite_detectability_closure.md`
+48. `proofs/finite_semigroup_holonomy_route.md`
+49. `proofs/unit_holonomy_longitude_gate.md`
 Also read `proofs/unit_factorization_gate.md`, which proves that a product of
 finite total transformations can be a residual permutation only when every
 factor is already a unit/permutation.
@@ -143,13 +144,19 @@ recursive longitudes, and every finite-group value of such a defect lies in
 the sharpest current A-side endpoint target is to display each elementary
 Green/corridor endpoint generator as a product of Artin permutation defect
 values in fixed factors of `H(pi,Q)`.
+Also read `proofs/artin_detector_lift_criterion.md`: if a fixed observer
+factor carries live-strand pairs `(m_k,u_k)` and its positive and negative
+crossing rows match the active `U x U` Artin detector update, then induction
+gives `u_k(beta)=phi(L_k(beta))`.  This reduces the unbounded braid-word part
+of the remaining endpoint problem to finite row identities in fixed detector
+factors.
 Also read `proofs/unit_section_product_detector.md`, which combines finitely
 many fixed unit-section factors into one direct-product detector group.
-49. `proofs/green_holonomy_factorization_gate.md`
-50. `proofs/involutive_permutation_detector.md`
-51. `proofs/structure_orbit_law_obstruction.md`
-52. `proofs/fixed_variety_barrier.md`
-53. `proofs/bounded_degree_action_image_limit.md`
+50. `proofs/green_holonomy_factorization_gate.md`
+51. `proofs/involutive_permutation_detector.md`
+52. `proofs/structure_orbit_law_obstruction.md`
+53. `proofs/fixed_variety_barrier.md`
+54. `proofs/bounded_degree_action_image_limit.md`
 Also read `proofs/diagonal_normalized_obstruction.md`, which proves that an
 explicit detector-free interval diagonalizes to the normalized-law sequence
 required for outcome B.  Audit the companion helpers
@@ -157,14 +164,14 @@ required for outcome B.  Audit the companion helpers
 `right_stabilization_longitude_audit(...)` for product and stabilization
 conventions only; they are not a substitute for proving all finite detector
 groups fail.
-54. `proofs/affine_f2_audit.md`
-55. `proofs/two_colour_fibre2_all_bases_audit.md`
-56. `proofs/fibre2_product_branch.md`
-57. `proofs/two_colour_fibre3_product_audit.md`
-58. `proofs/three_colour_fibre2_product_audit.md`
-59. `proofs/sawin_proof_log.docx`
-60. `tables/reduction_audit.xlsx`
-61. Relevant code in `src/`, `tools/`, and `tests`, especially modules
+55. `proofs/affine_f2_audit.md`
+56. `proofs/two_colour_fibre2_all_bases_audit.md`
+57. `proofs/fibre2_product_branch.md`
+58. `proofs/two_colour_fibre3_product_audit.md`
+59. `proofs/three_colour_fibre2_product_audit.md`
+60. `proofs/sawin_proof_log.docx`
+61. `tables/reduction_audit.xlsx`
+62. Relevant code in `src/`, `tools/`, and `tests`, especially modules
     concerning input-dependent longitude factorization, quotient image
     kernels, residual dependency support, local-minimal intervals, local
     bottleneck routing, coordinate-kernel corridors, product label words,
@@ -475,6 +482,13 @@ the normal closure of the recursive Artin longitudes.  Use
 such displays.  The missing local theorem is exactly that these displays
 exist for all elementary Green/corridor endpoint generators, uniformly in
 `n`.
+Also audit the detector-lift version in
+`proofs/artin_detector_lift_criterion.md`.  A proposed Green/corridor row may
+instead carry live-strand labels `(m,u)` in a fixed group `U`; if the positive
+and negative local rows are the active `U x U` Artin detector rows, then
+terminal `u`-labels are evaluated recursive longitudes.  Use
+`artin_detector_lift_transition_audit(...)` for the finite row check and
+`artin_detector_lift_braid_audit(...)` for the braid-recursion convention.
 
 Important warning from `proofs/product_longitude_witness_audit.md`: one common
 homomorphism `F_n -> H_prod` need not realize all coordinate labels at once.

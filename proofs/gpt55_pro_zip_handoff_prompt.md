@@ -39,9 +39,10 @@ First read:
 6. `proofs/normalized_law_sequence_gate.md`
 7. `proofs/longitude_subgroup_witness_calculus.md`
 8. `proofs/artin_defect_longitudinalization_sieve.md`
-9. `proofs/sawin_proof_log.docx`
-10. `tables/reduction_audit.xlsx`
-11. The code and tests under `src/`, `tools/`, and `tests/`
+9. `proofs/artin_detector_lift_criterion.md`
+10. `proofs/sawin_proof_log.docx`
+11. `tables/reduction_audit.xlsx`
+12. The code and tests under `src/`, `tools/`, and `tests/`
 
 Then audit and use these reductions:
 
@@ -144,6 +145,13 @@ Then audit and use these reductions:
    `endpoint_product_artin_defect_audit(...)` verify supplied displays and
    assemble them into one product detector witness.  They do not prove that
    such displays always exist.
+   Also use `proofs/artin_detector_lift_criterion.md`: if a fixed
+   Green/corridor observer factor carries live-strand labels `(m_k,u_k)` and
+   each positive/negative crossing row matches the active `U x U` Artin
+   detector update, induction gives `u_k(beta)=phi(L_k(beta))`.  This resolves
+   the unbounded braid-word recursion after the finite row identities are
+   proved.  Audit proposed rows with `artin_detector_lift_transition_audit(...)`
+   and the convention with `artin_detector_lift_braid_audit(...)`.
    Also audit the Green atom-action layer through `proofs/green_branch_audit.md`
    and `atom_action_summary(...)`: it checks whether completed rows descend to
    operations on saturated atoms, `p(a) triangleright p(q)=p(a^q)` and

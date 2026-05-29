@@ -263,3 +263,21 @@ direct product, evaluates to the same literal longitude-subgroup witness.
 As with the earlier endpoint expression audits, these helpers do not find the
 missing Green/corridor displays.  They verify the final algebraic handoff once
 a symbolic proof supplies those displays.
+
+## Relation to detector-lift rows
+
+The follow-up criterion
+`proofs/artin_detector_lift_criterion.md` supplies a finite row-by-row way to
+produce the ordinary endpoint-longitude expressions used above.  If a fixed
+observer factor carries live-strand labels `(m_k,u_k)` and its crossing rows
+match the active `U x U` Artin detector update, then induction proves
+
+```text
+u_k(beta)=phi(L_k(beta)).
+```
+
+Thus signed products of terminal `u`-labels are already endpoint-longitude
+expressions.  This detector-lift route is complementary to the Artin-defect
+route: the defect sieve gives a normal-closure certificate, while the
+detector-lift criterion turns finite local row identities directly into
+recursive longitude evaluations.

@@ -400,6 +400,12 @@ The Artin-defect helpers verify the refined certificate form: each supplied
 term is a value of `beta(w)p_beta(w)^-1` under an input-dependent assignment,
 and the helper constructs the corresponding literal word in `V_beta(G)` by
 absorbing normal conjugators into changed assignments.
+The detector-lift helpers in
+`proofs/artin_detector_lift_criterion.md` verify a different sufficient route:
+finite local rows carrying live-strand pairs `(m,u)` match the active
+`G x G` Artin detector update.  Once those row identities hold, the global
+braid induction gives terminal `u`-labels equal to evaluated recursive
+longitudes, so the older endpoint expression helpers can be applied directly.
 
 These helpers do not produce the missing endpoint expressions.  They verify the
 last algebraic and faithful-readout steps once a symbolic corridor proof has

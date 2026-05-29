@@ -430,6 +430,13 @@ const rows = [
     "Display every elementary Green/corridor endpoint generator as a finite product of Artin-defect values in fixed H(pi,Q) factors.",
   ],
   [
+    "Artin detector lift",
+    "Turn endpoint observers with live (m,u) labels into recursive longitude expressions.",
+    "proofs/artin_detector_lift_criterion.md proves the unbounded braid recursion from finite U x U row identities; artin_detector_lift_transition_audit and artin_detector_lift_braid_audit verify rows and convention.",
+    "Finite row criterion",
+    "Verify the detector-lift identities for every remaining Green/corridor observer row in fixed factors.",
+  ],
+  [
     "Bi-free subgroup certificate",
     "Profile candidate words against fixed corridor detector factors.",
     "Helper, extra-factor target support, direct-product subgroup audit, and tests added; affine commutator seen by S3 block factor.",
