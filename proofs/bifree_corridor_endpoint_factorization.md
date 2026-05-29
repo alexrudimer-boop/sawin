@@ -379,6 +379,11 @@ The principal gauge subcase is closed by
 `(a,r)*(b,s)=(a*b,c(a,b)s)` is a finite rack extension exactly when `c`
 satisfies the nonabelian rack-cocycle law, and then the fixed group
 `Inn(A x U)` supplies the detector-lift factor.
+The transport-state refinement
+`proofs/transport_state_rackification_detector.md` removes principality for
+strand-continuing rows: the finite state `(a,r)` is itself the rack element,
+so `Inn(A x E)` detects any bijective YBE row
+`((a,r),(b,s))->((a*b,F_{a,b,r}(s)),(a,r))`.
 
 ## Executable certificate layer
 

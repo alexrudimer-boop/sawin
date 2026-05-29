@@ -50,9 +50,10 @@ First read:
 17. `proofs/green_balanced_defect_gauge_decomposition.md`
 18. `proofs/terminal_gauge_longitudinalization_criterion.md`
 19. `proofs/principal_gauge_extension_detector.md`
-20. `proofs/sawin_proof_log.docx`
-21. `tables/reduction_audit.xlsx`
-22. The code and tests under `src/`, `tools/`, and `tests/`
+20. `proofs/transport_state_rackification_detector.md`
+21. `proofs/sawin_proof_log.docx`
+22. `tables/reduction_audit.xlsx`
+23. The code and tests under `src/`, `tools/`, and `tests/`
 
 Then audit and use these reductions:
 
@@ -206,6 +207,9 @@ Then audit and use these reductions:
    principal lower endpoint/unit gauge subcase by turning
    `(a,r)*(b,s)=(a*b,c(a,b)s)` and the YBE cocycle law into the finite rack
    `A x U` and fixed detector `Inn(A x U)`.
+   Also use `proofs/transport_state_rackification_detector.md`: it removes
+   principality for any strand-continuing finite gauge row by rackifying the
+   finite state `A x E`; the remaining theorem burden is descent separation.
    Also audit the Green atom-action layer through `proofs/green_branch_audit.md`
    and `atom_action_summary(...)`: it checks whether completed rows descend to
    operations on saturated atoms, `p(a) triangleright p(q)=p(a^q)` and

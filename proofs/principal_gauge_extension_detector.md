@@ -7,6 +7,9 @@ This note follows
 the Master Local-Minimal Residual Theorem.  It closes the lower
 endpoint/unit holonomy branch under one explicit structural hypothesis:
 the remaining gauge row is a principal finite rack-extension cocycle.
+The later note `proofs/transport_state_rackification_detector.md` removes
+this principal hypothesis for all strand-continuing finite transport rows by
+passing to the enlarged rack state `A x E`.
 
 The remaining global problem is therefore sharpened again.  After the Green
 balanced decomposition and terminal-gauge criterion, the unresolved corridor

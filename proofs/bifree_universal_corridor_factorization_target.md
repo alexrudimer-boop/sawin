@@ -287,3 +287,9 @@ form `(a,r)*(b,s)=(a*b,c(a,b)s)`, the YBE gives the rack-cocycle identity and
 `Inn(A x U)` becomes a fixed detector.  The remaining structural target is
 therefore principal-gauge normal form, or a nonprincipal row suitable for the
 normalized-law B route.
+The stronger transport-state note
+`proofs/transport_state_rackification_detector.md` removes the principal
+normal-form requirement for strand-continuing gauge rows.  Such rows rackify
+on `A x E`, so the only remaining structural issue is descent separation:
+motion that is not strand-continuing must already be accounted for by Green
+kernel-block or Schutzenberger detector factors.

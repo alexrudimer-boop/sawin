@@ -389,6 +389,93 @@ class PrincipalGaugeExtensionDetectorAudit:
 
 
 @dataclass(frozen=True)
+class RackExtensionProjectionFailure:
+    """One failed projection-homomorphism identity for a rack extension."""
+
+    left_extension_element: object
+    right_extension_element: object
+    projected_output: object
+    expected_base_output: object
+
+
+@dataclass(frozen=True)
+class RackExtensionDetectorAudit:
+    """Audit that a finite rack extension is closed by its inner group."""
+
+    base_rack_size: int
+    extension_size: int
+    projection_image_size: int
+    projection_surjective: bool
+    extension_is_rack_form: bool
+    extension_is_ybe: bool
+    projection_failures: Tuple[RackExtensionProjectionFailure, ...]
+    inner_group_order: int | None
+    detector_lift_audit: RackInnerDetectorLiftAudit | None
+
+    @property
+    def projection_is_rack_homomorphism(self) -> bool:
+        return self.projection_surjective and not self.projection_failures
+
+    @property
+    def extension_is_finite_rack_over_base(self) -> bool:
+        return (
+            self.extension_is_rack_form
+            and self.extension_is_ybe
+            and self.projection_is_rack_homomorphism
+        )
+
+    @property
+    def proves_rack_extension_detector(self) -> bool:
+        return (
+            self.extension_is_finite_rack_over_base
+            and self.detector_lift_audit is not None
+            and self.detector_lift_audit.proves_rack_inner_detector_lift_rows
+        )
+
+
+@dataclass(frozen=True)
+class TransportStateLeftTranslationFailure:
+    """One non-bijective left translation in a transport-state row."""
+
+    left_atom: object
+    left_state: object
+    image_size: int
+    expected_size: int
+
+
+@dataclass(frozen=True)
+class TransportStateRackificationAudit:
+    """Audit rackification of a strand-continuing finite gauge row."""
+
+    atom_rack_size: int
+    state_count: int
+    transport_size: int
+    left_translation_failures: Tuple[TransportStateLeftTranslationFailure, ...]
+    transport_rack_built: bool
+    extension_detector_audit: RackExtensionDetectorAudit | None
+
+    @property
+    def all_left_translations_bijective(self) -> bool:
+        return not self.left_translation_failures
+
+    @property
+    def transport_state_is_finite_rack_extension(self) -> bool:
+        return (
+            self.transport_rack_built
+            and self.extension_detector_audit is not None
+            and self.extension_detector_audit.extension_is_finite_rack_over_base
+        )
+
+    @property
+    def proves_transport_state_detector(self) -> bool:
+        return (
+            self.transport_state_is_finite_rack_extension
+            and self.extension_detector_audit is not None
+            and self.extension_detector_audit.proves_rack_extension_detector
+        )
+
+
+@dataclass(frozen=True)
 class RackLongitudeFactorization:
     """Input-dependent finite-group longitude factorization for a rack action."""
 
@@ -2091,6 +2178,245 @@ def right_rack_inner_detector_lift_audit(
     return rack_inner_detector_lift_audit(
         opposite_solution(solution),
         endpoint_labels=endpoint_labels,
+    )
+
+
+def rack_extension_projection_failures(
+    extension_rack: FiniteBraidedSet,
+    base_rack: FiniteBraidedSet,
+    projection: Mapping[object, object] | Callable[[object], object],
+) -> Tuple[RackExtensionProjectionFailure, ...]:
+    """Return failed identities ``p(e*f)=p(e)*p(f)`` for a rack extension."""
+
+    if not is_rack_solution(base_rack) or not base_rack.is_ybe():
+        raise ValueError("base solution must be a finite rack")
+    if callable(projection):
+        projection_map = {
+            element: projection(element)
+            for element in extension_rack.elements
+        }
+    else:
+        if set(projection.keys()) != set(extension_rack.elements):
+            raise ValueError("projection must be defined on every extension element")
+        projection_map = dict(projection)
+    if any(value not in base_rack.elements for value in projection_map.values()):
+        raise ValueError("projection values must lie in the base rack")
+    failures: List[RackExtensionProjectionFailure] = []
+    for left, right in product(extension_rack.elements, repeat=2):
+        extension_output, _extension_second = extension_rack.R[(left, right)]
+        base_left = projection_map[left]
+        base_right = projection_map[right]
+        expected = _rack_operation_value(base_rack, base_left, base_right)
+        actual = projection_map[extension_output]
+        if actual != expected:
+            failures.append(
+                RackExtensionProjectionFailure(
+                    left_extension_element=left,
+                    right_extension_element=right,
+                    projected_output=actual,
+                    expected_base_output=expected,
+                )
+            )
+    return tuple(failures)
+
+
+def rack_extension_detector_audit(
+    extension_rack: FiniteBraidedSet,
+    base_rack: FiniteBraidedSet,
+    projection: Mapping[object, object] | Callable[[object], object],
+    endpoint_labels: Sequence[GroupElement] | None = None,
+) -> RackExtensionDetectorAudit:
+    """Audit the detector for a finite rack extension over a finite base rack."""
+
+    if callable(projection):
+        projection_map = {
+            element: projection(element)
+            for element in extension_rack.elements
+        }
+    else:
+        if set(projection.keys()) != set(extension_rack.elements):
+            raise ValueError("projection must be defined on every extension element")
+        projection_map = dict(projection)
+    if any(value not in base_rack.elements for value in projection_map.values()):
+        raise ValueError("projection values must lie in the base rack")
+    projection_failures = rack_extension_projection_failures(
+        extension_rack,
+        base_rack,
+        projection_map,
+    )
+    extension_is_rack_form = is_rack_solution(extension_rack)
+    extension_is_ybe = extension_rack.is_ybe()
+    detector_lift_audit = (
+        rack_inner_detector_lift_audit(
+            extension_rack,
+            endpoint_labels=endpoint_labels,
+        )
+        if extension_is_rack_form and extension_is_ybe
+        else None
+    )
+    return RackExtensionDetectorAudit(
+        base_rack_size=len(base_rack.elements),
+        extension_size=len(extension_rack.elements),
+        projection_image_size=len(set(projection_map.values())),
+        projection_surjective=set(projection_map.values()) == set(base_rack.elements),
+        extension_is_rack_form=extension_is_rack_form,
+        extension_is_ybe=extension_is_ybe,
+        projection_failures=projection_failures,
+        inner_group_order=(
+            detector_lift_audit.inner_group_order
+            if detector_lift_audit is not None
+            else None
+        ),
+        detector_lift_audit=detector_lift_audit,
+    )
+
+
+TransportStateTransition = (
+    Mapping[Tuple[object, object, object, object], object]
+    | Callable[[object, object, object, object], object]
+)
+
+
+def _transport_state_transition_value(
+    states: Tuple[object, ...],
+    transition: TransportStateTransition,
+    left_atom: object,
+    right_atom: object,
+    left_state: object,
+    right_state: object,
+) -> object:
+    value = (
+        transition(left_atom, right_atom, left_state, right_state)
+        if callable(transition)
+        else transition[(left_atom, right_atom, left_state, right_state)]
+    )
+    if value not in states:
+        raise ValueError("transport-state transition value outside state set")
+    return value
+
+
+def transport_state_left_translation_failures(
+    atom_rack: FiniteBraidedSet,
+    states: Iterable[object],
+    transition: TransportStateTransition,
+) -> Tuple[TransportStateLeftTranslationFailure, ...]:
+    """Return non-bijective left translations for ``A x E`` transport rows."""
+
+    if not is_rack_solution(atom_rack) or not atom_rack.is_ybe():
+        raise ValueError("atom solution must be a finite rack")
+    state_tuple = tuple(states)
+    if not state_tuple:
+        raise ValueError("transport-state set must be nonempty")
+    elements = tuple(
+        (atom, state)
+        for atom in atom_rack.elements
+        for state in state_tuple
+    )
+    expected_size = len(elements)
+    failures: List[TransportStateLeftTranslationFailure] = []
+    for left_atom, left_state in elements:
+        images = set()
+        for right_atom, right_state in elements:
+            images.add(
+                (
+                    _rack_operation_value(atom_rack, left_atom, right_atom),
+                    _transport_state_transition_value(
+                        state_tuple,
+                        transition,
+                        left_atom,
+                        right_atom,
+                        left_state,
+                        right_state,
+                    ),
+                )
+            )
+        if len(images) != expected_size:
+            failures.append(
+                TransportStateLeftTranslationFailure(
+                    left_atom=left_atom,
+                    left_state=left_state,
+                    image_size=len(images),
+                    expected_size=expected_size,
+                )
+            )
+    return tuple(failures)
+
+
+def transport_state_rack(
+    atom_rack: FiniteBraidedSet,
+    states: Iterable[object],
+    transition: TransportStateTransition,
+) -> FiniteBraidedSet:
+    """Build the rack-type transport-state row on ``A x E``."""
+
+    state_tuple = tuple(states)
+    failures = transport_state_left_translation_failures(
+        atom_rack,
+        state_tuple,
+        transition,
+    )
+    if failures:
+        raise ValueError("transport-state left translations are not bijective")
+    elements = tuple(
+        (atom, state)
+        for atom in atom_rack.elements
+        for state in state_tuple
+    )
+
+    def op(left: Tuple[object, object], right: Tuple[object, object]):
+        left_atom, left_state = left
+        right_atom, right_state = right
+        return (
+            _rack_operation_value(atom_rack, left_atom, right_atom),
+            _transport_state_transition_value(
+                state_tuple,
+                transition,
+                left_atom,
+                right_atom,
+                left_state,
+                right_state,
+            ),
+        )
+
+    return rack_solution(elements, op)
+
+
+def transport_state_rackification_audit(
+    atom_rack: FiniteBraidedSet,
+    states: Iterable[object],
+    transition: TransportStateTransition,
+    endpoint_labels: Sequence[GroupElement] | None = None,
+) -> TransportStateRackificationAudit:
+    """Audit the finite detector for a strand-continuing transport-state row."""
+
+    state_tuple = tuple(states)
+    failures = transport_state_left_translation_failures(
+        atom_rack,
+        state_tuple,
+        transition,
+    )
+    extension_audit = None
+    transport_built = False
+    if not failures:
+        transport = transport_state_rack(atom_rack, state_tuple, transition)
+        transport_built = True
+        projection = {
+            element: element[0]
+            for element in transport.elements
+        }
+        extension_audit = rack_extension_detector_audit(
+            transport,
+            atom_rack,
+            projection,
+            endpoint_labels=endpoint_labels,
+        )
+    return TransportStateRackificationAudit(
+        atom_rack_size=len(atom_rack.elements),
+        state_count=len(state_tuple),
+        transport_size=len(atom_rack.elements) * len(state_tuple),
+        left_translation_failures=failures,
+        transport_rack_built=transport_built,
+        extension_detector_audit=extension_audit,
     )
 
 

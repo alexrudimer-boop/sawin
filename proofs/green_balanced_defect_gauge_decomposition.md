@@ -169,6 +169,10 @@ The principal-gauge subcase is then closed by
 `proofs/principal_gauge_extension_detector.md`: if the lower gauge row is a
 principal rack-extension cocycle, the finite rack `A x U` and its inner group
 detect the remaining endpoint/unit holonomy.
+The transport-state refinement
+`proofs/transport_state_rackification_detector.md` removes the principal
+restriction for strand-continuing rows by treating `(a,r)` as the rack state.
+Thus only descent-separation failures remain as Green/lower-row obstructions.
 
 ## Updated local target
 

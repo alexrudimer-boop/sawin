@@ -54,6 +54,7 @@ from ybe_domination import (
     principal_gauge_extension_rack,
     pushforward_longitude_subgroup_witness,
     pushforward_longitude_subgroup_witness_audit,
+    rack_extension_detector_audit,
     rack_inner_group,
     rack_inner_detector_lift_audit,
     rack_inner_detector_lift_row_audit,
@@ -65,6 +66,9 @@ from ybe_domination import (
     reverse_braid_word,
     sharp_obstruction_rack,
     symmetric_group,
+    transport_state_left_translation_failures,
+    transport_state_rack,
+    transport_state_rackification_audit,
 )
 
 
@@ -679,6 +683,51 @@ class ArtinLongitudeTests(unittest.TestCase):
         self.assertFalse(audit.extension_is_ybe)
         self.assertFalse(audit.principal_extension_is_finite_rack)
         self.assertFalse(audit.proves_principal_gauge_detector)
+
+    def test_transport_state_rackification_closes_nonprincipal_gauge(self):
+        atom = rack_solution(range(2), lambda _left, right: right)
+        states = tuple(range(3))
+
+        def transition(_left_atom, _right_atom, left_state, right_state):
+            return (2 * left_state - right_state) % 3
+
+        transport = transport_state_rack(atom, states, transition)
+        audit = transport_state_rackification_audit(atom, states, transition)
+        extension_audit = rack_extension_detector_audit(
+            transport,
+            atom,
+            {element: element[0] for element in transport.elements},
+        )
+
+        self.assertEqual(len(transport.elements), 6)
+        self.assertTrue(is_rack_solution(transport))
+        self.assertTrue(transport.is_ybe())
+        self.assertEqual(audit.left_translation_failures, tuple())
+        self.assertTrue(audit.all_left_translations_bijective)
+        self.assertTrue(audit.transport_state_is_finite_rack_extension)
+        self.assertTrue(audit.proves_transport_state_detector)
+        self.assertTrue(extension_audit.projection_is_rack_homomorphism)
+        self.assertTrue(extension_audit.proves_rack_extension_detector)
+
+    def test_transport_state_rackification_flags_nonbijective_transition(self):
+        atom = rack_solution(range(2), lambda _left, right: right)
+        states = tuple(range(2))
+
+        def transition(_left_atom, _right_atom, _left_state, _right_state):
+            return 0
+
+        failures = transport_state_left_translation_failures(
+            atom,
+            states,
+            transition,
+        )
+        audit = transport_state_rackification_audit(atom, states, transition)
+
+        self.assertGreater(len(failures), 0)
+        self.assertFalse(audit.all_left_translations_bijective)
+        self.assertFalse(audit.transport_rack_built)
+        self.assertIsNone(audit.extension_detector_audit)
+        self.assertFalse(audit.proves_transport_state_detector)
 
     def test_artin_detector_lift_state_matches_artin_images_and_longitudes(self):
         group = symmetric_group(3)

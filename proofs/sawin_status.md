@@ -957,6 +957,22 @@ Artin detector-lift rows for this principal terminal gauge.  The current
 sharp structural burden is principal-gauge normal form for every surviving
 endpoint/unit holonomy row; a failure would be an explicit nonprincipal row
 that still needs a normalized-law sequence to become outcome B.
+The transport-state refinement in
+`proofs/transport_state_rackification_detector.md` removes the principal
+restriction for genuine strand-continuing gauge.  If the lower row has form
+
+```text
+((a,r),(b,s)) -> ((a*b,F_{a,b,r}(s)),(a,r)),
+```
+
+then the finite state `A x E` itself is the rack state whenever the completed
+row is bijective YBE.  The fixed detector is `Inn(A x E)`, and the executable
+hooks `transport_state_rackification_audit(...)` and
+`rack_extension_detector_audit(...)` record the corresponding finite
+inner-group detector.  The current bottleneck is therefore descent
+separation: prove that any non-strand-continuing lower motion is already
+visible in Green kernel-block or Schutzenberger readouts, with no residual
+motion left outside the fixed factors.
 The single-endpoint route audit
 `unit_composite_longitude_route_audit(monoid,n,beta,factors)` now records the
 same ladder used in product-label work: endpoint identity, one evaluated

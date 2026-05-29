@@ -118,14 +118,15 @@ nondegeneracy to the total solution.
 49. `proofs/green_balanced_defect_gauge_decomposition.md`
 50. `proofs/terminal_gauge_longitudinalization_criterion.md`
 51. `proofs/principal_gauge_extension_detector.md`
-52. `proofs/bifree_corridor_subgroup_certificate.md`
-53. `proofs/bifree_corridor_certificate_audit.md`
-54. `proofs/bifree_corridor_exact_audit.md`
-55. `proofs/local_minimal_green_audit.md`
-56. `proofs/dual_green_symmetry.md`
-57. `proofs/opposite_detectability_closure.md`
-58. `proofs/finite_semigroup_holonomy_route.md`
-59. `proofs/unit_holonomy_longitude_gate.md`
+52. `proofs/transport_state_rackification_detector.md`
+53. `proofs/bifree_corridor_subgroup_certificate.md`
+54. `proofs/bifree_corridor_certificate_audit.md`
+55. `proofs/bifree_corridor_exact_audit.md`
+56. `proofs/local_minimal_green_audit.md`
+57. `proofs/dual_green_symmetry.md`
+58. `proofs/opposite_detectability_closure.md`
+59. `proofs/finite_semigroup_holonomy_route.md`
+60. `proofs/unit_holonomy_longitude_gate.md`
 Also read `proofs/unit_factorization_gate.md`, which proves that a product of
 finite total transformations can be a residual permutation only when every
 factor is already a unit/permutation.
@@ -208,13 +209,19 @@ principal lower endpoint/unit gauge subcase.  If the surviving row has
 identity, `A x U` is a finite rack, and `Inn(A x U)` is a fixed detector.
 The remaining structural target is principal-gauge normal form or a
 nonprincipal row upgraded to a normalized-law B sequence.
+Also read `proofs/transport_state_rackification_detector.md`: it removes the
+principal assumption for strand-continuing finite gauge rows.  A row
+`((a,r),(b,s))->((a*b,F_{a,b,r}(s)),(a,r))` rackifies on `A x E`, so
+`Inn(A x E)` is a fixed detector.  The remaining target is descent
+separation: any non-strand-continuing lower motion must be completely visible
+in Green kernel-block or Schutzenberger factors.
 Also read `proofs/unit_section_product_detector.md`, which combines finitely
 many fixed unit-section factors into one direct-product detector group.
-60. `proofs/green_holonomy_factorization_gate.md`
-61. `proofs/involutive_permutation_detector.md`
-62. `proofs/structure_orbit_law_obstruction.md`
-63. `proofs/fixed_variety_barrier.md`
-64. `proofs/bounded_degree_action_image_limit.md`
+61. `proofs/green_holonomy_factorization_gate.md`
+62. `proofs/involutive_permutation_detector.md`
+63. `proofs/structure_orbit_law_obstruction.md`
+64. `proofs/fixed_variety_barrier.md`
+65. `proofs/bounded_degree_action_image_limit.md`
 Also read `proofs/diagonal_normalized_obstruction.md`, which proves that an
 explicit detector-free interval diagonalizes to the normalized-law sequence
 required for outcome B.  Audit the companion helpers
@@ -222,14 +229,14 @@ required for outcome B.  Audit the companion helpers
 `right_stabilization_longitude_audit(...)` for product and stabilization
 conventions only; they are not a substitute for proving all finite detector
 groups fail.
-65. `proofs/affine_f2_audit.md`
-66. `proofs/two_colour_fibre2_all_bases_audit.md`
-67. `proofs/fibre2_product_branch.md`
-68. `proofs/two_colour_fibre3_product_audit.md`
-69. `proofs/three_colour_fibre2_product_audit.md`
-70. `proofs/sawin_proof_log.docx`
-71. `tables/reduction_audit.xlsx`
-72. Relevant code in `src/`, `tools/`, and `tests`, especially modules
+66. `proofs/affine_f2_audit.md`
+67. `proofs/two_colour_fibre2_all_bases_audit.md`
+68. `proofs/fibre2_product_branch.md`
+69. `proofs/two_colour_fibre3_product_audit.md`
+70. `proofs/three_colour_fibre2_product_audit.md`
+71. `proofs/sawin_proof_log.docx`
+72. `tables/reduction_audit.xlsx`
+73. Relevant code in `src/`, `tools/`, and `tests`, especially modules
     concerning input-dependent longitude factorization, quotient image
     kernels, residual dependency support, local-minimal intervals, local
     bottleneck routing, coordinate-kernel corridors, product label words,

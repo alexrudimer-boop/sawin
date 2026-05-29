@@ -507,6 +507,13 @@ const rows = [
     "Prove principal-gauge normal form for every surviving corridor gauge row, or extract a nonprincipal normalized-law seed.",
   ],
   [
+    "Transport-state rackification",
+    "Remove principality for strand-continuing finite gauge rows by enlarging the rack state to A x E.",
+    "proofs/transport_state_rackification_detector.md proves the rackification lemma; transport_state_rackification_audit builds A x E and checks Inn(A x E) detector-lift rows.",
+    "Closed subcase",
+    "Prove descent separation: non-strand-continuing motion is fully visible in Green/Schutzenberger readouts.",
+  ],
+  [
     "Bi-free subgroup certificate",
     "Profile candidate words against fixed corridor detector factors.",
     "Helper, extra-factor target support, direct-product subgroup audit, and tests added; affine commutator seen by S3 block factor.",

@@ -153,6 +153,11 @@ the form `(a,r)*(b,s)=(a*b,c(a,b)s)`, the YBE supplies the nonabelian
 rack-cocycle identity for `c`; the finite rack `A x U` then has inner group
 `Inn(A x U)`, which is a fixed detector for that principal terminal gauge
 holonomy.  The remaining structural burden is nonprincipal terminal gauge.
+The follow-up `proofs/transport_state_rackification_detector.md` removes
+that burden for every strand-continuing finite gauge row by enlarging the rack
+state to `A x E`.  The remaining issue is descent separation: any lower
+motion that is not strand-continuing must be visible in the Green or
+Schutzenberger readout, rather than treated as endpoint gauge.
 
 ## Executable audit hooks
 

@@ -187,6 +187,13 @@ The principal subcase is now closed in
 has the form `(a,r)*(b,s)=(a*b,c(a,b)s)`, then the YBE supplies the nonabelian
 rack-cocycle identity, `A x U` is a finite rack, and
 `Inn(A x U)` is a fixed detector for that lower holonomy.
+The stronger transport-state refinement
+`proofs/transport_state_rackification_detector.md` removes the principal
+assumption for strand-continuing gauge rows: a finite row
+`((a,r),(b,s))->((a*b,F_{a,b,r}(s)),(a,r))` rackifies on `A x E`, so
+`Inn(A x E)` detects it.  The remaining structural target is descent
+separation between Green/Schutzenberger motion and strand-continuing transport
+state.
 The semisplit audit now has an exact Boolean-CSP view: each coloured crossing
 lists the allowed equality/universal bit patterns on its two source and two
 target colours, and satisfying non-extreme assignments agree with the
