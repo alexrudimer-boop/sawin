@@ -238,6 +238,11 @@ The readout-kernel quotient note
 `readout_kernel_quotient_interval(...)` build the finite local interval on
 readout blocks, and the descent-separation audit now stores that quotient and
 its continuation audit when the readout kernel is admissible.
+The product readout-kernel assembly note
+`proofs/product_readout_kernel_assembly.md` records the factorwise product
+step: tuple-valued product labels have kernel equal to the meet of the factor
+kernels, and `product_readout_kernel_audit(...)` certifies factorwise
+admissibility before the fixed product readout is used for descent separation.
 The chart-transport collapse
 `proofs/chart_transport_collapse.md` removes transported-generator noise:
 `V_beta(G)` is already normal, and

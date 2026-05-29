@@ -563,6 +563,13 @@ const rows = [
     "After a passing descent-separation audit, apply transport-state rackification to the explicit strand-continuing quotient row.",
   ],
   [
+    "Product readout kernels",
+    "Assemble finitely many fixed detector labels into one tuple-valued readout.",
+    "proofs/product_readout_kernel_assembly.md; product_readout_kernel_audit checks factor kernels, the product kernel, and the meet identity.",
+    "Reduction criterion",
+    "Construct Green/Schutzenberger/atom/unit factors separately, then assemble the fixed product readout for descent separation.",
+  ],
+  [
     "Chart-transport collapse",
     "Avoid separate endpoint-longitude proofs for transported or chart-conjugate copies of elementary generators.",
     "proofs/chart_transport_collapse.md; conjugate_longitude_subgroup_witness shows V_beta(G) is normal at certificate level.",

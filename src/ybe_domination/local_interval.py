@@ -228,6 +228,30 @@ class ReadoutKernelAudit:
 
 
 @dataclass(frozen=True)
+class ProductReadoutKernelAudit:
+    """Assembly audit for tuple-valued products of finite readout labels."""
+
+    factor_audits: Tuple[ReadoutKernelAudit, ...]
+    product_labels: ReadoutLabels
+    product_audit: ReadoutKernelAudit
+    meet_family: Mapping[Color, Partition]
+    product_family_is_factor_meet: bool
+
+    @property
+    def all_factors_admissible(self) -> bool:
+        return all(audit.admissible for audit in self.factor_audits)
+
+    @property
+    def proves_product_readout_kernel_admissible(self) -> bool:
+        return (
+            self.factor_audits != ()
+            and self.all_factors_admissible
+            and self.product_family_is_factor_meet
+            and self.product_audit.admissible
+        )
+
+
+@dataclass(frozen=True)
 class ReadoutDescentSeparationAudit:
     """Descent-separation certificate for finite readout labels."""
 
@@ -378,6 +402,73 @@ def readout_kernel_audit(
         ),
         admissible=failure is None,
         failure=failure,
+    )
+
+
+def _meet_partition(left: Partition, right: Partition) -> Partition:
+    return canonical_partition(
+        left_block.intersection(right_block)
+        for left_block in left
+        for right_block in right
+    )
+
+
+def _meet_families(
+    interval: "LocalInterval",
+    families: Sequence[Mapping[Color, Partition]],
+) -> Dict[Color, Partition]:
+    if not families:
+        raise ValueError("at least one family is required")
+    current = {color: families[0][color] for color in interval.colors}
+    for family in families[1:]:
+        current = {
+            color: _meet_partition(current[color], family[color])
+            for color in interval.colors
+        }
+    return current
+
+
+def product_readout_labels(
+    interval: "LocalInterval",
+    *label_families: ReadoutLabels,
+) -> Dict[Color, Dict[FibrePoint, Tuple[ReadoutLabel, ...]]]:
+    """Return tuple-valued labels combining fixed readout factors."""
+
+    if not label_families:
+        raise ValueError("at least one readout label family is required")
+    for labels in label_families:
+        readout_kernel_family(interval, labels)
+    return {
+        color: {
+            point: tuple(labels[color][point] for labels in label_families)
+            for point in interval.fibres[color]
+        }
+        for color in interval.colors
+    }
+
+
+def product_readout_kernel_audit(
+    interval: "LocalInterval",
+    *label_families: ReadoutLabels,
+) -> ProductReadoutKernelAudit:
+    """Audit the kernel of a product of finite readout label systems."""
+
+    factor_audits = tuple(
+        readout_kernel_audit(interval, labels)
+        for labels in label_families
+    )
+    product_labels = product_readout_labels(interval, *label_families)
+    product_audit = readout_kernel_audit(interval, product_labels)
+    meet_family = _meet_families(
+        interval,
+        tuple(audit.family for audit in factor_audits),
+    )
+    return ProductReadoutKernelAudit(
+        factor_audits=factor_audits,
+        product_labels=product_labels,
+        product_audit=product_audit,
+        meet_family=meet_family,
+        product_family_is_factor_meet=product_audit.family == meet_family,
     )
 
 

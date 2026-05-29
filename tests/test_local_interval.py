@@ -17,6 +17,8 @@ from ybe_domination import (
     continuation_seed_universal_derivation_failures,
     coordinate_kernel_pair_closure_audits,
     coordinate_kernel_pair_closure_failures,
+    product_readout_kernel_audit,
+    product_readout_labels,
     quotient_interval_by_family,
     readout_descent_separation_audit,
     readout_descent_separation_failures,
@@ -400,6 +402,49 @@ class LocalIntervalTests(unittest.TestCase):
         block = quotient.fibres["*"][0]
         self.assertEqual(quotient.T[("*", "*", block, block)], (block, block))
         self.assertTrue(continuation_congruence_audit(quotient).is_strand_continuing_on_the_nose)
+
+    def test_product_readout_kernel_is_meet_of_factor_kernels(self):
+        interval = two_color_identity_interval()
+        collapse_a = {
+            "a": {0: "same", 1: "same"},
+            "b": {0: "zero", 1: "one"},
+        }
+        collapse_b = {
+            "a": {0: "zero", 1: "one"},
+            "b": {0: "same", 1: "same"},
+        }
+
+        labels = product_readout_labels(interval, collapse_a, collapse_b)
+        audit = product_readout_kernel_audit(interval, collapse_a, collapse_b)
+
+        self.assertEqual(labels["a"][0], ("same", "zero"))
+        self.assertEqual(labels["b"][1], ("one", "same"))
+        self.assertEqual(audit.product_audit.kind, "equality")
+        self.assertTrue(audit.product_family_is_factor_meet)
+        self.assertTrue(audit.all_factors_admissible)
+        self.assertTrue(audit.product_audit.admissible)
+        self.assertTrue(audit.proves_product_readout_kernel_admissible)
+        self.assertEqual(audit.product_audit.family, audit.meet_family)
+
+    def test_product_readout_kernel_records_nonadmissible_factor(self):
+        interval = two_color_swap_interval()
+        nonadmissible = {
+            "a": {0: "same", 1: "same"},
+            "b": {0: "zero", 1: "one"},
+        }
+        equality_labels = {
+            "a": {0: "zero", 1: "one"},
+            "b": {0: "zero", 1: "one"},
+        }
+
+        audit = product_readout_kernel_audit(interval, nonadmissible, equality_labels)
+
+        self.assertFalse(audit.factor_audits[0].admissible)
+        self.assertTrue(audit.factor_audits[1].admissible)
+        self.assertTrue(audit.product_family_is_factor_meet)
+        self.assertTrue(audit.product_audit.admissible)
+        self.assertFalse(audit.all_factors_admissible)
+        self.assertFalse(audit.proves_product_readout_kernel_admissible)
 
     def test_readout_descent_separation_reports_surviving_seed_rows(self):
         interval = one_color_identity_interval()

@@ -254,6 +254,10 @@ explicit local interval on readout blocks via
 `quotient_interval_by_family(...)` and `readout_kernel_quotient_interval(...)`.
 The descent-separation audit now stores this quotient and its continuation
 audit when the readout kernel is admissible.
+Also read `proofs/product_readout_kernel_assembly.md`: it proves that
+tuple-valued products of fixed readout labels have kernel equal to the meet of
+the factor kernels, and `product_readout_kernel_audit(...)` records the
+factorwise admissibility needed before using one fixed product readout.
 Also read `proofs/chart_transport_collapse.md`: it proves that finite chart
 conjugation does not create new endpoint-longitude obligations, because
 `V_beta(G)` is normal and one representative elementary-generator witness

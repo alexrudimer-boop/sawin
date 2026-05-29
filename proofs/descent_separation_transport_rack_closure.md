@@ -159,17 +159,20 @@ If descent separation is proved, the A-route closes as follows.
    survives in the quotient, so the quotient lower row is strand-continuing.
 9. The readout-kernel quotient constructor builds the explicit finite local
    interval on readout blocks and verifies its continuation audit directly.
-10. Product witness calculus assembles all factor witnesses into one fixed
+10. Product readout-kernel assembly combines the Green, Schutzenberger, atom,
+   known-branch, and unit labels into one fixed tuple-valued readout whose
+   kernel is the meet of the factor kernels.
+11. Product witness calculus assembles all factor witnesses into one fixed
    `H(pi,Q)`.
-11. The endpoint-factorization criterion gives
+12. The endpoint-factorization criterion gives
 
 ```text
 Lambda_{H(pi,Q),n}(beta)=Lambda_{H(pi,Q),n}(1)
   => Delta_n(beta)=1.
 ```
 
-12. The sharp obstruction theorem supplies the local rack `Q x A_H`.
-13. Congruence-chain induction assembles the local racks into one finite rack
+13. The sharp obstruction theorem supplies the local rack `Q x A_H`.
+14. Congruence-chain induction assembles the local racks into one finite rack
    independent of `n`.
 
 ## Why this is still open

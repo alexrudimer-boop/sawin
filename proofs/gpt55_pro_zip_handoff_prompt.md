@@ -248,6 +248,10 @@ Then audit and use these reductions:
    explicit finite quotient local interval on readout blocks and verifies the
    quotient continuation audit directly.  This is now the concrete object to
    which transport-state rackification applies.
+   Also use `proofs/product_readout_kernel_assembly.md`: it assembles
+   finitely many factor label systems into one tuple-valued product readout,
+   with kernel equal to the meet of factor kernels.  This is the local readout
+   analogue of multiplying fixed detector factors into one `H(pi,Q)`.
    Also use `proofs/chart_transport_collapse.md`: it proves transported
    elementary generators need no separate proof once one chart-conjugacy orbit
    representative is certified, because `V_beta(G)` is normal.  Then read

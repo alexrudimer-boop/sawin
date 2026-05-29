@@ -458,6 +458,11 @@ executable object.  The helpers `quotient_interval_by_family(...)` and
 `readout_kernel_quotient_interval(...)` construct the descended local table on
 readout blocks, and the descent-separation audit now stores the quotient and
 its continuation audit.
+The product readout-kernel assembly note
+`proofs/product_readout_kernel_assembly.md` gives the fixed-factor product
+step.  Tuple-valued product labels have kernel equal to the meet of the factor
+kernels, and `product_readout_kernel_audit(...)` records factor admissibility,
+the product kernel, and the meet identity.
 The chart-transport collapse
 `proofs/chart_transport_collapse.md` removes another source of proof noise:
 because `V_beta(G)` is normal for every finite group `G`, one
