@@ -14,7 +14,9 @@ from .finite_group import (
     FiniteGroup,
     FiniteGroupHomomorphism,
     GroupElement,
+    normal_closure_elements,
     permutation_group_from_generators,
+    quotient_group_by_normal_subgroup,
 )
 from .local_interval import canonical_partition
 
@@ -379,6 +381,8 @@ class GreenFirstOutputDefectAudit:
 
     observer_name: str
     r_class: Tuple[Transformation, ...]
+    group: FiniteGroup
+    edge_labels: Tuple[Tuple[EdgeGerm, GroupElement], ...]
     group_order: int
     row_audits: Tuple[GreenFirstOutputDefectRowAudit, ...]
     missing_edge_count: int
@@ -416,6 +420,55 @@ class GreenFirstOutputDefectAudit:
             self.covers_all_rows
             and self.all_rows_have_defect_normal_form
             and self.all_observed_rows_are_right_rack_when_defects_identity
+        )
+
+
+@dataclass(frozen=True)
+class GreenDefectKernelQuotientAudit:
+    """Audit the rack-detected quotient by the first-output defect kernel."""
+
+    observer_name: str
+    r_class: Tuple[Transformation, ...]
+    source_defect_audit: GreenFirstOutputDefectAudit
+    defect_generators: Tuple[GroupElement, ...]
+    defect_kernel: Tuple[GroupElement, ...]
+    quotient_group: FiniteGroup
+    quotient_homomorphism: FiniteGroupHomomorphism
+    projected_defect_audit: GreenFirstOutputDefectAudit
+
+    @property
+    def source_group_order(self) -> int:
+        return self.source_defect_audit.group_order
+
+    @property
+    def defect_generator_count(self) -> int:
+        return len(self.defect_generators)
+
+    @property
+    def defect_kernel_size(self) -> int:
+        return len(self.defect_kernel)
+
+    @property
+    def quotient_group_order(self) -> int:
+        return len(self.quotient_group.elements)
+
+    @property
+    def all_projected_defects_are_identity(self) -> bool:
+        return self.projected_defect_audit.nonidentity_defect_count == 0
+
+    @property
+    def projected_rows_are_rack_artin_rows(self) -> bool:
+        return (
+            self.projected_defect_audit.proves_first_output_defect_reduction
+            and self.all_projected_defects_are_identity
+        )
+
+    @property
+    def proves_defect_quotient_detection(self) -> bool:
+        return (
+            self.source_defect_audit.proves_first_output_defect_reduction
+            and self.quotient_homomorphism.is_surjective
+            and self.projected_rows_are_rack_artin_rows
         )
 
 
@@ -1060,11 +1113,60 @@ def green_first_output_defect_audit(
     return GreenFirstOutputDefectAudit(
         observer_name=observer_name,
         r_class=audit.r_class,
+        group=group,
+        edge_labels=tuple(sorted(edge_labels.items(), key=repr)),
         group_order=len(group.elements),
         row_audits=tuple(row_audits),
         missing_edge_count=len(missing_edges),
         missing_row_count=missing_row_count,
         local_only_edge_germ_count=local_only_edge_germ_count,
+    )
+
+
+def green_defect_kernel_quotient_audit(
+    source_defect_audit: GreenFirstOutputDefectAudit,
+) -> GreenDefectKernelQuotientAudit:
+    """Quotient a Green observer by its finite first-output defect kernel."""
+
+    defect_generators = tuple(
+        row.first_output_defect
+        for row in source_defect_audit.row_audits
+    )
+    defect_kernel = normal_closure_elements(
+        source_defect_audit.group,
+        defect_generators,
+    )
+    quotient_group, quotient_homomorphism = quotient_group_by_normal_subgroup(
+        source_defect_audit.group,
+        defect_kernel,
+    )
+    projected_edge_labels = {
+        edge: quotient_homomorphism.apply(label)
+        for edge, label in source_defect_audit.edge_labels
+    }
+    projected_audit = green_first_output_defect_audit(
+        GreenBranchAudit(
+            r_class=source_defect_audit.r_class,
+            edge_germs=tuple(edge for edge, _label in source_defect_audit.edge_labels),
+            edge_targets=tuple(),
+            rows=tuple(row.row for row in source_defect_audit.row_audits),
+            atom_partition=tuple(),
+            branch_choice_failures=tuple(),
+        ),
+        quotient_group,
+        projected_edge_labels,
+        f"{source_defect_audit.observer_name}-defect-quotient",
+        local_only_edge_germ_count=source_defect_audit.local_only_edge_germ_count,
+    )
+    return GreenDefectKernelQuotientAudit(
+        observer_name=source_defect_audit.observer_name,
+        r_class=source_defect_audit.r_class,
+        source_defect_audit=source_defect_audit,
+        defect_generators=defect_generators,
+        defect_kernel=defect_kernel,
+        quotient_group=quotient_group,
+        quotient_homomorphism=quotient_homomorphism,
+        projected_defect_audit=projected_audit,
     )
 
 
@@ -1417,6 +1519,28 @@ def schutzenberger_kernel_defect_pushforward_audits(
             )
         )
     return tuple(sorted(out, key=repr))
+
+
+def schutzenberger_defect_kernel_quotient_audits(
+    solution: FiniteBraidedSet,
+) -> Tuple[GreenDefectKernelQuotientAudit, ...]:
+    """Return defect-kernel quotient audits for Schutzenberger observers."""
+
+    return tuple(
+        green_defect_kernel_quotient_audit(audit)
+        for audit in schutzenberger_first_output_defect_audits(solution)
+    )
+
+
+def kernel_block_defect_kernel_quotient_audits(
+    solution: FiniteBraidedSet,
+) -> Tuple[GreenDefectKernelQuotientAudit, ...]:
+    """Return defect-kernel quotient audits for kernel-block observers."""
+
+    return tuple(
+        green_defect_kernel_quotient_audit(audit)
+        for audit in kernel_block_first_output_defect_audits(solution)
+    )
 
 
 def context_words_by_target(

@@ -872,11 +872,17 @@ side-opposite Artin detector row.  When retained edges are globally realized
 in the Schutzenberger action, kernel-block defects are homomorphic images of
 Schutzenberger defects; this is exposed by
 `schutzenberger_kernel_defect_pushforward_audits(...)`.  The remaining Green
-theorem is now to prove that the transported Schutzenberger defect endpoint
-`D_C(beta)` lies in `V_beta(Sch(C))`, uniformly in braid index.  A direct A
+theorem has now been sharpened by
+`proofs/green_defect_kernel_quotient_detection.md`.  For each observer
+`U_C`, let `Def_C` be the normal closure of the first-output defects.  In the
+finite quotient `U_C/Def_C`, every row is the exact side-opposite rack-Artin
+row, so the detector-lift theorem kills the quotient motion.  The remaining
+Green theorem is to prove that the transported defect-kernel endpoint
+`D_C(beta)` lies in `V_beta(Def_C)`, uniformly in braid index.  A direct A
 route is to express `D_C(beta)` as a product of Artin permutation defect
 values, which the Artin-defect sieve already places in the longitude-value
-subgroup.
+subgroup.  A B route must now escape through this finite defect kernel, not
+through a generic bounded row mismatch.
 The single-endpoint route audit
 `unit_composite_longitude_route_audit(monoid,n,beta,factors)` now records the
 same ladder used in product-label work: endpoint identity, one evaluated

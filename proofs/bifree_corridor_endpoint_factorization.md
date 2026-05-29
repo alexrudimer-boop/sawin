@@ -343,9 +343,11 @@ The Green kernel-block and Schutzenberger generators have now been compressed
 to the first-output defect endpoint in
 `proofs/green_first_output_defect_criterion.md`.  That note shows that the
 second output has no separate obstruction and that kernel-block defects are
-Schutzenberger pushforwards in the globally realized case.  The remaining
-Green endpoint to longitudinalize is the transported Schutzenberger defect
-product `D_C(beta)`.
+Schutzenberger pushforwards in the globally realized case.  The follow-up
+`proofs/green_defect_kernel_quotient_detection.md` kills the non-defect
+quotient `U_C/Def_C` by detector-lift.  The remaining Green endpoint to
+longitudinalize is the transported finite defect-kernel product
+`D_C(beta) in Def_C`.
 
 ## Executable certificate layer
 

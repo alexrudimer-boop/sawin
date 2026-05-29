@@ -183,11 +183,12 @@ lower endpoint/unit holonomy factors.
 ```
 
 The first two entries have since been reduced to one endpoint problem by
-`proofs/green_first_output_defect_criterion.md`: a Green row is controlled by
-its first-output defect, and kernel-block defects are Schutzenberger
-pushforwards when there are no local-only edge-germs.  Thus the remaining
-Green row burden is the transported Schutzenberger defect endpoint, not a
-literal row-by-row Artin check.
+`proofs/green_first_output_defect_criterion.md` and
+`proofs/green_defect_kernel_quotient_detection.md`: a Green row is controlled
+by its first-output defect, the non-defect quotient is rack-detected, and
+kernel-block defects are Schutzenberger pushforwards when there are no
+local-only edge-germs.  Thus the remaining Green row burden is the transported
+finite defect-kernel endpoint, not a literal row-by-row Artin check.
 
 The atom layer itself remains conditional on proving the descent/totality
 theorem in the arbitrary local-minimal interval.  If that theorem fails, a B

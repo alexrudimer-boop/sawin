@@ -207,9 +207,13 @@ Green kernel-block and Schutzenberger entries have also been sharpened by
 `proofs/green_first_output_defect_criterion.md`: each such row has a single
 first-output defect, and the second output is forced by the product relation.
 Kernel-block defects are Schutzenberger pushforwards when there are no
-local-only edge-germs.  The remaining row-level theorem is therefore to prove
-the transported Schutzenberger defect endpoint lies in `V_beta(Sch(C))`,
-together with the lower endpoint/unit holonomy rows.
+local-only edge-germs.  The follow-up
+`proofs/green_defect_kernel_quotient_detection.md` quotients each observer
+`U_C` by the normal closure `Def_C` of these defects; the projected rows then
+are exact side-opposite rack-Artin rows and are handled by this detector-lift
+theorem.  The remaining row-level theorem is therefore to prove the
+transported defect-kernel endpoint lies in `V_beta(Def_C)`, together with the
+lower endpoint/unit holonomy rows.
 
 If the row identities hold for every endpoint factor, then every endpoint
 factor lies in `V_beta(H_s)`.  The product assembly note

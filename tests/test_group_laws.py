@@ -13,9 +13,12 @@ from ybe_domination import (
     group_exponent,
     has_identity_longitude_signature,
     is_law_on_group,
+    is_normal_subgroup,
     law_braid_longitude_subgroup_profile,
     law_sequence_prefix_audit,
     lcm_upto,
+    normal_closure_elements,
+    quotient_group_by_normal_subgroup,
     reduced_free_words,
     short_law_escaping_variety,
     short_law_separating_groups,
@@ -44,6 +47,38 @@ class GroupLawTests(unittest.TestCase):
         transposition = (1, 0, 2)
         subgroup = subgroup_generated_elements(group, [transposition])
         self.assertEqual(set(subgroup), {group.identity, transposition})
+
+    def test_normal_closure_and_quotient_group_for_s3(self):
+        group = symmetric_group(3)
+        transposition = (1, 0, 2)
+        three_cycle = (1, 2, 0)
+
+        transposition_closure = normal_closure_elements(group, [transposition])
+        self.assertEqual(set(transposition_closure), set(group.elements))
+        self.assertTrue(is_normal_subgroup(group, transposition_closure))
+
+        alternating_closure = normal_closure_elements(group, [three_cycle])
+        self.assertEqual(
+            set(alternating_closure),
+            {group.identity, (1, 2, 0), (2, 0, 1)},
+        )
+        self.assertTrue(is_normal_subgroup(group, alternating_closure))
+
+        quotient, projection = quotient_group_by_normal_subgroup(
+            group,
+            alternating_closure,
+        )
+
+        self.assertEqual(len(quotient.elements), 2)
+        self.assertTrue(projection.is_surjective)
+        self.assertEqual(
+            {
+                element
+                for element in group.elements
+                if projection.apply(element) == quotient.identity
+            },
+            set(alternating_closure),
+        )
 
     def test_exponent_law_for_small_groups(self):
         word = exponent_law_word(3)

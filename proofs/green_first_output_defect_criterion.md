@@ -18,7 +18,7 @@ Artin detector-lift row identities
 by the smaller endpoint target
 
 ```text
-prove the transported Schutzenberger defect endpoint lies in V_beta(Sch(C)).
+prove the transported finite defect-kernel endpoint lies in V_beta(Def_C).
 ```
 
 Kernel-block defects are homomorphic images of Schutzenberger defects whenever
@@ -155,30 +155,51 @@ Local-only edge-germs are deliberately excluded from this pushforward
 statement.  They remain part of the lower endpoint/unit or local-only
 holonomy problem.
 
+## Defect-kernel quotient
+
+The follow-up reduction
+`proofs/green_defect_kernel_quotient_detection.md` packages all elementary
+first-output defects into one finite normal subgroup
+
+```text
+Def_C = << d_C(a,q) >>_{U_C}.
+```
+
+In the quotient `U_C/Def_C`, every completed row has identity first-output
+defect and hence is exactly the side-opposite rack-Artin row.  The
+detector-lift criterion therefore kills all projected `U_C/Def_C` endpoint
+motion by recursive Artin longitudes in the fixed finite quotient.
+
+Thus the only Green/Schutzenberger information not closed by this row
+quotient is the transported endpoint product of the defects themselves,
+viewed inside the fixed finite kernel `Def_C`.
+
 ## Remaining target
 
 For each regular Green class `C`, let `D_C(beta)` denote the ordered
 transported product of elementary first-output defects encountered while
-sweeping a residual braid word.  The Green row problem is reduced to:
+sweeping a residual braid word.  After the defect-kernel quotient reduction,
+the Green row problem is reduced to:
 
 ```text
-D_C(beta) in V_beta(Sch(C))
+D_C(beta) in V_beta(Def_C)
 ```
 
 for every residual braid `beta`, uniformly in braid index.
 
 If this is proved, then:
 
-1. identity finite-`Sch(C)` longitude data kills the Schutzenberger defect
-   endpoint;
-2. kernel-block defect endpoints are killed as homomorphic images when no
+1. identity finite-`U_C/Def_C` longitude data kills the projected
+   Green/Schutzenberger endpoint;
+2. identity finite-`Def_C` longitude data kills the defect-kernel endpoint;
+3. kernel-block defect endpoints are killed as homomorphic images when no
    local-only edge-germs occur;
-3. atom-inner motion is already killed by the rack-inner row theorem after
+4. atom-inner motion is already killed by the rack-inner row theorem after
    atom descent and totality;
-4. the remaining lower endpoint/unit holonomy is exactly the endpoint/unit
+5. the remaining lower endpoint/unit holonomy is exactly the endpoint/unit
    problem isolated elsewhere in the repository.
 
-A direct route to the Schutzenberger target is to display `D_C(beta)` as a
+A direct route to the defect-kernel target is to display `D_C(beta)` as a
 finite product of Artin permutation defect values
 
 ```text
@@ -186,7 +207,7 @@ phi(beta(w) p_beta(w)^-1),
 ```
 
 because `proofs/artin_defect_longitudinalization_sieve.md` already proves
-that such values lie in `V_beta(Sch(C))`.
+that such values lie in `V_beta(Def_C)`.
 
 ## Counterexample consequence
 
@@ -203,14 +224,18 @@ The code records this reduction through:
 ```text
 green_first_output_defect_row_audit(...)
 green_first_output_defect_audit(...)
+green_defect_kernel_quotient_audit(...)
 schutzenberger_first_output_defect_audits(...)
+schutzenberger_defect_kernel_quotient_audits(...)
 kernel_block_first_output_defect_audits(...)
+kernel_block_defect_kernel_quotient_audits(...)
 schutzenberger_kernel_block_homomorphism(...)
 schutzenberger_kernel_defect_pushforward_audits(...)
 ```
 
 These helpers verify the product relation, reconstruct the second output from
 the first-output defect, check that identity defects give the right-rack Artin
-row, and audit kernel-block defects as Schutzenberger pushforwards when the
-homomorphism exists.  They do not prove that the transported defect endpoints
-belong to `V_beta(Sch(C))`; that is the remaining theorem target.
+row, audit kernel-block defects as Schutzenberger pushforwards when the
+homomorphism exists, and construct the finite quotient by the normal closure
+of the defects.  They do not prove that the transported defect-kernel
+endpoints belong to `V_beta(Def_C)`; that is the remaining theorem target.

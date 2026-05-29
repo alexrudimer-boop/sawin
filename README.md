@@ -146,9 +146,14 @@ has the normal form determined by the single defect
 `d_C(a,q)=g(q^a)g(q)^-1`; the second output is forced from
 `g(a)g(q)=g(q^a)g(a^q)`.  When no local-only edge-germs occur, kernel-block
 defects are pushforwards of Schutzenberger defects through a fixed finite
-homomorphism.  Thus the open Green target is to prove the transported
-Schutzenberger defect endpoint `D_C(beta)` lies in `V_beta(Sch(C))`, plus the
-already isolated lower endpoint/unit holonomy problem.
+homomorphism.  The follow-up note
+`proofs/green_defect_kernel_quotient_detection.md` quotients each
+Green/Schutzenberger observer `U_C` by the normal closure of these defects;
+on `U_C/Def_C`, every row is exactly side-opposite rack-Artin and is therefore
+handled by the detector-lift theorem.  Thus the open Green target is now only
+the finite defect-kernel endpoint: prove the transported defect product
+`D_C(beta)` lies in `V_beta(Def_C)`, plus the already isolated lower
+endpoint/unit holonomy problem.
 The semisplit audit now has an exact Boolean-CSP view: each coloured crossing
 lists the allowed equality/universal bit patterns on its two source and two
 target colours, and satisfying non-extreme assignments agree with the

@@ -186,6 +186,7 @@ prove inside one of the fixed groups
 ```text
 Sym(Green kernel blocks),
 Sch(C),
+Def_C (the finite first-output defect kernel of a Green observer),
 Inn(atom quotient),
 U(M),
 or a fixed quotient/known-branch detector factor
@@ -288,7 +289,8 @@ group, but the Green kernel-block, Schutzenberger, and lower endpoint/unit
 holonomy factors.
 The Green kernel-block and Schutzenberger row-level work has now been
 compressed to a first-output defect endpoint by
-`proofs/green_first_output_defect_criterion.md`.  Therefore the defect-sieve
-route should be applied directly to the transported Schutzenberger defect
-product `D_C(beta)`: display it as a product of Artin permutation defects, and
-membership in `V_beta(Sch(C))` follows.
+`proofs/green_first_output_defect_criterion.md`, and the non-defect quotient
+motion is closed by `proofs/green_defect_kernel_quotient_detection.md`.
+Therefore the defect-sieve route should be applied directly to the transported
+finite defect-kernel product `D_C(beta)`: display it as a product of Artin
+permutation defects in `Def_C`, and membership in `V_beta(Def_C)` follows.

@@ -448,7 +448,14 @@ const rows = [
     "Replace Green kernel-block/Schutzenberger row checks by one transported defect endpoint.",
     "proofs/green_first_output_defect_criterion.md proves the row normal form from g(a)g(q)=g(q^a)g(a^q); schutzenberger_kernel_defect_pushforward_audits checks kernel pushforwards.",
     "Sharper open target",
-    "Prove transported Schutzenberger defect endpoints D_C(beta) lie in V_beta(Sch(C)); handle local-only and lower endpoint/unit holonomy.",
+    "Pass to the defect-kernel quotient, then handle local-only and lower endpoint/unit holonomy.",
+  ],
+  [
+    "Green defect quotient",
+    "Kill all non-defect Green/Schutzenberger row motion by a fixed quotient.",
+    "proofs/green_defect_kernel_quotient_detection.md quotients each observer U_C by the normal closure Def_C of its first-output defects; projected rows are exact side-opposite rack-Artin and green_defect_kernel_quotient_audit verifies the finite quotient step.",
+    "Quotient closure",
+    "Prove the remaining defect-kernel endpoint D_C(beta) lies in V_beta(Def_C), preferably by Artin-defect displays.",
   ],
   [
     "Bi-free subgroup certificate",

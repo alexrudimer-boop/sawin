@@ -246,8 +246,11 @@ quotient satisfies the positive row in its inner group by
 The Green kernel-block and Schutzenberger rows are further reduced by
 `proofs/green_first_output_defect_criterion.md`: one first-output defect
 determines the whole row, and kernel-block defects are Schutzenberger
-pushforwards when no local-only edge-germs occur.  The remaining Green target
-is the transported Schutzenberger defect endpoint
-`D_C(beta) in V_beta(Sch(C))`, together with lower endpoint/unit holonomy and
-the separate theorem that atom descent/totality holds or is absorbed by a
-controlled quotient.
+pushforwards when no local-only edge-germs occur.  The quotient step
+`proofs/green_defect_kernel_quotient_detection.md` then kills the
+non-defect part: after quotienting an observer `U_C` by the normal closure
+`Def_C` of all first-output defects, every projected row is exact
+side-opposite rack-Artin.  The remaining Green target is the defect-kernel
+endpoint `D_C(beta) in V_beta(Def_C)`, together with lower endpoint/unit
+holonomy and the separate theorem that atom descent/totality holds or is
+absorbed by a controlled quotient.

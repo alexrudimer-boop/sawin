@@ -158,6 +158,83 @@ def subgroup_generated_elements(
     return tuple(sorted(seen, key=repr))
 
 
+def normal_closure_elements(
+    group: FiniteGroup,
+    generators: Iterable[GroupElement],
+) -> Tuple[GroupElement, ...]:
+    """Return the normal closure of generators inside a finite group."""
+
+    gens = tuple(generators)
+    elements = set(group.elements)
+    if any(generator not in elements for generator in gens):
+        raise ValueError("normal-closure generator outside group")
+    conjugates = [
+        group.conjugate(element, generator)
+        for element in group.elements
+        for generator in gens
+    ]
+    return subgroup_generated_elements(group, conjugates)
+
+
+def is_normal_subgroup(
+    group: FiniteGroup,
+    subgroup: Iterable[GroupElement],
+) -> bool:
+    """Return whether the supplied elements form a normal subgroup."""
+
+    subset = frozenset(subgroup)
+    elements = set(group.elements)
+    if not subset or not subset.issubset(elements):
+        return False
+    if group.identity not in subset:
+        return False
+    if any(group.inv(element) not in subset for element in subset):
+        return False
+    if any(group.mul(left, right) not in subset for left in subset for right in subset):
+        return False
+    return all(
+        group.conjugate(element, normal_element) in subset
+        for element in group.elements
+        for normal_element in subset
+    )
+
+
+def quotient_group_by_normal_subgroup(
+    group: FiniteGroup,
+    normal_subgroup: Iterable[GroupElement],
+) -> Tuple[FiniteGroup, FiniteGroupHomomorphism]:
+    """Return ``G/N`` and the quotient homomorphism for a normal subgroup."""
+
+    normal = frozenset(normal_subgroup)
+    if not is_normal_subgroup(group, normal):
+        raise ValueError("quotient requires a normal subgroup")
+
+    element_to_coset: Dict[GroupElement, frozenset[GroupElement]] = {}
+    cosets = []
+    for element in group.elements:
+        if element in element_to_coset:
+            continue
+        coset = frozenset(group.mul(element, normal_element) for normal_element in normal)
+        cosets.append(coset)
+        for coset_element in coset:
+            element_to_coset[coset_element] = coset
+
+    coset_tuple = tuple(sorted(cosets, key=repr))
+    identity_coset = element_to_coset[group.identity]
+
+    def multiply(
+        left: frozenset[GroupElement],
+        right: frozenset[GroupElement],
+    ) -> frozenset[GroupElement]:
+        left_rep = next(iter(left))
+        right_rep = next(iter(right))
+        return element_to_coset[group.mul(left_rep, right_rep)]
+
+    quotient = build_group(coset_tuple, identity_coset, multiply)
+    projection = FiniteGroupHomomorphism(group, quotient, element_to_coset)
+    return quotient, projection
+
+
 def symmetric_group(degree: int) -> FiniteGroup:
     if degree <= 0:
         raise ValueError("degree must be positive")

@@ -110,14 +110,15 @@ nondegeneracy to the total solution.
 41. `proofs/artin_detector_lift_criterion.md`
 42. `proofs/atom_inner_detector_lift_rows.md`
 43. `proofs/green_first_output_defect_criterion.md`
-44. `proofs/bifree_corridor_subgroup_certificate.md`
-45. `proofs/bifree_corridor_certificate_audit.md`
-46. `proofs/bifree_corridor_exact_audit.md`
-47. `proofs/local_minimal_green_audit.md`
-48. `proofs/dual_green_symmetry.md`
-49. `proofs/opposite_detectability_closure.md`
-50. `proofs/finite_semigroup_holonomy_route.md`
-51. `proofs/unit_holonomy_longitude_gate.md`
+44. `proofs/green_defect_kernel_quotient_detection.md`
+45. `proofs/bifree_corridor_subgroup_certificate.md`
+46. `proofs/bifree_corridor_certificate_audit.md`
+47. `proofs/bifree_corridor_exact_audit.md`
+48. `proofs/local_minimal_green_audit.md`
+49. `proofs/dual_green_symmetry.md`
+50. `proofs/opposite_detectability_closure.md`
+51. `proofs/finite_semigroup_holonomy_route.md`
+52. `proofs/unit_holonomy_longitude_gate.md`
 Also read `proofs/unit_factorization_gate.md`, which proves that a product of
 finite total transformations can be a residual permutation only when every
 factor is already a unit/permutation.
@@ -164,16 +165,20 @@ kernel-block and Schutzenberger row checks are not independent literal Artin
 row checks anymore.  A row is determined by the first-output defect
 `d_C(a,q)=g(q^a)g(q)^-1`; kernel-block defects are Schutzenberger
 pushforwards when no local-only edge-germs occur.  The remaining Green target
-is to prove the transported Schutzenberger defect endpoint
-`D_C(beta) in V_beta(Sch(C))`, for example by Artin permutation defect
+is sharpened by `proofs/green_defect_kernel_quotient_detection.md`: quotient
+each observer `U_C` by the normal closure `Def_C` of all first-output
+defects.  The projected rows in `U_C/Def_C` are exact side-opposite
+rack-Artin rows, so detector-lift kills the quotient motion.  The remaining
+Green target is the finite defect-kernel endpoint
+`D_C(beta) in V_beta(Def_C)`, for example by Artin permutation defect
 displays.
 Also read `proofs/unit_section_product_detector.md`, which combines finitely
 many fixed unit-section factors into one direct-product detector group.
-52. `proofs/green_holonomy_factorization_gate.md`
-53. `proofs/involutive_permutation_detector.md`
-54. `proofs/structure_orbit_law_obstruction.md`
-55. `proofs/fixed_variety_barrier.md`
-56. `proofs/bounded_degree_action_image_limit.md`
+53. `proofs/green_holonomy_factorization_gate.md`
+54. `proofs/involutive_permutation_detector.md`
+55. `proofs/structure_orbit_law_obstruction.md`
+56. `proofs/fixed_variety_barrier.md`
+57. `proofs/bounded_degree_action_image_limit.md`
 Also read `proofs/diagonal_normalized_obstruction.md`, which proves that an
 explicit detector-free interval diagonalizes to the normalized-law sequence
 required for outcome B.  Audit the companion helpers
@@ -181,14 +186,14 @@ required for outcome B.  Audit the companion helpers
 `right_stabilization_longitude_audit(...)` for product and stabilization
 conventions only; they are not a substitute for proving all finite detector
 groups fail.
-57. `proofs/affine_f2_audit.md`
-58. `proofs/two_colour_fibre2_all_bases_audit.md`
-59. `proofs/fibre2_product_branch.md`
-60. `proofs/two_colour_fibre3_product_audit.md`
-61. `proofs/three_colour_fibre2_product_audit.md`
-62. `proofs/sawin_proof_log.docx`
-63. `tables/reduction_audit.xlsx`
-64. Relevant code in `src/`, `tools/`, and `tests`, especially modules
+58. `proofs/affine_f2_audit.md`
+59. `proofs/two_colour_fibre2_all_bases_audit.md`
+60. `proofs/fibre2_product_branch.md`
+61. `proofs/two_colour_fibre3_product_audit.md`
+62. `proofs/three_colour_fibre2_product_audit.md`
+63. `proofs/sawin_proof_log.docx`
+64. `tables/reduction_audit.xlsx`
+65. Relevant code in `src/`, `tools/`, and `tests`, especially modules
     concerning input-dependent longitude factorization, quotient image
     kernels, residual dependency support, local-minimal intervals, local
     bottleneck routing, coordinate-kernel corridors, product label words,
@@ -516,8 +521,12 @@ The Green kernel-block and Schutzenberger row checks are now replaced by
 `proofs/green_first_output_defect_criterion.md`.  Use
 `schutzenberger_first_output_defect_audits(...)` and
 `kernel_block_first_output_defect_audits(...)` only to verify the normal-form
-algebra; the theorem-level target is the transported Schutzenberger defect
-endpoint `D_C(beta) in V_beta(Sch(C))`.  Kernel-block defects are handled by
+algebra.  Then use `proofs/green_defect_kernel_quotient_detection.md` and
+`green_defect_kernel_quotient_audit(...)`: after quotienting `U_C` by the
+normal closure `Def_C` of all first-output defects, the projected rows are
+exact side-opposite rack-Artin rows.  The theorem-level target is now the
+transported finite defect-kernel endpoint
+`D_C(beta) in V_beta(Def_C)`.  Kernel-block defects are handled by
 `schutzenberger_kernel_defect_pushforward_audits(...)` when no local-only
 edge-germs occur.
 

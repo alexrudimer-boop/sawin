@@ -42,9 +42,10 @@ First read:
 9. `proofs/artin_detector_lift_criterion.md`
 10. `proofs/atom_inner_detector_lift_rows.md`
 11. `proofs/green_first_output_defect_criterion.md`
-12. `proofs/sawin_proof_log.docx`
-13. `tables/reduction_audit.xlsx`
-14. The code and tests under `src/`, `tools/`, and `tests/`
+12. `proofs/green_defect_kernel_quotient_detection.md`
+13. `proofs/sawin_proof_log.docx`
+14. `tables/reduction_audit.xlsx`
+15. The code and tests under `src/`, `tools/`, and `tests/`
 
 Then audit and use these reductions:
 
@@ -166,8 +167,13 @@ Then audit and use these reductions:
    first-output defect `d_C(a,q)=g(q^a)g(q)^-1`; the second output is forced
    by the product relation.  Kernel-block defects are Schutzenberger
    pushforwards when no local-only edge-germs occur.  The remaining Green
-   target is `D_C(beta) in V_beta(Sch(C))`, preferably by Artin permutation
-   defect displays.
+   quotient step is `proofs/green_defect_kernel_quotient_detection.md`: for
+   each observer `U_C`, quotient by the normal closure `Def_C` of all
+   first-output defects.  The projected rows in `U_C/Def_C` are exact
+   side-opposite rack-Artin rows and are killed by detector-lift.  The
+   remaining Green target is the defect-kernel endpoint
+   `D_C(beta) in V_beta(Def_C)`, preferably by Artin permutation defect
+   displays.
    Also audit the Green atom-action layer through `proofs/green_branch_audit.md`
    and `atom_action_summary(...)`: it checks whether completed rows descend to
    operations on saturated atoms, `p(a) triangleright p(q)=p(a^q)` and

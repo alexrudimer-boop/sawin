@@ -28,6 +28,7 @@ from ybe_domination import (
     context_words_by_target,
     depth_observer_summary,
     green_branch_audits,
+    kernel_block_defect_kernel_quotient_audits,
     kernel_block_first_output_defect_audits,
     induced_kernel_permutation,
     kernel_action_summary,
@@ -36,6 +37,7 @@ from ybe_domination import (
     right_coordinate_action_maps,
     right_coordinate_action_relation_failures,
     schutzenberger_action_groups,
+    schutzenberger_defect_kernel_quotient_audits,
     schutzenberger_first_output_defect_audits,
     schutzenberger_groups,
     schutzenberger_kernel_block_homomorphism,
@@ -225,6 +227,22 @@ class GreenBranchTests(unittest.TestCase):
         self.assertTrue(
             audit.proves_kernel_defects_are_schutzenberger_pushforwards
         )
+
+    def test_green_defect_kernel_quotient_closes_observed_rows(self):
+        solution = size_three_affine_candidate()
+        sch_audit = schutzenberger_defect_kernel_quotient_audits(solution)[0]
+        kernel_audit = kernel_block_defect_kernel_quotient_audits(solution)[0]
+
+        for audit in (sch_audit, kernel_audit):
+            self.assertEqual(audit.source_group_order, 3)
+            self.assertEqual(audit.defect_generator_count, 27)
+            self.assertEqual(audit.defect_kernel_size, 3)
+            self.assertEqual(audit.quotient_group_order, 1)
+            self.assertEqual(audit.projected_defect_audit.row_count, 27)
+            self.assertEqual(audit.projected_defect_audit.missing_row_count, 0)
+            self.assertTrue(audit.all_projected_defects_are_identity)
+            self.assertTrue(audit.projected_rows_are_rack_artin_rows)
+            self.assertTrue(audit.proves_defect_quotient_detection)
 
     def test_induced_kernel_permutation_detects_block_action(self):
         kernel = transformation_kernel((0, 0, 1, 1))
