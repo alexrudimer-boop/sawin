@@ -75,7 +75,7 @@ const rows = [
   [
     "Local-minimality gate",
     "Route finite intervals only after exact local-minimality evidence.",
-    "Single-pair closure counters expose failures and max depth.",
+    "Single-pair closure counters expose failures and max depth; derivation rows now record the first seed/forward/inverse proof of each generated relation edge.",
     "Proof hygiene",
     "Use generated pair closures as the arbitrary-fibre certificate.",
   ],

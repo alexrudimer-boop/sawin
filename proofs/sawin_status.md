@@ -430,6 +430,15 @@ audit.  The bottleneck summary now exposes the certificate as pair-count,
 pair-failure-count, and maximum closure-depth fields, so a proposed local
 counterexample must show zero pair failures rather than merely assert
 primitive/local-minimal status.
+The generated closure certificate now also records first-derivation rows for
+each nontrivial unordered relation edge.  Each row records whether the edge
+was a seed, a forward transport edge, or an inverse transport edge, together
+with the relevant crossing colours and source product pairs.  Hence a
+universal pair closure has an inspectable finite derivation of the connected
+fibre graphs, while a non-universal closure displays the precise transported
+edge set at which local-minimality fails.  This strengthens the auditability
+of semisplit and arbitrary-fibre local-minimality gates without changing the
+remaining all-`n` Green/corridor theorem burden.
 
 The product branch has the same certificate in product-label language:
 `swapped_product_label_pair_closure_audits()` and

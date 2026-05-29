@@ -53,6 +53,33 @@ def one_color_identity_interval():
     return LocalInterval(colors, fibres, base_R, T)
 
 
+def size_three_affine_interval():
+    points = (0, 1, 2)
+    values = [
+        (0, 0),
+        (1, 0),
+        (2, 0),
+        (2, 2),
+        (0, 2),
+        (1, 2),
+        (1, 1),
+        (2, 1),
+        (0, 1),
+    ]
+    return LocalInterval(
+        colors=("*",),
+        fibres={"*": points},
+        base_R={("*", "*"): ("*", "*")},
+        T={
+            ("*", "*", x, y): value
+            for (x, y), value in zip(
+                ((x, y) for x in points for y in points),
+                values,
+            )
+        },
+    )
+
+
 def two_color_swap_interval():
     colors = ("a", "b")
     fibres = {"a": (0, 1), "b": (0, 1)}
@@ -164,6 +191,30 @@ class LocalIntervalTests(unittest.TestCase):
         self.assertEqual(interval.semisplit_audits(), [])
         self.assertEqual(interval.semisplit_boolean_assignments(), [])
         self.assertTrue(interval.is_local_minimal())
+
+    def test_generated_congruence_derivation_rows_record_seed_and_transport(self):
+        interval = size_three_affine_interval()
+        audit = next(
+            row
+            for row in interval.pair_generated_local_minimality_audits()
+            if row.left == 0 and row.right == 1
+        ).generated
+
+        self.assertEqual(audit.kind, "universal")
+        self.assertEqual(audit.stable_depth, 1)
+        self.assertEqual(audit.edge_count_rows, (("*", 3),))
+        self.assertEqual(audit.derivation_count_rows, audit.edge_count_rows)
+        self.assertEqual(audit.derivation_rows[0].source, "seed")
+        self.assertEqual(audit.derivation_rows[0].depth, 0)
+        self.assertTrue(
+            any(
+                row.depth == 1 and row.source != "seed" and row.crossing == ("*", "*")
+                for row in audit.derivation_rows
+            )
+        )
+        self.assertTrue(
+            all(row.source_pairs or row.source == "seed" for row in audit.derivation_rows)
+        )
 
 
 if __name__ == "__main__":

@@ -14,6 +14,7 @@ from .finite_group import FiniteGroup, permutation_group_from_generators
 from .local_interval import Color, FibrePoint, LocalInterval
 from .local_interval import (
     GeneratedCongruenceAudit,
+    GeneratedCongruenceDerivationRow,
     Partition,
     canonical_partition,
     partition_pairs,
@@ -369,18 +370,41 @@ def _product_label_generated_congruence_audit(
     graph_edges: Dict[Color, set[Tuple[FibrePoint, FibrePoint]]] = {
         color: set() for color in interval.colors
     }
+    derivations: List[GeneratedCongruenceDerivationRow] = []
     seed_pair_count = 0
 
-    def add_pair(color: Color, left: FibrePoint, right: FibrePoint) -> None:
+    def add_pair(
+        color: Color,
+        left: FibrePoint,
+        right: FibrePoint,
+        *,
+        depth: int,
+        source: str,
+        crossing: Tuple[Color, Color] | None = None,
+        source_pairs: Tuple[Tuple[Color, FibrePoint, FibrePoint], ...] = (),
+    ) -> None:
         pairs[color].add((left, right))
         pairs[color].add((right, left))
         if left != right:
-            graph_edges[color].add(tuple(sorted((left, right), key=repr)))
+            edge = tuple(sorted((left, right), key=repr))
+            if edge not in graph_edges[color]:
+                graph_edges[color].add(edge)
+                derivations.append(
+                    GeneratedCongruenceDerivationRow(
+                        depth=depth,
+                        color=color,
+                        left=edge[0],
+                        right=edge[1],
+                        source=source,
+                        crossing=crossing,
+                        source_pairs=source_pairs,
+                    )
+                )
 
     for color in interval.colors:
         for left, right in seed_pairs.get(color, ()):
             seed_pair_count += 1
-            add_pair(color, left, right)
+            add_pair(color, left, right, depth=0, source="seed")
 
     inverses = [
         (kind, source, target, mapping, _invert_map(mapping))
@@ -405,9 +429,25 @@ def _product_label_generated_congruence_audit(
         }
         for _kind, source, target, mapping, inverse in inverses:
             for left, right in related[source]:
-                add_pair(target, mapping[left], mapping[right])
+                add_pair(
+                    target,
+                    mapping[left],
+                    mapping[right],
+                    depth=depth + 1,
+                    source="label_forward",
+                    crossing=(source, target),
+                    source_pairs=((source, left, right),),
+                )
             for left, right in related[target]:
-                add_pair(source, inverse[left], inverse[right])
+                add_pair(
+                    source,
+                    inverse[left],
+                    inverse[right],
+                    depth=depth + 1,
+                    source="label_inverse",
+                    crossing=(source, target),
+                    source_pairs=((target, left, right),),
+                )
         after = {color: frozenset(pairs[color]) for color in interval.colors}
         if after == before:
             final_family = current_family()
@@ -436,6 +476,7 @@ def _product_label_generated_congruence_audit(
                     (color, diameters[color])
                     for color in interval.colors
                 ),
+                derivation_rows=tuple(derivations),
             )
         depth += 1
 

@@ -671,6 +671,17 @@ class ProductPermutationTests(unittest.TestCase):
         self.assertEqual(len(swapped_audits), 10)
         self.assertEqual(swapped_product_label_pair_closure_failures(swapped), ())
         self.assertTrue(all(audit.generated.kind == "universal" for audit in swapped_audits))
+        self.assertEqual(
+            swapped_audits[0].generated.derivation_count_rows,
+            swapped_audits[0].generated.edge_count_rows,
+        )
+        self.assertEqual(swapped_audits[0].generated.derivation_rows[0].source, "seed")
+        self.assertTrue(
+            any(
+                row.source in {"label_forward", "label_inverse"} and row.source_pairs
+                for row in swapped_audits[0].generated.derivation_rows
+            )
+        )
 
         imprimitive = one_color_klein_regular_interval()
         swapped_failures = swapped_product_label_pair_closure_failures(imprimitive)
@@ -682,6 +693,12 @@ class ProductPermutationTests(unittest.TestCase):
         self.assertEqual(len(direct_audits), 2)
         self.assertEqual(direct_product_label_pair_closure_failures(direct), ())
         self.assertTrue(all(audit.generated.kind == "universal" for audit in direct_audits))
+        self.assertTrue(
+            any(
+                row.source == "label_forward" and row.crossing == (0, 1)
+                for row in direct_audits[0].generated.derivation_rows
+            )
+        )
 
     def test_identity_base_product_branch_reduces_to_cyclic_detector(self):
         interval = two_color_identity_base_cyclic_interval()

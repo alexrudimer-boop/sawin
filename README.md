@@ -42,7 +42,10 @@ The sharp rack-construction step is executable as
 `product_solution()` building the finite Cartesian product `Q x A_G`.
 The local branch router now uses an exact single-pair closure criterion for
 local-minimality, so arbitrary finite fibre sizes no longer require
-Bell-number partition enumeration before routing.
+Bell-number partition enumeration before routing.  The generated closure
+audits now also carry canonical first-derivation rows for each nontrivial
+relation edge, separating a proof-carrying local-minimality certificate from
+a bare final universal/equality verdict.
 The finite-longitude subgroup layer now includes a functoriality lemma:
 fixed finite group homomorphisms send `V_beta(G)` into `V_beta(H)`, with
 equality for surjections.  This keeps product-label, normalized holonomy,

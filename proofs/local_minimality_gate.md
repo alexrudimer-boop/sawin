@@ -74,6 +74,18 @@ count is the exact local-minimality proof for the interval, while a positive
 failure count points to generated proper admissible families that refine the
 congruence chain.
 
+The closure audit is now proof-carrying at the relation-edge level.  In
+addition to final partitions and counters, `GeneratedCongruenceAudit` records
+`derivation_rows`: the first derivation of each nontrivial unordered fibre
+edge.  A row states the closure depth, target colour, target pair, whether the
+edge came from an initial seed, forward transport through some `T_{a,b}`, or
+inverse transport through that same local bijection, and the source product
+pairs that forced it.  For a universal single-pair closure, these rows give a
+canonical finite derivation of the connected graph on every fibre; for a
+proper mixed closure, they identify exactly which transported identifications
+failed to reach the missing fibre edges.  This remains a finite certificate
+for the supplied interval, not a finite-search proof of the master theorem.
+
 ## Status
 
 This closes only the proof-hygiene gap around arbitrary fibre size in the

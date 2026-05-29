@@ -45,6 +45,19 @@ class SemisplitConstraintRow:
 
 
 @dataclass(frozen=True)
+class GeneratedCongruenceDerivationRow:
+    """First derivation of one nontrivial relation edge in a closure audit."""
+
+    depth: int
+    color: Color
+    left: FibrePoint
+    right: FibrePoint
+    source: str
+    crossing: Tuple[Color, Color] | None
+    source_pairs: Tuple[Tuple[Color, FibrePoint, FibrePoint], ...]
+
+
+@dataclass(frozen=True)
 class GeneratedCongruenceAudit:
     seed_pair_count: int
     stable_depth: int
@@ -54,6 +67,14 @@ class GeneratedCongruenceAudit:
     edge_count_rows: Tuple[Tuple[Color, int], ...]
     component_count_rows: Tuple[Tuple[Color, int], ...]
     diameter_rows: Tuple[Tuple[Color, int], ...]
+    derivation_rows: Tuple[GeneratedCongruenceDerivationRow, ...] = ()
+
+    @property
+    def derivation_count_rows(self) -> Tuple[Tuple[Color, int], ...]:
+        return tuple(
+            (color, sum(1 for row in self.derivation_rows if row.color == color))
+            for color, _count in self.edge_count_rows
+        )
 
 
 @dataclass(frozen=True)
@@ -306,19 +327,41 @@ def generated_admissible_congruence_audit(
     graph_edges: Dict[Color, set[Tuple[FibrePoint, FibrePoint]]] = {
         color: set() for color in interval.colors
     }
+    derivations: List[GeneratedCongruenceDerivationRow] = []
     seed_pair_count = 0
 
-    def add_pair(color: Color, left: FibrePoint, right: FibrePoint) -> None:
+    def add_pair(
+        color: Color,
+        left: FibrePoint,
+        right: FibrePoint,
+        *,
+        depth: int,
+        source: str,
+        crossing: Tuple[Color, Color] | None = None,
+        source_pairs: Tuple[Tuple[Color, FibrePoint, FibrePoint], ...] = (),
+    ) -> None:
         pairs[color].add((left, right))
         pairs[color].add((right, left))
         if left != right:
             edge = tuple(sorted((left, right), key=repr))
-            graph_edges[color].add(edge)
+            if edge not in graph_edges[color]:
+                graph_edges[color].add(edge)
+                derivations.append(
+                    GeneratedCongruenceDerivationRow(
+                        depth=depth,
+                        color=color,
+                        left=edge[0],
+                        right=edge[1],
+                        source=source,
+                        crossing=crossing,
+                        source_pairs=source_pairs,
+                    )
+                )
 
     for color in interval.colors:
         for left, right in seed_pairs.get(color, ()):
             seed_pair_count += 1
-            add_pair(color, left, right)
+            add_pair(color, left, right, depth=0, source="seed")
 
     inverse_tables = {}
     for a, b in product(interval.colors, repeat=2):
@@ -350,15 +393,49 @@ def generated_admissible_congruence_audit(
                 for y1, y2 in related[b]:
                     u1, v1 = interval.T[(a, b, x1, y1)]
                     u2, v2 = interval.T[(a, b, x2, y2)]
-                    add_pair(c, u1, u2)
-                    add_pair(d, v1, v2)
+                    source_pairs = ((a, x1, x2), (b, y1, y2))
+                    add_pair(
+                        c,
+                        u1,
+                        u2,
+                        depth=depth + 1,
+                        source="forward_left",
+                        crossing=(a, b),
+                        source_pairs=source_pairs,
+                    )
+                    add_pair(
+                        d,
+                        v1,
+                        v2,
+                        depth=depth + 1,
+                        source="forward_right",
+                        crossing=(a, b),
+                        source_pairs=source_pairs,
+                    )
             inverse_table = inverse_tables[(a, b)]
             for u1, u2 in related[c]:
                 for v1, v2 in related[d]:
                     x1, y1 = inverse_table[(u1, v1)]
                     x2, y2 = inverse_table[(u2, v2)]
-                    add_pair(a, x1, x2)
-                    add_pair(b, y1, y2)
+                    source_pairs = ((c, u1, u2), (d, v1, v2))
+                    add_pair(
+                        a,
+                        x1,
+                        x2,
+                        depth=depth + 1,
+                        source="inverse_left",
+                        crossing=(a, b),
+                        source_pairs=source_pairs,
+                    )
+                    add_pair(
+                        b,
+                        y1,
+                        y2,
+                        depth=depth + 1,
+                        source="inverse_right",
+                        crossing=(a, b),
+                        source_pairs=source_pairs,
+                    )
         after = {color: frozenset(pairs[color]) for color in interval.colors}
         if after == before:
             final_family = current_family()
@@ -387,6 +464,7 @@ def generated_admissible_congruence_audit(
                     (color, diameters[color])
                     for color in interval.colors
                 ),
+                derivation_rows=tuple(derivations),
             )
         depth += 1
 

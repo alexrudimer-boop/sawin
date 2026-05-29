@@ -100,6 +100,11 @@ the least admissible closure of each single pair by transporting product
 relations through every local bijection and inverse.  This is an exact
 finite certificate for the supplied interval and works for arbitrary finite
 fibre sizes; it is not Bell-number partition enumeration.
+The generated closure audit now records first-derivation rows for every
+nontrivial relation edge, including the depth, seed/forward/inverse source,
+crossing colour pair, and source product pairs.  Thus local-minimality rows
+are no longer only Boolean or counter-based: a proof critic can inspect how
+each universal fibre edge was forced, or where a proper mixed closure stops.
 
 Semisplit families are fully visible.  For a subset of colours `S`, the
 equality/universal family
