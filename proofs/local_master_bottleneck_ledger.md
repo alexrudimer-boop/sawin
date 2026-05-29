@@ -95,12 +95,18 @@ Fibre-size-two affine product rows are deliberately marked as delegated to
 explicit affine detector order.  This keeps the ledger construction-shaped
 without turning an affine branch citation into a hidden claim about `C_2`.
 The convenience accessors `closed_detector_groups`,
-`closed_detector_group_orders`, and `closed_detector_gaps` merge the
+`closed_detector_group_orders`, `closed_detector_product_group`,
+`closed_detector_product_group_order`, and `closed_detector_gaps` merge the
 available product and known-branch detector data for closed verdicts.  They
-return actual finite `G_i` objects exactly when the current ledger has them,
-so these groups can be passed on to `assemble_congruence_chain_rack` without
-reconstructing them from prose.  Delegated affine product rows remain gaps in
-this merged view.
+return actual finite group objects exactly when the current ledger has them.
+If several closed branch factors are needed for one local interval, the
+product-group accessor combines them into the single interval detector
+`G_i=prod_j G_{i,j}` required by the sharp obstruction theorem.  Delegated
+affine product rows remain gaps in this merged view.
+The chain helper `closed_local_detector_chain(summaries)` now audits a list of
+local summaries before global assembly: every row must be a closed verdict
+with a single fixed product detector group, otherwise the helper records the
+open verdict or delegated gap instead of constructing a rack.
 
 `product_genuinely_coloured_bottleneck`.
 The interval has a product-permutation witness, but every available product

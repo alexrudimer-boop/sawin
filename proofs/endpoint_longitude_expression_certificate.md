@@ -212,6 +212,37 @@ is true only when this explicit product witness evaluates to the endpoint
 tuple.  It is the non-enumerative product analogue of the endpoint-subgroup
 membership flag in `unit_composite_product_detection_audit(...)`.
 
+For Green/corridor endpoint factors that already live in finite groups rather
+than transformation monoid unit groups, the corresponding group-only helpers
+are:
+
+```text
+endpoint_longitude_expression_audit(
+    group,n,beta,endpoint,assignment,expression
+)
+
+endpoint_product_longitude_expression_audit(
+    groups,n,beta,endpoints,assignments,expressions
+)
+
+endpoint_coordinate_readout_audit(
+    endpoint_audit,input_coordinate,output_coordinate
+)
+
+endpoint_residual_readout_audit(coordinate_audits)
+```
+
+They implement the certificate layer of
+`proofs/bifree_corridor_endpoint_factorization.md`: one helper checks a single
+endpoint expression in a fixed factor, and the product helper constructs a
+literal word in `V_beta(product_i G_i)`.  Thus kernel-block,
+Schutzenberger, atom-inner, quotient-detector, and endpoint/unit factors can
+all be audited with the same direct-product witness convention.
+The readout helpers record the faithful-readout clause: when the endpoint
+tuple is identity, the corresponding residual coordinate or tuple must
+actually be fixed.  They are the executable row format for the final implication
+from killed endpoints to killed residual motion.
+
 ## Role In The Master Local Theorem
 
 For outcome A, a Green/corridor proof does not have to enumerate
