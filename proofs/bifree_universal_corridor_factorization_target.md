@@ -221,3 +221,12 @@ recursive longitudes under an input-dependent assignment to the fixed unit
 group.  This is the preferred all-`n` certificate format for corridor
 endpoints because it keeps the detector group fixed while allowing the
 assignment and expression to depend on the residual tuple being evaluated.
+The sharper Artin-defect sieve in
+`proofs/artin_defect_longitudinalization_sieve.md` gives a more structured
+sufficient format: display each elementary group-like endpoint as a product of
+values of `beta(w)p_beta(w)^-1` in fixed factors of `H(pi,Q)`.  The note proves
+that these Artin permutation defects are in the normal closure of the recursive
+longitudes and therefore evaluate into `V_beta(G)` for every finite group
+`G`.  Thus the current A-route target for this branch is the Artin-defect
+endpoint lemma, not a finite search for subgroup membership at bounded braid
+degree.

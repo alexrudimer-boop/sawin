@@ -38,9 +38,10 @@ First read:
 5. `proofs/diagonal_normalized_obstruction.md`
 6. `proofs/normalized_law_sequence_gate.md`
 7. `proofs/longitude_subgroup_witness_calculus.md`
-8. `proofs/sawin_proof_log.docx`
-9. `tables/reduction_audit.xlsx`
-10. The code and tests under `src/`, `tools/`, and `tests/`
+8. `proofs/artin_defect_longitudinalization_sieve.md`
+9. `proofs/sawin_proof_log.docx`
+10. `tables/reduction_audit.xlsx`
+11. The code and tests under `src/`, `tools/`, and `tests/`
 
 Then audit and use these reductions:
 
@@ -131,6 +132,18 @@ Then audit and use these reductions:
    This witness is a literal word in `V_beta(prod_i U(M_i))`; its letters may
    use different product-group assignments, as allowed in the definition of
    the longitude-value subgroup.
+   Also use `proofs/artin_defect_longitudinalization_sieve.md`: it proves that
+   Artin permutation defects `beta(w)p_beta(w)^-1` lie in the normal closure
+   of the recursive longitudes and that every finite-group value of such a
+   defect lies in `V_beta(G)`.  Thus the newest A-side target is not an
+   arbitrary endpoint-longitude search, but the sharper local lemma that every
+   elementary Green/corridor endpoint generator is a product of Artin
+   permutation defect values in fixed factors of `H(pi,Q)`.  The helpers
+   `artin_permutation_defect_witness_audit(...)`,
+   `endpoint_artin_defect_audit(...)`, and
+   `endpoint_product_artin_defect_audit(...)` verify supplied displays and
+   assemble them into one product detector witness.  They do not prove that
+   such displays always exist.
    Also audit the Green atom-action layer through `proofs/green_branch_audit.md`
    and `atom_action_summary(...)`: it checks whether completed rows descend to
    operations on saturated atoms, `p(a) triangleright p(q)=p(a^q)` and

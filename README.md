@@ -115,6 +115,17 @@ explicit subgroup witness in `V_beta(prod_i U(M_i))`, whose letters may use
 different product-group assignments.  This matches the single finite group
 demanded by the sharp obstruction theorem without relying on product-subgroup
 enumeration.
+The newest endpoint refinement is the Artin-defect sieve:
+`proofs/artin_defect_longitudinalization_sieve.md` proves that values of
+`beta(w)p_beta(w)^-1` always lie in the longitude-value subgroup of any finite
+target group, because these defects are in the normal closure of the recursive
+Artin longitudes.  The helpers `artin_permutation_defect_witness_audit()`,
+`endpoint_artin_defect_audit()`, and
+`endpoint_product_artin_defect_audit()` verify supplied defect displays and
+turn them into literal longitude-subgroup witnesses.  This narrows the open
+bi-free corridor target to proving such Artin-defect displays for every
+elementary group-like Green/corridor endpoint generator in the fixed factors
+of `H(pi,Q)`.
 The semisplit audit now has an exact Boolean-CSP view: each coloured crossing
 lists the allowed equality/universal bit patterns on its two source and two
 target colours, and satisfying non-extreme assignments agree with the

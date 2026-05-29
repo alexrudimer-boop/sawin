@@ -313,6 +313,27 @@ This checklist is deliberately stronger than a finite subgroup-membership audit
 at one braid index.  It asks for the symbolic expressions that make the
 subgroup membership true uniformly in `n`.
 
+## Artin-defect refinement
+
+The follow-up note
+`proofs/artin_defect_longitudinalization_sieve.md` gives a sharper sufficient
+form for the missing endpoint expressions.  It proves that every Artin
+permutation defect
+
+```text
+beta(w) p_beta(w)^-1
+```
+
+lies in the normal closure of the recursive Artin longitudes, and that every
+finite-group value of such a defect belongs to `V_beta(G)`.  Hence it is
+enough, and now preferred, to display each remaining elementary group-like
+endpoint as a finite product of evaluated Artin permutation defects in one of
+the fixed factors of `H(pi,Q)`.  Such a display automatically supplies the
+longitude-subgroup witness required by Lemmas 1 and 2 above.  This refinement
+still does not prove the local theorem; it specifies the narrower all-`n`
+identity that remains to be proved for Green kernel-block, Schutzenberger,
+atom-inner, and lower endpoint/unit generators.
+
 ## Executable certificate layer
 
 The group-only certificate helpers implementing Lemmas 1 and 2 are:
@@ -334,6 +355,14 @@ endpoint_residual_readout_audit(coordinate_audits)
 
 endpoint_residual_action_audit(
     n,beta,residual_readouts,expected_row_count=None
+)
+
+endpoint_artin_defect_audit(
+    group,n,beta,endpoint,terms
+)
+
+endpoint_product_artin_defect_audit(
+    groups,n,beta,endpoints,terms_by_factor
 )
 ```
 
@@ -367,6 +396,10 @@ identity finite product-longitude data kills every supplied row, and, when an
 size.  This is still not a finite-search proof of the corridor theorem: the
 all-`n` proof must explain why the supplied rows cover every relevant
 `(z,x)` uniformly.
+The Artin-defect helpers verify the refined certificate form: each supplied
+term is a value of `beta(w)p_beta(w)^-1` under an input-dependent assignment,
+and the helper constructs the corresponding literal word in `V_beta(G)` by
+absorbing normal conjugators into changed assignments.
 
 These helpers do not produce the missing endpoint expressions.  They verify the
 last algebraic and faithful-readout steps once a symbolic corridor proof has

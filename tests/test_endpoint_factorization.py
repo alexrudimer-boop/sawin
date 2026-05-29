@@ -5,12 +5,16 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from ybe_domination import (
+    artin_permutation_defect_witness_audit,
     cyclic_group,
+    endpoint_artin_defect_audit,
     endpoint_coordinate_readout_audit,
     endpoint_longitude_expression_audit,
+    endpoint_product_artin_defect_audit,
     endpoint_product_longitude_expression_audit,
     endpoint_residual_action_audit,
     endpoint_residual_readout_audit,
+    symmetric_group,
 )
 
 
@@ -36,6 +40,100 @@ class EndpointFactorizationTests(unittest.TestCase):
         self.assertTrue(audit.endpoint_lies_in_longitude_subgroup_by_expression)
         self.assertFalse(audit.identity_longitude_signature)
         self.assertTrue(audit.identity_longitudes_kill_endpoint_by_expression)
+
+    def test_artin_permutation_defect_builds_longitude_witness(self):
+        group = symmetric_group(3)
+        assignment = ((1, 0, 2), (0, 2, 1))
+        word = ((0, 1), (1, 1))
+
+        audit = artin_permutation_defect_witness_audit(
+            group,
+            n=2,
+            braid_word=(1,),
+            assignment=assignment,
+            word=word,
+        )
+
+        self.assertEqual(
+            audit.defect_word,
+            ((0, 1), (1, 1), (0, -1), (1, -1)),
+        )
+        self.assertEqual(audit.defect_value, (2, 0, 1))
+        self.assertEqual(audit.longitude_witness_value, audit.defect_value)
+        self.assertEqual(len(audit.longitude_witness), 4)
+        self.assertTrue(audit.witness_matches_defect)
+
+    def test_endpoint_artin_defect_certifies_membership(self):
+        group = symmetric_group(3)
+        assignment = ((1, 0, 2), (0, 2, 1))
+        word = ((0, 1), (1, 1))
+
+        audit = endpoint_artin_defect_audit(
+            group,
+            n=2,
+            braid_word=(1,),
+            endpoint=(2, 0, 1),
+            terms=((assignment, word, 1),),
+        )
+
+        self.assertEqual(audit.group_order, 6)
+        self.assertEqual(audit.defect_values, ((2, 0, 1),))
+        self.assertEqual(audit.defect_product_value, audit.endpoint)
+        self.assertTrue(audit.defect_product_matches_endpoint)
+        self.assertEqual(audit.longitude_witness_value, audit.endpoint)
+        self.assertTrue(audit.longitude_witness_matches_defect_product)
+        self.assertTrue(audit.endpoint_lies_in_longitude_subgroup_by_artin_defects)
+        self.assertFalse(audit.identity_longitude_signature)
+        self.assertTrue(audit.identity_longitudes_kill_endpoint_by_artin_defects)
+
+    def test_product_artin_defect_builds_literal_product_witness(self):
+        group = symmetric_group(3)
+        assignment = ((1, 0, 2), (0, 2, 1))
+        word = ((0, 1), (1, 1))
+
+        audit = endpoint_product_artin_defect_audit(
+            (group,),
+            n=2,
+            braid_word=(1,),
+            endpoints=((2, 0, 1),),
+            terms_by_factor=(((assignment, word, 1),),),
+        )
+
+        self.assertEqual(audit.product_group_order, 6)
+        self.assertEqual(audit.product_endpoint, ((2, 0, 1),))
+        self.assertEqual(audit.product_witness_value, audit.product_endpoint)
+        self.assertTrue(audit.product_witness_matches_endpoint)
+        self.assertTrue(
+            audit.product_endpoint_lies_in_product_longitude_subgroup_by_artin_defects
+        )
+        self.assertTrue(audit.proves_product_endpoint_detector_by_artin_defects)
+
+    def test_artin_defect_endpoint_rejects_bad_display(self):
+        group = symmetric_group(3)
+        assignment = ((1, 0, 2), (0, 2, 1))
+        word = ((0, 1), (1, 1))
+
+        audit = endpoint_artin_defect_audit(
+            group,
+            n=2,
+            braid_word=(1,),
+            endpoint=group.identity,
+            terms=((assignment, word, 1),),
+        )
+
+        self.assertTrue(audit.longitude_witness_matches_defect_product)
+        self.assertFalse(audit.defect_product_matches_endpoint)
+        self.assertFalse(audit.endpoint_lies_in_longitude_subgroup_by_artin_defects)
+
+    def test_artin_defect_endpoint_rejects_bad_exponent(self):
+        with self.assertRaises(ValueError):
+            endpoint_artin_defect_audit(
+                symmetric_group(3),
+                n=2,
+                braid_word=(1,),
+                endpoint=(0, 1, 2),
+                terms=((((1, 0, 2), (0, 2, 1)), ((0, 1),), 2),),
+            )
 
     def test_product_endpoint_expression_builds_literal_product_witness(self):
         c2 = cyclic_group(2)

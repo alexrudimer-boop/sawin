@@ -252,6 +252,28 @@ claimed row count.  It is a proof-table verifier, not a substitute for the
 uniform theorem that constructs the rows for all braid indices and all
 residual fibre inputs.
 
+The sharpened Artin-defect route in
+`proofs/artin_defect_longitudinalization_sieve.md` is a sufficient way to
+produce these subgroup witnesses.  Instead of displaying an endpoint directly
+as a word in evaluated longitudes, one may display it as a product of values
+
+```text
+phi(beta(w) p_beta(w)^-1)^{epsilon}.
+```
+
+The helpers
+
+```text
+artin_permutation_defect_longitude_witness(...)
+endpoint_artin_defect_audit(...)
+endpoint_product_artin_defect_audit(...)
+```
+
+then convert the displayed Artin permutation defects into literal
+`V_beta(G)` witnesses by changing assignments to absorb the normal
+conjugators.  This is a stricter and more structured proof target for the
+remaining bi-free corridor endpoint factors.
+
 ## Role In The Master Local Theorem
 
 For outcome A, a Green/corridor proof does not have to enumerate
