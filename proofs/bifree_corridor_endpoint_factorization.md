@@ -333,6 +333,12 @@ longitude-subgroup witness required by Lemmas 1 and 2 above.  This refinement
 still does not prove the local theorem; it specifies the narrower all-`n`
 identity that remains to be proved for Green kernel-block, Schutzenberger,
 atom-inner, and lower endpoint/unit generators.
+The atom-inner part of this list is now handled by
+`proofs/atom_inner_detector_lift_rows.md` once atom descent and totality are
+available: rack-like atom quotient inner groups satisfy the detector-lift rows
+automatically.  The unresolved endpoint identities are therefore concentrated
+in Green kernel-block, Schutzenberger, and lower endpoint/unit holonomy
+generators.
 
 ## Executable certificate layer
 
@@ -406,6 +412,10 @@ finite local rows carrying live-strand pairs `(m,u)` match the active
 `G x G` Artin detector update.  Once those row identities hold, the global
 braid induction gives terminal `u`-labels equal to evaluated recursive
 longitudes, so the older endpoint expression helpers can be applied directly.
+For rack-like atom quotient factors this finite row check is automatic after
+descent; the executable hooks are `rack_inner_detector_lift_audit(...)`,
+`right_rack_inner_detector_lift_audit(...)`, and
+`atom_quotient_inner_detector_lift_audit(...)`.
 
 These helpers do not produce the missing endpoint expressions.  They verify the
 last algebraic and faithful-readout steps once a symbolic corridor proof has

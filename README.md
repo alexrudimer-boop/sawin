@@ -133,7 +133,13 @@ row against the active `G x G` update rules of the sharp Artin detector, and
 endpoint labels are exactly evaluated recursive Artin longitudes for every
 braid word.  The remaining corridor theorem is thereby reduced to a
 row-by-row finite identity check in the fixed Green, Schutzenberger,
-atom-inner, quotient, and endpoint-unit factors.
+atom-inner, quotient, and endpoint-unit factors.  The atom-inner part of this
+list is now closed once atom descent and totality are known:
+`proofs/atom_inner_detector_lift_rows.md` proves that every rack-like atom
+quotient inner group satisfies the detector-lift rows automatically, with the
+negative rows following as inverse positive rows.  The genuinely open row
+checks are now the Green kernel-block, Schutzenberger, and lower endpoint/unit
+holonomy factors.
 The semisplit audit now has an exact Boolean-CSP view: each coloured crossing
 lists the allowed equality/universal bit patterns on its two source and two
 target colours, and satisfying non-extreme assignments agree with the

@@ -12,8 +12,10 @@ from ybe_domination import (
     all_bijection_solutions,
     atom_action_summary,
     atom_descent_closure_summary,
+    atom_descent_quotient_inner_detector_lift_audit,
     atom_descent_quotient_rack_audit,
     atom_descent_quotient_solution,
+    atom_quotient_inner_detector_lift_audit,
     atom_quotient_inner_group,
     atom_quotient_inner_groups,
     atom_quotient_rack_audit,
@@ -247,6 +249,12 @@ class GreenBranchTests(unittest.TestCase):
         self.assertTrue(rack_audit.proves_right_rack_ybe_layer)
         self.assertTrue(descent_rack_audit.proves_right_rack_ybe_layer)
         self.assertEqual(len(atom_quotient_inner_group(audit).elements), 6)
+        row_audit = atom_quotient_inner_detector_lift_audit(audit)
+        descent_row_audit = atom_descent_quotient_inner_detector_lift_audit(audit)
+        self.assertEqual(row_audit.rack_size, 3)
+        self.assertEqual(row_audit.inner_group_order, 6)
+        self.assertTrue(row_audit.proves_rack_inner_detector_lift_rows)
+        self.assertTrue(descent_row_audit.proves_rack_inner_detector_lift_rows)
 
     def test_atom_action_summary_has_no_size_two_conflicts(self):
         for solution in all_bijection_solutions(2):

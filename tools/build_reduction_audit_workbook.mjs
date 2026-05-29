@@ -437,6 +437,13 @@ const rows = [
     "Verify the detector-lift identities for every remaining Green/corridor observer row in fixed factors.",
   ],
   [
+    "Atom-inner row lift",
+    "Close the rack-like atom quotient inner-group detector-lift rows.",
+    "proofs/atom_inner_detector_lift_rows.md proves positive rows from L_{a*b}=L_a L_b L_a^-1 and negative rows as inverse positive rows; rack_inner_detector_lift_audit and atom_quotient_inner_detector_lift_audit expose the check.",
+    "Conditional closure",
+    "Still prove atom descent/totality; remaining row checks are Green kernel-block, Schutzenberger, and endpoint/unit holonomy factors.",
+  ],
+  [
     "Bi-free subgroup certificate",
     "Profile candidate words against fixed corridor detector factors.",
     "Helper, extra-factor target support, direct-product subgroup audit, and tests added; affine commutator seen by S3 block factor.",

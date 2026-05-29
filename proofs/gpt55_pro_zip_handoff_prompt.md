@@ -40,9 +40,10 @@ First read:
 7. `proofs/longitude_subgroup_witness_calculus.md`
 8. `proofs/artin_defect_longitudinalization_sieve.md`
 9. `proofs/artin_detector_lift_criterion.md`
-10. `proofs/sawin_proof_log.docx`
-11. `tables/reduction_audit.xlsx`
-12. The code and tests under `src/`, `tools/`, and `tests/`
+10. `proofs/atom_inner_detector_lift_rows.md`
+11. `proofs/sawin_proof_log.docx`
+12. `tables/reduction_audit.xlsx`
+13. The code and tests under `src/`, `tools/`, and `tests/`
 
 Then audit and use these reductions:
 
@@ -152,6 +153,13 @@ Then audit and use these reductions:
    the unbounded braid-word recursion after the finite row identities are
    proved.  Audit proposed rows with `artin_detector_lift_transition_audit(...)`
    and the convention with `artin_detector_lift_braid_audit(...)`.
+   Also use `proofs/atom_inner_detector_lift_rows.md`: after atom descent and
+   totality, a rack-like atom quotient automatically satisfies the detector-lift
+   rows in its inner group.  Positive rows follow from
+   `L_{a*b}=L_a L_b L_a^-1`; negative rows are inverse positive rows.  Thus
+   atom-inner groups are no longer an open row-identity factor; the remaining
+   rows are Green kernel-block, Schutzenberger, and lower endpoint/unit
+   holonomy factors.
    Also audit the Green atom-action layer through `proofs/green_branch_audit.md`
    and `atom_action_summary(...)`: it checks whether completed rows descend to
    operations on saturated atoms, `p(a) triangleright p(q)=p(a^q)` and

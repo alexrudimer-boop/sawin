@@ -60,6 +60,12 @@ constructs `G_A` from a Green audit whenever
 `atom_quotient_rack_audit(audit)` proves the right-rack layer.  In the
 size-three affine commutator fixture, the atom quotient has three atoms and
 `|G_A|=6`.
+The follow-up note `proofs/atom_inner_detector_lift_rows.md` proves that this
+atom inner group automatically satisfies the Artin detector-lift row
+identities after descent: the side-opposite rack has left translations equal
+to the original right translations, positive rows are the rack conjugacy
+identity, and negative rows are inverse positive rows.  The executable helper
+`atom_quotient_inner_detector_lift_audit(audit)` records this row closure.
 
 The audit
 

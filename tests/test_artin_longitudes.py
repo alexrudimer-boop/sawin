@@ -7,6 +7,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 from ybe_domination import (
     artin_detector_rack,
     artin_detector_lift_braid_audit,
+    artin_detector_lift_inverse_row_audit,
     artin_detector_lift_negative_update,
     artin_detector_lift_positive_update,
     artin_detector_lift_state,
@@ -27,6 +28,7 @@ from ybe_domination import (
     evaluate_longitude_expression,
     evaluate_longitude_subgroup_witness,
     evaluate_terminal_label_expression,
+    FiniteBraidedSet,
     FiniteGroupHomomorphism,
     has_identity_longitude_signature,
     has_trivial_abelian_longitudes_mod,
@@ -42,9 +44,12 @@ from ybe_domination import (
     pushforward_longitude_subgroup_witness,
     pushforward_longitude_subgroup_witness_audit,
     rack_inner_group,
+    rack_inner_detector_lift_audit,
+    rack_inner_detector_lift_row_audit,
     rack_longitude_action,
     rack_longitude_factorization,
     right_stabilization_longitude_audit,
+    right_rack_inner_detector_lift_audit,
     rack_solution,
     reverse_braid_word,
     sharp_obstruction_rack,
@@ -447,6 +452,67 @@ class ArtinLongitudeTests(unittest.TestCase):
             right,
         )
         self.assertFalse(bad.row_matches_artin_detector)
+
+    def test_negative_detector_lift_row_is_positive_inverse(self):
+        group = symmetric_group(3)
+        left = ((1, 0, 2), (0, 1, 2))
+        right = ((0, 2, 1), (1, 2, 0))
+
+        audit = artin_detector_lift_inverse_row_audit(group, left, right)
+
+        self.assertTrue(audit.positive_then_negative_recovers_input)
+        self.assertTrue(audit.negative_then_positive_recovers_input)
+        self.assertTrue(audit.negative_row_is_positive_inverse)
+
+    def test_rack_inner_rows_satisfy_detector_lift_identities(self):
+        rack = rack_solution(range(3), lambda left, right: (2 * left - right) % 3)
+        group = rack_inner_group(rack)
+
+        row = rack_inner_detector_lift_row_audit(
+            rack,
+            0,
+            1,
+            endpoint_left=group.elements[1],
+            endpoint_right=group.elements[2],
+        )
+        audit = rack_inner_detector_lift_audit(
+            rack,
+            endpoint_labels=group.elements,
+        )
+
+        self.assertTrue(row.left_translation_conjugacy_matches)
+        self.assertTrue(row.right_output_translation_matches)
+        self.assertTrue(row.endpoint_transport_matches_crossing)
+        self.assertTrue(row.positive_row_matches_artin_detector)
+        self.assertTrue(row.negative_row_is_positive_inverse)
+        self.assertTrue(row.proves_rack_inner_detector_lift_row)
+        self.assertEqual(audit.rack_size, 3)
+        self.assertEqual(audit.endpoint_label_count, len(group.elements))
+        self.assertEqual(audit.row_count, 9 * len(group.elements) ** 2)
+        self.assertTrue(audit.all_positive_rows_match_artin_detector)
+        self.assertTrue(audit.all_translation_conjugacies_match)
+        self.assertTrue(audit.all_endpoint_transports_match_crossing)
+        self.assertTrue(audit.all_negative_rows_follow_by_inverse)
+        self.assertTrue(audit.proves_rack_inner_detector_lift_rows)
+
+    def test_right_rack_layer_uses_side_opposite_inner_rows(self):
+        right_layer = rack_solution(
+            range(3),
+            lambda left, right: (2 * left - right) % 3,
+        )
+        # Convert the left rack fixture into the atom-layer convention
+        # R(a,b)=(b,a^b) by taking its side-opposite solution.
+        table = {
+            (left, right): (right, right_layer.R[(right, left)][0])
+            for left in right_layer.elements
+            for right in right_layer.elements
+        }
+        atom_layer = FiniteBraidedSet(right_layer.elements, table)
+
+        audit = right_rack_inner_detector_lift_audit(atom_layer)
+
+        self.assertEqual(audit.rack_size, 3)
+        self.assertTrue(audit.proves_rack_inner_detector_lift_rows)
 
     def test_artin_detector_lift_state_matches_artin_images_and_longitudes(self):
         group = symmetric_group(3)

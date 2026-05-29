@@ -7,6 +7,7 @@ from typing import Dict, Iterable, List, Mapping, Sequence, Tuple
 from .finite_braided_set import (
     FiniteBraidedSet,
     is_rack_solution,
+    opposite_solution,
     product_solution,
     rack_solution,
 )
@@ -208,6 +209,134 @@ class ArtinDetectorLiftBraidAudit:
             self.meridians_match_artin_images
             and self.longitudes_match_artin_longitudes
             and self.endpoint_matches_longitude_expression
+        )
+
+
+@dataclass(frozen=True)
+class ArtinDetectorLiftInverseRowAudit:
+    """Check that the negative detector row is the inverse positive row."""
+
+    input_left: ArtinDetectorLiftLabel
+    input_right: ArtinDetectorLiftLabel
+    positive_left: ArtinDetectorLiftLabel
+    positive_right: ArtinDetectorLiftLabel
+    positive_then_negative_left: ArtinDetectorLiftLabel
+    positive_then_negative_right: ArtinDetectorLiftLabel
+    negative_left: ArtinDetectorLiftLabel
+    negative_right: ArtinDetectorLiftLabel
+    negative_then_positive_left: ArtinDetectorLiftLabel
+    negative_then_positive_right: ArtinDetectorLiftLabel
+
+    @property
+    def positive_then_negative_recovers_input(self) -> bool:
+        return (
+            self.positive_then_negative_left == self.input_left
+            and self.positive_then_negative_right == self.input_right
+        )
+
+    @property
+    def negative_then_positive_recovers_input(self) -> bool:
+        return (
+            self.negative_then_positive_left == self.input_left
+            and self.negative_then_positive_right == self.input_right
+        )
+
+    @property
+    def negative_row_is_positive_inverse(self) -> bool:
+        return (
+            self.positive_then_negative_recovers_input
+            and self.negative_then_positive_recovers_input
+        )
+
+
+@dataclass(frozen=True)
+class RackInnerDetectorLiftRowAudit:
+    """One rack-inner positive row checked against the Artin detector lift."""
+
+    input_left_atom: object
+    input_right_atom: object
+    output_left_atom: object
+    output_right_atom: object
+    endpoint_left: GroupElement
+    endpoint_right: GroupElement
+    input_left: ArtinDetectorLiftLabel
+    input_right: ArtinDetectorLiftLabel
+    supplied_left: ArtinDetectorLiftLabel
+    supplied_right: ArtinDetectorLiftLabel
+    transition_audit: ArtinDetectorLiftTransitionAudit
+    left_translation_conjugacy_matches: bool
+    right_output_translation_matches: bool
+    left_base_atom: object
+    right_base_atom: object
+    left_endpoint_image: object
+    right_endpoint_image: object
+    endpoint_transport_matches_crossing: bool
+    negative_row_is_positive_inverse: bool
+
+    @property
+    def positive_row_matches_artin_detector(self) -> bool:
+        return self.transition_audit.row_matches_artin_detector
+
+    @property
+    def proves_rack_inner_detector_lift_row(self) -> bool:
+        return (
+            self.positive_row_matches_artin_detector
+            and self.left_translation_conjugacy_matches
+            and self.right_output_translation_matches
+            and self.endpoint_transport_matches_crossing
+            and self.negative_row_is_positive_inverse
+        )
+
+
+@dataclass(frozen=True)
+class RackInnerDetectorLiftAudit:
+    """Finite row audit for a rack inner-group detector factor."""
+
+    rack_size: int
+    inner_group_order: int
+    endpoint_label_count: int
+    row_audits: Tuple[RackInnerDetectorLiftRowAudit, ...]
+
+    @property
+    def row_count(self) -> int:
+        return len(self.row_audits)
+
+    @property
+    def all_positive_rows_match_artin_detector(self) -> bool:
+        return all(
+            row.positive_row_matches_artin_detector
+            for row in self.row_audits
+        )
+
+    @property
+    def all_translation_conjugacies_match(self) -> bool:
+        return all(
+            row.left_translation_conjugacy_matches
+            and row.right_output_translation_matches
+            for row in self.row_audits
+        )
+
+    @property
+    def all_endpoint_transports_match_crossing(self) -> bool:
+        return all(
+            row.endpoint_transport_matches_crossing
+            for row in self.row_audits
+        )
+
+    @property
+    def all_negative_rows_follow_by_inverse(self) -> bool:
+        return all(
+            row.negative_row_is_positive_inverse
+            for row in self.row_audits
+        )
+
+    @property
+    def proves_rack_inner_detector_lift_rows(self) -> bool:
+        return (
+            self.all_positive_rows_match_artin_detector
+            and self.all_translation_conjugacies_match
+            and self.all_endpoint_transports_match_crossing
+            and self.all_negative_rows_follow_by_inverse
         )
 
 
@@ -434,6 +563,53 @@ def artin_detector_lift_negative_update(
             group.mul(group.mul(group.inv(m_right), m_left), m_right),
             group.mul(group.inv(m_right), u_left),
         ),
+    )
+
+
+def artin_detector_lift_inverse_row_audit(
+    group: FiniteGroup,
+    left: ArtinDetectorLiftLabel,
+    right: ArtinDetectorLiftLabel,
+) -> ArtinDetectorLiftInverseRowAudit:
+    """Audit the formal identity ``P^{-1}`` = negative Artin detector row."""
+
+    input_left = _check_detector_lift_label(group, left)
+    input_right = _check_detector_lift_label(group, right)
+    positive_left, positive_right = artin_detector_lift_positive_update(
+        group,
+        input_left,
+        input_right,
+    )
+    positive_then_negative_left, positive_then_negative_right = (
+        artin_detector_lift_negative_update(
+            group,
+            positive_left,
+            positive_right,
+        )
+    )
+    negative_left, negative_right = artin_detector_lift_negative_update(
+        group,
+        input_left,
+        input_right,
+    )
+    negative_then_positive_left, negative_then_positive_right = (
+        artin_detector_lift_positive_update(
+            group,
+            negative_left,
+            negative_right,
+        )
+    )
+    return ArtinDetectorLiftInverseRowAudit(
+        input_left=input_left,
+        input_right=input_right,
+        positive_left=positive_left,
+        positive_right=positive_right,
+        positive_then_negative_left=positive_then_negative_left,
+        positive_then_negative_right=positive_then_negative_right,
+        negative_left=negative_left,
+        negative_right=negative_right,
+        negative_then_positive_left=negative_then_positive_left,
+        negative_then_positive_right=negative_then_positive_right,
     )
 
 
@@ -1404,6 +1580,192 @@ def rack_inner_group(rack: FiniteBraidedSet) -> FiniteGroup:
             raise ValueError("left rack translation is not bijective")
         generators.append(permutation)
     return permutation_group_from_generators(generators, degree=len(rack.elements))
+
+
+def _rack_left_translation(
+    rack: FiniteBraidedSet,
+    index: Mapping[object, int],
+    left: object,
+) -> Tuple[int, ...]:
+    images = []
+    for right in rack.elements:
+        first, second = rack.R[(left, right)]
+        if second != left:
+            raise ValueError("solution is not in rack form R(a,b)=(a*b,a)")
+        images.append(index[first])
+    permutation = tuple(images)
+    if set(permutation) != set(range(len(rack.elements))):
+        raise ValueError("left rack translation is not bijective")
+    return permutation
+
+
+def _apply_indexed_permutation(
+    index: Mapping[object, int],
+    elements_by_index: Mapping[int, object],
+    permutation: GroupElement,
+    element: object,
+) -> object:
+    perm = tuple(permutation)  # type: ignore[arg-type]
+    return elements_by_index[perm[index[element]]]
+
+
+def rack_inner_detector_lift_row_audit(
+    rack: FiniteBraidedSet,
+    left: object,
+    right: object,
+    endpoint_left: GroupElement | None = None,
+    endpoint_right: GroupElement | None = None,
+) -> RackInnerDetectorLiftRowAudit:
+    """Audit one positive row for the rack inner-group detector factor.
+
+    The rack is in the left convention ``R(a,b)=(a*b,a)``.  The meridian
+    labels are left translations, and endpoint labels are arbitrary elements
+    of the same inner group.
+    """
+
+    if left not in rack.elements or right not in rack.elements:
+        raise ValueError("row atoms must be rack elements")
+    group = rack_inner_group(rack)
+    endpoint_left = group.identity if endpoint_left is None else endpoint_left
+    endpoint_right = group.identity if endpoint_right is None else endpoint_right
+    endpoint_left = _check_group_assignment(group, (endpoint_left,))[0]
+    endpoint_right = _check_group_assignment(group, (endpoint_right,))[0]
+    index = {element: i for i, element in enumerate(rack.elements)}
+    elements_by_index = {i: element for element, i in index.items()}
+
+    left_translation = _rack_left_translation(rack, index, left)
+    right_translation = _rack_left_translation(rack, index, right)
+    output_left, output_right = rack.R[(left, right)]
+    output_left_translation = _rack_left_translation(rack, index, output_left)
+    output_right_translation = _rack_left_translation(rack, index, output_right)
+    supplied_left = (
+        output_left_translation,
+        group.mul(left_translation, endpoint_right),
+    )
+    supplied_right = (output_right_translation, endpoint_left)
+    input_left = (left_translation, endpoint_left)
+    input_right = (right_translation, endpoint_right)
+    transition = artin_detector_lift_transition_audit(
+        group,
+        1,
+        input_left,
+        input_right,
+        supplied_left,
+        supplied_right,
+    )
+    left_translation_conjugacy_matches = output_left_translation == group.mul(
+        group.mul(left_translation, right_translation),
+        group.inv(left_translation),
+    )
+    right_output_translation_matches = output_right_translation == left_translation
+    left_base = _apply_indexed_permutation(
+        index,
+        elements_by_index,
+        group.inv(endpoint_left),
+        left,
+    )
+    right_base = _apply_indexed_permutation(
+        index,
+        elements_by_index,
+        group.inv(endpoint_right),
+        right,
+    )
+    left_endpoint_image = _apply_indexed_permutation(
+        index,
+        elements_by_index,
+        supplied_left[1],
+        right_base,
+    )
+    right_endpoint_image = _apply_indexed_permutation(
+        index,
+        elements_by_index,
+        supplied_right[1],
+        left_base,
+    )
+    inverse_audit = artin_detector_lift_inverse_row_audit(
+        group,
+        input_left,
+        input_right,
+    )
+    return RackInnerDetectorLiftRowAudit(
+        input_left_atom=left,
+        input_right_atom=right,
+        output_left_atom=output_left,
+        output_right_atom=output_right,
+        endpoint_left=endpoint_left,
+        endpoint_right=endpoint_right,
+        input_left=input_left,
+        input_right=input_right,
+        supplied_left=supplied_left,
+        supplied_right=supplied_right,
+        transition_audit=transition,
+        left_translation_conjugacy_matches=left_translation_conjugacy_matches,
+        right_output_translation_matches=right_output_translation_matches,
+        left_base_atom=left_base,
+        right_base_atom=right_base,
+        left_endpoint_image=left_endpoint_image,
+        right_endpoint_image=right_endpoint_image,
+        endpoint_transport_matches_crossing=(
+            left_endpoint_image == output_left
+            and right_endpoint_image == output_right
+        ),
+        negative_row_is_positive_inverse=(
+            inverse_audit.negative_row_is_positive_inverse
+        ),
+    )
+
+
+def rack_inner_detector_lift_audit(
+    rack: FiniteBraidedSet,
+    endpoint_labels: Sequence[GroupElement] | None = None,
+) -> RackInnerDetectorLiftAudit:
+    """Audit all positive rack rows for an inner-group detector factor.
+
+    By default the endpoint label set is the identity singleton; callers may
+    pass the whole inner group to check every finite endpoint state explicitly.
+    The symbolic rack proof uses the same multiplication formula for arbitrary
+    endpoint labels.
+    """
+
+    if not is_rack_solution(rack):
+        raise ValueError("solution is not a rack in left convention")
+    group = rack_inner_group(rack)
+    labels = (
+        (group.identity,)
+        if endpoint_labels is None
+        else _check_group_assignment(group, endpoint_labels)
+    )
+    row_audits = tuple(
+        rack_inner_detector_lift_row_audit(
+            rack,
+            left,
+            right,
+            endpoint_left,
+            endpoint_right,
+        )
+        for left in rack.elements
+        for right in rack.elements
+        for endpoint_left in labels
+        for endpoint_right in labels
+    )
+    return RackInnerDetectorLiftAudit(
+        rack_size=len(rack.elements),
+        inner_group_order=len(group.elements),
+        endpoint_label_count=len(labels),
+        row_audits=row_audits,
+    )
+
+
+def right_rack_inner_detector_lift_audit(
+    solution: FiniteBraidedSet,
+    endpoint_labels: Sequence[GroupElement] | None = None,
+) -> RackInnerDetectorLiftAudit:
+    """Audit a right-rack-like layer via its side-opposite left rack."""
+
+    return rack_inner_detector_lift_audit(
+        opposite_solution(solution),
+        endpoint_labels=endpoint_labels,
+    )
 
 
 def rack_longitude_action(

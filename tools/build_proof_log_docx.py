@@ -93,6 +93,7 @@ EXTRA_MD.append(ROOT / "proofs" / "bifree_universal_corridor_factorization_targe
 EXTRA_MD.append(ROOT / "proofs" / "bifree_corridor_endpoint_factorization.md")
 EXTRA_MD.append(ROOT / "proofs" / "artin_defect_longitudinalization_sieve.md")
 EXTRA_MD.append(ROOT / "proofs" / "artin_detector_lift_criterion.md")
+EXTRA_MD.append(ROOT / "proofs" / "atom_inner_detector_lift_rows.md")
 EXTRA_MD.append(ROOT / "proofs" / "bifree_corridor_subgroup_certificate.md")
 EXTRA_MD.append(ROOT / "proofs" / "bifree_corridor_certificate_audit.md")
 EXTRA_MD.append(ROOT / "proofs" / "bifree_corridor_exact_audit.md")

@@ -841,6 +841,21 @@ is a literal endpoint-longitude expression in `U`.  The code now exposes
 This shifts the remaining A-route burden to verifying these finite row
 identities for each Green/corridor observer row in the fixed factors of
 `H(pi,Q)`.
+The atom-inner rack-layer portion of that burden is now closed conditionally
+on atom descent and totality.  The note
+`proofs/atom_inner_detector_lift_rows.md` proves that for a finite rack layer
+`R(a,b)=(a*b,a)`, the inner translations satisfy
+`L_{a*b}=L_a L_b L_a^-1`, so the positive Artin detector row holds in
+`Inn(A)`.  Endpoint labels update by `u_i'=L_a u_{i+1}` and
+`u_{i+1}'=u_i`, and the negative row is the inverse positive row.  Applying
+this to the side-opposite of the right-rack-like Green atom quotient shows
+that `Inn(atom quotient)` is no longer an open detector-lift row factor once
+the atom action descends and is total.  The code exposes this as
+`rack_inner_detector_lift_audit(...)`,
+`right_rack_inner_detector_lift_audit(...)`, and
+`atom_quotient_inner_detector_lift_audit(...)`.  The remaining row checks are
+Green kernel-block factors, Schutzenberger factors, and lower endpoint/unit
+holonomy factors.
 The single-endpoint route audit
 `unit_composite_longitude_route_audit(monoid,n,beta,factors)` now records the
 same ladder used in product-label work: endpoint identity, one evaluated
