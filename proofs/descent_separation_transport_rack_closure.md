@@ -147,17 +147,20 @@ If descent separation is proved, the A-route closes as follows.
    `A x E`, with detector group `Inn(A x E)`.
 4. Chart-transport collapse reduces representative checks to one finite
    chart-conjugacy orbit representative per elementary generator orbit.
-5. Product witness calculus assembles all factor witnesses into one fixed
+5. Elementary continuation closure reduces universal continuation to one
+   nontrivial seed pair at a time: in a local-minimal interval every
+   individual continuation seed has universal admissible closure.
+6. Product witness calculus assembles all factor witnesses into one fixed
    `H(pi,Q)`.
-6. The endpoint-factorization criterion gives
+7. The endpoint-factorization criterion gives
 
 ```text
 Lambda_{H(pi,Q),n}(beta)=Lambda_{H(pi,Q),n}(1)
   => Delta_n(beta)=1.
 ```
 
-7. The sharp obstruction theorem supplies the local rack `Q x A_H`.
-8. Congruence-chain induction assembles the local racks into one finite rack
+8. The sharp obstruction theorem supplies the local rack `Q x A_H`.
+9. Congruence-chain induction assembles the local racks into one finite rack
    independent of `n`.
 
 ## Why this is still open

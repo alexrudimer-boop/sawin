@@ -521,6 +521,13 @@ const rows = [
     "Handle the universal continuation corridor by Green/Schutzenberger visibility, or build a normalized-law escape.",
   ],
   [
+    "Elementary continuation closure",
+    "Rule out collective-only universal continuation in local-minimal intervals.",
+    "proofs/elementary_continuation_closure.md; continuation_seed_pair_closure_audits closes each nontrivial x~v seed separately.",
+    "Reduction criterion",
+    "Prove Green/Schutzenberger visibility or normalized-law escape for one representative elementary continuation seed.",
+  ],
+  [
     "Chart-transport collapse",
     "Avoid separate endpoint-longitude proofs for transported or chart-conjugate copies of elementary generators.",
     "proofs/chart_transport_collapse.md; conjugate_longitude_subgroup_witness shows V_beta(G) is normal at certificate level.",

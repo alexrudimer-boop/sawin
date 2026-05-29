@@ -299,6 +299,10 @@ the finite closure of continuation seeds `x~v`.  Local-minimality rules out
 proper mixed closure; equality is the transport-state case; universal closure
 is the sole remaining nontrivial corridor to prove Green/Schutzenberger
 visible.
+The elementary continuation note
+`proofs/elementary_continuation_closure.md` shows that this remaining
+universal corridor is seed-level in local-minimal intervals: each nontrivial
+continuation seed pair must close universally by itself.
 The chart-transport collapse
 `proofs/chart_transport_collapse.md` further reduces the endpoint burden:
 because `V_beta(G)` is normal, it is enough to prove one representative in

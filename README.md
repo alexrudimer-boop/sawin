@@ -201,6 +201,12 @@ changes `x~v`.  Equality gives the strand-continuing case; a proper mixed
 closure is a local-minimality failure; the only surviving case is the
 all-universal continuation corridor, which must be proved Green/Schutzenberger
 visible or upgraded to the normalized-law B route.
+The elementary continuation refinement
+`proofs/elementary_continuation_closure.md` rules out collective-only
+universal continuation: in a local-minimal interval, every individual
+nontrivial continuation seed pair has universal admissible closure.  The code
+exposes this through `continuation_seed_pair_closure_audits(...)` and
+`continuation_seed_pair_closure_failures(...)`.
 The chart-transport collapse
 `proofs/chart_transport_collapse.md` removes transported-generator noise:
 `V_beta(G)` is already normal, and

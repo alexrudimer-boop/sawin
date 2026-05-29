@@ -389,6 +389,10 @@ The continuation-congruence gate
 row is not strand-continuing: close the seed pairs `x~v` under admissible
 local congruence.  Proper mixed closure is incompatible with local-minimality;
 universal closure is the only nontrivial descent-separation case left.
+The elementary continuation refinement
+`proofs/elementary_continuation_closure.md` says that, in a local-minimal
+target, each individual nontrivial continuation seed pair already has
+universal closure.
 The chart-transport collapse
 `proofs/chart_transport_collapse.md` removes transported copies from the
 generator burden: ordinary `V_beta(G)` membership is already closed under

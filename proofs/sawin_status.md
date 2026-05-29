@@ -985,6 +985,13 @@ all-universal.  The current sharp bottleneck is universal continuation
 visibility: prove that this universal continuation corridor is exactly the
 fixed Green/Schutzenberger-visible motion, or extract the normalized-law B
 sequence from it.
+The elementary continuation closure note
+`proofs/elementary_continuation_closure.md` sharpens this once more.  A
+local-minimal interval cannot have a universal continuation corridor generated
+only collectively by many seeds: every individual nontrivial continuation seed
+pair has universal closure.  The helpers
+`continuation_seed_pair_closure_audits(...)` and
+`continuation_seed_pair_closure_failures(...)` expose this seed-level gate.
 The chart-transport collapse in
 `proofs/chart_transport_collapse.md` removes chart-dependent copies from the
 generator burden.  Since `V_beta(G)` is already normal in every finite group,

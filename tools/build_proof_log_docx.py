@@ -105,6 +105,7 @@ EXTRA_MD.append(ROOT / "proofs" / "terminal_gauge_longitudinalization_criterion.
 EXTRA_MD.append(ROOT / "proofs" / "principal_gauge_extension_detector.md")
 EXTRA_MD.append(ROOT / "proofs" / "transport_state_rackification_detector.md")
 EXTRA_MD.append(ROOT / "proofs" / "continuation_congruence_descent_gate.md")
+EXTRA_MD.append(ROOT / "proofs" / "elementary_continuation_closure.md")
 EXTRA_MD.append(ROOT / "proofs" / "chart_transport_collapse.md")
 EXTRA_MD.append(ROOT / "proofs" / "descent_separation_transport_rack_closure.md")
 EXTRA_MD.append(ROOT / "proofs" / "bifree_corridor_subgroup_certificate.md")

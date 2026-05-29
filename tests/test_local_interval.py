@@ -7,6 +7,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 from ybe_domination import (
     LocalInterval,
     continuation_congruence_audit,
+    continuation_seed_pair_closure_audits,
+    continuation_seed_pair_closure_failures,
     continuation_seed_pairs,
     continuation_seed_rows,
     coordinate_kernel_pair_closure_audits,
@@ -226,6 +228,8 @@ class LocalIntervalTests(unittest.TestCase):
 
         self.assertEqual(continuation_seed_rows(interval), ())
         self.assertEqual(continuation_seed_pairs(interval), {"*": ()})
+        self.assertEqual(continuation_seed_pair_closure_audits(interval), ())
+        self.assertEqual(continuation_seed_pair_closure_failures(interval), ())
         self.assertTrue(audit.base_rows_are_left_rack_form)
         self.assertTrue(audit.is_strand_continuing_on_the_nose)
         self.assertEqual(audit.generated.kind, "equality")
@@ -243,6 +247,14 @@ class LocalIntervalTests(unittest.TestCase):
         self.assertTrue(audit.continuation_closure_is_universal)
         self.assertTrue(audit.proves_transport_or_universal_dichotomy)
 
+        pair_audits = continuation_seed_pair_closure_audits(interval)
+        self.assertEqual(len(pair_audits), 1)
+        self.assertEqual(pair_audits[0].color, "*")
+        self.assertEqual(pair_audits[0].generated.kind, "universal")
+        self.assertEqual(pair_audits[0].generated.seed_pair_count, 1)
+        self.assertEqual(len(pair_audits[0].seed_rows), 2)
+        self.assertEqual(continuation_seed_pair_closure_failures(interval), ())
+
     def test_continuation_congruence_records_non_rack_base_rows(self):
         interval = two_color_identity_interval()
 
@@ -251,6 +263,15 @@ class LocalIntervalTests(unittest.TestCase):
         self.assertFalse(audit.base_rows_are_left_rack_form)
         self.assertTrue(audit.non_rack_base_rows)
         self.assertFalse(audit.proves_transport_or_universal_dichotomy)
+
+    def test_continuation_seed_pair_closure_exposes_nonminimal_rows(self):
+        interval = two_color_identity_interval()
+
+        self.assertFalse(interval.is_local_minimal())
+        failures = continuation_seed_pair_closure_failures(interval)
+
+        self.assertTrue(failures)
+        self.assertTrue(all(failure.generated.kind != "universal" for failure in failures))
 
 
 if __name__ == "__main__":

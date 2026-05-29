@@ -420,6 +420,12 @@ contradicts local-minimality, and the only surviving nontrivial case is an
 all-universal continuation corridor.  The next theorem target is therefore
 universal continuation visibility in the fixed Green/Schutzenberger readouts,
 or a normalized-law B construction from that universal corridor.
+The elementary continuation refinement
+`proofs/elementary_continuation_closure.md` removes collective-only
+continuation as a possible loophole: in a local-minimal interval, each single
+nontrivial seed `x~v` already has universal admissible closure.  The helper
+`continuation_seed_pair_closure_audits(...)` exposes the seed-by-seed closure,
+and failures certify that the interval was not a valid local-minimal target.
 The chart-transport collapse
 `proofs/chart_transport_collapse.md` removes another source of proof noise:
 because `V_beta(G)` is normal for every finite group `G`, one

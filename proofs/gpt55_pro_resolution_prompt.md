@@ -120,16 +120,17 @@ nondegeneracy to the total solution.
 51. `proofs/principal_gauge_extension_detector.md`
 52. `proofs/transport_state_rackification_detector.md`
 53. `proofs/continuation_congruence_descent_gate.md`
-54. `proofs/chart_transport_collapse.md`
-55. `proofs/descent_separation_transport_rack_closure.md`
-56. `proofs/bifree_corridor_subgroup_certificate.md`
-57. `proofs/bifree_corridor_certificate_audit.md`
-58. `proofs/bifree_corridor_exact_audit.md`
-59. `proofs/local_minimal_green_audit.md`
-60. `proofs/dual_green_symmetry.md`
-61. `proofs/opposite_detectability_closure.md`
-62. `proofs/finite_semigroup_holonomy_route.md`
-63. `proofs/unit_holonomy_longitude_gate.md`
+54. `proofs/elementary_continuation_closure.md`
+55. `proofs/chart_transport_collapse.md`
+56. `proofs/descent_separation_transport_rack_closure.md`
+57. `proofs/bifree_corridor_subgroup_certificate.md`
+58. `proofs/bifree_corridor_certificate_audit.md`
+59. `proofs/bifree_corridor_exact_audit.md`
+60. `proofs/local_minimal_green_audit.md`
+61. `proofs/dual_green_symmetry.md`
+62. `proofs/opposite_detectability_closure.md`
+63. `proofs/finite_semigroup_holonomy_route.md`
+64. `proofs/unit_holonomy_longitude_gate.md`
 Also read `proofs/unit_factorization_gate.md`, which proves that a product of
 finite total transformations can be a residual permutation only when every
 factor is already a unit/permutation.
@@ -223,6 +224,10 @@ least admissible congruence from all continuation changes `x~v`.  Equality is
 the transport-state case, proper mixed closure contradicts local-minimality,
 and universal closure is the remaining corridor whose Green/Schutzenberger
 visibility must be proved or converted into a normalized-law B sequence.
+Also read `proofs/elementary_continuation_closure.md`: it proves that in a
+local-minimal target every single nontrivial continuation seed pair has
+universal closure, so the final descent-separation obstruction can be attacked
+seed-by-seed.
 Also read `proofs/chart_transport_collapse.md`: it proves that finite chart
 conjugation does not create new endpoint-longitude obligations, because
 `V_beta(G)` is normal and one representative elementary-generator witness
