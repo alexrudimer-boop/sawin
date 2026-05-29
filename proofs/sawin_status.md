@@ -780,6 +780,13 @@ input-dependent assignments, then construct the literal direct-product witness
 in `V_beta(product_s H_s)`.  This is the code-level form of the endpoint
 assembly lemma for Green kernel-block, Schutzenberger, atom-inner, quotient,
 and endpoint/unit factors.
+The same module now records the faithful-readout clause through
+`endpoint_coordinate_readout_audit(...)` and
+`endpoint_residual_readout_audit(...)`: an identity endpoint tuple must fix the
+corresponding residual coordinate, and coordinate rows bundle into a
+residual-tuple implication.  This closes the executable shape of the
+endpoint-factorization proposition while leaving the uniform construction of
+the endpoint expressions as the open theorem.
 The single-endpoint route audit
 `unit_composite_longitude_route_audit(monoid,n,beta,factors)` now records the
 same ladder used in product-label work: endpoint identity, one evaluated

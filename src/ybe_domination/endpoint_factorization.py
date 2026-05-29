@@ -105,6 +105,71 @@ class EndpointProductExpressionAudit:
         return self.product_endpoint_lies_in_product_longitude_subgroup_by_expression
 
 
+@dataclass(frozen=True)
+class EndpointCoordinateReadoutAudit:
+    """One residual coordinate readout controlled by endpoint expressions."""
+
+    endpoint_audit: EndpointProductExpressionAudit
+    input_coordinate: object
+    output_coordinate: object
+
+    @property
+    def endpoint_tuple_is_identity(self) -> bool:
+        return self.endpoint_audit.product_endpoint == tuple(
+            audit.group_identity for audit in self.endpoint_audit.factor_audits
+        )
+
+    @property
+    def coordinate_fixed(self) -> bool:
+        return self.output_coordinate == self.input_coordinate
+
+    @property
+    def identity_endpoints_fix_coordinate(self) -> bool:
+        return (not self.endpoint_tuple_is_identity) or self.coordinate_fixed
+
+    @property
+    def identity_longitudes_kill_coordinate_by_expression(self) -> bool:
+        audit = self.endpoint_audit
+        if not audit.product_endpoint_lies_in_product_longitude_subgroup_by_expression:
+            return False
+        if not audit.identity_product_longitude_signature_by_factors:
+            return True
+        return self.endpoint_tuple_is_identity and self.coordinate_fixed
+
+
+@dataclass(frozen=True)
+class EndpointResidualReadoutAudit:
+    """Bundle coordinate readout rows for one residual tuple."""
+
+    coordinate_audits: Tuple[EndpointCoordinateReadoutAudit, ...]
+
+    @property
+    def input_tuple(self) -> Tuple[object, ...]:
+        return tuple(audit.input_coordinate for audit in self.coordinate_audits)
+
+    @property
+    def output_tuple(self) -> Tuple[object, ...]:
+        return tuple(audit.output_coordinate for audit in self.coordinate_audits)
+
+    @property
+    def residual_tuple_fixed(self) -> bool:
+        return self.output_tuple == self.input_tuple
+
+    @property
+    def identity_endpoints_fix_all_coordinates(self) -> bool:
+        return all(
+            audit.identity_endpoints_fix_coordinate
+            for audit in self.coordinate_audits
+        )
+
+    @property
+    def identity_longitudes_kill_residual_tuple_by_expression(self) -> bool:
+        return all(
+            audit.identity_longitudes_kill_coordinate_by_expression
+            for audit in self.coordinate_audits
+        )
+
+
 def endpoint_longitude_expression_audit(
     group: FiniteGroup,
     n: int,
@@ -233,3 +298,25 @@ def endpoint_product_longitude_expression_audit(
         product_witness_value=product_witness_value,
         product_witness_matches_endpoint=product_witness_value == endpoint_tuple,
     )
+
+
+def endpoint_coordinate_readout_audit(
+    endpoint_audit: EndpointProductExpressionAudit,
+    input_coordinate: object,
+    output_coordinate: object,
+) -> EndpointCoordinateReadoutAudit:
+    """Audit the faithful-readout implication for one residual coordinate."""
+
+    return EndpointCoordinateReadoutAudit(
+        endpoint_audit=endpoint_audit,
+        input_coordinate=input_coordinate,
+        output_coordinate=output_coordinate,
+    )
+
+
+def endpoint_residual_readout_audit(
+    coordinate_audits: Sequence[EndpointCoordinateReadoutAudit],
+) -> EndpointResidualReadoutAudit:
+    """Bundle endpoint-controlled coordinates into one residual-tuple audit."""
+
+    return EndpointResidualReadoutAudit(coordinate_audits=tuple(coordinate_audits))

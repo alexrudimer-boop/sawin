@@ -442,6 +442,11 @@ The executable helpers
 certificate layer for that note.  They are useful for checking a proposed
 factorwise proof, but they do not themselves construct the missing endpoint
 expressions.
+Also check the faithful-readout helpers
+`endpoint_coordinate_readout_audit(...)` and
+`endpoint_residual_readout_audit(...)`: they only verify that identity endpoint
+tuples fix the residual coordinates in supplied rows.  They do not replace the
+uniform all-`n` construction of those rows.
 
 Important warning from `proofs/product_longitude_witness_audit.md`: one common
 homomorphism `F_n -> H_prod` need not realize all coordinate labels at once.

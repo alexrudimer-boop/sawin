@@ -418,7 +418,7 @@ const rows = [
   [
     "Bi-free endpoint factorization",
     "Assemble corridor endpoint-longitude expressions into one fixed product detector.",
-    "Proof note plus endpoint_*_longitude_expression_audit helpers build literal product witnesses in V_beta(H(pi,Q)) from displayed factor expressions.",
+    "Proof note plus endpoint expression/readout helpers build literal product witnesses and verify the identity-endpoint faithful-readout gate.",
     "Assembly lemma",
     "Prove the endpoint longitudinalization lemma for every target interval.",
   ],

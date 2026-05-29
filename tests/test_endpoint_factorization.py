@@ -6,8 +6,10 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from ybe_domination import (
     cyclic_group,
+    endpoint_coordinate_readout_audit,
     endpoint_longitude_expression_audit,
     endpoint_product_longitude_expression_audit,
+    endpoint_residual_readout_audit,
 )
 
 
@@ -136,6 +138,84 @@ class EndpointFactorizationTests(unittest.TestCase):
         self.assertFalse(
             audit.product_endpoint_lies_in_product_longitude_subgroup_by_expression
         )
+
+    def test_identity_endpoint_readout_records_fixed_coordinate(self):
+        c2 = cyclic_group(2)
+        product_audit = endpoint_product_longitude_expression_audit(
+            (c2,),
+            n=2,
+            braid_word=(1,) * 4,
+            endpoints=(0,),
+            assignments=((1, 0),),
+            expressions=((),),
+        )
+
+        readout = endpoint_coordinate_readout_audit(product_audit, "p", "p")
+
+        self.assertTrue(readout.endpoint_tuple_is_identity)
+        self.assertTrue(readout.coordinate_fixed)
+        self.assertTrue(readout.identity_endpoints_fix_coordinate)
+        self.assertTrue(readout.identity_longitudes_kill_coordinate_by_expression)
+
+    def test_identity_endpoint_readout_detects_unfaithful_moved_coordinate(self):
+        c2 = cyclic_group(2)
+        product_audit = endpoint_product_longitude_expression_audit(
+            (c2,),
+            n=2,
+            braid_word=(1,) * 4,
+            endpoints=(0,),
+            assignments=((1, 0),),
+            expressions=((),),
+        )
+
+        readout = endpoint_coordinate_readout_audit(product_audit, "p", "q")
+
+        self.assertTrue(readout.endpoint_tuple_is_identity)
+        self.assertFalse(readout.coordinate_fixed)
+        self.assertFalse(readout.identity_endpoints_fix_coordinate)
+        self.assertFalse(readout.identity_longitudes_kill_coordinate_by_expression)
+
+    def test_residual_readout_bundles_endpoint_controlled_coordinates(self):
+        c2 = cyclic_group(2)
+        product_audit = endpoint_product_longitude_expression_audit(
+            (c2,),
+            n=2,
+            braid_word=(1,) * 4,
+            endpoints=(0,),
+            assignments=((1, 0),),
+            expressions=((),),
+        )
+        first = endpoint_coordinate_readout_audit(product_audit, "a", "a")
+        second = endpoint_coordinate_readout_audit(product_audit, "b", "b")
+
+        residual = endpoint_residual_readout_audit((first, second))
+
+        self.assertEqual(residual.input_tuple, ("a", "b"))
+        self.assertEqual(residual.output_tuple, ("a", "b"))
+        self.assertTrue(residual.residual_tuple_fixed)
+        self.assertTrue(residual.identity_endpoints_fix_all_coordinates)
+        self.assertTrue(
+            residual.identity_longitudes_kill_residual_tuple_by_expression
+        )
+
+    def test_readout_implication_is_vacuous_for_visible_product_longitudes(self):
+        c2 = cyclic_group(2)
+        product_audit = endpoint_product_longitude_expression_audit(
+            (c2,),
+            n=2,
+            braid_word=(1, 1),
+            endpoints=(1,),
+            assignments=((1, 0),),
+            expressions=(((1, 1),),),
+        )
+
+        readout = endpoint_coordinate_readout_audit(product_audit, "p", "q")
+
+        self.assertFalse(product_audit.identity_product_longitude_signature_by_factors)
+        self.assertFalse(readout.endpoint_tuple_is_identity)
+        self.assertFalse(readout.coordinate_fixed)
+        self.assertTrue(readout.identity_endpoints_fix_coordinate)
+        self.assertTrue(readout.identity_longitudes_kill_coordinate_by_expression)
 
 
 if __name__ == "__main__":

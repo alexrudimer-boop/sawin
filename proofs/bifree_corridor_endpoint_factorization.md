@@ -325,6 +325,12 @@ endpoint_longitude_expression_audit(
 endpoint_product_longitude_expression_audit(
     groups,n,beta,endpoints,assignments,expressions
 )
+
+endpoint_coordinate_readout_audit(
+    endpoint_audit,input_coordinate,output_coordinate
+)
+
+endpoint_residual_readout_audit(coordinate_audits)
 ```
 
 The first helper checks one displayed endpoint expression in a fixed finite
@@ -343,6 +349,14 @@ data kills it.  The tests in `tests/test_endpoint_factorization.py` cover
 visible endpoints, identity-signature endpoints, bad expressions, and malformed
 parallel data.
 
+The readout helpers implement the last line of the proposition for finite
+certificate rows.  A coordinate row records whether an identity endpoint tuple
+really fixes the residual output coordinate.  A residual row bundles these
+coordinate checks and records whether identity finite product-longitude data
+kills the whole residual tuple by expression.  These are still row-level proof
+objects: a complete corridor proof must construct such faithful readout rows
+uniformly for every `n`, `beta`, `z`, `x`, and output coordinate.
+
 These helpers do not produce the missing endpoint expressions.  They verify the
-last algebraic step once a symbolic corridor proof has supplied those
-expressions in the fixed factors of `H(pi,Q)`.
+last algebraic and faithful-readout steps once a symbolic corridor proof has
+supplied those expressions in the fixed factors of `H(pi,Q)`.
