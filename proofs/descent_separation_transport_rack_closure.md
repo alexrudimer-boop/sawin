@@ -171,17 +171,19 @@ If descent separation is proved, the A-route closes as follows.
 13. The local-minimal seed-saturation dichotomy rules out a hidden proper
    seed-saturated quotient: equality factors missing nontrivial seeds force a
    universal-collapse routing obligation.
-14. Product witness calculus assembles all factor witnesses into one fixed
+14. The lost-edge external routing ledger separates quotient labels from
+   external endpoint labels that remember the edges collapsed by saturation.
+15. Product witness calculus assembles all factor witnesses into one fixed
    `H(pi,Q)`.
-15. The endpoint-factorization criterion gives
+16. The endpoint-factorization criterion gives
 
 ```text
 Lambda_{H(pi,Q),n}(beta)=Lambda_{H(pi,Q),n}(1)
   => Delta_n(beta)=1.
 ```
 
-16. The sharp obstruction theorem supplies the local rack `Q x A_H`.
-17. Congruence-chain induction assembles the local racks into one finite rack
+17. The sharp obstruction theorem supplies the local rack `Q x A_H`.
+18. Congruence-chain induction assembles the local racks into one finite rack
    independent of `n`.
 
 ## Why this is still open

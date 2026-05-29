@@ -58,11 +58,12 @@ First read:
 25. `proofs/product_readout_descent_separation.md`
 26. `proofs/readout_seed_saturation.md`
 27. `proofs/local_minimal_seed_saturation_dichotomy.md`
-28. `proofs/chart_transport_collapse.md`
-29. `proofs/descent_separation_transport_rack_closure.md`
-30. `proofs/sawin_proof_log.docx`
-31. `tables/reduction_audit.xlsx`
-32. The code and tests under `src/`, `tools/`, and `tests/`
+28. `proofs/lost_edge_external_routing.md`
+29. `proofs/chart_transport_collapse.md`
+30. `proofs/descent_separation_transport_rack_closure.md`
+31. `proofs/sawin_proof_log.docx`
+32. `tables/reduction_audit.xlsx`
+33. The code and tests under `src/`, `tools/`, and `tests/`
 
 Then audit and use these reductions:
 
@@ -268,6 +269,9 @@ Then audit and use these reductions:
    Also use `proofs/local_minimal_seed_saturation_dichotomy.md`: it makes the
    equality/universal seed-saturation consequence executable and records
    forced universal collapse as an external-routing obligation.
+   Also use `proofs/lost_edge_external_routing.md`: it separates descent
+   quotient labels from external endpoint routing labels and records which
+   seed-saturation edges are lost, routed, or still unrouted.
    Also use `proofs/chart_transport_collapse.md`: it proves transported
    elementary generators need no separate proof once one chart-conjugacy orbit
    representative is certified, because `V_beta(G)` is normal.  Then read

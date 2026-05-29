@@ -270,6 +270,10 @@ another fixed detector component or through transport-state rackification.
 Also read `proofs/local_minimal_seed_saturation_dichotomy.md`: it makes that
 local-minimality consequence executable and treats forced universal collapse
 as an external-routing obligation, not as faithful residual detection.
+Also read `proofs/lost_edge_external_routing.md`: it separates descent
+quotient labels from external endpoint labels that route the edges collapsed
+by seed-saturation.  Routing labels must not be added back to the descent
+quotient product unless one wants the continuation seeds to survive again.
 Also read `proofs/chart_transport_collapse.md`: it proves that finite chart
 conjugation does not create new endpoint-longitude obligations, because
 `V_beta(G)` is normal and one representative elementary-generator witness

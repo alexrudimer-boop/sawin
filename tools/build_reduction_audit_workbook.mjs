@@ -591,6 +591,13 @@ const rows = [
     "Any equality-kernel factor missing a nontrivial seed collapses to universal; prove external routing for information lost by that collapse.",
   ],
   [
+    "Lost-edge external routing",
+    "Separate descent quotient labels from external labels that remember collapsed edges.",
+    "proofs/lost_edge_external_routing.md; lost_edge_external_routing_audit lists lost, routed, and unrouted saturation edges.",
+    "Reduction criterion",
+    "Do not add routing labels back to the descent quotient; prove their fixed-factor longitude visibility separately.",
+  ],
+  [
     "Chart-transport collapse",
     "Avoid separate endpoint-longitude proofs for transported or chart-conjugate copies of elementary generators.",
     "proofs/chart_transport_collapse.md; conjugate_longitude_subgroup_witness shows V_beta(G) is normal at certificate level.",

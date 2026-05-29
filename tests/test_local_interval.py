@@ -18,6 +18,7 @@ from ybe_domination import (
     coordinate_kernel_pair_closure_audits,
     coordinate_kernel_pair_closure_failures,
     local_minimal_seed_saturation_dichotomy_audit,
+    lost_edge_external_routing_audit,
     partition_readout_labels,
     product_readout_descent_separation_audit,
     product_readout_descent_separation_failures,
@@ -482,6 +483,42 @@ class LocalIntervalTests(unittest.TestCase):
 
         self.assertFalse(audit.interval_is_local_minimal)
         self.assertFalse(audit.proves_local_minimal_seed_saturation_dichotomy)
+
+    def test_lost_edge_external_routing_records_routed_collapse_edges(self):
+        interval = one_color_identity_interval()
+        descent_labels = {"*": {0: "zero", 1: "one"}}
+        routing_labels = {"*": {0: "left", 1: "right"}}
+
+        audit = lost_edge_external_routing_audit(
+            interval,
+            descent_labels,
+            routing_labels,
+        )
+
+        self.assertTrue(audit.forced_collapse_requires_routing)
+        self.assertEqual(len(audit.lost_edges), 1)
+        self.assertEqual(set(audit.routed_edges), set(audit.lost_edges))
+        self.assertEqual(audit.unrouted_edges, ())
+        self.assertTrue(audit.all_lost_edges_routed)
+        self.assertTrue(audit.proves_external_routing_ledger)
+
+    def test_lost_edge_external_routing_reports_unrouted_collapse_edges(self):
+        interval = one_color_identity_interval()
+        descent_labels = {"*": {0: "zero", 1: "one"}}
+        routing_labels = {"*": {0: "same", 1: "same"}}
+
+        audit = lost_edge_external_routing_audit(
+            interval,
+            descent_labels,
+            routing_labels,
+        )
+
+        self.assertTrue(audit.forced_collapse_requires_routing)
+        self.assertEqual(len(audit.lost_edges), 1)
+        self.assertEqual(audit.routed_edges, ())
+        self.assertEqual(set(audit.unrouted_edges), set(audit.lost_edges))
+        self.assertFalse(audit.all_lost_edges_routed)
+        self.assertFalse(audit.proves_external_routing_ledger)
 
     def test_product_readout_kernel_is_meet_of_factor_kernels(self):
         interval = two_color_identity_interval()

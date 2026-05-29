@@ -394,6 +394,36 @@ class LocalMinimalSeedSaturationDichotomyAudit:
         )
 
 
+@dataclass(frozen=True)
+class LostEdgeExternalRoutingAudit:
+    """External routing ledger for edges collapsed by seed-saturation."""
+
+    dichotomy: LocalMinimalSeedSaturationDichotomyAudit
+    routing_labels: ReadoutLabels
+    routing_kernel: ReadoutKernelAudit
+    lost_edges: Tuple[Tuple[Color, FibrePoint, FibrePoint], ...]
+    routed_edges: Tuple[Tuple[Color, FibrePoint, FibrePoint], ...]
+    unrouted_edges: Tuple[Tuple[Color, FibrePoint, FibrePoint], ...]
+
+    @property
+    def forced_collapse_requires_routing(self) -> bool:
+        return self.dichotomy.needs_external_routing_after_collapse
+
+    @property
+    def all_lost_edges_routed(self) -> bool:
+        return not self.unrouted_edges
+
+    @property
+    def proves_external_routing_ledger(self) -> bool:
+        return (
+            self.dichotomy.proves_local_minimal_seed_saturation_dichotomy
+            and (
+                not self.forced_collapse_requires_routing
+                or self.all_lost_edges_routed
+            )
+        )
+
+
 def equality_partition(items: Sequence[FibrePoint]) -> Partition:
     return canonical_partition(frozenset([item]) for item in items)
 
@@ -1251,6 +1281,50 @@ def local_minimal_seed_saturation_dichotomy_audit(
         expected_saturation_kind=_expected_local_minimal_seed_saturation_kind(
             seed_saturation,
         ),
+    )
+
+
+def _labels_distinguish_edge(
+    labels: ReadoutLabels,
+    color: Color,
+    left: FibrePoint,
+    right: FibrePoint,
+) -> bool:
+    return labels[color][left] != labels[color][right]
+
+
+def lost_edge_external_routing_audit(
+    interval: "LocalInterval",
+    descent_labels: ReadoutLabels,
+    routing_labels: ReadoutLabels,
+) -> LostEdgeExternalRoutingAudit:
+    """Audit whether external labels distinguish edges lost by saturation.
+
+    The routing labels are a separate ledger.  They are not included as
+    descent-quotient factors, since doing so would refine the quotient and may
+    make continuation seeds survive again.
+    """
+
+    dichotomy = local_minimal_seed_saturation_dichotomy_audit(
+        interval,
+        descent_labels,
+    )
+    routing_kernel = readout_kernel_audit(interval, routing_labels)
+    lost_edges = dichotomy.seed_saturation.new_saturation_edges
+    routed = []
+    unrouted = []
+    for color, left, right in lost_edges:
+        if _labels_distinguish_edge(routing_labels, color, left, right):
+            routed.append((color, left, right))
+        else:
+            unrouted.append((color, left, right))
+    return LostEdgeExternalRoutingAudit(
+        dichotomy=dichotomy,
+        routing_labels=routing_labels,
+        routing_kernel=routing_kernel,
+        lost_edges=lost_edges,
+        routed_edges=tuple(routed),
+        unrouted_edges=tuple(unrouted),
     )
 
 

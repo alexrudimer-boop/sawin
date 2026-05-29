@@ -480,6 +480,10 @@ The local-minimal seed-saturation dichotomy note
 an executable audit.  It rejects non-local-minimal intervals, checks that
 kernel and saturation kinds are equality/universal, and flags forced universal
 collapse as an external-routing obligation.
+The lost-edge external routing note `proofs/lost_edge_external_routing.md`
+turns that obligation into a finite ledger.  It distinguishes descent quotient
+labels from external endpoint routing labels and records which
+seed-saturation edges are lost, routed, or still unrouted.
 The chart-transport collapse
 `proofs/chart_transport_collapse.md` removes another source of proof noise:
 because `V_beta(G)` is normal for every finite group `G`, one

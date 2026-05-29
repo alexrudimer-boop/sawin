@@ -259,6 +259,12 @@ The local-minimal seed-saturation dichotomy note
 `local_minimal_seed_saturation_dichotomy_audit(...)` checks that an admissible
 readout factor has only equality/universal saturation and flags the universal
 collapse cases that require external routing.
+The lost-edge external routing note
+`proofs/lost_edge_external_routing.md` separates the labels used for the
+descent quotient from external endpoint labels that remember edges collapsed
+by seed-saturation.  `lost_edge_external_routing_audit(...)` records lost,
+routed, and unrouted edges without adding the routing labels back to the
+descent quotient.
 The chart-transport collapse
 `proofs/chart_transport_collapse.md` removes transported-generator noise:
 `V_beta(G)` is already normal, and

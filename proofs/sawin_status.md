@@ -1050,6 +1050,13 @@ an explicit certificate.  The helper
 `local_minimal_seed_saturation_dichotomy_audit(...)` verifies the
 equality/universal saturation expectation and marks forced universal collapse
 as an external-routing obligation rather than a proof of faithful detection.
+The lost-edge external routing note `proofs/lost_edge_external_routing.md`
+records that obligation as a finite edge ledger.  The helper
+`lost_edge_external_routing_audit(...)` takes descent labels and separate
+external routing labels, then lists the saturation edges that are lost,
+routed, or still unrouted.  These routing labels are not fed back into the
+descent quotient; their all-`n` recursive-longitude visibility remains a
+separate endpoint-factorization obligation.
 The chart-transport collapse in
 `proofs/chart_transport_collapse.md` removes chart-dependent copies from the
 generator burden.  Since `V_beta(G)` is already normal in every finite group,
