@@ -108,14 +108,15 @@ nondegeneracy to the total solution.
 39. `proofs/bifree_corridor_endpoint_factorization.md`
 40. `proofs/artin_defect_longitudinalization_sieve.md`
 41. `proofs/artin_detector_lift_criterion.md`
-42. `proofs/bifree_corridor_subgroup_certificate.md`
-43. `proofs/bifree_corridor_certificate_audit.md`
-44. `proofs/bifree_corridor_exact_audit.md`
-45. `proofs/local_minimal_green_audit.md`
-46. `proofs/dual_green_symmetry.md`
-47. `proofs/opposite_detectability_closure.md`
-48. `proofs/finite_semigroup_holonomy_route.md`
-49. `proofs/unit_holonomy_longitude_gate.md`
+42. `proofs/atom_inner_detector_lift_rows.md`
+43. `proofs/bifree_corridor_subgroup_certificate.md`
+44. `proofs/bifree_corridor_certificate_audit.md`
+45. `proofs/bifree_corridor_exact_audit.md`
+46. `proofs/local_minimal_green_audit.md`
+47. `proofs/dual_green_symmetry.md`
+48. `proofs/opposite_detectability_closure.md`
+49. `proofs/finite_semigroup_holonomy_route.md`
+50. `proofs/unit_holonomy_longitude_gate.md`
 Also read `proofs/unit_factorization_gate.md`, which proves that a product of
 finite total transformations can be a residual permutation only when every
 factor is already a unit/permutation.
@@ -150,13 +151,20 @@ crossing rows match the active `U x U` Artin detector update, then induction
 gives `u_k(beta)=phi(L_k(beta))`.  This reduces the unbounded braid-word part
 of the remaining endpoint problem to finite row identities in fixed detector
 factors.
+Also read `proofs/atom_inner_detector_lift_rows.md`: once atom descent and
+totality are established, the atom quotient is rack-like and its inner group
+automatically satisfies the detector-lift rows.  Positive rows are just rack
+self-distributivity in the form `L_{a*b}=L_a L_b L_a^-1`; negative rows are
+formal inverses.  Therefore do not spend the remaining proof effort on the
+atom-inner row identity itself.  The open row checks are Green kernel-block,
+Schutzenberger, and lower endpoint/unit holonomy factors.
 Also read `proofs/unit_section_product_detector.md`, which combines finitely
 many fixed unit-section factors into one direct-product detector group.
-50. `proofs/green_holonomy_factorization_gate.md`
-51. `proofs/involutive_permutation_detector.md`
-52. `proofs/structure_orbit_law_obstruction.md`
-53. `proofs/fixed_variety_barrier.md`
-54. `proofs/bounded_degree_action_image_limit.md`
+51. `proofs/green_holonomy_factorization_gate.md`
+52. `proofs/involutive_permutation_detector.md`
+53. `proofs/structure_orbit_law_obstruction.md`
+54. `proofs/fixed_variety_barrier.md`
+55. `proofs/bounded_degree_action_image_limit.md`
 Also read `proofs/diagonal_normalized_obstruction.md`, which proves that an
 explicit detector-free interval diagonalizes to the normalized-law sequence
 required for outcome B.  Audit the companion helpers
@@ -164,14 +172,14 @@ required for outcome B.  Audit the companion helpers
 `right_stabilization_longitude_audit(...)` for product and stabilization
 conventions only; they are not a substitute for proving all finite detector
 groups fail.
-55. `proofs/affine_f2_audit.md`
-56. `proofs/two_colour_fibre2_all_bases_audit.md`
-57. `proofs/fibre2_product_branch.md`
-58. `proofs/two_colour_fibre3_product_audit.md`
-59. `proofs/three_colour_fibre2_product_audit.md`
-60. `proofs/sawin_proof_log.docx`
-61. `tables/reduction_audit.xlsx`
-62. Relevant code in `src/`, `tools/`, and `tests`, especially modules
+56. `proofs/affine_f2_audit.md`
+57. `proofs/two_colour_fibre2_all_bases_audit.md`
+58. `proofs/fibre2_product_branch.md`
+59. `proofs/two_colour_fibre3_product_audit.md`
+60. `proofs/three_colour_fibre2_product_audit.md`
+61. `proofs/sawin_proof_log.docx`
+62. `tables/reduction_audit.xlsx`
+63. Relevant code in `src/`, `tools/`, and `tests`, especially modules
     concerning input-dependent longitude factorization, quotient image
     kernels, residual dependency support, local-minimal intervals, local
     bottleneck routing, coordinate-kernel corridors, product label words,
@@ -489,6 +497,12 @@ and negative local rows are the active `U x U` Artin detector rows, then
 terminal `u`-labels are evaluated recursive longitudes.  Use
 `artin_detector_lift_transition_audit(...)` for the finite row check and
 `artin_detector_lift_braid_audit(...)` for the braid-recursion convention.
+The atom-inner rows are already closed by
+`proofs/atom_inner_detector_lift_rows.md`: after atom descent and totality,
+the side-opposite rack layer has inner translations satisfying the positive
+Artin row, and the negative row is its inverse.  Focus any remaining
+detector-lift proof on Green kernel-block, Schutzenberger, and lower
+endpoint/unit holonomy rows.
 
 Important warning from `proofs/product_longitude_witness_audit.md`: one common
 homomorphism `F_n -> H_prod` need not realize all coordinate labels at once.

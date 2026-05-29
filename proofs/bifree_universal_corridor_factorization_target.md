@@ -239,3 +239,11 @@ factor's local crossing rows carry pairs `(m,u)` and agree with the active
 finite check for this target is: verify those detector-lift row identities
 for the Green kernel-block, Schutzenberger, atom-inner, quotient, and lower
 endpoint/unit observer rows.
+The atom-inner entry in that finite check is now closed by
+`proofs/atom_inner_detector_lift_rows.md`: a descended total rack-like atom
+quotient satisfies the positive row in its inner group by
+`L_{a*b}=L_a L_b L_a^-1`, and the negative row is the inverse positive row.
+The remaining row identities to prove are therefore Green kernel-block,
+Schutzenberger, and lower endpoint/unit holonomy rows, together with the
+separate theorem that atom descent/totality holds or is absorbed by a
+controlled quotient.

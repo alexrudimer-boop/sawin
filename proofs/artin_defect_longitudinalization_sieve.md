@@ -281,3 +281,8 @@ expressions.  This detector-lift route is complementary to the Artin-defect
 route: the defect sieve gives a normal-closure certificate, while the
 detector-lift criterion turns finite local row identities directly into
 recursive longitude evaluations.
+The atom-inner rack-layer row identities in this detector-lift route are now
+closed by `proofs/atom_inner_detector_lift_rows.md`, conditional on atom
+descent and totality.  The remaining row-level work is not the atom inner
+group, but the Green kernel-block, Schutzenberger, and lower endpoint/unit
+holonomy factors.

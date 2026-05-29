@@ -200,6 +200,12 @@ fixed quotient or known-branch detector groups,
 fixed lower endpoint/unit groups.
 ```
 
+The atom-inner entry is now closed conditionally on atom descent and totality:
+`proofs/atom_inner_detector_lift_rows.md` proves that a rack-like atom quotient
+automatically satisfies these detector-lift rows in its inner group.  The
+remaining unverified row identities are therefore the Green kernel-block,
+Schutzenberger, and lower endpoint/unit holonomy rows.
+
 If the row identities hold for every endpoint factor, then every endpoint
 factor lies in `V_beta(H_s)`.  The product assembly note
 `proofs/bifree_corridor_endpoint_factorization.md` combines these witnesses

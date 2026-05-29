@@ -242,6 +242,9 @@ endpoint expression in a fixed factor, and the product helper constructs a
 literal word in `V_beta(product_i G_i)`.  Thus kernel-block,
 Schutzenberger, atom-inner, quotient-detector, and endpoint/unit factors can
 all be audited with the same direct-product witness convention.
+For atom-inner factors, `proofs/atom_inner_detector_lift_rows.md` now supplies
+the detector-lift row proof once the atom quotient is a descended total
+rack-like layer, so the certificate burden there is automatic after descent.
 The readout helpers record the faithful-readout clause: when the endpoint
 tuple is identity, the corresponding residual coordinate or tuple must
 actually be fixed.  They are the executable row format for the final implication

@@ -5,6 +5,10 @@ from dataclasses import dataclass
 from itertools import product
 from typing import Dict, Hashable, Iterable, Mapping, Tuple
 
+from .artin_longitudes import (
+    RackInnerDetectorLiftAudit,
+    right_rack_inner_detector_lift_audit,
+)
 from .finite_braided_set import FiniteBraidedSet, opposite_solution
 from .finite_group import FiniteGroup, permutation_group_from_generators
 from .local_interval import canonical_partition
@@ -704,6 +708,30 @@ def atom_quotient_inner_group(audit: GreenBranchAudit) -> FiniteGroup:
     return permutation_group_from_generators(
         generators,
         degree=len(quotient.elements),
+    )
+
+
+def atom_quotient_inner_detector_lift_audit(
+    audit: GreenBranchAudit,
+) -> RackInnerDetectorLiftAudit:
+    """Audit the Artin detector-lift rows for a descended atom quotient."""
+
+    rack_audit = atom_quotient_rack_audit(audit)
+    if not rack_audit.proves_right_rack_ybe_layer:
+        raise ValueError("atom quotient is not a proved right-rack layer")
+    return right_rack_inner_detector_lift_audit(atom_quotient_solution(audit))
+
+
+def atom_descent_quotient_inner_detector_lift_audit(
+    audit: GreenBranchAudit,
+) -> RackInnerDetectorLiftAudit:
+    """Audit Artin detector-lift rows after atom descent-closure coarsening."""
+
+    rack_audit = atom_descent_quotient_rack_audit(audit)
+    if not rack_audit.proves_right_rack_ybe_layer:
+        raise ValueError("descent-closed atom quotient is not a proved right-rack layer")
+    return right_rack_inner_detector_lift_audit(
+        atom_descent_quotient_solution(audit),
     )
 
 
