@@ -213,6 +213,127 @@ class EndpointProductArtinDefectAudit:
 
 
 @dataclass(frozen=True)
+class EndpointArtinDefectCoordinateReadoutAudit:
+    """One residual coordinate readout controlled by Artin-defect endpoints."""
+
+    endpoint_audit: EndpointProductArtinDefectAudit
+    input_coordinate: object
+    output_coordinate: object
+
+    @property
+    def endpoint_tuple_is_identity(self) -> bool:
+        return self.endpoint_audit.product_endpoint == tuple(
+            audit.group_identity for audit in self.endpoint_audit.factor_audits
+        )
+
+    @property
+    def coordinate_fixed(self) -> bool:
+        return self.output_coordinate == self.input_coordinate
+
+    @property
+    def identity_endpoints_fix_coordinate(self) -> bool:
+        return (not self.endpoint_tuple_is_identity) or self.coordinate_fixed
+
+    @property
+    def identity_longitudes_kill_coordinate_by_artin_defects(self) -> bool:
+        audit = self.endpoint_audit
+        if not audit.product_endpoint_lies_in_product_longitude_subgroup_by_artin_defects:
+            return False
+        if not audit.identity_product_longitude_signature_by_factors:
+            return True
+        return self.endpoint_tuple_is_identity and self.coordinate_fixed
+
+
+@dataclass(frozen=True)
+class EndpointArtinDefectResidualReadoutAudit:
+    """Bundle Artin-defect coordinate readout rows for one residual tuple."""
+
+    coordinate_audits: Tuple[EndpointArtinDefectCoordinateReadoutAudit, ...]
+
+    @property
+    def input_tuple(self) -> Tuple[object, ...]:
+        return tuple(audit.input_coordinate for audit in self.coordinate_audits)
+
+    @property
+    def output_tuple(self) -> Tuple[object, ...]:
+        return tuple(audit.output_coordinate for audit in self.coordinate_audits)
+
+    @property
+    def residual_tuple_fixed(self) -> bool:
+        return self.output_tuple == self.input_tuple
+
+    @property
+    def identity_endpoints_fix_all_coordinates(self) -> bool:
+        return all(
+            audit.identity_endpoints_fix_coordinate
+            for audit in self.coordinate_audits
+        )
+
+    @property
+    def identity_longitudes_kill_residual_tuple_by_artin_defects(self) -> bool:
+        return all(
+            audit.identity_longitudes_kill_coordinate_by_artin_defects
+            for audit in self.coordinate_audits
+        )
+
+
+@dataclass(frozen=True)
+class EndpointArtinDefectResidualActionAudit:
+    """Supplied-row residual action audit controlled by Artin defects."""
+
+    n: int
+    braid_word: Tuple[int, ...]
+    residual_readouts: Tuple[EndpointArtinDefectResidualReadoutAudit, ...]
+    expected_row_count: int | None = None
+
+    @property
+    def row_count(self) -> int:
+        return len(self.residual_readouts)
+
+    @property
+    def covers_expected_rows(self) -> bool:
+        return self.expected_row_count is None or self.row_count == self.expected_row_count
+
+    @property
+    def braid_data_consistent(self) -> bool:
+        for readout in self.residual_readouts:
+            for coordinate in readout.coordinate_audits:
+                endpoint = coordinate.endpoint_audit
+                if endpoint.n != self.n or endpoint.braid_word != self.braid_word:
+                    return False
+        return True
+
+    @property
+    def all_identity_endpoints_fix_rows(self) -> bool:
+        return all(
+            readout.identity_endpoints_fix_all_coordinates
+            for readout in self.residual_readouts
+        )
+
+    @property
+    def all_identity_longitudes_kill_rows_by_artin_defects(self) -> bool:
+        return all(
+            readout.identity_longitudes_kill_residual_tuple_by_artin_defects
+            for readout in self.residual_readouts
+        )
+
+    @property
+    def residual_action_identity_on_supplied_rows(self) -> bool:
+        return all(readout.residual_tuple_fixed for readout in self.residual_readouts)
+
+    @property
+    def proves_supplied_rows_detector_implication(self) -> bool:
+        return (
+            self.braid_data_consistent
+            and self.all_identity_longitudes_kill_rows_by_artin_defects
+        )
+
+    @property
+    def proves_complete_residual_action_implication(self) -> bool:
+        return self.proves_supplied_rows_detector_implication and self.covers_expected_rows
+
+
+@dataclass(frozen=True)
 class EndpointCoordinateReadoutAudit:
     """One residual coordinate readout controlled by endpoint expressions."""
 
@@ -617,6 +738,49 @@ def endpoint_product_artin_defect_audit(
         product_witness=product_witness,
         product_witness_value=product_witness_value,
         product_witness_matches_endpoint=product_witness_value == endpoint_tuple,
+    )
+
+
+def endpoint_artin_defect_coordinate_readout_audit(
+    endpoint_audit: EndpointProductArtinDefectAudit,
+    input_coordinate: object,
+    output_coordinate: object,
+) -> EndpointArtinDefectCoordinateReadoutAudit:
+    """Audit the faithful-readout implication for one Artin-defect row."""
+
+    return EndpointArtinDefectCoordinateReadoutAudit(
+        endpoint_audit=endpoint_audit,
+        input_coordinate=input_coordinate,
+        output_coordinate=output_coordinate,
+    )
+
+
+def endpoint_artin_defect_residual_readout_audit(
+    coordinate_audits: Sequence[EndpointArtinDefectCoordinateReadoutAudit],
+) -> EndpointArtinDefectResidualReadoutAudit:
+    """Bundle Artin-defect coordinates into one residual-tuple audit."""
+
+    return EndpointArtinDefectResidualReadoutAudit(
+        coordinate_audits=tuple(coordinate_audits)
+    )
+
+
+def endpoint_artin_defect_residual_action_audit(
+    n: int,
+    braid_word: BraidWord,
+    residual_readouts: Sequence[EndpointArtinDefectResidualReadoutAudit],
+    *,
+    expected_row_count: int | None = None,
+) -> EndpointArtinDefectResidualActionAudit:
+    """Bundle supplied residual rows for the Artin-defect implication."""
+
+    if expected_row_count is not None and expected_row_count < 0:
+        raise ValueError("expected row count must be nonnegative")
+    return EndpointArtinDefectResidualActionAudit(
+        n=n,
+        braid_word=tuple(braid_word),
+        residual_readouts=tuple(residual_readouts),
+        expected_row_count=expected_row_count,
     )
 
 

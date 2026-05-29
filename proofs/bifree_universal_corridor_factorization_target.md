@@ -230,3 +230,12 @@ longitudes and therefore evaluate into `V_beta(G)` for every finite group
 `G`.  Thus the current A-route target for this branch is the Artin-defect
 endpoint lemma, not a finite search for subgroup membership at bounded braid
 degree.
+The detector-lift criterion
+`proofs/artin_detector_lift_criterion.md` reduces the ordinary
+endpoint-expression part to finite local rows.  If a Green/corridor observer
+factor's local crossing rows carry pairs `(m,u)` and agree with the active
+`U x U` Artin detector update, then every terminal `u`-label is
+`phi(L_k(beta))` for the initial meridian assignment.  Hence the current
+finite check for this target is: verify those detector-lift row identities
+for the Green kernel-block, Schutzenberger, atom-inner, quotient, and lower
+endpoint/unit observer rows.

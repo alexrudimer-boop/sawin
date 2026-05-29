@@ -126,6 +126,14 @@ turn them into literal longitude-subgroup witnesses.  This narrows the open
 bi-free corridor target to proving such Artin-defect displays for every
 elementary group-like Green/corridor endpoint generator in the fixed factors
 of `H(pi,Q)`.
+The detector-lift criterion now handles the braid-word recursion behind those
+displays: `artin_detector_lift_transition_audit()` checks one finite local
+row against the active `G x G` update rules of the sharp Artin detector, and
+`artin_detector_lift_braid_audit()` verifies that the resulting terminal
+endpoint labels are exactly evaluated recursive Artin longitudes for every
+braid word.  The remaining corridor theorem is thereby reduced to a
+row-by-row finite identity check in the fixed Green, Schutzenberger,
+atom-inner, quotient, and endpoint-unit factors.
 The semisplit audit now has an exact Boolean-CSP view: each coloured crossing
 lists the allowed equality/universal bit patterns on its two source and two
 target colours, and satisfying non-extreme assignments agree with the

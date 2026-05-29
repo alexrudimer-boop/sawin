@@ -6,6 +6,11 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from ybe_domination import (
     artin_detector_rack,
+    artin_detector_lift_braid_audit,
+    artin_detector_lift_negative_update,
+    artin_detector_lift_positive_update,
+    artin_detector_lift_state,
+    artin_detector_lift_transition_audit,
     artin_images,
     artin_longitudes,
     artin_longitude_exponent_matrix,
@@ -21,6 +26,7 @@ from ybe_domination import (
     evaluate_artin_longitudes,
     evaluate_longitude_expression,
     evaluate_longitude_subgroup_witness,
+    evaluate_terminal_label_expression,
     FiniteGroupHomomorphism,
     has_identity_longitude_signature,
     has_trivial_abelian_longitudes_mod,
@@ -390,6 +396,87 @@ class ArtinLongitudeTests(unittest.TestCase):
         image_values, longitude_values = detector_rack_state(group, assignment, word)
         self.assertEqual(image_values, evaluate_artin_images(group, assignment, word))
         self.assertEqual(longitude_values, evaluate_artin_longitudes(group, assignment, word))
+
+    def test_artin_detector_lift_local_rows_match_active_detector(self):
+        group = symmetric_group(3)
+        left = ((1, 0, 2), (0, 1, 2))
+        right = ((0, 2, 1), (1, 2, 0))
+
+        positive_left, positive_right = artin_detector_lift_positive_update(
+            group,
+            left,
+            right,
+        )
+        positive = artin_detector_lift_transition_audit(
+            group,
+            1,
+            left,
+            right,
+            positive_left,
+            positive_right,
+        )
+
+        self.assertTrue(positive.row_matches_artin_detector)
+        self.assertEqual(positive.expected_left, positive_left)
+        self.assertEqual(positive.expected_right, positive_right)
+
+        negative_left, negative_right = artin_detector_lift_negative_update(
+            group,
+            left,
+            right,
+        )
+        negative = artin_detector_lift_transition_audit(
+            group,
+            -1,
+            left,
+            right,
+            negative_left,
+            negative_right,
+        )
+
+        self.assertTrue(negative.row_matches_artin_detector)
+        self.assertEqual(negative.expected_left, negative_left)
+        self.assertEqual(negative.expected_right, negative_right)
+
+        bad = artin_detector_lift_transition_audit(
+            group,
+            -1,
+            left,
+            right,
+            left,
+            right,
+        )
+        self.assertFalse(bad.row_matches_artin_detector)
+
+    def test_artin_detector_lift_state_matches_artin_images_and_longitudes(self):
+        group = symmetric_group(3)
+        assignment = (group.elements[1], group.elements[2], group.elements[3])
+        word = (1, 2, -1, 2)
+
+        state = artin_detector_lift_state(group, assignment, word)
+        image_values, longitude_values = detector_rack_state(group, assignment, word)
+        audit = artin_detector_lift_braid_audit(
+            group,
+            assignment,
+            word,
+            endpoint_expression=((0, 1), (2, -1)),
+        )
+
+        self.assertEqual(tuple(label[0] for label in state), image_values)
+        self.assertEqual(tuple(label[1] for label in state), longitude_values)
+        self.assertTrue(audit.meridians_match_artin_images)
+        self.assertTrue(audit.longitudes_match_artin_longitudes)
+        self.assertEqual(
+            audit.endpoint_value,
+            evaluate_terminal_label_expression(
+                group,
+                longitude_values,
+                ((0, 1), (2, -1)),
+            ),
+        )
+        self.assertEqual(audit.endpoint_value, audit.expected_endpoint_value)
+        self.assertTrue(audit.endpoint_matches_longitude_expression)
+        self.assertTrue(audit.proves_detector_lift_recursion)
 
     def test_longitude_expression_evaluates_word_in_longitude_values(self):
         group = cyclic_group(3)

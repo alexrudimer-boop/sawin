@@ -8,6 +8,9 @@ from ybe_domination import (
     artin_permutation_defect_witness_audit,
     cyclic_group,
     endpoint_artin_defect_audit,
+    endpoint_artin_defect_coordinate_readout_audit,
+    endpoint_artin_defect_residual_action_audit,
+    endpoint_artin_defect_residual_readout_audit,
     endpoint_coordinate_readout_audit,
     endpoint_longitude_expression_audit,
     endpoint_product_artin_defect_audit,
@@ -107,6 +110,75 @@ class EndpointFactorizationTests(unittest.TestCase):
             audit.product_endpoint_lies_in_product_longitude_subgroup_by_artin_defects
         )
         self.assertTrue(audit.proves_product_endpoint_detector_by_artin_defects)
+
+    def test_artin_defect_residual_action_records_complete_supplied_rows(self):
+        group = symmetric_group(3)
+        assignment = ((1, 0, 2), (0, 2, 1))
+        word = ((0, 1), (1, 1))
+        endpoint_audit = endpoint_product_artin_defect_audit(
+            (group,),
+            n=2,
+            braid_word=(1,),
+            endpoints=((2, 0, 1),),
+            terms_by_factor=(((assignment, word, 1),),),
+        )
+        coordinate = endpoint_artin_defect_coordinate_readout_audit(
+            endpoint_audit,
+            "a",
+            "b",
+        )
+        residual = endpoint_artin_defect_residual_readout_audit((coordinate,))
+        action = endpoint_artin_defect_residual_action_audit(
+            2,
+            (1,),
+            (residual,),
+            expected_row_count=1,
+        )
+
+        self.assertFalse(coordinate.endpoint_tuple_is_identity)
+        self.assertTrue(coordinate.identity_endpoints_fix_coordinate)
+        self.assertTrue(coordinate.identity_longitudes_kill_coordinate_by_artin_defects)
+        self.assertEqual(residual.input_tuple, ("a",))
+        self.assertEqual(residual.output_tuple, ("b",))
+        self.assertFalse(residual.residual_tuple_fixed)
+        self.assertTrue(residual.identity_longitudes_kill_residual_tuple_by_artin_defects)
+        self.assertEqual(action.row_count, 1)
+        self.assertTrue(action.covers_expected_rows)
+        self.assertTrue(action.braid_data_consistent)
+        self.assertTrue(action.proves_supplied_rows_detector_implication)
+        self.assertTrue(action.proves_complete_residual_action_implication)
+
+    def test_artin_defect_residual_action_rejects_unfaithful_identity_endpoint_row(self):
+        group = symmetric_group(3)
+        endpoint_audit = endpoint_product_artin_defect_audit(
+            (group,),
+            n=2,
+            braid_word=(1, -1),
+            endpoints=(group.identity,),
+            terms_by_factor=((),),
+        )
+        coordinate = endpoint_artin_defect_coordinate_readout_audit(
+            endpoint_audit,
+            "a",
+            "b",
+        )
+        residual = endpoint_artin_defect_residual_readout_audit((coordinate,))
+        action = endpoint_artin_defect_residual_action_audit(
+            2,
+            (1, -1),
+            (residual,),
+            expected_row_count=1,
+        )
+
+        self.assertTrue(coordinate.endpoint_tuple_is_identity)
+        self.assertFalse(coordinate.identity_endpoints_fix_coordinate)
+        self.assertFalse(
+            coordinate.identity_longitudes_kill_coordinate_by_artin_defects
+        )
+        self.assertFalse(action.all_identity_endpoints_fix_rows)
+        self.assertFalse(action.all_identity_longitudes_kill_rows_by_artin_defects)
+        self.assertFalse(action.residual_action_identity_on_supplied_rows)
+        self.assertFalse(action.proves_supplied_rows_detector_implication)
 
     def test_artin_defect_endpoint_rejects_bad_display(self):
         group = symmetric_group(3)

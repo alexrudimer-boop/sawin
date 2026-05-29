@@ -26,6 +26,7 @@ LongitudeExpressionLetter = Tuple[int, int]
 LongitudeExpression = Tuple[LongitudeExpressionLetter, ...]
 LongitudeSubgroupWitnessLetter = Tuple[Tuple[GroupElement, ...], int, int]
 LongitudeSubgroupWitness = Tuple[LongitudeSubgroupWitnessLetter, ...]
+ArtinDetectorLiftLabel = Tuple[GroupElement, GroupElement]
 
 
 def reduce_free_word(word: Iterable[FreeLetter]) -> FreeWord:
@@ -166,6 +167,48 @@ class ArtinPermutationDefectWitnessAudit:
     longitude_witness: LongitudeSubgroupWitness
     longitude_witness_value: GroupElement
     witness_matches_defect: bool
+
+
+@dataclass(frozen=True)
+class ArtinDetectorLiftTransitionAudit:
+    """One local row check for the active ``G x G`` Artin detector update."""
+
+    signed_generator: int
+    input_left: ArtinDetectorLiftLabel
+    input_right: ArtinDetectorLiftLabel
+    supplied_left: ArtinDetectorLiftLabel
+    supplied_right: ArtinDetectorLiftLabel
+    expected_left: ArtinDetectorLiftLabel
+    expected_right: ArtinDetectorLiftLabel
+    row_matches_artin_detector: bool
+
+
+@dataclass(frozen=True)
+class ArtinDetectorLiftBraidAudit:
+    """Global induction check for a supplied detector-lift endpoint expression."""
+
+    n: int
+    braid_word: Tuple[int, ...]
+    group_order: int
+    initial_meridians: Tuple[GroupElement, ...]
+    terminal_meridians: Tuple[GroupElement, ...]
+    terminal_longitude_labels: Tuple[GroupElement, ...]
+    expected_meridians: Tuple[GroupElement, ...]
+    expected_longitudes: Tuple[GroupElement, ...]
+    meridians_match_artin_images: bool
+    longitudes_match_artin_longitudes: bool
+    endpoint_expression: LongitudeExpression
+    endpoint_value: GroupElement
+    expected_endpoint_value: GroupElement
+    endpoint_matches_longitude_expression: bool
+
+    @property
+    def proves_detector_lift_recursion(self) -> bool:
+        return (
+            self.meridians_match_artin_images
+            and self.longitudes_match_artin_longitudes
+            and self.endpoint_matches_longitude_expression
+        )
 
 
 @dataclass(frozen=True)
@@ -332,6 +375,213 @@ def evaluate_free_word(group: FiniteGroup, assignment: Sequence[GroupElement], w
             value = group.inv(value)
         out = group.mul(out, value)
     return out
+
+
+def _check_group_assignment(
+    group: FiniteGroup,
+    assignment: Sequence[GroupElement],
+) -> Tuple[GroupElement, ...]:
+    assignment_tuple = tuple(assignment)
+    elements = set(group.elements)
+    if any(value not in elements for value in assignment_tuple):
+        raise ValueError("assignment contains a value outside the group")
+    return assignment_tuple
+
+
+def _check_detector_lift_label(
+    group: FiniteGroup,
+    label: ArtinDetectorLiftLabel,
+) -> ArtinDetectorLiftLabel:
+    pair = tuple(label)
+    if len(pair) != 2:
+        raise ValueError("detector-lift labels are pairs (meridian, endpoint)")
+    elements = set(group.elements)
+    if pair[0] not in elements or pair[1] not in elements:
+        raise ValueError("detector-lift label contains a value outside the group")
+    return pair  # type: ignore[return-value]
+
+
+def artin_detector_lift_positive_update(
+    group: FiniteGroup,
+    left: ArtinDetectorLiftLabel,
+    right: ArtinDetectorLiftLabel,
+) -> Tuple[ArtinDetectorLiftLabel, ArtinDetectorLiftLabel]:
+    """Return the active ``G x G`` detector update for ``sigma_i``."""
+
+    m_left, u_left = _check_detector_lift_label(group, left)
+    m_right, u_right = _check_detector_lift_label(group, right)
+    return (
+        (
+            group.mul(group.mul(m_left, m_right), group.inv(m_left)),
+            group.mul(m_left, u_right),
+        ),
+        (m_left, u_left),
+    )
+
+
+def artin_detector_lift_negative_update(
+    group: FiniteGroup,
+    left: ArtinDetectorLiftLabel,
+    right: ArtinDetectorLiftLabel,
+) -> Tuple[ArtinDetectorLiftLabel, ArtinDetectorLiftLabel]:
+    """Return the active ``G x G`` detector update for ``sigma_i^-1``."""
+
+    m_left, u_left = _check_detector_lift_label(group, left)
+    m_right, u_right = _check_detector_lift_label(group, right)
+    return (
+        (m_right, u_right),
+        (
+            group.mul(group.mul(group.inv(m_right), m_left), m_right),
+            group.mul(group.inv(m_right), u_left),
+        ),
+    )
+
+
+def artin_detector_lift_transition_audit(
+    group: FiniteGroup,
+    signed_generator: int,
+    input_left: ArtinDetectorLiftLabel,
+    input_right: ArtinDetectorLiftLabel,
+    supplied_left: ArtinDetectorLiftLabel,
+    supplied_right: ArtinDetectorLiftLabel,
+) -> ArtinDetectorLiftTransitionAudit:
+    """Audit one supplied finite row against the Artin detector-lift rules."""
+
+    if signed_generator == 0:
+        raise ValueError("signed generator must be nonzero")
+    if signed_generator > 0:
+        expected_left, expected_right = artin_detector_lift_positive_update(
+            group,
+            input_left,
+            input_right,
+        )
+    else:
+        expected_left, expected_right = artin_detector_lift_negative_update(
+            group,
+            input_left,
+            input_right,
+        )
+    supplied_left = _check_detector_lift_label(group, supplied_left)
+    supplied_right = _check_detector_lift_label(group, supplied_right)
+    return ArtinDetectorLiftTransitionAudit(
+        signed_generator=1 if signed_generator > 0 else -1,
+        input_left=_check_detector_lift_label(group, input_left),
+        input_right=_check_detector_lift_label(group, input_right),
+        supplied_left=supplied_left,
+        supplied_right=supplied_right,
+        expected_left=expected_left,
+        expected_right=expected_right,
+        row_matches_artin_detector=(
+            supplied_left == expected_left and supplied_right == expected_right
+        ),
+    )
+
+
+def artin_detector_lift_state(
+    group: FiniteGroup,
+    initial_meridians: Sequence[GroupElement],
+    braid_word: BraidWord,
+) -> Tuple[ArtinDetectorLiftLabel, ...]:
+    """Sweep a braid with active ``G x G`` Artin detector labels."""
+
+    meridians = _check_group_assignment(group, initial_meridians)
+    state: list[ArtinDetectorLiftLabel] = [
+        (meridian, group.identity) for meridian in meridians
+    ]
+    n = len(state)
+    for signed_generator in braid_word:
+        if signed_generator == 0:
+            raise ValueError("braid generators are nonzero")
+        index = abs(signed_generator) - 1
+        if index < 0 or index + 1 >= n:
+            raise IndexError(index)
+        if signed_generator > 0:
+            left, right = artin_detector_lift_positive_update(
+                group,
+                state[index],
+                state[index + 1],
+            )
+        else:
+            left, right = artin_detector_lift_negative_update(
+                group,
+                state[index],
+                state[index + 1],
+            )
+        state[index], state[index + 1] = left, right
+    return tuple(state)
+
+
+def evaluate_terminal_label_expression(
+    group: FiniteGroup,
+    labels: Sequence[GroupElement],
+    expression: LongitudeExpression,
+) -> GroupElement:
+    """Evaluate a signed word in terminal detector-lift endpoint labels."""
+
+    label_tuple = _check_group_assignment(group, labels)
+    out = group.identity
+    for index, exponent in tuple(expression):
+        if index < 0 or index >= len(label_tuple):
+            raise IndexError(index)
+        if exponent not in (-1, 1):
+            raise ValueError("terminal label expression exponents must be +/-1")
+        value = label_tuple[index]
+        if exponent < 0:
+            value = group.inv(value)
+        out = group.mul(out, value)
+    return out
+
+
+def artin_detector_lift_braid_audit(
+    group: FiniteGroup,
+    initial_meridians: Sequence[GroupElement],
+    braid_word: BraidWord,
+    endpoint_expression: Sequence[LongitudeExpressionLetter] = (),
+) -> ArtinDetectorLiftBraidAudit:
+    """Audit the detector-lift induction for a full braid word.
+
+    Passing this audit says that the terminal endpoint labels produced by the
+    finite local ``G x G`` update rules are exactly the recursive Artin
+    longitude values under the initial meridian assignment.
+    """
+
+    meridians = _check_group_assignment(group, initial_meridians)
+    n = len(meridians)
+    state = artin_detector_lift_state(group, meridians, braid_word)
+    terminal_meridians = tuple(label[0] for label in state)
+    terminal_longitudes = tuple(label[1] for label in state)
+    expected_meridians = evaluate_artin_images(group, meridians, braid_word)
+    expected_longitudes = evaluate_artin_longitudes(group, meridians, braid_word)
+    expression = tuple(endpoint_expression)
+    endpoint_value = evaluate_terminal_label_expression(
+        group,
+        terminal_longitudes,
+        expression,
+    )
+    expected_endpoint_value = evaluate_longitude_expression(
+        group,
+        meridians,
+        braid_word,
+        expression,
+    )
+    return ArtinDetectorLiftBraidAudit(
+        n=n,
+        braid_word=tuple(braid_word),
+        group_order=len(group.elements),
+        initial_meridians=meridians,
+        terminal_meridians=terminal_meridians,
+        terminal_longitude_labels=terminal_longitudes,
+        expected_meridians=expected_meridians,
+        expected_longitudes=expected_longitudes,
+        meridians_match_artin_images=terminal_meridians == expected_meridians,
+        longitudes_match_artin_longitudes=terminal_longitudes == expected_longitudes,
+        endpoint_expression=expression,
+        endpoint_value=endpoint_value,
+        expected_endpoint_value=expected_endpoint_value,
+        endpoint_matches_longitude_expression=(
+            endpoint_value == expected_endpoint_value
+        ),
+    )
 
 
 def _check_free_word_indices(n: int, word: FreeWord) -> None:

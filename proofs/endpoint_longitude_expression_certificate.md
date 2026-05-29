@@ -274,6 +274,15 @@ then convert the displayed Artin permutation defects into literal
 conjugators.  This is a stricter and more structured proof target for the
 remaining bi-free corridor endpoint factors.
 
+There is now also a detector-lift route:
+`proofs/artin_detector_lift_criterion.md` proves that if a fixed observer
+factor's finite crossing rows are the active `U x U` Artin detector rows, then
+the terminal observer labels are literally evaluated recursive longitudes.
+The helpers `artin_detector_lift_transition_audit(...)` and
+`artin_detector_lift_braid_audit(...)` check the finite row rule and the
+global recursion convention.  This converts the remaining endpoint-expression
+problem into a row-by-row finite identity check in the fixed detector factors.
+
 ## Role In The Master Local Theorem
 
 For outcome A, a Green/corridor proof does not have to enumerate
