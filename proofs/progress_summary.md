@@ -426,6 +426,14 @@ continuation as a possible loophole: in a local-minimal interval, each single
 nontrivial seed `x~v` already has universal admissible closure.  The helper
 `continuation_seed_pair_closure_audits(...)` exposes the seed-by-seed closure,
 and failures certify that the interval was not a valid local-minimal target.
+The universal-continuation derivation certificate
+`proofs/universal_continuation_derivation_certificate.md` exposes the finite
+transport ledger inside each universal single-seed closure.  The helper
+`continuation_seed_universal_derivation_audits(...)` checks that every
+nontrivial fibre edge in the universal closure has a recorded derivation row.
+The remaining descent-separation proof can now be stated edge-by-edge: route
+each derived edge through fixed Green/Schutzenberger/atom readouts, or extract
+B from one derived edge.
 The chart-transport collapse
 `proofs/chart_transport_collapse.md` removes another source of proof noise:
 because `V_beta(G)` is normal for every finite group `G`, one

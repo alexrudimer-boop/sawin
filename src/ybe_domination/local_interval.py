@@ -158,6 +158,28 @@ class ContinuationSeedPairClosureAudit:
     generated: GeneratedCongruenceAudit
 
 
+@dataclass(frozen=True)
+class ContinuationSeedUniversalDerivationAudit:
+    """Derivation coverage of a single continuation seed's universal closure."""
+
+    seed_closure: ContinuationSeedPairClosureAudit
+    edge_count_rows: Tuple[Tuple[Color, int], ...]
+    derivation_count_rows: Tuple[Tuple[Color, int], ...]
+    missing_derivation_count_rows: Tuple[Tuple[Color, int], ...]
+
+    @property
+    def closure_is_universal(self) -> bool:
+        return self.seed_closure.generated.kind == "universal"
+
+    @property
+    def every_edge_has_derivation(self) -> bool:
+        return all(count == 0 for _color, count in self.missing_derivation_count_rows)
+
+    @property
+    def proves_single_seed_universal_derivation(self) -> bool:
+        return self.closure_is_universal and self.every_edge_has_derivation
+
+
 def equality_partition(items: Sequence[FibrePoint]) -> Partition:
     return canonical_partition(frozenset([item]) for item in items)
 
@@ -492,6 +514,51 @@ def continuation_seed_pair_closure_failures(
         audit
         for audit in continuation_seed_pair_closure_audits(interval)
         if audit.generated.kind != "universal"
+    )
+
+
+def continuation_seed_universal_derivation_audits(
+    interval: "LocalInterval",
+) -> Tuple[ContinuationSeedUniversalDerivationAudit, ...]:
+    """Return derivation coverage for every universal continuation seed.
+
+    The generated-congruence engine records the first transport/inverse
+    derivation of every nontrivial edge it creates.  For a universal closure,
+    this audit exposes that edge-by-edge certificate so the descent-separation
+    proof target can be checked seed-by-seed.
+    """
+
+    audits = []
+    for seed_closure in continuation_seed_pair_closure_audits(interval):
+        edge_counts = dict(seed_closure.generated.edge_count_rows)
+        derivation_counts = dict(seed_closure.generated.derivation_count_rows)
+        missing = tuple(
+            (
+                color,
+                edge_counts[color] - derivation_counts.get(color, 0),
+            )
+            for color, _count in seed_closure.generated.edge_count_rows
+        )
+        audits.append(
+            ContinuationSeedUniversalDerivationAudit(
+                seed_closure=seed_closure,
+                edge_count_rows=seed_closure.generated.edge_count_rows,
+                derivation_count_rows=seed_closure.generated.derivation_count_rows,
+                missing_derivation_count_rows=missing,
+            )
+        )
+    return tuple(audits)
+
+
+def continuation_seed_universal_derivation_failures(
+    interval: "LocalInterval",
+) -> Tuple[ContinuationSeedUniversalDerivationAudit, ...]:
+    """Return seed derivation audits that do not certify universal closure."""
+
+    return tuple(
+        audit
+        for audit in continuation_seed_universal_derivation_audits(interval)
+        if not audit.proves_single_seed_universal_derivation
     )
 
 

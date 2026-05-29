@@ -11,6 +11,8 @@ from ybe_domination import (
     continuation_seed_pair_closure_failures,
     continuation_seed_pairs,
     continuation_seed_rows,
+    continuation_seed_universal_derivation_audits,
+    continuation_seed_universal_derivation_failures,
     coordinate_kernel_pair_closure_audits,
     coordinate_kernel_pair_closure_failures,
 )
@@ -230,6 +232,8 @@ class LocalIntervalTests(unittest.TestCase):
         self.assertEqual(continuation_seed_pairs(interval), {"*": ()})
         self.assertEqual(continuation_seed_pair_closure_audits(interval), ())
         self.assertEqual(continuation_seed_pair_closure_failures(interval), ())
+        self.assertEqual(continuation_seed_universal_derivation_audits(interval), ())
+        self.assertEqual(continuation_seed_universal_derivation_failures(interval), ())
         self.assertTrue(audit.base_rows_are_left_rack_form)
         self.assertTrue(audit.is_strand_continuing_on_the_nose)
         self.assertEqual(audit.generated.kind, "equality")
@@ -255,6 +259,32 @@ class LocalIntervalTests(unittest.TestCase):
         self.assertEqual(len(pair_audits[0].seed_rows), 2)
         self.assertEqual(continuation_seed_pair_closure_failures(interval), ())
 
+        derivation_audits = continuation_seed_universal_derivation_audits(interval)
+        self.assertEqual(len(derivation_audits), 1)
+        self.assertTrue(derivation_audits[0].closure_is_universal)
+        self.assertTrue(derivation_audits[0].every_edge_has_derivation)
+        self.assertEqual(derivation_audits[0].missing_derivation_count_rows, (("*", 0),))
+        self.assertTrue(derivation_audits[0].proves_single_seed_universal_derivation)
+        self.assertEqual(continuation_seed_universal_derivation_failures(interval), ())
+
+    def test_continuation_universal_derivation_records_positive_depth_edges(self):
+        interval = size_three_affine_interval()
+
+        audits = continuation_seed_universal_derivation_audits(interval)
+
+        self.assertEqual(len(audits), 1)
+        self.assertEqual(audits[0].seed_closure.generated.stable_depth, 1)
+        self.assertEqual(audits[0].edge_count_rows, (("*", 3),))
+        self.assertEqual(audits[0].derivation_count_rows, (("*", 3),))
+        self.assertEqual(audits[0].missing_derivation_count_rows, (("*", 0),))
+        self.assertTrue(audits[0].proves_single_seed_universal_derivation)
+        self.assertTrue(
+            any(
+                row.depth == 1 and row.source != "seed"
+                for row in audits[0].seed_closure.generated.derivation_rows
+            )
+        )
+
     def test_continuation_congruence_records_non_rack_base_rows(self):
         interval = two_color_identity_interval()
 
@@ -272,6 +302,7 @@ class LocalIntervalTests(unittest.TestCase):
 
         self.assertTrue(failures)
         self.assertTrue(all(failure.generated.kind != "universal" for failure in failures))
+        self.assertTrue(continuation_seed_universal_derivation_failures(interval))
 
 
 if __name__ == "__main__":

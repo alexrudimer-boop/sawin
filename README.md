@@ -207,6 +207,12 @@ universal continuation: in a local-minimal interval, every individual
 nontrivial continuation seed pair has universal admissible closure.  The code
 exposes this through `continuation_seed_pair_closure_audits(...)` and
 `continuation_seed_pair_closure_failures(...)`.
+The derivation certificate note
+`proofs/universal_continuation_derivation_certificate.md` then exposes the
+edge-by-edge finite transport ledger for each universal seed closure through
+`continuation_seed_universal_derivation_audits(...)`.  A future proof must
+route those derived edges through fixed Green/Schutzenberger/atom readouts, or
+choose one derived edge as the normalized-law B seed.
 The chart-transport collapse
 `proofs/chart_transport_collapse.md` removes transported-generator noise:
 `V_beta(G)` is already normal, and

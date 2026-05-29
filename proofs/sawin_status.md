@@ -992,6 +992,13 @@ only collectively by many seeds: every individual nontrivial continuation seed
 pair has universal closure.  The helpers
 `continuation_seed_pair_closure_audits(...)` and
 `continuation_seed_pair_closure_failures(...)` expose this seed-level gate.
+The universal-continuation derivation certificate
+`proofs/universal_continuation_derivation_certificate.md` now records the
+edge-by-edge derivation ledger for each universal seed closure.  The helper
+`continuation_seed_universal_derivation_audits(...)` compares the universal
+edge count with the recorded derivation rows, including positive-depth
+transport edges.  Thus the final descent-separation target is not only
+seed-by-seed but derived-edge-by-derived-edge.
 The chart-transport collapse in
 `proofs/chart_transport_collapse.md` removes chart-dependent copies from the
 generator burden.  Since `V_beta(G)` is already normal in every finite group,

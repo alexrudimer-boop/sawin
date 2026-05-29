@@ -108,3 +108,9 @@ the local theorem.
 
 This is not finite-search proof of A.  It is a finite exact gate that removes
 collective continuation closures from the final obstruction list.
+
+The next note,
+`proofs/universal_continuation_derivation_certificate.md`, exposes the
+edge-by-edge derivation certificate carried by a universal single-seed
+closure.  It is the finite transport ledger that a future descent-separation
+proof must route through the fixed Green/Schutzenberger/atom readouts.

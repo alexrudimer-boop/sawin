@@ -303,6 +303,11 @@ The elementary continuation note
 `proofs/elementary_continuation_closure.md` shows that this remaining
 universal corridor is seed-level in local-minimal intervals: each nontrivial
 continuation seed pair must close universally by itself.
+The derivation certificate
+`proofs/universal_continuation_derivation_certificate.md` records the finite
+first-derivation row for every nontrivial edge in that universal seed closure,
+so the next proof target is to route those derived edges through fixed
+Green/Schutzenberger/atom readouts.
 The chart-transport collapse
 `proofs/chart_transport_collapse.md` further reduces the endpoint burden:
 because `V_beta(G)` is normal, it is enough to prove one representative in

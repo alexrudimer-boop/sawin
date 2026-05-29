@@ -53,11 +53,12 @@ First read:
 20. `proofs/transport_state_rackification_detector.md`
 21. `proofs/continuation_congruence_descent_gate.md`
 22. `proofs/elementary_continuation_closure.md`
-23. `proofs/chart_transport_collapse.md`
-24. `proofs/descent_separation_transport_rack_closure.md`
-25. `proofs/sawin_proof_log.docx`
-26. `tables/reduction_audit.xlsx`
-27. The code and tests under `src/`, `tools/`, and `tests/`
+23. `proofs/universal_continuation_derivation_certificate.md`
+24. `proofs/chart_transport_collapse.md`
+25. `proofs/descent_separation_transport_rack_closure.md`
+26. `proofs/sawin_proof_log.docx`
+27. `tables/reduction_audit.xlsx`
+28. The code and tests under `src/`, `tools/`, and `tests/`
 
 Then audit and use these reductions:
 
@@ -222,6 +223,11 @@ Then audit and use these reductions:
    local-minimal target every single nontrivial continuation seed already has
    universal closure, so the remaining obstruction is seed-level rather than
    collective-only.
+   Also use `proofs/universal_continuation_derivation_certificate.md`: it
+   exposes the finite derivation rows for every edge in a universal
+   single-seed continuation closure.  A positive proof must route those
+   derived edges through fixed Green/Schutzenberger/atom readouts; a B proof
+   must choose one derived edge and upgrade it to a normalized-law sequence.
    Also use `proofs/chart_transport_collapse.md`: it proves transported
    elementary generators need no separate proof once one chart-conjugacy orbit
    representative is certified, because `V_beta(G)` is normal.  Then read
