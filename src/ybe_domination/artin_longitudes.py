@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from itertools import product
-from typing import Dict, Iterable, List, Mapping, Sequence, Tuple
+from typing import Callable, Dict, Iterable, List, Mapping, Sequence, Tuple
 
 from .finite_braided_set import (
     FiniteBraidedSet,
@@ -340,6 +340,51 @@ class RackInnerDetectorLiftAudit:
             and self.all_translation_conjugacies_match
             and self.all_endpoint_transports_match_crossing
             and self.all_negative_rows_follow_by_inverse
+        )
+
+
+@dataclass(frozen=True)
+class PrincipalGaugeCocycleFailure:
+    """One failed nonabelian rack-cocycle identity."""
+
+    left_atom: object
+    middle_atom: object
+    right_atom: object
+    left_value: GroupElement
+    right_value: GroupElement
+
+
+@dataclass(frozen=True)
+class PrincipalGaugeExtensionDetectorAudit:
+    """Audit a principal finite rack-extension detector for unit holonomy."""
+
+    base_rack_size: int
+    unit_group_order: int
+    extension_size: int
+    cocycle_failures: Tuple[PrincipalGaugeCocycleFailure, ...]
+    extension_is_rack_form: bool
+    extension_is_ybe: bool
+    inner_group_order: int | None
+    detector_lift_audit: RackInnerDetectorLiftAudit | None
+
+    @property
+    def cocycle_identity_holds(self) -> bool:
+        return not self.cocycle_failures
+
+    @property
+    def principal_extension_is_finite_rack(self) -> bool:
+        return (
+            self.cocycle_identity_holds
+            and self.extension_is_rack_form
+            and self.extension_is_ybe
+        )
+
+    @property
+    def proves_principal_gauge_detector(self) -> bool:
+        return (
+            self.principal_extension_is_finite_rack
+            and self.detector_lift_audit is not None
+            and self.detector_lift_audit.proves_rack_inner_detector_lift_rows
         )
 
 
@@ -2046,6 +2091,146 @@ def right_rack_inner_detector_lift_audit(
     return rack_inner_detector_lift_audit(
         opposite_solution(solution),
         endpoint_labels=endpoint_labels,
+    )
+
+
+PrincipalGaugeCocycle = (
+    Mapping[Tuple[object, object], GroupElement]
+    | Callable[[object, object], GroupElement]
+)
+
+
+def _rack_operation_value(
+    rack: FiniteBraidedSet,
+    left: object,
+    right: object,
+) -> object:
+    first, second = rack.R[(left, right)]
+    if second != left:
+        raise ValueError("base solution is not in left rack form R(a,b)=(a*b,a)")
+    return first
+
+
+def _principal_gauge_cocycle_value(
+    unit_group: FiniteGroup,
+    cocycle: PrincipalGaugeCocycle,
+    left: object,
+    right: object,
+) -> GroupElement:
+    value = (
+        cocycle(left, right)
+        if callable(cocycle)
+        else cocycle[(left, right)]
+    )
+    if value not in unit_group.elements:
+        raise ValueError("principal gauge cocycle value outside unit group")
+    return value
+
+
+def principal_gauge_cocycle_failures(
+    base_rack: FiniteBraidedSet,
+    unit_group: FiniteGroup,
+    cocycle: PrincipalGaugeCocycle,
+) -> Tuple[PrincipalGaugeCocycleFailure, ...]:
+    """Return failed identities ``c(a,b*d)c(b,d)=c(a*b,a*d)c(a,d)``."""
+
+    if not is_rack_solution(base_rack) or not base_rack.is_ybe():
+        raise ValueError("base solution must be a finite rack")
+    failures: List[PrincipalGaugeCocycleFailure] = []
+    for left, middle, right in product(base_rack.elements, repeat=3):
+        middle_under_right = _rack_operation_value(base_rack, middle, right)
+        left_under_middle = _rack_operation_value(base_rack, left, middle)
+        left_under_right = _rack_operation_value(base_rack, left, right)
+        left_value = unit_group.mul(
+            _principal_gauge_cocycle_value(
+                unit_group,
+                cocycle,
+                left,
+                middle_under_right,
+            ),
+            _principal_gauge_cocycle_value(unit_group, cocycle, middle, right),
+        )
+        right_value = unit_group.mul(
+            _principal_gauge_cocycle_value(
+                unit_group,
+                cocycle,
+                left_under_middle,
+                left_under_right,
+            ),
+            _principal_gauge_cocycle_value(unit_group, cocycle, left, right),
+        )
+        if left_value != right_value:
+            failures.append(
+                PrincipalGaugeCocycleFailure(
+                    left_atom=left,
+                    middle_atom=middle,
+                    right_atom=right,
+                    left_value=left_value,
+                    right_value=right_value,
+                )
+            )
+    return tuple(failures)
+
+
+def principal_gauge_extension_rack(
+    base_rack: FiniteBraidedSet,
+    unit_group: FiniteGroup,
+    cocycle: PrincipalGaugeCocycle,
+) -> FiniteBraidedSet:
+    """Build the principal gauge extension ``(a,r)*(b,s)=(a*b,c(a,b)s)``."""
+
+    if not is_rack_solution(base_rack) or not base_rack.is_ybe():
+        raise ValueError("base solution must be a finite rack")
+    elements = tuple(
+        (atom, unit)
+        for atom in base_rack.elements
+        for unit in unit_group.elements
+    )
+
+    def op(left: Tuple[object, GroupElement], right: Tuple[object, GroupElement]):
+        left_atom, _left_unit = left
+        right_atom, right_unit = right
+        return (
+            _rack_operation_value(base_rack, left_atom, right_atom),
+            unit_group.mul(
+                _principal_gauge_cocycle_value(
+                    unit_group,
+                    cocycle,
+                    left_atom,
+                    right_atom,
+                ),
+                right_unit,
+            ),
+        )
+
+    return rack_solution(elements, op)
+
+
+def principal_gauge_extension_detector_audit(
+    base_rack: FiniteBraidedSet,
+    unit_group: FiniteGroup,
+    cocycle: PrincipalGaugeCocycle,
+    endpoint_labels: Sequence[GroupElement] | None = None,
+) -> PrincipalGaugeExtensionDetectorAudit:
+    """Audit that a principal gauge cocycle is closed by a rack inner detector."""
+
+    failures = principal_gauge_cocycle_failures(base_rack, unit_group, cocycle)
+    extension = principal_gauge_extension_rack(base_rack, unit_group, cocycle)
+    extension_is_rack_form = is_rack_solution(extension)
+    extension_is_ybe = extension.is_ybe()
+    detector_lift_audit = rack_inner_detector_lift_audit(
+        extension,
+        endpoint_labels=endpoint_labels,
+    )
+    return PrincipalGaugeExtensionDetectorAudit(
+        base_rack_size=len(base_rack.elements),
+        unit_group_order=len(unit_group.elements),
+        extension_size=len(extension.elements),
+        cocycle_failures=failures,
+        extension_is_rack_form=extension_is_rack_form,
+        extension_is_ybe=extension_is_ybe,
+        inner_group_order=detector_lift_audit.inner_group_order,
+        detector_lift_audit=detector_lift_audit,
     )
 
 

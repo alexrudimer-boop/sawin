@@ -48,9 +48,11 @@ First read:
 15. `proofs/green_defect_abelianization_split.md`
 16. `proofs/abelian_longitude_image_criterion.md`
 17. `proofs/green_balanced_defect_gauge_decomposition.md`
-18. `proofs/sawin_proof_log.docx`
-19. `tables/reduction_audit.xlsx`
-20. The code and tests under `src/`, `tools/`, and `tests/`
+18. `proofs/terminal_gauge_longitudinalization_criterion.md`
+19. `proofs/principal_gauge_extension_detector.md`
+20. `proofs/sawin_proof_log.docx`
+21. `tables/reduction_audit.xlsx`
+22. The code and tests under `src/`, `tools/`, and `tests/`
 
 Then audit and use these reductions:
 
@@ -197,6 +199,13 @@ Then audit and use these reductions:
    raw Green/Schutzenberger first-output defects into an Artin-visible
    commutator and a terminal second-output gauge boundary, so a final proof
    should focus on terminal gauge/unit holonomy.
+   Also use `proofs/terminal_gauge_longitudinalization_criterion.md`: it
+   packages terminal gauge holonomy as a telescope plus an endpoint-longitude
+   certificate in fixed gauge factors.
+   Also use `proofs/principal_gauge_extension_detector.md`: it closes the
+   principal lower endpoint/unit gauge subcase by turning
+   `(a,r)*(b,s)=(a*b,c(a,b)s)` and the YBE cocycle law into the finite rack
+   `A x U` and fixed detector `Inn(A x U)`.
    Also audit the Green atom-action layer through `proofs/green_branch_audit.md`
    and `atom_action_summary(...)`: it checks whether completed rows descend to
    operations on saturated atoms, `p(a) triangleright p(q)=p(a^q)` and

@@ -49,6 +49,9 @@ from ybe_domination import (
     longitude_value_generators,
     longitude_value_subgroup_elements,
     pure_braid_generator,
+    principal_gauge_cocycle_failures,
+    principal_gauge_extension_detector_audit,
+    principal_gauge_extension_rack,
     pushforward_longitude_subgroup_witness,
     pushforward_longitude_subgroup_witness_audit,
     rack_inner_group,
@@ -629,6 +632,53 @@ class ArtinLongitudeTests(unittest.TestCase):
 
         self.assertEqual(audit.rack_size, 3)
         self.assertTrue(audit.proves_rack_inner_detector_lift_rows)
+
+    def test_principal_gauge_extension_detector_closes_cocycle_rows(self):
+        base = rack_solution(range(2), lambda _left, right: right)
+        unit = cyclic_group(3)
+        cocycle = {
+            (left, right): left % 3
+            for left in base.elements
+            for right in base.elements
+        }
+
+        failures = principal_gauge_cocycle_failures(base, unit, cocycle)
+        extension = principal_gauge_extension_rack(base, unit, cocycle)
+        audit = principal_gauge_extension_detector_audit(base, unit, cocycle)
+
+        self.assertEqual(failures, tuple())
+        self.assertEqual(len(extension.elements), 6)
+        self.assertTrue(is_rack_solution(extension))
+        self.assertTrue(extension.is_ybe())
+        self.assertEqual(audit.base_rack_size, 2)
+        self.assertEqual(audit.unit_group_order, 3)
+        self.assertEqual(audit.extension_size, 6)
+        self.assertTrue(audit.cocycle_identity_holds)
+        self.assertTrue(audit.principal_extension_is_finite_rack)
+        self.assertIsNotNone(audit.detector_lift_audit)
+        self.assertTrue(audit.proves_principal_gauge_detector)
+
+    def test_principal_gauge_extension_audit_exposes_nonprincipal_failure(self):
+        base = rack_solution(range(2), lambda _left, right: right)
+        unit = symmetric_group(3)
+        transposition_01 = (1, 0, 2)
+        transposition_12 = (0, 2, 1)
+        cocycle = {
+            (left, right): unit.identity
+            for left in base.elements
+            for right in base.elements
+        }
+        cocycle[(0, 0)] = transposition_01
+        cocycle[(1, 0)] = transposition_12
+
+        audit = principal_gauge_extension_detector_audit(base, unit, cocycle)
+
+        self.assertGreater(len(audit.cocycle_failures), 0)
+        self.assertFalse(audit.cocycle_identity_holds)
+        self.assertTrue(audit.extension_is_rack_form)
+        self.assertFalse(audit.extension_is_ybe)
+        self.assertFalse(audit.principal_extension_is_finite_rack)
+        self.assertFalse(audit.proves_principal_gauge_detector)
 
     def test_artin_detector_lift_state_matches_artin_images_and_longitudes(self):
         group = symmetric_group(3)

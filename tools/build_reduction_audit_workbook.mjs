@@ -493,6 +493,20 @@ const rows = [
     "Prove terminal gauge holonomy lies in the fixed endpoint/unit longitude subgroup.",
   ],
   [
+    "Terminal gauge criterion",
+    "Turn terminal second-output gauge holonomy into the standard endpoint-longitude certificate target.",
+    "proofs/terminal_gauge_longitudinalization_criterion.md proves the gauge telescope and records terminal_gauge_* audits that reuse endpoint expression/product witnesses.",
+    "Certificate criterion",
+    "Supply all-n terminal gauge certificates in fixed factors, or extract normalized-law gauge escape.",
+  ],
+  [
+    "Principal gauge extension",
+    "Close lower endpoint/unit holonomy when the surviving gauge row is a principal finite rack-extension cocycle.",
+    "proofs/principal_gauge_extension_detector.md proves the rack-cocycle criterion; principal_gauge_extension_detector_audit builds A x U and checks Inn(A x U) detector-lift rows.",
+    "Closed subcase",
+    "Prove principal-gauge normal form for every surviving corridor gauge row, or extract a nonprincipal normalized-law seed.",
+  ],
+  [
     "Bi-free subgroup certificate",
     "Profile candidate words against fixed corridor detector factors.",
     "Helper, extra-factor target support, direct-product subgroup audit, and tests added; affine commutator seen by S3 block factor.",

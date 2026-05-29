@@ -920,6 +920,43 @@ finite target group `U`, the conjugation around the second factor is harmless.
 Thus the genuine remaining Green/Schutzenberger burden is terminal
 second-output gauge holonomy `CA^-1`, not an independent first-output defect
 endpoint.
+The certificate target for this burden is now recorded in
+`proofs/terminal_gauge_longitudinalization_criterion.md`.  Along one strand
+or chart, labels `g_0,...,g_t` have gauge increments
+`s_k=g_k g_{k-1}^-1`, and the newest-on-left product telescopes:
+
+```text
+s_t ... s_1 = g_t g_0^-1.
+```
+
+The terminal endpoint can then be killed by the same endpoint certificates
+already used elsewhere: recursive-longitude expressions, literal subgroup
+witnesses, Artin-defect displays, or abelian matrix witnesses in fixed gauge
+factors.  The executable helpers
+`terminal_gauge_telescoping_audit(...)`,
+`terminal_gauge_longitude_expression_audit(...)`, and
+`terminal_gauge_product_longitude_expression_audit(...)` record the single
+factor and product-detector forms.
+The principal lower endpoint/unit subcase is now closed in
+`proofs/principal_gauge_extension_detector.md`.  If the surviving gauge row
+has principal form
+
+```text
+(a,r)*(b,s) = (a*b, c(a,b)s),
+```
+
+then projecting the local YBE to the unit coordinate gives the nonabelian
+rack-cocycle identity
+
+```text
+c(a,b*d)c(b,d)=c(a*b,a*d)c(a,d).
+```
+
+Thus `A x U` is a finite rack and the fixed group `Inn(A x U)` supplies the
+Artin detector-lift rows for this principal terminal gauge.  The current
+sharp structural burden is principal-gauge normal form for every surviving
+endpoint/unit holonomy row; a failure would be an explicit nonprincipal row
+that still needs a normalized-law sequence to become outcome B.
 The single-endpoint route audit
 `unit_composite_longitude_route_audit(monoid,n,beta,factors)` now records the
 same ladder used in product-label work: endpoint identity, one evaluated

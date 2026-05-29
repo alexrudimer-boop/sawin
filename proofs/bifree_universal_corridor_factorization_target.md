@@ -276,3 +276,14 @@ Green/Schutzenberger row defects from the independent open list: each such
 defect is an Artin-visible commutator times a terminal second-output gauge
 boundary.  The open Green row burden is therefore the terminal gauge/unit
 holonomy target.
+The certificate format for that target is
+`proofs/terminal_gauge_longitudinalization_criterion.md`: terminal gauge
+increments telescope to one endpoint, and the proof must display that
+endpoint in `V_beta` of fixed gauge factors using the existing endpoint
+certificate calculus.
+The principal finite rack-extension subcase is handled by
+`proofs/principal_gauge_extension_detector.md`: once a lower gauge row has
+form `(a,r)*(b,s)=(a*b,c(a,b)s)`, the YBE gives the rack-cocycle identity and
+`Inn(A x U)` becomes a fixed detector.  The remaining structural target is
+therefore principal-gauge normal form, or a nonprincipal row suitable for the
+normalized-law B route.

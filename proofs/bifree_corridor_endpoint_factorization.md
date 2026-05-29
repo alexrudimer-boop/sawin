@@ -369,6 +369,16 @@ Green/Schutzenberger first-output defect is an Artin-visible commutator times
 a conjugated inverse second-output gauge.  Therefore the genuinely remaining
 Green/Schutzenberger endpoint is terminal gauge holonomy, which belongs with
 the lower endpoint/unit factors in the product detector.
+The terminal gauge certificate itself is isolated in
+`proofs/terminal_gauge_longitudinalization_criterion.md`: chart labels
+`g_0,...,g_t` produce gauge increments `s_k=g_k g_{k-1}^-1` that telescope to
+`g_t g_0^-1`, and this endpoint is then handled by the same longitude
+expression/product witness machinery as any other endpoint factor.
+The principal gauge subcase is closed by
+`proofs/principal_gauge_extension_detector.md`: a lower row
+`(a,r)*(b,s)=(a*b,c(a,b)s)` is a finite rack extension exactly when `c`
+satisfies the nonabelian rack-cocycle law, and then the fixed group
+`Inn(A x U)` supplies the detector-lift factor.
 
 ## Executable certificate layer
 

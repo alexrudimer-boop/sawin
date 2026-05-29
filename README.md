@@ -176,6 +176,17 @@ The Green row obstruction is now smaller still:
 commutator is an Artin permutation defect value, so raw Green row defects
 reduce to terminal second-output gauge holonomy in the lower endpoint/unit
 chart.
+The next criterion,
+`proofs/terminal_gauge_longitudinalization_criterion.md`, packages that target
+as an endpoint certificate: gauge increments telescope to a terminal endpoint,
+and that endpoint must be shown to lie in a fixed `V_beta(U)` by the existing
+longitude-expression, subgroup-witness, Artin-defect, or abelian matrix
+certificate formats.
+The principal subcase is now closed in
+`proofs/principal_gauge_extension_detector.md`: if the remaining unit gauge row
+has the form `(a,r)*(b,s)=(a*b,c(a,b)s)`, then the YBE supplies the nonabelian
+rack-cocycle identity, `A x U` is a finite rack, and
+`Inn(A x U)` is a fixed detector for that lower holonomy.
 The semisplit audit now has an exact Boolean-CSP view: each coloured crossing
 lists the allowed equality/universal bit patterns on its two source and two
 target colours, and satisfying non-extreme assignments agree with the

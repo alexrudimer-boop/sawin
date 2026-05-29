@@ -116,6 +116,96 @@ class EndpointProductExpressionAudit:
 
 
 @dataclass(frozen=True)
+class TerminalGaugeTelescopingAudit:
+    """Check that second-output gauge increments telescope to one endpoint."""
+
+    group_order: int
+    labels: Tuple[GroupElement, ...]
+    labels_in_group: bool
+    gauge_factors: Tuple[GroupElement, ...]
+    gauge_factors_in_group: bool
+    computed_gauge_factors: Tuple[GroupElement, ...] | None
+    gauge_factors_match_label_differences: bool
+    terminal_endpoint: GroupElement | None
+    telescoped_gauge_product: GroupElement | None
+    telescoped_product_matches_endpoint: bool
+    group_identity: GroupElement
+
+    @property
+    def has_terminal_endpoint(self) -> bool:
+        return self.terminal_endpoint is not None
+
+    @property
+    def proves_terminal_gauge_telescoping(self) -> bool:
+        return (
+            self.labels_in_group
+            and self.gauge_factors_in_group
+            and self.gauge_factors_match_label_differences
+            and self.telescoped_product_matches_endpoint
+        )
+
+    @property
+    def terminal_endpoint_is_identity(self) -> bool:
+        return self.terminal_endpoint == self.group_identity
+
+
+@dataclass(frozen=True)
+class TerminalGaugeLongitudeExpressionAudit:
+    """Terminal gauge endpoint plus a recursive-longitude expression certificate."""
+
+    telescope_audit: TerminalGaugeTelescopingAudit
+    endpoint_audit: EndpointLongitudeExpressionAudit
+
+    @property
+    def terminal_gauge_lies_in_longitude_subgroup_by_expression(self) -> bool:
+        return (
+            self.telescope_audit.proves_terminal_gauge_telescoping
+            and self.endpoint_audit.endpoint_lies_in_longitude_subgroup_by_expression
+            and self.endpoint_audit.endpoint == self.telescope_audit.terminal_endpoint
+        )
+
+    @property
+    def identity_longitudes_kill_terminal_gauge_by_expression(self) -> bool:
+        if not self.terminal_gauge_lies_in_longitude_subgroup_by_expression:
+            return False
+        return self.endpoint_audit.identity_longitudes_kill_endpoint_by_expression
+
+
+@dataclass(frozen=True)
+class TerminalGaugeProductExpressionAudit:
+    """Assemble terminal gauge certificates into one product detector."""
+
+    telescope_audits: Tuple[TerminalGaugeTelescopingAudit, ...]
+    endpoint_audit: EndpointProductExpressionAudit
+
+    @property
+    def all_terminal_gauges_telescope(self) -> bool:
+        return all(
+            audit.proves_terminal_gauge_telescoping
+            for audit in self.telescope_audits
+        )
+
+    @property
+    def terminal_endpoint_tuple(self) -> Tuple[GroupElement | None, ...]:
+        return tuple(audit.terminal_endpoint for audit in self.telescope_audits)
+
+    @property
+    def terminal_gauge_tuple_lies_in_product_longitude_subgroup_by_expression(self) -> bool:
+        return (
+            self.all_terminal_gauges_telescope
+            and self.endpoint_audit.product_endpoint
+            == tuple(audit.terminal_endpoint for audit in self.telescope_audits)
+            and self.endpoint_audit.product_endpoint_lies_in_product_longitude_subgroup_by_expression
+        )
+
+    @property
+    def identity_longitudes_kill_terminal_gauge_tuple_by_expression(self) -> bool:
+        if not self.terminal_gauge_tuple_lies_in_product_longitude_subgroup_by_expression:
+            return False
+        return self.endpoint_audit.identity_longitudes_kill_product_endpoint_by_expression
+
+
+@dataclass(frozen=True)
 class EndpointArtinDefectAudit:
     """Endpoint certificate using Artin permutation defect values."""
 
@@ -585,6 +675,164 @@ def endpoint_product_longitude_expression_audit(
         product_witness=product_witness,
         product_witness_value=product_witness_value,
         product_witness_matches_endpoint=product_witness_value == endpoint_tuple,
+    )
+
+
+def _terminal_gauge_product(
+    group: FiniteGroup,
+    factors: Sequence[GroupElement],
+) -> GroupElement:
+    out = group.identity
+    for factor in factors:
+        out = group.mul(factor, out)
+    return out
+
+
+def terminal_gauge_telescoping_audit(
+    group: FiniteGroup,
+    labels: Sequence[GroupElement],
+    gauge_factors: Sequence[GroupElement] | None = None,
+) -> TerminalGaugeTelescopingAudit:
+    """Audit the telescope ``s_t ... s_1 = g_t g_0^-1``.
+
+    Labels are ordered along one physical strand.  The computed chronological
+    gauge increments are ``s_k = g_k g_{k-1}^-1``.  Their terminal product is
+    taken with the newest factor on the left, matching the algebraic
+    telescoping convention.
+    """
+
+    label_tuple = tuple(labels)
+    if not label_tuple:
+        raise ValueError("terminal gauge audit needs at least one label")
+    elements = set(group.elements)
+    labels_in_group = all(label in elements for label in label_tuple)
+    computed: Tuple[GroupElement, ...] | None = None
+    terminal_endpoint = None
+    if labels_in_group:
+        computed = tuple(
+            group.mul(label_tuple[index], group.inv(label_tuple[index - 1]))
+            for index in range(1, len(label_tuple))
+        )
+        terminal_endpoint = group.mul(label_tuple[-1], group.inv(label_tuple[0]))
+    factor_tuple = computed if gauge_factors is None and computed is not None else tuple(gauge_factors or ())
+    gauge_factors_in_group = all(factor in elements for factor in factor_tuple)
+    telescoped = (
+        _terminal_gauge_product(group, factor_tuple)
+        if gauge_factors_in_group
+        else None
+    )
+    return TerminalGaugeTelescopingAudit(
+        group_order=len(group.elements),
+        labels=label_tuple,
+        labels_in_group=labels_in_group,
+        gauge_factors=factor_tuple,
+        gauge_factors_in_group=gauge_factors_in_group,
+        computed_gauge_factors=computed,
+        gauge_factors_match_label_differences=(
+            computed is not None and factor_tuple == computed
+        ),
+        terminal_endpoint=terminal_endpoint,
+        telescoped_gauge_product=telescoped,
+        telescoped_product_matches_endpoint=(
+            terminal_endpoint is not None and telescoped == terminal_endpoint
+        ),
+        group_identity=group.identity,
+    )
+
+
+def terminal_gauge_longitude_expression_audit(
+    group: FiniteGroup,
+    n: int,
+    braid_word: BraidWord,
+    labels: Sequence[GroupElement],
+    assignment: Sequence[GroupElement],
+    expression: Sequence[Tuple[int, int]],
+    gauge_factors: Sequence[GroupElement] | None = None,
+) -> TerminalGaugeLongitudeExpressionAudit:
+    """Audit terminal gauge telescoping and a longitude expression for it."""
+
+    telescope = terminal_gauge_telescoping_audit(
+        group,
+        labels,
+        gauge_factors=gauge_factors,
+    )
+    endpoint = (
+        telescope.terminal_endpoint
+        if telescope.terminal_endpoint is not None
+        else group.identity
+    )
+    endpoint = endpoint if endpoint in group.elements else group.identity
+    endpoint_audit = endpoint_longitude_expression_audit(
+        group,
+        n,
+        braid_word,
+        endpoint,
+        assignment,
+        expression,
+    )
+    return TerminalGaugeLongitudeExpressionAudit(
+        telescope_audit=telescope,
+        endpoint_audit=endpoint_audit,
+    )
+
+
+def terminal_gauge_product_longitude_expression_audit(
+    groups: Sequence[FiniteGroup],
+    n: int,
+    braid_word: BraidWord,
+    labels_by_factor: Sequence[Sequence[GroupElement]],
+    assignments: Sequence[Sequence[GroupElement]],
+    expressions: Sequence[Sequence[Tuple[int, int]]],
+    gauge_factors_by_factor: Sequence[Sequence[GroupElement]] | None = None,
+) -> TerminalGaugeProductExpressionAudit:
+    """Assemble terminal gauge endpoint certificates into one product group."""
+
+    group_tuple = tuple(groups)
+    label_tuple = tuple(tuple(labels) for labels in labels_by_factor)
+    assignment_tuple = tuple(tuple(assignment) for assignment in assignments)
+    expression_tuple = tuple(tuple(expression) for expression in expressions)
+    if not (
+        len(group_tuple)
+        == len(label_tuple)
+        == len(assignment_tuple)
+        == len(expression_tuple)
+    ):
+        raise ValueError(
+            "need labels, assignment, and expression data for each group"
+        )
+    if gauge_factors_by_factor is None:
+        gauge_tuple: Tuple[Tuple[GroupElement, ...] | None, ...] = tuple(
+            None for _group in group_tuple
+        )
+    else:
+        gauge_tuple = tuple(tuple(factors) for factors in gauge_factors_by_factor)
+        if len(gauge_tuple) != len(group_tuple):
+            raise ValueError("need one gauge-factor list for each group")
+    telescopes = tuple(
+        terminal_gauge_telescoping_audit(
+            group,
+            labels,
+            gauge_factors=factors,
+        )
+        for group, labels, factors in zip(group_tuple, label_tuple, gauge_tuple)
+    )
+    endpoints = tuple(
+        audit.terminal_endpoint
+        if audit.terminal_endpoint is not None
+        else group.identity
+        for group, audit in zip(group_tuple, telescopes)
+    )
+    endpoint_audit = endpoint_product_longitude_expression_audit(
+        group_tuple,
+        n,
+        braid_word,
+        endpoints,
+        assignment_tuple,
+        expression_tuple,
+    )
+    return TerminalGaugeProductExpressionAudit(
+        telescope_audits=telescopes,
+        endpoint_audit=endpoint_audit,
     )
 
 

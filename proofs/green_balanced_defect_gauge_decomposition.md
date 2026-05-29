@@ -159,6 +159,17 @@ s_t ... s_1 = g(a_terminal) g(a_initial)^-1,
 with the usual transported form when read in moving Green or Schutzenberger
 charts.
 
+The follow-up note
+`proofs/terminal_gauge_longitudinalization_criterion.md` records this
+telescope as the executable certificate target: after computing the terminal
+gauge endpoint, prove that endpoint lies in `V_beta` of fixed gauge factors
+by a longitude expression, literal subgroup witness, Artin-defect display, or
+abelian matrix witness.
+The principal-gauge subcase is then closed by
+`proofs/principal_gauge_extension_detector.md`: if the lower gauge row is a
+principal rack-extension cocycle, the finite rack `A x U` and its inner group
+detect the remaining endpoint/unit holonomy.
+
 ## Updated local target
 
 The Green/Schutzenberger row list should no longer be counted as:
