@@ -951,6 +951,11 @@ permutation orders.  The detector is `G=C_m`, independent of braid index; the
 is invoked.  This closes the pairwise-linking branch as a finite-G-measurable
 local branch, while explicitly leaving genuinely coloured holonomy to the
 coboundary/product-label or bi-free corridor targets.
+The local bottleneck summary now exposes this as a product certificate:
+closed one-colour pairwise rows carry a
+`cyclic_pairwise_linking_group` detector with order equal to the exponent of
+the finite product-label group, and the associated sharp rack factor size is
+recorded as `2*|G|^2`.
 
 The one-colour swapped product branch is now symbolic, not just audited.  For
 `T(x,y)=(L(y),R(x))`, the coloured YBE reduces to `LR=RL`.  Local-minimality
@@ -974,6 +979,9 @@ whole product subcase lies in the already eliminated affine `F_2`
 finite-G-measurable branch; semisplit families are exactly the
 equality/universal colour-status choices already checked by local
 admissibility.
+The product certificate layer marks these fibre-size-two affine rows as
+delegated to this affine branch note rather than inventing a local detector
+order inside the product wrapper.
 
 The coloured product-permutation constraints have also been made explicit.
 Expanding the coloured YBE in the swapped and direct normal forms gives
@@ -998,6 +1006,13 @@ cleanly separated from coboundary: in the one-colour
 swapped case it recovers the pairwise-linking branch handled by cyclic
 abelian longitudes, while genuinely coloured failures are the remaining
 finite groupoid-label obstruction.
+At the ledger level, a coboundary detail now carries the trivial detector
+`G=1`, while identity-base cyclic details carry the prime cyclic detector
+from `proofs/identity_base_product_branch.md`.  Genuinely-coloured product
+rows whose total table is already known reuse the known-branch detector
+certificate.  Thus `product_finite_g_branch` is no longer just a string
+verdict for these subcases: it exposes the finite detector order or names the
+exact delegated affine branch.
 
 Those failures are no longer just booleans.  The holonomy summaries
 `swapped_product_holonomy_summary()` and

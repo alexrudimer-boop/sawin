@@ -15,6 +15,7 @@ from ybe_domination import (
 )
 from ybe_domination.local_bottleneck import (
     KNOWN_TOTAL_DETECTOR_TAGS,
+    _product_detector_certificate,
     _verdict_and_obligation,
 )
 
@@ -57,6 +58,22 @@ def one_color_identity_interval():
     return LocalInterval(colors, fibres, base_R, T)
 
 
+def one_color_commuting_swapped_interval():
+    colors = ("*",)
+    points = (0, 1, 2)
+    cycle = {0: 1, 1: 2, 2: 0}
+    return LocalInterval(
+        colors,
+        {"*": points},
+        {("*", "*"): ("*", "*")},
+        {
+            ("*", "*", x, y): (cycle[y], cycle[x])
+            for x in points
+            for y in points
+        },
+    )
+
+
 def one_color_large_flip_interval():
     colors = ("*",)
     fibres = {"*": tuple(range(6))}
@@ -67,6 +84,37 @@ def one_color_large_flip_interval():
         for y in fibres["*"]
     }
     return LocalInterval(colors, fibres, base_R, T)
+
+
+def two_color_identity_base_cyclic_interval():
+    colors = (0, 1)
+    points = (0, 1, 2)
+    fibres = {0: points, 1: points}
+    cycle = {0: 1, 1: 2, 2: 0}
+    identity = {point: point for point in points}
+    base_R = {(a, b): (a, b) for a in colors for b in colors}
+    left = {
+        (0, 0): identity,
+        (0, 1): cycle,
+        (1, 0): identity,
+        (1, 1): identity,
+    }
+
+    def inverse(mapping):
+        return {value: key for key, value in mapping.items()}
+
+    def compose(first, second):
+        return {key: first[second[key]] for key in second}
+
+    right = {
+        key: compose(cycle, inverse(mapping))
+        for key, mapping in left.items()
+    }
+    table = {}
+    for a, b in product(colors, repeat=2):
+        for x, y in product(points, repeat=2):
+            table[(a, b, x, y)] = (left[(a, b)][y], right[(a, b)][x])
+    return LocalInterval(colors, fibres, base_R, table)
 
 
 def dihedral_three_rack_interval():
@@ -129,7 +177,37 @@ class LocalMasterBottleneckTests(unittest.TestCase):
         self.assertEqual(summary.local_minimal_pair_failure_count, 0)
         self.assertIn(summary.product_branch, {"swapped", "swapped_and_direct"})
         self.assertIn("swapped_coboundary", summary.product_holonomy_details)
+        self.assertEqual(summary.product_detector_group_orders, (1,))
+        self.assertEqual(summary.product_detector_gaps, ())
         self.assertEqual(summary.verdict, "product_finite_g_branch")
+
+    def test_one_color_pairwise_product_records_cyclic_detector(self):
+        certificate = _product_detector_certificate(
+            one_color_commuting_swapped_interval(),
+            "swapped_one_color_pairwise",
+        )
+
+        self.assertEqual(certificate.detector_kind, "cyclic_pairwise_linking_group")
+        self.assertEqual(certificate.detector_group_order, 3)
+        self.assertEqual(certificate.sharp_rack_factor_size, 18)
+        self.assertEqual(
+            certificate.proof_reference,
+            "proofs/pairwise_linking_detector.md",
+        )
+
+    def test_identity_base_product_records_cyclic_detector(self):
+        summary = local_master_bottleneck_summary(two_color_identity_base_cyclic_interval())
+
+        self.assertIn("swapped_identity_base_cyclic", summary.product_holonomy_details)
+        self.assertEqual(summary.product_detector_group_orders, (3,))
+        self.assertEqual(summary.product_detector_gaps, ())
+        certificate = summary.product_detector_certificates[0]
+        self.assertEqual(certificate.detector_kind, "cyclic_identity_base_group")
+        self.assertEqual(certificate.sharp_rack_factor_size, 18)
+        self.assertEqual(
+            certificate.proof_reference,
+            "proofs/identity_base_product_branch.md",
+        )
 
     def test_large_fibre_interval_uses_pair_closure_local_minimality_gate(self):
         summary = local_master_bottleneck_summary(one_color_large_flip_interval())
@@ -214,6 +292,8 @@ class LocalMasterBottleneckTests(unittest.TestCase):
         self.assertTrue(summary.local_minimal)
         self.assertEqual(summary.total_branch_tags, ())
         self.assertIn("direct_fibre2_affine", summary.product_holonomy_details)
+        self.assertEqual(summary.product_detector_group_orders, ())
+        self.assertEqual(summary.product_detector_gaps, ("direct_fibre2_affine",))
         self.assertEqual(summary.verdict, "product_finite_g_branch")
 
 

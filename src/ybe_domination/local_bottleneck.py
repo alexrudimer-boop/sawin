@@ -10,6 +10,8 @@ from .context_retraction import (
     product_permutation_witness,
 )
 from .detector_candidates import two_sided_green_detector_groups
+from .group_laws import group_exponent
+from .label_detectors import direct_product_label_group, swapped_product_label_group
 from .local_interval import (
     LocalInterval,
     coordinate_kernel_pair_closure_audits,
@@ -39,6 +41,22 @@ KNOWN_TOTAL_DETECTOR_TAGS = frozenset(
 
 
 @dataclass(frozen=True)
+class ProductFiniteGDetectorCertificate:
+    """Detector bookkeeping for one closed product finite-G subbranch."""
+
+    detail: str
+    detector_kind: str
+    detector_group_order: int | None
+    sharp_rack_factor_size: int | None
+    proof_reference: str
+    braid_index_independent: bool
+
+    @property
+    def has_explicit_group_order(self) -> bool:
+        return self.detector_group_order is not None
+
+
+@dataclass(frozen=True)
 class LocalMasterBottleneckSummary:
     """A compact ledger for the current local-minimal reduction fork.
 
@@ -65,6 +83,7 @@ class LocalMasterBottleneckSummary:
     output_kernel_pair_max_depth: int
     all_coordinate_kernel_kind: str
     all_coordinate_kernel_stable_depth: int
+    product_detector_certificates: Tuple[ProductFiniteGDetectorCertificate, ...]
     total_branch_tags: Tuple[str, ...]
     known_total_detector_reason: str | None
     known_total_detector_group_order: int | None
@@ -76,6 +95,22 @@ class LocalMasterBottleneckSummary:
     @property
     def output_kernel_pairs_all_universal(self) -> bool:
         return self.output_kernel_pair_failure_count == 0
+
+    @property
+    def product_detector_group_orders(self) -> Tuple[int, ...]:
+        return tuple(
+            certificate.detector_group_order
+            for certificate in self.product_detector_certificates
+            if certificate.detector_group_order is not None
+        )
+
+    @property
+    def product_detector_gaps(self) -> Tuple[str, ...]:
+        return tuple(
+            certificate.detail
+            for certificate in self.product_detector_certificates
+            if certificate.detector_group_order is None
+        )
 
 
 def _local_minimal_value(
@@ -152,6 +187,92 @@ def _product_holonomy_details(
     if product_branch in {"direct", "swapped_and_direct"}:
         details.append(_product_holonomy_detail(interval, "direct", total_branch_tags))
     return tuple(details)
+
+
+def _sharp_rack_factor_size(group_order: int) -> int:
+    return 2 * group_order * group_order
+
+
+def _product_label_detector_order(interval: LocalInterval, side: str) -> int:
+    if side == "swapped":
+        group = swapped_product_label_group(interval).group
+    elif side == "direct":
+        group = direct_product_label_group(interval).group
+    else:
+        raise ValueError(f"unknown product side {side!r}")
+    return group_exponent(group)
+
+
+def _product_detector_certificate(
+    interval: LocalInterval,
+    detail: str,
+) -> ProductFiniteGDetectorCertificate:
+    side = detail.split("_", 1)[0]
+    if detail.endswith("_coboundary"):
+        order = 1
+        return ProductFiniteGDetectorCertificate(
+            detail=detail,
+            detector_kind="trivial_coboundary_group",
+            detector_group_order=order,
+            sharp_rack_factor_size=_sharp_rack_factor_size(order),
+            proof_reference="proofs/product_coboundary_telescope.md",
+            braid_index_independent=True,
+        )
+    if detail.endswith("_one_color_pairwise"):
+        order = _product_label_detector_order(interval, side)
+        return ProductFiniteGDetectorCertificate(
+            detail=detail,
+            detector_kind="cyclic_pairwise_linking_group",
+            detector_group_order=order,
+            sharp_rack_factor_size=_sharp_rack_factor_size(order),
+            proof_reference="proofs/pairwise_linking_detector.md",
+            braid_index_independent=True,
+        )
+    if detail == "swapped_identity_base_cyclic":
+        order = identity_base_swapped_reduction(interval).prime_cycle_modulus
+        if order is None:
+            raise ValueError("identity-base cyclic detail has no cyclic modulus")
+        return ProductFiniteGDetectorCertificate(
+            detail=detail,
+            detector_kind="cyclic_identity_base_group",
+            detector_group_order=order,
+            sharp_rack_factor_size=_sharp_rack_factor_size(order),
+            proof_reference="proofs/identity_base_product_branch.md",
+            braid_index_independent=True,
+        )
+    if detail.endswith("_genuinely_coloured_known_total"):
+        known = known_branch_detector_certificate(solution_from_local_interval(interval).total)
+        if known is None:
+            raise ValueError("known-total product detail has no known detector certificate")
+        return ProductFiniteGDetectorCertificate(
+            detail=detail,
+            detector_kind=f"known_total_{known.detector_kind}",
+            detector_group_order=known.detector_group_order,
+            sharp_rack_factor_size=known.sharp_rack_factor_size,
+            proof_reference=known.proof_reference,
+            braid_index_independent=True,
+        )
+    if detail.endswith("_fibre2_affine"):
+        return ProductFiniteGDetectorCertificate(
+            detail=detail,
+            detector_kind="delegated_affine_f2_branch",
+            detector_group_order=None,
+            sharp_rack_factor_size=None,
+            proof_reference="proofs/fibre2_product_branch.md",
+            braid_index_independent=True,
+        )
+    raise ValueError(f"open product detail has no finite-G certificate: {detail}")
+
+
+def _product_detector_certificates(
+    interval: LocalInterval,
+    product_holonomy_details: Tuple[str, ...],
+) -> Tuple[ProductFiniteGDetectorCertificate, ...]:
+    return tuple(
+        _product_detector_certificate(interval, detail)
+        for detail in product_holonomy_details
+        if not detail.endswith("_open")
+    )
 
 
 def _verdict_and_obligation(
@@ -337,6 +458,10 @@ def local_master_bottleneck_summary(
         output_kernel_pair_max_depth=output_kernel_pair_max_depth,
         all_coordinate_kernel_kind=all_coordinate_kernel_audit.kind,
         all_coordinate_kernel_stable_depth=all_coordinate_kernel_audit.stable_depth,
+        product_detector_certificates=_product_detector_certificates(
+            interval,
+            product_details,
+        ),
         total_branch_tags=total_tags,
         known_total_detector_reason=(
             None if known_total_certificate is None else known_total_certificate.reason

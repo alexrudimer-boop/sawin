@@ -414,6 +414,13 @@ product-label pair-closure gate:
 `direct_product_label_pair_closure_audits()` must have no non-universal
 closures.  This is the product-groupoid form of local-minimality and does not
 depend on bounded partition enumeration.
+Also audit the closed product detector certificates in
+`local_master_bottleneck_summary(interval)`.  Coboundary, one-colour
+pairwise, identity-base cyclic, and known-total product details should expose
+a fixed detector order and sharp rack factor size.  Fibre-size-two affine
+product details are currently marked as delegated to
+`proofs/fibre2_product_branch.md`; do not treat that delegation as a local
+`C_2` proof unless you supply the missing all-`n` affine detector argument.
 
 Important warning from `proofs/product_longitude_witness_audit.md`: one common
 homomorphism `F_n -> H_prod` need not realize all coordinate labels at once.

@@ -213,6 +213,7 @@ from .local_models import (
 )
 from .local_bottleneck import (
     LocalMasterBottleneckSummary,
+    ProductFiniteGDetectorCertificate,
     local_master_bottleneck_summary,
 )
 from .bifree_corridor import (
@@ -522,6 +523,7 @@ __all__ = [
     "ProductCoboundaryAudit",
     "ProductCoboundaryFailure",
     "ProductCocycleFailure",
+    "ProductFiniteGDetectorCertificate",
     "ProductClosedLabelLongitudeWitness",
     "ProductClosedLabelLongitudeSubgroupAudit",
     "ProductClosedLabelExactAudit",
