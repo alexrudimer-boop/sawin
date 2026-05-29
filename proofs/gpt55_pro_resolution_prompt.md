@@ -262,6 +262,11 @@ Also read `proofs/product_readout_descent_separation.md`: it records the
 seed-level consequence of that meet identity.  A tuple-valued product readout
 kills a continuation seed only when every factor kills it; the product
 survival rows are the union of the factor survival rows.
+Also read `proofs/readout_seed_saturation.md`: it computes the least
+admissible coarsening forced by one readout factor plus all continuation
+seeds.  In a local-minimal interval, a non-killing admissible equality factor
+has universal seed-saturation, so any lost information must be routed through
+another fixed detector component or through transport-state rackification.
 Also read `proofs/chart_transport_collapse.md`: it proves that finite chart
 conjugation does not create new endpoint-longitude obligations, because
 `V_beta(G)` is normal and one representative elementary-generator witness

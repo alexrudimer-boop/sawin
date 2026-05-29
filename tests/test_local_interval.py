@@ -17,6 +17,7 @@ from ybe_domination import (
     continuation_seed_universal_derivation_failures,
     coordinate_kernel_pair_closure_audits,
     coordinate_kernel_pair_closure_failures,
+    partition_readout_labels,
     product_readout_descent_separation_audit,
     product_readout_descent_separation_failures,
     product_readout_kernel_audit,
@@ -27,6 +28,7 @@ from ybe_domination import (
     readout_kernel_audit,
     readout_kernel_family,
     readout_kernel_quotient_interval,
+    readout_seed_saturation_audit,
 )
 
 
@@ -404,6 +406,43 @@ class LocalIntervalTests(unittest.TestCase):
         block = quotient.fibres["*"][0]
         self.assertEqual(quotient.T[("*", "*", block, block)], (block, block))
         self.assertTrue(continuation_congruence_audit(quotient).is_strand_continuing_on_the_nose)
+
+    def test_readout_seed_saturation_is_minimal_coarsening_that_kills_seeds(self):
+        interval = one_color_identity_interval()
+        labels = {"*": {0: "zero", 1: "one"}}
+
+        audit = readout_seed_saturation_audit(interval, labels)
+
+        self.assertEqual(audit.readout_kernel.kind, "equality")
+        self.assertEqual(audit.saturation.kind, "universal")
+        self.assertTrue(audit.saturation_contains_readout_kernel)
+        self.assertFalse(audit.saturation_adds_no_new_edges)
+        self.assertEqual(len(audit.original_surviving_seed_rows), 2)
+        self.assertEqual(audit.saturated_readout_kernel.family, audit.saturation.family)
+        self.assertEqual(audit.saturated_readout_kernel.kind, "universal")
+        self.assertTrue(audit.saturated_descent.all_continuation_seeds_killed)
+        self.assertTrue(audit.proves_admissible_seed_saturation)
+        self.assertTrue(audit.proves_saturated_descent_separation)
+
+        labels_from_saturation = partition_readout_labels(
+            interval,
+            audit.saturation.family,
+        )
+        self.assertEqual(labels_from_saturation, audit.saturated_labels)
+
+    def test_readout_seed_saturation_adds_no_edges_when_no_seeds_survive(self):
+        interval = one_color_flip_interval()
+        labels = {"*": {0: "zero", 1: "one"}}
+
+        audit = readout_seed_saturation_audit(interval, labels)
+
+        self.assertEqual(audit.readout_kernel.kind, "equality")
+        self.assertEqual(audit.saturation.kind, "equality")
+        self.assertTrue(audit.saturation_adds_no_new_edges)
+        self.assertEqual(audit.original_surviving_seed_rows, ())
+        self.assertEqual(audit.new_saturation_edges, ())
+        self.assertTrue(audit.proves_admissible_seed_saturation)
+        self.assertTrue(audit.proves_saturated_descent_separation)
 
     def test_product_readout_kernel_is_meet_of_factor_kernels(self):
         interval = two_color_identity_interval()

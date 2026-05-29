@@ -314,6 +314,46 @@ class ProductReadoutDescentSeparationAudit:
         )
 
 
+@dataclass(frozen=True)
+class ReadoutSeedSaturationAudit:
+    """Least admissible coarsening that contains readout and continuation seeds."""
+
+    readout_kernel: ReadoutKernelAudit
+    continuation: ContinuationCongruenceAudit
+    saturation: GeneratedCongruenceAudit
+    saturated_labels: ReadoutLabels
+    saturated_readout_kernel: ReadoutKernelAudit
+    saturated_descent: ReadoutDescentSeparationAudit
+    original_surviving_seed_rows: Tuple[ContinuationSeedRow, ...]
+    missing_readout_kernel_edges: Tuple[Tuple[Color, FibrePoint, FibrePoint], ...]
+    new_saturation_edges: Tuple[Tuple[Color, FibrePoint, FibrePoint], ...]
+
+    @property
+    def saturation_contains_readout_kernel(self) -> bool:
+        return not self.missing_readout_kernel_edges
+
+    @property
+    def saturation_adds_no_new_edges(self) -> bool:
+        return not self.new_saturation_edges
+
+    @property
+    def proves_admissible_seed_saturation(self) -> bool:
+        return (
+            self.readout_kernel.admissible
+            and self.saturation_contains_readout_kernel
+            and self.saturated_readout_kernel.admissible
+            and self.saturated_readout_kernel.family == self.saturation.family
+            and self.saturated_descent.all_continuation_seeds_killed
+        )
+
+    @property
+    def proves_saturated_descent_separation(self) -> bool:
+        return (
+            self.proves_admissible_seed_saturation
+            and self.saturated_descent.proves_descent_separation_readout
+        )
+
+
 def equality_partition(items: Sequence[FibrePoint]) -> Partition:
     return canonical_partition(frozenset([item]) for item in items)
 
@@ -1048,6 +1088,102 @@ def product_readout_descent_separation_failures(
         interval,
         *label_families,
     ).product_surviving_seed_rows
+
+
+def partition_readout_labels(
+    interval: "LocalInterval",
+    family: Mapping[Color, Partition],
+) -> Dict[Color, Dict[FibrePoint, Block]]:
+    """Return labels by equivalence block for a fibre partition family."""
+
+    lookups = {
+        color: _partition_block_lookup(family[color])
+        for color in interval.colors
+    }
+    return {
+        color: {
+            point: lookups[color][point]
+            for point in interval.fibres[color]
+        }
+        for color in interval.colors
+    }
+
+
+def _pair_family_from_partition_family(
+    interval: "LocalInterval",
+    family: Mapping[Color, Partition],
+) -> Dict[Color, Tuple[Tuple[FibrePoint, FibrePoint], ...]]:
+    pairs: Dict[Color, set[Tuple[FibrePoint, FibrePoint]]] = {
+        color: set() for color in interval.colors
+    }
+    for color in interval.colors:
+        for block in family[color]:
+            for left in block:
+                for right in block:
+                    if left != right:
+                        pairs[color].add((left, right))
+    return {
+        color: tuple(sorted(color_pairs, key=repr))
+        for color, color_pairs in pairs.items()
+    }
+
+
+def _merge_pair_families(
+    interval: "LocalInterval",
+    *families: PairFamily,
+) -> Dict[Color, Tuple[Tuple[FibrePoint, FibrePoint], ...]]:
+    merged: Dict[Color, set[Tuple[FibrePoint, FibrePoint]]] = {
+        color: set() for color in interval.colors
+    }
+    for family in families:
+        for color in interval.colors:
+            merged[color].update(family.get(color, ()))
+    return {
+        color: tuple(sorted(color_pairs, key=repr))
+        for color, color_pairs in merged.items()
+    }
+
+
+def readout_seed_saturation_audit(
+    interval: "LocalInterval",
+    labels: ReadoutLabels,
+) -> ReadoutSeedSaturationAudit:
+    """Audit the least admissible coarsening that kills continuation seeds."""
+
+    readout_kernel = readout_kernel_audit(interval, labels)
+    continuation = continuation_congruence_audit(interval)
+    seed_pairs = _merge_pair_families(
+        interval,
+        _pair_family_from_partition_family(interval, readout_kernel.family),
+        continuation_seed_pairs(interval),
+    )
+    saturation = generated_admissible_congruence_audit(interval, seed_pairs)
+    saturated_labels = partition_readout_labels(interval, saturation.family)
+    saturated_readout_kernel = readout_kernel_audit(interval, saturated_labels)
+    saturated_descent = readout_descent_separation_audit(
+        interval,
+        saturated_labels,
+    )
+    return ReadoutSeedSaturationAudit(
+        readout_kernel=readout_kernel,
+        continuation=continuation,
+        saturation=saturation,
+        saturated_labels=saturated_labels,
+        saturated_readout_kernel=saturated_readout_kernel,
+        saturated_descent=saturated_descent,
+        original_surviving_seed_rows=readout_descent_separation_failures(
+            interval,
+            labels,
+        ),
+        missing_readout_kernel_edges=_missing_family_edges(
+            readout_kernel.family,
+            saturation.family,
+        ),
+        new_saturation_edges=_missing_family_edges(
+            saturation.family,
+            readout_kernel.family,
+        ),
+    )
 
 
 def generated_admissible_congruence_audit(

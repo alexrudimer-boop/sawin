@@ -1038,6 +1038,12 @@ seed survives the product quotient if and only if it survives at least one
 factor quotient.  The helper `product_readout_descent_separation_audit(...)`
 therefore records factor seed survival, product seed survival, and the product
 descent-separation certificate in one object.
+The readout seed-saturation note `proofs/readout_seed_saturation.md` records
+the minimal admissible coarsening forced by one factor readout together with
+all continuation seeds.  The helper `readout_seed_saturation_audit(...)`
+constructs the saturated block labels and re-runs descent separation on them.
+For a local-minimal interval, this exposes the dichotomy that an admissible
+equality factor either already kills the seeds or saturates to universal.
 The chart-transport collapse in
 `proofs/chart_transport_collapse.md` removes chart-dependent copies from the
 generator burden.  Since `V_beta(G)` is already normal in every finite group,

@@ -56,11 +56,12 @@ First read:
 23. `proofs/universal_continuation_derivation_certificate.md`
 24. `proofs/product_readout_kernel_assembly.md`
 25. `proofs/product_readout_descent_separation.md`
-26. `proofs/chart_transport_collapse.md`
-27. `proofs/descent_separation_transport_rack_closure.md`
-28. `proofs/sawin_proof_log.docx`
-29. `tables/reduction_audit.xlsx`
-30. The code and tests under `src/`, `tools/`, and `tests/`
+26. `proofs/readout_seed_saturation.md`
+27. `proofs/chart_transport_collapse.md`
+28. `proofs/descent_separation_transport_rack_closure.md`
+29. `proofs/sawin_proof_log.docx`
+30. `tables/reduction_audit.xlsx`
+31. The code and tests under `src/`, `tools/`, and `tests/`
 
 Then audit and use these reductions:
 
@@ -258,6 +259,11 @@ Then audit and use these reductions:
    seed-level guardrail for product readouts.  A product readout kills a
    continuation seed only when every factor kills it, so product seed survival
    is the union of factor seed survival.
+   Also use `proofs/readout_seed_saturation.md`: it computes the least
+   admissible coarsening forced by one factor readout plus all continuation
+   seeds.  In a local-minimal interval, a non-killing admissible equality
+   factor saturates to universal, so any lost information must be routed
+   elsewhere.
    Also use `proofs/chart_transport_collapse.md`: it proves transported
    elementary generators need no separate proof once one chart-conjugacy orbit
    representative is certified, because `V_beta(G)` is normal.  Then read

@@ -577,6 +577,13 @@ const rows = [
     "Each factor must kill every representative continuation seed; one killing factor is not enough because product kernels are meets.",
   ],
   [
+    "Readout seed saturation",
+    "Compute the least admissible coarsening forced by one readout factor plus all continuation seeds.",
+    "proofs/readout_seed_saturation.md; readout_seed_saturation_audit records saturation, new edges, and saturated descent separation.",
+    "Reduction criterion",
+    "In local-minimal intervals a non-killing admissible equality factor saturates to universal, so lost information must be routed elsewhere.",
+  ],
+  [
     "Chart-transport collapse",
     "Avoid separate endpoint-longitude proofs for transported or chart-conjugate copies of elementary generators.",
     "proofs/chart_transport_collapse.md; conjugate_longitude_subgroup_witness shows V_beta(G) is normal at certificate level.",

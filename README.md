@@ -248,6 +248,12 @@ The product descent-separation note
 guardrail: a product readout kills a continuation seed only when every factor
 kills it, and `product_readout_descent_separation_audit(...)` records factor
 seed survival together with the product quotient certificate.
+The readout seed-saturation note
+`proofs/readout_seed_saturation.md` computes the least admissible coarsening
+forced by one factor kernel together with all continuation seeds.  In a
+local-minimal interval, a non-killing admissible equality factor saturates to
+universal, so any lost information must be routed through another fixed
+detector component or the transport-state quotient.
 The chart-transport collapse
 `proofs/chart_transport_collapse.md` removes transported-generator noise:
 `V_beta(G)` is already normal, and

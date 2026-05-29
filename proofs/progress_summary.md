@@ -469,6 +469,12 @@ consequence of that meet identity.  A tuple-valued product readout kills a
 continuation seed exactly when every factor kills it, and
 `product_readout_descent_separation_audit(...)` exposes factor seed survival
 alongside the product quotient certificate.
+The readout seed-saturation note `proofs/readout_seed_saturation.md` computes
+the least admissible coarsening of one factor kernel that also kills all
+continuation seeds.  The local-minimal corollary says that a non-killing
+admissible equality factor has universal seed-saturation, so lost information
+must be carried by another fixed factor or by the transport-state rack
+quotient.
 The chart-transport collapse
 `proofs/chart_transport_collapse.md` removes another source of proof noise:
 because `V_beta(G)` is normal for every finite group `G`, one
