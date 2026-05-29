@@ -135,6 +135,20 @@ already supplies a total well-defined atom action.  If it coarsens, the
 coarsening is a precise obstruction object rather than an informal descent
 failure; see `proofs/green_atom_descent_closure.md`.
 
+The companion helper
+
+```text
+atom_descent_quotient_rack_audit(audit)
+```
+
+applies the same rack-law check after passing from saturated atoms to the
+least descent-closed coarsening.  If the original atom partition coarsens but
+the descent-closed quotient is a total rack layer, the atom-level part is
+still controlled by a finite rack detector; the remaining theorem burden is
+to show that the lost lower information is killed by endpoint/unit
+longitudes, or to turn that lost information into a normalized-law
+counterexample.
+
 The helper
 
 ```text

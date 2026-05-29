@@ -236,8 +236,11 @@ bijective right translations and right self-distributivity directly.
 The descent-closure helper `atom_descent_closure_summary(...)` records the
 least coarsening needed for descent.  In all current tiny exhaustive audits
 and named stress rows this closure is trivial, but this is diagnostic only.
-The symbolic theorem still must prove triviality/control in arbitrary
-local-minimal Green/corridor intervals or provide a real counterexample.
+The new `atom_descent_quotient_rack_audit(...)` checks whether a nontrivial
+closed quotient is nevertheless a total finite rack layer.  Thus the symbolic
+theorem must prove either trivial descent, controlled descent-closed rack
+quotients plus endpoint/unit detection for the lost lower information, or a
+real normalized-law counterexample.
 
 ## Counterexample route status
 

@@ -537,6 +537,12 @@ stable depth `0` and add no related pairs.  This does not prove the arbitrary
 finite-fibre theorem, but it turns any future descent failure into a concrete
 finite coarsening obstruction that must either be absorbed by a quotient
 branch or upgraded to a normalized-law B sequence.
+The new helper `atom_descent_quotient_rack_audit()` audits the absorption
+side explicitly: after passing to the least descent-closed coarsening, it
+checks whether the resulting atom quotient is a total right-rack-like YBE
+layer.  A coarsening that still is not total remains an obstruction object;
+a coarsening whose closed quotient is a rack layer pushes the remaining proof
+burden down to endpoint/unit holonomy below that quotient.
 The follow-up criterion `proofs/green_atom_rack_lift_criterion.md` packages
 this into a local detector target.  It constructs the atom inner group
 `G_A`, implemented by `atom_quotient_inner_group(audit)`, and states that a

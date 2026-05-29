@@ -209,9 +209,13 @@ branch-choice ambiguity to all-`n` unit holonomy in this finite atom layer.
 When that action is total, `atom_quotient_solution()` constructs the finite
 atom crossing `(A,Q)->(Q,A^Q)`.  The current tiny scans produce only
 right-rack-like YBE atom quotients, and `atom_quotient_rack_audit()` records
-bijective right translations plus right self-distributivity directly.  So the
-atom quotient itself is routed to a finite rack layer; any remaining Green
-obstruction must survive in the section/unit holonomy below it.
+bijective right translations plus right self-distributivity directly.  The
+descent-closed variant `atom_descent_quotient_rack_audit()` now distinguishes
+controlled coarsening from a genuine obstruction: if the least closed
+coarsening is still a rack layer, the lost lower information must be handled
+by endpoint/unit holonomy.  So the atom quotient itself is routed to a finite
+rack layer whenever the saturated or closed quotient is total; any remaining
+Green obstruction must survive in the section/unit holonomy below it.
 The new descent-closure audit `atom_descent_closure_summary(audit)` makes the
 atom-action gap exact: it computes the least coarsening needed for completed
 rows to act on atoms.  In the current size-2/3 exhaustive scans this closure

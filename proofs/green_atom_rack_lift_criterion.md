@@ -18,7 +18,8 @@ N_n = ker rho_{Q,n}.
 
 Suppose a residual Green/corridor branch has:
 
-1. a total descended Green atom quotient `A`, with crossing
+1. a total descended Green atom quotient `A`, either on the saturated atom
+   partition or on the least descent-closed coarsening, with crossing
 
    ```text
    R_A(A_0,A_1) = (A_1, A_0^A_1),
@@ -59,6 +60,18 @@ constructs `G_A` from a Green audit whenever
 `atom_quotient_rack_audit(audit)` proves the right-rack layer.  In the
 size-three affine commutator fixture, the atom quotient has three atoms and
 `|G_A|=6`.
+
+The audit
+
+```text
+atom_descent_quotient_rack_audit(audit)
+```
+
+records the controlled-coarsening variant: if saturated atoms must be
+identified before the completed-row action descends, but the closed quotient
+is still a total rack layer, the atom detector is the inner group of that
+closed rack layer.  Any information below the closed quotient must then be
+handled by the endpoint/unit part of the criterion.
 
 ## Lift Criterion
 
@@ -112,9 +125,10 @@ For the remaining bi-free universal-corridor branch, a proof of A may now be
 organized as three symbolic statements:
 
 1. Green atom-action descent and totality hold in every relevant
-   local-minimal corridor branch.
-2. The descended atom quotient is the finite right-rack layer described in
-   `proofs/green_atom_quotient_layer.md`.
+   local-minimal corridor branch, or the least descent-closed coarsening is
+   forced and the lost lower information is routed to endpoint/unit holonomy.
+2. The resulting saturated or descent-closed atom quotient is the finite
+   right-rack layer described in `proofs/green_atom_quotient_layer.md`.
 3. Every lower section or endpoint unit lies in the appropriate
    longitude-value subgroup of one fixed product of unit groups.
 

@@ -554,14 +554,43 @@ def atom_quotient_solution(audit: GreenBranchAudit) -> FiniteBraidedSet:
         raise ValueError("atom action does not descend to saturated atoms")
     if summary.undefined_pair_count:
         raise ValueError("atom action is not defined on every atom pair")
+    return _atom_quotient_solution_for_partition(audit, audit.atom_partition)
+
+
+def _atom_quotient_solution_for_partition(
+    audit: GreenBranchAudit,
+    partition: Tuple[frozenset[EdgeGerm], ...],
+) -> FiniteBraidedSet:
+    summary = _atom_action_summary_for_partition(audit, partition)
+    if not summary.well_defined:
+        raise ValueError("atom action does not descend to the chosen partition")
+    if summary.undefined_pair_count:
+        raise ValueError("atom action is not defined on every chosen atom pair")
     elements = tuple(range(summary.atom_count))
     table: Dict[Tuple[int, int], Tuple[int, int]] = {}
     for row in audit.rows:
-        a_atom = atom_index(audit, row.a)
-        q_atom = atom_index(audit, row.q)
-        aq_atom = atom_index(audit, row.a_under_q)
+        a_atom = _block_index(partition, row.a)
+        q_atom = _block_index(partition, row.q)
+        aq_atom = _block_index(partition, row.a_under_q)
         table[(a_atom, q_atom)] = (q_atom, aq_atom)
     return FiniteBraidedSet(elements, table)
+
+
+def atom_descent_quotient_solution(audit: GreenBranchAudit) -> FiniteBraidedSet:
+    """Return the rack-like quotient after descent-closure coarsening.
+
+    This constructs the atom crossing on the least coarsening that makes the
+    completed-row action and inverse bookkeeping action well-defined.  It is
+    useful for distinguishing controlled atom coarsening from a genuine
+    obstruction.  It still raises if the closed action is not total.
+    """
+
+    closure = atom_descent_closure_summary(audit)
+    if not closure.well_defined_after_closure:
+        raise ValueError("descent closure did not make atom action well-defined")
+    if closure.undefined_pair_count_after_closure:
+        raise ValueError("descent-closed atom action is not defined on every atom pair")
+    return _atom_quotient_solution_for_partition(audit, closure.closure_partition)
 
 
 def atom_quotient_rack_audit(audit: GreenBranchAudit) -> AtomQuotientRackAudit:
@@ -570,6 +599,55 @@ def atom_quotient_rack_audit(audit: GreenBranchAudit) -> AtomQuotientRackAudit:
     atom_count = len(audit.atom_partition)
     try:
         quotient = atom_quotient_solution(audit)
+    except ValueError as exc:
+        return AtomQuotientRackAudit(
+            atom_count=atom_count,
+            constructed=False,
+            construction_error=str(exc),
+            right_rack_like=None,
+            right_translations_bijective=None,
+            right_self_distributive=None,
+            is_ybe=None,
+        )
+    elements = quotient.elements
+    right_rack_like = all(
+        quotient.R[(left, right)][0] == right
+        for left in elements
+        for right in elements
+    )
+
+    def op(left: int, right: int) -> int:
+        return quotient.R[(left, right)][1]
+
+    right_translations_bijective = all(
+        {op(left, right) for left in elements} == set(elements)
+        for right in elements
+    )
+    right_self_distributive = all(
+        op(op(left, middle), right)
+        == op(op(left, right), op(middle, right))
+        for left in elements
+        for middle in elements
+        for right in elements
+    )
+    return AtomQuotientRackAudit(
+        atom_count=atom_count,
+        constructed=True,
+        construction_error=None,
+        right_rack_like=right_rack_like,
+        right_translations_bijective=right_translations_bijective,
+        right_self_distributive=right_self_distributive,
+        is_ybe=quotient.is_ybe(),
+    )
+
+
+def atom_descent_quotient_rack_audit(audit: GreenBranchAudit) -> AtomQuotientRackAudit:
+    """Check rack laws after atom descent-closure coarsening."""
+
+    closure = atom_descent_closure_summary(audit)
+    atom_count = closure.closed_atom_count
+    try:
+        quotient = atom_descent_quotient_solution(audit)
     except ValueError as exc:
         return AtomQuotientRackAudit(
             atom_count=atom_count,

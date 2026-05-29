@@ -299,7 +299,7 @@ const rows = [
   [
     "Green branch",
     "Audit coordinate-action monoid branch choices.",
-    "Atom descent closure, atom inner group, and unit-lift detector criterion recorded; two-sided Green detector list now includes atom inner groups.",
+    "Atom descent closure, descent-closed rack quotient, atom inner group, and unit-lift detector criterion recorded; two-sided Green detector list now includes atom inner groups.",
     "Executable audit",
     "Prove descent closure is trivial/absorbed and endpoint-unit subgroup membership.",
   ],

@@ -12,6 +12,8 @@ from ybe_domination import (
     all_bijection_solutions,
     atom_action_summary,
     atom_descent_closure_summary,
+    atom_descent_quotient_rack_audit,
+    atom_descent_quotient_solution,
     atom_quotient_inner_group,
     atom_quotient_inner_groups,
     atom_quotient_rack_audit,
@@ -221,9 +223,13 @@ class GreenBranchTests(unittest.TestCase):
     def test_atom_quotient_solution_is_right_rack_like_for_affine_candidate(self):
         audit = green_branch_audits(size_three_affine_candidate())[0]
         quotient = atom_quotient_solution(audit)
+        descent_quotient = atom_descent_quotient_solution(audit)
         rack_audit = atom_quotient_rack_audit(audit)
+        descent_rack_audit = atom_descent_quotient_rack_audit(audit)
 
         self.assertEqual(quotient.elements, (0, 1, 2))
+        self.assertEqual(descent_quotient.elements, quotient.elements)
+        self.assertEqual(descent_quotient.R, quotient.R)
         self.assertTrue(quotient.is_ybe())
         self.assertTrue(
             all(
@@ -239,6 +245,7 @@ class GreenBranchTests(unittest.TestCase):
         self.assertTrue(rack_audit.right_self_distributive)
         self.assertTrue(rack_audit.is_ybe)
         self.assertTrue(rack_audit.proves_right_rack_ybe_layer)
+        self.assertTrue(descent_rack_audit.proves_right_rack_ybe_layer)
         self.assertEqual(len(atom_quotient_inner_group(audit).elements), 6)
 
     def test_atom_action_summary_has_no_size_two_conflicts(self):
@@ -304,6 +311,49 @@ class GreenBranchTests(unittest.TestCase):
         self.assertGreater(closure.added_related_pair_count, 0)
         self.assertTrue(closure.well_defined_after_closure)
         self.assertFalse(closure.closes_without_coarsening)
+        descent_rack_audit = atom_descent_quotient_rack_audit(audit)
+        self.assertFalse(descent_rack_audit.constructed)
+        self.assertIn("not defined", descent_rack_audit.construction_error)
+
+    def test_descent_closed_atom_quotient_can_absorb_coarsening(self):
+        source = (0,)
+        a1 = (source, "a1")
+        a2 = (source, "a2")
+        q = (source, "q")
+        out1 = (source, "out1")
+        out2 = (source, "out2")
+        audit = GreenBranchAudit(
+            r_class=(source,),
+            edge_germs=(a1, a2, q, out1, out2),
+            edge_targets=tuple((edge, source) for edge in (a1, a2, q, out1, out2)),
+            rows=(
+                BranchRow(a=a1, q=q, q_under_a=q, a_under_q=out1),
+                BranchRow(a=a2, q=q, q_under_a=q, a_under_q=out2),
+                BranchRow(a=a1, q=q, q_under_a=q, a_under_q=q),
+                BranchRow(a=q, q=q, q_under_a=q, a_under_q=q),
+                BranchRow(a=out1, q=q, q_under_a=q, a_under_q=q),
+                BranchRow(a=q, q=q, q_under_a=q, a_under_q=q),
+            ),
+            atom_partition=(
+                frozenset((a1, a2)),
+                frozenset((q,)),
+                frozenset((out1,)),
+                frozenset((out2,)),
+            ),
+            branch_choice_failures=(),
+        )
+
+        action = atom_action_summary(audit)
+        closure = atom_descent_closure_summary(audit)
+        descent = atom_descent_quotient_solution(audit)
+        rack_audit = atom_descent_quotient_rack_audit(audit)
+
+        self.assertFalse(action.well_defined)
+        self.assertEqual(closure.closed_atom_count, 1)
+        self.assertTrue(closure.well_defined_after_closure)
+        self.assertEqual(closure.undefined_pair_count_after_closure, 0)
+        self.assertEqual(descent.elements, (0,))
+        self.assertTrue(rack_audit.proves_right_rack_ybe_layer)
 
 
 if __name__ == "__main__":

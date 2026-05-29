@@ -72,6 +72,37 @@ computes this least coarsening and records:
 The helper is not a search for the theorem.  For a fixed finite audit it is
 the exact finite closure forced by the definition of an atom-level action.
 
+## Descent-Closed Quotient
+
+There are now two atom quotient helpers.
+
+```text
+atom_quotient_solution(audit)
+atom_descent_quotient_solution(audit)
+```
+
+The first uses the original saturated atom partition.  The second uses the
+descent-closure partition.  The corresponding rack-law audit
+
+```text
+atom_descent_quotient_rack_audit(audit)
+```
+
+checks whether the closed quotient is a total right-rack-like YBE layer.
+This separates two different phenomena that were previously both described
+as "coarsening":
+
+- if the closure coarsens but the closed action is still not total, the audit
+  remains a concrete obstruction object;
+- if the closure coarsens and the closed quotient is a finite rack layer, the
+  coarsening is controlled at the atom level, and any remaining obstruction
+  must live in the information lost below that quotient or in endpoint/unit
+  holonomy.
+
+This does not prove that local-minimal Green/corridor intervals always fall
+in the controlled case.  It gives the exact finite object a symbolic proof
+must force, or a B proof must make fail in a normalized-law way.
+
 ## Exact Sufficient Criterion
 
 For one Green audit, if
