@@ -446,7 +446,7 @@ const rows = [
   [
     "Kernel corridor",
     "Distinguish seed-only vs transported universal closures.",
-    "Size<=3: no semisplit leaks; elementary kernel-pair closure gate added.",
+    "Size<=3: no semisplit leaks; LocalMasterBottleneckSummary now records elementary output-kernel pair counts/failures/depth.",
     "Candidate audit",
     "Prove lemma or find normalized-law escape along universal pair corridors.",
   ],

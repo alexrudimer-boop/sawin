@@ -45,6 +45,18 @@ def one_color_flip_interval():
     return LocalInterval(colors, fibres, base_R, T)
 
 
+def one_color_identity_interval():
+    colors = ("*",)
+    fibres = {"*": (0, 1)}
+    base_R = {("*", "*"): ("*", "*")}
+    T = {
+        ("*", "*", x, y): (x, y)
+        for x in fibres["*"]
+        for y in fibres["*"]
+    }
+    return LocalInterval(colors, fibres, base_R, T)
+
+
 def one_color_large_flip_interval():
     colors = ("*",)
     fibres = {"*": tuple(range(6))}
@@ -104,6 +116,9 @@ class LocalMasterBottleneckTests(unittest.TestCase):
         self.assertFalse(summary.local_minimal)
         self.assertEqual(summary.local_minimal_pair_count, 2)
         self.assertEqual(summary.local_minimal_pair_failure_count, 2)
+        self.assertEqual(summary.output_kernel_pair_count, 2)
+        self.assertEqual(summary.output_kernel_pair_failure_count, 2)
+        self.assertFalse(summary.output_kernel_pairs_all_universal)
         self.assertEqual(summary.verdict, "semisplit_leak")
 
     def test_universal_retraction_product_branch_is_routed_to_product_labels(self):
@@ -132,8 +147,20 @@ class LocalMasterBottleneckTests(unittest.TestCase):
 
         self.assertTrue(summary.local_minimal)
         self.assertEqual(summary.output_kernel_kind, "equality")
+        self.assertEqual(summary.output_kernel_pair_count, 0)
+        self.assertTrue(summary.output_kernel_pairs_all_universal)
         self.assertEqual(summary.verdict, "locally_nondegenerate_branch")
         self.assertNotEqual(summary.verdict, "bi_free_universal_corridor_bottleneck")
+
+    def test_elementary_kernel_pairs_are_recorded_for_universal_corridor(self):
+        summary = local_master_bottleneck_summary(one_color_identity_interval())
+
+        self.assertTrue(summary.local_minimal)
+        self.assertEqual(summary.output_kernel_kind, "universal")
+        self.assertEqual(summary.output_kernel_pair_count, 1)
+        self.assertEqual(summary.output_kernel_pair_failure_count, 0)
+        self.assertEqual(summary.output_kernel_pair_max_depth, 0)
+        self.assertTrue(summary.output_kernel_pairs_all_universal)
 
     def test_size_three_involutive_rows_are_not_corridor_bottlenecks(self):
         counts = {}

@@ -26,6 +26,8 @@ returns a `LocalMasterBottleneckSummary` with the following fields:
 - whether the interval has a swapped or direct product-permutation witness;
 - the product holonomy detail, when a product witness exists;
 - the coordinate-kernel closure kind and stable depth;
+- the elementary output coordinate-kernel pair-closure count, failure count,
+  and maximum stable depth;
 - the all-coordinate-kernel closure kind and stable depth;
 - known whole-solution branch tags for the total interval table;
 - for actual corridor-target rows, the orders of the current two-sided Green
@@ -39,6 +41,12 @@ The pair-closure counters give a concrete certificate behind the Boolean:
 `local_minimal_pair_failure_count=0` means every distinct fibre pair generates
 the universal admissible family, while a positive count points to explicit
 generated proper congruence families.
+The output-kernel pair counters are the elementary corridor counterpart:
+`output_kernel_pair_failure_count=0` means every individual nontrivial
+coordinate-kernel seed pair already generates the universal admissible
+family.  This is stronger than merely saying the aggregate kernel closure is
+universal, and it is the certificate required by
+`proofs/universal_corridor_target.md`.
 
 ## Verdicts
 
@@ -108,7 +116,10 @@ or by a closed product subbranch.
 This is the genuine remaining master branch.  The interval has passed the
 semisplit audit, is not routed to a product witness, is not locally
 nondegenerate, has no known whole-solution branch tag, and has universal
-coordinate-kernel closure.  A proof of A must show that input-dependent
+coordinate-kernel closure.  The audit also records the elementary
+coordinate-kernel pair closures; in a legitimate local-minimal corridor row,
+each nontrivial seed pair must separately have universal closure.  A proof of
+A must show that input-dependent
 Artin-longitude evaluations in fixed finite Green/corridor detector groups
 kill all residual braid motion here.  A proof of B must construct an explicit
 interval or full solution in this verdict and a normalized-law sequence whose
@@ -135,7 +146,10 @@ across the notes:
    versus genuinely coloured product holonomy.
 3. Equality coordinate-kernel closure is exactly local nondegeneracy; the
    only rank-collapsed local-minimal remainder is universal coordinate-kernel
-   closure outside known whole-solution finite-G branches.
+   closure outside known whole-solution finite-G branches.  The elementary
+   coordinate-kernel pair counters prevent an aggregate-only shortcut: every
+   individual kernel degeneracy must already open the same universal
+   corridor.
 
 Thus a future candidate counterexample cannot be advertised merely as
 degenerate, product-like, semisplit-free, or high-corridor-depth.  It must

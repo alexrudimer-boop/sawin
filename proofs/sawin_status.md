@@ -1383,6 +1383,12 @@ coordinate-kernel degeneracy must already generate the all-universal
 admissible family.  A proposed B interval with a proper elementary closure is
 therefore not local-minimal and must be refined before it can enter the
 master local theorem.
+This elementary gate is now surfaced directly in
+`LocalMasterBottleneckSummary` through `output_kernel_pair_count`,
+`output_kernel_pair_failure_count`, `output_kernel_pair_max_depth`, and the
+derived flag `output_kernel_pairs_all_universal`.  Thus the main local
+router records not only the aggregate output-kernel closure but also whether
+each seed degeneracy separately opens the required universal corridor.
 
 The generated closure audit now records a finite corridor graph for this
 branch: seed coordinate-kernel pairs and their transported images under local

@@ -12,6 +12,7 @@ from .context_retraction import (
 from .detector_candidates import two_sided_green_detector_groups
 from .local_interval import (
     LocalInterval,
+    coordinate_kernel_pair_closure_audits,
     coordinate_kernel_seed_pairs,
     generated_admissible_congruence_audit,
 )
@@ -59,12 +60,19 @@ class LocalMasterBottleneckSummary:
     product_holonomy_details: Tuple[str, ...]
     output_kernel_kind: str
     output_kernel_stable_depth: int
+    output_kernel_pair_count: int
+    output_kernel_pair_failure_count: int
+    output_kernel_pair_max_depth: int
     all_coordinate_kernel_kind: str
     all_coordinate_kernel_stable_depth: int
     total_branch_tags: Tuple[str, ...]
     green_detector_group_orders: Tuple[int, ...]
     verdict: str
     remaining_obligation: str
+
+    @property
+    def output_kernel_pairs_all_universal(self) -> bool:
+        return self.output_kernel_pair_failure_count == 0
 
 
 def _local_minimal_value(
@@ -256,6 +264,19 @@ def local_master_bottleneck_summary(
             include_coretraction_kernels=False,
         ),
     )
+    output_kernel_pair_audits = coordinate_kernel_pair_closure_audits(
+        interval,
+        include_coretraction_kernels=False,
+    )
+    output_kernel_pair_failures = tuple(
+        audit
+        for audit in output_kernel_pair_audits
+        if audit.generated.kind != "universal"
+    )
+    output_kernel_pair_max_depth = max(
+        (audit.generated.stable_depth for audit in output_kernel_pair_audits),
+        default=0,
+    )
     all_coordinate_kernel_audit = generated_admissible_congruence_audit(
         interval,
         coordinate_kernel_seed_pairs(
@@ -307,6 +328,9 @@ def local_master_bottleneck_summary(
         product_holonomy_details=product_details,
         output_kernel_kind=output_kernel_audit.kind,
         output_kernel_stable_depth=output_kernel_audit.stable_depth,
+        output_kernel_pair_count=len(output_kernel_pair_audits),
+        output_kernel_pair_failure_count=len(output_kernel_pair_failures),
+        output_kernel_pair_max_depth=output_kernel_pair_max_depth,
         all_coordinate_kernel_kind=all_coordinate_kernel_audit.kind,
         all_coordinate_kernel_stable_depth=all_coordinate_kernel_audit.stable_depth,
         total_branch_tags=total_tags,

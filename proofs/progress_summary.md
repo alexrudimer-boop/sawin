@@ -215,6 +215,8 @@ The current final local branch is named
 - pair-closure local-minimality is exact;
 - no product-permutation witness routes it to a closed product branch;
 - the local coordinate-kernel closure is universal rather than equality;
+- every individual output coordinate-kernel seed pair separately generates
+  the universal admissible family, not merely the aggregate seed set;
 - no known whole-solution finite-`G` branch applies.
 
 The finite detector candidate for this branch is a product of:
