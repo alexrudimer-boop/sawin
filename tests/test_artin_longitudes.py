@@ -5,6 +5,9 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from ybe_domination import (
+    abelian_longitude_image_audit,
+    abelian_longitude_value_generators,
+    abelian_longitude_value_subgroup_elements,
     artin_detector_rack,
     artin_detector_lift_braid_audit,
     artin_detector_lift_inverse_row_audit,
@@ -31,10 +34,12 @@ from ybe_domination import (
     FiniteBraidedSet,
     FiniteGroupHomomorphism,
     has_identity_longitude_signature,
+    has_identity_abelian_longitude_signature,
     has_trivial_abelian_longitudes_mod,
     homomorphic_longitude_subgroup_audit,
     identity_solution,
     is_rack_solution,
+    is_abelian_group,
     is_identity_action,
     longitude_blind_movers,
     longitude_subgroup_profile,
@@ -108,6 +113,51 @@ class ArtinLongitudeTests(unittest.TestCase):
         triple = braid + braid + braid
         self.assertTrue(has_trivial_abelian_longitudes_mod(3, 2, triple))
         self.assertTrue(has_identity_longitude_signature(cyclic_group(3), 2, triple))
+
+    def test_abelian_longitude_matrix_formula_matches_exhaustive_subgroup(self):
+        group = cyclic_group(4)
+        braid = pure_braid_generator(1, 2) * 2
+
+        audit = abelian_longitude_image_audit(
+            group,
+            2,
+            braid,
+            compare_by_enumeration=True,
+        )
+
+        self.assertTrue(is_abelian_group(group))
+        self.assertEqual(audit.exponent_matrix, ((0, 2), (2, 0)))
+        self.assertEqual(audit.coefficient_entries, (0, 2))
+        self.assertEqual(set(audit.matrix_generators), {0, 2})
+        self.assertEqual(set(audit.matrix_subgroup), {0, 2})
+        self.assertEqual(set(audit.enumerated_subgroup), {0, 2})
+        self.assertTrue(audit.enumeration_matches_matrix_formula)
+        self.assertFalse(audit.identity_signature_by_matrix)
+        self.assertFalse(has_identity_abelian_longitude_signature(group, 2, braid))
+
+    def test_abelian_longitude_matrix_formula_handles_products(self):
+        group = direct_product_group((cyclic_group(2), cyclic_group(3)))
+        braid = pure_braid_generator(1, 2)
+        invisible = braid * 6
+
+        self.assertEqual(
+            set(abelian_longitude_value_subgroup_elements(group, 2, braid)),
+            set(group.elements),
+        )
+        self.assertEqual(
+            set(abelian_longitude_value_generators(group, 2, invisible)),
+            {group.identity},
+        )
+        self.assertTrue(has_identity_abelian_longitude_signature(group, 2, invisible))
+
+    def test_abelian_longitude_matrix_formula_rejects_nonabelian_groups(self):
+        self.assertFalse(is_abelian_group(symmetric_group(3)))
+        with self.assertRaises(ValueError):
+            abelian_longitude_value_subgroup_elements(
+                symmetric_group(3),
+                2,
+                pure_braid_generator(1, 2),
+            )
 
     def test_longitude_data_stabilizes_under_extra_right_strands(self):
         braid = pure_braid_generator(1, 3)

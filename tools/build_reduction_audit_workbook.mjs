@@ -479,6 +479,13 @@ const rows = [
     "Prove ordinary finite abelian longitude visibility for the projected endpoint, then handle the commutator residual.",
   ],
   [
+    "Abelian longitude image",
+    "Compute V_beta(A) exactly for any fixed finite abelian target.",
+    "proofs/abelian_longitude_image_criterion.md proves V_beta(A)=<a^{m_ij}> from the recursive-longitude exponent matrix; abelian_longitude_image_audit optionally checks the matrix subgroup against exhaustive enumeration.",
+    "Exact criterion",
+    "Apply this matrix subgroup to the projected AbDef_C endpoint, then route the remaining commutator endpoint.",
+  ],
+  [
     "Bi-free subgroup certificate",
     "Profile candidate words against fixed corridor detector factors.",
     "Helper, extra-factor target support, direct-product subgroup audit, and tests added; affine commutator seen by S3 block factor.",

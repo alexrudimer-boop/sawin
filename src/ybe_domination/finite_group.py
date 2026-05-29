@@ -158,6 +158,16 @@ def subgroup_generated_elements(
     return tuple(sorted(seen, key=repr))
 
 
+def is_abelian_group(group: FiniteGroup) -> bool:
+    """Return whether the finite group is abelian."""
+
+    return all(
+        group.mul(left, right) == group.mul(right, left)
+        for left in group.elements
+        for right in group.elements
+    )
+
+
 def normal_closure_elements(
     group: FiniteGroup,
     generators: Iterable[GroupElement],
