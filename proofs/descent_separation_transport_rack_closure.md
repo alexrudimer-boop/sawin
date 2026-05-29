@@ -157,17 +157,19 @@ If descent separation is proved, the A-route closes as follows.
    admissible relation by checking exact transport through every local table.
 8. The readout descent-separation certificate checks that no continuation seed
    survives in the quotient, so the quotient lower row is strand-continuing.
-9. Product witness calculus assembles all factor witnesses into one fixed
+9. The readout-kernel quotient constructor builds the explicit finite local
+   interval on readout blocks and verifies its continuation audit directly.
+10. Product witness calculus assembles all factor witnesses into one fixed
    `H(pi,Q)`.
-10. The endpoint-factorization criterion gives
+11. The endpoint-factorization criterion gives
 
 ```text
 Lambda_{H(pi,Q),n}(beta)=Lambda_{H(pi,Q),n}(1)
   => Delta_n(beta)=1.
 ```
 
-11. The sharp obstruction theorem supplies the local rack `Q x A_H`.
-12. Congruence-chain induction assembles the local racks into one finite rack
+12. The sharp obstruction theorem supplies the local rack `Q x A_H`.
+13. Congruence-chain induction assembles the local racks into one finite rack
    independent of `n`.
 
 ## Why this is still open
@@ -177,9 +179,9 @@ fixed Green, Schutzenberger, atom, or unit readout labels whose kernel is
 admissible and kills every representative nontrivial continuation seed.  By
 continuation readout propagation, that would force the whole generated
 continuation closure to be readout-visible, and the integrated readout
-descent-separation certificate would make the quotient row strand-continuing.
-Equivalently, after those readouts, the remaining lower endpoint motion must
-be strand-continuing.
+descent-separation certificate would construct a quotient interval whose row is
+strand-continuing.  Equivalently, after those readouts, the remaining lower
+endpoint motion must be strand-continuing.
 
 There is also a guardrail against an invalid shortcut: elementary Green defects
 cannot always be products of Artin permutation defects.  The abelianization

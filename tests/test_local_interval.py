@@ -17,10 +17,12 @@ from ybe_domination import (
     continuation_seed_universal_derivation_failures,
     coordinate_kernel_pair_closure_audits,
     coordinate_kernel_pair_closure_failures,
+    quotient_interval_by_family,
     readout_descent_separation_audit,
     readout_descent_separation_failures,
     readout_kernel_audit,
     readout_kernel_family,
+    readout_kernel_quotient_interval,
 )
 
 
@@ -377,6 +379,27 @@ class LocalIntervalTests(unittest.TestCase):
         self.assertTrue(audit.quotient_is_strand_continuing)
         self.assertTrue(audit.proves_descent_separation_readout)
         self.assertEqual(readout_descent_separation_failures(interval, labels), ())
+        self.assertIsNotNone(audit.quotient_interval)
+        self.assertIsNotNone(audit.quotient_continuation)
+        self.assertEqual(audit.quotient_continuation.nontrivial_seed_count, 0)
+        self.assertTrue(audit.quotient_continuation.is_strand_continuing_on_the_nose)
+
+    def test_readout_kernel_quotient_interval_descends_local_table(self):
+        interval = one_color_identity_interval()
+        labels = {"*": {0: "same", 1: "same"}}
+
+        quotient = readout_kernel_quotient_interval(interval, labels)
+        family_quotient = quotient_interval_by_family(
+            interval,
+            readout_kernel_family(interval, labels),
+        )
+
+        self.assertEqual(quotient.fibres, family_quotient.fibres)
+        self.assertTrue(quotient.is_colored_ybe())
+        self.assertEqual(len(quotient.fibres["*"]), 1)
+        block = quotient.fibres["*"][0]
+        self.assertEqual(quotient.T[("*", "*", block, block)], (block, block))
+        self.assertTrue(continuation_congruence_audit(quotient).is_strand_continuing_on_the_nose)
 
     def test_readout_descent_separation_reports_surviving_seed_rows(self):
         interval = one_color_identity_interval()
@@ -390,6 +413,9 @@ class LocalIntervalTests(unittest.TestCase):
         self.assertFalse(audit.all_seed_closures_propagate)
         self.assertFalse(audit.quotient_is_strand_continuing)
         self.assertFalse(audit.proves_descent_separation_readout)
+        self.assertIsNotNone(audit.quotient_interval)
+        self.assertIsNotNone(audit.quotient_continuation)
+        self.assertEqual(audit.quotient_continuation.nontrivial_seed_count, 2)
         self.assertEqual(
             readout_descent_separation_failures(interval, labels),
             audit.surviving_seed_rows,

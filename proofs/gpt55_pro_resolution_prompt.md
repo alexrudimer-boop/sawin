@@ -249,6 +249,11 @@ readout-kernel and continuation-seed checks.  The helper
 rows in the readout quotient; if none survive and the base row is in rack-side
 form, the quotient row is strand-continuing and transport-state rackification
 applies.
+Also read `proofs/readout_kernel_quotient_interval.md`: it constructs the
+explicit local interval on readout blocks via
+`quotient_interval_by_family(...)` and `readout_kernel_quotient_interval(...)`.
+The descent-separation audit now stores this quotient and its continuation
+audit when the readout kernel is admissible.
 Also read `proofs/chart_transport_collapse.md`: it proves that finite chart
 conjugation does not create new endpoint-longitude obligations, because
 `V_beta(G)` is normal and one representative elementary-generator witness

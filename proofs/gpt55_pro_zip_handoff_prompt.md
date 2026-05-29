@@ -244,6 +244,10 @@ Then audit and use these reductions:
    readout-kernel admissibility with continuation seed killing.  If
    `readout_descent_separation_audit(...)` passes, the quotient lower row is
    strand-continuing and the transport-state rackification theorem applies.
+   Also use `proofs/readout_kernel_quotient_interval.md`: it constructs the
+   explicit finite quotient local interval on readout blocks and verifies the
+   quotient continuation audit directly.  This is now the concrete object to
+   which transport-state rackification applies.
    Also use `proofs/chart_transport_collapse.md`: it proves transported
    elementary generators need no separate proof once one chart-conjugacy orbit
    representative is certified, because `V_beta(G)` is normal.  Then read

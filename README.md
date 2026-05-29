@@ -232,6 +232,12 @@ continuation closure propagation, and any continuation seed rows that survive
 in the quotient.  If no seed survives and the base row is in rack-side form,
 the quotient row is strand-continuing and transport-state rackification
 applies.
+The readout-kernel quotient note
+`proofs/readout_kernel_quotient_interval.md` makes this quotient explicit:
+`quotient_interval_by_family(...)` and
+`readout_kernel_quotient_interval(...)` build the finite local interval on
+readout blocks, and the descent-separation audit now stores that quotient and
+its continuation audit when the readout kernel is admissible.
 The chart-transport collapse
 `proofs/chart_transport_collapse.md` removes transported-generator noise:
 `V_beta(G)` is already normal, and

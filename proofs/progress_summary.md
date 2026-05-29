@@ -452,6 +452,12 @@ criterion needed by transport-state rackification.  The helper
 `readout_descent_separation_audit(...)` combines the readout kernel,
 continuation propagation, and surviving seed rows; when it passes, the quotient
 row is strand-continuing.
+The readout-kernel quotient interval note
+`proofs/readout_kernel_quotient_interval.md` makes the quotient row an
+executable object.  The helpers `quotient_interval_by_family(...)` and
+`readout_kernel_quotient_interval(...)` construct the descended local table on
+readout blocks, and the descent-separation audit now stores the quotient and
+its continuation audit.
 The chart-transport collapse
 `proofs/chart_transport_collapse.md` removes another source of proof noise:
 because `V_beta(G)` is normal for every finite group `G`, one

@@ -235,6 +235,8 @@ class ReadoutDescentSeparationAudit:
     continuation: ContinuationCongruenceAudit
     propagation_audits: Tuple[ContinuationSeedReadoutPropagationAudit, ...]
     surviving_seed_rows: Tuple[ContinuationSeedRow, ...]
+    quotient_interval: LocalInterval | None
+    quotient_continuation: ContinuationCongruenceAudit | None
 
     @property
     def readout_is_admissible(self) -> bool:
@@ -254,6 +256,8 @@ class ReadoutDescentSeparationAudit:
             self.continuation.base_rows_are_left_rack_form
             and self.readout_is_admissible
             and self.all_continuation_seeds_killed
+            and self.quotient_continuation is not None
+            and self.quotient_continuation.is_strand_continuing_on_the_nose
         )
 
     @property
@@ -375,6 +379,59 @@ def readout_kernel_audit(
         admissible=failure is None,
         failure=failure,
     )
+
+
+def _partition_block_lookup(partition: Partition) -> Dict[FibrePoint, Block]:
+    lookup: Dict[FibrePoint, Block] = {}
+    for block in partition:
+        for point in block:
+            lookup[point] = block
+    return lookup
+
+
+def quotient_interval_by_family(
+    interval: "LocalInterval",
+    family: Mapping[Color, Partition],
+) -> "LocalInterval":
+    """Return the local interval quotient by an admissible fibre congruence."""
+
+    if not interval.is_admissible_congruence_family(family):
+        raise ValueError("family must be an admissible local congruence")
+    lookups = {
+        color: _partition_block_lookup(family[color])
+        for color in interval.colors
+    }
+    fibres: Dict[Color, Tuple[Block, ...]] = {
+        color: tuple(family[color])
+        for color in interval.colors
+    }
+    table = {}
+    for a, b in product(interval.colors, repeat=2):
+        c, d = interval.base_R[(a, b)]
+        for block_x in fibres[a]:
+            for block_y in fibres[b]:
+                x = next(iter(block_x))
+                y = next(iter(block_y))
+                u, v = interval.T[(a, b, x, y)]
+                table[(a, b, block_x, block_y)] = (
+                    lookups[c][u],
+                    lookups[d][v],
+                )
+    return LocalInterval(
+        interval.colors,
+        fibres,
+        interval.base_R,
+        table,
+    )
+
+
+def readout_kernel_quotient_interval(
+    interval: "LocalInterval",
+    labels: ReadoutLabels,
+) -> "LocalInterval":
+    """Return the quotient interval induced by admissible readout labels."""
+
+    return quotient_interval_by_family(interval, readout_kernel_family(interval, labels))
 
 
 def _pairs_from_value_fibres(
@@ -798,11 +855,18 @@ def readout_descent_separation_audit(
             row.continuing_output,
         )
     )
+    quotient_interval = None
+    quotient_continuation = None
+    if readout_kernel.admissible:
+        quotient_interval = quotient_interval_by_family(interval, readout_kernel.family)
+        quotient_continuation = continuation_congruence_audit(quotient_interval)
     return ReadoutDescentSeparationAudit(
         readout_kernel=readout_kernel,
         continuation=continuation,
         propagation_audits=propagation_audits,
         surviving_seed_rows=surviving_rows,
+        quotient_interval=quotient_interval,
+        quotient_continuation=quotient_continuation,
     )
 
 

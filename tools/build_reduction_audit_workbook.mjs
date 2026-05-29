@@ -556,6 +556,13 @@ const rows = [
     "Construct fixed detector labels that make this audit pass in every local-minimal bottleneck interval.",
   ],
   [
+    "Readout quotient interval",
+    "Construct the explicit finite local interval on readout-kernel blocks.",
+    "proofs/readout_kernel_quotient_interval.md; quotient_interval_by_family and readout_kernel_quotient_interval build the descended local table.",
+    "Reduction criterion",
+    "After a passing descent-separation audit, apply transport-state rackification to the explicit strand-continuing quotient row.",
+  ],
+  [
     "Chart-transport collapse",
     "Avoid separate endpoint-longitude proofs for transported or chart-conjugate copies of elementary generators.",
     "proofs/chart_transport_collapse.md; conjugate_longitude_subgroup_witness shows V_beta(G) is normal at certificate level.",

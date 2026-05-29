@@ -1019,6 +1019,12 @@ kernel and seed-propagation checks.  The helper
 `readout_descent_separation_audit(...)` records any continuation seed rows
 that survive in the readout quotient; if none survive and the base row is in
 rack-side form, the quotient lower row is strand-continuing.
+The readout-kernel quotient interval note
+`proofs/readout_kernel_quotient_interval.md` now constructs that quotient row
+explicitly.  The helper `quotient_interval_by_family(...)` quotients any
+admissible fibre congruence, while `readout_kernel_quotient_interval(...)`
+specializes this to detector labels.  The descent-separation audit stores the
+quotient interval and its own continuation audit when the kernel is admissible.
 The chart-transport collapse in
 `proofs/chart_transport_collapse.md` removes chart-dependent copies from the
 generator burden.  Since `V_beta(G)` is already normal in every finite group,
