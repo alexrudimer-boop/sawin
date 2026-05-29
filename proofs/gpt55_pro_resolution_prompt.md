@@ -46,6 +46,10 @@ Also read `proofs/longitude_subgroup_witness_calculus.md`, which upgrades
 the homomorphism and product subgroup lemmas to explicit witness operations:
 push a longitude-subgroup witness through a fixed homomorphism, or assemble
 factor witnesses into one product witness.
+Also read `proofs/normalized_law_sequence_gate.md`, which isolates the
+B-side prefix condition: if word `j` is a law on every finite group of order
+at most `j`, then the sequence is eventually invisible to every fixed finite
+group after the pure-braid law embedding.
 Also read `proofs/detector_action_products.md`, which proves that
 `A_{prod_i G_i}` projects to the factor detector actions and therefore
 combines factor readouts.

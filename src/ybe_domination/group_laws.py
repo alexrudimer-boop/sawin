@@ -1,11 +1,40 @@
 from __future__ import annotations
 
+from dataclasses import dataclass
 from itertools import product
 from math import gcd
 from typing import Iterable, Iterator, Mapping, Sequence, Tuple
 
 from .artin_longitudes import FreeWord, evaluate_free_word, invert_free_word, reduce_free_word
 from .finite_group import FiniteGroup, GroupElement
+
+
+@dataclass(frozen=True)
+class LawSequencePrefixRow:
+    """One finite prefix check for an eventual all-finite-group law sequence."""
+
+    index: int
+    group_name: str
+    group_order: int
+    is_law: bool
+
+
+@dataclass(frozen=True)
+class LawSequencePrefixAudit:
+    """Finite audit of the condition: ``w_j`` is a law on groups of order <= j."""
+
+    arity: int
+    start_index: int
+    word_count: int
+    rows: Tuple[LawSequencePrefixRow, ...]
+
+    @property
+    def failed_rows(self) -> Tuple[LawSequencePrefixRow, ...]:
+        return tuple(row for row in self.rows if not row.is_law)
+
+    @property
+    def all_required_prefix_laws_hold(self) -> bool:
+        return not self.failed_rows
 
 
 def lcm(a: int, b: int) -> int:
@@ -126,6 +155,52 @@ def exponent_law_profile(groups: Mapping[str, FiniteGroup], bound: int):
         "laws": laws,
         "failures": failures,
     }
+
+
+def law_sequence_prefix_audit(
+    groups: Mapping[str, FiniteGroup],
+    words: Sequence[FreeWord],
+    *,
+    arity: int,
+    start_index: int = 1,
+) -> LawSequencePrefixAudit:
+    """Audit the finite prefix of a normalized-law sequence.
+
+    The all-``j`` theorem-level condition is: the word ``w_j`` is a law on
+    every finite group of order at most ``j``.  If an infinite sequence has
+    that property, then every fixed finite group eventually satisfies the
+    words.  This helper only checks the supplied finite prefix against the
+    supplied explicit groups; it is a diagnostic gate, not a proof of an
+    infinite sequence.
+    """
+
+    if arity < 0:
+        raise ValueError("arity must be nonnegative")
+    if start_index < 1:
+        raise ValueError("start_index must be positive")
+
+    word_tuple = tuple(words)
+    rows = []
+    for offset, word in enumerate(word_tuple):
+        index = start_index + offset
+        for name, group in groups.items():
+            group_order = len(group.elements)
+            if group_order > index:
+                continue
+            rows.append(
+                LawSequencePrefixRow(
+                    index=index,
+                    group_name=name,
+                    group_order=group_order,
+                    is_law=is_law_on_group(group, word, arity=arity),
+                )
+            )
+    return LawSequencePrefixAudit(
+        arity=arity,
+        start_index=start_index,
+        word_count=len(word_tuple),
+        rows=tuple(rows),
+    )
 
 
 def reduced_free_words(arity: int, max_length: int) -> Iterator[FreeWord]:

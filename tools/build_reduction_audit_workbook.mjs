@@ -215,7 +215,7 @@ const rows = [
   [
     "Normalized laws",
     "Audit exponent-law braid shortcut.",
-    "Pure-power shortcut ruled insufficient.",
+    "Pure-power shortcut ruled insufficient; normalized_law_sequence_gate records the order-prefix law condition and prefix audit helper.",
     "Gap clarified",
     "Need non-power law family or proof.",
   ],

@@ -279,6 +279,14 @@ has no finite detector group at all, then products of the first `j` finite
 groups and right-strand stabilization yield the required normalized-law
 sequence.  No such explicit interval has been found.
 
+The normalized-law prefix gate is now explicit.  A sequence of free words
+`w_j` that is a law on every finite group of order at most `j` is eventually
+a law on every fixed finite group.  The helper
+`law_sequence_prefix_audit(...)` checks finite prefixes of this condition
+against listed groups.  This supplies only the finite-group invisibility side
+of B; a counterexample still needs a fixed finite YBE solution and moved
+tuples for the corresponding law braids.
+
 ## Current bottleneck
 
 The unresolved mathematical task is the Master Local-Minimal Residual

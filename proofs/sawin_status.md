@@ -1458,6 +1458,12 @@ fixed finite group has size at most `j` eventually.  The helper
 `short_law_separating_groups()` searches finite instances of this separation;
 it is diagnostic only, but it gives the B route a precise target beyond pure
 powers and beyond single fixed-image law tests.
+The prefix-law quantifier is now isolated in
+`proofs/normalized_law_sequence_gate.md` and implemented by
+`law_sequence_prefix_audit(...)`: a sequence satisfying "word `j` is a law on
+every group of order at most `j`" is eventually a law on every fixed finite
+group.  The helper checks finite prefixes against listed groups only; it is a
+B-candidate gate, not evidence of nontrivial YBE motion.
 
 The moving-variety criterion has now been sharpened to structure orbits in
 `proofs/structure_orbit_law_obstruction.md`.  A genuine B sequence can be

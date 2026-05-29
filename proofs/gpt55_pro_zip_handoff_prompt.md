@@ -36,10 +36,11 @@ First read:
 3. `proofs/sawin_status.md`
 4. `proofs/gpt55_pro_resolution_prompt.md`
 5. `proofs/diagonal_normalized_obstruction.md`
-6. `proofs/longitude_subgroup_witness_calculus.md`
-7. `proofs/sawin_proof_log.docx`
-8. `tables/reduction_audit.xlsx`
-9. The code and tests under `src/`, `tools/`, and `tests/`
+6. `proofs/normalized_law_sequence_gate.md`
+7. `proofs/longitude_subgroup_witness_calculus.md`
+8. `proofs/sawin_proof_log.docx`
+9. `tables/reduction_audit.xlsx`
+10. The code and tests under `src/`, `tools/`, and `tests/`
 
 Then audit and use these reductions:
 

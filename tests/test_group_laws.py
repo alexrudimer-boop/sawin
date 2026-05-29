@@ -14,6 +14,7 @@ from ybe_domination import (
     has_identity_longitude_signature,
     is_law_on_group,
     law_braid_longitude_subgroup_profile,
+    law_sequence_prefix_audit,
     lcm_upto,
     reduced_free_words,
     short_law_escaping_variety,
@@ -108,6 +109,46 @@ class GroupLawTests(unittest.TestCase):
         )
         self.assertEqual(profile["exponent"], 6)
         self.assertEqual(profile["failures"], ())
+
+    def test_law_sequence_prefix_audit_checks_order_bound(self):
+        groups = {
+            "C2": cyclic_group(2),
+            "C3": cyclic_group(3),
+            "S3": symmetric_group(3),
+        }
+        words = tuple(exponent_law_word(bound) for bound in range(1, 7))
+
+        audit = law_sequence_prefix_audit(groups, words, arity=1)
+
+        self.assertEqual(audit.word_count, 6)
+        self.assertTrue(audit.all_required_prefix_laws_hold)
+        self.assertEqual(audit.failed_rows, ())
+        self.assertIn(
+            (6, "S3", 6, True),
+            tuple(
+                (row.index, row.group_name, row.group_order, row.is_law)
+                for row in audit.rows
+            ),
+        )
+        self.assertNotIn(
+            "S3",
+            tuple(row.group_name for row in audit.rows if row.index < 6),
+        )
+
+    def test_law_sequence_prefix_audit_reports_failures(self):
+        audit = law_sequence_prefix_audit(
+            {"C2": cyclic_group(2)},
+            (free_word_power(0, 1),),
+            arity=1,
+            start_index=2,
+        )
+
+        self.assertFalse(audit.all_required_prefix_laws_hold)
+        self.assertEqual(len(audit.failed_rows), 1)
+        self.assertEqual(audit.failed_rows[0].group_name, "C2")
+
+        with self.assertRaises(ValueError):
+            law_sequence_prefix_audit({}, (), arity=1, start_index=0)
 
     def test_two_strand_exponent_law_braid_is_longitude_invisible(self):
         braid = two_strand_exponent_law_braid(3)
