@@ -339,6 +339,13 @@ available: rack-like atom quotient inner groups satisfy the detector-lift rows
 automatically.  The unresolved endpoint identities are therefore concentrated
 in Green kernel-block, Schutzenberger, and lower endpoint/unit holonomy
 generators.
+The Green kernel-block and Schutzenberger generators have now been compressed
+to the first-output defect endpoint in
+`proofs/green_first_output_defect_criterion.md`.  That note shows that the
+second output has no separate obstruction and that kernel-block defects are
+Schutzenberger pushforwards in the globally realized case.  The remaining
+Green endpoint to longitudinalize is the transported Schutzenberger defect
+product `D_C(beta)`.
 
 ## Executable certificate layer
 
@@ -416,6 +423,10 @@ For rack-like atom quotient factors this finite row check is automatic after
 descent; the executable hooks are `rack_inner_detector_lift_audit(...)`,
 `right_rack_inner_detector_lift_audit(...)`, and
 `atom_quotient_inner_detector_lift_audit(...)`.
+For Green kernel-block and Schutzenberger factors, the corresponding
+normal-form hooks are `schutzenberger_first_output_defect_audits(...)`,
+`kernel_block_first_output_defect_audits(...)`, and
+`schutzenberger_kernel_defect_pushforward_audits(...)`.
 
 These helpers do not produce the missing endpoint expressions.  They verify the
 last algebraic and faithful-readout steps once a symbolic corridor proof has

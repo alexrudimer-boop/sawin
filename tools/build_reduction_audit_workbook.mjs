@@ -444,6 +444,13 @@ const rows = [
     "Still prove atom descent/totality; remaining row checks are Green kernel-block, Schutzenberger, and endpoint/unit holonomy factors.",
   ],
   [
+    "Green first-output defect",
+    "Replace Green kernel-block/Schutzenberger row checks by one transported defect endpoint.",
+    "proofs/green_first_output_defect_criterion.md proves the row normal form from g(a)g(q)=g(q^a)g(a^q); schutzenberger_kernel_defect_pushforward_audits checks kernel pushforwards.",
+    "Sharper open target",
+    "Prove transported Schutzenberger defect endpoints D_C(beta) lie in V_beta(Sch(C)); handle local-only and lower endpoint/unit holonomy.",
+  ],
+  [
     "Bi-free subgroup certificate",
     "Profile candidate words against fixed corridor detector factors.",
     "Helper, extra-factor target support, direct-product subgroup audit, and tests added; affine commutator seen by S3 block factor.",

@@ -41,9 +41,10 @@ First read:
 8. `proofs/artin_defect_longitudinalization_sieve.md`
 9. `proofs/artin_detector_lift_criterion.md`
 10. `proofs/atom_inner_detector_lift_rows.md`
-11. `proofs/sawin_proof_log.docx`
-12. `tables/reduction_audit.xlsx`
-13. The code and tests under `src/`, `tools/`, and `tests/`
+11. `proofs/green_first_output_defect_criterion.md`
+12. `proofs/sawin_proof_log.docx`
+13. `tables/reduction_audit.xlsx`
+14. The code and tests under `src/`, `tools/`, and `tests/`
 
 Then audit and use these reductions:
 
@@ -160,6 +161,13 @@ Then audit and use these reductions:
    atom-inner groups are no longer an open row-identity factor; the remaining
    rows are Green kernel-block, Schutzenberger, and lower endpoint/unit
    holonomy factors.
+   Also use `proofs/green_first_output_defect_criterion.md`: Green
+   kernel-block and Schutzenberger rows are controlled by the single
+   first-output defect `d_C(a,q)=g(q^a)g(q)^-1`; the second output is forced
+   by the product relation.  Kernel-block defects are Schutzenberger
+   pushforwards when no local-only edge-germs occur.  The remaining Green
+   target is `D_C(beta) in V_beta(Sch(C))`, preferably by Artin permutation
+   defect displays.
    Also audit the Green atom-action layer through `proofs/green_branch_audit.md`
    and `atom_action_summary(...)`: it checks whether completed rows descend to
    operations on saturated atoms, `p(a) triangleright p(q)=p(a^q)` and

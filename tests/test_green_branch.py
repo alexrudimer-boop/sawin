@@ -28,6 +28,7 @@ from ybe_domination import (
     context_words_by_target,
     depth_observer_summary,
     green_branch_audits,
+    kernel_block_first_output_defect_audits,
     induced_kernel_permutation,
     kernel_action_summary,
     opposite_green_branch_audits,
@@ -35,7 +36,10 @@ from ybe_domination import (
     right_coordinate_action_maps,
     right_coordinate_action_relation_failures,
     schutzenberger_action_groups,
+    schutzenberger_first_output_defect_audits,
     schutzenberger_groups,
+    schutzenberger_kernel_block_homomorphism,
+    schutzenberger_kernel_defect_pushforward_audits,
     schutzenberger_summaries,
     two_sided_atom_quotient_inner_groups,
     two_sided_green_detector_groups,
@@ -182,6 +186,45 @@ class GreenBranchTests(unittest.TestCase):
         self.assertEqual(summary.retained_labels, (0, 1, 2))
         self.assertEqual(summary.induced_group_size, 3)
         self.assertEqual(summary.nonpermutation_label_count, 0)
+
+    def test_green_first_output_defect_normal_form_for_affine_candidate(self):
+        solution = size_three_affine_candidate()
+        sch_audit = schutzenberger_first_output_defect_audits(solution)[0]
+        kernel_audit = kernel_block_first_output_defect_audits(solution)[0]
+
+        self.assertEqual(sch_audit.row_count, 27)
+        self.assertEqual(sch_audit.missing_row_count, 0)
+        self.assertEqual(sch_audit.local_only_edge_germ_count, 0)
+        self.assertEqual(sch_audit.nonidentity_defect_count, 18)
+        self.assertTrue(sch_audit.all_rows_have_defect_normal_form)
+        self.assertTrue(
+            sch_audit.all_observed_rows_are_right_rack_when_defects_identity
+        )
+        self.assertTrue(sch_audit.proves_first_output_defect_reduction)
+
+        self.assertEqual(kernel_audit.row_count, 27)
+        self.assertEqual(kernel_audit.missing_row_count, 0)
+        self.assertEqual(kernel_audit.nonidentity_defect_count, 18)
+        self.assertTrue(kernel_audit.proves_first_output_defect_reduction)
+
+    def test_kernel_defects_push_forward_from_schutzenberger_defects(self):
+        solution = size_three_affine_candidate()
+        r_class = green_branch_audits(solution)[0].r_class
+        homomorphism = schutzenberger_kernel_block_homomorphism(solution, r_class)
+        audits = schutzenberger_kernel_defect_pushforward_audits(solution)
+
+        self.assertIsNotNone(homomorphism)
+        self.assertEqual(len(audits), 1)
+        audit = audits[0]
+        self.assertEqual(audit.source_order, 3)
+        self.assertEqual(audit.target_order, 3)
+        self.assertEqual(audit.local_only_edge_germ_count, 0)
+        self.assertTrue(audit.homomorphism_exists)
+        self.assertEqual(audit.compared_row_count, 27)
+        self.assertEqual(audit.defect_pushforward_failure_count, 0)
+        self.assertTrue(
+            audit.proves_kernel_defects_are_schutzenberger_pushforwards
+        )
 
     def test_induced_kernel_permutation_detects_block_action(self):
         kernel = transformation_kernel((0, 0, 1, 1))

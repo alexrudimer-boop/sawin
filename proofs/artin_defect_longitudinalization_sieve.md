@@ -286,3 +286,9 @@ closed by `proofs/atom_inner_detector_lift_rows.md`, conditional on atom
 descent and totality.  The remaining row-level work is not the atom inner
 group, but the Green kernel-block, Schutzenberger, and lower endpoint/unit
 holonomy factors.
+The Green kernel-block and Schutzenberger row-level work has now been
+compressed to a first-output defect endpoint by
+`proofs/green_first_output_defect_criterion.md`.  Therefore the defect-sieve
+route should be applied directly to the transported Schutzenberger defect
+product `D_C(beta)`: display it as a product of Artin permutation defects, and
+membership in `V_beta(Sch(C))` follows.

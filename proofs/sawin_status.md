@@ -856,6 +856,27 @@ the atom action descends and is total.  The code exposes this as
 `atom_quotient_inner_detector_lift_audit(...)`.  The remaining row checks are
 Green kernel-block factors, Schutzenberger factors, and lower endpoint/unit
 holonomy factors.
+The Green kernel-block and Schutzenberger row checks have now been reduced to
+a single first-output defect endpoint.  The note
+`proofs/green_first_output_defect_criterion.md` proves that for every
+group-valued Green observer row,
+
+```text
+d_C(a,q)=g(q^a)g(q)^-1
+```
+
+determines the whole row: `g(q^a)=d_C(a,q)g(q)` and
+`g(a^q)=g(q)^-1 d_C(a,q)^-1 g(a)g(q)`.  Thus there is no independent
+second-output obstruction.  If the defect is identity, the row is exactly the
+side-opposite Artin detector row.  When retained edges are globally realized
+in the Schutzenberger action, kernel-block defects are homomorphic images of
+Schutzenberger defects; this is exposed by
+`schutzenberger_kernel_defect_pushforward_audits(...)`.  The remaining Green
+theorem is now to prove that the transported Schutzenberger defect endpoint
+`D_C(beta)` lies in `V_beta(Sch(C))`, uniformly in braid index.  A direct A
+route is to express `D_C(beta)` as a product of Artin permutation defect
+values, which the Artin-defect sieve already places in the longitude-value
+subgroup.
 The single-endpoint route audit
 `unit_composite_longitude_route_audit(monoid,n,beta,factors)` now records the
 same ladder used in product-label work: endpoint identity, one evaluated

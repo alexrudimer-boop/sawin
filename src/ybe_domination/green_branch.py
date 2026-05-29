@@ -10,7 +10,12 @@ from .artin_longitudes import (
     right_rack_inner_detector_lift_audit,
 )
 from .finite_braided_set import FiniteBraidedSet, opposite_solution
-from .finite_group import FiniteGroup, permutation_group_from_generators
+from .finite_group import (
+    FiniteGroup,
+    FiniteGroupHomomorphism,
+    GroupElement,
+    permutation_group_from_generators,
+)
 from .local_interval import canonical_partition
 
 Transformation = Tuple[int, ...]
@@ -333,6 +338,122 @@ class KernelActionSummary:
     induced_permutations: Tuple[Tuple[Hashable, Permutation], ...]
     induced_group_size: int
     nonpermutation_label_count: int
+
+
+@dataclass(frozen=True)
+class GreenFirstOutputDefectRowAudit:
+    """Normal-form audit for one group-valued Green completed row."""
+
+    row: BranchRow
+    observer_name: str
+    group_order: int
+    g_a: GroupElement
+    g_q: GroupElement
+    g_q_under_a: GroupElement
+    g_a_under_q: GroupElement
+    first_output_defect: GroupElement
+    reconstructed_q_under_a: GroupElement
+    reconstructed_a_under_q: GroupElement
+    product_relation_holds: bool
+    first_output_normal_form_holds: bool
+    second_output_forced_by_defect: bool
+    defect_is_identity: bool
+    right_rack_row_if_defect_identity: bool
+
+    @property
+    def row_has_defect_normal_form(self) -> bool:
+        return (
+            self.product_relation_holds
+            and self.first_output_normal_form_holds
+            and self.second_output_forced_by_defect
+        )
+
+    @property
+    def proves_no_independent_second_output_check(self) -> bool:
+        return self.row_has_defect_normal_form
+
+
+@dataclass(frozen=True)
+class GreenFirstOutputDefectAudit:
+    """Bundle first-output defect rows for one Green observer factor."""
+
+    observer_name: str
+    r_class: Tuple[Transformation, ...]
+    group_order: int
+    row_audits: Tuple[GreenFirstOutputDefectRowAudit, ...]
+    missing_edge_count: int
+    missing_row_count: int
+    local_only_edge_germ_count: int | None = None
+
+    @property
+    def row_count(self) -> int:
+        return len(self.row_audits)
+
+    @property
+    def nonidentity_defect_count(self) -> int:
+        return sum(
+            1 for row in self.row_audits if not row.defect_is_identity
+        )
+
+    @property
+    def all_rows_have_defect_normal_form(self) -> bool:
+        return all(row.row_has_defect_normal_form for row in self.row_audits)
+
+    @property
+    def all_observed_rows_are_right_rack_when_defects_identity(self) -> bool:
+        return all(
+            row.right_rack_row_if_defect_identity
+            for row in self.row_audits
+        )
+
+    @property
+    def covers_all_rows(self) -> bool:
+        return self.missing_row_count == 0
+
+    @property
+    def proves_first_output_defect_reduction(self) -> bool:
+        return (
+            self.covers_all_rows
+            and self.all_rows_have_defect_normal_form
+            and self.all_observed_rows_are_right_rack_when_defects_identity
+        )
+
+
+@dataclass(frozen=True)
+class SchutzenbergerKernelDefectPushforwardAudit:
+    """Audit that kernel-block defects are homomorphic Schutzenberger images."""
+
+    r_class: Tuple[Transformation, ...]
+    source_order: int
+    target_order: int
+    local_only_edge_germ_count: int
+    homomorphism: FiniteGroupHomomorphism | None
+    schutzenberger_defect_audit: GreenFirstOutputDefectAudit
+    kernel_defect_audit: GreenFirstOutputDefectAudit
+    compared_row_count: int
+    defect_pushforward_failure_count: int
+
+    @property
+    def homomorphism_exists(self) -> bool:
+        return self.homomorphism is not None
+
+    @property
+    def no_local_only_edges(self) -> bool:
+        return self.local_only_edge_germ_count == 0
+
+    @property
+    def all_compared_defects_push_forward(self) -> bool:
+        return self.defect_pushforward_failure_count == 0
+
+    @property
+    def proves_kernel_defects_are_schutzenberger_pushforwards(self) -> bool:
+        return (
+            self.no_local_only_edges
+            and self.homomorphism_exists
+            and self.schutzenberger_defect_audit.proves_first_output_defect_reduction
+            and self.kernel_defect_audit.proves_first_output_defect_reduction
+            and self.all_compared_defects_push_forward
+        )
 
 
 def _block_index(partition: Tuple[frozenset[EdgeGerm], ...], item: EdgeGerm) -> int:
@@ -849,6 +970,104 @@ def induced_kernel_permutation(
     return candidate
 
 
+def green_first_output_defect_row_audit(
+    group: FiniteGroup,
+    row: BranchRow,
+    edge_labels: Mapping[EdgeGerm, GroupElement],
+    observer_name: str,
+) -> GreenFirstOutputDefectRowAudit:
+    """Audit the first-output defect normal form for one completed row."""
+
+    elements = set(group.elements)
+    try:
+        g_a = edge_labels[row.a]
+        g_q = edge_labels[row.q]
+        g_q_under_a = edge_labels[row.q_under_a]
+        g_a_under_q = edge_labels[row.a_under_q]
+    except KeyError as exc:
+        raise ValueError(f"missing observer label for edge {exc.args[0]!r}") from exc
+    if any(value not in elements for value in (g_a, g_q, g_q_under_a, g_a_under_q)):
+        raise ValueError("observer labels must be elements of the supplied group")
+
+    first_output_defect = group.mul(g_q_under_a, group.inv(g_q))
+    reconstructed_q_under_a = group.mul(first_output_defect, g_q)
+    reconstructed_a_under_q = group.mul(
+        group.mul(group.mul(group.inv(g_q), group.inv(first_output_defect)), g_a),
+        g_q,
+    )
+    product_relation_holds = group.mul(g_a, g_q) == group.mul(
+        g_q_under_a,
+        g_a_under_q,
+    )
+    first_output_normal_form_holds = reconstructed_q_under_a == g_q_under_a
+    second_output_forced_by_defect = reconstructed_a_under_q == g_a_under_q
+    defect_is_identity = first_output_defect == group.identity
+    right_rack_row_if_defect_identity = (
+        (not defect_is_identity)
+        or (
+            g_q_under_a == g_q
+            and g_a_under_q
+            == group.mul(group.mul(group.inv(g_q), g_a), g_q)
+        )
+    )
+    return GreenFirstOutputDefectRowAudit(
+        row=row,
+        observer_name=observer_name,
+        group_order=len(group.elements),
+        g_a=g_a,
+        g_q=g_q,
+        g_q_under_a=g_q_under_a,
+        g_a_under_q=g_a_under_q,
+        first_output_defect=first_output_defect,
+        reconstructed_q_under_a=reconstructed_q_under_a,
+        reconstructed_a_under_q=reconstructed_a_under_q,
+        product_relation_holds=product_relation_holds,
+        first_output_normal_form_holds=first_output_normal_form_holds,
+        second_output_forced_by_defect=second_output_forced_by_defect,
+        defect_is_identity=defect_is_identity,
+        right_rack_row_if_defect_identity=right_rack_row_if_defect_identity,
+    )
+
+
+def green_first_output_defect_audit(
+    audit: GreenBranchAudit,
+    group: FiniteGroup,
+    edge_labels: Mapping[EdgeGerm, GroupElement],
+    observer_name: str,
+    local_only_edge_germ_count: int | None = None,
+) -> GreenFirstOutputDefectAudit:
+    """Audit all observable completed rows for the first-output defect form."""
+
+    labelled_edges = set(edge_labels)
+    missing_edges = set(audit.edge_germs).difference(labelled_edges)
+    row_audits = []
+    missing_row_count = 0
+    for row in audit.rows:
+        if any(
+            edge not in labelled_edges
+            for edge in (row.a, row.q, row.q_under_a, row.a_under_q)
+        ):
+            missing_row_count += 1
+            continue
+        row_audits.append(
+            green_first_output_defect_row_audit(
+                group,
+                row,
+                edge_labels,
+                observer_name,
+            )
+        )
+    return GreenFirstOutputDefectAudit(
+        observer_name=observer_name,
+        r_class=audit.r_class,
+        group_order=len(group.elements),
+        row_audits=tuple(row_audits),
+        missing_edge_count=len(missing_edges),
+        missing_row_count=missing_row_count,
+        local_only_edge_germ_count=local_only_edge_germ_count,
+    )
+
+
 def kernel_action_summary(solution: FiniteBraidedSet) -> Tuple[KernelActionSummary, ...]:
     """Summarize finite kernel-block actions for retained Green labels.
 
@@ -1004,6 +1223,200 @@ def schutzenberger_action_groups(
             )
         )
     return tuple(sorted(groups, key=repr))
+
+
+def schutzenberger_first_output_defect_audits(
+    solution: FiniteBraidedSet,
+) -> Tuple[GreenFirstOutputDefectAudit, ...]:
+    """Audit Green first-output defects in Schutzenberger action groups."""
+
+    failures = coordinate_action_relation_failures(solution)
+    if failures:
+        raise ValueError("coordinate actions do not satisfy structure relation")
+
+    tau = coordinate_action_maps(solution)
+    monoid = TransformationMonoid.generated(tau.values())
+    audits = []
+    for audit in green_branch_audits(solution):
+        label_actions = {
+            label: action
+            for label, transform in tau.items()
+            for action in (
+                _permutation_action_on_r_class(monoid, audit.r_class, transform),
+            )
+            if action is not None
+        }
+        group = permutation_group_from_generators(
+            label_actions.values(),
+            degree=len(audit.r_class),
+        )
+        edge_labels = {
+            edge: label_actions[edge[1]]
+            for edge in audit.edge_germs
+            if edge[1] in label_actions
+        }
+        local_only_edge_germ_count = len(audit.edge_germs) - len(edge_labels)
+        audits.append(
+            green_first_output_defect_audit(
+                audit,
+                group,
+                edge_labels,
+                "schutzenberger",
+                local_only_edge_germ_count=local_only_edge_germ_count,
+            )
+        )
+    return tuple(sorted(audits, key=repr))
+
+
+def kernel_block_first_output_defect_audits(
+    solution: FiniteBraidedSet,
+) -> Tuple[GreenFirstOutputDefectAudit, ...]:
+    """Audit Green first-output defects in kernel-block permutation groups."""
+
+    failures = coordinate_action_relation_failures(solution)
+    if failures:
+        raise ValueError("coordinate actions do not satisfy structure relation")
+
+    tau = coordinate_action_maps(solution)
+    audits = []
+    for audit in green_branch_audits(solution):
+        if not audit.r_class:
+            continue
+        kernel = transformation_kernel(audit.r_class[0])
+        label_actions = {
+            label: permutation
+            for label, transform in tau.items()
+            for permutation in (induced_kernel_permutation(kernel, transform),)
+            if permutation is not None
+        }
+        group = permutation_group_from_generators(
+            label_actions.values(),
+            degree=len(kernel),
+        )
+        edge_labels = {
+            edge: label_actions[edge[1]]
+            for edge in audit.edge_germs
+            if edge[1] in label_actions
+        }
+        audits.append(
+            green_first_output_defect_audit(
+                audit,
+                group,
+                edge_labels,
+                "kernel-block",
+            )
+        )
+    return tuple(sorted(audits, key=repr))
+
+
+def schutzenberger_kernel_block_homomorphism(
+    solution: FiniteBraidedSet,
+    r_class: Tuple[Transformation, ...],
+) -> FiniteGroupHomomorphism | None:
+    """Return the Schutzenberger-to-kernel block action, when well-defined."""
+
+    if not r_class:
+        return None
+    failures = coordinate_action_relation_failures(solution)
+    if failures:
+        raise ValueError("coordinate actions do not satisfy structure relation")
+
+    tau = coordinate_action_maps(solution)
+    monoid = TransformationMonoid.generated(tau.values())
+    r_class_set = set(r_class)
+    stabilizer = tuple(
+        element
+        for element in monoid.elements
+        if all(monoid.mul(source, element) in r_class_set for source in r_class)
+    )
+    kernel = transformation_kernel(r_class[0])
+    image_candidates: Dict[Permutation, set[Permutation]] = defaultdict(set)
+    for element in stabilizer:
+        sch_action = _permutation_action_on_r_class(monoid, r_class, element)
+        if sch_action is None:
+            continue
+        kernel_action = induced_kernel_permutation(kernel, element)
+        if kernel_action is None:
+            return None
+        image_candidates[sch_action].add(kernel_action)
+
+    source = permutation_group_from_generators(
+        image_candidates.keys(),
+        degree=len(r_class),
+    )
+    if any(
+        element not in image_candidates or len(image_candidates[element]) != 1
+        for element in source.elements
+    ):
+        return None
+    mapping = {
+        element: next(iter(image_candidates[element]))
+        for element in source.elements
+    }
+    target = permutation_group_from_generators(
+        mapping.values(),
+        degree=len(kernel),
+    )
+    try:
+        return FiniteGroupHomomorphism(source, target, mapping)
+    except ValueError:
+        return None
+
+
+def schutzenberger_kernel_defect_pushforward_audits(
+    solution: FiniteBraidedSet,
+) -> Tuple[SchutzenbergerKernelDefectPushforwardAudit, ...]:
+    """Audit kernel defects as homomorphic images of Schutzenberger defects."""
+
+    sch_audits = {
+        audit.r_class: audit
+        for audit in schutzenberger_first_output_defect_audits(solution)
+    }
+    kernel_audits = {
+        audit.r_class: audit
+        for audit in kernel_block_first_output_defect_audits(solution)
+    }
+    summaries = {
+        summary.r_class: summary
+        for summary in schutzenberger_summaries(solution)
+    }
+    out = []
+    for r_class, sch_audit in sch_audits.items():
+        kernel_audit = kernel_audits[r_class]
+        homomorphism = schutzenberger_kernel_block_homomorphism(
+            solution,
+            r_class,
+        )
+        kernel_rows = {row.row: row for row in kernel_audit.row_audits}
+        compared = 0
+        failures = 0
+        if homomorphism is not None:
+            for sch_row in sch_audit.row_audits:
+                kernel_row = kernel_rows.get(sch_row.row)
+                if kernel_row is None:
+                    continue
+                compared += 1
+                if (
+                    homomorphism.apply(sch_row.first_output_defect)
+                    != kernel_row.first_output_defect
+                ):
+                    failures += 1
+        out.append(
+            SchutzenbergerKernelDefectPushforwardAudit(
+                r_class=r_class,
+                source_order=sch_audit.group_order,
+                target_order=kernel_audit.group_order,
+                local_only_edge_germ_count=summaries[
+                    r_class
+                ].local_only_edge_germ_count,
+                homomorphism=homomorphism,
+                schutzenberger_defect_audit=sch_audit,
+                kernel_defect_audit=kernel_audit,
+                compared_row_count=compared,
+                defect_pushforward_failure_count=failures,
+            )
+        )
+    return tuple(sorted(out, key=repr))
 
 
 def context_words_by_target(
