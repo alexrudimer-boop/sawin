@@ -291,6 +291,10 @@ The Green kernel-block and Schutzenberger row-level work has now been
 compressed to a first-output defect endpoint by
 `proofs/green_first_output_defect_criterion.md`, and the non-defect quotient
 motion is closed by `proofs/green_defect_kernel_quotient_detection.md`.
-Therefore the defect-sieve route should be applied directly to the transported
-finite defect-kernel product `D_C(beta)`: display it as a product of Artin
-permutation defects in `Def_C`, and membership in `V_beta(Def_C)` follows.
+The elementary defects are also finite coboundaries by
+`proofs/green_defect_potential_coboundary.md`:
+`d(a,q)=eta(q^a)eta(q)^-1`.  Therefore the defect-sieve route should be
+applied directly to the Artin transport of this `Def_C`-valued potential:
+display the transported finite defect-kernel product `D_C(beta)` as a product
+of Artin permutation defects in `Def_C`, and membership in `V_beta(Def_C)`
+follows.

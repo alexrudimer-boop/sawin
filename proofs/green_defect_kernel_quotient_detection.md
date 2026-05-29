@@ -167,6 +167,19 @@ inside the fixed finite group `Def_C`, because
 `proofs/artin_defect_longitudinalization_sieve.md` proves that such values
 always lie in `V_beta(Def_C)`.
 
+The next reduction `proofs/green_defect_potential_coboundary.md` proves that
+each elementary first-output defect is already a finite nonabelian coboundary
+
+```text
+d(a,q)=eta_C(q^a) eta_C(q)^-1
+```
+
+for a `Def_C`-valued, basepoint-normalized potential on the retained
+edge-germ graph.  Therefore the remaining target can be phrased still more
+sharply: prove that this finite potential is principal for the Artin detector
+transport.  If the transported potential differences are Artin permutation
+defect values, then the displayed endpoint lies in `V_beta(Def_C)`.
+
 If this defect-kernel longitudinalization is proved, the
 Green/Schutzenberger component closes:
 
@@ -207,13 +220,17 @@ The code records the finite quotient step through:
 normal_closure_elements(...)
 quotient_group_by_normal_subgroup(...)
 green_defect_kernel_quotient_audit(...)
+green_defect_kernel_potential_audit(...)
 schutzenberger_defect_kernel_quotient_audits(...)
+schutzenberger_defect_kernel_potential_audits(...)
 kernel_block_defect_kernel_quotient_audits(...)
+kernel_block_defect_kernel_potential_audits(...)
 ```
 
 The audit computes the normal closure of the first-output row defects,
 constructs the quotient group and projection homomorphism, re-runs the
 first-output defect audit after projection, and records that every projected
 defect is identity.  This is a finite row-level certificate of the quotient
-theorem.  It is not the missing all-`n` proof of defect-kernel
-longitudinalization.
+theorem.  The potential audit additionally verifies the proved coboundary
+identity inside `Def_C`.  Neither audit proves the missing all-`n` Artin
+transport principalness of the defect potential.

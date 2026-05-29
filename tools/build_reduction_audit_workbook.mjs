@@ -458,6 +458,13 @@ const rows = [
     "Prove the remaining defect-kernel endpoint D_C(beta) lies in V_beta(Def_C), preferably by Artin-defect displays.",
   ],
   [
+    "Green defect potential",
+    "Reduce elementary Def_C defects to a finite nonabelian coboundary on retained edge-germs.",
+    "proofs/green_defect_potential_coboundary.md proves d(a,q)=eta(q^a)eta(q)^-1 after choosing a base edge per defect component; green_defect_kernel_potential_audit verifies potentials lie in Def_C and all row coboundaries match.",
+    "Coboundary reduction",
+    "Prove the Def_C potential is principal for Artin detector transport, or extract a normalized-law cocycle escape.",
+  ],
+  [
     "Bi-free subgroup certificate",
     "Profile candidate words against fixed corridor detector factors.",
     "Helper, extra-factor target support, direct-product subgroup audit, and tests added; affine commutator seen by S3 block factor.",

@@ -876,13 +876,17 @@ theorem has now been sharpened by
 `proofs/green_defect_kernel_quotient_detection.md`.  For each observer
 `U_C`, let `Def_C` be the normal closure of the first-output defects.  In the
 finite quotient `U_C/Def_C`, every row is the exact side-opposite rack-Artin
-row, so the detector-lift theorem kills the quotient motion.  The remaining
-Green theorem is to prove that the transported defect-kernel endpoint
-`D_C(beta)` lies in `V_beta(Def_C)`, uniformly in braid index.  A direct A
-route is to express `D_C(beta)` as a product of Artin permutation defect
-values, which the Artin-defect sieve already places in the longitude-value
-subgroup.  A B route must now escape through this finite defect kernel, not
-through a generic bounded row mismatch.
+row, so the detector-lift theorem kills the quotient motion.  The follow-up
+`proofs/green_defect_potential_coboundary.md` proves that each elementary
+defect in `Def_C` is a nonabelian coboundary `eta(q^a)eta(q)^-1` for a
+basepoint-normalized potential on the retained edge-germ graph.  The remaining
+Green theorem is to prove that this finite potential is principal for Artin
+transport, equivalently that the transported defect-kernel endpoint
+`D_C(beta)` lies in `V_beta(Def_C)` uniformly in braid index.  A direct A
+route is to express the potential transport differences as Artin permutation
+defect values, which the Artin-defect sieve already places in the
+longitude-value subgroup.  A B route must now escape through a nonprincipal
+finite defect-potential cocycle, not through a generic bounded row mismatch.
 The single-endpoint route audit
 `unit_composite_longitude_route_audit(monoid,n,beta,factors)` now records the
 same ladder used in product-label work: endpoint identity, one evaluated

@@ -174,18 +174,41 @@ Thus the only Green/Schutzenberger information not closed by this row
 quotient is the transported endpoint product of the defects themselves,
 viewed inside the fixed finite kernel `Def_C`.
 
+## Potential coboundary refinement
+
+The further reduction `proofs/green_defect_potential_coboundary.md` constructs
+a `Def_C`-valued potential on each connected component of the defect graph.
+After choosing a base edge-germ `e_0` in a component, set
+
+```text
+eta_C(e)=g(e)g(e_0)^-1.
+```
+
+Then every elementary first-output defect is the coboundary
+
+```text
+d_C(a,q)=eta_C(q^a)eta_C(q)^-1.
+```
+
+Changing the basepoint only right-renormalizes `eta_C` inside `Def_C`, so the
+coboundaries are unchanged.  This does not yet prove that transported defect
+endpoints lie in `V_beta(Def_C)`; it reduces that question to proving that the
+finite potential is principal for the Artin detector transport.
+
 ## Remaining target
 
 For each regular Green class `C`, let `D_C(beta)` denote the ordered
 transported product of elementary first-output defects encountered while
-sweeping a residual braid word.  After the defect-kernel quotient reduction,
-the Green row problem is reduced to:
+sweeping a residual braid word.  After the defect-kernel quotient and
+potential-coboundary reductions, the Green row problem is reduced to:
 
 ```text
 D_C(beta) in V_beta(Def_C)
 ```
 
-for every residual braid `beta`, uniformly in braid index.
+for every residual braid `beta`, uniformly in braid index, preferably by
+expressing transported potential differences as Artin permutation defect
+values.
 
 If this is proved, then:
 
@@ -225,10 +248,13 @@ The code records this reduction through:
 green_first_output_defect_row_audit(...)
 green_first_output_defect_audit(...)
 green_defect_kernel_quotient_audit(...)
+green_defect_kernel_potential_audit(...)
 schutzenberger_first_output_defect_audits(...)
 schutzenberger_defect_kernel_quotient_audits(...)
+schutzenberger_defect_kernel_potential_audits(...)
 kernel_block_first_output_defect_audits(...)
 kernel_block_defect_kernel_quotient_audits(...)
+kernel_block_defect_kernel_potential_audits(...)
 schutzenberger_kernel_block_homomorphism(...)
 schutzenberger_kernel_defect_pushforward_audits(...)
 ```
@@ -237,5 +263,7 @@ These helpers verify the product relation, reconstruct the second output from
 the first-output defect, check that identity defects give the right-rack Artin
 row, audit kernel-block defects as Schutzenberger pushforwards when the
 homomorphism exists, and construct the finite quotient by the normal closure
-of the defects.  They do not prove that the transported defect-kernel
-endpoints belong to `V_beta(Def_C)`; that is the remaining theorem target.
+of the defects.  The potential helpers verify the finite coboundary identity
+`d_C(a,q)=eta_C(q^a)eta_C(q)^-1`.  They do not prove that the transported
+defect-kernel endpoints belong to `V_beta(Def_C)`; that Artin-transport
+principalness is the remaining theorem target.

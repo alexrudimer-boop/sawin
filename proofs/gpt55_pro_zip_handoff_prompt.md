@@ -43,9 +43,10 @@ First read:
 10. `proofs/atom_inner_detector_lift_rows.md`
 11. `proofs/green_first_output_defect_criterion.md`
 12. `proofs/green_defect_kernel_quotient_detection.md`
-13. `proofs/sawin_proof_log.docx`
-14. `tables/reduction_audit.xlsx`
-15. The code and tests under `src/`, `tools/`, and `tests/`
+13. `proofs/green_defect_potential_coboundary.md`
+14. `proofs/sawin_proof_log.docx`
+15. `tables/reduction_audit.xlsx`
+16. The code and tests under `src/`, `tools/`, and `tests/`
 
 Then audit and use these reductions:
 
@@ -172,8 +173,11 @@ Then audit and use these reductions:
    first-output defects.  The projected rows in `U_C/Def_C` are exact
    side-opposite rack-Artin rows and are killed by detector-lift.  The
    remaining Green target is the defect-kernel endpoint
-   `D_C(beta) in V_beta(Def_C)`, preferably by Artin permutation defect
-   displays.
+   `D_C(beta) in V_beta(Def_C)`.  Also use
+   `proofs/green_defect_potential_coboundary.md`: it proves every elementary
+   defect is a finite coboundary `eta(q^a)eta(q)^-1` in `Def_C`, so the exact
+   remaining Green check is whether this potential is principal for the Artin
+   detector transport, preferably by Artin permutation defect displays.
    Also audit the Green atom-action layer through `proofs/green_branch_audit.md`
    and `atom_action_summary(...)`: it checks whether completed rows descend to
    operations on saturated atoms, `p(a) triangleright p(q)=p(a^q)` and

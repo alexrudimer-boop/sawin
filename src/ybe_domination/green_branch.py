@@ -473,6 +473,91 @@ class GreenDefectKernelQuotientAudit:
 
 
 @dataclass(frozen=True)
+class GreenDefectPotentialComponentAudit:
+    """Basepoint-normalized potential on one defect graph component."""
+
+    base_edge: EdgeGerm
+    edges: Tuple[EdgeGerm, ...]
+    potentials: Tuple[Tuple[EdgeGerm, GroupElement], ...]
+    potential_outside_kernel_count: int
+
+    @property
+    def edge_count(self) -> int:
+        return len(self.edges)
+
+    @property
+    def all_potentials_lie_in_defect_kernel(self) -> bool:
+        return self.potential_outside_kernel_count == 0
+
+
+@dataclass(frozen=True)
+class GreenDefectPotentialRowAudit:
+    """Check one first-output defect as a potential coboundary."""
+
+    row: BranchRow
+    first_output_defect: GroupElement
+    q_potential: GroupElement
+    q_under_a_potential: GroupElement
+    potential_coboundary: GroupElement
+    defect_is_potential_coboundary: bool
+
+
+@dataclass(frozen=True)
+class GreenDefectKernelPotentialAudit:
+    """Audit the finite potential-coboundary form of Green defects."""
+
+    observer_name: str
+    r_class: Tuple[Transformation, ...]
+    source_defect_audit: GreenFirstOutputDefectAudit
+    quotient_audit: GreenDefectKernelQuotientAudit
+    components: Tuple[GreenDefectPotentialComponentAudit, ...]
+    row_audits: Tuple[GreenDefectPotentialRowAudit, ...]
+    missing_potential_row_count: int
+
+    @property
+    def component_count(self) -> int:
+        return len(self.components)
+
+    @property
+    def row_count(self) -> int:
+        return len(self.row_audits)
+
+    @property
+    def potential_outside_kernel_count(self) -> int:
+        return sum(
+            component.potential_outside_kernel_count
+            for component in self.components
+        )
+
+    @property
+    def coboundary_failure_count(self) -> int:
+        return sum(
+            1
+            for row in self.row_audits
+            if not row.defect_is_potential_coboundary
+        )
+
+    @property
+    def all_potentials_lie_in_defect_kernel(self) -> bool:
+        return self.potential_outside_kernel_count == 0
+
+    @property
+    def all_defects_are_potential_coboundaries(self) -> bool:
+        return (
+            self.missing_potential_row_count == 0
+            and self.coboundary_failure_count == 0
+        )
+
+    @property
+    def proves_defect_kernel_potential_coboundary(self) -> bool:
+        return (
+            self.quotient_audit.proves_defect_quotient_detection
+            and self.all_potentials_lie_in_defect_kernel
+            and self.all_defects_are_potential_coboundaries
+        )
+
+
+@dataclass(frozen=True)
 class SchutzenbergerKernelDefectPushforwardAudit:
     """Audit that kernel-block defects are homomorphic Schutzenberger images."""
 
@@ -1170,6 +1255,96 @@ def green_defect_kernel_quotient_audit(
     )
 
 
+def green_defect_kernel_potential_audit(
+    source_defect_audit: GreenFirstOutputDefectAudit,
+) -> GreenDefectKernelPotentialAudit:
+    """Audit first-output defects as finite potential coboundaries."""
+
+    quotient_audit = green_defect_kernel_quotient_audit(source_defect_audit)
+    group = source_defect_audit.group
+    defect_kernel = set(quotient_audit.defect_kernel)
+    edge_labels = dict(source_defect_audit.edge_labels)
+    labelled_edges = set(edge_labels)
+    adjacency: Dict[EdgeGerm, set[EdgeGerm]] = {
+        edge: set() for edge in labelled_edges
+    }
+    for row_audit in source_defect_audit.row_audits:
+        left = row_audit.row.q
+        right = row_audit.row.q_under_a
+        if left not in labelled_edges or right not in labelled_edges:
+            continue
+        adjacency[left].add(right)
+        adjacency[right].add(left)
+
+    seen: set[EdgeGerm] = set()
+    potential_by_edge: Dict[EdgeGerm, GroupElement] = {}
+    components = []
+    for base_edge in sorted(labelled_edges, key=repr):
+        if base_edge in seen:
+            continue
+        component_seen = {base_edge}
+        queue = deque([base_edge])
+        while queue:
+            edge = queue.popleft()
+            for neighbor in adjacency[edge]:
+                if neighbor not in component_seen:
+                    component_seen.add(neighbor)
+                    queue.append(neighbor)
+        seen.update(component_seen)
+        base_inverse = group.inv(edge_labels[base_edge])
+        potentials = []
+        outside_kernel = 0
+        for edge in sorted(component_seen, key=repr):
+            potential = group.mul(edge_labels[edge], base_inverse)
+            potential_by_edge[edge] = potential
+            potentials.append((edge, potential))
+            if potential not in defect_kernel:
+                outside_kernel += 1
+        components.append(
+            GreenDefectPotentialComponentAudit(
+                base_edge=base_edge,
+                edges=tuple(sorted(component_seen, key=repr)),
+                potentials=tuple(potentials),
+                potential_outside_kernel_count=outside_kernel,
+            )
+        )
+
+    row_audits = []
+    missing = 0
+    for row_audit in source_defect_audit.row_audits:
+        q_potential = potential_by_edge.get(row_audit.row.q)
+        q_under_a_potential = potential_by_edge.get(row_audit.row.q_under_a)
+        if q_potential is None or q_under_a_potential is None:
+            missing += 1
+            continue
+        potential_coboundary = group.mul(
+            q_under_a_potential,
+            group.inv(q_potential),
+        )
+        row_audits.append(
+            GreenDefectPotentialRowAudit(
+                row=row_audit.row,
+                first_output_defect=row_audit.first_output_defect,
+                q_potential=q_potential,
+                q_under_a_potential=q_under_a_potential,
+                potential_coboundary=potential_coboundary,
+                defect_is_potential_coboundary=(
+                    potential_coboundary == row_audit.first_output_defect
+                ),
+            )
+        )
+
+    return GreenDefectKernelPotentialAudit(
+        observer_name=source_defect_audit.observer_name,
+        r_class=source_defect_audit.r_class,
+        source_defect_audit=source_defect_audit,
+        quotient_audit=quotient_audit,
+        components=tuple(components),
+        row_audits=tuple(row_audits),
+        missing_potential_row_count=missing,
+    )
+
+
 def kernel_action_summary(solution: FiniteBraidedSet) -> Tuple[KernelActionSummary, ...]:
     """Summarize finite kernel-block actions for retained Green labels.
 
@@ -1532,6 +1707,17 @@ def schutzenberger_defect_kernel_quotient_audits(
     )
 
 
+def schutzenberger_defect_kernel_potential_audits(
+    solution: FiniteBraidedSet,
+) -> Tuple[GreenDefectKernelPotentialAudit, ...]:
+    """Return potential-coboundary audits for Schutzenberger defects."""
+
+    return tuple(
+        green_defect_kernel_potential_audit(audit)
+        for audit in schutzenberger_first_output_defect_audits(solution)
+    )
+
+
 def kernel_block_defect_kernel_quotient_audits(
     solution: FiniteBraidedSet,
 ) -> Tuple[GreenDefectKernelQuotientAudit, ...]:
@@ -1539,6 +1725,17 @@ def kernel_block_defect_kernel_quotient_audits(
 
     return tuple(
         green_defect_kernel_quotient_audit(audit)
+        for audit in kernel_block_first_output_defect_audits(solution)
+    )
+
+
+def kernel_block_defect_kernel_potential_audits(
+    solution: FiniteBraidedSet,
+) -> Tuple[GreenDefectKernelPotentialAudit, ...]:
+    """Return potential-coboundary audits for kernel-block defects."""
+
+    return tuple(
+        green_defect_kernel_potential_audit(audit)
         for audit in kernel_block_first_output_defect_audits(solution)
     )
 

@@ -28,6 +28,7 @@ from ybe_domination import (
     context_words_by_target,
     depth_observer_summary,
     green_branch_audits,
+    kernel_block_defect_kernel_potential_audits,
     kernel_block_defect_kernel_quotient_audits,
     kernel_block_first_output_defect_audits,
     induced_kernel_permutation,
@@ -37,6 +38,7 @@ from ybe_domination import (
     right_coordinate_action_maps,
     right_coordinate_action_relation_failures,
     schutzenberger_action_groups,
+    schutzenberger_defect_kernel_potential_audits,
     schutzenberger_defect_kernel_quotient_audits,
     schutzenberger_first_output_defect_audits,
     schutzenberger_groups,
@@ -243,6 +245,25 @@ class GreenBranchTests(unittest.TestCase):
             self.assertTrue(audit.all_projected_defects_are_identity)
             self.assertTrue(audit.projected_rows_are_rack_artin_rows)
             self.assertTrue(audit.proves_defect_quotient_detection)
+
+    def test_green_defect_kernel_potential_coboundary_for_affine_candidate(self):
+        solution = size_three_affine_candidate()
+        sch_audit = schutzenberger_defect_kernel_potential_audits(solution)[0]
+        kernel_audit = kernel_block_defect_kernel_potential_audits(solution)[0]
+
+        for audit in (sch_audit, kernel_audit):
+            self.assertEqual(audit.component_count, 3)
+            self.assertEqual(
+                sorted(component.edge_count for component in audit.components),
+                [3, 3, 3],
+            )
+            self.assertEqual(audit.potential_outside_kernel_count, 0)
+            self.assertEqual(audit.row_count, 27)
+            self.assertEqual(audit.missing_potential_row_count, 0)
+            self.assertEqual(audit.coboundary_failure_count, 0)
+            self.assertTrue(audit.all_potentials_lie_in_defect_kernel)
+            self.assertTrue(audit.all_defects_are_potential_coboundaries)
+            self.assertTrue(audit.proves_defect_kernel_potential_coboundary)
 
     def test_induced_kernel_permutation_detects_block_action(self):
         kernel = transformation_kernel((0, 0, 1, 1))

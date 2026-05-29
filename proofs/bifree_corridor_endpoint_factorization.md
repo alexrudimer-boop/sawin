@@ -347,7 +347,11 @@ Schutzenberger pushforwards in the globally realized case.  The follow-up
 `proofs/green_defect_kernel_quotient_detection.md` kills the non-defect
 quotient `U_C/Def_C` by detector-lift.  The remaining Green endpoint to
 longitudinalize is the transported finite defect-kernel product
-`D_C(beta) in Def_C`.
+`D_C(beta) in Def_C`.  The potential-coboundary refinement
+`proofs/green_defect_potential_coboundary.md` proves each elementary defect is
+`eta(q^a)eta(q)^-1`; therefore the finite Green check left for endpoint
+longitudinalization is whether this `Def_C`-valued potential is principal for
+the Artin detector transport.
 
 ## Executable certificate layer
 

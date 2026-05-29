@@ -358,7 +358,11 @@ Green target has now been sharpened again by
 `U_C` by the normal closure `Def_C` of all first-output defects makes every
 projected row exactly side-opposite rack-Artin, so `U_C/Def_C` is handled by
 the detector-lift theorem.  The only remaining Green/Schutzenberger
-obstruction is the finite defect-kernel endpoint
+obstruction has now been expressed as a finite potential problem:
+`proofs/green_defect_potential_coboundary.md` proves that each elementary
+defect is `eta(q^a)eta(q)^-1` for a `Def_C`-valued potential on the retained
+edge-germ graph.  The remaining Green target is the Artin-transport
+principalness of this potential, equivalently the transported endpoint
 `D_C(beta) in V_beta(Def_C)`, plus the lower endpoint/unit holonomy target.
 
 The Green atom layer is now explicit.  Retained edge-germs in a regular Green
