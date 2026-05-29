@@ -486,6 +486,13 @@ const rows = [
     "Apply this matrix subgroup to the projected AbDef_C endpoint, then route the remaining commutator endpoint.",
   ],
   [
+    "Green balanced gauge",
+    "Split raw Green/Schutzenberger first-output defects into Artin-visible commutators plus terminal gauge.",
+    "proofs/green_balanced_defect_gauge_decomposition.md proves d=[A,Q]*Q(CA^-1)^-1Q^-1; row audits now expose second_output_gauge and balanced_decomposition_holds.",
+    "Reduction criterion",
+    "Prove terminal gauge holonomy lies in the fixed endpoint/unit longitude subgroup.",
+  ],
+  [
     "Bi-free subgroup certificate",
     "Profile candidate words against fixed corridor detector factors.",
     "Helper, extra-factor target support, direct-product subgroup audit, and tests added; affine commutator seen by S3 block factor.",

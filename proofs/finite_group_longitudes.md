@@ -121,6 +121,8 @@ The general finite abelian version is recorded separately in
 `a in A` and all entries of the recursive-longitude exponent matrix.  The
 helpers `abelian_longitude_value_subgroup_elements(...)` and
 `abelian_longitude_image_audit(...)` implement this non-enumerative formula.
+The matrix-witness helpers additionally convert a displayed product of
+`a^{m_ij}` factors into a literal longitude-subgroup witness.
 
 This supplies the finite cyclic detector used by pairwise-linking and
 one-colour product-permutation branches: if all fibre permutations have

@@ -113,6 +113,14 @@ V_beta(A)=< a^{m_ij} : a in A, i,j positions >.
 Thus the projected defect endpoint in `AbDef_C` must be displayed in this
 matrix-generated subgroup, or shown to cancel under the residual hypotheses.
 
+The balanced Green refinement
+`proofs/green_balanced_defect_gauge_decomposition.md` further explains where
+this abelian target can come from: the commutator piece of a raw row defect is
+Artin-visible, while the noncommutator data is terminal second-output gauge
+holonomy.  Thus this abelian split is now mainly a guardrail for the gauge
+endpoint, not evidence that raw Green row defects form an independent
+obstruction.
+
 ## Consequence for the A-route
 
 The remaining Green route now has two explicit layers.

@@ -28,6 +28,8 @@ LongitudeExpressionLetter = Tuple[int, int]
 LongitudeExpression = Tuple[LongitudeExpressionLetter, ...]
 LongitudeSubgroupWitnessLetter = Tuple[Tuple[GroupElement, ...], int, int]
 LongitudeSubgroupWitness = Tuple[LongitudeSubgroupWitnessLetter, ...]
+AbelianLongitudeMatrixWitnessLetter = Tuple[GroupElement, int, int, int]
+AbelianLongitudeMatrixWitness = Tuple[AbelianLongitudeMatrixWitnessLetter, ...]
 ArtinDetectorLiftLabel = Tuple[GroupElement, GroupElement]
 
 
@@ -418,6 +420,28 @@ class AbelianLongitudeImageAudit:
         return (
             self.permutation == tuple(range(self.n))
             and len(self.matrix_subgroup) == 1
+        )
+
+
+@dataclass(frozen=True)
+class AbelianLongitudeMatrixWitnessAudit:
+    """Certificate that an abelian endpoint lies in the matrix form of ``V_beta``."""
+
+    n: int
+    braid_word: Tuple[int, ...]
+    endpoint: GroupElement
+    matrix_witness: AbelianLongitudeMatrixWitness
+    matrix_witness_value: GroupElement
+    longitude_subgroup_witness: LongitudeSubgroupWitness
+    longitude_subgroup_witness_value: GroupElement
+    endpoint_matches_matrix_witness: bool
+    matrix_witness_matches_longitude_witness: bool
+
+    @property
+    def proves_endpoint_in_abelian_longitude_subgroup(self) -> bool:
+        return (
+            self.endpoint_matches_matrix_witness
+            and self.matrix_witness_matches_longitude_witness
         )
 
 
@@ -1143,6 +1167,109 @@ def abelian_longitude_image_audit(
         matrix_generators=matrix_generators,
         matrix_subgroup=matrix_subgroup,
         enumerated_subgroup=enumerated_subgroup,
+    )
+
+
+def _check_abelian_matrix_witness(
+    group: FiniteGroup,
+    n: int,
+    witness: Sequence[AbelianLongitudeMatrixWitnessLetter],
+) -> AbelianLongitudeMatrixWitness:
+    elements = set(group.elements)
+    rows = []
+    for element, longitude_index, generator_index, exponent in witness:
+        if element not in elements:
+            raise ValueError("matrix witness element outside group")
+        if longitude_index < 0 or longitude_index >= n:
+            raise IndexError(longitude_index)
+        if generator_index < 0 or generator_index >= n:
+            raise IndexError(generator_index)
+        if exponent not in (-1, 1):
+            raise ValueError("matrix witness exponents must be +/-1")
+        rows.append((element, longitude_index, generator_index, exponent))
+    return tuple(rows)
+
+
+def evaluate_abelian_longitude_matrix_witness(
+    group: FiniteGroup,
+    n: int,
+    braid_word: BraidWord,
+    witness: Sequence[AbelianLongitudeMatrixWitnessLetter],
+) -> GroupElement:
+    """Evaluate a word in the matrix generators ``a^{m_ij}`` of ``V_beta(A)``."""
+
+    if n < 0:
+        raise ValueError("braid degree must be nonnegative")
+    _require_abelian_group(group)
+    witness_tuple = _check_abelian_matrix_witness(group, n, witness)
+    matrix = artin_longitude_exponent_matrix(n, braid_word)
+    out = group.identity
+    for element, longitude_index, generator_index, exponent in witness_tuple:
+        value = group.pow(element, matrix[longitude_index][generator_index])
+        if exponent < 0:
+            value = group.inv(value)
+        out = group.mul(out, value)
+    return out
+
+
+def abelian_longitude_matrix_witness_to_subgroup_witness(
+    group: FiniteGroup,
+    n: int,
+    witness: Sequence[AbelianLongitudeMatrixWitnessLetter],
+) -> LongitudeSubgroupWitness:
+    """Turn matrix letters into literal recursive-longitude subgroup letters."""
+
+    if n < 0:
+        raise ValueError("braid degree must be nonnegative")
+    _require_abelian_group(group)
+    witness_tuple = _check_abelian_matrix_witness(group, n, witness)
+    rows: List[LongitudeSubgroupWitnessLetter] = []
+    for element, longitude_index, generator_index, exponent in witness_tuple:
+        assignment = [group.identity] * n
+        assignment[generator_index] = element
+        rows.append((tuple(assignment), longitude_index, exponent))
+    return tuple(rows)
+
+
+def abelian_longitude_matrix_witness_audit(
+    group: FiniteGroup,
+    n: int,
+    braid_word: BraidWord,
+    endpoint: GroupElement,
+    witness: Sequence[AbelianLongitudeMatrixWitnessLetter],
+) -> AbelianLongitudeMatrixWitnessAudit:
+    """Audit a displayed abelian matrix-subgroup certificate for an endpoint."""
+
+    if endpoint not in group.elements:
+        raise ValueError("endpoint outside group")
+    matrix_witness = _check_abelian_matrix_witness(group, n, witness)
+    matrix_value = evaluate_abelian_longitude_matrix_witness(
+        group,
+        n,
+        braid_word,
+        matrix_witness,
+    )
+    subgroup_witness = abelian_longitude_matrix_witness_to_subgroup_witness(
+        group,
+        n,
+        matrix_witness,
+    )
+    subgroup_value = evaluate_longitude_subgroup_witness(
+        group,
+        n,
+        braid_word,
+        subgroup_witness,
+    )
+    return AbelianLongitudeMatrixWitnessAudit(
+        n=n,
+        braid_word=tuple(braid_word),
+        endpoint=endpoint,
+        matrix_witness=matrix_witness,
+        matrix_witness_value=matrix_value,
+        longitude_subgroup_witness=subgroup_witness,
+        longitude_subgroup_witness_value=subgroup_value,
+        endpoint_matches_matrix_witness=(endpoint == matrix_value),
+        matrix_witness_matches_longitude_witness=(matrix_value == subgroup_value),
     )
 
 

@@ -355,12 +355,18 @@ class GreenFirstOutputDefectRowAudit:
     g_q_under_a: GroupElement
     g_a_under_q: GroupElement
     first_output_defect: GroupElement
+    second_output_gauge: GroupElement
+    artin_commutator_part: GroupElement
+    terminal_gauge_boundary_part: GroupElement
+    balanced_reconstructed_defect: GroupElement
     reconstructed_q_under_a: GroupElement
     reconstructed_a_under_q: GroupElement
     product_relation_holds: bool
     first_output_normal_form_holds: bool
     second_output_forced_by_defect: bool
+    balanced_decomposition_holds: bool
     defect_is_identity: bool
+    second_output_gauge_is_identity: bool
     right_rack_row_if_defect_identity: bool
 
     @property
@@ -369,11 +375,16 @@ class GreenFirstOutputDefectRowAudit:
             self.product_relation_holds
             and self.first_output_normal_form_holds
             and self.second_output_forced_by_defect
+            and self.balanced_decomposition_holds
         )
 
     @property
     def proves_no_independent_second_output_check(self) -> bool:
         return self.row_has_defect_normal_form
+
+    @property
+    def first_output_defect_splits_into_commutator_and_gauge(self) -> bool:
+        return self.product_relation_holds and self.balanced_decomposition_holds
 
 
 @dataclass(frozen=True)
@@ -401,8 +412,29 @@ class GreenFirstOutputDefectAudit:
         )
 
     @property
+    def nonidentity_second_output_gauge_count(self) -> int:
+        return sum(
+            1 for row in self.row_audits if not row.second_output_gauge_is_identity
+        )
+
+    @property
+    def balanced_decomposition_failure_count(self) -> int:
+        return sum(
+            1
+            for row in self.row_audits
+            if not row.balanced_decomposition_holds
+        )
+
+    @property
     def all_rows_have_defect_normal_form(self) -> bool:
         return all(row.row_has_defect_normal_form for row in self.row_audits)
+
+    @property
+    def all_first_output_defects_split_into_commutator_and_gauge(self) -> bool:
+        return all(
+            row.first_output_defect_splits_into_commutator_and_gauge
+            for row in self.row_audits
+        )
 
     @property
     def all_observed_rows_are_right_rack_when_defects_identity(self) -> bool:
@@ -1235,6 +1267,19 @@ def green_first_output_defect_row_audit(
         raise ValueError("observer labels must be elements of the supplied group")
 
     first_output_defect = group.mul(g_q_under_a, group.inv(g_q))
+    second_output_gauge = group.mul(g_a_under_q, group.inv(g_a))
+    artin_commutator_part = group.mul(
+        group.mul(group.mul(g_a, g_q), group.inv(g_a)),
+        group.inv(g_q),
+    )
+    terminal_gauge_boundary_part = group.mul(
+        group.mul(g_q, group.inv(second_output_gauge)),
+        group.inv(g_q),
+    )
+    balanced_reconstructed_defect = group.mul(
+        artin_commutator_part,
+        terminal_gauge_boundary_part,
+    )
     reconstructed_q_under_a = group.mul(first_output_defect, g_q)
     reconstructed_a_under_q = group.mul(
         group.mul(group.mul(group.inv(g_q), group.inv(first_output_defect)), g_a),
@@ -1246,7 +1291,9 @@ def green_first_output_defect_row_audit(
     )
     first_output_normal_form_holds = reconstructed_q_under_a == g_q_under_a
     second_output_forced_by_defect = reconstructed_a_under_q == g_a_under_q
+    balanced_decomposition_holds = balanced_reconstructed_defect == first_output_defect
     defect_is_identity = first_output_defect == group.identity
+    second_output_gauge_is_identity = second_output_gauge == group.identity
     right_rack_row_if_defect_identity = (
         (not defect_is_identity)
         or (
@@ -1264,12 +1311,18 @@ def green_first_output_defect_row_audit(
         g_q_under_a=g_q_under_a,
         g_a_under_q=g_a_under_q,
         first_output_defect=first_output_defect,
+        second_output_gauge=second_output_gauge,
+        artin_commutator_part=artin_commutator_part,
+        terminal_gauge_boundary_part=terminal_gauge_boundary_part,
+        balanced_reconstructed_defect=balanced_reconstructed_defect,
         reconstructed_q_under_a=reconstructed_q_under_a,
         reconstructed_a_under_q=reconstructed_a_under_q,
         product_relation_holds=product_relation_holds,
         first_output_normal_form_holds=first_output_normal_form_holds,
         second_output_forced_by_defect=second_output_forced_by_defect,
+        balanced_decomposition_holds=balanced_decomposition_holds,
         defect_is_identity=defect_is_identity,
+        second_output_gauge_is_identity=second_output_gauge_is_identity,
         right_rack_row_if_defect_identity=right_rack_row_if_defect_identity,
     )
 

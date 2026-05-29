@@ -170,6 +170,12 @@ apply.  The abelian layer is now an exact matrix problem:
 abelianized recursive-longitude matrix, and
 `abelian_longitude_image_audit()` exposes that subgroup without enumerating
 all assignments `A^n`.
+The Green row obstruction is now smaller still:
+`proofs/green_balanced_defect_gauge_decomposition.md` proves
+`B Q^-1=[A,Q] Q(CA^-1)^-1Q^-1` for Green/Schutzenberger row labels.  The
+commutator is an Artin permutation defect value, so raw Green row defects
+reduce to terminal second-output gauge holonomy in the lower endpoint/unit
+chart.
 The semisplit audit now has an exact Boolean-CSP view: each coloured crossing
 lists the allowed equality/universal bit patterns on its two source and two
 target colours, and satisfying non-extreme assignments agree with the

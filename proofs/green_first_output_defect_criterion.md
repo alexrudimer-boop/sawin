@@ -21,6 +21,11 @@ by the smaller endpoint target
 prove the transported finite defect-kernel endpoint lies in V_beta(Def_C).
 ```
 
+The later balanced refinement
+`proofs/green_balanced_defect_gauge_decomposition.md` shrinks this target
+again to terminal second-output gauge holonomy, after removing an
+Artin-visible commutator factor from each row defect.
+
 Kernel-block defects are homomorphic images of Schutzenberger defects whenever
 the retained Green edges are globally realized in the Schutzenberger action.
 
@@ -202,6 +207,21 @@ target, while `Def_C` can have nontrivial abelian row defects.
 The note `proofs/green_defect_abelianization_split.md` therefore splits the
 remaining target into the finite abelian quotient
 `Def_C/[Def_C,Def_C]` and the commutator subgroup `[Def_C,Def_C]`.
+
+The later balanced refinement
+`proofs/green_balanced_defect_gauge_decomposition.md` goes further: for
+`A=g(a)`, `Q=g(q)`, `B=g(q^a)`, and `C=g(a^q)`, the defect
+`d_C(a,q)=B Q^-1` decomposes as
+
+```text
+d_C(a,q) = [A,Q] * Q (C A^-1)^-1 Q^-1.
+```
+
+The commutator `[A,Q]` is a local Artin permutation defect value, hence is
+already longitude-visible by the Artin-defect sieve.  The remaining factor is
+the conjugated inverse of the second-output gauge `C A^-1`; because
+`V_beta(U_C)` is normal, the genuinely remaining Green/Schutzenberger target
+is terminal gauge holonomy rather than raw first-output defect holonomy.
 
 ## Remaining target
 

@@ -879,14 +879,11 @@ finite quotient `U_C/Def_C`, every row is the exact side-opposite rack-Artin
 row, so the detector-lift theorem kills the quotient motion.  The follow-up
 `proofs/green_defect_potential_coboundary.md` proves that each elementary
 defect in `Def_C` is a nonabelian coboundary `eta(q^a)eta(q)^-1` for a
-basepoint-normalized potential on the retained edge-germ graph.  The remaining
-Green theorem is to prove that this finite potential is principal for Artin
-transport, equivalently that the transported defect-kernel endpoint
-`D_C(beta)` lies in `V_beta(Def_C)` uniformly in braid index.  A direct A
-route is to express the potential transport differences as Artin permutation
-defect values, which the Artin-defect sieve already places in the
-longitude-value subgroup.  A B route must now escape through a nonprincipal
-finite defect-potential cocycle, not through a generic bounded row mismatch.
+basepoint-normalized potential on the retained edge-germ graph.  This made
+the intermediate Green theorem the principalness of that finite potential,
+equivalently that the transported defect-kernel endpoint `D_C(beta)` lies in
+`V_beta(Def_C)` uniformly in braid index.  The balanced gauge refinement
+below now pushes the raw row-defect target into terminal gauge holonomy.
 The stronger elementary Artin-defect display route is now explicitly blocked
 in general by `proofs/artin_defect_abelianization_barrier.md`: Artin
 permutation defect values always land in the commutator subgroup of the
@@ -908,6 +905,21 @@ all `a in A` and all entries `m_ij` of the abelianized recursive-longitude
 matrix.  Thus the projected `AbDef_C` endpoint must be shown to lie in this
 matrix subgroup, or to cancel under the residual hypotheses, before the
 commutator endpoint is considered.
+The raw Green/Schutzenberger row obstruction has now been compressed further
+by `proofs/green_balanced_defect_gauge_decomposition.md`.  For a row with
+labels `A=g(a)`, `Q=g(q)`, `B=g(q^a)`, and `C=g(a^q)`, the first-output
+defect satisfies
+
+```text
+B Q^-1 = [A,Q] Q(CA^-1)^-1 Q^-1.
+```
+
+The commutator `[A,Q]` is a local Artin permutation defect value and is
+therefore already longitude-visible.  Since `V_beta(U)` is normal in every
+finite target group `U`, the conjugation around the second factor is harmless.
+Thus the genuine remaining Green/Schutzenberger burden is terminal
+second-output gauge holonomy `CA^-1`, not an independent first-output defect
+endpoint.
 The single-endpoint route audit
 `unit_composite_longitude_route_audit(monoid,n,beta,factors)` now records the
 same ladder used in product-label work: endpoint identity, one evaluated

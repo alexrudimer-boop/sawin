@@ -132,7 +132,14 @@ differences:
 d(a,q)=eta_C(q^a) eta_C(q)^-1.
 ```
 
-Therefore the remaining A-side burden is the following finite row-level
+The later balanced decomposition
+`proofs/green_balanced_defect_gauge_decomposition.md` refines this again:
+each row defect is an Artin-visible commutator times a conjugated inverse
+second-output gauge.  Thus the potential viewpoint remains a valid audit
+guardrail, while the smallest remaining proof target is terminal gauge
+holonomy.
+
+At the potential level, the A-side burden was the following finite row-level
 condition:
 
 ```text
@@ -164,9 +171,9 @@ Green/Schutzenberger part closes:
 A B-route cannot use a bare nontrivial defect or a bounded row mismatch.  The
 elementary defects are always coboundaries of the finite potential above.
 
-The smallest visible B-target is now a nonprincipal `Def_C`-potential
-transport cocycle that survives a normalized-law sequence.  Such a proof
-would still need an explicit finite YBE solution, symbolic YBE verification,
+After the balanced refinement, the smallest visible B-target is terminal
+gauge holonomy that survives a normalized-law sequence.  Such a proof would
+still need an explicit finite YBE solution, symbolic YBE verification,
 base-kernel membership, moved residual tuples, and a normalized-law sequence
 invisible to every finite group.
 

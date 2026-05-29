@@ -6,6 +6,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from ybe_domination import (
     abelian_longitude_image_audit,
+    abelian_longitude_matrix_witness_audit,
+    abelian_longitude_matrix_witness_to_subgroup_witness,
     abelian_longitude_value_generators,
     abelian_longitude_value_subgroup_elements,
     artin_detector_rack,
@@ -28,6 +30,7 @@ from ybe_domination import (
     diagonal_product_invisibility_audit,
     evaluate_artin_images,
     evaluate_artin_longitudes,
+    evaluate_abelian_longitude_matrix_witness,
     evaluate_longitude_expression,
     evaluate_longitude_subgroup_witness,
     evaluate_terminal_label_expression,
@@ -158,6 +161,69 @@ class ArtinLongitudeTests(unittest.TestCase):
                 2,
                 pure_braid_generator(1, 2),
             )
+
+    def test_abelian_matrix_witness_becomes_literal_longitude_witness(self):
+        group = cyclic_group(4)
+        braid = pure_braid_generator(1, 2) * 2
+        witness = ((1, 0, 1, 1),)
+
+        audit = abelian_longitude_matrix_witness_audit(
+            group,
+            2,
+            braid,
+            endpoint=2,
+            witness=witness,
+        )
+
+        self.assertEqual(
+            evaluate_abelian_longitude_matrix_witness(group, 2, braid, witness),
+            2,
+        )
+        self.assertEqual(
+            abelian_longitude_matrix_witness_to_subgroup_witness(group, 2, witness),
+            (((0, 1), 0, 1),),
+        )
+        self.assertEqual(audit.matrix_witness_value, 2)
+        self.assertEqual(audit.longitude_subgroup_witness_value, 2)
+        self.assertTrue(audit.endpoint_matches_matrix_witness)
+        self.assertTrue(audit.matrix_witness_matches_longitude_witness)
+        self.assertTrue(audit.proves_endpoint_in_abelian_longitude_subgroup)
+
+    def test_abelian_matrix_witness_uses_signed_letters(self):
+        group = cyclic_group(5)
+        braid = pure_braid_generator(1, 2)
+        witness = ((2, 0, 1, 1), (3, 1, 0, -1))
+
+        audit = abelian_longitude_matrix_witness_audit(
+            group,
+            2,
+            braid,
+            endpoint=4,
+            witness=witness,
+        )
+
+        self.assertEqual(audit.matrix_witness_value, 4)
+        self.assertTrue(audit.proves_endpoint_in_abelian_longitude_subgroup)
+
+    def test_abelian_matrix_witness_validates_rows(self):
+        group = cyclic_group(3)
+        braid = pure_braid_generator(1, 2)
+
+        with self.assertRaises(ValueError):
+            evaluate_abelian_longitude_matrix_witness(
+                symmetric_group(3),
+                2,
+                braid,
+                (),
+            )
+        with self.assertRaises(ValueError):
+            evaluate_abelian_longitude_matrix_witness(group, 2, braid, ((4, 0, 0, 1),))
+        with self.assertRaises(IndexError):
+            evaluate_abelian_longitude_matrix_witness(group, 2, braid, ((1, 2, 0, 1),))
+        with self.assertRaises(IndexError):
+            evaluate_abelian_longitude_matrix_witness(group, 2, braid, ((1, 0, 2, 1),))
+        with self.assertRaises(ValueError):
+            evaluate_abelian_longitude_matrix_witness(group, 2, braid, ((1, 0, 0, 2),))
 
     def test_longitude_data_stabilizes_under_extra_right_strands(self):
         braid = pure_braid_generator(1, 3)

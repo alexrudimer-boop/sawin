@@ -145,6 +145,21 @@ The audit optionally compares the matrix subgroup with exhaustive enumeration
 of `V_beta(A)` on small finite abelian examples.  It rejects nonabelian target
 groups, since the matrix formula is specifically an abelianization theorem.
 
+The code also records certificate-level witnesses:
+
+```text
+evaluate_abelian_longitude_matrix_witness(...)
+abelian_longitude_matrix_witness_to_subgroup_witness(...)
+abelian_longitude_matrix_witness_audit(...)
+```
+
+A matrix-witness letter `(a,i,j,epsilon)` represents the factor
+`(a^{m_ij})^epsilon`.  It is converted into a literal longitude-subgroup
+witness by using the assignment that sends `x_j` to `a` and every other free
+generator to the identity, then reading the `i`-th recursive longitude.  Thus
+a displayed product in the matrix subgroup is automatically a displayed word
+in `V_beta(A)`.
+
 ## Updated remaining target
 
 After this note, the Green/Schutzenberger defect problem is split into:

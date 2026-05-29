@@ -250,12 +250,13 @@ pushforwards when no local-only edge-germs occur.  The quotient step
 `proofs/green_defect_kernel_quotient_detection.md` then kills the
 non-defect part: after quotienting an observer `U_C` by the normal closure
 `Def_C` of all first-output defects, every projected row is exact
-side-opposite rack-Artin.  The remaining Green target is the defect-kernel
-endpoint `D_C(beta) in V_beta(Def_C)`.  The further potential-coboundary note
+side-opposite rack-Artin.  The intermediate Green target was the
+defect-kernel endpoint `D_C(beta) in V_beta(Def_C)`.  The further
+potential-coboundary note
 `proofs/green_defect_potential_coboundary.md` proves that each elementary
-defect is `eta(q^a)eta(q)^-1` for a finite `Def_C`-valued potential, so the
-exact remaining Green check is Artin-transport principalness of that
-potential.  The guardrail
+defect is `eta(q^a)eta(q)^-1` for a finite `Def_C`-valued potential, making
+Artin-transport principalness explicit before the balanced gauge refinement.
+The guardrail
 `proofs/artin_defect_abelianization_barrier.md` shows that principalness
 cannot generally be proved by displaying each elementary defect as an Artin
 permutation defect: those values die in abelian quotients, while audited
@@ -269,3 +270,9 @@ commutator endpoint.  The ordinary abelian subgroup is now exact by
 matrix.  This sits alongside lower endpoint/unit holonomy and the separate
 theorem that atom descent/totality holds or is absorbed by a controlled
 quotient.
+The balanced Green refinement
+`proofs/green_balanced_defect_gauge_decomposition.md` removes raw
+Green/Schutzenberger row defects from the independent open list: each such
+defect is an Artin-visible commutator times a terminal second-output gauge
+boundary.  The open Green row burden is therefore the terminal gauge/unit
+holonomy target.

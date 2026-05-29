@@ -363,6 +363,12 @@ subgroup itself is computed exactly by
 `a^{m_ij}` values coming from the abelianized recursive-longitude matrix.
 Only after that layer is handled may any remaining endpoint be reduced to
 commutator-level methods.
+The balanced refinement
+`proofs/green_balanced_defect_gauge_decomposition.md` then shows that a raw
+Green/Schutzenberger first-output defect is an Artin-visible commutator times
+a conjugated inverse second-output gauge.  Therefore the genuinely remaining
+Green/Schutzenberger endpoint is terminal gauge holonomy, which belongs with
+the lower endpoint/unit factors in the product detector.
 
 ## Executable certificate layer
 

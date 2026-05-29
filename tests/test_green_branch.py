@@ -21,6 +21,7 @@ from ybe_domination import (
     atom_quotient_rack_audit,
     atom_quotient_solution,
     atom_projection_summary,
+    artin_permutation_defect_witness_audit,
     bounded_atom_trivial_loop_group_summaries,
     bounded_category_summary,
     coordinate_action_maps,
@@ -204,7 +205,12 @@ class GreenBranchTests(unittest.TestCase):
         self.assertEqual(sch_audit.missing_row_count, 0)
         self.assertEqual(sch_audit.local_only_edge_germ_count, 0)
         self.assertEqual(sch_audit.nonidentity_defect_count, 18)
+        self.assertEqual(sch_audit.balanced_decomposition_failure_count, 0)
+        self.assertEqual(sch_audit.nonidentity_second_output_gauge_count, 18)
         self.assertTrue(sch_audit.all_rows_have_defect_normal_form)
+        self.assertTrue(
+            sch_audit.all_first_output_defects_split_into_commutator_and_gauge
+        )
         self.assertTrue(
             sch_audit.all_observed_rows_are_right_rack_when_defects_identity
         )
@@ -213,7 +219,23 @@ class GreenBranchTests(unittest.TestCase):
         self.assertEqual(kernel_audit.row_count, 27)
         self.assertEqual(kernel_audit.missing_row_count, 0)
         self.assertEqual(kernel_audit.nonidentity_defect_count, 18)
+        self.assertEqual(kernel_audit.balanced_decomposition_failure_count, 0)
+        self.assertEqual(kernel_audit.nonidentity_second_output_gauge_count, 18)
         self.assertTrue(kernel_audit.proves_first_output_defect_reduction)
+
+        row = next(row for row in sch_audit.row_audits if not row.defect_is_identity)
+        commutator_witness = artin_permutation_defect_witness_audit(
+            sch_audit.group,
+            2,
+            (1,),
+            (row.g_a, row.g_q),
+            ((0, 1),),
+        )
+        self.assertEqual(
+            commutator_witness.defect_value,
+            row.artin_commutator_part,
+        )
+        self.assertTrue(commutator_witness.witness_matches_defect)
 
     def test_kernel_defects_push_forward_from_schutzenberger_defects(self):
         solution = size_three_affine_candidate()
