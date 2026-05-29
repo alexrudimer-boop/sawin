@@ -1013,6 +1013,12 @@ check the admissibility input for finite detector labels.  The helper
 `readout_kernel_audit(...)` takes fibrewise labels, forms their kernel
 partition family, and applies the exact local transport test, recording the
 first failed row if the labels are not a valid local quotient.
+The readout descent-separation certificate
+`proofs/readout_descent_separation_certificate.md` now combines the readout
+kernel and seed-propagation checks.  The helper
+`readout_descent_separation_audit(...)` records any continuation seed rows
+that survive in the readout quotient; if none survive and the base row is in
+rack-side form, the quotient lower row is strand-continuing.
 The chart-transport collapse in
 `proofs/chart_transport_collapse.md` removes chart-dependent copies from the
 generator burden.  Since `V_beta(G)` is already normal in every finite group,
@@ -1022,8 +1028,9 @@ certificate-level operation.  The final A-route theorem is now stated in
 `proofs/descent_separation_transport_rack_closure.md`: transport-rack closure
 is proved, but descent separation remains open.  A complete proof must show
 fixed Green, Schutzenberger, atom, or unit readout labels whose kernel is
-admissible and contains each representative seed, so that propagation leaves
-only strand-continuing transport-rack gauge.
+admissible and kills each representative seed, so that the integrated descent
+separation audit passes and only strand-continuing transport-rack gauge
+remains.
 The single-endpoint route audit
 `unit_composite_longitude_route_audit(monoid,n,beta,factors)` now records the
 same ladder used in product-label work: endpoint identity, one evaluated

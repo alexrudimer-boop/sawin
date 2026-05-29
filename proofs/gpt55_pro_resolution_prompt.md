@@ -243,6 +243,12 @@ criterion for the admissibility input.  Fibrewise fixed detector labels define
 a kernel relation, and `readout_kernel_audit(...)` verifies exact transport
 through every local table, recording the first failure row if the proposed
 labels do not descend.
+Also read `proofs/readout_descent_separation_certificate.md`: it combines the
+readout-kernel and continuation-seed checks.  The helper
+`readout_descent_separation_audit(...)` records surviving continuation seed
+rows in the readout quotient; if none survive and the base row is in rack-side
+form, the quotient row is strand-continuing and transport-state rackification
+applies.
 Also read `proofs/chart_transport_collapse.md`: it proves that finite chart
 conjugation does not create new endpoint-longitude obligations, because
 `V_beta(G)` is normal and one representative elementary-generator witness

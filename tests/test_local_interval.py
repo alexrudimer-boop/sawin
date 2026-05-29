@@ -17,6 +17,8 @@ from ybe_domination import (
     continuation_seed_universal_derivation_failures,
     coordinate_kernel_pair_closure_audits,
     coordinate_kernel_pair_closure_failures,
+    readout_descent_separation_audit,
+    readout_descent_separation_failures,
     readout_kernel_audit,
     readout_kernel_family,
 )
@@ -359,6 +361,54 @@ class LocalIntervalTests(unittest.TestCase):
         self.assertFalse(audit.proves_readout_kernel_admissible)
         self.assertIsNotNone(audit.failure)
         self.assertEqual(audit.failure.side, "transported_not_target")
+
+    def test_readout_descent_separation_certifies_strand_continuing_quotient(self):
+        interval = one_color_identity_interval()
+        labels = {"*": {0: "same", 1: "same"}}
+
+        audit = readout_descent_separation_audit(interval, labels)
+
+        self.assertTrue(audit.readout_is_admissible)
+        self.assertEqual(audit.continuation.nontrivial_seed_count, 2)
+        self.assertTrue(audit.continuation.base_rows_are_left_rack_form)
+        self.assertEqual(audit.surviving_seed_rows, ())
+        self.assertTrue(audit.all_continuation_seeds_killed)
+        self.assertTrue(audit.all_seed_closures_propagate)
+        self.assertTrue(audit.quotient_is_strand_continuing)
+        self.assertTrue(audit.proves_descent_separation_readout)
+        self.assertEqual(readout_descent_separation_failures(interval, labels), ())
+
+    def test_readout_descent_separation_reports_surviving_seed_rows(self):
+        interval = one_color_identity_interval()
+        labels = {"*": {0: "zero", 1: "one"}}
+
+        audit = readout_descent_separation_audit(interval, labels)
+
+        self.assertTrue(audit.readout_is_admissible)
+        self.assertEqual(len(audit.surviving_seed_rows), 2)
+        self.assertFalse(audit.all_continuation_seeds_killed)
+        self.assertFalse(audit.all_seed_closures_propagate)
+        self.assertFalse(audit.quotient_is_strand_continuing)
+        self.assertFalse(audit.proves_descent_separation_readout)
+        self.assertEqual(
+            readout_descent_separation_failures(interval, labels),
+            audit.surviving_seed_rows,
+        )
+
+    def test_readout_descent_separation_rejects_non_rack_base_rows(self):
+        interval = two_color_identity_interval()
+        labels = {
+            "a": {0: "same", 1: "same"},
+            "b": {0: "same", 1: "same"},
+        }
+
+        audit = readout_descent_separation_audit(interval, labels)
+
+        self.assertTrue(audit.readout_is_admissible)
+        self.assertFalse(audit.continuation.base_rows_are_left_rack_form)
+        self.assertEqual(audit.surviving_seed_rows, ())
+        self.assertFalse(audit.quotient_is_strand_continuing)
+        self.assertFalse(audit.proves_descent_separation_readout)
 
     def test_continuation_congruence_records_non_rack_base_rows(self):
         interval = two_color_identity_interval()

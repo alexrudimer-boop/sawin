@@ -227,6 +227,40 @@ class ReadoutKernelAudit:
         return self.admissible
 
 
+@dataclass(frozen=True)
+class ReadoutDescentSeparationAudit:
+    """Descent-separation certificate for finite readout labels."""
+
+    readout_kernel: ReadoutKernelAudit
+    continuation: ContinuationCongruenceAudit
+    propagation_audits: Tuple[ContinuationSeedReadoutPropagationAudit, ...]
+    surviving_seed_rows: Tuple[ContinuationSeedRow, ...]
+
+    @property
+    def readout_is_admissible(self) -> bool:
+        return self.readout_kernel.admissible
+
+    @property
+    def all_seed_closures_propagate(self) -> bool:
+        return all(audit.proves_readout_propagation for audit in self.propagation_audits)
+
+    @property
+    def all_continuation_seeds_killed(self) -> bool:
+        return not self.surviving_seed_rows
+
+    @property
+    def quotient_is_strand_continuing(self) -> bool:
+        return (
+            self.continuation.base_rows_are_left_rack_form
+            and self.readout_is_admissible
+            and self.all_continuation_seeds_killed
+        )
+
+    @property
+    def proves_descent_separation_readout(self) -> bool:
+        return self.quotient_is_strand_continuing and self.all_seed_closures_propagate
+
+
 def equality_partition(items: Sequence[FibrePoint]) -> Partition:
     return canonical_partition(frozenset([item]) for item in items)
 
@@ -741,6 +775,44 @@ def continuation_seed_readout_propagation_failures(
         )
         if not audit.proves_readout_propagation
     )
+
+
+def readout_descent_separation_audit(
+    interval: "LocalInterval",
+    labels: ReadoutLabels,
+) -> ReadoutDescentSeparationAudit:
+    """Certify when finite readout labels make the quotient strand-continuing."""
+
+    readout_kernel = readout_kernel_audit(interval, labels)
+    continuation = continuation_congruence_audit(interval)
+    propagation_audits = continuation_seed_readout_propagation_audits(
+        interval,
+        readout_kernel.family,
+    )
+    surviving_rows = tuple(
+        row
+        for row in continuation.seed_rows
+        if not same_block(
+            readout_kernel.family[row.left_color],
+            row.left_input,
+            row.continuing_output,
+        )
+    )
+    return ReadoutDescentSeparationAudit(
+        readout_kernel=readout_kernel,
+        continuation=continuation,
+        propagation_audits=propagation_audits,
+        surviving_seed_rows=surviving_rows,
+    )
+
+
+def readout_descent_separation_failures(
+    interval: "LocalInterval",
+    labels: ReadoutLabels,
+) -> Tuple[ContinuationSeedRow, ...]:
+    """Return continuation seed rows that survive this readout quotient."""
+
+    return readout_descent_separation_audit(interval, labels).surviving_seed_rows
 
 
 def generated_admissible_congruence_audit(

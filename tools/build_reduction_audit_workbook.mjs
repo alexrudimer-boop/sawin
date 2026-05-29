@@ -549,6 +549,13 @@ const rows = [
     "Construct fixed Green/Schutzenberger/atom/unit labels whose kernel is admissible and contains each representative continuation seed.",
   ],
   [
+    "Readout descent separation",
+    "Combine readout-kernel admissibility and continuation seed killing into a strand-continuing quotient certificate.",
+    "proofs/readout_descent_separation_certificate.md; readout_descent_separation_audit records the kernel, propagation audits, and surviving seed rows.",
+    "Reduction criterion",
+    "Construct fixed detector labels that make this audit pass in every local-minimal bottleneck interval.",
+  ],
+  [
     "Chart-transport collapse",
     "Avoid separate endpoint-longitude proofs for transported or chart-conjugate copies of elementary generators.",
     "proofs/chart_transport_collapse.md; conjugate_longitude_subgroup_witness shows V_beta(G) is normal at certificate level.",

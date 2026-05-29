@@ -240,6 +240,10 @@ Then audit and use these reductions:
    table transport.  A positive proof must construct labels from fixed
    Green/Schutzenberger/atom/unit factors whose kernel is admissible and
    contains each representative seed.
+   Also use `proofs/readout_descent_separation_certificate.md`: it combines
+   readout-kernel admissibility with continuation seed killing.  If
+   `readout_descent_separation_audit(...)` passes, the quotient lower row is
+   strand-continuing and the transport-state rackification theorem applies.
    Also use `proofs/chart_transport_collapse.md`: it proves transported
    elementary generators need no separate proof once one chart-conjugacy orbit
    representative is certified, because `V_beta(G)` is normal.  Then read

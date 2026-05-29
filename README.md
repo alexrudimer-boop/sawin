@@ -225,6 +225,13 @@ The companion readout-kernel criterion
 executable: finite fibrewise detector labels define a kernel partition family,
 and `readout_kernel_audit(...)` checks exact transport through every local
 table, recording the first failed row if the labels do not descend.
+The readout descent-separation certificate
+`proofs/readout_descent_separation_certificate.md` now combines these two
+steps: `readout_descent_separation_audit(...)` records the readout kernel, the
+continuation closure propagation, and any continuation seed rows that survive
+in the quotient.  If no seed survives and the base row is in rack-side form,
+the quotient row is strand-continuing and transport-state rackification
+applies.
 The chart-transport collapse
 `proofs/chart_transport_collapse.md` removes transported-generator noise:
 `V_beta(G)` is already normal, and
@@ -233,8 +240,8 @@ the witness for any finite chart conjugate.  The final open theorem is recorded
 in `proofs/descent_separation_transport_rack_closure.md`: transport-rack
 closure is proved, but descent separation itself remains unproved.  A positive
 solution now requires fixed Green/Schutzenberger/atom/unit readout labels whose
-kernel is admissible and contains each representative seed, or a normalized-law
-B construction from a non-separated seed.
+kernel makes the descent-separation audit pass, or a normalized-law B
+construction from a non-separated seed.
 The semisplit audit now has an exact Boolean-CSP view: each coloured crossing
 lists the allowed equality/universal bit patterns on its two source and two
 target colours, and satisfying non-extreme assignments agree with the

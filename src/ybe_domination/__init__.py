@@ -148,6 +148,7 @@ from .local_interval import (
     GeneratedCongruenceAudit,
     GeneratedCongruenceDerivationRow,
     PairGeneratedLocalMinimalityAudit,
+    ReadoutDescentSeparationAudit,
     ReadoutKernelAudit,
     SemisplitAudit,
     SemisplitConstraintRow,
@@ -169,6 +170,8 @@ from .local_interval import (
     generated_admissible_congruence_family,
     readout_kernel_audit,
     readout_kernel_family,
+    readout_descent_separation_audit,
+    readout_descent_separation_failures,
     relation_family_kind,
 )
 from .context_retraction import (
@@ -726,6 +729,7 @@ __all__ = [
     "OneColorSwappedExponentAction",
     "PairGeneratedLocalMinimalityAudit",
     "ProductLabelGroup",
+    "ReadoutDescentSeparationAudit",
     "ReadoutKernelAudit",
     "ProductLabelPairClosureAudit",
     "ProductPartitionFailure",
@@ -1091,6 +1095,8 @@ __all__ = [
     "right_rack_inner_detector_lift_audit",
     "right_stabilization_longitude_audit",
     "rack_quotient_obstructions",
+    "readout_descent_separation_audit",
+    "readout_descent_separation_failures",
     "readout_kernel_audit",
     "readout_kernel_family",
     "refines",
