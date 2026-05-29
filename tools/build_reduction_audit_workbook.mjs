@@ -404,7 +404,7 @@ const rows = [
   [
     "Local bottleneck",
     "Route each local interval to a branch verdict.",
-    "Router now records explicit known-branch and closed-product detector reason/order/factor size, with fibre2 affine product rows marked as delegated.",
+    "Router now records explicit known-branch and closed-product detector group/order/factor size, with fibre2 affine product rows marked as delegated.",
     "Reduction ledger",
     "Prove genuinely-coloured product or bi-free corridor factorization, or realize B there.",
   ],
@@ -467,7 +467,7 @@ const rows = [
   [
     "Product-permutation",
     "Normalize swapped and direct universal branches.",
-    "H_prod explicit; coboundaries telescope; closed product detector certificates added to bottleneck summary.",
+    "H_prod explicit; coboundaries telescope; closed product detector groups added to bottleneck summary.",
     "Executable audit",
     "Prove H_prod words are longitude products.",
   ],
@@ -516,7 +516,7 @@ const rows = [
   [
     "Product holonomy normalization",
     "Gauge-normalize product label words to the actual finite holonomy group.",
-    "Helpers and subgroup audit added; coboundary is identity, pairwise branch is C_m-detected, and certificate orders are exposed.",
+    "Helpers and subgroup audit added; coboundary is identity, pairwise branch is C_m-detected, and certificate groups are exposed.",
     "Reduction criterion",
     "Prove all-n longitude-subgroup membership in normalized product holonomy groups.",
   ],

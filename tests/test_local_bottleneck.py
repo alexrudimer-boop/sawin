@@ -178,6 +178,10 @@ class LocalMasterBottleneckTests(unittest.TestCase):
         self.assertIn(summary.product_branch, {"swapped", "swapped_and_direct"})
         self.assertIn("swapped_coboundary", summary.product_holonomy_details)
         self.assertEqual(summary.product_detector_group_orders, (1,))
+        self.assertEqual(
+            tuple(len(group.elements) for group in summary.product_detector_groups),
+            (1,),
+        )
         self.assertEqual(summary.product_detector_gaps, ())
         self.assertEqual(summary.verdict, "product_finite_g_branch")
 
@@ -188,7 +192,9 @@ class LocalMasterBottleneckTests(unittest.TestCase):
         )
 
         self.assertEqual(certificate.detector_kind, "cyclic_pairwise_linking_group")
+        self.assertTrue(certificate.has_explicit_group)
         self.assertEqual(certificate.detector_group_order, 3)
+        self.assertEqual(len(certificate.detector_group.elements), 3)
         self.assertEqual(certificate.sharp_rack_factor_size, 18)
         self.assertEqual(
             certificate.proof_reference,
@@ -200,9 +206,14 @@ class LocalMasterBottleneckTests(unittest.TestCase):
 
         self.assertIn("swapped_identity_base_cyclic", summary.product_holonomy_details)
         self.assertEqual(summary.product_detector_group_orders, (3,))
+        self.assertEqual(
+            tuple(len(group.elements) for group in summary.product_detector_groups),
+            (3,),
+        )
         self.assertEqual(summary.product_detector_gaps, ())
         certificate = summary.product_detector_certificates[0]
         self.assertEqual(certificate.detector_kind, "cyclic_identity_base_group")
+        self.assertTrue(certificate.has_explicit_group)
         self.assertEqual(certificate.sharp_rack_factor_size, 18)
         self.assertEqual(
             certificate.proof_reference,
@@ -293,6 +304,7 @@ class LocalMasterBottleneckTests(unittest.TestCase):
         self.assertEqual(summary.total_branch_tags, ())
         self.assertIn("direct_fibre2_affine", summary.product_holonomy_details)
         self.assertEqual(summary.product_detector_group_orders, ())
+        self.assertEqual(summary.product_detector_groups, ())
         self.assertEqual(summary.product_detector_gaps, ("direct_fibre2_affine",))
         self.assertEqual(summary.verdict, "product_finite_g_branch")
 

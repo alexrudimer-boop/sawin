@@ -955,7 +955,8 @@ The local bottleneck summary now exposes this as a product certificate:
 closed one-colour pairwise rows carry a
 `cyclic_pairwise_linking_group` detector with order equal to the exponent of
 the finite product-label group, and the associated sharp rack factor size is
-recorded as `2*|G|^2`.
+recorded as `2*|G|^2`.  The certificate now stores the actual cyclic group
+`C_m`, so this row can feed directly into a sharp obstruction rack factor.
 
 The one-colour swapped product branch is now symbolic, not just audited.  For
 `T(x,y)=(L(y),R(x))`, the coloured YBE reduces to `LR=RL`.  Local-minimality
@@ -1011,8 +1012,8 @@ At the ledger level, a coboundary detail now carries the trivial detector
 from `proofs/identity_base_product_branch.md`.  Genuinely-coloured product
 rows whose total table is already known reuse the known-branch detector
 certificate.  Thus `product_finite_g_branch` is no longer just a string
-verdict for these subcases: it exposes the finite detector order or names the
-exact delegated affine branch.
+verdict for these subcases: it exposes the finite detector group object and
+order, or names the exact delegated affine branch.
 
 Those failures are no longer just booleans.  The holonomy summaries
 `swapped_product_holonomy_summary()` and

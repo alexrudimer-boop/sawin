@@ -10,6 +10,7 @@ from .context_retraction import (
     product_permutation_witness,
 )
 from .detector_candidates import two_sided_green_detector_groups
+from .finite_group import FiniteGroup, cyclic_group
 from .group_laws import group_exponent
 from .label_detectors import direct_product_label_group, swapped_product_label_group
 from .local_interval import (
@@ -46,6 +47,7 @@ class ProductFiniteGDetectorCertificate:
 
     detail: str
     detector_kind: str
+    detector_group: FiniteGroup | None
     detector_group_order: int | None
     sharp_rack_factor_size: int | None
     proof_reference: str
@@ -54,6 +56,10 @@ class ProductFiniteGDetectorCertificate:
     @property
     def has_explicit_group_order(self) -> bool:
         return self.detector_group_order is not None
+
+    @property
+    def has_explicit_group(self) -> bool:
+        return self.detector_group is not None
 
 
 @dataclass(frozen=True)
@@ -102,6 +108,14 @@ class LocalMasterBottleneckSummary:
             certificate.detector_group_order
             for certificate in self.product_detector_certificates
             if certificate.detector_group_order is not None
+        )
+
+    @property
+    def product_detector_groups(self) -> Tuple[FiniteGroup, ...]:
+        return tuple(
+            certificate.detector_group
+            for certificate in self.product_detector_certificates
+            if certificate.detector_group is not None
         )
 
     @property
@@ -193,6 +207,25 @@ def _sharp_rack_factor_size(group_order: int) -> int:
     return 2 * group_order * group_order
 
 
+def _cyclic_product_certificate(
+    *,
+    detail: str,
+    detector_kind: str,
+    order: int,
+    proof_reference: str,
+) -> ProductFiniteGDetectorCertificate:
+    group = cyclic_group(order)
+    return ProductFiniteGDetectorCertificate(
+        detail=detail,
+        detector_kind=detector_kind,
+        detector_group=group,
+        detector_group_order=len(group.elements),
+        sharp_rack_factor_size=_sharp_rack_factor_size(len(group.elements)),
+        proof_reference=proof_reference,
+        braid_index_independent=True,
+    )
+
+
 def _product_label_detector_order(interval: LocalInterval, side: str) -> int:
     if side == "swapped":
         group = swapped_product_label_group(interval).group
@@ -209,36 +242,29 @@ def _product_detector_certificate(
 ) -> ProductFiniteGDetectorCertificate:
     side = detail.split("_", 1)[0]
     if detail.endswith("_coboundary"):
-        order = 1
-        return ProductFiniteGDetectorCertificate(
+        return _cyclic_product_certificate(
             detail=detail,
             detector_kind="trivial_coboundary_group",
-            detector_group_order=order,
-            sharp_rack_factor_size=_sharp_rack_factor_size(order),
+            order=1,
             proof_reference="proofs/product_coboundary_telescope.md",
-            braid_index_independent=True,
         )
     if detail.endswith("_one_color_pairwise"):
         order = _product_label_detector_order(interval, side)
-        return ProductFiniteGDetectorCertificate(
+        return _cyclic_product_certificate(
             detail=detail,
             detector_kind="cyclic_pairwise_linking_group",
-            detector_group_order=order,
-            sharp_rack_factor_size=_sharp_rack_factor_size(order),
+            order=order,
             proof_reference="proofs/pairwise_linking_detector.md",
-            braid_index_independent=True,
         )
     if detail == "swapped_identity_base_cyclic":
         order = identity_base_swapped_reduction(interval).prime_cycle_modulus
         if order is None:
             raise ValueError("identity-base cyclic detail has no cyclic modulus")
-        return ProductFiniteGDetectorCertificate(
+        return _cyclic_product_certificate(
             detail=detail,
             detector_kind="cyclic_identity_base_group",
-            detector_group_order=order,
-            sharp_rack_factor_size=_sharp_rack_factor_size(order),
+            order=order,
             proof_reference="proofs/identity_base_product_branch.md",
-            braid_index_independent=True,
         )
     if detail.endswith("_genuinely_coloured_known_total"):
         known = known_branch_detector_certificate(solution_from_local_interval(interval).total)
@@ -247,6 +273,7 @@ def _product_detector_certificate(
         return ProductFiniteGDetectorCertificate(
             detail=detail,
             detector_kind=f"known_total_{known.detector_kind}",
+            detector_group=known.detector_group,
             detector_group_order=known.detector_group_order,
             sharp_rack_factor_size=known.sharp_rack_factor_size,
             proof_reference=known.proof_reference,
@@ -256,6 +283,7 @@ def _product_detector_certificate(
         return ProductFiniteGDetectorCertificate(
             detail=detail,
             detector_kind="delegated_affine_f2_branch",
+            detector_group=None,
             detector_group_order=None,
             sharp_rack_factor_size=None,
             proof_reference="proofs/fibre2_product_branch.md",

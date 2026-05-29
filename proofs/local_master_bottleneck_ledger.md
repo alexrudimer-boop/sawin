@@ -85,10 +85,11 @@ holonomy, handled by the affine `F_2` product reduction; and genuinely
 coloured product holonomy whose total interval solution is already in a known
 whole-solution finite-G branch.
 The summary now attaches `ProductFiniteGDetectorCertificate` rows to these
-closed details.  Coboundaries carry the trivial detector `G=1`; one-colour
-pairwise and identity-base cyclic rows carry the cyclic detector order from
-the product-label group or prime cycle modulus; genuinely-coloured
-known-total rows reuse the known whole-solution detector certificate.
+closed details.  Coboundaries carry the actual trivial detector group `G=1`;
+one-colour pairwise and identity-base cyclic rows carry the actual cyclic
+detector group from the product-label exponent or prime cycle modulus;
+genuinely-coloured known-total rows reuse the known whole-solution detector
+group object.
 Fibre-size-two affine product rows are deliberately marked as delegated to
 `proofs/fibre2_product_branch.md` unless a local wrapper has recorded an
 explicit affine detector order.  This keeps the ledger construction-shaped
