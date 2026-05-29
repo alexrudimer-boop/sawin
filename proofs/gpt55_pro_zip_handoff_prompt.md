@@ -54,11 +54,13 @@ First read:
 21. `proofs/continuation_congruence_descent_gate.md`
 22. `proofs/elementary_continuation_closure.md`
 23. `proofs/universal_continuation_derivation_certificate.md`
-24. `proofs/chart_transport_collapse.md`
-25. `proofs/descent_separation_transport_rack_closure.md`
-26. `proofs/sawin_proof_log.docx`
-27. `tables/reduction_audit.xlsx`
-28. The code and tests under `src/`, `tools/`, and `tests/`
+24. `proofs/product_readout_kernel_assembly.md`
+25. `proofs/product_readout_descent_separation.md`
+26. `proofs/chart_transport_collapse.md`
+27. `proofs/descent_separation_transport_rack_closure.md`
+28. `proofs/sawin_proof_log.docx`
+29. `tables/reduction_audit.xlsx`
+30. The code and tests under `src/`, `tools/`, and `tests/`
 
 Then audit and use these reductions:
 
@@ -252,6 +254,10 @@ Then audit and use these reductions:
    finitely many factor label systems into one tuple-valued product readout,
    with kernel equal to the meet of factor kernels.  This is the local readout
    analogue of multiplying fixed detector factors into one `H(pi,Q)`.
+   Also use `proofs/product_readout_descent_separation.md`: it records the
+   seed-level guardrail for product readouts.  A product readout kills a
+   continuation seed only when every factor kills it, so product seed survival
+   is the union of factor seed survival.
    Also use `proofs/chart_transport_collapse.md`: it proves transported
    elementary generators need no separate proof once one chart-conjugacy orbit
    representative is certified, because `V_beta(G)` is normal.  Then read

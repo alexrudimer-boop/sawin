@@ -1031,6 +1031,13 @@ finite detector product assembly.  The helper `product_readout_kernel_audit(...)
 bundles finitely many factor labels into one tuple-valued readout, checks that
 its kernel is the meet of the factor kernels, and certifies the product step
 when all factor kernels are admissible.
+The product descent-separation note
+`proofs/product_readout_descent_separation.md` adds the corresponding
+continuation-seed ledger.  Since the product kernel is a meet, a continuation
+seed survives the product quotient if and only if it survives at least one
+factor quotient.  The helper `product_readout_descent_separation_audit(...)`
+therefore records factor seed survival, product seed survival, and the product
+descent-separation certificate in one object.
 The chart-transport collapse in
 `proofs/chart_transport_collapse.md` removes chart-dependent copies from the
 generator burden.  Since `V_beta(G)` is already normal in every finite group,

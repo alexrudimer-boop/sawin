@@ -162,17 +162,20 @@ If descent separation is proved, the A-route closes as follows.
 10. Product readout-kernel assembly combines the Green, Schutzenberger, atom,
    known-branch, and unit labels into one fixed tuple-valued readout whose
    kernel is the meet of the factor kernels.
-11. Product witness calculus assembles all factor witnesses into one fixed
+11. Product descent-separation assembly checks the seed-level guardrail:
+   because the product kernel is a meet, each factor must kill every
+   continuation seed for the product quotient to be strand-continuing.
+12. Product witness calculus assembles all factor witnesses into one fixed
    `H(pi,Q)`.
-12. The endpoint-factorization criterion gives
+13. The endpoint-factorization criterion gives
 
 ```text
 Lambda_{H(pi,Q),n}(beta)=Lambda_{H(pi,Q),n}(1)
   => Delta_n(beta)=1.
 ```
 
-13. The sharp obstruction theorem supplies the local rack `Q x A_H`.
-14. Congruence-chain induction assembles the local racks into one finite rack
+14. The sharp obstruction theorem supplies the local rack `Q x A_H`.
+15. Congruence-chain induction assembles the local racks into one finite rack
    independent of `n`.
 
 ## Why this is still open

@@ -289,6 +289,31 @@ class ReadoutDescentSeparationAudit:
         return self.quotient_is_strand_continuing and self.all_seed_closures_propagate
 
 
+@dataclass(frozen=True)
+class ProductReadoutDescentSeparationAudit:
+    """Integrated certificate for product readout descent separation."""
+
+    product_kernel: ProductReadoutKernelAudit
+    descent: ReadoutDescentSeparationAudit
+    factor_surviving_seed_rows: Tuple[Tuple[int, Tuple[ContinuationSeedRow, ...]], ...]
+    product_surviving_seed_rows: Tuple[ContinuationSeedRow, ...]
+    factor_survival_union: Tuple[ContinuationSeedRow, ...]
+    product_survival_is_factor_union: bool
+
+    @property
+    def all_factor_seed_rows_killed(self) -> bool:
+        return all(not rows for _index, rows in self.factor_surviving_seed_rows)
+
+    @property
+    def proves_product_descent_separation(self) -> bool:
+        return (
+            self.product_kernel.proves_product_readout_kernel_admissible
+            and self.product_survival_is_factor_union
+            and self.all_factor_seed_rows_killed
+            and self.descent.proves_descent_separation_readout
+        )
+
+
 def equality_partition(items: Sequence[FibrePoint]) -> Partition:
     return canonical_partition(frozenset([item]) for item in items)
 
@@ -968,6 +993,61 @@ def readout_descent_separation_failures(
     """Return continuation seed rows that survive this readout quotient."""
 
     return readout_descent_separation_audit(interval, labels).surviving_seed_rows
+
+
+def _sorted_seed_rows(
+    rows: Iterable[ContinuationSeedRow],
+) -> Tuple[ContinuationSeedRow, ...]:
+    return tuple(sorted(set(rows), key=repr))
+
+
+def product_readout_descent_separation_audit(
+    interval: "LocalInterval",
+    *label_families: ReadoutLabels,
+) -> ProductReadoutDescentSeparationAudit:
+    """Audit descent separation for a tuple-valued product readout.
+
+    A continuation seed survives the product kernel exactly when it survives
+    at least one factor kernel, because the product kernel is the meet of the
+    factor kernels.
+    """
+
+    product_kernel = product_readout_kernel_audit(interval, *label_families)
+    descent = readout_descent_separation_audit(
+        interval,
+        product_kernel.product_labels,
+    )
+    factor_surviving_seed_rows = tuple(
+        (index, readout_descent_separation_failures(interval, labels))
+        for index, labels in enumerate(label_families)
+    )
+    factor_survival_union = _sorted_seed_rows(
+        row
+        for _index, rows in factor_surviving_seed_rows
+        for row in rows
+    )
+    return ProductReadoutDescentSeparationAudit(
+        product_kernel=product_kernel,
+        descent=descent,
+        factor_surviving_seed_rows=factor_surviving_seed_rows,
+        product_surviving_seed_rows=descent.surviving_seed_rows,
+        factor_survival_union=factor_survival_union,
+        product_survival_is_factor_union=(
+            set(descent.surviving_seed_rows) == set(factor_survival_union)
+        ),
+    )
+
+
+def product_readout_descent_separation_failures(
+    interval: "LocalInterval",
+    *label_families: ReadoutLabels,
+) -> Tuple[ContinuationSeedRow, ...]:
+    """Return seed rows that survive a tuple-valued product readout."""
+
+    return product_readout_descent_separation_audit(
+        interval,
+        *label_families,
+    ).product_surviving_seed_rows
 
 
 def generated_admissible_congruence_audit(

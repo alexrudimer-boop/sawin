@@ -17,6 +17,8 @@ from ybe_domination import (
     continuation_seed_universal_derivation_failures,
     coordinate_kernel_pair_closure_audits,
     coordinate_kernel_pair_closure_failures,
+    product_readout_descent_separation_audit,
+    product_readout_descent_separation_failures,
     product_readout_kernel_audit,
     product_readout_labels,
     quotient_interval_by_family,
@@ -445,6 +447,56 @@ class LocalIntervalTests(unittest.TestCase):
         self.assertTrue(audit.product_audit.admissible)
         self.assertFalse(audit.all_factors_admissible)
         self.assertFalse(audit.proves_product_readout_kernel_admissible)
+
+    def test_product_readout_descent_separation_requires_all_factors_to_kill_seed(self):
+        interval = one_color_identity_interval()
+        universal_left = {"*": {0: "same", 1: "same"}}
+        universal_right = {"*": {0: "again", 1: "again"}}
+
+        audit = product_readout_descent_separation_audit(
+            interval,
+            universal_left,
+            universal_right,
+        )
+
+        self.assertTrue(audit.product_kernel.proves_product_readout_kernel_admissible)
+        self.assertTrue(audit.product_survival_is_factor_union)
+        self.assertTrue(audit.all_factor_seed_rows_killed)
+        self.assertEqual(audit.product_surviving_seed_rows, ())
+        self.assertEqual(audit.factor_survival_union, ())
+        self.assertTrue(audit.descent.proves_descent_separation_readout)
+        self.assertTrue(audit.proves_product_descent_separation)
+        self.assertEqual(
+            product_readout_descent_separation_failures(
+                interval,
+                universal_left,
+                universal_right,
+            ),
+            (),
+        )
+
+    def test_product_readout_descent_separation_reports_factor_seed_survival(self):
+        interval = one_color_identity_interval()
+        universal_labels = {"*": {0: "same", 1: "same"}}
+        equality_labels = {"*": {0: "zero", 1: "one"}}
+
+        audit = product_readout_descent_separation_audit(
+            interval,
+            universal_labels,
+            equality_labels,
+        )
+
+        self.assertTrue(audit.product_kernel.proves_product_readout_kernel_admissible)
+        self.assertTrue(audit.product_survival_is_factor_union)
+        self.assertEqual(audit.factor_surviving_seed_rows[0][1], ())
+        self.assertEqual(len(audit.factor_surviving_seed_rows[1][1]), 2)
+        self.assertEqual(
+            set(audit.product_surviving_seed_rows),
+            set(audit.factor_survival_union),
+        )
+        self.assertFalse(audit.all_factor_seed_rows_killed)
+        self.assertFalse(audit.descent.proves_descent_separation_readout)
+        self.assertFalse(audit.proves_product_descent_separation)
 
     def test_readout_descent_separation_reports_surviving_seed_rows(self):
         interval = one_color_identity_interval()

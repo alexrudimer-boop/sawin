@@ -258,6 +258,10 @@ Also read `proofs/product_readout_kernel_assembly.md`: it proves that
 tuple-valued products of fixed readout labels have kernel equal to the meet of
 the factor kernels, and `product_readout_kernel_audit(...)` records the
 factorwise admissibility needed before using one fixed product readout.
+Also read `proofs/product_readout_descent_separation.md`: it records the
+seed-level consequence of that meet identity.  A tuple-valued product readout
+kills a continuation seed only when every factor kills it; the product
+survival rows are the union of the factor survival rows.
 Also read `proofs/chart_transport_collapse.md`: it proves that finite chart
 conjugation does not create new endpoint-longitude obligations, because
 `V_beta(G)` is normal and one representative elementary-generator witness

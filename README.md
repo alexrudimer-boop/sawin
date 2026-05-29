@@ -243,6 +243,11 @@ The product readout-kernel assembly note
 step: tuple-valued product labels have kernel equal to the meet of the factor
 kernels, and `product_readout_kernel_audit(...)` certifies factorwise
 admissibility before the fixed product readout is used for descent separation.
+The product descent-separation note
+`proofs/product_readout_descent_separation.md` adds the corresponding seed
+guardrail: a product readout kills a continuation seed only when every factor
+kills it, and `product_readout_descent_separation_audit(...)` records factor
+seed survival together with the product quotient certificate.
 The chart-transport collapse
 `proofs/chart_transport_collapse.md` removes transported-generator noise:
 `V_beta(G)` is already normal, and

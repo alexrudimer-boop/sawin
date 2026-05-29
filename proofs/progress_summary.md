@@ -463,6 +463,12 @@ The product readout-kernel assembly note
 step.  Tuple-valued product labels have kernel equal to the meet of the factor
 kernels, and `product_readout_kernel_audit(...)` records factor admissibility,
 the product kernel, and the meet identity.
+The product descent-separation note
+`proofs/product_readout_descent_separation.md` records the seed-level
+consequence of that meet identity.  A tuple-valued product readout kills a
+continuation seed exactly when every factor kills it, and
+`product_readout_descent_separation_audit(...)` exposes factor seed survival
+alongside the product quotient certificate.
 The chart-transport collapse
 `proofs/chart_transport_collapse.md` removes another source of proof noise:
 because `V_beta(G)` is normal for every finite group `G`, one

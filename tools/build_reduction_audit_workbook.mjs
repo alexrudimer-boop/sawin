@@ -570,6 +570,13 @@ const rows = [
     "Construct Green/Schutzenberger/atom/unit factors separately, then assemble the fixed product readout for descent separation.",
   ],
   [
+    "Product descent separation",
+    "Track exactly which continuation seeds survive a tuple-valued product readout.",
+    "proofs/product_readout_descent_separation.md; product_readout_descent_separation_audit checks factor seed survival and product descent separation.",
+    "Reduction criterion",
+    "Each factor must kill every representative continuation seed; one killing factor is not enough because product kernels are meets.",
+  ],
+  [
     "Chart-transport collapse",
     "Avoid separate endpoint-longitude proofs for transported or chart-conjugate copies of elementary generators.",
     "proofs/chart_transport_collapse.md; conjugate_longitude_subgroup_witness shows V_beta(G) is normal at certificate level.",
