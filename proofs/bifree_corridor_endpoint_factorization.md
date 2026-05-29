@@ -312,3 +312,37 @@ factor checks.
 This checklist is deliberately stronger than a finite subgroup-membership audit
 at one braid index.  It asks for the symbolic expressions that make the
 subgroup membership true uniformly in `n`.
+
+## Executable certificate layer
+
+The group-only certificate helpers implementing Lemmas 1 and 2 are:
+
+```text
+endpoint_longitude_expression_audit(
+    group,n,beta,endpoint,assignment,expression
+)
+
+endpoint_product_longitude_expression_audit(
+    groups,n,beta,endpoints,assignments,expressions
+)
+```
+
+The first helper checks one displayed endpoint expression in a fixed finite
+group.  The second helper embeds the factor expressions into the direct product
+and evaluates the literal product witness in `V_beta(product_s H_s)`, using
+identity assignments in all non-active coordinates.  Its flags
+
+```text
+product_endpoint_lies_in_product_longitude_subgroup_by_expression
+identity_longitudes_kill_product_endpoint_by_expression
+```
+
+record exactly the two proof-side facts used above: the endpoint tuple has a
+non-enumerative product-subgroup witness, and identity finite product-longitude
+data kills it.  The tests in `tests/test_endpoint_factorization.py` cover
+visible endpoints, identity-signature endpoints, bad expressions, and malformed
+parallel data.
+
+These helpers do not produce the missing endpoint expressions.  They verify the
+last algebraic step once a symbolic corridor proof has supplied those
+expressions in the fixed factors of `H(pi,Q)`.

@@ -771,6 +771,15 @@ completed-context endpoint must be displayed as a finite product of recursive
 Artin-longitude evaluations in fixed factors of `H(pi,Q)`, uniformly in braid
 index.  This note is an A-side assembly lemma, not a proof that the endpoint
 expressions always exist.
+The corresponding group-only executable layer is now
+`endpoint_longitude_expression_audit(...)` and
+`endpoint_product_longitude_expression_audit(...)` in
+`src/ybe_domination/endpoint_factorization.py`.  These helpers take endpoint
+elements in fixed finite groups, displayed longitude expressions, and
+input-dependent assignments, then construct the literal direct-product witness
+in `V_beta(product_s H_s)`.  This is the code-level form of the endpoint
+assembly lemma for Green kernel-block, Schutzenberger, atom-inner, quotient,
+and endpoint/unit factors.
 The single-endpoint route audit
 `unit_composite_longitude_route_audit(monoid,n,beta,factors)` now records the
 same ladder used in product-label work: endpoint identity, one evaluated

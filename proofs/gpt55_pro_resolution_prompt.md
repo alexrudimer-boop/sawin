@@ -436,6 +436,12 @@ assembly implication from factorwise endpoint-longitude expressions to one
 fixed product detector `H(pi,Q)`.  Do not count it as proof of the Master Local
 Theorem unless the missing endpoint longitudinalization lemma is supplied for
 arbitrary local-minimal target intervals.
+The executable helpers
+`endpoint_longitude_expression_audit(...)` and
+`endpoint_product_longitude_expression_audit(...)` are the group-only
+certificate layer for that note.  They are useful for checking a proposed
+factorwise proof, but they do not themselves construct the missing endpoint
+expressions.
 
 Important warning from `proofs/product_longitude_witness_audit.md`: one common
 homomorphism `F_n -> H_prod` need not realize all coordinate labels at once.

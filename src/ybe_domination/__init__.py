@@ -403,6 +403,12 @@ from .semigroup_holonomy import (
     unit_section_detection_audit,
     unit_section_product_detection_audit,
 )
+from .endpoint_factorization import (
+    EndpointLongitudeExpressionAudit,
+    EndpointProductExpressionAudit,
+    endpoint_longitude_expression_audit,
+    endpoint_product_longitude_expression_audit,
+)
 from .small_search import (
     affine_cyclic_form,
     all_bijection_solutions,
@@ -499,6 +505,8 @@ __all__ = [
     "DirectProductLongitudeSubgroupAudit",
     "DirectProductLongitudeSubgroupWitnessAudit",
     "DiagonalProductInvisibilityAudit",
+    "EndpointLongitudeExpressionAudit",
+    "EndpointProductExpressionAudit",
     "ExactImageAudit",
     "ExactDetectorReadoutAudit",
     "ExactDetectorProductReadoutAudit",
@@ -687,6 +695,8 @@ __all__ = [
     "evaluate_artin_longitudes",
     "evaluate_longitude_expression",
     "evaluate_longitude_subgroup_witness",
+    "endpoint_longitude_expression_audit",
+    "endpoint_product_longitude_expression_audit",
     "evaluate_direct_product_label_word",
     "evaluate_swapped_product_label_word",
     "evaluate_free_word_on_permutations",
