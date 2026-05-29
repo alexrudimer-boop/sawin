@@ -57,11 +57,12 @@ First read:
 24. `proofs/product_readout_kernel_assembly.md`
 25. `proofs/product_readout_descent_separation.md`
 26. `proofs/readout_seed_saturation.md`
-27. `proofs/chart_transport_collapse.md`
-28. `proofs/descent_separation_transport_rack_closure.md`
-29. `proofs/sawin_proof_log.docx`
-30. `tables/reduction_audit.xlsx`
-31. The code and tests under `src/`, `tools/`, and `tests/`
+27. `proofs/local_minimal_seed_saturation_dichotomy.md`
+28. `proofs/chart_transport_collapse.md`
+29. `proofs/descent_separation_transport_rack_closure.md`
+30. `proofs/sawin_proof_log.docx`
+31. `tables/reduction_audit.xlsx`
+32. The code and tests under `src/`, `tools/`, and `tests/`
 
 Then audit and use these reductions:
 
@@ -264,6 +265,9 @@ Then audit and use these reductions:
    seeds.  In a local-minimal interval, a non-killing admissible equality
    factor saturates to universal, so any lost information must be routed
    elsewhere.
+   Also use `proofs/local_minimal_seed_saturation_dichotomy.md`: it makes the
+   equality/universal seed-saturation consequence executable and records
+   forced universal collapse as an external-routing obligation.
    Also use `proofs/chart_transport_collapse.md`: it proves transported
    elementary generators need no separate proof once one chart-conjugacy orbit
    representative is certified, because `V_beta(G)` is normal.  Then read

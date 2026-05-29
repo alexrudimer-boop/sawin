@@ -17,6 +17,7 @@ from ybe_domination import (
     continuation_seed_universal_derivation_failures,
     coordinate_kernel_pair_closure_audits,
     coordinate_kernel_pair_closure_failures,
+    local_minimal_seed_saturation_dichotomy_audit,
     partition_readout_labels,
     product_readout_descent_separation_audit,
     product_readout_descent_separation_failures,
@@ -443,6 +444,44 @@ class LocalIntervalTests(unittest.TestCase):
         self.assertEqual(audit.new_saturation_edges, ())
         self.assertTrue(audit.proves_admissible_seed_saturation)
         self.assertTrue(audit.proves_saturated_descent_separation)
+
+    def test_local_minimal_seed_saturation_dichotomy_records_universal_collapse(self):
+        interval = one_color_identity_interval()
+        labels = {"*": {0: "zero", 1: "one"}}
+
+        audit = local_minimal_seed_saturation_dichotomy_audit(interval, labels)
+
+        self.assertTrue(audit.interval_is_local_minimal)
+        self.assertEqual(audit.expected_saturation_kind, "universal")
+        self.assertTrue(audit.readout_kernel_has_local_minimal_kind)
+        self.assertTrue(audit.saturation_has_local_minimal_kind)
+        self.assertTrue(audit.forced_universal_collapse)
+        self.assertTrue(audit.needs_external_routing_after_collapse)
+        self.assertTrue(audit.proves_local_minimal_seed_saturation_dichotomy)
+
+    def test_local_minimal_seed_saturation_dichotomy_keeps_rack_equality(self):
+        interval = one_color_flip_interval()
+        labels = {"*": {0: "zero", 1: "one"}}
+
+        audit = local_minimal_seed_saturation_dichotomy_audit(interval, labels)
+
+        self.assertTrue(audit.interval_is_local_minimal)
+        self.assertEqual(audit.expected_saturation_kind, "equality")
+        self.assertFalse(audit.forced_universal_collapse)
+        self.assertFalse(audit.needs_external_routing_after_collapse)
+        self.assertTrue(audit.proves_local_minimal_seed_saturation_dichotomy)
+
+    def test_local_minimal_seed_saturation_dichotomy_rejects_nonminimal_interval(self):
+        interval = two_color_identity_interval()
+        labels = {
+            "a": {0: "zero", 1: "one"},
+            "b": {0: "zero", 1: "one"},
+        }
+
+        audit = local_minimal_seed_saturation_dichotomy_audit(interval, labels)
+
+        self.assertFalse(audit.interval_is_local_minimal)
+        self.assertFalse(audit.proves_local_minimal_seed_saturation_dichotomy)
 
     def test_product_readout_kernel_is_meet_of_factor_kernels(self):
         interval = two_color_identity_interval()

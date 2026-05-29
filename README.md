@@ -254,6 +254,11 @@ forced by one factor kernel together with all continuation seeds.  In a
 local-minimal interval, a non-killing admissible equality factor saturates to
 universal, so any lost information must be routed through another fixed
 detector component or the transport-state quotient.
+The local-minimal seed-saturation dichotomy note
+`proofs/local_minimal_seed_saturation_dichotomy.md` makes this executable:
+`local_minimal_seed_saturation_dichotomy_audit(...)` checks that an admissible
+readout factor has only equality/universal saturation and flags the universal
+collapse cases that require external routing.
 The chart-transport collapse
 `proofs/chart_transport_collapse.md` removes transported-generator noise:
 `V_beta(G)` is already normal, and

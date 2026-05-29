@@ -1044,6 +1044,12 @@ all continuation seeds.  The helper `readout_seed_saturation_audit(...)`
 constructs the saturated block labels and re-runs descent separation on them.
 For a local-minimal interval, this exposes the dichotomy that an admissible
 equality factor either already kills the seeds or saturates to universal.
+The local-minimal seed-saturation dichotomy note
+`proofs/local_minimal_seed_saturation_dichotomy.md` now makes that dichotomy
+an explicit certificate.  The helper
+`local_minimal_seed_saturation_dichotomy_audit(...)` verifies the
+equality/universal saturation expectation and marks forced universal collapse
+as an external-routing obligation rather than a proof of faithful detection.
 The chart-transport collapse in
 `proofs/chart_transport_collapse.md` removes chart-dependent copies from the
 generator burden.  Since `V_beta(G)` is already normal in every finite group,

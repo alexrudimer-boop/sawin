@@ -475,6 +475,11 @@ continuation seeds.  The local-minimal corollary says that a non-killing
 admissible equality factor has universal seed-saturation, so lost information
 must be carried by another fixed factor or by the transport-state rack
 quotient.
+The local-minimal seed-saturation dichotomy note
+`proofs/local_minimal_seed_saturation_dichotomy.md` exposes that corollary as
+an executable audit.  It rejects non-local-minimal intervals, checks that
+kernel and saturation kinds are equality/universal, and flags forced universal
+collapse as an external-routing obligation.
 The chart-transport collapse
 `proofs/chart_transport_collapse.md` removes another source of proof noise:
 because `V_beta(G)` is normal for every finite group `G`, one

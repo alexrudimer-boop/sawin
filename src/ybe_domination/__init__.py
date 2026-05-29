@@ -139,6 +139,7 @@ from .chain_rack import (
 )
 from .local_interval import (
     LocalInterval,
+    LocalMinimalSeedSaturationDichotomyAudit,
     ContinuationCongruenceAudit,
     ContinuationSeedPairClosureAudit,
     ContinuationSeedReadoutPropagationAudit,
@@ -171,6 +172,7 @@ from .local_interval import (
     continuation_seed_universal_derivation_failures,
     generated_admissible_congruence_audit,
     generated_admissible_congruence_family,
+    local_minimal_seed_saturation_dichotomy_audit,
     partition_readout_labels,
     product_readout_descent_separation_audit,
     product_readout_descent_separation_failures,
@@ -709,6 +711,7 @@ __all__ = [
     "LongitudeSubgroupWitness",
     "LongitudeSubgroupWitnessLetter",
     "LocalInterval",
+    "LocalMinimalSeedSaturationDichotomyAudit",
     "LocalMasterBottleneckSummary",
     "QuotientMap",
     "QuotientImageKernelSummary",
@@ -1029,6 +1032,7 @@ __all__ = [
     "longitude_subgroup_mover_profiles",
     "longitude_value_generators",
     "longitude_value_subgroup_elements",
+    "local_minimal_seed_saturation_dichotomy_audit",
     "local_master_bottleneck_summary",
     "maximal_congruence_chain",
     "meet_partition",

@@ -584,6 +584,13 @@ const rows = [
     "In local-minimal intervals a non-killing admissible equality factor saturates to universal, so lost information must be routed elsewhere.",
   ],
   [
+    "Local-minimal seed dichotomy",
+    "Use local-minimality to rule out hidden proper seed-saturated quotients.",
+    "proofs/local_minimal_seed_saturation_dichotomy.md; local_minimal_seed_saturation_dichotomy_audit checks the equality/universal saturation expectation.",
+    "Reduction criterion",
+    "Any equality-kernel factor missing a nontrivial seed collapses to universal; prove external routing for information lost by that collapse.",
+  ],
+  [
     "Chart-transport collapse",
     "Avoid separate endpoint-longitude proofs for transported or chart-conjugate copies of elementary generators.",
     "proofs/chart_transport_collapse.md; conjugate_longitude_subgroup_witness shows V_beta(G) is normal at certificate level.",

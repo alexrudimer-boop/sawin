@@ -267,6 +267,9 @@ admissible coarsening forced by one readout factor plus all continuation
 seeds.  In a local-minimal interval, a non-killing admissible equality factor
 has universal seed-saturation, so any lost information must be routed through
 another fixed detector component or through transport-state rackification.
+Also read `proofs/local_minimal_seed_saturation_dichotomy.md`: it makes that
+local-minimality consequence executable and treats forced universal collapse
+as an external-routing obligation, not as faithful residual detection.
 Also read `proofs/chart_transport_collapse.md`: it proves that finite chart
 conjugation does not create new endpoint-longitude obligations, because
 `V_beta(G)` is normal and one representative elementary-generator witness

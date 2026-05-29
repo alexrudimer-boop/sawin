@@ -354,6 +354,46 @@ class ReadoutSeedSaturationAudit:
         )
 
 
+@dataclass(frozen=True)
+class LocalMinimalSeedSaturationDichotomyAudit:
+    """Local-minimal dichotomy for an admissible readout seed-saturation."""
+
+    seed_saturation: ReadoutSeedSaturationAudit
+    interval_is_local_minimal: bool
+    expected_saturation_kind: str | None
+
+    @property
+    def readout_kernel_has_local_minimal_kind(self) -> bool:
+        return self.seed_saturation.readout_kernel.kind in ("equality", "universal")
+
+    @property
+    def saturation_has_local_minimal_kind(self) -> bool:
+        return self.seed_saturation.saturation.kind in ("equality", "universal")
+
+    @property
+    def forced_universal_collapse(self) -> bool:
+        return (
+            self.expected_saturation_kind == "universal"
+            and self.seed_saturation.readout_kernel.kind == "equality"
+            and bool(self.seed_saturation.original_surviving_seed_rows)
+        )
+
+    @property
+    def needs_external_routing_after_collapse(self) -> bool:
+        return self.forced_universal_collapse
+
+    @property
+    def proves_local_minimal_seed_saturation_dichotomy(self) -> bool:
+        return (
+            self.interval_is_local_minimal
+            and self.seed_saturation.readout_kernel.admissible
+            and self.readout_kernel_has_local_minimal_kind
+            and self.saturation_has_local_minimal_kind
+            and self.expected_saturation_kind is not None
+            and self.seed_saturation.saturation.kind == self.expected_saturation_kind
+        )
+
+
 def equality_partition(items: Sequence[FibrePoint]) -> Partition:
     return canonical_partition(frozenset([item]) for item in items)
 
@@ -1182,6 +1222,34 @@ def readout_seed_saturation_audit(
         new_saturation_edges=_missing_family_edges(
             saturation.family,
             readout_kernel.family,
+        ),
+    )
+
+
+def _expected_local_minimal_seed_saturation_kind(
+    audit: ReadoutSeedSaturationAudit,
+) -> str | None:
+    if not audit.readout_kernel.admissible:
+        return None
+    if audit.readout_kernel.kind == "universal":
+        return "universal"
+    if audit.readout_kernel.kind == "equality":
+        return "universal" if audit.original_surviving_seed_rows else "equality"
+    return None
+
+
+def local_minimal_seed_saturation_dichotomy_audit(
+    interval: "LocalInterval",
+    labels: ReadoutLabels,
+) -> LocalMinimalSeedSaturationDichotomyAudit:
+    """Audit the equality/universal seed-saturation dichotomy."""
+
+    seed_saturation = readout_seed_saturation_audit(interval, labels)
+    return LocalMinimalSeedSaturationDichotomyAudit(
+        seed_saturation=seed_saturation,
+        interval_is_local_minimal=interval.is_local_minimal(),
+        expected_saturation_kind=_expected_local_minimal_seed_saturation_kind(
+            seed_saturation,
         ),
     )
 
