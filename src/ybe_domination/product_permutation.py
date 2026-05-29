@@ -1,0 +1,1529 @@
+from __future__ import annotations
+
+from dataclasses import dataclass
+from itertools import product
+from typing import Dict, List, Mapping, Sequence, Tuple
+
+from .context_retraction import (
+    DirectProductWitness,
+    ProductPermutationWitness,
+    direct_product_witness,
+    product_permutation_witness,
+)
+from .finite_group import FiniteGroup, permutation_group_from_generators
+from .local_interval import Color, FibrePoint, LocalInterval
+from .local_interval import (
+    GeneratedCongruenceAudit,
+    Partition,
+    canonical_partition,
+    partition_pairs,
+    relation_family_kind,
+    set_partitions,
+)
+
+FibreMap = Mapping[FibrePoint, FibrePoint]
+ProductLabel = Tuple[str, Color, Color, int]
+
+
+@dataclass(frozen=True)
+class ProductPermutationAction:
+    final_colors: Tuple[Color, ...]
+    dependency: Tuple[int, ...]
+    coordinate_maps: Tuple[Tuple[Tuple[FibrePoint, FibrePoint], ...], ...]
+
+
+@dataclass(frozen=True)
+class ProductLabelWordAction:
+    final_colors: Tuple[Color, ...]
+    dependency: Tuple[int, ...]
+    label_words: Tuple[Tuple[ProductLabel, ...], ...]
+
+
+@dataclass(frozen=True)
+class OneColorSwappedExponentAction:
+    dependency: Tuple[int, ...]
+    exponents: Tuple[Tuple[int, int], ...]
+
+
+@dataclass(frozen=True)
+class ProductCocycleFailure:
+    kind: str
+    colors: Tuple[Color, Color, Color]
+    left: Tuple[Tuple[FibrePoint, FibrePoint], ...]
+    right: Tuple[Tuple[FibrePoint, FibrePoint], ...]
+
+
+@dataclass(frozen=True)
+class ProductCoboundaryFailure:
+    kind: str
+    source_color: Color
+    target_color: Color
+    expected_gauge: Tuple[Tuple[FibrePoint, FibrePoint], ...]
+    actual_gauge: Tuple[Tuple[FibrePoint, FibrePoint], ...]
+
+
+@dataclass(frozen=True)
+class ProductCoboundaryAudit:
+    gauges: Mapping[Color, Tuple[Tuple[FibrePoint, FibrePoint], ...]]
+    failures: Tuple[ProductCoboundaryFailure, ...]
+
+    @property
+    def is_coboundary(self) -> bool:
+        return not self.failures
+
+
+@dataclass(frozen=True)
+class ProductHolonomyGenerator:
+    kind: str
+    source_color: Color
+    target_color: Color
+    model_points: Tuple[FibrePoint, ...]
+    permutation: Tuple[int, ...]
+
+
+@dataclass(frozen=True)
+class ProductHolonomySummary:
+    coboundary_audit: ProductCoboundaryAudit
+    generators: Tuple[ProductHolonomyGenerator, ...]
+    component_group_sizes: Tuple[Tuple[Tuple[FibrePoint, ...], int], ...]
+
+    @property
+    def is_trivial(self) -> bool:
+        return not self.generators
+
+
+@dataclass(frozen=True)
+class ProductHolonomyGroup:
+    """One finite gauge-normalized product holonomy group."""
+
+    model_points: Tuple[FibrePoint, ...]
+    group: FiniteGroup
+
+
+@dataclass(frozen=True)
+class IdentityBaseSwappedFailure:
+    """Failure of the identity-base swapped central-label normal form."""
+
+    kind: str
+    colors: Tuple[Color, ...]
+    expected: Tuple[Tuple[FibrePoint, FibrePoint], ...]
+    actual: Tuple[Tuple[FibrePoint, FibrePoint], ...]
+
+
+@dataclass(frozen=True)
+class IdentityBaseSwappedReduction:
+    """Central-label reduction for identity-base swapped product intervals."""
+
+    central_maps: Mapping[Color, Tuple[Tuple[FibrePoint, FibrePoint], ...]]
+    cycle_lengths: Mapping[Color, Tuple[int, ...]]
+    failures: Tuple[IdentityBaseSwappedFailure, ...]
+
+    @property
+    def satisfies_central_form(self) -> bool:
+        return not self.failures
+
+    @property
+    def all_central_maps_identity(self) -> bool:
+        return all(all(source == target for source, target in mapping) for mapping in self.central_maps.values())
+
+    @property
+    def prime_cycle_modulus(self) -> int | None:
+        if self.all_central_maps_identity:
+            return 1
+        length_profiles = {profile for profile in self.cycle_lengths.values()}
+        if len(length_profiles) != 1:
+            return None
+        (cycle_lengths,) = tuple(length_profiles)
+        if len(cycle_lengths) != 1:
+            return None
+        (length,) = cycle_lengths
+        if _is_prime(length):
+            return length
+        return None
+
+
+@dataclass(frozen=True)
+class IdentityBaseDirectFailure:
+    """Failure of the identity-base direct product triviality equations."""
+
+    kind: str
+    colors: Tuple[Color, Color]
+    expected: Tuple[Tuple[FibrePoint, FibrePoint], ...]
+    actual: Tuple[Tuple[FibrePoint, FibrePoint], ...]
+
+
+@dataclass(frozen=True)
+class IdentityBaseDirectReduction:
+    """Triviality reduction for identity-base direct product intervals."""
+
+    failures: Tuple[IdentityBaseDirectFailure, ...]
+
+    @property
+    def is_trivial(self) -> bool:
+        return not self.failures
+
+
+@dataclass(frozen=True)
+class ProductPartitionFailure:
+    kind: str
+    source_color: Color
+    target_color: Color
+    transported: Partition
+    target: Partition
+
+
+@dataclass(frozen=True)
+class ProductLabelPairClosureAudit:
+    """Least invariant partition family generated by one product-label pair."""
+
+    branch: str
+    color: Color
+    left: FibrePoint
+    right: FibrePoint
+    generated: GeneratedCongruenceAudit
+
+
+def _map_from_canonical(mapping: Tuple[Tuple[FibrePoint, FibrePoint], ...]) -> Dict[FibrePoint, FibrePoint]:
+    return dict(mapping)
+
+
+def _identity_map(points: Sequence[FibrePoint]) -> Dict[FibrePoint, FibrePoint]:
+    return {point: point for point in points}
+
+
+def _invert_map(mapping: FibreMap) -> Dict[FibrePoint, FibrePoint]:
+    return {value: key for key, value in mapping.items()}
+
+
+def _compose_maps(left: FibreMap, right: FibreMap) -> Dict[FibrePoint, FibrePoint]:
+    """Return left after right."""
+
+    return {source: left[right[source]] for source in right}
+
+
+def _canonical_map(mapping: FibreMap) -> Tuple[Tuple[FibrePoint, FibrePoint], ...]:
+    return tuple(sorted(mapping.items(), key=repr))
+
+
+def _cycle_lengths(points: Sequence[FibrePoint], mapping: FibreMap) -> Tuple[int, ...]:
+    unseen = set(points)
+    lengths = []
+    while unseen:
+        start = next(iter(unseen))
+        current = start
+        length = 0
+        while current in unseen:
+            unseen.remove(current)
+            current = mapping[current]
+            length += 1
+        lengths.append(length)
+    return tuple(sorted(lengths))
+
+
+def _is_prime(value: int) -> bool:
+    if value < 2:
+        return False
+    divisor = 2
+    while divisor * divisor <= value:
+        if value % divisor == 0:
+            return False
+        divisor += 1
+    return True
+
+
+def _transport_partition(mapping: FibreMap, partition: Partition) -> Partition:
+    return canonical_partition(
+        (mapping[point] for point in block)
+        for block in partition
+    )
+
+
+def _partition_failures(
+    family: Mapping[Color, Partition],
+    constraints: Sequence[Tuple[str, Color, Color, FibreMap]],
+) -> Tuple[ProductPartitionFailure, ...]:
+    failures = []
+    for kind, source, target, mapping in constraints:
+        transported = _transport_partition(mapping, family[source])
+        if transported != family[target]:
+            failures.append(
+                ProductPartitionFailure(
+                    kind=kind,
+                    source_color=source,
+                    target_color=target,
+                    transported=transported,
+                    target=family[target],
+                )
+            )
+    return tuple(failures)
+
+
+def _invariant_partition_families(
+    interval: LocalInterval,
+    constraints: Sequence[Tuple[str, Color, Color, FibreMap]],
+    max_fibre_size: int = 5,
+) -> Tuple[Mapping[Color, Partition], ...]:
+    if any(len(interval.fibres[color]) > max_fibre_size for color in interval.colors):
+        raise ValueError("full partition enumeration disabled for this fibre size")
+    per_color = [set_partitions(interval.fibres[color]) for color in interval.colors]
+    out = []
+    for parts in product(*per_color):
+        family = dict(zip(interval.colors, parts))
+        if not _partition_failures(family, constraints):
+                out.append(family)
+    return tuple(out)
+
+
+def _union_blocks(
+    items: Sequence[FibrePoint],
+    related_pairs: Sequence[Tuple[FibrePoint, FibrePoint]],
+) -> Tuple[Tuple[FibrePoint, ...], ...]:
+    parent = {item: item for item in items}
+
+    def find(item):
+        while parent[item] != item:
+            parent[item] = parent[parent[item]]
+            item = parent[item]
+        return item
+
+    def union(left, right) -> None:
+        root_left = find(left)
+        root_right = find(right)
+        if root_left != root_right:
+            parent[root_right] = root_left
+
+    for left, right in related_pairs:
+        union(left, right)
+    blocks: Dict[FibrePoint, List[FibrePoint]] = {}
+    for item in items:
+        blocks.setdefault(find(item), []).append(item)
+    return tuple(tuple(block) for block in blocks.values())
+
+
+def _graph_component_summaries(
+    interval: LocalInterval,
+    graph_edges: Mapping[Color, Sequence[Tuple[FibrePoint, FibrePoint]]],
+) -> Tuple[Dict[Color, int], Dict[Color, int]]:
+    component_counts = {}
+    diameters = {}
+    for color in interval.colors:
+        adjacency = {point: set() for point in interval.fibres[color]}
+        for left, right in graph_edges[color]:
+            adjacency[left].add(right)
+            adjacency[right].add(left)
+        unseen = set(interval.fibres[color])
+        component_count = 0
+        max_diameter = 0
+        while unseen:
+            component_count += 1
+            start = next(iter(unseen))
+            stack = [start]
+            component = set()
+            while stack:
+                current = stack.pop()
+                if current in component:
+                    continue
+                component.add(current)
+                unseen.discard(current)
+                stack.extend(adjacency[current] - component)
+            for source in component:
+                distances = _graph_distances(adjacency, source)
+                max_diameter = max(
+                    max_diameter,
+                    max(distances[target] for target in component),
+                )
+        component_counts[color] = component_count
+        diameters[color] = max_diameter
+    return component_counts, diameters
+
+
+def _graph_distances(
+    adjacency: Mapping[FibrePoint, set[FibrePoint]],
+    source: FibrePoint,
+) -> Dict[FibrePoint, int]:
+    distances = {source: 0}
+    queue = [source]
+    cursor = 0
+    while cursor < len(queue):
+        current = queue[cursor]
+        cursor += 1
+        for neighbour in adjacency[current]:
+            if neighbour in distances:
+                continue
+            distances[neighbour] = distances[current] + 1
+            queue.append(neighbour)
+    return distances
+
+
+def _product_label_generated_congruence_audit(
+    interval: LocalInterval,
+    constraints: Sequence[Tuple[str, Color, Color, FibreMap]],
+    seed_pairs: Mapping[Color, Sequence[Tuple[FibrePoint, FibrePoint]]],
+) -> GeneratedCongruenceAudit:
+    """Close a seed relation under product-label transports and inverses."""
+
+    pairs: Dict[Color, set[Tuple[FibrePoint, FibrePoint]]] = {
+        color: {(point, point) for point in interval.fibres[color]}
+        for color in interval.colors
+    }
+    graph_edges: Dict[Color, set[Tuple[FibrePoint, FibrePoint]]] = {
+        color: set() for color in interval.colors
+    }
+    seed_pair_count = 0
+
+    def add_pair(color: Color, left: FibrePoint, right: FibrePoint) -> None:
+        pairs[color].add((left, right))
+        pairs[color].add((right, left))
+        if left != right:
+            graph_edges[color].add(tuple(sorted((left, right), key=repr)))
+
+    for color in interval.colors:
+        for left, right in seed_pairs.get(color, ()):
+            seed_pair_count += 1
+            add_pair(color, left, right)
+
+    inverses = [
+        (kind, source, target, mapping, _invert_map(mapping))
+        for kind, source, target, mapping in constraints
+    ]
+
+    def current_family() -> Dict[Color, Partition]:
+        return {
+            color: canonical_partition(
+                _union_blocks(interval.fibres[color], tuple(pairs[color]))
+            )
+            for color in interval.colors
+        }
+
+    depth = 0
+    while True:
+        family = current_family()
+        before = {color: frozenset(pairs[color]) for color in interval.colors}
+        related = {
+            color: partition_pairs(family[color])
+            for color in interval.colors
+        }
+        for _kind, source, target, mapping, inverse in inverses:
+            for left, right in related[source]:
+                add_pair(target, mapping[left], mapping[right])
+            for left, right in related[target]:
+                add_pair(source, inverse[left], inverse[right])
+        after = {color: frozenset(pairs[color]) for color in interval.colors}
+        if after == before:
+            final_family = current_family()
+            component_counts, diameters = _graph_component_summaries(
+                interval,
+                graph_edges,
+            )
+            return GeneratedCongruenceAudit(
+                seed_pair_count=seed_pair_count,
+                stable_depth=depth,
+                family=final_family,
+                kind=relation_family_kind(interval, final_family),
+                pair_count_rows=tuple(
+                    (color, len(partition_pairs(final_family[color])))
+                    for color in interval.colors
+                ),
+                edge_count_rows=tuple(
+                    (color, len(graph_edges[color]))
+                    for color in interval.colors
+                ),
+                component_count_rows=tuple(
+                    (color, component_counts[color])
+                    for color in interval.colors
+                ),
+                diameter_rows=tuple(
+                    (color, diameters[color])
+                    for color in interval.colors
+                ),
+            )
+        depth += 1
+
+
+def _product_label_pair_closure_audits(
+    interval: LocalInterval,
+    branch: str,
+    constraints: Sequence[Tuple[str, Color, Color, FibreMap]],
+) -> Tuple[ProductLabelPairClosureAudit, ...]:
+    audits = []
+    for color in interval.colors:
+        points = interval.fibres[color]
+        for left_index, left in enumerate(points):
+            for right in points[left_index + 1 :]:
+                generated = _product_label_generated_congruence_audit(
+                    interval,
+                    constraints,
+                    {color: ((left, right),)},
+                )
+                audits.append(
+                    ProductLabelPairClosureAudit(
+                        branch=branch,
+                        color=color,
+                        left=left,
+                        right=right,
+                        generated=generated,
+                    )
+                )
+    return tuple(audits)
+
+
+def _swapped_constraints(
+    interval: LocalInterval,
+    witness: ProductPermutationWitness,
+) -> Tuple[Tuple[str, Color, Color, FibreMap], ...]:
+    constraints = []
+    for a, b in product(interval.colors, repeat=2):
+        c, d = interval.base_R[(a, b)]
+        constraints.append(("swapped_left", b, c, witness.left_maps[(a, b)]))
+        constraints.append(("swapped_right", a, d, witness.right_maps[(a, b)]))
+    return tuple(constraints)
+
+
+def _direct_constraints(
+    interval: LocalInterval,
+    witness: DirectProductWitness,
+) -> Tuple[Tuple[str, Color, Color, FibreMap], ...]:
+    constraints = []
+    for a, b in product(interval.colors, repeat=2):
+        c, d = interval.base_R[(a, b)]
+        constraints.append(("direct_left", a, c, witness.left_maps[(a, b)]))
+        constraints.append(("direct_right", b, d, witness.right_maps[(a, b)]))
+    return tuple(constraints)
+
+
+def _coboundary_audit(
+    interval: LocalInterval,
+    constraints: Sequence[Tuple[str, Color, Color, FibreMap]],
+) -> ProductCoboundaryAudit:
+    """Solve gauge constraints of the form ``g_target f = g_source``."""
+
+    pending = list(constraints)
+    gauges: Dict[Color, Dict[FibrePoint, FibrePoint]] = {}
+    failures: List[ProductCoboundaryFailure] = []
+
+    def seed_component(color: Color) -> None:
+        gauges[color] = _identity_map(interval.fibres[color])
+
+    while True:
+        unknown = [color for color in interval.colors if color not in gauges]
+        if not unknown:
+            break
+        seed_component(unknown[0])
+        changed = True
+        while changed:
+            changed = False
+            for kind, source, target, mapping in pending:
+                source_known = source in gauges
+                target_known = target in gauges
+                if source_known and not target_known:
+                    inverse = _invert_map(mapping)
+                    gauges[target] = {
+                        point: gauges[source][inverse[point]]
+                        for point in interval.fibres[target]
+                    }
+                    changed = True
+                elif target_known and not source_known:
+                    gauges[source] = {
+                        point: gauges[target][mapping[point]]
+                        for point in interval.fibres[source]
+                    }
+                    changed = True
+
+    for kind, source, target, mapping in constraints:
+        expected_target = {
+            mapping[point]: gauges[source][point]
+            for point in interval.fibres[source]
+        }
+        actual_target = gauges[target]
+        if expected_target != actual_target:
+            failures.append(
+                ProductCoboundaryFailure(
+                    kind=kind,
+                    source_color=source,
+                    target_color=target,
+                    expected_gauge=_canonical_map(expected_target),
+                    actual_gauge=_canonical_map(actual_target),
+                )
+            )
+
+    return ProductCoboundaryAudit(
+        gauges={color: _canonical_map(gauges[color]) for color in interval.colors},
+        failures=tuple(failures),
+    )
+
+
+def product_coboundary_transport_map(
+    interval: LocalInterval,
+    audit: ProductCoboundaryAudit,
+    source_color: Color,
+    target_color: Color,
+) -> Tuple[Tuple[FibrePoint, FibrePoint], ...]:
+    """Return the telescoped coboundary map ``g_target^{-1} g_source``.
+
+    A successful product coboundary audit records gauges satisfying
+    ``g_target f = g_source`` for every product label ``f``.  Thus any
+    composable label word from ``source_color`` to ``target_color`` must equal
+    ``g_target^{-1} g_source``.
+    """
+
+    if not audit.is_coboundary:
+        raise ValueError("coboundary transport requires a successful audit")
+    if source_color not in interval.fibres or target_color not in interval.fibres:
+        raise ValueError("unknown source or target color")
+    source_gauge = _map_from_canonical(audit.gauges[source_color])
+    target_gauge = _map_from_canonical(audit.gauges[target_color])
+    inverse_target = _invert_map(target_gauge)
+    if not set(source_gauge.values()).issubset(set(inverse_target)):
+        raise ValueError("source and target gauges lie in different components")
+    return _canonical_map(
+        {
+            point: inverse_target[source_gauge[point]]
+            for point in interval.fibres[source_color]
+        }
+    )
+
+
+def product_coboundary_transport_is_identity(
+    interval: LocalInterval,
+    audit: ProductCoboundaryAudit,
+    color: Color,
+) -> bool:
+    """Return whether the coboundary transport from a colour to itself is identity."""
+
+    return product_coboundary_transport_map(interval, audit, color, color) == _canonical_map(
+        _identity_map(interval.fibres[color])
+    )
+
+
+def _permutation_between_gauges(
+    actual: Mapping[FibrePoint, FibrePoint],
+    expected: Mapping[FibrePoint, FibrePoint],
+) -> Tuple[Tuple[FibrePoint, ...], Tuple[int, ...]]:
+    """Return expected after actual^{-1} as an index permutation."""
+
+    model_points = tuple(sorted(set(actual.values()), key=repr))
+    index = {point: i for i, point in enumerate(model_points)}
+    inverse_actual = {value: key for key, value in actual.items()}
+    permutation = tuple(
+        index[expected[inverse_actual[point]]]
+        for point in model_points
+    )
+    return model_points, permutation
+
+
+def _holonomy_summary(
+    interval: LocalInterval,
+    constraints: Sequence[Tuple[str, Color, Color, FibreMap]],
+) -> ProductHolonomySummary:
+    audit = _coboundary_audit(interval, constraints)
+    gauge_maps = {color: dict(mapping) for color, mapping in audit.gauges.items()}
+    generators = []
+    for kind, source, target, mapping in constraints:
+        expected_target = {
+            mapping[point]: gauge_maps[source][point]
+            for point in interval.fibres[source]
+        }
+        actual_target = gauge_maps[target]
+        if expected_target == actual_target:
+            continue
+        model_points, permutation = _permutation_between_gauges(
+            actual_target, expected_target
+        )
+        generators.append(
+            ProductHolonomyGenerator(kind, source, target, model_points, permutation)
+        )
+
+    by_model: Dict[Tuple[FibrePoint, ...], List[Tuple[int, ...]]] = {}
+    for generator in generators:
+        by_model.setdefault(generator.model_points, []).append(generator.permutation)
+    component_group_sizes = []
+    for model_points, permutations in sorted(by_model.items(), key=repr):
+        group = permutation_group_from_generators(
+            permutations,
+            degree=len(model_points),
+        )
+        component_group_sizes.append((model_points, len(group.elements)))
+    return ProductHolonomySummary(
+        coboundary_audit=audit,
+        generators=tuple(generators),
+        component_group_sizes=tuple(component_group_sizes),
+    )
+
+
+def product_holonomy_groups(
+    interval: LocalInterval,
+    branch: str,
+    witness: ProductPermutationWitness | DirectProductWitness | None = None,
+) -> Tuple[ProductHolonomyGroup, ...]:
+    """Return the finite groups generated by normalized product holonomy."""
+
+    if branch == "swapped":
+        if witness is not None and not isinstance(witness, ProductPermutationWitness):
+            raise ValueError("swapped branch needs a ProductPermutationWitness")
+        summary = swapped_product_holonomy_summary(interval, witness)
+    elif branch == "direct":
+        if witness is not None and not isinstance(witness, DirectProductWitness):
+            raise ValueError("direct branch needs a DirectProductWitness")
+        summary = direct_product_holonomy_summary(interval, witness)
+    else:
+        raise ValueError(f"unknown product branch {branch!r}")
+
+    by_model: Dict[Tuple[FibrePoint, ...], List[Tuple[int, ...]]] = {}
+    for generator in summary.generators:
+        by_model.setdefault(generator.model_points, []).append(generator.permutation)
+    return tuple(
+        ProductHolonomyGroup(
+            model_points=model_points,
+            group=permutation_group_from_generators(
+                permutations,
+                degree=len(model_points),
+            ),
+        )
+        for model_points, permutations in sorted(by_model.items(), key=repr)
+    )
+
+
+def product_permutation_action(
+    interval: LocalInterval,
+    color_tuple: Sequence[Color],
+    braid_word: Sequence[int],
+    witness: ProductPermutationWitness | None = None,
+) -> ProductPermutationAction:
+    """Decompose a product-permutation local action.
+
+    If `T_{a,b}(x,y)=(L_{a,b}(y),R_{a,b}(x))`, every braid acts on fibres by
+    moving dependency strands and composing one-variable fibre bijections.  The
+    returned dependency says which initial coordinate supplies each final
+    coordinate, and `coordinate_maps[j]` is the fibre map from that initial
+    coordinate's fibre to the final fibre at position `j`.
+    """
+
+    witness = product_permutation_witness(interval) if witness is None else witness
+    if witness is None:
+        raise ValueError("interval is not in product-permutation form")
+    if any(color not in interval.colors for color in color_tuple):
+        raise ValueError("unknown color in tuple")
+
+    inverse_base = {value: key for key, value in interval.base_R.items()}
+    colors = list(color_tuple)
+    dependency = list(range(len(colors)))
+    maps = [_identity_map(interval.fibres[color]) for color in colors]
+    initial_colors = tuple(colors)
+
+    for signed_generator in braid_word:
+        if signed_generator == 0:
+            raise ValueError("braid generators are nonzero")
+        i = abs(signed_generator) - 1
+        if i < 0 or i + 1 >= len(colors):
+            raise IndexError(i)
+        if signed_generator > 0:
+            a, b = colors[i], colors[i + 1]
+            c, d = interval.base_R[(a, b)]
+            left_map = witness.left_maps[(a, b)]
+            right_map = witness.right_maps[(a, b)]
+            maps[i], maps[i + 1] = (
+                _compose_maps(left_map, maps[i + 1]),
+                _compose_maps(right_map, maps[i]),
+            )
+            dependency[i], dependency[i + 1] = dependency[i + 1], dependency[i]
+            colors[i], colors[i + 1] = c, d
+        else:
+            c, d = colors[i], colors[i + 1]
+            a, b = inverse_base[(c, d)]
+            left_inverse = _invert_map(witness.left_maps[(a, b)])
+            right_inverse = _invert_map(witness.right_maps[(a, b)])
+            maps[i], maps[i + 1] = (
+                _compose_maps(right_inverse, maps[i + 1]),
+                _compose_maps(left_inverse, maps[i]),
+            )
+            dependency[i], dependency[i + 1] = dependency[i + 1], dependency[i]
+            colors[i], colors[i + 1] = a, b
+
+    for index, mapping in enumerate(maps):
+        source_color = initial_colors[dependency[index]]
+        if set(mapping.keys()) != set(interval.fibres[source_color]):
+            raise ValueError("coordinate map source mismatch")
+        if set(mapping.values()) != set(interval.fibres[colors[index]]):
+            raise ValueError("coordinate map target mismatch")
+
+    return ProductPermutationAction(
+        final_colors=tuple(colors),
+        dependency=tuple(dependency),
+        coordinate_maps=tuple(_canonical_map(mapping) for mapping in maps),
+    )
+
+
+def apply_product_permutation_action(
+    action: ProductPermutationAction, fibre_tuple: Sequence[FibrePoint]
+) -> Tuple[FibrePoint, ...]:
+    maps = [dict(mapping) for mapping in action.coordinate_maps]
+    return tuple(
+        maps[index][fibre_tuple[action.dependency[index]]]
+        for index in range(len(action.dependency))
+    )
+
+
+def _swapped_label_map(
+    witness: ProductPermutationWitness, label: ProductLabel
+) -> Dict[FibrePoint, FibrePoint]:
+    kind, a, b, sign = label
+    if kind == "L":
+        mapping = dict(witness.left_maps[(a, b)])
+    elif kind == "R":
+        mapping = dict(witness.right_maps[(a, b)])
+    else:
+        raise ValueError(f"unknown product label kind {kind!r}")
+    if sign == 1:
+        return mapping
+    if sign == -1:
+        return _invert_map(mapping)
+    raise ValueError("product label sign must be +/-1")
+
+
+def _direct_label_map(
+    witness: DirectProductWitness, label: ProductLabel
+) -> Dict[FibrePoint, FibrePoint]:
+    kind, a, b, sign = label
+    if kind == "L":
+        mapping = dict(witness.left_maps[(a, b)])
+    elif kind == "R":
+        mapping = dict(witness.right_maps[(a, b)])
+    else:
+        raise ValueError(f"unknown product label kind {kind!r}")
+    if sign == 1:
+        return mapping
+    if sign == -1:
+        return _invert_map(mapping)
+    raise ValueError("product label sign must be +/-1")
+
+
+def evaluate_swapped_product_label_word(
+    interval: LocalInterval,
+    source_color: Color,
+    label_word: Sequence[ProductLabel],
+    witness: ProductPermutationWitness | None = None,
+) -> Tuple[Color, Tuple[Tuple[FibrePoint, FibrePoint], ...]]:
+    """Evaluate a formal swapped-product label word.
+
+    Labels are stored in chronological order.  The returned map has domain
+    `A_source_color`; the returned colour is the target colour after applying
+    all labels.
+    """
+
+    witness = product_permutation_witness(interval) if witness is None else witness
+    if witness is None:
+        raise ValueError("interval is not in product-permutation form")
+    color = source_color
+    mapping = _identity_map(interval.fibres[color])
+    for label in label_word:
+        kind, a, b, sign = label
+        if kind == "L":
+            source = b if sign == 1 else interval.base_R[(a, b)][0]
+            target = interval.base_R[(a, b)][0] if sign == 1 else b
+        elif kind == "R":
+            source = a if sign == 1 else interval.base_R[(a, b)][1]
+            target = interval.base_R[(a, b)][1] if sign == 1 else a
+        else:
+            raise ValueError(f"unknown product label kind {kind!r}")
+        if color != source:
+            raise ValueError(
+                f"label source mismatch: have {color!r}, label expects {source!r}"
+            )
+        label_map = _swapped_label_map(witness, label)
+        mapping = _compose_maps(label_map, mapping)
+        color = target
+    return color, _canonical_map(mapping)
+
+
+def evaluate_direct_product_label_word(
+    interval: LocalInterval,
+    source_color: Color,
+    label_word: Sequence[ProductLabel],
+    witness: DirectProductWitness | None = None,
+) -> Tuple[Color, Tuple[Tuple[FibrePoint, FibrePoint], ...]]:
+    """Evaluate a formal direct-product label word."""
+
+    witness = direct_product_witness(interval) if witness is None else witness
+    if witness is None:
+        raise ValueError("interval is not in direct product-permutation form")
+    color = source_color
+    mapping = _identity_map(interval.fibres[color])
+    for label in label_word:
+        kind, a, b, sign = label
+        c, d = interval.base_R[(a, b)]
+        if kind == "L":
+            source = a if sign == 1 else c
+            target = c if sign == 1 else a
+        elif kind == "R":
+            source = b if sign == 1 else d
+            target = d if sign == 1 else b
+        else:
+            raise ValueError(f"unknown product label kind {kind!r}")
+        if color != source:
+            raise ValueError(
+                f"label source mismatch: have {color!r}, label expects {source!r}"
+            )
+        label_map = _direct_label_map(witness, label)
+        mapping = _compose_maps(label_map, mapping)
+        color = target
+    return color, _canonical_map(mapping)
+
+
+def product_holonomy_label_permutation(
+    interval: LocalInterval,
+    branch: str,
+    source_color: Color,
+    label_word: Sequence[ProductLabel],
+    witness: ProductPermutationWitness | DirectProductWitness | None = None,
+) -> Tuple[Color, Tuple[FibrePoint, ...], Tuple[int, ...]]:
+    """Evaluate a product label word after gauge-normalizing fibre transport.
+
+    The coboundary audit chooses gauges ``g_a`` from each fibre to a model
+    fibre in its connected product-label component.  For a label word
+    ``f:A_source -> A_target`` this helper returns the normalized permutation
+    ``g_target f g_source^{-1}`` on that model fibre.  Coboundary label words
+    normalize to the identity; nonidentity values are the actual product
+    holonomy left after gauge telescoping.
+    """
+
+    if branch == "swapped":
+        if witness is not None and not isinstance(witness, ProductPermutationWitness):
+            raise ValueError("swapped branch needs a ProductPermutationWitness")
+        audit = swapped_product_coboundary_audit(interval, witness)
+        target_color, mapping = evaluate_swapped_product_label_word(
+            interval,
+            source_color,
+            label_word,
+            witness,
+        )
+    elif branch == "direct":
+        if witness is not None and not isinstance(witness, DirectProductWitness):
+            raise ValueError("direct branch needs a DirectProductWitness")
+        audit = direct_product_coboundary_audit(interval, witness)
+        target_color, mapping = evaluate_direct_product_label_word(
+            interval,
+            source_color,
+            label_word,
+            witness,
+        )
+    else:
+        raise ValueError(f"unknown product branch {branch!r}")
+
+    source_gauge = _map_from_canonical(audit.gauges[source_color])
+    target_gauge = _map_from_canonical(audit.gauges[target_color])
+    inverse_source_gauge = _invert_map(source_gauge)
+    model_points = tuple(sorted(set(source_gauge.values()), key=repr))
+    if set(target_gauge.values()) != set(model_points):
+        raise ValueError("source and target gauges lie in different components")
+    model_index = {point: index for index, point in enumerate(model_points)}
+    label_map = dict(mapping)
+    permutation = tuple(
+        model_index[target_gauge[label_map[inverse_source_gauge[point]]]]
+        for point in model_points
+    )
+    return target_color, model_points, permutation
+
+
+def product_holonomy_closed_label_permutations(
+    interval: LocalInterval,
+    branch: str,
+    color_tuple: Sequence[Color],
+    braid_word: Sequence[int],
+) -> Tuple[Tuple[Tuple[FibrePoint, ...], Tuple[int, ...]], ...]:
+    """Return gauge-normalized closed product labels for a base-fixed braid."""
+
+    if branch == "swapped":
+        action = swapped_product_label_word_action(interval, color_tuple, braid_word)
+    elif branch == "direct":
+        action = direct_product_label_word_action(interval, color_tuple, braid_word)
+    else:
+        raise ValueError(f"unknown product branch {branch!r}")
+
+    identity_dependency = tuple(range(len(color_tuple)))
+    if action.final_colors != tuple(color_tuple):
+        raise ValueError("product label path is not base-colour closed")
+    if action.dependency != identity_dependency:
+        raise ValueError("product label path is not strand-permutation closed")
+
+    normalized = []
+    for index, label_word in enumerate(action.label_words):
+        source_color = color_tuple[action.dependency[index]]
+        target_color, model_points, permutation = product_holonomy_label_permutation(
+            interval,
+            branch,
+            source_color,
+            label_word,
+        )
+        if target_color != action.final_colors[index]:
+            raise ValueError("normalized label target mismatch")
+        normalized.append((model_points, permutation))
+    return tuple(normalized)
+
+
+def swapped_product_label_word_action(
+    interval: LocalInterval,
+    color_tuple: Sequence[Color],
+    braid_word: Sequence[int],
+    witness: ProductPermutationWitness | None = None,
+) -> ProductLabelWordAction:
+    """Return the formal product-label words accumulated by a braid.
+
+    This is the word-level version of `product_permutation_action`: evaluating
+    each returned label word gives the corresponding coordinate map.
+    """
+
+    witness = product_permutation_witness(interval) if witness is None else witness
+    if witness is None:
+        raise ValueError("interval is not in product-permutation form")
+    inverse_base = {value: key for key, value in interval.base_R.items()}
+    colors = list(color_tuple)
+    dependency = list(range(len(colors)))
+    words: List[Tuple[ProductLabel, ...]] = [tuple() for _ in colors]
+
+    for signed_generator in braid_word:
+        if signed_generator == 0:
+            raise ValueError("braid generators are nonzero")
+        i = abs(signed_generator) - 1
+        if i < 0 or i + 1 >= len(colors):
+            raise IndexError(i)
+        if signed_generator > 0:
+            a, b = colors[i], colors[i + 1]
+            c, d = interval.base_R[(a, b)]
+            words[i], words[i + 1] = (
+                words[i + 1] + (("L", a, b, 1),),
+                words[i] + (("R", a, b, 1),),
+            )
+            dependency[i], dependency[i + 1] = dependency[i + 1], dependency[i]
+            colors[i], colors[i + 1] = c, d
+        else:
+            c, d = colors[i], colors[i + 1]
+            a, b = inverse_base[(c, d)]
+            words[i], words[i + 1] = (
+                words[i + 1] + (("R", a, b, -1),),
+                words[i] + (("L", a, b, -1),),
+            )
+            dependency[i], dependency[i + 1] = dependency[i + 1], dependency[i]
+            colors[i], colors[i + 1] = a, b
+
+    return ProductLabelWordAction(
+        final_colors=tuple(colors),
+        dependency=tuple(dependency),
+        label_words=tuple(words),
+    )
+
+
+def direct_product_label_word_action(
+    interval: LocalInterval,
+    color_tuple: Sequence[Color],
+    braid_word: Sequence[int],
+    witness: DirectProductWitness | None = None,
+) -> ProductLabelWordAction:
+    """Return formal label words for a direct product-permutation action."""
+
+    witness = direct_product_witness(interval) if witness is None else witness
+    if witness is None:
+        raise ValueError("interval is not in direct product-permutation form")
+    inverse_base = {value: key for key, value in interval.base_R.items()}
+    colors = list(color_tuple)
+    dependency = list(range(len(colors)))
+    words: List[Tuple[ProductLabel, ...]] = [tuple() for _ in colors]
+
+    for signed_generator in braid_word:
+        if signed_generator == 0:
+            raise ValueError("braid generators are nonzero")
+        i = abs(signed_generator) - 1
+        if i < 0 or i + 1 >= len(colors):
+            raise IndexError(i)
+        if signed_generator > 0:
+            a, b = colors[i], colors[i + 1]
+            c, d = interval.base_R[(a, b)]
+            words[i] = words[i] + (("L", a, b, 1),)
+            words[i + 1] = words[i + 1] + (("R", a, b, 1),)
+            colors[i], colors[i + 1] = c, d
+        else:
+            c, d = colors[i], colors[i + 1]
+            a, b = inverse_base[(c, d)]
+            words[i] = words[i] + (("L", a, b, -1),)
+            words[i + 1] = words[i + 1] + (("R", a, b, -1),)
+            colors[i], colors[i + 1] = a, b
+
+    return ProductLabelWordAction(
+        final_colors=tuple(colors),
+        dependency=tuple(dependency),
+        label_words=tuple(words),
+    )
+
+
+def one_color_swapped_label_exponent_action(
+    n: int, braid_word: Sequence[int]
+) -> OneColorSwappedExponentAction:
+    """Return `(L,R)` exponent pairs for a one-colour swapped product branch."""
+
+    if n < 1:
+        raise ValueError("braid degree must be positive")
+    dependency = list(range(n))
+    exponents = [(0, 0) for _ in range(n)]
+    for signed_generator in braid_word:
+        if signed_generator == 0:
+            raise ValueError("braid generators are nonzero")
+        i = abs(signed_generator) - 1
+        if i < 0 or i + 1 >= n:
+            raise IndexError(i)
+        left = exponents[i]
+        right = exponents[i + 1]
+        if signed_generator > 0:
+            exponents[i] = (right[0] + 1, right[1])
+            exponents[i + 1] = (left[0], left[1] + 1)
+        else:
+            exponents[i] = (right[0], right[1] - 1)
+            exponents[i + 1] = (left[0] - 1, left[1])
+        dependency[i], dependency[i + 1] = dependency[i + 1], dependency[i]
+    return OneColorSwappedExponentAction(tuple(dependency), tuple(exponents))
+
+
+def swapped_product_cocycle_failures(
+    interval: LocalInterval,
+    witness: ProductPermutationWitness | None = None,
+) -> Tuple[ProductCocycleFailure, ...]:
+    """Return failures of the swapped product-permutation cocycle equations."""
+
+    witness = product_permutation_witness(interval) if witness is None else witness
+    if witness is None:
+        raise ValueError("interval is not in product-permutation form")
+    failures = []
+    for a, b, c in product(interval.colors, repeat=3):
+        ab, a_b = interval.base_R[(a, b)]
+        bc, b_c = interval.base_R[(b, c)]
+        a_b_c, _a_b_star_c = interval.base_R[(a_b, c)]
+        _a_bc, a_star_bc = interval.base_R[(a, bc)]
+
+        left_1 = _compose_maps(witness.left_maps[(ab, a_b_c)], witness.left_maps[(a_b, c)])
+        right_1 = _compose_maps(witness.left_maps[(a, bc)], witness.left_maps[(b, c)])
+        if left_1 != right_1:
+            failures.append(
+                ProductCocycleFailure("swapped_left", (a, b, c), _canonical_map(left_1), _canonical_map(right_1))
+            )
+
+        left_2 = _compose_maps(witness.right_maps[(ab, a_b_c)], witness.left_maps[(a, b)])
+        right_2 = _compose_maps(witness.left_maps[(a_star_bc, b_c)], witness.right_maps[(b, c)])
+        if left_2 != right_2:
+            failures.append(
+                ProductCocycleFailure("swapped_middle", (a, b, c), _canonical_map(left_2), _canonical_map(right_2))
+            )
+
+        left_3 = _compose_maps(witness.right_maps[(a_b, c)], witness.right_maps[(a, b)])
+        right_3 = _compose_maps(witness.right_maps[(a_star_bc, b_c)], witness.right_maps[(a, bc)])
+        if left_3 != right_3:
+            failures.append(
+                ProductCocycleFailure("swapped_right", (a, b, c), _canonical_map(left_3), _canonical_map(right_3))
+            )
+    return tuple(failures)
+
+
+def identity_base_swapped_reduction(
+    interval: LocalInterval,
+    witness: ProductPermutationWitness | None = None,
+) -> IdentityBaseSwappedReduction:
+    """Return the central-label normal form for identity-base swapped products.
+
+    When the quotient colour solution is the identity table and
+    ``T_{a,b}(x,y)=(L_{a,b}(y),R_{a,b}(x))``, the coloured YBE middle
+    equation is equivalent to a family of fibre endomorphisms
+    ``K_b=R_{a,b} L_{a,b}=L_{b,c} R_{b,c}``, independent of the outside
+    colours.  The maps ``L`` conjugate these ``K`` maps between fibres.  This
+    helper records the exact finite data used by the identity-base product
+    proof note.
+    """
+
+    if any(interval.base_R[(a, b)] != (a, b) for a, b in product(interval.colors, repeat=2)):
+        raise ValueError("identity-base reduction requires R_Z(a,b)=(a,b)")
+    witness = product_permutation_witness(interval) if witness is None else witness
+    if witness is None:
+        raise ValueError("interval is not in product-permutation form")
+
+    first_color = interval.colors[0]
+    central_maps = {
+        color: _compose_maps(
+            witness.right_maps[(first_color, color)],
+            witness.left_maps[(first_color, color)],
+        )
+        for color in interval.colors
+    }
+    failures: List[IdentityBaseSwappedFailure] = []
+
+    for a, b in product(interval.colors, repeat=2):
+        right_after_left = _compose_maps(
+            witness.right_maps[(a, b)],
+            witness.left_maps[(a, b)],
+        )
+        if right_after_left != central_maps[b]:
+            failures.append(
+                IdentityBaseSwappedFailure(
+                    kind="right_after_left",
+                    colors=(a, b),
+                    expected=_canonical_map(central_maps[b]),
+                    actual=_canonical_map(right_after_left),
+                )
+            )
+
+        left_after_right = _compose_maps(
+            witness.left_maps[(a, b)],
+            witness.right_maps[(a, b)],
+        )
+        if left_after_right != central_maps[a]:
+            failures.append(
+                IdentityBaseSwappedFailure(
+                    kind="left_after_right",
+                    colors=(a, b),
+                    expected=_canonical_map(central_maps[a]),
+                    actual=_canonical_map(left_after_right),
+                )
+            )
+
+        left_conjugates_source = _compose_maps(
+            witness.left_maps[(a, b)],
+            central_maps[b],
+        )
+        target_conjugates_left = _compose_maps(
+            central_maps[a],
+            witness.left_maps[(a, b)],
+        )
+        if left_conjugates_source != target_conjugates_left:
+            failures.append(
+                IdentityBaseSwappedFailure(
+                    kind="left_conjugacy",
+                    colors=(a, b),
+                    expected=_canonical_map(target_conjugates_left),
+                    actual=_canonical_map(left_conjugates_source),
+                )
+            )
+
+    return IdentityBaseSwappedReduction(
+        central_maps={
+            color: _canonical_map(mapping)
+            for color, mapping in central_maps.items()
+        },
+        cycle_lengths={
+            color: _cycle_lengths(interval.fibres[color], central_maps[color])
+            for color in interval.colors
+        },
+        failures=tuple(failures),
+    )
+
+
+def swapped_product_coboundary_audit(
+    interval: LocalInterval,
+    witness: ProductPermutationWitness | None = None,
+) -> ProductCoboundaryAudit:
+    """Audit whether swapped product labels are a fibre-gauge coboundary."""
+
+    witness = product_permutation_witness(interval) if witness is None else witness
+    if witness is None:
+        raise ValueError("interval is not in product-permutation form")
+    return _coboundary_audit(interval, _swapped_constraints(interval, witness))
+
+
+def swapped_product_holonomy_summary(
+    interval: LocalInterval,
+    witness: ProductPermutationWitness | None = None,
+) -> ProductHolonomySummary:
+    """Return finite holonomy groups left by swapped product labels."""
+
+    witness = product_permutation_witness(interval) if witness is None else witness
+    if witness is None:
+        raise ValueError("interval is not in product-permutation form")
+    return _holonomy_summary(interval, _swapped_constraints(interval, witness))
+
+
+def swapped_product_partition_failures(
+    interval: LocalInterval,
+    family: Mapping[Color, Partition],
+    witness: ProductPermutationWitness | None = None,
+) -> Tuple[ProductPartitionFailure, ...]:
+    """Return failures of partition invariance for swapped product labels."""
+
+    witness = product_permutation_witness(interval) if witness is None else witness
+    if witness is None:
+        raise ValueError("interval is not in product-permutation form")
+    return _partition_failures(family, _swapped_constraints(interval, witness))
+
+
+def swapped_product_invariant_families(
+    interval: LocalInterval,
+    witness: ProductPermutationWitness | None = None,
+    max_fibre_size: int = 5,
+) -> Tuple[Mapping[Color, Partition], ...]:
+    """Enumerate partition families invariant under swapped product labels."""
+
+    witness = product_permutation_witness(interval) if witness is None else witness
+    if witness is None:
+        raise ValueError("interval is not in product-permutation form")
+    return _invariant_partition_families(
+        interval,
+        _swapped_constraints(interval, witness),
+        max_fibre_size=max_fibre_size,
+    )
+
+
+def swapped_product_label_pair_closure_audits(
+    interval: LocalInterval,
+    witness: ProductPermutationWitness | None = None,
+) -> Tuple[ProductLabelPairClosureAudit, ...]:
+    """Return exact product-label pair closures for the swapped branch."""
+
+    witness = product_permutation_witness(interval) if witness is None else witness
+    if witness is None:
+        raise ValueError("interval is not in product-permutation form")
+    return _product_label_pair_closure_audits(
+        interval,
+        "swapped",
+        _swapped_constraints(interval, witness),
+    )
+
+
+def swapped_product_label_pair_closure_failures(
+    interval: LocalInterval,
+    witness: ProductPermutationWitness | None = None,
+) -> Tuple[ProductLabelPairClosureAudit, ...]:
+    """Return swapped product-label pair closures that are not universal."""
+
+    return tuple(
+        audit
+        for audit in swapped_product_label_pair_closure_audits(interval, witness)
+        if audit.generated.kind != "universal"
+    )
+
+
+def direct_product_action(
+    interval: LocalInterval,
+    color_tuple: Sequence[Color],
+    braid_word: Sequence[int],
+    witness: DirectProductWitness | None = None,
+) -> ProductPermutationAction:
+    """Decompose a direct product-permutation local action.
+
+    If `T_{a,b}(x,y)=(L_{a,b}(x),R_{a,b}(y))`, no fibre coordinate depends on a
+    different initial fibre coordinate.  Every braid acts by coordinatewise
+    composition of the finite maps `L`, `R`, and their inverses along the base
+    colour path.  The returned action uses the same container as
+    `product_permutation_action`, with identity dependency.
+    """
+
+    witness = direct_product_witness(interval) if witness is None else witness
+    if witness is None:
+        raise ValueError("interval is not in direct product-permutation form")
+    if any(color not in interval.colors for color in color_tuple):
+        raise ValueError("unknown color in tuple")
+
+    inverse_base = {value: key for key, value in interval.base_R.items()}
+    colors = list(color_tuple)
+    dependency = list(range(len(colors)))
+    maps = [_identity_map(interval.fibres[color]) for color in colors]
+    initial_colors = tuple(colors)
+
+    for signed_generator in braid_word:
+        if signed_generator == 0:
+            raise ValueError("braid generators are nonzero")
+        i = abs(signed_generator) - 1
+        if i < 0 or i + 1 >= len(colors):
+            raise IndexError(i)
+        if signed_generator > 0:
+            a, b = colors[i], colors[i + 1]
+            c, d = interval.base_R[(a, b)]
+            maps[i] = _compose_maps(witness.left_maps[(a, b)], maps[i])
+            maps[i + 1] = _compose_maps(witness.right_maps[(a, b)], maps[i + 1])
+            colors[i], colors[i + 1] = c, d
+        else:
+            c, d = colors[i], colors[i + 1]
+            a, b = inverse_base[(c, d)]
+            maps[i] = _compose_maps(_invert_map(witness.left_maps[(a, b)]), maps[i])
+            maps[i + 1] = _compose_maps(
+                _invert_map(witness.right_maps[(a, b)]), maps[i + 1]
+            )
+            colors[i], colors[i + 1] = a, b
+
+    for index, mapping in enumerate(maps):
+        source_color = initial_colors[dependency[index]]
+        if set(mapping.keys()) != set(interval.fibres[source_color]):
+            raise ValueError("coordinate map source mismatch")
+        if set(mapping.values()) != set(interval.fibres[colors[index]]):
+            raise ValueError("coordinate map target mismatch")
+
+    return ProductPermutationAction(
+        final_colors=tuple(colors),
+        dependency=tuple(dependency),
+        coordinate_maps=tuple(_canonical_map(mapping) for mapping in maps),
+    )
+
+
+def direct_product_cocycle_failures(
+    interval: LocalInterval,
+    witness: DirectProductWitness | None = None,
+) -> Tuple[ProductCocycleFailure, ...]:
+    """Return failures of the direct product-permutation cocycle equations."""
+
+    witness = direct_product_witness(interval) if witness is None else witness
+    if witness is None:
+        raise ValueError("interval is not in direct product-permutation form")
+    failures = []
+    for a, b, c in product(interval.colors, repeat=3):
+        ab, a_b = interval.base_R[(a, b)]
+        bc, b_c = interval.base_R[(b, c)]
+        a_b_c, _a_b_star_c = interval.base_R[(a_b, c)]
+        _a_bc, a_star_bc = interval.base_R[(a, bc)]
+
+        left_1 = _compose_maps(witness.left_maps[(ab, a_b_c)], witness.left_maps[(a, b)])
+        right_1 = witness.left_maps[(a, bc)]
+        if left_1 != right_1:
+            failures.append(
+                ProductCocycleFailure("direct_left", (a, b, c), _canonical_map(left_1), _canonical_map(right_1))
+            )
+
+        left_2 = _compose_maps(
+            witness.right_maps[(ab, a_b_c)],
+            _compose_maps(witness.left_maps[(a_b, c)], witness.right_maps[(a, b)]),
+        )
+        right_2 = _compose_maps(
+            witness.left_maps[(a_star_bc, b_c)],
+            _compose_maps(witness.right_maps[(a, bc)], witness.left_maps[(b, c)]),
+        )
+        if left_2 != right_2:
+            failures.append(
+                ProductCocycleFailure("direct_middle", (a, b, c), _canonical_map(left_2), _canonical_map(right_2))
+            )
+
+        left_3 = witness.right_maps[(a_b, c)]
+        right_3 = _compose_maps(witness.right_maps[(a_star_bc, b_c)], witness.right_maps[(b, c)])
+        if left_3 != right_3:
+            failures.append(
+                ProductCocycleFailure("direct_right", (a, b, c), _canonical_map(left_3), _canonical_map(right_3))
+            )
+    return tuple(failures)
+
+
+def identity_base_direct_reduction(
+    interval: LocalInterval,
+    witness: DirectProductWitness | None = None,
+) -> IdentityBaseDirectReduction:
+    """Return the direct identity-base triviality reduction.
+
+    If ``R_Z(a,b)=(a,b)`` and
+    ``T_{a,b}(x,y)=(L_{a,b}(x),R_{a,b}(y))``, the direct product cocycle
+    equations force ``L_{a,b}^2=L_{a,b}`` and ``R_{a,b}=R_{c,b}R_{a,b}`` for
+    all colours.  Since all labels are bijections, every ``L`` and ``R`` is
+    the identity.  This helper records any failure of that conclusion in an
+    explicit identity-base direct table.
+    """
+
+    if any(interval.base_R[(a, b)] != (a, b) for a, b in product(interval.colors, repeat=2)):
+        raise ValueError("identity-base reduction requires R_Z(a,b)=(a,b)")
+    witness = direct_product_witness(interval) if witness is None else witness
+    if witness is None:
+        raise ValueError("interval is not in direct product-permutation form")
+
+    failures: List[IdentityBaseDirectFailure] = []
+    for a, b in product(interval.colors, repeat=2):
+        left_identity = _identity_map(interval.fibres[a])
+        if witness.left_maps[(a, b)] != left_identity:
+            failures.append(
+                IdentityBaseDirectFailure(
+                    kind="left_label_nonidentity",
+                    colors=(a, b),
+                    expected=_canonical_map(left_identity),
+                    actual=_canonical_map(witness.left_maps[(a, b)]),
+                )
+            )
+        right_identity = _identity_map(interval.fibres[b])
+        if witness.right_maps[(a, b)] != right_identity:
+            failures.append(
+                IdentityBaseDirectFailure(
+                    kind="right_label_nonidentity",
+                    colors=(a, b),
+                    expected=_canonical_map(right_identity),
+                    actual=_canonical_map(witness.right_maps[(a, b)]),
+                )
+            )
+    return IdentityBaseDirectReduction(failures=tuple(failures))
+
+
+def direct_product_coboundary_audit(
+    interval: LocalInterval,
+    witness: DirectProductWitness | None = None,
+) -> ProductCoboundaryAudit:
+    """Audit whether direct product labels are a fibre-gauge coboundary."""
+
+    witness = direct_product_witness(interval) if witness is None else witness
+    if witness is None:
+        raise ValueError("interval is not in direct product-permutation form")
+    return _coboundary_audit(interval, _direct_constraints(interval, witness))
+
+
+def direct_product_holonomy_summary(
+    interval: LocalInterval,
+    witness: DirectProductWitness | None = None,
+) -> ProductHolonomySummary:
+    """Return finite holonomy groups left by direct product labels."""
+
+    witness = direct_product_witness(interval) if witness is None else witness
+    if witness is None:
+        raise ValueError("interval is not in direct product-permutation form")
+    return _holonomy_summary(interval, _direct_constraints(interval, witness))
+
+
+def direct_product_partition_failures(
+    interval: LocalInterval,
+    family: Mapping[Color, Partition],
+    witness: DirectProductWitness | None = None,
+) -> Tuple[ProductPartitionFailure, ...]:
+    """Return failures of partition invariance for direct product labels."""
+
+    witness = direct_product_witness(interval) if witness is None else witness
+    if witness is None:
+        raise ValueError("interval is not in direct product-permutation form")
+    return _partition_failures(family, _direct_constraints(interval, witness))
+
+
+def direct_product_invariant_families(
+    interval: LocalInterval,
+    witness: DirectProductWitness | None = None,
+    max_fibre_size: int = 5,
+) -> Tuple[Mapping[Color, Partition], ...]:
+    """Enumerate partition families invariant under direct product labels."""
+
+    witness = direct_product_witness(interval) if witness is None else witness
+    if witness is None:
+        raise ValueError("interval is not in direct product-permutation form")
+    return _invariant_partition_families(
+        interval,
+        _direct_constraints(interval, witness),
+        max_fibre_size=max_fibre_size,
+    )
+
+
+def direct_product_label_pair_closure_audits(
+    interval: LocalInterval,
+    witness: DirectProductWitness | None = None,
+) -> Tuple[ProductLabelPairClosureAudit, ...]:
+    """Return exact product-label pair closures for the direct branch."""
+
+    witness = direct_product_witness(interval) if witness is None else witness
+    if witness is None:
+        raise ValueError("interval is not in direct product-permutation form")
+    return _product_label_pair_closure_audits(
+        interval,
+        "direct",
+        _direct_constraints(interval, witness),
+    )
+
+
+def direct_product_label_pair_closure_failures(
+    interval: LocalInterval,
+    witness: DirectProductWitness | None = None,
+) -> Tuple[ProductLabelPairClosureAudit, ...]:
+    """Return direct product-label pair closures that are not universal."""
+
+    return tuple(
+        audit
+        for audit in direct_product_label_pair_closure_audits(interval, witness)
+        if audit.generated.kind != "universal"
+    )

@@ -1,0 +1,610 @@
+import sys
+import unittest
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
+
+from ybe_domination import (
+    artin_detector_rack,
+    artin_images,
+    artin_longitudes,
+    artin_longitude_exponent_matrix,
+    cyclic_group,
+    detector_rack_state,
+    direct_product_group,
+    direct_product_detector_action_audit,
+    direct_product_longitude_subgroup_audit,
+    direct_product_longitude_subgroup_witness,
+    direct_product_longitude_subgroup_witness_audit,
+    diagonal_product_invisibility_audit,
+    evaluate_artin_images,
+    evaluate_artin_longitudes,
+    evaluate_longitude_expression,
+    evaluate_longitude_subgroup_witness,
+    FiniteGroupHomomorphism,
+    has_identity_longitude_signature,
+    has_trivial_abelian_longitudes_mod,
+    homomorphic_longitude_subgroup_audit,
+    identity_solution,
+    is_rack_solution,
+    is_identity_action,
+    longitude_blind_movers,
+    longitude_subgroup_profile,
+    longitude_value_generators,
+    longitude_value_subgroup_elements,
+    pure_braid_generator,
+    pushforward_longitude_subgroup_witness,
+    pushforward_longitude_subgroup_witness_audit,
+    rack_inner_group,
+    rack_longitude_action,
+    rack_longitude_factorization,
+    right_stabilization_longitude_audit,
+    rack_solution,
+    reverse_braid_word,
+    sharp_obstruction_rack,
+    symmetric_group,
+)
+
+
+class ArtinLongitudeTests(unittest.TestCase):
+    def test_artin_images_satisfy_braid_relation(self):
+        self.assertEqual(artin_images(3, [1, 2, 1]), artin_images(3, [2, 1, 2]))
+
+    def test_artin_generator_longitudes(self):
+        data = artin_longitudes(2, [1])
+        self.assertEqual(data.permutation, (1, 0))
+        self.assertEqual(data.longitudes, (((0, 1),), ()))
+
+    def test_canceling_braid_has_identity_signature(self):
+        group = symmetric_group(3)
+        self.assertTrue(has_identity_longitude_signature(group, 2, [1, -1]))
+
+    def test_positive_generator_is_not_identity_signature(self):
+        group = cyclic_group(2)
+        self.assertFalse(has_identity_longitude_signature(group, 2, [1]))
+
+    def test_longitude_value_subgroup_for_positive_generator(self):
+        group = cyclic_group(3)
+        generators = longitude_value_generators(group, 2, [1])
+        subgroup = longitude_value_subgroup_elements(group, 2, [1])
+
+        self.assertEqual(set(generators), {0, 1, 2})
+        self.assertEqual(set(subgroup), {0, 1, 2})
+
+    def test_longitude_subgroup_profile_matches_identity_signature(self):
+        groups = {"C2": cyclic_group(2), "C3": cyclic_group(3)}
+        braid = pure_braid_generator(1, 2) * 6
+        profile = longitude_subgroup_profile(groups, 2, braid)
+
+        self.assertEqual(tuple(row.name for row in profile), ("C2", "C3"))
+        self.assertTrue(all(row.identity_longitude_signature for row in profile))
+        self.assertEqual(tuple(row.subgroup_size for row in profile), (1, 1))
+
+    def test_pure_generator_abelian_longitude_matrix(self):
+        braid = pure_braid_generator(1, 3)
+        self.assertEqual(
+            artin_longitude_exponent_matrix(3, braid),
+            (
+                (0, 0, 1),
+                (0, 0, 0),
+                (1, 0, 0),
+            ),
+        )
+
+    def test_abelian_longitude_modulus_criterion(self):
+        braid = pure_braid_generator(1, 2)
+        self.assertFalse(has_trivial_abelian_longitudes_mod(3, 2, braid))
+        triple = braid + braid + braid
+        self.assertTrue(has_trivial_abelian_longitudes_mod(3, 2, triple))
+        self.assertTrue(has_identity_longitude_signature(cyclic_group(3), 2, triple))
+
+    def test_longitude_data_stabilizes_under_extra_right_strands(self):
+        braid = pure_braid_generator(1, 3)
+        small = artin_longitudes(3, braid)
+        large = artin_longitudes(5, braid)
+        self.assertEqual(large.permutation, (small.permutation[0], small.permutation[1], small.permutation[2], 3, 4))
+        self.assertEqual(large.longitudes[:3], small.longitudes)
+        self.assertEqual(large.longitudes[3:], (tuple(), tuple()))
+        self.assertEqual(
+            artin_longitude_exponent_matrix(5, braid),
+            (
+                (0, 0, 1, 0, 0),
+                (0, 0, 0, 0, 0),
+                (1, 0, 0, 0, 0),
+                (0, 0, 0, 0, 0),
+                (0, 0, 0, 0, 0),
+            ),
+        )
+
+    def test_longitude_identity_is_invariant_under_strand_reversal(self):
+        group = symmetric_group(3)
+        braid = (1, 2, -1, 2, 2, -1)
+        reversed_braid = reverse_braid_word(3, braid)
+        invisible = pure_braid_generator(1, 3) * 6
+
+        self.assertEqual(
+            has_identity_longitude_signature(group, 3, braid),
+            has_identity_longitude_signature(group, 3, reversed_braid),
+        )
+        self.assertTrue(has_identity_longitude_signature(group, 3, invisible))
+        self.assertTrue(
+            has_identity_longitude_signature(
+                group,
+                3,
+                reverse_braid_word(3, invisible),
+            )
+        )
+
+    def test_direct_product_group_combines_longitude_detectors(self):
+        left = cyclic_group(2)
+        right = cyclic_group(3)
+        product_group = direct_product_group((left, right))
+        braid = pure_braid_generator(1, 2)
+        self.assertFalse(has_identity_longitude_signature(product_group, 2, braid))
+
+        sixth_power = braid * 6
+        self.assertTrue(has_identity_longitude_signature(left, 2, sixth_power))
+        self.assertTrue(has_identity_longitude_signature(right, 2, sixth_power))
+        self.assertTrue(has_identity_longitude_signature(product_group, 2, sixth_power))
+
+        double = braid * 2
+        self.assertTrue(has_identity_longitude_signature(left, 2, double))
+        self.assertFalse(has_identity_longitude_signature(right, 2, double))
+        self.assertFalse(has_identity_longitude_signature(product_group, 2, double))
+
+    def test_direct_product_longitude_subgroup_is_product_of_factor_subgroups(self):
+        left = cyclic_group(2)
+        right = cyclic_group(3)
+        braid = pure_braid_generator(1, 2)
+
+        audit = direct_product_longitude_subgroup_audit((left, right), 2, braid)
+
+        self.assertEqual(audit.factor_orders, (2, 3))
+        self.assertEqual(audit.factor_subgroup_sizes, (2, 3))
+        self.assertEqual(audit.product_group_order, 6)
+        self.assertEqual(audit.product_subgroup_size, 6)
+        self.assertEqual(audit.expected_product_subgroup_size, 6)
+        self.assertTrue(audit.product_subgroup_equals_factor_product)
+
+        invisible = braid * 6
+        trivial = direct_product_longitude_subgroup_audit((left, right), 2, invisible)
+        self.assertEqual(trivial.factor_subgroup_sizes, (1, 1))
+        self.assertEqual(trivial.product_subgroup_size, 1)
+        self.assertTrue(trivial.product_subgroup_equals_factor_product)
+
+    def test_empty_direct_product_longitude_subgroup_is_trivial(self):
+        audit = direct_product_longitude_subgroup_audit((), 2, pure_braid_generator(1, 2))
+
+        self.assertEqual(audit.factor_orders, ())
+        self.assertEqual(audit.factor_subgroup_sizes, ())
+        self.assertEqual(audit.product_group_order, 1)
+        self.assertEqual(audit.product_subgroup_size, 1)
+        self.assertEqual(audit.expected_product_subgroup_size, 1)
+        self.assertTrue(audit.product_subgroup_equals_factor_product)
+
+    def test_longitude_value_subgroups_are_functorial_under_surjections(self):
+        source = cyclic_group(6)
+        target = cyclic_group(3)
+        quotient = FiniteGroupHomomorphism(
+            source,
+            target,
+            {element: element % 3 for element in source.elements},
+        )
+
+        audit = homomorphic_longitude_subgroup_audit(
+            quotient,
+            n=2,
+            braid_word=pure_braid_generator(1, 2),
+        )
+
+        self.assertTrue(audit.homomorphism_surjective)
+        self.assertTrue(audit.image_contained_in_target_subgroup)
+        self.assertTrue(audit.target_subgroup_equals_image)
+        self.assertEqual(audit.target_subgroup_size, 3)
+
+    def test_longitude_value_subgroup_image_can_be_proper_for_nonsurjection(self):
+        source = cyclic_group(2)
+        target = cyclic_group(4)
+        inclusion = FiniteGroupHomomorphism(
+            source,
+            target,
+            {element: (2 * element) % 4 for element in source.elements},
+        )
+
+        audit = homomorphic_longitude_subgroup_audit(
+            inclusion,
+            n=2,
+            braid_word=pure_braid_generator(1, 2),
+        )
+
+        self.assertFalse(audit.homomorphism_surjective)
+        self.assertTrue(audit.image_contained_in_target_subgroup)
+        self.assertFalse(audit.target_subgroup_equals_image)
+        self.assertEqual(audit.image_subgroup_size, 2)
+        self.assertEqual(audit.target_subgroup_size, 4)
+
+    def test_longitude_subgroup_witness_pushes_forward_under_homomorphism(self):
+        source = cyclic_group(6)
+        target = cyclic_group(3)
+        quotient = FiniteGroupHomomorphism(
+            source,
+            target,
+            {element: element % 3 for element in source.elements},
+        )
+        witness = ((((4, 0), 1, 1),))
+
+        pushed = pushforward_longitude_subgroup_witness(quotient, witness)
+        audit = pushforward_longitude_subgroup_witness_audit(
+            quotient,
+            n=2,
+            braid_word=(1, 1),
+            witness=witness,
+        )
+
+        self.assertEqual(pushed, ((((1, 0), 1, 1),)))
+        self.assertEqual(audit.pushed_witness, pushed)
+        self.assertEqual(audit.target_image_value, quotient.apply(audit.source_value))
+        self.assertEqual(audit.pushed_witness_value, audit.target_image_value)
+        self.assertTrue(audit.pushforward_matches_image)
+
+        with self.assertRaises(ValueError):
+            pushforward_longitude_subgroup_witness(
+                quotient,
+                ((((7, 0), 1, 1),)),
+            )
+
+    def test_direct_product_longitude_subgroup_witness_assembles_factors(self):
+        left = cyclic_group(2)
+        right = cyclic_group(3)
+        braid = (1, 1)
+        factor_witnesses = (
+            ((((1, 0), 1, 1),)),
+            ((((1, 0), 1, 1),)),
+        )
+
+        witness = direct_product_longitude_subgroup_witness(
+            (left, right),
+            2,
+            factor_witnesses,
+        )
+        audit = direct_product_longitude_subgroup_witness_audit(
+            (left, right),
+            2,
+            braid,
+            factor_witnesses,
+        )
+
+        self.assertEqual(
+            witness,
+            (
+                (((1, 0), (0, 0)), 1, 1),
+                (((0, 1), (0, 0)), 1, 1),
+            ),
+        )
+        self.assertEqual(audit.factor_values, (1, 1))
+        self.assertEqual(audit.expected_product_value, (1, 1))
+        self.assertEqual(audit.product_witness, witness)
+        self.assertEqual(audit.product_witness_value, (1, 1))
+        self.assertTrue(audit.product_witness_matches_factors)
+
+    def test_direct_product_longitude_subgroup_witness_handles_empty_product(self):
+        audit = direct_product_longitude_subgroup_witness_audit(
+            (),
+            2,
+            (1, 1),
+            (),
+        )
+
+        self.assertEqual(audit.factor_values, ())
+        self.assertEqual(audit.product_witness, ())
+        self.assertEqual(audit.product_witness_value, ())
+        self.assertEqual(audit.expected_product_value, ())
+        self.assertTrue(audit.product_witness_matches_factors)
+
+        with self.assertRaises(ValueError):
+            direct_product_longitude_subgroup_witness(
+                (cyclic_group(2),),
+                2,
+                (),
+            )
+
+        with self.assertRaises(ValueError):
+            direct_product_longitude_subgroup_witness(
+                (cyclic_group(2),),
+                2,
+                ((((1,), 1, 1),),),
+            )
+
+    def test_artin_detector_rack_is_ybe(self):
+        group = symmetric_group(3)
+        rack = artin_detector_rack(group)
+        self.assertTrue(rack.is_ybe())
+
+    def test_trivial_two_factor_forces_artin_permutation(self):
+        group = cyclic_group(1)
+        with_trivial_two = artin_detector_rack(group, include_trivial_two=True)
+        without_trivial_two = artin_detector_rack(group, include_trivial_two=False)
+
+        self.assertFalse(is_identity_action(with_trivial_two, 2, (1,)))
+        self.assertTrue(is_identity_action(with_trivial_two, 2, (1, 1)))
+        self.assertTrue(is_identity_action(without_trivial_two, 2, (1,)))
+
+    def test_sharp_obstruction_rack_is_explicit_product_rack(self):
+        quotient_rack = rack_solution(["a", "b"], lambda _left, right: right)
+        group = cyclic_group(2)
+
+        rack = sharp_obstruction_rack(quotient_rack, group)
+
+        self.assertTrue(rack.is_ybe())
+        self.assertTrue(is_rack_solution(rack))
+        self.assertEqual(len(rack.elements), len(quotient_rack.elements) * 2 * 2 * 2)
+
+    def test_sharp_obstruction_rack_kernel_is_intersection(self):
+        quotient_rack = rack_solution([0, 1, 2], lambda left, right: (2 * left - right) % 3)
+        group = cyclic_group(2)
+        rack = sharp_obstruction_rack(quotient_rack, group)
+        words = [
+            tuple(),
+            (1,),
+            (1, -1),
+            (1, 1),
+            (1, 2, 1),
+            (1, 1, 2, 2, -1, -2),
+        ]
+
+        for word in words:
+            self.assertEqual(
+                is_identity_action(rack, 3, word),
+                is_identity_action(quotient_rack, 3, word)
+                and has_identity_longitude_signature(group, 3, word),
+                msg=word,
+            )
+
+    def test_sharp_obstruction_rack_requires_rack_detector(self):
+        with self.assertRaises(ValueError):
+            sharp_obstruction_rack(identity_solution([0, 1]), cyclic_group(2))
+
+    def test_detector_rack_kernel_matches_longitude_signature(self):
+        group = cyclic_group(2)
+        rack = artin_detector_rack(group)
+        words = [
+            tuple(),
+            (1,),
+            (1, -1),
+            (1, 1),
+            (1, 2, 1),
+            (1, 2, -1, -2),
+            (1, 1, 2, 2, -1, -2),
+        ]
+        for word in words:
+            self.assertEqual(
+                is_identity_action(rack, 3, word),
+                has_identity_longitude_signature(group, 3, word),
+                msg=word,
+            )
+
+    def test_detector_rack_state_matches_artin_data(self):
+        group = symmetric_group(3)
+        assignment = (group.elements[1], group.elements[2], group.elements[3])
+        word = [1, 2, -1, 2]
+        image_values, longitude_values = detector_rack_state(group, assignment, word)
+        self.assertEqual(image_values, evaluate_artin_images(group, assignment, word))
+        self.assertEqual(longitude_values, evaluate_artin_longitudes(group, assignment, word))
+
+    def test_longitude_expression_evaluates_word_in_longitude_values(self):
+        group = cyclic_group(3)
+        assignment = (1, 2)
+        braid = (1, 1)
+
+        values = evaluate_artin_longitudes(group, assignment, braid)
+        expression_value = evaluate_longitude_expression(
+            group,
+            assignment,
+            braid,
+            ((0, 1), (1, -1)),
+        )
+
+        self.assertEqual(expression_value, group.mul(values[0], group.inv(values[1])))
+
+        with self.assertRaises(ValueError):
+            evaluate_longitude_expression(group, assignment, braid, ((0, 2),))
+
+        with self.assertRaises(IndexError):
+            evaluate_longitude_expression(group, assignment, braid, ((2, 1),))
+
+    def test_longitude_subgroup_witness_allows_separate_assignments(self):
+        left = cyclic_group(2)
+        right = cyclic_group(3)
+        product_group = direct_product_group((left, right))
+        braid = (1, 1)
+
+        value = evaluate_longitude_subgroup_witness(
+            product_group,
+            2,
+            braid,
+            (
+                (((1, 0), (0, 0)), 1, 1),
+                (((0, 1), (0, 0)), 1, 1),
+            ),
+        )
+        inverse_value = evaluate_longitude_subgroup_witness(
+            product_group,
+            2,
+            braid,
+            ((((0, 1), (0, 0)), 1, -1),),
+        )
+
+        self.assertEqual(value, (1, 1))
+        self.assertEqual(inverse_value, (0, 2))
+
+    def test_longitude_subgroup_witness_validates_letters(self):
+        group = cyclic_group(2)
+
+        self.assertEqual(
+            evaluate_longitude_subgroup_witness(group, 2, (1, 1), ()),
+            group.identity,
+        )
+
+        with self.assertRaises(ValueError):
+            evaluate_longitude_subgroup_witness(
+                group,
+                2,
+                (1, 1),
+                (((1,), 1, 1),),
+            )
+
+        with self.assertRaises(ValueError):
+            evaluate_longitude_subgroup_witness(
+                group,
+                2,
+                (1, 1),
+                (((1, 0), 1, 2),),
+            )
+
+        with self.assertRaises(ValueError):
+            evaluate_longitude_subgroup_witness(
+                group,
+                2,
+                (1, 1),
+                (((2, 0), 1, 1),),
+            )
+
+        with self.assertRaises(IndexError):
+            evaluate_longitude_subgroup_witness(
+                group,
+                2,
+                (1, 1),
+                (((1, 0), 2, 1),),
+            )
+
+    def test_product_detector_action_projects_to_factor_actions(self):
+        left = cyclic_group(2)
+        right = cyclic_group(3)
+        word = (1, 2, -1, 2, 1)
+
+        audit = direct_product_detector_action_audit(
+            (left, right),
+            (
+                (0, 1, 1),
+                (0, 1, 2),
+            ),
+            word,
+        )
+
+        self.assertEqual(audit.factor_orders, (2, 3))
+        self.assertTrue(audit.image_projections_match)
+        self.assertTrue(audit.longitude_projections_match)
+        self.assertTrue(audit.detector_projections_match)
+        self.assertEqual(audit.projected_image_values, audit.factor_image_values)
+        self.assertEqual(audit.projected_longitude_values, audit.factor_longitude_values)
+
+    def test_product_detector_action_requires_factor_assignments(self):
+        with self.assertRaises(ValueError):
+            direct_product_detector_action_audit((), (), (1,))
+
+        with self.assertRaises(ValueError):
+            direct_product_detector_action_audit(
+                (cyclic_group(2), cyclic_group(3)),
+                ((0, 1),),
+                (1,),
+            )
+
+    def test_diagonal_product_invisibility_equivalent_to_factors(self):
+        left = cyclic_group(2)
+        right = cyclic_group(3)
+        invisible = pure_braid_generator(1, 2) * 12
+        visible_to_left = pure_braid_generator(1, 2) * 3
+
+        all_invisible = diagonal_product_invisibility_audit(
+            (left, right),
+            2,
+            invisible,
+        )
+        left_visible = diagonal_product_invisibility_audit(
+            (left, right),
+            2,
+            visible_to_left,
+        )
+
+        self.assertEqual(all_invisible.group_orders, (2, 3))
+        self.assertEqual(all_invisible.product_group_order, 6)
+        self.assertEqual(all_invisible.factor_identity_signatures, (True, True))
+        self.assertTrue(all_invisible.product_identity_signature)
+        self.assertTrue(all_invisible.product_signature_equivalent_to_factors)
+
+        self.assertEqual(left_visible.factor_identity_signatures, (False, True))
+        self.assertFalse(left_visible.product_identity_signature)
+        self.assertTrue(left_visible.product_signature_equivalent_to_factors)
+
+    def test_right_stabilization_preserves_longitude_data(self):
+        braid = pure_braid_generator(1, 3) * 2
+
+        audit = right_stabilization_longitude_audit(3, braid, extra_strands=2)
+
+        self.assertEqual(audit.old_n, 3)
+        self.assertEqual(audit.new_n, 5)
+        self.assertEqual(audit.new_permutation[:3], audit.old_permutation)
+        self.assertEqual(audit.new_permutation[3:], (3, 4))
+        self.assertEqual(audit.new_restricted_longitudes, audit.old_longitudes)
+        self.assertEqual(audit.added_longitudes, ((), ()))
+        self.assertTrue(audit.old_data_preserved)
+        self.assertTrue(audit.added_strands_trivial)
+        self.assertTrue(audit.stabilization_valid)
+
+    def test_right_stabilization_requires_nonnegative_extra_strands(self):
+        with self.assertRaises(ValueError):
+            right_stabilization_longitude_audit(2, (1, 1), extra_strands=-1)
+
+    def test_rack_action_is_longitude_action_in_inner_group(self):
+        rack = rack_solution([0, 1, 2], lambda left, right: (2 * left - right) % 3)
+        self.assertEqual(len(rack_inner_group(rack).elements), 6)
+        for tup in ((0, 1, 2), (2, 2, 0), (1, 0, 1)):
+            for word in ([1], [1, 2, 1], [2, -1, 2, 1], [1, 1, 2, -1]):
+                self.assertEqual(
+                    rack_longitude_action(rack, word, tup),
+                    rack.braid_action(word, tup),
+                )
+
+    def test_rack_longitude_factorization_exposes_input_dependent_assignment(self):
+        rack = rack_solution([0, 1, 2], lambda left, right: (2 * left - right) % 3)
+        tup = (0, 1, 2)
+        word = (1, 2, -1, 2)
+
+        factorization = rack_longitude_factorization(rack, word, tup)
+
+        self.assertEqual(factorization.permutation, artin_longitudes(3, word).permutation)
+        self.assertEqual(len(factorization.assignment), len(tup))
+        self.assertEqual(len(factorization.longitude_values), len(tup))
+        self.assertEqual(factorization.output, rack.braid_action(word, tup))
+
+    def test_rack_longitude_invisibility_kills_finite_rack_action(self):
+        rack = rack_solution([0, 1, 2], lambda left, right: (2 * left - right) % 3)
+        group = rack_inner_group(rack)
+        braid = pure_braid_generator(1, 2) * 6
+        self.assertTrue(has_identity_longitude_signature(group, 2, braid))
+        for tup in ((0, 1), (1, 2), (2, 0)):
+            self.assertEqual(rack_longitude_action(rack, braid, tup), tup)
+            self.assertEqual(rack.braid_action(braid, tup), tup)
+
+    def test_detector_action_readout_is_killed_by_identity_signature(self):
+        group = cyclic_group(2)
+        detector = artin_detector_rack(group)
+        start = ((0, 1, group.identity), (0, 0, group.identity))
+        invisible = pure_braid_generator(1, 2) * 2
+
+        def toy_readout(word):
+            image = detector.braid_action(word, start)
+            return tuple(cell[2] for cell in image)
+
+        self.assertTrue(has_identity_longitude_signature(group, 2, invisible))
+        self.assertEqual(toy_readout(invisible), toy_readout(tuple()))
+
+    def test_longitude_blind_mover_finds_none_for_identity_solution(self):
+        group = cyclic_group(2)
+        solution = identity_solution([0, 1])
+        movers = longitude_blind_movers(solution, group, 2, [[1, -1]])
+        self.assertEqual(movers, {})
+
+
+if __name__ == "__main__":
+    unittest.main()

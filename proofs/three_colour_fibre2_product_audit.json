@@ -1,0 +1,3464 @@
+{
+  "by_side": {
+    "direct": {
+      "cocycle_count": 649,
+      "known_primitive_count": 288,
+      "primitive_count": 648,
+      "product_holonomy_detail_counts": {
+        "direct_coboundary": 288,
+        "direct_fibre2_affine": 360
+      },
+      "router_verdict_counts": {
+        "product_finite_g_branch": 648
+      },
+      "tag_counts": {
+        "(untagged)": 360,
+        "involutive": 288
+      }
+    },
+    "swapped": {
+      "cocycle_count": 322336,
+      "known_primitive_count": 1312,
+      "primitive_count": 1824,
+      "product_holonomy_detail_counts": {
+        "swapped_coboundary": 84,
+        "swapped_fibre2_affine": 720,
+        "swapped_identity_base_cyclic": 1020
+      },
+      "router_verdict_counts": {
+        "product_finite_g_branch": 1824
+      },
+      "tag_counts": {
+        "(untagged)": 512,
+        "involutive": 512,
+        "involutive+left_nondegenerate+right_nondegenerate+nondegenerate": 48,
+        "involutive+permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate": 16,
+        "left_nondegenerate+right_nondegenerate+nondegenerate": 616,
+        "permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate": 96,
+        "rack_type+left_nondegenerate+right_nondegenerate+nondegenerate": 8,
+        "rack_type+permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate": 16
+      }
+    }
+  },
+  "description": "three quotient colours, two-point fibres, product labels in S2",
+  "rows": [
+    {
+      "base_index": 0,
+      "base_tags": [
+        "involutive",
+        "identity_table",
+        "affine_cyclic"
+      ],
+      "cocycle_count": 1024,
+      "first_router_targets": [],
+      "known_primitive_count": 512,
+      "linear_dimension": 10,
+      "primitive_count": 1024,
+      "product_holonomy_detail_counts": {
+        "swapped_coboundary": 4,
+        "swapped_identity_base_cyclic": 1020
+      },
+      "router_verdict_counts": {
+        "product_finite_g_branch": 1024
+      },
+      "semisplit_free": true,
+      "side": "swapped",
+      "tag_counts": {
+        "(untagged)": 512,
+        "involutive": 512
+      }
+    },
+    {
+      "base_index": 0,
+      "base_tags": [
+        "involutive",
+        "identity_table",
+        "affine_cyclic"
+      ],
+      "cocycle_count": 1,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 0,
+      "primitive_count": 0,
+      "product_holonomy_detail_counts": {},
+      "router_verdict_counts": {},
+      "semisplit_free": false,
+      "side": "direct",
+      "tag_counts": {}
+    },
+    {
+      "base_index": 1,
+      "base_tags": [
+        "involutive"
+      ],
+      "cocycle_count": 4096,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 12,
+      "primitive_count": 0,
+      "product_holonomy_detail_counts": {},
+      "router_verdict_counts": {},
+      "semisplit_free": false,
+      "side": "swapped",
+      "tag_counts": {}
+    },
+    {
+      "base_index": 1,
+      "base_tags": [
+        "involutive"
+      ],
+      "cocycle_count": 16,
+      "first_router_targets": [],
+      "known_primitive_count": 16,
+      "linear_dimension": 4,
+      "primitive_count": 16,
+      "product_holonomy_detail_counts": {
+        "direct_coboundary": 4,
+        "direct_fibre2_affine": 12
+      },
+      "router_verdict_counts": {
+        "product_finite_g_branch": 16
+      },
+      "semisplit_free": true,
+      "side": "direct",
+      "tag_counts": {
+        "involutive": 16
+      }
+    },
+    {
+      "base_index": 2,
+      "base_tags": [
+        "involutive"
+      ],
+      "cocycle_count": 1024,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 10,
+      "primitive_count": 0,
+      "product_holonomy_detail_counts": {},
+      "router_verdict_counts": {},
+      "semisplit_free": false,
+      "side": "swapped",
+      "tag_counts": {}
+    },
+    {
+      "base_index": 2,
+      "base_tags": [
+        "involutive"
+      ],
+      "cocycle_count": 16,
+      "first_router_targets": [],
+      "known_primitive_count": 16,
+      "linear_dimension": 4,
+      "primitive_count": 16,
+      "product_holonomy_detail_counts": {
+        "direct_coboundary": 4,
+        "direct_fibre2_affine": 12
+      },
+      "router_verdict_counts": {
+        "product_finite_g_branch": 16
+      },
+      "semisplit_free": true,
+      "side": "direct",
+      "tag_counts": {
+        "involutive": 16
+      }
+    },
+    {
+      "base_index": 3,
+      "base_tags": [
+        "involutive"
+      ],
+      "cocycle_count": 4096,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 12,
+      "primitive_count": 0,
+      "product_holonomy_detail_counts": {},
+      "router_verdict_counts": {},
+      "semisplit_free": false,
+      "side": "swapped",
+      "tag_counts": {}
+    },
+    {
+      "base_index": 3,
+      "base_tags": [
+        "involutive"
+      ],
+      "cocycle_count": 16,
+      "first_router_targets": [],
+      "known_primitive_count": 16,
+      "linear_dimension": 4,
+      "primitive_count": 16,
+      "product_holonomy_detail_counts": {
+        "direct_coboundary": 4,
+        "direct_fibre2_affine": 12
+      },
+      "router_verdict_counts": {
+        "product_finite_g_branch": 16
+      },
+      "semisplit_free": true,
+      "side": "direct",
+      "tag_counts": {
+        "involutive": 16
+      }
+    },
+    {
+      "base_index": 4,
+      "base_tags": [
+        "involutive"
+      ],
+      "cocycle_count": 4096,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 12,
+      "primitive_count": 0,
+      "product_holonomy_detail_counts": {},
+      "router_verdict_counts": {},
+      "semisplit_free": false,
+      "side": "swapped",
+      "tag_counts": {}
+    },
+    {
+      "base_index": 4,
+      "base_tags": [
+        "involutive"
+      ],
+      "cocycle_count": 16,
+      "first_router_targets": [],
+      "known_primitive_count": 16,
+      "linear_dimension": 4,
+      "primitive_count": 16,
+      "product_holonomy_detail_counts": {
+        "direct_coboundary": 4,
+        "direct_fibre2_affine": 12
+      },
+      "router_verdict_counts": {
+        "product_finite_g_branch": 16
+      },
+      "semisplit_free": true,
+      "side": "direct",
+      "tag_counts": {
+        "involutive": 16
+      }
+    },
+    {
+      "base_index": 5,
+      "base_tags": [
+        "rack_type",
+        "involutive",
+        "permutation_form",
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate",
+        "affine_cyclic"
+      ],
+      "cocycle_count": 262144,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 18,
+      "primitive_count": 0,
+      "product_holonomy_detail_counts": {},
+      "router_verdict_counts": {},
+      "semisplit_free": false,
+      "side": "swapped",
+      "tag_counts": {}
+    },
+    {
+      "base_index": 5,
+      "base_tags": [
+        "rack_type",
+        "involutive",
+        "permutation_form",
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate",
+        "affine_cyclic"
+      ],
+      "cocycle_count": 16,
+      "first_router_targets": [],
+      "known_primitive_count": 16,
+      "linear_dimension": 4,
+      "primitive_count": 16,
+      "product_holonomy_detail_counts": {
+        "direct_coboundary": 4,
+        "direct_fibre2_affine": 12
+      },
+      "router_verdict_counts": {
+        "product_finite_g_branch": 16
+      },
+      "semisplit_free": true,
+      "side": "direct",
+      "tag_counts": {
+        "involutive": 16
+      }
+    },
+    {
+      "base_index": 6,
+      "base_tags": [
+        "rack_type",
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate"
+      ],
+      "cocycle_count": 512,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 9,
+      "primitive_count": 0,
+      "product_holonomy_detail_counts": {},
+      "router_verdict_counts": {},
+      "semisplit_free": false,
+      "side": "swapped",
+      "tag_counts": {}
+    },
+    {
+      "base_index": 6,
+      "base_tags": [
+        "rack_type",
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate"
+      ],
+      "cocycle_count": 8,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 3,
+      "primitive_count": 8,
+      "product_holonomy_detail_counts": {
+        "direct_coboundary": 4,
+        "direct_fibre2_affine": 4
+      },
+      "router_verdict_counts": {
+        "product_finite_g_branch": 8
+      },
+      "semisplit_free": true,
+      "side": "direct",
+      "tag_counts": {
+        "(untagged)": 8
+      }
+    },
+    {
+      "base_index": 7,
+      "base_tags": [
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate"
+      ],
+      "cocycle_count": 512,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 9,
+      "primitive_count": 0,
+      "product_holonomy_detail_counts": {},
+      "router_verdict_counts": {},
+      "semisplit_free": false,
+      "side": "swapped",
+      "tag_counts": {}
+    },
+    {
+      "base_index": 7,
+      "base_tags": [
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate"
+      ],
+      "cocycle_count": 8,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 3,
+      "primitive_count": 8,
+      "product_holonomy_detail_counts": {
+        "direct_coboundary": 4,
+        "direct_fibre2_affine": 4
+      },
+      "router_verdict_counts": {
+        "product_finite_g_branch": 8
+      },
+      "semisplit_free": true,
+      "side": "direct",
+      "tag_counts": {
+        "(untagged)": 8
+      }
+    },
+    {
+      "base_index": 8,
+      "base_tags": [
+        "rack_type",
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate"
+      ],
+      "cocycle_count": 512,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 9,
+      "primitive_count": 0,
+      "product_holonomy_detail_counts": {},
+      "router_verdict_counts": {},
+      "semisplit_free": false,
+      "side": "swapped",
+      "tag_counts": {}
+    },
+    {
+      "base_index": 8,
+      "base_tags": [
+        "rack_type",
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate"
+      ],
+      "cocycle_count": 8,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 3,
+      "primitive_count": 8,
+      "product_holonomy_detail_counts": {
+        "direct_coboundary": 4,
+        "direct_fibre2_affine": 4
+      },
+      "router_verdict_counts": {
+        "product_finite_g_branch": 8
+      },
+      "semisplit_free": true,
+      "side": "direct",
+      "tag_counts": {
+        "(untagged)": 8
+      }
+    },
+    {
+      "base_index": 9,
+      "base_tags": [
+        "involutive",
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate"
+      ],
+      "cocycle_count": 4096,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 12,
+      "primitive_count": 0,
+      "product_holonomy_detail_counts": {},
+      "router_verdict_counts": {},
+      "semisplit_free": false,
+      "side": "swapped",
+      "tag_counts": {}
+    },
+    {
+      "base_index": 9,
+      "base_tags": [
+        "involutive",
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate"
+      ],
+      "cocycle_count": 16,
+      "first_router_targets": [],
+      "known_primitive_count": 16,
+      "linear_dimension": 4,
+      "primitive_count": 16,
+      "product_holonomy_detail_counts": {
+        "direct_coboundary": 4,
+        "direct_fibre2_affine": 12
+      },
+      "router_verdict_counts": {
+        "product_finite_g_branch": 16
+      },
+      "semisplit_free": true,
+      "side": "direct",
+      "tag_counts": {
+        "involutive": 16
+      }
+    },
+    {
+      "base_index": 10,
+      "base_tags": [
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate"
+      ],
+      "cocycle_count": 512,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 9,
+      "primitive_count": 0,
+      "product_holonomy_detail_counts": {},
+      "router_verdict_counts": {},
+      "semisplit_free": false,
+      "side": "swapped",
+      "tag_counts": {}
+    },
+    {
+      "base_index": 10,
+      "base_tags": [
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate"
+      ],
+      "cocycle_count": 8,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 3,
+      "primitive_count": 8,
+      "product_holonomy_detail_counts": {
+        "direct_coboundary": 4,
+        "direct_fibre2_affine": 4
+      },
+      "router_verdict_counts": {
+        "product_finite_g_branch": 8
+      },
+      "semisplit_free": true,
+      "side": "direct",
+      "tag_counts": {
+        "(untagged)": 8
+      }
+    },
+    {
+      "base_index": 11,
+      "base_tags": [
+        "permutation_form",
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate",
+        "affine_cyclic"
+      ],
+      "cocycle_count": 512,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 9,
+      "primitive_count": 0,
+      "product_holonomy_detail_counts": {},
+      "router_verdict_counts": {},
+      "semisplit_free": false,
+      "side": "swapped",
+      "tag_counts": {}
+    },
+    {
+      "base_index": 11,
+      "base_tags": [
+        "permutation_form",
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate",
+        "affine_cyclic"
+      ],
+      "cocycle_count": 8,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 3,
+      "primitive_count": 8,
+      "product_holonomy_detail_counts": {
+        "direct_coboundary": 4,
+        "direct_fibre2_affine": 4
+      },
+      "router_verdict_counts": {
+        "product_finite_g_branch": 8
+      },
+      "semisplit_free": true,
+      "side": "direct",
+      "tag_counts": {
+        "(untagged)": 8
+      }
+    },
+    {
+      "base_index": 12,
+      "base_tags": [
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate"
+      ],
+      "cocycle_count": 512,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 9,
+      "primitive_count": 0,
+      "product_holonomy_detail_counts": {},
+      "router_verdict_counts": {},
+      "semisplit_free": false,
+      "side": "swapped",
+      "tag_counts": {}
+    },
+    {
+      "base_index": 12,
+      "base_tags": [
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate"
+      ],
+      "cocycle_count": 8,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 3,
+      "primitive_count": 8,
+      "product_holonomy_detail_counts": {
+        "direct_coboundary": 4,
+        "direct_fibre2_affine": 4
+      },
+      "router_verdict_counts": {
+        "product_finite_g_branch": 8
+      },
+      "semisplit_free": true,
+      "side": "direct",
+      "tag_counts": {
+        "(untagged)": 8
+      }
+    },
+    {
+      "base_index": 13,
+      "base_tags": [
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate"
+      ],
+      "cocycle_count": 512,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 9,
+      "primitive_count": 0,
+      "product_holonomy_detail_counts": {},
+      "router_verdict_counts": {},
+      "semisplit_free": false,
+      "side": "swapped",
+      "tag_counts": {}
+    },
+    {
+      "base_index": 13,
+      "base_tags": [
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate"
+      ],
+      "cocycle_count": 8,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 3,
+      "primitive_count": 8,
+      "product_holonomy_detail_counts": {
+        "direct_coboundary": 4,
+        "direct_fibre2_affine": 4
+      },
+      "router_verdict_counts": {
+        "product_finite_g_branch": 8
+      },
+      "semisplit_free": true,
+      "side": "direct",
+      "tag_counts": {
+        "(untagged)": 8
+      }
+    },
+    {
+      "base_index": 14,
+      "base_tags": [
+        "rack_type",
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate"
+      ],
+      "cocycle_count": 512,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 9,
+      "primitive_count": 0,
+      "product_holonomy_detail_counts": {},
+      "router_verdict_counts": {},
+      "semisplit_free": false,
+      "side": "swapped",
+      "tag_counts": {}
+    },
+    {
+      "base_index": 14,
+      "base_tags": [
+        "rack_type",
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate"
+      ],
+      "cocycle_count": 8,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 3,
+      "primitive_count": 8,
+      "product_holonomy_detail_counts": {
+        "direct_coboundary": 4,
+        "direct_fibre2_affine": 4
+      },
+      "router_verdict_counts": {
+        "product_finite_g_branch": 8
+      },
+      "semisplit_free": true,
+      "side": "direct",
+      "tag_counts": {
+        "(untagged)": 8
+      }
+    },
+    {
+      "base_index": 15,
+      "base_tags": [
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate",
+        "affine_cyclic"
+      ],
+      "cocycle_count": 16,
+      "first_router_targets": [],
+      "known_primitive_count": 16,
+      "linear_dimension": 4,
+      "primitive_count": 16,
+      "product_holonomy_detail_counts": {
+        "swapped_coboundary": 4,
+        "swapped_fibre2_affine": 12
+      },
+      "router_verdict_counts": {
+        "product_finite_g_branch": 16
+      },
+      "semisplit_free": true,
+      "side": "swapped",
+      "tag_counts": {
+        "left_nondegenerate+right_nondegenerate+nondegenerate": 16
+      }
+    },
+    {
+      "base_index": 15,
+      "base_tags": [
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate",
+        "affine_cyclic"
+      ],
+      "cocycle_count": 4,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 2,
+      "primitive_count": 4,
+      "product_holonomy_detail_counts": {
+        "direct_coboundary": 4
+      },
+      "router_verdict_counts": {
+        "product_finite_g_branch": 4
+      },
+      "semisplit_free": true,
+      "side": "direct",
+      "tag_counts": {
+        "(untagged)": 4
+      }
+    },
+    {
+      "base_index": 16,
+      "base_tags": [
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate"
+      ],
+      "cocycle_count": 512,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 9,
+      "primitive_count": 0,
+      "product_holonomy_detail_counts": {},
+      "router_verdict_counts": {},
+      "semisplit_free": false,
+      "side": "swapped",
+      "tag_counts": {}
+    },
+    {
+      "base_index": 16,
+      "base_tags": [
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate"
+      ],
+      "cocycle_count": 8,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 3,
+      "primitive_count": 8,
+      "product_holonomy_detail_counts": {
+        "direct_coboundary": 4,
+        "direct_fibre2_affine": 4
+      },
+      "router_verdict_counts": {
+        "product_finite_g_branch": 8
+      },
+      "semisplit_free": true,
+      "side": "direct",
+      "tag_counts": {
+        "(untagged)": 8
+      }
+    },
+    {
+      "base_index": 17,
+      "base_tags": [
+        "involutive",
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate"
+      ],
+      "cocycle_count": 2048,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 11,
+      "primitive_count": 0,
+      "product_holonomy_detail_counts": {},
+      "router_verdict_counts": {},
+      "semisplit_free": false,
+      "side": "swapped",
+      "tag_counts": {}
+    },
+    {
+      "base_index": 17,
+      "base_tags": [
+        "involutive",
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate"
+      ],
+      "cocycle_count": 16,
+      "first_router_targets": [],
+      "known_primitive_count": 16,
+      "linear_dimension": 4,
+      "primitive_count": 16,
+      "product_holonomy_detail_counts": {
+        "direct_coboundary": 4,
+        "direct_fibre2_affine": 12
+      },
+      "router_verdict_counts": {
+        "product_finite_g_branch": 16
+      },
+      "semisplit_free": true,
+      "side": "direct",
+      "tag_counts": {
+        "involutive": 16
+      }
+    },
+    {
+      "base_index": 18,
+      "base_tags": [
+        "involutive"
+      ],
+      "cocycle_count": 1024,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 10,
+      "primitive_count": 0,
+      "product_holonomy_detail_counts": {},
+      "router_verdict_counts": {},
+      "semisplit_free": false,
+      "side": "swapped",
+      "tag_counts": {}
+    },
+    {
+      "base_index": 18,
+      "base_tags": [
+        "involutive"
+      ],
+      "cocycle_count": 16,
+      "first_router_targets": [],
+      "known_primitive_count": 16,
+      "linear_dimension": 4,
+      "primitive_count": 16,
+      "product_holonomy_detail_counts": {
+        "direct_coboundary": 4,
+        "direct_fibre2_affine": 12
+      },
+      "router_verdict_counts": {
+        "product_finite_g_branch": 16
+      },
+      "semisplit_free": true,
+      "side": "direct",
+      "tag_counts": {
+        "involutive": 16
+      }
+    },
+    {
+      "base_index": 19,
+      "base_tags": [
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate"
+      ],
+      "cocycle_count": 512,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 9,
+      "primitive_count": 0,
+      "product_holonomy_detail_counts": {},
+      "router_verdict_counts": {},
+      "semisplit_free": false,
+      "side": "swapped",
+      "tag_counts": {}
+    },
+    {
+      "base_index": 19,
+      "base_tags": [
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate"
+      ],
+      "cocycle_count": 8,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 3,
+      "primitive_count": 8,
+      "product_holonomy_detail_counts": {
+        "direct_coboundary": 4,
+        "direct_fibre2_affine": 4
+      },
+      "router_verdict_counts": {
+        "product_finite_g_branch": 8
+      },
+      "semisplit_free": true,
+      "side": "direct",
+      "tag_counts": {
+        "(untagged)": 8
+      }
+    },
+    {
+      "base_index": 20,
+      "base_tags": [
+        "involutive",
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate"
+      ],
+      "cocycle_count": 2048,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 11,
+      "primitive_count": 0,
+      "product_holonomy_detail_counts": {},
+      "router_verdict_counts": {},
+      "semisplit_free": false,
+      "side": "swapped",
+      "tag_counts": {}
+    },
+    {
+      "base_index": 20,
+      "base_tags": [
+        "involutive",
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate"
+      ],
+      "cocycle_count": 16,
+      "first_router_targets": [],
+      "known_primitive_count": 16,
+      "linear_dimension": 4,
+      "primitive_count": 16,
+      "product_holonomy_detail_counts": {
+        "direct_coboundary": 4,
+        "direct_fibre2_affine": 12
+      },
+      "router_verdict_counts": {
+        "product_finite_g_branch": 16
+      },
+      "semisplit_free": true,
+      "side": "direct",
+      "tag_counts": {
+        "involutive": 16
+      }
+    },
+    {
+      "base_index": 21,
+      "base_tags": [
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate",
+        "affine_cyclic"
+      ],
+      "cocycle_count": 16,
+      "first_router_targets": [],
+      "known_primitive_count": 16,
+      "linear_dimension": 4,
+      "primitive_count": 16,
+      "product_holonomy_detail_counts": {
+        "swapped_coboundary": 4,
+        "swapped_fibre2_affine": 12
+      },
+      "router_verdict_counts": {
+        "product_finite_g_branch": 16
+      },
+      "semisplit_free": true,
+      "side": "swapped",
+      "tag_counts": {
+        "left_nondegenerate+right_nondegenerate+nondegenerate": 16
+      }
+    },
+    {
+      "base_index": 21,
+      "base_tags": [
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate",
+        "affine_cyclic"
+      ],
+      "cocycle_count": 4,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 2,
+      "primitive_count": 4,
+      "product_holonomy_detail_counts": {
+        "direct_coboundary": 4
+      },
+      "router_verdict_counts": {
+        "product_finite_g_branch": 4
+      },
+      "semisplit_free": true,
+      "side": "direct",
+      "tag_counts": {
+        "(untagged)": 4
+      }
+    },
+    {
+      "base_index": 22,
+      "base_tags": [
+        "rack_type",
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate"
+      ],
+      "cocycle_count": 512,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 9,
+      "primitive_count": 0,
+      "product_holonomy_detail_counts": {},
+      "router_verdict_counts": {},
+      "semisplit_free": false,
+      "side": "swapped",
+      "tag_counts": {}
+    },
+    {
+      "base_index": 22,
+      "base_tags": [
+        "rack_type",
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate"
+      ],
+      "cocycle_count": 8,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 3,
+      "primitive_count": 8,
+      "product_holonomy_detail_counts": {
+        "direct_coboundary": 4,
+        "direct_fibre2_affine": 4
+      },
+      "router_verdict_counts": {
+        "product_finite_g_branch": 8
+      },
+      "semisplit_free": true,
+      "side": "direct",
+      "tag_counts": {
+        "(untagged)": 8
+      }
+    },
+    {
+      "base_index": 23,
+      "base_tags": [
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate"
+      ],
+      "cocycle_count": 512,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 9,
+      "primitive_count": 0,
+      "product_holonomy_detail_counts": {},
+      "router_verdict_counts": {},
+      "semisplit_free": false,
+      "side": "swapped",
+      "tag_counts": {}
+    },
+    {
+      "base_index": 23,
+      "base_tags": [
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate"
+      ],
+      "cocycle_count": 8,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 3,
+      "primitive_count": 8,
+      "product_holonomy_detail_counts": {
+        "direct_coboundary": 4,
+        "direct_fibre2_affine": 4
+      },
+      "router_verdict_counts": {
+        "product_finite_g_branch": 8
+      },
+      "semisplit_free": true,
+      "side": "direct",
+      "tag_counts": {
+        "(untagged)": 8
+      }
+    },
+    {
+      "base_index": 24,
+      "base_tags": [
+        "rack_type",
+        "permutation_form",
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate",
+        "affine_cyclic"
+      ],
+      "cocycle_count": 512,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 9,
+      "primitive_count": 0,
+      "product_holonomy_detail_counts": {},
+      "router_verdict_counts": {},
+      "semisplit_free": false,
+      "side": "swapped",
+      "tag_counts": {}
+    },
+    {
+      "base_index": 24,
+      "base_tags": [
+        "rack_type",
+        "permutation_form",
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate",
+        "affine_cyclic"
+      ],
+      "cocycle_count": 8,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 3,
+      "primitive_count": 8,
+      "product_holonomy_detail_counts": {
+        "direct_coboundary": 4,
+        "direct_fibre2_affine": 4
+      },
+      "router_verdict_counts": {
+        "product_finite_g_branch": 8
+      },
+      "semisplit_free": true,
+      "side": "direct",
+      "tag_counts": {
+        "(untagged)": 8
+      }
+    },
+    {
+      "base_index": 25,
+      "base_tags": [
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate"
+      ],
+      "cocycle_count": 512,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 9,
+      "primitive_count": 0,
+      "product_holonomy_detail_counts": {},
+      "router_verdict_counts": {},
+      "semisplit_free": false,
+      "side": "swapped",
+      "tag_counts": {}
+    },
+    {
+      "base_index": 25,
+      "base_tags": [
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate"
+      ],
+      "cocycle_count": 8,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 3,
+      "primitive_count": 8,
+      "product_holonomy_detail_counts": {
+        "direct_coboundary": 4,
+        "direct_fibre2_affine": 4
+      },
+      "router_verdict_counts": {
+        "product_finite_g_branch": 8
+      },
+      "semisplit_free": true,
+      "side": "direct",
+      "tag_counts": {
+        "(untagged)": 8
+      }
+    },
+    {
+      "base_index": 26,
+      "base_tags": [
+        "involutive"
+      ],
+      "cocycle_count": 1024,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 10,
+      "primitive_count": 0,
+      "product_holonomy_detail_counts": {},
+      "router_verdict_counts": {},
+      "semisplit_free": false,
+      "side": "swapped",
+      "tag_counts": {}
+    },
+    {
+      "base_index": 26,
+      "base_tags": [
+        "involutive"
+      ],
+      "cocycle_count": 16,
+      "first_router_targets": [],
+      "known_primitive_count": 16,
+      "linear_dimension": 4,
+      "primitive_count": 16,
+      "product_holonomy_detail_counts": {
+        "direct_coboundary": 4,
+        "direct_fibre2_affine": 12
+      },
+      "router_verdict_counts": {
+        "product_finite_g_branch": 16
+      },
+      "semisplit_free": true,
+      "side": "direct",
+      "tag_counts": {
+        "involutive": 16
+      }
+    },
+    {
+      "base_index": 27,
+      "base_tags": [
+        "involutive",
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate"
+      ],
+      "cocycle_count": 2048,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 11,
+      "primitive_count": 0,
+      "product_holonomy_detail_counts": {},
+      "router_verdict_counts": {},
+      "semisplit_free": false,
+      "side": "swapped",
+      "tag_counts": {}
+    },
+    {
+      "base_index": 27,
+      "base_tags": [
+        "involutive",
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate"
+      ],
+      "cocycle_count": 16,
+      "first_router_targets": [],
+      "known_primitive_count": 16,
+      "linear_dimension": 4,
+      "primitive_count": 16,
+      "product_holonomy_detail_counts": {
+        "direct_coboundary": 4,
+        "direct_fibre2_affine": 12
+      },
+      "router_verdict_counts": {
+        "product_finite_g_branch": 16
+      },
+      "semisplit_free": true,
+      "side": "direct",
+      "tag_counts": {
+        "involutive": 16
+      }
+    },
+    {
+      "base_index": 28,
+      "base_tags": [
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate"
+      ],
+      "cocycle_count": 512,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 9,
+      "primitive_count": 0,
+      "product_holonomy_detail_counts": {},
+      "router_verdict_counts": {},
+      "semisplit_free": false,
+      "side": "swapped",
+      "tag_counts": {}
+    },
+    {
+      "base_index": 28,
+      "base_tags": [
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate"
+      ],
+      "cocycle_count": 8,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 3,
+      "primitive_count": 8,
+      "product_holonomy_detail_counts": {
+        "direct_coboundary": 4,
+        "direct_fibre2_affine": 4
+      },
+      "router_verdict_counts": {
+        "product_finite_g_branch": 8
+      },
+      "semisplit_free": true,
+      "side": "direct",
+      "tag_counts": {
+        "(untagged)": 8
+      }
+    },
+    {
+      "base_index": 29,
+      "base_tags": [
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate"
+      ],
+      "cocycle_count": 512,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 9,
+      "primitive_count": 0,
+      "product_holonomy_detail_counts": {},
+      "router_verdict_counts": {},
+      "semisplit_free": false,
+      "side": "swapped",
+      "tag_counts": {}
+    },
+    {
+      "base_index": 29,
+      "base_tags": [
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate"
+      ],
+      "cocycle_count": 8,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 3,
+      "primitive_count": 8,
+      "product_holonomy_detail_counts": {
+        "direct_coboundary": 4,
+        "direct_fibre2_affine": 4
+      },
+      "router_verdict_counts": {
+        "product_finite_g_branch": 8
+      },
+      "semisplit_free": true,
+      "side": "direct",
+      "tag_counts": {
+        "(untagged)": 8
+      }
+    },
+    {
+      "base_index": 30,
+      "base_tags": [
+        "involutive",
+        "permutation_form",
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate",
+        "affine_cyclic"
+      ],
+      "cocycle_count": 2048,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 11,
+      "primitive_count": 0,
+      "product_holonomy_detail_counts": {},
+      "router_verdict_counts": {},
+      "semisplit_free": false,
+      "side": "swapped",
+      "tag_counts": {}
+    },
+    {
+      "base_index": 30,
+      "base_tags": [
+        "involutive",
+        "permutation_form",
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate",
+        "affine_cyclic"
+      ],
+      "cocycle_count": 16,
+      "first_router_targets": [],
+      "known_primitive_count": 16,
+      "linear_dimension": 4,
+      "primitive_count": 16,
+      "product_holonomy_detail_counts": {
+        "direct_coboundary": 4,
+        "direct_fibre2_affine": 12
+      },
+      "router_verdict_counts": {
+        "product_finite_g_branch": 16
+      },
+      "semisplit_free": true,
+      "side": "direct",
+      "tag_counts": {
+        "involutive": 16
+      }
+    },
+    {
+      "base_index": 31,
+      "base_tags": [
+        "rack_type",
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate",
+        "affine_cyclic"
+      ],
+      "cocycle_count": 16,
+      "first_router_targets": [],
+      "known_primitive_count": 16,
+      "linear_dimension": 4,
+      "primitive_count": 16,
+      "product_holonomy_detail_counts": {
+        "swapped_coboundary": 4,
+        "swapped_fibre2_affine": 12
+      },
+      "router_verdict_counts": {
+        "product_finite_g_branch": 16
+      },
+      "semisplit_free": true,
+      "side": "swapped",
+      "tag_counts": {
+        "left_nondegenerate+right_nondegenerate+nondegenerate": 8,
+        "rack_type+left_nondegenerate+right_nondegenerate+nondegenerate": 8
+      }
+    },
+    {
+      "base_index": 31,
+      "base_tags": [
+        "rack_type",
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate",
+        "affine_cyclic"
+      ],
+      "cocycle_count": 4,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 2,
+      "primitive_count": 4,
+      "product_holonomy_detail_counts": {
+        "direct_coboundary": 4
+      },
+      "router_verdict_counts": {
+        "product_finite_g_branch": 4
+      },
+      "semisplit_free": true,
+      "side": "direct",
+      "tag_counts": {
+        "(untagged)": 4
+      }
+    },
+    {
+      "base_index": 32,
+      "base_tags": [
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate",
+        "affine_cyclic"
+      ],
+      "cocycle_count": 16,
+      "first_router_targets": [],
+      "known_primitive_count": 16,
+      "linear_dimension": 4,
+      "primitive_count": 16,
+      "product_holonomy_detail_counts": {
+        "swapped_coboundary": 4,
+        "swapped_fibre2_affine": 12
+      },
+      "router_verdict_counts": {
+        "product_finite_g_branch": 16
+      },
+      "semisplit_free": true,
+      "side": "swapped",
+      "tag_counts": {
+        "left_nondegenerate+right_nondegenerate+nondegenerate": 16
+      }
+    },
+    {
+      "base_index": 32,
+      "base_tags": [
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate",
+        "affine_cyclic"
+      ],
+      "cocycle_count": 4,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 2,
+      "primitive_count": 4,
+      "product_holonomy_detail_counts": {
+        "direct_coboundary": 4
+      },
+      "router_verdict_counts": {
+        "product_finite_g_branch": 4
+      },
+      "semisplit_free": true,
+      "side": "direct",
+      "tag_counts": {
+        "(untagged)": 4
+      }
+    },
+    {
+      "base_index": 33,
+      "base_tags": [
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate"
+      ],
+      "cocycle_count": 512,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 9,
+      "primitive_count": 0,
+      "product_holonomy_detail_counts": {},
+      "router_verdict_counts": {},
+      "semisplit_free": false,
+      "side": "swapped",
+      "tag_counts": {}
+    },
+    {
+      "base_index": 33,
+      "base_tags": [
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate"
+      ],
+      "cocycle_count": 8,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 3,
+      "primitive_count": 8,
+      "product_holonomy_detail_counts": {
+        "direct_coboundary": 4,
+        "direct_fibre2_affine": 4
+      },
+      "router_verdict_counts": {
+        "product_finite_g_branch": 8
+      },
+      "semisplit_free": true,
+      "side": "direct",
+      "tag_counts": {
+        "(untagged)": 8
+      }
+    },
+    {
+      "base_index": 34,
+      "base_tags": [
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate"
+      ],
+      "cocycle_count": 512,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 9,
+      "primitive_count": 0,
+      "product_holonomy_detail_counts": {},
+      "router_verdict_counts": {},
+      "semisplit_free": false,
+      "side": "swapped",
+      "tag_counts": {}
+    },
+    {
+      "base_index": 34,
+      "base_tags": [
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate"
+      ],
+      "cocycle_count": 8,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 3,
+      "primitive_count": 8,
+      "product_holonomy_detail_counts": {
+        "direct_coboundary": 4,
+        "direct_fibre2_affine": 4
+      },
+      "router_verdict_counts": {
+        "product_finite_g_branch": 8
+      },
+      "semisplit_free": true,
+      "side": "direct",
+      "tag_counts": {
+        "(untagged)": 8
+      }
+    },
+    {
+      "base_index": 35,
+      "base_tags": [
+        "permutation_form",
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate",
+        "affine_cyclic"
+      ],
+      "cocycle_count": 512,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 9,
+      "primitive_count": 0,
+      "product_holonomy_detail_counts": {},
+      "router_verdict_counts": {},
+      "semisplit_free": false,
+      "side": "swapped",
+      "tag_counts": {}
+    },
+    {
+      "base_index": 35,
+      "base_tags": [
+        "permutation_form",
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate",
+        "affine_cyclic"
+      ],
+      "cocycle_count": 8,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 3,
+      "primitive_count": 8,
+      "product_holonomy_detail_counts": {
+        "direct_coboundary": 4,
+        "direct_fibre2_affine": 4
+      },
+      "router_verdict_counts": {
+        "product_finite_g_branch": 8
+      },
+      "semisplit_free": true,
+      "side": "direct",
+      "tag_counts": {
+        "(untagged)": 8
+      }
+    },
+    {
+      "base_index": 36,
+      "base_tags": [
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate"
+      ],
+      "cocycle_count": 512,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 9,
+      "primitive_count": 0,
+      "product_holonomy_detail_counts": {},
+      "router_verdict_counts": {},
+      "semisplit_free": false,
+      "side": "swapped",
+      "tag_counts": {}
+    },
+    {
+      "base_index": 36,
+      "base_tags": [
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate"
+      ],
+      "cocycle_count": 8,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 3,
+      "primitive_count": 8,
+      "product_holonomy_detail_counts": {
+        "direct_coboundary": 4,
+        "direct_fibre2_affine": 4
+      },
+      "router_verdict_counts": {
+        "product_finite_g_branch": 8
+      },
+      "semisplit_free": true,
+      "side": "direct",
+      "tag_counts": {
+        "(untagged)": 8
+      }
+    },
+    {
+      "base_index": 37,
+      "base_tags": [
+        "permutation_form",
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate",
+        "affine_cyclic"
+      ],
+      "cocycle_count": 16,
+      "first_router_targets": [],
+      "known_primitive_count": 16,
+      "linear_dimension": 4,
+      "primitive_count": 16,
+      "product_holonomy_detail_counts": {
+        "swapped_coboundary": 4,
+        "swapped_fibre2_affine": 12
+      },
+      "router_verdict_counts": {
+        "product_finite_g_branch": 16
+      },
+      "semisplit_free": true,
+      "side": "swapped",
+      "tag_counts": {
+        "permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate": 16
+      }
+    },
+    {
+      "base_index": 37,
+      "base_tags": [
+        "permutation_form",
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate",
+        "affine_cyclic"
+      ],
+      "cocycle_count": 4,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 2,
+      "primitive_count": 4,
+      "product_holonomy_detail_counts": {
+        "direct_coboundary": 4
+      },
+      "router_verdict_counts": {
+        "product_finite_g_branch": 4
+      },
+      "semisplit_free": true,
+      "side": "direct",
+      "tag_counts": {
+        "(untagged)": 4
+      }
+    },
+    {
+      "base_index": 38,
+      "base_tags": [
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate"
+      ],
+      "cocycle_count": 512,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 9,
+      "primitive_count": 0,
+      "product_holonomy_detail_counts": {},
+      "router_verdict_counts": {},
+      "semisplit_free": false,
+      "side": "swapped",
+      "tag_counts": {}
+    },
+    {
+      "base_index": 38,
+      "base_tags": [
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate"
+      ],
+      "cocycle_count": 8,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 3,
+      "primitive_count": 8,
+      "product_holonomy_detail_counts": {
+        "direct_coboundary": 4,
+        "direct_fibre2_affine": 4
+      },
+      "router_verdict_counts": {
+        "product_finite_g_branch": 8
+      },
+      "semisplit_free": true,
+      "side": "direct",
+      "tag_counts": {
+        "(untagged)": 8
+      }
+    },
+    {
+      "base_index": 39,
+      "base_tags": [
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate"
+      ],
+      "cocycle_count": 512,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 9,
+      "primitive_count": 0,
+      "product_holonomy_detail_counts": {},
+      "router_verdict_counts": {},
+      "semisplit_free": false,
+      "side": "swapped",
+      "tag_counts": {}
+    },
+    {
+      "base_index": 39,
+      "base_tags": [
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate"
+      ],
+      "cocycle_count": 8,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 3,
+      "primitive_count": 8,
+      "product_holonomy_detail_counts": {
+        "direct_coboundary": 4,
+        "direct_fibre2_affine": 4
+      },
+      "router_verdict_counts": {
+        "product_finite_g_branch": 8
+      },
+      "semisplit_free": true,
+      "side": "direct",
+      "tag_counts": {
+        "(untagged)": 8
+      }
+    },
+    {
+      "base_index": 40,
+      "base_tags": [
+        "permutation_form",
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate",
+        "affine_cyclic"
+      ],
+      "cocycle_count": 16,
+      "first_router_targets": [],
+      "known_primitive_count": 16,
+      "linear_dimension": 4,
+      "primitive_count": 16,
+      "product_holonomy_detail_counts": {
+        "swapped_coboundary": 4,
+        "swapped_fibre2_affine": 12
+      },
+      "router_verdict_counts": {
+        "product_finite_g_branch": 16
+      },
+      "semisplit_free": true,
+      "side": "swapped",
+      "tag_counts": {
+        "permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate": 16
+      }
+    },
+    {
+      "base_index": 40,
+      "base_tags": [
+        "permutation_form",
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate",
+        "affine_cyclic"
+      ],
+      "cocycle_count": 4,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 2,
+      "primitive_count": 4,
+      "product_holonomy_detail_counts": {
+        "direct_coboundary": 4
+      },
+      "router_verdict_counts": {
+        "product_finite_g_branch": 4
+      },
+      "semisplit_free": true,
+      "side": "direct",
+      "tag_counts": {
+        "(untagged)": 4
+      }
+    },
+    {
+      "base_index": 41,
+      "base_tags": [
+        "permutation_form",
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate",
+        "affine_cyclic"
+      ],
+      "cocycle_count": 512,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 9,
+      "primitive_count": 0,
+      "product_holonomy_detail_counts": {},
+      "router_verdict_counts": {},
+      "semisplit_free": false,
+      "side": "swapped",
+      "tag_counts": {}
+    },
+    {
+      "base_index": 41,
+      "base_tags": [
+        "permutation_form",
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate",
+        "affine_cyclic"
+      ],
+      "cocycle_count": 8,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 3,
+      "primitive_count": 8,
+      "product_holonomy_detail_counts": {
+        "direct_coboundary": 4,
+        "direct_fibre2_affine": 4
+      },
+      "router_verdict_counts": {
+        "product_finite_g_branch": 8
+      },
+      "semisplit_free": true,
+      "side": "direct",
+      "tag_counts": {
+        "(untagged)": 8
+      }
+    },
+    {
+      "base_index": 42,
+      "base_tags": [
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate"
+      ],
+      "cocycle_count": 512,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 9,
+      "primitive_count": 0,
+      "product_holonomy_detail_counts": {},
+      "router_verdict_counts": {},
+      "semisplit_free": false,
+      "side": "swapped",
+      "tag_counts": {}
+    },
+    {
+      "base_index": 42,
+      "base_tags": [
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate"
+      ],
+      "cocycle_count": 8,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 3,
+      "primitive_count": 8,
+      "product_holonomy_detail_counts": {
+        "direct_coboundary": 4,
+        "direct_fibre2_affine": 4
+      },
+      "router_verdict_counts": {
+        "product_finite_g_branch": 8
+      },
+      "semisplit_free": true,
+      "side": "direct",
+      "tag_counts": {
+        "(untagged)": 8
+      }
+    },
+    {
+      "base_index": 43,
+      "base_tags": [
+        "rack_type",
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate"
+      ],
+      "cocycle_count": 512,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 9,
+      "primitive_count": 0,
+      "product_holonomy_detail_counts": {},
+      "router_verdict_counts": {},
+      "semisplit_free": false,
+      "side": "swapped",
+      "tag_counts": {}
+    },
+    {
+      "base_index": 43,
+      "base_tags": [
+        "rack_type",
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate"
+      ],
+      "cocycle_count": 8,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 3,
+      "primitive_count": 8,
+      "product_holonomy_detail_counts": {
+        "direct_coboundary": 4,
+        "direct_fibre2_affine": 4
+      },
+      "router_verdict_counts": {
+        "product_finite_g_branch": 8
+      },
+      "semisplit_free": true,
+      "side": "direct",
+      "tag_counts": {
+        "(untagged)": 8
+      }
+    },
+    {
+      "base_index": 44,
+      "base_tags": [
+        "rack_type",
+        "permutation_form",
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate",
+        "affine_cyclic"
+      ],
+      "cocycle_count": 512,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 9,
+      "primitive_count": 0,
+      "product_holonomy_detail_counts": {},
+      "router_verdict_counts": {},
+      "semisplit_free": false,
+      "side": "swapped",
+      "tag_counts": {}
+    },
+    {
+      "base_index": 44,
+      "base_tags": [
+        "rack_type",
+        "permutation_form",
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate",
+        "affine_cyclic"
+      ],
+      "cocycle_count": 8,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 3,
+      "primitive_count": 8,
+      "product_holonomy_detail_counts": {
+        "direct_coboundary": 4,
+        "direct_fibre2_affine": 4
+      },
+      "router_verdict_counts": {
+        "product_finite_g_branch": 8
+      },
+      "semisplit_free": true,
+      "side": "direct",
+      "tag_counts": {
+        "(untagged)": 8
+      }
+    },
+    {
+      "base_index": 45,
+      "base_tags": [
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate"
+      ],
+      "cocycle_count": 512,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 9,
+      "primitive_count": 0,
+      "product_holonomy_detail_counts": {},
+      "router_verdict_counts": {},
+      "semisplit_free": false,
+      "side": "swapped",
+      "tag_counts": {}
+    },
+    {
+      "base_index": 45,
+      "base_tags": [
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate"
+      ],
+      "cocycle_count": 8,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 3,
+      "primitive_count": 8,
+      "product_holonomy_detail_counts": {
+        "direct_coboundary": 4,
+        "direct_fibre2_affine": 4
+      },
+      "router_verdict_counts": {
+        "product_finite_g_branch": 8
+      },
+      "semisplit_free": true,
+      "side": "direct",
+      "tag_counts": {
+        "(untagged)": 8
+      }
+    },
+    {
+      "base_index": 46,
+      "base_tags": [
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate"
+      ],
+      "cocycle_count": 512,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 9,
+      "primitive_count": 0,
+      "product_holonomy_detail_counts": {},
+      "router_verdict_counts": {},
+      "semisplit_free": false,
+      "side": "swapped",
+      "tag_counts": {}
+    },
+    {
+      "base_index": 46,
+      "base_tags": [
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate"
+      ],
+      "cocycle_count": 8,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 3,
+      "primitive_count": 8,
+      "product_holonomy_detail_counts": {
+        "direct_coboundary": 4,
+        "direct_fibre2_affine": 4
+      },
+      "router_verdict_counts": {
+        "product_finite_g_branch": 8
+      },
+      "semisplit_free": true,
+      "side": "direct",
+      "tag_counts": {
+        "(untagged)": 8
+      }
+    },
+    {
+      "base_index": 47,
+      "base_tags": [
+        "rack_type",
+        "permutation_form",
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate",
+        "affine_cyclic"
+      ],
+      "cocycle_count": 16,
+      "first_router_targets": [],
+      "known_primitive_count": 16,
+      "linear_dimension": 4,
+      "primitive_count": 16,
+      "product_holonomy_detail_counts": {
+        "swapped_coboundary": 4,
+        "swapped_fibre2_affine": 12
+      },
+      "router_verdict_counts": {
+        "product_finite_g_branch": 16
+      },
+      "semisplit_free": true,
+      "side": "swapped",
+      "tag_counts": {
+        "permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate": 8,
+        "rack_type+permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate": 8
+      }
+    },
+    {
+      "base_index": 47,
+      "base_tags": [
+        "rack_type",
+        "permutation_form",
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate",
+        "affine_cyclic"
+      ],
+      "cocycle_count": 4,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 2,
+      "primitive_count": 4,
+      "product_holonomy_detail_counts": {
+        "direct_coboundary": 4
+      },
+      "router_verdict_counts": {
+        "product_finite_g_branch": 4
+      },
+      "semisplit_free": true,
+      "side": "direct",
+      "tag_counts": {
+        "(untagged)": 4
+      }
+    },
+    {
+      "base_index": 48,
+      "base_tags": [
+        "involutive",
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate"
+      ],
+      "cocycle_count": 4096,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 12,
+      "primitive_count": 0,
+      "product_holonomy_detail_counts": {},
+      "router_verdict_counts": {},
+      "semisplit_free": false,
+      "side": "swapped",
+      "tag_counts": {}
+    },
+    {
+      "base_index": 48,
+      "base_tags": [
+        "involutive",
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate"
+      ],
+      "cocycle_count": 16,
+      "first_router_targets": [],
+      "known_primitive_count": 16,
+      "linear_dimension": 4,
+      "primitive_count": 16,
+      "product_holonomy_detail_counts": {
+        "direct_coboundary": 4,
+        "direct_fibre2_affine": 12
+      },
+      "router_verdict_counts": {
+        "product_finite_g_branch": 16
+      },
+      "semisplit_free": true,
+      "side": "direct",
+      "tag_counts": {
+        "involutive": 16
+      }
+    },
+    {
+      "base_index": 49,
+      "base_tags": [
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate"
+      ],
+      "cocycle_count": 512,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 9,
+      "primitive_count": 0,
+      "product_holonomy_detail_counts": {},
+      "router_verdict_counts": {},
+      "semisplit_free": false,
+      "side": "swapped",
+      "tag_counts": {}
+    },
+    {
+      "base_index": 49,
+      "base_tags": [
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate"
+      ],
+      "cocycle_count": 8,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 3,
+      "primitive_count": 8,
+      "product_holonomy_detail_counts": {
+        "direct_coboundary": 4,
+        "direct_fibre2_affine": 4
+      },
+      "router_verdict_counts": {
+        "product_finite_g_branch": 8
+      },
+      "semisplit_free": true,
+      "side": "direct",
+      "tag_counts": {
+        "(untagged)": 8
+      }
+    },
+    {
+      "base_index": 50,
+      "base_tags": [
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate",
+        "affine_cyclic"
+      ],
+      "cocycle_count": 16,
+      "first_router_targets": [],
+      "known_primitive_count": 16,
+      "linear_dimension": 4,
+      "primitive_count": 16,
+      "product_holonomy_detail_counts": {
+        "swapped_coboundary": 4,
+        "swapped_fibre2_affine": 12
+      },
+      "router_verdict_counts": {
+        "product_finite_g_branch": 16
+      },
+      "semisplit_free": true,
+      "side": "swapped",
+      "tag_counts": {
+        "left_nondegenerate+right_nondegenerate+nondegenerate": 16
+      }
+    },
+    {
+      "base_index": 50,
+      "base_tags": [
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate",
+        "affine_cyclic"
+      ],
+      "cocycle_count": 4,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 2,
+      "primitive_count": 4,
+      "product_holonomy_detail_counts": {
+        "direct_coboundary": 4
+      },
+      "router_verdict_counts": {
+        "product_finite_g_branch": 4
+      },
+      "semisplit_free": true,
+      "side": "direct",
+      "tag_counts": {
+        "(untagged)": 4
+      }
+    },
+    {
+      "base_index": 51,
+      "base_tags": [
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate"
+      ],
+      "cocycle_count": 512,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 9,
+      "primitive_count": 0,
+      "product_holonomy_detail_counts": {},
+      "router_verdict_counts": {},
+      "semisplit_free": false,
+      "side": "swapped",
+      "tag_counts": {}
+    },
+    {
+      "base_index": 51,
+      "base_tags": [
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate"
+      ],
+      "cocycle_count": 8,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 3,
+      "primitive_count": 8,
+      "product_holonomy_detail_counts": {
+        "direct_coboundary": 4,
+        "direct_fibre2_affine": 4
+      },
+      "router_verdict_counts": {
+        "product_finite_g_branch": 8
+      },
+      "semisplit_free": true,
+      "side": "direct",
+      "tag_counts": {
+        "(untagged)": 8
+      }
+    },
+    {
+      "base_index": 52,
+      "base_tags": [
+        "involutive",
+        "permutation_form",
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate",
+        "affine_cyclic"
+      ],
+      "cocycle_count": 2048,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 11,
+      "primitive_count": 0,
+      "product_holonomy_detail_counts": {},
+      "router_verdict_counts": {},
+      "semisplit_free": false,
+      "side": "swapped",
+      "tag_counts": {}
+    },
+    {
+      "base_index": 52,
+      "base_tags": [
+        "involutive",
+        "permutation_form",
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate",
+        "affine_cyclic"
+      ],
+      "cocycle_count": 16,
+      "first_router_targets": [],
+      "known_primitive_count": 16,
+      "linear_dimension": 4,
+      "primitive_count": 16,
+      "product_holonomy_detail_counts": {
+        "direct_coboundary": 4,
+        "direct_fibre2_affine": 12
+      },
+      "router_verdict_counts": {
+        "product_finite_g_branch": 16
+      },
+      "semisplit_free": true,
+      "side": "direct",
+      "tag_counts": {
+        "involutive": 16
+      }
+    },
+    {
+      "base_index": 53,
+      "base_tags": [
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate",
+        "affine_cyclic"
+      ],
+      "cocycle_count": 16,
+      "first_router_targets": [],
+      "known_primitive_count": 16,
+      "linear_dimension": 4,
+      "primitive_count": 16,
+      "product_holonomy_detail_counts": {
+        "swapped_coboundary": 4,
+        "swapped_fibre2_affine": 12
+      },
+      "router_verdict_counts": {
+        "product_finite_g_branch": 16
+      },
+      "semisplit_free": true,
+      "side": "swapped",
+      "tag_counts": {
+        "left_nondegenerate+right_nondegenerate+nondegenerate": 16
+      }
+    },
+    {
+      "base_index": 53,
+      "base_tags": [
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate",
+        "affine_cyclic"
+      ],
+      "cocycle_count": 4,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 2,
+      "primitive_count": 4,
+      "product_holonomy_detail_counts": {
+        "direct_coboundary": 4
+      },
+      "router_verdict_counts": {
+        "product_finite_g_branch": 4
+      },
+      "semisplit_free": true,
+      "side": "direct",
+      "tag_counts": {
+        "(untagged)": 4
+      }
+    },
+    {
+      "base_index": 54,
+      "base_tags": [
+        "permutation_form",
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate",
+        "affine_cyclic"
+      ],
+      "cocycle_count": 16,
+      "first_router_targets": [],
+      "known_primitive_count": 16,
+      "linear_dimension": 4,
+      "primitive_count": 16,
+      "product_holonomy_detail_counts": {
+        "swapped_coboundary": 4,
+        "swapped_fibre2_affine": 12
+      },
+      "router_verdict_counts": {
+        "product_finite_g_branch": 16
+      },
+      "semisplit_free": true,
+      "side": "swapped",
+      "tag_counts": {
+        "permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate": 16
+      }
+    },
+    {
+      "base_index": 54,
+      "base_tags": [
+        "permutation_form",
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate",
+        "affine_cyclic"
+      ],
+      "cocycle_count": 4,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 2,
+      "primitive_count": 4,
+      "product_holonomy_detail_counts": {
+        "direct_coboundary": 4
+      },
+      "router_verdict_counts": {
+        "product_finite_g_branch": 4
+      },
+      "semisplit_free": true,
+      "side": "direct",
+      "tag_counts": {
+        "(untagged)": 4
+      }
+    },
+    {
+      "base_index": 55,
+      "base_tags": [
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate",
+        "affine_cyclic"
+      ],
+      "cocycle_count": 16,
+      "first_router_targets": [],
+      "known_primitive_count": 16,
+      "linear_dimension": 4,
+      "primitive_count": 16,
+      "product_holonomy_detail_counts": {
+        "swapped_coboundary": 4,
+        "swapped_fibre2_affine": 12
+      },
+      "router_verdict_counts": {
+        "product_finite_g_branch": 16
+      },
+      "semisplit_free": true,
+      "side": "swapped",
+      "tag_counts": {
+        "left_nondegenerate+right_nondegenerate+nondegenerate": 16
+      }
+    },
+    {
+      "base_index": 55,
+      "base_tags": [
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate",
+        "affine_cyclic"
+      ],
+      "cocycle_count": 4,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 2,
+      "primitive_count": 4,
+      "product_holonomy_detail_counts": {
+        "direct_coboundary": 4
+      },
+      "router_verdict_counts": {
+        "product_finite_g_branch": 4
+      },
+      "semisplit_free": true,
+      "side": "direct",
+      "tag_counts": {
+        "(untagged)": 4
+      }
+    },
+    {
+      "base_index": 56,
+      "base_tags": [
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate",
+        "affine_cyclic"
+      ],
+      "cocycle_count": 16,
+      "first_router_targets": [],
+      "known_primitive_count": 16,
+      "linear_dimension": 4,
+      "primitive_count": 16,
+      "product_holonomy_detail_counts": {
+        "swapped_coboundary": 4,
+        "swapped_fibre2_affine": 12
+      },
+      "router_verdict_counts": {
+        "product_finite_g_branch": 16
+      },
+      "semisplit_free": true,
+      "side": "swapped",
+      "tag_counts": {
+        "left_nondegenerate+right_nondegenerate+nondegenerate": 16
+      }
+    },
+    {
+      "base_index": 56,
+      "base_tags": [
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate",
+        "affine_cyclic"
+      ],
+      "cocycle_count": 4,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 2,
+      "primitive_count": 4,
+      "product_holonomy_detail_counts": {
+        "direct_coboundary": 4
+      },
+      "router_verdict_counts": {
+        "product_finite_g_branch": 4
+      },
+      "semisplit_free": true,
+      "side": "direct",
+      "tag_counts": {
+        "(untagged)": 4
+      }
+    },
+    {
+      "base_index": 57,
+      "base_tags": [
+        "involutive",
+        "permutation_form",
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate",
+        "affine_cyclic"
+      ],
+      "cocycle_count": 256,
+      "first_router_targets": [],
+      "known_primitive_count": 256,
+      "linear_dimension": 8,
+      "primitive_count": 256,
+      "product_holonomy_detail_counts": {
+        "swapped_coboundary": 4,
+        "swapped_fibre2_affine": 252
+      },
+      "router_verdict_counts": {
+        "product_finite_g_branch": 256
+      },
+      "semisplit_free": true,
+      "side": "swapped",
+      "tag_counts": {
+        "involutive+left_nondegenerate+right_nondegenerate+nondegenerate": 24,
+        "involutive+permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate": 8,
+        "left_nondegenerate+right_nondegenerate+nondegenerate": 216,
+        "permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate": 8
+      }
+    },
+    {
+      "base_index": 57,
+      "base_tags": [
+        "involutive",
+        "permutation_form",
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate",
+        "affine_cyclic"
+      ],
+      "cocycle_count": 16,
+      "first_router_targets": [],
+      "known_primitive_count": 16,
+      "linear_dimension": 4,
+      "primitive_count": 16,
+      "product_holonomy_detail_counts": {
+        "direct_coboundary": 4,
+        "direct_fibre2_affine": 12
+      },
+      "router_verdict_counts": {
+        "product_finite_g_branch": 16
+      },
+      "semisplit_free": true,
+      "side": "direct",
+      "tag_counts": {
+        "involutive": 16
+      }
+    },
+    {
+      "base_index": 58,
+      "base_tags": [
+        "rack_type",
+        "permutation_form",
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate",
+        "affine_cyclic"
+      ],
+      "cocycle_count": 16,
+      "first_router_targets": [],
+      "known_primitive_count": 16,
+      "linear_dimension": 4,
+      "primitive_count": 16,
+      "product_holonomy_detail_counts": {
+        "swapped_coboundary": 4,
+        "swapped_fibre2_affine": 12
+      },
+      "router_verdict_counts": {
+        "product_finite_g_branch": 16
+      },
+      "semisplit_free": true,
+      "side": "swapped",
+      "tag_counts": {
+        "permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate": 8,
+        "rack_type+permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate": 8
+      }
+    },
+    {
+      "base_index": 58,
+      "base_tags": [
+        "rack_type",
+        "permutation_form",
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate",
+        "affine_cyclic"
+      ],
+      "cocycle_count": 4,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 2,
+      "primitive_count": 4,
+      "product_holonomy_detail_counts": {
+        "direct_coboundary": 4
+      },
+      "router_verdict_counts": {
+        "product_finite_g_branch": 4
+      },
+      "semisplit_free": true,
+      "side": "direct",
+      "tag_counts": {
+        "(untagged)": 4
+      }
+    },
+    {
+      "base_index": 59,
+      "base_tags": [
+        "rack_type",
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate"
+      ],
+      "cocycle_count": 512,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 9,
+      "primitive_count": 0,
+      "product_holonomy_detail_counts": {},
+      "router_verdict_counts": {},
+      "semisplit_free": false,
+      "side": "swapped",
+      "tag_counts": {}
+    },
+    {
+      "base_index": 59,
+      "base_tags": [
+        "rack_type",
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate"
+      ],
+      "cocycle_count": 8,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 3,
+      "primitive_count": 8,
+      "product_holonomy_detail_counts": {
+        "direct_coboundary": 4,
+        "direct_fibre2_affine": 4
+      },
+      "router_verdict_counts": {
+        "product_finite_g_branch": 8
+      },
+      "semisplit_free": true,
+      "side": "direct",
+      "tag_counts": {
+        "(untagged)": 8
+      }
+    },
+    {
+      "base_index": 60,
+      "base_tags": [
+        "rack_type",
+        "permutation_form",
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate",
+        "affine_cyclic"
+      ],
+      "cocycle_count": 512,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 9,
+      "primitive_count": 0,
+      "product_holonomy_detail_counts": {},
+      "router_verdict_counts": {},
+      "semisplit_free": false,
+      "side": "swapped",
+      "tag_counts": {}
+    },
+    {
+      "base_index": 60,
+      "base_tags": [
+        "rack_type",
+        "permutation_form",
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate",
+        "affine_cyclic"
+      ],
+      "cocycle_count": 8,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 3,
+      "primitive_count": 8,
+      "product_holonomy_detail_counts": {
+        "direct_coboundary": 4,
+        "direct_fibre2_affine": 4
+      },
+      "router_verdict_counts": {
+        "product_finite_g_branch": 8
+      },
+      "semisplit_free": true,
+      "side": "direct",
+      "tag_counts": {
+        "(untagged)": 8
+      }
+    },
+    {
+      "base_index": 61,
+      "base_tags": [
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate"
+      ],
+      "cocycle_count": 512,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 9,
+      "primitive_count": 0,
+      "product_holonomy_detail_counts": {},
+      "router_verdict_counts": {},
+      "semisplit_free": false,
+      "side": "swapped",
+      "tag_counts": {}
+    },
+    {
+      "base_index": 61,
+      "base_tags": [
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate"
+      ],
+      "cocycle_count": 8,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 3,
+      "primitive_count": 8,
+      "product_holonomy_detail_counts": {
+        "direct_coboundary": 4,
+        "direct_fibre2_affine": 4
+      },
+      "router_verdict_counts": {
+        "product_finite_g_branch": 8
+      },
+      "semisplit_free": true,
+      "side": "direct",
+      "tag_counts": {
+        "(untagged)": 8
+      }
+    },
+    {
+      "base_index": 62,
+      "base_tags": [
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate"
+      ],
+      "cocycle_count": 512,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 9,
+      "primitive_count": 0,
+      "product_holonomy_detail_counts": {},
+      "router_verdict_counts": {},
+      "semisplit_free": false,
+      "side": "swapped",
+      "tag_counts": {}
+    },
+    {
+      "base_index": 62,
+      "base_tags": [
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate"
+      ],
+      "cocycle_count": 8,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 3,
+      "primitive_count": 8,
+      "product_holonomy_detail_counts": {
+        "direct_coboundary": 4,
+        "direct_fibre2_affine": 4
+      },
+      "router_verdict_counts": {
+        "product_finite_g_branch": 8
+      },
+      "semisplit_free": true,
+      "side": "direct",
+      "tag_counts": {
+        "(untagged)": 8
+      }
+    },
+    {
+      "base_index": 63,
+      "base_tags": [
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate",
+        "affine_cyclic"
+      ],
+      "cocycle_count": 16,
+      "first_router_targets": [],
+      "known_primitive_count": 16,
+      "linear_dimension": 4,
+      "primitive_count": 16,
+      "product_holonomy_detail_counts": {
+        "swapped_coboundary": 4,
+        "swapped_fibre2_affine": 12
+      },
+      "router_verdict_counts": {
+        "product_finite_g_branch": 16
+      },
+      "semisplit_free": true,
+      "side": "swapped",
+      "tag_counts": {
+        "left_nondegenerate+right_nondegenerate+nondegenerate": 16
+      }
+    },
+    {
+      "base_index": 63,
+      "base_tags": [
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate",
+        "affine_cyclic"
+      ],
+      "cocycle_count": 4,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 2,
+      "primitive_count": 4,
+      "product_holonomy_detail_counts": {
+        "direct_coboundary": 4
+      },
+      "router_verdict_counts": {
+        "product_finite_g_branch": 4
+      },
+      "semisplit_free": true,
+      "side": "direct",
+      "tag_counts": {
+        "(untagged)": 4
+      }
+    },
+    {
+      "base_index": 64,
+      "base_tags": [
+        "involutive",
+        "permutation_form",
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate",
+        "affine_cyclic"
+      ],
+      "cocycle_count": 256,
+      "first_router_targets": [],
+      "known_primitive_count": 256,
+      "linear_dimension": 8,
+      "primitive_count": 256,
+      "product_holonomy_detail_counts": {
+        "swapped_coboundary": 4,
+        "swapped_fibre2_affine": 252
+      },
+      "router_verdict_counts": {
+        "product_finite_g_branch": 256
+      },
+      "semisplit_free": true,
+      "side": "swapped",
+      "tag_counts": {
+        "involutive+left_nondegenerate+right_nondegenerate+nondegenerate": 24,
+        "involutive+permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate": 8,
+        "left_nondegenerate+right_nondegenerate+nondegenerate": 216,
+        "permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate": 8
+      }
+    },
+    {
+      "base_index": 64,
+      "base_tags": [
+        "involutive",
+        "permutation_form",
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate",
+        "affine_cyclic"
+      ],
+      "cocycle_count": 16,
+      "first_router_targets": [],
+      "known_primitive_count": 16,
+      "linear_dimension": 4,
+      "primitive_count": 16,
+      "product_holonomy_detail_counts": {
+        "direct_coboundary": 4,
+        "direct_fibre2_affine": 12
+      },
+      "router_verdict_counts": {
+        "product_finite_g_branch": 16
+      },
+      "semisplit_free": true,
+      "side": "direct",
+      "tag_counts": {
+        "involutive": 16
+      }
+    },
+    {
+      "base_index": 65,
+      "base_tags": [
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate",
+        "affine_cyclic"
+      ],
+      "cocycle_count": 16,
+      "first_router_targets": [],
+      "known_primitive_count": 16,
+      "linear_dimension": 4,
+      "primitive_count": 16,
+      "product_holonomy_detail_counts": {
+        "swapped_coboundary": 4,
+        "swapped_fibre2_affine": 12
+      },
+      "router_verdict_counts": {
+        "product_finite_g_branch": 16
+      },
+      "semisplit_free": true,
+      "side": "swapped",
+      "tag_counts": {
+        "left_nondegenerate+right_nondegenerate+nondegenerate": 16
+      }
+    },
+    {
+      "base_index": 65,
+      "base_tags": [
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate",
+        "affine_cyclic"
+      ],
+      "cocycle_count": 4,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 2,
+      "primitive_count": 4,
+      "product_holonomy_detail_counts": {
+        "direct_coboundary": 4
+      },
+      "router_verdict_counts": {
+        "product_finite_g_branch": 4
+      },
+      "semisplit_free": true,
+      "side": "direct",
+      "tag_counts": {
+        "(untagged)": 4
+      }
+    },
+    {
+      "base_index": 66,
+      "base_tags": [
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate",
+        "affine_cyclic"
+      ],
+      "cocycle_count": 16,
+      "first_router_targets": [],
+      "known_primitive_count": 16,
+      "linear_dimension": 4,
+      "primitive_count": 16,
+      "product_holonomy_detail_counts": {
+        "swapped_coboundary": 4,
+        "swapped_fibre2_affine": 12
+      },
+      "router_verdict_counts": {
+        "product_finite_g_branch": 16
+      },
+      "semisplit_free": true,
+      "side": "swapped",
+      "tag_counts": {
+        "left_nondegenerate+right_nondegenerate+nondegenerate": 16
+      }
+    },
+    {
+      "base_index": 66,
+      "base_tags": [
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate",
+        "affine_cyclic"
+      ],
+      "cocycle_count": 4,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 2,
+      "primitive_count": 4,
+      "product_holonomy_detail_counts": {
+        "direct_coboundary": 4
+      },
+      "router_verdict_counts": {
+        "product_finite_g_branch": 4
+      },
+      "semisplit_free": true,
+      "side": "direct",
+      "tag_counts": {
+        "(untagged)": 4
+      }
+    },
+    {
+      "base_index": 67,
+      "base_tags": [
+        "permutation_form",
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate",
+        "affine_cyclic"
+      ],
+      "cocycle_count": 16,
+      "first_router_targets": [],
+      "known_primitive_count": 16,
+      "linear_dimension": 4,
+      "primitive_count": 16,
+      "product_holonomy_detail_counts": {
+        "swapped_coboundary": 4,
+        "swapped_fibre2_affine": 12
+      },
+      "router_verdict_counts": {
+        "product_finite_g_branch": 16
+      },
+      "semisplit_free": true,
+      "side": "swapped",
+      "tag_counts": {
+        "permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate": 16
+      }
+    },
+    {
+      "base_index": 67,
+      "base_tags": [
+        "permutation_form",
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate",
+        "affine_cyclic"
+      ],
+      "cocycle_count": 4,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 2,
+      "primitive_count": 4,
+      "product_holonomy_detail_counts": {
+        "direct_coboundary": 4
+      },
+      "router_verdict_counts": {
+        "product_finite_g_branch": 4
+      },
+      "semisplit_free": true,
+      "side": "direct",
+      "tag_counts": {
+        "(untagged)": 4
+      }
+    },
+    {
+      "base_index": 68,
+      "base_tags": [
+        "involutive",
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate"
+      ],
+      "cocycle_count": 4096,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 12,
+      "primitive_count": 0,
+      "product_holonomy_detail_counts": {},
+      "router_verdict_counts": {},
+      "semisplit_free": false,
+      "side": "swapped",
+      "tag_counts": {}
+    },
+    {
+      "base_index": 68,
+      "base_tags": [
+        "involutive",
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate"
+      ],
+      "cocycle_count": 16,
+      "first_router_targets": [],
+      "known_primitive_count": 16,
+      "linear_dimension": 4,
+      "primitive_count": 16,
+      "product_holonomy_detail_counts": {
+        "direct_coboundary": 4,
+        "direct_fibre2_affine": 12
+      },
+      "router_verdict_counts": {
+        "product_finite_g_branch": 16
+      },
+      "semisplit_free": true,
+      "side": "direct",
+      "tag_counts": {
+        "involutive": 16
+      }
+    },
+    {
+      "base_index": 69,
+      "base_tags": [
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate"
+      ],
+      "cocycle_count": 512,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 9,
+      "primitive_count": 0,
+      "product_holonomy_detail_counts": {},
+      "router_verdict_counts": {},
+      "semisplit_free": false,
+      "side": "swapped",
+      "tag_counts": {}
+    },
+    {
+      "base_index": 69,
+      "base_tags": [
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate"
+      ],
+      "cocycle_count": 8,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 3,
+      "primitive_count": 8,
+      "product_holonomy_detail_counts": {
+        "direct_coboundary": 4,
+        "direct_fibre2_affine": 4
+      },
+      "router_verdict_counts": {
+        "product_finite_g_branch": 8
+      },
+      "semisplit_free": true,
+      "side": "direct",
+      "tag_counts": {
+        "(untagged)": 8
+      }
+    },
+    {
+      "base_index": 70,
+      "base_tags": [
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate"
+      ],
+      "cocycle_count": 512,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 9,
+      "primitive_count": 0,
+      "product_holonomy_detail_counts": {},
+      "router_verdict_counts": {},
+      "semisplit_free": false,
+      "side": "swapped",
+      "tag_counts": {}
+    },
+    {
+      "base_index": 70,
+      "base_tags": [
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate"
+      ],
+      "cocycle_count": 8,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 3,
+      "primitive_count": 8,
+      "product_holonomy_detail_counts": {
+        "direct_coboundary": 4,
+        "direct_fibre2_affine": 4
+      },
+      "router_verdict_counts": {
+        "product_finite_g_branch": 8
+      },
+      "semisplit_free": true,
+      "side": "direct",
+      "tag_counts": {
+        "(untagged)": 8
+      }
+    },
+    {
+      "base_index": 71,
+      "base_tags": [
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate",
+        "affine_cyclic"
+      ],
+      "cocycle_count": 16,
+      "first_router_targets": [],
+      "known_primitive_count": 16,
+      "linear_dimension": 4,
+      "primitive_count": 16,
+      "product_holonomy_detail_counts": {
+        "swapped_coboundary": 4,
+        "swapped_fibre2_affine": 12
+      },
+      "router_verdict_counts": {
+        "product_finite_g_branch": 16
+      },
+      "semisplit_free": true,
+      "side": "swapped",
+      "tag_counts": {
+        "left_nondegenerate+right_nondegenerate+nondegenerate": 16
+      }
+    },
+    {
+      "base_index": 71,
+      "base_tags": [
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate",
+        "affine_cyclic"
+      ],
+      "cocycle_count": 4,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 2,
+      "primitive_count": 4,
+      "product_holonomy_detail_counts": {
+        "direct_coboundary": 4
+      },
+      "router_verdict_counts": {
+        "product_finite_g_branch": 4
+      },
+      "semisplit_free": true,
+      "side": "direct",
+      "tag_counts": {
+        "(untagged)": 4
+      }
+    },
+    {
+      "base_index": 72,
+      "base_tags": [
+        "involutive",
+        "permutation_form",
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate",
+        "affine_cyclic"
+      ],
+      "cocycle_count": 2048,
+      "first_router_targets": [],
+      "known_primitive_count": 0,
+      "linear_dimension": 11,
+      "primitive_count": 0,
+      "product_holonomy_detail_counts": {},
+      "router_verdict_counts": {},
+      "semisplit_free": false,
+      "side": "swapped",
+      "tag_counts": {}
+    },
+    {
+      "base_index": 72,
+      "base_tags": [
+        "involutive",
+        "permutation_form",
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate",
+        "affine_cyclic"
+      ],
+      "cocycle_count": 16,
+      "first_router_targets": [],
+      "known_primitive_count": 16,
+      "linear_dimension": 4,
+      "primitive_count": 16,
+      "product_holonomy_detail_counts": {
+        "direct_coboundary": 4,
+        "direct_fibre2_affine": 12
+      },
+      "router_verdict_counts": {
+        "product_finite_g_branch": 16
+      },
+      "semisplit_free": true,
+      "side": "direct",
+      "tag_counts": {
+        "involutive": 16
+      }
+    }
+  ],
+  "totals": {
+    "cocycle_count": 322985,
+    "known_primitive_count": 1600,
+    "primitive_count": 2472,
+    "product_holonomy_detail_counts": {
+      "direct_coboundary": 288,
+      "direct_fibre2_affine": 360,
+      "swapped_coboundary": 84,
+      "swapped_fibre2_affine": 720,
+      "swapped_identity_base_cyclic": 1020
+    },
+    "router_verdict_counts": {
+      "product_finite_g_branch": 2472
+    },
+    "tag_counts": {
+      "(untagged)": 872,
+      "involutive": 800,
+      "involutive+left_nondegenerate+right_nondegenerate+nondegenerate": 48,
+      "involutive+permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate": 16,
+      "left_nondegenerate+right_nondegenerate+nondegenerate": 616,
+      "permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate": 96,
+      "rack_type+left_nondegenerate+right_nondegenerate+nondegenerate": 8,
+      "rack_type+permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate": 16
+    }
+  }
+}

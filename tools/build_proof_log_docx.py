@@ -1,0 +1,182 @@
+from pathlib import Path
+
+from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from docx.shared import Inches, Pt
+
+
+ROOT = Path(__file__).resolve().parents[1]
+STATUS_MD = ROOT / "proofs" / "sawin_status.md"
+EXTRA_MD = [ROOT / "proofs" / "progress_summary.md"]
+EXTRA_MD.append(ROOT / "proofs" / "semisplit_families.md")
+EXTRA_MD.append(ROOT / "proofs" / "local_minimality_gate.md")
+EXTRA_MD.append(ROOT / "proofs" / "finite_group_longitudes.md")
+EXTRA_MD.append(ROOT / "proofs" / "pairwise_linking_detector.md")
+EXTRA_MD.append(ROOT / "proofs" / "finite_rack_longitude_quotient.md")
+EXTRA_MD.append(ROOT / "proofs" / "sharp_obstruction_theorem.md")
+EXTRA_MD.append(ROOT / "proofs" / "purity_stabilization.md")
+EXTRA_MD.append(ROOT / "proofs" / "finite_longitude_factorization_criterion.md")
+EXTRA_MD.append(ROOT / "proofs" / "longitude_subgroup_profile.md")
+EXTRA_MD.append(ROOT / "proofs" / "longitude_subgroup_functoriality.md")
+EXTRA_MD.append(ROOT / "proofs" / "longitude_subgroup_products.md")
+EXTRA_MD.append(ROOT / "proofs" / "label_longitude_factorization.md")
+EXTRA_MD.append(ROOT / "proofs" / "input_dependent_longitude_factorization.md")
+EXTRA_MD.append(ROOT / "proofs" / "fixed_detector_action_factorization.md")
+EXTRA_MD.append(ROOT / "proofs" / "fixed_detector_readout_audit.md")
+EXTRA_MD.append(ROOT / "proofs" / "detector_product_groups.md")
+EXTRA_MD.append(ROOT / "proofs" / "detector_action_products.md")
+EXTRA_MD.append(ROOT / "proofs" / "product_domination_closure.md")
+EXTRA_MD.append(ROOT / "proofs" / "hereditary_domination_closure.md")
+EXTRA_MD.append(ROOT / "proofs" / "nondegenerate_cover_obstruction.md")
+EXTRA_MD.append(ROOT / "proofs" / "rack_cover_obstruction.md")
+EXTRA_MD.append(ROOT / "proofs" / "residual_kernel_checks.md")
+EXTRA_MD.append(ROOT / "proofs" / "quotient_image_kernel_exact_sequence.md")
+EXTRA_MD.append(ROOT / "proofs" / "residual_dependency_support.md")
+EXTRA_MD.append(ROOT / "proofs" / "congruence_chain_mechanics.md")
+EXTRA_MD.append(ROOT / "proofs" / "master_local_dichotomy.md")
+EXTRA_MD.append(ROOT / "proofs" / "bounded_obstruction_search.md")
+EXTRA_MD.append(ROOT / "proofs" / "normalized_law_attempts.md")
+EXTRA_MD.append(ROOT / "proofs" / "diagonal_normalized_obstruction.md")
+EXTRA_MD.append(ROOT / "proofs" / "pure_braid_law_embedding.md")
+EXTRA_MD.append(ROOT / "proofs" / "action_image_law_obstruction.md")
+EXTRA_MD.append(ROOT / "proofs" / "moving_variety_counterexample_criterion.md")
+EXTRA_MD.append(ROOT / "proofs" / "fixed_variety_barrier.md")
+EXTRA_MD.append(ROOT / "proofs" / "assigned_generator_law_separation.md")
+EXTRA_MD.append(ROOT / "proofs" / "moving_action_images.md")
+EXTRA_MD.append(ROOT / "proofs" / "symmetric_detector_audit.md")
+EXTRA_MD.append(ROOT / "proofs" / "universal_symmetric_detector_target.md")
+EXTRA_MD.append(ROOT / "proofs" / "direct_symmetric_known_branches.md")
+EXTRA_MD.append(ROOT / "proofs" / "two_strand_symmetric_gate.md")
+EXTRA_MD.append(ROOT / "proofs" / "two_strand_known_branch_gate.md")
+EXTRA_MD.append(ROOT / "proofs" / "two_strand_guitar_gate.md")
+EXTRA_MD.append(ROOT / "proofs" / "two_strand_product_gate.md")
+EXTRA_MD.append(ROOT / "proofs" / "pure_power_growth_audit.md")
+EXTRA_MD.append(ROOT / "proofs" / "small_ybe_law_search.md")
+EXTRA_MD.append(ROOT / "proofs" / "size3_candidate_detail.md")
+EXTRA_MD.append(ROOT / "proofs" / "green_branch_audit.md")
+EXTRA_MD.append(ROOT / "proofs" / "green_atom_quotient_layer.md")
+EXTRA_MD.append(ROOT / "proofs" / "green_atom_descent_closure.md")
+EXTRA_MD.append(ROOT / "proofs" / "green_atom_rack_lift_criterion.md")
+EXTRA_MD.append(ROOT / "proofs" / "local_minimal_green_audit.md")
+EXTRA_MD.append(ROOT / "proofs" / "kernel_detector_audit.md")
+EXTRA_MD.append(ROOT / "proofs" / "dual_green_symmetry.md")
+EXTRA_MD.append(ROOT / "proofs" / "opposite_detectability_closure.md")
+EXTRA_MD.append(ROOT / "proofs" / "green_detector_group_candidate.md")
+EXTRA_MD.append(ROOT / "proofs" / "finite_semigroup_holonomy_route.md")
+EXTRA_MD.append(ROOT / "proofs" / "unit_holonomy_longitude_gate.md")
+EXTRA_MD.append(ROOT / "proofs" / "unit_factorization_gate.md")
+EXTRA_MD.append(ROOT / "proofs" / "unit_composite_longitude_criterion.md")
+EXTRA_MD.append(ROOT / "proofs" / "unit_composite_longitude_route_audit.md")
+EXTRA_MD.append(ROOT / "proofs" / "endpoint_longitude_expression_certificate.md")
+EXTRA_MD.append(ROOT / "proofs" / "endpoint_unit_dichotomy.md")
+EXTRA_MD.append(ROOT / "proofs" / "unit_section_detection_criterion.md")
+EXTRA_MD.append(ROOT / "proofs" / "unit_section_product_detector.md")
+EXTRA_MD.append(ROOT / "proofs" / "green_holonomy_factorization_gate.md")
+EXTRA_MD.append(ROOT / "proofs" / "involutive_permutation_detector.md")
+EXTRA_MD.append(ROOT / "proofs" / "affine_cyclic_guardrail.md")
+EXTRA_MD.append(ROOT / "proofs" / "structure_orbit_reduction.md")
+EXTRA_MD.append(ROOT / "proofs" / "structure_orbit_holonomy_audit.md")
+EXTRA_MD.append(ROOT / "proofs" / "structure_orbit_law_obstruction.md")
+EXTRA_MD.append(ROOT / "proofs" / "bounded_degree_action_image_limit.md")
+EXTRA_MD.append(ROOT / "proofs" / "symmetric_law_separator_audit.md")
+EXTRA_MD.append(ROOT / "proofs" / "retraction_dichotomy.md")
+EXTRA_MD.append(ROOT / "proofs" / "coretraction_dichotomy.md")
+EXTRA_MD.append(ROOT / "proofs" / "context_retraction_audit.md")
+EXTRA_MD.append(ROOT / "proofs" / "kernel_closure_dichotomy.md")
+EXTRA_MD.append(ROOT / "proofs" / "kernel_corridor_audit.md")
+EXTRA_MD.append(ROOT / "proofs" / "universal_corridor_target.md")
+EXTRA_MD.append(ROOT / "proofs" / "corridor_green_bridge.md")
+EXTRA_MD.append(ROOT / "proofs" / "bifree_rank_audit.md")
+EXTRA_MD.append(ROOT / "proofs" / "local_master_bottleneck_ledger.md")
+EXTRA_MD.append(ROOT / "proofs" / "bifree_universal_corridor_factorization_target.md")
+EXTRA_MD.append(ROOT / "proofs" / "bifree_corridor_subgroup_certificate.md")
+EXTRA_MD.append(ROOT / "proofs" / "bifree_corridor_certificate_audit.md")
+EXTRA_MD.append(ROOT / "proofs" / "bifree_corridor_exact_audit.md")
+EXTRA_MD.append(ROOT / "proofs" / "product_permutation_branch.md")
+EXTRA_MD.append(ROOT / "proofs" / "swapped_product_nondegenerate_base.md")
+EXTRA_MD.append(ROOT / "proofs" / "product_label_words.md")
+EXTRA_MD.append(ROOT / "proofs" / "product_label_group_detector.md")
+EXTRA_MD.append(ROOT / "proofs" / "product_holonomy_normalization.md")
+EXTRA_MD.append(ROOT / "proofs" / "product_closed_label_cocycle.md")
+EXTRA_MD.append(ROOT / "proofs" / "product_longitude_witness_audit.md")
+EXTRA_MD.append(ROOT / "proofs" / "product_longitude_route_audit.md")
+EXTRA_MD.append(ROOT / "proofs" / "product_longitude_subgroup_criterion.md")
+EXTRA_MD.append(ROOT / "proofs" / "product_holonomy_subgroup_audit.md")
+EXTRA_MD.append(ROOT / "proofs" / "product_holonomy_exact_audit.md")
+EXTRA_MD.append(ROOT / "proofs" / "product_subgroup_audit.md")
+EXTRA_MD.append(ROOT / "proofs" / "product_exact_closed_label_audit.md")
+EXTRA_MD.append(ROOT / "proofs" / "product_closed_label_obstruction.md")
+EXTRA_MD.append(ROOT / "proofs" / "product_coboundary_telescope.md")
+EXTRA_MD.append(ROOT / "proofs" / "fibre2_product_branch.md")
+EXTRA_MD.append(ROOT / "proofs" / "product_holonomy_audit.md")
+EXTRA_MD.append(ROOT / "proofs" / "identity_base_product_branch.md")
+EXTRA_MD.append(ROOT / "proofs" / "one_colour_product_branch.md")
+EXTRA_MD.append(ROOT / "proofs" / "two_colour_fibre2_audit.md")
+EXTRA_MD.append(ROOT / "proofs" / "two_colour_fibre2_all_bases_audit.md")
+EXTRA_MD.append(ROOT / "proofs" / "two_colour_fibre3_product_audit.md")
+EXTRA_MD.append(ROOT / "proofs" / "three_colour_fibre2_product_audit.md")
+EXTRA_MD.append(ROOT / "proofs" / "linear_f2_audit.md")
+EXTRA_MD.append(ROOT / "proofs" / "affine_f2_audit.md")
+OUT = ROOT / "proofs" / "sawin_proof_log.docx"
+
+
+def add_markdownish(document: Document, text: str) -> None:
+    for raw_line in text.splitlines():
+        line = raw_line.rstrip()
+        if not line:
+            document.add_paragraph()
+            continue
+        if line.startswith("# "):
+            document.add_heading(line[2:], level=0)
+        elif line.startswith("## "):
+            document.add_heading(line[3:], level=1)
+        elif line.startswith("### "):
+            document.add_heading(line[4:], level=2)
+        elif line.startswith("- "):
+            document.add_paragraph(line[2:], style="List Bullet")
+        elif line.startswith("> "):
+            p = document.add_paragraph(line[2:])
+            p.paragraph_format.left_indent = Inches(0.25)
+            for run in p.runs:
+                run.italic = True
+        else:
+            document.add_paragraph(line)
+
+
+def main() -> None:
+    document = Document()
+    section = document.sections[0]
+    section.top_margin = Inches(0.8)
+    section.bottom_margin = Inches(0.8)
+    section.left_margin = Inches(0.9)
+    section.right_margin = Inches(0.9)
+
+    styles = document.styles
+    styles["Normal"].font.name = "Arial"
+    styles["Normal"].font.size = Pt(10)
+    styles["Heading 1"].font.name = "Arial"
+    styles["Heading 1"].font.size = Pt(16)
+    styles["Heading 2"].font.name = "Arial"
+    styles["Heading 2"].font.size = Pt(12)
+
+    title = document.add_paragraph()
+    title.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    title_run = title.add_run("Sawin finite-rack domination proof log")
+    title_run.bold = True
+    title_run.font.name = "Arial"
+    title_run.font.size = Pt(18)
+    subtitle = document.add_paragraph("Working audit generated from proofs/*.md")
+    subtitle.alignment = WD_ALIGN_PARAGRAPH.CENTER
+
+    document.add_paragraph()
+    add_markdownish(document, STATUS_MD.read_text(encoding="utf-8"))
+    for extra in EXTRA_MD:
+        document.add_page_break()
+        add_markdownish(document, extra.read_text(encoding="utf-8"))
+    OUT.parent.mkdir(parents=True, exist_ok=True)
+    document.save(OUT)
+    print(OUT)
+
+
+if __name__ == "__main__":
+    main()

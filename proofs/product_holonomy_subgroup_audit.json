@@ -1,0 +1,1039 @@
+{
+  "bases": {
+    "base_0": {
+      "base_index": 0,
+      "base_signature": [
+        [
+          "0",
+          "0"
+        ],
+        [
+          "0",
+          "1"
+        ],
+        [
+          "1",
+          "0"
+        ],
+        [
+          "1",
+          "1"
+        ]
+      ],
+      "checked_table_count": 331776,
+      "closed_tuple_word_count": 512,
+      "colored_ybe_count": 33,
+      "first_branch_scans": [
+        {
+          "base_index": 0,
+          "branch": "swapped",
+          "closed_tuple_word_count": 0,
+          "first_closed_nonidentity": null,
+          "first_failure": null,
+          "holonomy_group_count": 0,
+          "holonomy_groups": [],
+          "nonidentity_row_count": 0,
+          "subgroup_failure_count": 0,
+          "total_tags": [
+            "involutive"
+          ]
+        },
+        {
+          "base_index": 0,
+          "branch": "swapped",
+          "closed_tuple_word_count": 0,
+          "first_closed_nonidentity": null,
+          "first_failure": null,
+          "holonomy_group_count": 1,
+          "holonomy_groups": [
+            {
+              "model_points": [
+                "0",
+                "1"
+              ],
+              "order": 2
+            }
+          ],
+          "nonidentity_row_count": 0,
+          "subgroup_failure_count": 0,
+          "total_tags": [
+            "involutive"
+          ]
+        },
+        {
+          "base_index": 0,
+          "branch": "swapped",
+          "closed_tuple_word_count": 0,
+          "first_closed_nonidentity": null,
+          "first_failure": null,
+          "holonomy_group_count": 1,
+          "holonomy_groups": [
+            {
+              "model_points": [
+                "0",
+                "1"
+              ],
+              "order": 2
+            }
+          ],
+          "nonidentity_row_count": 0,
+          "subgroup_failure_count": 0,
+          "total_tags": [
+            "involutive"
+          ]
+        },
+        {
+          "base_index": 0,
+          "branch": "swapped",
+          "closed_tuple_word_count": 0,
+          "first_closed_nonidentity": null,
+          "first_failure": null,
+          "holonomy_group_count": 1,
+          "holonomy_groups": [
+            {
+              "model_points": [
+                "0",
+                "1"
+              ],
+              "order": 2
+            }
+          ],
+          "nonidentity_row_count": 0,
+          "subgroup_failure_count": 0,
+          "total_tags": [
+            "involutive"
+          ]
+        },
+        {
+          "base_index": 0,
+          "branch": "swapped",
+          "closed_tuple_word_count": 0,
+          "first_closed_nonidentity": null,
+          "first_failure": null,
+          "holonomy_group_count": 1,
+          "holonomy_groups": [
+            {
+              "model_points": [
+                "0",
+                "1"
+              ],
+              "order": 2
+            }
+          ],
+          "nonidentity_row_count": 0,
+          "subgroup_failure_count": 0,
+          "total_tags": [
+            "involutive"
+          ]
+        },
+        {
+          "base_index": 0,
+          "branch": "swapped",
+          "closed_tuple_word_count": 0,
+          "first_closed_nonidentity": null,
+          "first_failure": null,
+          "holonomy_group_count": 1,
+          "holonomy_groups": [
+            {
+              "model_points": [
+                "0",
+                "1"
+              ],
+              "order": 2
+            }
+          ],
+          "nonidentity_row_count": 0,
+          "subgroup_failure_count": 0,
+          "total_tags": [
+            "involutive"
+          ]
+        },
+        {
+          "base_index": 0,
+          "branch": "swapped",
+          "closed_tuple_word_count": 0,
+          "first_closed_nonidentity": null,
+          "first_failure": null,
+          "holonomy_group_count": 0,
+          "holonomy_groups": [],
+          "nonidentity_row_count": 0,
+          "subgroup_failure_count": 0,
+          "total_tags": [
+            "involutive"
+          ]
+        },
+        {
+          "base_index": 0,
+          "branch": "swapped",
+          "closed_tuple_word_count": 0,
+          "first_closed_nonidentity": null,
+          "first_failure": null,
+          "holonomy_group_count": 1,
+          "holonomy_groups": [
+            {
+              "model_points": [
+                "0",
+                "1"
+              ],
+              "order": 2
+            }
+          ],
+          "nonidentity_row_count": 0,
+          "subgroup_failure_count": 0,
+          "total_tags": [
+            "involutive"
+          ]
+        }
+      ],
+      "first_failures": [],
+      "holonomy_group_order_counts": {
+        "swapped|order=2": 30
+      },
+      "local_minimal_count": 32,
+      "nonidentity_holonomy_row_count": 1024,
+      "product_branch_counts": {
+        "swapped": 32
+      },
+      "subgroup_failure_count": 0
+    },
+    "base_1": {
+      "base_index": 1,
+      "base_signature": [
+        [
+          "0",
+          "0"
+        ],
+        [
+          "1",
+          "0"
+        ],
+        [
+          "0",
+          "1"
+        ],
+        [
+          "1",
+          "1"
+        ]
+      ],
+      "checked_table_count": 331776,
+      "closed_tuple_word_count": 0,
+      "colored_ybe_count": 520,
+      "first_branch_scans": [
+        {
+          "base_index": 1,
+          "branch": "direct",
+          "closed_tuple_word_count": 0,
+          "first_closed_nonidentity": null,
+          "first_failure": null,
+          "holonomy_group_count": 0,
+          "holonomy_groups": [],
+          "nonidentity_row_count": 0,
+          "subgroup_failure_count": 0,
+          "total_tags": [
+            "involutive"
+          ]
+        },
+        {
+          "base_index": 1,
+          "branch": "direct",
+          "closed_tuple_word_count": 0,
+          "first_closed_nonidentity": null,
+          "first_failure": null,
+          "holonomy_group_count": 1,
+          "holonomy_groups": [
+            {
+              "model_points": [
+                "0",
+                "1"
+              ],
+              "order": 2
+            }
+          ],
+          "nonidentity_row_count": 0,
+          "subgroup_failure_count": 0,
+          "total_tags": [
+            "involutive"
+          ]
+        },
+        {
+          "base_index": 1,
+          "branch": "direct",
+          "closed_tuple_word_count": 0,
+          "first_closed_nonidentity": null,
+          "first_failure": null,
+          "holonomy_group_count": 1,
+          "holonomy_groups": [
+            {
+              "model_points": [
+                "0",
+                "1"
+              ],
+              "order": 2
+            }
+          ],
+          "nonidentity_row_count": 0,
+          "subgroup_failure_count": 0,
+          "total_tags": [
+            "involutive"
+          ]
+        },
+        {
+          "base_index": 1,
+          "branch": "direct",
+          "closed_tuple_word_count": 0,
+          "first_closed_nonidentity": null,
+          "first_failure": null,
+          "holonomy_group_count": 0,
+          "holonomy_groups": [],
+          "nonidentity_row_count": 0,
+          "subgroup_failure_count": 0,
+          "total_tags": [
+            "involutive"
+          ]
+        }
+      ],
+      "first_failures": [],
+      "holonomy_group_order_counts": {
+        "direct|order=2": 2
+      },
+      "local_minimal_count": 12,
+      "nonidentity_holonomy_row_count": 0,
+      "product_branch_counts": {
+        "direct": 4
+      },
+      "subgroup_failure_count": 0
+    },
+    "base_2": {
+      "base_index": 2,
+      "base_signature": [
+        [
+          "0",
+          "1"
+        ],
+        [
+          "1",
+          "1"
+        ],
+        [
+          "0",
+          "0"
+        ],
+        [
+          "1",
+          "0"
+        ]
+      ],
+      "checked_table_count": 331776,
+      "closed_tuple_word_count": 0,
+      "colored_ybe_count": 10,
+      "first_branch_scans": [
+        {
+          "base_index": 2,
+          "branch": "direct",
+          "closed_tuple_word_count": 0,
+          "first_closed_nonidentity": null,
+          "first_failure": null,
+          "holonomy_group_count": 0,
+          "holonomy_groups": [],
+          "nonidentity_row_count": 0,
+          "subgroup_failure_count": 0,
+          "total_tags": []
+        },
+        {
+          "base_index": 2,
+          "branch": "swapped",
+          "closed_tuple_word_count": 0,
+          "first_closed_nonidentity": null,
+          "first_failure": null,
+          "holonomy_group_count": 0,
+          "holonomy_groups": [],
+          "nonidentity_row_count": 0,
+          "subgroup_failure_count": 0,
+          "total_tags": [
+            "permutation_form",
+            "left_nondegenerate",
+            "right_nondegenerate",
+            "nondegenerate"
+          ]
+        },
+        {
+          "base_index": 2,
+          "branch": "swapped",
+          "closed_tuple_word_count": 0,
+          "first_closed_nonidentity": null,
+          "first_failure": null,
+          "holonomy_group_count": 1,
+          "holonomy_groups": [
+            {
+              "model_points": [
+                "0",
+                "1"
+              ],
+              "order": 2
+            }
+          ],
+          "nonidentity_row_count": 0,
+          "subgroup_failure_count": 0,
+          "total_tags": [
+            "permutation_form",
+            "left_nondegenerate",
+            "right_nondegenerate",
+            "nondegenerate"
+          ]
+        },
+        {
+          "base_index": 2,
+          "branch": "direct",
+          "closed_tuple_word_count": 0,
+          "first_closed_nonidentity": null,
+          "first_failure": null,
+          "holonomy_group_count": 0,
+          "holonomy_groups": [],
+          "nonidentity_row_count": 0,
+          "subgroup_failure_count": 0,
+          "total_tags": []
+        },
+        {
+          "base_index": 2,
+          "branch": "swapped",
+          "closed_tuple_word_count": 0,
+          "first_closed_nonidentity": null,
+          "first_failure": null,
+          "holonomy_group_count": 1,
+          "holonomy_groups": [
+            {
+              "model_points": [
+                "0",
+                "1"
+              ],
+              "order": 2
+            }
+          ],
+          "nonidentity_row_count": 0,
+          "subgroup_failure_count": 0,
+          "total_tags": [
+            "permutation_form",
+            "left_nondegenerate",
+            "right_nondegenerate",
+            "nondegenerate"
+          ]
+        },
+        {
+          "base_index": 2,
+          "branch": "swapped",
+          "closed_tuple_word_count": 0,
+          "first_closed_nonidentity": null,
+          "first_failure": null,
+          "holonomy_group_count": 0,
+          "holonomy_groups": [],
+          "nonidentity_row_count": 0,
+          "subgroup_failure_count": 0,
+          "total_tags": [
+            "permutation_form",
+            "left_nondegenerate",
+            "right_nondegenerate",
+            "nondegenerate"
+          ]
+        },
+        {
+          "base_index": 2,
+          "branch": "swapped",
+          "closed_tuple_word_count": 0,
+          "first_closed_nonidentity": null,
+          "first_failure": null,
+          "holonomy_group_count": 1,
+          "holonomy_groups": [
+            {
+              "model_points": [
+                "0",
+                "1"
+              ],
+              "order": 2
+            }
+          ],
+          "nonidentity_row_count": 0,
+          "subgroup_failure_count": 0,
+          "total_tags": [
+            "permutation_form",
+            "left_nondegenerate",
+            "right_nondegenerate",
+            "nondegenerate"
+          ]
+        },
+        {
+          "base_index": 2,
+          "branch": "swapped",
+          "closed_tuple_word_count": 0,
+          "first_closed_nonidentity": null,
+          "first_failure": null,
+          "holonomy_group_count": 1,
+          "holonomy_groups": [
+            {
+              "model_points": [
+                "0",
+                "1"
+              ],
+              "order": 2
+            }
+          ],
+          "nonidentity_row_count": 0,
+          "subgroup_failure_count": 0,
+          "total_tags": [
+            "permutation_form",
+            "left_nondegenerate",
+            "right_nondegenerate",
+            "nondegenerate"
+          ]
+        }
+      ],
+      "first_failures": [],
+      "holonomy_group_order_counts": {
+        "swapped|order=2": 6
+      },
+      "local_minimal_count": 10,
+      "nonidentity_holonomy_row_count": 0,
+      "product_branch_counts": {
+        "direct": 2,
+        "swapped": 8
+      },
+      "subgroup_failure_count": 0
+    },
+    "base_3": {
+      "base_index": 3,
+      "base_signature": [
+        [
+          "1",
+          "0"
+        ],
+        [
+          "0",
+          "0"
+        ],
+        [
+          "1",
+          "1"
+        ],
+        [
+          "0",
+          "1"
+        ]
+      ],
+      "checked_table_count": 331776,
+      "closed_tuple_word_count": 0,
+      "colored_ybe_count": 10,
+      "first_branch_scans": [
+        {
+          "base_index": 3,
+          "branch": "direct",
+          "closed_tuple_word_count": 0,
+          "first_closed_nonidentity": null,
+          "first_failure": null,
+          "holonomy_group_count": 0,
+          "holonomy_groups": [],
+          "nonidentity_row_count": 0,
+          "subgroup_failure_count": 0,
+          "total_tags": []
+        },
+        {
+          "base_index": 3,
+          "branch": "swapped",
+          "closed_tuple_word_count": 0,
+          "first_closed_nonidentity": null,
+          "first_failure": null,
+          "holonomy_group_count": 0,
+          "holonomy_groups": [],
+          "nonidentity_row_count": 0,
+          "subgroup_failure_count": 0,
+          "total_tags": [
+            "rack_type",
+            "permutation_form",
+            "left_nondegenerate",
+            "right_nondegenerate",
+            "nondegenerate"
+          ]
+        },
+        {
+          "base_index": 3,
+          "branch": "swapped",
+          "closed_tuple_word_count": 0,
+          "first_closed_nonidentity": null,
+          "first_failure": null,
+          "holonomy_group_count": 1,
+          "holonomy_groups": [
+            {
+              "model_points": [
+                "0",
+                "1"
+              ],
+              "order": 2
+            }
+          ],
+          "nonidentity_row_count": 0,
+          "subgroup_failure_count": 0,
+          "total_tags": [
+            "rack_type",
+            "permutation_form",
+            "left_nondegenerate",
+            "right_nondegenerate",
+            "nondegenerate"
+          ]
+        },
+        {
+          "base_index": 3,
+          "branch": "swapped",
+          "closed_tuple_word_count": 0,
+          "first_closed_nonidentity": null,
+          "first_failure": null,
+          "holonomy_group_count": 1,
+          "holonomy_groups": [
+            {
+              "model_points": [
+                "0",
+                "1"
+              ],
+              "order": 2
+            }
+          ],
+          "nonidentity_row_count": 0,
+          "subgroup_failure_count": 0,
+          "total_tags": [
+            "permutation_form",
+            "left_nondegenerate",
+            "right_nondegenerate",
+            "nondegenerate"
+          ]
+        },
+        {
+          "base_index": 3,
+          "branch": "swapped",
+          "closed_tuple_word_count": 0,
+          "first_closed_nonidentity": null,
+          "first_failure": null,
+          "holonomy_group_count": 1,
+          "holonomy_groups": [
+            {
+              "model_points": [
+                "0",
+                "1"
+              ],
+              "order": 2
+            }
+          ],
+          "nonidentity_row_count": 0,
+          "subgroup_failure_count": 0,
+          "total_tags": [
+            "permutation_form",
+            "left_nondegenerate",
+            "right_nondegenerate",
+            "nondegenerate"
+          ]
+        },
+        {
+          "base_index": 3,
+          "branch": "swapped",
+          "closed_tuple_word_count": 0,
+          "first_closed_nonidentity": null,
+          "first_failure": null,
+          "holonomy_group_count": 1,
+          "holonomy_groups": [
+            {
+              "model_points": [
+                "0",
+                "1"
+              ],
+              "order": 2
+            }
+          ],
+          "nonidentity_row_count": 0,
+          "subgroup_failure_count": 0,
+          "total_tags": [
+            "rack_type",
+            "permutation_form",
+            "left_nondegenerate",
+            "right_nondegenerate",
+            "nondegenerate"
+          ]
+        },
+        {
+          "base_index": 3,
+          "branch": "swapped",
+          "closed_tuple_word_count": 0,
+          "first_closed_nonidentity": null,
+          "first_failure": null,
+          "holonomy_group_count": 0,
+          "holonomy_groups": [],
+          "nonidentity_row_count": 0,
+          "subgroup_failure_count": 0,
+          "total_tags": [
+            "rack_type",
+            "permutation_form",
+            "left_nondegenerate",
+            "right_nondegenerate",
+            "nondegenerate"
+          ]
+        },
+        {
+          "base_index": 3,
+          "branch": "direct",
+          "closed_tuple_word_count": 0,
+          "first_closed_nonidentity": null,
+          "first_failure": null,
+          "holonomy_group_count": 0,
+          "holonomy_groups": [],
+          "nonidentity_row_count": 0,
+          "subgroup_failure_count": 0,
+          "total_tags": []
+        }
+      ],
+      "first_failures": [],
+      "holonomy_group_order_counts": {
+        "swapped|order=2": 6
+      },
+      "local_minimal_count": 10,
+      "nonidentity_holonomy_row_count": 0,
+      "product_branch_counts": {
+        "direct": 2,
+        "swapped": 8
+      },
+      "subgroup_failure_count": 0
+    },
+    "base_4": {
+      "base_index": 4,
+      "base_signature": [
+        [
+          "1",
+          "1"
+        ],
+        [
+          "0",
+          "1"
+        ],
+        [
+          "1",
+          "0"
+        ],
+        [
+          "0",
+          "0"
+        ]
+      ],
+      "checked_table_count": 331776,
+      "closed_tuple_word_count": 512,
+      "colored_ybe_count": 56,
+      "first_branch_scans": [
+        {
+          "base_index": 4,
+          "branch": "direct",
+          "closed_tuple_word_count": 0,
+          "first_closed_nonidentity": null,
+          "first_failure": null,
+          "holonomy_group_count": 0,
+          "holonomy_groups": [],
+          "nonidentity_row_count": 0,
+          "subgroup_failure_count": 0,
+          "total_tags": [
+            "involutive"
+          ]
+        },
+        {
+          "base_index": 4,
+          "branch": "swapped",
+          "closed_tuple_word_count": 0,
+          "first_closed_nonidentity": null,
+          "first_failure": null,
+          "holonomy_group_count": 0,
+          "holonomy_groups": [],
+          "nonidentity_row_count": 0,
+          "subgroup_failure_count": 0,
+          "total_tags": [
+            "involutive",
+            "permutation_form",
+            "left_nondegenerate",
+            "right_nondegenerate",
+            "nondegenerate"
+          ]
+        },
+        {
+          "base_index": 4,
+          "branch": "swapped",
+          "closed_tuple_word_count": 16,
+          "first_closed_nonidentity": {
+            "color_tuple": [
+              "0",
+              "0",
+              "0"
+            ],
+            "generator_counts": {
+              "(0, 1)": 2
+            },
+            "nonidentity_row_count": 2,
+            "subgroup_sizes": {
+              "(0, 1)": 2
+            },
+            "word": [
+              1,
+              1
+            ]
+          },
+          "first_failure": null,
+          "holonomy_group_count": 1,
+          "holonomy_groups": [
+            {
+              "model_points": [
+                "0",
+                "1"
+              ],
+              "order": 2
+            }
+          ],
+          "nonidentity_row_count": 32,
+          "subgroup_failure_count": 0,
+          "total_tags": [
+            "left_nondegenerate",
+            "right_nondegenerate",
+            "nondegenerate"
+          ]
+        },
+        {
+          "base_index": 4,
+          "branch": "swapped",
+          "closed_tuple_word_count": 16,
+          "first_closed_nonidentity": {
+            "color_tuple": [
+              "0",
+              "0",
+              "1"
+            ],
+            "generator_counts": {
+              "(0, 1)": 2
+            },
+            "nonidentity_row_count": 2,
+            "subgroup_sizes": {
+              "(0, 1)": 2
+            },
+            "word": [
+              2,
+              2
+            ]
+          },
+          "first_failure": null,
+          "holonomy_group_count": 1,
+          "holonomy_groups": [
+            {
+              "model_points": [
+                "0",
+                "1"
+              ],
+              "order": 2
+            }
+          ],
+          "nonidentity_row_count": 32,
+          "subgroup_failure_count": 0,
+          "total_tags": [
+            "left_nondegenerate",
+            "right_nondegenerate",
+            "nondegenerate"
+          ]
+        },
+        {
+          "base_index": 4,
+          "branch": "swapped",
+          "closed_tuple_word_count": 32,
+          "first_closed_nonidentity": {
+            "color_tuple": [
+              "0",
+              "0",
+              "0"
+            ],
+            "generator_counts": {
+              "(0, 1)": 2
+            },
+            "nonidentity_row_count": 2,
+            "subgroup_sizes": {
+              "(0, 1)": 2
+            },
+            "word": [
+              1,
+              1
+            ]
+          },
+          "first_failure": null,
+          "holonomy_group_count": 1,
+          "holonomy_groups": [
+            {
+              "model_points": [
+                "0",
+                "1"
+              ],
+              "order": 2
+            }
+          ],
+          "nonidentity_row_count": 64,
+          "subgroup_failure_count": 0,
+          "total_tags": [
+            "left_nondegenerate",
+            "right_nondegenerate",
+            "nondegenerate"
+          ]
+        },
+        {
+          "base_index": 4,
+          "branch": "swapped",
+          "closed_tuple_word_count": 32,
+          "first_closed_nonidentity": {
+            "color_tuple": [
+              "0",
+              "0",
+              "0"
+            ],
+            "generator_counts": {
+              "(0, 1)": 2
+            },
+            "nonidentity_row_count": 2,
+            "subgroup_sizes": {
+              "(0, 1)": 2
+            },
+            "word": [
+              1,
+              1
+            ]
+          },
+          "first_failure": null,
+          "holonomy_group_count": 1,
+          "holonomy_groups": [
+            {
+              "model_points": [
+                "0",
+                "1"
+              ],
+              "order": 2
+            }
+          ],
+          "nonidentity_row_count": 64,
+          "subgroup_failure_count": 0,
+          "total_tags": [
+            "permutation_form",
+            "left_nondegenerate",
+            "right_nondegenerate",
+            "nondegenerate"
+          ]
+        },
+        {
+          "base_index": 4,
+          "branch": "swapped",
+          "closed_tuple_word_count": 16,
+          "first_closed_nonidentity": {
+            "color_tuple": [
+              "0",
+              "0",
+              "1"
+            ],
+            "generator_counts": {
+              "(0, 1)": 2
+            },
+            "nonidentity_row_count": 2,
+            "subgroup_sizes": {
+              "(0, 1)": 2
+            },
+            "word": [
+              2,
+              2
+            ]
+          },
+          "first_failure": null,
+          "holonomy_group_count": 1,
+          "holonomy_groups": [
+            {
+              "model_points": [
+                "0",
+                "1"
+              ],
+              "order": 2
+            }
+          ],
+          "nonidentity_row_count": 32,
+          "subgroup_failure_count": 0,
+          "total_tags": [
+            "left_nondegenerate",
+            "right_nondegenerate",
+            "nondegenerate"
+          ]
+        },
+        {
+          "base_index": 4,
+          "branch": "swapped",
+          "closed_tuple_word_count": 16,
+          "first_closed_nonidentity": {
+            "color_tuple": [
+              "0",
+              "0",
+              "0"
+            ],
+            "generator_counts": {
+              "(0, 1)": 2
+            },
+            "nonidentity_row_count": 2,
+            "subgroup_sizes": {
+              "(0, 1)": 2
+            },
+            "word": [
+              1,
+              1
+            ]
+          },
+          "first_failure": null,
+          "holonomy_group_count": 1,
+          "holonomy_groups": [
+            {
+              "model_points": [
+                "0",
+                "1"
+              ],
+              "order": 2
+            }
+          ],
+          "nonidentity_row_count": 32,
+          "subgroup_failure_count": 0,
+          "total_tags": [
+            "left_nondegenerate",
+            "right_nondegenerate",
+            "nondegenerate"
+          ]
+        }
+      ],
+      "first_failures": [],
+      "holonomy_group_order_counts": {
+        "direct|order=2": 2,
+        "swapped|order=2": 30
+      },
+      "local_minimal_count": 56,
+      "nonidentity_holonomy_row_count": 1024,
+      "product_branch_counts": {
+        "direct": 4,
+        "swapped": 32
+      },
+      "subgroup_failure_count": 0
+    }
+  },
+  "totals": {
+    "checked_table_count": 1658880,
+    "closed_tuple_word_count": 1024,
+    "colored_ybe_count": 629,
+    "holonomy_group_order_counts": {
+      "direct|order=2": 4,
+      "swapped|order=2": 72
+    },
+    "local_minimal_count": 120,
+    "max_word_length": 3,
+    "n": 3,
+    "nonidentity_holonomy_row_count": 2048,
+    "product_branch_counts": {
+      "direct": 12,
+      "swapped": 80
+    },
+    "product_branch_scan_count": 92,
+    "subgroup_failure_count": 0,
+    "word_count": 53
+  }
+}

@@ -1,0 +1,982 @@
+{
+  "size_2_exhaustive": {
+    "cover_count": 5,
+    "depth2_completed_category_truncation_count": 0,
+    "depth2_hidden_atom_trivial_loop_interval_count": 1,
+    "depth2_hidden_atom_trivial_loop_involutive_interval_count": 1,
+    "depth2_hidden_atom_trivial_loop_only_rack_tag_interval_count": 0,
+    "depth2_hidden_atom_trivial_loop_untagged_interval_count": 0,
+    "depth2_hidden_bijective_loop_branch_tag_counts": {},
+    "depth2_hidden_bijective_loop_interval_count": 0,
+    "depth2_hidden_bijective_loop_involutive_interval_count": 0,
+    "depth2_hidden_bijective_loop_only_rack_tag_interval_count": 0,
+    "depth2_hidden_bijective_loop_untagged_interval_count": 0,
+    "depth2_hidden_loop_branch_tag_counts": {
+      "identity_table": 1,
+      "involutive": 1
+    },
+    "first_hidden_intervals": [
+      {
+        "bounded_category_summaries": [
+          {
+            "hidden_atom_trivial_loop_count": 6,
+            "hidden_bijective_loop_count": 0,
+            "max_depth": 2,
+            "morphism_count": 7,
+            "truncated": false
+          },
+          {
+            "hidden_atom_trivial_loop_count": 0,
+            "hidden_bijective_loop_count": 0,
+            "max_depth": 2,
+            "morphism_count": 1,
+            "truncated": false
+          },
+          {
+            "hidden_atom_trivial_loop_count": 6,
+            "hidden_bijective_loop_count": 0,
+            "max_depth": 2,
+            "morphism_count": 7,
+            "truncated": false
+          }
+        ],
+        "interval_color_count": 1,
+        "interval_total_branch_tags": [
+          "involutive",
+          "identity_table"
+        ],
+        "interval_total_element_count": 2,
+        "interval_total_is_involutive": true,
+        "interval_total_is_rack_type": false,
+        "lower_partition": [
+          [
+            "0"
+          ],
+          [
+            "1"
+          ]
+        ],
+        "original_table_values": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            1
+          ]
+        ],
+        "upper_partition": [
+          [
+            "0",
+            "1"
+          ]
+        ]
+      }
+    ],
+    "first_mixed_atom_projection_intervals": [],
+    "first_untagged_hidden_intervals": [],
+    "kernel_action_max_group_size": 2,
+    "kernel_action_nonpermutation_interval_count": 0,
+    "local_minimal_cover_count": 5,
+    "local_only_edge_germ_interval_count": 0,
+    "mixed_atom_projection_branch_tag_counts": {},
+    "mixed_atom_projection_interval_count": 0,
+    "mixed_atom_projection_involutive_interval_count": 0,
+    "output_kernel_counts": {
+      "equality": 4,
+      "universal": 1
+    },
+    "schutzenberger_non_group_action_interval_count": 0,
+    "semisplit_candidate_count": 0,
+    "semisplit_cover_count": 0,
+    "semisplit_failure_witness_count": 0,
+    "size": 2,
+    "universal_output_branch_tag_counts": {
+      "identity_table": 1,
+      "involutive": 1
+    },
+    "universal_output_depth_counts": {
+      "0": 1
+    },
+    "universal_output_hidden_atom_trivial_loop_interval_count": 1,
+    "universal_output_hidden_bijective_loop_interval_count": 0,
+    "universal_output_mixed_atom_projection_interval_count": 0,
+    "universal_output_untagged_interval_count": 0,
+    "ybe_solution_count": 5
+  },
+  "size_3_exhaustive": {
+    "cover_count": 134,
+    "depth2_completed_category_truncation_count": 0,
+    "depth2_hidden_atom_trivial_loop_interval_count": 12,
+    "depth2_hidden_atom_trivial_loop_involutive_interval_count": 12,
+    "depth2_hidden_atom_trivial_loop_only_rack_tag_interval_count": 0,
+    "depth2_hidden_atom_trivial_loop_untagged_interval_count": 0,
+    "depth2_hidden_bijective_loop_branch_tag_counts": {
+      "involutive": 3
+    },
+    "depth2_hidden_bijective_loop_interval_count": 3,
+    "depth2_hidden_bijective_loop_involutive_interval_count": 3,
+    "depth2_hidden_bijective_loop_only_rack_tag_interval_count": 0,
+    "depth2_hidden_bijective_loop_untagged_interval_count": 0,
+    "depth2_hidden_loop_branch_tag_counts": {
+      "identity_table": 6,
+      "involutive": 12
+    },
+    "first_hidden_intervals": [
+      {
+        "bounded_category_summaries": [
+          {
+            "hidden_atom_trivial_loop_count": 6,
+            "hidden_bijective_loop_count": 0,
+            "max_depth": 2,
+            "morphism_count": 7,
+            "truncated": false
+          },
+          {
+            "hidden_atom_trivial_loop_count": 0,
+            "hidden_bijective_loop_count": 0,
+            "max_depth": 2,
+            "morphism_count": 1,
+            "truncated": false
+          },
+          {
+            "hidden_atom_trivial_loop_count": 6,
+            "hidden_bijective_loop_count": 0,
+            "max_depth": 2,
+            "morphism_count": 7,
+            "truncated": false
+          }
+        ],
+        "interval_color_count": 1,
+        "interval_total_branch_tags": [
+          "involutive",
+          "identity_table"
+        ],
+        "interval_total_element_count": 2,
+        "interval_total_is_involutive": true,
+        "interval_total_is_rack_type": false,
+        "lower_partition": [
+          [
+            "0"
+          ],
+          [
+            "1",
+            "2"
+          ]
+        ],
+        "original_table_values": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            2,
+            2
+          ]
+        ],
+        "upper_partition": [
+          [
+            "0",
+            "1",
+            "2"
+          ]
+        ]
+      },
+      {
+        "bounded_category_summaries": [
+          {
+            "hidden_atom_trivial_loop_count": 6,
+            "hidden_bijective_loop_count": 0,
+            "max_depth": 2,
+            "morphism_count": 7,
+            "truncated": false
+          },
+          {
+            "hidden_atom_trivial_loop_count": 0,
+            "hidden_bijective_loop_count": 0,
+            "max_depth": 2,
+            "morphism_count": 1,
+            "truncated": false
+          },
+          {
+            "hidden_atom_trivial_loop_count": 6,
+            "hidden_bijective_loop_count": 0,
+            "max_depth": 2,
+            "morphism_count": 7,
+            "truncated": false
+          }
+        ],
+        "interval_color_count": 1,
+        "interval_total_branch_tags": [
+          "involutive",
+          "identity_table"
+        ],
+        "interval_total_element_count": 2,
+        "interval_total_is_involutive": true,
+        "interval_total_is_rack_type": false,
+        "lower_partition": [
+          [
+            "1"
+          ],
+          [
+            "0",
+            "2"
+          ]
+        ],
+        "original_table_values": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            2,
+            2
+          ]
+        ],
+        "upper_partition": [
+          [
+            "0",
+            "1",
+            "2"
+          ]
+        ]
+      },
+      {
+        "bounded_category_summaries": [
+          {
+            "hidden_atom_trivial_loop_count": 6,
+            "hidden_bijective_loop_count": 0,
+            "max_depth": 2,
+            "morphism_count": 7,
+            "truncated": false
+          },
+          {
+            "hidden_atom_trivial_loop_count": 0,
+            "hidden_bijective_loop_count": 0,
+            "max_depth": 2,
+            "morphism_count": 1,
+            "truncated": false
+          },
+          {
+            "hidden_atom_trivial_loop_count": 6,
+            "hidden_bijective_loop_count": 0,
+            "max_depth": 2,
+            "morphism_count": 7,
+            "truncated": false
+          }
+        ],
+        "interval_color_count": 1,
+        "interval_total_branch_tags": [
+          "involutive",
+          "identity_table"
+        ],
+        "interval_total_element_count": 2,
+        "interval_total_is_involutive": true,
+        "interval_total_is_rack_type": false,
+        "lower_partition": [
+          [
+            "2"
+          ],
+          [
+            "0",
+            "1"
+          ]
+        ],
+        "original_table_values": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            2,
+            2
+          ]
+        ],
+        "upper_partition": [
+          [
+            "0",
+            "1",
+            "2"
+          ]
+        ]
+      },
+      {
+        "bounded_category_summaries": [
+          {
+            "hidden_atom_trivial_loop_count": 12,
+            "hidden_bijective_loop_count": 0,
+            "max_depth": 2,
+            "morphism_count": 13,
+            "truncated": false
+          },
+          {
+            "hidden_atom_trivial_loop_count": 0,
+            "hidden_bijective_loop_count": 0,
+            "max_depth": 2,
+            "morphism_count": 1,
+            "truncated": false
+          },
+          {
+            "hidden_atom_trivial_loop_count": 12,
+            "hidden_bijective_loop_count": 0,
+            "max_depth": 2,
+            "morphism_count": 13,
+            "truncated": false
+          },
+          {
+            "hidden_atom_trivial_loop_count": 12,
+            "hidden_bijective_loop_count": 0,
+            "max_depth": 2,
+            "morphism_count": 13,
+            "truncated": false
+          }
+        ],
+        "interval_color_count": 2,
+        "interval_total_branch_tags": [
+          "involutive",
+          "identity_table"
+        ],
+        "interval_total_element_count": 3,
+        "interval_total_is_involutive": true,
+        "interval_total_is_rack_type": false,
+        "lower_partition": [
+          [
+            "0"
+          ],
+          [
+            "1"
+          ],
+          [
+            "2"
+          ]
+        ],
+        "original_table_values": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            2,
+            2
+          ]
+        ],
+        "upper_partition": [
+          [
+            "0"
+          ],
+          [
+            "1",
+            "2"
+          ]
+        ]
+      },
+      {
+        "bounded_category_summaries": [
+          {
+            "hidden_atom_trivial_loop_count": 12,
+            "hidden_bijective_loop_count": 0,
+            "max_depth": 2,
+            "morphism_count": 13,
+            "truncated": false
+          },
+          {
+            "hidden_atom_trivial_loop_count": 0,
+            "hidden_bijective_loop_count": 0,
+            "max_depth": 2,
+            "morphism_count": 1,
+            "truncated": false
+          },
+          {
+            "hidden_atom_trivial_loop_count": 12,
+            "hidden_bijective_loop_count": 0,
+            "max_depth": 2,
+            "morphism_count": 13,
+            "truncated": false
+          },
+          {
+            "hidden_atom_trivial_loop_count": 12,
+            "hidden_bijective_loop_count": 0,
+            "max_depth": 2,
+            "morphism_count": 13,
+            "truncated": false
+          }
+        ],
+        "interval_color_count": 2,
+        "interval_total_branch_tags": [
+          "involutive",
+          "identity_table"
+        ],
+        "interval_total_element_count": 3,
+        "interval_total_is_involutive": true,
+        "interval_total_is_rack_type": false,
+        "lower_partition": [
+          [
+            "0"
+          ],
+          [
+            "1"
+          ],
+          [
+            "2"
+          ]
+        ],
+        "original_table_values": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            2,
+            2
+          ]
+        ],
+        "upper_partition": [
+          [
+            "1"
+          ],
+          [
+            "0",
+            "2"
+          ]
+        ]
+      }
+    ],
+    "first_mixed_atom_projection_intervals": [
+      {
+        "interval_color_count": 2,
+        "interval_total_branch_tags": [
+          "involutive"
+        ],
+        "interval_total_element_count": 3,
+        "interval_total_is_involutive": true,
+        "lower_partition": [
+          [
+            "0"
+          ],
+          [
+            "1"
+          ],
+          [
+            "2"
+          ]
+        ],
+        "mixed_source_counts": [
+          1,
+          0,
+          1
+        ],
+        "original_table_values": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            2
+          ]
+        ],
+        "upper_partition": [
+          [
+            "2"
+          ],
+          [
+            "0",
+            "1"
+          ]
+        ]
+      },
+      {
+        "interval_color_count": 2,
+        "interval_total_branch_tags": [
+          "involutive"
+        ],
+        "interval_total_element_count": 3,
+        "interval_total_is_involutive": true,
+        "lower_partition": [
+          [
+            "0"
+          ],
+          [
+            "1"
+          ],
+          [
+            "2"
+          ]
+        ],
+        "mixed_source_counts": [
+          1,
+          0,
+          1
+        ],
+        "original_table_values": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            2,
+            2
+          ]
+        ],
+        "upper_partition": [
+          [
+            "2"
+          ],
+          [
+            "0",
+            "1"
+          ]
+        ]
+      },
+      {
+        "interval_color_count": 2,
+        "interval_total_branch_tags": [
+          "involutive"
+        ],
+        "interval_total_element_count": 3,
+        "interval_total_is_involutive": true,
+        "lower_partition": [
+          [
+            "0"
+          ],
+          [
+            "1"
+          ],
+          [
+            "2"
+          ]
+        ],
+        "mixed_source_counts": [
+          1,
+          0,
+          1
+        ],
+        "original_table_values": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            2
+          ]
+        ],
+        "upper_partition": [
+          [
+            "1"
+          ],
+          [
+            "0",
+            "2"
+          ]
+        ]
+      },
+      {
+        "interval_color_count": 2,
+        "interval_total_branch_tags": [
+          "involutive"
+        ],
+        "interval_total_element_count": 3,
+        "interval_total_is_involutive": true,
+        "lower_partition": [
+          [
+            "0"
+          ],
+          [
+            "1"
+          ],
+          [
+            "2"
+          ]
+        ],
+        "mixed_source_counts": [
+          1,
+          0,
+          1
+        ],
+        "original_table_values": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            2,
+            2
+          ]
+        ],
+        "upper_partition": [
+          [
+            "0"
+          ],
+          [
+            "1",
+            "2"
+          ]
+        ]
+      },
+      {
+        "interval_color_count": 2,
+        "interval_total_branch_tags": [
+          "involutive"
+        ],
+        "interval_total_element_count": 3,
+        "interval_total_is_involutive": true,
+        "lower_partition": [
+          [
+            "0"
+          ],
+          [
+            "1"
+          ],
+          [
+            "2"
+          ]
+        ],
+        "mixed_source_counts": [
+          1,
+          0,
+          1
+        ],
+        "original_table_values": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            2,
+            2
+          ]
+        ],
+        "upper_partition": [
+          [
+            "1"
+          ],
+          [
+            "0",
+            "2"
+          ]
+        ]
+      }
+    ],
+    "first_untagged_hidden_intervals": [],
+    "kernel_action_max_group_size": 6,
+    "kernel_action_nonpermutation_interval_count": 0,
+    "local_minimal_cover_count": 134,
+    "local_only_edge_germ_interval_count": 0,
+    "mixed_atom_projection_branch_tag_counts": {
+      "involutive": 6
+    },
+    "mixed_atom_projection_interval_count": 6,
+    "mixed_atom_projection_involutive_interval_count": 6,
+    "output_kernel_counts": {
+      "equality": 122,
+      "universal": 12
+    },
+    "schutzenberger_non_group_action_interval_count": 0,
+    "semisplit_candidate_count": 0,
+    "semisplit_cover_count": 0,
+    "semisplit_failure_witness_count": 0,
+    "size": 3,
+    "universal_output_branch_tag_counts": {
+      "identity_table": 6,
+      "involutive": 12
+    },
+    "universal_output_depth_counts": {
+      "0": 12
+    },
+    "universal_output_hidden_atom_trivial_loop_interval_count": 12,
+    "universal_output_hidden_bijective_loop_interval_count": 3,
+    "universal_output_mixed_atom_projection_interval_count": 6,
+    "universal_output_untagged_interval_count": 0,
+    "ybe_solution_count": 73
+  }
+}

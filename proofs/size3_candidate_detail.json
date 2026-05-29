@@ -1,0 +1,403 @@
+{
+  "candidate_count_returned": 3,
+  "records": [
+    {
+      "affine_cyclic_form": {
+        "matrix": [
+          [
+            2,
+            1
+          ],
+          [
+            2,
+            0
+          ]
+        ],
+        "modulus": 3,
+        "offset": [
+          0,
+          0
+        ]
+      },
+      "commutator_action_order_at_q3": 4,
+      "commutator_action_support_size_at_q3": 24,
+      "commutator_braid_index": 3,
+      "commutator_braid_word": [
+        2,
+        1,
+        1,
+        -2,
+        2,
+        2,
+        2,
+        -1,
+        -1,
+        -2,
+        -2,
+        -2
+      ],
+      "commutator_longitude_invisible_groups": [
+        "C2",
+        "C3",
+        "C5"
+      ],
+      "commutator_longitude_visible_groups": [
+        "S3"
+      ],
+      "is_rack_type": false,
+      "is_ybe": true,
+      "moved_image": "(1, 1, 2)",
+      "moved_tuple": "(0, 0, 1)",
+      "projection_form": {
+        "first_depends_only_on_x": false,
+        "first_depends_only_on_y": false,
+        "second_depends_only_on_x": true,
+        "second_depends_only_on_y": false
+      },
+      "pure_image_subgroup_exponent_at_q3": 12,
+      "pure_image_subgroup_size_at_q3": 24,
+      "table_order": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          2
+        ]
+      ],
+      "table_values": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "affine_cyclic_form": {
+        "matrix": [
+          [
+            0,
+            1
+          ],
+          [
+            2,
+            2
+          ]
+        ],
+        "modulus": 3,
+        "offset": [
+          0,
+          0
+        ]
+      },
+      "commutator_action_order_at_q3": 4,
+      "commutator_action_support_size_at_q3": 24,
+      "commutator_braid_index": 3,
+      "commutator_braid_word": [
+        2,
+        1,
+        1,
+        -2,
+        2,
+        2,
+        2,
+        -1,
+        -1,
+        -2,
+        -2,
+        -2
+      ],
+      "commutator_longitude_invisible_groups": [
+        "C2",
+        "C3",
+        "C5"
+      ],
+      "commutator_longitude_visible_groups": [
+        "S3"
+      ],
+      "is_rack_type": false,
+      "is_ybe": true,
+      "moved_image": "(1, 0, 0)",
+      "moved_tuple": "(0, 0, 1)",
+      "projection_form": {
+        "first_depends_only_on_x": false,
+        "first_depends_only_on_y": true,
+        "second_depends_only_on_x": false,
+        "second_depends_only_on_y": false
+      },
+      "pure_image_subgroup_exponent_at_q3": 12,
+      "pure_image_subgroup_size_at_q3": 24,
+      "table_order": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          2
+        ]
+      ],
+      "table_values": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          2
+        ]
+      ]
+    },
+    {
+      "affine_cyclic_form": {
+        "matrix": [
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            2
+          ]
+        ],
+        "modulus": 3,
+        "offset": [
+          0,
+          0
+        ]
+      },
+      "commutator_action_order_at_q3": 4,
+      "commutator_action_support_size_at_q3": 24,
+      "commutator_braid_index": 3,
+      "commutator_braid_word": [
+        2,
+        1,
+        1,
+        -2,
+        2,
+        2,
+        2,
+        -1,
+        -1,
+        -2,
+        -2,
+        -2
+      ],
+      "commutator_longitude_invisible_groups": [
+        "C2",
+        "C3",
+        "C5"
+      ],
+      "commutator_longitude_visible_groups": [
+        "S3"
+      ],
+      "is_rack_type": false,
+      "is_ybe": true,
+      "moved_image": "(1, 0, 0)",
+      "moved_tuple": "(0, 0, 1)",
+      "projection_form": {
+        "first_depends_only_on_x": false,
+        "first_depends_only_on_y": true,
+        "second_depends_only_on_x": false,
+        "second_depends_only_on_y": false
+      },
+      "pure_image_subgroup_exponent_at_q3": 12,
+      "pure_image_subgroup_size_at_q3": 24,
+      "table_order": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          2
+        ]
+      ],
+      "table_values": [
+        [
+          0,
+          0
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          1,
+          0
+        ]
+      ]
+    }
+  ],
+  "table_prefix_max_checked": 50000,
+  "ybe_solutions_examined_until_limit": 33
+}

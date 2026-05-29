@@ -1,0 +1,2869 @@
+{
+  "size_2_exhaustive": {
+    "bifree_examples": [],
+    "bifree_rank_counts": [],
+    "combined_rank_counts": [
+      {
+        "all_coordinate_kernel_closure_kind": "universal",
+        "all_coordinate_kernel_seed_count": 2,
+        "all_coordinate_kernel_stable_depth": 0,
+        "coretraction": "universal",
+        "count": 1,
+        "left_input_second_output_distinct_kernel_count": 1,
+        "left_input_second_output_kernel_shapes": [
+          [
+            1,
+            1
+          ]
+        ],
+        "left_input_second_output_ranks": [
+          2
+        ],
+        "left_output_distinct_kernel_count": 1,
+        "left_output_kernel_shapes": [
+          [
+            2
+          ]
+        ],
+        "left_output_ranks": [
+          1
+        ],
+        "output_kernel_closure_kind": "universal",
+        "output_kernel_diameters": [
+          1
+        ],
+        "output_kernel_edge_counts": [
+          1
+        ],
+        "output_kernel_seed_count": 2,
+        "output_kernel_stable_depth": 0,
+        "retraction": "equality",
+        "right_input_first_output_distinct_kernel_count": 1,
+        "right_input_first_output_kernel_shapes": [
+          [
+            1,
+            1
+          ]
+        ],
+        "right_input_first_output_ranks": [
+          2
+        ],
+        "right_output_distinct_kernel_count": 1,
+        "right_output_kernel_shapes": [
+          [
+            2
+          ]
+        ],
+        "right_output_ranks": [
+          1
+        ],
+        "tags": [
+          "involutive",
+          "identity_table"
+        ]
+      },
+      {
+        "all_coordinate_kernel_closure_kind": "universal",
+        "all_coordinate_kernel_seed_count": 2,
+        "all_coordinate_kernel_stable_depth": 0,
+        "coretraction": "equality",
+        "count": 1,
+        "left_input_second_output_distinct_kernel_count": 1,
+        "left_input_second_output_kernel_shapes": [
+          [
+            2
+          ]
+        ],
+        "left_input_second_output_ranks": [
+          1
+        ],
+        "left_output_distinct_kernel_count": 1,
+        "left_output_kernel_shapes": [
+          [
+            1,
+            1
+          ]
+        ],
+        "left_output_ranks": [
+          2
+        ],
+        "output_kernel_closure_kind": "equality",
+        "output_kernel_diameters": [
+          0
+        ],
+        "output_kernel_edge_counts": [
+          0
+        ],
+        "output_kernel_seed_count": 0,
+        "output_kernel_stable_depth": 0,
+        "retraction": "universal",
+        "right_input_first_output_distinct_kernel_count": 1,
+        "right_input_first_output_kernel_shapes": [
+          [
+            2
+          ]
+        ],
+        "right_input_first_output_ranks": [
+          1
+        ],
+        "right_output_distinct_kernel_count": 1,
+        "right_output_kernel_shapes": [
+          [
+            1,
+            1
+          ]
+        ],
+        "right_output_ranks": [
+          2
+        ],
+        "tags": [
+          "involutive",
+          "permutation_form",
+          "left_nondegenerate",
+          "right_nondegenerate",
+          "nondegenerate"
+        ]
+      },
+      {
+        "all_coordinate_kernel_closure_kind": "universal",
+        "all_coordinate_kernel_seed_count": 2,
+        "all_coordinate_kernel_stable_depth": 0,
+        "coretraction": "equality",
+        "count": 1,
+        "left_input_second_output_distinct_kernel_count": 1,
+        "left_input_second_output_kernel_shapes": [
+          [
+            2
+          ]
+        ],
+        "left_input_second_output_ranks": [
+          1
+        ],
+        "left_output_distinct_kernel_count": 1,
+        "left_output_kernel_shapes": [
+          [
+            1,
+            1
+          ]
+        ],
+        "left_output_ranks": [
+          2
+        ],
+        "output_kernel_closure_kind": "equality",
+        "output_kernel_diameters": [
+          0
+        ],
+        "output_kernel_edge_counts": [
+          0
+        ],
+        "output_kernel_seed_count": 0,
+        "output_kernel_stable_depth": 0,
+        "retraction": "universal",
+        "right_input_first_output_distinct_kernel_count": 1,
+        "right_input_first_output_kernel_shapes": [
+          [
+            2
+          ]
+        ],
+        "right_input_first_output_ranks": [
+          1
+        ],
+        "right_output_distinct_kernel_count": 1,
+        "right_output_kernel_shapes": [
+          [
+            1,
+            1
+          ]
+        ],
+        "right_output_ranks": [
+          2
+        ],
+        "tags": [
+          "permutation_form",
+          "left_nondegenerate",
+          "right_nondegenerate",
+          "nondegenerate"
+        ]
+      },
+      {
+        "all_coordinate_kernel_closure_kind": "universal",
+        "all_coordinate_kernel_seed_count": 2,
+        "all_coordinate_kernel_stable_depth": 0,
+        "coretraction": "equality",
+        "count": 1,
+        "left_input_second_output_distinct_kernel_count": 1,
+        "left_input_second_output_kernel_shapes": [
+          [
+            2
+          ]
+        ],
+        "left_input_second_output_ranks": [
+          1
+        ],
+        "left_output_distinct_kernel_count": 1,
+        "left_output_kernel_shapes": [
+          [
+            1,
+            1
+          ]
+        ],
+        "left_output_ranks": [
+          2
+        ],
+        "output_kernel_closure_kind": "equality",
+        "output_kernel_diameters": [
+          0
+        ],
+        "output_kernel_edge_counts": [
+          0
+        ],
+        "output_kernel_seed_count": 0,
+        "output_kernel_stable_depth": 0,
+        "retraction": "universal",
+        "right_input_first_output_distinct_kernel_count": 1,
+        "right_input_first_output_kernel_shapes": [
+          [
+            2
+          ]
+        ],
+        "right_input_first_output_ranks": [
+          1
+        ],
+        "right_output_distinct_kernel_count": 1,
+        "right_output_kernel_shapes": [
+          [
+            1,
+            1
+          ]
+        ],
+        "right_output_ranks": [
+          2
+        ],
+        "tags": [
+          "rack_type",
+          "involutive",
+          "permutation_form",
+          "left_nondegenerate",
+          "right_nondegenerate",
+          "nondegenerate"
+        ]
+      },
+      {
+        "all_coordinate_kernel_closure_kind": "universal",
+        "all_coordinate_kernel_seed_count": 2,
+        "all_coordinate_kernel_stable_depth": 0,
+        "coretraction": "equality",
+        "count": 1,
+        "left_input_second_output_distinct_kernel_count": 1,
+        "left_input_second_output_kernel_shapes": [
+          [
+            2
+          ]
+        ],
+        "left_input_second_output_ranks": [
+          1
+        ],
+        "left_output_distinct_kernel_count": 1,
+        "left_output_kernel_shapes": [
+          [
+            1,
+            1
+          ]
+        ],
+        "left_output_ranks": [
+          2
+        ],
+        "output_kernel_closure_kind": "equality",
+        "output_kernel_diameters": [
+          0
+        ],
+        "output_kernel_edge_counts": [
+          0
+        ],
+        "output_kernel_seed_count": 0,
+        "output_kernel_stable_depth": 0,
+        "retraction": "universal",
+        "right_input_first_output_distinct_kernel_count": 1,
+        "right_input_first_output_kernel_shapes": [
+          [
+            2
+          ]
+        ],
+        "right_input_first_output_ranks": [
+          1
+        ],
+        "right_output_distinct_kernel_count": 1,
+        "right_output_kernel_shapes": [
+          [
+            1,
+            1
+          ]
+        ],
+        "right_output_ranks": [
+          2
+        ],
+        "tags": [
+          "rack_type",
+          "permutation_form",
+          "left_nondegenerate",
+          "right_nondegenerate",
+          "nondegenerate"
+        ]
+      }
+    ],
+    "size": 2
+  },
+  "size_3_exhaustive": {
+    "bifree_examples": [
+      {
+        "all_coordinate_kernel_closure_kind": "universal",
+        "all_coordinate_kernel_seed_count": 2,
+        "all_coordinate_kernel_stable_depth": 0,
+        "original_table_values": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            2
+          ]
+        ],
+        "output_kernel_closure_kind": "universal",
+        "output_kernel_diameters": [
+          [
+            "frozenset({2})",
+            0
+          ],
+          [
+            "frozenset({0, 1})",
+            1
+          ]
+        ],
+        "output_kernel_edge_counts": [
+          [
+            "frozenset({2})",
+            0
+          ],
+          [
+            "frozenset({0, 1})",
+            1
+          ]
+        ],
+        "output_kernel_seed_count": 2,
+        "output_kernel_stable_depth": 0,
+        "rank_profile": {
+          "left_input_second_output_distinct_kernel_count": 3,
+          "left_input_second_output_kernel_shapes": [
+            [
+              1
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              2
+            ]
+          ],
+          "left_input_second_output_ranks": [
+            1,
+            2
+          ],
+          "left_output_distinct_kernel_count": 3,
+          "left_output_kernel_shapes": [
+            [
+              1
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              2
+            ]
+          ],
+          "left_output_ranks": [
+            1,
+            2
+          ],
+          "right_input_first_output_distinct_kernel_count": 3,
+          "right_input_first_output_kernel_shapes": [
+            [
+              1
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              2
+            ]
+          ],
+          "right_input_first_output_ranks": [
+            1,
+            2
+          ],
+          "right_output_distinct_kernel_count": 3,
+          "right_output_kernel_shapes": [
+            [
+              1
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              2
+            ]
+          ],
+          "right_output_ranks": [
+            1,
+            2
+          ]
+        },
+        "solution_index": 1,
+        "tags": [
+          "involutive"
+        ]
+      },
+      {
+        "all_coordinate_kernel_closure_kind": "universal",
+        "all_coordinate_kernel_seed_count": 2,
+        "all_coordinate_kernel_stable_depth": 0,
+        "original_table_values": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            2,
+            2
+          ]
+        ],
+        "output_kernel_closure_kind": "universal",
+        "output_kernel_diameters": [
+          [
+            "frozenset({2})",
+            0
+          ],
+          [
+            "frozenset({0, 1})",
+            1
+          ]
+        ],
+        "output_kernel_edge_counts": [
+          [
+            "frozenset({2})",
+            0
+          ],
+          [
+            "frozenset({0, 1})",
+            1
+          ]
+        ],
+        "output_kernel_seed_count": 2,
+        "output_kernel_stable_depth": 0,
+        "rank_profile": {
+          "left_input_second_output_distinct_kernel_count": 3,
+          "left_input_second_output_kernel_shapes": [
+            [
+              1
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              2
+            ]
+          ],
+          "left_input_second_output_ranks": [
+            1,
+            2
+          ],
+          "left_output_distinct_kernel_count": 3,
+          "left_output_kernel_shapes": [
+            [
+              1
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              2
+            ]
+          ],
+          "left_output_ranks": [
+            1,
+            2
+          ],
+          "right_input_first_output_distinct_kernel_count": 3,
+          "right_input_first_output_kernel_shapes": [
+            [
+              1
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              2
+            ]
+          ],
+          "right_input_first_output_ranks": [
+            1,
+            2
+          ],
+          "right_output_distinct_kernel_count": 3,
+          "right_output_kernel_shapes": [
+            [
+              1
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              2
+            ]
+          ],
+          "right_output_ranks": [
+            1,
+            2
+          ]
+        },
+        "solution_index": 2,
+        "tags": [
+          "involutive"
+        ]
+      },
+      {
+        "all_coordinate_kernel_closure_kind": "universal",
+        "all_coordinate_kernel_seed_count": 2,
+        "all_coordinate_kernel_stable_depth": 0,
+        "original_table_values": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            2
+          ]
+        ],
+        "output_kernel_closure_kind": "universal",
+        "output_kernel_diameters": [
+          [
+            "frozenset({1})",
+            0
+          ],
+          [
+            "frozenset({0, 2})",
+            1
+          ]
+        ],
+        "output_kernel_edge_counts": [
+          [
+            "frozenset({1})",
+            0
+          ],
+          [
+            "frozenset({0, 2})",
+            1
+          ]
+        ],
+        "output_kernel_seed_count": 2,
+        "output_kernel_stable_depth": 0,
+        "rank_profile": {
+          "left_input_second_output_distinct_kernel_count": 3,
+          "left_input_second_output_kernel_shapes": [
+            [
+              1
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              2
+            ]
+          ],
+          "left_input_second_output_ranks": [
+            1,
+            2
+          ],
+          "left_output_distinct_kernel_count": 3,
+          "left_output_kernel_shapes": [
+            [
+              1
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              2
+            ]
+          ],
+          "left_output_ranks": [
+            1,
+            2
+          ],
+          "right_input_first_output_distinct_kernel_count": 3,
+          "right_input_first_output_kernel_shapes": [
+            [
+              1
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              2
+            ]
+          ],
+          "right_input_first_output_ranks": [
+            1,
+            2
+          ],
+          "right_output_distinct_kernel_count": 3,
+          "right_output_kernel_shapes": [
+            [
+              1
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              2
+            ]
+          ],
+          "right_output_ranks": [
+            1,
+            2
+          ]
+        },
+        "solution_index": 3,
+        "tags": [
+          "involutive"
+        ]
+      },
+      {
+        "all_coordinate_kernel_closure_kind": "universal",
+        "all_coordinate_kernel_seed_count": 2,
+        "all_coordinate_kernel_stable_depth": 0,
+        "original_table_values": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            2,
+            2
+          ]
+        ],
+        "output_kernel_closure_kind": "universal",
+        "output_kernel_diameters": [
+          [
+            "frozenset({0})",
+            0
+          ],
+          [
+            "frozenset({1, 2})",
+            1
+          ]
+        ],
+        "output_kernel_edge_counts": [
+          [
+            "frozenset({0})",
+            0
+          ],
+          [
+            "frozenset({1, 2})",
+            1
+          ]
+        ],
+        "output_kernel_seed_count": 2,
+        "output_kernel_stable_depth": 0,
+        "rank_profile": {
+          "left_input_second_output_distinct_kernel_count": 3,
+          "left_input_second_output_kernel_shapes": [
+            [
+              1
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              2
+            ]
+          ],
+          "left_input_second_output_ranks": [
+            1,
+            2
+          ],
+          "left_output_distinct_kernel_count": 3,
+          "left_output_kernel_shapes": [
+            [
+              1
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              2
+            ]
+          ],
+          "left_output_ranks": [
+            1,
+            2
+          ],
+          "right_input_first_output_distinct_kernel_count": 3,
+          "right_input_first_output_kernel_shapes": [
+            [
+              1
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              2
+            ]
+          ],
+          "right_input_first_output_ranks": [
+            1,
+            2
+          ],
+          "right_output_distinct_kernel_count": 3,
+          "right_output_kernel_shapes": [
+            [
+              1
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              2
+            ]
+          ],
+          "right_output_ranks": [
+            1,
+            2
+          ]
+        },
+        "solution_index": 4,
+        "tags": [
+          "involutive"
+        ]
+      },
+      {
+        "all_coordinate_kernel_closure_kind": "universal",
+        "all_coordinate_kernel_seed_count": 6,
+        "all_coordinate_kernel_stable_depth": 0,
+        "original_table_values": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "output_kernel_closure_kind": "equality",
+        "output_kernel_diameters": [
+          [
+            "frozenset({0, 1, 2})",
+            0
+          ]
+        ],
+        "output_kernel_edge_counts": [
+          [
+            "frozenset({0, 1, 2})",
+            0
+          ]
+        ],
+        "output_kernel_seed_count": 0,
+        "output_kernel_stable_depth": 0,
+        "rank_profile": {
+          "left_input_second_output_distinct_kernel_count": 1,
+          "left_input_second_output_kernel_shapes": [
+            [
+              3
+            ]
+          ],
+          "left_input_second_output_ranks": [
+            1
+          ],
+          "left_output_distinct_kernel_count": 1,
+          "left_output_kernel_shapes": [
+            [
+              1,
+              1,
+              1
+            ]
+          ],
+          "left_output_ranks": [
+            3
+          ],
+          "right_input_first_output_distinct_kernel_count": 1,
+          "right_input_first_output_kernel_shapes": [
+            [
+              1,
+              1,
+              1
+            ]
+          ],
+          "right_input_first_output_ranks": [
+            3
+          ],
+          "right_output_distinct_kernel_count": 1,
+          "right_output_kernel_shapes": [
+            [
+              1,
+              1,
+              1
+            ]
+          ],
+          "right_output_ranks": [
+            3
+          ]
+        },
+        "solution_index": 15,
+        "tags": [
+          "left_nondegenerate",
+          "right_nondegenerate",
+          "nondegenerate"
+        ]
+      },
+      {
+        "all_coordinate_kernel_closure_kind": "universal",
+        "all_coordinate_kernel_seed_count": 2,
+        "all_coordinate_kernel_stable_depth": 0,
+        "original_table_values": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            2,
+            2
+          ]
+        ],
+        "output_kernel_closure_kind": "universal",
+        "output_kernel_diameters": [
+          [
+            "frozenset({1})",
+            0
+          ],
+          [
+            "frozenset({0, 2})",
+            1
+          ]
+        ],
+        "output_kernel_edge_counts": [
+          [
+            "frozenset({1})",
+            0
+          ],
+          [
+            "frozenset({0, 2})",
+            1
+          ]
+        ],
+        "output_kernel_seed_count": 2,
+        "output_kernel_stable_depth": 0,
+        "rank_profile": {
+          "left_input_second_output_distinct_kernel_count": 3,
+          "left_input_second_output_kernel_shapes": [
+            [
+              1
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              2
+            ]
+          ],
+          "left_input_second_output_ranks": [
+            1,
+            2
+          ],
+          "left_output_distinct_kernel_count": 3,
+          "left_output_kernel_shapes": [
+            [
+              1
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              2
+            ]
+          ],
+          "left_output_ranks": [
+            1,
+            2
+          ],
+          "right_input_first_output_distinct_kernel_count": 3,
+          "right_input_first_output_kernel_shapes": [
+            [
+              1
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              2
+            ]
+          ],
+          "right_input_first_output_ranks": [
+            1,
+            2
+          ],
+          "right_output_distinct_kernel_count": 3,
+          "right_output_kernel_shapes": [
+            [
+              1
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              2
+            ]
+          ],
+          "right_output_ranks": [
+            1,
+            2
+          ]
+        },
+        "solution_index": 18,
+        "tags": [
+          "involutive"
+        ]
+      },
+      {
+        "all_coordinate_kernel_closure_kind": "universal",
+        "all_coordinate_kernel_seed_count": 6,
+        "all_coordinate_kernel_stable_depth": 0,
+        "original_table_values": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            2,
+            2
+          ]
+        ],
+        "output_kernel_closure_kind": "equality",
+        "output_kernel_diameters": [
+          [
+            "frozenset({0, 1, 2})",
+            0
+          ]
+        ],
+        "output_kernel_edge_counts": [
+          [
+            "frozenset({0, 1, 2})",
+            0
+          ]
+        ],
+        "output_kernel_seed_count": 0,
+        "output_kernel_stable_depth": 0,
+        "rank_profile": {
+          "left_input_second_output_distinct_kernel_count": 1,
+          "left_input_second_output_kernel_shapes": [
+            [
+              1,
+              1,
+              1
+            ]
+          ],
+          "left_input_second_output_ranks": [
+            3
+          ],
+          "left_output_distinct_kernel_count": 1,
+          "left_output_kernel_shapes": [
+            [
+              1,
+              1,
+              1
+            ]
+          ],
+          "left_output_ranks": [
+            3
+          ],
+          "right_input_first_output_distinct_kernel_count": 1,
+          "right_input_first_output_kernel_shapes": [
+            [
+              3
+            ]
+          ],
+          "right_input_first_output_ranks": [
+            1
+          ],
+          "right_output_distinct_kernel_count": 1,
+          "right_output_kernel_shapes": [
+            [
+              1,
+              1,
+              1
+            ]
+          ],
+          "right_output_ranks": [
+            3
+          ]
+        },
+        "solution_index": 21,
+        "tags": [
+          "left_nondegenerate",
+          "right_nondegenerate",
+          "nondegenerate"
+        ]
+      },
+      {
+        "all_coordinate_kernel_closure_kind": "universal",
+        "all_coordinate_kernel_seed_count": 2,
+        "all_coordinate_kernel_stable_depth": 0,
+        "original_table_values": [
+          [
+            0,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            2,
+            2
+          ]
+        ],
+        "output_kernel_closure_kind": "universal",
+        "output_kernel_diameters": [
+          [
+            "frozenset({0})",
+            0
+          ],
+          [
+            "frozenset({1, 2})",
+            1
+          ]
+        ],
+        "output_kernel_edge_counts": [
+          [
+            "frozenset({0})",
+            0
+          ],
+          [
+            "frozenset({1, 2})",
+            1
+          ]
+        ],
+        "output_kernel_seed_count": 2,
+        "output_kernel_stable_depth": 0,
+        "rank_profile": {
+          "left_input_second_output_distinct_kernel_count": 3,
+          "left_input_second_output_kernel_shapes": [
+            [
+              1
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              2
+            ]
+          ],
+          "left_input_second_output_ranks": [
+            1,
+            2
+          ],
+          "left_output_distinct_kernel_count": 3,
+          "left_output_kernel_shapes": [
+            [
+              1
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              2
+            ]
+          ],
+          "left_output_ranks": [
+            1,
+            2
+          ],
+          "right_input_first_output_distinct_kernel_count": 3,
+          "right_input_first_output_kernel_shapes": [
+            [
+              1
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              2
+            ]
+          ],
+          "right_input_first_output_ranks": [
+            1,
+            2
+          ],
+          "right_output_distinct_kernel_count": 3,
+          "right_output_kernel_shapes": [
+            [
+              1
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              2
+            ]
+          ],
+          "right_output_ranks": [
+            1,
+            2
+          ]
+        },
+        "solution_index": 26,
+        "tags": [
+          "involutive"
+        ]
+      }
+    ],
+    "bifree_rank_counts": [
+      {
+        "all_coordinate_kernel_closure_kind": "universal",
+        "all_coordinate_kernel_seed_count": 2,
+        "all_coordinate_kernel_stable_depth": 0,
+        "count": 6,
+        "left_input_second_output_distinct_kernel_count": 3,
+        "left_input_second_output_kernel_shapes": [
+          [
+            1
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            2
+          ]
+        ],
+        "left_input_second_output_ranks": [
+          1,
+          2
+        ],
+        "left_output_distinct_kernel_count": 3,
+        "left_output_kernel_shapes": [
+          [
+            1
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            2
+          ]
+        ],
+        "left_output_ranks": [
+          1,
+          2
+        ],
+        "output_kernel_closure_kind": "universal",
+        "output_kernel_diameters": [
+          0,
+          1
+        ],
+        "output_kernel_edge_counts": [
+          0,
+          1
+        ],
+        "output_kernel_seed_count": 2,
+        "output_kernel_stable_depth": 0,
+        "right_input_first_output_distinct_kernel_count": 3,
+        "right_input_first_output_kernel_shapes": [
+          [
+            1
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            2
+          ]
+        ],
+        "right_input_first_output_ranks": [
+          1,
+          2
+        ],
+        "right_output_distinct_kernel_count": 3,
+        "right_output_kernel_shapes": [
+          [
+            1
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            2
+          ]
+        ],
+        "right_output_ranks": [
+          1,
+          2
+        ],
+        "tags": [
+          "involutive"
+        ]
+      },
+      {
+        "all_coordinate_kernel_closure_kind": "universal",
+        "all_coordinate_kernel_seed_count": 6,
+        "all_coordinate_kernel_stable_depth": 0,
+        "count": 6,
+        "left_input_second_output_distinct_kernel_count": 1,
+        "left_input_second_output_kernel_shapes": [
+          [
+            1,
+            1,
+            1
+          ]
+        ],
+        "left_input_second_output_ranks": [
+          3
+        ],
+        "left_output_distinct_kernel_count": 1,
+        "left_output_kernel_shapes": [
+          [
+            1,
+            1,
+            1
+          ]
+        ],
+        "left_output_ranks": [
+          3
+        ],
+        "output_kernel_closure_kind": "equality",
+        "output_kernel_diameters": [
+          0
+        ],
+        "output_kernel_edge_counts": [
+          0
+        ],
+        "output_kernel_seed_count": 0,
+        "output_kernel_stable_depth": 0,
+        "right_input_first_output_distinct_kernel_count": 1,
+        "right_input_first_output_kernel_shapes": [
+          [
+            3
+          ]
+        ],
+        "right_input_first_output_ranks": [
+          1
+        ],
+        "right_output_distinct_kernel_count": 1,
+        "right_output_kernel_shapes": [
+          [
+            1,
+            1,
+            1
+          ]
+        ],
+        "right_output_ranks": [
+          3
+        ],
+        "tags": [
+          "left_nondegenerate",
+          "right_nondegenerate",
+          "nondegenerate"
+        ]
+      },
+      {
+        "all_coordinate_kernel_closure_kind": "universal",
+        "all_coordinate_kernel_seed_count": 6,
+        "all_coordinate_kernel_stable_depth": 0,
+        "count": 5,
+        "left_input_second_output_distinct_kernel_count": 1,
+        "left_input_second_output_kernel_shapes": [
+          [
+            3
+          ]
+        ],
+        "left_input_second_output_ranks": [
+          1
+        ],
+        "left_output_distinct_kernel_count": 1,
+        "left_output_kernel_shapes": [
+          [
+            1,
+            1,
+            1
+          ]
+        ],
+        "left_output_ranks": [
+          3
+        ],
+        "output_kernel_closure_kind": "equality",
+        "output_kernel_diameters": [
+          0
+        ],
+        "output_kernel_edge_counts": [
+          0
+        ],
+        "output_kernel_seed_count": 0,
+        "output_kernel_stable_depth": 0,
+        "right_input_first_output_distinct_kernel_count": 1,
+        "right_input_first_output_kernel_shapes": [
+          [
+            1,
+            1,
+            1
+          ]
+        ],
+        "right_input_first_output_ranks": [
+          3
+        ],
+        "right_output_distinct_kernel_count": 1,
+        "right_output_kernel_shapes": [
+          [
+            1,
+            1,
+            1
+          ]
+        ],
+        "right_output_ranks": [
+          3
+        ],
+        "tags": [
+          "left_nondegenerate",
+          "right_nondegenerate",
+          "nondegenerate"
+        ]
+      },
+      {
+        "all_coordinate_kernel_closure_kind": "universal",
+        "all_coordinate_kernel_seed_count": 6,
+        "all_coordinate_kernel_stable_depth": 0,
+        "count": 1,
+        "left_input_second_output_distinct_kernel_count": 1,
+        "left_input_second_output_kernel_shapes": [
+          [
+            3
+          ]
+        ],
+        "left_input_second_output_ranks": [
+          1
+        ],
+        "left_output_distinct_kernel_count": 1,
+        "left_output_kernel_shapes": [
+          [
+            1,
+            1,
+            1
+          ]
+        ],
+        "left_output_ranks": [
+          3
+        ],
+        "output_kernel_closure_kind": "equality",
+        "output_kernel_diameters": [
+          0
+        ],
+        "output_kernel_edge_counts": [
+          0
+        ],
+        "output_kernel_seed_count": 0,
+        "output_kernel_stable_depth": 0,
+        "right_input_first_output_distinct_kernel_count": 1,
+        "right_input_first_output_kernel_shapes": [
+          [
+            1,
+            1,
+            1
+          ]
+        ],
+        "right_input_first_output_ranks": [
+          3
+        ],
+        "right_output_distinct_kernel_count": 1,
+        "right_output_kernel_shapes": [
+          [
+            1,
+            1,
+            1
+          ]
+        ],
+        "right_output_ranks": [
+          3
+        ],
+        "tags": [
+          "rack_type",
+          "left_nondegenerate",
+          "right_nondegenerate",
+          "nondegenerate"
+        ]
+      }
+    ],
+    "combined_rank_counts": [
+      {
+        "all_coordinate_kernel_closure_kind": "universal",
+        "all_coordinate_kernel_seed_count": 2,
+        "all_coordinate_kernel_stable_depth": 0,
+        "coretraction": "equality",
+        "count": 6,
+        "left_input_second_output_distinct_kernel_count": 3,
+        "left_input_second_output_kernel_shapes": [
+          [
+            1
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            2
+          ]
+        ],
+        "left_input_second_output_ranks": [
+          1,
+          2
+        ],
+        "left_output_distinct_kernel_count": 3,
+        "left_output_kernel_shapes": [
+          [
+            1
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            2
+          ]
+        ],
+        "left_output_ranks": [
+          1,
+          2
+        ],
+        "output_kernel_closure_kind": "universal",
+        "output_kernel_diameters": [
+          0,
+          1
+        ],
+        "output_kernel_edge_counts": [
+          0,
+          1
+        ],
+        "output_kernel_seed_count": 2,
+        "output_kernel_stable_depth": 0,
+        "retraction": "equality",
+        "right_input_first_output_distinct_kernel_count": 3,
+        "right_input_first_output_kernel_shapes": [
+          [
+            1
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            2
+          ]
+        ],
+        "right_input_first_output_ranks": [
+          1,
+          2
+        ],
+        "right_output_distinct_kernel_count": 3,
+        "right_output_kernel_shapes": [
+          [
+            1
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            2
+          ]
+        ],
+        "right_output_ranks": [
+          1,
+          2
+        ],
+        "tags": [
+          "involutive"
+        ]
+      },
+      {
+        "all_coordinate_kernel_closure_kind": "universal",
+        "all_coordinate_kernel_seed_count": 6,
+        "all_coordinate_kernel_stable_depth": 0,
+        "coretraction": "equality",
+        "count": 6,
+        "left_input_second_output_distinct_kernel_count": 1,
+        "left_input_second_output_kernel_shapes": [
+          [
+            1,
+            1,
+            1
+          ]
+        ],
+        "left_input_second_output_ranks": [
+          3
+        ],
+        "left_output_distinct_kernel_count": 1,
+        "left_output_kernel_shapes": [
+          [
+            1,
+            1,
+            1
+          ]
+        ],
+        "left_output_ranks": [
+          3
+        ],
+        "output_kernel_closure_kind": "equality",
+        "output_kernel_diameters": [
+          0
+        ],
+        "output_kernel_edge_counts": [
+          0
+        ],
+        "output_kernel_seed_count": 0,
+        "output_kernel_stable_depth": 0,
+        "retraction": "equality",
+        "right_input_first_output_distinct_kernel_count": 1,
+        "right_input_first_output_kernel_shapes": [
+          [
+            3
+          ]
+        ],
+        "right_input_first_output_ranks": [
+          1
+        ],
+        "right_output_distinct_kernel_count": 1,
+        "right_output_kernel_shapes": [
+          [
+            1,
+            1,
+            1
+          ]
+        ],
+        "right_output_ranks": [
+          3
+        ],
+        "tags": [
+          "left_nondegenerate",
+          "right_nondegenerate",
+          "nondegenerate"
+        ]
+      },
+      {
+        "all_coordinate_kernel_closure_kind": "universal",
+        "all_coordinate_kernel_seed_count": 6,
+        "all_coordinate_kernel_stable_depth": 0,
+        "coretraction": "equality",
+        "count": 5,
+        "left_input_second_output_distinct_kernel_count": 1,
+        "left_input_second_output_kernel_shapes": [
+          [
+            3
+          ]
+        ],
+        "left_input_second_output_ranks": [
+          1
+        ],
+        "left_output_distinct_kernel_count": 1,
+        "left_output_kernel_shapes": [
+          [
+            1,
+            1,
+            1
+          ]
+        ],
+        "left_output_ranks": [
+          3
+        ],
+        "output_kernel_closure_kind": "equality",
+        "output_kernel_diameters": [
+          0
+        ],
+        "output_kernel_edge_counts": [
+          0
+        ],
+        "output_kernel_seed_count": 0,
+        "output_kernel_stable_depth": 0,
+        "retraction": "equality",
+        "right_input_first_output_distinct_kernel_count": 1,
+        "right_input_first_output_kernel_shapes": [
+          [
+            1,
+            1,
+            1
+          ]
+        ],
+        "right_input_first_output_ranks": [
+          3
+        ],
+        "right_output_distinct_kernel_count": 1,
+        "right_output_kernel_shapes": [
+          [
+            1,
+            1,
+            1
+          ]
+        ],
+        "right_output_ranks": [
+          3
+        ],
+        "tags": [
+          "left_nondegenerate",
+          "right_nondegenerate",
+          "nondegenerate"
+        ]
+      },
+      {
+        "all_coordinate_kernel_closure_kind": "universal",
+        "all_coordinate_kernel_seed_count": 6,
+        "all_coordinate_kernel_stable_depth": 0,
+        "coretraction": "equality",
+        "count": 1,
+        "left_input_second_output_distinct_kernel_count": 1,
+        "left_input_second_output_kernel_shapes": [
+          [
+            3
+          ]
+        ],
+        "left_input_second_output_ranks": [
+          1
+        ],
+        "left_output_distinct_kernel_count": 1,
+        "left_output_kernel_shapes": [
+          [
+            1,
+            1,
+            1
+          ]
+        ],
+        "left_output_ranks": [
+          3
+        ],
+        "output_kernel_closure_kind": "equality",
+        "output_kernel_diameters": [
+          0
+        ],
+        "output_kernel_edge_counts": [
+          0
+        ],
+        "output_kernel_seed_count": 0,
+        "output_kernel_stable_depth": 0,
+        "retraction": "equality",
+        "right_input_first_output_distinct_kernel_count": 1,
+        "right_input_first_output_kernel_shapes": [
+          [
+            1,
+            1,
+            1
+          ]
+        ],
+        "right_input_first_output_ranks": [
+          3
+        ],
+        "right_output_distinct_kernel_count": 1,
+        "right_output_kernel_shapes": [
+          [
+            1,
+            1,
+            1
+          ]
+        ],
+        "right_output_ranks": [
+          3
+        ],
+        "tags": [
+          "rack_type",
+          "left_nondegenerate",
+          "right_nondegenerate",
+          "nondegenerate"
+        ]
+      },
+      {
+        "all_coordinate_kernel_closure_kind": "universal",
+        "all_coordinate_kernel_seed_count": 2,
+        "all_coordinate_kernel_stable_depth": 0,
+        "coretraction": "universal",
+        "count": 3,
+        "left_input_second_output_distinct_kernel_count": 2,
+        "left_input_second_output_kernel_shapes": [
+          [
+            1
+          ],
+          [
+            1,
+            1
+          ]
+        ],
+        "left_input_second_output_ranks": [
+          1,
+          2
+        ],
+        "left_output_distinct_kernel_count": 2,
+        "left_output_kernel_shapes": [
+          [
+            1
+          ],
+          [
+            2
+          ]
+        ],
+        "left_output_ranks": [
+          1
+        ],
+        "output_kernel_closure_kind": "universal",
+        "output_kernel_diameters": [
+          0,
+          1
+        ],
+        "output_kernel_edge_counts": [
+          0,
+          1
+        ],
+        "output_kernel_seed_count": 2,
+        "output_kernel_stable_depth": 0,
+        "retraction": "equality",
+        "right_input_first_output_distinct_kernel_count": 2,
+        "right_input_first_output_kernel_shapes": [
+          [
+            1
+          ],
+          [
+            1,
+            1
+          ]
+        ],
+        "right_input_first_output_ranks": [
+          1,
+          2
+        ],
+        "right_output_distinct_kernel_count": 2,
+        "right_output_kernel_shapes": [
+          [
+            1
+          ],
+          [
+            2
+          ]
+        ],
+        "right_output_ranks": [
+          1
+        ],
+        "tags": [
+          "involutive",
+          "identity_table"
+        ]
+      },
+      {
+        "all_coordinate_kernel_closure_kind": "universal",
+        "all_coordinate_kernel_seed_count": 2,
+        "all_coordinate_kernel_stable_depth": 0,
+        "coretraction": "universal",
+        "count": 3,
+        "left_input_second_output_distinct_kernel_count": 1,
+        "left_input_second_output_kernel_shapes": [
+          [
+            1,
+            1
+          ]
+        ],
+        "left_input_second_output_ranks": [
+          2
+        ],
+        "left_output_distinct_kernel_count": 1,
+        "left_output_kernel_shapes": [
+          [
+            2
+          ]
+        ],
+        "left_output_ranks": [
+          1
+        ],
+        "output_kernel_closure_kind": "universal",
+        "output_kernel_diameters": [
+          1
+        ],
+        "output_kernel_edge_counts": [
+          1
+        ],
+        "output_kernel_seed_count": 2,
+        "output_kernel_stable_depth": 0,
+        "retraction": "equality",
+        "right_input_first_output_distinct_kernel_count": 1,
+        "right_input_first_output_kernel_shapes": [
+          [
+            1,
+            1
+          ]
+        ],
+        "right_input_first_output_ranks": [
+          2
+        ],
+        "right_output_distinct_kernel_count": 1,
+        "right_output_kernel_shapes": [
+          [
+            2
+          ]
+        ],
+        "right_output_ranks": [
+          1
+        ],
+        "tags": [
+          "involutive",
+          "identity_table"
+        ]
+      },
+      {
+        "all_coordinate_kernel_closure_kind": "universal",
+        "all_coordinate_kernel_seed_count": 2,
+        "all_coordinate_kernel_stable_depth": 0,
+        "coretraction": "equality",
+        "count": 6,
+        "left_input_second_output_distinct_kernel_count": 2,
+        "left_input_second_output_kernel_shapes": [
+          [
+            1
+          ],
+          [
+            2
+          ]
+        ],
+        "left_input_second_output_ranks": [
+          1
+        ],
+        "left_output_distinct_kernel_count": 2,
+        "left_output_kernel_shapes": [
+          [
+            1
+          ],
+          [
+            1,
+            1
+          ]
+        ],
+        "left_output_ranks": [
+          1,
+          2
+        ],
+        "output_kernel_closure_kind": "equality",
+        "output_kernel_diameters": [
+          0,
+          0
+        ],
+        "output_kernel_edge_counts": [
+          0,
+          0
+        ],
+        "output_kernel_seed_count": 0,
+        "output_kernel_stable_depth": 0,
+        "retraction": "universal",
+        "right_input_first_output_distinct_kernel_count": 2,
+        "right_input_first_output_kernel_shapes": [
+          [
+            1
+          ],
+          [
+            2
+          ]
+        ],
+        "right_input_first_output_ranks": [
+          1
+        ],
+        "right_output_distinct_kernel_count": 2,
+        "right_output_kernel_shapes": [
+          [
+            1
+          ],
+          [
+            1,
+            1
+          ]
+        ],
+        "right_output_ranks": [
+          1,
+          2
+        ],
+        "tags": [
+          "involutive",
+          "left_nondegenerate",
+          "right_nondegenerate",
+          "nondegenerate"
+        ]
+      },
+      {
+        "all_coordinate_kernel_closure_kind": "universal",
+        "all_coordinate_kernel_seed_count": 2,
+        "all_coordinate_kernel_stable_depth": 0,
+        "coretraction": "equality",
+        "count": 3,
+        "left_input_second_output_distinct_kernel_count": 2,
+        "left_input_second_output_kernel_shapes": [
+          [
+            1
+          ],
+          [
+            2
+          ]
+        ],
+        "left_input_second_output_ranks": [
+          1
+        ],
+        "left_output_distinct_kernel_count": 2,
+        "left_output_kernel_shapes": [
+          [
+            1
+          ],
+          [
+            1,
+            1
+          ]
+        ],
+        "left_output_ranks": [
+          1,
+          2
+        ],
+        "output_kernel_closure_kind": "equality",
+        "output_kernel_diameters": [
+          0,
+          0
+        ],
+        "output_kernel_edge_counts": [
+          0,
+          0
+        ],
+        "output_kernel_seed_count": 0,
+        "output_kernel_stable_depth": 0,
+        "retraction": "universal",
+        "right_input_first_output_distinct_kernel_count": 2,
+        "right_input_first_output_kernel_shapes": [
+          [
+            1
+          ],
+          [
+            2
+          ]
+        ],
+        "right_input_first_output_ranks": [
+          1
+        ],
+        "right_output_distinct_kernel_count": 2,
+        "right_output_kernel_shapes": [
+          [
+            1
+          ],
+          [
+            1,
+            1
+          ]
+        ],
+        "right_output_ranks": [
+          1,
+          2
+        ],
+        "tags": [
+          "involutive",
+          "permutation_form",
+          "left_nondegenerate",
+          "right_nondegenerate",
+          "nondegenerate"
+        ]
+      },
+      {
+        "all_coordinate_kernel_closure_kind": "universal",
+        "all_coordinate_kernel_seed_count": 6,
+        "all_coordinate_kernel_stable_depth": 0,
+        "coretraction": "equality",
+        "count": 2,
+        "left_input_second_output_distinct_kernel_count": 1,
+        "left_input_second_output_kernel_shapes": [
+          [
+            3
+          ]
+        ],
+        "left_input_second_output_ranks": [
+          1
+        ],
+        "left_output_distinct_kernel_count": 1,
+        "left_output_kernel_shapes": [
+          [
+            1,
+            1,
+            1
+          ]
+        ],
+        "left_output_ranks": [
+          3
+        ],
+        "output_kernel_closure_kind": "equality",
+        "output_kernel_diameters": [
+          0
+        ],
+        "output_kernel_edge_counts": [
+          0
+        ],
+        "output_kernel_seed_count": 0,
+        "output_kernel_stable_depth": 0,
+        "retraction": "universal",
+        "right_input_first_output_distinct_kernel_count": 1,
+        "right_input_first_output_kernel_shapes": [
+          [
+            3
+          ]
+        ],
+        "right_input_first_output_ranks": [
+          1
+        ],
+        "right_output_distinct_kernel_count": 1,
+        "right_output_kernel_shapes": [
+          [
+            1,
+            1,
+            1
+          ]
+        ],
+        "right_output_ranks": [
+          3
+        ],
+        "tags": [
+          "involutive",
+          "permutation_form",
+          "left_nondegenerate",
+          "right_nondegenerate",
+          "nondegenerate"
+        ]
+      },
+      {
+        "all_coordinate_kernel_closure_kind": "universal",
+        "all_coordinate_kernel_seed_count": 2,
+        "all_coordinate_kernel_stable_depth": 0,
+        "coretraction": "equality",
+        "count": 24,
+        "left_input_second_output_distinct_kernel_count": 2,
+        "left_input_second_output_kernel_shapes": [
+          [
+            1
+          ],
+          [
+            2
+          ]
+        ],
+        "left_input_second_output_ranks": [
+          1
+        ],
+        "left_output_distinct_kernel_count": 2,
+        "left_output_kernel_shapes": [
+          [
+            1
+          ],
+          [
+            1,
+            1
+          ]
+        ],
+        "left_output_ranks": [
+          1,
+          2
+        ],
+        "output_kernel_closure_kind": "equality",
+        "output_kernel_diameters": [
+          0,
+          0
+        ],
+        "output_kernel_edge_counts": [
+          0,
+          0
+        ],
+        "output_kernel_seed_count": 0,
+        "output_kernel_stable_depth": 0,
+        "retraction": "universal",
+        "right_input_first_output_distinct_kernel_count": 2,
+        "right_input_first_output_kernel_shapes": [
+          [
+            1
+          ],
+          [
+            2
+          ]
+        ],
+        "right_input_first_output_ranks": [
+          1
+        ],
+        "right_output_distinct_kernel_count": 2,
+        "right_output_kernel_shapes": [
+          [
+            1
+          ],
+          [
+            1,
+            1
+          ]
+        ],
+        "right_output_ranks": [
+          1,
+          2
+        ],
+        "tags": [
+          "left_nondegenerate",
+          "right_nondegenerate",
+          "nondegenerate"
+        ]
+      },
+      {
+        "all_coordinate_kernel_closure_kind": "universal",
+        "all_coordinate_kernel_seed_count": 2,
+        "all_coordinate_kernel_stable_depth": 0,
+        "coretraction": "equality",
+        "count": 3,
+        "left_input_second_output_distinct_kernel_count": 2,
+        "left_input_second_output_kernel_shapes": [
+          [
+            1
+          ],
+          [
+            2
+          ]
+        ],
+        "left_input_second_output_ranks": [
+          1
+        ],
+        "left_output_distinct_kernel_count": 2,
+        "left_output_kernel_shapes": [
+          [
+            1
+          ],
+          [
+            1,
+            1
+          ]
+        ],
+        "left_output_ranks": [
+          1,
+          2
+        ],
+        "output_kernel_closure_kind": "equality",
+        "output_kernel_diameters": [
+          0,
+          0
+        ],
+        "output_kernel_edge_counts": [
+          0,
+          0
+        ],
+        "output_kernel_seed_count": 0,
+        "output_kernel_stable_depth": 0,
+        "retraction": "universal",
+        "right_input_first_output_distinct_kernel_count": 2,
+        "right_input_first_output_kernel_shapes": [
+          [
+            1
+          ],
+          [
+            2
+          ]
+        ],
+        "right_input_first_output_ranks": [
+          1
+        ],
+        "right_output_distinct_kernel_count": 2,
+        "right_output_kernel_shapes": [
+          [
+            1
+          ],
+          [
+            1,
+            1
+          ]
+        ],
+        "right_output_ranks": [
+          1,
+          2
+        ],
+        "tags": [
+          "permutation_form",
+          "left_nondegenerate",
+          "right_nondegenerate",
+          "nondegenerate"
+        ]
+      },
+      {
+        "all_coordinate_kernel_closure_kind": "universal",
+        "all_coordinate_kernel_seed_count": 6,
+        "all_coordinate_kernel_stable_depth": 0,
+        "coretraction": "equality",
+        "count": 4,
+        "left_input_second_output_distinct_kernel_count": 1,
+        "left_input_second_output_kernel_shapes": [
+          [
+            3
+          ]
+        ],
+        "left_input_second_output_ranks": [
+          1
+        ],
+        "left_output_distinct_kernel_count": 1,
+        "left_output_kernel_shapes": [
+          [
+            1,
+            1,
+            1
+          ]
+        ],
+        "left_output_ranks": [
+          3
+        ],
+        "output_kernel_closure_kind": "equality",
+        "output_kernel_diameters": [
+          0
+        ],
+        "output_kernel_edge_counts": [
+          0
+        ],
+        "output_kernel_seed_count": 0,
+        "output_kernel_stable_depth": 0,
+        "retraction": "universal",
+        "right_input_first_output_distinct_kernel_count": 1,
+        "right_input_first_output_kernel_shapes": [
+          [
+            3
+          ]
+        ],
+        "right_input_first_output_ranks": [
+          1
+        ],
+        "right_output_distinct_kernel_count": 1,
+        "right_output_kernel_shapes": [
+          [
+            1,
+            1,
+            1
+          ]
+        ],
+        "right_output_ranks": [
+          3
+        ],
+        "tags": [
+          "permutation_form",
+          "left_nondegenerate",
+          "right_nondegenerate",
+          "nondegenerate"
+        ]
+      },
+      {
+        "all_coordinate_kernel_closure_kind": "universal",
+        "all_coordinate_kernel_seed_count": 2,
+        "all_coordinate_kernel_stable_depth": 0,
+        "coretraction": "equality",
+        "count": 3,
+        "left_input_second_output_distinct_kernel_count": 2,
+        "left_input_second_output_kernel_shapes": [
+          [
+            1
+          ],
+          [
+            2
+          ]
+        ],
+        "left_input_second_output_ranks": [
+          1
+        ],
+        "left_output_distinct_kernel_count": 2,
+        "left_output_kernel_shapes": [
+          [
+            1
+          ],
+          [
+            1,
+            1
+          ]
+        ],
+        "left_output_ranks": [
+          1,
+          2
+        ],
+        "output_kernel_closure_kind": "equality",
+        "output_kernel_diameters": [
+          0,
+          0
+        ],
+        "output_kernel_edge_counts": [
+          0,
+          0
+        ],
+        "output_kernel_seed_count": 0,
+        "output_kernel_stable_depth": 0,
+        "retraction": "universal",
+        "right_input_first_output_distinct_kernel_count": 2,
+        "right_input_first_output_kernel_shapes": [
+          [
+            1
+          ],
+          [
+            2
+          ]
+        ],
+        "right_input_first_output_ranks": [
+          1
+        ],
+        "right_output_distinct_kernel_count": 2,
+        "right_output_kernel_shapes": [
+          [
+            1
+          ],
+          [
+            1,
+            1
+          ]
+        ],
+        "right_output_ranks": [
+          1,
+          2
+        ],
+        "tags": [
+          "rack_type",
+          "involutive",
+          "permutation_form",
+          "left_nondegenerate",
+          "right_nondegenerate",
+          "nondegenerate"
+        ]
+      },
+      {
+        "all_coordinate_kernel_closure_kind": "universal",
+        "all_coordinate_kernel_seed_count": 2,
+        "all_coordinate_kernel_stable_depth": 0,
+        "coretraction": "equality",
+        "count": 54,
+        "left_input_second_output_distinct_kernel_count": 1,
+        "left_input_second_output_kernel_shapes": [
+          [
+            2
+          ]
+        ],
+        "left_input_second_output_ranks": [
+          1
+        ],
+        "left_output_distinct_kernel_count": 1,
+        "left_output_kernel_shapes": [
+          [
+            1,
+            1
+          ]
+        ],
+        "left_output_ranks": [
+          2
+        ],
+        "output_kernel_closure_kind": "equality",
+        "output_kernel_diameters": [
+          0
+        ],
+        "output_kernel_edge_counts": [
+          0
+        ],
+        "output_kernel_seed_count": 0,
+        "output_kernel_stable_depth": 0,
+        "retraction": "universal",
+        "right_input_first_output_distinct_kernel_count": 1,
+        "right_input_first_output_kernel_shapes": [
+          [
+            2
+          ]
+        ],
+        "right_input_first_output_ranks": [
+          1
+        ],
+        "right_output_distinct_kernel_count": 1,
+        "right_output_kernel_shapes": [
+          [
+            1,
+            1
+          ]
+        ],
+        "right_output_ranks": [
+          2
+        ],
+        "tags": [
+          "rack_type",
+          "involutive",
+          "permutation_form",
+          "left_nondegenerate",
+          "right_nondegenerate",
+          "nondegenerate"
+        ]
+      },
+      {
+        "all_coordinate_kernel_closure_kind": "universal",
+        "all_coordinate_kernel_seed_count": 2,
+        "all_coordinate_kernel_stable_depth": 0,
+        "coretraction": "equality",
+        "count": 6,
+        "left_input_second_output_distinct_kernel_count": 2,
+        "left_input_second_output_kernel_shapes": [
+          [
+            1
+          ],
+          [
+            2
+          ]
+        ],
+        "left_input_second_output_ranks": [
+          1
+        ],
+        "left_output_distinct_kernel_count": 2,
+        "left_output_kernel_shapes": [
+          [
+            1
+          ],
+          [
+            1,
+            1
+          ]
+        ],
+        "left_output_ranks": [
+          1,
+          2
+        ],
+        "output_kernel_closure_kind": "equality",
+        "output_kernel_diameters": [
+          0,
+          0
+        ],
+        "output_kernel_edge_counts": [
+          0,
+          0
+        ],
+        "output_kernel_seed_count": 0,
+        "output_kernel_stable_depth": 0,
+        "retraction": "universal",
+        "right_input_first_output_distinct_kernel_count": 2,
+        "right_input_first_output_kernel_shapes": [
+          [
+            1
+          ],
+          [
+            2
+          ]
+        ],
+        "right_input_first_output_ranks": [
+          1
+        ],
+        "right_output_distinct_kernel_count": 2,
+        "right_output_kernel_shapes": [
+          [
+            1
+          ],
+          [
+            1,
+            1
+          ]
+        ],
+        "right_output_ranks": [
+          1,
+          2
+        ],
+        "tags": [
+          "rack_type",
+          "left_nondegenerate",
+          "right_nondegenerate",
+          "nondegenerate"
+        ]
+      },
+      {
+        "all_coordinate_kernel_closure_kind": "universal",
+        "all_coordinate_kernel_seed_count": 2,
+        "all_coordinate_kernel_stable_depth": 0,
+        "coretraction": "equality",
+        "count": 3,
+        "left_input_second_output_distinct_kernel_count": 2,
+        "left_input_second_output_kernel_shapes": [
+          [
+            1
+          ],
+          [
+            2
+          ]
+        ],
+        "left_input_second_output_ranks": [
+          1
+        ],
+        "left_output_distinct_kernel_count": 2,
+        "left_output_kernel_shapes": [
+          [
+            1
+          ],
+          [
+            1,
+            1
+          ]
+        ],
+        "left_output_ranks": [
+          1,
+          2
+        ],
+        "output_kernel_closure_kind": "equality",
+        "output_kernel_diameters": [
+          0,
+          0
+        ],
+        "output_kernel_edge_counts": [
+          0,
+          0
+        ],
+        "output_kernel_seed_count": 0,
+        "output_kernel_stable_depth": 0,
+        "retraction": "universal",
+        "right_input_first_output_distinct_kernel_count": 2,
+        "right_input_first_output_kernel_shapes": [
+          [
+            1
+          ],
+          [
+            2
+          ]
+        ],
+        "right_input_first_output_ranks": [
+          1
+        ],
+        "right_output_distinct_kernel_count": 2,
+        "right_output_kernel_shapes": [
+          [
+            1
+          ],
+          [
+            1,
+            1
+          ]
+        ],
+        "right_output_ranks": [
+          1,
+          2
+        ],
+        "tags": [
+          "rack_type",
+          "permutation_form",
+          "left_nondegenerate",
+          "right_nondegenerate",
+          "nondegenerate"
+        ]
+      },
+      {
+        "all_coordinate_kernel_closure_kind": "universal",
+        "all_coordinate_kernel_seed_count": 6,
+        "all_coordinate_kernel_stable_depth": 0,
+        "coretraction": "equality",
+        "count": 2,
+        "left_input_second_output_distinct_kernel_count": 1,
+        "left_input_second_output_kernel_shapes": [
+          [
+            3
+          ]
+        ],
+        "left_input_second_output_ranks": [
+          1
+        ],
+        "left_output_distinct_kernel_count": 1,
+        "left_output_kernel_shapes": [
+          [
+            1,
+            1,
+            1
+          ]
+        ],
+        "left_output_ranks": [
+          3
+        ],
+        "output_kernel_closure_kind": "equality",
+        "output_kernel_diameters": [
+          0
+        ],
+        "output_kernel_edge_counts": [
+          0
+        ],
+        "output_kernel_seed_count": 0,
+        "output_kernel_stable_depth": 0,
+        "retraction": "universal",
+        "right_input_first_output_distinct_kernel_count": 1,
+        "right_input_first_output_kernel_shapes": [
+          [
+            3
+          ]
+        ],
+        "right_input_first_output_ranks": [
+          1
+        ],
+        "right_output_distinct_kernel_count": 1,
+        "right_output_kernel_shapes": [
+          [
+            1,
+            1,
+            1
+          ]
+        ],
+        "right_output_ranks": [
+          3
+        ],
+        "tags": [
+          "rack_type",
+          "permutation_form",
+          "left_nondegenerate",
+          "right_nondegenerate",
+          "nondegenerate"
+        ]
+      }
+    ],
+    "size": 3
+  }
+}

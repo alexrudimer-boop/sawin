@@ -1,0 +1,84 @@
+{
+  "cyclic_2_3": {
+    "group_count": 2,
+    "max_word_length": 6,
+    "n": 2,
+    "obstruction_count": 0,
+    "obstructions": []
+  },
+  "cyclic_2_3_and_S3": {
+    "group_count": 3,
+    "max_word_length": 6,
+    "n": 2,
+    "obstruction_count": 0,
+    "obstructions": []
+  },
+  "trivial_only": {
+    "group_count": 1,
+    "max_word_length": 6,
+    "n": 2,
+    "obstruction_count": 4,
+    "obstructions": [
+      {
+        "braid_word": [
+          1,
+          1
+        ],
+        "invisible_groups": [
+          "trivial"
+        ],
+        "moved_base": "('*', '*')",
+        "moved_image": "(('*', 1), ('*', 1))",
+        "moved_tuple": "(('*', 0), ('*', 0))",
+        "visible_groups": []
+      },
+      {
+        "braid_word": [
+          -1,
+          -1
+        ],
+        "invisible_groups": [
+          "trivial"
+        ],
+        "moved_base": "('*', '*')",
+        "moved_image": "(('*', 1), ('*', 1))",
+        "moved_tuple": "(('*', 0), ('*', 0))",
+        "visible_groups": []
+      },
+      {
+        "braid_word": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "invisible_groups": [
+          "trivial"
+        ],
+        "moved_base": "('*', '*')",
+        "moved_image": "(('*', 1), ('*', 1))",
+        "moved_tuple": "(('*', 0), ('*', 0))",
+        "visible_groups": []
+      },
+      {
+        "braid_word": [
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1
+        ],
+        "invisible_groups": [
+          "trivial"
+        ],
+        "moved_base": "('*', '*')",
+        "moved_image": "(('*', 1), ('*', 1))",
+        "moved_tuple": "(('*', 0), ('*', 0))",
+        "visible_groups": []
+      }
+    ]
+  }
+}

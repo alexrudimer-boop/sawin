@@ -1,0 +1,371 @@
+{
+  "f2_dimension_2": {
+    "affine_only_bifree_example_count": 0,
+    "affine_only_bifree_examples": [],
+    "affine_ybe_count": 481,
+    "checked_affine_map_count": 1048576,
+    "combined_branch_tag_counts": {
+      "retraction=equality|coretraction=equality|tags=involutive": 12,
+      "retraction=equality|coretraction=equality|tags=involutive+left_nondegenerate+right_nondegenerate+nondegenerate": 24,
+      "retraction=equality|coretraction=equality|tags=left_nondegenerate+right_nondegenerate+nondegenerate": 46,
+      "retraction=equality|coretraction=equality|tags=rack_type+left_nondegenerate+right_nondegenerate+nondegenerate": 2,
+      "retraction=equality|coretraction=proper_mixed|tags=involutive": 12,
+      "retraction=equality|coretraction=universal|tags=involutive+identity_table": 1,
+      "retraction=proper_mixed|coretraction=equality|tags=(untagged)": 12,
+      "retraction=proper_mixed|coretraction=equality|tags=involutive": 12,
+      "retraction=proper_mixed|coretraction=equality|tags=involutive+left_nondegenerate+right_nondegenerate+nondegenerate": 24,
+      "retraction=proper_mixed|coretraction=equality|tags=left_nondegenerate+right_nondegenerate+nondegenerate": 180,
+      "retraction=proper_mixed|coretraction=equality|tags=rack_type+left_nondegenerate+right_nondegenerate+nondegenerate": 12,
+      "retraction=proper_mixed|coretraction=proper_mixed|tags=(untagged)": 12,
+      "retraction=proper_mixed|coretraction=proper_mixed|tags=involutive": 12,
+      "retraction=universal|coretraction=equality|tags=involutive+permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate": 23,
+      "retraction=universal|coretraction=equality|tags=permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate": 73,
+      "retraction=universal|coretraction=equality|tags=rack_type+involutive+permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate": 1,
+      "retraction=universal|coretraction=equality|tags=rack_type+permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate": 23
+    },
+    "combined_witness_counts": {
+      "retraction=equality|coretraction=equality|product=False|direct=False": 84,
+      "retraction=equality|coretraction=proper_mixed|product=False|direct=False": 12,
+      "retraction=equality|coretraction=universal|product=False|direct=True": 1,
+      "retraction=proper_mixed|coretraction=equality|product=False|direct=False": 240,
+      "retraction=proper_mixed|coretraction=proper_mixed|product=False|direct=False": 24,
+      "retraction=universal|coretraction=equality|product=True|direct=False": 120
+    },
+    "dimension": 2,
+    "first_examples": {
+      "retraction=equality|coretraction=equality": {
+        "branch_tags": [
+          "left_nondegenerate",
+          "right_nondegenerate",
+          "nondegenerate"
+        ],
+        "direct_product_witness": false,
+        "matrix": [
+          "0001",
+          "0011",
+          "0101",
+          "1111"
+        ],
+        "offset": "0000",
+        "product_permutation_witness": false
+      },
+      "retraction=equality|coretraction=proper_mixed": {
+        "branch_tags": [
+          "involutive"
+        ],
+        "direct_product_witness": false,
+        "matrix": [
+          "0010",
+          "0100",
+          "1000",
+          "1011"
+        ],
+        "offset": "0000",
+        "product_permutation_witness": false
+      },
+      "retraction=equality|coretraction=universal": {
+        "branch_tags": [
+          "involutive",
+          "identity_table"
+        ],
+        "direct_product_witness": true,
+        "matrix": [
+          "1000",
+          "0100",
+          "0010",
+          "0001"
+        ],
+        "offset": "0000",
+        "product_permutation_witness": false
+      },
+      "retraction=proper_mixed|coretraction=equality": {
+        "branch_tags": [
+          "left_nondegenerate",
+          "right_nondegenerate",
+          "nondegenerate"
+        ],
+        "direct_product_witness": false,
+        "matrix": [
+          "0001",
+          "0010",
+          "0111",
+          "1011"
+        ],
+        "offset": "0000",
+        "product_permutation_witness": false
+      },
+      "retraction=proper_mixed|coretraction=proper_mixed": {
+        "branch_tags": [
+          "involutive"
+        ],
+        "direct_product_witness": false,
+        "matrix": [
+          "0010",
+          "0100",
+          "1000",
+          "0001"
+        ],
+        "offset": "0000",
+        "product_permutation_witness": false
+      },
+      "retraction=universal|coretraction=equality": {
+        "branch_tags": [
+          "involutive",
+          "permutation_form",
+          "left_nondegenerate",
+          "right_nondegenerate",
+          "nondegenerate"
+        ],
+        "direct_product_witness": false,
+        "matrix": [
+          "0001",
+          "0010",
+          "0100",
+          "1000"
+        ],
+        "offset": "0000",
+        "product_permutation_witness": true
+      }
+    },
+    "invertible_affine_map_count": 322560,
+    "local_minimal_branch_tag_counts": {
+      "retraction=equality|coretraction=equality|tags=involutive": 12,
+      "retraction=equality|coretraction=equality|tags=involutive+left_nondegenerate+right_nondegenerate+nondegenerate": 24,
+      "retraction=equality|coretraction=equality|tags=left_nondegenerate+right_nondegenerate+nondegenerate": 46,
+      "retraction=equality|coretraction=equality|tags=rack_type+left_nondegenerate+right_nondegenerate+nondegenerate": 2
+    },
+    "local_minimal_corridor_branch_counts": {
+      "retraction=equality|coretraction=equality|tags=involutive+left_nondegenerate+right_nondegenerate+nondegenerate|output=equality|depth=0": 24,
+      "retraction=equality|coretraction=equality|tags=involutive|output=universal|depth=1": 12,
+      "retraction=equality|coretraction=equality|tags=left_nondegenerate+right_nondegenerate+nondegenerate|output=equality|depth=0": 46,
+      "retraction=equality|coretraction=equality|tags=rack_type+left_nondegenerate+right_nondegenerate+nondegenerate|output=equality|depth=0": 2
+    },
+    "local_minimal_count": 84,
+    "local_minimal_output_kernel_counts": {
+      "equality": 72,
+      "universal": 12
+    },
+    "local_minimal_output_universal_depth_counts": {
+      "1": 12
+    },
+    "local_minimal_retraction_coretraction_counts": {
+      "retraction=equality|coretraction=equality": 84
+    },
+    "local_minimal_universal_output_example_count": 8,
+    "local_minimal_universal_output_examples": [
+      {
+        "branch_tags": [
+          "involutive"
+        ],
+        "matrix": [
+          "0101",
+          "1001",
+          "1111",
+          "0001"
+        ],
+        "offset": "0000",
+        "output_kernel_depth": 1,
+        "output_kernel_diameters": [
+          [
+            "'*'",
+            1
+          ]
+        ],
+        "output_kernel_edge_counts": [
+          [
+            "'*'",
+            6
+          ]
+        ]
+      },
+      {
+        "branch_tags": [
+          "involutive"
+        ],
+        "matrix": [
+          "0101",
+          "1001",
+          "1111",
+          "0001"
+        ],
+        "offset": "1110",
+        "output_kernel_depth": 1,
+        "output_kernel_diameters": [
+          [
+            "'*'",
+            1
+          ]
+        ],
+        "output_kernel_edge_counts": [
+          [
+            "'*'",
+            6
+          ]
+        ]
+      },
+      {
+        "branch_tags": [
+          "involutive"
+        ],
+        "matrix": [
+          "0110",
+          "1010",
+          "0010",
+          "1111"
+        ],
+        "offset": "0000",
+        "output_kernel_depth": 1,
+        "output_kernel_diameters": [
+          [
+            "'*'",
+            1
+          ]
+        ],
+        "output_kernel_edge_counts": [
+          [
+            "'*'",
+            6
+          ]
+        ]
+      },
+      {
+        "branch_tags": [
+          "involutive"
+        ],
+        "matrix": [
+          "0110",
+          "1010",
+          "0010",
+          "1111"
+        ],
+        "offset": "1101",
+        "output_kernel_depth": 1,
+        "output_kernel_diameters": [
+          [
+            "'*'",
+            1
+          ]
+        ],
+        "output_kernel_edge_counts": [
+          [
+            "'*'",
+            6
+          ]
+        ]
+      },
+      {
+        "branch_tags": [
+          "involutive"
+        ],
+        "matrix": [
+          "1000",
+          "1101",
+          "1011",
+          "0001"
+        ],
+        "offset": "0000",
+        "output_kernel_depth": 1,
+        "output_kernel_diameters": [
+          [
+            "'*'",
+            1
+          ]
+        ],
+        "output_kernel_edge_counts": [
+          [
+            "'*'",
+            6
+          ]
+        ]
+      },
+      {
+        "branch_tags": [
+          "involutive"
+        ],
+        "matrix": [
+          "1000",
+          "1101",
+          "1011",
+          "0001"
+        ],
+        "offset": "0110",
+        "output_kernel_depth": 1,
+        "output_kernel_diameters": [
+          [
+            "'*'",
+            1
+          ]
+        ],
+        "output_kernel_edge_counts": [
+          [
+            "'*'",
+            6
+          ]
+        ]
+      },
+      {
+        "branch_tags": [
+          "involutive"
+        ],
+        "matrix": [
+          "1000",
+          "1111",
+          "1001",
+          "1010"
+        ],
+        "offset": "0000",
+        "output_kernel_depth": 1,
+        "output_kernel_diameters": [
+          [
+            "'*'",
+            1
+          ]
+        ],
+        "output_kernel_edge_counts": [
+          [
+            "'*'",
+            6
+          ]
+        ]
+      },
+      {
+        "branch_tags": [
+          "involutive"
+        ],
+        "matrix": [
+          "1000",
+          "1111",
+          "1001",
+          "1010"
+        ],
+        "offset": "0111",
+        "output_kernel_depth": 1,
+        "output_kernel_diameters": [
+          [
+            "'*'",
+            1
+          ]
+        ],
+        "output_kernel_edge_counts": [
+          [
+            "'*'",
+            6
+          ]
+        ]
+      }
+    ],
+    "point_count": 4,
+    "retraction_coretraction_counts": {
+      "retraction=equality|coretraction=equality": 84,
+      "retraction=equality|coretraction=proper_mixed": 12,
+      "retraction=equality|coretraction=universal": 1,
+      "retraction=proper_mixed|coretraction=equality": 240,
+      "retraction=proper_mixed|coretraction=proper_mixed": 24,
+      "retraction=universal|coretraction=equality": 120
+    },
+    "witness_counts": {
+      "direct_product": 1,
+      "product_permutation": 120
+    }
+  }
+}

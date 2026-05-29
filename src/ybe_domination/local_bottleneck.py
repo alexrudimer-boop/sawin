@@ -1,0 +1,316 @@
+from __future__ import annotations
+
+from dataclasses import dataclass
+from typing import Tuple
+
+from .context_retraction import (
+    context_coretraction_audit,
+    context_retraction_audit,
+    direct_product_witness,
+    product_permutation_witness,
+)
+from .detector_candidates import two_sided_green_detector_groups
+from .local_interval import (
+    LocalInterval,
+    coordinate_kernel_seed_pairs,
+    generated_admissible_congruence_audit,
+)
+from .local_models import solution_from_local_interval
+from .product_permutation import (
+    direct_product_holonomy_summary,
+    identity_base_swapped_reduction,
+    swapped_product_holonomy_summary,
+)
+from .small_search import branch_tags
+
+
+# Only tags with a symbolic all-n finite-G detector belong here.  Audit tags
+# such as "affine_cyclic" are deliberately excluded unless another tag in this
+# set, or a product-specific closed subbranch, supplies the detector proof.
+KNOWN_TOTAL_DETECTOR_TAGS = frozenset(
+    {
+        "involutive",
+        "permutation_form",
+        "rack_type",
+        "nondegenerate",
+    }
+)
+
+
+@dataclass(frozen=True)
+class LocalMasterBottleneckSummary:
+    """A compact ledger for the current local-minimal reduction fork.
+
+    This is not a proof of the master theorem.  It packages the symbolic
+    reductions that are already proved or explicitly targeted, so a candidate
+    local interval can be routed to the exact remaining obligation.
+    """
+
+    colored_ybe: bool
+    semisplit_count: int
+    local_minimal: bool | None
+    local_minimal_error: str | None
+    local_minimal_pair_count: int
+    local_minimal_pair_failure_count: int
+    local_minimal_pair_max_depth: int
+    retraction_kind: str
+    coretraction_kind: str
+    product_branch: str
+    product_holonomy_details: Tuple[str, ...]
+    output_kernel_kind: str
+    output_kernel_stable_depth: int
+    all_coordinate_kernel_kind: str
+    all_coordinate_kernel_stable_depth: int
+    total_branch_tags: Tuple[str, ...]
+    green_detector_group_orders: Tuple[int, ...]
+    verdict: str
+    remaining_obligation: str
+
+
+def _local_minimal_value(
+    interval: LocalInterval,
+    max_fibre_size: int,
+) -> tuple[bool | None, str | None, int, int, int]:
+    try:
+        audits = interval.pair_generated_local_minimality_audits()
+        failures = [
+            audit for audit in audits if audit.generated.kind != "universal"
+        ]
+        max_depth = max(
+            (audit.generated.stable_depth for audit in audits),
+            default=0,
+        )
+        return not failures, None, len(audits), len(failures), max_depth
+    except ValueError as exc:
+        return None, str(exc), 0, 0, 0
+
+
+def _product_branch(interval: LocalInterval) -> str:
+    has_swapped = product_permutation_witness(interval) is not None
+    has_direct = direct_product_witness(interval) is not None
+    if has_swapped and has_direct:
+        return "swapped_and_direct"
+    if has_swapped:
+        return "swapped"
+    if has_direct:
+        return "direct"
+    return "none"
+
+
+def _product_holonomy_detail(
+    interval: LocalInterval,
+    side: str,
+    total_branch_tags: Tuple[str, ...],
+) -> str:
+    if side == "swapped":
+        summary = swapped_product_holonomy_summary(interval)
+    elif side == "direct":
+        summary = direct_product_holonomy_summary(interval)
+    else:
+        raise ValueError(f"unknown product side {side!r}")
+    if summary.is_trivial:
+        return f"{side}_coboundary"
+    if (
+        side == "swapped"
+        and all(
+            interval.base_R[(left, right)] == (left, right)
+            for left in interval.colors
+            for right in interval.colors
+        )
+    ):
+        reduction = identity_base_swapped_reduction(interval)
+        if reduction.satisfies_central_form and reduction.prime_cycle_modulus is not None:
+            return "swapped_identity_base_cyclic"
+    if len(interval.colors) == 1:
+        return f"{side}_one_color_pairwise"
+    if all(len(interval.fibres[color]) == 2 for color in interval.colors):
+        return f"{side}_fibre2_affine"
+    if set(total_branch_tags) & KNOWN_TOTAL_DETECTOR_TAGS:
+        return f"{side}_genuinely_coloured_known_total"
+    return f"{side}_genuinely_coloured_open"
+
+
+def _product_holonomy_details(
+    interval: LocalInterval,
+    product_branch: str,
+    total_branch_tags: Tuple[str, ...],
+) -> Tuple[str, ...]:
+    details = []
+    if product_branch in {"swapped", "swapped_and_direct"}:
+        details.append(_product_holonomy_detail(interval, "swapped", total_branch_tags))
+    if product_branch in {"direct", "swapped_and_direct"}:
+        details.append(_product_holonomy_detail(interval, "direct", total_branch_tags))
+    return tuple(details)
+
+
+def _verdict_and_obligation(
+    *,
+    colored_ybe: bool,
+    semisplit_count: int,
+    local_minimal: bool | None,
+    retraction_kind: str,
+    coretraction_kind: str,
+    product_branch: str,
+    product_holonomy_details: Tuple[str, ...],
+    output_kernel_kind: str,
+    total_branch_tags: Tuple[str, ...],
+) -> tuple[str, str]:
+    if not colored_ybe:
+        return (
+            "invalid_colored_ybe",
+            "Reject as a local interval until the coloured YBE is proved.",
+        )
+    if semisplit_count:
+        return (
+            "semisplit_leak",
+            "Not local-minimal: an equality/universal mixed congruence survives.",
+        )
+    if local_minimal is None:
+        return (
+            "local_minimality_unchecked",
+            "Full congruence-family enumeration was disabled; supply a symbolic local-minimality proof before routing this interval.",
+        )
+    if local_minimal is False:
+        return (
+            "not_local_minimal",
+            "Refine the congruence chain before applying the master local theorem.",
+        )
+    if product_branch in {"swapped", "direct", "swapped_and_direct"}:
+        if any(not detail.endswith("_open") for detail in product_holonomy_details):
+            return (
+                "product_finite_g_branch",
+                "Use the closed product subbranch: coboundary telescope, one-colour pairwise cyclic detector, fibre-size-two affine detector, or known total branch.",
+            )
+        return (
+            "product_genuinely_coloured_bottleneck",
+            "Product normal form has genuinely coloured holonomy outside current known tags; prove product-label finite-longitude factorization or realize the product B-route.",
+        )
+    if retraction_kind == "universal" or coretraction_kind == "universal":
+        return (
+            "product_witness_missing",
+            "Audit the universal retraction/coretraction proof against this interval; a product witness should exist.",
+        )
+    if output_kernel_kind == "equality":
+        return (
+            "locally_nondegenerate_branch",
+            "Use the already bookkept nondegenerate/guitar finite-G detector branch.",
+        )
+    if set(total_branch_tags) & {"involutive", "permutation_form", "rack_type"}:
+        return (
+            "known_total_branch",
+            "Use the whole-solution finite-G detector branch; no Green/corridor factorization is needed for this interval.",
+        )
+    if output_kernel_kind == "universal":
+        return (
+            "bi_free_universal_corridor_bottleneck",
+            "Prove input-dependent Green/corridor finite-longitude factorization through fixed detector groups, or construct normalized-law B.",
+        )
+    return (
+        "proper_mixed_kernel_closure",
+        "If the interval is truly local-minimal this should not occur; audit local-minimality and semisplit/proper mixed families.",
+    )
+
+
+def local_master_bottleneck_summary(
+    interval: LocalInterval,
+    *,
+    max_fibre_size: int = 5,
+    max_kernel_degree: int | None = None,
+) -> LocalMasterBottleneckSummary:
+    """Return the current reduction ledger for one finite local interval.
+
+    The ledger combines:
+
+    - semisplit congruence checks;
+    - exact single-pair local-minimality closures, including failure count
+      and maximum closure depth;
+    - two-sided retraction and coretraction dichotomies;
+    - product-permutation witnesses;
+    - product holonomy closed/open subbranch details;
+    - coordinate-kernel closure;
+    - the finite two-sided Green detector group orders.
+
+    The output is meant for proof audits and counterexample triage.  It should
+    never be cited as finite-search evidence for the global theorem.
+    """
+
+    colored_ybe = interval.is_colored_ybe()
+    semisplit_count = len(interval.semisplit_families())
+    (
+        local_minimal,
+        local_minimal_error,
+        local_minimal_pair_count,
+        local_minimal_pair_failure_count,
+        local_minimal_pair_max_depth,
+    ) = _local_minimal_value(
+        interval,
+        max_fibre_size,
+    )
+    retraction_kind = context_retraction_audit(interval).kind
+    coretraction_kind = context_coretraction_audit(interval).kind
+    product_branch = _product_branch(interval)
+    output_kernel_audit = generated_admissible_congruence_audit(
+        interval,
+        coordinate_kernel_seed_pairs(
+            interval,
+            include_coretraction_kernels=False,
+        ),
+    )
+    all_coordinate_kernel_audit = generated_admissible_congruence_audit(
+        interval,
+        coordinate_kernel_seed_pairs(
+            interval,
+            include_coretraction_kernels=True,
+        ),
+    )
+    qmap = solution_from_local_interval(interval)
+    total_tags = branch_tags(qmap.total)
+    product_details = _product_holonomy_details(
+        interval,
+        product_branch,
+        total_tags,
+    )
+    verdict, obligation = _verdict_and_obligation(
+        colored_ybe=colored_ybe,
+        semisplit_count=semisplit_count,
+        local_minimal=local_minimal,
+        retraction_kind=retraction_kind,
+        coretraction_kind=coretraction_kind,
+        product_branch=product_branch,
+        product_holonomy_details=product_details,
+        output_kernel_kind=output_kernel_audit.kind,
+        total_branch_tags=total_tags,
+    )
+    if verdict != "bi_free_universal_corridor_bottleneck":
+        green_orders = tuple()
+    else:
+        green_orders = tuple(
+            sorted(
+                len(group.elements)
+                for group in two_sided_green_detector_groups(
+                    qmap.total,
+                    max_kernel_degree=max_kernel_degree,
+                )
+            )
+        )
+    return LocalMasterBottleneckSummary(
+        colored_ybe=colored_ybe,
+        semisplit_count=semisplit_count,
+        local_minimal=local_minimal,
+        local_minimal_error=local_minimal_error,
+        local_minimal_pair_count=local_minimal_pair_count,
+        local_minimal_pair_failure_count=local_minimal_pair_failure_count,
+        local_minimal_pair_max_depth=local_minimal_pair_max_depth,
+        retraction_kind=retraction_kind,
+        coretraction_kind=coretraction_kind,
+        product_branch=product_branch,
+        product_holonomy_details=product_details,
+        output_kernel_kind=output_kernel_audit.kind,
+        output_kernel_stable_depth=output_kernel_audit.stable_depth,
+        all_coordinate_kernel_kind=all_coordinate_kernel_audit.kind,
+        all_coordinate_kernel_stable_depth=all_coordinate_kernel_audit.stable_depth,
+        total_branch_tags=total_tags,
+        green_detector_group_orders=green_orders,
+        verdict=verdict,
+        remaining_obligation=obligation,
+    )

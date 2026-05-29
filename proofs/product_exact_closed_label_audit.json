@@ -1,0 +1,5823 @@
+{
+  "bases": {
+    "base_0": {
+      "base_index": 0,
+      "base_signature": [
+        [
+          "0",
+          "0"
+        ],
+        [
+          "0",
+          "1"
+        ],
+        [
+          "1",
+          "0"
+        ],
+        [
+          "1",
+          "1"
+        ]
+      ],
+      "branch_counts": {
+        "swapped": 32
+      },
+      "branch_scan_count": 32,
+      "checked_table_count": 331776,
+      "colored_ybe_count": 33,
+      "detector_order_counts": {
+        "swapped|order=2": 2,
+        "swapped|order=4": 2,
+        "swapped|order=8": 28
+      },
+      "failure_count": 0,
+      "first_bad": [],
+      "first_good": [
+        {
+          "base_index": 0,
+          "branch": "swapped",
+          "detector_order": 2,
+          "total_tags": [
+            "involutive"
+          ],
+          "tuple_scans": [
+            {
+              "base_state_count": 1,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "0",
+                "0"
+              ],
+              "detector_state_count": 4,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 2,
+              "truncated": false,
+              "visited_state_count": 4
+            },
+            {
+              "base_state_count": 1,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "0",
+                "1"
+              ],
+              "detector_state_count": 4,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 2,
+              "truncated": false,
+              "visited_state_count": 4
+            },
+            {
+              "base_state_count": 1,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "1",
+                "0"
+              ],
+              "detector_state_count": 4,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 2,
+              "truncated": false,
+              "visited_state_count": 4
+            },
+            {
+              "base_state_count": 1,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "1",
+                "1"
+              ],
+              "detector_state_count": 4,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 2,
+              "truncated": false,
+              "visited_state_count": 4
+            }
+          ]
+        },
+        {
+          "base_index": 0,
+          "branch": "swapped",
+          "detector_order": 8,
+          "total_tags": [
+            "involutive"
+          ],
+          "tuple_scans": [
+            {
+              "base_state_count": 1,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "0",
+                "0"
+              ],
+              "detector_state_count": 8,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 2,
+              "truncated": false,
+              "visited_state_count": 8
+            },
+            {
+              "base_state_count": 1,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "0",
+                "1"
+              ],
+              "detector_state_count": 8,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 2,
+              "truncated": false,
+              "visited_state_count": 8
+            },
+            {
+              "base_state_count": 1,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "1",
+                "0"
+              ],
+              "detector_state_count": 8,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 2,
+              "truncated": false,
+              "visited_state_count": 8
+            },
+            {
+              "base_state_count": 1,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "1",
+                "1"
+              ],
+              "detector_state_count": 8,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 2,
+              "truncated": false,
+              "visited_state_count": 8
+            }
+          ]
+        },
+        {
+          "base_index": 0,
+          "branch": "swapped",
+          "detector_order": 4,
+          "total_tags": [
+            "involutive"
+          ],
+          "tuple_scans": [
+            {
+              "base_state_count": 1,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "0",
+                "0"
+              ],
+              "detector_state_count": 4,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 2,
+              "truncated": false,
+              "visited_state_count": 4
+            },
+            {
+              "base_state_count": 1,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "0",
+                "1"
+              ],
+              "detector_state_count": 4,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 2,
+              "truncated": false,
+              "visited_state_count": 4
+            },
+            {
+              "base_state_count": 1,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "1",
+                "0"
+              ],
+              "detector_state_count": 4,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 2,
+              "truncated": false,
+              "visited_state_count": 4
+            },
+            {
+              "base_state_count": 1,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "1",
+                "1"
+              ],
+              "detector_state_count": 4,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 2,
+              "truncated": false,
+              "visited_state_count": 4
+            }
+          ]
+        },
+        {
+          "base_index": 0,
+          "branch": "swapped",
+          "detector_order": 8,
+          "total_tags": [
+            "involutive"
+          ],
+          "tuple_scans": [
+            {
+              "base_state_count": 1,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "0",
+                "0"
+              ],
+              "detector_state_count": 8,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 2,
+              "truncated": false,
+              "visited_state_count": 8
+            },
+            {
+              "base_state_count": 1,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "0",
+                "1"
+              ],
+              "detector_state_count": 8,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 2,
+              "truncated": false,
+              "visited_state_count": 8
+            },
+            {
+              "base_state_count": 1,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "1",
+                "0"
+              ],
+              "detector_state_count": 8,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 2,
+              "truncated": false,
+              "visited_state_count": 8
+            },
+            {
+              "base_state_count": 1,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "1",
+                "1"
+              ],
+              "detector_state_count": 8,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 2,
+              "truncated": false,
+              "visited_state_count": 8
+            }
+          ]
+        },
+        {
+          "base_index": 0,
+          "branch": "swapped",
+          "detector_order": 4,
+          "total_tags": [
+            "involutive"
+          ],
+          "tuple_scans": [
+            {
+              "base_state_count": 1,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "0",
+                "0"
+              ],
+              "detector_state_count": 4,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 2,
+              "truncated": false,
+              "visited_state_count": 4
+            },
+            {
+              "base_state_count": 1,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "0",
+                "1"
+              ],
+              "detector_state_count": 4,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 2,
+              "truncated": false,
+              "visited_state_count": 4
+            },
+            {
+              "base_state_count": 1,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "1",
+                "0"
+              ],
+              "detector_state_count": 4,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 2,
+              "truncated": false,
+              "visited_state_count": 4
+            },
+            {
+              "base_state_count": 1,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "1",
+                "1"
+              ],
+              "detector_state_count": 4,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 2,
+              "truncated": false,
+              "visited_state_count": 4
+            }
+          ]
+        },
+        {
+          "base_index": 0,
+          "branch": "swapped",
+          "detector_order": 8,
+          "total_tags": [
+            "involutive"
+          ],
+          "tuple_scans": [
+            {
+              "base_state_count": 1,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "0",
+                "0"
+              ],
+              "detector_state_count": 8,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 2,
+              "truncated": false,
+              "visited_state_count": 8
+            },
+            {
+              "base_state_count": 1,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "0",
+                "1"
+              ],
+              "detector_state_count": 8,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 2,
+              "truncated": false,
+              "visited_state_count": 8
+            },
+            {
+              "base_state_count": 1,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "1",
+                "0"
+              ],
+              "detector_state_count": 8,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 2,
+              "truncated": false,
+              "visited_state_count": 8
+            },
+            {
+              "base_state_count": 1,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "1",
+                "1"
+              ],
+              "detector_state_count": 8,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 2,
+              "truncated": false,
+              "visited_state_count": 8
+            }
+          ]
+        },
+        {
+          "base_index": 0,
+          "branch": "swapped",
+          "detector_order": 2,
+          "total_tags": [
+            "involutive"
+          ],
+          "tuple_scans": [
+            {
+              "base_state_count": 1,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "0",
+                "0"
+              ],
+              "detector_state_count": 4,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 2,
+              "truncated": false,
+              "visited_state_count": 4
+            },
+            {
+              "base_state_count": 1,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "0",
+                "1"
+              ],
+              "detector_state_count": 4,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 2,
+              "truncated": false,
+              "visited_state_count": 4
+            },
+            {
+              "base_state_count": 1,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "1",
+                "0"
+              ],
+              "detector_state_count": 4,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 2,
+              "truncated": false,
+              "visited_state_count": 4
+            },
+            {
+              "base_state_count": 1,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "1",
+                "1"
+              ],
+              "detector_state_count": 4,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 2,
+              "truncated": false,
+              "visited_state_count": 4
+            }
+          ]
+        },
+        {
+          "base_index": 0,
+          "branch": "swapped",
+          "detector_order": 8,
+          "total_tags": [
+            "involutive"
+          ],
+          "tuple_scans": [
+            {
+              "base_state_count": 1,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "0",
+                "0"
+              ],
+              "detector_state_count": 8,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 2,
+              "truncated": false,
+              "visited_state_count": 8
+            },
+            {
+              "base_state_count": 1,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "0",
+                "1"
+              ],
+              "detector_state_count": 8,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 2,
+              "truncated": false,
+              "visited_state_count": 8
+            },
+            {
+              "base_state_count": 1,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "1",
+                "0"
+              ],
+              "detector_state_count": 8,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 2,
+              "truncated": false,
+              "visited_state_count": 8
+            },
+            {
+              "base_state_count": 1,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "1",
+                "1"
+              ],
+              "detector_state_count": 8,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 2,
+              "truncated": false,
+              "visited_state_count": 8
+            }
+          ]
+        }
+      ],
+      "known_failure_count": 0,
+      "local_minimal_count": 32,
+      "max_visited_state_count": 8,
+      "truncated_count": 0,
+      "tuple_scan_count": 128,
+      "untagged_failure_count": 0
+    },
+    "base_1": {
+      "base_index": 1,
+      "base_signature": [
+        [
+          "0",
+          "0"
+        ],
+        [
+          "1",
+          "0"
+        ],
+        [
+          "0",
+          "1"
+        ],
+        [
+          "1",
+          "1"
+        ]
+      ],
+      "branch_counts": {
+        "direct": 4
+      },
+      "branch_scan_count": 4,
+      "checked_table_count": 331776,
+      "colored_ybe_count": 520,
+      "detector_order_counts": {
+        "direct|order=2": 2,
+        "direct|order=4": 2
+      },
+      "failure_count": 0,
+      "first_bad": [],
+      "first_good": [
+        {
+          "base_index": 1,
+          "branch": "direct",
+          "detector_order": 2,
+          "total_tags": [
+            "involutive"
+          ],
+          "tuple_scans": [
+            {
+              "base_state_count": 2,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "0",
+                "0"
+              ],
+              "detector_state_count": 4,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 1,
+              "truncated": false,
+              "visited_state_count": 4
+            },
+            {
+              "base_state_count": 2,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "0",
+                "1"
+              ],
+              "detector_state_count": 4,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 2,
+              "truncated": false,
+              "visited_state_count": 4
+            },
+            {
+              "base_state_count": 2,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "1",
+                "0"
+              ],
+              "detector_state_count": 4,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 2,
+              "truncated": false,
+              "visited_state_count": 4
+            },
+            {
+              "base_state_count": 2,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "1",
+                "1"
+              ],
+              "detector_state_count": 4,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 1,
+              "truncated": false,
+              "visited_state_count": 4
+            }
+          ]
+        },
+        {
+          "base_index": 1,
+          "branch": "direct",
+          "detector_order": 4,
+          "total_tags": [
+            "involutive"
+          ],
+          "tuple_scans": [
+            {
+              "base_state_count": 2,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "0",
+                "0"
+              ],
+              "detector_state_count": 4,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 1,
+              "truncated": false,
+              "visited_state_count": 4
+            },
+            {
+              "base_state_count": 2,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "0",
+                "1"
+              ],
+              "detector_state_count": 4,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 2,
+              "truncated": false,
+              "visited_state_count": 4
+            },
+            {
+              "base_state_count": 2,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "1",
+                "0"
+              ],
+              "detector_state_count": 4,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 2,
+              "truncated": false,
+              "visited_state_count": 4
+            },
+            {
+              "base_state_count": 2,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "1",
+                "1"
+              ],
+              "detector_state_count": 4,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 1,
+              "truncated": false,
+              "visited_state_count": 4
+            }
+          ]
+        },
+        {
+          "base_index": 1,
+          "branch": "direct",
+          "detector_order": 4,
+          "total_tags": [
+            "involutive"
+          ],
+          "tuple_scans": [
+            {
+              "base_state_count": 2,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "0",
+                "0"
+              ],
+              "detector_state_count": 4,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 1,
+              "truncated": false,
+              "visited_state_count": 4
+            },
+            {
+              "base_state_count": 2,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "0",
+                "1"
+              ],
+              "detector_state_count": 4,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 2,
+              "truncated": false,
+              "visited_state_count": 4
+            },
+            {
+              "base_state_count": 2,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "1",
+                "0"
+              ],
+              "detector_state_count": 4,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 2,
+              "truncated": false,
+              "visited_state_count": 4
+            },
+            {
+              "base_state_count": 2,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "1",
+                "1"
+              ],
+              "detector_state_count": 4,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 1,
+              "truncated": false,
+              "visited_state_count": 4
+            }
+          ]
+        },
+        {
+          "base_index": 1,
+          "branch": "direct",
+          "detector_order": 2,
+          "total_tags": [
+            "involutive"
+          ],
+          "tuple_scans": [
+            {
+              "base_state_count": 2,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "0",
+                "0"
+              ],
+              "detector_state_count": 4,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 1,
+              "truncated": false,
+              "visited_state_count": 4
+            },
+            {
+              "base_state_count": 2,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "0",
+                "1"
+              ],
+              "detector_state_count": 4,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 2,
+              "truncated": false,
+              "visited_state_count": 4
+            },
+            {
+              "base_state_count": 2,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "1",
+                "0"
+              ],
+              "detector_state_count": 4,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 2,
+              "truncated": false,
+              "visited_state_count": 4
+            },
+            {
+              "base_state_count": 2,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "1",
+                "1"
+              ],
+              "detector_state_count": 4,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 1,
+              "truncated": false,
+              "visited_state_count": 4
+            }
+          ]
+        }
+      ],
+      "known_failure_count": 0,
+      "local_minimal_count": 12,
+      "max_visited_state_count": 4,
+      "truncated_count": 0,
+      "tuple_scan_count": 16,
+      "untagged_failure_count": 0
+    },
+    "base_2": {
+      "base_index": 2,
+      "base_signature": [
+        [
+          "0",
+          "1"
+        ],
+        [
+          "1",
+          "1"
+        ],
+        [
+          "0",
+          "0"
+        ],
+        [
+          "1",
+          "0"
+        ]
+      ],
+      "branch_counts": {
+        "direct": 2,
+        "swapped": 8
+      },
+      "branch_scan_count": 10,
+      "checked_table_count": 331776,
+      "colored_ybe_count": 10,
+      "detector_order_counts": {
+        "direct|order=2": 2,
+        "swapped|order=2": 2,
+        "swapped|order=4": 2,
+        "swapped|order=8": 4
+      },
+      "failure_count": 8,
+      "first_bad": [
+        {
+          "base_index": 2,
+          "base_signature": [
+            [
+              "0",
+              "1"
+            ],
+            [
+              "1",
+              "1"
+            ],
+            [
+              "0",
+              "0"
+            ],
+            [
+              "1",
+              "0"
+            ]
+          ],
+          "branch": "swapped",
+          "interval_table": [
+            {
+              "colors": [
+                "0",
+                "0"
+              ],
+              "input": [
+                "0",
+                "0"
+              ],
+              "output": [
+                "0",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "0"
+              ],
+              "input": [
+                "0",
+                "1"
+              ],
+              "output": [
+                "1",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "0"
+              ],
+              "input": [
+                "1",
+                "0"
+              ],
+              "output": [
+                "0",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "0"
+              ],
+              "input": [
+                "1",
+                "1"
+              ],
+              "output": [
+                "1",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "1"
+              ],
+              "input": [
+                "0",
+                "0"
+              ],
+              "output": [
+                "0",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "1"
+              ],
+              "input": [
+                "0",
+                "1"
+              ],
+              "output": [
+                "1",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "1"
+              ],
+              "input": [
+                "1",
+                "0"
+              ],
+              "output": [
+                "0",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "1"
+              ],
+              "input": [
+                "1",
+                "1"
+              ],
+              "output": [
+                "1",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "0"
+              ],
+              "input": [
+                "0",
+                "0"
+              ],
+              "output": [
+                "0",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "0"
+              ],
+              "input": [
+                "0",
+                "1"
+              ],
+              "output": [
+                "1",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "0"
+              ],
+              "input": [
+                "1",
+                "0"
+              ],
+              "output": [
+                "0",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "0"
+              ],
+              "input": [
+                "1",
+                "1"
+              ],
+              "output": [
+                "1",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "1"
+              ],
+              "input": [
+                "0",
+                "0"
+              ],
+              "output": [
+                "0",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "1"
+              ],
+              "input": [
+                "0",
+                "1"
+              ],
+              "output": [
+                "1",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "1"
+              ],
+              "input": [
+                "1",
+                "0"
+              ],
+              "output": [
+                "0",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "1"
+              ],
+              "input": [
+                "1",
+                "1"
+              ],
+              "output": [
+                "1",
+                "0"
+              ]
+            }
+          ],
+          "total_tags": [
+            "permutation_form",
+            "left_nondegenerate",
+            "right_nondegenerate",
+            "nondegenerate"
+          ],
+          "tuple_scan": {
+            "base_state_count": 4,
+            "closed_state_count": 1,
+            "color_tuple": [
+              "0",
+              "0"
+            ],
+            "detector_state_count": 4,
+            "failure": {
+              "closed_label": [
+                [
+                  0,
+                  1
+                ],
+                [
+                  1,
+                  0
+                ]
+              ],
+              "coordinate": 0,
+              "word": [
+                1,
+                1,
+                1,
+                1
+              ]
+            },
+            "identity_detector_closed_state_count": 1,
+            "product_state_count": 8,
+            "truncated": false,
+            "visited_state_count": 8
+          }
+        },
+        {
+          "base_index": 2,
+          "base_signature": [
+            [
+              "0",
+              "1"
+            ],
+            [
+              "1",
+              "1"
+            ],
+            [
+              "0",
+              "0"
+            ],
+            [
+              "1",
+              "0"
+            ]
+          ],
+          "branch": "swapped",
+          "interval_table": [
+            {
+              "colors": [
+                "0",
+                "0"
+              ],
+              "input": [
+                "0",
+                "0"
+              ],
+              "output": [
+                "0",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "0"
+              ],
+              "input": [
+                "0",
+                "1"
+              ],
+              "output": [
+                "1",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "0"
+              ],
+              "input": [
+                "1",
+                "0"
+              ],
+              "output": [
+                "0",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "0"
+              ],
+              "input": [
+                "1",
+                "1"
+              ],
+              "output": [
+                "1",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "1"
+              ],
+              "input": [
+                "0",
+                "0"
+              ],
+              "output": [
+                "0",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "1"
+              ],
+              "input": [
+                "0",
+                "1"
+              ],
+              "output": [
+                "1",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "1"
+              ],
+              "input": [
+                "1",
+                "0"
+              ],
+              "output": [
+                "0",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "1"
+              ],
+              "input": [
+                "1",
+                "1"
+              ],
+              "output": [
+                "1",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "0"
+              ],
+              "input": [
+                "0",
+                "0"
+              ],
+              "output": [
+                "0",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "0"
+              ],
+              "input": [
+                "0",
+                "1"
+              ],
+              "output": [
+                "1",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "0"
+              ],
+              "input": [
+                "1",
+                "0"
+              ],
+              "output": [
+                "0",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "0"
+              ],
+              "input": [
+                "1",
+                "1"
+              ],
+              "output": [
+                "1",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "1"
+              ],
+              "input": [
+                "0",
+                "0"
+              ],
+              "output": [
+                "0",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "1"
+              ],
+              "input": [
+                "0",
+                "1"
+              ],
+              "output": [
+                "1",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "1"
+              ],
+              "input": [
+                "1",
+                "0"
+              ],
+              "output": [
+                "0",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "1"
+              ],
+              "input": [
+                "1",
+                "1"
+              ],
+              "output": [
+                "1",
+                "0"
+              ]
+            }
+          ],
+          "total_tags": [
+            "permutation_form",
+            "left_nondegenerate",
+            "right_nondegenerate",
+            "nondegenerate"
+          ],
+          "tuple_scan": {
+            "base_state_count": 4,
+            "closed_state_count": 1,
+            "color_tuple": [
+              "0",
+              "1"
+            ],
+            "detector_state_count": 4,
+            "failure": {
+              "closed_label": [
+                [
+                  0,
+                  1
+                ],
+                [
+                  1,
+                  0
+                ]
+              ],
+              "coordinate": 0,
+              "word": [
+                1,
+                1,
+                1,
+                1
+              ]
+            },
+            "identity_detector_closed_state_count": 1,
+            "product_state_count": 8,
+            "truncated": false,
+            "visited_state_count": 8
+          }
+        },
+        {
+          "base_index": 2,
+          "base_signature": [
+            [
+              "0",
+              "1"
+            ],
+            [
+              "1",
+              "1"
+            ],
+            [
+              "0",
+              "0"
+            ],
+            [
+              "1",
+              "0"
+            ]
+          ],
+          "branch": "swapped",
+          "interval_table": [
+            {
+              "colors": [
+                "0",
+                "0"
+              ],
+              "input": [
+                "0",
+                "0"
+              ],
+              "output": [
+                "0",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "0"
+              ],
+              "input": [
+                "0",
+                "1"
+              ],
+              "output": [
+                "1",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "0"
+              ],
+              "input": [
+                "1",
+                "0"
+              ],
+              "output": [
+                "0",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "0"
+              ],
+              "input": [
+                "1",
+                "1"
+              ],
+              "output": [
+                "1",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "1"
+              ],
+              "input": [
+                "0",
+                "0"
+              ],
+              "output": [
+                "0",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "1"
+              ],
+              "input": [
+                "0",
+                "1"
+              ],
+              "output": [
+                "1",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "1"
+              ],
+              "input": [
+                "1",
+                "0"
+              ],
+              "output": [
+                "0",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "1"
+              ],
+              "input": [
+                "1",
+                "1"
+              ],
+              "output": [
+                "1",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "0"
+              ],
+              "input": [
+                "0",
+                "0"
+              ],
+              "output": [
+                "0",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "0"
+              ],
+              "input": [
+                "0",
+                "1"
+              ],
+              "output": [
+                "1",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "0"
+              ],
+              "input": [
+                "1",
+                "0"
+              ],
+              "output": [
+                "0",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "0"
+              ],
+              "input": [
+                "1",
+                "1"
+              ],
+              "output": [
+                "1",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "1"
+              ],
+              "input": [
+                "0",
+                "0"
+              ],
+              "output": [
+                "0",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "1"
+              ],
+              "input": [
+                "0",
+                "1"
+              ],
+              "output": [
+                "1",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "1"
+              ],
+              "input": [
+                "1",
+                "0"
+              ],
+              "output": [
+                "0",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "1"
+              ],
+              "input": [
+                "1",
+                "1"
+              ],
+              "output": [
+                "1",
+                "0"
+              ]
+            }
+          ],
+          "total_tags": [
+            "permutation_form",
+            "left_nondegenerate",
+            "right_nondegenerate",
+            "nondegenerate"
+          ],
+          "tuple_scan": {
+            "base_state_count": 4,
+            "closed_state_count": 1,
+            "color_tuple": [
+              "1",
+              "0"
+            ],
+            "detector_state_count": 4,
+            "failure": {
+              "closed_label": [
+                [
+                  0,
+                  1
+                ],
+                [
+                  1,
+                  0
+                ]
+              ],
+              "coordinate": 0,
+              "word": [
+                1,
+                1,
+                1,
+                1
+              ]
+            },
+            "identity_detector_closed_state_count": 1,
+            "product_state_count": 8,
+            "truncated": false,
+            "visited_state_count": 8
+          }
+        },
+        {
+          "base_index": 2,
+          "base_signature": [
+            [
+              "0",
+              "1"
+            ],
+            [
+              "1",
+              "1"
+            ],
+            [
+              "0",
+              "0"
+            ],
+            [
+              "1",
+              "0"
+            ]
+          ],
+          "branch": "swapped",
+          "interval_table": [
+            {
+              "colors": [
+                "0",
+                "0"
+              ],
+              "input": [
+                "0",
+                "0"
+              ],
+              "output": [
+                "0",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "0"
+              ],
+              "input": [
+                "0",
+                "1"
+              ],
+              "output": [
+                "1",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "0"
+              ],
+              "input": [
+                "1",
+                "0"
+              ],
+              "output": [
+                "0",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "0"
+              ],
+              "input": [
+                "1",
+                "1"
+              ],
+              "output": [
+                "1",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "1"
+              ],
+              "input": [
+                "0",
+                "0"
+              ],
+              "output": [
+                "0",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "1"
+              ],
+              "input": [
+                "0",
+                "1"
+              ],
+              "output": [
+                "1",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "1"
+              ],
+              "input": [
+                "1",
+                "0"
+              ],
+              "output": [
+                "0",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "1"
+              ],
+              "input": [
+                "1",
+                "1"
+              ],
+              "output": [
+                "1",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "0"
+              ],
+              "input": [
+                "0",
+                "0"
+              ],
+              "output": [
+                "0",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "0"
+              ],
+              "input": [
+                "0",
+                "1"
+              ],
+              "output": [
+                "1",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "0"
+              ],
+              "input": [
+                "1",
+                "0"
+              ],
+              "output": [
+                "0",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "0"
+              ],
+              "input": [
+                "1",
+                "1"
+              ],
+              "output": [
+                "1",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "1"
+              ],
+              "input": [
+                "0",
+                "0"
+              ],
+              "output": [
+                "0",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "1"
+              ],
+              "input": [
+                "0",
+                "1"
+              ],
+              "output": [
+                "1",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "1"
+              ],
+              "input": [
+                "1",
+                "0"
+              ],
+              "output": [
+                "0",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "1"
+              ],
+              "input": [
+                "1",
+                "1"
+              ],
+              "output": [
+                "1",
+                "0"
+              ]
+            }
+          ],
+          "total_tags": [
+            "permutation_form",
+            "left_nondegenerate",
+            "right_nondegenerate",
+            "nondegenerate"
+          ],
+          "tuple_scan": {
+            "base_state_count": 4,
+            "closed_state_count": 1,
+            "color_tuple": [
+              "1",
+              "1"
+            ],
+            "detector_state_count": 4,
+            "failure": {
+              "closed_label": [
+                [
+                  0,
+                  1
+                ],
+                [
+                  1,
+                  0
+                ]
+              ],
+              "coordinate": 0,
+              "word": [
+                1,
+                1,
+                1,
+                1
+              ]
+            },
+            "identity_detector_closed_state_count": 1,
+            "product_state_count": 8,
+            "truncated": false,
+            "visited_state_count": 8
+          }
+        },
+        {
+          "base_index": 2,
+          "base_signature": [
+            [
+              "0",
+              "1"
+            ],
+            [
+              "1",
+              "1"
+            ],
+            [
+              "0",
+              "0"
+            ],
+            [
+              "1",
+              "0"
+            ]
+          ],
+          "branch": "swapped",
+          "interval_table": [
+            {
+              "colors": [
+                "0",
+                "0"
+              ],
+              "input": [
+                "0",
+                "0"
+              ],
+              "output": [
+                "0",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "0"
+              ],
+              "input": [
+                "0",
+                "1"
+              ],
+              "output": [
+                "1",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "0"
+              ],
+              "input": [
+                "1",
+                "0"
+              ],
+              "output": [
+                "0",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "0"
+              ],
+              "input": [
+                "1",
+                "1"
+              ],
+              "output": [
+                "1",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "1"
+              ],
+              "input": [
+                "0",
+                "0"
+              ],
+              "output": [
+                "0",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "1"
+              ],
+              "input": [
+                "0",
+                "1"
+              ],
+              "output": [
+                "1",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "1"
+              ],
+              "input": [
+                "1",
+                "0"
+              ],
+              "output": [
+                "0",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "1"
+              ],
+              "input": [
+                "1",
+                "1"
+              ],
+              "output": [
+                "1",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "0"
+              ],
+              "input": [
+                "0",
+                "0"
+              ],
+              "output": [
+                "0",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "0"
+              ],
+              "input": [
+                "0",
+                "1"
+              ],
+              "output": [
+                "1",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "0"
+              ],
+              "input": [
+                "1",
+                "0"
+              ],
+              "output": [
+                "0",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "0"
+              ],
+              "input": [
+                "1",
+                "1"
+              ],
+              "output": [
+                "1",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "1"
+              ],
+              "input": [
+                "0",
+                "0"
+              ],
+              "output": [
+                "0",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "1"
+              ],
+              "input": [
+                "0",
+                "1"
+              ],
+              "output": [
+                "1",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "1"
+              ],
+              "input": [
+                "1",
+                "0"
+              ],
+              "output": [
+                "0",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "1"
+              ],
+              "input": [
+                "1",
+                "1"
+              ],
+              "output": [
+                "1",
+                "1"
+              ]
+            }
+          ],
+          "total_tags": [
+            "permutation_form",
+            "left_nondegenerate",
+            "right_nondegenerate",
+            "nondegenerate"
+          ],
+          "tuple_scan": {
+            "base_state_count": 4,
+            "closed_state_count": 1,
+            "color_tuple": [
+              "0",
+              "0"
+            ],
+            "detector_state_count": 4,
+            "failure": {
+              "closed_label": [
+                [
+                  0,
+                  1
+                ],
+                [
+                  1,
+                  0
+                ]
+              ],
+              "coordinate": 0,
+              "word": [
+                1,
+                1,
+                1,
+                1
+              ]
+            },
+            "identity_detector_closed_state_count": 1,
+            "product_state_count": 8,
+            "truncated": false,
+            "visited_state_count": 8
+          }
+        }
+      ],
+      "first_good": [
+        {
+          "base_index": 2,
+          "branch": "direct",
+          "detector_order": 2,
+          "total_tags": [],
+          "tuple_scans": [
+            {
+              "base_state_count": 4,
+              "closed_state_count": 0,
+              "color_tuple": [
+                "0",
+                "0"
+              ],
+              "detector_state_count": 4,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 4,
+              "truncated": false,
+              "visited_state_count": 4
+            },
+            {
+              "base_state_count": 4,
+              "closed_state_count": 0,
+              "color_tuple": [
+                "0",
+                "1"
+              ],
+              "detector_state_count": 4,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 4,
+              "truncated": false,
+              "visited_state_count": 4
+            },
+            {
+              "base_state_count": 4,
+              "closed_state_count": 0,
+              "color_tuple": [
+                "1",
+                "0"
+              ],
+              "detector_state_count": 4,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 4,
+              "truncated": false,
+              "visited_state_count": 4
+            },
+            {
+              "base_state_count": 4,
+              "closed_state_count": 0,
+              "color_tuple": [
+                "1",
+                "1"
+              ],
+              "detector_state_count": 4,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 4,
+              "truncated": false,
+              "visited_state_count": 4
+            }
+          ]
+        },
+        {
+          "base_index": 2,
+          "branch": "swapped",
+          "detector_order": 2,
+          "total_tags": [
+            "permutation_form",
+            "left_nondegenerate",
+            "right_nondegenerate",
+            "nondegenerate"
+          ],
+          "tuple_scans": [
+            {
+              "base_state_count": 4,
+              "closed_state_count": 0,
+              "color_tuple": [
+                "0",
+                "0"
+              ],
+              "detector_state_count": 4,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 4,
+              "truncated": false,
+              "visited_state_count": 4
+            },
+            {
+              "base_state_count": 4,
+              "closed_state_count": 0,
+              "color_tuple": [
+                "0",
+                "1"
+              ],
+              "detector_state_count": 4,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 4,
+              "truncated": false,
+              "visited_state_count": 4
+            },
+            {
+              "base_state_count": 4,
+              "closed_state_count": 0,
+              "color_tuple": [
+                "1",
+                "0"
+              ],
+              "detector_state_count": 4,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 4,
+              "truncated": false,
+              "visited_state_count": 4
+            },
+            {
+              "base_state_count": 4,
+              "closed_state_count": 0,
+              "color_tuple": [
+                "1",
+                "1"
+              ],
+              "detector_state_count": 4,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 4,
+              "truncated": false,
+              "visited_state_count": 4
+            }
+          ]
+        },
+        {
+          "base_index": 2,
+          "branch": "swapped",
+          "detector_order": 4,
+          "total_tags": [
+            "permutation_form",
+            "left_nondegenerate",
+            "right_nondegenerate",
+            "nondegenerate"
+          ],
+          "tuple_scans": [
+            {
+              "base_state_count": 4,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "0",
+                "0"
+              ],
+              "detector_state_count": 4,
+              "failure": {
+                "closed_label": [
+                  [
+                    0,
+                    1
+                  ],
+                  [
+                    1,
+                    0
+                  ]
+                ],
+                "coordinate": 0,
+                "word": [
+                  1,
+                  1,
+                  1,
+                  1
+                ]
+              },
+              "identity_detector_closed_state_count": 1,
+              "product_state_count": 8,
+              "truncated": false,
+              "visited_state_count": 8
+            },
+            {
+              "base_state_count": 4,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "0",
+                "1"
+              ],
+              "detector_state_count": 4,
+              "failure": {
+                "closed_label": [
+                  [
+                    0,
+                    1
+                  ],
+                  [
+                    1,
+                    0
+                  ]
+                ],
+                "coordinate": 0,
+                "word": [
+                  1,
+                  1,
+                  1,
+                  1
+                ]
+              },
+              "identity_detector_closed_state_count": 1,
+              "product_state_count": 8,
+              "truncated": false,
+              "visited_state_count": 8
+            },
+            {
+              "base_state_count": 4,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "1",
+                "0"
+              ],
+              "detector_state_count": 4,
+              "failure": {
+                "closed_label": [
+                  [
+                    0,
+                    1
+                  ],
+                  [
+                    1,
+                    0
+                  ]
+                ],
+                "coordinate": 0,
+                "word": [
+                  1,
+                  1,
+                  1,
+                  1
+                ]
+              },
+              "identity_detector_closed_state_count": 1,
+              "product_state_count": 8,
+              "truncated": false,
+              "visited_state_count": 8
+            },
+            {
+              "base_state_count": 4,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "1",
+                "1"
+              ],
+              "detector_state_count": 4,
+              "failure": {
+                "closed_label": [
+                  [
+                    0,
+                    1
+                  ],
+                  [
+                    1,
+                    0
+                  ]
+                ],
+                "coordinate": 0,
+                "word": [
+                  1,
+                  1,
+                  1,
+                  1
+                ]
+              },
+              "identity_detector_closed_state_count": 1,
+              "product_state_count": 8,
+              "truncated": false,
+              "visited_state_count": 8
+            }
+          ]
+        },
+        {
+          "base_index": 2,
+          "branch": "direct",
+          "detector_order": 2,
+          "total_tags": [],
+          "tuple_scans": [
+            {
+              "base_state_count": 4,
+              "closed_state_count": 0,
+              "color_tuple": [
+                "0",
+                "0"
+              ],
+              "detector_state_count": 4,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 4,
+              "truncated": false,
+              "visited_state_count": 4
+            },
+            {
+              "base_state_count": 4,
+              "closed_state_count": 0,
+              "color_tuple": [
+                "0",
+                "1"
+              ],
+              "detector_state_count": 4,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 4,
+              "truncated": false,
+              "visited_state_count": 4
+            },
+            {
+              "base_state_count": 4,
+              "closed_state_count": 0,
+              "color_tuple": [
+                "1",
+                "0"
+              ],
+              "detector_state_count": 4,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 4,
+              "truncated": false,
+              "visited_state_count": 4
+            },
+            {
+              "base_state_count": 4,
+              "closed_state_count": 0,
+              "color_tuple": [
+                "1",
+                "1"
+              ],
+              "detector_state_count": 4,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 4,
+              "truncated": false,
+              "visited_state_count": 4
+            }
+          ]
+        },
+        {
+          "base_index": 2,
+          "branch": "swapped",
+          "detector_order": 4,
+          "total_tags": [
+            "permutation_form",
+            "left_nondegenerate",
+            "right_nondegenerate",
+            "nondegenerate"
+          ],
+          "tuple_scans": [
+            {
+              "base_state_count": 4,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "0",
+                "0"
+              ],
+              "detector_state_count": 4,
+              "failure": {
+                "closed_label": [
+                  [
+                    0,
+                    1
+                  ],
+                  [
+                    1,
+                    0
+                  ]
+                ],
+                "coordinate": 0,
+                "word": [
+                  1,
+                  1,
+                  1,
+                  1
+                ]
+              },
+              "identity_detector_closed_state_count": 1,
+              "product_state_count": 8,
+              "truncated": false,
+              "visited_state_count": 8
+            },
+            {
+              "base_state_count": 4,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "0",
+                "1"
+              ],
+              "detector_state_count": 4,
+              "failure": {
+                "closed_label": [
+                  [
+                    0,
+                    1
+                  ],
+                  [
+                    1,
+                    0
+                  ]
+                ],
+                "coordinate": 0,
+                "word": [
+                  1,
+                  1,
+                  1,
+                  1
+                ]
+              },
+              "identity_detector_closed_state_count": 1,
+              "product_state_count": 8,
+              "truncated": false,
+              "visited_state_count": 8
+            },
+            {
+              "base_state_count": 4,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "1",
+                "0"
+              ],
+              "detector_state_count": 4,
+              "failure": {
+                "closed_label": [
+                  [
+                    0,
+                    1
+                  ],
+                  [
+                    1,
+                    0
+                  ]
+                ],
+                "coordinate": 0,
+                "word": [
+                  1,
+                  1,
+                  1,
+                  1
+                ]
+              },
+              "identity_detector_closed_state_count": 1,
+              "product_state_count": 8,
+              "truncated": false,
+              "visited_state_count": 8
+            },
+            {
+              "base_state_count": 4,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "1",
+                "1"
+              ],
+              "detector_state_count": 4,
+              "failure": {
+                "closed_label": [
+                  [
+                    0,
+                    1
+                  ],
+                  [
+                    1,
+                    0
+                  ]
+                ],
+                "coordinate": 0,
+                "word": [
+                  1,
+                  1,
+                  1,
+                  1
+                ]
+              },
+              "identity_detector_closed_state_count": 1,
+              "product_state_count": 8,
+              "truncated": false,
+              "visited_state_count": 8
+            }
+          ]
+        },
+        {
+          "base_index": 2,
+          "branch": "swapped",
+          "detector_order": 2,
+          "total_tags": [
+            "permutation_form",
+            "left_nondegenerate",
+            "right_nondegenerate",
+            "nondegenerate"
+          ],
+          "tuple_scans": [
+            {
+              "base_state_count": 4,
+              "closed_state_count": 0,
+              "color_tuple": [
+                "0",
+                "0"
+              ],
+              "detector_state_count": 4,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 4,
+              "truncated": false,
+              "visited_state_count": 4
+            },
+            {
+              "base_state_count": 4,
+              "closed_state_count": 0,
+              "color_tuple": [
+                "0",
+                "1"
+              ],
+              "detector_state_count": 4,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 4,
+              "truncated": false,
+              "visited_state_count": 4
+            },
+            {
+              "base_state_count": 4,
+              "closed_state_count": 0,
+              "color_tuple": [
+                "1",
+                "0"
+              ],
+              "detector_state_count": 4,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 4,
+              "truncated": false,
+              "visited_state_count": 4
+            },
+            {
+              "base_state_count": 4,
+              "closed_state_count": 0,
+              "color_tuple": [
+                "1",
+                "1"
+              ],
+              "detector_state_count": 4,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 4,
+              "truncated": false,
+              "visited_state_count": 4
+            }
+          ]
+        },
+        {
+          "base_index": 2,
+          "branch": "swapped",
+          "detector_order": 8,
+          "total_tags": [
+            "permutation_form",
+            "left_nondegenerate",
+            "right_nondegenerate",
+            "nondegenerate"
+          ],
+          "tuple_scans": [
+            {
+              "base_state_count": 4,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "0",
+                "0"
+              ],
+              "detector_state_count": 8,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 4,
+              "truncated": false,
+              "visited_state_count": 8
+            },
+            {
+              "base_state_count": 4,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "0",
+                "1"
+              ],
+              "detector_state_count": 8,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 4,
+              "truncated": false,
+              "visited_state_count": 8
+            },
+            {
+              "base_state_count": 4,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "1",
+                "0"
+              ],
+              "detector_state_count": 8,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 4,
+              "truncated": false,
+              "visited_state_count": 8
+            },
+            {
+              "base_state_count": 4,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "1",
+                "1"
+              ],
+              "detector_state_count": 8,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 4,
+              "truncated": false,
+              "visited_state_count": 8
+            }
+          ]
+        },
+        {
+          "base_index": 2,
+          "branch": "swapped",
+          "detector_order": 8,
+          "total_tags": [
+            "permutation_form",
+            "left_nondegenerate",
+            "right_nondegenerate",
+            "nondegenerate"
+          ],
+          "tuple_scans": [
+            {
+              "base_state_count": 4,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "0",
+                "0"
+              ],
+              "detector_state_count": 8,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 8,
+              "truncated": false,
+              "visited_state_count": 8
+            },
+            {
+              "base_state_count": 4,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "0",
+                "1"
+              ],
+              "detector_state_count": 8,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 8,
+              "truncated": false,
+              "visited_state_count": 8
+            },
+            {
+              "base_state_count": 4,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "1",
+                "0"
+              ],
+              "detector_state_count": 8,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 8,
+              "truncated": false,
+              "visited_state_count": 8
+            },
+            {
+              "base_state_count": 4,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "1",
+                "1"
+              ],
+              "detector_state_count": 8,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 8,
+              "truncated": false,
+              "visited_state_count": 8
+            }
+          ]
+        }
+      ],
+      "known_failure_count": 8,
+      "local_minimal_count": 10,
+      "max_visited_state_count": 8,
+      "truncated_count": 0,
+      "tuple_scan_count": 40,
+      "untagged_failure_count": 0
+    },
+    "base_3": {
+      "base_index": 3,
+      "base_signature": [
+        [
+          "1",
+          "0"
+        ],
+        [
+          "0",
+          "0"
+        ],
+        [
+          "1",
+          "1"
+        ],
+        [
+          "0",
+          "1"
+        ]
+      ],
+      "branch_counts": {
+        "direct": 2,
+        "swapped": 8
+      },
+      "branch_scan_count": 10,
+      "checked_table_count": 331776,
+      "colored_ybe_count": 10,
+      "detector_order_counts": {
+        "direct|order=2": 2,
+        "swapped|order=2": 2,
+        "swapped|order=4": 2,
+        "swapped|order=8": 4
+      },
+      "failure_count": 8,
+      "first_bad": [
+        {
+          "base_index": 3,
+          "base_signature": [
+            [
+              "1",
+              "0"
+            ],
+            [
+              "0",
+              "0"
+            ],
+            [
+              "1",
+              "1"
+            ],
+            [
+              "0",
+              "1"
+            ]
+          ],
+          "branch": "swapped",
+          "interval_table": [
+            {
+              "colors": [
+                "0",
+                "0"
+              ],
+              "input": [
+                "0",
+                "0"
+              ],
+              "output": [
+                "0",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "0"
+              ],
+              "input": [
+                "0",
+                "1"
+              ],
+              "output": [
+                "1",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "0"
+              ],
+              "input": [
+                "1",
+                "0"
+              ],
+              "output": [
+                "0",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "0"
+              ],
+              "input": [
+                "1",
+                "1"
+              ],
+              "output": [
+                "1",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "1"
+              ],
+              "input": [
+                "0",
+                "0"
+              ],
+              "output": [
+                "1",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "1"
+              ],
+              "input": [
+                "0",
+                "1"
+              ],
+              "output": [
+                "0",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "1"
+              ],
+              "input": [
+                "1",
+                "0"
+              ],
+              "output": [
+                "1",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "1"
+              ],
+              "input": [
+                "1",
+                "1"
+              ],
+              "output": [
+                "0",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "0"
+              ],
+              "input": [
+                "0",
+                "0"
+              ],
+              "output": [
+                "0",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "0"
+              ],
+              "input": [
+                "0",
+                "1"
+              ],
+              "output": [
+                "1",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "0"
+              ],
+              "input": [
+                "1",
+                "0"
+              ],
+              "output": [
+                "0",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "0"
+              ],
+              "input": [
+                "1",
+                "1"
+              ],
+              "output": [
+                "1",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "1"
+              ],
+              "input": [
+                "0",
+                "0"
+              ],
+              "output": [
+                "1",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "1"
+              ],
+              "input": [
+                "0",
+                "1"
+              ],
+              "output": [
+                "0",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "1"
+              ],
+              "input": [
+                "1",
+                "0"
+              ],
+              "output": [
+                "1",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "1"
+              ],
+              "input": [
+                "1",
+                "1"
+              ],
+              "output": [
+                "0",
+                "1"
+              ]
+            }
+          ],
+          "total_tags": [
+            "rack_type",
+            "permutation_form",
+            "left_nondegenerate",
+            "right_nondegenerate",
+            "nondegenerate"
+          ],
+          "tuple_scan": {
+            "base_state_count": 4,
+            "closed_state_count": 1,
+            "color_tuple": [
+              "0",
+              "0"
+            ],
+            "detector_state_count": 4,
+            "failure": {
+              "closed_label": [
+                [
+                  0,
+                  1
+                ],
+                [
+                  1,
+                  0
+                ]
+              ],
+              "coordinate": 0,
+              "word": [
+                1,
+                1,
+                1,
+                1
+              ]
+            },
+            "identity_detector_closed_state_count": 1,
+            "product_state_count": 8,
+            "truncated": false,
+            "visited_state_count": 8
+          }
+        },
+        {
+          "base_index": 3,
+          "base_signature": [
+            [
+              "1",
+              "0"
+            ],
+            [
+              "0",
+              "0"
+            ],
+            [
+              "1",
+              "1"
+            ],
+            [
+              "0",
+              "1"
+            ]
+          ],
+          "branch": "swapped",
+          "interval_table": [
+            {
+              "colors": [
+                "0",
+                "0"
+              ],
+              "input": [
+                "0",
+                "0"
+              ],
+              "output": [
+                "0",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "0"
+              ],
+              "input": [
+                "0",
+                "1"
+              ],
+              "output": [
+                "1",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "0"
+              ],
+              "input": [
+                "1",
+                "0"
+              ],
+              "output": [
+                "0",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "0"
+              ],
+              "input": [
+                "1",
+                "1"
+              ],
+              "output": [
+                "1",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "1"
+              ],
+              "input": [
+                "0",
+                "0"
+              ],
+              "output": [
+                "1",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "1"
+              ],
+              "input": [
+                "0",
+                "1"
+              ],
+              "output": [
+                "0",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "1"
+              ],
+              "input": [
+                "1",
+                "0"
+              ],
+              "output": [
+                "1",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "1"
+              ],
+              "input": [
+                "1",
+                "1"
+              ],
+              "output": [
+                "0",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "0"
+              ],
+              "input": [
+                "0",
+                "0"
+              ],
+              "output": [
+                "0",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "0"
+              ],
+              "input": [
+                "0",
+                "1"
+              ],
+              "output": [
+                "1",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "0"
+              ],
+              "input": [
+                "1",
+                "0"
+              ],
+              "output": [
+                "0",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "0"
+              ],
+              "input": [
+                "1",
+                "1"
+              ],
+              "output": [
+                "1",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "1"
+              ],
+              "input": [
+                "0",
+                "0"
+              ],
+              "output": [
+                "1",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "1"
+              ],
+              "input": [
+                "0",
+                "1"
+              ],
+              "output": [
+                "0",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "1"
+              ],
+              "input": [
+                "1",
+                "0"
+              ],
+              "output": [
+                "1",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "1"
+              ],
+              "input": [
+                "1",
+                "1"
+              ],
+              "output": [
+                "0",
+                "1"
+              ]
+            }
+          ],
+          "total_tags": [
+            "rack_type",
+            "permutation_form",
+            "left_nondegenerate",
+            "right_nondegenerate",
+            "nondegenerate"
+          ],
+          "tuple_scan": {
+            "base_state_count": 4,
+            "closed_state_count": 1,
+            "color_tuple": [
+              "0",
+              "1"
+            ],
+            "detector_state_count": 4,
+            "failure": {
+              "closed_label": [
+                [
+                  0,
+                  1
+                ],
+                [
+                  1,
+                  0
+                ]
+              ],
+              "coordinate": 0,
+              "word": [
+                1,
+                1,
+                1,
+                1
+              ]
+            },
+            "identity_detector_closed_state_count": 1,
+            "product_state_count": 8,
+            "truncated": false,
+            "visited_state_count": 8
+          }
+        },
+        {
+          "base_index": 3,
+          "base_signature": [
+            [
+              "1",
+              "0"
+            ],
+            [
+              "0",
+              "0"
+            ],
+            [
+              "1",
+              "1"
+            ],
+            [
+              "0",
+              "1"
+            ]
+          ],
+          "branch": "swapped",
+          "interval_table": [
+            {
+              "colors": [
+                "0",
+                "0"
+              ],
+              "input": [
+                "0",
+                "0"
+              ],
+              "output": [
+                "0",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "0"
+              ],
+              "input": [
+                "0",
+                "1"
+              ],
+              "output": [
+                "1",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "0"
+              ],
+              "input": [
+                "1",
+                "0"
+              ],
+              "output": [
+                "0",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "0"
+              ],
+              "input": [
+                "1",
+                "1"
+              ],
+              "output": [
+                "1",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "1"
+              ],
+              "input": [
+                "0",
+                "0"
+              ],
+              "output": [
+                "1",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "1"
+              ],
+              "input": [
+                "0",
+                "1"
+              ],
+              "output": [
+                "0",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "1"
+              ],
+              "input": [
+                "1",
+                "0"
+              ],
+              "output": [
+                "1",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "1"
+              ],
+              "input": [
+                "1",
+                "1"
+              ],
+              "output": [
+                "0",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "0"
+              ],
+              "input": [
+                "0",
+                "0"
+              ],
+              "output": [
+                "0",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "0"
+              ],
+              "input": [
+                "0",
+                "1"
+              ],
+              "output": [
+                "1",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "0"
+              ],
+              "input": [
+                "1",
+                "0"
+              ],
+              "output": [
+                "0",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "0"
+              ],
+              "input": [
+                "1",
+                "1"
+              ],
+              "output": [
+                "1",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "1"
+              ],
+              "input": [
+                "0",
+                "0"
+              ],
+              "output": [
+                "1",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "1"
+              ],
+              "input": [
+                "0",
+                "1"
+              ],
+              "output": [
+                "0",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "1"
+              ],
+              "input": [
+                "1",
+                "0"
+              ],
+              "output": [
+                "1",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "1"
+              ],
+              "input": [
+                "1",
+                "1"
+              ],
+              "output": [
+                "0",
+                "1"
+              ]
+            }
+          ],
+          "total_tags": [
+            "rack_type",
+            "permutation_form",
+            "left_nondegenerate",
+            "right_nondegenerate",
+            "nondegenerate"
+          ],
+          "tuple_scan": {
+            "base_state_count": 4,
+            "closed_state_count": 1,
+            "color_tuple": [
+              "1",
+              "0"
+            ],
+            "detector_state_count": 4,
+            "failure": {
+              "closed_label": [
+                [
+                  0,
+                  1
+                ],
+                [
+                  1,
+                  0
+                ]
+              ],
+              "coordinate": 0,
+              "word": [
+                1,
+                1,
+                1,
+                1
+              ]
+            },
+            "identity_detector_closed_state_count": 1,
+            "product_state_count": 8,
+            "truncated": false,
+            "visited_state_count": 8
+          }
+        },
+        {
+          "base_index": 3,
+          "base_signature": [
+            [
+              "1",
+              "0"
+            ],
+            [
+              "0",
+              "0"
+            ],
+            [
+              "1",
+              "1"
+            ],
+            [
+              "0",
+              "1"
+            ]
+          ],
+          "branch": "swapped",
+          "interval_table": [
+            {
+              "colors": [
+                "0",
+                "0"
+              ],
+              "input": [
+                "0",
+                "0"
+              ],
+              "output": [
+                "0",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "0"
+              ],
+              "input": [
+                "0",
+                "1"
+              ],
+              "output": [
+                "1",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "0"
+              ],
+              "input": [
+                "1",
+                "0"
+              ],
+              "output": [
+                "0",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "0"
+              ],
+              "input": [
+                "1",
+                "1"
+              ],
+              "output": [
+                "1",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "1"
+              ],
+              "input": [
+                "0",
+                "0"
+              ],
+              "output": [
+                "1",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "1"
+              ],
+              "input": [
+                "0",
+                "1"
+              ],
+              "output": [
+                "0",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "1"
+              ],
+              "input": [
+                "1",
+                "0"
+              ],
+              "output": [
+                "1",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "1"
+              ],
+              "input": [
+                "1",
+                "1"
+              ],
+              "output": [
+                "0",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "0"
+              ],
+              "input": [
+                "0",
+                "0"
+              ],
+              "output": [
+                "0",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "0"
+              ],
+              "input": [
+                "0",
+                "1"
+              ],
+              "output": [
+                "1",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "0"
+              ],
+              "input": [
+                "1",
+                "0"
+              ],
+              "output": [
+                "0",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "0"
+              ],
+              "input": [
+                "1",
+                "1"
+              ],
+              "output": [
+                "1",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "1"
+              ],
+              "input": [
+                "0",
+                "0"
+              ],
+              "output": [
+                "1",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "1"
+              ],
+              "input": [
+                "0",
+                "1"
+              ],
+              "output": [
+                "0",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "1"
+              ],
+              "input": [
+                "1",
+                "0"
+              ],
+              "output": [
+                "1",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "1"
+              ],
+              "input": [
+                "1",
+                "1"
+              ],
+              "output": [
+                "0",
+                "1"
+              ]
+            }
+          ],
+          "total_tags": [
+            "rack_type",
+            "permutation_form",
+            "left_nondegenerate",
+            "right_nondegenerate",
+            "nondegenerate"
+          ],
+          "tuple_scan": {
+            "base_state_count": 4,
+            "closed_state_count": 1,
+            "color_tuple": [
+              "1",
+              "1"
+            ],
+            "detector_state_count": 4,
+            "failure": {
+              "closed_label": [
+                [
+                  0,
+                  1
+                ],
+                [
+                  1,
+                  0
+                ]
+              ],
+              "coordinate": 0,
+              "word": [
+                1,
+                1,
+                1,
+                1
+              ]
+            },
+            "identity_detector_closed_state_count": 1,
+            "product_state_count": 8,
+            "truncated": false,
+            "visited_state_count": 8
+          }
+        },
+        {
+          "base_index": 3,
+          "base_signature": [
+            [
+              "1",
+              "0"
+            ],
+            [
+              "0",
+              "0"
+            ],
+            [
+              "1",
+              "1"
+            ],
+            [
+              "0",
+              "1"
+            ]
+          ],
+          "branch": "swapped",
+          "interval_table": [
+            {
+              "colors": [
+                "0",
+                "0"
+              ],
+              "input": [
+                "0",
+                "0"
+              ],
+              "output": [
+                "1",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "0"
+              ],
+              "input": [
+                "0",
+                "1"
+              ],
+              "output": [
+                "0",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "0"
+              ],
+              "input": [
+                "1",
+                "0"
+              ],
+              "output": [
+                "1",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "0"
+              ],
+              "input": [
+                "1",
+                "1"
+              ],
+              "output": [
+                "0",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "1"
+              ],
+              "input": [
+                "0",
+                "0"
+              ],
+              "output": [
+                "0",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "1"
+              ],
+              "input": [
+                "0",
+                "1"
+              ],
+              "output": [
+                "1",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "1"
+              ],
+              "input": [
+                "1",
+                "0"
+              ],
+              "output": [
+                "0",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "1"
+              ],
+              "input": [
+                "1",
+                "1"
+              ],
+              "output": [
+                "1",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "0"
+              ],
+              "input": [
+                "0",
+                "0"
+              ],
+              "output": [
+                "1",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "0"
+              ],
+              "input": [
+                "0",
+                "1"
+              ],
+              "output": [
+                "0",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "0"
+              ],
+              "input": [
+                "1",
+                "0"
+              ],
+              "output": [
+                "1",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "0"
+              ],
+              "input": [
+                "1",
+                "1"
+              ],
+              "output": [
+                "0",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "1"
+              ],
+              "input": [
+                "0",
+                "0"
+              ],
+              "output": [
+                "0",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "1"
+              ],
+              "input": [
+                "0",
+                "1"
+              ],
+              "output": [
+                "1",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "1"
+              ],
+              "input": [
+                "1",
+                "0"
+              ],
+              "output": [
+                "0",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "1"
+              ],
+              "input": [
+                "1",
+                "1"
+              ],
+              "output": [
+                "1",
+                "1"
+              ]
+            }
+          ],
+          "total_tags": [
+            "rack_type",
+            "permutation_form",
+            "left_nondegenerate",
+            "right_nondegenerate",
+            "nondegenerate"
+          ],
+          "tuple_scan": {
+            "base_state_count": 4,
+            "closed_state_count": 1,
+            "color_tuple": [
+              "0",
+              "0"
+            ],
+            "detector_state_count": 4,
+            "failure": {
+              "closed_label": [
+                [
+                  0,
+                  1
+                ],
+                [
+                  1,
+                  0
+                ]
+              ],
+              "coordinate": 0,
+              "word": [
+                1,
+                1,
+                1,
+                1
+              ]
+            },
+            "identity_detector_closed_state_count": 1,
+            "product_state_count": 8,
+            "truncated": false,
+            "visited_state_count": 8
+          }
+        }
+      ],
+      "first_good": [
+        {
+          "base_index": 3,
+          "branch": "direct",
+          "detector_order": 2,
+          "total_tags": [],
+          "tuple_scans": [
+            {
+              "base_state_count": 4,
+              "closed_state_count": 0,
+              "color_tuple": [
+                "0",
+                "0"
+              ],
+              "detector_state_count": 4,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 4,
+              "truncated": false,
+              "visited_state_count": 4
+            },
+            {
+              "base_state_count": 4,
+              "closed_state_count": 0,
+              "color_tuple": [
+                "0",
+                "1"
+              ],
+              "detector_state_count": 4,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 4,
+              "truncated": false,
+              "visited_state_count": 4
+            },
+            {
+              "base_state_count": 4,
+              "closed_state_count": 0,
+              "color_tuple": [
+                "1",
+                "0"
+              ],
+              "detector_state_count": 4,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 4,
+              "truncated": false,
+              "visited_state_count": 4
+            },
+            {
+              "base_state_count": 4,
+              "closed_state_count": 0,
+              "color_tuple": [
+                "1",
+                "1"
+              ],
+              "detector_state_count": 4,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 4,
+              "truncated": false,
+              "visited_state_count": 4
+            }
+          ]
+        },
+        {
+          "base_index": 3,
+          "branch": "swapped",
+          "detector_order": 2,
+          "total_tags": [
+            "rack_type",
+            "permutation_form",
+            "left_nondegenerate",
+            "right_nondegenerate",
+            "nondegenerate"
+          ],
+          "tuple_scans": [
+            {
+              "base_state_count": 4,
+              "closed_state_count": 0,
+              "color_tuple": [
+                "0",
+                "0"
+              ],
+              "detector_state_count": 4,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 4,
+              "truncated": false,
+              "visited_state_count": 4
+            },
+            {
+              "base_state_count": 4,
+              "closed_state_count": 0,
+              "color_tuple": [
+                "0",
+                "1"
+              ],
+              "detector_state_count": 4,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 4,
+              "truncated": false,
+              "visited_state_count": 4
+            },
+            {
+              "base_state_count": 4,
+              "closed_state_count": 0,
+              "color_tuple": [
+                "1",
+                "0"
+              ],
+              "detector_state_count": 4,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 4,
+              "truncated": false,
+              "visited_state_count": 4
+            },
+            {
+              "base_state_count": 4,
+              "closed_state_count": 0,
+              "color_tuple": [
+                "1",
+                "1"
+              ],
+              "detector_state_count": 4,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 4,
+              "truncated": false,
+              "visited_state_count": 4
+            }
+          ]
+        },
+        {
+          "base_index": 3,
+          "branch": "swapped",
+          "detector_order": 4,
+          "total_tags": [
+            "rack_type",
+            "permutation_form",
+            "left_nondegenerate",
+            "right_nondegenerate",
+            "nondegenerate"
+          ],
+          "tuple_scans": [
+            {
+              "base_state_count": 4,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "0",
+                "0"
+              ],
+              "detector_state_count": 4,
+              "failure": {
+                "closed_label": [
+                  [
+                    0,
+                    1
+                  ],
+                  [
+                    1,
+                    0
+                  ]
+                ],
+                "coordinate": 0,
+                "word": [
+                  1,
+                  1,
+                  1,
+                  1
+                ]
+              },
+              "identity_detector_closed_state_count": 1,
+              "product_state_count": 8,
+              "truncated": false,
+              "visited_state_count": 8
+            },
+            {
+              "base_state_count": 4,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "0",
+                "1"
+              ],
+              "detector_state_count": 4,
+              "failure": {
+                "closed_label": [
+                  [
+                    0,
+                    1
+                  ],
+                  [
+                    1,
+                    0
+                  ]
+                ],
+                "coordinate": 0,
+                "word": [
+                  1,
+                  1,
+                  1,
+                  1
+                ]
+              },
+              "identity_detector_closed_state_count": 1,
+              "product_state_count": 8,
+              "truncated": false,
+              "visited_state_count": 8
+            },
+            {
+              "base_state_count": 4,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "1",
+                "0"
+              ],
+              "detector_state_count": 4,
+              "failure": {
+                "closed_label": [
+                  [
+                    0,
+                    1
+                  ],
+                  [
+                    1,
+                    0
+                  ]
+                ],
+                "coordinate": 0,
+                "word": [
+                  1,
+                  1,
+                  1,
+                  1
+                ]
+              },
+              "identity_detector_closed_state_count": 1,
+              "product_state_count": 8,
+              "truncated": false,
+              "visited_state_count": 8
+            },
+            {
+              "base_state_count": 4,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "1",
+                "1"
+              ],
+              "detector_state_count": 4,
+              "failure": {
+                "closed_label": [
+                  [
+                    0,
+                    1
+                  ],
+                  [
+                    1,
+                    0
+                  ]
+                ],
+                "coordinate": 0,
+                "word": [
+                  1,
+                  1,
+                  1,
+                  1
+                ]
+              },
+              "identity_detector_closed_state_count": 1,
+              "product_state_count": 8,
+              "truncated": false,
+              "visited_state_count": 8
+            }
+          ]
+        },
+        {
+          "base_index": 3,
+          "branch": "swapped",
+          "detector_order": 8,
+          "total_tags": [
+            "permutation_form",
+            "left_nondegenerate",
+            "right_nondegenerate",
+            "nondegenerate"
+          ],
+          "tuple_scans": [
+            {
+              "base_state_count": 4,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "0",
+                "0"
+              ],
+              "detector_state_count": 8,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 4,
+              "truncated": false,
+              "visited_state_count": 8
+            },
+            {
+              "base_state_count": 4,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "0",
+                "1"
+              ],
+              "detector_state_count": 8,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 4,
+              "truncated": false,
+              "visited_state_count": 8
+            },
+            {
+              "base_state_count": 4,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "1",
+                "0"
+              ],
+              "detector_state_count": 8,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 4,
+              "truncated": false,
+              "visited_state_count": 8
+            },
+            {
+              "base_state_count": 4,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "1",
+                "1"
+              ],
+              "detector_state_count": 8,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 4,
+              "truncated": false,
+              "visited_state_count": 8
+            }
+          ]
+        },
+        {
+          "base_index": 3,
+          "branch": "swapped",
+          "detector_order": 8,
+          "total_tags": [
+            "permutation_form",
+            "left_nondegenerate",
+            "right_nondegenerate",
+            "nondegenerate"
+          ],
+          "tuple_scans": [
+            {
+              "base_state_count": 4,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "0",
+                "0"
+              ],
+              "detector_state_count": 8,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 8,
+              "truncated": false,
+              "visited_state_count": 8
+            },
+            {
+              "base_state_count": 4,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "0",
+                "1"
+              ],
+              "detector_state_count": 8,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 8,
+              "truncated": false,
+              "visited_state_count": 8
+            },
+            {
+              "base_state_count": 4,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "1",
+                "0"
+              ],
+              "detector_state_count": 8,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 8,
+              "truncated": false,
+              "visited_state_count": 8
+            },
+            {
+              "base_state_count": 4,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "1",
+                "1"
+              ],
+              "detector_state_count": 8,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 8,
+              "truncated": false,
+              "visited_state_count": 8
+            }
+          ]
+        },
+        {
+          "base_index": 3,
+          "branch": "swapped",
+          "detector_order": 4,
+          "total_tags": [
+            "rack_type",
+            "permutation_form",
+            "left_nondegenerate",
+            "right_nondegenerate",
+            "nondegenerate"
+          ],
+          "tuple_scans": [
+            {
+              "base_state_count": 4,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "0",
+                "0"
+              ],
+              "detector_state_count": 4,
+              "failure": {
+                "closed_label": [
+                  [
+                    0,
+                    1
+                  ],
+                  [
+                    1,
+                    0
+                  ]
+                ],
+                "coordinate": 0,
+                "word": [
+                  1,
+                  1,
+                  1,
+                  1
+                ]
+              },
+              "identity_detector_closed_state_count": 1,
+              "product_state_count": 8,
+              "truncated": false,
+              "visited_state_count": 8
+            },
+            {
+              "base_state_count": 4,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "0",
+                "1"
+              ],
+              "detector_state_count": 4,
+              "failure": {
+                "closed_label": [
+                  [
+                    0,
+                    1
+                  ],
+                  [
+                    1,
+                    0
+                  ]
+                ],
+                "coordinate": 0,
+                "word": [
+                  1,
+                  1,
+                  1,
+                  1
+                ]
+              },
+              "identity_detector_closed_state_count": 1,
+              "product_state_count": 8,
+              "truncated": false,
+              "visited_state_count": 8
+            },
+            {
+              "base_state_count": 4,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "1",
+                "0"
+              ],
+              "detector_state_count": 4,
+              "failure": {
+                "closed_label": [
+                  [
+                    0,
+                    1
+                  ],
+                  [
+                    1,
+                    0
+                  ]
+                ],
+                "coordinate": 0,
+                "word": [
+                  1,
+                  1,
+                  1,
+                  1
+                ]
+              },
+              "identity_detector_closed_state_count": 1,
+              "product_state_count": 8,
+              "truncated": false,
+              "visited_state_count": 8
+            },
+            {
+              "base_state_count": 4,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "1",
+                "1"
+              ],
+              "detector_state_count": 4,
+              "failure": {
+                "closed_label": [
+                  [
+                    0,
+                    1
+                  ],
+                  [
+                    1,
+                    0
+                  ]
+                ],
+                "coordinate": 0,
+                "word": [
+                  1,
+                  1,
+                  1,
+                  1
+                ]
+              },
+              "identity_detector_closed_state_count": 1,
+              "product_state_count": 8,
+              "truncated": false,
+              "visited_state_count": 8
+            }
+          ]
+        },
+        {
+          "base_index": 3,
+          "branch": "swapped",
+          "detector_order": 2,
+          "total_tags": [
+            "rack_type",
+            "permutation_form",
+            "left_nondegenerate",
+            "right_nondegenerate",
+            "nondegenerate"
+          ],
+          "tuple_scans": [
+            {
+              "base_state_count": 4,
+              "closed_state_count": 0,
+              "color_tuple": [
+                "0",
+                "0"
+              ],
+              "detector_state_count": 4,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 4,
+              "truncated": false,
+              "visited_state_count": 4
+            },
+            {
+              "base_state_count": 4,
+              "closed_state_count": 0,
+              "color_tuple": [
+                "0",
+                "1"
+              ],
+              "detector_state_count": 4,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 4,
+              "truncated": false,
+              "visited_state_count": 4
+            },
+            {
+              "base_state_count": 4,
+              "closed_state_count": 0,
+              "color_tuple": [
+                "1",
+                "0"
+              ],
+              "detector_state_count": 4,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 4,
+              "truncated": false,
+              "visited_state_count": 4
+            },
+            {
+              "base_state_count": 4,
+              "closed_state_count": 0,
+              "color_tuple": [
+                "1",
+                "1"
+              ],
+              "detector_state_count": 4,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 4,
+              "truncated": false,
+              "visited_state_count": 4
+            }
+          ]
+        },
+        {
+          "base_index": 3,
+          "branch": "direct",
+          "detector_order": 2,
+          "total_tags": [],
+          "tuple_scans": [
+            {
+              "base_state_count": 4,
+              "closed_state_count": 0,
+              "color_tuple": [
+                "0",
+                "0"
+              ],
+              "detector_state_count": 4,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 4,
+              "truncated": false,
+              "visited_state_count": 4
+            },
+            {
+              "base_state_count": 4,
+              "closed_state_count": 0,
+              "color_tuple": [
+                "0",
+                "1"
+              ],
+              "detector_state_count": 4,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 4,
+              "truncated": false,
+              "visited_state_count": 4
+            },
+            {
+              "base_state_count": 4,
+              "closed_state_count": 0,
+              "color_tuple": [
+                "1",
+                "0"
+              ],
+              "detector_state_count": 4,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 4,
+              "truncated": false,
+              "visited_state_count": 4
+            },
+            {
+              "base_state_count": 4,
+              "closed_state_count": 0,
+              "color_tuple": [
+                "1",
+                "1"
+              ],
+              "detector_state_count": 4,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 4,
+              "truncated": false,
+              "visited_state_count": 4
+            }
+          ]
+        }
+      ],
+      "known_failure_count": 8,
+      "local_minimal_count": 10,
+      "max_visited_state_count": 8,
+      "truncated_count": 0,
+      "tuple_scan_count": 40,
+      "untagged_failure_count": 0
+    },
+    "base_4": {
+      "base_index": 4,
+      "base_signature": [
+        [
+          "1",
+          "1"
+        ],
+        [
+          "0",
+          "1"
+        ],
+        [
+          "1",
+          "0"
+        ],
+        [
+          "0",
+          "0"
+        ]
+      ],
+      "branch_counts": {
+        "direct": 4,
+        "swapped": 32
+      },
+      "branch_scan_count": 36,
+      "checked_table_count": 331776,
+      "colored_ybe_count": 56,
+      "detector_order_counts": {
+        "direct|order=2": 2,
+        "direct|order=4": 2,
+        "swapped|order=2": 2,
+        "swapped|order=4": 30
+      },
+      "failure_count": 0,
+      "first_bad": [],
+      "first_good": [
+        {
+          "base_index": 4,
+          "branch": "direct",
+          "detector_order": 2,
+          "total_tags": [
+            "involutive"
+          ],
+          "tuple_scans": [
+            {
+              "base_state_count": 2,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "0",
+                "0"
+              ],
+              "detector_state_count": 4,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 2,
+              "truncated": false,
+              "visited_state_count": 4
+            },
+            {
+              "base_state_count": 2,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "0",
+                "1"
+              ],
+              "detector_state_count": 4,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 1,
+              "truncated": false,
+              "visited_state_count": 4
+            },
+            {
+              "base_state_count": 2,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "1",
+                "0"
+              ],
+              "detector_state_count": 4,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 1,
+              "truncated": false,
+              "visited_state_count": 4
+            },
+            {
+              "base_state_count": 2,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "1",
+                "1"
+              ],
+              "detector_state_count": 4,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 2,
+              "truncated": false,
+              "visited_state_count": 4
+            }
+          ]
+        },
+        {
+          "base_index": 4,
+          "branch": "swapped",
+          "detector_order": 2,
+          "total_tags": [
+            "involutive",
+            "permutation_form",
+            "left_nondegenerate",
+            "right_nondegenerate",
+            "nondegenerate"
+          ],
+          "tuple_scans": [
+            {
+              "base_state_count": 2,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "0",
+                "0"
+              ],
+              "detector_state_count": 4,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 2,
+              "truncated": false,
+              "visited_state_count": 4
+            },
+            {
+              "base_state_count": 2,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "0",
+                "1"
+              ],
+              "detector_state_count": 4,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 2,
+              "truncated": false,
+              "visited_state_count": 4
+            },
+            {
+              "base_state_count": 2,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "1",
+                "0"
+              ],
+              "detector_state_count": 4,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 2,
+              "truncated": false,
+              "visited_state_count": 4
+            },
+            {
+              "base_state_count": 2,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "1",
+                "1"
+              ],
+              "detector_state_count": 4,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 2,
+              "truncated": false,
+              "visited_state_count": 4
+            }
+          ]
+        },
+        {
+          "base_index": 4,
+          "branch": "swapped",
+          "detector_order": 4,
+          "total_tags": [
+            "left_nondegenerate",
+            "right_nondegenerate",
+            "nondegenerate"
+          ],
+          "tuple_scans": [
+            {
+              "base_state_count": 2,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "0",
+                "0"
+              ],
+              "detector_state_count": 4,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 4,
+              "truncated": false,
+              "visited_state_count": 4
+            },
+            {
+              "base_state_count": 2,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "0",
+                "1"
+              ],
+              "detector_state_count": 4,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 2,
+              "truncated": false,
+              "visited_state_count": 4
+            },
+            {
+              "base_state_count": 2,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "1",
+                "0"
+              ],
+              "detector_state_count": 4,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 2,
+              "truncated": false,
+              "visited_state_count": 4
+            },
+            {
+              "base_state_count": 2,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "1",
+                "1"
+              ],
+              "detector_state_count": 4,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 4,
+              "truncated": false,
+              "visited_state_count": 4
+            }
+          ]
+        },
+        {
+          "base_index": 4,
+          "branch": "swapped",
+          "detector_order": 4,
+          "total_tags": [
+            "left_nondegenerate",
+            "right_nondegenerate",
+            "nondegenerate"
+          ],
+          "tuple_scans": [
+            {
+              "base_state_count": 2,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "0",
+                "0"
+              ],
+              "detector_state_count": 4,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 2,
+              "truncated": false,
+              "visited_state_count": 4
+            },
+            {
+              "base_state_count": 2,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "0",
+                "1"
+              ],
+              "detector_state_count": 4,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 4,
+              "truncated": false,
+              "visited_state_count": 4
+            },
+            {
+              "base_state_count": 2,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "1",
+                "0"
+              ],
+              "detector_state_count": 4,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 4,
+              "truncated": false,
+              "visited_state_count": 4
+            },
+            {
+              "base_state_count": 2,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "1",
+                "1"
+              ],
+              "detector_state_count": 4,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 2,
+              "truncated": false,
+              "visited_state_count": 4
+            }
+          ]
+        },
+        {
+          "base_index": 4,
+          "branch": "swapped",
+          "detector_order": 4,
+          "total_tags": [
+            "left_nondegenerate",
+            "right_nondegenerate",
+            "nondegenerate"
+          ],
+          "tuple_scans": [
+            {
+              "base_state_count": 2,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "0",
+                "0"
+              ],
+              "detector_state_count": 4,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 4,
+              "truncated": false,
+              "visited_state_count": 4
+            },
+            {
+              "base_state_count": 2,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "0",
+                "1"
+              ],
+              "detector_state_count": 4,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 4,
+              "truncated": false,
+              "visited_state_count": 4
+            },
+            {
+              "base_state_count": 2,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "1",
+                "0"
+              ],
+              "detector_state_count": 4,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 4,
+              "truncated": false,
+              "visited_state_count": 4
+            },
+            {
+              "base_state_count": 2,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "1",
+                "1"
+              ],
+              "detector_state_count": 4,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 4,
+              "truncated": false,
+              "visited_state_count": 4
+            }
+          ]
+        },
+        {
+          "base_index": 4,
+          "branch": "swapped",
+          "detector_order": 4,
+          "total_tags": [
+            "permutation_form",
+            "left_nondegenerate",
+            "right_nondegenerate",
+            "nondegenerate"
+          ],
+          "tuple_scans": [
+            {
+              "base_state_count": 2,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "0",
+                "0"
+              ],
+              "detector_state_count": 4,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 4,
+              "truncated": false,
+              "visited_state_count": 4
+            },
+            {
+              "base_state_count": 2,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "0",
+                "1"
+              ],
+              "detector_state_count": 4,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 4,
+              "truncated": false,
+              "visited_state_count": 4
+            },
+            {
+              "base_state_count": 2,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "1",
+                "0"
+              ],
+              "detector_state_count": 4,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 4,
+              "truncated": false,
+              "visited_state_count": 4
+            },
+            {
+              "base_state_count": 2,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "1",
+                "1"
+              ],
+              "detector_state_count": 4,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 4,
+              "truncated": false,
+              "visited_state_count": 4
+            }
+          ]
+        },
+        {
+          "base_index": 4,
+          "branch": "swapped",
+          "detector_order": 4,
+          "total_tags": [
+            "left_nondegenerate",
+            "right_nondegenerate",
+            "nondegenerate"
+          ],
+          "tuple_scans": [
+            {
+              "base_state_count": 2,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "0",
+                "0"
+              ],
+              "detector_state_count": 4,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 2,
+              "truncated": false,
+              "visited_state_count": 4
+            },
+            {
+              "base_state_count": 2,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "0",
+                "1"
+              ],
+              "detector_state_count": 4,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 4,
+              "truncated": false,
+              "visited_state_count": 4
+            },
+            {
+              "base_state_count": 2,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "1",
+                "0"
+              ],
+              "detector_state_count": 4,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 4,
+              "truncated": false,
+              "visited_state_count": 4
+            },
+            {
+              "base_state_count": 2,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "1",
+                "1"
+              ],
+              "detector_state_count": 4,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 2,
+              "truncated": false,
+              "visited_state_count": 4
+            }
+          ]
+        },
+        {
+          "base_index": 4,
+          "branch": "swapped",
+          "detector_order": 4,
+          "total_tags": [
+            "left_nondegenerate",
+            "right_nondegenerate",
+            "nondegenerate"
+          ],
+          "tuple_scans": [
+            {
+              "base_state_count": 2,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "0",
+                "0"
+              ],
+              "detector_state_count": 4,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 4,
+              "truncated": false,
+              "visited_state_count": 4
+            },
+            {
+              "base_state_count": 2,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "0",
+                "1"
+              ],
+              "detector_state_count": 4,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 2,
+              "truncated": false,
+              "visited_state_count": 4
+            },
+            {
+              "base_state_count": 2,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "1",
+                "0"
+              ],
+              "detector_state_count": 4,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 2,
+              "truncated": false,
+              "visited_state_count": 4
+            },
+            {
+              "base_state_count": 2,
+              "closed_state_count": 1,
+              "color_tuple": [
+                "1",
+                "1"
+              ],
+              "detector_state_count": 4,
+              "failure": null,
+              "identity_detector_closed_state_count": 0,
+              "product_state_count": 4,
+              "truncated": false,
+              "visited_state_count": 4
+            }
+          ]
+        }
+      ],
+      "known_failure_count": 0,
+      "local_minimal_count": 56,
+      "max_visited_state_count": 4,
+      "truncated_count": 0,
+      "tuple_scan_count": 144,
+      "untagged_failure_count": 0
+    }
+  },
+  "totals": {
+    "branch_counts": {
+      "direct": 12,
+      "swapped": 80
+    },
+    "branch_scan_count": 92,
+    "checked_table_count": 1658880,
+    "colored_ybe_count": 629,
+    "detector_order_counts": {
+      "direct|order=2": 8,
+      "direct|order=4": 4,
+      "swapped|order=2": 8,
+      "swapped|order=4": 36,
+      "swapped|order=8": 36
+    },
+    "failure_count": 16,
+    "known_failure_count": 16,
+    "local_minimal_count": 120,
+    "max_visited_state_count": 8,
+    "state_limit": 5000,
+    "truncated_count": 0,
+    "tuple_scan_count": 368,
+    "untagged_failure_count": 0
+  }
+}

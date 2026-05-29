@@ -1,0 +1,137 @@
+{
+  "commutator_certificate": {
+    "all_listed_factors_invisible": false,
+    "braid_word": [
+      2,
+      1,
+      1,
+      -2,
+      2,
+      2,
+      2,
+      -1,
+      -1,
+      -2,
+      -2,
+      -2
+    ],
+    "is_b_failure_against_listed_factors": false,
+    "moved_residual_tuple": [
+      [
+        "'*'",
+        "'*'",
+        "'*'"
+      ],
+      [
+        "('*', 0)",
+        "('*', 0)",
+        "('*', 1)"
+      ],
+      [
+        "('*', 1)",
+        "('*', 1)",
+        "('*', 2)"
+      ]
+    ],
+    "moves_residual_tuple": true,
+    "n": 3,
+    "quotient_fixed": true,
+    "subgroup_profile": [
+      {
+        "generator_count": 3,
+        "group_order": 6,
+        "identity_longitude_signature": false,
+        "name": "H1_order_6",
+        "permutation": [
+          0,
+          1,
+          2
+        ],
+        "subgroup_size": 3
+      },
+      {
+        "generator_count": 1,
+        "group_order": 3,
+        "identity_longitude_signature": true,
+        "name": "H2_order_3",
+        "permutation": [
+          0,
+          1,
+          2
+        ],
+        "subgroup_size": 1
+      },
+      {
+        "generator_count": 1,
+        "group_order": 2,
+        "identity_longitude_signature": true,
+        "name": "H3_order_2",
+        "permutation": [
+          0,
+          1,
+          2
+        ],
+        "subgroup_size": 1
+      }
+    ],
+    "visible_factor_names": [
+      "H1_order_6"
+    ]
+  },
+  "detector_order": 36,
+  "exact_n2": {
+    "base_kernel_detector_state_count": 12,
+    "base_kernel_residual_state_count": 3,
+    "collision_failure": null,
+    "detector_state_count": 12,
+    "kernel_failure": null,
+    "n": 2,
+    "proves_fixed_n_implication": true,
+    "residual_state_count": 3,
+    "truncated": false,
+    "visited_state_count": 12
+  },
+  "factor_orders": [
+    2,
+    3,
+    6
+  ],
+  "named_factor_orders": {
+    "H1_order_6": 6,
+    "H2_order_3": 3,
+    "H3_order_2": 2
+  },
+  "product_subgroup_n2": {
+    "all_factor_identity_signatures": false,
+    "braid_word": [
+      1,
+      1
+    ],
+    "expected_product_subgroup_size": 36,
+    "factor_identity_signatures": [
+      false,
+      false,
+      false
+    ],
+    "factor_names": [
+      "H1_order_6",
+      "H2_order_3",
+      "H3_order_2"
+    ],
+    "factor_orders": [
+      6,
+      3,
+      2
+    ],
+    "n": 2,
+    "product_group_order": 36,
+    "product_identity_signature": false,
+    "product_identity_signature_equivalent": true,
+    "product_subgroup_equals_factor_product": true,
+    "product_subgroup_size": 36,
+    "truncated": false
+  },
+  "scenario": "size_three_affine_commutator_stress_row",
+  "target_applies": false,
+  "target_verdict": "locally_nondegenerate_branch"
+}

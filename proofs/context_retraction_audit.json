@@ -1,0 +1,382 @@
+{
+  "size_2_exhaustive": {
+    "bifree_branch_tag_counts": {},
+    "combined_branch_tag_counts": {
+      "retraction=equality|coretraction=universal|tags=involutive+identity_table": 1,
+      "retraction=universal|coretraction=equality|tags=involutive+permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate": 1,
+      "retraction=universal|coretraction=equality|tags=permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate": 1,
+      "retraction=universal|coretraction=equality|tags=rack_type+involutive+permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate": 1,
+      "retraction=universal|coretraction=equality|tags=rack_type+permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate": 1
+    },
+    "combined_retraction_coretraction_counts": {
+      "retraction=equality|coretraction=universal": 1,
+      "retraction=universal|coretraction=equality": 4
+    },
+    "coretraction_initial_admissible_count": 5,
+    "coretraction_stable_kind_counts": {
+      "equality|admissible=True": 4,
+      "universal|admissible=True": 1
+    },
+    "equality_branch_tag_counts": {
+      "involutive + identity_table": 1
+    },
+    "examples_by_kind": {
+      "equality": {
+        "branch_tags": [
+          "involutive",
+          "identity_table"
+        ],
+        "initial_family": {
+          "frozenset({0, 1})": [
+            [
+              "frozenset({0})"
+            ],
+            [
+              "frozenset({1})"
+            ]
+          ]
+        },
+        "lower_partition": [
+          [
+            "0"
+          ],
+          [
+            "1"
+          ]
+        ],
+        "original_table_values": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            1
+          ]
+        ],
+        "solution_index": 0,
+        "stable_depth": 1,
+        "stable_family": {
+          "frozenset({0, 1})": [
+            [
+              "frozenset({0})"
+            ],
+            [
+              "frozenset({1})"
+            ]
+          ]
+        },
+        "upper_partition": [
+          [
+            "0",
+            "1"
+          ]
+        ]
+      },
+      "universal": {
+        "branch_tags": [
+          "rack_type",
+          "involutive",
+          "permutation_form",
+          "left_nondegenerate",
+          "right_nondegenerate",
+          "nondegenerate"
+        ],
+        "initial_family": {
+          "frozenset({0, 1})": [
+            [
+              "frozenset({0})",
+              "frozenset({1})"
+            ]
+          ]
+        },
+        "lower_partition": [
+          [
+            "0"
+          ],
+          [
+            "1"
+          ]
+        ],
+        "original_table_values": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            1
+          ]
+        ],
+        "solution_index": 1,
+        "stable_depth": 1,
+        "stable_family": {
+          "frozenset({0, 1})": [
+            [
+              "frozenset({0})",
+              "frozenset({1})"
+            ]
+          ]
+        },
+        "upper_partition": [
+          [
+            "0",
+            "1"
+          ]
+        ]
+      }
+    },
+    "initial_admissible_count": 5,
+    "initial_kind_counts": {
+      "initial_equality": 1,
+      "initial_non_equality": 4
+    },
+    "local_minimal_cover_count": 5,
+    "max_coretraction_stable_depth": 1,
+    "max_stable_depth": 1,
+    "mixed_examples": [],
+    "non_admissible_examples": [],
+    "size": 2,
+    "stable_kind_counts": {
+      "equality|admissible=True": 1,
+      "universal|admissible=True": 4
+    },
+    "universal_direct_product_count": 1,
+    "universal_product_permutation_count": 4
+  },
+  "size_3_exhaustive": {
+    "bifree_branch_tag_counts": {
+      "involutive": 6,
+      "left_nondegenerate + right_nondegenerate + nondegenerate": 11,
+      "rack_type + left_nondegenerate + right_nondegenerate + nondegenerate": 1
+    },
+    "combined_branch_tag_counts": {
+      "retraction=equality|coretraction=equality|tags=involutive": 6,
+      "retraction=equality|coretraction=equality|tags=left_nondegenerate+right_nondegenerate+nondegenerate": 11,
+      "retraction=equality|coretraction=equality|tags=rack_type+left_nondegenerate+right_nondegenerate+nondegenerate": 1,
+      "retraction=equality|coretraction=universal|tags=involutive+identity_table": 6,
+      "retraction=universal|coretraction=equality|tags=involutive+left_nondegenerate+right_nondegenerate+nondegenerate": 6,
+      "retraction=universal|coretraction=equality|tags=involutive+permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate": 5,
+      "retraction=universal|coretraction=equality|tags=left_nondegenerate+right_nondegenerate+nondegenerate": 24,
+      "retraction=universal|coretraction=equality|tags=permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate": 7,
+      "retraction=universal|coretraction=equality|tags=rack_type+involutive+permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate": 57,
+      "retraction=universal|coretraction=equality|tags=rack_type+left_nondegenerate+right_nondegenerate+nondegenerate": 6,
+      "retraction=universal|coretraction=equality|tags=rack_type+permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate": 5
+    },
+    "combined_retraction_coretraction_counts": {
+      "retraction=equality|coretraction=equality": 18,
+      "retraction=equality|coretraction=universal": 6,
+      "retraction=universal|coretraction=equality": 110
+    },
+    "coretraction_initial_admissible_count": 134,
+    "coretraction_stable_kind_counts": {
+      "equality|admissible=True": 128,
+      "universal|admissible=True": 6
+    },
+    "equality_branch_tag_counts": {
+      "involutive": 6,
+      "involutive + identity_table": 6,
+      "left_nondegenerate + right_nondegenerate + nondegenerate": 11,
+      "rack_type + left_nondegenerate + right_nondegenerate + nondegenerate": 1
+    },
+    "examples_by_kind": {
+      "equality": {
+        "branch_tags": [
+          "involutive",
+          "identity_table"
+        ],
+        "initial_family": {
+          "frozenset({0, 1, 2})": [
+            [
+              "frozenset({0})"
+            ],
+            [
+              "frozenset({1, 2})"
+            ]
+          ]
+        },
+        "lower_partition": [
+          [
+            "0"
+          ],
+          [
+            "1",
+            "2"
+          ]
+        ],
+        "original_table_values": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            2,
+            2
+          ]
+        ],
+        "solution_index": 0,
+        "stable_depth": 1,
+        "stable_family": {
+          "frozenset({0, 1, 2})": [
+            [
+              "frozenset({0})"
+            ],
+            [
+              "frozenset({1, 2})"
+            ]
+          ]
+        },
+        "upper_partition": [
+          [
+            "0",
+            "1",
+            "2"
+          ]
+        ]
+      },
+      "universal": {
+        "branch_tags": [
+          "rack_type",
+          "involutive",
+          "permutation_form",
+          "left_nondegenerate",
+          "right_nondegenerate",
+          "nondegenerate"
+        ],
+        "initial_family": {
+          "frozenset({0, 1, 2})": [
+            [
+              "frozenset({0, 1})",
+              "frozenset({2})"
+            ]
+          ]
+        },
+        "lower_partition": [
+          [
+            "2"
+          ],
+          [
+            "0",
+            "1"
+          ]
+        ],
+        "original_table_values": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            2
+          ]
+        ],
+        "solution_index": 1,
+        "stable_depth": 1,
+        "stable_family": {
+          "frozenset({0, 1, 2})": [
+            [
+              "frozenset({0, 1})",
+              "frozenset({2})"
+            ]
+          ]
+        },
+        "upper_partition": [
+          [
+            "0",
+            "1",
+            "2"
+          ]
+        ]
+      }
+    },
+    "initial_admissible_count": 134,
+    "initial_kind_counts": {
+      "initial_equality": 24,
+      "initial_non_equality": 110
+    },
+    "local_minimal_cover_count": 134,
+    "max_coretraction_stable_depth": 1,
+    "max_stable_depth": 1,
+    "mixed_examples": [],
+    "non_admissible_examples": [],
+    "size": 3,
+    "stable_kind_counts": {
+      "equality|admissible=True": 24,
+      "universal|admissible=True": 110
+    },
+    "universal_direct_product_count": 6,
+    "universal_product_permutation_count": 110
+  }
+}

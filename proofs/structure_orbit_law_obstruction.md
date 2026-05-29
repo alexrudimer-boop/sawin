@@ -1,0 +1,133 @@
+# Structure-orbit law obstruction criterion
+
+Date: 2026-05-28
+
+This note localizes the moving-variety B criterion to a single structure
+orbit.  It is not a counterexample, but it gives a sharper certification
+target than global image growth.
+
+## Orbit-local pure images
+
+For a finite braided set `X`, the degree-`q` structure classes are exactly the
+`B_q`-orbits in `X^q`; see `proofs/structure_orbit_reduction.md`.  Fix one
+such orbit `O <= X^q`.  The standard pure braid generators
+
+```text
+A_{1,q}, A_{2,q}, ..., A_{q-1,q}
+```
+
+preserve `O`, so they generate a finite orbit-local group
+
+```text
+H_{q,O} <= Sym(O).
+```
+
+If a free word `w` is not a law on `H_{q,O}`, then the law braid
+
+```text
+beta = w(A_{1,q}, ..., A_{q-1,q})
+```
+
+moves a tuple inside the same structure orbit.  The moved tuple and its image
+are therefore not separated by a length/product invariant; they witness
+actual internal holonomy.
+
+For the braid construction, the needed condition is slightly sharper and
+cheaper to test than "not a law on the whole group": it is enough that `w`
+evaluate nontrivially on the specific generator tuple
+
+```text
+(A_{1,q}|_O, ..., A_{q-1,q}|_O).
+```
+
+The orbit group is still recorded as context when it closes, but the mover
+certificate is the assigned pure-generator evaluation.
+
+## Normalized-law criterion
+
+Suppose there are braid indices `q_j -> infinity`, structure orbits
+`O_j <= X^{q_j}`, and free words `w_j` such that:
+
+1. `w_j` is a law for every finite group of size at most `j`;
+2. `w_j` is not a law on `H_{q_j,O_j}`.
+
+Then
+
+```text
+beta_j = w_j(A_{1,q_j}, ..., A_{q_j-1,q_j})
+```
+
+has identity finite-group Artin-longitude data eventually for every fixed
+finite group, by the law-longitude lemma in
+`proofs/pure_braid_law_embedding.md`.  But `beta_j` moves an explicit tuple
+in `O_j`, so `rho_{X,q_j}(beta_j) != 1`.
+
+Consequently, such a sequence is outcome B once `X` is an explicit finite
+YBE solution and the Yang-Baxter equation is proved symbolically.  The final
+step defeating finite racks is exactly
+`proofs/finite_rack_longitude_quotient.md`.
+
+## Why this is sharper than global image growth
+
+Large or growing global braid-action images do not by themselves imply a
+counterexample.  The law word must remain nontrivial in the correlated global
+image and must move a tuple for reasons not already killed by finite
+longitudes.  Orbit-local separation focuses on the necessary internal
+holonomy:
+
+```text
+tuple and image lie in the same structure orbit.
+```
+
+This matches the Green/corridor branch: the unresolved holonomy is expected
+inside recurrent structure classes, not in the degree/product invariant.
+
+## Executable bounded diagnostic
+
+The helper
+
+```text
+structure_orbit_law_separation(X,n,law_groups,max_length=...)
+```
+
+restricts the standard pure generators to each degree-`n` structure orbit,
+records the orbit-local pure image group size when it closes, and searches
+for a short word that is a law on the supplied detector groups but evaluates
+nontrivially on the restricted pure-generator tuple.  It also returns a moved
+tuple and image when found.
+
+This helper is finite search only.  A returned row can disprove a proposed
+finite detector list or suggest a candidate pattern.  It is not proof of B
+unless it is upgraded to the symbolic sequence above for all `j`.
+
+There is an important guardrail.  Orbit-local separators can appear for
+ordinary racks if the supplied detector list is too small.  For example, the
+dihedral three-point rack has orbit-local pure image groups with nonabelian
+separators against only `C_2` and `C_3`, but those separators disappear once
+the rack inner group `Inn(Y) ~= S_3` is included.  This is exactly what
+`proofs/finite_rack_longitude_quotient.md` predicts.  Therefore a B proof
+must use the increasing law list "all finite groups of size at most `j`",
+not a fixed small detector list.
+
+The assignment-specific implementation now makes the degree-`4` guardrail
+cheap enough to check directly.  Against only `C_2` and `C_3`, the commutator
+word moves a tuple in a size-`27` orbit whose pure image group has order
+`648`.  Adding `S_3` or the rack inner group removes this length-`4`
+separator in both the dihedral rack and the size-three affine commutator
+diagnostic.  Thus these rows are not B evidence; they show that any genuine
+moving-variety counterexample must escape the obvious finite symmetric/inner
+detectors, not merely small abelian detector lists.
+
+The assigned-generator search is now factored out as
+`short_law_separating_permutation_assignment(...)` and documented in
+`proofs/assigned_generator_law_separation.md`.  This helper records the
+separating word, the evaluated permutation, and one moved index before the
+structure-orbit layer translates that index into a moved tuple.
+
+## A-route contrapositive
+
+The positive theorem must rule out this orbit-local moving-variety escape.
+Equivalently, for every local-minimal interval not already in a known branch,
+the residual orbit holonomy generated by pure braids must be forced by
+recursive Artin longitudes in one fixed finite detector group, independent of
+`q`.

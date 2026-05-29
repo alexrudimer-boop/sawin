@@ -1,0 +1,566 @@
+{
+  "local_minimal_scans": {
+    "size_2_exhaustive": {
+      "counts": {
+        "direct": {
+          "coboundary": 1,
+          "genuinely_coloured": 0,
+          "one_color_pairwise": 0
+        },
+        "swapped": {
+          "coboundary": 1,
+          "genuinely_coloured": 0,
+          "one_color_pairwise": 3
+        }
+      },
+      "cover_count": 5,
+      "first_examples": {
+        "direct": {
+          "coboundary": [
+            {
+              "branch_tags": [
+                "involutive",
+                "identity_table"
+              ],
+              "color_count": 1,
+              "component_group_sizes": [],
+              "fibre_sizes": [
+                2
+              ],
+              "holonomy_generator_count": 0,
+              "holonomy_kind": "coboundary",
+              "invariant_family_count": 2,
+              "is_involutive": true,
+              "is_rack_type": false,
+              "known_branch": true,
+              "primitive_by_invariants": true,
+              "side": "direct"
+            }
+          ],
+          "genuinely_coloured": [],
+          "one_color_pairwise": []
+        },
+        "swapped": {
+          "coboundary": [
+            {
+              "branch_tags": [
+                "rack_type",
+                "involutive",
+                "permutation_form",
+                "left_nondegenerate",
+                "right_nondegenerate",
+                "nondegenerate"
+              ],
+              "color_count": 1,
+              "component_group_sizes": [],
+              "fibre_sizes": [
+                2
+              ],
+              "holonomy_generator_count": 0,
+              "holonomy_kind": "coboundary",
+              "invariant_family_count": 2,
+              "is_involutive": true,
+              "is_rack_type": true,
+              "known_branch": true,
+              "primitive_by_invariants": true,
+              "side": "swapped"
+            }
+          ],
+          "genuinely_coloured": [],
+          "one_color_pairwise": [
+            {
+              "branch_tags": [
+                "permutation_form",
+                "left_nondegenerate",
+                "right_nondegenerate",
+                "nondegenerate"
+              ],
+              "color_count": 1,
+              "component_group_sizes": [
+                {
+                  "group_size": 2,
+                  "model_points": [
+                    "frozenset({0})",
+                    "frozenset({1})"
+                  ]
+                }
+              ],
+              "fibre_sizes": [
+                2
+              ],
+              "holonomy_generator_count": 1,
+              "holonomy_kind": "one_color_pairwise",
+              "invariant_family_count": 2,
+              "is_involutive": false,
+              "is_rack_type": false,
+              "known_branch": true,
+              "primitive_by_invariants": true,
+              "side": "swapped"
+            },
+            {
+              "branch_tags": [
+                "rack_type",
+                "permutation_form",
+                "left_nondegenerate",
+                "right_nondegenerate",
+                "nondegenerate"
+              ],
+              "color_count": 1,
+              "component_group_sizes": [
+                {
+                  "group_size": 2,
+                  "model_points": [
+                    "frozenset({0})",
+                    "frozenset({1})"
+                  ]
+                }
+              ],
+              "fibre_sizes": [
+                2
+              ],
+              "holonomy_generator_count": 1,
+              "holonomy_kind": "one_color_pairwise",
+              "invariant_family_count": 2,
+              "is_involutive": false,
+              "is_rack_type": true,
+              "known_branch": true,
+              "primitive_by_invariants": true,
+              "side": "swapped"
+            },
+            {
+              "branch_tags": [
+                "involutive",
+                "permutation_form",
+                "left_nondegenerate",
+                "right_nondegenerate",
+                "nondegenerate"
+              ],
+              "color_count": 1,
+              "component_group_sizes": [
+                {
+                  "group_size": 2,
+                  "model_points": [
+                    "frozenset({0})",
+                    "frozenset({1})"
+                  ]
+                }
+              ],
+              "fibre_sizes": [
+                2
+              ],
+              "holonomy_generator_count": 2,
+              "holonomy_kind": "one_color_pairwise",
+              "invariant_family_count": 2,
+              "is_involutive": true,
+              "is_rack_type": false,
+              "known_branch": true,
+              "primitive_by_invariants": true,
+              "side": "swapped"
+            }
+          ]
+        }
+      },
+      "known_branch_counts": {
+        "direct": {
+          "coboundary": 1,
+          "genuinely_coloured": 0,
+          "one_color_pairwise": 0
+        },
+        "swapped": {
+          "coboundary": 1,
+          "genuinely_coloured": 0,
+          "one_color_pairwise": 3
+        }
+      },
+      "local_minimal_count": 5,
+      "nonprimitive_invariant_counts": {
+        "direct": 0,
+        "swapped": 0
+      },
+      "product_row_count": 5,
+      "size": 2,
+      "unknown_branch_counts": {
+        "direct": {
+          "coboundary": 0,
+          "genuinely_coloured": 0,
+          "one_color_pairwise": 0
+        },
+        "swapped": {
+          "coboundary": 0,
+          "genuinely_coloured": 0,
+          "one_color_pairwise": 0
+        }
+      },
+      "ybe_count": 5
+    },
+    "size_3_exhaustive": {
+      "counts": {
+        "direct": {
+          "coboundary": 6,
+          "genuinely_coloured": 0,
+          "one_color_pairwise": 0
+        },
+        "swapped": {
+          "coboundary": 57,
+          "genuinely_coloured": 45,
+          "one_color_pairwise": 8
+        }
+      },
+      "cover_count": 134,
+      "first_examples": {
+        "direct": {
+          "coboundary": [
+            {
+              "branch_tags": [
+                "involutive",
+                "identity_table"
+              ],
+              "color_count": 1,
+              "component_group_sizes": [],
+              "fibre_sizes": [
+                2
+              ],
+              "holonomy_generator_count": 0,
+              "holonomy_kind": "coboundary",
+              "invariant_family_count": 2,
+              "is_involutive": true,
+              "is_rack_type": false,
+              "known_branch": true,
+              "primitive_by_invariants": true,
+              "side": "direct"
+            },
+            {
+              "branch_tags": [
+                "involutive",
+                "identity_table"
+              ],
+              "color_count": 1,
+              "component_group_sizes": [],
+              "fibre_sizes": [
+                2
+              ],
+              "holonomy_generator_count": 0,
+              "holonomy_kind": "coboundary",
+              "invariant_family_count": 2,
+              "is_involutive": true,
+              "is_rack_type": false,
+              "known_branch": true,
+              "primitive_by_invariants": true,
+              "side": "direct"
+            },
+            {
+              "branch_tags": [
+                "involutive",
+                "identity_table"
+              ],
+              "color_count": 1,
+              "component_group_sizes": [],
+              "fibre_sizes": [
+                2
+              ],
+              "holonomy_generator_count": 0,
+              "holonomy_kind": "coboundary",
+              "invariant_family_count": 2,
+              "is_involutive": true,
+              "is_rack_type": false,
+              "known_branch": true,
+              "primitive_by_invariants": true,
+              "side": "direct"
+            }
+          ],
+          "genuinely_coloured": [],
+          "one_color_pairwise": []
+        },
+        "swapped": {
+          "coboundary": [
+            {
+              "branch_tags": [
+                "rack_type",
+                "involutive",
+                "permutation_form",
+                "left_nondegenerate",
+                "right_nondegenerate",
+                "nondegenerate"
+              ],
+              "color_count": 1,
+              "component_group_sizes": [],
+              "fibre_sizes": [
+                2
+              ],
+              "holonomy_generator_count": 0,
+              "holonomy_kind": "coboundary",
+              "invariant_family_count": 2,
+              "is_involutive": true,
+              "is_rack_type": true,
+              "known_branch": true,
+              "primitive_by_invariants": true,
+              "side": "swapped"
+            },
+            {
+              "branch_tags": [
+                "rack_type",
+                "involutive",
+                "permutation_form",
+                "left_nondegenerate",
+                "right_nondegenerate",
+                "nondegenerate"
+              ],
+              "color_count": 1,
+              "component_group_sizes": [],
+              "fibre_sizes": [
+                2
+              ],
+              "holonomy_generator_count": 0,
+              "holonomy_kind": "coboundary",
+              "invariant_family_count": 2,
+              "is_involutive": true,
+              "is_rack_type": true,
+              "known_branch": true,
+              "primitive_by_invariants": true,
+              "side": "swapped"
+            },
+            {
+              "branch_tags": [
+                "rack_type",
+                "involutive",
+                "permutation_form",
+                "left_nondegenerate",
+                "right_nondegenerate",
+                "nondegenerate"
+              ],
+              "color_count": 1,
+              "component_group_sizes": [],
+              "fibre_sizes": [
+                2
+              ],
+              "holonomy_generator_count": 0,
+              "holonomy_kind": "coboundary",
+              "invariant_family_count": 2,
+              "is_involutive": true,
+              "is_rack_type": true,
+              "known_branch": true,
+              "primitive_by_invariants": true,
+              "side": "swapped"
+            }
+          ],
+          "genuinely_coloured": [
+            {
+              "branch_tags": [
+                "rack_type",
+                "left_nondegenerate",
+                "right_nondegenerate",
+                "nondegenerate"
+              ],
+              "color_count": 2,
+              "component_group_sizes": [
+                {
+                  "group_size": 2,
+                  "model_points": [
+                    "frozenset({0})",
+                    "frozenset({1})"
+                  ]
+                }
+              ],
+              "fibre_sizes": [
+                1,
+                2
+              ],
+              "holonomy_generator_count": 1,
+              "holonomy_kind": "genuinely_coloured",
+              "invariant_family_count": 2,
+              "is_involutive": false,
+              "is_rack_type": true,
+              "known_branch": true,
+              "primitive_by_invariants": true,
+              "side": "swapped"
+            },
+            {
+              "branch_tags": [
+                "left_nondegenerate",
+                "right_nondegenerate",
+                "nondegenerate"
+              ],
+              "color_count": 2,
+              "component_group_sizes": [
+                {
+                  "group_size": 2,
+                  "model_points": [
+                    "frozenset({1})",
+                    "frozenset({2})"
+                  ]
+                }
+              ],
+              "fibre_sizes": [
+                1,
+                2
+              ],
+              "holonomy_generator_count": 1,
+              "holonomy_kind": "genuinely_coloured",
+              "invariant_family_count": 2,
+              "is_involutive": false,
+              "is_rack_type": false,
+              "known_branch": true,
+              "primitive_by_invariants": true,
+              "side": "swapped"
+            },
+            {
+              "branch_tags": [
+                "rack_type",
+                "left_nondegenerate",
+                "right_nondegenerate",
+                "nondegenerate"
+              ],
+              "color_count": 2,
+              "component_group_sizes": [
+                {
+                  "group_size": 2,
+                  "model_points": [
+                    "frozenset({1})",
+                    "frozenset({2})"
+                  ]
+                }
+              ],
+              "fibre_sizes": [
+                1,
+                2
+              ],
+              "holonomy_generator_count": 1,
+              "holonomy_kind": "genuinely_coloured",
+              "invariant_family_count": 2,
+              "is_involutive": false,
+              "is_rack_type": true,
+              "known_branch": true,
+              "primitive_by_invariants": true,
+              "side": "swapped"
+            }
+          ],
+          "one_color_pairwise": [
+            {
+              "branch_tags": [
+                "permutation_form",
+                "left_nondegenerate",
+                "right_nondegenerate",
+                "nondegenerate"
+              ],
+              "color_count": 1,
+              "component_group_sizes": [
+                {
+                  "group_size": 3,
+                  "model_points": [
+                    "frozenset({0})",
+                    "frozenset({1})",
+                    "frozenset({2})"
+                  ]
+                }
+              ],
+              "fibre_sizes": [
+                3
+              ],
+              "holonomy_generator_count": 1,
+              "holonomy_kind": "one_color_pairwise",
+              "invariant_family_count": 2,
+              "is_involutive": false,
+              "is_rack_type": false,
+              "known_branch": true,
+              "primitive_by_invariants": true,
+              "side": "swapped"
+            },
+            {
+              "branch_tags": [
+                "permutation_form",
+                "left_nondegenerate",
+                "right_nondegenerate",
+                "nondegenerate"
+              ],
+              "color_count": 1,
+              "component_group_sizes": [
+                {
+                  "group_size": 3,
+                  "model_points": [
+                    "frozenset({0})",
+                    "frozenset({1})",
+                    "frozenset({2})"
+                  ]
+                }
+              ],
+              "fibre_sizes": [
+                3
+              ],
+              "holonomy_generator_count": 1,
+              "holonomy_kind": "one_color_pairwise",
+              "invariant_family_count": 2,
+              "is_involutive": false,
+              "is_rack_type": false,
+              "known_branch": true,
+              "primitive_by_invariants": true,
+              "side": "swapped"
+            },
+            {
+              "branch_tags": [
+                "rack_type",
+                "permutation_form",
+                "left_nondegenerate",
+                "right_nondegenerate",
+                "nondegenerate"
+              ],
+              "color_count": 1,
+              "component_group_sizes": [
+                {
+                  "group_size": 3,
+                  "model_points": [
+                    "frozenset({0})",
+                    "frozenset({1})",
+                    "frozenset({2})"
+                  ]
+                }
+              ],
+              "fibre_sizes": [
+                3
+              ],
+              "holonomy_generator_count": 1,
+              "holonomy_kind": "one_color_pairwise",
+              "invariant_family_count": 2,
+              "is_involutive": false,
+              "is_rack_type": true,
+              "known_branch": true,
+              "primitive_by_invariants": true,
+              "side": "swapped"
+            }
+          ]
+        }
+      },
+      "known_branch_counts": {
+        "direct": {
+          "coboundary": 6,
+          "genuinely_coloured": 0,
+          "one_color_pairwise": 0
+        },
+        "swapped": {
+          "coboundary": 57,
+          "genuinely_coloured": 45,
+          "one_color_pairwise": 8
+        }
+      },
+      "local_minimal_count": 134,
+      "nonprimitive_invariant_counts": {
+        "direct": 0,
+        "swapped": 0
+      },
+      "product_row_count": 116,
+      "size": 3,
+      "unknown_branch_counts": {
+        "direct": {
+          "coboundary": 0,
+          "genuinely_coloured": 0,
+          "one_color_pairwise": 0
+        },
+        "swapped": {
+          "coboundary": 0,
+          "genuinely_coloured": 0,
+          "one_color_pairwise": 0
+        }
+      },
+      "ybe_count": 73
+    }
+  }
+}

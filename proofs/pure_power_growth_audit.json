@@ -1,0 +1,1309 @@
+{
+  "linear_f2_dimension_2": {
+    "max_order_branch_tag_counts": {
+      "max_order=1|tags=involutive": 24,
+      "max_order=1|tags=involutive+identity_table": 1,
+      "max_order=1|tags=involutive+left_nondegenerate+right_nondegenerate+nondegenerate": 12,
+      "max_order=1|tags=involutive+permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate": 5,
+      "max_order=1|tags=rack_type+involutive+permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate": 1,
+      "max_order=2|tags=left_nondegenerate+right_nondegenerate+nondegenerate": 24,
+      "max_order=2|tags=permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate": 3,
+      "max_order=2|tags=rack_type+left_nondegenerate+right_nondegenerate+nondegenerate": 6,
+      "max_order=2|tags=rack_type+permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate": 3,
+      "max_order=3|tags=left_nondegenerate+right_nondegenerate+nondegenerate": 10,
+      "max_order=3|tags=permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate": 4,
+      "max_order=3|tags=rack_type+left_nondegenerate+right_nondegenerate+nondegenerate": 2,
+      "max_order=3|tags=rack_type+permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate": 2
+    },
+    "max_q": 5,
+    "maximum_pure_generator_order": 3,
+    "solution_count": 97,
+    "top_examples": [
+      {
+        "branch_tags": [
+          "permutation_form",
+          "left_nondegenerate",
+          "right_nondegenerate",
+          "nondegenerate"
+        ],
+        "max_order": 3,
+        "profile": [
+          {
+            "braid_index": 2,
+            "generator_orders": [
+              3
+            ],
+            "max_order": 3,
+            "tuple_count": 16
+          },
+          {
+            "braid_index": 3,
+            "generator_orders": [
+              3,
+              3
+            ],
+            "max_order": 3,
+            "tuple_count": 64
+          },
+          {
+            "braid_index": 4,
+            "generator_orders": [
+              3,
+              3,
+              3
+            ],
+            "max_order": 3,
+            "tuple_count": 256
+          },
+          {
+            "braid_index": 5,
+            "generator_orders": [
+              3,
+              3,
+              3,
+              3
+            ],
+            "max_order": 3,
+            "tuple_count": 1024
+          }
+        ],
+        "solution_index": 4
+      },
+      {
+        "branch_tags": [
+          "left_nondegenerate",
+          "right_nondegenerate",
+          "nondegenerate"
+        ],
+        "max_order": 3,
+        "profile": [
+          {
+            "braid_index": 2,
+            "generator_orders": [
+              3
+            ],
+            "max_order": 3,
+            "tuple_count": 16
+          },
+          {
+            "braid_index": 3,
+            "generator_orders": [
+              3,
+              3
+            ],
+            "max_order": 3,
+            "tuple_count": 64
+          },
+          {
+            "braid_index": 4,
+            "generator_orders": [
+              3,
+              3,
+              3
+            ],
+            "max_order": 3,
+            "tuple_count": 256
+          },
+          {
+            "braid_index": 5,
+            "generator_orders": [
+              3,
+              3,
+              3,
+              3
+            ],
+            "max_order": 3,
+            "tuple_count": 1024
+          }
+        ],
+        "solution_index": 5
+      },
+      {
+        "branch_tags": [
+          "rack_type",
+          "permutation_form",
+          "left_nondegenerate",
+          "right_nondegenerate",
+          "nondegenerate"
+        ],
+        "max_order": 3,
+        "profile": [
+          {
+            "braid_index": 2,
+            "generator_orders": [
+              3
+            ],
+            "max_order": 3,
+            "tuple_count": 16
+          },
+          {
+            "braid_index": 3,
+            "generator_orders": [
+              3,
+              3
+            ],
+            "max_order": 3,
+            "tuple_count": 64
+          },
+          {
+            "braid_index": 4,
+            "generator_orders": [
+              3,
+              3,
+              3
+            ],
+            "max_order": 3,
+            "tuple_count": 256
+          },
+          {
+            "braid_index": 5,
+            "generator_orders": [
+              3,
+              3,
+              3,
+              3
+            ],
+            "max_order": 3,
+            "tuple_count": 1024
+          }
+        ],
+        "solution_index": 6
+      },
+      {
+        "branch_tags": [
+          "left_nondegenerate",
+          "right_nondegenerate",
+          "nondegenerate"
+        ],
+        "max_order": 3,
+        "profile": [
+          {
+            "braid_index": 2,
+            "generator_orders": [
+              3
+            ],
+            "max_order": 3,
+            "tuple_count": 16
+          },
+          {
+            "braid_index": 3,
+            "generator_orders": [
+              3,
+              3
+            ],
+            "max_order": 3,
+            "tuple_count": 64
+          },
+          {
+            "braid_index": 4,
+            "generator_orders": [
+              3,
+              3,
+              3
+            ],
+            "max_order": 3,
+            "tuple_count": 256
+          },
+          {
+            "braid_index": 5,
+            "generator_orders": [
+              3,
+              3,
+              3,
+              3
+            ],
+            "max_order": 3,
+            "tuple_count": 1024
+          }
+        ],
+        "solution_index": 7
+      },
+      {
+        "branch_tags": [
+          "permutation_form",
+          "left_nondegenerate",
+          "right_nondegenerate",
+          "nondegenerate"
+        ],
+        "max_order": 3,
+        "profile": [
+          {
+            "braid_index": 2,
+            "generator_orders": [
+              3
+            ],
+            "max_order": 3,
+            "tuple_count": 16
+          },
+          {
+            "braid_index": 3,
+            "generator_orders": [
+              3,
+              3
+            ],
+            "max_order": 3,
+            "tuple_count": 64
+          },
+          {
+            "braid_index": 4,
+            "generator_orders": [
+              3,
+              3,
+              3
+            ],
+            "max_order": 3,
+            "tuple_count": 256
+          },
+          {
+            "braid_index": 5,
+            "generator_orders": [
+              3,
+              3,
+              3,
+              3
+            ],
+            "max_order": 3,
+            "tuple_count": 1024
+          }
+        ],
+        "solution_index": 11
+      },
+      {
+        "branch_tags": [
+          "left_nondegenerate",
+          "right_nondegenerate",
+          "nondegenerate"
+        ],
+        "max_order": 3,
+        "profile": [
+          {
+            "braid_index": 2,
+            "generator_orders": [
+              3
+            ],
+            "max_order": 3,
+            "tuple_count": 16
+          },
+          {
+            "braid_index": 3,
+            "generator_orders": [
+              3,
+              3
+            ],
+            "max_order": 3,
+            "tuple_count": 64
+          },
+          {
+            "braid_index": 4,
+            "generator_orders": [
+              3,
+              3,
+              3
+            ],
+            "max_order": 3,
+            "tuple_count": 256
+          },
+          {
+            "braid_index": 5,
+            "generator_orders": [
+              3,
+              3,
+              3,
+              3
+            ],
+            "max_order": 3,
+            "tuple_count": 1024
+          }
+        ],
+        "solution_index": 13
+      },
+      {
+        "branch_tags": [
+          "permutation_form",
+          "left_nondegenerate",
+          "right_nondegenerate",
+          "nondegenerate"
+        ],
+        "max_order": 3,
+        "profile": [
+          {
+            "braid_index": 2,
+            "generator_orders": [
+              3
+            ],
+            "max_order": 3,
+            "tuple_count": 16
+          },
+          {
+            "braid_index": 3,
+            "generator_orders": [
+              3,
+              3
+            ],
+            "max_order": 3,
+            "tuple_count": 64
+          },
+          {
+            "braid_index": 4,
+            "generator_orders": [
+              3,
+              3,
+              3
+            ],
+            "max_order": 3,
+            "tuple_count": 256
+          },
+          {
+            "braid_index": 5,
+            "generator_orders": [
+              3,
+              3,
+              3,
+              3
+            ],
+            "max_order": 3,
+            "tuple_count": 1024
+          }
+        ],
+        "solution_index": 21
+      },
+      {
+        "branch_tags": [
+          "left_nondegenerate",
+          "right_nondegenerate",
+          "nondegenerate"
+        ],
+        "max_order": 3,
+        "profile": [
+          {
+            "braid_index": 2,
+            "generator_orders": [
+              3
+            ],
+            "max_order": 3,
+            "tuple_count": 16
+          },
+          {
+            "braid_index": 3,
+            "generator_orders": [
+              3,
+              3
+            ],
+            "max_order": 3,
+            "tuple_count": 64
+          },
+          {
+            "braid_index": 4,
+            "generator_orders": [
+              3,
+              3,
+              3
+            ],
+            "max_order": 3,
+            "tuple_count": 256
+          },
+          {
+            "braid_index": 5,
+            "generator_orders": [
+              3,
+              3,
+              3,
+              3
+            ],
+            "max_order": 3,
+            "tuple_count": 1024
+          }
+        ],
+        "solution_index": 23
+      }
+    ]
+  },
+  "size3_commutator_candidate_pure_subgroup_growth": [
+    {
+      "braid_index": 2,
+      "generator_count": 1,
+      "subgroup_exponent": 3,
+      "subgroup_size": 3,
+      "truncated": false,
+      "tuple_count": 9
+    },
+    {
+      "braid_index": 3,
+      "generator_count": 2,
+      "subgroup_exponent": 12,
+      "subgroup_size": 24,
+      "truncated": false,
+      "tuple_count": 27
+    },
+    {
+      "braid_index": 4,
+      "generator_count": 3,
+      "subgroup_exponent": 36,
+      "subgroup_size": 648,
+      "truncated": false,
+      "tuple_count": 81
+    },
+    {
+      "braid_index": 5,
+      "generator_count": 4,
+      "subgroup_exponent": null,
+      "subgroup_size": null,
+      "truncated": true,
+      "tuple_count": 243
+    }
+  ],
+  "whole_size_2": {
+    "max_order_branch_tag_counts": {
+      "max_order=1|tags=involutive+identity_table+affine_cyclic": 1,
+      "max_order=1|tags=involutive+permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate+affine_cyclic": 1,
+      "max_order=1|tags=rack_type+involutive+permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate+affine_cyclic": 1,
+      "max_order=2|tags=permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate+affine_cyclic": 1,
+      "max_order=2|tags=rack_type+permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate+affine_cyclic": 1
+    },
+    "max_q": 6,
+    "maximum_pure_generator_order": 2,
+    "solution_count": 5,
+    "top_examples": [
+      {
+        "branch_tags": [
+          "permutation_form",
+          "left_nondegenerate",
+          "right_nondegenerate",
+          "nondegenerate",
+          "affine_cyclic"
+        ],
+        "max_order": 2,
+        "profile": [
+          {
+            "braid_index": 2,
+            "generator_orders": [
+              2
+            ],
+            "max_order": 2,
+            "tuple_count": 4
+          },
+          {
+            "braid_index": 3,
+            "generator_orders": [
+              2,
+              2
+            ],
+            "max_order": 2,
+            "tuple_count": 8
+          },
+          {
+            "braid_index": 4,
+            "generator_orders": [
+              2,
+              2,
+              2
+            ],
+            "max_order": 2,
+            "tuple_count": 16
+          },
+          {
+            "braid_index": 5,
+            "generator_orders": [
+              2,
+              2,
+              2,
+              2
+            ],
+            "max_order": 2,
+            "tuple_count": 32
+          },
+          {
+            "braid_index": 6,
+            "generator_orders": [
+              2,
+              2,
+              2,
+              2,
+              2
+            ],
+            "max_order": 2,
+            "tuple_count": 64
+          }
+        ],
+        "solution_index": 2
+      },
+      {
+        "branch_tags": [
+          "rack_type",
+          "permutation_form",
+          "left_nondegenerate",
+          "right_nondegenerate",
+          "nondegenerate",
+          "affine_cyclic"
+        ],
+        "max_order": 2,
+        "profile": [
+          {
+            "braid_index": 2,
+            "generator_orders": [
+              2
+            ],
+            "max_order": 2,
+            "tuple_count": 4
+          },
+          {
+            "braid_index": 3,
+            "generator_orders": [
+              2,
+              2
+            ],
+            "max_order": 2,
+            "tuple_count": 8
+          },
+          {
+            "braid_index": 4,
+            "generator_orders": [
+              2,
+              2,
+              2
+            ],
+            "max_order": 2,
+            "tuple_count": 16
+          },
+          {
+            "braid_index": 5,
+            "generator_orders": [
+              2,
+              2,
+              2,
+              2
+            ],
+            "max_order": 2,
+            "tuple_count": 32
+          },
+          {
+            "braid_index": 6,
+            "generator_orders": [
+              2,
+              2,
+              2,
+              2,
+              2
+            ],
+            "max_order": 2,
+            "tuple_count": 64
+          }
+        ],
+        "solution_index": 3
+      },
+      {
+        "branch_tags": [
+          "involutive",
+          "identity_table",
+          "affine_cyclic"
+        ],
+        "max_order": 1,
+        "profile": [
+          {
+            "braid_index": 2,
+            "generator_orders": [
+              1
+            ],
+            "max_order": 1,
+            "tuple_count": 4
+          },
+          {
+            "braid_index": 3,
+            "generator_orders": [
+              1,
+              1
+            ],
+            "max_order": 1,
+            "tuple_count": 8
+          },
+          {
+            "braid_index": 4,
+            "generator_orders": [
+              1,
+              1,
+              1
+            ],
+            "max_order": 1,
+            "tuple_count": 16
+          },
+          {
+            "braid_index": 5,
+            "generator_orders": [
+              1,
+              1,
+              1,
+              1
+            ],
+            "max_order": 1,
+            "tuple_count": 32
+          },
+          {
+            "braid_index": 6,
+            "generator_orders": [
+              1,
+              1,
+              1,
+              1,
+              1
+            ],
+            "max_order": 1,
+            "tuple_count": 64
+          }
+        ],
+        "solution_index": 0
+      },
+      {
+        "branch_tags": [
+          "rack_type",
+          "involutive",
+          "permutation_form",
+          "left_nondegenerate",
+          "right_nondegenerate",
+          "nondegenerate",
+          "affine_cyclic"
+        ],
+        "max_order": 1,
+        "profile": [
+          {
+            "braid_index": 2,
+            "generator_orders": [
+              1
+            ],
+            "max_order": 1,
+            "tuple_count": 4
+          },
+          {
+            "braid_index": 3,
+            "generator_orders": [
+              1,
+              1
+            ],
+            "max_order": 1,
+            "tuple_count": 8
+          },
+          {
+            "braid_index": 4,
+            "generator_orders": [
+              1,
+              1,
+              1
+            ],
+            "max_order": 1,
+            "tuple_count": 16
+          },
+          {
+            "braid_index": 5,
+            "generator_orders": [
+              1,
+              1,
+              1,
+              1
+            ],
+            "max_order": 1,
+            "tuple_count": 32
+          },
+          {
+            "braid_index": 6,
+            "generator_orders": [
+              1,
+              1,
+              1,
+              1,
+              1
+            ],
+            "max_order": 1,
+            "tuple_count": 64
+          }
+        ],
+        "solution_index": 1
+      },
+      {
+        "branch_tags": [
+          "involutive",
+          "permutation_form",
+          "left_nondegenerate",
+          "right_nondegenerate",
+          "nondegenerate",
+          "affine_cyclic"
+        ],
+        "max_order": 1,
+        "profile": [
+          {
+            "braid_index": 2,
+            "generator_orders": [
+              1
+            ],
+            "max_order": 1,
+            "tuple_count": 4
+          },
+          {
+            "braid_index": 3,
+            "generator_orders": [
+              1,
+              1
+            ],
+            "max_order": 1,
+            "tuple_count": 8
+          },
+          {
+            "braid_index": 4,
+            "generator_orders": [
+              1,
+              1,
+              1
+            ],
+            "max_order": 1,
+            "tuple_count": 16
+          },
+          {
+            "braid_index": 5,
+            "generator_orders": [
+              1,
+              1,
+              1,
+              1
+            ],
+            "max_order": 1,
+            "tuple_count": 32
+          },
+          {
+            "braid_index": 6,
+            "generator_orders": [
+              1,
+              1,
+              1,
+              1,
+              1
+            ],
+            "max_order": 1,
+            "tuple_count": 64
+          }
+        ],
+        "solution_index": 4
+      }
+    ]
+  },
+  "whole_size_3": {
+    "max_order_branch_tag_counts": {
+      "max_order=1|tags=involutive": 6,
+      "max_order=1|tags=involutive+identity_table+affine_cyclic": 1,
+      "max_order=1|tags=involutive+left_nondegenerate+right_nondegenerate+nondegenerate": 6,
+      "max_order=1|tags=involutive+permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate+affine_cyclic": 5,
+      "max_order=1|tags=rack_type+involutive+permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate+affine_cyclic": 1,
+      "max_order=2|tags=left_nondegenerate+right_nondegenerate+nondegenerate": 24,
+      "max_order=2|tags=permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate+affine_cyclic": 3,
+      "max_order=2|tags=rack_type+left_nondegenerate+right_nondegenerate+nondegenerate": 6,
+      "max_order=2|tags=rack_type+permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate+affine_cyclic": 3,
+      "max_order=3|tags=left_nondegenerate+right_nondegenerate+nondegenerate+affine_cyclic": 11,
+      "max_order=3|tags=permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate+affine_cyclic": 4,
+      "max_order=3|tags=rack_type+left_nondegenerate+right_nondegenerate+nondegenerate+affine_cyclic": 1,
+      "max_order=3|tags=rack_type+permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate+affine_cyclic": 2
+    },
+    "max_q": 6,
+    "maximum_pure_generator_order": 3,
+    "solution_count": 73,
+    "top_examples": [
+      {
+        "branch_tags": [
+          "left_nondegenerate",
+          "right_nondegenerate",
+          "nondegenerate",
+          "affine_cyclic"
+        ],
+        "max_order": 3,
+        "profile": [
+          {
+            "braid_index": 2,
+            "generator_orders": [
+              3
+            ],
+            "max_order": 3,
+            "tuple_count": 9
+          },
+          {
+            "braid_index": 3,
+            "generator_orders": [
+              3,
+              3
+            ],
+            "max_order": 3,
+            "tuple_count": 27
+          },
+          {
+            "braid_index": 4,
+            "generator_orders": [
+              3,
+              3,
+              3
+            ],
+            "max_order": 3,
+            "tuple_count": 81
+          },
+          {
+            "braid_index": 5,
+            "generator_orders": [
+              3,
+              3,
+              3,
+              3
+            ],
+            "max_order": 3,
+            "tuple_count": 243
+          },
+          {
+            "braid_index": 6,
+            "generator_orders": [
+              3,
+              3,
+              3,
+              3,
+              3
+            ],
+            "max_order": 3,
+            "tuple_count": 729
+          }
+        ],
+        "solution_index": 15
+      },
+      {
+        "branch_tags": [
+          "left_nondegenerate",
+          "right_nondegenerate",
+          "nondegenerate",
+          "affine_cyclic"
+        ],
+        "max_order": 3,
+        "profile": [
+          {
+            "braid_index": 2,
+            "generator_orders": [
+              3
+            ],
+            "max_order": 3,
+            "tuple_count": 9
+          },
+          {
+            "braid_index": 3,
+            "generator_orders": [
+              3,
+              3
+            ],
+            "max_order": 3,
+            "tuple_count": 27
+          },
+          {
+            "braid_index": 4,
+            "generator_orders": [
+              3,
+              3,
+              3
+            ],
+            "max_order": 3,
+            "tuple_count": 81
+          },
+          {
+            "braid_index": 5,
+            "generator_orders": [
+              3,
+              3,
+              3,
+              3
+            ],
+            "max_order": 3,
+            "tuple_count": 243
+          },
+          {
+            "braid_index": 6,
+            "generator_orders": [
+              3,
+              3,
+              3,
+              3,
+              3
+            ],
+            "max_order": 3,
+            "tuple_count": 729
+          }
+        ],
+        "solution_index": 21
+      },
+      {
+        "branch_tags": [
+          "rack_type",
+          "left_nondegenerate",
+          "right_nondegenerate",
+          "nondegenerate",
+          "affine_cyclic"
+        ],
+        "max_order": 3,
+        "profile": [
+          {
+            "braid_index": 2,
+            "generator_orders": [
+              3
+            ],
+            "max_order": 3,
+            "tuple_count": 9
+          },
+          {
+            "braid_index": 3,
+            "generator_orders": [
+              3,
+              3
+            ],
+            "max_order": 3,
+            "tuple_count": 27
+          },
+          {
+            "braid_index": 4,
+            "generator_orders": [
+              3,
+              3,
+              3
+            ],
+            "max_order": 3,
+            "tuple_count": 81
+          },
+          {
+            "braid_index": 5,
+            "generator_orders": [
+              3,
+              3,
+              3,
+              3
+            ],
+            "max_order": 3,
+            "tuple_count": 243
+          },
+          {
+            "braid_index": 6,
+            "generator_orders": [
+              3,
+              3,
+              3,
+              3,
+              3
+            ],
+            "max_order": 3,
+            "tuple_count": 729
+          }
+        ],
+        "solution_index": 31
+      },
+      {
+        "branch_tags": [
+          "left_nondegenerate",
+          "right_nondegenerate",
+          "nondegenerate",
+          "affine_cyclic"
+        ],
+        "max_order": 3,
+        "profile": [
+          {
+            "braid_index": 2,
+            "generator_orders": [
+              3
+            ],
+            "max_order": 3,
+            "tuple_count": 9
+          },
+          {
+            "braid_index": 3,
+            "generator_orders": [
+              3,
+              3
+            ],
+            "max_order": 3,
+            "tuple_count": 27
+          },
+          {
+            "braid_index": 4,
+            "generator_orders": [
+              3,
+              3,
+              3
+            ],
+            "max_order": 3,
+            "tuple_count": 81
+          },
+          {
+            "braid_index": 5,
+            "generator_orders": [
+              3,
+              3,
+              3,
+              3
+            ],
+            "max_order": 3,
+            "tuple_count": 243
+          },
+          {
+            "braid_index": 6,
+            "generator_orders": [
+              3,
+              3,
+              3,
+              3,
+              3
+            ],
+            "max_order": 3,
+            "tuple_count": 729
+          }
+        ],
+        "solution_index": 32
+      },
+      {
+        "branch_tags": [
+          "permutation_form",
+          "left_nondegenerate",
+          "right_nondegenerate",
+          "nondegenerate",
+          "affine_cyclic"
+        ],
+        "max_order": 3,
+        "profile": [
+          {
+            "braid_index": 2,
+            "generator_orders": [
+              3
+            ],
+            "max_order": 3,
+            "tuple_count": 9
+          },
+          {
+            "braid_index": 3,
+            "generator_orders": [
+              3,
+              3
+            ],
+            "max_order": 3,
+            "tuple_count": 27
+          },
+          {
+            "braid_index": 4,
+            "generator_orders": [
+              3,
+              3,
+              3
+            ],
+            "max_order": 3,
+            "tuple_count": 81
+          },
+          {
+            "braid_index": 5,
+            "generator_orders": [
+              3,
+              3,
+              3,
+              3
+            ],
+            "max_order": 3,
+            "tuple_count": 243
+          },
+          {
+            "braid_index": 6,
+            "generator_orders": [
+              3,
+              3,
+              3,
+              3,
+              3
+            ],
+            "max_order": 3,
+            "tuple_count": 729
+          }
+        ],
+        "solution_index": 37
+      },
+      {
+        "branch_tags": [
+          "permutation_form",
+          "left_nondegenerate",
+          "right_nondegenerate",
+          "nondegenerate",
+          "affine_cyclic"
+        ],
+        "max_order": 3,
+        "profile": [
+          {
+            "braid_index": 2,
+            "generator_orders": [
+              3
+            ],
+            "max_order": 3,
+            "tuple_count": 9
+          },
+          {
+            "braid_index": 3,
+            "generator_orders": [
+              3,
+              3
+            ],
+            "max_order": 3,
+            "tuple_count": 27
+          },
+          {
+            "braid_index": 4,
+            "generator_orders": [
+              3,
+              3,
+              3
+            ],
+            "max_order": 3,
+            "tuple_count": 81
+          },
+          {
+            "braid_index": 5,
+            "generator_orders": [
+              3,
+              3,
+              3,
+              3
+            ],
+            "max_order": 3,
+            "tuple_count": 243
+          },
+          {
+            "braid_index": 6,
+            "generator_orders": [
+              3,
+              3,
+              3,
+              3,
+              3
+            ],
+            "max_order": 3,
+            "tuple_count": 729
+          }
+        ],
+        "solution_index": 40
+      },
+      {
+        "branch_tags": [
+          "rack_type",
+          "permutation_form",
+          "left_nondegenerate",
+          "right_nondegenerate",
+          "nondegenerate",
+          "affine_cyclic"
+        ],
+        "max_order": 3,
+        "profile": [
+          {
+            "braid_index": 2,
+            "generator_orders": [
+              3
+            ],
+            "max_order": 3,
+            "tuple_count": 9
+          },
+          {
+            "braid_index": 3,
+            "generator_orders": [
+              3,
+              3
+            ],
+            "max_order": 3,
+            "tuple_count": 27
+          },
+          {
+            "braid_index": 4,
+            "generator_orders": [
+              3,
+              3,
+              3
+            ],
+            "max_order": 3,
+            "tuple_count": 81
+          },
+          {
+            "braid_index": 5,
+            "generator_orders": [
+              3,
+              3,
+              3,
+              3
+            ],
+            "max_order": 3,
+            "tuple_count": 243
+          },
+          {
+            "braid_index": 6,
+            "generator_orders": [
+              3,
+              3,
+              3,
+              3,
+              3
+            ],
+            "max_order": 3,
+            "tuple_count": 729
+          }
+        ],
+        "solution_index": 47
+      },
+      {
+        "branch_tags": [
+          "left_nondegenerate",
+          "right_nondegenerate",
+          "nondegenerate",
+          "affine_cyclic"
+        ],
+        "max_order": 3,
+        "profile": [
+          {
+            "braid_index": 2,
+            "generator_orders": [
+              3
+            ],
+            "max_order": 3,
+            "tuple_count": 9
+          },
+          {
+            "braid_index": 3,
+            "generator_orders": [
+              3,
+              3
+            ],
+            "max_order": 3,
+            "tuple_count": 27
+          },
+          {
+            "braid_index": 4,
+            "generator_orders": [
+              3,
+              3,
+              3
+            ],
+            "max_order": 3,
+            "tuple_count": 81
+          },
+          {
+            "braid_index": 5,
+            "generator_orders": [
+              3,
+              3,
+              3,
+              3
+            ],
+            "max_order": 3,
+            "tuple_count": 243
+          },
+          {
+            "braid_index": 6,
+            "generator_orders": [
+              3,
+              3,
+              3,
+              3,
+              3
+            ],
+            "max_order": 3,
+            "tuple_count": 729
+          }
+        ],
+        "solution_index": 50
+      }
+    ]
+  }
+}

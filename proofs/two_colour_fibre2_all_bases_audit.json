@@ -1,0 +1,4381 @@
+{
+  "bases": {
+    "base_0": {
+      "base_index": 0,
+      "base_signature": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "branch_tag_counts": {
+        "(untagged)": 16,
+        "involutive": 16
+      },
+      "checked_table_count": 331776,
+      "colored_ybe_count": 33,
+      "corridor_rows": [
+        {
+          "all_coordinate_kernel_depth": 0,
+          "all_coordinate_kernel_kind": "universal",
+          "coretraction": "equality",
+          "count": 16,
+          "has_direct_witness": false,
+          "has_product_witness": true,
+          "output_kernel_depth": 0,
+          "output_kernel_kind": "equality",
+          "retraction": "universal",
+          "tags": [
+            "involutive"
+          ]
+        },
+        {
+          "all_coordinate_kernel_depth": 0,
+          "all_coordinate_kernel_kind": "universal",
+          "coretraction": "equality",
+          "count": 16,
+          "has_direct_witness": false,
+          "has_product_witness": true,
+          "output_kernel_depth": 0,
+          "output_kernel_kind": "equality",
+          "retraction": "universal",
+          "tags": []
+        }
+      ],
+      "first_examples": {
+        "retraction=universal|coretraction=equality|output=equality|depth=0|tags=(untagged)|product=True|direct=False": {
+          "interval_table": [
+            {
+              "colors": [
+                "0",
+                "0"
+              ],
+              "input": [
+                "0",
+                "0"
+              ],
+              "output": [
+                "0",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "0"
+              ],
+              "input": [
+                "0",
+                "1"
+              ],
+              "output": [
+                "1",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "0"
+              ],
+              "input": [
+                "1",
+                "0"
+              ],
+              "output": [
+                "0",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "0"
+              ],
+              "input": [
+                "1",
+                "1"
+              ],
+              "output": [
+                "1",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "1"
+              ],
+              "input": [
+                "0",
+                "0"
+              ],
+              "output": [
+                "0",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "1"
+              ],
+              "input": [
+                "0",
+                "1"
+              ],
+              "output": [
+                "1",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "1"
+              ],
+              "input": [
+                "1",
+                "0"
+              ],
+              "output": [
+                "0",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "1"
+              ],
+              "input": [
+                "1",
+                "1"
+              ],
+              "output": [
+                "1",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "0"
+              ],
+              "input": [
+                "0",
+                "0"
+              ],
+              "output": [
+                "0",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "0"
+              ],
+              "input": [
+                "0",
+                "1"
+              ],
+              "output": [
+                "1",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "0"
+              ],
+              "input": [
+                "1",
+                "0"
+              ],
+              "output": [
+                "0",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "0"
+              ],
+              "input": [
+                "1",
+                "1"
+              ],
+              "output": [
+                "1",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "1"
+              ],
+              "input": [
+                "0",
+                "0"
+              ],
+              "output": [
+                "0",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "1"
+              ],
+              "input": [
+                "0",
+                "1"
+              ],
+              "output": [
+                "1",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "1"
+              ],
+              "input": [
+                "1",
+                "0"
+              ],
+              "output": [
+                "0",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "1"
+              ],
+              "input": [
+                "1",
+                "1"
+              ],
+              "output": [
+                "1",
+                "0"
+              ]
+            }
+          ],
+          "output_kernel_family": {
+            "0": [
+              [
+                "0"
+              ],
+              [
+                "1"
+              ]
+            ],
+            "1": [
+              [
+                "0"
+              ],
+              [
+                "1"
+              ]
+            ]
+          },
+          "row": {
+            "all_coordinate_kernel_depth": 0,
+            "all_coordinate_kernel_kind": "universal",
+            "all_coordinate_kernel_seed_count": 4,
+            "coretraction": "equality",
+            "has_direct_witness": false,
+            "has_product_witness": true,
+            "output_kernel_depth": 0,
+            "output_kernel_kind": "equality",
+            "output_kernel_seed_count": 0,
+            "retraction": "universal",
+            "tags": []
+          }
+        },
+        "retraction=universal|coretraction=equality|output=equality|depth=0|tags=involutive|product=True|direct=False": {
+          "interval_table": [
+            {
+              "colors": [
+                "0",
+                "0"
+              ],
+              "input": [
+                "0",
+                "0"
+              ],
+              "output": [
+                "0",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "0"
+              ],
+              "input": [
+                "0",
+                "1"
+              ],
+              "output": [
+                "1",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "0"
+              ],
+              "input": [
+                "1",
+                "0"
+              ],
+              "output": [
+                "0",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "0"
+              ],
+              "input": [
+                "1",
+                "1"
+              ],
+              "output": [
+                "1",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "1"
+              ],
+              "input": [
+                "0",
+                "0"
+              ],
+              "output": [
+                "0",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "1"
+              ],
+              "input": [
+                "0",
+                "1"
+              ],
+              "output": [
+                "1",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "1"
+              ],
+              "input": [
+                "1",
+                "0"
+              ],
+              "output": [
+                "0",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "1"
+              ],
+              "input": [
+                "1",
+                "1"
+              ],
+              "output": [
+                "1",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "0"
+              ],
+              "input": [
+                "0",
+                "0"
+              ],
+              "output": [
+                "0",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "0"
+              ],
+              "input": [
+                "0",
+                "1"
+              ],
+              "output": [
+                "1",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "0"
+              ],
+              "input": [
+                "1",
+                "0"
+              ],
+              "output": [
+                "0",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "0"
+              ],
+              "input": [
+                "1",
+                "1"
+              ],
+              "output": [
+                "1",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "1"
+              ],
+              "input": [
+                "0",
+                "0"
+              ],
+              "output": [
+                "0",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "1"
+              ],
+              "input": [
+                "0",
+                "1"
+              ],
+              "output": [
+                "1",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "1"
+              ],
+              "input": [
+                "1",
+                "0"
+              ],
+              "output": [
+                "0",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "1"
+              ],
+              "input": [
+                "1",
+                "1"
+              ],
+              "output": [
+                "1",
+                "1"
+              ]
+            }
+          ],
+          "output_kernel_family": {
+            "0": [
+              [
+                "0"
+              ],
+              [
+                "1"
+              ]
+            ],
+            "1": [
+              [
+                "0"
+              ],
+              [
+                "1"
+              ]
+            ]
+          },
+          "row": {
+            "all_coordinate_kernel_depth": 0,
+            "all_coordinate_kernel_kind": "universal",
+            "all_coordinate_kernel_seed_count": 4,
+            "coretraction": "equality",
+            "has_direct_witness": false,
+            "has_product_witness": true,
+            "output_kernel_depth": 0,
+            "output_kernel_kind": "equality",
+            "output_kernel_seed_count": 0,
+            "retraction": "universal",
+            "tags": [
+              "involutive"
+            ]
+          }
+        }
+      },
+      "local_minimal_count": 32,
+      "output_kernel_counts": {
+        "equality": 32
+      },
+      "output_universal_depth_counts": {},
+      "retraction_coretraction_counts": {
+        "retraction=universal|coretraction=equality": 32
+      },
+      "semisplit_leak_count": 0,
+      "unknown_universal_output_example_count": 0,
+      "unknown_universal_output_examples": []
+    },
+    "base_1": {
+      "base_index": 1,
+      "base_signature": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "branch_tag_counts": {
+        "involutive": 12
+      },
+      "checked_table_count": 331776,
+      "colored_ybe_count": 520,
+      "corridor_rows": [
+        {
+          "all_coordinate_kernel_depth": 0,
+          "all_coordinate_kernel_kind": "universal",
+          "coretraction": "equality",
+          "count": 8,
+          "has_direct_witness": false,
+          "has_product_witness": false,
+          "output_kernel_depth": 0,
+          "output_kernel_kind": "universal",
+          "retraction": "equality",
+          "tags": [
+            "involutive"
+          ]
+        },
+        {
+          "all_coordinate_kernel_depth": 0,
+          "all_coordinate_kernel_kind": "universal",
+          "coretraction": "universal",
+          "count": 4,
+          "has_direct_witness": true,
+          "has_product_witness": false,
+          "output_kernel_depth": 0,
+          "output_kernel_kind": "universal",
+          "retraction": "equality",
+          "tags": [
+            "involutive"
+          ]
+        }
+      ],
+      "first_examples": {
+        "retraction=equality|coretraction=equality|output=universal|depth=0|tags=involutive|product=False|direct=False": {
+          "interval_table": [
+            {
+              "colors": [
+                "0",
+                "0"
+              ],
+              "input": [
+                "0",
+                "0"
+              ],
+              "output": [
+                "0",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "0"
+              ],
+              "input": [
+                "0",
+                "1"
+              ],
+              "output": [
+                "0",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "0"
+              ],
+              "input": [
+                "1",
+                "0"
+              ],
+              "output": [
+                "1",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "0"
+              ],
+              "input": [
+                "1",
+                "1"
+              ],
+              "output": [
+                "1",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "1"
+              ],
+              "input": [
+                "0",
+                "0"
+              ],
+              "output": [
+                "0",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "1"
+              ],
+              "input": [
+                "0",
+                "1"
+              ],
+              "output": [
+                "0",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "1"
+              ],
+              "input": [
+                "1",
+                "0"
+              ],
+              "output": [
+                "1",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "1"
+              ],
+              "input": [
+                "1",
+                "1"
+              ],
+              "output": [
+                "1",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "0"
+              ],
+              "input": [
+                "0",
+                "0"
+              ],
+              "output": [
+                "0",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "0"
+              ],
+              "input": [
+                "0",
+                "1"
+              ],
+              "output": [
+                "0",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "0"
+              ],
+              "input": [
+                "1",
+                "0"
+              ],
+              "output": [
+                "1",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "0"
+              ],
+              "input": [
+                "1",
+                "1"
+              ],
+              "output": [
+                "1",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "1"
+              ],
+              "input": [
+                "0",
+                "0"
+              ],
+              "output": [
+                "0",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "1"
+              ],
+              "input": [
+                "0",
+                "1"
+              ],
+              "output": [
+                "0",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "1"
+              ],
+              "input": [
+                "1",
+                "0"
+              ],
+              "output": [
+                "1",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "1"
+              ],
+              "input": [
+                "1",
+                "1"
+              ],
+              "output": [
+                "1",
+                "1"
+              ]
+            }
+          ],
+          "output_kernel_family": {
+            "0": [
+              [
+                "0",
+                "1"
+              ]
+            ],
+            "1": [
+              [
+                "0",
+                "1"
+              ]
+            ]
+          },
+          "row": {
+            "all_coordinate_kernel_depth": 0,
+            "all_coordinate_kernel_kind": "universal",
+            "all_coordinate_kernel_seed_count": 4,
+            "coretraction": "equality",
+            "has_direct_witness": false,
+            "has_product_witness": false,
+            "output_kernel_depth": 0,
+            "output_kernel_kind": "universal",
+            "output_kernel_seed_count": 4,
+            "retraction": "equality",
+            "tags": [
+              "involutive"
+            ]
+          }
+        },
+        "retraction=equality|coretraction=universal|output=universal|depth=0|tags=involutive|product=False|direct=True": {
+          "interval_table": [
+            {
+              "colors": [
+                "0",
+                "0"
+              ],
+              "input": [
+                "0",
+                "0"
+              ],
+              "output": [
+                "0",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "0"
+              ],
+              "input": [
+                "0",
+                "1"
+              ],
+              "output": [
+                "0",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "0"
+              ],
+              "input": [
+                "1",
+                "0"
+              ],
+              "output": [
+                "1",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "0"
+              ],
+              "input": [
+                "1",
+                "1"
+              ],
+              "output": [
+                "1",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "1"
+              ],
+              "input": [
+                "0",
+                "0"
+              ],
+              "output": [
+                "0",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "1"
+              ],
+              "input": [
+                "0",
+                "1"
+              ],
+              "output": [
+                "0",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "1"
+              ],
+              "input": [
+                "1",
+                "0"
+              ],
+              "output": [
+                "1",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "1"
+              ],
+              "input": [
+                "1",
+                "1"
+              ],
+              "output": [
+                "1",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "0"
+              ],
+              "input": [
+                "0",
+                "0"
+              ],
+              "output": [
+                "0",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "0"
+              ],
+              "input": [
+                "0",
+                "1"
+              ],
+              "output": [
+                "0",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "0"
+              ],
+              "input": [
+                "1",
+                "0"
+              ],
+              "output": [
+                "1",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "0"
+              ],
+              "input": [
+                "1",
+                "1"
+              ],
+              "output": [
+                "1",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "1"
+              ],
+              "input": [
+                "0",
+                "0"
+              ],
+              "output": [
+                "0",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "1"
+              ],
+              "input": [
+                "0",
+                "1"
+              ],
+              "output": [
+                "0",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "1"
+              ],
+              "input": [
+                "1",
+                "0"
+              ],
+              "output": [
+                "1",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "1"
+              ],
+              "input": [
+                "1",
+                "1"
+              ],
+              "output": [
+                "1",
+                "1"
+              ]
+            }
+          ],
+          "output_kernel_family": {
+            "0": [
+              [
+                "0",
+                "1"
+              ]
+            ],
+            "1": [
+              [
+                "0",
+                "1"
+              ]
+            ]
+          },
+          "row": {
+            "all_coordinate_kernel_depth": 0,
+            "all_coordinate_kernel_kind": "universal",
+            "all_coordinate_kernel_seed_count": 4,
+            "coretraction": "universal",
+            "has_direct_witness": true,
+            "has_product_witness": false,
+            "output_kernel_depth": 0,
+            "output_kernel_kind": "universal",
+            "output_kernel_seed_count": 4,
+            "retraction": "equality",
+            "tags": [
+              "involutive"
+            ]
+          }
+        }
+      },
+      "local_minimal_count": 12,
+      "output_kernel_counts": {
+        "universal": 12
+      },
+      "output_universal_depth_counts": {
+        "0": 12
+      },
+      "retraction_coretraction_counts": {
+        "retraction=equality|coretraction=equality": 8,
+        "retraction=equality|coretraction=universal": 4
+      },
+      "semisplit_leak_count": 0,
+      "unknown_universal_output_example_count": 0,
+      "unknown_universal_output_examples": []
+    },
+    "base_2": {
+      "base_index": 2,
+      "base_signature": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "branch_tag_counts": {
+        "(untagged)": 2,
+        "permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate": 8
+      },
+      "checked_table_count": 331776,
+      "colored_ybe_count": 10,
+      "corridor_rows": [
+        {
+          "all_coordinate_kernel_depth": 0,
+          "all_coordinate_kernel_kind": "universal",
+          "coretraction": "universal",
+          "count": 2,
+          "has_direct_witness": true,
+          "has_product_witness": false,
+          "output_kernel_depth": 0,
+          "output_kernel_kind": "universal",
+          "retraction": "equality",
+          "tags": []
+        },
+        {
+          "all_coordinate_kernel_depth": 0,
+          "all_coordinate_kernel_kind": "universal",
+          "coretraction": "equality",
+          "count": 8,
+          "has_direct_witness": false,
+          "has_product_witness": true,
+          "output_kernel_depth": 0,
+          "output_kernel_kind": "equality",
+          "retraction": "universal",
+          "tags": [
+            "permutation_form",
+            "left_nondegenerate",
+            "right_nondegenerate",
+            "nondegenerate"
+          ]
+        }
+      ],
+      "first_examples": {
+        "retraction=equality|coretraction=universal|output=universal|depth=0|tags=(untagged)|product=False|direct=True": {
+          "interval_table": [
+            {
+              "colors": [
+                "0",
+                "0"
+              ],
+              "input": [
+                "0",
+                "0"
+              ],
+              "output": [
+                "0",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "0"
+              ],
+              "input": [
+                "0",
+                "1"
+              ],
+              "output": [
+                "0",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "0"
+              ],
+              "input": [
+                "1",
+                "0"
+              ],
+              "output": [
+                "1",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "0"
+              ],
+              "input": [
+                "1",
+                "1"
+              ],
+              "output": [
+                "1",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "1"
+              ],
+              "input": [
+                "0",
+                "0"
+              ],
+              "output": [
+                "0",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "1"
+              ],
+              "input": [
+                "0",
+                "1"
+              ],
+              "output": [
+                "0",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "1"
+              ],
+              "input": [
+                "1",
+                "0"
+              ],
+              "output": [
+                "1",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "1"
+              ],
+              "input": [
+                "1",
+                "1"
+              ],
+              "output": [
+                "1",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "0"
+              ],
+              "input": [
+                "0",
+                "0"
+              ],
+              "output": [
+                "0",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "0"
+              ],
+              "input": [
+                "0",
+                "1"
+              ],
+              "output": [
+                "0",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "0"
+              ],
+              "input": [
+                "1",
+                "0"
+              ],
+              "output": [
+                "1",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "0"
+              ],
+              "input": [
+                "1",
+                "1"
+              ],
+              "output": [
+                "1",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "1"
+              ],
+              "input": [
+                "0",
+                "0"
+              ],
+              "output": [
+                "0",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "1"
+              ],
+              "input": [
+                "0",
+                "1"
+              ],
+              "output": [
+                "0",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "1"
+              ],
+              "input": [
+                "1",
+                "0"
+              ],
+              "output": [
+                "1",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "1"
+              ],
+              "input": [
+                "1",
+                "1"
+              ],
+              "output": [
+                "1",
+                "1"
+              ]
+            }
+          ],
+          "output_kernel_family": {
+            "0": [
+              [
+                "0",
+                "1"
+              ]
+            ],
+            "1": [
+              [
+                "0",
+                "1"
+              ]
+            ]
+          },
+          "row": {
+            "all_coordinate_kernel_depth": 0,
+            "all_coordinate_kernel_kind": "universal",
+            "all_coordinate_kernel_seed_count": 4,
+            "coretraction": "universal",
+            "has_direct_witness": true,
+            "has_product_witness": false,
+            "output_kernel_depth": 0,
+            "output_kernel_kind": "universal",
+            "output_kernel_seed_count": 4,
+            "retraction": "equality",
+            "tags": []
+          }
+        },
+        "retraction=universal|coretraction=equality|output=equality|depth=0|tags=permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate|product=True|direct=False": {
+          "interval_table": [
+            {
+              "colors": [
+                "0",
+                "0"
+              ],
+              "input": [
+                "0",
+                "0"
+              ],
+              "output": [
+                "0",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "0"
+              ],
+              "input": [
+                "0",
+                "1"
+              ],
+              "output": [
+                "1",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "0"
+              ],
+              "input": [
+                "1",
+                "0"
+              ],
+              "output": [
+                "0",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "0"
+              ],
+              "input": [
+                "1",
+                "1"
+              ],
+              "output": [
+                "1",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "1"
+              ],
+              "input": [
+                "0",
+                "0"
+              ],
+              "output": [
+                "0",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "1"
+              ],
+              "input": [
+                "0",
+                "1"
+              ],
+              "output": [
+                "1",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "1"
+              ],
+              "input": [
+                "1",
+                "0"
+              ],
+              "output": [
+                "0",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "1"
+              ],
+              "input": [
+                "1",
+                "1"
+              ],
+              "output": [
+                "1",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "0"
+              ],
+              "input": [
+                "0",
+                "0"
+              ],
+              "output": [
+                "0",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "0"
+              ],
+              "input": [
+                "0",
+                "1"
+              ],
+              "output": [
+                "1",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "0"
+              ],
+              "input": [
+                "1",
+                "0"
+              ],
+              "output": [
+                "0",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "0"
+              ],
+              "input": [
+                "1",
+                "1"
+              ],
+              "output": [
+                "1",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "1"
+              ],
+              "input": [
+                "0",
+                "0"
+              ],
+              "output": [
+                "0",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "1"
+              ],
+              "input": [
+                "0",
+                "1"
+              ],
+              "output": [
+                "1",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "1"
+              ],
+              "input": [
+                "1",
+                "0"
+              ],
+              "output": [
+                "0",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "1"
+              ],
+              "input": [
+                "1",
+                "1"
+              ],
+              "output": [
+                "1",
+                "1"
+              ]
+            }
+          ],
+          "output_kernel_family": {
+            "0": [
+              [
+                "0"
+              ],
+              [
+                "1"
+              ]
+            ],
+            "1": [
+              [
+                "0"
+              ],
+              [
+                "1"
+              ]
+            ]
+          },
+          "row": {
+            "all_coordinate_kernel_depth": 0,
+            "all_coordinate_kernel_kind": "universal",
+            "all_coordinate_kernel_seed_count": 4,
+            "coretraction": "equality",
+            "has_direct_witness": false,
+            "has_product_witness": true,
+            "output_kernel_depth": 0,
+            "output_kernel_kind": "equality",
+            "output_kernel_seed_count": 0,
+            "retraction": "universal",
+            "tags": [
+              "permutation_form",
+              "left_nondegenerate",
+              "right_nondegenerate",
+              "nondegenerate"
+            ]
+          }
+        }
+      },
+      "local_minimal_count": 10,
+      "output_kernel_counts": {
+        "equality": 8,
+        "universal": 2
+      },
+      "output_universal_depth_counts": {
+        "0": 2
+      },
+      "retraction_coretraction_counts": {
+        "retraction=equality|coretraction=universal": 2,
+        "retraction=universal|coretraction=equality": 8
+      },
+      "semisplit_leak_count": 0,
+      "unknown_universal_output_example_count": 0,
+      "unknown_universal_output_examples": []
+    },
+    "base_3": {
+      "base_index": 3,
+      "base_signature": [
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "branch_tag_counts": {
+        "(untagged)": 2,
+        "permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate": 4,
+        "rack_type+permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate": 4
+      },
+      "checked_table_count": 331776,
+      "colored_ybe_count": 10,
+      "corridor_rows": [
+        {
+          "all_coordinate_kernel_depth": 0,
+          "all_coordinate_kernel_kind": "universal",
+          "coretraction": "universal",
+          "count": 2,
+          "has_direct_witness": true,
+          "has_product_witness": false,
+          "output_kernel_depth": 0,
+          "output_kernel_kind": "universal",
+          "retraction": "equality",
+          "tags": []
+        },
+        {
+          "all_coordinate_kernel_depth": 0,
+          "all_coordinate_kernel_kind": "universal",
+          "coretraction": "equality",
+          "count": 4,
+          "has_direct_witness": false,
+          "has_product_witness": true,
+          "output_kernel_depth": 0,
+          "output_kernel_kind": "equality",
+          "retraction": "universal",
+          "tags": [
+            "permutation_form",
+            "left_nondegenerate",
+            "right_nondegenerate",
+            "nondegenerate"
+          ]
+        },
+        {
+          "all_coordinate_kernel_depth": 0,
+          "all_coordinate_kernel_kind": "universal",
+          "coretraction": "equality",
+          "count": 4,
+          "has_direct_witness": false,
+          "has_product_witness": true,
+          "output_kernel_depth": 0,
+          "output_kernel_kind": "equality",
+          "retraction": "universal",
+          "tags": [
+            "rack_type",
+            "permutation_form",
+            "left_nondegenerate",
+            "right_nondegenerate",
+            "nondegenerate"
+          ]
+        }
+      ],
+      "first_examples": {
+        "retraction=equality|coretraction=universal|output=universal|depth=0|tags=(untagged)|product=False|direct=True": {
+          "interval_table": [
+            {
+              "colors": [
+                "0",
+                "0"
+              ],
+              "input": [
+                "0",
+                "0"
+              ],
+              "output": [
+                "0",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "0"
+              ],
+              "input": [
+                "0",
+                "1"
+              ],
+              "output": [
+                "0",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "0"
+              ],
+              "input": [
+                "1",
+                "0"
+              ],
+              "output": [
+                "1",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "0"
+              ],
+              "input": [
+                "1",
+                "1"
+              ],
+              "output": [
+                "1",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "1"
+              ],
+              "input": [
+                "0",
+                "0"
+              ],
+              "output": [
+                "0",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "1"
+              ],
+              "input": [
+                "0",
+                "1"
+              ],
+              "output": [
+                "0",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "1"
+              ],
+              "input": [
+                "1",
+                "0"
+              ],
+              "output": [
+                "1",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "1"
+              ],
+              "input": [
+                "1",
+                "1"
+              ],
+              "output": [
+                "1",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "0"
+              ],
+              "input": [
+                "0",
+                "0"
+              ],
+              "output": [
+                "0",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "0"
+              ],
+              "input": [
+                "0",
+                "1"
+              ],
+              "output": [
+                "0",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "0"
+              ],
+              "input": [
+                "1",
+                "0"
+              ],
+              "output": [
+                "1",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "0"
+              ],
+              "input": [
+                "1",
+                "1"
+              ],
+              "output": [
+                "1",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "1"
+              ],
+              "input": [
+                "0",
+                "0"
+              ],
+              "output": [
+                "0",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "1"
+              ],
+              "input": [
+                "0",
+                "1"
+              ],
+              "output": [
+                "0",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "1"
+              ],
+              "input": [
+                "1",
+                "0"
+              ],
+              "output": [
+                "1",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "1"
+              ],
+              "input": [
+                "1",
+                "1"
+              ],
+              "output": [
+                "1",
+                "1"
+              ]
+            }
+          ],
+          "output_kernel_family": {
+            "0": [
+              [
+                "0",
+                "1"
+              ]
+            ],
+            "1": [
+              [
+                "0",
+                "1"
+              ]
+            ]
+          },
+          "row": {
+            "all_coordinate_kernel_depth": 0,
+            "all_coordinate_kernel_kind": "universal",
+            "all_coordinate_kernel_seed_count": 4,
+            "coretraction": "universal",
+            "has_direct_witness": true,
+            "has_product_witness": false,
+            "output_kernel_depth": 0,
+            "output_kernel_kind": "universal",
+            "output_kernel_seed_count": 4,
+            "retraction": "equality",
+            "tags": []
+          }
+        },
+        "retraction=universal|coretraction=equality|output=equality|depth=0|tags=permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate|product=True|direct=False": {
+          "interval_table": [
+            {
+              "colors": [
+                "0",
+                "0"
+              ],
+              "input": [
+                "0",
+                "0"
+              ],
+              "output": [
+                "0",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "0"
+              ],
+              "input": [
+                "0",
+                "1"
+              ],
+              "output": [
+                "1",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "0"
+              ],
+              "input": [
+                "1",
+                "0"
+              ],
+              "output": [
+                "0",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "0"
+              ],
+              "input": [
+                "1",
+                "1"
+              ],
+              "output": [
+                "1",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "1"
+              ],
+              "input": [
+                "0",
+                "0"
+              ],
+              "output": [
+                "0",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "1"
+              ],
+              "input": [
+                "0",
+                "1"
+              ],
+              "output": [
+                "1",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "1"
+              ],
+              "input": [
+                "1",
+                "0"
+              ],
+              "output": [
+                "0",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "1"
+              ],
+              "input": [
+                "1",
+                "1"
+              ],
+              "output": [
+                "1",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "0"
+              ],
+              "input": [
+                "0",
+                "0"
+              ],
+              "output": [
+                "0",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "0"
+              ],
+              "input": [
+                "0",
+                "1"
+              ],
+              "output": [
+                "1",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "0"
+              ],
+              "input": [
+                "1",
+                "0"
+              ],
+              "output": [
+                "0",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "0"
+              ],
+              "input": [
+                "1",
+                "1"
+              ],
+              "output": [
+                "1",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "1"
+              ],
+              "input": [
+                "0",
+                "0"
+              ],
+              "output": [
+                "0",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "1"
+              ],
+              "input": [
+                "0",
+                "1"
+              ],
+              "output": [
+                "1",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "1"
+              ],
+              "input": [
+                "1",
+                "0"
+              ],
+              "output": [
+                "0",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "1"
+              ],
+              "input": [
+                "1",
+                "1"
+              ],
+              "output": [
+                "1",
+                "0"
+              ]
+            }
+          ],
+          "output_kernel_family": {
+            "0": [
+              [
+                "0"
+              ],
+              [
+                "1"
+              ]
+            ],
+            "1": [
+              [
+                "0"
+              ],
+              [
+                "1"
+              ]
+            ]
+          },
+          "row": {
+            "all_coordinate_kernel_depth": 0,
+            "all_coordinate_kernel_kind": "universal",
+            "all_coordinate_kernel_seed_count": 4,
+            "coretraction": "equality",
+            "has_direct_witness": false,
+            "has_product_witness": true,
+            "output_kernel_depth": 0,
+            "output_kernel_kind": "equality",
+            "output_kernel_seed_count": 0,
+            "retraction": "universal",
+            "tags": [
+              "permutation_form",
+              "left_nondegenerate",
+              "right_nondegenerate",
+              "nondegenerate"
+            ]
+          }
+        },
+        "retraction=universal|coretraction=equality|output=equality|depth=0|tags=rack_type+permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate|product=True|direct=False": {
+          "interval_table": [
+            {
+              "colors": [
+                "0",
+                "0"
+              ],
+              "input": [
+                "0",
+                "0"
+              ],
+              "output": [
+                "0",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "0"
+              ],
+              "input": [
+                "0",
+                "1"
+              ],
+              "output": [
+                "1",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "0"
+              ],
+              "input": [
+                "1",
+                "0"
+              ],
+              "output": [
+                "0",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "0"
+              ],
+              "input": [
+                "1",
+                "1"
+              ],
+              "output": [
+                "1",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "1"
+              ],
+              "input": [
+                "0",
+                "0"
+              ],
+              "output": [
+                "0",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "1"
+              ],
+              "input": [
+                "0",
+                "1"
+              ],
+              "output": [
+                "1",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "1"
+              ],
+              "input": [
+                "1",
+                "0"
+              ],
+              "output": [
+                "0",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "1"
+              ],
+              "input": [
+                "1",
+                "1"
+              ],
+              "output": [
+                "1",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "0"
+              ],
+              "input": [
+                "0",
+                "0"
+              ],
+              "output": [
+                "0",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "0"
+              ],
+              "input": [
+                "0",
+                "1"
+              ],
+              "output": [
+                "1",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "0"
+              ],
+              "input": [
+                "1",
+                "0"
+              ],
+              "output": [
+                "0",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "0"
+              ],
+              "input": [
+                "1",
+                "1"
+              ],
+              "output": [
+                "1",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "1"
+              ],
+              "input": [
+                "0",
+                "0"
+              ],
+              "output": [
+                "0",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "1"
+              ],
+              "input": [
+                "0",
+                "1"
+              ],
+              "output": [
+                "1",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "1"
+              ],
+              "input": [
+                "1",
+                "0"
+              ],
+              "output": [
+                "0",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "1"
+              ],
+              "input": [
+                "1",
+                "1"
+              ],
+              "output": [
+                "1",
+                "1"
+              ]
+            }
+          ],
+          "output_kernel_family": {
+            "0": [
+              [
+                "0"
+              ],
+              [
+                "1"
+              ]
+            ],
+            "1": [
+              [
+                "0"
+              ],
+              [
+                "1"
+              ]
+            ]
+          },
+          "row": {
+            "all_coordinate_kernel_depth": 0,
+            "all_coordinate_kernel_kind": "universal",
+            "all_coordinate_kernel_seed_count": 4,
+            "coretraction": "equality",
+            "has_direct_witness": false,
+            "has_product_witness": true,
+            "output_kernel_depth": 0,
+            "output_kernel_kind": "equality",
+            "output_kernel_seed_count": 0,
+            "retraction": "universal",
+            "tags": [
+              "rack_type",
+              "permutation_form",
+              "left_nondegenerate",
+              "right_nondegenerate",
+              "nondegenerate"
+            ]
+          }
+        }
+      },
+      "local_minimal_count": 10,
+      "output_kernel_counts": {
+        "equality": 8,
+        "universal": 2
+      },
+      "output_universal_depth_counts": {
+        "0": 2
+      },
+      "retraction_coretraction_counts": {
+        "retraction=equality|coretraction=universal": 2,
+        "retraction=universal|coretraction=equality": 8
+      },
+      "semisplit_leak_count": 0,
+      "unknown_universal_output_example_count": 0,
+      "unknown_universal_output_examples": []
+    },
+    "base_4": {
+      "base_index": 4,
+      "base_signature": [
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "branch_tag_counts": {
+        "involutive": 24,
+        "involutive+left_nondegenerate+right_nondegenerate+nondegenerate": 4,
+        "involutive+permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate": 4,
+        "left_nondegenerate+right_nondegenerate+nondegenerate": 20,
+        "permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate": 4
+      },
+      "checked_table_count": 331776,
+      "colored_ybe_count": 56,
+      "corridor_rows": [
+        {
+          "all_coordinate_kernel_depth": 0,
+          "all_coordinate_kernel_kind": "universal",
+          "coretraction": "equality",
+          "count": 20,
+          "has_direct_witness": false,
+          "has_product_witness": false,
+          "output_kernel_depth": 0,
+          "output_kernel_kind": "universal",
+          "retraction": "equality",
+          "tags": [
+            "involutive"
+          ]
+        },
+        {
+          "all_coordinate_kernel_depth": 0,
+          "all_coordinate_kernel_kind": "universal",
+          "coretraction": "universal",
+          "count": 4,
+          "has_direct_witness": true,
+          "has_product_witness": false,
+          "output_kernel_depth": 0,
+          "output_kernel_kind": "universal",
+          "retraction": "equality",
+          "tags": [
+            "involutive"
+          ]
+        },
+        {
+          "all_coordinate_kernel_depth": 0,
+          "all_coordinate_kernel_kind": "universal",
+          "coretraction": "equality",
+          "count": 4,
+          "has_direct_witness": false,
+          "has_product_witness": true,
+          "output_kernel_depth": 0,
+          "output_kernel_kind": "equality",
+          "retraction": "universal",
+          "tags": [
+            "involutive",
+            "left_nondegenerate",
+            "right_nondegenerate",
+            "nondegenerate"
+          ]
+        },
+        {
+          "all_coordinate_kernel_depth": 0,
+          "all_coordinate_kernel_kind": "universal",
+          "coretraction": "equality",
+          "count": 4,
+          "has_direct_witness": false,
+          "has_product_witness": true,
+          "output_kernel_depth": 0,
+          "output_kernel_kind": "equality",
+          "retraction": "universal",
+          "tags": [
+            "involutive",
+            "permutation_form",
+            "left_nondegenerate",
+            "right_nondegenerate",
+            "nondegenerate"
+          ]
+        },
+        {
+          "all_coordinate_kernel_depth": 0,
+          "all_coordinate_kernel_kind": "universal",
+          "coretraction": "equality",
+          "count": 20,
+          "has_direct_witness": false,
+          "has_product_witness": true,
+          "output_kernel_depth": 0,
+          "output_kernel_kind": "equality",
+          "retraction": "universal",
+          "tags": [
+            "left_nondegenerate",
+            "right_nondegenerate",
+            "nondegenerate"
+          ]
+        },
+        {
+          "all_coordinate_kernel_depth": 0,
+          "all_coordinate_kernel_kind": "universal",
+          "coretraction": "equality",
+          "count": 4,
+          "has_direct_witness": false,
+          "has_product_witness": true,
+          "output_kernel_depth": 0,
+          "output_kernel_kind": "equality",
+          "retraction": "universal",
+          "tags": [
+            "permutation_form",
+            "left_nondegenerate",
+            "right_nondegenerate",
+            "nondegenerate"
+          ]
+        }
+      ],
+      "first_examples": {
+        "retraction=equality|coretraction=equality|output=universal|depth=0|tags=involutive|product=False|direct=False": {
+          "interval_table": [
+            {
+              "colors": [
+                "0",
+                "0"
+              ],
+              "input": [
+                "0",
+                "0"
+              ],
+              "output": [
+                "0",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "0"
+              ],
+              "input": [
+                "0",
+                "1"
+              ],
+              "output": [
+                "0",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "0"
+              ],
+              "input": [
+                "1",
+                "0"
+              ],
+              "output": [
+                "1",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "0"
+              ],
+              "input": [
+                "1",
+                "1"
+              ],
+              "output": [
+                "1",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "1"
+              ],
+              "input": [
+                "0",
+                "0"
+              ],
+              "output": [
+                "0",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "1"
+              ],
+              "input": [
+                "0",
+                "1"
+              ],
+              "output": [
+                "0",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "1"
+              ],
+              "input": [
+                "1",
+                "0"
+              ],
+              "output": [
+                "1",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "1"
+              ],
+              "input": [
+                "1",
+                "1"
+              ],
+              "output": [
+                "1",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "0"
+              ],
+              "input": [
+                "0",
+                "0"
+              ],
+              "output": [
+                "0",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "0"
+              ],
+              "input": [
+                "0",
+                "1"
+              ],
+              "output": [
+                "0",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "0"
+              ],
+              "input": [
+                "1",
+                "0"
+              ],
+              "output": [
+                "1",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "0"
+              ],
+              "input": [
+                "1",
+                "1"
+              ],
+              "output": [
+                "1",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "1"
+              ],
+              "input": [
+                "0",
+                "0"
+              ],
+              "output": [
+                "0",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "1"
+              ],
+              "input": [
+                "0",
+                "1"
+              ],
+              "output": [
+                "0",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "1"
+              ],
+              "input": [
+                "1",
+                "0"
+              ],
+              "output": [
+                "1",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "1"
+              ],
+              "input": [
+                "1",
+                "1"
+              ],
+              "output": [
+                "1",
+                "0"
+              ]
+            }
+          ],
+          "output_kernel_family": {
+            "0": [
+              [
+                "0",
+                "1"
+              ]
+            ],
+            "1": [
+              [
+                "0",
+                "1"
+              ]
+            ]
+          },
+          "row": {
+            "all_coordinate_kernel_depth": 0,
+            "all_coordinate_kernel_kind": "universal",
+            "all_coordinate_kernel_seed_count": 4,
+            "coretraction": "equality",
+            "has_direct_witness": false,
+            "has_product_witness": false,
+            "output_kernel_depth": 0,
+            "output_kernel_kind": "universal",
+            "output_kernel_seed_count": 4,
+            "retraction": "equality",
+            "tags": [
+              "involutive"
+            ]
+          }
+        },
+        "retraction=equality|coretraction=universal|output=universal|depth=0|tags=involutive|product=False|direct=True": {
+          "interval_table": [
+            {
+              "colors": [
+                "0",
+                "0"
+              ],
+              "input": [
+                "0",
+                "0"
+              ],
+              "output": [
+                "0",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "0"
+              ],
+              "input": [
+                "0",
+                "1"
+              ],
+              "output": [
+                "0",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "0"
+              ],
+              "input": [
+                "1",
+                "0"
+              ],
+              "output": [
+                "1",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "0"
+              ],
+              "input": [
+                "1",
+                "1"
+              ],
+              "output": [
+                "1",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "1"
+              ],
+              "input": [
+                "0",
+                "0"
+              ],
+              "output": [
+                "0",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "1"
+              ],
+              "input": [
+                "0",
+                "1"
+              ],
+              "output": [
+                "0",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "1"
+              ],
+              "input": [
+                "1",
+                "0"
+              ],
+              "output": [
+                "1",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "1"
+              ],
+              "input": [
+                "1",
+                "1"
+              ],
+              "output": [
+                "1",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "0"
+              ],
+              "input": [
+                "0",
+                "0"
+              ],
+              "output": [
+                "0",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "0"
+              ],
+              "input": [
+                "0",
+                "1"
+              ],
+              "output": [
+                "0",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "0"
+              ],
+              "input": [
+                "1",
+                "0"
+              ],
+              "output": [
+                "1",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "0"
+              ],
+              "input": [
+                "1",
+                "1"
+              ],
+              "output": [
+                "1",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "1"
+              ],
+              "input": [
+                "0",
+                "0"
+              ],
+              "output": [
+                "0",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "1"
+              ],
+              "input": [
+                "0",
+                "1"
+              ],
+              "output": [
+                "0",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "1"
+              ],
+              "input": [
+                "1",
+                "0"
+              ],
+              "output": [
+                "1",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "1"
+              ],
+              "input": [
+                "1",
+                "1"
+              ],
+              "output": [
+                "1",
+                "1"
+              ]
+            }
+          ],
+          "output_kernel_family": {
+            "0": [
+              [
+                "0",
+                "1"
+              ]
+            ],
+            "1": [
+              [
+                "0",
+                "1"
+              ]
+            ]
+          },
+          "row": {
+            "all_coordinate_kernel_depth": 0,
+            "all_coordinate_kernel_kind": "universal",
+            "all_coordinate_kernel_seed_count": 4,
+            "coretraction": "universal",
+            "has_direct_witness": true,
+            "has_product_witness": false,
+            "output_kernel_depth": 0,
+            "output_kernel_kind": "universal",
+            "output_kernel_seed_count": 4,
+            "retraction": "equality",
+            "tags": [
+              "involutive"
+            ]
+          }
+        },
+        "retraction=universal|coretraction=equality|output=equality|depth=0|tags=involutive+left_nondegenerate+right_nondegenerate+nondegenerate|product=True|direct=False": {
+          "interval_table": [
+            {
+              "colors": [
+                "0",
+                "0"
+              ],
+              "input": [
+                "0",
+                "0"
+              ],
+              "output": [
+                "0",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "0"
+              ],
+              "input": [
+                "0",
+                "1"
+              ],
+              "output": [
+                "1",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "0"
+              ],
+              "input": [
+                "1",
+                "0"
+              ],
+              "output": [
+                "0",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "0"
+              ],
+              "input": [
+                "1",
+                "1"
+              ],
+              "output": [
+                "1",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "1"
+              ],
+              "input": [
+                "0",
+                "0"
+              ],
+              "output": [
+                "1",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "1"
+              ],
+              "input": [
+                "0",
+                "1"
+              ],
+              "output": [
+                "0",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "1"
+              ],
+              "input": [
+                "1",
+                "0"
+              ],
+              "output": [
+                "1",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "1"
+              ],
+              "input": [
+                "1",
+                "1"
+              ],
+              "output": [
+                "0",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "0"
+              ],
+              "input": [
+                "0",
+                "0"
+              ],
+              "output": [
+                "1",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "0"
+              ],
+              "input": [
+                "0",
+                "1"
+              ],
+              "output": [
+                "0",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "0"
+              ],
+              "input": [
+                "1",
+                "0"
+              ],
+              "output": [
+                "1",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "0"
+              ],
+              "input": [
+                "1",
+                "1"
+              ],
+              "output": [
+                "0",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "1"
+              ],
+              "input": [
+                "0",
+                "0"
+              ],
+              "output": [
+                "0",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "1"
+              ],
+              "input": [
+                "0",
+                "1"
+              ],
+              "output": [
+                "1",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "1"
+              ],
+              "input": [
+                "1",
+                "0"
+              ],
+              "output": [
+                "0",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "1"
+              ],
+              "input": [
+                "1",
+                "1"
+              ],
+              "output": [
+                "1",
+                "1"
+              ]
+            }
+          ],
+          "output_kernel_family": {
+            "0": [
+              [
+                "0"
+              ],
+              [
+                "1"
+              ]
+            ],
+            "1": [
+              [
+                "0"
+              ],
+              [
+                "1"
+              ]
+            ]
+          },
+          "row": {
+            "all_coordinate_kernel_depth": 0,
+            "all_coordinate_kernel_kind": "universal",
+            "all_coordinate_kernel_seed_count": 4,
+            "coretraction": "equality",
+            "has_direct_witness": false,
+            "has_product_witness": true,
+            "output_kernel_depth": 0,
+            "output_kernel_kind": "equality",
+            "output_kernel_seed_count": 0,
+            "retraction": "universal",
+            "tags": [
+              "involutive",
+              "left_nondegenerate",
+              "right_nondegenerate",
+              "nondegenerate"
+            ]
+          }
+        },
+        "retraction=universal|coretraction=equality|output=equality|depth=0|tags=involutive+permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate|product=True|direct=False": {
+          "interval_table": [
+            {
+              "colors": [
+                "0",
+                "0"
+              ],
+              "input": [
+                "0",
+                "0"
+              ],
+              "output": [
+                "0",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "0"
+              ],
+              "input": [
+                "0",
+                "1"
+              ],
+              "output": [
+                "1",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "0"
+              ],
+              "input": [
+                "1",
+                "0"
+              ],
+              "output": [
+                "0",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "0"
+              ],
+              "input": [
+                "1",
+                "1"
+              ],
+              "output": [
+                "1",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "1"
+              ],
+              "input": [
+                "0",
+                "0"
+              ],
+              "output": [
+                "0",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "1"
+              ],
+              "input": [
+                "0",
+                "1"
+              ],
+              "output": [
+                "1",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "1"
+              ],
+              "input": [
+                "1",
+                "0"
+              ],
+              "output": [
+                "0",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "1"
+              ],
+              "input": [
+                "1",
+                "1"
+              ],
+              "output": [
+                "1",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "0"
+              ],
+              "input": [
+                "0",
+                "0"
+              ],
+              "output": [
+                "0",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "0"
+              ],
+              "input": [
+                "0",
+                "1"
+              ],
+              "output": [
+                "1",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "0"
+              ],
+              "input": [
+                "1",
+                "0"
+              ],
+              "output": [
+                "0",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "0"
+              ],
+              "input": [
+                "1",
+                "1"
+              ],
+              "output": [
+                "1",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "1"
+              ],
+              "input": [
+                "0",
+                "0"
+              ],
+              "output": [
+                "0",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "1"
+              ],
+              "input": [
+                "0",
+                "1"
+              ],
+              "output": [
+                "1",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "1"
+              ],
+              "input": [
+                "1",
+                "0"
+              ],
+              "output": [
+                "0",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "1"
+              ],
+              "input": [
+                "1",
+                "1"
+              ],
+              "output": [
+                "1",
+                "1"
+              ]
+            }
+          ],
+          "output_kernel_family": {
+            "0": [
+              [
+                "0"
+              ],
+              [
+                "1"
+              ]
+            ],
+            "1": [
+              [
+                "0"
+              ],
+              [
+                "1"
+              ]
+            ]
+          },
+          "row": {
+            "all_coordinate_kernel_depth": 0,
+            "all_coordinate_kernel_kind": "universal",
+            "all_coordinate_kernel_seed_count": 4,
+            "coretraction": "equality",
+            "has_direct_witness": false,
+            "has_product_witness": true,
+            "output_kernel_depth": 0,
+            "output_kernel_kind": "equality",
+            "output_kernel_seed_count": 0,
+            "retraction": "universal",
+            "tags": [
+              "involutive",
+              "permutation_form",
+              "left_nondegenerate",
+              "right_nondegenerate",
+              "nondegenerate"
+            ]
+          }
+        },
+        "retraction=universal|coretraction=equality|output=equality|depth=0|tags=left_nondegenerate+right_nondegenerate+nondegenerate|product=True|direct=False": {
+          "interval_table": [
+            {
+              "colors": [
+                "0",
+                "0"
+              ],
+              "input": [
+                "0",
+                "0"
+              ],
+              "output": [
+                "0",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "0"
+              ],
+              "input": [
+                "0",
+                "1"
+              ],
+              "output": [
+                "1",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "0"
+              ],
+              "input": [
+                "1",
+                "0"
+              ],
+              "output": [
+                "0",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "0"
+              ],
+              "input": [
+                "1",
+                "1"
+              ],
+              "output": [
+                "1",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "1"
+              ],
+              "input": [
+                "0",
+                "0"
+              ],
+              "output": [
+                "0",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "1"
+              ],
+              "input": [
+                "0",
+                "1"
+              ],
+              "output": [
+                "1",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "1"
+              ],
+              "input": [
+                "1",
+                "0"
+              ],
+              "output": [
+                "0",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "1"
+              ],
+              "input": [
+                "1",
+                "1"
+              ],
+              "output": [
+                "1",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "0"
+              ],
+              "input": [
+                "0",
+                "0"
+              ],
+              "output": [
+                "1",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "0"
+              ],
+              "input": [
+                "0",
+                "1"
+              ],
+              "output": [
+                "0",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "0"
+              ],
+              "input": [
+                "1",
+                "0"
+              ],
+              "output": [
+                "1",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "0"
+              ],
+              "input": [
+                "1",
+                "1"
+              ],
+              "output": [
+                "0",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "1"
+              ],
+              "input": [
+                "0",
+                "0"
+              ],
+              "output": [
+                "1",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "1"
+              ],
+              "input": [
+                "0",
+                "1"
+              ],
+              "output": [
+                "0",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "1"
+              ],
+              "input": [
+                "1",
+                "0"
+              ],
+              "output": [
+                "1",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "1"
+              ],
+              "input": [
+                "1",
+                "1"
+              ],
+              "output": [
+                "0",
+                "0"
+              ]
+            }
+          ],
+          "output_kernel_family": {
+            "0": [
+              [
+                "0"
+              ],
+              [
+                "1"
+              ]
+            ],
+            "1": [
+              [
+                "0"
+              ],
+              [
+                "1"
+              ]
+            ]
+          },
+          "row": {
+            "all_coordinate_kernel_depth": 0,
+            "all_coordinate_kernel_kind": "universal",
+            "all_coordinate_kernel_seed_count": 4,
+            "coretraction": "equality",
+            "has_direct_witness": false,
+            "has_product_witness": true,
+            "output_kernel_depth": 0,
+            "output_kernel_kind": "equality",
+            "output_kernel_seed_count": 0,
+            "retraction": "universal",
+            "tags": [
+              "left_nondegenerate",
+              "right_nondegenerate",
+              "nondegenerate"
+            ]
+          }
+        },
+        "retraction=universal|coretraction=equality|output=equality|depth=0|tags=permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate|product=True|direct=False": {
+          "interval_table": [
+            {
+              "colors": [
+                "0",
+                "0"
+              ],
+              "input": [
+                "0",
+                "0"
+              ],
+              "output": [
+                "0",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "0"
+              ],
+              "input": [
+                "0",
+                "1"
+              ],
+              "output": [
+                "1",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "0"
+              ],
+              "input": [
+                "1",
+                "0"
+              ],
+              "output": [
+                "0",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "0"
+              ],
+              "input": [
+                "1",
+                "1"
+              ],
+              "output": [
+                "1",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "1"
+              ],
+              "input": [
+                "0",
+                "0"
+              ],
+              "output": [
+                "1",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "1"
+              ],
+              "input": [
+                "0",
+                "1"
+              ],
+              "output": [
+                "0",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "1"
+              ],
+              "input": [
+                "1",
+                "0"
+              ],
+              "output": [
+                "1",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "0",
+                "1"
+              ],
+              "input": [
+                "1",
+                "1"
+              ],
+              "output": [
+                "0",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "0"
+              ],
+              "input": [
+                "0",
+                "0"
+              ],
+              "output": [
+                "0",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "0"
+              ],
+              "input": [
+                "0",
+                "1"
+              ],
+              "output": [
+                "1",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "0"
+              ],
+              "input": [
+                "1",
+                "0"
+              ],
+              "output": [
+                "0",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "0"
+              ],
+              "input": [
+                "1",
+                "1"
+              ],
+              "output": [
+                "1",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "1"
+              ],
+              "input": [
+                "0",
+                "0"
+              ],
+              "output": [
+                "1",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "1"
+              ],
+              "input": [
+                "0",
+                "1"
+              ],
+              "output": [
+                "0",
+                "1"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "1"
+              ],
+              "input": [
+                "1",
+                "0"
+              ],
+              "output": [
+                "1",
+                "0"
+              ]
+            },
+            {
+              "colors": [
+                "1",
+                "1"
+              ],
+              "input": [
+                "1",
+                "1"
+              ],
+              "output": [
+                "0",
+                "0"
+              ]
+            }
+          ],
+          "output_kernel_family": {
+            "0": [
+              [
+                "0"
+              ],
+              [
+                "1"
+              ]
+            ],
+            "1": [
+              [
+                "0"
+              ],
+              [
+                "1"
+              ]
+            ]
+          },
+          "row": {
+            "all_coordinate_kernel_depth": 0,
+            "all_coordinate_kernel_kind": "universal",
+            "all_coordinate_kernel_seed_count": 4,
+            "coretraction": "equality",
+            "has_direct_witness": false,
+            "has_product_witness": true,
+            "output_kernel_depth": 0,
+            "output_kernel_kind": "equality",
+            "output_kernel_seed_count": 0,
+            "retraction": "universal",
+            "tags": [
+              "permutation_form",
+              "left_nondegenerate",
+              "right_nondegenerate",
+              "nondegenerate"
+            ]
+          }
+        }
+      },
+      "local_minimal_count": 56,
+      "output_kernel_counts": {
+        "equality": 32,
+        "universal": 24
+      },
+      "output_universal_depth_counts": {
+        "0": 24
+      },
+      "retraction_coretraction_counts": {
+        "retraction=equality|coretraction=equality": 20,
+        "retraction=equality|coretraction=universal": 4,
+        "retraction=universal|coretraction=equality": 32
+      },
+      "semisplit_leak_count": 0,
+      "unknown_universal_output_example_count": 0,
+      "unknown_universal_output_examples": []
+    }
+  },
+  "totals": {
+    "base_count": 5,
+    "checked_table_count": 1658880,
+    "colored_ybe_count": 629,
+    "local_minimal_count": 120,
+    "output_kernel_counts": {
+      "equality": 80,
+      "universal": 40
+    },
+    "output_universal_depth_counts": {
+      "0": 40
+    },
+    "semisplit_leak_count": 0,
+    "unknown_universal_output_example_count": 0
+  }
+}

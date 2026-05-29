@@ -1,0 +1,502 @@
+{
+  "bounded_local_minimal_scans": {
+    "size_2_exhaustive_n3_len4": {
+      "actual_kernel_blind_interval_count": 1,
+      "first_symmetric_kernel_blind_intervals": [],
+      "first_symmetric_kernel_collision_intervals": [],
+      "local_minimal_cover_count": 5,
+      "max_word_length": 4,
+      "n": 3,
+      "size": 2,
+      "symmetric_kernel_blind_interval_count": 0,
+      "symmetric_kernel_collision_interval_count": 0,
+      "word_count": 161
+    },
+    "size_3_exhaustive_n3_len4": {
+      "actual_kernel_blind_interval_count": 15,
+      "first_symmetric_kernel_blind_intervals": [],
+      "first_symmetric_kernel_collision_intervals": [],
+      "local_minimal_cover_count": 134,
+      "max_word_length": 4,
+      "n": 3,
+      "size": 3,
+      "symmetric_kernel_blind_interval_count": 0,
+      "symmetric_kernel_collision_interval_count": 0,
+      "word_count": 161
+    }
+  },
+  "bounded_word_scans": {
+    "size_2_exhaustive_n3_len4": {
+      "actual_kernel_blind_solution_count": 1,
+      "first_symmetric_kernel_blind_solutions": [],
+      "first_symmetric_kernel_collision_solutions": [],
+      "max_word_length": 4,
+      "n": 3,
+      "size": 2,
+      "symmetric_kernel_blind_solution_count": 0,
+      "symmetric_kernel_collision_solution_count": 0,
+      "word_count": 161,
+      "ybe_count": 5
+    },
+    "size_3_exhaustive_n3_len4": {
+      "actual_kernel_blind_solution_count": 15,
+      "first_symmetric_kernel_blind_solutions": [],
+      "first_symmetric_kernel_collision_solutions": [],
+      "max_word_length": 4,
+      "n": 3,
+      "size": 3,
+      "symmetric_kernel_blind_solution_count": 0,
+      "symmetric_kernel_collision_solution_count": 0,
+      "word_count": 161,
+      "ybe_count": 73
+    }
+  },
+  "commutator_law_braid": {
+    "n": 3,
+    "word": [
+      2,
+      1,
+      1,
+      -2,
+      2,
+      2,
+      2,
+      -1,
+      -1,
+      -2,
+      -2,
+      -2
+    ]
+  },
+  "exact_image_examples": {
+    "size3_affine_commutator_candidate": {
+      "n2": {
+        "base_kernel_detector_state_count": 12,
+        "base_kernel_residual_state_count": 3,
+        "detector_state_count": 12,
+        "has_collision_failure": false,
+        "has_kernel_failure": false,
+        "proves_fixed_n_implication": true,
+        "residual_state_count": 3,
+        "truncated": false,
+        "visited_state_count": 12
+      },
+      "n3_cap_1000": {
+        "base_kernel_detector_state_count": 1001,
+        "base_kernel_residual_state_count": 24,
+        "detector_state_count": 1001,
+        "has_collision_failure": false,
+        "has_kernel_failure": false,
+        "proves_fixed_n_implication": false,
+        "residual_state_count": 24,
+        "truncated": true,
+        "visited_state_count": 1001
+      }
+    }
+  },
+  "examples": {
+    "size3_affine_commutator_candidate": {
+      "actual_kernel_group_orders": [
+        3
+      ],
+      "actual_kernel_groups_blind": true,
+      "branch_tags": [
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate",
+        "affine_cyclic"
+      ],
+      "commutator_moves": true,
+      "element_count": 3,
+      "is_involutive_solution": false,
+      "is_rack_type": false,
+      "moved_tuple": {
+        "image": [
+          "1",
+          "1",
+          "2"
+        ],
+        "start": [
+          "0",
+          "0",
+          "1"
+        ]
+      },
+      "symmetric_kernel_group_orders": [
+        6
+      ],
+      "symmetric_kernel_groups_blind": false
+    }
+  },
+  "local_minimal_scans": {
+    "size_2_exhaustive": {
+      "actual_kernel_blind_mover_interval_count": 0,
+      "commutator_mover_interval_count": 0,
+      "first_symmetric_kernel_blind_mover_intervals": [],
+      "local_minimal_cover_count": 5,
+      "size": 2,
+      "symmetric_kernel_blind_mover_interval_count": 0
+    },
+    "size_3_exhaustive": {
+      "actual_kernel_blind_mover_interval_count": 9,
+      "commutator_mover_interval_count": 12,
+      "first_symmetric_kernel_blind_mover_intervals": [],
+      "local_minimal_cover_count": 134,
+      "size": 3,
+      "symmetric_kernel_blind_mover_interval_count": 0
+    }
+  },
+  "small_scans": {
+    "size_2_exhaustive": {
+      "actual_kernel_blind_mover_count": 0,
+      "commutator_mover_count": 0,
+      "first_actual_kernel_blind_movers": [],
+      "first_symmetric_kernel_blind_movers": [],
+      "size": 2,
+      "symmetric_kernel_blind_mover_count": 0,
+      "symmetric_kernel_visible_mover_count": 0,
+      "ybe_count": 5
+    },
+    "size_3_exhaustive": {
+      "actual_kernel_blind_mover_count": 9,
+      "commutator_mover_count": 12,
+      "first_actual_kernel_blind_movers": [
+        {
+          "actual_kernel_group_orders": [
+            3
+          ],
+          "branch_tags": [
+            "left_nondegenerate",
+            "right_nondegenerate",
+            "nondegenerate",
+            "affine_cyclic"
+          ],
+          "is_involutive_solution": false,
+          "is_rack_type": false,
+          "moved_tuple": {
+            "image": [
+              "1",
+              "1",
+              "2"
+            ],
+            "start": [
+              "0",
+              "0",
+              "1"
+            ]
+          },
+          "symmetric_kernel_group_orders": [
+            6
+          ],
+          "table_values": [
+            [
+              0,
+              0
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              2,
+              0
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              0,
+              1
+            ]
+          ]
+        },
+        {
+          "actual_kernel_group_orders": [
+            1
+          ],
+          "branch_tags": [
+            "left_nondegenerate",
+            "right_nondegenerate",
+            "nondegenerate",
+            "affine_cyclic"
+          ],
+          "is_involutive_solution": false,
+          "is_rack_type": false,
+          "moved_tuple": {
+            "image": [
+              "1",
+              "0",
+              "0"
+            ],
+            "start": [
+              "0",
+              "0",
+              "1"
+            ]
+          },
+          "symmetric_kernel_group_orders": [
+            6
+          ],
+          "table_values": [
+            [
+              0,
+              0
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              2,
+              0
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              2,
+              2
+            ]
+          ]
+        },
+        {
+          "actual_kernel_group_orders": [
+            2
+          ],
+          "branch_tags": [
+            "left_nondegenerate",
+            "right_nondegenerate",
+            "nondegenerate",
+            "affine_cyclic"
+          ],
+          "is_involutive_solution": false,
+          "is_rack_type": false,
+          "moved_tuple": {
+            "image": [
+              "1",
+              "0",
+              "0"
+            ],
+            "start": [
+              "0",
+              "0",
+              "1"
+            ]
+          },
+          "symmetric_kernel_group_orders": [
+            6
+          ],
+          "table_values": [
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              2,
+              0
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              1,
+              0
+            ]
+          ]
+        },
+        {
+          "actual_kernel_group_orders": [
+            3
+          ],
+          "branch_tags": [
+            "left_nondegenerate",
+            "right_nondegenerate",
+            "nondegenerate",
+            "affine_cyclic"
+          ],
+          "is_involutive_solution": false,
+          "is_rack_type": false,
+          "moved_tuple": {
+            "image": [
+              "0",
+              "1",
+              "1"
+            ],
+            "start": [
+              "0",
+              "0",
+              "0"
+            ]
+          },
+          "symmetric_kernel_group_orders": [
+            6
+          ],
+          "table_values": [
+            [
+              1,
+              1
+            ],
+            [
+              2,
+              0
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              0,
+              0
+            ]
+          ]
+        },
+        {
+          "actual_kernel_group_orders": [
+            2
+          ],
+          "branch_tags": [
+            "left_nondegenerate",
+            "right_nondegenerate",
+            "nondegenerate",
+            "affine_cyclic"
+          ],
+          "is_involutive_solution": false,
+          "is_rack_type": false,
+          "moved_tuple": {
+            "image": [
+              "1",
+              "2",
+              "0"
+            ],
+            "start": [
+              "0",
+              "0",
+              "0"
+            ]
+          },
+          "symmetric_kernel_group_orders": [
+            6
+          ],
+          "table_values": [
+            [
+              1,
+              2
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              2,
+              0
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              2
+            ]
+          ]
+        }
+      ],
+      "first_symmetric_kernel_blind_movers": [],
+      "size": 3,
+      "symmetric_kernel_blind_mover_count": 0,
+      "symmetric_kernel_visible_mover_count": 12,
+      "ybe_count": 73
+    }
+  }
+}

@@ -1,0 +1,139 @@
+{
+  "size_2_exhaustive": {
+    "checked": 24,
+    "exhaustive": true,
+    "max_checked": null,
+    "nonrack_commutator_law_mover_count": 0,
+    "nonrack_commutator_law_movers": [],
+    "nonrack_count": 3,
+    "rack_type_count": 2,
+    "size": 2,
+    "ybe_count": 5
+  },
+  "size_3_prefix_50000": {
+    "checked": 50000,
+    "exhaustive": false,
+    "max_checked": 50000,
+    "nonrack_commutator_law_mover_count": 3,
+    "nonrack_commutator_law_movers": [
+      [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          2
+        ]
+      ],
+      [
+        [
+          0,
+          0
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          1,
+          0
+        ]
+      ]
+    ],
+    "nonrack_count": 26,
+    "rack_type_count": 7,
+    "size": 3,
+    "ybe_count": 33
+  }
+}

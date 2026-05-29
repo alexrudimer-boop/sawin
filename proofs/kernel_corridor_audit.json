@@ -1,0 +1,1985 @@
+{
+  "size_2_exhaustive": {
+    "all_coordinate_kind_counts": {
+      "universal": 5
+    },
+    "bifree_output_kind_counts": {},
+    "bifree_universal_depth_counts": {},
+    "corridor_rows": [
+      {
+        "all_coordinate_depth": 0,
+        "all_coordinate_kind": "universal",
+        "all_coordinate_seed_count": 2,
+        "coretraction": "universal",
+        "count": 1,
+        "has_direct_witness": true,
+        "has_product_witness": false,
+        "output_depth": 0,
+        "output_kind": "universal",
+        "output_seed_count": 2,
+        "retraction": "equality",
+        "tags": [
+          "involutive",
+          "identity_table"
+        ]
+      },
+      {
+        "all_coordinate_depth": 0,
+        "all_coordinate_kind": "universal",
+        "all_coordinate_seed_count": 2,
+        "coretraction": "equality",
+        "count": 1,
+        "has_direct_witness": false,
+        "has_product_witness": true,
+        "output_depth": 0,
+        "output_kind": "equality",
+        "output_seed_count": 0,
+        "retraction": "universal",
+        "tags": [
+          "involutive",
+          "permutation_form",
+          "left_nondegenerate",
+          "right_nondegenerate",
+          "nondegenerate"
+        ]
+      },
+      {
+        "all_coordinate_depth": 0,
+        "all_coordinate_kind": "universal",
+        "all_coordinate_seed_count": 2,
+        "coretraction": "equality",
+        "count": 1,
+        "has_direct_witness": false,
+        "has_product_witness": true,
+        "output_depth": 0,
+        "output_kind": "equality",
+        "output_seed_count": 0,
+        "retraction": "universal",
+        "tags": [
+          "permutation_form",
+          "left_nondegenerate",
+          "right_nondegenerate",
+          "nondegenerate"
+        ]
+      },
+      {
+        "all_coordinate_depth": 0,
+        "all_coordinate_kind": "universal",
+        "all_coordinate_seed_count": 2,
+        "coretraction": "equality",
+        "count": 1,
+        "has_direct_witness": false,
+        "has_product_witness": true,
+        "output_depth": 0,
+        "output_kind": "equality",
+        "output_seed_count": 0,
+        "retraction": "universal",
+        "tags": [
+          "rack_type",
+          "involutive",
+          "permutation_form",
+          "left_nondegenerate",
+          "right_nondegenerate",
+          "nondegenerate"
+        ]
+      },
+      {
+        "all_coordinate_depth": 0,
+        "all_coordinate_kind": "universal",
+        "all_coordinate_seed_count": 2,
+        "coretraction": "equality",
+        "count": 1,
+        "has_direct_witness": false,
+        "has_product_witness": true,
+        "output_depth": 0,
+        "output_kind": "equality",
+        "output_seed_count": 0,
+        "retraction": "universal",
+        "tags": [
+          "rack_type",
+          "permutation_form",
+          "left_nondegenerate",
+          "right_nondegenerate",
+          "nondegenerate"
+        ]
+      }
+    ],
+    "examples": {
+      "retraction=equality|coretraction=universal|output=universal|depth=0|tags=involutive+identity_table": {
+        "lower_partition": [
+          [
+            "0"
+          ],
+          [
+            "1"
+          ]
+        ],
+        "original_table_values": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            1
+          ]
+        ],
+        "output_family": {
+          "frozenset({0, 1})": [
+            [
+              "frozenset({0})",
+              "frozenset({1})"
+            ]
+          ]
+        },
+        "row": {
+          "all_coordinate_depth": 0,
+          "all_coordinate_kind": "universal",
+          "all_coordinate_seed_count": 2,
+          "coretraction": "universal",
+          "has_direct_witness": true,
+          "has_product_witness": false,
+          "output_depth": 0,
+          "output_diameters": [
+            [
+              "frozenset({0, 1})",
+              1
+            ]
+          ],
+          "output_edge_counts": [
+            [
+              "frozenset({0, 1})",
+              1
+            ]
+          ],
+          "output_kind": "universal",
+          "output_seed_count": 2,
+          "retraction": "equality",
+          "tags": [
+            "involutive",
+            "identity_table"
+          ]
+        },
+        "solution_index": 0,
+        "upper_partition": [
+          [
+            "0",
+            "1"
+          ]
+        ]
+      },
+      "retraction=universal|coretraction=equality|output=equality|depth=0|tags=involutive+permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate": {
+        "lower_partition": [
+          [
+            "0"
+          ],
+          [
+            "1"
+          ]
+        ],
+        "original_table_values": [
+          [
+            1,
+            1
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ],
+        "output_family": {
+          "frozenset({0, 1})": [
+            [
+              "frozenset({0})"
+            ],
+            [
+              "frozenset({1})"
+            ]
+          ]
+        },
+        "row": {
+          "all_coordinate_depth": 0,
+          "all_coordinate_kind": "universal",
+          "all_coordinate_seed_count": 2,
+          "coretraction": "equality",
+          "has_direct_witness": false,
+          "has_product_witness": true,
+          "output_depth": 0,
+          "output_diameters": [
+            [
+              "frozenset({0, 1})",
+              0
+            ]
+          ],
+          "output_edge_counts": [
+            [
+              "frozenset({0, 1})",
+              0
+            ]
+          ],
+          "output_kind": "equality",
+          "output_seed_count": 0,
+          "retraction": "universal",
+          "tags": [
+            "involutive",
+            "permutation_form",
+            "left_nondegenerate",
+            "right_nondegenerate",
+            "nondegenerate"
+          ]
+        },
+        "solution_index": 4,
+        "upper_partition": [
+          [
+            "0",
+            "1"
+          ]
+        ]
+      },
+      "retraction=universal|coretraction=equality|output=equality|depth=0|tags=permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate": {
+        "lower_partition": [
+          [
+            "0"
+          ],
+          [
+            "1"
+          ]
+        ],
+        "original_table_values": [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ]
+        ],
+        "output_family": {
+          "frozenset({0, 1})": [
+            [
+              "frozenset({0})"
+            ],
+            [
+              "frozenset({1})"
+            ]
+          ]
+        },
+        "row": {
+          "all_coordinate_depth": 0,
+          "all_coordinate_kind": "universal",
+          "all_coordinate_seed_count": 2,
+          "coretraction": "equality",
+          "has_direct_witness": false,
+          "has_product_witness": true,
+          "output_depth": 0,
+          "output_diameters": [
+            [
+              "frozenset({0, 1})",
+              0
+            ]
+          ],
+          "output_edge_counts": [
+            [
+              "frozenset({0, 1})",
+              0
+            ]
+          ],
+          "output_kind": "equality",
+          "output_seed_count": 0,
+          "retraction": "universal",
+          "tags": [
+            "permutation_form",
+            "left_nondegenerate",
+            "right_nondegenerate",
+            "nondegenerate"
+          ]
+        },
+        "solution_index": 2,
+        "upper_partition": [
+          [
+            "0",
+            "1"
+          ]
+        ]
+      },
+      "retraction=universal|coretraction=equality|output=equality|depth=0|tags=rack_type+involutive+permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate": {
+        "lower_partition": [
+          [
+            "0"
+          ],
+          [
+            "1"
+          ]
+        ],
+        "original_table_values": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            1
+          ]
+        ],
+        "output_family": {
+          "frozenset({0, 1})": [
+            [
+              "frozenset({0})"
+            ],
+            [
+              "frozenset({1})"
+            ]
+          ]
+        },
+        "row": {
+          "all_coordinate_depth": 0,
+          "all_coordinate_kind": "universal",
+          "all_coordinate_seed_count": 2,
+          "coretraction": "equality",
+          "has_direct_witness": false,
+          "has_product_witness": true,
+          "output_depth": 0,
+          "output_diameters": [
+            [
+              "frozenset({0, 1})",
+              0
+            ]
+          ],
+          "output_edge_counts": [
+            [
+              "frozenset({0, 1})",
+              0
+            ]
+          ],
+          "output_kind": "equality",
+          "output_seed_count": 0,
+          "retraction": "universal",
+          "tags": [
+            "rack_type",
+            "involutive",
+            "permutation_form",
+            "left_nondegenerate",
+            "right_nondegenerate",
+            "nondegenerate"
+          ]
+        },
+        "solution_index": 1,
+        "upper_partition": [
+          [
+            "0",
+            "1"
+          ]
+        ]
+      },
+      "retraction=universal|coretraction=equality|output=equality|depth=0|tags=rack_type+permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate": {
+        "lower_partition": [
+          [
+            "0"
+          ],
+          [
+            "1"
+          ]
+        ],
+        "original_table_values": [
+          [
+            1,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "output_family": {
+          "frozenset({0, 1})": [
+            [
+              "frozenset({0})"
+            ],
+            [
+              "frozenset({1})"
+            ]
+          ]
+        },
+        "row": {
+          "all_coordinate_depth": 0,
+          "all_coordinate_kind": "universal",
+          "all_coordinate_seed_count": 2,
+          "coretraction": "equality",
+          "has_direct_witness": false,
+          "has_product_witness": true,
+          "output_depth": 0,
+          "output_diameters": [
+            [
+              "frozenset({0, 1})",
+              0
+            ]
+          ],
+          "output_edge_counts": [
+            [
+              "frozenset({0, 1})",
+              0
+            ]
+          ],
+          "output_kind": "equality",
+          "output_seed_count": 0,
+          "retraction": "universal",
+          "tags": [
+            "rack_type",
+            "permutation_form",
+            "left_nondegenerate",
+            "right_nondegenerate",
+            "nondegenerate"
+          ]
+        },
+        "solution_index": 3,
+        "upper_partition": [
+          [
+            "0",
+            "1"
+          ]
+        ]
+      }
+    },
+    "local_minimal_cover_count": 5,
+    "output_kind_counts": {
+      "equality": 4,
+      "universal": 1
+    },
+    "output_universal_depth_counts": {
+      "0": 1
+    },
+    "product_side_counts": {
+      "retraction=equality|coretraction=universal|product=False|direct=True": 1,
+      "retraction=universal|coretraction=equality|product=True|direct=False": 4
+    },
+    "semisplit_leak_count": 0,
+    "semisplit_leaks": [],
+    "size": 2
+  },
+  "size_3_exhaustive": {
+    "all_coordinate_kind_counts": {
+      "universal": 134
+    },
+    "bifree_output_kind_counts": {
+      "equality": 12,
+      "universal": 6
+    },
+    "bifree_universal_depth_counts": {
+      "0": 6
+    },
+    "corridor_rows": [
+      {
+        "all_coordinate_depth": 0,
+        "all_coordinate_kind": "universal",
+        "all_coordinate_seed_count": 2,
+        "coretraction": "equality",
+        "count": 6,
+        "has_direct_witness": false,
+        "has_product_witness": false,
+        "output_depth": 0,
+        "output_kind": "universal",
+        "output_seed_count": 2,
+        "retraction": "equality",
+        "tags": [
+          "involutive"
+        ]
+      },
+      {
+        "all_coordinate_depth": 0,
+        "all_coordinate_kind": "universal",
+        "all_coordinate_seed_count": 6,
+        "coretraction": "equality",
+        "count": 11,
+        "has_direct_witness": false,
+        "has_product_witness": false,
+        "output_depth": 0,
+        "output_kind": "equality",
+        "output_seed_count": 0,
+        "retraction": "equality",
+        "tags": [
+          "left_nondegenerate",
+          "right_nondegenerate",
+          "nondegenerate"
+        ]
+      },
+      {
+        "all_coordinate_depth": 0,
+        "all_coordinate_kind": "universal",
+        "all_coordinate_seed_count": 6,
+        "coretraction": "equality",
+        "count": 1,
+        "has_direct_witness": false,
+        "has_product_witness": false,
+        "output_depth": 0,
+        "output_kind": "equality",
+        "output_seed_count": 0,
+        "retraction": "equality",
+        "tags": [
+          "rack_type",
+          "left_nondegenerate",
+          "right_nondegenerate",
+          "nondegenerate"
+        ]
+      },
+      {
+        "all_coordinate_depth": 0,
+        "all_coordinate_kind": "universal",
+        "all_coordinate_seed_count": 2,
+        "coretraction": "universal",
+        "count": 6,
+        "has_direct_witness": true,
+        "has_product_witness": false,
+        "output_depth": 0,
+        "output_kind": "universal",
+        "output_seed_count": 2,
+        "retraction": "equality",
+        "tags": [
+          "involutive",
+          "identity_table"
+        ]
+      },
+      {
+        "all_coordinate_depth": 0,
+        "all_coordinate_kind": "universal",
+        "all_coordinate_seed_count": 2,
+        "coretraction": "equality",
+        "count": 6,
+        "has_direct_witness": false,
+        "has_product_witness": true,
+        "output_depth": 0,
+        "output_kind": "equality",
+        "output_seed_count": 0,
+        "retraction": "universal",
+        "tags": [
+          "involutive",
+          "left_nondegenerate",
+          "right_nondegenerate",
+          "nondegenerate"
+        ]
+      },
+      {
+        "all_coordinate_depth": 0,
+        "all_coordinate_kind": "universal",
+        "all_coordinate_seed_count": 2,
+        "coretraction": "equality",
+        "count": 3,
+        "has_direct_witness": false,
+        "has_product_witness": true,
+        "output_depth": 0,
+        "output_kind": "equality",
+        "output_seed_count": 0,
+        "retraction": "universal",
+        "tags": [
+          "involutive",
+          "permutation_form",
+          "left_nondegenerate",
+          "right_nondegenerate",
+          "nondegenerate"
+        ]
+      },
+      {
+        "all_coordinate_depth": 0,
+        "all_coordinate_kind": "universal",
+        "all_coordinate_seed_count": 6,
+        "coretraction": "equality",
+        "count": 2,
+        "has_direct_witness": false,
+        "has_product_witness": true,
+        "output_depth": 0,
+        "output_kind": "equality",
+        "output_seed_count": 0,
+        "retraction": "universal",
+        "tags": [
+          "involutive",
+          "permutation_form",
+          "left_nondegenerate",
+          "right_nondegenerate",
+          "nondegenerate"
+        ]
+      },
+      {
+        "all_coordinate_depth": 0,
+        "all_coordinate_kind": "universal",
+        "all_coordinate_seed_count": 2,
+        "coretraction": "equality",
+        "count": 24,
+        "has_direct_witness": false,
+        "has_product_witness": true,
+        "output_depth": 0,
+        "output_kind": "equality",
+        "output_seed_count": 0,
+        "retraction": "universal",
+        "tags": [
+          "left_nondegenerate",
+          "right_nondegenerate",
+          "nondegenerate"
+        ]
+      },
+      {
+        "all_coordinate_depth": 0,
+        "all_coordinate_kind": "universal",
+        "all_coordinate_seed_count": 2,
+        "coretraction": "equality",
+        "count": 3,
+        "has_direct_witness": false,
+        "has_product_witness": true,
+        "output_depth": 0,
+        "output_kind": "equality",
+        "output_seed_count": 0,
+        "retraction": "universal",
+        "tags": [
+          "permutation_form",
+          "left_nondegenerate",
+          "right_nondegenerate",
+          "nondegenerate"
+        ]
+      },
+      {
+        "all_coordinate_depth": 0,
+        "all_coordinate_kind": "universal",
+        "all_coordinate_seed_count": 6,
+        "coretraction": "equality",
+        "count": 4,
+        "has_direct_witness": false,
+        "has_product_witness": true,
+        "output_depth": 0,
+        "output_kind": "equality",
+        "output_seed_count": 0,
+        "retraction": "universal",
+        "tags": [
+          "permutation_form",
+          "left_nondegenerate",
+          "right_nondegenerate",
+          "nondegenerate"
+        ]
+      },
+      {
+        "all_coordinate_depth": 0,
+        "all_coordinate_kind": "universal",
+        "all_coordinate_seed_count": 2,
+        "coretraction": "equality",
+        "count": 57,
+        "has_direct_witness": false,
+        "has_product_witness": true,
+        "output_depth": 0,
+        "output_kind": "equality",
+        "output_seed_count": 0,
+        "retraction": "universal",
+        "tags": [
+          "rack_type",
+          "involutive",
+          "permutation_form",
+          "left_nondegenerate",
+          "right_nondegenerate",
+          "nondegenerate"
+        ]
+      },
+      {
+        "all_coordinate_depth": 0,
+        "all_coordinate_kind": "universal",
+        "all_coordinate_seed_count": 2,
+        "coretraction": "equality",
+        "count": 6,
+        "has_direct_witness": false,
+        "has_product_witness": true,
+        "output_depth": 0,
+        "output_kind": "equality",
+        "output_seed_count": 0,
+        "retraction": "universal",
+        "tags": [
+          "rack_type",
+          "left_nondegenerate",
+          "right_nondegenerate",
+          "nondegenerate"
+        ]
+      },
+      {
+        "all_coordinate_depth": 0,
+        "all_coordinate_kind": "universal",
+        "all_coordinate_seed_count": 2,
+        "coretraction": "equality",
+        "count": 3,
+        "has_direct_witness": false,
+        "has_product_witness": true,
+        "output_depth": 0,
+        "output_kind": "equality",
+        "output_seed_count": 0,
+        "retraction": "universal",
+        "tags": [
+          "rack_type",
+          "permutation_form",
+          "left_nondegenerate",
+          "right_nondegenerate",
+          "nondegenerate"
+        ]
+      },
+      {
+        "all_coordinate_depth": 0,
+        "all_coordinate_kind": "universal",
+        "all_coordinate_seed_count": 6,
+        "coretraction": "equality",
+        "count": 2,
+        "has_direct_witness": false,
+        "has_product_witness": true,
+        "output_depth": 0,
+        "output_kind": "equality",
+        "output_seed_count": 0,
+        "retraction": "universal",
+        "tags": [
+          "rack_type",
+          "permutation_form",
+          "left_nondegenerate",
+          "right_nondegenerate",
+          "nondegenerate"
+        ]
+      }
+    ],
+    "examples": {
+      "retraction=equality|coretraction=equality|output=equality|depth=0|tags=left_nondegenerate+right_nondegenerate+nondegenerate": {
+        "lower_partition": [
+          [
+            "0"
+          ],
+          [
+            "1"
+          ],
+          [
+            "2"
+          ]
+        ],
+        "original_table_values": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "output_family": {
+          "frozenset({0, 1, 2})": [
+            [
+              "frozenset({0})"
+            ],
+            [
+              "frozenset({1})"
+            ],
+            [
+              "frozenset({2})"
+            ]
+          ]
+        },
+        "row": {
+          "all_coordinate_depth": 0,
+          "all_coordinate_kind": "universal",
+          "all_coordinate_seed_count": 6,
+          "coretraction": "equality",
+          "has_direct_witness": false,
+          "has_product_witness": false,
+          "output_depth": 0,
+          "output_diameters": [
+            [
+              "frozenset({0, 1, 2})",
+              0
+            ]
+          ],
+          "output_edge_counts": [
+            [
+              "frozenset({0, 1, 2})",
+              0
+            ]
+          ],
+          "output_kind": "equality",
+          "output_seed_count": 0,
+          "retraction": "equality",
+          "tags": [
+            "left_nondegenerate",
+            "right_nondegenerate",
+            "nondegenerate"
+          ]
+        },
+        "solution_index": 15,
+        "upper_partition": [
+          [
+            "0",
+            "1",
+            "2"
+          ]
+        ]
+      },
+      "retraction=equality|coretraction=equality|output=equality|depth=0|tags=rack_type+left_nondegenerate+right_nondegenerate+nondegenerate": {
+        "lower_partition": [
+          [
+            "0"
+          ],
+          [
+            "1"
+          ],
+          [
+            "2"
+          ]
+        ],
+        "original_table_values": [
+          [
+            0,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            2,
+            2
+          ]
+        ],
+        "output_family": {
+          "frozenset({0, 1, 2})": [
+            [
+              "frozenset({0})"
+            ],
+            [
+              "frozenset({1})"
+            ],
+            [
+              "frozenset({2})"
+            ]
+          ]
+        },
+        "row": {
+          "all_coordinate_depth": 0,
+          "all_coordinate_kind": "universal",
+          "all_coordinate_seed_count": 6,
+          "coretraction": "equality",
+          "has_direct_witness": false,
+          "has_product_witness": false,
+          "output_depth": 0,
+          "output_diameters": [
+            [
+              "frozenset({0, 1, 2})",
+              0
+            ]
+          ],
+          "output_edge_counts": [
+            [
+              "frozenset({0, 1, 2})",
+              0
+            ]
+          ],
+          "output_kind": "equality",
+          "output_seed_count": 0,
+          "retraction": "equality",
+          "tags": [
+            "rack_type",
+            "left_nondegenerate",
+            "right_nondegenerate",
+            "nondegenerate"
+          ]
+        },
+        "solution_index": 31,
+        "upper_partition": [
+          [
+            "0",
+            "1",
+            "2"
+          ]
+        ]
+      },
+      "retraction=equality|coretraction=equality|output=universal|depth=0|tags=involutive": {
+        "lower_partition": [
+          [
+            "0"
+          ],
+          [
+            "1"
+          ],
+          [
+            "2"
+          ]
+        ],
+        "original_table_values": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            2
+          ]
+        ],
+        "output_family": {
+          "frozenset({0, 1})": [
+            [
+              "frozenset({0})",
+              "frozenset({1})"
+            ]
+          ],
+          "frozenset({2})": [
+            [
+              "frozenset({2})"
+            ]
+          ]
+        },
+        "row": {
+          "all_coordinate_depth": 0,
+          "all_coordinate_kind": "universal",
+          "all_coordinate_seed_count": 2,
+          "coretraction": "equality",
+          "has_direct_witness": false,
+          "has_product_witness": false,
+          "output_depth": 0,
+          "output_diameters": [
+            [
+              "frozenset({2})",
+              0
+            ],
+            [
+              "frozenset({0, 1})",
+              1
+            ]
+          ],
+          "output_edge_counts": [
+            [
+              "frozenset({2})",
+              0
+            ],
+            [
+              "frozenset({0, 1})",
+              1
+            ]
+          ],
+          "output_kind": "universal",
+          "output_seed_count": 2,
+          "retraction": "equality",
+          "tags": [
+            "involutive"
+          ]
+        },
+        "solution_index": 1,
+        "upper_partition": [
+          [
+            "2"
+          ],
+          [
+            "0",
+            "1"
+          ]
+        ]
+      },
+      "retraction=equality|coretraction=universal|output=universal|depth=0|tags=involutive+identity_table": {
+        "lower_partition": [
+          [
+            "0"
+          ],
+          [
+            "1",
+            "2"
+          ]
+        ],
+        "original_table_values": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            2,
+            2
+          ]
+        ],
+        "output_family": {
+          "frozenset({0, 1, 2})": [
+            [
+              "frozenset({0})",
+              "frozenset({1, 2})"
+            ]
+          ]
+        },
+        "row": {
+          "all_coordinate_depth": 0,
+          "all_coordinate_kind": "universal",
+          "all_coordinate_seed_count": 2,
+          "coretraction": "universal",
+          "has_direct_witness": true,
+          "has_product_witness": false,
+          "output_depth": 0,
+          "output_diameters": [
+            [
+              "frozenset({0, 1, 2})",
+              1
+            ]
+          ],
+          "output_edge_counts": [
+            [
+              "frozenset({0, 1, 2})",
+              1
+            ]
+          ],
+          "output_kind": "universal",
+          "output_seed_count": 2,
+          "retraction": "equality",
+          "tags": [
+            "involutive",
+            "identity_table"
+          ]
+        },
+        "solution_index": 0,
+        "upper_partition": [
+          [
+            "0",
+            "1",
+            "2"
+          ]
+        ]
+      },
+      "retraction=universal|coretraction=equality|output=equality|depth=0|tags=involutive+left_nondegenerate+right_nondegenerate+nondegenerate": {
+        "lower_partition": [
+          [
+            "0"
+          ],
+          [
+            "1"
+          ],
+          [
+            "2"
+          ]
+        ],
+        "original_table_values": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            1,
+            1
+          ]
+        ],
+        "output_family": {
+          "frozenset({0})": [
+            [
+              "frozenset({0})"
+            ]
+          ],
+          "frozenset({1, 2})": [
+            [
+              "frozenset({1})"
+            ],
+            [
+              "frozenset({2})"
+            ]
+          ]
+        },
+        "row": {
+          "all_coordinate_depth": 0,
+          "all_coordinate_kind": "universal",
+          "all_coordinate_seed_count": 2,
+          "coretraction": "equality",
+          "has_direct_witness": false,
+          "has_product_witness": true,
+          "output_depth": 0,
+          "output_diameters": [
+            [
+              "frozenset({0})",
+              0
+            ],
+            [
+              "frozenset({1, 2})",
+              0
+            ]
+          ],
+          "output_edge_counts": [
+            [
+              "frozenset({0})",
+              0
+            ],
+            [
+              "frozenset({1, 2})",
+              0
+            ]
+          ],
+          "output_kind": "equality",
+          "output_seed_count": 0,
+          "retraction": "universal",
+          "tags": [
+            "involutive",
+            "left_nondegenerate",
+            "right_nondegenerate",
+            "nondegenerate"
+          ]
+        },
+        "solution_index": 9,
+        "upper_partition": [
+          [
+            "0"
+          ],
+          [
+            "1",
+            "2"
+          ]
+        ]
+      },
+      "retraction=universal|coretraction=equality|output=equality|depth=0|tags=involutive+permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate": {
+        "lower_partition": [
+          [
+            "0"
+          ],
+          [
+            "1"
+          ],
+          [
+            "2"
+          ]
+        ],
+        "original_table_values": [
+          [
+            0,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            1,
+            1
+          ]
+        ],
+        "output_family": {
+          "frozenset({0})": [
+            [
+              "frozenset({0})"
+            ]
+          ],
+          "frozenset({1, 2})": [
+            [
+              "frozenset({1})"
+            ],
+            [
+              "frozenset({2})"
+            ]
+          ]
+        },
+        "row": {
+          "all_coordinate_depth": 0,
+          "all_coordinate_kind": "universal",
+          "all_coordinate_seed_count": 2,
+          "coretraction": "equality",
+          "has_direct_witness": false,
+          "has_product_witness": true,
+          "output_depth": 0,
+          "output_diameters": [
+            [
+              "frozenset({0})",
+              0
+            ],
+            [
+              "frozenset({1, 2})",
+              0
+            ]
+          ],
+          "output_edge_counts": [
+            [
+              "frozenset({0})",
+              0
+            ],
+            [
+              "frozenset({1, 2})",
+              0
+            ]
+          ],
+          "output_kind": "equality",
+          "output_seed_count": 0,
+          "retraction": "universal",
+          "tags": [
+            "involutive",
+            "permutation_form",
+            "left_nondegenerate",
+            "right_nondegenerate",
+            "nondegenerate"
+          ]
+        },
+        "solution_index": 30,
+        "upper_partition": [
+          [
+            "0"
+          ],
+          [
+            "1",
+            "2"
+          ]
+        ]
+      },
+      "retraction=universal|coretraction=equality|output=equality|depth=0|tags=left_nondegenerate+right_nondegenerate+nondegenerate": {
+        "lower_partition": [
+          [
+            "0"
+          ],
+          [
+            "1"
+          ],
+          [
+            "2"
+          ]
+        ],
+        "original_table_values": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            2,
+            1
+          ]
+        ],
+        "output_family": {
+          "frozenset({0})": [
+            [
+              "frozenset({0})"
+            ]
+          ],
+          "frozenset({1, 2})": [
+            [
+              "frozenset({1})"
+            ],
+            [
+              "frozenset({2})"
+            ]
+          ]
+        },
+        "row": {
+          "all_coordinate_depth": 0,
+          "all_coordinate_kind": "universal",
+          "all_coordinate_seed_count": 2,
+          "coretraction": "equality",
+          "has_direct_witness": false,
+          "has_product_witness": true,
+          "output_depth": 0,
+          "output_diameters": [
+            [
+              "frozenset({0})",
+              0
+            ],
+            [
+              "frozenset({1, 2})",
+              0
+            ]
+          ],
+          "output_edge_counts": [
+            [
+              "frozenset({0})",
+              0
+            ],
+            [
+              "frozenset({1, 2})",
+              0
+            ]
+          ],
+          "output_kind": "equality",
+          "output_seed_count": 0,
+          "retraction": "universal",
+          "tags": [
+            "left_nondegenerate",
+            "right_nondegenerate",
+            "nondegenerate"
+          ]
+        },
+        "solution_index": 7,
+        "upper_partition": [
+          [
+            "0"
+          ],
+          [
+            "1",
+            "2"
+          ]
+        ]
+      },
+      "retraction=universal|coretraction=equality|output=equality|depth=0|tags=permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate": {
+        "lower_partition": [
+          [
+            "0"
+          ],
+          [
+            "1"
+          ],
+          [
+            "2"
+          ]
+        ],
+        "original_table_values": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            2,
+            1
+          ]
+        ],
+        "output_family": {
+          "frozenset({0})": [
+            [
+              "frozenset({0})"
+            ]
+          ],
+          "frozenset({1, 2})": [
+            [
+              "frozenset({1})"
+            ],
+            [
+              "frozenset({2})"
+            ]
+          ]
+        },
+        "row": {
+          "all_coordinate_depth": 0,
+          "all_coordinate_kind": "universal",
+          "all_coordinate_seed_count": 2,
+          "coretraction": "equality",
+          "has_direct_witness": false,
+          "has_product_witness": true,
+          "output_depth": 0,
+          "output_diameters": [
+            [
+              "frozenset({0})",
+              0
+            ],
+            [
+              "frozenset({1, 2})",
+              0
+            ]
+          ],
+          "output_edge_counts": [
+            [
+              "frozenset({0})",
+              0
+            ],
+            [
+              "frozenset({1, 2})",
+              0
+            ]
+          ],
+          "output_kind": "equality",
+          "output_seed_count": 0,
+          "retraction": "universal",
+          "tags": [
+            "permutation_form",
+            "left_nondegenerate",
+            "right_nondegenerate",
+            "nondegenerate"
+          ]
+        },
+        "solution_index": 11,
+        "upper_partition": [
+          [
+            "0"
+          ],
+          [
+            "1",
+            "2"
+          ]
+        ]
+      },
+      "retraction=universal|coretraction=equality|output=equality|depth=0|tags=rack_type+involutive+permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate": {
+        "lower_partition": [
+          [
+            "2"
+          ],
+          [
+            "0",
+            "1"
+          ]
+        ],
+        "original_table_values": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            2
+          ]
+        ],
+        "output_family": {
+          "frozenset({0, 1, 2})": [
+            [
+              "frozenset({0, 1})"
+            ],
+            [
+              "frozenset({2})"
+            ]
+          ]
+        },
+        "row": {
+          "all_coordinate_depth": 0,
+          "all_coordinate_kind": "universal",
+          "all_coordinate_seed_count": 2,
+          "coretraction": "equality",
+          "has_direct_witness": false,
+          "has_product_witness": true,
+          "output_depth": 0,
+          "output_diameters": [
+            [
+              "frozenset({0, 1, 2})",
+              0
+            ]
+          ],
+          "output_edge_counts": [
+            [
+              "frozenset({0, 1, 2})",
+              0
+            ]
+          ],
+          "output_kind": "equality",
+          "output_seed_count": 0,
+          "retraction": "universal",
+          "tags": [
+            "rack_type",
+            "involutive",
+            "permutation_form",
+            "left_nondegenerate",
+            "right_nondegenerate",
+            "nondegenerate"
+          ]
+        },
+        "solution_index": 1,
+        "upper_partition": [
+          [
+            "0",
+            "1",
+            "2"
+          ]
+        ]
+      },
+      "retraction=universal|coretraction=equality|output=equality|depth=0|tags=rack_type+left_nondegenerate+right_nondegenerate+nondegenerate": {
+        "lower_partition": [
+          [
+            "0"
+          ],
+          [
+            "1"
+          ],
+          [
+            "2"
+          ]
+        ],
+        "original_table_values": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            2,
+            2
+          ]
+        ],
+        "output_family": {
+          "frozenset({0, 1})": [
+            [
+              "frozenset({0})"
+            ],
+            [
+              "frozenset({1})"
+            ]
+          ],
+          "frozenset({2})": [
+            [
+              "frozenset({2})"
+            ]
+          ]
+        },
+        "row": {
+          "all_coordinate_depth": 0,
+          "all_coordinate_kind": "universal",
+          "all_coordinate_seed_count": 2,
+          "coretraction": "equality",
+          "has_direct_witness": false,
+          "has_product_witness": true,
+          "output_depth": 0,
+          "output_diameters": [
+            [
+              "frozenset({2})",
+              0
+            ],
+            [
+              "frozenset({0, 1})",
+              0
+            ]
+          ],
+          "output_edge_counts": [
+            [
+              "frozenset({2})",
+              0
+            ],
+            [
+              "frozenset({0, 1})",
+              0
+            ]
+          ],
+          "output_kind": "equality",
+          "output_seed_count": 0,
+          "retraction": "universal",
+          "tags": [
+            "rack_type",
+            "left_nondegenerate",
+            "right_nondegenerate",
+            "nondegenerate"
+          ]
+        },
+        "solution_index": 6,
+        "upper_partition": [
+          [
+            "2"
+          ],
+          [
+            "0",
+            "1"
+          ]
+        ]
+      },
+      "retraction=universal|coretraction=equality|output=equality|depth=0|tags=rack_type+permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate": {
+        "lower_partition": [
+          [
+            "0"
+          ],
+          [
+            "1"
+          ],
+          [
+            "2"
+          ]
+        ],
+        "original_table_values": [
+          [
+            0,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            1,
+            2
+          ]
+        ],
+        "output_family": {
+          "frozenset({0})": [
+            [
+              "frozenset({0})"
+            ]
+          ],
+          "frozenset({1, 2})": [
+            [
+              "frozenset({1})"
+            ],
+            [
+              "frozenset({2})"
+            ]
+          ]
+        },
+        "row": {
+          "all_coordinate_depth": 0,
+          "all_coordinate_kind": "universal",
+          "all_coordinate_seed_count": 2,
+          "coretraction": "equality",
+          "has_direct_witness": false,
+          "has_product_witness": true,
+          "output_depth": 0,
+          "output_diameters": [
+            [
+              "frozenset({0})",
+              0
+            ],
+            [
+              "frozenset({1, 2})",
+              0
+            ]
+          ],
+          "output_edge_counts": [
+            [
+              "frozenset({0})",
+              0
+            ],
+            [
+              "frozenset({1, 2})",
+              0
+            ]
+          ],
+          "output_kind": "equality",
+          "output_seed_count": 0,
+          "retraction": "universal",
+          "tags": [
+            "rack_type",
+            "permutation_form",
+            "left_nondegenerate",
+            "right_nondegenerate",
+            "nondegenerate"
+          ]
+        },
+        "solution_index": 24,
+        "upper_partition": [
+          [
+            "0"
+          ],
+          [
+            "1",
+            "2"
+          ]
+        ]
+      }
+    },
+    "local_minimal_cover_count": 134,
+    "output_kind_counts": {
+      "equality": 122,
+      "universal": 12
+    },
+    "output_universal_depth_counts": {
+      "0": 12
+    },
+    "product_side_counts": {
+      "retraction=equality|coretraction=universal|product=False|direct=True": 6,
+      "retraction=universal|coretraction=equality|product=True|direct=False": 110
+    },
+    "semisplit_leak_count": 0,
+    "semisplit_leaks": [],
+    "size": 3
+  }
+}

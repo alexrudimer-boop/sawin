@@ -1,0 +1,678 @@
+import fs from "node:fs/promises";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+import { SpreadsheetFile, Workbook } from "@oai/artifact-tool";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const root = path.resolve(__dirname, "..");
+const outDir = path.join(root, "tables");
+const outPath = path.join(outDir, "reduction_audit.xlsx");
+
+const rows = [
+  [
+    "Area",
+    "Requirement",
+    "Current evidence",
+    "Status",
+    "Next decisive check",
+  ],
+  [
+    "Progress summary",
+    "Give proof critics a compact source-of-truth entry point.",
+    "proofs/progress_summary.md records established reductions, closed branches, B-route requirements, and the current bi-free universal-corridor bottleneck.",
+    "Current map",
+    "Keep synchronized with proof log and zip handoff prompt.",
+  ],
+  [
+    "Quotient/residual",
+    "Define N_n, fibres X_z, delta maps, and Delta_n.",
+    "Logged in sawin_status.md.",
+    "Set up",
+    "Use in any interval proof or counterexample.",
+  ],
+  [
+    "Sharp obstruction",
+    "Finite-G implication gives Q x A_G.",
+    "Kernel/collision theorem written; sharp_obstruction_rack(Q,G) constructs the finite product rack.",
+    "Reduction ready",
+    "Prove uniform G or produce law sequence.",
+  ],
+  [
+    "Purity stabilization",
+    "Ensure pure-braid formulas are used only after permutation is killed.",
+    "T2 factor in A_G forces Artin permutation; guardrail test added.",
+    "Reduction ready",
+    "Keep local branch proofs tied to full Lambda identity.",
+  ],
+  [
+    "Rack cover",
+    "Check direct rack quotient-cover shortcut.",
+    "Impossible unless X is rack-type.",
+    "Ruled out",
+    "Use indirect detector racks only.",
+  ],
+  [
+    "Congruence chain",
+    "Local detectors compose down congruence chain.",
+    "Cover/local extraction implemented.",
+    "Executable audit",
+    "Check detector independence from n.",
+  ],
+  [
+    "Master dichotomy",
+    "A follows from all local detectors; B follows from one detector-free interval.",
+    "proofs/master_local_dichotomy.md combines congruence induction with diagonalization.",
+    "Reduction ready",
+    "Prove local theorem or exhibit explicit no-finite-G local interval.",
+  ],
+  [
+    "Local table",
+    "T_{a,b} bijections satisfy coloured YBE.",
+    "LocalInterval verifies finite tables.",
+    "Executable audit",
+    "Use symbolic proof for final candidate.",
+  ],
+  [
+    "Local-minimality gate",
+    "Route finite intervals only after exact local-minimality evidence.",
+    "Single-pair closure counters expose failures and max depth.",
+    "Proof hygiene",
+    "Use generated pair closures as the arbitrary-fibre certificate.",
+  ],
+  [
+    "Semisplit",
+    "Equality/universal mixtures must be tested.",
+    "Relation-level lemma plus witness audit.",
+    "Executable audit",
+    "Prove exclusion in master theorem.",
+  ],
+  [
+    "Finite-G detector",
+    "A_G action matches recursive Artin longitudes.",
+    "Bridge plus abelian matrix tests.",
+    "Executable audit",
+    "Use for candidate beta_j checks.",
+  ],
+  [
+    "Rack longitude quotient",
+    "Finite rack actions factor through Inn(Y) longitudes.",
+    "Inner-group formula proved and tested.",
+    "Reduction ready",
+    "Use to show B defeats every rack.",
+  ],
+  [
+    "Longitude factorization",
+    "Residual action factors through F_n/K_G(n).",
+    "Criterion stated; factorization still open.",
+    "Reduction ready",
+    "Prove Green/corridor factorization.",
+  ],
+  [
+    "Longitude subgroup",
+    "Compress finite-G longitude identity to V_beta(G).",
+    "Profile helper, law-braid wrapper, homomorphism/product functoriality, and explicit witness calculus implemented.",
+    "Reduction ready",
+    "Use witness pushforward/product assembly for A factorization audits, detector quotients, and B law profiles.",
+  ],
+  [
+    "Mover profiles",
+    "Attach moved tuples to subgroup visibility rows.",
+    "Total/residual helpers implemented.",
+    "Executable audit",
+    "Use on B candidates and detector failures.",
+  ],
+  [
+    "Label-longitudes",
+    "Labels are finite-H longitude evaluations.",
+    "Sufficient condition stated.",
+    "Reduction ready",
+    "Prove for product and Green/corridor labels.",
+  ],
+  [
+    "Input-dependent",
+    "Allow homomorphisms depending on fibre tuple.",
+    "Rack factorization exposed in code.",
+    "Reduction ready",
+    "Prove Green/corridor input-dependent factorization.",
+  ],
+  [
+    "Detector action factor",
+    "Residual action factors through the fixed rack detector action A_G.",
+    "Action/readout criterion stated; fixed-n residual-fibre readout table audit added, including direct Sym(X) wrapper.",
+    "Reduction ready",
+    "Construct these readouts uniformly in n, or build a normalized-law escape.",
+  ],
+  [
+    "Detector products",
+    "Combine finite detector factors into one G.",
+    "Longitude, subgroup, action, and fixed-n readout product equivalences recorded.",
+    "Reduction ready",
+    "Use for local G_i construction, subgroup membership, and factor readouts.",
+  ],
+  [
+    "Product domination closure",
+    "Cartesian products of dominated finite solutions stay dominated.",
+    "All-n coordinatewise kernel-intersection proof plus braid-action convention test.",
+    "Reduction ready",
+    "Do not treat products of already dominated factors as B candidates.",
+  ],
+  [
+    "Hereditary closure",
+    "Domination passes to quotients and crossing-closed subsolutions.",
+    "All-n projection/restriction kernel inclusions plus convention tests.",
+    "Reduction ready",
+    "Search for quotient-minimal and subsolution-minimal B candidates.",
+  ],
+  [
+    "Nondegenerate cover",
+    "Quotients of finite nondegenerate solutions stay nondegenerate.",
+    "Surjectivity proof added; regression uses a nontrivial rack-product quotient.",
+    "Guardrail",
+    "Do not try to solve degenerate intervals by hidden nondegenerate covers.",
+  ],
+  [
+    "Abelian longitudes",
+    "Cyclic groups detect pairwise-linking exponents.",
+    "Dedicated all-n detector note plus row/column product formula implemented.",
+    "Reduction ready",
+    "Use for pairwise-linking branches.",
+  ],
+  [
+    "Pairwise-linking detector",
+    "Give fixed cyclic G for residual labels linear in abelian longitude entries.",
+    "proofs/pairwise_linking_detector.md proves the Lambda_Cm implication.",
+    "Symbolic branch closed",
+    "Route genuinely coloured holonomy to coboundary/product-label or bi-free corridor.",
+  ],
+  [
+    "Residual kernel",
+    "Check beta in ker Q and Lambda_G=1 implies Delta=1.",
+    "Bounded failure harness implemented.",
+    "Executable audit",
+    "Use on local obstruction candidates.",
+  ],
+  [
+    "Image-kernel sequence",
+    "Identify fixed-degree residual image kernel.",
+    "Joint image/kernel summary implemented.",
+    "Exact fixed-n audit",
+    "Describe kernels uniformly in n.",
+  ],
+  [
+    "Residual dependencies",
+    "Track fibre-coordinate supports after base fixing.",
+    "Summary plus detector-failure classifier.",
+    "Exact fixed-n audit",
+    "Split coordinatewise vs multi-input holonomy.",
+  ],
+  [
+    "Candidate search",
+    "Convert local tables to quotient maps and scan groups.",
+    "Bounded profile harness implemented.",
+    "Executable audit",
+    "Find symbolic normalized-law family.",
+  ],
+  [
+    "Normalized laws",
+    "Audit exponent-law braid shortcut.",
+    "Pure-power shortcut ruled insufficient.",
+    "Gap clarified",
+    "Need non-power law family or proof.",
+  ],
+  [
+    "Pure-braid laws",
+    "Embed free laws via A_{i,n} pure braids.",
+    "Law-longitude lemma plus tests.",
+    "Reduction ready",
+    "Find fixed moved YBE action.",
+  ],
+  [
+    "Action images",
+    "Law words vanish on fixed finite action images.",
+    "Fixed-image certificate implemented.",
+    "Gap clarified",
+    "Control rho_X,q image growth.",
+  ],
+  [
+    "Symmetric detector",
+    "Test global G_X=Sym(X) candidate.",
+    "Direct known-branch filter covers all size<=3 rows; direct fixed-n readout wrapper added.",
+    "Candidate audit",
+    "Prove all-n context factorization outside known branches or find degenerate failure.",
+  ],
+  [
+    "Symmetric product gate",
+    "Rule out product-built B2 failures of the direct Sym(X) route.",
+    "Symbolic product-closure lemma, B2 failure certificate helper, cyclic B2 detector lemma, and regression helper added.",
+    "Reduction ready",
+    "Use to avoid product-constructed or pure two-strand false leads.",
+  ],
+  [
+    "Image growth",
+    "Measure pure-generator images as q grows.",
+    "Small growth audit incl. size-3 candidate.",
+    "Executable audit",
+    "Find unbounded moved nonrack interval.",
+  ],
+  [
+    "Pure-power growth",
+    "Test exponent-law B route via pure-generator orders.",
+    "Size<=3 and linear F2 show bounded orders.",
+    "Candidate audit",
+    "Need unbounded order or non-power laws.",
+  ],
+  [
+    "Moving-variety B",
+    "Finite-variety law separation.",
+    "Criterion plus assigned-generator separator helper added.",
+    "Proof criterion",
+    "Find fixed X whose moving H_j escapes size<=j laws.",
+  ],
+  [
+    "Fixed-variety barrier",
+    "Rule out normalized-law motion when moving holonomy stays in var(G0).",
+    "All-n law-variety lemma plus bounded escape helper.",
+    "Reduction ready",
+    "A B proof must show finite-variety escape from every fixed finite G0.",
+  ],
+  [
+    "Diagonal B",
+    "No finite detector gives law sequence.",
+    "Product diagonal and right-stabilization convention audits added.",
+    "Reduction ready",
+    "Use only after explicit all-G detector failure.",
+  ],
+  [
+    "Small YBE scan",
+    "Screen tiny YBE tables for law-braid motion.",
+    "Size-2 full, size-3 capped scan.",
+    "Bounded audit",
+    "Escalate beyond tiny tables.",
+  ],
+  [
+    "Size-3 candidates",
+    "Detail nonrack tables moved by commutator law braid.",
+    "Report generated; affine and S3-visible.",
+    "Candidate only",
+    "Need all-finite-group law sequence.",
+  ],
+  [
+    "Green branch",
+    "Audit coordinate-action monoid branch choices.",
+    "Atom descent closure, atom inner group, and unit-lift detector criterion recorded; two-sided Green detector list now includes atom inner groups.",
+    "Executable audit",
+    "Prove descent closure is trivial/absorbed and endpoint-unit subgroup membership.",
+  ],
+  [
+    "Local-minimal Green",
+    "Run Green loops through congruence-cover intervals.",
+    "Universal-output Green overlaps all known.",
+    "Executable audit",
+    "Prove all-n finite-G detection.",
+  ],
+  [
+    "Kernel detectors",
+    "Compare kernel image vs Sym blocks.",
+    "No len<=4 collisions; exact n=2 closes.",
+    "Executable audit",
+    "Prove symmetric kernel groups suffice.",
+  ],
+  [
+    "Dual Green",
+    "Include right-coordinate Green kernel data.",
+    "Opposite audit plus two-sided Sym helper.",
+    "Reduction ready",
+    "Prove two-sided Green detection.",
+  ],
+  [
+    "Opposite detectability",
+    "Finite-G detectability is invariant under side-opposite solution.",
+    "Strand-reversal proof plus braid-action and longitude invariance tests.",
+    "Reduction ready",
+    "Use same detector factors on left/right dual branches.",
+  ],
+  [
+    "Semigroup holonomy",
+    "Separate group holonomy from aperiodic reset parts.",
+    "Aperiodic lemma, endpoint/product expression audits with explicit product witnesses, product-unit detector, and endpoint finite-failure flags recorded.",
+    "Reduction ready",
+    "Display all-n residual endpoint units as longitude expressions in a fixed unit group, or prove subgroup membership directly.",
+  ],
+  [
+    "Green holonomy gate",
+    "Separate raw atom-trivial context collapse from group-like completed-context holonomy.",
+    "Loop unit groups extracted; endpoint-product flags record direct membership in one detector.",
+    "Executable guardrail",
+    "Prove these group-like loops factor through fixed H(pi,Q), or build B in this group part.",
+  ],
+  [
+    "Involutive/permutation",
+    "Known branch finite-rack domination.",
+    "T2 for involutive; C_m twist detector plus pure-longitude tests.",
+    "Symbolic branch proof",
+    "Use as closed branch in local bottleneck routing.",
+  ],
+  [
+    "Affine tag guardrail",
+    "Prevent audit-only affine_cyclic tags from closing a local interval.",
+    "Regression excludes affine_cyclic from KNOWN_TOTAL_DETECTOR_TAGS; proof note added.",
+    "Proof hygiene",
+    "Use affine rows only via a symbolic all-n detector branch or a closed product subbranch.",
+  ],
+  [
+    "Structure orbits",
+    "Separate product invariants from orbit holonomy.",
+    "Orbit factors plus correlated global image profiled.",
+    "Reduction ready",
+    "Detect holonomy in correlated global image.",
+  ],
+  [
+    "Bounded-degree images",
+    "Do not use rho_X(B_n) or orbit groups as n-dependent detectors.",
+    "proofs/bounded_degree_action_image_limit.md records the limitation.",
+    "Guardrail",
+    "Replace fixed-degree images by an all-n factorization through fixed G.",
+  ],
+  [
+    "Orbit-law obstruction",
+    "Localize normalized-law B route to one structure orbit.",
+    "Assigned-generator helper; Sym-law audit has 0 tiny failures.",
+    "Proof criterion",
+    "Upgrade orbit-local separators to all-j sequence.",
+  ],
+  [
+    "Context retraction",
+    "Two-sided context-profile congruence.",
+    "Symbolic admissible; size<=3 split.",
+    "Reduction ready",
+    "Prove two-sided-free branch detection.",
+  ],
+  [
+    "Coretraction",
+    "Dual two-sided input-profile congruence.",
+    "Symbolic admissible; bi-free size3 known.",
+    "Reduction ready",
+    "Prove bi-free branch detection.",
+  ],
+  [
+    "Bi-free rank",
+    "Rank/kernel profile for bi-free rows.",
+    "No untagged size3 rank/kernel rows.",
+    "Candidate audit",
+    "Prove rank/Green dichotomy symbolically.",
+  ],
+  [
+    "Local bottleneck",
+    "Route each local interval to a branch verdict.",
+    "Router now splits closed product finite-G branches from product/corridor bottlenecks.",
+    "Reduction ledger",
+    "Prove genuinely-coloured product or bi-free corridor factorization, or realize B there.",
+  ],
+  [
+    "Bi-free corridor target",
+    "State exact hypotheses, fixed H(pi,Q), and B certificate.",
+    "Target note added; false rack/Hurwitz shortcuts excluded.",
+    "Open theorem target",
+    "Prove all-n H(pi,Q) factorization or build normalized-law escape.",
+  ],
+  [
+    "Bi-free subgroup certificate",
+    "Profile candidate words against fixed corridor detector factors.",
+    "Helper, direct-product subgroup audit, and tests added; affine commutator seen by S3 block factor.",
+    "Executable audit",
+    "Upgrade finite certificates to all-n factorization or law sequence.",
+  ],
+  [
+    "Bi-free certificate audit",
+    "Apply corridor certificate to local-minimal cover corpus.",
+    "Size3: 116 product_finite_g, 12 nondegenerate, 6 known_total, 0 product/corridor targets.",
+    "Bounded audit",
+    "Prove arbitrary-fibre theorem or find normalized-law escape.",
+  ],
+  [
+    "Bi-free exact audit",
+    "Close fixed-index image using the same corridor detector factor list.",
+    "Affine stress row n=2: 12 states, no kernel/collision failure; product subgroup check matches factor product.",
+    "Exact fixed-n audit",
+    "Upgrade fixed-n closure to all-n corridor factorization.",
+  ],
+  [
+    "Kernel closure",
+    "Close coordinate kernels.",
+    "Equality=nondegenerate; elementary kernel-pair closures must be universal in local-minimal degenerate rows.",
+    "Reduction ready",
+    "Control universal kernel-closure branch or refine nonminimal intervals.",
+  ],
+  [
+    "Kernel corridor",
+    "Distinguish seed-only vs transported universal closures.",
+    "Size<=3: no semisplit leaks; elementary kernel-pair closure gate added.",
+    "Candidate audit",
+    "Prove lemma or find normalized-law escape along universal pair corridors.",
+  ],
+  [
+    "Universal corridor target",
+    "State remaining universal-kernel A/B branch.",
+    "Affine depth 1 rows are involutive.",
+    "Open",
+    "Prove detector or find law escape.",
+  ],
+  [
+    "Corridor-Green bridge",
+    "Cross-tab universal corridors with Green hidden loops.",
+    "Size<=3 overlap has 0 untagged intervals.",
+    "Candidate audit",
+    "Prove bridge symbolically.",
+  ],
+  [
+    "Product-permutation",
+    "Normalize swapped and direct universal branches.",
+    "H_prod explicit; coboundaries telescope.",
+    "Executable audit",
+    "Prove H_prod words are longitude products.",
+  ],
+  [
+    "Swapped nondegenerate base",
+    "Swapped product extension over nondegenerate quotient is nondegenerate.",
+    "All-n fibre-bijection proof added; regression fixture checks the known product row.",
+    "Reduction ready",
+    "Route such rows to the nondegenerate/guitar branch, not to product holonomy.",
+  ],
+  [
+    "Identity-base product",
+    "Reduce identity-base product holonomy to swapped K_a or direct identities.",
+    "Central-label/direct-trivial reducers plus cyclic detector implemented.",
+    "Reduction ready",
+    "Use as known product subbranch; obstruction needs non-identity colours.",
+  ],
+  [
+    "Product closed labels",
+    "Closed product holonomy as finite labels.",
+    "Exact n=2 all-base audit: 0 untagged failures; known-row miss fixed by S4 factor.",
+    "Exact fixed-n audit",
+    "Upgrade fixed-tuple certificates to all-n product lemma.",
+  ],
+  [
+    "Product witnesses",
+    "Avoid false common-assignment shortcut.",
+    "Route audit records common-assignment failure, per-label witnesses, and subgroup membership.",
+    "Executable audit",
+    "Use only as route bookkeeping; prove subgroup condition symbolically.",
+  ],
+  [
+    "Product subgroup",
+    "Closed labels lie in subgroup generated by longitude values.",
+    "Subgroup audit implemented for product labels.",
+    "Reduction criterion",
+    "Prove subgroup membership for all product intervals or find failure.",
+  ],
+  [
+    "Product primitivity",
+    "Certify product local-minimality via pair closures in the label groupoid.",
+    "Swapped/direct label pair-closure helpers added; no partition enumeration required.",
+    "Reduction criterion",
+    "Use before applying product holonomy or closed-label B route.",
+  ],
+  [
+    "Product holonomy normalization",
+    "Gauge-normalize product label words to the actual finite holonomy group.",
+    "Helpers and subgroup audit added; coboundary is identity and pairwise branch is C3-detected.",
+    "Reduction criterion",
+    "Prove all-n longitude-subgroup membership in normalized product holonomy groups.",
+  ],
+  [
+    "Product holonomy subgroup scan",
+    "Check normalized holonomy subgroup convention in smallest arbitrary product corpus.",
+    "Two-colour/two-point fibres: 92 product branch scans; 2048 nonidentity normalized holonomy rows; 0 subgroup failures.",
+    "Candidate audit",
+    "Search beyond fibre size 2/colour size 2 or prove normalized product holonomy theorem.",
+  ],
+  [
+    "Product holonomy exact scan",
+    "Close fixed-degree normalized holonomy images without word-length cutoff on representative rows.",
+    "5 exact scenarios; 0 truncations; raw holonomy misses 1 known-branch row; adding S4 removes that miss.",
+    "Candidate audit",
+    "Use full detector product, not raw holonomy alone, in product theorem or B search.",
+  ],
+  [
+    "Product subgroup scan",
+    "Stress subgroup criterion in smallest arbitrary product corpus.",
+    "2-colour fibre-2 all-base scan: 0 failures.",
+    "Candidate audit",
+    "Escalate beyond fibre size 2 or prove symbolically.",
+  ],
+  [
+    "Closed-label B route",
+    "Diagonalize failure of every closed-label detector.",
+    "Obstruction criterion plus bounded helper.",
+    "Reduction ready",
+    "Use after explicit all-G product failure.",
+  ],
+  [
+    "2-colour fibre-2",
+    "Enumerate identity/flip-base local intervals.",
+    "No unknown primitive examples.",
+    "Candidate audit",
+    "Search larger colour/fibre patterns.",
+  ],
+  [
+    "2-colour fibre-2 all bases",
+    "Enumerate arbitrary local tables over all 2-point bases.",
+    "120 local-minimal; no untagged universal corridors.",
+    "Candidate audit",
+    "Escalate fibre size or prove symbolic branch.",
+  ],
+  [
+    "2-colour fibre-3 product",
+    "Enumerate S3 swapped/direct product labels.",
+    "Swapped 2064/direct 24 primitive; router sends all to product_finite_g, 0 open product targets.",
+    "Candidate audit",
+    "Prove product-groupoid theorem.",
+  ],
+  [
+    "3-colour fibre-2 product",
+    "Enumerate S2 product labels over all size-3 quotient bases via F2 linear equations.",
+    "2472 primitive rows; fibre2 affine router sends all to product_finite_g, 0 open product targets.",
+    "Candidate audit",
+    "Use fibre-size-two affine detector branch; prove arbitrary-fibre product-groupoid theorem.",
+  ],
+  [
+    "Linear F2",
+    "Enumerate all linear bijective maps on F2^2.",
+    "97 YBE tables; no unknown primitive examples; 0 two-strand Sym-gate failures.",
+    "Candidate audit",
+    "Search higher-rank affine patterns.",
+  ],
+  [
+    "Affine F2",
+    "Enumerate translated affine maps on F2^2.",
+    "481 YBE; depth1 universals all involutive.",
+    "Candidate audit",
+    "Search non-affine or higher-rank affine.",
+  ],
+  [
+    "Known branches",
+    "Do not re-open eliminated cases as final obstacles.",
+    "Branch list recorded in proof log.",
+    "Bookkept",
+    "Focus on arbitrary fibres/colours.",
+  ],
+  [
+    "Master theorem",
+    "Find uniform G(pi,Q) for local-minimal interval.",
+    "Kernel/Schutzenberger group candidate isolated.",
+    "Open",
+    "Prove detection or realize escape.",
+  ],
+  [
+    "Counterexample path",
+    "Explicit X, symbolic YBE, beta_j, moved tuple.",
+    "No candidate yet.",
+    "Open",
+    "Search for normalized-law behavior.",
+  ],
+  [
+    "GPT-5.5 Pro audit",
+    "Ask critic before finalizing A or B.",
+    "Awaiting final candidate.",
+    "Pending",
+    "Use Browser/Chrome for final audit.",
+  ],
+];
+
+await fs.mkdir(outDir, { recursive: true });
+const workbook = Workbook.create();
+const sheet = workbook.worksheets.add("Reduction Audit");
+sheet.getRangeByIndexes(0, 0, rows.length, rows[0].length).values = rows;
+sheet.getRange("A1:E1").format = {
+  fill: "#1F4E79",
+  font: { bold: true, color: "#FFFFFF" },
+};
+sheet.getRange("A:E").format.wrapText = true;
+sheet.getRange("A:A").format.columnWidthPx = 150;
+sheet.getRange("B:B").format.columnWidthPx = 330;
+sheet.getRange("C:C").format.columnWidthPx = 350;
+sheet.getRange("D:D").format.columnWidthPx = 120;
+sheet.getRange("E:E").format.columnWidthPx = 330;
+sheet.getRange(`A2:E${rows.length}`).format.rowHeightPx = 64;
+sheet.freezePanes.freezeRows(1);
+
+const statusRange = sheet.getRange(`D2:D${rows.length}`);
+statusRange.conditionalFormats.add("containsText", {
+  text: "Open",
+  format: { fill: "#FCE4D6", font: { color: "#9C0006" } },
+});
+statusRange.conditionalFormats.add("containsText", {
+  text: "Executable",
+  format: { fill: "#E2F0D9", font: { color: "#375623" } },
+});
+statusRange.conditionalFormats.add("containsText", {
+  text: "Conditional",
+  format: { fill: "#FFF2CC", font: { color: "#7F6000" } },
+});
+
+if (process.env.RENDER_PREVIEW === "1") {
+  const preview = await workbook.render({
+    sheetName: "Reduction Audit",
+    range: `A1:E${rows.length}`,
+    scale: 1,
+    format: "png",
+  });
+  await fs.writeFile(
+    path.join(outDir, "reduction_audit_preview.png"),
+    new Uint8Array(await preview.arrayBuffer()),
+  );
+}
+
+const errors = await workbook.inspect({
+  kind: "match",
+  searchTerm: "#REF!|#DIV/0!|#VALUE!|#NAME\\?|#N/A",
+  options: { useRegex: true, maxResults: 50 },
+  summary: "formula error scan",
+});
+console.log(errors.ndjson);
+
+const output = await SpreadsheetFile.exportXlsx(workbook);
+await output.save(outPath);
+console.log(outPath);
+process.exit(0);

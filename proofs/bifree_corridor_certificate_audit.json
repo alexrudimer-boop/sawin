@@ -1,0 +1,36 @@
+{
+  "size_2_exhaustive": {
+    "checked_word_count_per_target_interval": 160,
+    "failure_examples": [],
+    "local_minimal_count": 5,
+    "max_word_length": 4,
+    "n": 3,
+    "size": 2,
+    "target_count": 0,
+    "target_examples": [],
+    "target_factor_rows": [],
+    "target_failure_count": 0,
+    "target_tag_counts": {},
+    "verdict_counts": {
+      "product_finite_g_branch": 5
+    }
+  },
+  "size_3_exhaustive": {
+    "checked_word_count_per_target_interval": 160,
+    "failure_examples": [],
+    "local_minimal_count": 134,
+    "max_word_length": 4,
+    "n": 3,
+    "size": 3,
+    "target_count": 0,
+    "target_examples": [],
+    "target_factor_rows": [],
+    "target_failure_count": 0,
+    "target_tag_counts": {},
+    "verdict_counts": {
+      "known_total_branch": 6,
+      "locally_nondegenerate_branch": 12,
+      "product_finite_g_branch": 116
+    }
+  }
+}

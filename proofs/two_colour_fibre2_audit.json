@@ -1,0 +1,533 @@
+{
+  "flip_base": {
+    "base": "flip",
+    "branch_tag_counts": {
+      "involutive": 12
+    },
+    "checked_table_count": 331776,
+    "colored_ybe_count": 520,
+    "first_examples_by_kind": {
+      "equality": {
+        "branch_tags": [
+          "involutive"
+        ],
+        "product_permutation_witness": false,
+        "retraction_family": {
+          "0": [
+            [
+              "0"
+            ],
+            [
+              "1"
+            ]
+          ],
+          "1": [
+            [
+              "0"
+            ],
+            [
+              "1"
+            ]
+          ]
+        },
+        "table": [
+          {
+            "colors": [
+              "0",
+              "0"
+            ],
+            "input": [
+              "0",
+              "0"
+            ],
+            "output": [
+              "0",
+              "0"
+            ]
+          },
+          {
+            "colors": [
+              "0",
+              "0"
+            ],
+            "input": [
+              "0",
+              "1"
+            ],
+            "output": [
+              "0",
+              "1"
+            ]
+          },
+          {
+            "colors": [
+              "0",
+              "0"
+            ],
+            "input": [
+              "1",
+              "0"
+            ],
+            "output": [
+              "1",
+              "0"
+            ]
+          },
+          {
+            "colors": [
+              "0",
+              "0"
+            ],
+            "input": [
+              "1",
+              "1"
+            ],
+            "output": [
+              "1",
+              "1"
+            ]
+          },
+          {
+            "colors": [
+              "0",
+              "1"
+            ],
+            "input": [
+              "0",
+              "0"
+            ],
+            "output": [
+              "0",
+              "0"
+            ]
+          },
+          {
+            "colors": [
+              "0",
+              "1"
+            ],
+            "input": [
+              "0",
+              "1"
+            ],
+            "output": [
+              "0",
+              "1"
+            ]
+          },
+          {
+            "colors": [
+              "0",
+              "1"
+            ],
+            "input": [
+              "1",
+              "0"
+            ],
+            "output": [
+              "1",
+              "0"
+            ]
+          },
+          {
+            "colors": [
+              "0",
+              "1"
+            ],
+            "input": [
+              "1",
+              "1"
+            ],
+            "output": [
+              "1",
+              "1"
+            ]
+          },
+          {
+            "colors": [
+              "1",
+              "0"
+            ],
+            "input": [
+              "0",
+              "0"
+            ],
+            "output": [
+              "0",
+              "0"
+            ]
+          },
+          {
+            "colors": [
+              "1",
+              "0"
+            ],
+            "input": [
+              "0",
+              "1"
+            ],
+            "output": [
+              "0",
+              "1"
+            ]
+          },
+          {
+            "colors": [
+              "1",
+              "0"
+            ],
+            "input": [
+              "1",
+              "0"
+            ],
+            "output": [
+              "1",
+              "0"
+            ]
+          },
+          {
+            "colors": [
+              "1",
+              "0"
+            ],
+            "input": [
+              "1",
+              "1"
+            ],
+            "output": [
+              "1",
+              "1"
+            ]
+          },
+          {
+            "colors": [
+              "1",
+              "1"
+            ],
+            "input": [
+              "0",
+              "0"
+            ],
+            "output": [
+              "0",
+              "0"
+            ]
+          },
+          {
+            "colors": [
+              "1",
+              "1"
+            ],
+            "input": [
+              "0",
+              "1"
+            ],
+            "output": [
+              "0",
+              "1"
+            ]
+          },
+          {
+            "colors": [
+              "1",
+              "1"
+            ],
+            "input": [
+              "1",
+              "0"
+            ],
+            "output": [
+              "1",
+              "0"
+            ]
+          },
+          {
+            "colors": [
+              "1",
+              "1"
+            ],
+            "input": [
+              "1",
+              "1"
+            ],
+            "output": [
+              "1",
+              "1"
+            ]
+          }
+        ]
+      }
+    },
+    "local_minimal_count": 12,
+    "product_permutation_witness_count": 0,
+    "retraction_kind_counts": {
+      "equality": 12
+    },
+    "unknown_example_count": 0,
+    "unknown_examples": []
+  },
+  "identity_base": {
+    "base": "identity",
+    "branch_tag_counts": {
+      "(untagged)": 16,
+      "involutive": 16
+    },
+    "checked_table_count": 331776,
+    "colored_ybe_count": 33,
+    "first_examples_by_kind": {
+      "universal": {
+        "branch_tags": [
+          "involutive"
+        ],
+        "product_permutation_witness": true,
+        "retraction_family": {
+          "0": [
+            [
+              "0",
+              "1"
+            ]
+          ],
+          "1": [
+            [
+              "0",
+              "1"
+            ]
+          ]
+        },
+        "table": [
+          {
+            "colors": [
+              "0",
+              "0"
+            ],
+            "input": [
+              "0",
+              "0"
+            ],
+            "output": [
+              "0",
+              "0"
+            ]
+          },
+          {
+            "colors": [
+              "0",
+              "0"
+            ],
+            "input": [
+              "0",
+              "1"
+            ],
+            "output": [
+              "1",
+              "0"
+            ]
+          },
+          {
+            "colors": [
+              "0",
+              "0"
+            ],
+            "input": [
+              "1",
+              "0"
+            ],
+            "output": [
+              "0",
+              "1"
+            ]
+          },
+          {
+            "colors": [
+              "0",
+              "0"
+            ],
+            "input": [
+              "1",
+              "1"
+            ],
+            "output": [
+              "1",
+              "1"
+            ]
+          },
+          {
+            "colors": [
+              "0",
+              "1"
+            ],
+            "input": [
+              "0",
+              "0"
+            ],
+            "output": [
+              "0",
+              "0"
+            ]
+          },
+          {
+            "colors": [
+              "0",
+              "1"
+            ],
+            "input": [
+              "0",
+              "1"
+            ],
+            "output": [
+              "1",
+              "0"
+            ]
+          },
+          {
+            "colors": [
+              "0",
+              "1"
+            ],
+            "input": [
+              "1",
+              "0"
+            ],
+            "output": [
+              "0",
+              "1"
+            ]
+          },
+          {
+            "colors": [
+              "0",
+              "1"
+            ],
+            "input": [
+              "1",
+              "1"
+            ],
+            "output": [
+              "1",
+              "1"
+            ]
+          },
+          {
+            "colors": [
+              "1",
+              "0"
+            ],
+            "input": [
+              "0",
+              "0"
+            ],
+            "output": [
+              "0",
+              "0"
+            ]
+          },
+          {
+            "colors": [
+              "1",
+              "0"
+            ],
+            "input": [
+              "0",
+              "1"
+            ],
+            "output": [
+              "1",
+              "0"
+            ]
+          },
+          {
+            "colors": [
+              "1",
+              "0"
+            ],
+            "input": [
+              "1",
+              "0"
+            ],
+            "output": [
+              "0",
+              "1"
+            ]
+          },
+          {
+            "colors": [
+              "1",
+              "0"
+            ],
+            "input": [
+              "1",
+              "1"
+            ],
+            "output": [
+              "1",
+              "1"
+            ]
+          },
+          {
+            "colors": [
+              "1",
+              "1"
+            ],
+            "input": [
+              "0",
+              "0"
+            ],
+            "output": [
+              "0",
+              "0"
+            ]
+          },
+          {
+            "colors": [
+              "1",
+              "1"
+            ],
+            "input": [
+              "0",
+              "1"
+            ],
+            "output": [
+              "1",
+              "0"
+            ]
+          },
+          {
+            "colors": [
+              "1",
+              "1"
+            ],
+            "input": [
+              "1",
+              "0"
+            ],
+            "output": [
+              "0",
+              "1"
+            ]
+          },
+          {
+            "colors": [
+              "1",
+              "1"
+            ],
+            "input": [
+              "1",
+              "1"
+            ],
+            "output": [
+              "1",
+              "1"
+            ]
+          }
+        ]
+      }
+    },
+    "local_minimal_count": 32,
+    "product_permutation_witness_count": 32,
+    "retraction_kind_counts": {
+      "universal": 32
+    },
+    "unknown_example_count": 0,
+    "unknown_examples": []
+  }
+}

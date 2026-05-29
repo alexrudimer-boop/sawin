@@ -1,0 +1,63 @@
+{
+  "commutator_law_braid": {
+    "n": 3,
+    "word": [
+      2,
+      1,
+      1,
+      -2,
+      2,
+      2,
+      2,
+      -1,
+      -1,
+      -2,
+      -2,
+      -2
+    ]
+  },
+  "local_minimal_scans": {
+    "size_2_exhaustive": {
+      "commutator_mover_count": 0,
+      "first_two_sided_blind_movers": [],
+      "local_minimal_cover_count": 5,
+      "max_two_sided_group_order": 2,
+      "opposite_ybe_failure_count": 0,
+      "right_relation_failure_count": 0,
+      "size": 2,
+      "two_sided_blind_mover_count": 0
+    },
+    "size_3_exhaustive": {
+      "commutator_mover_count": 12,
+      "first_two_sided_blind_movers": [],
+      "local_minimal_cover_count": 134,
+      "max_two_sided_group_order": 6,
+      "opposite_ybe_failure_count": 0,
+      "right_relation_failure_count": 0,
+      "size": 3,
+      "two_sided_blind_mover_count": 0
+    }
+  },
+  "solution_scans": {
+    "size_2_exhaustive": {
+      "commutator_mover_count": 0,
+      "first_two_sided_blind_movers": [],
+      "max_two_sided_group_order": 2,
+      "opposite_ybe_failure_count": 0,
+      "right_relation_failure_count": 0,
+      "size": 2,
+      "two_sided_blind_mover_count": 0,
+      "ybe_count": 5
+    },
+    "size_3_exhaustive": {
+      "commutator_mover_count": 12,
+      "first_two_sided_blind_movers": [],
+      "max_two_sided_group_order": 6,
+      "opposite_ybe_failure_count": 0,
+      "right_relation_failure_count": 0,
+      "size": 3,
+      "two_sided_blind_mover_count": 0,
+      "ybe_count": 73
+    }
+  }
+}

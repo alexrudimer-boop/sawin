@@ -1,0 +1,393 @@
+from __future__ import annotations
+
+from dataclasses import dataclass
+from itertools import product
+from math import gcd
+from typing import Dict, Hashable, Iterable, List, Mapping, Sequence, Tuple
+
+from .artin_longitudes import BraidWord, has_identity_longitude_signature
+from .finite_braided_set import Element, FiniteBraidedSet, product_solution
+from .finite_group import FiniteGroup
+
+BaseTuple = Tuple[Hashable, ...]
+FibreTuple = Tuple[Element, ...]
+ResidualAction = Dict[BaseTuple, Dict[FibreTuple, FibreTuple]]
+
+
+def all_tuples(elements: Sequence[Hashable], n: int) -> List[Tuple[Hashable, ...]]:
+    return list(product(elements, repeat=n))
+
+
+def action_permutation(solution: FiniteBraidedSet, n: int, braid_word: BraidWord) -> Tuple[int, ...]:
+    tuples = all_tuples(solution.elements, n)
+    index = {tup: i for i, tup in enumerate(tuples)}
+    return tuple(index[solution.braid_action(braid_word, tup)] for tup in tuples)
+
+
+def _lcm(a: int, b: int) -> int:
+    if a == 0 or b == 0:
+        return 0
+    return abs(a * b) // gcd(a, b)
+
+
+def permutation_order(permutation: Sequence[int]) -> int:
+    seen = [False] * len(permutation)
+    order = 1
+    for start in range(len(permutation)):
+        if seen[start]:
+            continue
+        current = start
+        cycle_length = 0
+        while not seen[current]:
+            seen[current] = True
+            cycle_length += 1
+            current = permutation[current]
+        if cycle_length:
+            order = _lcm(order, cycle_length)
+    return order
+
+
+def braid_action_order(solution: FiniteBraidedSet, n: int, braid_word: BraidWord) -> int:
+    return permutation_order(action_permutation(solution, n, braid_word))
+
+
+def is_identity_action(solution: FiniteBraidedSet, n: int, braid_word: BraidWord) -> bool:
+    for tup in product(solution.elements, repeat=n):
+        if solution.braid_action(braid_word, tup) != tuple(tup):
+            return False
+    return True
+
+
+@dataclass(frozen=True)
+class QuotientMap:
+    """A finite braided-set quotient/congruence map pi: X -> Z."""
+
+    total: FiniteBraidedSet
+    quotient: FiniteBraidedSet
+    pi: Mapping[Element, Hashable]
+
+    def __post_init__(self) -> None:
+        if set(self.pi.keys()) != set(self.total.elements):
+            raise ValueError("pi must be defined on every total element")
+        if any(value not in self.quotient.elements for value in self.pi.values()):
+            raise ValueError("pi values must lie in quotient elements")
+        if set(self.pi.values()) != set(self.quotient.elements):
+            raise ValueError("pi must be onto the quotient")
+        self.validate_homomorphism()
+
+    def validate_homomorphism(self) -> None:
+        for x, y in product(self.total.elements, repeat=2):
+            u, v = self.total.R[(x, y)]
+            base_u, base_v = self.quotient.R[(self.pi[x], self.pi[y])]
+            if (self.pi[u], self.pi[v]) != (base_u, base_v):
+                raise ValueError("pi is not a braided-set homomorphism")
+
+    def base_tuple(self, tup: Sequence[Element]) -> BaseTuple:
+        return tuple(self.pi[x] for x in tup)
+
+    def fibre(self, base_tuple: Sequence[Hashable]) -> Tuple[FibreTuple, ...]:
+        return tuple(
+            tuple(tup)
+            for tup in product(self.total.elements, repeat=len(base_tuple))
+            if self.base_tuple(tup) == tuple(base_tuple)
+        )
+
+    def residual_action(self, n: int, braid_word: BraidWord) -> ResidualAction:
+        """Return Delta_n(beta), requiring beta to fix the quotient base."""
+
+        action: ResidualAction = {}
+        for base in product(self.quotient.elements, repeat=n):
+            base_image = self.quotient.braid_action(braid_word, base)
+            if base_image != tuple(base):
+                raise ValueError(f"braid word does not fix quotient base {base!r}")
+            fibre_action = {}
+            for tup in self.fibre(base):
+                image = self.total.braid_action(braid_word, tup)
+                if self.base_tuple(image) != tuple(base):
+                    raise ValueError("total action left the fixed fibre unexpectedly")
+                fibre_action[tup] = image
+            action[tuple(base)] = fibre_action
+        return action
+
+    def residual_is_identity(self, n: int, braid_word: BraidWord) -> bool:
+        for base in product(self.quotient.elements, repeat=n):
+            if self.quotient.braid_action(braid_word, base) != tuple(base):
+                return False
+            for tup in self.fibre(base):
+                if self.total.braid_action(braid_word, tup) != tup:
+                    return False
+        return True
+
+    def moved_residual_tuple(
+        self, n: int, braid_word: BraidWord
+    ) -> Tuple[BaseTuple, FibreTuple, FibreTuple] | None:
+        for base in product(self.quotient.elements, repeat=n):
+            if self.quotient.braid_action(braid_word, base) != tuple(base):
+                continue
+            for tup in self.fibre(base):
+                image = self.total.braid_action(braid_word, tup)
+                if image != tup:
+                    return tuple(base), tup, image
+        return None
+
+
+@dataclass(frozen=True)
+class QuotientImageKernelSummary:
+    """Exact fixed-degree image/kernel data for a quotient action."""
+
+    n: int
+    joint_image_size: int | None
+    total_image_size: int | None
+    base_image_size: int | None
+    kernel_size: int | None
+    projection_surjective: bool | None
+    kernel_contains_nonidentity: bool | None
+    first_nonidentity_kernel_word: Tuple[int, ...] | None
+    truncated: bool
+
+    @property
+    def proves_fixed_n_exact_sequence(self) -> bool:
+        return not self.truncated and self.projection_surjective is True
+
+
+@dataclass(frozen=True)
+class ResidualDependencySummary:
+    """Coordinate dependency data for one base-fixed residual action."""
+
+    base_tuple: BaseTuple
+    braid_word: Tuple[int, ...]
+    supports: Tuple[Tuple[int, ...], ...]
+
+    @property
+    def max_arity(self) -> int:
+        return max((len(support) for support in self.supports), default=0)
+
+    @property
+    def is_coordinatewise(self) -> bool:
+        return all(len(support) <= 1 for support in self.supports)
+
+
+def residual_coordinate_dependency_summary(
+    quotient_map: QuotientMap,
+    base_tuple: Sequence[Hashable],
+    braid_word: BraidWord,
+) -> ResidualDependencySummary:
+    """Return essential input fibre coordinates for each residual output.
+
+    The braid must fix the supplied quotient base tuple.  The output support
+    for coordinate ``j`` contains an input coordinate ``k`` exactly when two
+    points in the fixed fibre that differ only at ``k`` can have different
+    ``j``-th output coordinates.
+
+    This is an exact finite diagnostic for one base tuple and braid word.  It
+    is not a symbolic all-degree proof.
+    """
+
+    base = tuple(base_tuple)
+    if quotient_map.quotient.braid_action(braid_word, base) != base:
+        raise ValueError("braid word does not fix quotient base tuple")
+    fibre = quotient_map.fibre(base)
+    n = len(base)
+    supports = [set() for _ in range(n)]
+    images = {
+        tup: quotient_map.total.braid_action(braid_word, tup)
+        for tup in fibre
+    }
+    for left in fibre:
+        for right in fibre:
+            differing = [
+                index
+                for index, (a, b) in enumerate(zip(left, right))
+                if a != b
+            ]
+            if len(differing) != 1:
+                continue
+            changed_index = differing[0]
+            left_image = images[left]
+            right_image = images[right]
+            for output_index, (a, b) in enumerate(zip(left_image, right_image)):
+                if a != b:
+                    supports[output_index].add(changed_index)
+    return ResidualDependencySummary(
+        base_tuple=base,
+        braid_word=tuple(braid_word),
+        supports=tuple(tuple(sorted(support)) for support in supports),
+    )
+
+
+def _compose_permutations(left: Tuple[int, ...], right: Tuple[int, ...]) -> Tuple[int, ...]:
+    """Return left after right."""
+
+    if len(left) != len(right):
+        raise ValueError("permutations must have the same size")
+    return tuple(left[right[i]] for i in range(len(left)))
+
+
+def quotient_image_kernel_summary(
+    quotient_map: QuotientMap,
+    n: int,
+    state_limit: int = 100_000,
+) -> QuotientImageKernelSummary:
+    """Return the exact finite image/kernel sequence for one braid degree.
+
+    The braid action on ``total^n`` projects to the braid action on
+    ``quotient^n``.  For fixed ``n`` this helper closes the finite joint image
+    generated by the corresponding braid generators and reports the kernel of
+    the projection to the quotient image.  The kernel is exactly the fixed-
+    degree residual image of base-fixing braids.
+
+    This is a finite-degree structural certificate, not an all-``n`` proof.
+    """
+
+    if n < 1:
+        raise ValueError("braid degree must be positive")
+    alphabet = tuple(i for generator in range(1, n) for i in (generator, -generator))
+    total_identity = tuple(range(len(quotient_map.total.elements) ** n))
+    base_identity = tuple(range(len(quotient_map.quotient.elements) ** n))
+    if not alphabet:
+        return QuotientImageKernelSummary(
+            n=n,
+            joint_image_size=1,
+            total_image_size=1,
+            base_image_size=1,
+            kernel_size=1,
+            projection_surjective=True,
+            kernel_contains_nonidentity=False,
+            first_nonidentity_kernel_word=None,
+            truncated=False,
+        )
+
+    total_generators = {
+        signed: action_permutation(quotient_map.total, n, (signed,))
+        for signed in alphabet
+    }
+    base_generators = {
+        signed: action_permutation(quotient_map.quotient, n, (signed,))
+        for signed in alphabet
+    }
+
+    initial = (base_identity, total_identity, tuple())
+    queue = [initial]
+    seen = {(base_identity, total_identity)}
+    total_image = {total_identity}
+    base_projection = {base_identity}
+    kernel_total = {total_identity}
+    first_nonidentity_kernel_word = None
+    cursor = 0
+    truncated = False
+    while cursor < len(queue):
+        base_state, total_state, word = queue[cursor]
+        cursor += 1
+        for signed in alphabet:
+            next_word = word + (signed,)
+            next_base = _compose_permutations(base_generators[signed], base_state)
+            next_total = _compose_permutations(total_generators[signed], total_state)
+            key = (next_base, next_total)
+            if key in seen:
+                continue
+            seen.add(key)
+            total_image.add(next_total)
+            base_projection.add(next_base)
+            if next_base == base_identity:
+                kernel_total.add(next_total)
+                if next_total != total_identity and first_nonidentity_kernel_word is None:
+                    first_nonidentity_kernel_word = next_word
+            if len(seen) > state_limit:
+                truncated = True
+                return QuotientImageKernelSummary(
+                    n=n,
+                    joint_image_size=None,
+                    total_image_size=None,
+                    base_image_size=None,
+                    kernel_size=None,
+                    projection_surjective=None,
+                    kernel_contains_nonidentity=None,
+                    first_nonidentity_kernel_word=first_nonidentity_kernel_word,
+                    truncated=True,
+                )
+            queue.append((next_base, next_total, next_word))
+
+    base_image = set()
+    base_queue = [base_identity]
+    base_image.add(base_identity)
+    cursor = 0
+    while cursor < len(base_queue):
+        base_state = base_queue[cursor]
+        cursor += 1
+        for signed in alphabet:
+            next_base = _compose_permutations(base_generators[signed], base_state)
+            if next_base in base_image:
+                continue
+            base_image.add(next_base)
+            if len(base_image) > state_limit:
+                return QuotientImageKernelSummary(
+                    n=n,
+                    joint_image_size=None,
+                    total_image_size=None,
+                    base_image_size=None,
+                    kernel_size=None,
+                    projection_surjective=None,
+                    kernel_contains_nonidentity=None,
+                    first_nonidentity_kernel_word=first_nonidentity_kernel_word,
+                    truncated=True,
+                )
+            base_queue.append(next_base)
+
+    return QuotientImageKernelSummary(
+        n=n,
+        joint_image_size=len(seen),
+        total_image_size=len(total_image),
+        base_image_size=len(base_image),
+        kernel_size=len(kernel_total),
+        projection_surjective=base_projection == base_image,
+        kernel_contains_nonidentity=any(item != total_identity for item in kernel_total),
+        first_nonidentity_kernel_word=first_nonidentity_kernel_word,
+        truncated=truncated,
+    )
+
+
+def sharp_kernel_implication_failures(
+    quotient_map: QuotientMap,
+    base_detector: FiniteBraidedSet,
+    group: FiniteGroup,
+    n: int,
+    braid_words: Iterable[BraidWord],
+) -> Dict[Tuple[int, ...], Tuple[BaseTuple, FibreTuple, FibreTuple]]:
+    """Bounded failures of the sharp kernel implication.
+
+    This checks words in the supplied iterable.  It is useful for auditing
+    examples but cannot prove the universal theorem by itself.
+    """
+
+    failures = {}
+    for word in braid_words:
+        key = tuple(word)
+        if not is_identity_action(base_detector, n, key):
+            continue
+        if not has_identity_longitude_signature(group, n, key):
+            continue
+        moved = quotient_map.moved_residual_tuple(n, key)
+        if moved is not None:
+            failures[key] = moved
+    return failures
+
+
+def bounded_words(n: int, max_length: int) -> List[Tuple[int, ...]]:
+    """Enumerate braid words over sigma_i^{+-1} up to a length bound."""
+
+    if n < 2:
+        return [tuple()]
+    alphabet = tuple(i for generator in range(1, n) for i in (generator, -generator))
+    words = [tuple()]
+    frontier = [tuple()]
+    for _ in range(max_length):
+        next_frontier = []
+        for word in frontier:
+            for letter in alphabet:
+                if word and word[-1] == -letter:
+                    continue
+                new_word = word + (letter,)
+                words.append(new_word)
+                next_frontier.append(new_word)
+        frontier = next_frontier
+    return words

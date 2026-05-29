@@ -1,0 +1,87 @@
+[
+  {
+    "bound": 1,
+    "braid_word_length": 2,
+    "lcm_1_to_bound": 1,
+    "longitude_invisible_groups": [],
+    "longitude_visible_groups": [
+      "C2",
+      "C3",
+      "S3"
+    ],
+    "moved_tuple": "(('*', '*'), (('*', 0), ('*', 0)), (('*', 1), ('*', 1)))",
+    "moves_interval": true,
+    "pure_generator_action_order": 2
+  },
+  {
+    "bound": 2,
+    "braid_word_length": 4,
+    "lcm_1_to_bound": 2,
+    "longitude_invisible_groups": [
+      "C2"
+    ],
+    "longitude_visible_groups": [
+      "C3",
+      "S3"
+    ],
+    "moved_tuple": null,
+    "moves_interval": false,
+    "pure_generator_action_order": 2
+  },
+  {
+    "bound": 3,
+    "braid_word_length": 12,
+    "lcm_1_to_bound": 6,
+    "longitude_invisible_groups": [
+      "C2",
+      "C3",
+      "S3"
+    ],
+    "longitude_visible_groups": [],
+    "moved_tuple": null,
+    "moves_interval": false,
+    "pure_generator_action_order": 2
+  },
+  {
+    "bound": 4,
+    "braid_word_length": 24,
+    "lcm_1_to_bound": 12,
+    "longitude_invisible_groups": [
+      "C2",
+      "C3",
+      "S3"
+    ],
+    "longitude_visible_groups": [],
+    "moved_tuple": null,
+    "moves_interval": false,
+    "pure_generator_action_order": 2
+  },
+  {
+    "bound": 5,
+    "braid_word_length": 120,
+    "lcm_1_to_bound": 60,
+    "longitude_invisible_groups": [
+      "C2",
+      "C3",
+      "S3"
+    ],
+    "longitude_visible_groups": [],
+    "moved_tuple": null,
+    "moves_interval": false,
+    "pure_generator_action_order": 2
+  },
+  {
+    "bound": 6,
+    "braid_word_length": 120,
+    "lcm_1_to_bound": 60,
+    "longitude_invisible_groups": [
+      "C2",
+      "C3",
+      "S3"
+    ],
+    "longitude_visible_groups": [],
+    "moved_tuple": null,
+    "moves_interval": false,
+    "pure_generator_action_order": 2
+  }
+]

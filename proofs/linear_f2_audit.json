@@ -1,0 +1,90 @@
+{
+  "f2_dimension_2": {
+    "checked_matrix_count": 65536,
+    "crossing_gate_explanation_counts": {
+      "involutive_order_two": 42,
+      "nondegenerate_derived_rack_branch": 34,
+      "permutation_form_twist_order_2": 3,
+      "permutation_form_twist_order_3": 4,
+      "rack_inner_group_branch": 13,
+      "trivial_crossing_action": 1
+    },
+    "crossing_order_histogram": {
+      "1": 1,
+      "2": 42,
+      "3": 12,
+      "4": 36,
+      "6": 6
+    },
+    "dimension": 2,
+    "first_examples_by_kind": {
+      "equality": {
+        "branch_tags": [
+          "left_nondegenerate",
+          "right_nondegenerate",
+          "nondegenerate"
+        ],
+        "matrix": [
+          "0001",
+          "0011",
+          "0101",
+          "1111"
+        ],
+        "product_permutation_witness": false
+      },
+      "proper_mixed": {
+        "branch_tags": [
+          "left_nondegenerate",
+          "right_nondegenerate",
+          "nondegenerate"
+        ],
+        "matrix": [
+          "0001",
+          "0010",
+          "0111",
+          "1011"
+        ],
+        "product_permutation_witness": false
+      },
+      "universal": {
+        "branch_tags": [
+          "involutive",
+          "permutation_form",
+          "left_nondegenerate",
+          "right_nondegenerate",
+          "nondegenerate"
+        ],
+        "matrix": [
+          "0001",
+          "0010",
+          "0100",
+          "1000"
+        ],
+        "product_permutation_witness": true
+      }
+    },
+    "first_symmetric_gate_bad": null,
+    "invertible_matrix_count": 20160,
+    "linear_ybe_count": 97,
+    "point_count": 4,
+    "retraction_branch_counts": {
+      "equality | involutive + identity_table | no_product": 1,
+      "equality | involutive + left_nondegenerate + right_nondegenerate + nondegenerate | no_product": 6,
+      "equality | involutive | no_product": 12,
+      "equality | left_nondegenerate + right_nondegenerate + nondegenerate | no_product": 10,
+      "equality | rack_type + left_nondegenerate + right_nondegenerate + nondegenerate | no_product": 2,
+      "proper_mixed | involutive + left_nondegenerate + right_nondegenerate + nondegenerate | no_product": 6,
+      "proper_mixed | involutive | no_product": 12,
+      "proper_mixed | left_nondegenerate + right_nondegenerate + nondegenerate | no_product": 24,
+      "proper_mixed | rack_type + left_nondegenerate + right_nondegenerate + nondegenerate | no_product": 6,
+      "universal | involutive + permutation_form + left_nondegenerate + right_nondegenerate + nondegenerate | product": 5,
+      "universal | permutation_form + left_nondegenerate + right_nondegenerate + nondegenerate | product": 7,
+      "universal | rack_type + involutive + permutation_form + left_nondegenerate + right_nondegenerate + nondegenerate | product": 1,
+      "universal | rack_type + permutation_form + left_nondegenerate + right_nondegenerate + nondegenerate | product": 5
+    },
+    "symmetric_gate_bad_count": 0,
+    "two_strand_symmetric_longitude_period": 24,
+    "unknown_example_count": 0,
+    "unknown_examples": []
+  }
+}

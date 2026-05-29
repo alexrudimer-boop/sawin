@@ -1,0 +1,1524 @@
+{
+  "examples": {
+    "dihedral_quandle_3": {
+      "coordinate_action_relation_failure_count": 0,
+      "coordinate_monoid_size": 6,
+      "element_count": 3,
+      "green_r_class_audits": [
+        {
+          "atom_action": {
+            "supported_pair_count": 9,
+            "triangleleft_failure_count": 0,
+            "triangleright_failure_count": 0,
+            "undefined_pair_count": 0,
+            "well_defined": true
+          },
+          "atom_block_sizes": [
+            6,
+            6,
+            6
+          ],
+          "atom_count": 3,
+          "atom_descent_closure": {
+            "added_related_pair_count": 0,
+            "closed_atom_count": 3,
+            "closes_without_coarsening": true,
+            "initial_atom_count": 3,
+            "proves_stable_atom_action": true,
+            "stable_depth": 0,
+            "undefined_pair_count_after_closure": 0,
+            "well_defined_after_closure": true
+          },
+          "atom_projection": {
+            "empty_source_count": 0,
+            "equality_source_count": 6,
+            "mixed_source_count": 0,
+            "source_count": 6,
+            "universal_source_count": 0
+          },
+          "atom_quotient": {
+            "constructed": true,
+            "inner_group_order": 6,
+            "is_ybe": true,
+            "proves_right_rack_ybe_layer": true,
+            "right_rack_like": true,
+            "right_self_distributive": true,
+            "right_translations_bijective": true
+          },
+          "bounded_categories": [
+            {
+              "hidden_atom_trivial_loop_count": 0,
+              "hidden_bijective_loop_count": 0,
+              "max_depth": 0,
+              "morphism_count": 36,
+              "truncated": false,
+              "undefined_image_count": 0
+            },
+            {
+              "hidden_atom_trivial_loop_count": 0,
+              "hidden_bijective_loop_count": 0,
+              "max_depth": 1,
+              "morphism_count": 36,
+              "truncated": false,
+              "undefined_image_count": 0
+            },
+            {
+              "hidden_atom_trivial_loop_count": 0,
+              "hidden_bijective_loop_count": 0,
+              "max_depth": 2,
+              "morphism_count": 36,
+              "truncated": false,
+              "undefined_image_count": 0
+            }
+          ],
+          "branch_choice_failure_count": 0,
+          "completed_row_count": 54,
+          "depth_observers": [
+            {
+              "atom_profile_conflict_count": 0,
+              "context_word_counts": [
+                [
+                  "(0, 1, 2)",
+                  1
+                ],
+                [
+                  "(0, 2, 1)",
+                  1
+                ],
+                [
+                  "(1, 0, 2)",
+                  1
+                ],
+                [
+                  "(1, 2, 0)",
+                  1
+                ],
+                [
+                  "(2, 0, 1)",
+                  1
+                ],
+                [
+                  "(2, 1, 0)",
+                  1
+                ]
+              ],
+              "hidden_profile_split_count": 0,
+              "max_depth": 0,
+              "undefined_profile_count": 0
+            },
+            {
+              "atom_profile_conflict_count": 0,
+              "context_word_counts": [
+                [
+                  "(0, 1, 2)",
+                  4
+                ],
+                [
+                  "(0, 2, 1)",
+                  4
+                ],
+                [
+                  "(1, 0, 2)",
+                  4
+                ],
+                [
+                  "(1, 2, 0)",
+                  4
+                ],
+                [
+                  "(2, 0, 1)",
+                  4
+                ],
+                [
+                  "(2, 1, 0)",
+                  4
+                ]
+              ],
+              "hidden_profile_split_count": 0,
+              "max_depth": 1,
+              "undefined_profile_count": 0
+            },
+            {
+              "atom_profile_conflict_count": 0,
+              "context_word_counts": [
+                [
+                  "(0, 1, 2)",
+                  13
+                ],
+                [
+                  "(0, 2, 1)",
+                  13
+                ],
+                [
+                  "(1, 0, 2)",
+                  13
+                ],
+                [
+                  "(1, 2, 0)",
+                  13
+                ],
+                [
+                  "(2, 0, 1)",
+                  13
+                ],
+                [
+                  "(2, 1, 0)",
+                  13
+                ]
+              ],
+              "hidden_profile_split_count": 0,
+              "max_depth": 2,
+              "undefined_profile_count": 0
+            },
+            {
+              "atom_profile_conflict_count": 0,
+              "context_word_counts": [
+                [
+                  "(0, 1, 2)",
+                  40
+                ],
+                [
+                  "(0, 2, 1)",
+                  40
+                ],
+                [
+                  "(1, 0, 2)",
+                  40
+                ],
+                [
+                  "(1, 2, 0)",
+                  40
+                ],
+                [
+                  "(2, 0, 1)",
+                  40
+                ],
+                [
+                  "(2, 1, 0)",
+                  40
+                ]
+              ],
+              "hidden_profile_split_count": 0,
+              "max_depth": 3,
+              "undefined_profile_count": 0
+            }
+          ],
+          "edge_germ_count": 18,
+          "kernel_action": {
+            "induced_group_size": 6,
+            "induced_permutation_count": 3,
+            "kernel_block_count": 3,
+            "nonpermutation_label_count": 0,
+            "retained_label_count": 3
+          },
+          "r_class_size": 6,
+          "schutzenberger": {
+            "global_edge_germ_count": 18,
+            "globally_stabilizing_label_count": 3,
+            "local_only_edge_germ_count": 0,
+            "nonpermutation_stabilizer_count": 0,
+            "permutation_count": 6,
+            "permutation_group_closed": true,
+            "right_stabilizer_size": 6
+          }
+        }
+      ],
+      "j_class_count": 1,
+      "r_class_count": 1,
+      "regular_j_class_count": 1,
+      "tau_maps": {
+        "0": [
+          0,
+          2,
+          1
+        ],
+        "1": [
+          2,
+          1,
+          0
+        ],
+        "2": [
+          1,
+          0,
+          2
+        ]
+      }
+    },
+    "size3_affine_commutator_candidate": {
+      "coordinate_action_relation_failure_count": 0,
+      "coordinate_monoid_size": 3,
+      "element_count": 3,
+      "green_r_class_audits": [
+        {
+          "atom_action": {
+            "supported_pair_count": 9,
+            "triangleleft_failure_count": 0,
+            "triangleright_failure_count": 0,
+            "undefined_pair_count": 0,
+            "well_defined": true
+          },
+          "atom_block_sizes": [
+            3,
+            3,
+            3
+          ],
+          "atom_count": 3,
+          "atom_descent_closure": {
+            "added_related_pair_count": 0,
+            "closed_atom_count": 3,
+            "closes_without_coarsening": true,
+            "initial_atom_count": 3,
+            "proves_stable_atom_action": true,
+            "stable_depth": 0,
+            "undefined_pair_count_after_closure": 0,
+            "well_defined_after_closure": true
+          },
+          "atom_projection": {
+            "empty_source_count": 0,
+            "equality_source_count": 3,
+            "mixed_source_count": 0,
+            "source_count": 3,
+            "universal_source_count": 0
+          },
+          "atom_quotient": {
+            "constructed": true,
+            "inner_group_order": 6,
+            "is_ybe": true,
+            "proves_right_rack_ybe_layer": true,
+            "right_rack_like": true,
+            "right_self_distributive": true,
+            "right_translations_bijective": true
+          },
+          "bounded_categories": [
+            {
+              "hidden_atom_trivial_loop_count": 0,
+              "hidden_bijective_loop_count": 0,
+              "max_depth": 0,
+              "morphism_count": 9,
+              "truncated": false,
+              "undefined_image_count": 0
+            },
+            {
+              "hidden_atom_trivial_loop_count": 0,
+              "hidden_bijective_loop_count": 0,
+              "max_depth": 1,
+              "morphism_count": 18,
+              "truncated": false,
+              "undefined_image_count": 0
+            },
+            {
+              "hidden_atom_trivial_loop_count": 0,
+              "hidden_bijective_loop_count": 0,
+              "max_depth": 2,
+              "morphism_count": 18,
+              "truncated": false,
+              "undefined_image_count": 0
+            }
+          ],
+          "branch_choice_failure_count": 0,
+          "completed_row_count": 27,
+          "depth_observers": [
+            {
+              "atom_profile_conflict_count": 0,
+              "context_word_counts": [
+                [
+                  "(0, 1, 2)",
+                  1
+                ],
+                [
+                  "(1, 2, 0)",
+                  1
+                ],
+                [
+                  "(2, 0, 1)",
+                  1
+                ]
+              ],
+              "hidden_profile_split_count": 0,
+              "max_depth": 0,
+              "undefined_profile_count": 0
+            },
+            {
+              "atom_profile_conflict_count": 0,
+              "context_word_counts": [
+                [
+                  "(0, 1, 2)",
+                  4
+                ],
+                [
+                  "(1, 2, 0)",
+                  4
+                ],
+                [
+                  "(2, 0, 1)",
+                  4
+                ]
+              ],
+              "hidden_profile_split_count": 0,
+              "max_depth": 1,
+              "undefined_profile_count": 0
+            },
+            {
+              "atom_profile_conflict_count": 0,
+              "context_word_counts": [
+                [
+                  "(0, 1, 2)",
+                  13
+                ],
+                [
+                  "(1, 2, 0)",
+                  13
+                ],
+                [
+                  "(2, 0, 1)",
+                  13
+                ]
+              ],
+              "hidden_profile_split_count": 0,
+              "max_depth": 2,
+              "undefined_profile_count": 0
+            },
+            {
+              "atom_profile_conflict_count": 0,
+              "context_word_counts": [
+                [
+                  "(0, 1, 2)",
+                  40
+                ],
+                [
+                  "(1, 2, 0)",
+                  40
+                ],
+                [
+                  "(2, 0, 1)",
+                  40
+                ]
+              ],
+              "hidden_profile_split_count": 0,
+              "max_depth": 3,
+              "undefined_profile_count": 0
+            }
+          ],
+          "edge_germ_count": 9,
+          "kernel_action": {
+            "induced_group_size": 3,
+            "induced_permutation_count": 3,
+            "kernel_block_count": 3,
+            "nonpermutation_label_count": 0,
+            "retained_label_count": 3
+          },
+          "r_class_size": 3,
+          "schutzenberger": {
+            "global_edge_germ_count": 9,
+            "globally_stabilizing_label_count": 3,
+            "local_only_edge_germ_count": 0,
+            "nonpermutation_stabilizer_count": 0,
+            "permutation_count": 3,
+            "permutation_group_closed": true,
+            "right_stabilizer_size": 3
+          }
+        }
+      ],
+      "j_class_count": 1,
+      "r_class_count": 1,
+      "regular_j_class_count": 1,
+      "tau_maps": {
+        "0": [
+          0,
+          1,
+          2
+        ],
+        "1": [
+          2,
+          0,
+          1
+        ],
+        "2": [
+          1,
+          2,
+          0
+        ]
+      }
+    },
+    "trivial_rack_2": {
+      "coordinate_action_relation_failure_count": 0,
+      "coordinate_monoid_size": 1,
+      "element_count": 2,
+      "green_r_class_audits": [
+        {
+          "atom_action": {
+            "supported_pair_count": 4,
+            "triangleleft_failure_count": 0,
+            "triangleright_failure_count": 0,
+            "undefined_pair_count": 0,
+            "well_defined": true
+          },
+          "atom_block_sizes": [
+            1,
+            1
+          ],
+          "atom_count": 2,
+          "atom_descent_closure": {
+            "added_related_pair_count": 0,
+            "closed_atom_count": 2,
+            "closes_without_coarsening": true,
+            "initial_atom_count": 2,
+            "proves_stable_atom_action": true,
+            "stable_depth": 0,
+            "undefined_pair_count_after_closure": 0,
+            "well_defined_after_closure": true
+          },
+          "atom_projection": {
+            "empty_source_count": 0,
+            "equality_source_count": 1,
+            "mixed_source_count": 0,
+            "source_count": 1,
+            "universal_source_count": 0
+          },
+          "atom_quotient": {
+            "constructed": true,
+            "inner_group_order": 1,
+            "is_ybe": true,
+            "proves_right_rack_ybe_layer": true,
+            "right_rack_like": true,
+            "right_self_distributive": true,
+            "right_translations_bijective": true
+          },
+          "bounded_categories": [
+            {
+              "hidden_atom_trivial_loop_count": 0,
+              "hidden_bijective_loop_count": 0,
+              "max_depth": 0,
+              "morphism_count": 1,
+              "truncated": false,
+              "undefined_image_count": 0
+            },
+            {
+              "hidden_atom_trivial_loop_count": 0,
+              "hidden_bijective_loop_count": 0,
+              "max_depth": 1,
+              "morphism_count": 1,
+              "truncated": false,
+              "undefined_image_count": 0
+            },
+            {
+              "hidden_atom_trivial_loop_count": 0,
+              "hidden_bijective_loop_count": 0,
+              "max_depth": 2,
+              "morphism_count": 1,
+              "truncated": false,
+              "undefined_image_count": 0
+            }
+          ],
+          "branch_choice_failure_count": 0,
+          "completed_row_count": 4,
+          "depth_observers": [
+            {
+              "atom_profile_conflict_count": 0,
+              "context_word_counts": [
+                [
+                  "(0, 1)",
+                  1
+                ]
+              ],
+              "hidden_profile_split_count": 0,
+              "max_depth": 0,
+              "undefined_profile_count": 0
+            },
+            {
+              "atom_profile_conflict_count": 0,
+              "context_word_counts": [
+                [
+                  "(0, 1)",
+                  3
+                ]
+              ],
+              "hidden_profile_split_count": 0,
+              "max_depth": 1,
+              "undefined_profile_count": 0
+            },
+            {
+              "atom_profile_conflict_count": 0,
+              "context_word_counts": [
+                [
+                  "(0, 1)",
+                  7
+                ]
+              ],
+              "hidden_profile_split_count": 0,
+              "max_depth": 2,
+              "undefined_profile_count": 0
+            },
+            {
+              "atom_profile_conflict_count": 0,
+              "context_word_counts": [
+                [
+                  "(0, 1)",
+                  15
+                ]
+              ],
+              "hidden_profile_split_count": 0,
+              "max_depth": 3,
+              "undefined_profile_count": 0
+            }
+          ],
+          "edge_germ_count": 2,
+          "kernel_action": {
+            "induced_group_size": 1,
+            "induced_permutation_count": 2,
+            "kernel_block_count": 2,
+            "nonpermutation_label_count": 0,
+            "retained_label_count": 2
+          },
+          "r_class_size": 1,
+          "schutzenberger": {
+            "global_edge_germ_count": 2,
+            "globally_stabilizing_label_count": 2,
+            "local_only_edge_germ_count": 0,
+            "nonpermutation_stabilizer_count": 0,
+            "permutation_count": 1,
+            "permutation_group_closed": true,
+            "right_stabilizer_size": 1
+          }
+        }
+      ],
+      "j_class_count": 1,
+      "r_class_count": 1,
+      "regular_j_class_count": 1,
+      "tau_maps": {
+        "0": [
+          0,
+          1
+        ],
+        "1": [
+          0,
+          1
+        ]
+      }
+    }
+  },
+  "small_scans": {
+    "size_2_exhaustive": {
+      "atom_action_failure_solution_count": 0,
+      "atom_action_undefined_pair_audit_count": 0,
+      "atom_descent_closure_coarsening_solution_count": 0,
+      "atom_descent_closure_failure_solution_count": 0,
+      "atom_quotient_failure_solution_count": 0,
+      "atom_quotient_non_right_rack_like_solution_count": 0,
+      "atom_quotient_non_ybe_solution_count": 0,
+      "atom_quotient_rack_law_failure_solution_count": 0,
+      "depth2_atom_profile_conflict_count": 0,
+      "depth2_completed_category_truncation_count": 0,
+      "depth2_hidden_atom_trivial_loop_involutive_solution_count": 1,
+      "depth2_hidden_atom_trivial_loop_solution_count": 1,
+      "depth2_hidden_bijective_loop_involutive_solution_count": 0,
+      "depth2_hidden_bijective_loop_solution_count": 0,
+      "depth2_hidden_profile_split_count": 2,
+      "depth2_hidden_profile_split_solution_count": 1,
+      "depth2_hidden_split_involutive_solution_count": 1,
+      "direct_branch_choice_failure_count": 0,
+      "first_failure_signatures": [],
+      "first_hidden_loop_signatures": [
+        {
+          "affine_cyclic_form": {
+            "matrix": [
+              [
+                1,
+                0
+              ],
+              [
+                0,
+                1
+              ]
+            ],
+            "modulus": 2,
+            "offset": [
+              0,
+              0
+            ]
+          },
+          "branch_tags": [
+            "involutive",
+            "identity_table",
+            "affine_cyclic"
+          ],
+          "is_involutive_solution": true,
+          "is_rack_type": false,
+          "table_values": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              1,
+              1
+            ]
+          ]
+        }
+      ],
+      "first_hidden_split_signatures": [
+        {
+          "affine_cyclic_form": {
+            "matrix": [
+              [
+                1,
+                0
+              ],
+              [
+                0,
+                1
+              ]
+            ],
+            "modulus": 2,
+            "offset": [
+              0,
+              0
+            ]
+          },
+          "branch_tags": [
+            "involutive",
+            "identity_table",
+            "affine_cyclic"
+          ],
+          "is_identity_table": true,
+          "is_involutive_solution": true,
+          "is_rack_type": false,
+          "table_values": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              1,
+              1
+            ]
+          ]
+        }
+      ],
+      "first_mixed_atom_projection_signatures": [],
+      "kernel_action_max_group_size": 2,
+      "kernel_action_nonpermutation_solution_count": 0,
+      "local_only_edge_germ_solution_count": 0,
+      "max_checked": null,
+      "mixed_atom_projection_branch_tag_counts": {},
+      "mixed_atom_projection_involutive_solution_count": 0,
+      "mixed_atom_projection_solution_count": 0,
+      "nonrack_count": 3,
+      "schutzenberger_non_group_action_solution_count": 0,
+      "size": 2,
+      "ybe_count": 5
+    },
+    "size_3_exhaustive": {
+      "atom_action_failure_solution_count": 0,
+      "atom_action_undefined_pair_audit_count": 0,
+      "atom_descent_closure_coarsening_solution_count": 0,
+      "atom_descent_closure_failure_solution_count": 0,
+      "atom_quotient_failure_solution_count": 0,
+      "atom_quotient_non_right_rack_like_solution_count": 0,
+      "atom_quotient_non_ybe_solution_count": 0,
+      "atom_quotient_rack_law_failure_solution_count": 0,
+      "depth2_atom_profile_conflict_count": 0,
+      "depth2_completed_category_truncation_count": 0,
+      "depth2_hidden_atom_trivial_loop_involutive_solution_count": 7,
+      "depth2_hidden_atom_trivial_loop_solution_count": 7,
+      "depth2_hidden_bijective_loop_involutive_solution_count": 3,
+      "depth2_hidden_bijective_loop_solution_count": 3,
+      "depth2_hidden_profile_split_count": 15,
+      "depth2_hidden_profile_split_solution_count": 7,
+      "depth2_hidden_split_involutive_solution_count": 7,
+      "direct_branch_choice_failure_count": 0,
+      "first_failure_signatures": [],
+      "first_hidden_loop_signatures": [
+        {
+          "affine_cyclic_form": {
+            "matrix": [
+              [
+                1,
+                0
+              ],
+              [
+                0,
+                1
+              ]
+            ],
+            "modulus": 3,
+            "offset": [
+              0,
+              0
+            ]
+          },
+          "branch_tags": [
+            "involutive",
+            "identity_table",
+            "affine_cyclic"
+          ],
+          "is_involutive_solution": true,
+          "is_rack_type": false,
+          "table_values": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              0
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              2,
+              2
+            ]
+          ]
+        },
+        {
+          "affine_cyclic_form": null,
+          "branch_tags": [
+            "involutive"
+          ],
+          "is_involutive_solution": true,
+          "is_rack_type": false,
+          "table_values": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              2,
+              0
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              2
+            ]
+          ]
+        },
+        {
+          "affine_cyclic_form": null,
+          "branch_tags": [
+            "involutive"
+          ],
+          "is_involutive_solution": true,
+          "is_rack_type": false,
+          "table_values": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              2,
+              0
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              2,
+              2
+            ]
+          ]
+        },
+        {
+          "affine_cyclic_form": null,
+          "branch_tags": [
+            "involutive"
+          ],
+          "is_involutive_solution": true,
+          "is_rack_type": false,
+          "table_values": [
+            [
+              0,
+              0
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              2,
+              0
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              2
+            ]
+          ]
+        },
+        {
+          "affine_cyclic_form": null,
+          "branch_tags": [
+            "involutive"
+          ],
+          "is_involutive_solution": true,
+          "is_rack_type": false,
+          "table_values": [
+            [
+              0,
+              0
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              2,
+              0
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              2,
+              2
+            ]
+          ]
+        }
+      ],
+      "first_hidden_split_signatures": [
+        {
+          "affine_cyclic_form": {
+            "matrix": [
+              [
+                1,
+                0
+              ],
+              [
+                0,
+                1
+              ]
+            ],
+            "modulus": 3,
+            "offset": [
+              0,
+              0
+            ]
+          },
+          "branch_tags": [
+            "involutive",
+            "identity_table",
+            "affine_cyclic"
+          ],
+          "is_identity_table": true,
+          "is_involutive_solution": true,
+          "is_rack_type": false,
+          "table_values": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              0
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              2,
+              2
+            ]
+          ]
+        },
+        {
+          "affine_cyclic_form": null,
+          "branch_tags": [
+            "involutive"
+          ],
+          "is_identity_table": false,
+          "is_involutive_solution": true,
+          "is_rack_type": false,
+          "table_values": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              2,
+              0
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              2
+            ]
+          ]
+        },
+        {
+          "affine_cyclic_form": null,
+          "branch_tags": [
+            "involutive"
+          ],
+          "is_identity_table": false,
+          "is_involutive_solution": true,
+          "is_rack_type": false,
+          "table_values": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              2,
+              0
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              2,
+              2
+            ]
+          ]
+        },
+        {
+          "affine_cyclic_form": null,
+          "branch_tags": [
+            "involutive"
+          ],
+          "is_identity_table": false,
+          "is_involutive_solution": true,
+          "is_rack_type": false,
+          "table_values": [
+            [
+              0,
+              0
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              2,
+              0
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              2
+            ]
+          ]
+        },
+        {
+          "affine_cyclic_form": null,
+          "branch_tags": [
+            "involutive"
+          ],
+          "is_identity_table": false,
+          "is_involutive_solution": true,
+          "is_rack_type": false,
+          "table_values": [
+            [
+              0,
+              0
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              2,
+              0
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              2,
+              2
+            ]
+          ]
+        }
+      ],
+      "first_mixed_atom_projection_signatures": [
+        {
+          "affine_cyclic_form": null,
+          "branch_tags": [
+            "involutive"
+          ],
+          "is_involutive_solution": true,
+          "is_rack_type": false,
+          "mixed_source_counts": [
+            1,
+            0,
+            1
+          ],
+          "table_values": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              2,
+              0
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              2
+            ]
+          ]
+        },
+        {
+          "affine_cyclic_form": null,
+          "branch_tags": [
+            "involutive"
+          ],
+          "is_involutive_solution": true,
+          "is_rack_type": false,
+          "mixed_source_counts": [
+            1,
+            0,
+            1
+          ],
+          "table_values": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              2,
+              0
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              2,
+              2
+            ]
+          ]
+        },
+        {
+          "affine_cyclic_form": null,
+          "branch_tags": [
+            "involutive"
+          ],
+          "is_involutive_solution": true,
+          "is_rack_type": false,
+          "mixed_source_counts": [
+            1,
+            0,
+            1
+          ],
+          "table_values": [
+            [
+              0,
+              0
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              2,
+              0
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              2
+            ]
+          ]
+        },
+        {
+          "affine_cyclic_form": null,
+          "branch_tags": [
+            "involutive"
+          ],
+          "is_involutive_solution": true,
+          "is_rack_type": false,
+          "mixed_source_counts": [
+            1,
+            0,
+            1
+          ],
+          "table_values": [
+            [
+              0,
+              0
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              2,
+              0
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              2,
+              2
+            ]
+          ]
+        },
+        {
+          "affine_cyclic_form": null,
+          "branch_tags": [
+            "involutive"
+          ],
+          "is_involutive_solution": true,
+          "is_rack_type": false,
+          "mixed_source_counts": [
+            1,
+            0,
+            1
+          ],
+          "table_values": [
+            [
+              0,
+              0
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              2,
+              0
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              2,
+              2
+            ]
+          ]
+        }
+      ],
+      "kernel_action_max_group_size": 6,
+      "kernel_action_nonpermutation_solution_count": 0,
+      "local_only_edge_germ_solution_count": 0,
+      "max_checked": null,
+      "mixed_atom_projection_branch_tag_counts": {
+        "involutive": 6
+      },
+      "mixed_atom_projection_involutive_solution_count": 6,
+      "mixed_atom_projection_solution_count": 6,
+      "nonrack_count": 60,
+      "schutzenberger_non_group_action_solution_count": 0,
+      "size": 3,
+      "ybe_count": 73
+    }
+  }
+}

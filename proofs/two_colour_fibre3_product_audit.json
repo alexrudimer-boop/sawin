@@ -1,0 +1,462 @@
+{
+  "base_scans": [
+    {
+      "base_identity": true,
+      "base_index": 0,
+      "base_tags": [
+        "involutive",
+        "identity_table",
+        "affine_cyclic"
+      ],
+      "direct": {
+        "base_identity": true,
+        "base_index": 0,
+        "base_tags": [
+          "involutive",
+          "identity_table",
+          "affine_cyclic"
+        ],
+        "branch_tag_counts": {},
+        "first_identity_base_cyclic": null,
+        "first_router_targets": [],
+        "first_unknowns": [],
+        "holonomy_counts": {},
+        "identity_base_cyclic_count": 0,
+        "known_primitive_count": 0,
+        "primitive_count": 0,
+        "product_cocycle_count": 1,
+        "product_holonomy_detail_counts": {},
+        "right_label_assignments_checked": 1296,
+        "router_verdict_counts": {},
+        "side": "direct",
+        "unknown_primitive_count": 0,
+        "valid_left_label_count": 1
+      },
+      "swapped": {
+        "base_identity": true,
+        "base_index": 0,
+        "base_tags": [
+          "involutive",
+          "identity_table",
+          "affine_cyclic"
+        ],
+        "branch_tag_counts": {
+          "(untagged)": 324,
+          "involutive": 1164
+        },
+        "first_identity_base_cyclic": {
+          "holonomy": "(((0, 1, 2), 3),)",
+          "left": {
+            "(0, 0)": [
+              0,
+              1,
+              2
+            ],
+            "(0, 1)": [
+              0,
+              1,
+              2
+            ],
+            "(1, 0)": [
+              0,
+              1,
+              2
+            ],
+            "(1, 1)": [
+              0,
+              1,
+              2
+            ]
+          },
+          "right": {
+            "(0, 0)": [
+              1,
+              2,
+              0
+            ],
+            "(0, 1)": [
+              1,
+              2,
+              0
+            ],
+            "(1, 0)": [
+              1,
+              2,
+              0
+            ],
+            "(1, 1)": [
+              1,
+              2,
+              0
+            ]
+          }
+        },
+        "first_router_targets": [],
+        "first_unknowns": [],
+        "holonomy_counts": {
+          "(((0, 1, 2), 3),)": 480,
+          "(((0, 1, 2), 6),)": 1008
+        },
+        "identity_base_cyclic_count": 324,
+        "known_primitive_count": 1164,
+        "primitive_count": 1488,
+        "product_cocycle_count": 1764,
+        "product_holonomy_detail_counts": {
+          "swapped_identity_base_cyclic": 1488
+        },
+        "right_label_assignments_checked": 1679616,
+        "router_verdict_counts": {
+          "product_finite_g_branch": 1488
+        },
+        "side": "swapped",
+        "unknown_primitive_count": 0,
+        "valid_left_label_count": 1296
+      }
+    },
+    {
+      "base_identity": false,
+      "base_index": 1,
+      "base_tags": [
+        "rack_type",
+        "involutive",
+        "permutation_form",
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate",
+        "affine_cyclic"
+      ],
+      "direct": {
+        "base_identity": false,
+        "base_index": 1,
+        "base_tags": [
+          "rack_type",
+          "involutive",
+          "permutation_form",
+          "left_nondegenerate",
+          "right_nondegenerate",
+          "nondegenerate",
+          "affine_cyclic"
+        ],
+        "branch_tag_counts": {
+          "involutive": 12
+        },
+        "first_identity_base_cyclic": null,
+        "first_router_targets": [],
+        "first_unknowns": [],
+        "holonomy_counts": {
+          "(((0, 1, 2), 3),)": 12
+        },
+        "identity_base_cyclic_count": 0,
+        "known_primitive_count": 12,
+        "primitive_count": 12,
+        "product_cocycle_count": 36,
+        "product_holonomy_detail_counts": {
+          "direct_genuinely_coloured_known_total": 12
+        },
+        "right_label_assignments_checked": 7776,
+        "router_verdict_counts": {
+          "product_finite_g_branch": 12
+        },
+        "side": "direct",
+        "unknown_primitive_count": 0,
+        "valid_left_label_count": 6
+      },
+      "swapped": {
+        "base_identity": false,
+        "base_index": 1,
+        "base_tags": [
+          "rack_type",
+          "involutive",
+          "permutation_form",
+          "left_nondegenerate",
+          "right_nondegenerate",
+          "nondegenerate",
+          "affine_cyclic"
+        ],
+        "branch_tag_counts": {},
+        "first_identity_base_cyclic": null,
+        "first_router_targets": [],
+        "first_unknowns": [],
+        "holonomy_counts": {},
+        "identity_base_cyclic_count": 0,
+        "known_primitive_count": 0,
+        "primitive_count": 0,
+        "product_cocycle_count": 15876,
+        "product_holonomy_detail_counts": {},
+        "right_label_assignments_checked": 419904,
+        "router_verdict_counts": {},
+        "side": "swapped",
+        "unknown_primitive_count": 0,
+        "valid_left_label_count": 324
+      }
+    },
+    {
+      "base_identity": false,
+      "base_index": 2,
+      "base_tags": [
+        "permutation_form",
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate",
+        "affine_cyclic"
+      ],
+      "direct": {
+        "base_identity": false,
+        "base_index": 2,
+        "base_tags": [
+          "permutation_form",
+          "left_nondegenerate",
+          "right_nondegenerate",
+          "nondegenerate",
+          "affine_cyclic"
+        ],
+        "branch_tag_counts": {},
+        "first_identity_base_cyclic": null,
+        "first_router_targets": [],
+        "first_unknowns": [],
+        "holonomy_counts": {},
+        "identity_base_cyclic_count": 0,
+        "known_primitive_count": 0,
+        "primitive_count": 0,
+        "product_cocycle_count": 6,
+        "product_holonomy_detail_counts": {},
+        "right_label_assignments_checked": 7776,
+        "router_verdict_counts": {},
+        "side": "direct",
+        "unknown_primitive_count": 0,
+        "valid_left_label_count": 6
+      },
+      "swapped": {
+        "base_identity": false,
+        "base_index": 2,
+        "base_tags": [
+          "permutation_form",
+          "left_nondegenerate",
+          "right_nondegenerate",
+          "nondegenerate",
+          "affine_cyclic"
+        ],
+        "branch_tag_counts": {
+          "permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate": 48
+        },
+        "first_identity_base_cyclic": null,
+        "first_router_targets": [],
+        "first_unknowns": [],
+        "holonomy_counts": {
+          "(((0, 1, 2), 3),)": 48
+        },
+        "identity_base_cyclic_count": 0,
+        "known_primitive_count": 48,
+        "primitive_count": 48,
+        "product_cocycle_count": 108,
+        "product_holonomy_detail_counts": {
+          "swapped_genuinely_coloured_known_total": 48
+        },
+        "right_label_assignments_checked": 46656,
+        "router_verdict_counts": {
+          "product_finite_g_branch": 48
+        },
+        "side": "swapped",
+        "unknown_primitive_count": 0,
+        "valid_left_label_count": 36
+      }
+    },
+    {
+      "base_identity": false,
+      "base_index": 3,
+      "base_tags": [
+        "rack_type",
+        "permutation_form",
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate",
+        "affine_cyclic"
+      ],
+      "direct": {
+        "base_identity": false,
+        "base_index": 3,
+        "base_tags": [
+          "rack_type",
+          "permutation_form",
+          "left_nondegenerate",
+          "right_nondegenerate",
+          "nondegenerate",
+          "affine_cyclic"
+        ],
+        "branch_tag_counts": {},
+        "first_identity_base_cyclic": null,
+        "first_router_targets": [],
+        "first_unknowns": [],
+        "holonomy_counts": {},
+        "identity_base_cyclic_count": 0,
+        "known_primitive_count": 0,
+        "primitive_count": 0,
+        "product_cocycle_count": 6,
+        "product_holonomy_detail_counts": {},
+        "right_label_assignments_checked": 7776,
+        "router_verdict_counts": {},
+        "side": "direct",
+        "unknown_primitive_count": 0,
+        "valid_left_label_count": 6
+      },
+      "swapped": {
+        "base_identity": false,
+        "base_index": 3,
+        "base_tags": [
+          "rack_type",
+          "permutation_form",
+          "left_nondegenerate",
+          "right_nondegenerate",
+          "nondegenerate",
+          "affine_cyclic"
+        ],
+        "branch_tag_counts": {
+          "permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate": 36,
+          "rack_type+permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate": 12
+        },
+        "first_identity_base_cyclic": null,
+        "first_router_targets": [],
+        "first_unknowns": [],
+        "holonomy_counts": {
+          "(((0, 1, 2), 3),)": 48
+        },
+        "identity_base_cyclic_count": 0,
+        "known_primitive_count": 48,
+        "primitive_count": 48,
+        "product_cocycle_count": 108,
+        "product_holonomy_detail_counts": {
+          "swapped_genuinely_coloured_known_total": 48
+        },
+        "right_label_assignments_checked": 46656,
+        "router_verdict_counts": {
+          "product_finite_g_branch": 48
+        },
+        "side": "swapped",
+        "unknown_primitive_count": 0,
+        "valid_left_label_count": 36
+      }
+    },
+    {
+      "base_identity": false,
+      "base_index": 4,
+      "base_tags": [
+        "involutive",
+        "permutation_form",
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate",
+        "affine_cyclic"
+      ],
+      "direct": {
+        "base_identity": false,
+        "base_index": 4,
+        "base_tags": [
+          "involutive",
+          "permutation_form",
+          "left_nondegenerate",
+          "right_nondegenerate",
+          "nondegenerate",
+          "affine_cyclic"
+        ],
+        "branch_tag_counts": {
+          "involutive": 12
+        },
+        "first_identity_base_cyclic": null,
+        "first_router_targets": [],
+        "first_unknowns": [],
+        "holonomy_counts": {
+          "(((0, 1, 2), 3),)": 12
+        },
+        "identity_base_cyclic_count": 0,
+        "known_primitive_count": 12,
+        "primitive_count": 12,
+        "product_cocycle_count": 36,
+        "product_holonomy_detail_counts": {
+          "direct_genuinely_coloured_known_total": 12
+        },
+        "right_label_assignments_checked": 7776,
+        "router_verdict_counts": {
+          "product_finite_g_branch": 12
+        },
+        "side": "direct",
+        "unknown_primitive_count": 0,
+        "valid_left_label_count": 6
+      },
+      "swapped": {
+        "base_identity": false,
+        "base_index": 4,
+        "base_tags": [
+          "involutive",
+          "permutation_form",
+          "left_nondegenerate",
+          "right_nondegenerate",
+          "nondegenerate",
+          "affine_cyclic"
+        ],
+        "branch_tag_counts": {
+          "involutive+left_nondegenerate+right_nondegenerate+nondegenerate": 36,
+          "involutive+permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate": 12,
+          "left_nondegenerate+right_nondegenerate+nondegenerate": 396,
+          "permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate": 36
+        },
+        "first_identity_base_cyclic": null,
+        "first_router_targets": [],
+        "first_unknowns": [],
+        "holonomy_counts": {
+          "(((0, 1, 2), 3),)": 480
+        },
+        "identity_base_cyclic_count": 0,
+        "known_primitive_count": 480,
+        "primitive_count": 480,
+        "product_cocycle_count": 756,
+        "product_holonomy_detail_counts": {
+          "swapped_genuinely_coloured_known_total": 480
+        },
+        "right_label_assignments_checked": 139968,
+        "router_verdict_counts": {
+          "product_finite_g_branch": 480
+        },
+        "side": "swapped",
+        "unknown_primitive_count": 0,
+        "valid_left_label_count": 108
+      }
+    }
+  ],
+  "product_detail_totals": {
+    "direct": {
+      "direct_genuinely_coloured_known_total": 24
+    },
+    "swapped": {
+      "swapped_genuinely_coloured_known_total": 576,
+      "swapped_identity_base_cyclic": 1488
+    }
+  },
+  "router_totals": {
+    "direct": {
+      "product_finite_g_branch": 24
+    },
+    "swapped": {
+      "product_finite_g_branch": 2064
+    }
+  },
+  "totals": {
+    "direct": {
+      "identity_base_cyclic_count": 0,
+      "known_primitive_count": 24,
+      "primitive_count": 24,
+      "product_cocycle_count": 85,
+      "right_label_assignments_checked": 32400,
+      "unknown_primitive_count": 0,
+      "valid_left_label_count": 25
+    },
+    "swapped": {
+      "identity_base_cyclic_count": 324,
+      "known_primitive_count": 1740,
+      "primitive_count": 2064,
+      "product_cocycle_count": 18612,
+      "right_label_assignments_checked": 2332800,
+      "unknown_primitive_count": 0,
+      "valid_left_label_count": 1800
+    }
+  }
+}
