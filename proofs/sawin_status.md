@@ -973,6 +973,28 @@ inner-group detector.  The current bottleneck is therefore descent
 separation: prove that any non-strand-continuing lower motion is already
 visible in Green kernel-block or Schutzenberger readouts, with no residual
 motion left outside the fixed factors.
+The continuation-congruence gate
+`proofs/continuation_congruence_descent_gate.md` now isolates the finite
+local-minimality dichotomy behind that statement.  For a rack-base local row
+`T_{a,b}(x,y)=(u,v)`, seed the relation `x~v` whenever `v != x`, and close it
+to the least admissible family `Theta^cont`.  Equality gives the
+strand-continuing row already handled by transport-state rackification.
+Proper mixed closure is a local-minimality failure.  In a genuine
+local-minimal interval, every nontrivial continuation closure is therefore
+all-universal.  The current sharp bottleneck is universal continuation
+visibility: prove that this universal continuation corridor is exactly the
+fixed Green/Schutzenberger-visible motion, or extract the normalized-law B
+sequence from it.
+The chart-transport collapse in
+`proofs/chart_transport_collapse.md` removes chart-dependent copies from the
+generator burden.  Since `V_beta(G)` is already normal in every finite group,
+a representative elementary-generator witness gives witnesses for all finite
+chart conjugates; `conjugate_longitude_subgroup_witness(...)` records the
+certificate-level operation.  The final A-route theorem is now stated in
+`proofs/descent_separation_transport_rack_closure.md`: transport-rack closure
+is proved, but descent separation remains open.  A complete proof must show
+that every non-rack lower motion is visible in fixed Green, Schutzenberger, or
+atom readouts, so that only strand-continuing transport-rack gauge remains.
 The single-endpoint route audit
 `unit_composite_longitude_route_audit(monoid,n,beta,factors)` now records the
 same ladder used in product-label work: endpoint identity, one evaluated

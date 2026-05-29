@@ -12,6 +12,12 @@ The new residual bottleneck is therefore not nonprincipal gauge.  It is
 descent separation: prove that every completed Green/corridor readout splits
 into Green/Schutzenberger motion plus strand-continuing finite transport
 state, with no residual motion outside those readouts.
+The next note, `proofs/continuation_congruence_descent_gate.md`, turns this
+descent-separation question into a finite local-minimality dichotomy by
+closing all continuation-change pairs `x~v` under admissible congruence.
+The status note `proofs/descent_separation_transport_rack_closure.md`
+separates the proved transport-rack closure from the still-unproved descent
+separation theorem.
 
 ## Strand-continuing transport row
 

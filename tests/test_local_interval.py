@@ -6,6 +6,9 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from ybe_domination import (
     LocalInterval,
+    continuation_congruence_audit,
+    continuation_seed_pairs,
+    continuation_seed_rows,
     coordinate_kernel_pair_closure_audits,
     coordinate_kernel_pair_closure_failures,
 )
@@ -215,6 +218,39 @@ class LocalIntervalTests(unittest.TestCase):
         self.assertTrue(
             all(row.source_pairs or row.source == "seed" for row in audit.derivation_rows)
         )
+
+    def test_continuation_congruence_detects_strand_continuing_rows(self):
+        interval = one_color_flip_interval()
+
+        audit = continuation_congruence_audit(interval)
+
+        self.assertEqual(continuation_seed_rows(interval), ())
+        self.assertEqual(continuation_seed_pairs(interval), {"*": ()})
+        self.assertTrue(audit.base_rows_are_left_rack_form)
+        self.assertTrue(audit.is_strand_continuing_on_the_nose)
+        self.assertEqual(audit.generated.kind, "equality")
+        self.assertTrue(audit.proves_transport_or_universal_dichotomy)
+
+    def test_continuation_congruence_universal_for_local_minimal_flip_gap(self):
+        interval = one_color_identity_interval()
+
+        audit = continuation_congruence_audit(interval)
+
+        self.assertEqual(audit.nontrivial_seed_count, 2)
+        self.assertTrue(audit.base_rows_are_left_rack_form)
+        self.assertFalse(audit.is_strand_continuing_on_the_nose)
+        self.assertEqual(audit.generated.kind, "universal")
+        self.assertTrue(audit.continuation_closure_is_universal)
+        self.assertTrue(audit.proves_transport_or_universal_dichotomy)
+
+    def test_continuation_congruence_records_non_rack_base_rows(self):
+        interval = two_color_identity_interval()
+
+        audit = continuation_congruence_audit(interval)
+
+        self.assertFalse(audit.base_rows_are_left_rack_form)
+        self.assertTrue(audit.non_rack_base_rows)
+        self.assertFalse(audit.proves_transport_or_universal_dichotomy)
 
 
 if __name__ == "__main__":

@@ -384,6 +384,18 @@ The transport-state refinement
 strand-continuing rows: the finite state `(a,r)` is itself the rack element,
 so `Inn(A x E)` detects any bijective YBE row
 `((a,r),(b,s))->((a*b,F_{a,b,r}(s)),(a,r))`.
+The continuation-congruence gate
+`proofs/continuation_congruence_descent_gate.md` records what remains when a
+row is not strand-continuing: close the seed pairs `x~v` under admissible
+local congruence.  Proper mixed closure is incompatible with local-minimality;
+universal closure is the only nontrivial descent-separation case left.
+The chart-transport collapse
+`proofs/chart_transport_collapse.md` removes transported copies from the
+generator burden: ordinary `V_beta(G)` membership is already closed under
+finite chart conjugation.  The remaining proof target is the descent
+separation theorem recorded in
+`proofs/descent_separation_transport_rack_closure.md`, not another
+chart-dependent generator check.
 
 ## Executable certificate layer
 

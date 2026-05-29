@@ -589,6 +589,18 @@ class PushforwardLongitudeSubgroupWitnessAudit:
 
 
 @dataclass(frozen=True)
+class ConjugateLongitudeSubgroupWitnessAudit:
+    """Certificate-level normality for one longitude subgroup witness."""
+
+    original_value: GroupElement
+    conjugator: GroupElement
+    conjugated_witness: LongitudeSubgroupWitness
+    conjugated_witness_value: GroupElement
+    expected_conjugate_value: GroupElement
+    conjugated_witness_matches: bool
+
+
+@dataclass(frozen=True)
 class DirectProductLongitudeSubgroupAudit:
     """Compare ``V_beta(product_i G_i)`` with ``product_i V_beta(G_i)``."""
 
@@ -1541,6 +1553,84 @@ def pushforward_longitude_subgroup_witness_audit(
         pushed_witness=pushed_witness,
         pushed_witness_value=pushed_witness_value,
         pushforward_matches_image=pushed_witness_value == target_image_value,
+    )
+
+
+def conjugate_longitude_subgroup_witness(
+    group: FiniteGroup,
+    conjugator: GroupElement,
+    witness: Sequence[LongitudeSubgroupWitnessLetter],
+) -> LongitudeSubgroupWitness:
+    """Return a witness for ``conjugator * value * conjugator^-1``.
+
+    Each witness letter evaluates a recursive longitude under some assignment
+    ``phi:F_n -> G``.  Replacing that assignment by
+    ``x_j |-> c phi(x_j) c^-1`` conjugates the corresponding longitude value.
+    Letterwise conjugation therefore witnesses the conjugate of the whole
+    product, which is the certificate-level normality of ``V_beta(G)``.
+    """
+
+    elements = set(group.elements)
+    if conjugator not in elements:
+        raise ValueError("conjugator must be an element of the group")
+    inverse = group.inv(conjugator)
+    conjugated = []
+    for assignment, longitude_index, exponent in witness:
+        assignment_tuple = tuple(assignment)
+        if any(value not in elements for value in assignment_tuple):
+            raise ValueError("witness assignment contains a value outside the group")
+        conjugated.append(
+            (
+                tuple(
+                    group.mul(group.mul(conjugator, value), inverse)
+                    for value in assignment_tuple
+                ),
+                longitude_index,
+                exponent,
+            )
+        )
+    return tuple(conjugated)
+
+
+def conjugate_longitude_subgroup_witness_audit(
+    group: FiniteGroup,
+    n: int,
+    braid_word: BraidWord,
+    conjugator: GroupElement,
+    witness: Sequence[LongitudeSubgroupWitnessLetter],
+) -> ConjugateLongitudeSubgroupWitnessAudit:
+    """Audit that conjugating assignments conjugates the witness value."""
+
+    original_value = evaluate_longitude_subgroup_witness(
+        group,
+        n,
+        braid_word,
+        witness,
+    )
+    conjugated_witness = conjugate_longitude_subgroup_witness(
+        group,
+        conjugator,
+        witness,
+    )
+    conjugated_witness_value = evaluate_longitude_subgroup_witness(
+        group,
+        n,
+        braid_word,
+        conjugated_witness,
+    )
+    expected_conjugate_value = group.mul(
+        group.mul(conjugator, original_value),
+        group.inv(conjugator),
+    )
+    return ConjugateLongitudeSubgroupWitnessAudit(
+        original_value=original_value,
+        conjugator=conjugator,
+        conjugated_witness=conjugated_witness,
+        conjugated_witness_value=conjugated_witness_value,
+        expected_conjugate_value=expected_conjugate_value,
+        conjugated_witness_matches=(
+            conjugated_witness_value == expected_conjugate_value
+        ),
     )
 
 

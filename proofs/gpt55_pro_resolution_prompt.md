@@ -119,14 +119,17 @@ nondegeneracy to the total solution.
 50. `proofs/terminal_gauge_longitudinalization_criterion.md`
 51. `proofs/principal_gauge_extension_detector.md`
 52. `proofs/transport_state_rackification_detector.md`
-53. `proofs/bifree_corridor_subgroup_certificate.md`
-54. `proofs/bifree_corridor_certificate_audit.md`
-55. `proofs/bifree_corridor_exact_audit.md`
-56. `proofs/local_minimal_green_audit.md`
-57. `proofs/dual_green_symmetry.md`
-58. `proofs/opposite_detectability_closure.md`
-59. `proofs/finite_semigroup_holonomy_route.md`
-60. `proofs/unit_holonomy_longitude_gate.md`
+53. `proofs/continuation_congruence_descent_gate.md`
+54. `proofs/chart_transport_collapse.md`
+55. `proofs/descent_separation_transport_rack_closure.md`
+56. `proofs/bifree_corridor_subgroup_certificate.md`
+57. `proofs/bifree_corridor_certificate_audit.md`
+58. `proofs/bifree_corridor_exact_audit.md`
+59. `proofs/local_minimal_green_audit.md`
+60. `proofs/dual_green_symmetry.md`
+61. `proofs/opposite_detectability_closure.md`
+62. `proofs/finite_semigroup_holonomy_route.md`
+63. `proofs/unit_holonomy_longitude_gate.md`
 Also read `proofs/unit_factorization_gate.md`, which proves that a product of
 finite total transformations can be a residual permutation only when every
 factor is already a unit/permutation.
@@ -215,13 +218,25 @@ principal assumption for strand-continuing finite gauge rows.  A row
 `Inn(A x E)` is a fixed detector.  The remaining target is descent
 separation: any non-strand-continuing lower motion must be completely visible
 in Green kernel-block or Schutzenberger factors.
+Also read `proofs/continuation_congruence_descent_gate.md`: it generates the
+least admissible congruence from all continuation changes `x~v`.  Equality is
+the transport-state case, proper mixed closure contradicts local-minimality,
+and universal closure is the remaining corridor whose Green/Schutzenberger
+visibility must be proved or converted into a normalized-law B sequence.
+Also read `proofs/chart_transport_collapse.md`: it proves that finite chart
+conjugation does not create new endpoint-longitude obligations, because
+`V_beta(G)` is normal and one representative elementary-generator witness
+certifies the whole chart-conjugacy orbit.  Then read
+`proofs/descent_separation_transport_rack_closure.md`: it is the current
+honest final A-route statement.  Transport-rack closure is proved there; the
+unproved theorem is descent separation itself.
 Also read `proofs/unit_section_product_detector.md`, which combines finitely
 many fixed unit-section factors into one direct-product detector group.
-61. `proofs/green_holonomy_factorization_gate.md`
-62. `proofs/involutive_permutation_detector.md`
-63. `proofs/structure_orbit_law_obstruction.md`
-64. `proofs/fixed_variety_barrier.md`
-65. `proofs/bounded_degree_action_image_limit.md`
+62. `proofs/green_holonomy_factorization_gate.md`
+63. `proofs/involutive_permutation_detector.md`
+64. `proofs/structure_orbit_law_obstruction.md`
+65. `proofs/fixed_variety_barrier.md`
+66. `proofs/bounded_degree_action_image_limit.md`
 Also read `proofs/diagonal_normalized_obstruction.md`, which proves that an
 explicit detector-free interval diagonalizes to the normalized-law sequence
 required for outcome B.  Audit the companion helpers
@@ -229,14 +244,14 @@ required for outcome B.  Audit the companion helpers
 `right_stabilization_longitude_audit(...)` for product and stabilization
 conventions only; they are not a substitute for proving all finite detector
 groups fail.
-66. `proofs/affine_f2_audit.md`
-67. `proofs/two_colour_fibre2_all_bases_audit.md`
-68. `proofs/fibre2_product_branch.md`
-69. `proofs/two_colour_fibre3_product_audit.md`
-70. `proofs/three_colour_fibre2_product_audit.md`
-71. `proofs/sawin_proof_log.docx`
-72. `tables/reduction_audit.xlsx`
-73. Relevant code in `src/`, `tools/`, and `tests`, especially modules
+67. `proofs/affine_f2_audit.md`
+68. `proofs/two_colour_fibre2_all_bases_audit.md`
+69. `proofs/fibre2_product_branch.md`
+70. `proofs/two_colour_fibre3_product_audit.md`
+71. `proofs/three_colour_fibre2_product_audit.md`
+72. `proofs/sawin_proof_log.docx`
+73. `tables/reduction_audit.xlsx`
+74. Relevant code in `src/`, `tools/`, and `tests`, especially modules
     concerning input-dependent longitude factorization, quotient image
     kernels, residual dependency support, local-minimal intervals, local
     bottleneck routing, coordinate-kernel corridors, product label words,

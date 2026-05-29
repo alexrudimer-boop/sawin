@@ -293,3 +293,17 @@ normal-form requirement for strand-continuing gauge rows.  Such rows rackify
 on `A x E`, so the only remaining structural issue is descent separation:
 motion that is not strand-continuing must already be accounted for by Green
 kernel-block or Schutzenberger detector factors.
+The continuation-congruence gate
+`proofs/continuation_congruence_descent_gate.md` turns descent separation into
+the finite closure of continuation seeds `x~v`.  Local-minimality rules out
+proper mixed closure; equality is the transport-state case; universal closure
+is the sole remaining nontrivial corridor to prove Green/Schutzenberger
+visible.
+The chart-transport collapse
+`proofs/chart_transport_collapse.md` further reduces the endpoint burden:
+because `V_beta(G)` is normal, it is enough to prove one representative in
+each finite chart-conjugacy orbit of elementary generators.  The final
+unproved A-route theorem is stated in
+`proofs/descent_separation_transport_rack_closure.md`: every non-rack lower
+motion must be visible in fixed Green/Schutzenberger/atom readouts, leaving
+only strand-continuing transport-rack gauge.

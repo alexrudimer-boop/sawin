@@ -98,6 +98,55 @@ class CoordinateKernelPairClosureAudit:
     generated: GeneratedCongruenceAudit
 
 
+@dataclass(frozen=True)
+class ContinuationSeedRow:
+    """One second-output change of the strand-continuing coordinate."""
+
+    left_color: Color
+    right_color: Color
+    output_left_color: Color
+    output_right_color: Color
+    left_input: FibrePoint
+    right_input: FibrePoint
+    continuing_output: FibrePoint
+
+
+@dataclass(frozen=True)
+class ContinuationCongruenceAudit:
+    """Least admissible closure of all strand-continuation changes."""
+
+    seed_rows: Tuple[ContinuationSeedRow, ...]
+    non_rack_base_rows: Tuple[Tuple[Color, Color, Color, Color], ...]
+    generated: GeneratedCongruenceAudit
+
+    @property
+    def nontrivial_seed_count(self) -> int:
+        return len(self.seed_rows)
+
+    @property
+    def base_rows_are_left_rack_form(self) -> bool:
+        return not self.non_rack_base_rows
+
+    @property
+    def is_strand_continuing_on_the_nose(self) -> bool:
+        return self.base_rows_are_left_rack_form and not self.seed_rows
+
+    @property
+    def continuation_closure_is_universal(self) -> bool:
+        return self.generated.kind == "universal"
+
+    @property
+    def continuation_closure_is_proper(self) -> bool:
+        return self.generated.kind not in ("equality", "universal")
+
+    @property
+    def proves_transport_or_universal_dichotomy(self) -> bool:
+        return self.base_rows_are_left_rack_form and (
+            self.is_strand_continuing_on_the_nose
+            or self.continuation_closure_is_universal
+        )
+
+
 def equality_partition(items: Sequence[FibrePoint]) -> Partition:
     return canonical_partition(frozenset([item]) for item in items)
 
@@ -312,6 +361,78 @@ def coordinate_kernel_pair_closure_failures(
             include_coretraction_kernels=include_coretraction_kernels,
         )
         if audit.generated.kind != "universal"
+    )
+
+
+def continuation_seed_rows(
+    interval: "LocalInterval",
+) -> Tuple[ContinuationSeedRow, ...]:
+    """Return rows where the rack-continuing second output changes state.
+
+    This is meaningful after the base row is in left rack convention, so that
+    `base_R(a,b)=(a*b,a)`.  Rows whose second output colour is not `a` are
+    reported separately by `continuation_congruence_audit`.
+    """
+
+    rows: List[ContinuationSeedRow] = []
+    for a, b in product(interval.colors, repeat=2):
+        c, d = interval.base_R[(a, b)]
+        if d != a:
+            continue
+        for x in interval.fibres[a]:
+            for y in interval.fibres[b]:
+                _u, v = interval.T[(a, b, x, y)]
+                if v != x:
+                    rows.append(
+                        ContinuationSeedRow(
+                            left_color=a,
+                            right_color=b,
+                            output_left_color=c,
+                            output_right_color=d,
+                            left_input=x,
+                            right_input=y,
+                            continuing_output=v,
+                        )
+                    )
+    return tuple(rows)
+
+
+def continuation_seed_pairs(
+    interval: "LocalInterval",
+) -> Dict[Color, Tuple[Tuple[FibrePoint, FibrePoint], ...]]:
+    """Return seed pairs `x ~ v` forced by non-strand-continuing outputs."""
+
+    pairs: Dict[Color, set[Tuple[FibrePoint, FibrePoint]]] = {
+        color: set() for color in interval.colors
+    }
+    for row in continuation_seed_rows(interval):
+        pairs[row.left_color].add((row.left_input, row.continuing_output))
+    return {
+        color: tuple(sorted(color_pairs, key=repr))
+        for color, color_pairs in pairs.items()
+    }
+
+
+def continuation_congruence_audit(
+    interval: "LocalInterval",
+) -> ContinuationCongruenceAudit:
+    """Audit the continuation-change closure used in descent separation."""
+
+    non_rack_base_rows = tuple(
+        (a, b, c, d)
+        for a, b in product(interval.colors, repeat=2)
+        for c, d in (interval.base_R[(a, b)],)
+        if d != a
+    )
+    seed_rows = continuation_seed_rows(interval)
+    generated = generated_admissible_congruence_audit(
+        interval,
+        continuation_seed_pairs(interval),
+    )
+    return ContinuationCongruenceAudit(
+        seed_rows=seed_rows,
+        non_rack_base_rows=non_rack_base_rows,
+        generated=generated,
     )
 
 

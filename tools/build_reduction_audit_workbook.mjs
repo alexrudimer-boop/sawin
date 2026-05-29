@@ -514,6 +514,27 @@ const rows = [
     "Prove descent separation: non-strand-continuing motion is fully visible in Green/Schutzenberger readouts.",
   ],
   [
+    "Continuation congruence gate",
+    "Turn non-strand-continuing lower motion into a least admissible congruence closure.",
+    "proofs/continuation_congruence_descent_gate.md; continuation_congruence_audit seeds x~v and reuses the generated congruence closure engine.",
+    "Reduction criterion",
+    "Handle the universal continuation corridor by Green/Schutzenberger visibility, or build a normalized-law escape.",
+  ],
+  [
+    "Chart-transport collapse",
+    "Avoid separate endpoint-longitude proofs for transported or chart-conjugate copies of elementary generators.",
+    "proofs/chart_transport_collapse.md; conjugate_longitude_subgroup_witness shows V_beta(G) is normal at certificate level.",
+    "Reduction ready",
+    "Prove one representative elementary generator per finite chart-conjugacy orbit.",
+  ],
+  [
+    "Descent separation target",
+    "State the final A-route theorem: all residual endpoint motion separates into fixed Green/Sch, atom, and transport-rack readouts.",
+    "proofs/descent_separation_transport_rack_closure.md records that transport-rack closure is proved and descent separation remains open.",
+    "Open theorem",
+    "Prove universal continuation visibility or extract a normalized-law B seed from a non-separated row.",
+  ],
+  [
     "Bi-free subgroup certificate",
     "Profile candidate words against fixed corridor detector factors.",
     "Helper, extra-factor target support, direct-product subgroup audit, and tests added; affine commutator seen by S3 block factor.",

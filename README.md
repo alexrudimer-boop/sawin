@@ -194,6 +194,23 @@ assumption for strand-continuing gauge rows: a finite row
 `Inn(A x E)` detects it.  The remaining structural target is descent
 separation between Green/Schutzenberger motion and strand-continuing transport
 state.
+The continuation gate
+`proofs/continuation_congruence_descent_gate.md` now makes this target finite:
+generate the least admissible congruence from all second-output continuation
+changes `x~v`.  Equality gives the strand-continuing case; a proper mixed
+closure is a local-minimality failure; the only surviving case is the
+all-universal continuation corridor, which must be proved Green/Schutzenberger
+visible or upgraded to the normalized-law B route.
+The chart-transport collapse
+`proofs/chart_transport_collapse.md` removes transported-generator noise:
+`V_beta(G)` is already normal, and
+`conjugate_longitude_subgroup_witness(...)` turns a representative witness into
+the witness for any finite chart conjugate.  The final open theorem is recorded
+in `proofs/descent_separation_transport_rack_closure.md`: transport-rack
+closure is proved, but descent separation itself remains unproved.  A positive
+solution now requires universal continuation visibility in the fixed
+Green/Schutzenberger/atom readouts, or a normalized-law B construction from a
+non-separated row.
 The semisplit audit now has an exact Boolean-CSP view: each coloured crossing
 lists the allowed equality/universal bit patterns on its two source and two
 target colours, and satisfying non-extreme assignments agree with the

@@ -20,6 +20,8 @@ from ybe_domination import (
     artin_images,
     artin_longitudes,
     artin_longitude_exponent_matrix,
+    conjugate_longitude_subgroup_witness,
+    conjugate_longitude_subgroup_witness_audit,
     cyclic_group,
     detector_rack_state,
     direct_product_group,
@@ -385,6 +387,42 @@ class ArtinLongitudeTests(unittest.TestCase):
             pushforward_longitude_subgroup_witness(
                 quotient,
                 ((((7, 0), 1, 1),)),
+            )
+
+    def test_longitude_subgroup_witness_is_stable_under_chart_conjugation(self):
+        group = symmetric_group(3)
+        conjugator = (1, 2, 0)
+        witness = (
+            (((1, 0, 2), (0, 2, 1)), 0, 1),
+            (((0, 2, 1), (1, 2, 0)), 1, -1),
+        )
+        braid = (1, 1)
+
+        conjugated = conjugate_longitude_subgroup_witness(
+            group,
+            conjugator,
+            witness,
+        )
+        audit = conjugate_longitude_subgroup_witness_audit(
+            group,
+            2,
+            braid,
+            conjugator,
+            witness,
+        )
+
+        self.assertEqual(audit.conjugated_witness, conjugated)
+        self.assertEqual(
+            audit.conjugated_witness_value,
+            audit.expected_conjugate_value,
+        )
+        self.assertTrue(audit.conjugated_witness_matches)
+
+        with self.assertRaises(ValueError):
+            conjugate_longitude_subgroup_witness(
+                group,
+                (0, 0, 0),
+                witness,
             )
 
     def test_direct_product_longitude_subgroup_witness_assembles_factors(self):
