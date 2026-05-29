@@ -21,7 +21,9 @@ from ybe_domination import (
     is_permutation_solution_form,
     is_rack_type,
     is_right_nondegenerate,
+    known_branch_detector_certificate,
     permutation_order,
+    permutation_form_detector_group,
     permutation_solution_crossing_order_formula,
     permutation_solution_pure_longitude_factorization,
     permutation_solution_maps,
@@ -107,6 +109,63 @@ class SmallSearchTests(unittest.TestCase):
             permutation_solution_crossing_order_formula(solution),
         )
         self.assertTrue(two_strand_symmetric_detector_covers_solution(solution))
+
+    def test_permutation_form_detector_certificate_uses_fixed_cyclic_group(self):
+        elements = (0, 1, 2)
+        solution = FiniteBraidedSet(
+            elements,
+            {
+                (x, y): ((y + 1) % 3, x)
+                for x in elements
+                for y in elements
+            },
+        )
+
+        group = permutation_form_detector_group(solution)
+        certificate = known_branch_detector_certificate(solution)
+
+        self.assertEqual(len(group.elements), 3)
+        self.assertIsNotNone(certificate)
+        self.assertEqual(certificate.reason, "permutation_twist_subgroup")
+        self.assertEqual(certificate.detector_kind, "cyclic_twist_group")
+        self.assertEqual(certificate.detector_group_order, 3)
+        self.assertEqual(certificate.sharp_rack_factor_size, 18)
+        self.assertEqual(certificate.twist_order, 3)
+        self.assertTrue(certificate.braid_index_independent)
+
+    def test_involutive_detector_certificate_uses_trivial_group(self):
+        solution = FiniteBraidedSet(
+            (0, 1),
+            {
+                (0, 0): (0, 0),
+                (0, 1): (1, 0),
+                (1, 0): (0, 1),
+                (1, 1): (1, 1),
+            },
+        )
+
+        certificate = known_branch_detector_certificate(solution)
+
+        self.assertIsNotNone(certificate)
+        self.assertEqual(certificate.reason, "involutive_artin_permutation")
+        self.assertEqual(certificate.detector_kind, "trivial_group")
+        self.assertEqual(certificate.detector_group_order, 1)
+        self.assertEqual(certificate.sharp_rack_factor_size, 2)
+        self.assertIsNone(certificate.twist_order)
+
+    def test_rack_known_branch_certificate_uses_direct_symmetric_group(self):
+        solution = rack_solution(
+            [0, 1, 2],
+            lambda left, right: (2 * left - right) % 3,
+        )
+
+        certificate = known_branch_detector_certificate(solution)
+
+        self.assertIsNotNone(certificate)
+        self.assertEqual(certificate.reason, "rack_inner_group_subgroup")
+        self.assertEqual(certificate.detector_kind, "direct_symmetric_group")
+        self.assertEqual(certificate.detector_group_order, 6)
+        self.assertEqual(certificate.sharp_rack_factor_size, 72)
 
     def test_permutation_solution_crossing_order_formula_for_one_point(self):
         solution = FiniteBraidedSet((0,), {(0, 0): (0, 0)})

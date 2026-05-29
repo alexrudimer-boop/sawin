@@ -22,7 +22,7 @@ from .product_permutation import (
     identity_base_swapped_reduction,
     swapped_product_holonomy_summary,
 )
-from .small_search import branch_tags
+from .small_search import branch_tags, known_branch_detector_certificate
 
 
 # Only tags with a symbolic all-n finite-G detector belong here.  Audit tags
@@ -66,6 +66,9 @@ class LocalMasterBottleneckSummary:
     all_coordinate_kernel_kind: str
     all_coordinate_kernel_stable_depth: int
     total_branch_tags: Tuple[str, ...]
+    known_total_detector_reason: str | None
+    known_total_detector_group_order: int | None
+    known_total_detector_factor_size: int | None
     green_detector_group_orders: Tuple[int, ...]
     verdict: str
     remaining_obligation: str
@@ -286,6 +289,7 @@ def local_master_bottleneck_summary(
     )
     qmap = solution_from_local_interval(interval)
     total_tags = branch_tags(qmap.total)
+    known_total_certificate = known_branch_detector_certificate(qmap.total)
     product_details = _product_holonomy_details(
         interval,
         product_branch,
@@ -334,6 +338,19 @@ def local_master_bottleneck_summary(
         all_coordinate_kernel_kind=all_coordinate_kernel_audit.kind,
         all_coordinate_kernel_stable_depth=all_coordinate_kernel_audit.stable_depth,
         total_branch_tags=total_tags,
+        known_total_detector_reason=(
+            None if known_total_certificate is None else known_total_certificate.reason
+        ),
+        known_total_detector_group_order=(
+            None
+            if known_total_certificate is None
+            else known_total_certificate.detector_group_order
+        ),
+        known_total_detector_factor_size=(
+            None
+            if known_total_certificate is None
+            else known_total_certificate.sharp_rack_factor_size
+        ),
         green_detector_group_orders=green_orders,
         verdict=verdict,
         remaining_obligation=obligation,

@@ -94,6 +94,20 @@ returns one of:
 - `nondegenerate_guitar_derived_rack`;
 - `None`, when no branch proof in this note applies.
 
+The certificate helper
+
+```text
+known_branch_detector_certificate(X)
+```
+
+uses the smaller detectors from
+`proofs/involutive_permutation_detector.md` for involutive and
+permutation-form solutions.  For the rack-type and nondegenerate/guitar
+branches recorded in this note, it returns the finite group `Sym(X)` itself.
+Thus every closed whole-solution branch exported to the local bottleneck
+ledger has an explicit detector group and sharp rack factor size
+`2*|G|^2`, with no braid-index input.
+
 The generated symmetric audit now reports this filter separately from exact
 detector-state enumeration.  This matters because exact enumeration can
 truncate even on branch-closed rows: the first size-`3`, `n=3` truncation is

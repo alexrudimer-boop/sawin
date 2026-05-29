@@ -348,7 +348,7 @@ const rows = [
   [
     "Involutive/permutation",
     "Known branch finite-rack domination.",
-    "T2 for involutive; C_m twist detector plus pure-longitude tests.",
+    "T2 for involutive; C_m twist detector plus pure-longitude tests; known_branch_detector_certificate exposes G and |A_G|.",
     "Symbolic branch proof",
     "Use as closed branch in local bottleneck routing.",
   ],
@@ -404,7 +404,7 @@ const rows = [
   [
     "Local bottleneck",
     "Route each local interval to a branch verdict.",
-    "Router now splits closed product finite-G branches from product/corridor bottlenecks.",
+    "Router now splits closed product finite-G branches from product/corridor bottlenecks and records explicit known-branch detector reason/order/factor size.",
     "Reduction ledger",
     "Prove genuinely-coloured product or bi-free corridor factorization, or realize B there.",
   ],

@@ -109,11 +109,23 @@ the congruence-chain induction may pass this factor down to lower intervals.
 The helper functions
 
 ```text
+known_branch_detector_certificate(X)
+permutation_form_detector_group(X)
 permutation_solution_maps(X)
 permutation_solution_twist_order(X)
 permutation_solution_pure_longitude_factorization(X,beta,x)
 ```
 
-extract `sigma`, `tau`, and `m`, and check the pure-longitude formula against
-the direct braid action for finite permutation-form tables.  They are audit
-helpers only; the proof above is the all-`n` argument.
+extract the fixed finite detector group, `sigma`, `tau`, and `m`, and check
+the pure-longitude formula against the direct braid action for finite
+permutation-form tables.  The certificate records:
+
+- `G=1`, `|A_G|=2`, for the involutive branch;
+- `G=C_m`, `|A_G|=2m^2`, for the permutation-form branch;
+- the proof reference and a Boolean marker that the group is independent of
+  braid index.
+
+The certificate is bookkeeping for the all-`n` proof above, not a finite
+search substitute.  It is also used by the local bottleneck ledger so that a
+`known_total_branch` verdict carries an explicit detector group order rather
+than only a tag.

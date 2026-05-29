@@ -149,6 +149,12 @@ class LocalMasterBottleneckTests(unittest.TestCase):
         self.assertEqual(summary.output_kernel_kind, "equality")
         self.assertEqual(summary.output_kernel_pair_count, 0)
         self.assertTrue(summary.output_kernel_pairs_all_universal)
+        self.assertEqual(
+            summary.known_total_detector_reason,
+            "rack_inner_group_subgroup",
+        )
+        self.assertEqual(summary.known_total_detector_group_order, 6)
+        self.assertEqual(summary.known_total_detector_factor_size, 72)
         self.assertEqual(summary.verdict, "locally_nondegenerate_branch")
         self.assertNotEqual(summary.verdict, "bi_free_universal_corridor_bottleneck")
 
@@ -161,6 +167,11 @@ class LocalMasterBottleneckTests(unittest.TestCase):
         self.assertEqual(summary.output_kernel_pair_failure_count, 0)
         self.assertEqual(summary.output_kernel_pair_max_depth, 0)
         self.assertTrue(summary.output_kernel_pairs_all_universal)
+        self.assertEqual(
+            summary.known_total_detector_reason,
+            "involutive_artin_permutation",
+        )
+        self.assertEqual(summary.known_total_detector_group_order, 1)
 
     def test_size_three_involutive_rows_are_not_corridor_bottlenecks(self):
         counts = {}

@@ -9,6 +9,7 @@ from .action_images import braid_word_permutation_image
 from .artin_longitudes import BraidWord, artin_longitudes, free_word_exponent_vector
 from .braid_laws import law_word_on_last_strand
 from .finite_braided_set import FiniteBraidedSet, rack_solution
+from .finite_group import FiniteGroup, cyclic_group, symmetric_group
 from .group_laws import (
     commutator,
     free_word_power,
@@ -348,6 +349,104 @@ class PermutationSolutionLongitudeFactorization:
     twist_order: int
     longitude_total_exponents: Tuple[int, ...]
     output: Tuple[object, ...]
+
+
+@dataclass(frozen=True)
+class KnownBranchDetectorCertificate:
+    """Explicit finite detector group for a closed whole-solution branch.
+
+    The certificate assumes the supplied table is a finite bijective YBE
+    solution and records a group that is fixed at the solution/interval level,
+    not chosen from the braid index.
+    """
+
+    reason: str
+    detector_group: FiniteGroup
+    detector_group_order: int
+    sharp_rack_factor_size: int
+    branch_tags: Tuple[str, ...]
+    twist_order: int | None
+    proof_reference: str
+    detector_kind: str
+    braid_index_independent: bool
+
+
+def _known_branch_certificate(
+    *,
+    solution: FiniteBraidedSet,
+    reason: str,
+    detector_group: FiniteGroup,
+    twist_order: int | None,
+    proof_reference: str,
+    detector_kind: str,
+) -> KnownBranchDetectorCertificate:
+    order = len(detector_group.elements)
+    return KnownBranchDetectorCertificate(
+        reason=reason,
+        detector_group=detector_group,
+        detector_group_order=order,
+        sharp_rack_factor_size=2 * order * order,
+        branch_tags=branch_tags(solution),
+        twist_order=twist_order,
+        proof_reference=proof_reference,
+        detector_kind=detector_kind,
+        braid_index_independent=True,
+    )
+
+
+def permutation_form_detector_group(solution: FiniteBraidedSet) -> FiniteGroup:
+    """Return the fixed cyclic detector ``C_ord(sigma tau)``.
+
+    Raises ``ValueError`` when the solution is not in permutation form.
+    """
+
+    twist_order = permutation_solution_twist_order(solution)
+    if twist_order is None:
+        raise ValueError("solution is not in permutation form")
+    return cyclic_group(twist_order)
+
+
+def known_branch_detector_certificate(
+    solution: FiniteBraidedSet,
+) -> KnownBranchDetectorCertificate | None:
+    """Return an explicit finite-G certificate for closed total branches.
+
+    The involutive and permutation-form branches use the minimal detector
+    groups from ``proofs/involutive_permutation_detector.md``.  Rack-type and
+    nondegenerate/guitar branches use the all-degree direct-symmetric
+    implication from ``proofs/direct_symmetric_known_branches.md``.
+    """
+
+    if is_involutive_solution(solution):
+        return _known_branch_certificate(
+            solution=solution,
+            reason="involutive_artin_permutation",
+            detector_group=cyclic_group(1),
+            twist_order=None,
+            proof_reference="proofs/involutive_permutation_detector.md",
+            detector_kind="trivial_group",
+        )
+    twist_order = permutation_solution_twist_order(solution)
+    if twist_order is not None:
+        return _known_branch_certificate(
+            solution=solution,
+            reason="permutation_twist_subgroup",
+            detector_group=cyclic_group(twist_order),
+            twist_order=twist_order,
+            proof_reference="proofs/involutive_permutation_detector.md",
+            detector_kind="cyclic_twist_group",
+        )
+    reason = direct_symmetric_known_branch_reason(solution)
+    if reason is None:
+        return None
+    return _known_branch_certificate(
+        solution=solution,
+        reason=reason,
+        detector_group=symmetric_group(len(solution.elements)),
+        twist_order=None,
+        proof_reference="proofs/direct_symmetric_known_branches.md",
+        detector_kind="direct_symmetric_group",
+    )
 
 
 def _invert_mapping(mapping: Dict[object, object]) -> Dict[object, object]:

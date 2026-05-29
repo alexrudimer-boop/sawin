@@ -365,6 +365,12 @@ detected by `Sym(X)` by subgroup monotonicity or Artin-permutation
 factorization.  The size-`2` and size-`3` exhaustive rows have no unknown
 cases under this symbolic filter, so their exact detector truncations are not
 counterexample evidence.
+The executable helper `known_branch_detector_certificate(X)` makes these
+closed branches concrete: it returns `G=1` for involutive rows,
+`G=C_ord(sigma tau)` for permutation-form rows, and `Sym(X)` for the
+rack-type/nondegenerate direct-symmetric branches, together with the sharp
+rack factor size `2*|G|^2`.  Audit that any local `known_total_branch` use is
+backed by one of these fixed groups, not merely by a tag.
 
 Do not try to solve the problem by a direct rack cover of `X`, by a literal
 Hurwitz-conjugation structure-group formula, or by the coordinatewise rack

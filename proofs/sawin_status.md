@@ -486,6 +486,14 @@ audits, and `permutation_solution_pure_longitude_factorization()` checks the
 pure-longitude action formula against direct braid action in regression
 tests.  The formula is used only after finite longitude identity has forced
 the Artin permutation to be trivial.
+The executable certificate `known_branch_detector_certificate()` now records
+the fixed detector group used by these branches: `G=1` for involutive rows and
+`G=C_m` for permutation-form rows, with sharp rack factor sizes `2` and
+`2m^2`, respectively.  For rack-type and nondegenerate/guitar rows it records
+the direct `Sym(X)` detector from `proofs/direct_symmetric_known_branches.md`.
+The local bottleneck summary carries this detector reason and group order, so
+a `known_total_branch` verdict is backed by an explicit finite group rather
+than only by a branch tag.
 
 ## Master theorem gap
 

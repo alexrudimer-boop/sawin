@@ -30,6 +30,8 @@ returns a `LocalMasterBottleneckSummary` with the following fields:
   and maximum stable depth;
 - the all-coordinate-kernel closure kind and stable depth;
 - known whole-solution branch tags for the total interval table;
+- when a known whole-solution branch applies, the explicit detector reason,
+  detector group order, and sharp rack factor size `2*|G|^2`;
 - for actual corridor-target rows, the orders of the current two-sided Green
   detector group factors;
 - a verdict and the remaining proof obligation.
@@ -107,6 +109,11 @@ known whole-solution finite-G branch such as involutive, permutation-form, or
 rack-type.  In this case the local Green/corridor theorem is unnecessary:
 the known branch detector can be multiplied with the upper quotient detector,
 and the interval cannot be counted as a remaining corridor bottleneck.
+The summary now records the detector explicitly.  Involutive rows carry
+`G=1`, permutation-form rows carry `G=C_ord(sigma tau)`, and rack-type or
+nondegenerate/guitar rows use the direct `Sym(X)` branch.  These are fixed
+finite groups attached to the interval table, so the associated
+`Q x A_G` factor is still independent of braid index.
 Audit-only tags do not suffice for this verdict.  In particular,
 `affine_cyclic` remains excluded from the known-total detector set unless the
 same interval is also covered by one of the symbolic all-`n` detector branches
