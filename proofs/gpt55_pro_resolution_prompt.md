@@ -105,14 +105,16 @@ nondegeneracy to the total solution.
 36. `proofs/kernel_corridor_audit.md`
 37. `proofs/local_master_bottleneck_ledger.md`
 38. `proofs/bifree_universal_corridor_factorization_target.md`
-39. `proofs/bifree_corridor_subgroup_certificate.md`
-40. `proofs/bifree_corridor_certificate_audit.md`
-41. `proofs/bifree_corridor_exact_audit.md`
-42. `proofs/local_minimal_green_audit.md`
-43. `proofs/dual_green_symmetry.md`
-44. `proofs/opposite_detectability_closure.md`
-45. `proofs/finite_semigroup_holonomy_route.md`
-46. `proofs/unit_holonomy_longitude_gate.md`
+39. `proofs/bifree_corridor_endpoint_factorization.md`
+40. `proofs/artin_defect_longitudinalization_sieve.md`
+41. `proofs/bifree_corridor_subgroup_certificate.md`
+42. `proofs/bifree_corridor_certificate_audit.md`
+43. `proofs/bifree_corridor_exact_audit.md`
+44. `proofs/local_minimal_green_audit.md`
+45. `proofs/dual_green_symmetry.md`
+46. `proofs/opposite_detectability_closure.md`
+47. `proofs/finite_semigroup_holonomy_route.md`
+48. `proofs/unit_holonomy_longitude_gate.md`
 Also read `proofs/unit_factorization_gate.md`, which proves that a product of
 finite total transformations can be a residual permutation only when every
 factor is already a unit/permutation.
@@ -134,13 +136,20 @@ format.  The code also includes
 `evaluate_longitude_subgroup_witness(...)`, whose letters may use different
 assignments; this is the literal subgroup-word format for membership in
 `V_beta(G)`.
+Also read `proofs/artin_defect_longitudinalization_sieve.md`: Artin
+permutation defects `beta(w)p_beta(w)^-1` lie in the normal closure of the
+recursive longitudes, and every finite-group value of such a defect lies in
+`V_beta(G)` by changing assignments to absorb the normal conjugators.  Thus
+the sharpest current A-side endpoint target is to display each elementary
+Green/corridor endpoint generator as a product of Artin permutation defect
+values in fixed factors of `H(pi,Q)`.
 Also read `proofs/unit_section_product_detector.md`, which combines finitely
 many fixed unit-section factors into one direct-product detector group.
-47. `proofs/green_holonomy_factorization_gate.md`
-48. `proofs/involutive_permutation_detector.md`
-49. `proofs/structure_orbit_law_obstruction.md`
-50. `proofs/fixed_variety_barrier.md`
-51. `proofs/bounded_degree_action_image_limit.md`
+49. `proofs/green_holonomy_factorization_gate.md`
+50. `proofs/involutive_permutation_detector.md`
+51. `proofs/structure_orbit_law_obstruction.md`
+52. `proofs/fixed_variety_barrier.md`
+53. `proofs/bounded_degree_action_image_limit.md`
 Also read `proofs/diagonal_normalized_obstruction.md`, which proves that an
 explicit detector-free interval diagonalizes to the normalized-law sequence
 required for outcome B.  Audit the companion helpers
@@ -148,14 +157,14 @@ required for outcome B.  Audit the companion helpers
 `right_stabilization_longitude_audit(...)` for product and stabilization
 conventions only; they are not a substitute for proving all finite detector
 groups fail.
-52. `proofs/affine_f2_audit.md`
-53. `proofs/two_colour_fibre2_all_bases_audit.md`
-54. `proofs/fibre2_product_branch.md`
-55. `proofs/two_colour_fibre3_product_audit.md`
-56. `proofs/three_colour_fibre2_product_audit.md`
-57. `proofs/sawin_proof_log.docx`
-58. `tables/reduction_audit.xlsx`
-59. Relevant code in `src/`, `tools/`, and `tests`, especially modules
+54. `proofs/affine_f2_audit.md`
+55. `proofs/two_colour_fibre2_all_bases_audit.md`
+56. `proofs/fibre2_product_branch.md`
+57. `proofs/two_colour_fibre3_product_audit.md`
+58. `proofs/three_colour_fibre2_product_audit.md`
+59. `proofs/sawin_proof_log.docx`
+60. `tables/reduction_audit.xlsx`
+61. Relevant code in `src/`, `tools/`, and `tests`, especially modules
     concerning input-dependent longitude factorization, quotient image
     kernels, residual dependency support, local-minimal intervals, local
     bottleneck routing, coordinate-kernel corridors, product label words,
@@ -447,6 +456,25 @@ Also check the faithful-readout helpers
 `endpoint_residual_readout_audit(...)`: they only verify that identity endpoint
 tuples fix the residual coordinates in supplied rows.  They do not replace the
 uniform all-`n` construction of those rows.
+`endpoint_residual_action_audit(...)` adds braid-data and supplied-row coverage
+bookkeeping for one fixed braid word; treat it as an audit of displayed rows,
+not as finite-search evidence for arbitrary `n`.
+Then audit the Artin-defect refinement in
+`proofs/artin_defect_longitudinalization_sieve.md`.  A supplied identity
+
+```text
+h_e(beta,z,x)=product_m phi_m(beta(w_m)p_beta(w_m)^-1)^{epsilon_m}
+```
+
+inside a fixed detector factor is enough to prove
+`h_e(beta,z,x) in V_beta(H_s)`, because each Artin permutation defect lies in
+the normal closure of the recursive Artin longitudes.  Use
+`artin_permutation_defect_witness_audit(...)`,
+`endpoint_artin_defect_audit(...)`, and
+`endpoint_product_artin_defect_audit(...)` only as certificate verifiers for
+such displays.  The missing local theorem is exactly that these displays
+exist for all elementary Green/corridor endpoint generators, uniformly in
+`n`.
 
 Important warning from `proofs/product_longitude_witness_audit.md`: one common
 homomorphism `F_n -> H_prod` need not realize all coordinate labels at once.
@@ -531,6 +559,9 @@ factor expressions into one product endpoint certificate.  Audit the returned
 `product_witness_value` and `product_witness_matches_endpoint`: the product
 certificate should be an actual word in `V_beta(prod_i U(M_i))`, not merely an
 appeal to finite subgroup enumeration.
+Prefer the Artin-defect form when the corridor algebra supplies it: a display
+by `beta(w)p_beta(w)^-1` values automatically gives the needed subgroup
+witness and is the sharpened target for the remaining bi-free corridor branch.
 Before treating a corridor example as B-shaped, verify that its elementary
 coordinate-kernel pair closures are universal; otherwise it is a reducible
 non-local-minimal interval rather than a master-local obstruction.

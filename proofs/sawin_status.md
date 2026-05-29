@@ -1,6 +1,6 @@
 # Sawin finite-rack domination status
 
-Date: 2026-05-28
+Date: 2026-05-29
 
 ## Required final output
 
@@ -787,6 +787,34 @@ corresponding residual coordinate, and coordinate rows bundle into a
 residual-tuple implication.  This closes the executable shape of the
 endpoint-factorization proposition while leaving the uniform construction of
 the endpoint expressions as the open theorem.
+The row bundle helper `endpoint_residual_action_audit(...)` now records the
+fixed-braid residual-action implication for supplied rows.  It checks
+braid-data consistency, endpoint-controlled killing of all supplied rows, and
+an optional expected row count.  This keeps a finite readout table honest:
+passing supplied rows is not confused with the missing all-`n` proof that such
+rows cover every residual input.
+The Artin-defect longitudinalization sieve
+`proofs/artin_defect_longitudinalization_sieve.md` sharpens the remaining
+endpoint target.  For `beta in B_n`, set
+`D_beta=<<L_1(beta),...,L_n(beta)>>` in `F_n`.  The note proves that every
+Artin permutation defect `beta(w)p_beta(w)^-1` lies in `D_beta`, and that every
+finite-group value of any element of `D_beta` lies in `V_beta(G)` after
+absorbing normal conjugators into input-dependent assignments.  Therefore a
+display
+
+```text
+h_e(beta,z,x) =
+  product_m phi_m(beta(w_m)p_beta(w_m)^-1)^{epsilon_m}
+```
+
+inside one fixed detector factor `H_s` is a certificate that
+`h_e(beta,z,x) in V_beta(H_s)`.  The code now verifies supplied displays with
+`artin_permutation_defect_witness_audit(...)`,
+`endpoint_artin_defect_audit(...)`, and
+`endpoint_product_artin_defect_audit(...)`.  This does not solve the local
+theorem; it reduces the missing corridor statement to proving such
+Artin-defect displays for the elementary Green kernel-block, Schutzenberger,
+atom-inner, and endpoint-unit generators in fixed factors of `H(pi,Q)`.
 The single-endpoint route audit
 `unit_composite_longitude_route_audit(monoid,n,beta,factors)` now records the
 same ladder used in product-label work: endpoint identity, one evaluated

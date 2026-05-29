@@ -418,9 +418,16 @@ const rows = [
   [
     "Bi-free endpoint factorization",
     "Assemble corridor endpoint-longitude expressions into one fixed product detector.",
-    "Proof note plus endpoint expression/readout helpers build literal product witnesses and verify the identity-endpoint faithful-readout gate.",
+    "Endpoint expression/readout/action helpers build product witnesses, verify faithful rows, and separate supplied-row proof from row-coverage claims; the Artin-defect sieve now converts displayed beta(w)p(w)^-1 endpoint values into longitude-subgroup witnesses.",
     "Assembly lemma",
-    "Prove the endpoint longitudinalization lemma for every target interval.",
+    "Prove the sharpened Artin-defect endpoint lemma for every target interval.",
+  ],
+  [
+    "Artin-defect sieve",
+    "Replace arbitrary endpoint-longitude search by Artin permutation defect displays.",
+    "proofs/artin_defect_longitudinalization_sieve.md proves defects beta(w)p_beta(w)^-1 lie in the normal closure of recursive longitudes; endpoint_artin_defect_audit and endpoint_product_artin_defect_audit verify supplied displays.",
+    "Sharper open target",
+    "Display every elementary Green/corridor endpoint generator as a finite product of Artin-defect values in fixed H(pi,Q) factors.",
   ],
   [
     "Bi-free subgroup certificate",

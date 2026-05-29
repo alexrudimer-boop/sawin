@@ -230,6 +230,10 @@ endpoint_coordinate_readout_audit(
 )
 
 endpoint_residual_readout_audit(coordinate_audits)
+
+endpoint_residual_action_audit(
+    n,beta,residual_readouts,expected_row_count=None
+)
 ```
 
 They implement the certificate layer of
@@ -242,6 +246,33 @@ The readout helpers record the faithful-readout clause: when the endpoint
 tuple is identity, the corresponding residual coordinate or tuple must
 actually be fixed.  They are the executable row format for the final implication
 from killed endpoints to killed residual motion.
+The residual-action helper packages a supplied finite table of such rows for a
+single braid word.  It checks braid-data consistency and, if requested, the
+claimed row count.  It is a proof-table verifier, not a substitute for the
+uniform theorem that constructs the rows for all braid indices and all
+residual fibre inputs.
+
+The sharpened Artin-defect route in
+`proofs/artin_defect_longitudinalization_sieve.md` is a sufficient way to
+produce these subgroup witnesses.  Instead of displaying an endpoint directly
+as a word in evaluated longitudes, one may display it as a product of values
+
+```text
+phi(beta(w) p_beta(w)^-1)^{epsilon}.
+```
+
+The helpers
+
+```text
+artin_permutation_defect_longitude_witness(...)
+endpoint_artin_defect_audit(...)
+endpoint_product_artin_defect_audit(...)
+```
+
+then convert the displayed Artin permutation defects into literal
+`V_beta(G)` witnesses by changing assignments to absorb the normal
+conjugators.  This is a stricter and more structured proof target for the
+remaining bi-free corridor endpoint factors.
 
 ## Role In The Master Local Theorem
 

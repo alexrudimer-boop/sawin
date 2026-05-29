@@ -154,6 +154,21 @@ class ArtinLongitudeData:
 
 
 @dataclass(frozen=True)
+class ArtinPermutationDefectWitnessAudit:
+    """Witness that one Artin permutation defect lies in ``V_beta(G)``."""
+
+    n: int
+    braid_word: Tuple[int, ...]
+    word: FreeWord
+    assignment: Tuple[GroupElement, ...]
+    defect_word: FreeWord
+    defect_value: GroupElement
+    longitude_witness: LongitudeSubgroupWitness
+    longitude_witness_value: GroupElement
+    witness_matches_defect: bool
+
+
+@dataclass(frozen=True)
 class RackLongitudeFactorization:
     """Input-dependent finite-group longitude factorization for a rack action."""
 
@@ -317,6 +332,185 @@ def evaluate_free_word(group: FiniteGroup, assignment: Sequence[GroupElement], w
             value = group.inv(value)
         out = group.mul(out, value)
     return out
+
+
+def _check_free_word_indices(n: int, word: FreeWord) -> None:
+    for generator, exponent in word:
+        if generator < 0 or generator >= n:
+            raise IndexError(generator)
+        if exponent not in (-1, 1):
+            raise ValueError("free words use unit exponents")
+
+
+def apply_permutation_to_free_word(
+    permutation: Sequence[int],
+    word: FreeWord,
+) -> FreeWord:
+    """Apply a generator permutation to a free word."""
+
+    perm = tuple(permutation)
+    if sorted(perm) != list(range(len(perm))):
+        raise ValueError("permutation must contain each generator index once")
+    _check_free_word_indices(len(perm), tuple(word))
+    return reduce_free_word((perm[generator], exponent) for generator, exponent in word)
+
+
+def artin_permutation_defect_word(
+    n: int,
+    braid_word: BraidWord,
+    word: FreeWord,
+) -> FreeWord:
+    """Return ``beta(word) * p_beta(word)^-1`` as a free word.
+
+    Here ``p_beta`` is the Artin strand permutation acting on free generators.
+    The word is reduced before evaluation, but no finite-group assignments are
+    enumerated.
+    """
+
+    word_tuple = reduce_free_word(word)
+    _check_free_word_indices(n, word_tuple)
+    beta_word = substitute_free_word(word_tuple, artin_images(n, braid_word))
+    permuted_word = apply_permutation_to_free_word(
+        braid_permutation(n, braid_word),
+        word_tuple,
+    )
+    return reduce_free_word(beta_word + invert_free_word(permuted_word))
+
+
+def conjugated_assignment(
+    group: FiniteGroup,
+    assignment: Sequence[GroupElement],
+    conjugator: FreeWord,
+) -> Tuple[GroupElement, ...]:
+    """Return the assignment ``x_j |-> phi(u x_j u^-1)``."""
+
+    assignment_tuple = tuple(assignment)
+    elements = set(group.elements)
+    if any(value not in elements for value in assignment_tuple):
+        raise ValueError("assignment contains a value outside the group")
+    _check_free_word_indices(len(assignment_tuple), tuple(conjugator))
+    conjugator_value = evaluate_free_word(group, assignment_tuple, tuple(conjugator))
+    inverse = group.inv(conjugator_value)
+    return tuple(
+        group.mul(group.mul(conjugator_value, value), inverse)
+        for value in assignment_tuple
+    )
+
+
+def invert_longitude_subgroup_witness(
+    witness: Sequence[LongitudeSubgroupWitnessLetter],
+) -> LongitudeSubgroupWitness:
+    """Return a witness for the inverse subgroup element."""
+
+    return tuple(
+        (tuple(assignment), longitude_index, -exponent)
+        for assignment, longitude_index, exponent in reversed(tuple(witness))
+    )
+
+
+def artin_permutation_defect_longitude_witness(
+    group: FiniteGroup,
+    n: int,
+    braid_word: BraidWord,
+    assignment: Sequence[GroupElement],
+    word: FreeWord,
+) -> LongitudeSubgroupWitness:
+    """Convert an Artin permutation defect value into a ``V_beta(G)`` witness.
+
+    For a generator, the identity
+
+    ``beta(x_i) x_{p(i)}^-1 = L_i (x_{p(i)} L_i^-1 x_{p(i)}^-1)``
+
+    writes the defect as two normal conjugates of the longitude ``L_i``.  For a
+    word, defects multiply with the usual prefix conjugation
+    ``d(uv)=d(u) p(u) d(v) p(u)^-1``.  The returned witness records these
+    conjugations by changing the finite-group assignment, not by enumerating
+    any subgroup.
+    """
+
+    assignment_tuple = tuple(assignment)
+    if len(assignment_tuple) != n:
+        raise ValueError("assignment must have length n")
+    elements = set(group.elements)
+    if any(value not in elements for value in assignment_tuple):
+        raise ValueError("assignment contains a value outside the group")
+    word_tuple = reduce_free_word(word)
+    _check_free_word_indices(n, word_tuple)
+    data = artin_longitudes(n, braid_word)
+    p_prefix: FreeWord = tuple()
+    rows: List[LongitudeSubgroupWitnessLetter] = []
+    for generator, exponent in word_tuple:
+        target = data.permutation[generator]
+        prefix_assignment = conjugated_assignment(group, assignment_tuple, p_prefix)
+        rows.append((prefix_assignment, generator, 1))
+        target_conjugator = ((target, exponent),)
+        rows.append(
+            (
+                conjugated_assignment(group, prefix_assignment, target_conjugator),
+                generator,
+                -1,
+            )
+        )
+        p_prefix = reduce_free_word(p_prefix + ((target, exponent),))
+    return tuple(rows)
+
+
+def evaluate_artin_permutation_defect(
+    group: FiniteGroup,
+    assignment: Sequence[GroupElement],
+    n: int,
+    braid_word: BraidWord,
+    word: FreeWord,
+) -> GroupElement:
+    """Evaluate ``beta(word) * p_beta(word)^-1`` under one assignment."""
+
+    assignment_tuple = tuple(assignment)
+    if len(assignment_tuple) != n:
+        raise ValueError("assignment must have length n")
+    return evaluate_free_word(
+        group,
+        assignment_tuple,
+        artin_permutation_defect_word(n, braid_word, word),
+    )
+
+
+def artin_permutation_defect_witness_audit(
+    group: FiniteGroup,
+    n: int,
+    braid_word: BraidWord,
+    assignment: Sequence[GroupElement],
+    word: FreeWord,
+) -> ArtinPermutationDefectWitnessAudit:
+    """Audit the Artin-defect normal-closure witness for one word."""
+
+    assignment_tuple = tuple(assignment)
+    word_tuple = reduce_free_word(word)
+    defect_word = artin_permutation_defect_word(n, braid_word, word_tuple)
+    defect_value = evaluate_free_word(group, assignment_tuple, defect_word)
+    longitude_witness = artin_permutation_defect_longitude_witness(
+        group,
+        n,
+        braid_word,
+        assignment_tuple,
+        word_tuple,
+    )
+    longitude_witness_value = evaluate_longitude_subgroup_witness(
+        group,
+        n,
+        braid_word,
+        longitude_witness,
+    )
+    return ArtinPermutationDefectWitnessAudit(
+        n=n,
+        braid_word=tuple(braid_word),
+        word=word_tuple,
+        assignment=assignment_tuple,
+        defect_word=defect_word,
+        defect_value=defect_value,
+        longitude_witness=longitude_witness,
+        longitude_witness_value=longitude_witness_value,
+        witness_matches_defect=longitude_witness_value == defect_value,
+    )
 
 
 def free_word_exponent_vector(n: int, word: FreeWord) -> Tuple[int, ...]:

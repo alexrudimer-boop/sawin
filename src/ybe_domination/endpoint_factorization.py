@@ -5,21 +5,29 @@ from typing import Sequence, Tuple
 
 from .artin_longitudes import (
     BraidWord,
+    FreeWord,
     LongitudeExpression,
     LongitudeSubgroupWitness,
+    artin_permutation_defect_longitude_witness,
     artin_longitudes,
     direct_product_longitude_subgroup_witness,
+    evaluate_artin_permutation_defect,
     evaluate_longitude_expression,
     evaluate_longitude_subgroup_witness,
     has_identity_longitude_signature,
+    invert_longitude_subgroup_witness,
 )
 from .finite_group import FiniteGroup, GroupElement, direct_product_group
+
+ArtinDefectEndpointTerm = Tuple[Tuple[GroupElement, ...], FreeWord, int]
 
 
 @dataclass(frozen=True)
 class EndpointLongitudeExpressionAudit:
     """Expression certificate for one endpoint in a fixed finite group."""
 
+    n: int
+    braid_word: Tuple[int, ...]
     artin_permutation: Tuple[int, ...]
     group_order: int
     endpoint: GroupElement
@@ -57,6 +65,8 @@ class EndpointLongitudeExpressionAudit:
 class EndpointProductExpressionAudit:
     """Assemble endpoint expression certificates into one product detector."""
 
+    n: int
+    braid_word: Tuple[int, ...]
     factor_audits: Tuple[EndpointLongitudeExpressionAudit, ...]
     product_endpoint: Tuple[GroupElement, ...]
     group_orders: Tuple[int, ...]
@@ -103,6 +113,103 @@ class EndpointProductExpressionAudit:
     @property
     def proves_product_endpoint_detector_by_expression(self) -> bool:
         return self.product_endpoint_lies_in_product_longitude_subgroup_by_expression
+
+
+@dataclass(frozen=True)
+class EndpointArtinDefectAudit:
+    """Endpoint certificate using Artin permutation defect values."""
+
+    n: int
+    braid_word: Tuple[int, ...]
+    artin_permutation: Tuple[int, ...]
+    group_order: int
+    endpoint: GroupElement
+    endpoint_in_group: bool
+    terms: Tuple[ArtinDefectEndpointTerm, ...]
+    assignments_in_group: bool
+    defect_values: Tuple[GroupElement, ...]
+    defect_product_value: GroupElement | None
+    defect_product_matches_endpoint: bool
+    longitude_witness: LongitudeSubgroupWitness | None
+    longitude_witness_value: GroupElement | None
+    longitude_witness_matches_defect_product: bool
+    identity_longitude_signature: bool
+    group_identity: GroupElement
+
+    @property
+    def endpoint_is_identity(self) -> bool:
+        return self.endpoint == self.group_identity
+
+    @property
+    def endpoint_lies_in_longitude_subgroup_by_artin_defects(self) -> bool:
+        return (
+            self.endpoint_in_group
+            and self.assignments_in_group
+            and self.defect_product_matches_endpoint
+            and self.longitude_witness_matches_defect_product
+        )
+
+    @property
+    def identity_longitudes_kill_endpoint_by_artin_defects(self) -> bool:
+        if not self.endpoint_lies_in_longitude_subgroup_by_artin_defects:
+            return False
+        if not self.identity_longitude_signature:
+            return True
+        return self.endpoint_is_identity
+
+
+@dataclass(frozen=True)
+class EndpointProductArtinDefectAudit:
+    """Assemble Artin-defect endpoint certificates into one product detector."""
+
+    n: int
+    braid_word: Tuple[int, ...]
+    factor_audits: Tuple[EndpointArtinDefectAudit, ...]
+    product_endpoint: Tuple[GroupElement, ...]
+    group_orders: Tuple[int, ...]
+    product_group_order: int
+    product_witness: LongitudeSubgroupWitness | None
+    product_witness_value: GroupElement | None
+    product_witness_matches_endpoint: bool
+
+    @property
+    def all_endpoints_in_groups(self) -> bool:
+        return all(audit.endpoint_in_group for audit in self.factor_audits)
+
+    @property
+    def all_assignments_in_groups(self) -> bool:
+        return all(audit.assignments_in_group for audit in self.factor_audits)
+
+    @property
+    def all_defect_products_match_endpoints(self) -> bool:
+        return all(audit.defect_product_matches_endpoint for audit in self.factor_audits)
+
+    @property
+    def product_endpoint_lies_in_product_longitude_subgroup_by_artin_defects(self) -> bool:
+        return (
+            self.all_endpoints_in_groups
+            and self.all_assignments_in_groups
+            and self.all_defect_products_match_endpoints
+            and self.product_witness_matches_endpoint
+        )
+
+    @property
+    def identity_product_longitude_signature_by_factors(self) -> bool:
+        return all(audit.identity_longitude_signature for audit in self.factor_audits)
+
+    @property
+    def identity_longitudes_kill_product_endpoint_by_artin_defects(self) -> bool:
+        if not self.product_endpoint_lies_in_product_longitude_subgroup_by_artin_defects:
+            return False
+        if not self.identity_product_longitude_signature_by_factors:
+            return True
+        return self.product_endpoint == tuple(
+            audit.group_identity for audit in self.factor_audits
+        )
+
+    @property
+    def proves_product_endpoint_detector_by_artin_defects(self) -> bool:
+        return self.product_endpoint_lies_in_product_longitude_subgroup_by_artin_defects
 
 
 @dataclass(frozen=True)
@@ -170,6 +277,62 @@ class EndpointResidualReadoutAudit:
         )
 
 
+@dataclass(frozen=True)
+class EndpointResidualActionAudit:
+    """Supplied-row audit for a residual action controlled by endpoints."""
+
+    n: int
+    braid_word: Tuple[int, ...]
+    residual_readouts: Tuple[EndpointResidualReadoutAudit, ...]
+    expected_row_count: int | None = None
+
+    @property
+    def row_count(self) -> int:
+        return len(self.residual_readouts)
+
+    @property
+    def covers_expected_rows(self) -> bool:
+        return self.expected_row_count is None or self.row_count == self.expected_row_count
+
+    @property
+    def braid_data_consistent(self) -> bool:
+        for readout in self.residual_readouts:
+            for coordinate in readout.coordinate_audits:
+                endpoint = coordinate.endpoint_audit
+                if endpoint.n != self.n or endpoint.braid_word != self.braid_word:
+                    return False
+        return True
+
+    @property
+    def all_identity_endpoints_fix_rows(self) -> bool:
+        return all(
+            readout.identity_endpoints_fix_all_coordinates
+            for readout in self.residual_readouts
+        )
+
+    @property
+    def all_identity_longitudes_kill_rows_by_expression(self) -> bool:
+        return all(
+            readout.identity_longitudes_kill_residual_tuple_by_expression
+            for readout in self.residual_readouts
+        )
+
+    @property
+    def residual_action_identity_on_supplied_rows(self) -> bool:
+        return all(readout.residual_tuple_fixed for readout in self.residual_readouts)
+
+    @property
+    def proves_supplied_rows_detector_implication(self) -> bool:
+        return (
+            self.braid_data_consistent
+            and self.all_identity_longitudes_kill_rows_by_expression
+        )
+
+    @property
+    def proves_complete_residual_action_implication(self) -> bool:
+        return self.proves_supplied_rows_detector_implication and self.covers_expected_rows
+
+
 def endpoint_longitude_expression_audit(
     group: FiniteGroup,
     n: int,
@@ -204,6 +367,8 @@ def endpoint_longitude_expression_audit(
         )
     data = artin_longitudes(n, braid_word)
     return EndpointLongitudeExpressionAudit(
+        n=n,
+        braid_word=tuple(braid_word),
         artin_permutation=data.permutation,
         group_order=len(group.elements),
         endpoint=endpoint,
@@ -290,6 +455,161 @@ def endpoint_product_longitude_expression_audit(
             product_witness,
         )
     return EndpointProductExpressionAudit(
+        n=n,
+        braid_word=tuple(braid_word),
+        factor_audits=factor_audits,
+        product_endpoint=endpoint_tuple,
+        group_orders=tuple(len(group.elements) for group in group_tuple),
+        product_group_order=product_order,
+        product_witness=product_witness,
+        product_witness_value=product_witness_value,
+        product_witness_matches_endpoint=product_witness_value == endpoint_tuple,
+    )
+
+
+def endpoint_artin_defect_audit(
+    group: FiniteGroup,
+    n: int,
+    braid_word: BraidWord,
+    endpoint: GroupElement,
+    terms: Sequence[Tuple[Sequence[GroupElement], FreeWord, int]],
+) -> EndpointArtinDefectAudit:
+    """Verify that an endpoint is a product of Artin permutation defects.
+
+    Each term is ``(assignment, word, exponent)`` and represents
+    ``phi(beta(word) * p_beta(word)^-1)^exponent``.  The audit also converts
+    the supplied defect display into a literal ``V_beta(G)`` witness using the
+    Artin-defect normal-closure criterion.
+    """
+
+    term_tuple: Tuple[ArtinDefectEndpointTerm, ...] = tuple(
+        (tuple(assignment), tuple(word), exponent)
+        for assignment, word, exponent in terms
+    )
+    for _assignment, _word, exponent in term_tuple:
+        if exponent not in (-1, 1):
+            raise ValueError("Artin-defect endpoint exponents must be +/-1")
+    elements = set(group.elements)
+    endpoint_in_group = endpoint in elements
+    assignments_in_group = all(
+        len(assignment) == n and all(value in elements for value in assignment)
+        for assignment, _word, _exponent in term_tuple
+    )
+    defect_values: Tuple[GroupElement, ...] = tuple()
+    defect_product_value = None
+    longitude_witness = None
+    longitude_witness_value = None
+    longitude_witness_matches_defect_product = False
+    if assignments_in_group:
+        values = []
+        witness_rows = []
+        product_value = group.identity
+        for assignment, word, exponent in term_tuple:
+            value = evaluate_artin_permutation_defect(
+                group,
+                assignment,
+                n,
+                braid_word,
+                word,
+            )
+            witness = artin_permutation_defect_longitude_witness(
+                group,
+                n,
+                braid_word,
+                assignment,
+                word,
+            )
+            if exponent < 0:
+                value = group.inv(value)
+                witness = invert_longitude_subgroup_witness(witness)
+            values.append(value)
+            witness_rows.extend(witness)
+            product_value = group.mul(product_value, value)
+        defect_values = tuple(values)
+        defect_product_value = product_value
+        longitude_witness = tuple(witness_rows)
+        longitude_witness_value = evaluate_longitude_subgroup_witness(
+            group,
+            n,
+            braid_word,
+            longitude_witness,
+        )
+        longitude_witness_matches_defect_product = (
+            longitude_witness_value == defect_product_value
+        )
+    data = artin_longitudes(n, braid_word)
+    return EndpointArtinDefectAudit(
+        n=n,
+        braid_word=tuple(braid_word),
+        artin_permutation=data.permutation,
+        group_order=len(group.elements),
+        endpoint=endpoint,
+        endpoint_in_group=endpoint_in_group,
+        terms=term_tuple,
+        assignments_in_group=assignments_in_group,
+        defect_values=defect_values,
+        defect_product_value=defect_product_value,
+        defect_product_matches_endpoint=(
+            endpoint_in_group
+            and defect_product_value is not None
+            and defect_product_value == endpoint
+        ),
+        longitude_witness=longitude_witness,
+        longitude_witness_value=longitude_witness_value,
+        longitude_witness_matches_defect_product=longitude_witness_matches_defect_product,
+        identity_longitude_signature=has_identity_longitude_signature(
+            group,
+            n,
+            braid_word,
+        ),
+        group_identity=group.identity,
+    )
+
+
+def endpoint_product_artin_defect_audit(
+    groups: Sequence[FiniteGroup],
+    n: int,
+    braid_word: BraidWord,
+    endpoints: Sequence[GroupElement],
+    terms_by_factor: Sequence[Sequence[Tuple[Sequence[GroupElement], FreeWord, int]]],
+) -> EndpointProductArtinDefectAudit:
+    """Assemble Artin-defect endpoint certificates in one product group."""
+
+    group_tuple = tuple(groups)
+    endpoint_tuple = tuple(endpoints)
+    terms_tuple = tuple(tuple(terms) for terms in terms_by_factor)
+    if not (len(group_tuple) == len(endpoint_tuple) == len(terms_tuple)):
+        raise ValueError("need one endpoint and Artin-defect term list for each group")
+    factor_audits = tuple(
+        endpoint_artin_defect_audit(
+            group,
+            n,
+            braid_word,
+            endpoint,
+            terms,
+        )
+        for group, endpoint, terms in zip(group_tuple, endpoint_tuple, terms_tuple)
+    )
+    product_order = 1
+    for group in group_tuple:
+        product_order *= len(group.elements)
+    product_witness = None
+    product_witness_value = None
+    if all(audit.longitude_witness is not None for audit in factor_audits):
+        product_witness = direct_product_longitude_subgroup_witness(
+            group_tuple,
+            n,
+            tuple(audit.longitude_witness or tuple() for audit in factor_audits),
+        )
+        product_witness_value = evaluate_longitude_subgroup_witness(
+            direct_product_group(group_tuple),
+            n,
+            braid_word,
+            product_witness,
+        )
+    return EndpointProductArtinDefectAudit(
+        n=n,
+        braid_word=tuple(braid_word),
         factor_audits=factor_audits,
         product_endpoint=endpoint_tuple,
         group_orders=tuple(len(group.elements) for group in group_tuple),
@@ -320,3 +640,22 @@ def endpoint_residual_readout_audit(
     """Bundle endpoint-controlled coordinates into one residual-tuple audit."""
 
     return EndpointResidualReadoutAudit(coordinate_audits=tuple(coordinate_audits))
+
+
+def endpoint_residual_action_audit(
+    n: int,
+    braid_word: BraidWord,
+    residual_readouts: Sequence[EndpointResidualReadoutAudit],
+    *,
+    expected_row_count: int | None = None,
+) -> EndpointResidualActionAudit:
+    """Bundle supplied residual rows for the endpoint detector implication."""
+
+    if expected_row_count is not None and expected_row_count < 0:
+        raise ValueError("expected row count must be nonnegative")
+    return EndpointResidualActionAudit(
+        n=n,
+        braid_word=tuple(braid_word),
+        residual_readouts=tuple(residual_readouts),
+        expected_row_count=expected_row_count,
+    )
