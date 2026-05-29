@@ -150,25 +150,30 @@ If descent separation is proved, the A-route closes as follows.
 5. Elementary continuation closure reduces universal continuation to one
    nontrivial seed pair at a time: in a local-minimal interval every
    individual continuation seed has universal admissible closure.
-6. Product witness calculus assembles all factor witnesses into one fixed
+6. Continuation readout propagation reduces derived-edge visibility to
+   representative seed visibility: an admissible fixed readout relation that
+   contains the seed contains the whole generated seed closure.
+7. Product witness calculus assembles all factor witnesses into one fixed
    `H(pi,Q)`.
-7. The endpoint-factorization criterion gives
+8. The endpoint-factorization criterion gives
 
 ```text
 Lambda_{H(pi,Q),n}(beta)=Lambda_{H(pi,Q),n}(1)
   => Delta_n(beta)=1.
 ```
 
-8. The sharp obstruction theorem supplies the local rack `Q x A_H`.
-9. Congruence-chain induction assembles the local racks into one finite rack
+9. The sharp obstruction theorem supplies the local rack `Q x A_H`.
+10. Congruence-chain induction assembles the local racks into one finite rack
    independent of `n`.
 
 ## Why this is still open
 
 The branch does not yet prove descent separation.  It still must prove that
-every non-rack lower motion is already visible in the fixed Green,
-Schutzenberger, or atom readouts.  Equivalently, after those readouts, the
-remaining lower endpoint motion must be strand-continuing.
+the fixed Green, Schutzenberger, or atom readout relation is admissible and
+contains every representative nontrivial continuation seed.  By continuation
+readout propagation, that would force the whole generated continuation closure
+to be readout-visible.  Equivalently, after those readouts, the remaining
+lower endpoint motion must be strand-continuing.
 
 There is also a guardrail against an invalid shortcut: elementary Green defects
 cannot always be products of Artin permutation defects.  The abelianization

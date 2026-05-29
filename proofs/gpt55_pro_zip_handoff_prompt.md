@@ -228,6 +228,12 @@ Then audit and use these reductions:
    single-seed continuation closure.  A positive proof must route those
    derived edges through fixed Green/Schutzenberger/atom readouts; a B proof
    must choose one derived edge and upgrade it to a normalized-law sequence.
+   Also use `proofs/continuation_readout_propagation.md`: it proves that an
+   admissible fixed readout relation containing one representative
+   continuation seed contains that seed's whole least admissible closure.
+   After this, the positive burden is representative seed visibility plus
+   admissibility of the fixed readout relation, not separate proof for every
+   derived edge.
    Also use `proofs/chart_transport_collapse.md`: it proves transported
    elementary generators need no separate proof once one chart-conjugacy orbit
    representative is certified, because `V_beta(G)` is normal.  Then read

@@ -535,6 +535,13 @@ const rows = [
     "Route each derived edge through fixed Green/Schutzenberger/atom readouts, or choose one derived edge as the normalized-law seed.",
   ],
   [
+    "Continuation readout propagation",
+    "Show that an admissible fixed readout containing one continuation seed contains the whole generated closure.",
+    "proofs/continuation_readout_propagation.md; continuation_seed_readout_propagation_audits records admissibility, seed containment, and missing generated edges.",
+    "Reduction criterion",
+    "Prove representative seed visibility in an admissible fixed readout; derived edges then propagate automatically.",
+  ],
+  [
     "Chart-transport collapse",
     "Avoid separate endpoint-longitude proofs for transported or chart-conjugate copies of elementary generators.",
     "proofs/chart_transport_collapse.md; conjugate_longitude_subgroup_witness shows V_beta(G) is normal at certificate level.",

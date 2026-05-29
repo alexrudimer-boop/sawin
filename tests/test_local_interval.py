@@ -10,6 +10,8 @@ from ybe_domination import (
     continuation_seed_pair_closure_audits,
     continuation_seed_pair_closure_failures,
     continuation_seed_pairs,
+    continuation_seed_readout_propagation_audits,
+    continuation_seed_readout_propagation_failures,
     continuation_seed_rows,
     continuation_seed_universal_derivation_audits,
     continuation_seed_universal_derivation_failures,
@@ -283,6 +285,39 @@ class LocalIntervalTests(unittest.TestCase):
                 row.depth == 1 and row.source != "seed"
                 for row in audits[0].seed_closure.generated.derivation_rows
             )
+        )
+
+    def test_continuation_seed_readout_propagates_admissible_universal_readout(self):
+        interval = one_color_identity_interval()
+        readout = {"*": (frozenset({0, 1}),)}
+
+        audits = continuation_seed_readout_propagation_audits(interval, readout)
+
+        self.assertEqual(len(audits), 1)
+        self.assertTrue(audits[0].readout_is_admissible)
+        self.assertTrue(audits[0].seed_contained)
+        self.assertTrue(audits[0].generated_contained)
+        self.assertEqual(audits[0].missing_generated_edges, ())
+        self.assertTrue(audits[0].proves_readout_propagation)
+        self.assertTrue(audits[0].forces_universal_readout)
+        self.assertEqual(continuation_seed_readout_propagation_failures(interval, readout), ())
+
+    def test_continuation_seed_readout_reports_missing_seed_and_edges(self):
+        interval = one_color_identity_interval()
+        readout = {"*": (frozenset({0}), frozenset({1}))}
+
+        audits = continuation_seed_readout_propagation_audits(interval, readout)
+
+        self.assertEqual(len(audits), 1)
+        self.assertTrue(audits[0].readout_is_admissible)
+        self.assertFalse(audits[0].seed_contained)
+        self.assertFalse(audits[0].generated_contained)
+        self.assertEqual(audits[0].missing_generated_edges, (("*", 0, 1),))
+        self.assertFalse(audits[0].proves_readout_propagation)
+        self.assertFalse(audits[0].forces_universal_readout)
+        self.assertEqual(
+            continuation_seed_readout_propagation_failures(interval, readout),
+            audits,
         )
 
     def test_continuation_congruence_records_non_rack_base_rows(self):

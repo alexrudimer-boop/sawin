@@ -999,6 +999,14 @@ edge-by-edge derivation ledger for each universal seed closure.  The helper
 edge count with the recorded derivation rows, including positive-depth
 transport edges.  Thus the final descent-separation target is not only
 seed-by-seed but derived-edge-by-derived-edge.
+The readout-propagation criterion
+`proofs/continuation_readout_propagation.md` now compresses the
+derived-edge target once a fixed readout relation is proposed.  An admissible
+readout containing the representative seed must contain the entire generated
+seed closure by the universal property of the least admissible congruence.
+The helper `continuation_seed_readout_propagation_audits(...)` records the
+admissibility, seed containment, generated containment, and any missing
+generated edges.
 The chart-transport collapse in
 `proofs/chart_transport_collapse.md` removes chart-dependent copies from the
 generator burden.  Since `V_beta(G)` is already normal in every finite group,
@@ -1007,8 +1015,9 @@ chart conjugates; `conjugate_longitude_subgroup_witness(...)` records the
 certificate-level operation.  The final A-route theorem is now stated in
 `proofs/descent_separation_transport_rack_closure.md`: transport-rack closure
 is proved, but descent separation remains open.  A complete proof must show
-that every non-rack lower motion is visible in fixed Green, Schutzenberger, or
-atom readouts, so that only strand-continuing transport-rack gauge remains.
+representative seed visibility in an admissible fixed Green, Schutzenberger,
+or atom readout, so that propagation leaves only strand-continuing
+transport-rack gauge.
 The single-endpoint route audit
 `unit_composite_longitude_route_audit(monoid,n,beta,factors)` now records the
 same ladder used in product-label work: endpoint identity, one evaluated

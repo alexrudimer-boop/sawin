@@ -180,6 +180,35 @@ class ContinuationSeedUniversalDerivationAudit:
         return self.closure_is_universal and self.every_edge_has_derivation
 
 
+@dataclass(frozen=True)
+class ContinuationSeedReadoutPropagationAudit:
+    """Containment of a continuation seed closure in a fixed readout relation."""
+
+    seed_closure: ContinuationSeedPairClosureAudit
+    readout_family: Mapping[Color, Partition]
+    readout_kind: str
+    readout_is_admissible: bool
+    seed_contained: bool
+    generated_contained: bool
+    missing_generated_edges: Tuple[Tuple[Color, FibrePoint, FibrePoint], ...]
+
+    @property
+    def proves_readout_propagation(self) -> bool:
+        return (
+            self.readout_is_admissible
+            and self.seed_contained
+            and self.generated_contained
+        )
+
+    @property
+    def forces_universal_readout(self) -> bool:
+        return (
+            self.proves_readout_propagation
+            and self.seed_closure.generated.kind == "universal"
+            and self.readout_kind == "universal"
+        )
+
+
 def equality_partition(items: Sequence[FibrePoint]) -> Partition:
     return canonical_partition(frozenset([item]) for item in items)
 
@@ -559,6 +588,94 @@ def continuation_seed_universal_derivation_failures(
         audit
         for audit in continuation_seed_universal_derivation_audits(interval)
         if not audit.proves_single_seed_universal_derivation
+    )
+
+
+def _family_contains_pair(
+    family: Mapping[Color, Partition],
+    color: Color,
+    left: FibrePoint,
+    right: FibrePoint,
+) -> bool:
+    return same_block(family[color], left, right)
+
+
+def _missing_family_edges(
+    contained: Mapping[Color, Partition],
+    container: Mapping[Color, Partition],
+) -> Tuple[Tuple[Color, FibrePoint, FibrePoint], ...]:
+    missing: List[Tuple[Color, FibrePoint, FibrePoint]] = []
+    for color in contained:
+        for left, right in partition_pairs(contained[color]):
+            if left == right:
+                continue
+            edge = tuple(sorted((left, right), key=repr))
+            if not _family_contains_pair(container, color, edge[0], edge[1]):
+                missing.append((color, edge[0], edge[1]))
+    return tuple(sorted(set(missing), key=repr))
+
+
+def continuation_seed_readout_propagation_audit(
+    interval: "LocalInterval",
+    seed_closure: ContinuationSeedPairClosureAudit,
+    readout_family: Mapping[Color, Partition],
+) -> ContinuationSeedReadoutPropagationAudit:
+    """Check whether an admissible readout contains a seed's full closure.
+
+    The proof use is minimality: the generated closure is the least admissible
+    family containing the seed.  Therefore any admissible readout relation that
+    contains the seed must contain every generated edge.  The audit records the
+    containment directly, so proof notes and tests can expose failures without
+    relying on a hidden enumeration argument.
+    """
+
+    seed_contained = _family_contains_pair(
+        readout_family,
+        seed_closure.color,
+        seed_closure.left,
+        seed_closure.right,
+    )
+    missing = _missing_family_edges(seed_closure.generated.family, readout_family)
+    return ContinuationSeedReadoutPropagationAudit(
+        seed_closure=seed_closure,
+        readout_family=readout_family,
+        readout_kind=relation_family_kind(interval, readout_family),
+        readout_is_admissible=interval.is_admissible_congruence_family(readout_family),
+        seed_contained=seed_contained,
+        generated_contained=not missing,
+        missing_generated_edges=missing,
+    )
+
+
+def continuation_seed_readout_propagation_audits(
+    interval: "LocalInterval",
+    readout_family: Mapping[Color, Partition],
+) -> Tuple[ContinuationSeedReadoutPropagationAudit, ...]:
+    """Apply the readout-propagation check to every continuation seed closure."""
+
+    return tuple(
+        continuation_seed_readout_propagation_audit(
+            interval,
+            seed_closure,
+            readout_family,
+        )
+        for seed_closure in continuation_seed_pair_closure_audits(interval)
+    )
+
+
+def continuation_seed_readout_propagation_failures(
+    interval: "LocalInterval",
+    readout_family: Mapping[Color, Partition],
+) -> Tuple[ContinuationSeedReadoutPropagationAudit, ...]:
+    """Return continuation seed closures not certified by this readout."""
+
+    return tuple(
+        audit
+        for audit in continuation_seed_readout_propagation_audits(
+            interval,
+            readout_family,
+        )
+        if not audit.proves_readout_propagation
     )
 
 
