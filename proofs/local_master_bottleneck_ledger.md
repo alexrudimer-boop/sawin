@@ -94,6 +94,13 @@ Fibre-size-two affine product rows are deliberately marked as delegated to
 `proofs/fibre2_product_branch.md` unless a local wrapper has recorded an
 explicit affine detector order.  This keeps the ledger construction-shaped
 without turning an affine branch citation into a hidden claim about `C_2`.
+The convenience accessors `closed_detector_groups`,
+`closed_detector_group_orders`, and `closed_detector_gaps` merge the
+available product and known-branch detector data for closed verdicts.  They
+return actual finite `G_i` objects exactly when the current ledger has them,
+so these groups can be passed on to `assemble_congruence_chain_rack` without
+reconstructing them from prose.  Delegated affine product rows remain gaps in
+this merged view.
 
 `product_genuinely_coloured_bottleneck`.
 The interval has a product-permutation witness, but every available product
@@ -126,6 +133,9 @@ The summary now records the detector explicitly.  Involutive rows carry
 nondegenerate/guitar rows use the direct `Sym(X)` branch.  These are fixed
 finite groups attached to the interval table, so the associated
 `Q x A_G` factor is still independent of braid index.
+Those known-branch groups also appear in the merged
+`closed_detector_groups` view for `known_total_branch` and
+`locally_nondegenerate_branch` verdicts.
 Audit-only tags do not suffice for this verdict.  In particular,
 `affine_cyclic` remains excluded from the known-total detector set unless the
 same interval is also covered by one of the symbolic all-`n` detector branches

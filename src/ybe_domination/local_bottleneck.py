@@ -92,6 +92,7 @@ class LocalMasterBottleneckSummary:
     product_detector_certificates: Tuple[ProductFiniteGDetectorCertificate, ...]
     total_branch_tags: Tuple[str, ...]
     known_total_detector_reason: str | None
+    known_total_detector_group: FiniteGroup | None
     known_total_detector_group_order: int | None
     known_total_detector_factor_size: int | None
     green_detector_group_orders: Tuple[int, ...]
@@ -125,6 +126,42 @@ class LocalMasterBottleneckSummary:
             for certificate in self.product_detector_certificates
             if certificate.detector_group_order is None
         )
+
+    @property
+    def known_total_detector_groups(self) -> Tuple[FiniteGroup, ...]:
+        if self.known_total_detector_group is None:
+            return tuple()
+        return (self.known_total_detector_group,)
+
+    @property
+    def closed_detector_groups(self) -> Tuple[FiniteGroup, ...]:
+        """Return actual finite groups for closed verdicts when known.
+
+        The returned groups are interval-level detector factors.  They are not
+        populated for open corridor/product bottlenecks, and delegated affine
+        rows remain visible through ``closed_detector_gaps``.
+        """
+
+        if self.verdict == "product_finite_g_branch":
+            return self.product_detector_groups
+        if self.verdict in {"known_total_branch", "locally_nondegenerate_branch"}:
+            return self.known_total_detector_groups
+        return tuple()
+
+    @property
+    def closed_detector_group_orders(self) -> Tuple[int, ...]:
+        return tuple(len(group.elements) for group in self.closed_detector_groups)
+
+    @property
+    def closed_detector_gaps(self) -> Tuple[str, ...]:
+        if self.verdict == "product_finite_g_branch":
+            return self.product_detector_gaps
+        if (
+            self.verdict in {"known_total_branch", "locally_nondegenerate_branch"}
+            and self.known_total_detector_group is None
+        ):
+            return (self.verdict,)
+        return tuple()
 
 
 def _local_minimal_value(
@@ -493,6 +530,9 @@ def local_master_bottleneck_summary(
         total_branch_tags=total_tags,
         known_total_detector_reason=(
             None if known_total_certificate is None else known_total_certificate.reason
+        ),
+        known_total_detector_group=(
+            None if known_total_certificate is None else known_total_certificate.detector_group
         ),
         known_total_detector_group_order=(
             None

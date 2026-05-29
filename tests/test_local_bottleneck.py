@@ -183,6 +183,8 @@ class LocalMasterBottleneckTests(unittest.TestCase):
             (1,),
         )
         self.assertEqual(summary.product_detector_gaps, ())
+        self.assertEqual(summary.closed_detector_group_orders, (1,))
+        self.assertEqual(summary.closed_detector_gaps, ())
         self.assertEqual(summary.verdict, "product_finite_g_branch")
 
     def test_one_color_pairwise_product_records_cyclic_detector(self):
@@ -211,6 +213,8 @@ class LocalMasterBottleneckTests(unittest.TestCase):
             (3,),
         )
         self.assertEqual(summary.product_detector_gaps, ())
+        self.assertEqual(summary.closed_detector_group_orders, (3,))
+        self.assertEqual(summary.closed_detector_gaps, ())
         certificate = summary.product_detector_certificates[0]
         self.assertEqual(certificate.detector_kind, "cyclic_identity_base_group")
         self.assertTrue(certificate.has_explicit_group)
@@ -245,6 +249,8 @@ class LocalMasterBottleneckTests(unittest.TestCase):
         self.assertEqual(summary.known_total_detector_group_order, 6)
         self.assertEqual(summary.known_total_detector_factor_size, 72)
         self.assertEqual(summary.verdict, "locally_nondegenerate_branch")
+        self.assertEqual(summary.closed_detector_group_orders, (6,))
+        self.assertEqual(summary.closed_detector_gaps, ())
         self.assertNotEqual(summary.verdict, "bi_free_universal_corridor_bottleneck")
 
     def test_elementary_kernel_pairs_are_recorded_for_universal_corridor(self):
@@ -261,6 +267,8 @@ class LocalMasterBottleneckTests(unittest.TestCase):
             "involutive_artin_permutation",
         )
         self.assertEqual(summary.known_total_detector_group_order, 1)
+        self.assertEqual(summary.closed_detector_group_orders, (1,))
+        self.assertEqual(summary.closed_detector_gaps, ())
 
     def test_size_three_involutive_rows_are_not_corridor_bottlenecks(self):
         counts = {}
@@ -306,6 +314,8 @@ class LocalMasterBottleneckTests(unittest.TestCase):
         self.assertEqual(summary.product_detector_group_orders, ())
         self.assertEqual(summary.product_detector_groups, ())
         self.assertEqual(summary.product_detector_gaps, ("direct_fibre2_affine",))
+        self.assertEqual(summary.closed_detector_group_orders, ())
+        self.assertEqual(summary.closed_detector_gaps, ("direct_fibre2_affine",))
         self.assertEqual(summary.verdict, "product_finite_g_branch")
 
 

@@ -421,6 +421,9 @@ a fixed finite group object, detector order, and sharp rack factor size.
 Fibre-size-two affine product details are currently marked as delegated to
 `proofs/fibre2_product_branch.md`; do not treat that delegation as a local
 `C_2` proof unless you supply the missing all-`n` affine detector argument.
+For closed local rows, use `closed_detector_groups` and
+`closed_detector_gaps` on the summary to check whether the current archive
+actually provides finite group objects ready for congruence-chain assembly.
 
 Important warning from `proofs/product_longitude_witness_audit.md`: one common
 homomorphism `F_n -> H_prod` need not realize all coordinate labels at once.

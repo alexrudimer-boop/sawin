@@ -404,7 +404,7 @@ const rows = [
   [
     "Local bottleneck",
     "Route each local interval to a branch verdict.",
-    "Router now records explicit known-branch and closed-product detector group/order/factor size, with fibre2 affine product rows marked as delegated.",
+    "Router now records explicit known/product detector groups and merged closed_detector_groups/closed_detector_gaps handoff.",
     "Reduction ledger",
     "Prove genuinely-coloured product or bi-free corridor factorization, or realize B there.",
   ],

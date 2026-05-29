@@ -1014,6 +1014,11 @@ rows whose total table is already known reuse the known-branch detector
 certificate.  Thus `product_finite_g_branch` is no longer just a string
 verdict for these subcases: it exposes the finite detector group object and
 order, or names the exact delegated affine branch.
+The merged summary accessors `closed_detector_groups` and
+`closed_detector_gaps` collect these product detectors together with the
+known-total/nondegenerate branch detectors.  Consequently a closed local
+verdict now has a direct programmatic path from the audited local table to the
+finite groups that should be supplied to the congruence-chain rack assembly.
 
 Those failures are no longer just booleans.  The holonomy summaries
 `swapped_product_holonomy_summary()` and
