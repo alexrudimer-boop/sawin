@@ -11,6 +11,7 @@ from .artin_longitudes import (
 )
 from .finite_braided_set import FiniteBraidedSet, opposite_solution
 from .finite_group import (
+    commutator_subgroup_elements,
     FiniteGroup,
     FiniteGroupHomomorphism,
     GroupElement,
@@ -555,6 +556,36 @@ class GreenDefectKernelPotentialAudit:
             and self.all_potentials_lie_in_defect_kernel
             and self.all_defects_are_potential_coboundaries
         )
+
+
+@dataclass(frozen=True)
+class GreenDefectArtinAbelianizationBarrierAudit:
+    """Audit the abelianization barrier for Artin-defect displays."""
+
+    observer_name: str
+    r_class: Tuple[Transformation, ...]
+    potential_audit: GreenDefectKernelPotentialAudit
+    defect_kernel_size: int
+    defect_commutator_subgroup: Tuple[GroupElement, ...]
+    row_count: int
+    noncommutator_row_count: int
+    noncommutator_defect_values: Tuple[GroupElement, ...]
+
+    @property
+    def defect_commutator_size(self) -> int:
+        return len(self.defect_commutator_subgroup)
+
+    @property
+    def defect_kernel_has_abelian_quotient(self) -> bool:
+        return self.defect_commutator_size < self.defect_kernel_size
+
+    @property
+    def elementary_artin_defect_display_obstructed(self) -> bool:
+        return self.noncommutator_row_count > 0
+
+    @property
+    def all_elementary_defects_have_trivial_defect_abelianization(self) -> bool:
+        return self.noncommutator_row_count == 0
 
 
 @dataclass(frozen=True)
@@ -1345,6 +1376,41 @@ def green_defect_kernel_potential_audit(
     )
 
 
+def green_defect_artin_abelianization_barrier_audit(
+    source_defect_audit: GreenFirstOutputDefectAudit,
+) -> GreenDefectArtinAbelianizationBarrierAudit:
+    """Audit whether elementary defects can be Artin-defect products.
+
+    Artin permutation defect values have trivial image in every abelian
+    quotient of the target group.  Thus an elementary defect outside the
+    commutator subgroup of ``Def_C`` cannot have an Artin-defect display in
+    that fixed defect kernel.
+    """
+
+    potential_audit = green_defect_kernel_potential_audit(source_defect_audit)
+    group = source_defect_audit.group
+    defect_kernel = potential_audit.quotient_audit.defect_kernel
+    defect_commutator = commutator_subgroup_elements(group, defect_kernel)
+    commutator_set = set(defect_commutator)
+    noncommutator_rows = [
+        row.first_output_defect
+        for row in source_defect_audit.row_audits
+        if row.first_output_defect not in commutator_set
+    ]
+    return GreenDefectArtinAbelianizationBarrierAudit(
+        observer_name=source_defect_audit.observer_name,
+        r_class=source_defect_audit.r_class,
+        potential_audit=potential_audit,
+        defect_kernel_size=len(defect_kernel),
+        defect_commutator_subgroup=defect_commutator,
+        row_count=len(source_defect_audit.row_audits),
+        noncommutator_row_count=len(noncommutator_rows),
+        noncommutator_defect_values=tuple(
+            sorted(set(noncommutator_rows), key=repr)
+        ),
+    )
+
+
 def kernel_action_summary(solution: FiniteBraidedSet) -> Tuple[KernelActionSummary, ...]:
     """Summarize finite kernel-block actions for retained Green labels.
 
@@ -1718,6 +1784,17 @@ def schutzenberger_defect_kernel_potential_audits(
     )
 
 
+def schutzenberger_defect_artin_abelianization_barrier_audits(
+    solution: FiniteBraidedSet,
+) -> Tuple[GreenDefectArtinAbelianizationBarrierAudit, ...]:
+    """Return Artin-defect abelianization barrier audits for Schutzenberger defects."""
+
+    return tuple(
+        green_defect_artin_abelianization_barrier_audit(audit)
+        for audit in schutzenberger_first_output_defect_audits(solution)
+    )
+
+
 def kernel_block_defect_kernel_quotient_audits(
     solution: FiniteBraidedSet,
 ) -> Tuple[GreenDefectKernelQuotientAudit, ...]:
@@ -1736,6 +1813,17 @@ def kernel_block_defect_kernel_potential_audits(
 
     return tuple(
         green_defect_kernel_potential_audit(audit)
+        for audit in kernel_block_first_output_defect_audits(solution)
+    )
+
+
+def kernel_block_defect_artin_abelianization_barrier_audits(
+    solution: FiniteBraidedSet,
+) -> Tuple[GreenDefectArtinAbelianizationBarrierAudit, ...]:
+    """Return Artin-defect abelianization barrier audits for kernel-block defects."""
+
+    return tuple(
+        green_defect_artin_abelianization_barrier_audit(audit)
         for audit in kernel_block_first_output_defect_audits(solution)
     )
 

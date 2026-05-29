@@ -44,9 +44,10 @@ First read:
 11. `proofs/green_first_output_defect_criterion.md`
 12. `proofs/green_defect_kernel_quotient_detection.md`
 13. `proofs/green_defect_potential_coboundary.md`
-14. `proofs/sawin_proof_log.docx`
-15. `tables/reduction_audit.xlsx`
-16. The code and tests under `src/`, `tools/`, and `tests/`
+14. `proofs/artin_defect_abelianization_barrier.md`
+15. `proofs/sawin_proof_log.docx`
+16. `tables/reduction_audit.xlsx`
+17. The code and tests under `src/`, `tools/`, and `tests/`
 
 Then audit and use these reductions:
 
@@ -177,7 +178,12 @@ Then audit and use these reductions:
    `proofs/green_defect_potential_coboundary.md`: it proves every elementary
    defect is a finite coboundary `eta(q^a)eta(q)^-1` in `Def_C`, so the exact
    remaining Green check is whether this potential is principal for the Artin
-   detector transport, preferably by Artin permutation defect displays.
+   detector transport.  Also use
+   `proofs/artin_defect_abelianization_barrier.md`: Artin permutation defect
+   values always lie in `[Def_C,Def_C]`, so elementary defects with nontrivial
+   abelianization cannot be handled by Artin-defect displays alone.  Use full
+   recursive-longitude membership, endpoint cancellation, or detector-lift
+   labels for such abelian defect-kernel data.
    Also audit the Green atom-action layer through `proofs/green_branch_audit.md`
    and `atom_action_summary(...)`: it checks whether completed rows descend to
    operations on saturated atoms, `p(a) triangleright p(q)=p(a^q)` and

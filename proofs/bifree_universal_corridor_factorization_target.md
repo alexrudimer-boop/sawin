@@ -255,6 +255,10 @@ endpoint `D_C(beta) in V_beta(Def_C)`.  The further potential-coboundary note
 `proofs/green_defect_potential_coboundary.md` proves that each elementary
 defect is `eta(q^a)eta(q)^-1` for a finite `Def_C`-valued potential, so the
 exact remaining Green check is Artin-transport principalness of that
-potential.  This sits alongside lower endpoint/unit holonomy and the separate
-theorem that atom descent/totality holds or is absorbed by a controlled
-quotient.
+potential.  The guardrail
+`proofs/artin_defect_abelianization_barrier.md` shows that principalness
+cannot generally be proved by displaying each elementary defect as an Artin
+permutation defect: those values die in abelian quotients, while audited
+defect kernels can be abelian with nonidentity defects.  This sits alongside
+lower endpoint/unit holonomy and the separate theorem that atom
+descent/totality holds or is absorbed by a controlled quotient.

@@ -176,6 +176,24 @@ def normal_closure_elements(
     return subgroup_generated_elements(group, conjugates)
 
 
+def commutator_subgroup_elements(
+    group: FiniteGroup,
+    subgroup: Iterable[GroupElement] | None = None,
+) -> Tuple[GroupElement, ...]:
+    """Return the commutator subgroup of ``group`` or a supplied subgroup."""
+
+    subset = tuple(group.elements if subgroup is None else subgroup)
+    elements = set(group.elements)
+    if any(element not in elements for element in subset):
+        raise ValueError("commutator subgroup element outside group")
+    commutators = [
+        group.mul(group.mul(group.mul(left, right), group.inv(left)), group.inv(right))
+        for left in subset
+        for right in subset
+    ]
+    return subgroup_generated_elements(group, commutators)
+
+
 def is_normal_subgroup(
     group: FiniteGroup,
     subgroup: Iterable[GroupElement],

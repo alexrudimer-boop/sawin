@@ -195,6 +195,11 @@ coboundaries are unchanged.  This does not yet prove that transported defect
 endpoints lie in `V_beta(Def_C)`; it reduces that question to proving that the
 finite potential is principal for the Artin detector transport.
 
+The guardrail `proofs/artin_defect_abelianization_barrier.md` shows that this
+principalness cannot generally be certified by Artin permutation defects for
+each elementary row.  Such defect values lie in the commutator subgroup of the
+target, while `Def_C` can have nontrivial abelian row defects.
+
 ## Remaining target
 
 For each regular Green class `C`, let `D_C(beta)` denote the ordered
@@ -207,8 +212,9 @@ D_C(beta) in V_beta(Def_C)
 ```
 
 for every residual braid `beta`, uniformly in braid index, preferably by
-expressing transported potential differences as Artin permutation defect
-values.
+ordinary recursive-longitude expressions or by proving cancellation of the
+abelianized potential transport before applying Artin permutation defect
+displays to the commutator part.
 
 If this is proved, then:
 

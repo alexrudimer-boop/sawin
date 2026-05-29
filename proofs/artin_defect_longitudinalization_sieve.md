@@ -294,7 +294,10 @@ motion is closed by `proofs/green_defect_kernel_quotient_detection.md`.
 The elementary defects are also finite coboundaries by
 `proofs/green_defect_potential_coboundary.md`:
 `d(a,q)=eta(q^a)eta(q)^-1`.  Therefore the defect-sieve route should be
-applied directly to the Artin transport of this `Def_C`-valued potential:
-display the transported finite defect-kernel product `D_C(beta)` as a product
-of Artin permutation defects in `Def_C`, and membership in `V_beta(Def_C)`
-follows.
+applied only after checking the abelianization barrier in
+`proofs/artin_defect_abelianization_barrier.md`.  Artin permutation defect
+values always lie in `[Def_C,Def_C]`; if the transported endpoint has
+nontrivial abelianized defect contribution, an Artin-defect-only display is
+impossible.  The valid target is still `D_C(beta) in V_beta(Def_C)`, but it
+may require ordinary recursive-longitude expressions, endpoint cancellation,
+or detector-lift labels rather than Artin permutation defects alone.

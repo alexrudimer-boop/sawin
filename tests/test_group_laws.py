@@ -6,6 +6,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from ybe_domination import (
     commutator,
+    commutator_subgroup_elements,
     cyclic_group,
     exponent_law_profile,
     exponent_law_word,
@@ -78,6 +79,15 @@ class GroupLawTests(unittest.TestCase):
                 if projection.apply(element) == quotient.identity
             },
             set(alternating_closure),
+        )
+
+    def test_commutator_subgroup_elements(self):
+        self.assertEqual(set(commutator_subgroup_elements(cyclic_group(3))), {0})
+
+        group = symmetric_group(3)
+        self.assertEqual(
+            set(commutator_subgroup_elements(group)),
+            {group.identity, (1, 2, 0), (2, 0, 1)},
         )
 
     def test_exponent_law_for_small_groups(self):

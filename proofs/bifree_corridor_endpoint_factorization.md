@@ -351,7 +351,11 @@ longitudinalize is the transported finite defect-kernel product
 `proofs/green_defect_potential_coboundary.md` proves each elementary defect is
 `eta(q^a)eta(q)^-1`; therefore the finite Green check left for endpoint
 longitudinalization is whether this `Def_C`-valued potential is principal for
-the Artin detector transport.
+the Artin detector transport.  The abelianization guardrail
+`proofs/artin_defect_abelianization_barrier.md` rules out the too-strong
+version where every elementary defect is an Artin permutation defect product:
+Artin permutation defects land in `[Def_C,Def_C]`, but audited defect kernels
+may have nontrivial abelian defect rows.
 
 ## Executable certificate layer
 

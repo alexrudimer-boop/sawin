@@ -465,6 +465,13 @@ const rows = [
     "Prove the Def_C potential is principal for Artin detector transport, or extract a normalized-law cocycle escape.",
   ],
   [
+    "Artin-defect abelianization",
+    "Prevent an invalid elementary Artin-defect display proof for abelian defect kernels.",
+    "proofs/artin_defect_abelianization_barrier.md proves Artin permutation defects land in [K,K]; the affine Green stress row has Def_C=C3 and nonidentity row defects outside [Def_C,Def_C].",
+    "Proof guardrail",
+    "Use full recursive-longitude membership, endpoint cancellation, or detector-lift labels for abelian defect-kernel data.",
+  ],
+  [
     "Bi-free subgroup certificate",
     "Profile candidate words against fixed corridor detector factors.",
     "Helper, extra-factor target support, direct-product subgroup audit, and tests added; affine commutator seen by S3 block factor.",

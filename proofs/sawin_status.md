@@ -887,6 +887,14 @@ route is to express the potential transport differences as Artin permutation
 defect values, which the Artin-defect sieve already places in the
 longitude-value subgroup.  A B route must now escape through a nonprincipal
 finite defect-potential cocycle, not through a generic bounded row mismatch.
+The stronger elementary Artin-defect display route is now explicitly blocked
+in general by `proofs/artin_defect_abelianization_barrier.md`: Artin
+permutation defect values always land in the commutator subgroup of the
+target, while the affine Green stress row has abelian defect kernel `C3` and
+nonidentity elementary defects.  Therefore a valid A proof must use full
+recursive-longitude membership in `V_beta(Def_C)`, endpoint cancellation of
+the abelianized potential transport, or a detector-lift construction for the
+potential labels.
 The single-endpoint route audit
 `unit_composite_longitude_route_audit(monoid,n,beta,factors)` now records the
 same ladder used in product-label work: endpoint identity, one evaluated

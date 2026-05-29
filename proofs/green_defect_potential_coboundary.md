@@ -94,7 +94,8 @@ g(q^a) g(q)^-1 = d(a,q) in Def_C.
 ```
 
 A reverse step has the inverse ratio, also in `Def_C`.  The product of ratios
-along the path telescopes to
+along the path, ordered from the final step back to the first step, telescopes
+to
 
 ```text
 g(e) g(e_0)^-1.
@@ -189,3 +190,11 @@ d(a,q)=eta(q^a)eta(q)^-1.
 
 It does not prove the remaining Artin-transport principalness condition; it
 only verifies the finite nonabelian coboundary reduction.
+
+The related guardrail `proofs/artin_defect_abelianization_barrier.md` shows
+that this principalness cannot generally mean "each elementary defect is a
+product of Artin permutation defects."  Artin permutation defect values always
+lie in the commutator subgroup of the target group, while the audited affine
+stress row has abelian defect kernel `C3` with nonidentity elementary defects.
+Thus the valid remaining target is full `V_beta(Def_C)` membership, endpoint
+cancellation, or detector-lift longitude labels for the transported potential.

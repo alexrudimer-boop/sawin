@@ -28,6 +28,7 @@ from ybe_domination import (
     context_words_by_target,
     depth_observer_summary,
     green_branch_audits,
+    kernel_block_defect_artin_abelianization_barrier_audits,
     kernel_block_defect_kernel_potential_audits,
     kernel_block_defect_kernel_quotient_audits,
     kernel_block_first_output_defect_audits,
@@ -38,6 +39,7 @@ from ybe_domination import (
     right_coordinate_action_maps,
     right_coordinate_action_relation_failures,
     schutzenberger_action_groups,
+    schutzenberger_defect_artin_abelianization_barrier_audits,
     schutzenberger_defect_kernel_potential_audits,
     schutzenberger_defect_kernel_quotient_audits,
     schutzenberger_first_output_defect_audits,
@@ -264,6 +266,27 @@ class GreenBranchTests(unittest.TestCase):
             self.assertTrue(audit.all_potentials_lie_in_defect_kernel)
             self.assertTrue(audit.all_defects_are_potential_coboundaries)
             self.assertTrue(audit.proves_defect_kernel_potential_coboundary)
+
+    def test_artin_defect_display_barrier_for_abelian_green_defects(self):
+        solution = size_three_affine_candidate()
+        sch_audit = schutzenberger_defect_artin_abelianization_barrier_audits(
+            solution
+        )[0]
+        kernel_audit = kernel_block_defect_artin_abelianization_barrier_audits(
+            solution
+        )[0]
+
+        for audit in (sch_audit, kernel_audit):
+            self.assertEqual(audit.defect_kernel_size, 3)
+            self.assertEqual(audit.defect_commutator_size, 1)
+            self.assertTrue(audit.defect_kernel_has_abelian_quotient)
+            self.assertEqual(audit.row_count, 27)
+            self.assertEqual(audit.noncommutator_row_count, 18)
+            self.assertEqual(len(audit.noncommutator_defect_values), 2)
+            self.assertTrue(audit.elementary_artin_defect_display_obstructed)
+            self.assertFalse(
+                audit.all_elementary_defects_have_trivial_defect_abelianization
+            )
 
     def test_induced_kernel_permutation_detects_block_action(self):
         kernel = transformation_kernel((0, 0, 1, 1))
