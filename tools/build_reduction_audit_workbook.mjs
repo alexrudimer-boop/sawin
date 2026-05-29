@@ -54,7 +54,7 @@ const rows = [
   [
     "Congruence chain",
     "Local detectors compose down congruence chain.",
-    "Cover/local extraction implemented.",
+    "Cover/local extraction implemented; assemble_congruence_chain_rack iterates Q_i=Q_{i+1} x A_{G_i} and records |Q_i|=|Q_{i+1}|*2*|G_i|^2 without an n parameter.",
     "Executable audit",
     "Check detector independence from n.",
   ],

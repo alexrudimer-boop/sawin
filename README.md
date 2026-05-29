@@ -40,6 +40,12 @@ finite-longitude identity has killed the Artin permutation.
 The sharp rack-construction step is executable as
 `sharp_obstruction_rack(Q,G)`, with `is_rack_solution()` checking rack form and
 `product_solution()` building the finite Cartesian product `Q x A_G`.
+The formal congruence-chain recursion is executable as
+`assemble_congruence_chain_rack(Q_m, (G_{m-1},...,G_0))`: it iterates the
+sharp step, records the size multiplication `|Q| -> |Q|*2*|G|^2` at each
+interval, and has no braid-index parameter.  This is only the assembly layer;
+the still-open burden is finding the local detector groups `G_i` uniformly in
+`n`.
 The local branch router now uses an exact single-pair closure criterion for
 local-minimality, so arbitrary finite fibre sizes no longer require
 Bell-number partition enumeration before routing.  The generated closure

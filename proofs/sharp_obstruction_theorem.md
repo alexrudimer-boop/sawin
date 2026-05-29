@@ -193,5 +193,18 @@ ker rho_{Q x A_G,n}
 ker rho_{Q,n} cap ker rho_{A_G,n}.
 ```
 
+The congruence-chain wrapper
+
+```text
+assemble_congruence_chain_rack(Q_m, groups)
+```
+
+now iterates this same constructor along a supplied finite list of local
+detector groups.  Its audit rows record the formal multiplication
+`|Q_i|=|Q_{i+1}|*2*|G_i|^2`, so the executable artifact matches the induction
+step `Q_i=Q_{i+1} x A_{G_i}` exactly.  This wrapper does not prove the local
+detector theorem; it verifies that once the fixed interval groups are known,
+the assembled rack is a finite object independent of braid degree.
+
 Again this executable check is not the theorem; it is the concrete artifact
 matching the proof above and the rack used in the congruence-chain induction.

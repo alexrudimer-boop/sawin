@@ -73,8 +73,11 @@ Then audit and use these reductions:
    `Delta_X=kappa_0<...<kappa_m=Nabla_X`, it suffices to prove the local
    theorem for every local-minimal interval
    `X/kappa_i -> X/kappa_{i+1}`.  If the local detector is `G_i`, the global
-   rack is obtained by iterating `Q_i=Q_{i+1} x A_{G_i}`.  The resulting
-   detector must be finite and independent of `n`.
+   rack is obtained by iterating `Q_i=Q_{i+1} x A_{G_i}`.  The archive
+   implements this assembly as `assemble_congruence_chain_rack(Q_m, groups)`,
+   which records the size factor `2*|G_i|^2` at each step and has no braid
+   index input.  The resulting detector must be finite and independent of
+   `n`.
 
 4. Local residual table.  For `R_Z(a,b)=(a dot b, a*b)` and fibres `A_a`,
    local maps

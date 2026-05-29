@@ -69,6 +69,11 @@ from .artin_longitudes import (
     right_stabilization_longitude_audit,
     sharp_obstruction_rack,
 )
+from .chain_rack import (
+    CongruenceChainRackAssembly,
+    CongruenceChainRackStep,
+    assemble_congruence_chain_rack,
+)
 from .local_interval import (
     LocalInterval,
     CoordinateKernelPairClosureAudit,
@@ -461,6 +466,8 @@ __all__ = [
     "BiFreeCorridorProductSubgroupAudit",
     "BiFreeCorridorWordCertificate",
     "CongruenceInterval",
+    "CongruenceChainRackAssembly",
+    "CongruenceChainRackStep",
     "ContextRetractionAudit",
     "ContextRetractionStep",
     "AtomActionFailure",
@@ -570,6 +577,7 @@ __all__ = [
     "artin_longitude_exponent_matrix",
     "artin_longitude_row_column_sums",
     "all_tuples",
+    "assemble_congruence_chain_rack",
     "atom_action_summary",
     "atom_descent_closure_summary",
     "atom_descent_quotient_rack_audit",

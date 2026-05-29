@@ -216,6 +216,10 @@ In the code archive this rack is constructed by
 `sharp_obstruction_rack(Q,G)`.  Audit this as the final finite rack
 constructor after a local detector group `G` is proved; do not confuse this
 explicit construction with the still-open problem of finding `G`.
+The chain-level wrapper `assemble_congruence_chain_rack(Q_m, groups)` iterates
+this constructor along the supplied finite detector groups and records
+`|Q_i|=|Q_{i+1}|*2*|G_i|^2`.  It has no braid-index input; audit it only as
+the formal assembly layer once the local groups have been proved.
 
 3. Congruence-chain induction.
 

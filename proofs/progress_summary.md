@@ -66,8 +66,13 @@ Delta_X=kappa_0 < ... < kappa_m=Nabla_X,
 
 it is enough to prove the local theorem for every interval
 `X/kappa_i -> X/kappa_{i+1}`.  If the local detector is `G_i`, the racks are
-assembled by `Q_i=Q_{i+1} x A_{G_i}`.  This preserves finiteness and
-independence from `n` provided every `G_i` is fixed at the interval level.
+assembled by `Q_i=Q_{i+1} x A_{G_i}`.  The executable helper
+`assemble_congruence_chain_rack(Q_m, groups)` now performs exactly this
+iteration, where `groups` are the fixed finite local detector groups supplied
+while descending the chain.  It records each factor size
+`2*|G_i|^2`, the input and output rack sizes, and the final rack.  The helper
+has no braid-index parameter; it preserves finiteness and independence from
+`n` provided every `G_i` is fixed at the interval level.
 
 ## Local-minimality and semisplit handling
 

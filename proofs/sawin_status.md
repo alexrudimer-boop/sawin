@@ -82,6 +82,11 @@ the generic `product_solution()` and `is_rack_solution()` helpers.  This
 explicitly returns the finite rack `Q x A_G` with `|Q|*2*|G|^2` elements and
 keeps the final rack-construction step separate from the still-open task of
 finding the uniform local detector group `G(pi,Q)`.
+The chain-level assembly is also executable as
+`assemble_congruence_chain_rack(Q_m, groups)`.  It iterates
+`sharp_obstruction_rack` down a supplied finite detector list, records every
+factor `2*|G_i|^2`, and exposes the final rack object without accepting any
+braid-index input.
 
 There is also a direct rack-action version of the same principle.  For a
 finite rack `Y`, the left translations generate a finite inner group
@@ -370,6 +375,12 @@ Q_i = Q_{i+1} x A_{G_i}.
 
 This induction is formally valid only after the local theorem supplies
 detectors for all intervals and those detectors are independent of `n`.
+The executable assembly helper
+`assemble_congruence_chain_rack(Q_m, groups)` now implements this recurrence
+directly.  Its audit rows record `|Q_i|=|Q_{i+1}|*2*|G_i|^2` for each fixed
+finite detector group and return the final rack `Q_0`.  This checks the
+formal induction mechanics while leaving the master local detector theorem as
+the open mathematical input.
 
 The A/B fork is now isolated in `proofs/master_local_dichotomy.md`.  If every
 local-minimal interval in a saturated congruence chain has a finite detector

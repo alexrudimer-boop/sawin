@@ -52,6 +52,15 @@ Every group and rack in this recursion is finite, and the chain length is
 finite.  The only non-formal input is the local theorem for each
 local-minimal interval, with `G_i` independent of `n`.
 
+The assembly part is now executable as
+`assemble_congruence_chain_rack(Q_m, groups)`.  This helper takes the terminal
+rack and the finite list of already-supplied detector groups, applies
+`sharp_obstruction_rack` at each interval, and records the size audit
+`|Q_i|=|Q_{i+1}|*2*|G_i|^2`.  It has no `n` parameter, so it cannot hide a
+detector depending on braid degree.  It is not a substitute for the master
+local theorem; it is the checked final induction step after the local
+detectors have been proved.
+
 ## B-Side
 
 Conversely, suppose an explicit local-minimal interval

@@ -75,6 +75,36 @@ objects.  After canonicalization, every congruence cover in this example
 extracts to a local-minimal interval, as required by the cover/local-minimal
 reduction.
 
+## Rack assembly
+
+Once the local theorem supplies fixed finite detector groups for a saturated
+chain, the final rack is no longer a prose-only recurrence.  The module
+`src/ybe_domination/chain_rack.py` provides
+
+```text
+assemble_congruence_chain_rack(Q_m, groups)
+```
+
+where `Q_m` is the terminal quotient rack and `groups` is the finite list of
+local detectors encountered while descending the chain.  The helper iterates
+
+```text
+Q_i = Q_{i+1} x A_{G_i}
+```
+
+by calling `sharp_obstruction_rack(Q,G)` at every step.  Its audit record
+stores:
+
+- `terminal_rack_size`;
+- the detector group orders `|G_i|`;
+- one row per interval with input size, detector rack size `2*|G_i|^2`, and
+  output size; and
+- the final finite rack object.
+
+The constructor deliberately takes no braid degree.  Therefore it checks the
+formal requirement that, after the still-open local theorem has provided the
+fixed groups `G_i`, the global rack is finite and independent of `n`.
+
 ## Limitation
 
 The congruence code enumerates finite partitions only for small examples.  It
