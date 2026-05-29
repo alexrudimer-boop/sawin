@@ -355,7 +355,10 @@ the Artin detector transport.  The abelianization guardrail
 `proofs/artin_defect_abelianization_barrier.md` rules out the too-strong
 version where every elementary defect is an Artin permutation defect product:
 Artin permutation defects land in `[Def_C,Def_C]`, but audited defect kernels
-may have nontrivial abelian defect rows.
+may have nontrivial abelian defect rows.  The endpoint proof must therefore
+first handle the finite abelian quotient `Def_C/[Def_C,Def_C]`, as separated
+in `proofs/green_defect_abelianization_split.md`, before reducing any
+remaining endpoint to commutator-level methods.
 
 ## Executable certificate layer
 

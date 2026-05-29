@@ -113,14 +113,15 @@ nondegeneracy to the total solution.
 44. `proofs/green_defect_kernel_quotient_detection.md`
 45. `proofs/green_defect_potential_coboundary.md`
 46. `proofs/artin_defect_abelianization_barrier.md`
-47. `proofs/bifree_corridor_subgroup_certificate.md`
-48. `proofs/bifree_corridor_certificate_audit.md`
-49. `proofs/bifree_corridor_exact_audit.md`
-50. `proofs/local_minimal_green_audit.md`
-51. `proofs/dual_green_symmetry.md`
-52. `proofs/opposite_detectability_closure.md`
-53. `proofs/finite_semigroup_holonomy_route.md`
-54. `proofs/unit_holonomy_longitude_gate.md`
+47. `proofs/green_defect_abelianization_split.md`
+48. `proofs/bifree_corridor_subgroup_certificate.md`
+49. `proofs/bifree_corridor_certificate_audit.md`
+50. `proofs/bifree_corridor_exact_audit.md`
+51. `proofs/local_minimal_green_audit.md`
+52. `proofs/dual_green_symmetry.md`
+53. `proofs/opposite_detectability_closure.md`
+54. `proofs/finite_semigroup_holonomy_route.md`
+55. `proofs/unit_holonomy_longitude_gate.md`
 Also read `proofs/unit_factorization_gate.md`, which proves that a product of
 finite total transformations can be a residual permutation only when every
 factor is already a unit/permutation.
@@ -181,14 +182,16 @@ Artin detector transport.  Also read
 values always lie in `[Def_C,Def_C]`, so nontrivial abelianized elementary
 defects cannot be handled by Artin-defect displays alone.  The remaining proof
 must use full recursive-longitude membership, endpoint cancellation, or
-detector-lift labels for abelian defect data.
+detector-lift labels for abelian defect data.  Also read
+`proofs/green_defect_abelianization_split.md`: it identifies the finite
+abelian target `Def_C/[Def_C,Def_C]` and the residual commutator endpoint.
 Also read `proofs/unit_section_product_detector.md`, which combines finitely
 many fixed unit-section factors into one direct-product detector group.
-55. `proofs/green_holonomy_factorization_gate.md`
-56. `proofs/involutive_permutation_detector.md`
-57. `proofs/structure_orbit_law_obstruction.md`
-58. `proofs/fixed_variety_barrier.md`
-59. `proofs/bounded_degree_action_image_limit.md`
+56. `proofs/green_holonomy_factorization_gate.md`
+57. `proofs/involutive_permutation_detector.md`
+58. `proofs/structure_orbit_law_obstruction.md`
+59. `proofs/fixed_variety_barrier.md`
+60. `proofs/bounded_degree_action_image_limit.md`
 Also read `proofs/diagonal_normalized_obstruction.md`, which proves that an
 explicit detector-free interval diagonalizes to the normalized-law sequence
 required for outcome B.  Audit the companion helpers
@@ -196,14 +199,14 @@ required for outcome B.  Audit the companion helpers
 `right_stabilization_longitude_audit(...)` for product and stabilization
 conventions only; they are not a substitute for proving all finite detector
 groups fail.
-60. `proofs/affine_f2_audit.md`
-61. `proofs/two_colour_fibre2_all_bases_audit.md`
-62. `proofs/fibre2_product_branch.md`
-63. `proofs/two_colour_fibre3_product_audit.md`
-64. `proofs/three_colour_fibre2_product_audit.md`
-65. `proofs/sawin_proof_log.docx`
-66. `tables/reduction_audit.xlsx`
-67. Relevant code in `src/`, `tools/`, and `tests`, especially modules
+61. `proofs/affine_f2_audit.md`
+62. `proofs/two_colour_fibre2_all_bases_audit.md`
+63. `proofs/fibre2_product_branch.md`
+64. `proofs/two_colour_fibre3_product_audit.md`
+65. `proofs/three_colour_fibre2_product_audit.md`
+66. `proofs/sawin_proof_log.docx`
+67. `tables/reduction_audit.xlsx`
+68. Relevant code in `src/`, `tools/`, and `tests`, especially modules
     concerning input-dependent longitude factorization, quotient image
     kernels, residual dependency support, local-minimal intervals, local
     bottleneck routing, coordinate-kernel corridors, product label words,
@@ -544,7 +547,10 @@ target is Artin-transport principalness of that potential.  Use
 `proofs/artin_defect_abelianization_barrier.md` and
 `green_defect_artin_abelianization_barrier_audit(...)` to rule out invalid
 Artin-defect-only displays when elementary defects survive in
-`Def_C/[Def_C,Def_C]`.  Kernel-block defects are handled by
+`Def_C/[Def_C,Def_C]`.  Use `proofs/green_defect_abelianization_split.md`
+and `green_defect_abelianization_split_audit(...)` to isolate that finite
+abelian target before attacking the commutator endpoint.  Kernel-block
+defects are handled by
 `schutzenberger_kernel_defect_pushforward_audits(...)` when no local-only
 edge-germs occur.
 

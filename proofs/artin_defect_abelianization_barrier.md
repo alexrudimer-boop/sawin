@@ -93,6 +93,11 @@ statements.
 - A detector-lift structure exists for the potential transport itself, so the
   endpoint labels are ordinary recursive Artin-longitude values.
 
+The companion note `proofs/green_defect_abelianization_split.md` makes the
+first option explicit: project first to `Def_C/[Def_C,Def_C]`, prove the
+finite abelian endpoint is ordinary longitude-visible, and only then attack
+the remaining endpoint in `[Def_C,Def_C]`.
+
 A counterexample route must still upgrade any remaining failure to a
 normalized-law sequence invisible to every finite group while moving a
 residual tuple.  A nontrivial abelian elementary defect at one row is not

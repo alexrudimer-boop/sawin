@@ -589,6 +589,82 @@ class GreenDefectArtinAbelianizationBarrierAudit:
 
 
 @dataclass(frozen=True)
+class GreenDefectAbelianizationRowAudit:
+    """One row projected to the abelianized defect-kernel target."""
+
+    row: BranchRow
+    projected_defect: GroupElement
+    projected_q_potential: GroupElement
+    projected_q_under_a_potential: GroupElement
+    projected_potential_coboundary: GroupElement
+    projected_coboundary_matches_defect: bool
+    projected_defect_is_identity: bool
+
+
+@dataclass(frozen=True)
+class GreenDefectAbelianizationSplitAudit:
+    """Split the defect-kernel target into abelian and commutator parts."""
+
+    observer_name: str
+    r_class: Tuple[Transformation, ...]
+    potential_audit: GreenDefectKernelPotentialAudit
+    defect_kernel_size: int
+    defect_commutator_subgroup: Tuple[GroupElement, ...]
+    quotient_group: FiniteGroup
+    quotient_homomorphism: FiniteGroupHomomorphism
+    abelianized_defect_kernel: Tuple[GroupElement, ...]
+    row_audits: Tuple[GreenDefectAbelianizationRowAudit, ...]
+
+    @property
+    def defect_commutator_size(self) -> int:
+        return len(self.defect_commutator_subgroup)
+
+    @property
+    def abelianized_defect_kernel_size(self) -> int:
+        return len(self.abelianized_defect_kernel)
+
+    @property
+    def nontrivial_abelian_row_count(self) -> int:
+        return sum(
+            1 for row in self.row_audits if not row.projected_defect_is_identity
+        )
+
+    @property
+    def abelian_coboundary_failure_count(self) -> int:
+        return sum(
+            1
+            for row in self.row_audits
+            if not row.projected_coboundary_matches_defect
+        )
+
+    @property
+    def abelianized_defect_kernel_is_abelian(self) -> bool:
+        image = tuple(self.abelianized_defect_kernel)
+        return all(
+            self.quotient_group.mul(left, right)
+            == self.quotient_group.mul(right, left)
+            for left in image
+            for right in image
+        )
+
+    @property
+    def abelian_part_is_trivial(self) -> bool:
+        return self.abelianized_defect_kernel_size == 1
+
+    @property
+    def abelian_part_requires_longitude_data(self) -> bool:
+        return self.nontrivial_abelian_row_count > 0
+
+    @property
+    def proves_abelianization_split(self) -> bool:
+        return (
+            self.potential_audit.proves_defect_kernel_potential_coboundary
+            and self.abelianized_defect_kernel_is_abelian
+            and self.abelian_coboundary_failure_count == 0
+        )
+
+
+@dataclass(frozen=True)
 class SchutzenbergerKernelDefectPushforwardAudit:
     """Audit that kernel-block defects are homomorphic Schutzenberger images."""
 
@@ -1411,6 +1487,64 @@ def green_defect_artin_abelianization_barrier_audit(
     )
 
 
+def green_defect_abelianization_split_audit(
+    source_defect_audit: GreenFirstOutputDefectAudit,
+) -> GreenDefectAbelianizationSplitAudit:
+    """Project defect potential data to the abelianized defect target."""
+
+    potential_audit = green_defect_kernel_potential_audit(source_defect_audit)
+    group = source_defect_audit.group
+    defect_kernel = potential_audit.quotient_audit.defect_kernel
+    defect_commutator = commutator_subgroup_elements(group, defect_kernel)
+    quotient_group, quotient_homomorphism = quotient_group_by_normal_subgroup(
+        group,
+        defect_commutator,
+    )
+    abelianized_defect_kernel = tuple(
+        sorted(
+            {quotient_homomorphism.apply(element) for element in defect_kernel},
+            key=repr,
+        )
+    )
+    row_audits = []
+    for row in potential_audit.row_audits:
+        projected_defect = quotient_homomorphism.apply(row.first_output_defect)
+        projected_q_potential = quotient_homomorphism.apply(row.q_potential)
+        projected_q_under_a_potential = quotient_homomorphism.apply(
+            row.q_under_a_potential
+        )
+        projected_coboundary = quotient_group.mul(
+            projected_q_under_a_potential,
+            quotient_group.inv(projected_q_potential),
+        )
+        row_audits.append(
+            GreenDefectAbelianizationRowAudit(
+                row=row.row,
+                projected_defect=projected_defect,
+                projected_q_potential=projected_q_potential,
+                projected_q_under_a_potential=projected_q_under_a_potential,
+                projected_potential_coboundary=projected_coboundary,
+                projected_coboundary_matches_defect=(
+                    projected_coboundary == projected_defect
+                ),
+                projected_defect_is_identity=(
+                    projected_defect == quotient_group.identity
+                ),
+            )
+        )
+    return GreenDefectAbelianizationSplitAudit(
+        observer_name=source_defect_audit.observer_name,
+        r_class=source_defect_audit.r_class,
+        potential_audit=potential_audit,
+        defect_kernel_size=len(defect_kernel),
+        defect_commutator_subgroup=defect_commutator,
+        quotient_group=quotient_group,
+        quotient_homomorphism=quotient_homomorphism,
+        abelianized_defect_kernel=abelianized_defect_kernel,
+        row_audits=tuple(row_audits),
+    )
+
+
 def kernel_action_summary(solution: FiniteBraidedSet) -> Tuple[KernelActionSummary, ...]:
     """Summarize finite kernel-block actions for retained Green labels.
 
@@ -1795,6 +1929,17 @@ def schutzenberger_defect_artin_abelianization_barrier_audits(
     )
 
 
+def schutzenberger_defect_abelianization_split_audits(
+    solution: FiniteBraidedSet,
+) -> Tuple[GreenDefectAbelianizationSplitAudit, ...]:
+    """Return abelianization-split audits for Schutzenberger defects."""
+
+    return tuple(
+        green_defect_abelianization_split_audit(audit)
+        for audit in schutzenberger_first_output_defect_audits(solution)
+    )
+
+
 def kernel_block_defect_kernel_quotient_audits(
     solution: FiniteBraidedSet,
 ) -> Tuple[GreenDefectKernelQuotientAudit, ...]:
@@ -1824,6 +1969,17 @@ def kernel_block_defect_artin_abelianization_barrier_audits(
 
     return tuple(
         green_defect_artin_abelianization_barrier_audit(audit)
+        for audit in kernel_block_first_output_defect_audits(solution)
+    )
+
+
+def kernel_block_defect_abelianization_split_audits(
+    solution: FiniteBraidedSet,
+) -> Tuple[GreenDefectAbelianizationSplitAudit, ...]:
+    """Return abelianization-split audits for kernel-block defects."""
+
+    return tuple(
+        green_defect_abelianization_split_audit(audit)
         for audit in kernel_block_first_output_defect_audits(solution)
     )
 

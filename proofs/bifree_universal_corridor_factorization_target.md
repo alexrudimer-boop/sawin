@@ -259,6 +259,10 @@ potential.  The guardrail
 `proofs/artin_defect_abelianization_barrier.md` shows that principalness
 cannot generally be proved by displaying each elementary defect as an Artin
 permutation defect: those values die in abelian quotients, while audited
-defect kernels can be abelian with nonidentity defects.  This sits alongside
-lower endpoint/unit holonomy and the separate theorem that atom
-descent/totality holds or is absorbed by a controlled quotient.
+defect kernels can be abelian with nonidentity defects.  The valid replacement
+is the abelianization split
+`proofs/green_defect_abelianization_split.md`: kill the finite abelian
+defect quotient by ordinary longitude data, then treat the remaining
+commutator endpoint.  This sits alongside lower endpoint/unit holonomy and
+the separate theorem that atom descent/totality holds or is absorbed by a
+controlled quotient.

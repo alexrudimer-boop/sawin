@@ -160,7 +160,11 @@ already isolated lower endpoint/unit holonomy problem.  The guardrail
 `proofs/artin_defect_abelianization_barrier.md` shows that this cannot
 generally be strengthened to an elementary Artin-permutation-defect display:
 such defects always land in `[Def_C,Def_C]`, while the affine stress row has
-abelian `Def_C=C3` with nonidentity elementary defects.
+abelian `Def_C=C3` with nonidentity elementary defects.  The follow-up
+`proofs/green_defect_abelianization_split.md` now separates the valid target
+into a finite abelian layer `Def_C/[Def_C,Def_C]`, to be handled by ordinary
+longitude data, and a commutator layer where Artin-defect methods may again
+apply.
 The semisplit audit now has an exact Boolean-CSP view: each coloured crossing
 lists the allowed equality/universal bit patterns on its two source and two
 target colours, and satisfying non-extreme assignments agree with the

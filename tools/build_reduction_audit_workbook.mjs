@@ -472,6 +472,13 @@ const rows = [
     "Use full recursive-longitude membership, endpoint cancellation, or detector-lift labels for abelian defect-kernel data.",
   ],
   [
+    "Green defect abelian split",
+    "Separate the finite abelian defect quotient from the commutator endpoint.",
+    "proofs/green_defect_abelianization_split.md records the split Def_C -> Def_C/[Def_C,Def_C]; green_defect_abelianization_split_audit verifies the projected potential coboundaries.",
+    "Reduction criterion",
+    "Prove ordinary finite abelian longitude visibility for the projected endpoint, then handle the commutator residual.",
+  ],
+  [
     "Bi-free subgroup certificate",
     "Profile candidate words against fixed corridor detector factors.",
     "Helper, extra-factor target support, direct-product subgroup audit, and tests added; affine commutator seen by S3 block factor.",

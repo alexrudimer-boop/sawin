@@ -895,6 +895,12 @@ nonidentity elementary defects.  Therefore a valid A proof must use full
 recursive-longitude membership in `V_beta(Def_C)`, endpoint cancellation of
 the abelianized potential transport, or a detector-lift construction for the
 potential labels.
+The next split is now explicit in
+`proofs/green_defect_abelianization_split.md`: the abelian defect target is
+`Def_C/[Def_C,Def_C]` and must be handled by ordinary finite abelian
+longitude data; only after killing that layer may the remaining commutator
+endpoint be attacked by Artin-defect displays or commutator-level
+detector-lift arguments.
 The single-endpoint route audit
 `unit_composite_longitude_route_audit(monoid,n,beta,factors)` now records the
 same ladder used in product-label work: endpoint identity, one evaluated

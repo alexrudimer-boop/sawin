@@ -28,6 +28,7 @@ from ybe_domination import (
     context_words_by_target,
     depth_observer_summary,
     green_branch_audits,
+    kernel_block_defect_abelianization_split_audits,
     kernel_block_defect_artin_abelianization_barrier_audits,
     kernel_block_defect_kernel_potential_audits,
     kernel_block_defect_kernel_quotient_audits,
@@ -39,6 +40,7 @@ from ybe_domination import (
     right_coordinate_action_maps,
     right_coordinate_action_relation_failures,
     schutzenberger_action_groups,
+    schutzenberger_defect_abelianization_split_audits,
     schutzenberger_defect_artin_abelianization_barrier_audits,
     schutzenberger_defect_kernel_potential_audits,
     schutzenberger_defect_kernel_quotient_audits,
@@ -287,6 +289,22 @@ class GreenBranchTests(unittest.TestCase):
             self.assertFalse(
                 audit.all_elementary_defects_have_trivial_defect_abelianization
             )
+
+    def test_green_defect_abelianization_split_for_affine_candidate(self):
+        solution = size_three_affine_candidate()
+        sch_audit = schutzenberger_defect_abelianization_split_audits(solution)[0]
+        kernel_audit = kernel_block_defect_abelianization_split_audits(solution)[0]
+
+        for audit in (sch_audit, kernel_audit):
+            self.assertEqual(audit.defect_kernel_size, 3)
+            self.assertEqual(audit.defect_commutator_size, 1)
+            self.assertEqual(audit.abelianized_defect_kernel_size, 3)
+            self.assertEqual(audit.nontrivial_abelian_row_count, 18)
+            self.assertEqual(audit.abelian_coboundary_failure_count, 0)
+            self.assertTrue(audit.abelianized_defect_kernel_is_abelian)
+            self.assertFalse(audit.abelian_part_is_trivial)
+            self.assertTrue(audit.abelian_part_requires_longitude_data)
+            self.assertTrue(audit.proves_abelianization_split)
 
     def test_induced_kernel_permutation_detects_block_action(self):
         kernel = transformation_kernel((0, 0, 1, 1))

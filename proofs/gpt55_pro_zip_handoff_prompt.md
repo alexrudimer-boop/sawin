@@ -45,9 +45,10 @@ First read:
 12. `proofs/green_defect_kernel_quotient_detection.md`
 13. `proofs/green_defect_potential_coboundary.md`
 14. `proofs/artin_defect_abelianization_barrier.md`
-15. `proofs/sawin_proof_log.docx`
-16. `tables/reduction_audit.xlsx`
-17. The code and tests under `src/`, `tools/`, and `tests/`
+15. `proofs/green_defect_abelianization_split.md`
+16. `proofs/sawin_proof_log.docx`
+17. `tables/reduction_audit.xlsx`
+18. The code and tests under `src/`, `tools/`, and `tests/`
 
 Then audit and use these reductions:
 
@@ -183,7 +184,10 @@ Then audit and use these reductions:
    values always lie in `[Def_C,Def_C]`, so elementary defects with nontrivial
    abelianization cannot be handled by Artin-defect displays alone.  Use full
    recursive-longitude membership, endpoint cancellation, or detector-lift
-   labels for such abelian defect-kernel data.
+   labels for such abelian defect-kernel data.  Also use
+   `proofs/green_defect_abelianization_split.md`: it separates the finite
+   abelian target `Def_C/[Def_C,Def_C]` from the commutator endpoint, so the
+   abelian layer can be attacked by ordinary finite abelian longitude data.
    Also audit the Green atom-action layer through `proofs/green_branch_audit.md`
    and `atom_action_summary(...)`: it checks whether completed rows descend to
    operations on saturated atoms, `p(a) triangleright p(q)=p(a^q)` and

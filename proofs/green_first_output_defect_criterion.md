@@ -199,6 +199,9 @@ The guardrail `proofs/artin_defect_abelianization_barrier.md` shows that this
 principalness cannot generally be certified by Artin permutation defects for
 each elementary row.  Such defect values lie in the commutator subgroup of the
 target, while `Def_C` can have nontrivial abelian row defects.
+The note `proofs/green_defect_abelianization_split.md` therefore splits the
+remaining target into the finite abelian quotient
+`Def_C/[Def_C,Def_C]` and the commutator subgroup `[Def_C,Def_C]`.
 
 ## Remaining target
 
