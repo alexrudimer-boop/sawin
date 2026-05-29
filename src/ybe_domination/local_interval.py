@@ -6,9 +6,11 @@ from typing import Dict, FrozenSet, Hashable, Iterable, List, Mapping, Sequence,
 
 Color = Hashable
 FibrePoint = Hashable
+ReadoutLabel = Hashable
 Block = FrozenSet[FibrePoint]
 Partition = Tuple[Block, ...]
 PairFamily = Mapping[Color, Iterable[Tuple[FibrePoint, FibrePoint]]]
+ReadoutLabels = Mapping[Color, Mapping[FibrePoint, ReadoutLabel]]
 
 
 @dataclass(frozen=True)
@@ -209,6 +211,22 @@ class ContinuationSeedReadoutPropagationAudit:
         )
 
 
+@dataclass(frozen=True)
+class ReadoutKernelAudit:
+    """Kernel congruence audit for a finite fibrewise readout."""
+
+    family: Mapping[Color, Partition]
+    kind: str
+    label_count_rows: Tuple[Tuple[Color, int], ...]
+    block_count_rows: Tuple[Tuple[Color, int], ...]
+    admissible: bool
+    failure: TransportFailure | None
+
+    @property
+    def proves_readout_kernel_admissible(self) -> bool:
+        return self.admissible
+
+
 def equality_partition(items: Sequence[FibrePoint]) -> Partition:
     return canonical_partition(frozenset([item]) for item in items)
 
@@ -277,6 +295,52 @@ def relation_family_kind(
     if any(family[color] == universal_partition(interval.fibres[color]) for color in interval.colors):
         return "semisplit_or_mixed"
     return "proper_mixed"
+
+
+def readout_kernel_family(
+    interval: "LocalInterval",
+    labels: ReadoutLabels,
+) -> Dict[Color, Partition]:
+    """Return fibre partitions induced by equality of finite readout labels."""
+
+    family = {}
+    for color in interval.colors:
+        if color not in labels:
+            raise ValueError(f"missing readout labels for color {color!r}")
+        color_labels = labels[color]
+        expected = set(interval.fibres[color])
+        actual = set(color_labels)
+        if actual != expected:
+            raise ValueError(f"readout label domain mismatch for color {color!r}")
+        blocks_by_label: Dict[ReadoutLabel, List[FibrePoint]] = {}
+        for point in interval.fibres[color]:
+            blocks_by_label.setdefault(color_labels[point], []).append(point)
+        family[color] = canonical_partition(blocks_by_label.values())
+    return family
+
+
+def readout_kernel_audit(
+    interval: "LocalInterval",
+    labels: ReadoutLabels,
+) -> ReadoutKernelAudit:
+    """Audit whether finite readout equality is an admissible congruence."""
+
+    family = readout_kernel_family(interval, labels)
+    failure = interval.congruence_family_failure(family)
+    return ReadoutKernelAudit(
+        family=family,
+        kind=relation_family_kind(interval, family),
+        label_count_rows=tuple(
+            (color, len(set(labels[color].values())))
+            for color in interval.colors
+        ),
+        block_count_rows=tuple(
+            (color, len(family[color]))
+            for color in interval.colors
+        ),
+        admissible=failure is None,
+        failure=failure,
+    )
 
 
 def _pairs_from_value_fibres(

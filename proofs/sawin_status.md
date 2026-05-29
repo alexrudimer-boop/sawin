@@ -1007,6 +1007,12 @@ seed closure by the universal property of the least admissible congruence.
 The helper `continuation_seed_readout_propagation_audits(...)` records the
 admissibility, seed containment, generated containment, and any missing
 generated edges.
+The readout-kernel admissibility criterion
+`proofs/readout_kernel_admissibility.md` now supplies the executable way to
+check the admissibility input for finite detector labels.  The helper
+`readout_kernel_audit(...)` takes fibrewise labels, forms their kernel
+partition family, and applies the exact local transport test, recording the
+first failed row if the labels are not a valid local quotient.
 The chart-transport collapse in
 `proofs/chart_transport_collapse.md` removes chart-dependent copies from the
 generator burden.  Since `V_beta(G)` is already normal in every finite group,
@@ -1015,9 +1021,9 @@ chart conjugates; `conjugate_longitude_subgroup_witness(...)` records the
 certificate-level operation.  The final A-route theorem is now stated in
 `proofs/descent_separation_transport_rack_closure.md`: transport-rack closure
 is proved, but descent separation remains open.  A complete proof must show
-representative seed visibility in an admissible fixed Green, Schutzenberger,
-or atom readout, so that propagation leaves only strand-continuing
-transport-rack gauge.
+fixed Green, Schutzenberger, atom, or unit readout labels whose kernel is
+admissible and contains each representative seed, so that propagation leaves
+only strand-continuing transport-rack gauge.
 The single-endpoint route audit
 `unit_composite_longitude_route_audit(monoid,n,beta,factors)` now records the
 same ladder used in product-label work: endpoint identity, one evaluated

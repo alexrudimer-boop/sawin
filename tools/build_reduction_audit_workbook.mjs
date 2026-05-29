@@ -542,6 +542,13 @@ const rows = [
     "Prove representative seed visibility in an admissible fixed readout; derived edges then propagate automatically.",
   ],
   [
+    "Readout-kernel admissibility",
+    "Certify when finite fibrewise detector labels define an admissible local congruence kernel.",
+    "proofs/readout_kernel_admissibility.md; readout_kernel_audit builds the kernel family and records exact transport failures.",
+    "Reduction criterion",
+    "Construct fixed Green/Schutzenberger/atom/unit labels whose kernel is admissible and contains each representative continuation seed.",
+  ],
+  [
     "Chart-transport collapse",
     "Avoid separate endpoint-longitude proofs for transported or chart-conjugate copies of elementary generators.",
     "proofs/chart_transport_collapse.md; conjugate_longitude_subgroup_witness shows V_beta(G) is normal at certificate level.",

@@ -17,6 +17,8 @@ from ybe_domination import (
     continuation_seed_universal_derivation_failures,
     coordinate_kernel_pair_closure_audits,
     coordinate_kernel_pair_closure_failures,
+    readout_kernel_audit,
+    readout_kernel_family,
 )
 
 
@@ -319,6 +321,44 @@ class LocalIntervalTests(unittest.TestCase):
             continuation_seed_readout_propagation_failures(interval, readout),
             audits,
         )
+
+    def test_readout_kernel_audit_accepts_admissible_readout_labels(self):
+        interval = one_color_identity_interval()
+        labels = {"*": {0: "same", 1: "same"}}
+
+        family = readout_kernel_family(interval, labels)
+        audit = readout_kernel_audit(interval, labels)
+        propagation = continuation_seed_readout_propagation_audits(
+            interval,
+            audit.family,
+        )
+
+        self.assertEqual(family, {"*": (frozenset({0, 1}),)})
+        self.assertEqual(audit.family, family)
+        self.assertEqual(audit.kind, "universal")
+        self.assertEqual(audit.label_count_rows, (("*", 1),))
+        self.assertEqual(audit.block_count_rows, (("*", 1),))
+        self.assertTrue(audit.admissible)
+        self.assertIsNone(audit.failure)
+        self.assertTrue(audit.proves_readout_kernel_admissible)
+        self.assertTrue(propagation[0].proves_readout_propagation)
+
+    def test_readout_kernel_audit_rejects_nonadmissible_readout_labels(self):
+        interval = two_color_swap_interval()
+        labels = {
+            "a": {0: "same", 1: "same"},
+            "b": {0: "zero", 1: "one"},
+        }
+
+        audit = readout_kernel_audit(interval, labels)
+
+        self.assertEqual(audit.kind, "semisplit_or_mixed")
+        self.assertEqual(audit.label_count_rows, (("a", 1), ("b", 2)))
+        self.assertEqual(audit.block_count_rows, (("a", 1), ("b", 2)))
+        self.assertFalse(audit.admissible)
+        self.assertFalse(audit.proves_readout_kernel_admissible)
+        self.assertIsNotNone(audit.failure)
+        self.assertEqual(audit.failure.side, "transported_not_target")
 
     def test_continuation_congruence_records_non_rack_base_rows(self):
         interval = two_color_identity_interval()

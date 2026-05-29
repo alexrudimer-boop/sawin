@@ -234,6 +234,12 @@ Then audit and use these reductions:
    After this, the positive burden is representative seed visibility plus
    admissibility of the fixed readout relation, not separate proof for every
    derived edge.
+   Also use `proofs/readout_kernel_admissibility.md`: it turns finite
+   fibrewise detector labels into the fixed readout relation by taking their
+   kernel, and `readout_kernel_audit(...)` checks exact admissibility by local
+   table transport.  A positive proof must construct labels from fixed
+   Green/Schutzenberger/atom/unit factors whose kernel is admissible and
+   contains each representative seed.
    Also use `proofs/chart_transport_collapse.md`: it proves transported
    elementary generators need no separate proof once one chart-conjugacy orbit
    representative is certified, because `V_beta(G)` is normal.  Then read

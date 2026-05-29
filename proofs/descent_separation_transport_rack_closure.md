@@ -153,27 +153,29 @@ If descent separation is proved, the A-route closes as follows.
 6. Continuation readout propagation reduces derived-edge visibility to
    representative seed visibility: an admissible fixed readout relation that
    contains the seed contains the whole generated seed closure.
-7. Product witness calculus assembles all factor witnesses into one fixed
+7. Readout-kernel admissibility turns fixed detector labels into that
+   admissible relation by checking exact transport through every local table.
+8. Product witness calculus assembles all factor witnesses into one fixed
    `H(pi,Q)`.
-8. The endpoint-factorization criterion gives
+9. The endpoint-factorization criterion gives
 
 ```text
 Lambda_{H(pi,Q),n}(beta)=Lambda_{H(pi,Q),n}(1)
   => Delta_n(beta)=1.
 ```
 
-9. The sharp obstruction theorem supplies the local rack `Q x A_H`.
-10. Congruence-chain induction assembles the local racks into one finite rack
+10. The sharp obstruction theorem supplies the local rack `Q x A_H`.
+11. Congruence-chain induction assembles the local racks into one finite rack
    independent of `n`.
 
 ## Why this is still open
 
-The branch does not yet prove descent separation.  It still must prove that
-the fixed Green, Schutzenberger, or atom readout relation is admissible and
-contains every representative nontrivial continuation seed.  By continuation
-readout propagation, that would force the whole generated continuation closure
-to be readout-visible.  Equivalently, after those readouts, the remaining
-lower endpoint motion must be strand-continuing.
+The branch does not yet prove descent separation.  It still must construct
+fixed Green, Schutzenberger, atom, or unit readout labels whose kernel is
+admissible and contains every representative nontrivial continuation seed.  By
+continuation readout propagation, that would force the whole generated
+continuation closure to be readout-visible.  Equivalently, after those
+readouts, the remaining lower endpoint motion must be strand-continuing.
 
 There is also a guardrail against an invalid shortcut: elementary Green defects
 cannot always be products of Artin permutation defects.  The abelianization
