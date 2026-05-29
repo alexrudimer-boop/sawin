@@ -147,6 +147,14 @@ words.  The exact-image helper closes the finite joint image for one braid
 index using the same factor list.  These helpers are useful for auditing
 proposed proof steps or counterexample stages, but they do not replace the
 all-`n` theorem or the normalized-law diagonalization required for outcome B.
+The detector helpers now accept a fixed `extra_groups` list.  These groups
+represent quotient-detector factors, already proved branch detector factors,
+or endpoint/unit detector factors that belong to the interval data.  They are
+named as `E_i` factors and multiplied with the two-sided Green factors before
+any longitude profile, exact-image audit, or product-subgroup audit is run.
+This keeps the executable target aligned with the theorem's `H(pi,Q)` rather
+than only the Green part of it; the list is still fixed by the interval and
+quotient detector and must not depend on the braid index.
 
 The readout audit is the fixed-index form of the A-route target: when it is
 nontruncated and well-defined, it displays a finite table from reachable

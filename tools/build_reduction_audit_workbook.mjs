@@ -411,14 +411,14 @@ const rows = [
   [
     "Bi-free corridor target",
     "State exact hypotheses, fixed H(pi,Q), and B certificate.",
-    "Target note added; false rack/Hurwitz shortcuts excluded.",
+    "Target note added; false rack/Hurwitz shortcuts excluded; corridor helpers now accept fixed extra detector factors for quotient/known/unit components of H(pi,Q).",
     "Open theorem target",
     "Prove all-n H(pi,Q) factorization or build normalized-law escape.",
   ],
   [
     "Bi-free subgroup certificate",
     "Profile candidate words against fixed corridor detector factors.",
-    "Helper, direct-product subgroup audit, and tests added; affine commutator seen by S3 block factor.",
+    "Helper, extra-factor target support, direct-product subgroup audit, and tests added; affine commutator seen by S3 block factor.",
     "Executable audit",
     "Upgrade finite certificates to all-n factorization or law sequence.",
   ],

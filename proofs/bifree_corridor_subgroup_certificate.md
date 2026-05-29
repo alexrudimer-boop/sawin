@@ -34,6 +34,14 @@ contains every currently named finite Green source: symmetric kernel-block
 groups, Schutzenberger action groups, and atom-quotient inner groups whenever
 the atom quotient is already certified as a right-rack-like YBE layer.
 Concrete duplicate group tables are deduplicated before forming the product.
+The same helper also accepts fixed `extra_groups`.  These are the executable
+slots for quotient-detector factors, known-branch factors, and endpoint/unit
+detector groups that are part of `H(pi,Q)` but are not discovered by the
+Green audit itself.  They are appended as named `E_i` factors before word
+profiles, exact-image closure, and product-subgroup checks.  Thus the
+displayed factor list is a single fixed product detector attached to the
+interval and quotient detector, not merely the Green subproduct and not a
+braid-index-dependent list.
 The exact-image helper uses the same factor list and closes the finite joint
 image at one braid index.  A nontruncated exact audit with no failures proves
 the sharp detector implication only for that fixed index and interval; it is
@@ -98,6 +106,10 @@ the computed longitude-value subgroup equals the Cartesian product of the
 three factor subgroups.  This is still a finite guardrail, but it confirms
 that the code path for the corridor factor list is compatible with one fixed
 finite group.
+A regression also checks that adding a fixed extra finite group changes the
+target product order and the product-subgroup audit in the expected way: the
+extra factor is visible as an `E_i` factor and is included in the one direct
+product detector used by the sharp obstruction theorem.
 
 The generated audit `proofs/bifree_corridor_certificate_audit.md` applies the
 same certificate to the exhaustive size-2 and size-3 local-minimal

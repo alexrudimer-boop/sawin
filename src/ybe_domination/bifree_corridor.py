@@ -39,6 +39,8 @@ class BiFreeCorridorDetectorTarget:
     quotient_size: int
     factor_orders: Tuple[int, ...]
     detector_order: int
+    green_factor_orders: Tuple[int, ...] = ()
+    extra_factor_orders: Tuple[int, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -103,18 +105,26 @@ def bifree_corridor_detector_groups(
     interval: LocalInterval,
     *,
     max_kernel_degree: int | None = None,
+    extra_groups: Sequence[FiniteGroup] = (),
 ) -> Mapping[str, FiniteGroup]:
-    """Return named finite factors for the corridor detector candidate."""
+    """Return named finite factors for the corridor detector candidate.
+
+    ``extra_groups`` is the fixed, interval-level slot for quotient detector,
+    known-branch, or unit/endpoint factors already proved elsewhere.
+    """
 
     qmap = solution_from_local_interval(interval)
-    groups = two_sided_green_detector_groups(
+    green_groups = two_sided_green_detector_groups(
         qmap.total,
         max_kernel_degree=max_kernel_degree,
     )
-    return {
+    named = {
         f"H{index + 1}_order_{len(group.elements)}": group
-        for index, group in enumerate(groups)
+        for index, group in enumerate(green_groups)
     }
+    for index, group in enumerate(tuple(extra_groups)):
+        named[f"E{index + 1}_order_{len(group.elements)}"] = group
+    return named
 
 
 def bifree_corridor_detector_target(
@@ -122,6 +132,7 @@ def bifree_corridor_detector_target(
     *,
     max_kernel_degree: int | None = None,
     max_fibre_size: int = 5,
+    extra_groups: Sequence[FiniteGroup] = (),
 ) -> BiFreeCorridorDetectorTarget:
     """Construct the fixed detector target for a local interval."""
 
@@ -134,8 +145,11 @@ def bifree_corridor_detector_target(
     groups = bifree_corridor_detector_groups(
         interval,
         max_kernel_degree=max_kernel_degree,
+        extra_groups=extra_groups,
     )
     factor_orders = tuple(len(group.elements) for group in groups.values())
+    extra_orders = tuple(len(group.elements) for group in tuple(extra_groups))
+    green_orders = factor_orders[: len(factor_orders) - len(extra_orders)]
     return BiFreeCorridorDetectorTarget(
         summary=summary,
         applies=summary.verdict == TARGET_VERDICT,
@@ -143,6 +157,8 @@ def bifree_corridor_detector_target(
         quotient_size=len(qmap.quotient.elements),
         factor_orders=factor_orders,
         detector_order=prod(factor_orders, start=1),
+        green_factor_orders=green_orders,
+        extra_factor_orders=extra_orders,
     )
 
 
@@ -154,12 +170,14 @@ def bifree_corridor_word_certificate(
     max_assignments: int | None = None,
     max_kernel_degree: int | None = None,
     max_fibre_size: int = 5,
+    extra_groups: Sequence[FiniteGroup] = (),
 ) -> BiFreeCorridorWordCertificate:
     """Profile one braid word against the fixed corridor detector factors.
 
     The certificate records whether the braid fixes the quotient action,
     whether it moves a residual tuple, and whether each finite factor has
-    trivial recursive-longitude subgroup for the word.
+    trivial recursive-longitude subgroup for the word.  ``extra_groups`` are
+    multiplied into the same fixed product detector before profiling.
     """
 
     key = tuple(braid_word)
@@ -168,12 +186,14 @@ def bifree_corridor_word_certificate(
         interval,
         max_kernel_degree=max_kernel_degree,
         max_fibre_size=max_fibre_size,
+        extra_groups=extra_groups,
     )
     quotient_fixed = is_identity_action(qmap.quotient, n, key)
     moved = qmap.moved_residual_tuple(n, key) if quotient_fixed else None
     groups = bifree_corridor_detector_groups(
         interval,
         max_kernel_degree=max_kernel_degree,
+        extra_groups=extra_groups,
     )
     profile = longitude_subgroup_profile(
         groups,
@@ -197,13 +217,15 @@ def bifree_corridor_exact_image_audit(
     *,
     state_limit: int = 10000,
     max_kernel_degree: int | None = None,
+    extra_groups: Sequence[FiniteGroup] = (),
 ) -> ExactImageAudit:
     """Close the fixed-index image for the corridor detector factors.
 
     This is the exact fixed-``n`` analogue of
     ``bifree_corridor_word_certificate``.  It uses the quotient colour
     solution as the base detector and the same two-sided Green factor list as
-    ``bifree_corridor_detector_groups``.  A nontruncated audit with no
+    ``bifree_corridor_detector_groups``, including any fixed ``extra_groups``.
+    A nontruncated audit with no
     failures proves the sharp detector implication only for this fixed braid
     index and this explicit interval; it is not the all-``n`` corridor
     theorem.
@@ -214,6 +236,7 @@ def bifree_corridor_exact_image_audit(
         bifree_corridor_detector_groups(
             interval,
             max_kernel_degree=max_kernel_degree,
+            extra_groups=extra_groups,
         ).values()
     )
     return exact_detector_image_audit(
@@ -234,6 +257,7 @@ def bifree_corridor_product_subgroup_audit(
     max_kernel_degree: int | None = None,
     max_fibre_size: int = 5,
     max_product_order: int = 100_000,
+    extra_groups: Sequence[FiniteGroup] = (),
 ) -> BiFreeCorridorProductSubgroupAudit:
     """Audit the single product detector behind the corridor factor list.
 
@@ -250,10 +274,12 @@ def bifree_corridor_product_subgroup_audit(
         interval,
         max_kernel_degree=max_kernel_degree,
         max_fibre_size=max_fibre_size,
+        extra_groups=extra_groups,
     )
     groups = bifree_corridor_detector_groups(
         interval,
         max_kernel_degree=max_kernel_degree,
+        extra_groups=extra_groups,
     )
     factor_names = tuple(groups.keys())
     factors = tuple(groups.values())
@@ -336,6 +362,7 @@ def bifree_corridor_bounded_failures(
     max_kernel_degree: int | None = None,
     max_fibre_size: int = 5,
     max_failures: int = 5,
+    extra_groups: Sequence[FiniteGroup] = (),
 ) -> Tuple[BiFreeCorridorWordCertificate, ...]:
     """Return bounded listed-factor failures for the corridor target.
 
@@ -349,10 +376,12 @@ def bifree_corridor_bounded_failures(
         interval,
         max_kernel_degree=max_kernel_degree,
         max_fibre_size=max_fibre_size,
+        extra_groups=extra_groups,
     )
     groups = bifree_corridor_detector_groups(
         interval,
         max_kernel_degree=max_kernel_degree,
+        extra_groups=extra_groups,
     )
     failures = []
     for word in bounded_words(n, max_word_length):

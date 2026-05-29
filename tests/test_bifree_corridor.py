@@ -10,10 +10,12 @@ from ybe_domination import (
     LocalInterval,
     bifree_corridor_detector_target,
     bifree_corridor_bounded_failures,
+    bifree_corridor_detector_groups,
     bifree_corridor_exact_image_audit,
     bifree_corridor_product_subgroup_audit,
     bifree_corridor_word_certificate,
     commutator,
+    cyclic_group,
     free_word_power,
     law_word_on_last_strand,
 )
@@ -58,6 +60,19 @@ class BiFreeCorridorCertificateTests(unittest.TestCase):
         self.assertEqual(target.quotient_size, 1)
         self.assertFalse(target.applies)
 
+    def test_detector_target_includes_fixed_extra_factors(self):
+        interval = interval_from_solution(size_three_affine_candidate())
+        extra = (cyclic_group(5),)
+
+        groups = bifree_corridor_detector_groups(interval, extra_groups=extra)
+        target = bifree_corridor_detector_target(interval, extra_groups=extra)
+
+        self.assertIn("E1_order_5", groups)
+        self.assertEqual(sorted(target.green_factor_orders), [2, 3, 6])
+        self.assertEqual(target.extra_factor_orders, (5,))
+        self.assertEqual(sorted(target.factor_orders), [2, 3, 5, 6])
+        self.assertEqual(target.detector_order, 180)
+
     def test_word_certificate_records_visible_symmetric_factor(self):
         interval = interval_from_solution(size_three_affine_candidate())
         law = commutator(free_word_power(0, 1), free_word_power(1, 1))
@@ -88,6 +103,23 @@ class BiFreeCorridorCertificateTests(unittest.TestCase):
         )
         self.assertFalse(audit.all_factor_identity_signatures)
         self.assertFalse(audit.product_identity_signature)
+        self.assertTrue(audit.product_identity_signature_equivalent)
+
+    def test_product_subgroup_audit_includes_extra_factors_in_one_product(self):
+        interval = interval_from_solution(size_three_affine_candidate())
+
+        audit = bifree_corridor_product_subgroup_audit(
+            interval,
+            2,
+            (1, 1),
+            extra_groups=(cyclic_group(2),),
+        )
+
+        self.assertFalse(audit.truncated)
+        self.assertIn("E1_order_2", audit.factor_names)
+        self.assertEqual(sorted(audit.factor_orders), [2, 2, 3, 6])
+        self.assertEqual(audit.product_group_order, 72)
+        self.assertTrue(audit.product_subgroup_equals_factor_product)
         self.assertTrue(audit.product_identity_signature_equivalent)
 
     def test_product_subgroup_audit_can_skip_large_product_enumeration(self):

@@ -239,8 +239,9 @@ symbolically or realize as a normalized-law counterexample.  Product-label
 work is separated from this last branch by the new bi-free
 universal-corridor target: a final proof must factor all residual motion
 through the fixed two-sided Green kernel-block, Schutzenberger, and
-atom-inner detector product, while a counterexample must land in that exact
-verdict and supply a
+atom-inner detector product, together with any fixed quotient, known-branch,
+or endpoint/unit detector factors passed as `extra_groups` in the corridor
+certificate helpers.  A counterexample must land in that exact verdict and supply a
 normalized-law sequence moving explicit residual tuples.  The corridor audit
 now closes each elementary coordinate-kernel pair separately, so a genuine
 local-minimal corridor candidate cannot hide behind an aggregate kernel
