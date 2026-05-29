@@ -5,6 +5,11 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from ybe_domination import (
+    abelian_longitude_image_audit,
+    abelian_longitude_matrix_witness_audit,
+    abelian_longitude_matrix_witness_to_subgroup_witness,
+    abelian_longitude_value_generators,
+    abelian_longitude_value_subgroup_elements,
     artin_detector_rack,
     artin_detector_lift_braid_audit,
     artin_detector_lift_inverse_row_audit,
@@ -25,22 +30,28 @@ from ybe_domination import (
     diagonal_product_invisibility_audit,
     evaluate_artin_images,
     evaluate_artin_longitudes,
+    evaluate_abelian_longitude_matrix_witness,
     evaluate_longitude_expression,
     evaluate_longitude_subgroup_witness,
     evaluate_terminal_label_expression,
     FiniteBraidedSet,
     FiniteGroupHomomorphism,
     has_identity_longitude_signature,
+    has_identity_abelian_longitude_signature,
     has_trivial_abelian_longitudes_mod,
     homomorphic_longitude_subgroup_audit,
     identity_solution,
     is_rack_solution,
+    is_abelian_group,
     is_identity_action,
     longitude_blind_movers,
     longitude_subgroup_profile,
     longitude_value_generators,
     longitude_value_subgroup_elements,
     pure_braid_generator,
+    principal_gauge_cocycle_failures,
+    principal_gauge_extension_detector_audit,
+    principal_gauge_extension_rack,
     pushforward_longitude_subgroup_witness,
     pushforward_longitude_subgroup_witness_audit,
     rack_inner_group,
@@ -108,6 +119,114 @@ class ArtinLongitudeTests(unittest.TestCase):
         triple = braid + braid + braid
         self.assertTrue(has_trivial_abelian_longitudes_mod(3, 2, triple))
         self.assertTrue(has_identity_longitude_signature(cyclic_group(3), 2, triple))
+
+    def test_abelian_longitude_matrix_formula_matches_exhaustive_subgroup(self):
+        group = cyclic_group(4)
+        braid = pure_braid_generator(1, 2) * 2
+
+        audit = abelian_longitude_image_audit(
+            group,
+            2,
+            braid,
+            compare_by_enumeration=True,
+        )
+
+        self.assertTrue(is_abelian_group(group))
+        self.assertEqual(audit.exponent_matrix, ((0, 2), (2, 0)))
+        self.assertEqual(audit.coefficient_entries, (0, 2))
+        self.assertEqual(set(audit.matrix_generators), {0, 2})
+        self.assertEqual(set(audit.matrix_subgroup), {0, 2})
+        self.assertEqual(set(audit.enumerated_subgroup), {0, 2})
+        self.assertTrue(audit.enumeration_matches_matrix_formula)
+        self.assertFalse(audit.identity_signature_by_matrix)
+        self.assertFalse(has_identity_abelian_longitude_signature(group, 2, braid))
+
+    def test_abelian_longitude_matrix_formula_handles_products(self):
+        group = direct_product_group((cyclic_group(2), cyclic_group(3)))
+        braid = pure_braid_generator(1, 2)
+        invisible = braid * 6
+
+        self.assertEqual(
+            set(abelian_longitude_value_subgroup_elements(group, 2, braid)),
+            set(group.elements),
+        )
+        self.assertEqual(
+            set(abelian_longitude_value_generators(group, 2, invisible)),
+            {group.identity},
+        )
+        self.assertTrue(has_identity_abelian_longitude_signature(group, 2, invisible))
+
+    def test_abelian_longitude_matrix_formula_rejects_nonabelian_groups(self):
+        self.assertFalse(is_abelian_group(symmetric_group(3)))
+        with self.assertRaises(ValueError):
+            abelian_longitude_value_subgroup_elements(
+                symmetric_group(3),
+                2,
+                pure_braid_generator(1, 2),
+            )
+
+    def test_abelian_matrix_witness_becomes_literal_longitude_witness(self):
+        group = cyclic_group(4)
+        braid = pure_braid_generator(1, 2) * 2
+        witness = ((1, 0, 1, 1),)
+
+        audit = abelian_longitude_matrix_witness_audit(
+            group,
+            2,
+            braid,
+            endpoint=2,
+            witness=witness,
+        )
+
+        self.assertEqual(
+            evaluate_abelian_longitude_matrix_witness(group, 2, braid, witness),
+            2,
+        )
+        self.assertEqual(
+            abelian_longitude_matrix_witness_to_subgroup_witness(group, 2, witness),
+            (((0, 1), 0, 1),),
+        )
+        self.assertEqual(audit.matrix_witness_value, 2)
+        self.assertEqual(audit.longitude_subgroup_witness_value, 2)
+        self.assertTrue(audit.endpoint_matches_matrix_witness)
+        self.assertTrue(audit.matrix_witness_matches_longitude_witness)
+        self.assertTrue(audit.proves_endpoint_in_abelian_longitude_subgroup)
+
+    def test_abelian_matrix_witness_uses_signed_letters(self):
+        group = cyclic_group(5)
+        braid = pure_braid_generator(1, 2)
+        witness = ((2, 0, 1, 1), (3, 1, 0, -1))
+
+        audit = abelian_longitude_matrix_witness_audit(
+            group,
+            2,
+            braid,
+            endpoint=4,
+            witness=witness,
+        )
+
+        self.assertEqual(audit.matrix_witness_value, 4)
+        self.assertTrue(audit.proves_endpoint_in_abelian_longitude_subgroup)
+
+    def test_abelian_matrix_witness_validates_rows(self):
+        group = cyclic_group(3)
+        braid = pure_braid_generator(1, 2)
+
+        with self.assertRaises(ValueError):
+            evaluate_abelian_longitude_matrix_witness(
+                symmetric_group(3),
+                2,
+                braid,
+                (),
+            )
+        with self.assertRaises(ValueError):
+            evaluate_abelian_longitude_matrix_witness(group, 2, braid, ((4, 0, 0, 1),))
+        with self.assertRaises(IndexError):
+            evaluate_abelian_longitude_matrix_witness(group, 2, braid, ((1, 2, 0, 1),))
+        with self.assertRaises(IndexError):
+            evaluate_abelian_longitude_matrix_witness(group, 2, braid, ((1, 0, 2, 1),))
+        with self.assertRaises(ValueError):
+            evaluate_abelian_longitude_matrix_witness(group, 2, braid, ((1, 0, 0, 2),))
 
     def test_longitude_data_stabilizes_under_extra_right_strands(self):
         braid = pure_braid_generator(1, 3)
@@ -513,6 +632,53 @@ class ArtinLongitudeTests(unittest.TestCase):
 
         self.assertEqual(audit.rack_size, 3)
         self.assertTrue(audit.proves_rack_inner_detector_lift_rows)
+
+    def test_principal_gauge_extension_detector_closes_cocycle_rows(self):
+        base = rack_solution(range(2), lambda _left, right: right)
+        unit = cyclic_group(3)
+        cocycle = {
+            (left, right): left % 3
+            for left in base.elements
+            for right in base.elements
+        }
+
+        failures = principal_gauge_cocycle_failures(base, unit, cocycle)
+        extension = principal_gauge_extension_rack(base, unit, cocycle)
+        audit = principal_gauge_extension_detector_audit(base, unit, cocycle)
+
+        self.assertEqual(failures, tuple())
+        self.assertEqual(len(extension.elements), 6)
+        self.assertTrue(is_rack_solution(extension))
+        self.assertTrue(extension.is_ybe())
+        self.assertEqual(audit.base_rack_size, 2)
+        self.assertEqual(audit.unit_group_order, 3)
+        self.assertEqual(audit.extension_size, 6)
+        self.assertTrue(audit.cocycle_identity_holds)
+        self.assertTrue(audit.principal_extension_is_finite_rack)
+        self.assertIsNotNone(audit.detector_lift_audit)
+        self.assertTrue(audit.proves_principal_gauge_detector)
+
+    def test_principal_gauge_extension_audit_exposes_nonprincipal_failure(self):
+        base = rack_solution(range(2), lambda _left, right: right)
+        unit = symmetric_group(3)
+        transposition_01 = (1, 0, 2)
+        transposition_12 = (0, 2, 1)
+        cocycle = {
+            (left, right): unit.identity
+            for left in base.elements
+            for right in base.elements
+        }
+        cocycle[(0, 0)] = transposition_01
+        cocycle[(1, 0)] = transposition_12
+
+        audit = principal_gauge_extension_detector_audit(base, unit, cocycle)
+
+        self.assertGreater(len(audit.cocycle_failures), 0)
+        self.assertFalse(audit.cocycle_identity_holds)
+        self.assertTrue(audit.extension_is_rack_form)
+        self.assertFalse(audit.extension_is_ybe)
+        self.assertFalse(audit.principal_extension_is_finite_rack)
+        self.assertFalse(audit.proves_principal_gauge_detector)
 
     def test_artin_detector_lift_state_matches_artin_images_and_longitudes(self):
         group = symmetric_group(3)

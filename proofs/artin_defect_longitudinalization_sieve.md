@@ -186,6 +186,7 @@ prove inside one of the fixed groups
 ```text
 Sym(Green kernel blocks),
 Sch(C),
+Def_C (the finite first-output defect kernel of a Green observer),
 Inn(atom quotient),
 U(M),
 or a fixed quotient/known-branch detector factor
@@ -286,3 +287,17 @@ closed by `proofs/atom_inner_detector_lift_rows.md`, conditional on atom
 descent and totality.  The remaining row-level work is not the atom inner
 group, but the Green kernel-block, Schutzenberger, and lower endpoint/unit
 holonomy factors.
+The Green kernel-block and Schutzenberger row-level work has now been
+compressed to a first-output defect endpoint by
+`proofs/green_first_output_defect_criterion.md`, and the non-defect quotient
+motion is closed by `proofs/green_defect_kernel_quotient_detection.md`.
+The elementary defects are also finite coboundaries by
+`proofs/green_defect_potential_coboundary.md`:
+`d(a,q)=eta(q^a)eta(q)^-1`.  Therefore the defect-sieve route should be
+applied only after checking the abelianization barrier in
+`proofs/artin_defect_abelianization_barrier.md`.  Artin permutation defect
+values always lie in `[Def_C,Def_C]`; if the transported endpoint has
+nontrivial abelianized defect contribution, an Artin-defect-only display is
+impossible.  The valid target is still `D_C(beta) in V_beta(Def_C)`, but it
+may require ordinary recursive-longitude expressions, endpoint cancellation,
+or detector-lift labels rather than Artin permutation defects alone.

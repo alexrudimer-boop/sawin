@@ -18,6 +18,9 @@ from ybe_domination import (
     endpoint_residual_action_audit,
     endpoint_residual_readout_audit,
     symmetric_group,
+    terminal_gauge_longitude_expression_audit,
+    terminal_gauge_product_longitude_expression_audit,
+    terminal_gauge_telescoping_audit,
 )
 
 
@@ -277,7 +280,83 @@ class EndpointFactorizationTests(unittest.TestCase):
         self.assertFalse(
             audit.product_endpoint_lies_in_product_longitude_subgroup_by_expression
         )
-        self.assertFalse(audit.identity_longitudes_kill_product_endpoint_by_expression)
+
+    def test_terminal_gauge_telescopes_in_nonabelian_group(self):
+        group = symmetric_group(3)
+        labels = (group.identity, (1, 0, 2), (0, 2, 1))
+
+        audit = terminal_gauge_telescoping_audit(group, labels)
+
+        self.assertTrue(audit.labels_in_group)
+        self.assertTrue(audit.gauge_factors_in_group)
+        self.assertEqual(audit.terminal_endpoint, labels[-1])
+        self.assertEqual(audit.telescoped_gauge_product, labels[-1])
+        self.assertTrue(audit.gauge_factors_match_label_differences)
+        self.assertTrue(audit.telescoped_product_matches_endpoint)
+        self.assertTrue(audit.proves_terminal_gauge_telescoping)
+
+    def test_terminal_gauge_expression_certifies_endpoint(self):
+        group = cyclic_group(3)
+
+        audit = terminal_gauge_longitude_expression_audit(
+            group,
+            n=2,
+            braid_word=(1, 1),
+            labels=(0, 1),
+            assignment=(1, 0),
+            expression=((1, 1),),
+        )
+
+        self.assertEqual(audit.telescope_audit.terminal_endpoint, 1)
+        self.assertTrue(audit.telescope_audit.proves_terminal_gauge_telescoping)
+        self.assertTrue(
+            audit.terminal_gauge_lies_in_longitude_subgroup_by_expression
+        )
+        self.assertTrue(audit.identity_longitudes_kill_terminal_gauge_by_expression)
+
+    def test_terminal_gauge_product_expression_uses_one_product_detector(self):
+        c2 = cyclic_group(2)
+        c3 = cyclic_group(3)
+
+        audit = terminal_gauge_product_longitude_expression_audit(
+            (c2, c3),
+            n=2,
+            braid_word=(1, 1),
+            labels_by_factor=((0, 1), (0, 1)),
+            assignments=((1, 0), (1, 0)),
+            expressions=(((1, 1),), ((1, 1),)),
+        )
+
+        self.assertEqual(audit.terminal_endpoint_tuple, (1, 1))
+        self.assertTrue(audit.all_terminal_gauges_telescope)
+        self.assertEqual(audit.endpoint_audit.product_endpoint, (1, 1))
+        self.assertTrue(audit.endpoint_audit.product_witness_matches_endpoint)
+        self.assertTrue(
+            audit.terminal_gauge_tuple_lies_in_product_longitude_subgroup_by_expression
+        )
+        self.assertTrue(
+            audit.identity_longitudes_kill_terminal_gauge_tuple_by_expression
+        )
+
+    def test_terminal_gauge_rejects_bad_supplied_factors(self):
+        group = cyclic_group(3)
+
+        audit = terminal_gauge_longitude_expression_audit(
+            group,
+            n=2,
+            braid_word=(1, 1),
+            labels=(0, 1),
+            assignment=(1, 0),
+            expression=((1, 1),),
+            gauge_factors=(2,),
+        )
+
+        self.assertFalse(audit.telescope_audit.gauge_factors_match_label_differences)
+        self.assertFalse(audit.telescope_audit.proves_terminal_gauge_telescoping)
+        self.assertFalse(
+            audit.terminal_gauge_lies_in_longitude_subgroup_by_expression
+        )
+        self.assertFalse(audit.identity_longitudes_kill_terminal_gauge_by_expression)
 
     def test_product_endpoint_expression_requires_parallel_data(self):
         with self.assertRaises(ValueError):

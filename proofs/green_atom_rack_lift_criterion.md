@@ -66,6 +66,10 @@ identities after descent: the side-opposite rack has left translations equal
 to the original right translations, positive rows are the rack conjugacy
 identity, and negative rows are inverse positive rows.  The executable helper
 `atom_quotient_inner_detector_lift_audit(audit)` records this row closure.
+The independent Green kernel-block and Schutzenberger row checks are now
+handled by `proofs/green_first_output_defect_criterion.md` and
+`proofs/green_defect_kernel_quotient_detection.md`, which reduce them to a
+finite defect-kernel endpoint plus homomorphic kernel-block images.
 
 The audit
 

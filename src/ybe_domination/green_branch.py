@@ -10,7 +10,15 @@ from .artin_longitudes import (
     right_rack_inner_detector_lift_audit,
 )
 from .finite_braided_set import FiniteBraidedSet, opposite_solution
-from .finite_group import FiniteGroup, permutation_group_from_generators
+from .finite_group import (
+    commutator_subgroup_elements,
+    FiniteGroup,
+    FiniteGroupHomomorphism,
+    GroupElement,
+    normal_closure_elements,
+    permutation_group_from_generators,
+    quotient_group_by_normal_subgroup,
+)
 from .local_interval import canonical_partition
 
 Transformation = Tuple[int, ...]
@@ -333,6 +341,396 @@ class KernelActionSummary:
     induced_permutations: Tuple[Tuple[Hashable, Permutation], ...]
     induced_group_size: int
     nonpermutation_label_count: int
+
+
+@dataclass(frozen=True)
+class GreenFirstOutputDefectRowAudit:
+    """Normal-form audit for one group-valued Green completed row."""
+
+    row: BranchRow
+    observer_name: str
+    group_order: int
+    g_a: GroupElement
+    g_q: GroupElement
+    g_q_under_a: GroupElement
+    g_a_under_q: GroupElement
+    first_output_defect: GroupElement
+    second_output_gauge: GroupElement
+    artin_commutator_part: GroupElement
+    terminal_gauge_boundary_part: GroupElement
+    balanced_reconstructed_defect: GroupElement
+    reconstructed_q_under_a: GroupElement
+    reconstructed_a_under_q: GroupElement
+    product_relation_holds: bool
+    first_output_normal_form_holds: bool
+    second_output_forced_by_defect: bool
+    balanced_decomposition_holds: bool
+    defect_is_identity: bool
+    second_output_gauge_is_identity: bool
+    right_rack_row_if_defect_identity: bool
+
+    @property
+    def row_has_defect_normal_form(self) -> bool:
+        return (
+            self.product_relation_holds
+            and self.first_output_normal_form_holds
+            and self.second_output_forced_by_defect
+            and self.balanced_decomposition_holds
+        )
+
+    @property
+    def proves_no_independent_second_output_check(self) -> bool:
+        return self.row_has_defect_normal_form
+
+    @property
+    def first_output_defect_splits_into_commutator_and_gauge(self) -> bool:
+        return self.product_relation_holds and self.balanced_decomposition_holds
+
+
+@dataclass(frozen=True)
+class GreenFirstOutputDefectAudit:
+    """Bundle first-output defect rows for one Green observer factor."""
+
+    observer_name: str
+    r_class: Tuple[Transformation, ...]
+    group: FiniteGroup
+    edge_labels: Tuple[Tuple[EdgeGerm, GroupElement], ...]
+    group_order: int
+    row_audits: Tuple[GreenFirstOutputDefectRowAudit, ...]
+    missing_edge_count: int
+    missing_row_count: int
+    local_only_edge_germ_count: int | None = None
+
+    @property
+    def row_count(self) -> int:
+        return len(self.row_audits)
+
+    @property
+    def nonidentity_defect_count(self) -> int:
+        return sum(
+            1 for row in self.row_audits if not row.defect_is_identity
+        )
+
+    @property
+    def nonidentity_second_output_gauge_count(self) -> int:
+        return sum(
+            1 for row in self.row_audits if not row.second_output_gauge_is_identity
+        )
+
+    @property
+    def balanced_decomposition_failure_count(self) -> int:
+        return sum(
+            1
+            for row in self.row_audits
+            if not row.balanced_decomposition_holds
+        )
+
+    @property
+    def all_rows_have_defect_normal_form(self) -> bool:
+        return all(row.row_has_defect_normal_form for row in self.row_audits)
+
+    @property
+    def all_first_output_defects_split_into_commutator_and_gauge(self) -> bool:
+        return all(
+            row.first_output_defect_splits_into_commutator_and_gauge
+            for row in self.row_audits
+        )
+
+    @property
+    def all_observed_rows_are_right_rack_when_defects_identity(self) -> bool:
+        return all(
+            row.right_rack_row_if_defect_identity
+            for row in self.row_audits
+        )
+
+    @property
+    def covers_all_rows(self) -> bool:
+        return self.missing_row_count == 0
+
+    @property
+    def proves_first_output_defect_reduction(self) -> bool:
+        return (
+            self.covers_all_rows
+            and self.all_rows_have_defect_normal_form
+            and self.all_observed_rows_are_right_rack_when_defects_identity
+        )
+
+
+@dataclass(frozen=True)
+class GreenDefectKernelQuotientAudit:
+    """Audit the rack-detected quotient by the first-output defect kernel."""
+
+    observer_name: str
+    r_class: Tuple[Transformation, ...]
+    source_defect_audit: GreenFirstOutputDefectAudit
+    defect_generators: Tuple[GroupElement, ...]
+    defect_kernel: Tuple[GroupElement, ...]
+    quotient_group: FiniteGroup
+    quotient_homomorphism: FiniteGroupHomomorphism
+    projected_defect_audit: GreenFirstOutputDefectAudit
+
+    @property
+    def source_group_order(self) -> int:
+        return self.source_defect_audit.group_order
+
+    @property
+    def defect_generator_count(self) -> int:
+        return len(self.defect_generators)
+
+    @property
+    def defect_kernel_size(self) -> int:
+        return len(self.defect_kernel)
+
+    @property
+    def quotient_group_order(self) -> int:
+        return len(self.quotient_group.elements)
+
+    @property
+    def all_projected_defects_are_identity(self) -> bool:
+        return self.projected_defect_audit.nonidentity_defect_count == 0
+
+    @property
+    def projected_rows_are_rack_artin_rows(self) -> bool:
+        return (
+            self.projected_defect_audit.proves_first_output_defect_reduction
+            and self.all_projected_defects_are_identity
+        )
+
+    @property
+    def proves_defect_quotient_detection(self) -> bool:
+        return (
+            self.source_defect_audit.proves_first_output_defect_reduction
+            and self.quotient_homomorphism.is_surjective
+            and self.projected_rows_are_rack_artin_rows
+        )
+
+
+@dataclass(frozen=True)
+class GreenDefectPotentialComponentAudit:
+    """Basepoint-normalized potential on one defect graph component."""
+
+    base_edge: EdgeGerm
+    edges: Tuple[EdgeGerm, ...]
+    potentials: Tuple[Tuple[EdgeGerm, GroupElement], ...]
+    potential_outside_kernel_count: int
+
+    @property
+    def edge_count(self) -> int:
+        return len(self.edges)
+
+    @property
+    def all_potentials_lie_in_defect_kernel(self) -> bool:
+        return self.potential_outside_kernel_count == 0
+
+
+@dataclass(frozen=True)
+class GreenDefectPotentialRowAudit:
+    """Check one first-output defect as a potential coboundary."""
+
+    row: BranchRow
+    first_output_defect: GroupElement
+    q_potential: GroupElement
+    q_under_a_potential: GroupElement
+    potential_coboundary: GroupElement
+    defect_is_potential_coboundary: bool
+
+
+@dataclass(frozen=True)
+class GreenDefectKernelPotentialAudit:
+    """Audit the finite potential-coboundary form of Green defects."""
+
+    observer_name: str
+    r_class: Tuple[Transformation, ...]
+    source_defect_audit: GreenFirstOutputDefectAudit
+    quotient_audit: GreenDefectKernelQuotientAudit
+    components: Tuple[GreenDefectPotentialComponentAudit, ...]
+    row_audits: Tuple[GreenDefectPotentialRowAudit, ...]
+    missing_potential_row_count: int
+
+    @property
+    def component_count(self) -> int:
+        return len(self.components)
+
+    @property
+    def row_count(self) -> int:
+        return len(self.row_audits)
+
+    @property
+    def potential_outside_kernel_count(self) -> int:
+        return sum(
+            component.potential_outside_kernel_count
+            for component in self.components
+        )
+
+    @property
+    def coboundary_failure_count(self) -> int:
+        return sum(
+            1
+            for row in self.row_audits
+            if not row.defect_is_potential_coboundary
+        )
+
+    @property
+    def all_potentials_lie_in_defect_kernel(self) -> bool:
+        return self.potential_outside_kernel_count == 0
+
+    @property
+    def all_defects_are_potential_coboundaries(self) -> bool:
+        return (
+            self.missing_potential_row_count == 0
+            and self.coboundary_failure_count == 0
+        )
+
+    @property
+    def proves_defect_kernel_potential_coboundary(self) -> bool:
+        return (
+            self.quotient_audit.proves_defect_quotient_detection
+            and self.all_potentials_lie_in_defect_kernel
+            and self.all_defects_are_potential_coboundaries
+        )
+
+
+@dataclass(frozen=True)
+class GreenDefectArtinAbelianizationBarrierAudit:
+    """Audit the abelianization barrier for Artin-defect displays."""
+
+    observer_name: str
+    r_class: Tuple[Transformation, ...]
+    potential_audit: GreenDefectKernelPotentialAudit
+    defect_kernel_size: int
+    defect_commutator_subgroup: Tuple[GroupElement, ...]
+    row_count: int
+    noncommutator_row_count: int
+    noncommutator_defect_values: Tuple[GroupElement, ...]
+
+    @property
+    def defect_commutator_size(self) -> int:
+        return len(self.defect_commutator_subgroup)
+
+    @property
+    def defect_kernel_has_abelian_quotient(self) -> bool:
+        return self.defect_commutator_size < self.defect_kernel_size
+
+    @property
+    def elementary_artin_defect_display_obstructed(self) -> bool:
+        return self.noncommutator_row_count > 0
+
+    @property
+    def all_elementary_defects_have_trivial_defect_abelianization(self) -> bool:
+        return self.noncommutator_row_count == 0
+
+
+@dataclass(frozen=True)
+class GreenDefectAbelianizationRowAudit:
+    """One row projected to the abelianized defect-kernel target."""
+
+    row: BranchRow
+    projected_defect: GroupElement
+    projected_q_potential: GroupElement
+    projected_q_under_a_potential: GroupElement
+    projected_potential_coboundary: GroupElement
+    projected_coboundary_matches_defect: bool
+    projected_defect_is_identity: bool
+
+
+@dataclass(frozen=True)
+class GreenDefectAbelianizationSplitAudit:
+    """Split the defect-kernel target into abelian and commutator parts."""
+
+    observer_name: str
+    r_class: Tuple[Transformation, ...]
+    potential_audit: GreenDefectKernelPotentialAudit
+    defect_kernel_size: int
+    defect_commutator_subgroup: Tuple[GroupElement, ...]
+    quotient_group: FiniteGroup
+    quotient_homomorphism: FiniteGroupHomomorphism
+    abelianized_defect_kernel: Tuple[GroupElement, ...]
+    row_audits: Tuple[GreenDefectAbelianizationRowAudit, ...]
+
+    @property
+    def defect_commutator_size(self) -> int:
+        return len(self.defect_commutator_subgroup)
+
+    @property
+    def abelianized_defect_kernel_size(self) -> int:
+        return len(self.abelianized_defect_kernel)
+
+    @property
+    def nontrivial_abelian_row_count(self) -> int:
+        return sum(
+            1 for row in self.row_audits if not row.projected_defect_is_identity
+        )
+
+    @property
+    def abelian_coboundary_failure_count(self) -> int:
+        return sum(
+            1
+            for row in self.row_audits
+            if not row.projected_coboundary_matches_defect
+        )
+
+    @property
+    def abelianized_defect_kernel_is_abelian(self) -> bool:
+        image = tuple(self.abelianized_defect_kernel)
+        return all(
+            self.quotient_group.mul(left, right)
+            == self.quotient_group.mul(right, left)
+            for left in image
+            for right in image
+        )
+
+    @property
+    def abelian_part_is_trivial(self) -> bool:
+        return self.abelianized_defect_kernel_size == 1
+
+    @property
+    def abelian_part_requires_longitude_data(self) -> bool:
+        return self.nontrivial_abelian_row_count > 0
+
+    @property
+    def proves_abelianization_split(self) -> bool:
+        return (
+            self.potential_audit.proves_defect_kernel_potential_coboundary
+            and self.abelianized_defect_kernel_is_abelian
+            and self.abelian_coboundary_failure_count == 0
+        )
+
+
+@dataclass(frozen=True)
+class SchutzenbergerKernelDefectPushforwardAudit:
+    """Audit that kernel-block defects are homomorphic Schutzenberger images."""
+
+    r_class: Tuple[Transformation, ...]
+    source_order: int
+    target_order: int
+    local_only_edge_germ_count: int
+    homomorphism: FiniteGroupHomomorphism | None
+    schutzenberger_defect_audit: GreenFirstOutputDefectAudit
+    kernel_defect_audit: GreenFirstOutputDefectAudit
+    compared_row_count: int
+    defect_pushforward_failure_count: int
+
+    @property
+    def homomorphism_exists(self) -> bool:
+        return self.homomorphism is not None
+
+    @property
+    def no_local_only_edges(self) -> bool:
+        return self.local_only_edge_germ_count == 0
+
+    @property
+    def all_compared_defects_push_forward(self) -> bool:
+        return self.defect_pushforward_failure_count == 0
+
+    @property
+    def proves_kernel_defects_are_schutzenberger_pushforwards(self) -> bool:
+        return (
+            self.no_local_only_edges
+            and self.homomorphism_exists
+            and self.schutzenberger_defect_audit.proves_first_output_defect_reduction
+            and self.kernel_defect_audit.proves_first_output_defect_reduction
+            and self.all_compared_defects_push_forward
+        )
 
 
 def _block_index(partition: Tuple[frozenset[EdgeGerm], ...], item: EdgeGerm) -> int:
@@ -849,6 +1247,357 @@ def induced_kernel_permutation(
     return candidate
 
 
+def green_first_output_defect_row_audit(
+    group: FiniteGroup,
+    row: BranchRow,
+    edge_labels: Mapping[EdgeGerm, GroupElement],
+    observer_name: str,
+) -> GreenFirstOutputDefectRowAudit:
+    """Audit the first-output defect normal form for one completed row."""
+
+    elements = set(group.elements)
+    try:
+        g_a = edge_labels[row.a]
+        g_q = edge_labels[row.q]
+        g_q_under_a = edge_labels[row.q_under_a]
+        g_a_under_q = edge_labels[row.a_under_q]
+    except KeyError as exc:
+        raise ValueError(f"missing observer label for edge {exc.args[0]!r}") from exc
+    if any(value not in elements for value in (g_a, g_q, g_q_under_a, g_a_under_q)):
+        raise ValueError("observer labels must be elements of the supplied group")
+
+    first_output_defect = group.mul(g_q_under_a, group.inv(g_q))
+    second_output_gauge = group.mul(g_a_under_q, group.inv(g_a))
+    artin_commutator_part = group.mul(
+        group.mul(group.mul(g_a, g_q), group.inv(g_a)),
+        group.inv(g_q),
+    )
+    terminal_gauge_boundary_part = group.mul(
+        group.mul(g_q, group.inv(second_output_gauge)),
+        group.inv(g_q),
+    )
+    balanced_reconstructed_defect = group.mul(
+        artin_commutator_part,
+        terminal_gauge_boundary_part,
+    )
+    reconstructed_q_under_a = group.mul(first_output_defect, g_q)
+    reconstructed_a_under_q = group.mul(
+        group.mul(group.mul(group.inv(g_q), group.inv(first_output_defect)), g_a),
+        g_q,
+    )
+    product_relation_holds = group.mul(g_a, g_q) == group.mul(
+        g_q_under_a,
+        g_a_under_q,
+    )
+    first_output_normal_form_holds = reconstructed_q_under_a == g_q_under_a
+    second_output_forced_by_defect = reconstructed_a_under_q == g_a_under_q
+    balanced_decomposition_holds = balanced_reconstructed_defect == first_output_defect
+    defect_is_identity = first_output_defect == group.identity
+    second_output_gauge_is_identity = second_output_gauge == group.identity
+    right_rack_row_if_defect_identity = (
+        (not defect_is_identity)
+        or (
+            g_q_under_a == g_q
+            and g_a_under_q
+            == group.mul(group.mul(group.inv(g_q), g_a), g_q)
+        )
+    )
+    return GreenFirstOutputDefectRowAudit(
+        row=row,
+        observer_name=observer_name,
+        group_order=len(group.elements),
+        g_a=g_a,
+        g_q=g_q,
+        g_q_under_a=g_q_under_a,
+        g_a_under_q=g_a_under_q,
+        first_output_defect=first_output_defect,
+        second_output_gauge=second_output_gauge,
+        artin_commutator_part=artin_commutator_part,
+        terminal_gauge_boundary_part=terminal_gauge_boundary_part,
+        balanced_reconstructed_defect=balanced_reconstructed_defect,
+        reconstructed_q_under_a=reconstructed_q_under_a,
+        reconstructed_a_under_q=reconstructed_a_under_q,
+        product_relation_holds=product_relation_holds,
+        first_output_normal_form_holds=first_output_normal_form_holds,
+        second_output_forced_by_defect=second_output_forced_by_defect,
+        balanced_decomposition_holds=balanced_decomposition_holds,
+        defect_is_identity=defect_is_identity,
+        second_output_gauge_is_identity=second_output_gauge_is_identity,
+        right_rack_row_if_defect_identity=right_rack_row_if_defect_identity,
+    )
+
+
+def green_first_output_defect_audit(
+    audit: GreenBranchAudit,
+    group: FiniteGroup,
+    edge_labels: Mapping[EdgeGerm, GroupElement],
+    observer_name: str,
+    local_only_edge_germ_count: int | None = None,
+) -> GreenFirstOutputDefectAudit:
+    """Audit all observable completed rows for the first-output defect form."""
+
+    labelled_edges = set(edge_labels)
+    missing_edges = set(audit.edge_germs).difference(labelled_edges)
+    row_audits = []
+    missing_row_count = 0
+    for row in audit.rows:
+        if any(
+            edge not in labelled_edges
+            for edge in (row.a, row.q, row.q_under_a, row.a_under_q)
+        ):
+            missing_row_count += 1
+            continue
+        row_audits.append(
+            green_first_output_defect_row_audit(
+                group,
+                row,
+                edge_labels,
+                observer_name,
+            )
+        )
+    return GreenFirstOutputDefectAudit(
+        observer_name=observer_name,
+        r_class=audit.r_class,
+        group=group,
+        edge_labels=tuple(sorted(edge_labels.items(), key=repr)),
+        group_order=len(group.elements),
+        row_audits=tuple(row_audits),
+        missing_edge_count=len(missing_edges),
+        missing_row_count=missing_row_count,
+        local_only_edge_germ_count=local_only_edge_germ_count,
+    )
+
+
+def green_defect_kernel_quotient_audit(
+    source_defect_audit: GreenFirstOutputDefectAudit,
+) -> GreenDefectKernelQuotientAudit:
+    """Quotient a Green observer by its finite first-output defect kernel."""
+
+    defect_generators = tuple(
+        row.first_output_defect
+        for row in source_defect_audit.row_audits
+    )
+    defect_kernel = normal_closure_elements(
+        source_defect_audit.group,
+        defect_generators,
+    )
+    quotient_group, quotient_homomorphism = quotient_group_by_normal_subgroup(
+        source_defect_audit.group,
+        defect_kernel,
+    )
+    projected_edge_labels = {
+        edge: quotient_homomorphism.apply(label)
+        for edge, label in source_defect_audit.edge_labels
+    }
+    projected_audit = green_first_output_defect_audit(
+        GreenBranchAudit(
+            r_class=source_defect_audit.r_class,
+            edge_germs=tuple(edge for edge, _label in source_defect_audit.edge_labels),
+            edge_targets=tuple(),
+            rows=tuple(row.row for row in source_defect_audit.row_audits),
+            atom_partition=tuple(),
+            branch_choice_failures=tuple(),
+        ),
+        quotient_group,
+        projected_edge_labels,
+        f"{source_defect_audit.observer_name}-defect-quotient",
+        local_only_edge_germ_count=source_defect_audit.local_only_edge_germ_count,
+    )
+    return GreenDefectKernelQuotientAudit(
+        observer_name=source_defect_audit.observer_name,
+        r_class=source_defect_audit.r_class,
+        source_defect_audit=source_defect_audit,
+        defect_generators=defect_generators,
+        defect_kernel=defect_kernel,
+        quotient_group=quotient_group,
+        quotient_homomorphism=quotient_homomorphism,
+        projected_defect_audit=projected_audit,
+    )
+
+
+def green_defect_kernel_potential_audit(
+    source_defect_audit: GreenFirstOutputDefectAudit,
+) -> GreenDefectKernelPotentialAudit:
+    """Audit first-output defects as finite potential coboundaries."""
+
+    quotient_audit = green_defect_kernel_quotient_audit(source_defect_audit)
+    group = source_defect_audit.group
+    defect_kernel = set(quotient_audit.defect_kernel)
+    edge_labels = dict(source_defect_audit.edge_labels)
+    labelled_edges = set(edge_labels)
+    adjacency: Dict[EdgeGerm, set[EdgeGerm]] = {
+        edge: set() for edge in labelled_edges
+    }
+    for row_audit in source_defect_audit.row_audits:
+        left = row_audit.row.q
+        right = row_audit.row.q_under_a
+        if left not in labelled_edges or right not in labelled_edges:
+            continue
+        adjacency[left].add(right)
+        adjacency[right].add(left)
+
+    seen: set[EdgeGerm] = set()
+    potential_by_edge: Dict[EdgeGerm, GroupElement] = {}
+    components = []
+    for base_edge in sorted(labelled_edges, key=repr):
+        if base_edge in seen:
+            continue
+        component_seen = {base_edge}
+        queue = deque([base_edge])
+        while queue:
+            edge = queue.popleft()
+            for neighbor in adjacency[edge]:
+                if neighbor not in component_seen:
+                    component_seen.add(neighbor)
+                    queue.append(neighbor)
+        seen.update(component_seen)
+        base_inverse = group.inv(edge_labels[base_edge])
+        potentials = []
+        outside_kernel = 0
+        for edge in sorted(component_seen, key=repr):
+            potential = group.mul(edge_labels[edge], base_inverse)
+            potential_by_edge[edge] = potential
+            potentials.append((edge, potential))
+            if potential not in defect_kernel:
+                outside_kernel += 1
+        components.append(
+            GreenDefectPotentialComponentAudit(
+                base_edge=base_edge,
+                edges=tuple(sorted(component_seen, key=repr)),
+                potentials=tuple(potentials),
+                potential_outside_kernel_count=outside_kernel,
+            )
+        )
+
+    row_audits = []
+    missing = 0
+    for row_audit in source_defect_audit.row_audits:
+        q_potential = potential_by_edge.get(row_audit.row.q)
+        q_under_a_potential = potential_by_edge.get(row_audit.row.q_under_a)
+        if q_potential is None or q_under_a_potential is None:
+            missing += 1
+            continue
+        potential_coboundary = group.mul(
+            q_under_a_potential,
+            group.inv(q_potential),
+        )
+        row_audits.append(
+            GreenDefectPotentialRowAudit(
+                row=row_audit.row,
+                first_output_defect=row_audit.first_output_defect,
+                q_potential=q_potential,
+                q_under_a_potential=q_under_a_potential,
+                potential_coboundary=potential_coboundary,
+                defect_is_potential_coboundary=(
+                    potential_coboundary == row_audit.first_output_defect
+                ),
+            )
+        )
+
+    return GreenDefectKernelPotentialAudit(
+        observer_name=source_defect_audit.observer_name,
+        r_class=source_defect_audit.r_class,
+        source_defect_audit=source_defect_audit,
+        quotient_audit=quotient_audit,
+        components=tuple(components),
+        row_audits=tuple(row_audits),
+        missing_potential_row_count=missing,
+    )
+
+
+def green_defect_artin_abelianization_barrier_audit(
+    source_defect_audit: GreenFirstOutputDefectAudit,
+) -> GreenDefectArtinAbelianizationBarrierAudit:
+    """Audit whether elementary defects can be Artin-defect products.
+
+    Artin permutation defect values have trivial image in every abelian
+    quotient of the target group.  Thus an elementary defect outside the
+    commutator subgroup of ``Def_C`` cannot have an Artin-defect display in
+    that fixed defect kernel.
+    """
+
+    potential_audit = green_defect_kernel_potential_audit(source_defect_audit)
+    group = source_defect_audit.group
+    defect_kernel = potential_audit.quotient_audit.defect_kernel
+    defect_commutator = commutator_subgroup_elements(group, defect_kernel)
+    commutator_set = set(defect_commutator)
+    noncommutator_rows = [
+        row.first_output_defect
+        for row in source_defect_audit.row_audits
+        if row.first_output_defect not in commutator_set
+    ]
+    return GreenDefectArtinAbelianizationBarrierAudit(
+        observer_name=source_defect_audit.observer_name,
+        r_class=source_defect_audit.r_class,
+        potential_audit=potential_audit,
+        defect_kernel_size=len(defect_kernel),
+        defect_commutator_subgroup=defect_commutator,
+        row_count=len(source_defect_audit.row_audits),
+        noncommutator_row_count=len(noncommutator_rows),
+        noncommutator_defect_values=tuple(
+            sorted(set(noncommutator_rows), key=repr)
+        ),
+    )
+
+
+def green_defect_abelianization_split_audit(
+    source_defect_audit: GreenFirstOutputDefectAudit,
+) -> GreenDefectAbelianizationSplitAudit:
+    """Project defect potential data to the abelianized defect target."""
+
+    potential_audit = green_defect_kernel_potential_audit(source_defect_audit)
+    group = source_defect_audit.group
+    defect_kernel = potential_audit.quotient_audit.defect_kernel
+    defect_commutator = commutator_subgroup_elements(group, defect_kernel)
+    quotient_group, quotient_homomorphism = quotient_group_by_normal_subgroup(
+        group,
+        defect_commutator,
+    )
+    abelianized_defect_kernel = tuple(
+        sorted(
+            {quotient_homomorphism.apply(element) for element in defect_kernel},
+            key=repr,
+        )
+    )
+    row_audits = []
+    for row in potential_audit.row_audits:
+        projected_defect = quotient_homomorphism.apply(row.first_output_defect)
+        projected_q_potential = quotient_homomorphism.apply(row.q_potential)
+        projected_q_under_a_potential = quotient_homomorphism.apply(
+            row.q_under_a_potential
+        )
+        projected_coboundary = quotient_group.mul(
+            projected_q_under_a_potential,
+            quotient_group.inv(projected_q_potential),
+        )
+        row_audits.append(
+            GreenDefectAbelianizationRowAudit(
+                row=row.row,
+                projected_defect=projected_defect,
+                projected_q_potential=projected_q_potential,
+                projected_q_under_a_potential=projected_q_under_a_potential,
+                projected_potential_coboundary=projected_coboundary,
+                projected_coboundary_matches_defect=(
+                    projected_coboundary == projected_defect
+                ),
+                projected_defect_is_identity=(
+                    projected_defect == quotient_group.identity
+                ),
+            )
+        )
+    return GreenDefectAbelianizationSplitAudit(
+        observer_name=source_defect_audit.observer_name,
+        r_class=source_defect_audit.r_class,
+        potential_audit=potential_audit,
+        defect_kernel_size=len(defect_kernel),
+        defect_commutator_subgroup=defect_commutator,
+        quotient_group=quotient_group,
+        quotient_homomorphism=quotient_homomorphism,
+        abelianized_defect_kernel=abelianized_defect_kernel,
+        row_audits=tuple(row_audits),
+    )
+
+
 def kernel_action_summary(solution: FiniteBraidedSet) -> Tuple[KernelActionSummary, ...]:
     """Summarize finite kernel-block actions for retained Green labels.
 
@@ -1004,6 +1753,288 @@ def schutzenberger_action_groups(
             )
         )
     return tuple(sorted(groups, key=repr))
+
+
+def schutzenberger_first_output_defect_audits(
+    solution: FiniteBraidedSet,
+) -> Tuple[GreenFirstOutputDefectAudit, ...]:
+    """Audit Green first-output defects in Schutzenberger action groups."""
+
+    failures = coordinate_action_relation_failures(solution)
+    if failures:
+        raise ValueError("coordinate actions do not satisfy structure relation")
+
+    tau = coordinate_action_maps(solution)
+    monoid = TransformationMonoid.generated(tau.values())
+    audits = []
+    for audit in green_branch_audits(solution):
+        label_actions = {
+            label: action
+            for label, transform in tau.items()
+            for action in (
+                _permutation_action_on_r_class(monoid, audit.r_class, transform),
+            )
+            if action is not None
+        }
+        group = permutation_group_from_generators(
+            label_actions.values(),
+            degree=len(audit.r_class),
+        )
+        edge_labels = {
+            edge: label_actions[edge[1]]
+            for edge in audit.edge_germs
+            if edge[1] in label_actions
+        }
+        local_only_edge_germ_count = len(audit.edge_germs) - len(edge_labels)
+        audits.append(
+            green_first_output_defect_audit(
+                audit,
+                group,
+                edge_labels,
+                "schutzenberger",
+                local_only_edge_germ_count=local_only_edge_germ_count,
+            )
+        )
+    return tuple(sorted(audits, key=repr))
+
+
+def kernel_block_first_output_defect_audits(
+    solution: FiniteBraidedSet,
+) -> Tuple[GreenFirstOutputDefectAudit, ...]:
+    """Audit Green first-output defects in kernel-block permutation groups."""
+
+    failures = coordinate_action_relation_failures(solution)
+    if failures:
+        raise ValueError("coordinate actions do not satisfy structure relation")
+
+    tau = coordinate_action_maps(solution)
+    audits = []
+    for audit in green_branch_audits(solution):
+        if not audit.r_class:
+            continue
+        kernel = transformation_kernel(audit.r_class[0])
+        label_actions = {
+            label: permutation
+            for label, transform in tau.items()
+            for permutation in (induced_kernel_permutation(kernel, transform),)
+            if permutation is not None
+        }
+        group = permutation_group_from_generators(
+            label_actions.values(),
+            degree=len(kernel),
+        )
+        edge_labels = {
+            edge: label_actions[edge[1]]
+            for edge in audit.edge_germs
+            if edge[1] in label_actions
+        }
+        audits.append(
+            green_first_output_defect_audit(
+                audit,
+                group,
+                edge_labels,
+                "kernel-block",
+            )
+        )
+    return tuple(sorted(audits, key=repr))
+
+
+def schutzenberger_kernel_block_homomorphism(
+    solution: FiniteBraidedSet,
+    r_class: Tuple[Transformation, ...],
+) -> FiniteGroupHomomorphism | None:
+    """Return the Schutzenberger-to-kernel block action, when well-defined."""
+
+    if not r_class:
+        return None
+    failures = coordinate_action_relation_failures(solution)
+    if failures:
+        raise ValueError("coordinate actions do not satisfy structure relation")
+
+    tau = coordinate_action_maps(solution)
+    monoid = TransformationMonoid.generated(tau.values())
+    r_class_set = set(r_class)
+    stabilizer = tuple(
+        element
+        for element in monoid.elements
+        if all(monoid.mul(source, element) in r_class_set for source in r_class)
+    )
+    kernel = transformation_kernel(r_class[0])
+    image_candidates: Dict[Permutation, set[Permutation]] = defaultdict(set)
+    for element in stabilizer:
+        sch_action = _permutation_action_on_r_class(monoid, r_class, element)
+        if sch_action is None:
+            continue
+        kernel_action = induced_kernel_permutation(kernel, element)
+        if kernel_action is None:
+            return None
+        image_candidates[sch_action].add(kernel_action)
+
+    source = permutation_group_from_generators(
+        image_candidates.keys(),
+        degree=len(r_class),
+    )
+    if any(
+        element not in image_candidates or len(image_candidates[element]) != 1
+        for element in source.elements
+    ):
+        return None
+    mapping = {
+        element: next(iter(image_candidates[element]))
+        for element in source.elements
+    }
+    target = permutation_group_from_generators(
+        mapping.values(),
+        degree=len(kernel),
+    )
+    try:
+        return FiniteGroupHomomorphism(source, target, mapping)
+    except ValueError:
+        return None
+
+
+def schutzenberger_kernel_defect_pushforward_audits(
+    solution: FiniteBraidedSet,
+) -> Tuple[SchutzenbergerKernelDefectPushforwardAudit, ...]:
+    """Audit kernel defects as homomorphic images of Schutzenberger defects."""
+
+    sch_audits = {
+        audit.r_class: audit
+        for audit in schutzenberger_first_output_defect_audits(solution)
+    }
+    kernel_audits = {
+        audit.r_class: audit
+        for audit in kernel_block_first_output_defect_audits(solution)
+    }
+    summaries = {
+        summary.r_class: summary
+        for summary in schutzenberger_summaries(solution)
+    }
+    out = []
+    for r_class, sch_audit in sch_audits.items():
+        kernel_audit = kernel_audits[r_class]
+        homomorphism = schutzenberger_kernel_block_homomorphism(
+            solution,
+            r_class,
+        )
+        kernel_rows = {row.row: row for row in kernel_audit.row_audits}
+        compared = 0
+        failures = 0
+        if homomorphism is not None:
+            for sch_row in sch_audit.row_audits:
+                kernel_row = kernel_rows.get(sch_row.row)
+                if kernel_row is None:
+                    continue
+                compared += 1
+                if (
+                    homomorphism.apply(sch_row.first_output_defect)
+                    != kernel_row.first_output_defect
+                ):
+                    failures += 1
+        out.append(
+            SchutzenbergerKernelDefectPushforwardAudit(
+                r_class=r_class,
+                source_order=sch_audit.group_order,
+                target_order=kernel_audit.group_order,
+                local_only_edge_germ_count=summaries[
+                    r_class
+                ].local_only_edge_germ_count,
+                homomorphism=homomorphism,
+                schutzenberger_defect_audit=sch_audit,
+                kernel_defect_audit=kernel_audit,
+                compared_row_count=compared,
+                defect_pushforward_failure_count=failures,
+            )
+        )
+    return tuple(sorted(out, key=repr))
+
+
+def schutzenberger_defect_kernel_quotient_audits(
+    solution: FiniteBraidedSet,
+) -> Tuple[GreenDefectKernelQuotientAudit, ...]:
+    """Return defect-kernel quotient audits for Schutzenberger observers."""
+
+    return tuple(
+        green_defect_kernel_quotient_audit(audit)
+        for audit in schutzenberger_first_output_defect_audits(solution)
+    )
+
+
+def schutzenberger_defect_kernel_potential_audits(
+    solution: FiniteBraidedSet,
+) -> Tuple[GreenDefectKernelPotentialAudit, ...]:
+    """Return potential-coboundary audits for Schutzenberger defects."""
+
+    return tuple(
+        green_defect_kernel_potential_audit(audit)
+        for audit in schutzenberger_first_output_defect_audits(solution)
+    )
+
+
+def schutzenberger_defect_artin_abelianization_barrier_audits(
+    solution: FiniteBraidedSet,
+) -> Tuple[GreenDefectArtinAbelianizationBarrierAudit, ...]:
+    """Return Artin-defect abelianization barrier audits for Schutzenberger defects."""
+
+    return tuple(
+        green_defect_artin_abelianization_barrier_audit(audit)
+        for audit in schutzenberger_first_output_defect_audits(solution)
+    )
+
+
+def schutzenberger_defect_abelianization_split_audits(
+    solution: FiniteBraidedSet,
+) -> Tuple[GreenDefectAbelianizationSplitAudit, ...]:
+    """Return abelianization-split audits for Schutzenberger defects."""
+
+    return tuple(
+        green_defect_abelianization_split_audit(audit)
+        for audit in schutzenberger_first_output_defect_audits(solution)
+    )
+
+
+def kernel_block_defect_kernel_quotient_audits(
+    solution: FiniteBraidedSet,
+) -> Tuple[GreenDefectKernelQuotientAudit, ...]:
+    """Return defect-kernel quotient audits for kernel-block observers."""
+
+    return tuple(
+        green_defect_kernel_quotient_audit(audit)
+        for audit in kernel_block_first_output_defect_audits(solution)
+    )
+
+
+def kernel_block_defect_kernel_potential_audits(
+    solution: FiniteBraidedSet,
+) -> Tuple[GreenDefectKernelPotentialAudit, ...]:
+    """Return potential-coboundary audits for kernel-block defects."""
+
+    return tuple(
+        green_defect_kernel_potential_audit(audit)
+        for audit in kernel_block_first_output_defect_audits(solution)
+    )
+
+
+def kernel_block_defect_artin_abelianization_barrier_audits(
+    solution: FiniteBraidedSet,
+) -> Tuple[GreenDefectArtinAbelianizationBarrierAudit, ...]:
+    """Return Artin-defect abelianization barrier audits for kernel-block defects."""
+
+    return tuple(
+        green_defect_artin_abelianization_barrier_audit(audit)
+        for audit in kernel_block_first_output_defect_audits(solution)
+    )
+
+
+def kernel_block_defect_abelianization_split_audits(
+    solution: FiniteBraidedSet,
+) -> Tuple[GreenDefectAbelianizationSplitAudit, ...]:
+    """Return abelianization-split audits for kernel-block defects."""
+
+    return tuple(
+        green_defect_abelianization_split_audit(audit)
+        for audit in kernel_block_first_output_defect_audits(solution)
+    )
 
 
 def context_words_by_target(

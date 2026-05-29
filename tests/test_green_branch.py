@@ -21,6 +21,7 @@ from ybe_domination import (
     atom_quotient_rack_audit,
     atom_quotient_solution,
     atom_projection_summary,
+    artin_permutation_defect_witness_audit,
     bounded_atom_trivial_loop_group_summaries,
     bounded_category_summary,
     coordinate_action_maps,
@@ -28,6 +29,11 @@ from ybe_domination import (
     context_words_by_target,
     depth_observer_summary,
     green_branch_audits,
+    kernel_block_defect_abelianization_split_audits,
+    kernel_block_defect_artin_abelianization_barrier_audits,
+    kernel_block_defect_kernel_potential_audits,
+    kernel_block_defect_kernel_quotient_audits,
+    kernel_block_first_output_defect_audits,
     induced_kernel_permutation,
     kernel_action_summary,
     opposite_green_branch_audits,
@@ -35,7 +41,14 @@ from ybe_domination import (
     right_coordinate_action_maps,
     right_coordinate_action_relation_failures,
     schutzenberger_action_groups,
+    schutzenberger_defect_abelianization_split_audits,
+    schutzenberger_defect_artin_abelianization_barrier_audits,
+    schutzenberger_defect_kernel_potential_audits,
+    schutzenberger_defect_kernel_quotient_audits,
+    schutzenberger_first_output_defect_audits,
     schutzenberger_groups,
+    schutzenberger_kernel_block_homomorphism,
+    schutzenberger_kernel_defect_pushforward_audits,
     schutzenberger_summaries,
     two_sided_atom_quotient_inner_groups,
     two_sided_green_detector_groups,
@@ -182,6 +195,138 @@ class GreenBranchTests(unittest.TestCase):
         self.assertEqual(summary.retained_labels, (0, 1, 2))
         self.assertEqual(summary.induced_group_size, 3)
         self.assertEqual(summary.nonpermutation_label_count, 0)
+
+    def test_green_first_output_defect_normal_form_for_affine_candidate(self):
+        solution = size_three_affine_candidate()
+        sch_audit = schutzenberger_first_output_defect_audits(solution)[0]
+        kernel_audit = kernel_block_first_output_defect_audits(solution)[0]
+
+        self.assertEqual(sch_audit.row_count, 27)
+        self.assertEqual(sch_audit.missing_row_count, 0)
+        self.assertEqual(sch_audit.local_only_edge_germ_count, 0)
+        self.assertEqual(sch_audit.nonidentity_defect_count, 18)
+        self.assertEqual(sch_audit.balanced_decomposition_failure_count, 0)
+        self.assertEqual(sch_audit.nonidentity_second_output_gauge_count, 18)
+        self.assertTrue(sch_audit.all_rows_have_defect_normal_form)
+        self.assertTrue(
+            sch_audit.all_first_output_defects_split_into_commutator_and_gauge
+        )
+        self.assertTrue(
+            sch_audit.all_observed_rows_are_right_rack_when_defects_identity
+        )
+        self.assertTrue(sch_audit.proves_first_output_defect_reduction)
+
+        self.assertEqual(kernel_audit.row_count, 27)
+        self.assertEqual(kernel_audit.missing_row_count, 0)
+        self.assertEqual(kernel_audit.nonidentity_defect_count, 18)
+        self.assertEqual(kernel_audit.balanced_decomposition_failure_count, 0)
+        self.assertEqual(kernel_audit.nonidentity_second_output_gauge_count, 18)
+        self.assertTrue(kernel_audit.proves_first_output_defect_reduction)
+
+        row = next(row for row in sch_audit.row_audits if not row.defect_is_identity)
+        commutator_witness = artin_permutation_defect_witness_audit(
+            sch_audit.group,
+            2,
+            (1,),
+            (row.g_a, row.g_q),
+            ((0, 1),),
+        )
+        self.assertEqual(
+            commutator_witness.defect_value,
+            row.artin_commutator_part,
+        )
+        self.assertTrue(commutator_witness.witness_matches_defect)
+
+    def test_kernel_defects_push_forward_from_schutzenberger_defects(self):
+        solution = size_three_affine_candidate()
+        r_class = green_branch_audits(solution)[0].r_class
+        homomorphism = schutzenberger_kernel_block_homomorphism(solution, r_class)
+        audits = schutzenberger_kernel_defect_pushforward_audits(solution)
+
+        self.assertIsNotNone(homomorphism)
+        self.assertEqual(len(audits), 1)
+        audit = audits[0]
+        self.assertEqual(audit.source_order, 3)
+        self.assertEqual(audit.target_order, 3)
+        self.assertEqual(audit.local_only_edge_germ_count, 0)
+        self.assertTrue(audit.homomorphism_exists)
+        self.assertEqual(audit.compared_row_count, 27)
+        self.assertEqual(audit.defect_pushforward_failure_count, 0)
+        self.assertTrue(
+            audit.proves_kernel_defects_are_schutzenberger_pushforwards
+        )
+
+    def test_green_defect_kernel_quotient_closes_observed_rows(self):
+        solution = size_three_affine_candidate()
+        sch_audit = schutzenberger_defect_kernel_quotient_audits(solution)[0]
+        kernel_audit = kernel_block_defect_kernel_quotient_audits(solution)[0]
+
+        for audit in (sch_audit, kernel_audit):
+            self.assertEqual(audit.source_group_order, 3)
+            self.assertEqual(audit.defect_generator_count, 27)
+            self.assertEqual(audit.defect_kernel_size, 3)
+            self.assertEqual(audit.quotient_group_order, 1)
+            self.assertEqual(audit.projected_defect_audit.row_count, 27)
+            self.assertEqual(audit.projected_defect_audit.missing_row_count, 0)
+            self.assertTrue(audit.all_projected_defects_are_identity)
+            self.assertTrue(audit.projected_rows_are_rack_artin_rows)
+            self.assertTrue(audit.proves_defect_quotient_detection)
+
+    def test_green_defect_kernel_potential_coboundary_for_affine_candidate(self):
+        solution = size_three_affine_candidate()
+        sch_audit = schutzenberger_defect_kernel_potential_audits(solution)[0]
+        kernel_audit = kernel_block_defect_kernel_potential_audits(solution)[0]
+
+        for audit in (sch_audit, kernel_audit):
+            self.assertEqual(audit.component_count, 3)
+            self.assertEqual(
+                sorted(component.edge_count for component in audit.components),
+                [3, 3, 3],
+            )
+            self.assertEqual(audit.potential_outside_kernel_count, 0)
+            self.assertEqual(audit.row_count, 27)
+            self.assertEqual(audit.missing_potential_row_count, 0)
+            self.assertEqual(audit.coboundary_failure_count, 0)
+            self.assertTrue(audit.all_potentials_lie_in_defect_kernel)
+            self.assertTrue(audit.all_defects_are_potential_coboundaries)
+            self.assertTrue(audit.proves_defect_kernel_potential_coboundary)
+
+    def test_artin_defect_display_barrier_for_abelian_green_defects(self):
+        solution = size_three_affine_candidate()
+        sch_audit = schutzenberger_defect_artin_abelianization_barrier_audits(
+            solution
+        )[0]
+        kernel_audit = kernel_block_defect_artin_abelianization_barrier_audits(
+            solution
+        )[0]
+
+        for audit in (sch_audit, kernel_audit):
+            self.assertEqual(audit.defect_kernel_size, 3)
+            self.assertEqual(audit.defect_commutator_size, 1)
+            self.assertTrue(audit.defect_kernel_has_abelian_quotient)
+            self.assertEqual(audit.row_count, 27)
+            self.assertEqual(audit.noncommutator_row_count, 18)
+            self.assertEqual(len(audit.noncommutator_defect_values), 2)
+            self.assertTrue(audit.elementary_artin_defect_display_obstructed)
+            self.assertFalse(
+                audit.all_elementary_defects_have_trivial_defect_abelianization
+            )
+
+    def test_green_defect_abelianization_split_for_affine_candidate(self):
+        solution = size_three_affine_candidate()
+        sch_audit = schutzenberger_defect_abelianization_split_audits(solution)[0]
+        kernel_audit = kernel_block_defect_abelianization_split_audits(solution)[0]
+
+        for audit in (sch_audit, kernel_audit):
+            self.assertEqual(audit.defect_kernel_size, 3)
+            self.assertEqual(audit.defect_commutator_size, 1)
+            self.assertEqual(audit.abelianized_defect_kernel_size, 3)
+            self.assertEqual(audit.nontrivial_abelian_row_count, 18)
+            self.assertEqual(audit.abelian_coboundary_failure_count, 0)
+            self.assertTrue(audit.abelianized_defect_kernel_is_abelian)
+            self.assertFalse(audit.abelian_part_is_trivial)
+            self.assertTrue(audit.abelian_part_requires_longitude_data)
+            self.assertTrue(audit.proves_abelianization_split)
 
     def test_induced_kernel_permutation_detects_block_action(self):
         kernel = transformation_kernel((0, 0, 1, 1))

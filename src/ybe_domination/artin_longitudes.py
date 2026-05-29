@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from itertools import product
-from typing import Dict, Iterable, List, Mapping, Sequence, Tuple
+from typing import Callable, Dict, Iterable, List, Mapping, Sequence, Tuple
 
 from .finite_braided_set import (
     FiniteBraidedSet,
@@ -16,6 +16,7 @@ from .finite_group import (
     FiniteGroupHomomorphism,
     GroupElement,
     direct_product_group,
+    is_abelian_group,
     permutation_group_from_generators,
     subgroup_generated_elements,
 )
@@ -27,6 +28,8 @@ LongitudeExpressionLetter = Tuple[int, int]
 LongitudeExpression = Tuple[LongitudeExpressionLetter, ...]
 LongitudeSubgroupWitnessLetter = Tuple[Tuple[GroupElement, ...], int, int]
 LongitudeSubgroupWitness = Tuple[LongitudeSubgroupWitnessLetter, ...]
+AbelianLongitudeMatrixWitnessLetter = Tuple[GroupElement, int, int, int]
+AbelianLongitudeMatrixWitness = Tuple[AbelianLongitudeMatrixWitnessLetter, ...]
 ArtinDetectorLiftLabel = Tuple[GroupElement, GroupElement]
 
 
@@ -341,6 +344,51 @@ class RackInnerDetectorLiftAudit:
 
 
 @dataclass(frozen=True)
+class PrincipalGaugeCocycleFailure:
+    """One failed nonabelian rack-cocycle identity."""
+
+    left_atom: object
+    middle_atom: object
+    right_atom: object
+    left_value: GroupElement
+    right_value: GroupElement
+
+
+@dataclass(frozen=True)
+class PrincipalGaugeExtensionDetectorAudit:
+    """Audit a principal finite rack-extension detector for unit holonomy."""
+
+    base_rack_size: int
+    unit_group_order: int
+    extension_size: int
+    cocycle_failures: Tuple[PrincipalGaugeCocycleFailure, ...]
+    extension_is_rack_form: bool
+    extension_is_ybe: bool
+    inner_group_order: int | None
+    detector_lift_audit: RackInnerDetectorLiftAudit | None
+
+    @property
+    def cocycle_identity_holds(self) -> bool:
+        return not self.cocycle_failures
+
+    @property
+    def principal_extension_is_finite_rack(self) -> bool:
+        return (
+            self.cocycle_identity_holds
+            and self.extension_is_rack_form
+            and self.extension_is_ybe
+        )
+
+    @property
+    def proves_principal_gauge_detector(self) -> bool:
+        return (
+            self.principal_extension_is_finite_rack
+            and self.detector_lift_audit is not None
+            and self.detector_lift_audit.proves_rack_inner_detector_lift_rows
+        )
+
+
+@dataclass(frozen=True)
 class RackLongitudeFactorization:
     """Input-dependent finite-group longitude factorization for a rack action."""
 
@@ -375,6 +423,71 @@ class HomomorphicLongitudeSubgroupAudit:
     homomorphism_surjective: bool
     image_contained_in_target_subgroup: bool
     target_subgroup_equals_image: bool
+
+
+@dataclass(frozen=True)
+class AbelianLongitudeImageAudit:
+    """Exact matrix computation of ``V_beta(A)`` for a finite abelian group."""
+
+    n: int
+    braid_word: Tuple[int, ...]
+    group_order: int
+    permutation: Tuple[int, ...]
+    exponent_matrix: Tuple[Tuple[int, ...], ...]
+    coefficient_entries: Tuple[int, ...]
+    matrix_generators: Tuple[GroupElement, ...]
+    matrix_subgroup: Tuple[GroupElement, ...]
+    enumerated_subgroup: Tuple[GroupElement, ...] | None
+
+    @property
+    def matrix_generator_count(self) -> int:
+        return len(self.matrix_generators)
+
+    @property
+    def matrix_subgroup_size(self) -> int:
+        return len(self.matrix_subgroup)
+
+    @property
+    def enumerated_subgroup_size(self) -> int | None:
+        if self.enumerated_subgroup is None:
+            return None
+        return len(self.enumerated_subgroup)
+
+    @property
+    def enumeration_matches_matrix_formula(self) -> bool:
+        return (
+            self.enumerated_subgroup is None
+            or set(self.enumerated_subgroup) == set(self.matrix_subgroup)
+        )
+
+    @property
+    def identity_signature_by_matrix(self) -> bool:
+        return (
+            self.permutation == tuple(range(self.n))
+            and len(self.matrix_subgroup) == 1
+        )
+
+
+@dataclass(frozen=True)
+class AbelianLongitudeMatrixWitnessAudit:
+    """Certificate that an abelian endpoint lies in the matrix form of ``V_beta``."""
+
+    n: int
+    braid_word: Tuple[int, ...]
+    endpoint: GroupElement
+    matrix_witness: AbelianLongitudeMatrixWitness
+    matrix_witness_value: GroupElement
+    longitude_subgroup_witness: LongitudeSubgroupWitness
+    longitude_subgroup_witness_value: GroupElement
+    endpoint_matches_matrix_witness: bool
+    matrix_witness_matches_longitude_witness: bool
+
+    @property
+    def proves_endpoint_in_abelian_longitude_subgroup(self) -> bool:
+        return (
+            self.endpoint_matches_matrix_witness
+            and self.matrix_witness_matches_longitude_witness
+        )
 
 
 @dataclass(frozen=True)
@@ -989,6 +1102,219 @@ def has_trivial_abelian_longitudes_mod(
         exponent % modulus == 0
         for row in artin_longitude_exponent_matrix(n, braid_word)
         for exponent in row
+    )
+
+
+def _require_abelian_group(group: FiniteGroup) -> None:
+    if not is_abelian_group(group):
+        raise ValueError("abelian longitude matrix formula requires an abelian group")
+
+
+def abelian_longitude_value_generators(
+    group: FiniteGroup,
+    n: int,
+    braid_word: BraidWord,
+) -> Tuple[GroupElement, ...]:
+    """Return the matrix-generated longitude values for an abelian group.
+
+    If ``A`` is abelian and the exponent of ``x_j`` in ``L_i(beta)`` is
+    ``m_ij``, then the values of all recursive longitudes under all
+    assignments ``F_n -> A`` generate exactly the subgroup generated by
+    ``a ** m_ij`` for every ``a in A`` and every matrix entry ``m_ij``.
+    """
+
+    if n < 0:
+        raise ValueError("braid degree must be nonnegative")
+    _require_abelian_group(group)
+    matrix = artin_longitude_exponent_matrix(n, braid_word)
+    coefficients = tuple(coefficient for row in matrix for coefficient in row)
+    values = {
+        group.pow(element, coefficient)
+        for element in group.elements
+        for coefficient in coefficients
+    }
+    return tuple(sorted(values, key=repr))
+
+
+def abelian_longitude_value_subgroup_elements(
+    group: FiniteGroup,
+    n: int,
+    braid_word: BraidWord,
+) -> Tuple[GroupElement, ...]:
+    """Return ``V_beta(A)`` from the abelian longitude exponent matrix."""
+
+    return subgroup_generated_elements(
+        group,
+        abelian_longitude_value_generators(group, n, braid_word),
+    )
+
+
+def has_identity_abelian_longitude_signature(
+    group: FiniteGroup,
+    n: int,
+    braid_word: BraidWord,
+) -> bool:
+    """Return whether finite-abelian longitude data equals the identity data."""
+
+    _require_abelian_group(group)
+    data = artin_longitudes(n, braid_word)
+    if data.permutation != tuple(range(n)):
+        return False
+    return len(abelian_longitude_value_subgroup_elements(group, n, braid_word)) == 1
+
+
+def abelian_longitude_image_audit(
+    group: FiniteGroup,
+    n: int,
+    braid_word: BraidWord,
+    *,
+    compare_by_enumeration: bool = False,
+    max_assignments: int | None = None,
+) -> AbelianLongitudeImageAudit:
+    """Audit the exact abelian matrix formula for ``V_beta(A)``.
+
+    The default avoids enumerating ``A^n``.  Set ``compare_by_enumeration`` to
+    additionally compare the matrix subgroup with the general finite-group
+    longitude enumeration on small examples.
+    """
+
+    if n < 0:
+        raise ValueError("braid degree must be nonnegative")
+    _require_abelian_group(group)
+    data = artin_longitudes(n, braid_word)
+    matrix = artin_longitude_exponent_matrix(n, braid_word)
+    coefficient_entries = tuple(
+        sorted({coefficient for row in matrix for coefficient in row})
+    )
+    matrix_generators = abelian_longitude_value_generators(group, n, braid_word)
+    matrix_subgroup = abelian_longitude_value_subgroup_elements(
+        group,
+        n,
+        braid_word,
+    )
+    enumerated_subgroup = (
+        longitude_value_subgroup_elements(
+            group,
+            n,
+            braid_word,
+            max_assignments=max_assignments,
+        )
+        if compare_by_enumeration
+        else None
+    )
+    return AbelianLongitudeImageAudit(
+        n=n,
+        braid_word=tuple(braid_word),
+        group_order=len(group.elements),
+        permutation=data.permutation,
+        exponent_matrix=matrix,
+        coefficient_entries=coefficient_entries,
+        matrix_generators=matrix_generators,
+        matrix_subgroup=matrix_subgroup,
+        enumerated_subgroup=enumerated_subgroup,
+    )
+
+
+def _check_abelian_matrix_witness(
+    group: FiniteGroup,
+    n: int,
+    witness: Sequence[AbelianLongitudeMatrixWitnessLetter],
+) -> AbelianLongitudeMatrixWitness:
+    elements = set(group.elements)
+    rows = []
+    for element, longitude_index, generator_index, exponent in witness:
+        if element not in elements:
+            raise ValueError("matrix witness element outside group")
+        if longitude_index < 0 or longitude_index >= n:
+            raise IndexError(longitude_index)
+        if generator_index < 0 or generator_index >= n:
+            raise IndexError(generator_index)
+        if exponent not in (-1, 1):
+            raise ValueError("matrix witness exponents must be +/-1")
+        rows.append((element, longitude_index, generator_index, exponent))
+    return tuple(rows)
+
+
+def evaluate_abelian_longitude_matrix_witness(
+    group: FiniteGroup,
+    n: int,
+    braid_word: BraidWord,
+    witness: Sequence[AbelianLongitudeMatrixWitnessLetter],
+) -> GroupElement:
+    """Evaluate a word in the matrix generators ``a^{m_ij}`` of ``V_beta(A)``."""
+
+    if n < 0:
+        raise ValueError("braid degree must be nonnegative")
+    _require_abelian_group(group)
+    witness_tuple = _check_abelian_matrix_witness(group, n, witness)
+    matrix = artin_longitude_exponent_matrix(n, braid_word)
+    out = group.identity
+    for element, longitude_index, generator_index, exponent in witness_tuple:
+        value = group.pow(element, matrix[longitude_index][generator_index])
+        if exponent < 0:
+            value = group.inv(value)
+        out = group.mul(out, value)
+    return out
+
+
+def abelian_longitude_matrix_witness_to_subgroup_witness(
+    group: FiniteGroup,
+    n: int,
+    witness: Sequence[AbelianLongitudeMatrixWitnessLetter],
+) -> LongitudeSubgroupWitness:
+    """Turn matrix letters into literal recursive-longitude subgroup letters."""
+
+    if n < 0:
+        raise ValueError("braid degree must be nonnegative")
+    _require_abelian_group(group)
+    witness_tuple = _check_abelian_matrix_witness(group, n, witness)
+    rows: List[LongitudeSubgroupWitnessLetter] = []
+    for element, longitude_index, generator_index, exponent in witness_tuple:
+        assignment = [group.identity] * n
+        assignment[generator_index] = element
+        rows.append((tuple(assignment), longitude_index, exponent))
+    return tuple(rows)
+
+
+def abelian_longitude_matrix_witness_audit(
+    group: FiniteGroup,
+    n: int,
+    braid_word: BraidWord,
+    endpoint: GroupElement,
+    witness: Sequence[AbelianLongitudeMatrixWitnessLetter],
+) -> AbelianLongitudeMatrixWitnessAudit:
+    """Audit a displayed abelian matrix-subgroup certificate for an endpoint."""
+
+    if endpoint not in group.elements:
+        raise ValueError("endpoint outside group")
+    matrix_witness = _check_abelian_matrix_witness(group, n, witness)
+    matrix_value = evaluate_abelian_longitude_matrix_witness(
+        group,
+        n,
+        braid_word,
+        matrix_witness,
+    )
+    subgroup_witness = abelian_longitude_matrix_witness_to_subgroup_witness(
+        group,
+        n,
+        matrix_witness,
+    )
+    subgroup_value = evaluate_longitude_subgroup_witness(
+        group,
+        n,
+        braid_word,
+        subgroup_witness,
+    )
+    return AbelianLongitudeMatrixWitnessAudit(
+        n=n,
+        braid_word=tuple(braid_word),
+        endpoint=endpoint,
+        matrix_witness=matrix_witness,
+        matrix_witness_value=matrix_value,
+        longitude_subgroup_witness=subgroup_witness,
+        longitude_subgroup_witness_value=subgroup_value,
+        endpoint_matches_matrix_witness=(endpoint == matrix_value),
+        matrix_witness_matches_longitude_witness=(matrix_value == subgroup_value),
     )
 
 
@@ -1765,6 +2091,146 @@ def right_rack_inner_detector_lift_audit(
     return rack_inner_detector_lift_audit(
         opposite_solution(solution),
         endpoint_labels=endpoint_labels,
+    )
+
+
+PrincipalGaugeCocycle = (
+    Mapping[Tuple[object, object], GroupElement]
+    | Callable[[object, object], GroupElement]
+)
+
+
+def _rack_operation_value(
+    rack: FiniteBraidedSet,
+    left: object,
+    right: object,
+) -> object:
+    first, second = rack.R[(left, right)]
+    if second != left:
+        raise ValueError("base solution is not in left rack form R(a,b)=(a*b,a)")
+    return first
+
+
+def _principal_gauge_cocycle_value(
+    unit_group: FiniteGroup,
+    cocycle: PrincipalGaugeCocycle,
+    left: object,
+    right: object,
+) -> GroupElement:
+    value = (
+        cocycle(left, right)
+        if callable(cocycle)
+        else cocycle[(left, right)]
+    )
+    if value not in unit_group.elements:
+        raise ValueError("principal gauge cocycle value outside unit group")
+    return value
+
+
+def principal_gauge_cocycle_failures(
+    base_rack: FiniteBraidedSet,
+    unit_group: FiniteGroup,
+    cocycle: PrincipalGaugeCocycle,
+) -> Tuple[PrincipalGaugeCocycleFailure, ...]:
+    """Return failed identities ``c(a,b*d)c(b,d)=c(a*b,a*d)c(a,d)``."""
+
+    if not is_rack_solution(base_rack) or not base_rack.is_ybe():
+        raise ValueError("base solution must be a finite rack")
+    failures: List[PrincipalGaugeCocycleFailure] = []
+    for left, middle, right in product(base_rack.elements, repeat=3):
+        middle_under_right = _rack_operation_value(base_rack, middle, right)
+        left_under_middle = _rack_operation_value(base_rack, left, middle)
+        left_under_right = _rack_operation_value(base_rack, left, right)
+        left_value = unit_group.mul(
+            _principal_gauge_cocycle_value(
+                unit_group,
+                cocycle,
+                left,
+                middle_under_right,
+            ),
+            _principal_gauge_cocycle_value(unit_group, cocycle, middle, right),
+        )
+        right_value = unit_group.mul(
+            _principal_gauge_cocycle_value(
+                unit_group,
+                cocycle,
+                left_under_middle,
+                left_under_right,
+            ),
+            _principal_gauge_cocycle_value(unit_group, cocycle, left, right),
+        )
+        if left_value != right_value:
+            failures.append(
+                PrincipalGaugeCocycleFailure(
+                    left_atom=left,
+                    middle_atom=middle,
+                    right_atom=right,
+                    left_value=left_value,
+                    right_value=right_value,
+                )
+            )
+    return tuple(failures)
+
+
+def principal_gauge_extension_rack(
+    base_rack: FiniteBraidedSet,
+    unit_group: FiniteGroup,
+    cocycle: PrincipalGaugeCocycle,
+) -> FiniteBraidedSet:
+    """Build the principal gauge extension ``(a,r)*(b,s)=(a*b,c(a,b)s)``."""
+
+    if not is_rack_solution(base_rack) or not base_rack.is_ybe():
+        raise ValueError("base solution must be a finite rack")
+    elements = tuple(
+        (atom, unit)
+        for atom in base_rack.elements
+        for unit in unit_group.elements
+    )
+
+    def op(left: Tuple[object, GroupElement], right: Tuple[object, GroupElement]):
+        left_atom, _left_unit = left
+        right_atom, right_unit = right
+        return (
+            _rack_operation_value(base_rack, left_atom, right_atom),
+            unit_group.mul(
+                _principal_gauge_cocycle_value(
+                    unit_group,
+                    cocycle,
+                    left_atom,
+                    right_atom,
+                ),
+                right_unit,
+            ),
+        )
+
+    return rack_solution(elements, op)
+
+
+def principal_gauge_extension_detector_audit(
+    base_rack: FiniteBraidedSet,
+    unit_group: FiniteGroup,
+    cocycle: PrincipalGaugeCocycle,
+    endpoint_labels: Sequence[GroupElement] | None = None,
+) -> PrincipalGaugeExtensionDetectorAudit:
+    """Audit that a principal gauge cocycle is closed by a rack inner detector."""
+
+    failures = principal_gauge_cocycle_failures(base_rack, unit_group, cocycle)
+    extension = principal_gauge_extension_rack(base_rack, unit_group, cocycle)
+    extension_is_rack_form = is_rack_solution(extension)
+    extension_is_ybe = extension.is_ybe()
+    detector_lift_audit = rack_inner_detector_lift_audit(
+        extension,
+        endpoint_labels=endpoint_labels,
+    )
+    return PrincipalGaugeExtensionDetectorAudit(
+        base_rack_size=len(base_rack.elements),
+        unit_group_order=len(unit_group.elements),
+        extension_size=len(extension.elements),
+        cocycle_failures=failures,
+        extension_is_rack_form=extension_is_rack_form,
+        extension_is_ybe=extension_is_ybe,
+        inner_group_order=detector_lift_audit.inner_group_order,
+        detector_lift_audit=detector_lift_audit,
     )
 
 
