@@ -290,6 +290,13 @@ const rows = [
     "Still need a positive uniform endpoint/descent theorem or an explicit interval with no finite group detector.",
   ],
   [
+    "Normalized-law B certificate",
+    "Separate constructive B data from nonconstructive all-detector failure.",
+    "proofs/normalized_law_counterexample_certificate.md states the product-prefix witness format; normalized_law_prefix_witness_audit checks one supplied prefix for product invisibility, right stabilization, and moved tuples.",
+    "Certificate format",
+    "A final B proof must supply these prefix witnesses for every product P_j, not just a bounded detector miss.",
+  ],
+  [
     "Small YBE scan",
     "Screen tiny YBE tables for law-braid motion.",
     "Size-2 full, size-3 capped scan.",

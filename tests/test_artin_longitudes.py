@@ -51,6 +51,7 @@ from ybe_domination import (
     longitude_value_generators,
     longitude_value_subgroup_elements,
     normal_quotient_longitude_lift_audit,
+    normalized_law_prefix_witness_audit,
     pure_braid_generator,
     principal_gauge_cocycle_failures,
     principal_gauge_extension_detector_audit,
@@ -1096,6 +1097,50 @@ class ArtinLongitudeTests(unittest.TestCase):
         self.assertTrue(has_identity_longitude_signature(group, 2, braid))
         self.assertTrue(audit.stabilization_valid)
         self.assertTrue(has_identity_longitude_signature(group, 5, braid))
+
+    def test_normalized_law_prefix_witness_checks_product_and_stabilization(self):
+        solution = rack_solution([0, 1], lambda _left, right: 1 - right)
+        braid = pure_braid_generator(1, 2)
+
+        audit = normalized_law_prefix_witness_audit(
+            solution,
+            (cyclic_group(1),),
+            2,
+            braid,
+            (0, 0),
+            extra_strands=2,
+            fill_value=0,
+        )
+
+        self.assertEqual(audit.group_orders, (1,))
+        self.assertTrue(audit.source_product_identity_signature)
+        self.assertTrue(audit.target_product_identity_signature)
+        self.assertEqual(audit.source_factor_identity_signatures, (True,))
+        self.assertEqual(audit.target_factor_identity_signatures, (True,))
+        self.assertTrue(audit.right_stabilization.stabilization_valid)
+        self.assertEqual(audit.source_image, (1, 1))
+        self.assertEqual(audit.stabilized_image, (1, 1, 0, 0))
+        self.assertTrue(audit.product_invisibility_survives_stabilization)
+        self.assertTrue(audit.movement_survives_stabilization)
+        self.assertTrue(audit.proves_one_prefix_normalized_law_witness)
+
+    def test_normalized_law_prefix_witness_rejects_nonmoving_tuple(self):
+        solution = identity_solution([0, 1])
+        braid = pure_braid_generator(1, 2)
+
+        audit = normalized_law_prefix_witness_audit(
+            solution,
+            (cyclic_group(1),),
+            2,
+            braid,
+            (0, 1),
+            extra_strands=1,
+            fill_value=0,
+        )
+
+        self.assertTrue(audit.product_invisibility_survives_stabilization)
+        self.assertFalse(audit.movement_survives_stabilization)
+        self.assertFalse(audit.proves_one_prefix_normalized_law_witness)
 
     def test_detector_action_readout_is_killed_by_identity_signature(self):
         group = cyclic_group(2)

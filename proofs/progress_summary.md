@@ -729,6 +729,14 @@ moving `X`.  The same dichotomy is stated for a fixed quotient/residual
 interval with `beta_j in N_{q_j}`.  This does not construct outcome B, but it
 proves that a normalized-law sequence is the forced shape of any negative
 resolution.
+`proofs/normalized_law_counterexample_certificate.md` now records the
+constructive B data format: for every product prefix
+`P_j=G_1 x ... x G_j`, give an explicit braid `alpha_j`, moved tuple, and
+identity `P_j` longitude signature, then right-stabilize.  The helper
+`normalized_law_prefix_witness_audit(...)` checks one supplied prefix record,
+including product invisibility, factor projection invisibility, stabilization,
+and movement before and after stabilization.  It is a certificate-shape check,
+not an all-`j` proof.
 
 ## Verification snapshot
 

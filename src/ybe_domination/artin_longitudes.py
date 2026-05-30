@@ -749,6 +749,54 @@ class RightStabilizationLongitudeAudit:
         return self.old_data_preserved and self.added_strands_trivial
 
 
+@dataclass(frozen=True)
+class NormalizedLawPrefixWitnessAudit:
+    """Finite-prefix check for a constructive normalized-law obstruction.
+
+    Passing one record verifies one explicit diagonal witness against one
+    finite product group.  A B proof still needs an all-`j` construction of
+    such records for the product of the first `j` finite groups.
+    """
+
+    source_n: int
+    target_n: int
+    braid_word: Tuple[int, ...]
+    group_orders: Tuple[int, ...]
+    product_group_order: int
+    source_product_identity_signature: bool
+    target_product_identity_signature: bool
+    source_factor_identity_signatures: Tuple[bool, ...]
+    target_factor_identity_signatures: Tuple[bool, ...]
+    right_stabilization: RightStabilizationLongitudeAudit
+    moved_tuple: Tuple[object, ...]
+    source_image: Tuple[object, ...] | None
+    source_tuple_moved: bool
+    stabilized_tuple: Tuple[object, ...]
+    stabilized_image: Tuple[object, ...] | None
+    stabilized_tuple_moved: bool
+
+    @property
+    def product_invisibility_survives_stabilization(self) -> bool:
+        return (
+            self.source_product_identity_signature
+            and self.target_product_identity_signature
+            and all(self.source_factor_identity_signatures)
+            and all(self.target_factor_identity_signatures)
+            and self.right_stabilization.stabilization_valid
+        )
+
+    @property
+    def movement_survives_stabilization(self) -> bool:
+        return self.source_tuple_moved and self.stabilized_tuple_moved
+
+    @property
+    def proves_one_prefix_normalized_law_witness(self) -> bool:
+        return (
+            self.product_invisibility_survives_stabilization
+            and self.movement_survives_stabilization
+        )
+
+
 def artin_longitudes(n: int, braid_word: BraidWord) -> ArtinLongitudeData:
     images, longitudes = _artin_images_and_longitudes(n, braid_word)
     targets: List[int] = []
@@ -2200,6 +2248,80 @@ def right_stabilization_longitude_audit(
         old_longitudes=old_data.longitudes,
         new_restricted_longitudes=new_data.longitudes[:n],
         added_longitudes=new_data.longitudes[n:],
+    )
+
+
+def normalized_law_prefix_witness_audit(
+    solution: FiniteBraidedSet,
+    groups: Sequence[FiniteGroup],
+    n: int,
+    braid_word: BraidWord,
+    moved_tuple: Sequence[object],
+    extra_strands: int,
+    fill_value: object,
+) -> NormalizedLawPrefixWitnessAudit:
+    """Check one explicit prefix record for a normalized-law B sequence.
+
+    The listed groups represent the finite prefix ``G_1,...,G_j``; the helper
+    checks invisibility in their product, right-stabilization of the Artin
+    data, and survival of one moved tuple after adding unused right strands.
+    It is a certificate-shape check for supplied data, not an all-`j` proof.
+    """
+
+    if not groups:
+        raise ValueError("at least one finite group is required")
+    if extra_strands < 0:
+        raise ValueError("extra_strands must be nonnegative")
+    tuple_value = tuple(moved_tuple)
+    if len(tuple_value) != n:
+        raise ValueError("moved_tuple length must equal n")
+    if any(value not in solution.elements for value in tuple_value):
+        raise ValueError("moved_tuple entries must lie in the solution")
+    if fill_value not in solution.elements:
+        raise ValueError("fill_value must lie in the solution")
+
+    group_tuple = tuple(groups)
+    product_group = direct_product_group(group_tuple)
+    stabilization = right_stabilization_longitude_audit(
+        n,
+        braid_word,
+        extra_strands,
+    )
+    target_n = n + extra_strands
+    source_image = solution.braid_action(braid_word, tuple_value)
+    stabilized_tuple = tuple_value + tuple(fill_value for _ in range(extra_strands))
+    stabilized_image = solution.braid_action(braid_word, stabilized_tuple)
+    return NormalizedLawPrefixWitnessAudit(
+        source_n=n,
+        target_n=target_n,
+        braid_word=tuple(braid_word),
+        group_orders=tuple(len(group.elements) for group in group_tuple),
+        product_group_order=len(product_group.elements),
+        source_product_identity_signature=has_identity_longitude_signature(
+            product_group,
+            n,
+            braid_word,
+        ),
+        target_product_identity_signature=has_identity_longitude_signature(
+            product_group,
+            target_n,
+            braid_word,
+        ),
+        source_factor_identity_signatures=tuple(
+            has_identity_longitude_signature(group, n, braid_word)
+            for group in group_tuple
+        ),
+        target_factor_identity_signatures=tuple(
+            has_identity_longitude_signature(group, target_n, braid_word)
+            for group in group_tuple
+        ),
+        right_stabilization=stabilization,
+        moved_tuple=tuple_value,
+        source_image=source_image,
+        source_tuple_moved=source_image != tuple_value,
+        stabilized_tuple=stabilized_tuple,
+        stabilized_image=stabilized_image,
+        stabilized_tuple_moved=stabilized_image != stabilized_tuple,
     )
 
 
