@@ -668,6 +668,13 @@ const rows = [
     "Prove the Latin-unit triangular longitude theorem for U_triangle, or upgrade a Latin-unit endpoint miss to normalized laws.",
   ],
   [
+    "Latin triangular YBE split",
+    "Separate alpha transport from companion shear in the Latin-unit triangular residue.",
+    "proofs/latin_triangular_ybe_split.md; latin_triangular_ybe_audit records alpha-cocycle, middle-companion, and endpoint-shear YBE equations.",
+    "Sharper triangular target",
+    "Route alpha through product/permutation holonomy and prove companion-shear endpoints lie in V_beta(U_shear), or upgrade a shear miss to normalized laws.",
+  ],
+  [
     "Unit-continuation abelian-kernel lift",
     "Split the final unit endpoint into finite abelianization plus commutator-kernel correction.",
     "proofs/unit_continuation_abelian_kernel_lift.md; normal_quotient_longitude_lift_audit checks quotient witness, lifted witness, and kernel witness.",

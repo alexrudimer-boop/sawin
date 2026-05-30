@@ -17,6 +17,7 @@ from ybe_domination import (
     continuation_seed_universal_derivation_failures,
     coordinate_kernel_pair_closure_audits,
     coordinate_kernel_pair_closure_failures,
+    latin_triangular_ybe_audit,
     local_minimal_seed_saturation_dichotomy_audit,
     lost_edge_external_routing_audit,
     partition_readout_labels,
@@ -80,6 +81,14 @@ def one_color_identity_interval():
         for x in fibres["*"]
         for y in fibres["*"]
     }
+    return LocalInterval(colors, fibres, base_R, T)
+
+
+def one_color_singleton_identity_interval():
+    colors = ("*",)
+    fibres = {"*": (0,)}
+    base_R = {("*", "*"): ("*", "*")}
+    T = {("*", "*", 0, 0): (0, 0)}
     return LocalInterval(colors, fibres, base_R, T)
 
 
@@ -578,6 +587,28 @@ class LocalIntervalTests(unittest.TestCase):
         self.assertTrue(row.opposite_sections_all_bijective)
         self.assertEqual(audit.latin_unit_rows, (row,))
         self.assertEqual(audit.product_collapse_rows, ())
+
+    def test_latin_triangular_ybe_audit_accepts_singleton_ybe_row(self):
+        interval = one_color_singleton_identity_interval()
+
+        audit = latin_triangular_ybe_audit(interval)
+
+        self.assertEqual(len(audit.latin_left_rows), 1)
+        self.assertEqual(len(audit.triple_audits), 1)
+        self.assertTrue(audit.all_alpha_cocycles_hold)
+        self.assertTrue(audit.all_companion_equations_hold)
+        self.assertTrue(audit.all_equations_hold)
+
+    def test_latin_triangular_ybe_audit_exposes_endpoint_shear_failure(self):
+        interval = one_color_latin_unit_triangular_interval()
+
+        audit = latin_triangular_ybe_audit(interval)
+
+        self.assertEqual(len(audit.triple_audits), 1)
+        self.assertTrue(audit.all_alpha_cocycles_hold)
+        self.assertFalse(audit.all_companion_equations_hold)
+        self.assertFalse(audit.all_equations_hold)
+        self.assertTrue(audit.triples_with_endpoint_shear_failures)
 
     def test_continuation_seed_readout_propagates_admissible_universal_readout(self):
         interval = one_color_identity_interval()

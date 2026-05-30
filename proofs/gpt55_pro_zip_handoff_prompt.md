@@ -319,6 +319,11 @@ Then audit and use these reductions:
    separate product-collapse rows from Latin-unit triangular rows.  The
    remaining triangular target is the Latin-unit triangular longitude theorem
    for the fixed group `U_triangle`.
+   Then read `proofs/latin_triangular_ybe_split.md`: the alpha maps in the
+   Latin triangular residue satisfy a product/permutation cocycle, audited by
+   `latin_triangular_ybe_audit(...)`.  The final triangular target is the
+   companion-shear endpoint in `U_shear`, governed by the middle-companion and
+   endpoint-shear equations.
    Then read `proofs/unit_continuation_abelian_kernel_lift.md`: it splits
    `S_beta in V_beta(U_cont)` into an abelianized matrix-longitude witness and
    a commutator-kernel correction witness, audited by

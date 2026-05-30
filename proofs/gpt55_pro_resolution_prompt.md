@@ -769,6 +769,12 @@ column forces all opposite columns constant.  Audit it with
 `triangular_column_collapse_audit(...)`.  The remaining triangular target is
 the Latin-unit triangular longitude theorem for `U_triangle`; a B seed must be
 a Latin-unit endpoint miss upgraded to normalized laws.
+Then use `proofs/latin_triangular_ybe_split.md`: the first coordinate of the
+Latin triangular YBE gives the alpha product/permutation cocycle, audited by
+`latin_triangular_ybe_audit(...)`.  Route alpha transport to the closed
+product/permutation branch.  The remaining triangular target is companion
+shear in `U_shear`, controlled by the middle-companion and endpoint-shear
+equations; a B seed must survive in that shear endpoint, not in alpha.
 Then use `proofs/unit_continuation_abelian_kernel_lift.md`: split the final
 unit endpoint through `U/[U,U]`.  The abelian projection should be handled by
 the abelian longitude matrix criterion, while the residual correction must be
