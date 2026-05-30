@@ -16,6 +16,7 @@ from ybe_domination import (
     law_braid_action_certificate,
     law_word_on_last_strand,
     delete_right_based_new_strand_word,
+    point_pushing_base_arity_certificate,
     point_pushing_brunnian_failure_certificate,
     point_pushing_brunnian_gate_prefix_audit,
     point_pushing_brunnian_normalized_prefix_audit,
@@ -522,6 +523,33 @@ class ActionImageTests(unittest.TestCase):
         self.assertEqual(audit.unresolved_degrees, (1,))
         self.assertEqual(audit.failure_kinds, ("base_marked_quotient",))
         self.assertEqual(audit.rows[0].first_failure_arity, 1)
+
+    def test_point_pushing_base_arity_certificate_closes_rack_base_gate(self):
+        solution = rack_solution([0, 1, 2], lambda a, b: (2 * a - b) % 3)
+
+        certificate = point_pushing_base_arity_certificate(solution)
+
+        self.assertEqual(certificate.tuple_count, 9)
+        self.assertEqual(certificate.pure_generator_order, 3)
+        self.assertEqual(certificate.symmetric_degree_bound, 3)
+        self.assertEqual(certificate.symmetric_exponent % certificate.pure_generator_order, 0)
+        self.assertTrue(certificate.proves_base_arity_detected)
+        self.assertTrue(
+            point_pushing_marked_quotient_audit(
+                solution,
+                cyclic_group(certificate.pure_generator_order),
+                arity=1,
+            ).marked_quotient_holds
+        )
+
+    def test_point_pushing_base_arity_certificate_handles_involutive_solution(self):
+        solution = rack_solution([0, 1], lambda a, b: b)
+
+        certificate = point_pushing_base_arity_certificate(solution)
+
+        self.assertEqual(certificate.pure_generator_order, 1)
+        self.assertEqual(certificate.symmetric_degree_bound, 1)
+        self.assertTrue(certificate.proves_base_arity_detected)
 
     def test_point_pushing_brunnian_failure_certificate_records_moved_tuple(self):
         solution = rack_solution([0, 1, 2], lambda a, b: (2 * a - b) % 3)

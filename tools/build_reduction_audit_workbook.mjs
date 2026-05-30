@@ -374,6 +374,13 @@ const rows = [
     "Prove one fixed S_m passes all gates, or construct an infinite symmetric-tail sequence of first failures.",
   ],
   [
+    "Point-pushing base-arity gate",
+    "Close the arity-1 point-pushing gate by the order of the pure two-strand action.",
+    "proofs/point_pushing_base_arity_gate.md proves D_1(G)->P_1(X) exists whenever ord(R_X^2) divides exp(G), so S_ord(R_X^2) passes the base gate; point_pushing_base_arity_certificate records the cutoff.",
+    "Base gate closed",
+    "Only the one-new-strand Brunnian extension gates remain in any asymptotic B tail.",
+  ],
+  [
     "Point-pushing Brunnian first-failure stratification",
     "Show a negative tail can be chosen with one stable non-base failure kind.",
     "proofs/point_pushing_brunnian_first_failure_stratification.md uses fixed-arity cofinality and infinite pigeonhole to reduce B to a homogeneous infinite tail of stabilizer, orbit_label, or orbit_relation failures.",

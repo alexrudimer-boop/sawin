@@ -195,6 +195,21 @@ class PointPushingBrunnianGatePrefixAudit:
 
 
 @dataclass(frozen=True)
+class PointPushingBaseArityCertificate:
+    """Closed-form certificate for the arity-1 point-pushing base gate."""
+
+    tuple_count: int
+    pure_generator_order: int
+    symmetric_degree_bound: int
+    symmetric_exponent: int
+    symmetric_marked_quotient_holds: bool
+
+    @property
+    def proves_base_arity_detected(self) -> bool:
+        return self.symmetric_marked_quotient_holds
+
+
+@dataclass(frozen=True)
 class PointPushingBrunnianFailureCertificate:
     """Braid-action certificate for one nontrivial Brunnian gate failure."""
 
@@ -1512,6 +1527,26 @@ def point_pushing_brunnian_tail_prefix_audit(
         max_symmetric_degree=max_symmetric_degree,
         max_arity=max_arity,
         rows=tuple(rows),
+    )
+
+
+def point_pushing_base_arity_certificate(
+    solution: FiniteBraidedSet,
+) -> PointPushingBaseArityCertificate:
+    """Return an explicit symmetric detector bound for arity ``1``."""
+
+    from .group_laws import lcm_upto
+
+    pure_action = action_permutation(solution, 2, (1, 1))
+    pure_order = permutation_order(pure_action)
+    symmetric_degree = max(1, pure_order)
+    symmetric_exponent = lcm_upto(symmetric_degree)
+    return PointPushingBaseArityCertificate(
+        tuple_count=len(pure_action),
+        pure_generator_order=pure_order,
+        symmetric_degree_bound=symmetric_degree,
+        symmetric_exponent=symmetric_exponent,
+        symmetric_marked_quotient_holds=symmetric_exponent % pure_order == 0,
     )
 
 
