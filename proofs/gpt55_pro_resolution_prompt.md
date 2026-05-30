@@ -758,6 +758,17 @@ Then use `proofs/constant_section_triangular_bundle_partition.md`: a bijective
 constant-section triangular row is a finite bundle partition over the constant
 map.  Audit it with `triangular_bundle_audit(...)`; the remaining obstruction
 is triangular bundle holonomy, not an arbitrary triangular map.
+Then use `proofs/triangular_bundle_recovery_inverse.md`: the triangular bundle
+inverse recovers the block label and then the within-block companion
+coordinate.  Audit it with `triangular_recovery_audit(...)`; a B seed must
+move through recovery holonomy, not merely display a nontrivial bundle.
+Then use `proofs/constant_column_collapse_triangular.md`: a hidden
+non-bijective opposite column in a triangular row forces product/permutation
+form, because proper kernels are Green/Schutzenberger-visible and one constant
+column forces all opposite columns constant.  Audit it with
+`triangular_column_collapse_audit(...)`.  The remaining triangular target is
+the Latin-unit triangular longitude theorem for `U_triangle`; a B seed must be
+a Latin-unit endpoint miss upgraded to normalized laws.
 Then use `proofs/unit_continuation_abelian_kernel_lift.md`: split the final
 unit endpoint through `U/[U,U]`.  The abelian projection should be handled by
 the abelian longitude matrix criterion, while the residual correction must be

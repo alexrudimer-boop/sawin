@@ -35,6 +35,8 @@ from ybe_domination import (
     section_rank_profile_collapse_audit,
     section_unit_row_audits,
     triangular_bundle_audit,
+    triangular_column_collapse_audit,
+    triangular_recovery_audit,
     two_sided_unit_collapse_audit,
 )
 
@@ -182,6 +184,18 @@ def two_color_nontrivial_triangular_bundle_interval():
     for x in fibres["a"]:
         for y in fibres["b"]:
             T[("a", "b", x, y)] = (alpha[x], beta[x][y])
+    return LocalInterval(colors, fibres, base_R, T)
+
+
+def one_color_latin_unit_triangular_interval():
+    colors = ("*",)
+    fibres = {"*": (0, 1)}
+    base_R = {("*", "*"): ("*", "*")}
+    T = {
+        ("*", "*", x, y): (x, (x + y) % 2)
+        for x in fibres["*"]
+        for y in fibres["*"]
+    }
     return LocalInterval(colors, fibres, base_R, T)
 
 
@@ -503,6 +517,67 @@ class LocalIntervalTests(unittest.TestCase):
         self.assertTrue(audit.every_bundle_partition_identity_holds)
         self.assertEqual(audit.rows_with_nontrivial_bundles, ())
         self.assertTrue(all(row.constant_map_is_bijective for row in audit.row_audits))
+
+    def test_triangular_recovery_audit_inverts_nontrivial_bundle_row(self):
+        interval = two_color_nontrivial_triangular_bundle_interval()
+
+        audit = triangular_recovery_audit(interval)
+        row = next(
+            row
+            for row in audit.row_audits
+            if row.side == "left" and row.left_color == "a" and row.right_color == "b"
+        )
+
+        self.assertTrue(row.recovery_formula_bijective)
+        self.assertEqual(row.missing_or_ambiguous_outputs, ())
+        recovered = {
+            (entry.output_left, entry.output_right):
+            (entry.recovered_left_input, entry.recovered_right_input)
+            for entry in row.entries
+        }
+        self.assertEqual(recovered[("p", 0)], (0, "p"))
+        self.assertEqual(recovered[("p", 3)], (1, "q"))
+        self.assertEqual(recovered[("q", 0)], (2, "p"))
+        self.assertEqual(recovered[("q", 3)], (3, "q"))
+
+    def test_triangular_recovery_audit_inverts_permutation_triangular_rows(self):
+        interval = one_color_identity_interval()
+
+        audit = triangular_recovery_audit(interval)
+
+        self.assertEqual(len(audit.row_audits), 2)
+        self.assertTrue(audit.every_recovery_formula_bijective)
+        self.assertEqual(audit.rows_with_recovery_failures, ())
+
+    def test_triangular_column_collapse_identifies_product_rows(self):
+        interval = one_color_identity_interval()
+
+        audit = triangular_column_collapse_audit(interval)
+
+        self.assertEqual(len(audit.row_audits), 2)
+        self.assertEqual(len(audit.product_collapse_rows), 2)
+        self.assertEqual(audit.latin_unit_rows, ())
+        self.assertTrue(
+            all(
+                row.constant_map_is_bijective
+                and row.companion_sections_bijective
+                and row.opposite_sections_all_constant
+                for row in audit.product_collapse_rows
+            )
+        )
+
+    def test_triangular_column_collapse_identifies_latin_unit_rows(self):
+        interval = one_color_latin_unit_triangular_interval()
+
+        audit = triangular_column_collapse_audit(interval)
+
+        self.assertEqual(len(audit.row_audits), 1)
+        row = audit.row_audits[0]
+        self.assertTrue(row.latin_unit_triangular)
+        self.assertFalse(row.product_collapse_for_hidden_nonunit)
+        self.assertTrue(row.opposite_sections_all_bijective)
+        self.assertEqual(audit.latin_unit_rows, (row,))
+        self.assertEqual(audit.product_collapse_rows, ())
 
     def test_continuation_seed_readout_propagates_admissible_universal_readout(self):
         interval = one_color_identity_interval()

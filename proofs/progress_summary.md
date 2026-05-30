@@ -549,6 +549,27 @@ statement holds for rows `T(x,y)=(lambda_y(x),gamma(y))`.  The helper
 `triangular_bundle_audit(...)` exposes the constant-map fibres and companion
 image blocks.  Thus the remaining local classification is triangular bundle
 holonomy, not an arbitrary constant-section triangular map.
+The recovery inverse note `proofs/triangular_bundle_recovery_inverse.md`
+computes the inverse of a triangular bundle row.  Given an output `(u,v)`,
+the partition first recovers the unique block label `x=r_u(v)` and then the
+within-block input `y=beta_x^{-1}(v)`.  The side-dual version recovers `y`
+first and then `x`.  The helper `triangular_recovery_audit(...)` records the
+output-to-source table and checks that the recovery formula is bijective.  The
+remaining obstruction is therefore triangular recovery holonomy in these
+finite labels and inverse companion coordinates.
+The constant-column collapse note
+`proofs/constant_column_collapse_triangular.md` then removes the non-Latin
+half of that triangular residue.  In a hidden constant-section triangular row,
+any non-bijective opposite column `C_y(x)=beta_x(y)` cannot have a proper
+kernel profile without being seen by the fixed Green/Schutzenberger observers,
+so it is constant.  If one such column is constant, bijectivity of the
+companion maps forces every opposite column to be constant; the row is
+therefore product/permutation holonomy and routes to a closed branch.  The
+helper `triangular_column_collapse_audit(...)` records this product-collapse
+case and isolates the only remaining triangular case: Latin-unit triangular
+rows, where `alpha`, every `y -> beta_x(y)`, and every
+`x -> beta_x(y)` are bijections.  The next theorem target is the Latin-unit
+triangular longitude theorem for the fixed group `U_triangle`.
 The follow-up abelian-kernel lift note
 `proofs/unit_continuation_abelian_kernel_lift.md` splits this endpoint target
 through the finite abelianization of the fixed unit group.  It is enough to
@@ -642,14 +663,15 @@ Until one of these is done, the archive supports neither final A nor final B.
 
 At the latest verified snapshot:
 
-- `python -m unittest discover -s tests` passed with 370 tests;
+- `python -m unittest discover -s tests` passed with 374 tests;
 - `python -m compileall -q src tests tools` passed;
 - `node --check tools/build_reduction_audit_workbook.mjs` passed;
 - the proof log DOCX and reduction audit workbook were regenerated, and the
   workbook preview/OOXML marker checks included the routed-edge witness,
   unit-continuation, derived-series, two-sided unit-collapse, and
-  mixed-unit companion-separation, rank-profile collapse, and triangular
-  bundle-partition rows;
+  mixed-unit companion-separation, rank-profile collapse, triangular
+  bundle-partition, triangular recovery-inverse, and constant-column collapse
+  rows;
 - LibreOffice/`soffice` was unavailable, so DOCX visual render QA could not
   be completed;
 - the Desktop zip was overwritten rather than versioned separately.

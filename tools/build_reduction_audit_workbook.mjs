@@ -654,6 +654,20 @@ const rows = [
     "Classify triangular bundle holonomy or upgrade a bundle holonomy cycle to normalized laws.",
   ],
   [
+    "Triangular recovery inverse",
+    "Compute the inverse of a triangular bundle row from block-label recovery plus within-block companion inverse.",
+    "proofs/triangular_bundle_recovery_inverse.md; triangular_recovery_audit records output-to-source recovery entries.",
+    "Sharper open theorem",
+    "Longitudinalize triangular recovery holonomy, or upgrade a recovery cycle to normalized laws.",
+  ],
+  [
+    "Constant-column collapse",
+    "Show hidden nonunit opposite columns in triangular rows force product/permutation form, leaving only Latin-unit triangular rows.",
+    "proofs/constant_column_collapse_triangular.md; triangular_column_collapse_audit records companion sections, opposite columns, product-collapse rows, and Latin-unit rows.",
+    "Final triangular target",
+    "Prove the Latin-unit triangular longitude theorem for U_triangle, or upgrade a Latin-unit endpoint miss to normalized laws.",
+  ],
+  [
     "Unit-continuation abelian-kernel lift",
     "Split the final unit endpoint into finite abelianization plus commutator-kernel correction.",
     "proofs/unit_continuation_abelian_kernel_lift.md; normal_quotient_longitude_lift_audit checks quotient witness, lifted witness, and kernel witness.",

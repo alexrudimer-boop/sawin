@@ -309,6 +309,16 @@ Then audit and use these reductions:
    bijective constant-section triangular row is a bundle partition over the
    constant map.  Use `triangular_bundle_audit(...)` to inspect constant-map
    fibres, companion image blocks, and nontrivial bundle fibres.
+   Then read `proofs/triangular_bundle_recovery_inverse.md`: it gives the
+   inverse formula from block-label recovery plus within-block companion
+   inverse.  Use `triangular_recovery_audit(...)` to inspect the recovery
+   table; a B seed must survive through this recovery holonomy.
+   Then read `proofs/constant_column_collapse_triangular.md`: a hidden
+   non-bijective opposite column in a triangular row collapses the row to
+   product/permutation form.  Use `triangular_column_collapse_audit(...)` to
+   separate product-collapse rows from Latin-unit triangular rows.  The
+   remaining triangular target is the Latin-unit triangular longitude theorem
+   for the fixed group `U_triangle`.
    Then read `proofs/unit_continuation_abelian_kernel_lift.md`: it splits
    `S_beta in V_beta(U_cont)` into an abelianized matrix-longitude witness and
    a commutator-kernel correction witness, audited by

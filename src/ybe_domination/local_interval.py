@@ -485,6 +485,185 @@ class TriangularBundleAudit:
 
 
 @dataclass(frozen=True)
+class TriangularRecoveryEntry:
+    """One inverse-formula entry for a triangular bundle row."""
+
+    output_left: FibrePoint
+    output_right: FibrePoint
+    recovered_left_input: FibrePoint
+    recovered_right_input: FibrePoint
+
+
+@dataclass(frozen=True)
+class TriangularRecoveryRowAudit:
+    """Inverse recovery table for one constant-section triangular row."""
+
+    side: str
+    left_color: Color
+    right_color: Color
+    output_left_color: Color
+    output_right_color: Color
+    source_size: int
+    output_size: int
+    entries: Tuple[TriangularRecoveryEntry, ...]
+    missing_or_ambiguous_outputs: Tuple[Tuple[FibrePoint, FibrePoint], ...]
+
+    @property
+    def output_pairs(self) -> Tuple[Tuple[FibrePoint, FibrePoint], ...]:
+        return tuple((entry.output_left, entry.output_right) for entry in self.entries)
+
+    @property
+    def recovered_source_pairs(self) -> Tuple[Tuple[FibrePoint, FibrePoint], ...]:
+        return tuple(
+            (entry.recovered_left_input, entry.recovered_right_input)
+            for entry in self.entries
+        )
+
+    @property
+    def output_pairs_unique(self) -> bool:
+        return len(set(self.output_pairs)) == len(self.output_pairs)
+
+    @property
+    def recovered_source_pairs_unique(self) -> bool:
+        return len(set(self.recovered_source_pairs)) == len(self.recovered_source_pairs)
+
+    @property
+    def recovery_formula_total(self) -> bool:
+        return not self.missing_or_ambiguous_outputs and len(self.entries) == self.output_size
+
+    @property
+    def recovery_formula_bijective(self) -> bool:
+        return (
+            self.recovery_formula_total
+            and self.output_pairs_unique
+            and self.recovered_source_pairs_unique
+            and len(self.entries) == self.source_size
+        )
+
+
+@dataclass(frozen=True)
+class TriangularRecoveryAudit:
+    """Inverse recovery audits for all triangular bundle rows."""
+
+    row_audits: Tuple[TriangularRecoveryRowAudit, ...]
+
+    @property
+    def every_recovery_formula_bijective(self) -> bool:
+        return all(row.recovery_formula_bijective for row in self.row_audits)
+
+    @property
+    def rows_with_recovery_failures(self) -> Tuple[TriangularRecoveryRowAudit, ...]:
+        return tuple(row for row in self.row_audits if not row.recovery_formula_bijective)
+
+
+@dataclass(frozen=True)
+class TriangularColumnCollapseRowAudit:
+    """Opposite-column collapse audit for one constant-section triangular row."""
+
+    side: str
+    left_color: Color
+    right_color: Color
+    output_left_color: Color
+    output_right_color: Color
+    constant_codomain: Tuple[FibrePoint, ...]
+    constant_map: Tuple[Tuple[FibrePoint, FibrePoint], ...]
+    companion_sections: Tuple[SectionRankProfileRow, ...]
+    opposite_sections: Tuple[SectionRankProfileRow, ...]
+
+    @property
+    def constant_outputs(self) -> Tuple[FibrePoint, ...]:
+        return tuple(output for _source, output in self.constant_map)
+
+    @property
+    def constant_map_surjective(self) -> bool:
+        return set(self.constant_outputs) == set(self.constant_codomain)
+
+    @property
+    def constant_map_is_bijective(self) -> bool:
+        return self.constant_map_surjective and len(set(self.constant_outputs)) == len(
+            self.constant_outputs
+        )
+
+    @property
+    def companion_sections_bijective(self) -> bool:
+        return all(section.is_bijective for section in self.companion_sections)
+
+    @property
+    def opposite_sections_all_bijective(self) -> bool:
+        return all(section.is_bijective for section in self.opposite_sections)
+
+    @property
+    def opposite_sections_all_constant(self) -> bool:
+        return all(section.is_constant for section in self.opposite_sections)
+
+    @property
+    def has_constant_opposite_section(self) -> bool:
+        return any(section.is_constant for section in self.opposite_sections)
+
+    @property
+    def has_nonbijective_opposite_section(self) -> bool:
+        return any(not section.is_bijective for section in self.opposite_sections)
+
+    @property
+    def has_proper_opposite_kernel(self) -> bool:
+        return any(
+            section.has_proper_nontrivial_kernel for section in self.opposite_sections
+        )
+
+    @property
+    def has_injective_non_surjective_opposite_section(self) -> bool:
+        return any(section.is_injective_non_surjective for section in self.opposite_sections)
+
+    @property
+    def product_collapse_for_hidden_nonunit(self) -> bool:
+        return (
+            self.constant_map_is_bijective
+            and self.companion_sections_bijective
+            and self.has_constant_opposite_section
+            and self.opposite_sections_all_constant
+        )
+
+    @property
+    def latin_unit_triangular(self) -> bool:
+        return (
+            self.constant_map_is_bijective
+            and self.companion_sections_bijective
+            and self.opposite_sections_all_bijective
+        )
+
+
+@dataclass(frozen=True)
+class TriangularColumnCollapseAudit:
+    """Classify constant-section triangular rows after opposite-column collapse."""
+
+    row_audits: Tuple[TriangularColumnCollapseRowAudit, ...]
+
+    @property
+    def product_collapse_rows(self) -> Tuple[TriangularColumnCollapseRowAudit, ...]:
+        return tuple(
+            row for row in self.row_audits if row.product_collapse_for_hidden_nonunit
+        )
+
+    @property
+    def latin_unit_rows(self) -> Tuple[TriangularColumnCollapseRowAudit, ...]:
+        return tuple(row for row in self.row_audits if row.latin_unit_triangular)
+
+    @property
+    def proper_opposite_kernel_rows(self) -> Tuple[TriangularColumnCollapseRowAudit, ...]:
+        return tuple(row for row in self.row_audits if row.has_proper_opposite_kernel)
+
+    @property
+    def injective_non_surjective_opposite_rows(
+        self,
+    ) -> Tuple[TriangularColumnCollapseRowAudit, ...]:
+        return tuple(
+            row
+            for row in self.row_audits
+            if row.has_injective_non_surjective_opposite_section
+        )
+
+
+@dataclass(frozen=True)
 class ContinuationSeedPairClosureAudit:
     """Least admissible closure generated by one continuation-change pair."""
 
@@ -1529,6 +1708,269 @@ def triangular_bundle_audit(interval: "LocalInterval") -> TriangularBundleAudit:
             )
 
     return TriangularBundleAudit(row_audits=tuple(audits))
+
+
+def triangular_recovery_audit(interval: "LocalInterval") -> TriangularRecoveryAudit:
+    """Return inverse recovery tables for constant-section triangular rows."""
+
+    audits: List[TriangularRecoveryRowAudit] = []
+    for a, b in product(interval.colors, repeat=2):
+        c, d = interval.base_R[(a, b)]
+
+        left_constant_map: Dict[FibrePoint, FibrePoint] = {}
+        left_companion_preimages: Dict[FibrePoint, Dict[FibrePoint, FibrePoint]] = {}
+        left_constant = True
+        for x in interval.fibres[a]:
+            outputs = [
+                (y, *interval.T[(a, b, x, y)])
+                for y in interval.fibres[b]
+            ]
+            left_values = {u for _y, u, _v in outputs}
+            if len(left_values) != 1:
+                left_constant = False
+                break
+            left_constant_map[x] = next(iter(left_values))
+            preimage: Dict[FibrePoint, FibrePoint] = {}
+            for y, _u, v in outputs:
+                preimage[v] = y
+            left_companion_preimages[x] = preimage
+
+        if left_constant:
+            entries: List[TriangularRecoveryEntry] = []
+            failures: List[Tuple[FibrePoint, FibrePoint]] = []
+            for u, v in product(interval.fibres[c], interval.fibres[d]):
+                candidates = [
+                    (x, left_companion_preimages[x][v])
+                    for x in interval.fibres[a]
+                    if left_constant_map[x] == u
+                    and v in left_companion_preimages[x]
+                ]
+                if len(candidates) != 1:
+                    failures.append((u, v))
+                    continue
+                x, y = candidates[0]
+                entries.append(
+                    TriangularRecoveryEntry(
+                        output_left=u,
+                        output_right=v,
+                        recovered_left_input=x,
+                        recovered_right_input=y,
+                    )
+                )
+            audits.append(
+                TriangularRecoveryRowAudit(
+                    side="left",
+                    left_color=a,
+                    right_color=b,
+                    output_left_color=c,
+                    output_right_color=d,
+                    source_size=len(interval.fibres[a]) * len(interval.fibres[b]),
+                    output_size=len(interval.fibres[c]) * len(interval.fibres[d]),
+                    entries=tuple(entries),
+                    missing_or_ambiguous_outputs=tuple(failures),
+                )
+            )
+
+        right_constant_map: Dict[FibrePoint, FibrePoint] = {}
+        right_companion_preimages: Dict[FibrePoint, Dict[FibrePoint, FibrePoint]] = {}
+        right_constant = True
+        for y in interval.fibres[b]:
+            outputs = [
+                (x, *interval.T[(a, b, x, y)])
+                for x in interval.fibres[a]
+            ]
+            right_values = {v for _x, _u, v in outputs}
+            if len(right_values) != 1:
+                right_constant = False
+                break
+            right_constant_map[y] = next(iter(right_values))
+            preimage = {}
+            for x, u, _v in outputs:
+                preimage[u] = x
+            right_companion_preimages[y] = preimage
+
+        if right_constant:
+            entries = []
+            failures = []
+            for u, v in product(interval.fibres[c], interval.fibres[d]):
+                candidates = [
+                    (right_companion_preimages[y][u], y)
+                    for y in interval.fibres[b]
+                    if right_constant_map[y] == v
+                    and u in right_companion_preimages[y]
+                ]
+                if len(candidates) != 1:
+                    failures.append((u, v))
+                    continue
+                x, y = candidates[0]
+                entries.append(
+                    TriangularRecoveryEntry(
+                        output_left=u,
+                        output_right=v,
+                        recovered_left_input=x,
+                        recovered_right_input=y,
+                    )
+                )
+            audits.append(
+                TriangularRecoveryRowAudit(
+                    side="right",
+                    left_color=a,
+                    right_color=b,
+                    output_left_color=c,
+                    output_right_color=d,
+                    source_size=len(interval.fibres[a]) * len(interval.fibres[b]),
+                    output_size=len(interval.fibres[c]) * len(interval.fibres[d]),
+                    entries=tuple(entries),
+                    missing_or_ambiguous_outputs=tuple(failures),
+                )
+            )
+
+    return TriangularRecoveryAudit(row_audits=tuple(audits))
+
+
+def triangular_column_collapse_audit(
+    interval: "LocalInterval",
+) -> TriangularColumnCollapseAudit:
+    """Classify triangular rows by opposite-column kernel type.
+
+    A left triangular row has first output independent of the right input:
+    `T(x,y)=(alpha(x), beta_x(y))`.  Its opposite columns are the maps
+    `x -> beta_x(y)`.  The right-side dual is audited symmetrically.
+    """
+
+    audits: List[TriangularColumnCollapseRowAudit] = []
+    for a, b in product(interval.colors, repeat=2):
+        c, d = interval.base_R[(a, b)]
+
+        left_constant = True
+        left_constant_map: Dict[FibrePoint, FibrePoint] = {}
+        for x in interval.fibres[a]:
+            outputs = [
+                interval.T[(a, b, x, y)]
+                for y in interval.fibres[b]
+            ]
+            left_values = {u for u, _v in outputs}
+            if len(left_values) != 1:
+                left_constant = False
+                break
+            left_constant_map[x] = outputs[0][0]
+
+        if left_constant:
+            companion_sections = tuple(
+                _rank_profile_row(
+                    side="left-companion",
+                    left_color=a,
+                    right_color=b,
+                    output_left_color=c,
+                    output_right_color=d,
+                    fixed_input=x,
+                    domain=interval.fibres[b],
+                    codomain=interval.fibres[d],
+                    values={
+                        y: interval.T[(a, b, x, y)][1]
+                        for y in interval.fibres[b]
+                    },
+                )
+                for x in interval.fibres[a]
+            )
+            opposite_sections = tuple(
+                _rank_profile_row(
+                    side="left-opposite",
+                    left_color=a,
+                    right_color=b,
+                    output_left_color=c,
+                    output_right_color=d,
+                    fixed_input=y,
+                    domain=interval.fibres[a],
+                    codomain=interval.fibres[d],
+                    values={
+                        x: interval.T[(a, b, x, y)][1]
+                        for x in interval.fibres[a]
+                    },
+                )
+                for y in interval.fibres[b]
+            )
+            audits.append(
+                TriangularColumnCollapseRowAudit(
+                    side="left",
+                    left_color=a,
+                    right_color=b,
+                    output_left_color=c,
+                    output_right_color=d,
+                    constant_codomain=tuple(interval.fibres[c]),
+                    constant_map=tuple(
+                        sorted(left_constant_map.items(), key=lambda item: repr(item[0]))
+                    ),
+                    companion_sections=companion_sections,
+                    opposite_sections=opposite_sections,
+                )
+            )
+
+        right_constant = True
+        right_constant_map: Dict[FibrePoint, FibrePoint] = {}
+        for y in interval.fibres[b]:
+            outputs = [
+                interval.T[(a, b, x, y)]
+                for x in interval.fibres[a]
+            ]
+            right_values = {v for _u, v in outputs}
+            if len(right_values) != 1:
+                right_constant = False
+                break
+            right_constant_map[y] = outputs[0][1]
+
+        if right_constant:
+            companion_sections = tuple(
+                _rank_profile_row(
+                    side="right-companion",
+                    left_color=a,
+                    right_color=b,
+                    output_left_color=c,
+                    output_right_color=d,
+                    fixed_input=y,
+                    domain=interval.fibres[a],
+                    codomain=interval.fibres[c],
+                    values={
+                        x: interval.T[(a, b, x, y)][0]
+                        for x in interval.fibres[a]
+                    },
+                )
+                for y in interval.fibres[b]
+            )
+            opposite_sections = tuple(
+                _rank_profile_row(
+                    side="right-opposite",
+                    left_color=a,
+                    right_color=b,
+                    output_left_color=c,
+                    output_right_color=d,
+                    fixed_input=x,
+                    domain=interval.fibres[b],
+                    codomain=interval.fibres[c],
+                    values={
+                        y: interval.T[(a, b, x, y)][0]
+                        for y in interval.fibres[b]
+                    },
+                )
+                for x in interval.fibres[a]
+            )
+            audits.append(
+                TriangularColumnCollapseRowAudit(
+                    side="right",
+                    left_color=a,
+                    right_color=b,
+                    output_left_color=c,
+                    output_right_color=d,
+                    constant_codomain=tuple(interval.fibres[d]),
+                    constant_map=tuple(
+                        sorted(right_constant_map.items(), key=lambda item: repr(item[0]))
+                    ),
+                    companion_sections=companion_sections,
+                    opposite_sections=opposite_sections,
+                )
+            )
+
+    return TriangularColumnCollapseAudit(row_audits=tuple(audits))
 
 
 def continuation_seed_pair_closure_audits(
