@@ -1300,6 +1300,11 @@ Schur-multiplier quotient of `N/M`; the quotient is ambient-normally generated
 by the bounded-order image of `t`.  The helper
 `point_pushing_centralizer_stem_multiplier_audit(...)` records finite quotient
 and generator-image data.
+`proofs/point_pushing_centralizer_stem_noncyclic_quotient.md` now removes the
+cyclic quotient subcase of that stem branch.  If `N/M` were cyclic, then the
+centrality of `M` in `N` would force `N` abelian, contradicting
+`M<=[N,N]`.  The helper records `quotient_is_cyclic` and only accepts
+noncyclic stem quotient rows.
 `proofs/point_pushing_nonabelian_chief_relation_quotient.md` now gives the
 parallel nonabelian-chief compression.  If `R` is the same detector orbit
 relation group and the chief layer is `M=S^r`, then the minimal vertical

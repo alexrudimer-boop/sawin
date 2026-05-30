@@ -145,6 +145,8 @@ The stem side is sharpened in
 `proofs/point_pushing_centralizer_stem_multiplier_tail.md`: there
 `1->M->N->N/M->1` is a stem central extension, and `M` is a quotient of the
 Schur multiplier of `N/M`.
+The cyclic quotient case of that stem side is ruled out in
+`proofs/point_pushing_centralizer_stem_noncyclic_quotient.md`.
 
 ## Audit Hook
 

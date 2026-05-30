@@ -115,6 +115,11 @@ centralizer-layer generator branch has two exact residual forms:
 Both remain open as possible infinite tails; neither is a complete
 counterexample without an explicit product-prefix Brunnian family.
 
+The follow-up
+`proofs/point_pushing_centralizer_stem_noncyclic_quotient.md` removes the
+cyclic quotient subcase: if `N/M` were cyclic, centrality of `M` would make
+`N` abelian, contradicting `M<=[N,N]`.
+
 ## Audit Hook
 
 The helper

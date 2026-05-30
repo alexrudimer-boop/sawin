@@ -151,6 +151,9 @@ The centralizer-stem side is further identified in
 `proofs/point_pushing_centralizer_stem_multiplier_tail.md`: the extension
 `1->M->N->N/M->1` is stem, so `M` is a Schur-multiplier quotient of `N/M`
 with bounded generator image inherited from `t`.
+The follow-up `proofs/point_pushing_centralizer_stem_noncyclic_quotient.md`
+rules out cyclic `N/M`: a cyclic central quotient would make `N` abelian,
+contradicting `M<=[N,N]`.
 
 ## Audit Hook
 

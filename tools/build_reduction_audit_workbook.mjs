@@ -395,6 +395,13 @@ const rows = [
     "Rule out bounded-generator centralizer-stem multiplier tails, or construct one for B.",
   ],
   [
+    "Centralizer-stem noncyclic quotient",
+    "Rule out cyclic quotients in centralizer-stem multiplier rows.",
+    "proofs/point_pushing_centralizer_stem_noncyclic_quotient.md proves that if N/M is cyclic and M<=Z(N), then N is abelian, contradicting M<=[N,N]. point_pushing_centralizer_stem_multiplier_audit records quotient_is_cyclic and rejects cyclic rows.",
+    "Cyclic quotient ruled out",
+    "Rule out noncyclic bounded-generator centralizer-stem multiplier tails, or construct one for B.",
+  ],
+  [
     "Nonabelian-chief relation quotient",
     "Compress nonabelian-chief Brunnian failures to detector relation-group quotients.",
     "proofs/point_pushing_nonabelian_chief_relation_quotient.md proves that a minimal nonabelian-chief first failure has mu_H(R)=M=S^r, and the detector orbit group controls the outer action on M. point_pushing_nonabelian_chief_relation_quotient_audit records finite chief-layer bookkeeping.",
