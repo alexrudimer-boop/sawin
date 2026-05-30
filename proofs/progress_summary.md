@@ -705,6 +705,14 @@ endpoint-longitudinalization for every local-minimal
 faithful readouts and `V_beta` membership for all residual
 Green/Schutzenberger/atom/lower endpoint components, uniformly in `n`.
 
+`proofs/descent_endpoint_repair_contract.md` now states this as an exact
+repair contract.  If every bottleneck interval admits a fixed
+descent-separating readout, fixed external endpoint groups, a faithful
+reconstruction rule, and all-`n` `V_beta` witnesses for routed endpoints, then
+the local finite detector implication follows.  A failure of any item is not
+yet outcome B, but it is the finite seed that must be upgraded to a
+normalized-law obstruction.
+
 ## Verification snapshot
 
 At the latest verified snapshot:

@@ -160,3 +160,8 @@ B. Explicit normalized-law counterexample: not constructed.
 The next real target is the uniform descent-separation and
 endpoint-longitudinalization theorem above, or a counterexample extracting a
 normalized-law sequence from its failure.
+
+The repair target is now stated as a precise conditional theorem in
+`proofs/descent_endpoint_repair_contract.md`.  That note packages the missing
+work into a fixed descent-separating readout, fixed external endpoint groups,
+faithful reconstruction, and all-`n` `V_beta` witnesses.

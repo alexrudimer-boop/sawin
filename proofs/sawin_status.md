@@ -19,6 +19,8 @@ proof-side positive assembly is recorded in
 audit in `proofs/proof_critic_gap_audit.md` shows that the current branch does
 not yet prove outcome A.  The older `proofs/final_completion_audit.md` is
 superseded.
+The current repair target is stated in
+`proofs/descent_endpoint_repair_contract.md`.
 
 ## External-state check
 

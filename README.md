@@ -32,6 +32,11 @@ The old internal completion audit is retained in
 records that Browser/Chrome automation could not reach the requested proof
 critic from this local session because the browser bridge failed before tab
 discovery.
+The exact repair target is now stated in
+`proofs/descent_endpoint_repair_contract.md`: construct, for each remaining
+bottleneck interval, a fixed descent-separating readout, fixed external
+endpoint groups, a faithful reconstruction rule, and all-`n` `V_beta`
+endpoint witnesses.
 
 The original target was to produce exactly one final outcome:
 

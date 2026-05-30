@@ -703,6 +703,13 @@ const rows = [
     "Supply the missing fixed-factor endpoint expressions and faithful residual decomposition uniformly in n.",
   ],
   [
+    "Descent-endpoint repair contract",
+    "Turn the proof-critic gap into a precise sufficient theorem package.",
+    "proofs/descent_endpoint_repair_contract.md proves that a fixed descent-separating readout, fixed endpoint groups, faithful reconstruction, and all-n V_beta witnesses imply the local finite-detector implication.",
+    "Repair target",
+    "Construct this readout/witness package for every bottleneck interval, or extract a normalized-law counterexample from a finite failure.",
+  ],
+  [
     "Superseded completion audit",
     "Keep the earlier internal completion checklist as historical context only.",
     "proofs/final_completion_audit.md is marked superseded by proofs/proof_critic_gap_audit.md.",
