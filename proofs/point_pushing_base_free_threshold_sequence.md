@@ -16,12 +16,21 @@ For a finite bijective YBE solution `X`, let
 epsilon_X(K)
 ```
 
-be the least symmetric degree `m>=s_X` such that `S_m` detects every
+be the least symmetric degree `m>=b_X` such that `S_m` detects every
 one-new-strand Brunnian extension row through arity `K`, where
 
 ```text
 s_X=ord(rho_X(A_{1,2})).
 ```
+
+Equivalently, one may replace the displayed lower bound by the minimal
+symmetric base cutoff
+
+```text
+b_X = min { m>=1 : s_X divides lcm(1,...,m) }.
+```
+
+The helper uses this sharper cutoff.
 
 The finite-prefix sequence is
 

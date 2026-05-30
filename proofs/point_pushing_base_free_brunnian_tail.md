@@ -18,11 +18,17 @@ For a finite bijective YBE solution `X`, set
 s_X = ord(rho_{X,2}(A_{1,2})).
 ```
 
+Let
+
+```text
+b_X = min { m>=1 : s_X divides lcm(1,...,m) }.
+```
+
 By `proofs/point_pushing_base_arity_gate.md`, every symmetric detector `S_m`
 with
 
 ```text
-m >= s_X
+m >= b_X
 ```
 
 passes the arity-`1` marked quotient gate.
@@ -40,10 +46,10 @@ failure_kind="none".
 The following are equivalent:
 
 1. `X` is dominated by a finite rack through the symmetric derivative fork.
-2. There exists `m>=s_X` such that every Brunnian extension row for `S_m` has
+2. There exists `m>=b_X` such that every Brunnian extension row for `S_m` has
    `failure_kind="none"`.
 
-If no such `m` exists, then for every `j>=s_X` there is a first failing row for
+If no such `m` exists, then for every `j>=b_X` there is a first failing row for
 `S_j`, and that row has one of the three non-base kinds:
 
 ```text
@@ -58,15 +64,15 @@ first failing arities tend to infinity.
 ## Proof
 
 The implication from (2) to (1) is exactly the Brunnian gate induction, using
-the closed base arity supplied by `m>=s_X`.
+the closed base arity supplied by `m>=b_X`.
 
 Conversely, if a symmetric detector `S_m` dominates `X`, then all marked
 quotients `D_k(S_m)->P_k(X)` exist.  In particular, the base gate and every
 Brunnian extension gate pass.  Enlarging `m` if necessary to also satisfy
-`m>=s_X` preserves detection by symmetric tower monotonicity.  Hence (1)
+`m>=b_X` preserves detection by symmetric tower monotonicity.  Hence (1)
 implies (2) in the symmetric fork.
 
-Now assume no such `m>=s_X` exists.  For every `j>=s_X`, the base arity gate
+Now assume no such `m>=b_X` exists.  For every `j>=b_X`, the base arity gate
 passes by the base-arity theorem.  Therefore the first failure in the
 base-plus-Brunnian gate induction cannot be `base_marked_quotient`; it must be
 one of the non-base Brunnian extension statuses unless a finite audit is
@@ -91,7 +97,7 @@ subsequence with one constant non-base failure kind.  QED.
 A negative solution can be searched for only in a base-free tail:
 
 ```text
-j >= s_X,
+j >= b_X,
 failure_kind_j in {stabilizer, orbit_label, orbit_relation},
 k_j -> infinity.
 ```
@@ -107,7 +113,7 @@ A positive proof no longer has to manage the base gate.  It is enough to prove
 that for some fixed
 
 ```text
-m>=s_X
+m>=b_X
 ```
 
 all one-new-strand Brunnian extension rows have status `none`.
@@ -120,7 +126,7 @@ The helper
 point_pushing_base_free_brunnian_tail_prefix(...)
 ```
 
-computes the base cutoff `s_X`, skips symmetric degrees below that cutoff, and
+computes the base cutoff `b_X`, skips symmetric degrees below that cutoff, and
 then records finite prefix rows only for the base-free range.  It exposes:
 
 ```text

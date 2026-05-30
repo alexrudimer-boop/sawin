@@ -276,6 +276,13 @@ const rows = [
     "A B proof may search for moving point-pushing layers in K_{P_j}; ordinary P_j-law words remain insufficient without the K_{P_j} check.",
   ],
   [
+    "Product-prefix first-failure stratification",
+    "Make the product-prefix profile monotone and normalize unbounded failures to first Brunnian rows.",
+    "proofs/point_pushing_product_prefix_first_failure_stratification.md proves eta_X(k)=min{j:D_k(P_j)->P_k(X)} is finite and weakly increasing, bounded iff A holds, and unbounded tails have k_j->infinity Brunnian first failures; point_pushing_product_prefix_first_failure_audit records finite prefixes.",
+    "Product-prefix fork",
+    "Prove eta_X(k) is bounded, or construct an infinite product-prefix first-failure Brunnian tail.",
+  ],
+  [
     "Point-pushing marked quotient criterion",
     "Replace fixed-variety containment by the exact derivative-detector marked quotient condition.",
     "proofs/point_pushing_marked_quotient_criterion.md proves A_G dominates X iff every P_k(X) is a marked quotient of D_k(G); point_pushing_marked_quotient_audit checks finite arity instances.",
@@ -376,16 +383,16 @@ const rows = [
   [
     "Point-pushing base-arity gate",
     "Close the arity-1 point-pushing gate by the order of the pure two-strand action.",
-    "proofs/point_pushing_base_arity_gate.md proves D_1(G)->P_1(X) exists whenever ord(R_X^2) divides exp(G), so S_ord(R_X^2) passes the base gate; point_pushing_base_arity_certificate records the cutoff.",
+    "proofs/point_pushing_base_arity_gate.md proves D_1(G)->P_1(X) exists whenever ord(R_X^2) divides exp(G); point_pushing_base_arity_certificate records the minimal symmetric cutoff b_X.",
     "Base gate closed",
     "Only the one-new-strand Brunnian extension gates remain in any asymptotic B tail.",
   ],
   [
     "Point-pushing base-free Brunnian tail",
-    "Start symmetric-tail audits after the explicit base cutoff s_X=ord(rho_X(A_1,2)).",
-    "proofs/point_pushing_base_free_brunnian_tail.md proves every first failure for S_j with j>=s_X must be non-base; point_pushing_base_free_brunnian_tail_prefix records finite base-free prefixes.",
+    "Start symmetric-tail audits after the minimal symmetric base cutoff b_X=min{m: ord(rho_X(A_1,2)) divides lcm(1,...,m)}.",
+    "proofs/point_pushing_base_free_brunnian_tail.md proves every first failure for S_j with j>=b_X must be non-base; point_pushing_base_free_brunnian_tail_prefix records finite base-free prefixes.",
     "Base-free B-tail fork",
-    "Prove one fixed S_m>=S_sX has all extension rows none, or construct an infinite certified non-base tail.",
+    "Prove one fixed S_m with m>=b_X has all extension rows none, or construct an infinite certified non-base tail.",
   ],
   [
     "Point-pushing base-free thresholds",

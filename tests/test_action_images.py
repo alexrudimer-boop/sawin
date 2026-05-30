@@ -27,6 +27,7 @@ from ybe_domination import (
     point_pushing_brunnian_tail_certificate_prefix,
     point_pushing_brunnian_tail_prefix_audit,
     point_pushing_brunnian_witness_certificate,
+    point_pushing_product_prefix_first_failure_audit,
     point_pushing_exponent_escape_audit,
     point_pushing_marked_quotient_audit,
     point_pushing_mu_prefix_audit,
@@ -40,6 +41,7 @@ from ybe_domination import (
     right_based_point_pushing_word_to_left,
     pure_braid_generator,
     pure_subgroup_growth_profile,
+    product_solution,
     rack_solution,
     short_law_separating_permutation_assignment,
     cyclic_group,
@@ -554,6 +556,18 @@ class ActionImageTests(unittest.TestCase):
         self.assertEqual(certificate.symmetric_degree_bound, 1)
         self.assertTrue(certificate.proves_base_arity_detected)
 
+    def test_point_pushing_base_arity_certificate_uses_minimal_symmetric_cutoff(self):
+        left = rack_solution(list(range(8)), lambda a, b: (2 * a - b) % 8)
+        right = rack_solution(list(range(3)), lambda a, b: (2 * a - b) % 3)
+        solution = product_solution(left, right)
+
+        certificate = point_pushing_base_arity_certificate(solution)
+
+        self.assertEqual(certificate.pure_generator_order, 12)
+        self.assertEqual(certificate.symmetric_degree_bound, 4)
+        self.assertEqual(certificate.symmetric_exponent, 12)
+        self.assertTrue(certificate.proves_base_arity_detected)
+
     def test_point_pushing_base_free_tail_prefix_starts_at_base_cutoff(self):
         solution = rack_solution([0, 1, 2], lambda a, b: (2 * a - b) % 3)
 
@@ -707,6 +721,34 @@ class ActionImageTests(unittest.TestCase):
         self.assertEqual(prefix.uncertified_failure_degrees, (1,))
         self.assertEqual(prefix.rows[0].first_failure_kind, "base_marked_quotient")
         self.assertIsNone(prefix.rows[0].certificate)
+
+    def test_point_pushing_product_prefix_first_failure_detects_trivial_prefix(self):
+        solution = rack_solution([0, 1], lambda a, b: b)
+
+        audit = point_pushing_product_prefix_first_failure_audit(
+            solution,
+            (cyclic_group(1), cyclic_group(2)),
+            max_arity=2,
+        )
+
+        self.assertEqual(audit.prefix_count, 2)
+        self.assertEqual(audit.detected_prefix_indices, (1, 2))
+        self.assertEqual(audit.unresolved_prefix_indices, tuple())
+        self.assertTrue(audit.first_failure_arities_weakly_increase)
+
+    def test_point_pushing_product_prefix_first_failure_records_base_then_tail(self):
+        solution = rack_solution([0, 1, 2], lambda a, b: (2 * a - b) % 3)
+
+        audit = point_pushing_product_prefix_first_failure_audit(
+            solution,
+            (cyclic_group(1), cyclic_group(3)),
+            max_arity=2,
+        )
+
+        self.assertEqual(audit.rows[0].first_failure_arity, 1)
+        self.assertEqual(audit.rows[0].first_failure_kind, "base_marked_quotient")
+        self.assertNotEqual(audit.rows[1].first_failure_kind, "base_marked_quotient")
+        self.assertTrue(audit.first_failure_arities_weakly_increase)
 
     def test_point_pushing_brunnian_normalized_prefix_audit_certifies_stabilized_row(self):
         solution = rack_solution([0, 1, 2], lambda a, b: (2 * a - b) % 3)

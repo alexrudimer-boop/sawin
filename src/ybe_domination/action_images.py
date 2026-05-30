@@ -323,6 +323,63 @@ class PointPushingBrunnianTailCertificatePrefix:
 
 
 @dataclass(frozen=True)
+class PointPushingProductPrefixFirstFailureRow:
+    """One product-prefix detector row in the first-failure profile."""
+
+    prefix_index: int
+    product_group_order: int
+    max_arity: int
+    prefix_detected: bool
+    first_failure_arity: int | None
+    first_failure_kind: str | None
+
+    @property
+    def has_nonbase_failure(self) -> bool:
+        return self.first_failure_kind in ("stabilizer", "orbit_label", "orbit_relation")
+
+
+@dataclass(frozen=True)
+class PointPushingProductPrefixFirstFailureAudit:
+    """Finite product-prefix first-failure stratification diagnostic."""
+
+    prefix_count: int
+    max_arity: int
+    rows: Tuple[PointPushingProductPrefixFirstFailureRow, ...]
+
+    @property
+    def detected_prefix_indices(self) -> Tuple[int, ...]:
+        return tuple(row.prefix_index for row in self.rows if row.prefix_detected)
+
+    @property
+    def unresolved_prefix_indices(self) -> Tuple[int, ...]:
+        return tuple(row.prefix_index for row in self.rows if not row.prefix_detected)
+
+    @property
+    def nonbase_failure_prefix_indices(self) -> Tuple[int, ...]:
+        return tuple(row.prefix_index for row in self.rows if row.has_nonbase_failure)
+
+    @property
+    def failure_kinds(self) -> Tuple[str, ...]:
+        return tuple(
+            row.first_failure_kind
+            for row in self.rows
+            if row.first_failure_kind is not None
+        )
+
+    @property
+    def first_failure_arities_weakly_increase(self) -> bool:
+        previous = 0
+        for row in self.rows:
+            value = row.first_failure_arity
+            if value is None:
+                value = self.max_arity + 1
+            if value < previous:
+                return False
+            previous = value
+        return True
+
+
+@dataclass(frozen=True)
 class PointPushingBaseFreeBrunnianTailPrefix:
     """Finite symmetric-tail prefix after the explicit base-arity cutoff."""
 
@@ -1667,7 +1724,9 @@ def point_pushing_base_arity_certificate(
 
     pure_action = action_permutation(solution, 2, (1, 1))
     pure_order = permutation_order(pure_action)
-    symmetric_degree = max(1, pure_order)
+    symmetric_degree = 1
+    while lcm_upto(symmetric_degree) % pure_order != 0:
+        symmetric_degree += 1
     symmetric_exponent = lcm_upto(symmetric_degree)
     return PointPushingBaseArityCertificate(
         tuple_count=len(pure_action),
@@ -1764,6 +1823,51 @@ def point_pushing_brunnian_tail_certificate_prefix(
         )
     return PointPushingBrunnianTailCertificatePrefix(
         max_symmetric_degree=max_symmetric_degree,
+        max_arity=max_arity,
+        rows=tuple(rows),
+    )
+
+
+def point_pushing_product_prefix_first_failure_audit(
+    solution: FiniteBraidedSet,
+    groups: Sequence[FiniteGroup],
+    max_arity: int,
+    *,
+    max_detector_states: int | None = None,
+    max_pair_subgroup_size: int | None = None,
+) -> PointPushingProductPrefixFirstFailureAudit:
+    """Check finite product-prefix first failures for supplied group factors."""
+
+    from .finite_group import direct_product_group
+
+    if max_arity < 1:
+        raise ValueError("max_arity must be positive")
+    factors = tuple(groups)
+    if not factors:
+        raise ValueError("at least one group is required")
+
+    rows = []
+    for index in range(1, len(factors) + 1):
+        product_group = direct_product_group(factors[:index])
+        audit = point_pushing_brunnian_gate_prefix_audit(
+            solution,
+            product_group,
+            max_arity=max_arity,
+            max_detector_states=max_detector_states,
+            max_pair_subgroup_size=max_pair_subgroup_size,
+        )
+        rows.append(
+            PointPushingProductPrefixFirstFailureRow(
+                prefix_index=index,
+                product_group_order=len(product_group.elements),
+                max_arity=max_arity,
+                prefix_detected=audit.prefix_detected,
+                first_failure_arity=audit.first_failure_arity,
+                first_failure_kind=audit.first_failure_kind,
+            )
+        )
+    return PointPushingProductPrefixFirstFailureAudit(
+        prefix_count=len(factors),
         max_arity=max_arity,
         rows=tuple(rows),
     )

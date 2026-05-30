@@ -33,6 +33,12 @@ s_X = ord(rho_{X,2}(A_{1,2})).
 Equivalently, `s_X` is the order of the pure two-strand action `R_X^2` on
 `X^2`.
 
+Define the minimal symmetric base cutoff
+
+```text
+b_X = min { m>=1 : s_X divides lcm(1,...,m) }.
+```
+
 ## Theorem
 
 The arity-`1` marked quotient
@@ -48,7 +54,8 @@ s_X divides exp(G).
 ```
 
 In particular, it exists for the cyclic group `C_{s_X}` and for the symmetric
-group `S_{s_X}`.
+group `S_{b_X}`.  The older choice `S_{s_X}` is always safe, but `S_{b_X}` is
+the minimal symmetric cutoff for the base gate.
 
 ## Proof
 
@@ -76,9 +83,14 @@ Thus the derivative detector image `D_1(G)` is cyclic of exponent dividing
 when `s_X` divides `exp(G)`.  This is precisely the marked quotient condition
 `D_1(G)->P_1(X)`.
 
-For `G=C_{s_X}`, the exponent is `s_X`.  For `G=S_{s_X}`, the exponent is
-`lcm(1,...,s_X)`, which is also divisible by `s_X`.  Therefore both groups
-detect arity `1`.  QED.
+For `G=C_{s_X}`, the exponent is `s_X`.  For `G=S_m`, the exponent is
+`lcm(1,...,m)`.  Therefore `S_m` detects arity `1` exactly when
+
+```text
+s_X divides lcm(1,...,m).
+```
+
+By definition, the least such symmetric degree is `b_X`.  QED.
 
 ## Consequence For The Brunnian Induction
 
@@ -87,7 +99,7 @@ The exact all-arity criterion from
 For any finite solution `X`, choose
 
 ```text
-m_0=s_X.
+m_0=b_X.
 ```
 
 Then every symmetric detector `S_m` with `m>=m_0` passes the arity-`1` marked
@@ -116,8 +128,8 @@ returns:
 
 ```text
 pure_generator_order = s_X,
-symmetric_degree_bound = s_X,
-symmetric_exponent = lcm(1,...,s_X),
+symmetric_degree_bound = b_X,
+symmetric_exponent = lcm(1,...,b_X),
 symmetric_marked_quotient_holds.
 ```
 
@@ -127,4 +139,4 @@ The property
 proves_base_arity_detected
 ```
 
-records the divisibility check `s_X | lcm(1,...,s_X)`.
+records the divisibility check `s_X | lcm(1,...,b_X)`.
