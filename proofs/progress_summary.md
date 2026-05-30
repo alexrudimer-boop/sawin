@@ -1216,6 +1216,13 @@ subsequence with module prime escape, fixed-prime module-dimension escape, or
 bounded-module centralizer-layer escape.  The audit helper now records the
 module dimension, centralizer-layer size, whether the size factorization
 matches the quotient, and a finite row parameter regime.
+`proofs/point_pushing_nonabelian_monolith_tail.md` now closes the structural
+bookkeeping for the nonabelian monolith branch.  If `M=S^r` is the nonabelian
+monolith, then `C_H(M)=1`; hence the compressed quotient embeds into
+`Aut(M) ~= Aut(S) wr Sym(r)`.  An infinite nonabelian tail therefore has a
+subsequence with unbounded simple factor size or fixed simple factor and
+unbounded multiplicity.  The finite audit helper records centralizer
+triviality, the quotient-over-monolith order, and a row prefix regime.
 
 ## Verification snapshot
 

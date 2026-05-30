@@ -107,7 +107,10 @@ affine detector argument.
 In the nonabelian tail, the moved value survives in a transitive product
 `S^r` of nonabelian finite simple groups; a positive proof may try to rule out
 unbounded nonabelian composition-factor tails in the point-pushing action
-images.
+images.  The follow-up note
+`proofs/point_pushing_nonabelian_monolith_tail.md` proves that `C_H(S^r)=1`,
+so any infinite nonabelian tail has either simple-factor escape or
+multiplicity escape.
 
 Thus a final B proof cannot present an arbitrary quotient mover.  It must
 produce an unbounded sequence in one of these two monolith regimes.

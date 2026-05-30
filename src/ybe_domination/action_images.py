@@ -458,6 +458,9 @@ class PointPushingMonolithicCompressionAudit:
     noncentral_centralizer_layer_order: int | None
     noncentral_size_product_matches_quotient: bool | None
     noncentral_parameter_regime: str | None
+    nonabelian_centralizer_trivial: bool | None
+    nonabelian_over_monolith_order: int | None
+    nonabelian_prefix_regime: str | None
     quotient_is_monolithic: bool | None
     projected_value_in_monolith: bool | None
     prefix_order_bound: int | None
@@ -2276,6 +2279,56 @@ def _noncentral_abelian_module_tail_data(
     return dimension, centralizer_layer_order, True, "mixed_parameter_escape"
 
 
+def _nonabelian_monolith_tail_data(
+    quotient_order: int,
+    monolith_order: int | None,
+    monolith_type: str | None,
+    centralizer_order: int | None,
+    prefix_order_bound: int | None,
+) -> Tuple[bool | None, int | None, str | None]:
+    """Return centralizer and prefix data for nonabelian monolith tails."""
+
+    if monolith_type != "nonabelian_characteristically_simple":
+        return None, None, None
+    if monolith_order is None or centralizer_order is None:
+        return None, None, "invalid_nonabelian_monolith_data"
+    centralizer_trivial = centralizer_order == 1
+    if quotient_order % monolith_order != 0:
+        return centralizer_trivial, None, "invalid_nonabelian_monolith_data"
+    over_monolith_order = quotient_order // monolith_order
+    if not centralizer_trivial:
+        return (
+            centralizer_trivial,
+            over_monolith_order,
+            "invalid_nonabelian_monolith_data",
+        )
+    if prefix_order_bound is None:
+        return centralizer_trivial, over_monolith_order, "nonabelian_simple_product"
+    if quotient_order <= prefix_order_bound:
+        return (
+            centralizer_trivial,
+            over_monolith_order,
+            "prefix_covers_nonabelian_quotient",
+        )
+    if monolith_order > prefix_order_bound:
+        return (
+            centralizer_trivial,
+            over_monolith_order,
+            "nonabelian_monolith_order_escape",
+        )
+    if over_monolith_order > prefix_order_bound:
+        return (
+            centralizer_trivial,
+            over_monolith_order,
+            "over_monolith_action_escape",
+        )
+    return (
+        centralizer_trivial,
+        over_monolith_order,
+        "mixed_nonabelian_parameter_escape",
+    )
+
+
 def point_pushing_monolithic_compression_audit(
     solution: FiniteBraidedSet,
     word: FreeWord,
@@ -2328,6 +2381,9 @@ def point_pushing_monolithic_compression_audit(
             noncentral_centralizer_layer_order=None,
             noncentral_size_product_matches_quotient=None,
             noncentral_parameter_regime=None,
+            nonabelian_centralizer_trivial=None,
+            nonabelian_over_monolith_order=None,
+            nonabelian_prefix_regime=None,
             quotient_is_monolithic=None,
             projected_value_in_monolith=None,
             prefix_order_bound=prefix_order_bound,
@@ -2365,6 +2421,9 @@ def point_pushing_monolithic_compression_audit(
             noncentral_centralizer_layer_order=None,
             noncentral_size_product_matches_quotient=None,
             noncentral_parameter_regime=None,
+            nonabelian_centralizer_trivial=None,
+            nonabelian_over_monolith_order=None,
+            nonabelian_prefix_regime=None,
             quotient_is_monolithic=None,
             projected_value_in_monolith=None,
             prefix_order_bound=prefix_order_bound,
@@ -2404,6 +2463,9 @@ def point_pushing_monolithic_compression_audit(
             noncentral_centralizer_layer_order=None,
             noncentral_size_product_matches_quotient=None,
             noncentral_parameter_regime=None,
+            nonabelian_centralizer_trivial=None,
+            nonabelian_over_monolith_order=None,
+            nonabelian_prefix_regime=None,
             quotient_is_monolithic=None,
             projected_value_in_monolith=None,
             prefix_order_bound=prefix_order_bound,
@@ -2448,6 +2510,9 @@ def point_pushing_monolithic_compression_audit(
             noncentral_centralizer_layer_order=None,
             noncentral_size_product_matches_quotient=None,
             noncentral_parameter_regime=None,
+            nonabelian_centralizer_trivial=None,
+            nonabelian_over_monolith_order=None,
+            nonabelian_prefix_regime=None,
             quotient_is_monolithic=None,
             projected_value_in_monolith=None,
             prefix_order_bound=prefix_order_bound,
@@ -2481,6 +2546,9 @@ def point_pushing_monolithic_compression_audit(
     noncentral_centralizer_layer_order = None
     noncentral_size_product_matches_quotient = None
     noncentral_parameter_regime = None
+    nonabelian_centralizer_trivial = None
+    nonabelian_over_monolith_order = None
+    nonabelian_prefix_regime = None
     if monolith is not None:
         monolith_type, monolith_prime, monolith_element_orders = _monolith_type_data(
             quotient,
@@ -2529,6 +2597,17 @@ def point_pushing_monolithic_compression_audit(
             monolith_centralizer_order,
             prefix_order_bound,
         )
+        (
+            nonabelian_centralizer_trivial,
+            nonabelian_over_monolith_order,
+            nonabelian_prefix_regime,
+        ) = _nonabelian_monolith_tail_data(
+            quotient_order,
+            len(monolith),
+            monolith_type,
+            monolith_centralizer_order,
+            prefix_order_bound,
+        )
     return PointPushingMonolithicCompressionAudit(
         arity=arity,
         word=tuple(word),
@@ -2556,6 +2635,9 @@ def point_pushing_monolithic_compression_audit(
         noncentral_centralizer_layer_order=noncentral_centralizer_layer_order,
         noncentral_size_product_matches_quotient=noncentral_size_product_matches_quotient,
         noncentral_parameter_regime=noncentral_parameter_regime,
+        nonabelian_centralizer_trivial=nonabelian_centralizer_trivial,
+        nonabelian_over_monolith_order=nonabelian_over_monolith_order,
+        nonabelian_prefix_regime=nonabelian_prefix_regime,
         quotient_is_monolithic=monolith is not None,
         projected_value_in_monolith=(
             None if monolith is None else projected_value in monolith

@@ -55,6 +55,7 @@ from ybe_domination.action_images import (
     _cyclic_p_power_tail_data,
     _minimal_normal_subgroups,
     _monolith_conjugation_data,
+    _nonabelian_monolith_tail_data,
     _noncentral_abelian_module_tail_data,
     _normal_subgroups_bruteforce,
 )
@@ -931,6 +932,44 @@ class ActionImageTests(unittest.TestCase):
         self.assertEqual(action_escape, (1, 1, True, "action_shadow_escape"))
         self.assertEqual(centralizer_escape, (1, 10, True, "centralizer_layer_escape"))
         self.assertEqual(mixed_escape, (1, 3, True, "mixed_parameter_escape"))
+
+    def test_nonabelian_monolith_tail_data_records_prefix_regimes(self):
+        monolith_escape = _nonabelian_monolith_tail_data(
+            120,
+            60,
+            "nonabelian_characteristically_simple",
+            1,
+            50,
+        )
+        over_escape = _nonabelian_monolith_tail_data(
+            7200,
+            60,
+            "nonabelian_characteristically_simple",
+            1,
+            100,
+        )
+        mixed_escape = _nonabelian_monolith_tail_data(
+            120,
+            60,
+            "nonabelian_characteristically_simple",
+            1,
+            80,
+        )
+        invalid_centralizer = _nonabelian_monolith_tail_data(
+            120,
+            60,
+            "nonabelian_characteristically_simple",
+            2,
+            50,
+        )
+
+        self.assertEqual(monolith_escape, (True, 2, "nonabelian_monolith_order_escape"))
+        self.assertEqual(over_escape, (True, 120, "over_monolith_action_escape"))
+        self.assertEqual(mixed_escape, (True, 2, "mixed_nonabelian_parameter_escape"))
+        self.assertEqual(
+            invalid_centralizer,
+            (False, 2, "invalid_nonabelian_monolith_data"),
+        )
 
     def test_central_abelian_monolith_depth_data_detects_stem_case(self):
         def multiply(left, right):

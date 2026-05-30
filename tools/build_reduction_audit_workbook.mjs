@@ -332,6 +332,13 @@ const rows = [
     "Rule out unbounded noncentral module primes, dimensions, and bounded-module centralizer layers, or construct one for B.",
   ],
   [
+    "Nonabelian monolith tail",
+    "Split nonabelian simple-product monolith failures into simple-factor escape and multiplicity escape.",
+    "proofs/point_pushing_nonabelian_monolith_tail.md proves C_H(S^r)=1, hence H embeds in Aut(S) wr Sym(r); an infinite nonabelian tail has |S_j|->infinity or fixed S with r_j->infinity. The audit records centralizer triviality, H/M order, and prefix regime.",
+    "Simple-product tail reduction",
+    "Rule out unbounded nonabelian simple factor size and unbounded multiplicity, or construct one for B.",
+  ],
+  [
     "Point-pushing marked quotient criterion",
     "Replace fixed-variety containment by the exact derivative-detector marked quotient condition.",
     "proofs/point_pushing_marked_quotient_criterion.md proves A_G dominates X iff every P_k(X) is a marked quotient of D_k(G); point_pushing_marked_quotient_audit checks finite arity instances.",

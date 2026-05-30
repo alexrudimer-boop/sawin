@@ -2173,12 +2173,18 @@ The noncentral elementary-abelian branch now has a parameter split too:
 `proofs/point_pushing_noncentral_module_tail.md` uses
 `|H|=p^r |H/C_H(M)| |C_H(M)/M|` to force an infinite tail into module prime
 escape, fixed-prime module-dimension escape, or bounded-module
-centralizer-layer escape.  Thus a negative proof must now produce one of seven
+centralizer-layer escape.  The nonabelian simple-product branch has now split
+as well: `proofs/point_pushing_nonabelian_monolith_tail.md` proves
+`C_H(S^r)=1`, so the compressed quotient embeds into
+`Aut(S) wr Sym(r)`, and an infinite nonabelian tail has simple-factor escape
+or fixed-factor multiplicity escape.  Thus a negative proof must now produce
+one of eight
 unbounded tails: cyclic prime escape, cyclic p-power depth escape, central stem
 depth, noncentral module prime escape, noncentral module dimension escape,
-noncentral bounded-module centralizer-layer escape, or nonabelian
-simple-product tails.  A positive proof may close the global point-pushing
-route by ruling out all seven for finite YBE action images.
+noncentral bounded-module centralizer-layer escape, nonabelian simple-factor
+escape, or nonabelian multiplicity escape.  A positive proof may close the
+global point-pushing route by ruling out all eight for finite YBE action
+images.
 
 ## Completion audit checklist
 
