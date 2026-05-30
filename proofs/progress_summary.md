@@ -729,6 +729,16 @@ moving `X`.  The same dichotomy is stated for a fixed quotient/residual
 interval with `beta_j in N_{q_j}`.  This does not construct outcome B, but it
 proves that a normalized-law sequence is the forced shape of any negative
 resolution.
+`proofs/global_local_normalized_fork.md` now removes the remaining global
+ambiguity.  Maximal congruence-chain intervals are local-minimal, local fixed
+group detectors descend by `Q_i=Q_{i+1} x A_{G_i}` to a global finite rack, and
+failure of one local detector diagonalizes to a local normalized-law residual
+obstruction.  Thus the whole Sawin problem is equivalent to the Master
+Local-Minimal Detector Theorem; if one interval fails it, the total solution of
+that interval is already a finite YBE counterexample.  The helper
+`local_normalized_law_prefix_witness_audit(...)` checks one supplied local
+product-prefix row, including quotient/base kernel membership, finite-product
+longitude invisibility, right stabilization, and residual tuple movement.
 `proofs/normalized_law_counterexample_certificate.md` now records the
 constructive B data format: for every product prefix
 `P_j=G_1 x ... x G_j`, give an explicit braid `alpha_j`, moved tuple, and

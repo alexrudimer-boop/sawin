@@ -290,6 +290,13 @@ const rows = [
     "Still need a positive uniform endpoint/descent theorem or an explicit interval with no finite group detector.",
   ],
   [
+    "Global-local normalized fork",
+    "Remove global ambiguity by reducing Sawin to the local-minimal detector theorem.",
+    "proofs/global_local_normalized_fork.md proves maximal chain intervals are local-minimal, local detectors descend to a global finite rack, and local detector failure diagonalizes to a normalized-law residual obstruction; local_normalized_law_prefix_witness_audit checks one supplied local prefix.",
+    "Reduction ready",
+    "The only remaining theorem is fixed finite detection for each local-minimal interval, especially the bi-free universal-corridor branch.",
+  ],
+  [
     "Normalized-law B certificate",
     "Separate constructive B data from nonconstructive all-detector failure.",
     "proofs/normalized_law_counterexample_certificate.md states the product-prefix witness format; normalized_law_prefix_witness_audit checks one supplied prefix for product invisibility, right stabilization, and moved tuples.",

@@ -118,3 +118,18 @@ diagonal argument.  It is not an all-`j` proof by itself.  A final B proof must
 give a symbolic construction of such prefix records for every `j`, plus the
 explicit finite YBE solution and moved tuples.
 
+For the relative interval theorem, the helper
+
+```text
+local_normalized_law_prefix_witness_audit(...)
+```
+
+checks the same product-prefix data together with quotient/base kernel
+membership and residual fibre movement.  Its property
+
+```text
+proves_one_local_prefix_normalized_law_witness
+```
+
+means that the supplied braid is one valid row of the local diagonal
+construction in `proofs/global_local_normalized_fork.md`.

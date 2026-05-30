@@ -5,9 +5,14 @@ from itertools import product
 from math import gcd
 from typing import Dict, Hashable, Iterable, List, Mapping, Sequence, Tuple
 
-from .artin_longitudes import BraidWord, has_identity_longitude_signature
+from .artin_longitudes import (
+    BraidWord,
+    RightStabilizationLongitudeAudit,
+    has_identity_longitude_signature,
+    right_stabilization_longitude_audit,
+)
 from .finite_braided_set import Element, FiniteBraidedSet, product_solution
-from .finite_group import FiniteGroup
+from .finite_group import FiniteGroup, direct_product_group
 
 BaseTuple = Tuple[Hashable, ...]
 FibreTuple = Tuple[Element, ...]
@@ -167,6 +172,85 @@ class ResidualDependencySummary:
         return all(len(support) <= 1 for support in self.supports)
 
 
+@dataclass(frozen=True)
+class LocalNormalizedLawPrefixWitnessAudit:
+    """One finite-prefix check for a local normalized-law obstruction.
+
+    This is the relative version of a constructive B certificate.  It verifies
+    a supplied braid against one finite product group and one quotient/kernel
+    detector.  A final B proof still needs such data for every product prefix
+    of an enumeration of finite groups.
+    """
+
+    source_n: int
+    target_n: int
+    braid_word: Tuple[int, ...]
+    group_orders: Tuple[int, ...]
+    product_group_order: int
+    source_base_detector_identity_action: bool
+    target_base_detector_identity_action: bool
+    source_product_identity_signature: bool
+    target_product_identity_signature: bool
+    source_factor_identity_signatures: Tuple[bool, ...]
+    target_factor_identity_signatures: Tuple[bool, ...]
+    right_stabilization: RightStabilizationLongitudeAudit
+    base_tuple: BaseTuple
+    source_base_image: BaseTuple
+    source_quotient_base_fixed: bool
+    fibre_tuple: FibreTuple
+    source_image: FibreTuple
+    source_image_base: BaseTuple
+    source_stays_over_base: bool
+    source_residual_tuple_moved: bool
+    stabilized_base_tuple: BaseTuple
+    target_base_image: BaseTuple
+    target_quotient_base_fixed: bool
+    stabilized_fibre_tuple: FibreTuple
+    stabilized_image: FibreTuple
+    stabilized_image_base: BaseTuple
+    target_stays_over_base: bool
+    target_residual_tuple_moved: bool
+
+    @property
+    def source_in_residual_kernel(self) -> bool:
+        return (
+            self.source_base_detector_identity_action
+            and self.source_quotient_base_fixed
+            and self.source_stays_over_base
+        )
+
+    @property
+    def target_in_residual_kernel(self) -> bool:
+        return (
+            self.target_base_detector_identity_action
+            and self.target_quotient_base_fixed
+            and self.target_stays_over_base
+        )
+
+    @property
+    def product_invisibility_survives_stabilization(self) -> bool:
+        return (
+            self.source_product_identity_signature
+            and self.target_product_identity_signature
+            and all(self.source_factor_identity_signatures)
+            and all(self.target_factor_identity_signatures)
+            and self.right_stabilization.stabilization_valid
+        )
+
+    @property
+    def residual_movement_survives_stabilization(self) -> bool:
+        return self.source_residual_tuple_moved and self.target_residual_tuple_moved
+
+    @property
+    def proves_one_local_prefix_normalized_law_witness(self) -> bool:
+        return (
+            self.source_in_residual_kernel
+            and self.target_in_residual_kernel
+            and self.product_invisibility_survives_stabilization
+            and self.residual_movement_survives_stabilization
+        )
+
+
 def residual_coordinate_dependency_summary(
     quotient_map: QuotientMap,
     base_tuple: Sequence[Hashable],
@@ -212,6 +296,122 @@ def residual_coordinate_dependency_summary(
         base_tuple=base,
         braid_word=tuple(braid_word),
         supports=tuple(tuple(sorted(support)) for support in supports),
+    )
+
+
+def local_normalized_law_prefix_witness_audit(
+    quotient_map: QuotientMap,
+    base_detector: FiniteBraidedSet,
+    groups: Sequence[FiniteGroup],
+    n: int,
+    braid_word: BraidWord,
+    base_tuple: Sequence[Hashable],
+    fibre_tuple: Sequence[Element],
+    extra_strands: int,
+    fill_value: Element,
+) -> LocalNormalizedLawPrefixWitnessAudit:
+    """Check one supplied local prefix witness for the normalized-law B route.
+
+    The braid is tested against a fixed quotient/base detector, a finite
+    product of group-longitude detectors, and one moved residual tuple.  Right
+    stabilization is checked by adding unused strands filled with
+    ``fill_value``.  This is a finite row of a constructive diagonal
+    certificate, not an all-prefix construction by itself.
+    """
+
+    if not groups:
+        raise ValueError("at least one finite group is required")
+    if extra_strands < 0:
+        raise ValueError("extra_strands must be nonnegative")
+    base = tuple(base_tuple)
+    fibre = tuple(fibre_tuple)
+    if len(base) != n:
+        raise ValueError("base_tuple length must equal n")
+    if len(fibre) != n:
+        raise ValueError("fibre_tuple length must equal n")
+    if any(value not in quotient_map.total.elements for value in fibre):
+        raise ValueError("fibre_tuple entries must lie in the total solution")
+    if quotient_map.base_tuple(fibre) != base:
+        raise ValueError("fibre_tuple must lie over base_tuple")
+    if fill_value not in quotient_map.total.elements:
+        raise ValueError("fill_value must lie in the total solution")
+
+    group_tuple = tuple(groups)
+    product_group = direct_product_group(group_tuple)
+    target_n = n + extra_strands
+    fill_base = quotient_map.pi[fill_value]
+    stabilization = right_stabilization_longitude_audit(
+        n,
+        braid_word,
+        extra_strands,
+    )
+
+    source_base_image = quotient_map.quotient.braid_action(braid_word, base)
+    source_image = quotient_map.total.braid_action(braid_word, fibre)
+    source_image_base = quotient_map.base_tuple(source_image)
+    stabilized_base = base + tuple(fill_base for _ in range(extra_strands))
+    stabilized_fibre = fibre + tuple(fill_value for _ in range(extra_strands))
+    target_base_image = quotient_map.quotient.braid_action(
+        braid_word,
+        stabilized_base,
+    )
+    stabilized_image = quotient_map.total.braid_action(
+        braid_word,
+        stabilized_fibre,
+    )
+    stabilized_image_base = quotient_map.base_tuple(stabilized_image)
+
+    return LocalNormalizedLawPrefixWitnessAudit(
+        source_n=n,
+        target_n=target_n,
+        braid_word=tuple(braid_word),
+        group_orders=tuple(len(group.elements) for group in group_tuple),
+        product_group_order=len(product_group.elements),
+        source_base_detector_identity_action=is_identity_action(
+            base_detector,
+            n,
+            braid_word,
+        ),
+        target_base_detector_identity_action=is_identity_action(
+            base_detector,
+            target_n,
+            braid_word,
+        ),
+        source_product_identity_signature=has_identity_longitude_signature(
+            product_group,
+            n,
+            braid_word,
+        ),
+        target_product_identity_signature=has_identity_longitude_signature(
+            product_group,
+            target_n,
+            braid_word,
+        ),
+        source_factor_identity_signatures=tuple(
+            has_identity_longitude_signature(group, n, braid_word)
+            for group in group_tuple
+        ),
+        target_factor_identity_signatures=tuple(
+            has_identity_longitude_signature(group, target_n, braid_word)
+            for group in group_tuple
+        ),
+        right_stabilization=stabilization,
+        base_tuple=base,
+        source_base_image=source_base_image,
+        source_quotient_base_fixed=source_base_image == base,
+        fibre_tuple=fibre,
+        source_image=source_image,
+        source_image_base=source_image_base,
+        source_stays_over_base=source_image_base == base,
+        source_residual_tuple_moved=source_image != fibre,
+        stabilized_base_tuple=stabilized_base,
+        target_base_image=target_base_image,
+        target_quotient_base_fixed=target_base_image == stabilized_base,
+        stabilized_fibre_tuple=stabilized_fibre,
+        stabilized_image=stabilized_image,
+        stabilized_image_base=stabilized_image_base,
+        target_stays_over_base=stabilized_image_base == stabilized_base,
+        target_residual_tuple_moved=stabilized_image != stabilized_fibre,
     )
 
 

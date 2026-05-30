@@ -631,6 +631,7 @@ from .small_search import (
     two_strand_symmetric_gate_summary,
 )
 from .residual import (
+    LocalNormalizedLawPrefixWitnessAudit,
     QuotientMap,
     QuotientImageKernelSummary,
     ResidualDependencySummary,
@@ -639,6 +640,7 @@ from .residual import (
     braid_action_order,
     bounded_words,
     is_identity_action,
+    local_normalized_law_prefix_witness_audit,
     permutation_order,
     quotient_image_kernel_summary,
     residual_coordinate_dependency_summary,
@@ -763,6 +765,7 @@ __all__ = [
     "LostEdgeExternalRoutingAudit",
     "LatinTriangularYBEAudit",
     "LatinTriangularYBETripleAudit",
+    "LocalNormalizedLawPrefixWitnessAudit",
     "NormalQuotientLongitudeLiftAudit",
     "NormalizedLawPrefixWitnessAudit",
     "QuotientMap",
@@ -1178,6 +1181,7 @@ __all__ = [
     "pure_braid_generator",
     "pure_generator_order_profile",
     "pure_subgroup_growth_profile",
+    "local_normalized_law_prefix_witness_audit",
     "quotient_group_by_normal_subgroup",
     "subgroup_as_group",
     "quotient_interval_by_family",

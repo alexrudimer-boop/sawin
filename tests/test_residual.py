@@ -12,11 +12,13 @@ from ybe_domination import (
     cyclic_group,
     identity_solution,
     is_identity_action,
+    local_normalized_law_prefix_witness_audit,
     is_nondegenerate,
     product_solution,
     quotient_image_kernel_summary,
     rack_solution,
     residual_coordinate_dependency_summary,
+    pure_braid_generator,
     sharp_kernel_implication_failures,
 )
 
@@ -185,6 +187,57 @@ class ResidualTests(unittest.TestCase):
 
         with self.assertRaises(ValueError):
             residual_coordinate_dependency_summary(qmap, (0, 1), (1,))
+
+    def test_local_normalized_law_prefix_witness_checks_residual_stabilization(self):
+        total = rack_solution([0, 1], lambda _left, right: 1 - right)
+        quotient = identity_solution(["*"])
+        qmap = QuotientMap(total, quotient, {element: "*" for element in total.elements})
+        base_detector = identity_solution(["q"])
+        braid = pure_braid_generator(1, 2)
+
+        audit = local_normalized_law_prefix_witness_audit(
+            qmap,
+            base_detector,
+            (cyclic_group(1),),
+            2,
+            braid,
+            ("*", "*"),
+            (0, 0),
+            extra_strands=2,
+            fill_value=0,
+        )
+
+        self.assertTrue(audit.source_in_residual_kernel)
+        self.assertTrue(audit.target_in_residual_kernel)
+        self.assertTrue(audit.product_invisibility_survives_stabilization)
+        self.assertEqual(audit.source_image, (1, 1))
+        self.assertEqual(audit.stabilized_image, (1, 1, 0, 0))
+        self.assertTrue(audit.residual_movement_survives_stabilization)
+        self.assertTrue(audit.proves_one_local_prefix_normalized_law_witness)
+
+    def test_local_normalized_law_prefix_witness_rejects_nonmoving_residual_tuple(self):
+        total = identity_solution([0, 1])
+        quotient = identity_solution(["*"])
+        qmap = QuotientMap(total, quotient, {element: "*" for element in total.elements})
+        base_detector = identity_solution(["q"])
+
+        audit = local_normalized_law_prefix_witness_audit(
+            qmap,
+            base_detector,
+            (cyclic_group(1),),
+            2,
+            pure_braid_generator(1, 2),
+            ("*", "*"),
+            (0, 1),
+            extra_strands=1,
+            fill_value=0,
+        )
+
+        self.assertTrue(audit.source_in_residual_kernel)
+        self.assertTrue(audit.target_in_residual_kernel)
+        self.assertTrue(audit.product_invisibility_survives_stabilization)
+        self.assertFalse(audit.residual_movement_survives_stabilization)
+        self.assertFalse(audit.proves_one_local_prefix_normalized_law_witness)
 
 
 if __name__ == "__main__":
