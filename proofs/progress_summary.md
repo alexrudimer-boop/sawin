@@ -758,6 +758,16 @@ interval for all braid indices, or for every `j` there is a local residual
 mover invisible to `S_j`.  The helper
 `local_symmetric_tower_prefix_sequence_audit(...)` checks supplied finite
 prefixes of the second alternative.
+`proofs/symmetric_repair_contract_bridge.md` now connects this symmetric fork
+back to the proof-critic repair contract.  If a supplied repair package proves
+the local implication using a fixed product detector `H(pi,Q)`, then the left
+regular embedding gives the same implication for `S_m` with
+`m>=|H(pi,Q)|`.  The helper
+`symmetric_repair_contract_bridge_audit(...)` records the degree, the
+left-regular embedding condition, and the corresponding sharp detector rack
+size.  This is only a detector-format bridge: it does not construct the
+missing descent readout, faithful decomposition, or all-`n` endpoint
+witnesses.
 `proofs/symmetric_tower_counterexample_certificate.md` now records the
 corresponding simplified B certificate: for every `j`, produce a braid
 `alpha_j` with identity `S_j` longitude data and a moved global or residual

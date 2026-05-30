@@ -602,7 +602,9 @@ from .endpoint_factorization import (
 )
 from .repair_contract import (
     DescentEndpointRepairContractAudit,
+    SymmetricRepairContractBridgeAudit,
     descent_endpoint_repair_contract_audit,
+    symmetric_repair_contract_bridge_audit,
 )
 from .small_search import (
     affine_cyclic_form,
@@ -733,6 +735,7 @@ __all__ = [
     "EndpointResidualActionAudit",
     "EndpointResidualReadoutAudit",
     "DescentEndpointRepairContractAudit",
+    "SymmetricRepairContractBridgeAudit",
     "RoutedLostEdgeEndpointWitnessAudit",
     "TerminalGaugeLongitudeExpressionAudit",
     "TerminalGaugeProductExpressionAudit",
@@ -1021,6 +1024,7 @@ __all__ = [
     "endpoint_residual_action_audit",
     "endpoint_residual_readout_audit",
     "descent_endpoint_repair_contract_audit",
+    "symmetric_repair_contract_bridge_audit",
     "routed_lost_edge_endpoint_witness_audit",
     "terminal_gauge_longitude_expression_audit",
     "terminal_gauge_product_longitude_expression_audit",

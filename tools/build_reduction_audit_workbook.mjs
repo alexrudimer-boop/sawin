@@ -318,6 +318,13 @@ const rows = [
     "Still need either a uniform proof of some m(pi,Q), or a symbolic all-j construction.",
   ],
   [
+    "Symmetric repair bridge",
+    "Translate a successful repair-contract product detector H(pi,Q) into one symmetric detector degree.",
+    "proofs/symmetric_repair_contract_bridge.md proves that if the supplied repair contract gives H, then S_m with m>=|H| also detects; symmetric_repair_contract_bridge_audit records the bridge.",
+    "Reduction ready",
+    "Still need the repair contract's fixed descent readout, faithful decomposition, and all-n endpoint witnesses.",
+  ],
+  [
     "Symmetric-tower B certificate",
     "State the simplified constructive B data after reducing to symmetric groups.",
     "proofs/symmetric_tower_counterexample_certificate.md states that witnesses invisible to S_j for every j suffice; symmetric_normalized_law_prefix_witness_audit and local_symmetric_normalized_law_prefix_witness_audit check supplied rows.",

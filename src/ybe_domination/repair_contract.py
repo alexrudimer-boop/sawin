@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from math import factorial
 from typing import Tuple
 
 from .endpoint_factorization import (
@@ -86,4 +87,95 @@ def descent_endpoint_repair_contract_audit(
         descent_audit=descent_audit,
         endpoint_action_audit=endpoint_action_audit,
         routed_edge_audit=routed_edge_audit,
+    )
+
+
+@dataclass(frozen=True)
+class SymmetricRepairContractBridgeAudit:
+    """Bridge a supplied finite repair detector to a symmetric detector.
+
+    The repair contract proves a local implication using some fixed finite
+    product detector ``H``.  Once that supplied implication is valid, the left
+    regular embedding ``H -> S_|H|`` shows that identity ``S_m`` longitude data
+    with ``m >= |H|`` implies identity ``H`` longitude data.  This audit records
+    that certificate-level bridge; it does not construct the missing repair
+    contract witnesses.
+    """
+
+    repair_contract_audit: DescentEndpointRepairContractAudit
+    detector_group_order: int
+    symmetric_degree: int
+
+    @property
+    def detector_group_order_valid(self) -> bool:
+        return self.detector_group_order > 0
+
+    @property
+    def symmetric_degree_valid(self) -> bool:
+        return self.symmetric_degree > 0
+
+    @property
+    def left_regular_embedding_available(self) -> bool:
+        return (
+            self.detector_group_order_valid
+            and self.symmetric_degree_valid
+            and self.symmetric_degree >= self.detector_group_order
+        )
+
+    @property
+    def symmetric_group_order(self) -> int | None:
+        if not self.symmetric_degree_valid:
+            return None
+        return factorial(self.symmetric_degree)
+
+    @property
+    def symmetric_detector_rack_size(self) -> int | None:
+        group_order = self.symmetric_group_order
+        if group_order is None:
+            return None
+        return 2 * group_order * group_order
+
+    @property
+    def repair_contract_proved(self) -> bool:
+        return self.repair_contract_audit.proves_repair_contract_for_supplied_data
+
+    @property
+    def proves_symmetric_detector_from_repair_contract(self) -> bool:
+        return self.repair_contract_proved and self.left_regular_embedding_available
+
+    @property
+    def failure_reasons(self) -> Tuple[str, ...]:
+        reasons = []
+        if not self.repair_contract_proved:
+            reasons.append("repair_contract_not_proved")
+        if not self.detector_group_order_valid:
+            reasons.append("invalid_detector_group_order")
+        if not self.symmetric_degree_valid:
+            reasons.append("invalid_symmetric_degree")
+        elif (
+            self.detector_group_order_valid
+            and self.symmetric_degree < self.detector_group_order
+        ):
+            reasons.append("symmetric_degree_too_small")
+        return tuple(reasons)
+
+
+def symmetric_repair_contract_bridge_audit(
+    repair_contract_audit: DescentEndpointRepairContractAudit,
+    detector_group_order: int,
+    symmetric_degree: int | None = None,
+) -> SymmetricRepairContractBridgeAudit:
+    """Record that a supplied finite repair detector may be replaced by ``S_m``.
+
+    When ``symmetric_degree`` is omitted, the minimal left-regular degree
+    ``m=|H|`` is used.  Larger degrees are also valid by symmetric tower
+    monotonicity, but this helper only records the direct left-regular bridge.
+    """
+
+    if symmetric_degree is None:
+        symmetric_degree = detector_group_order
+    return SymmetricRepairContractBridgeAudit(
+        repair_contract_audit=repair_contract_audit,
+        detector_group_order=detector_group_order,
+        symmetric_degree=symmetric_degree,
     )

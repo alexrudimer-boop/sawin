@@ -22,6 +22,7 @@ from ybe_domination import (
     lost_edge_external_routing_audit,
     readout_descent_separation_audit,
     routed_lost_edge_endpoint_witness_audit,
+    symmetric_repair_contract_bridge_audit,
     symmetric_group,
     terminal_gauge_longitude_expression_audit,
     terminal_gauge_product_longitude_expression_audit,
@@ -611,6 +612,84 @@ class EndpointFactorizationTests(unittest.TestCase):
         self.assertTrue(action.proves_complete_residual_action_implication)
         self.assertEqual(audit.failure_reasons, ())
         self.assertTrue(audit.proves_repair_contract_for_supplied_data)
+
+    def test_symmetric_repair_contract_bridge_uses_left_regular_degree(self):
+        interval = one_color_identity_interval()
+        descent = readout_descent_separation_audit(
+            interval,
+            {"*": {0: "collapsed", 1: "collapsed"}},
+        )
+        c2 = cyclic_group(2)
+        product_audit = endpoint_product_longitude_expression_audit(
+            (c2,),
+            n=2,
+            braid_word=(1, -1),
+            endpoints=(0,),
+            assignments=((1, 0),),
+            expressions=((),),
+        )
+        readout = endpoint_residual_readout_audit(
+            (endpoint_coordinate_readout_audit(product_audit, "p", "p"),)
+        )
+        action = endpoint_residual_action_audit(
+            2,
+            (1, -1),
+            (readout,),
+            expected_row_count=1,
+        )
+        repair = descent_endpoint_repair_contract_audit(descent, action)
+
+        bridge = symmetric_repair_contract_bridge_audit(
+            repair,
+            detector_group_order=2,
+        )
+
+        self.assertEqual(bridge.symmetric_degree, 2)
+        self.assertEqual(bridge.symmetric_group_order, 2)
+        self.assertEqual(bridge.symmetric_detector_rack_size, 8)
+        self.assertTrue(bridge.left_regular_embedding_available)
+        self.assertEqual(bridge.failure_reasons, ())
+        self.assertTrue(bridge.proves_symmetric_detector_from_repair_contract)
+
+    def test_symmetric_repair_contract_bridge_rejects_bad_inputs(self):
+        interval = one_color_identity_interval()
+        descent = readout_descent_separation_audit(
+            interval,
+            {"*": {0: "zero", 1: "one"}},
+        )
+        c2 = cyclic_group(2)
+        product_audit = endpoint_product_longitude_expression_audit(
+            (c2,),
+            n=2,
+            braid_word=(1, -1),
+            endpoints=(0,),
+            assignments=((1, 0),),
+            expressions=((),),
+        )
+        readout = endpoint_residual_readout_audit(
+            (endpoint_coordinate_readout_audit(product_audit, "p", "p"),)
+        )
+        action = endpoint_residual_action_audit(
+            2,
+            (1, -1),
+            (readout,),
+            expected_row_count=1,
+        )
+        repair = descent_endpoint_repair_contract_audit(descent, action)
+
+        bridge = symmetric_repair_contract_bridge_audit(
+            repair,
+            detector_group_order=3,
+            symmetric_degree=2,
+        )
+
+        self.assertFalse(bridge.repair_contract_proved)
+        self.assertFalse(bridge.left_regular_embedding_available)
+        self.assertEqual(
+            bridge.failure_reasons,
+            ("repair_contract_not_proved", "symmetric_degree_too_small"),
+        )
+        self.assertFalse(bridge.proves_symmetric_detector_from_repair_contract)
 
     def test_descent_endpoint_repair_contract_reports_descent_failure(self):
         interval = one_color_identity_interval()
