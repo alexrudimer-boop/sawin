@@ -16,6 +16,8 @@ from ybe_domination import (
     law_braid_action_certificate,
     law_word_on_last_strand,
     delete_right_based_new_strand_word,
+    point_pushing_action_group,
+    point_pushing_action_quotient_separation_audit,
     point_pushing_base_arity_certificate,
     point_pushing_base_free_brunnian_tail_prefix,
     point_pushing_base_free_threshold_audit,
@@ -749,6 +751,41 @@ class ActionImageTests(unittest.TestCase):
         self.assertEqual(audit.rows[0].first_failure_kind, "base_marked_quotient")
         self.assertNotEqual(audit.rows[1].first_failure_kind, "base_marked_quotient")
         self.assertTrue(audit.first_failure_arities_weakly_increase)
+
+    def test_point_pushing_action_group_records_marked_action_image(self):
+        solution = rack_solution([0, 1, 2], lambda a, b: (2 * a - b) % 3)
+
+        group = point_pushing_action_group(solution, arity=1)
+
+        self.assertEqual(len(group.elements), 3)
+
+    def test_point_pushing_action_quotient_separation_audit_records_depths(self):
+        solution = rack_solution([0, 1, 2], lambda a, b: (2 * a - b) % 3)
+
+        audit = point_pushing_action_quotient_separation_audit(
+            solution,
+            max_arity=1,
+            max_action_group_order=8,
+        )
+
+        self.assertEqual(audit.computed_arities, (1,))
+        self.assertEqual(audit.truncated_arities, tuple())
+        self.assertEqual(audit.rows[0].action_group_order, 3)
+        self.assertEqual(audit.rows[0].max_separating_quotient_size, 3)
+        self.assertEqual(audit.prefix_separation_bound, 3)
+
+    def test_point_pushing_action_quotient_separation_audit_truncates_large_rows(self):
+        solution = rack_solution([0, 1, 2], lambda a, b: (2 * a - b) % 3)
+
+        audit = point_pushing_action_quotient_separation_audit(
+            solution,
+            max_arity=1,
+            max_action_group_order=2,
+        )
+
+        self.assertEqual(audit.computed_arities, tuple())
+        self.assertEqual(audit.truncated_arities, (1,))
+        self.assertIsNone(audit.prefix_separation_bound)
 
     def test_point_pushing_brunnian_normalized_prefix_audit_certifies_stabilized_row(self):
         solution = rack_solution([0, 1, 2], lambda a, b: (2 * a - b) % 3)

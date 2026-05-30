@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from collections import deque
 from dataclasses import dataclass
-from itertools import product
+from itertools import combinations, product
 from typing import Iterable, Mapping, Sequence, Tuple
 
 from .artin_longitudes import BraidWord, FreeWord, NormalizedLawPrefixWitnessAudit
@@ -377,6 +377,50 @@ class PointPushingProductPrefixFirstFailureAudit:
                 return False
             previous = value
         return True
+
+
+@dataclass(frozen=True)
+class PointPushingActionQuotientSeparationRow:
+    """Finite residual-depth diagnostic for one action image ``P_k(X)``."""
+
+    arity: int
+    action_group_order: int | None
+    nonidentity_count: int | None
+    max_separating_quotient_size: int | None
+    deepest_element: Permutation | None
+    truncated: bool
+
+    @property
+    def computed_all_separators(self) -> bool:
+        return not self.truncated and self.max_separating_quotient_size is not None
+
+
+@dataclass(frozen=True)
+class PointPushingActionQuotientSeparationAudit:
+    """Finite-prefix audit for quotient-separating depth of action images."""
+
+    max_arity: int
+    max_action_group_order: int | None
+    rows: Tuple[PointPushingActionQuotientSeparationRow, ...]
+
+    @property
+    def truncated_arities(self) -> Tuple[int, ...]:
+        return tuple(row.arity for row in self.rows if row.truncated)
+
+    @property
+    def computed_arities(self) -> Tuple[int, ...]:
+        return tuple(row.arity for row in self.rows if row.computed_all_separators)
+
+    @property
+    def prefix_separation_bound(self) -> int | None:
+        values = [
+            row.max_separating_quotient_size
+            for row in self.rows
+            if row.max_separating_quotient_size is not None
+        ]
+        if len(values) != len(self.rows):
+            return None
+        return max(values, default=1)
 
 
 @dataclass(frozen=True)
@@ -863,6 +907,31 @@ def permutation_group_from_subgroup(subgroup: Iterable[Permutation]):
         for right in elements
     }
     return FiniteGroup(elements, identity, table)
+
+
+def point_pushing_action_group(
+    solution: FiniteBraidedSet,
+    arity: int,
+    *,
+    max_size: int | None = None,
+) -> FiniteGroup:
+    """Return the finite marked action image ``P_k(X)`` as a group."""
+
+    from .braid_laws import pure_braid_generator
+
+    if arity < 1:
+        raise ValueError("arity must be positive")
+    braid_index = arity + 1
+    action_braids = {
+        generator: pure_braid_generator(generator + 1, braid_index)
+        for generator in range(arity)
+    }
+    action_images = braid_images_for_words(solution, braid_index, action_braids)
+    subgroup = generated_permutation_subgroup(
+        action_images.values(),
+        max_size=max_size,
+    )
+    return permutation_group_from_subgroup(subgroup)
 
 
 def evaluate_free_word_on_permutations(
@@ -1869,6 +1938,127 @@ def point_pushing_product_prefix_first_failure_audit(
     return PointPushingProductPrefixFirstFailureAudit(
         prefix_count=len(factors),
         max_arity=max_arity,
+        rows=tuple(rows),
+    )
+
+
+def _normal_subgroups_bruteforce(
+    group: FiniteGroup,
+    *,
+    max_group_order: int | None = None,
+) -> Tuple[frozenset[object], ...] | None:
+    """Enumerate normal subgroups for small explicit groups."""
+
+    from .finite_group import is_normal_subgroup
+
+    group_order = len(group.elements)
+    if max_group_order is not None and group_order > max_group_order:
+        return None
+    identity = group.identity
+    rest = tuple(element for element in group.elements if element != identity)
+    normal_subgroups = []
+    for size in range(1, group_order + 1):
+        for chosen in combinations(rest, size - 1):
+            subset = frozenset((identity,) + chosen)
+            if is_normal_subgroup(group, subset):
+                normal_subgroups.append(subset)
+    return tuple(normal_subgroups)
+
+
+def _separating_quotient_size(
+    group: FiniteGroup,
+    element: object,
+    normal_subgroups: Sequence[frozenset[object]],
+) -> int:
+    """Return the smallest quotient order separating ``element`` from identity."""
+
+    candidates = [
+        len(group.elements) // len(normal)
+        for normal in normal_subgroups
+        if element not in normal
+    ]
+    if not candidates:
+        raise ValueError("no quotient separates the supplied nonidentity element")
+    return min(candidates)
+
+
+def point_pushing_action_quotient_separation_audit(
+    solution: FiniteBraidedSet,
+    max_arity: int,
+    *,
+    max_action_group_order: int | None = None,
+) -> PointPushingActionQuotientSeparationAudit:
+    """Audit finite quotient-separating depths of ``P_k(X)`` for small rows."""
+
+    if max_arity < 1:
+        raise ValueError("max_arity must be positive")
+
+    rows = []
+    for arity in range(1, max_arity + 1):
+        try:
+            action_group = point_pushing_action_group(
+                solution,
+                arity,
+                max_size=max_action_group_order,
+            )
+        except ValueError as exc:
+            if "exceeded max_size" not in str(exc):
+                raise
+            rows.append(
+                PointPushingActionQuotientSeparationRow(
+                    arity=arity,
+                    action_group_order=None,
+                    nonidentity_count=None,
+                    max_separating_quotient_size=None,
+                    deepest_element=None,
+                    truncated=True,
+                )
+            )
+            continue
+
+        normal_subgroups = _normal_subgroups_bruteforce(
+            action_group,
+            max_group_order=max_action_group_order,
+        )
+        if normal_subgroups is None:
+            rows.append(
+                PointPushingActionQuotientSeparationRow(
+                    arity=arity,
+                    action_group_order=len(action_group.elements),
+                    nonidentity_count=len(action_group.elements) - 1,
+                    max_separating_quotient_size=None,
+                    deepest_element=None,
+                    truncated=True,
+                )
+            )
+            continue
+
+        deepest_element = None
+        max_separator = 1
+        for element in action_group.elements:
+            if element == action_group.identity:
+                continue
+            separator = _separating_quotient_size(
+                action_group,
+                element,
+                normal_subgroups,
+            )
+            if separator > max_separator:
+                max_separator = separator
+                deepest_element = element
+        rows.append(
+            PointPushingActionQuotientSeparationRow(
+                arity=arity,
+                action_group_order=len(action_group.elements),
+                nonidentity_count=len(action_group.elements) - 1,
+                max_separating_quotient_size=max_separator,
+                deepest_element=deepest_element,
+                truncated=False,
+            )
+        )
+    return PointPushingActionQuotientSeparationAudit(
+        max_arity=max_arity,
+        max_action_group_order=max_action_group_order,
         rows=tuple(rows),
     )
 

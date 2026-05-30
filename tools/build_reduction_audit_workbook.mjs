@@ -283,6 +283,13 @@ const rows = [
     "Prove eta_X(k) is bounded, or construct an infinite product-prefix first-failure Brunnian tail.",
   ],
   [
+    "Action-quotient separation",
+    "Show product-prefix movers must be residually deep inside the action images P_k(X).",
+    "proofs/point_pushing_action_quotient_separation.md proves w=1 in D_k(P_j) but nontrivial in P_k(X) implies the moved element survives no quotient of P_k(X) of order <= b(j); point_pushing_action_quotient_separation_audit records finite residual-depth prefixes.",
+    "Residual-depth reduction",
+    "Prove uniformly bounded element-separating quotients for P_k(X), or construct product-prefix Brunnian movers with unbounded separation depth.",
+  ],
+  [
     "Point-pushing marked quotient criterion",
     "Replace fixed-variety containment by the exact derivative-detector marked quotient condition.",
     "proofs/point_pushing_marked_quotient_criterion.md proves A_G dominates X iff every P_k(X) is a marked quotient of D_k(G); point_pushing_marked_quotient_audit checks finite arity instances.",
