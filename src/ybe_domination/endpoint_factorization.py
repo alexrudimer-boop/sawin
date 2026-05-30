@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Sequence, Tuple
+from typing import Iterable, Sequence, Tuple
 
 from .artin_longitudes import (
     BraidWord,
@@ -18,8 +18,10 @@ from .artin_longitudes import (
     invert_longitude_subgroup_witness,
 )
 from .finite_group import FiniteGroup, GroupElement, direct_product_group
+from .local_interval import Color, FibrePoint, LostEdgeExternalRoutingAudit
 
 ArtinDefectEndpointTerm = Tuple[Tuple[GroupElement, ...], FreeWord, int]
+LostEdgeKey = Tuple[Color, FibrePoint, FibrePoint]
 
 
 @dataclass(frozen=True)
@@ -542,6 +544,72 @@ class EndpointResidualActionAudit:
     @property
     def proves_complete_residual_action_implication(self) -> bool:
         return self.proves_supplied_rows_detector_implication and self.covers_expected_rows
+
+
+@dataclass(frozen=True)
+class RoutedLostEdgeEndpointWitnessAudit:
+    """Endpoint-longitude obligations for externally routed lost edges."""
+
+    routing_audit: LostEdgeExternalRoutingAudit
+    edge_endpoint_audits: Tuple[Tuple[LostEdgeKey, EndpointProductExpressionAudit], ...]
+
+    @property
+    def routed_edges(self) -> Tuple[LostEdgeKey, ...]:
+        return self.routing_audit.routed_edges
+
+    @property
+    def witnessed_edges(self) -> Tuple[LostEdgeKey, ...]:
+        return _sorted_edges(
+            edge
+            for edge, audit in self.edge_endpoint_audits
+            if audit.proves_product_endpoint_detector_by_expression
+        )
+
+    @property
+    def missing_routed_edges(self) -> Tuple[LostEdgeKey, ...]:
+        witnessed = set(self.witnessed_edges)
+        return _sorted_edges(edge for edge in self.routed_edges if edge not in witnessed)
+
+    @property
+    def extra_witness_edges(self) -> Tuple[LostEdgeKey, ...]:
+        routed = set(self.routed_edges)
+        return _sorted_edges(edge for edge, _audit in self.edge_endpoint_audits if edge not in routed)
+
+    @property
+    def all_endpoint_witnesses_visible(self) -> bool:
+        return all(
+            audit.proves_product_endpoint_detector_by_expression
+            for _edge, audit in self.edge_endpoint_audits
+        )
+
+    @property
+    def all_routed_edges_have_endpoint_witnesses(self) -> bool:
+        return not self.missing_routed_edges
+
+    @property
+    def proves_routed_lost_edge_endpoint_visibility(self) -> bool:
+        return (
+            self.routing_audit.proves_external_routing_ledger
+            and self.all_endpoint_witnesses_visible
+            and self.all_routed_edges_have_endpoint_witnesses
+            and not self.extra_witness_edges
+        )
+
+
+def _sorted_edges(edges: Iterable[LostEdgeKey]) -> Tuple[LostEdgeKey, ...]:
+    return tuple(sorted(set(edges), key=repr))
+
+
+def routed_lost_edge_endpoint_witness_audit(
+    routing_audit: LostEdgeExternalRoutingAudit,
+    edge_endpoint_audits: Sequence[Tuple[LostEdgeKey, EndpointProductExpressionAudit]],
+) -> RoutedLostEdgeEndpointWitnessAudit:
+    """Bundle endpoint-longitude witnesses for externally routed lost edges."""
+
+    return RoutedLostEdgeEndpointWitnessAudit(
+        routing_audit=routing_audit,
+        edge_endpoint_audits=tuple(edge_endpoint_audits),
+    )
 
 
 def endpoint_longitude_expression_audit(

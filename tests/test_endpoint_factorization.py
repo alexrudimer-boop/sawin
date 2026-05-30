@@ -5,6 +5,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from ybe_domination import (
+    LocalInterval,
     artin_permutation_defect_witness_audit,
     cyclic_group,
     endpoint_artin_defect_audit,
@@ -17,11 +18,25 @@ from ybe_domination import (
     endpoint_product_longitude_expression_audit,
     endpoint_residual_action_audit,
     endpoint_residual_readout_audit,
+    lost_edge_external_routing_audit,
+    routed_lost_edge_endpoint_witness_audit,
     symmetric_group,
     terminal_gauge_longitude_expression_audit,
     terminal_gauge_product_longitude_expression_audit,
     terminal_gauge_telescoping_audit,
 )
+
+
+def one_color_identity_interval():
+    colors = ("*",)
+    fibres = {"*": (0, 1)}
+    base_R = {("*", "*"): ("*", "*")}
+    T = {
+        ("*", "*", x, y): (x, y)
+        for x in fibres["*"]
+        for y in fibres["*"]
+    }
+    return LocalInterval(colors, fibres, base_R, T)
 
 
 class EndpointFactorizationTests(unittest.TestCase):
@@ -357,6 +372,79 @@ class EndpointFactorizationTests(unittest.TestCase):
             audit.terminal_gauge_lies_in_longitude_subgroup_by_expression
         )
         self.assertFalse(audit.identity_longitudes_kill_terminal_gauge_by_expression)
+
+    def test_routed_lost_edge_endpoint_witness_covers_routed_edges(self):
+        interval = one_color_identity_interval()
+        routing = lost_edge_external_routing_audit(
+            interval,
+            {"*": {0: "zero", 1: "one"}},
+            {"*": {0: "left", 1: "right"}},
+        )
+        edge = routing.routed_edges[0]
+        c2 = cyclic_group(2)
+        endpoint = endpoint_product_longitude_expression_audit(
+            (c2,),
+            n=2,
+            braid_word=(1, 1),
+            endpoints=(1,),
+            assignments=((1, 0),),
+            expressions=(((1, 1),),),
+        )
+
+        audit = routed_lost_edge_endpoint_witness_audit(
+            routing,
+            ((edge, endpoint),),
+        )
+
+        self.assertEqual(audit.routed_edges, routing.routed_edges)
+        self.assertEqual(audit.witnessed_edges, routing.routed_edges)
+        self.assertEqual(audit.missing_routed_edges, ())
+        self.assertEqual(audit.extra_witness_edges, ())
+        self.assertTrue(audit.all_endpoint_witnesses_visible)
+        self.assertTrue(audit.all_routed_edges_have_endpoint_witnesses)
+        self.assertTrue(audit.proves_routed_lost_edge_endpoint_visibility)
+
+    def test_routed_lost_edge_endpoint_witness_reports_missing_edge(self):
+        interval = one_color_identity_interval()
+        routing = lost_edge_external_routing_audit(
+            interval,
+            {"*": {0: "zero", 1: "one"}},
+            {"*": {0: "left", 1: "right"}},
+        )
+
+        audit = routed_lost_edge_endpoint_witness_audit(routing, ())
+
+        self.assertEqual(audit.witnessed_edges, ())
+        self.assertEqual(audit.missing_routed_edges, routing.routed_edges)
+        self.assertFalse(audit.all_routed_edges_have_endpoint_witnesses)
+        self.assertFalse(audit.proves_routed_lost_edge_endpoint_visibility)
+
+    def test_routed_lost_edge_endpoint_witness_rejects_bad_endpoint_display(self):
+        interval = one_color_identity_interval()
+        routing = lost_edge_external_routing_audit(
+            interval,
+            {"*": {0: "zero", 1: "one"}},
+            {"*": {0: "left", 1: "right"}},
+        )
+        edge = routing.routed_edges[0]
+        c2 = cyclic_group(2)
+        endpoint = endpoint_product_longitude_expression_audit(
+            (c2,),
+            n=2,
+            braid_word=(1, 1),
+            endpoints=(0,),
+            assignments=((1, 0),),
+            expressions=(((1, 1),),),
+        )
+
+        audit = routed_lost_edge_endpoint_witness_audit(
+            routing,
+            ((edge, endpoint),),
+        )
+
+        self.assertFalse(audit.all_endpoint_witnesses_visible)
+        self.assertEqual(audit.missing_routed_edges, routing.routed_edges)
+        self.assertFalse(audit.proves_routed_lost_edge_endpoint_visibility)
 
     def test_product_endpoint_expression_requires_parallel_data(self):
         with self.assertRaises(ValueError):

@@ -265,6 +265,11 @@ descent quotient from external endpoint labels that remember edges collapsed
 by seed-saturation.  `lost_edge_external_routing_audit(...)` records lost,
 routed, and unrouted edges without adding the routing labels back to the
 descent quotient.
+The routed lost-edge endpoint witness note
+`proofs/routed_lost_edge_endpoint_witness.md` connects those routed edges to
+the existing endpoint-longitude expression certificates:
+`routed_lost_edge_endpoint_witness_audit(...)` requires each routed edge to
+have a product endpoint witness in fixed detector factors.
 The chart-transport collapse
 `proofs/chart_transport_collapse.md` removes transported-generator noise:
 `V_beta(G)` is already normal, and
@@ -275,6 +280,14 @@ closure is proved, but descent separation itself remains unproved.  A positive
 solution now requires fixed Green/Schutzenberger/atom/unit readout labels whose
 kernel makes the descent-separation audit pass, or a normalized-law B
 construction from a non-separated seed.
+The final constant-observer universal-continuation case is now sharpened by
+`proofs/unit_continuation_final_obstruction.md`.  If `Theta^cont=Nabla` and
+all certified observers are fibrewise constant, any completed-context branch
+that actually moves a residual tuple has a permutation composite, hence uses
+only unit continuation factors by the unit-factorization gate.  The last
+possible obstruction in this channel is therefore a unit endpoint
+`S_beta in U(M_cont)` whose membership in `V_beta(U(M_cont))` is still
+unproved; nonunit/reset labels cannot be final B evidence.
 The semisplit audit now has an exact Boolean-CSP view: each coloured crossing
 lists the allowed equality/universal bit patterns on its two source and two
 target colours, and satisfying non-extreme assignments agree with the

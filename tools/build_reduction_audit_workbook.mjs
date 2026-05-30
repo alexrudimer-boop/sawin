@@ -598,6 +598,13 @@ const rows = [
     "Do not add routing labels back to the descent quotient; prove their fixed-factor longitude visibility separately.",
   ],
   [
+    "Routed edge endpoint witnesses",
+    "Attach product endpoint-longitude certificates to externally routed lost edges.",
+    "proofs/routed_lost_edge_endpoint_witness.md; routed_lost_edge_endpoint_witness_audit checks routed-edge coverage by endpoint product-expression audits.",
+    "Reduction criterion",
+    "Every routed lost edge still needs a fixed-factor recursive-longitude witness; missing witnesses are not B without normalized laws.",
+  ],
+  [
     "Chart-transport collapse",
     "Avoid separate endpoint-longitude proofs for transported or chart-conjugate copies of elementary generators.",
     "proofs/chart_transport_collapse.md; conjugate_longitude_subgroup_witness shows V_beta(G) is normal at certificate level.",
@@ -610,6 +617,13 @@ const rows = [
     "proofs/descent_separation_transport_rack_closure.md records that transport-rack closure is proved and descent separation remains open.",
     "Open theorem",
     "Prove universal continuation visibility or extract a normalized-law B seed from a non-separated row.",
+  ],
+  [
+    "Unit-continuation final obstruction",
+    "Split the constant-observer universal-continuation case into nonunit impossibility and unit endpoint holonomy.",
+    "proofs/unit_continuation_final_obstruction.md specializes unit_factorization_audit to Theta^cont=Nabla and K^O=Nabla.",
+    "Sharper open theorem",
+    "Prove every residual unit-continuation endpoint lies in V_beta(U_cont), or upgrade such a failure to normalized laws.",
   ],
   [
     "Bi-free subgroup certificate",

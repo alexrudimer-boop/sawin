@@ -274,6 +274,10 @@ Also read `proofs/lost_edge_external_routing.md`: it separates descent
 quotient labels from external endpoint labels that route the edges collapsed
 by seed-saturation.  Routing labels must not be added back to the descent
 quotient product unless one wants the continuation seeds to survive again.
+Then read `proofs/routed_lost_edge_endpoint_witness.md`: routed lost edges
+are valid for the A route only after they receive product endpoint-longitude
+certificates in fixed detector factors.  Missing routed-edge witnesses are
+not B evidence unless upgraded to normalized laws.
 Also read `proofs/chart_transport_collapse.md`: it proves that finite chart
 conjugation does not create new endpoint-longitude obligations, because
 `V_beta(G)` is normal and one representative elementary-generator witness
@@ -726,6 +730,14 @@ Prefer the weaker endpoint target from
 prove the final unit/composite lies in `V_beta(U(M))`; do not require every
 intermediate label to lie there unless the branch proof genuinely supplies
 that stronger statement.
+Also use `proofs/unit_continuation_final_obstruction.md` for the final
+constant-observer universal-continuation case.  In the case
+`Theta^cont=Nabla` and `K^O=Nabla`, nonunit/reset-like continuation factors
+cannot be the moving residual obstruction because any branch that contributes
+to `delta_{n,z}(beta)` has a permutation composite.  The exact remaining
+target is the unit-continuation longitude theorem:
+`S_beta in V_beta(U(M_cont))` for the fixed interval-level unit group, or a
+normalized-law B sequence from a failure.
 Use `unit_composite_longitude_route_audit(...)` only as a fixed-word
 bookkeeping tool: a missing single-longitude witness is not an obstruction
 when the endpoint still lies in the longitude-value subgroup.

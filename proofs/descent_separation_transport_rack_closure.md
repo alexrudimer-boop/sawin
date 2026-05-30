@@ -197,6 +197,16 @@ descent-separation certificate would construct a quotient interval whose row is
 strand-continuing.  Equivalently, after those readouts, the remaining lower
 endpoint motion must be strand-continuing.
 
+The constant-observer universal-continuation subcase has a sharper endpoint
+form.  If `Theta^cont=Nabla` and `K^O=Nabla`, then a moving completed-context
+branch still represents part of the residual permutation
+`delta_{n,z}(beta)`.  By the unit-factorization gate, any finite
+transformation word with permutation composite uses only unit factors.  Hence
+nonunit continuation labels cannot be the final obstruction.  The remaining
+statement in that subcase is exactly unit-continuation longitude visibility:
+the terminal unit composite `S_beta in U(M_cont)` must lie in
+`V_beta(U(M_cont))` for the fixed interval-level transition monoid.
+
 There is also a guardrail against an invalid shortcut: elementary Green defects
 cannot always be products of Artin permutation defects.  The abelianization
 barrier records finite stress rows with nontrivial abelian defect kernels.

@@ -1057,6 +1057,15 @@ external routing labels, then lists the saturation edges that are lost,
 routed, or still unrouted.  These routing labels are not fed back into the
 descent quotient; their all-`n` recursive-longitude visibility remains a
 separate endpoint-factorization obligation.
+The routed lost-edge endpoint witness note
+`proofs/routed_lost_edge_endpoint_witness.md` connects that ledger to the
+endpoint certificate layer.  The helper
+`routed_lost_edge_endpoint_witness_audit(...)` requires each routed edge to
+come with a product endpoint-longitude expression audit in fixed detector
+factors, reports missing routed edges and extra witness edges, and passes only
+when the routing ledger itself is valid.  This is still not an A proof: it is
+the precise fixed-factor obligation for the externally routed lost
+information.
 The chart-transport collapse in
 `proofs/chart_transport_collapse.md` removes chart-dependent copies from the
 generator burden.  Since `V_beta(G)` is already normal in every finite group,
@@ -1069,6 +1078,20 @@ fixed Green, Schutzenberger, atom, or unit readout labels whose kernel is
 admissible and kills each representative seed, so that the integrated descent
 separation audit passes and only strand-continuing transport-rack gauge
 remains.
+The final constant-observer universal-continuation corridor has now been
+split by `proofs/unit_continuation_final_obstruction.md`.  In the case
+`Theta^cont=Nabla` and `K^O=Nabla`, every certified observer is fibrewise
+constant, but any completed-context continuation branch that actually
+contributes to `delta_{n,z}(beta)` has a permutation composite.  The
+unit-factorization lemma then forces every transition factor in that branch
+to be a unit/permutation; nonunit or reset-like continuation labels cannot be
+the moving residual obstruction.  The only remaining obstruction in this
+channel is a unit endpoint `S_beta in U(M_cont)` with unproved membership in
+`V_beta(U(M_cont))`.  Therefore the sharpened final theorem is the
+unit-continuation longitude theorem: every such residual unit-continuation
+endpoint lies in the longitude-value subgroup of the fixed unit group, or a
+failure must be upgraded to a normalized-law sequence invisible to every
+finite group.
 The single-endpoint route audit
 `unit_composite_longitude_route_audit(monoid,n,beta,factors)` now records the
 same ladder used in product-label work: endpoint identity, one evaluated

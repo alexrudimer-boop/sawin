@@ -59,11 +59,13 @@ First read:
 26. `proofs/readout_seed_saturation.md`
 27. `proofs/local_minimal_seed_saturation_dichotomy.md`
 28. `proofs/lost_edge_external_routing.md`
-29. `proofs/chart_transport_collapse.md`
-30. `proofs/descent_separation_transport_rack_closure.md`
-31. `proofs/sawin_proof_log.docx`
-32. `tables/reduction_audit.xlsx`
-33. The code and tests under `src/`, `tools/`, and `tests/`
+29. `proofs/routed_lost_edge_endpoint_witness.md`
+30. `proofs/chart_transport_collapse.md`
+31. `proofs/descent_separation_transport_rack_closure.md`
+32. `proofs/unit_continuation_final_obstruction.md`
+33. `proofs/sawin_proof_log.docx`
+34. `tables/reduction_audit.xlsx`
+35. The code and tests under `src/`, `tools/`, and `tests/`
 
 Then audit and use these reductions:
 
@@ -272,12 +274,23 @@ Then audit and use these reductions:
    Also use `proofs/lost_edge_external_routing.md`: it separates descent
    quotient labels from external endpoint routing labels and records which
    seed-saturation edges are lost, routed, or still unrouted.
+   Then use `proofs/routed_lost_edge_endpoint_witness.md`: every routed lost
+   edge needs a product endpoint-longitude certificate in fixed detector
+   factors; missing certificates are only unresolved obligations unless they
+   are upgraded to normalized laws.
    Also use `proofs/chart_transport_collapse.md`: it proves transported
    elementary generators need no separate proof once one chart-conjugacy orbit
    representative is certified, because `V_beta(G)` is normal.  Then read
    `proofs/descent_separation_transport_rack_closure.md`: it records that
    transport-rack closure is proved and that descent separation is the final
    unproved A-route theorem.
+   Also read `proofs/unit_continuation_final_obstruction.md`: in the final
+   constant-observer universal-continuation case `Theta^cont=Nabla` and
+   `K^O=Nabla`, nonunit continuation factors cannot move a residual
+   permutation branch.  The only remaining obstruction in that channel is a
+   unit endpoint `S_beta in U(M_cont)` whose membership in
+   `V_beta(U(M_cont))` must be proved, or upgraded to a normalized-law B
+   sequence if false.
    Also audit the Green atom-action layer through `proofs/green_branch_audit.md`
    and `atom_action_summary(...)`: it checks whether completed rows descend to
    operations on saturated atoms, `p(a) triangleright p(q)=p(a^q)` and
