@@ -451,6 +451,9 @@ class PointPushingMonolithicCompressionAudit:
     monolith_in_quotient_commutator: bool | None
     projected_value_in_quotient_commutator: bool | None
     central_abelian_depth_regime: str | None
+    central_cyclic_prime: int | None
+    central_cyclic_exponent: int | None
+    central_cyclic_prefix_regime: str | None
     quotient_is_monolithic: bool | None
     projected_value_in_monolith: bool | None
     prefix_order_bound: int | None
@@ -2171,6 +2174,35 @@ def _central_abelian_monolith_depth_data(
     )
 
 
+def _cyclic_p_power_tail_data(
+    quotient_order: int,
+    monolith_prime: int | None,
+    prefix_order_bound: int | None,
+    *,
+    central_abelian_depth_regime: str | None,
+) -> Tuple[int | None, int | None, str | None]:
+    """Return prime/exponent and product-prefix escape type for cyclic depth."""
+
+    if central_abelian_depth_regime != "cyclic_p_power_depth":
+        return None, None, None
+    if monolith_prime is None:
+        return None, None, "invalid_cyclic_p_power_data"
+    exponent = 0
+    remaining = quotient_order
+    while remaining % monolith_prime == 0:
+        exponent += 1
+        remaining //= monolith_prime
+    if remaining != 1 or exponent == 0:
+        return monolith_prime, None, "invalid_cyclic_p_power_data"
+    if prefix_order_bound is None:
+        return monolith_prime, exponent, "cyclic_p_power"
+    if quotient_order <= prefix_order_bound:
+        return monolith_prime, exponent, "prefix_covers_cyclic_p_power"
+    if monolith_prime > prefix_order_bound:
+        return monolith_prime, exponent, "prime_escape"
+    return monolith_prime, exponent, "p_power_depth_escape"
+
+
 def point_pushing_monolithic_compression_audit(
     solution: FiniteBraidedSet,
     word: FreeWord,
@@ -2216,6 +2248,9 @@ def point_pushing_monolithic_compression_audit(
             monolith_in_quotient_commutator=None,
             projected_value_in_quotient_commutator=None,
             central_abelian_depth_regime=None,
+            central_cyclic_prime=None,
+            central_cyclic_exponent=None,
+            central_cyclic_prefix_regime=None,
             quotient_is_monolithic=None,
             projected_value_in_monolith=None,
             prefix_order_bound=prefix_order_bound,
@@ -2246,6 +2281,9 @@ def point_pushing_monolithic_compression_audit(
             monolith_in_quotient_commutator=None,
             projected_value_in_quotient_commutator=None,
             central_abelian_depth_regime=None,
+            central_cyclic_prime=None,
+            central_cyclic_exponent=None,
+            central_cyclic_prefix_regime=None,
             quotient_is_monolithic=None,
             projected_value_in_monolith=None,
             prefix_order_bound=prefix_order_bound,
@@ -2278,6 +2316,9 @@ def point_pushing_monolithic_compression_audit(
             monolith_in_quotient_commutator=None,
             projected_value_in_quotient_commutator=None,
             central_abelian_depth_regime=None,
+            central_cyclic_prime=None,
+            central_cyclic_exponent=None,
+            central_cyclic_prefix_regime=None,
             quotient_is_monolithic=None,
             projected_value_in_monolith=None,
             prefix_order_bound=prefix_order_bound,
@@ -2315,6 +2356,9 @@ def point_pushing_monolithic_compression_audit(
             monolith_in_quotient_commutator=None,
             projected_value_in_quotient_commutator=None,
             central_abelian_depth_regime=None,
+            central_cyclic_prime=None,
+            central_cyclic_exponent=None,
+            central_cyclic_prefix_regime=None,
             quotient_is_monolithic=None,
             projected_value_in_monolith=None,
             prefix_order_bound=prefix_order_bound,
@@ -2341,6 +2385,9 @@ def point_pushing_monolithic_compression_audit(
     monolith_in_quotient_commutator = None
     projected_value_in_quotient_commutator = None
     central_abelian_depth_regime = None
+    central_cyclic_prime = None
+    central_cyclic_exponent = None
+    central_cyclic_prefix_regime = None
     if monolith is not None:
         monolith_type, monolith_prime, monolith_element_orders = _monolith_type_data(
             quotient,
@@ -2364,6 +2411,16 @@ def point_pushing_monolithic_compression_audit(
             monolith_type=monolith_type,
             monolith_is_central=monolith_is_central,
         )
+        (
+            central_cyclic_prime,
+            central_cyclic_exponent,
+            central_cyclic_prefix_regime,
+        ) = _cyclic_p_power_tail_data(
+            quotient_order,
+            monolith_prime,
+            prefix_order_bound,
+            central_abelian_depth_regime=central_abelian_depth_regime,
+        )
     return PointPushingMonolithicCompressionAudit(
         arity=arity,
         word=tuple(word),
@@ -2384,6 +2441,9 @@ def point_pushing_monolithic_compression_audit(
         monolith_in_quotient_commutator=monolith_in_quotient_commutator,
         projected_value_in_quotient_commutator=projected_value_in_quotient_commutator,
         central_abelian_depth_regime=central_abelian_depth_regime,
+        central_cyclic_prime=central_cyclic_prime,
+        central_cyclic_exponent=central_cyclic_exponent,
+        central_cyclic_prefix_regime=central_cyclic_prefix_regime,
         quotient_is_monolithic=monolith is not None,
         projected_value_in_monolith=(
             None if monolith is None else projected_value in monolith

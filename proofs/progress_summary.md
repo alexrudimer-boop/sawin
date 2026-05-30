@@ -1202,6 +1202,12 @@ monolithic group is cyclic of prime-power order.  Otherwise the monolith lies
 inside `Z(H) cap [H,H]`, a genuine stem central-extension obstruction.  The
 audit helper now records derived-subgroup order, whether the monolith and
 projected value lie in the derived subgroup, and a central-depth regime label.
+`proofs/point_pushing_cyclic_p_power_tail.md` refines the cyclic side.  A
+cyclic `C_{p^e}` first failure has `p^e>b(j)`.  Hence either `p>b(j)`, a prime
+escape, or `p<=b(j)<p^e`, a genuine p-power depth escape.  Proper quotients of
+`C_{p^e}` kill the bottom order-`p` monolith element, so the latter case is not
+detected merely because `C_p` lies in the product prefix.  The audit helper now
+records the cyclic prime, p-power exponent, and prefix escape regime.
 
 ## Verification snapshot
 

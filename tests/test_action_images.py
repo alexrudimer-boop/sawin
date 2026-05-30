@@ -52,6 +52,7 @@ from ybe_domination import (
 )
 from ybe_domination.action_images import (
     _central_abelian_monolith_depth_data,
+    _cyclic_p_power_tail_data,
     _minimal_normal_subgroups,
     _monolith_conjugation_data,
     _normal_subgroups_bruteforce,
@@ -823,10 +824,37 @@ class ActionImageTests(unittest.TestCase):
         self.assertFalse(audit.monolith_in_quotient_commutator)
         self.assertFalse(audit.projected_value_in_quotient_commutator)
         self.assertEqual(audit.central_abelian_depth_regime, "cyclic_p_power_depth")
+        self.assertEqual(audit.central_cyclic_prime, 3)
+        self.assertEqual(audit.central_cyclic_exponent, 1)
+        self.assertEqual(audit.central_cyclic_prefix_regime, "prime_escape")
         self.assertTrue(audit.quotient_is_monolithic)
         self.assertTrue(audit.projected_value_in_monolith)
         self.assertTrue(audit.quotient_escapes_prefix_bound)
         self.assertTrue(audit.proves_monolithic_compression)
+
+    def test_cyclic_p_power_tail_data_splits_prime_and_depth_escape(self):
+        prime_escape = _cyclic_p_power_tail_data(
+            9,
+            3,
+            2,
+            central_abelian_depth_regime="cyclic_p_power_depth",
+        )
+        depth_escape = _cyclic_p_power_tail_data(
+            8,
+            2,
+            4,
+            central_abelian_depth_regime="cyclic_p_power_depth",
+        )
+        covered = _cyclic_p_power_tail_data(
+            4,
+            2,
+            4,
+            central_abelian_depth_regime="cyclic_p_power_depth",
+        )
+
+        self.assertEqual(prime_escape, (3, 2, "prime_escape"))
+        self.assertEqual(depth_escape, (2, 3, "p_power_depth_escape"))
+        self.assertEqual(covered, (2, 2, "prefix_covers_cyclic_p_power"))
 
     def test_monolith_conjugation_data_splits_noncentral_abelian_case(self):
         group = symmetric_group(3)

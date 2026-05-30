@@ -318,6 +318,13 @@ const rows = [
     "Rule out cyclic p-power depth, central stem depth, noncentral irreducible module tails, and nonabelian simple-product tails, or construct one for B.",
   ],
   [
+    "Cyclic p-power tail",
+    "Split cyclic central-depth failures into prime escape and p-power depth escape.",
+    "proofs/point_pushing_cyclic_p_power_tail.md proves that a cyclic C_{p^e} first failure has p^e>b(j), hence either p>b(j) or p<=b(j)<p^e; proper quotients kill the bottom monolith element. The audit records p, e, and prefix regime.",
+    "p-adic tail reduction",
+    "Rule out unbounded cyclic prime escape and fixed-prime unbounded p-adic depth, or construct one for B.",
+  ],
+  [
     "Point-pushing marked quotient criterion",
     "Replace fixed-variety containment by the exact derivative-detector marked quotient condition.",
     "proofs/point_pushing_marked_quotient_criterion.md proves A_G dominates X iff every P_k(X) is a marked quotient of D_k(G); point_pushing_marked_quotient_audit checks finite arity instances.",

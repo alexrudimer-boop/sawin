@@ -2165,11 +2165,15 @@ In the noncentral case `H/C_H(M)` is a faithful irreducible linear action on
 central case, `proofs/point_pushing_central_monolith_depth.md` gives another
 split: either abelianization separates the monolith and minimality forces `H`
 to be cyclic of prime-power order, or `M <= Z(H) cap [H,H]` and the
-obstruction is a stem central extension.  Thus a negative proof must now
-produce one of four unbounded tails: cyclic p-power central depth, central stem
-depth, noncentral irreducible linear-module tails, or nonabelian simple-product
-tails.  A positive proof may close the global point-pushing route by ruling
-out all four for finite YBE action images.
+obstruction is a stem central extension.  The cyclic case then splits again in
+`proofs/point_pushing_cyclic_p_power_tail.md`: a cyclic `C_{p^e}` first
+failure has either prime escape `p>b(j)` or p-power depth escape
+`p<=b(j)<p^e`, and proper quotients kill the bottom monolith element.  Thus a
+negative proof must now produce one of five unbounded tails: cyclic prime
+escape, cyclic p-power depth escape, central stem depth, noncentral irreducible
+linear-module tails, or nonabelian simple-product tails.  A positive proof may
+close the global point-pushing route by ruling out all five for finite YBE
+action images.
 
 ## Completion audit checklist
 

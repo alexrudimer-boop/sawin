@@ -116,16 +116,19 @@ unbounded central stem-extension depth.
 
 The first form is abelian but not killed by any smaller quotient because the
 moved element lies in the bottom order-`p` subgroup of a cyclic `p^e` quotient.
+The follow-up note `proofs/point_pushing_cyclic_p_power_tail.md` splits this
+again into prime escape and p-power depth escape.
 
 The second form is nonabelian but abelianization-invisible because the moved
 monolith is contained in `Z(H) cap [H,H]`.
 
 Thus the current global point-pushing obstruction fork is now:
 
-1. cyclic p-power central depth;
-2. stem central depth;
-3. noncentral irreducible `F_p` module tails;
-4. nonabelian simple-product monolith tails.
+1. cyclic prime escape;
+2. cyclic p-power depth escape;
+3. stem central depth;
+4. noncentral irreducible `F_p` module tails;
+5. nonabelian simple-product monolith tails.
 
 Rule out all four uniformly for finite YBE point-pushing action images and
 outcome A follows from the product-prefix criterion.  Construct one unbounded
