@@ -79,6 +79,7 @@ from .artin_longitudes import (
     apply_permutation_to_free_word,
     artin_detector_rack,
     artin_detector_lift_braid_audit,
+    artin_detector_lift_general_state,
     artin_detector_lift_inverse_row_audit,
     artin_detector_lift_negative_update,
     artin_detector_lift_positive_update,
@@ -399,6 +400,7 @@ from .group_laws import (
 )
 from .braid_laws import (
     LastStrandLawExactnessAudit,
+    PointPushingKernelMembershipAudit,
     free_word_to_braid,
     invert_braid_word,
     last_strand_law_exactness_audit,
@@ -406,6 +408,7 @@ from .braid_laws import (
     law_braid_longitude_subgroup_profile,
     law_word_on_last_strand,
     longitude_identity_profile_for_law_braid,
+    point_pushing_kernel_membership_audit,
     pure_braid_generator,
     reverse_braid_word,
 )
@@ -807,6 +810,7 @@ __all__ = [
     "LawSequencePrefixAudit",
     "LawSequencePrefixRow",
     "LastStrandLawExactnessAudit",
+    "PointPushingKernelMembershipAudit",
     "LongitudeSubgroupMoverProfile",
     "LongitudeSubgroupProfileRow",
     "LongitudeSubgroupWitness",
@@ -942,6 +946,7 @@ __all__ = [
     "artin_detector_rack",
     "artin_defect_abelianization_barrier_audit",
     "artin_detector_lift_braid_audit",
+    "artin_detector_lift_general_state",
     "artin_detector_lift_inverse_row_audit",
     "artin_detector_lift_negative_update",
     "artin_detector_lift_positive_update",
@@ -1200,6 +1205,7 @@ __all__ = [
     "one_color_latin_triangular_collapse_audit",
     "permutation_order",
     "permutation_group_from_subgroup",
+    "point_pushing_kernel_membership_audit",
     "point_pushing_variety_escape_audit",
     "point_pushing_exponent_escape_audit",
     "point_pushing_variety_prefix_audit",

@@ -828,46 +828,37 @@ interval for all braid indices, or for every `j` there is a local residual
 mover invisible to `S_j`.  The helper
 `local_symmetric_tower_prefix_sequence_audit(...)` checks supplied finite
 prefixes of the second alternative.
-`proofs/sawin_last_strand_law_reduction.md` now sharpens that fork further.
-On the last-strand point-pushing subgroup, identity finite-`G` longitude data
-is exactly the ordinary law condition: `iota_n(w) in K_G(n)` iff `w` is a law
-on `G`.  Fadell-Neuwirth layer extraction then shows that any moving braid in
-`K_G(n)` has a moving point-pushing layer `iota_r(w)` with `w` a law on `G`.
-Thus the symmetric detector question is equivalent to asking whether some
-`S_m` kills all `S_m`-law point-pushing actions on `X`, and the B route may be
-given by `S_j`-law words whose point-pushing braids move.  The helper
-`last_strand_law_exactness_audit(...)` checks finite instances of the
-point-pushing exactness lemma.
-`proofs/point_pushing_action_image_variety.md` converts the same statement
-into a moving-variety condition.  For
-`P_k(X)=<rho_{X,k+1}(A_{1,k+1}),...,rho_{X,k+1}(A_{k,k+1})>`, a fixed degree
-`S_m` kills every `S_m`-law point-pushing braid exactly when
-`P_k(X) in var(S_m)` for every `k`.  Thus A may be pursued by proving one
-fixed symmetric variety contains all point-pushing action images, while B must
-produce explicit `S_j`-variety escapes with representing words in the marked
-pure-generator tuple.  The helper `point_pushing_variety_escape_audit(...)`
-computes a bounded `P_k(X)` image, searches for an `S_m`-law escape, and
-retains the moved permutation, moved tuple index, representing words, and
-substituted point-pushing word.  The companion
-`point_pushing_variety_prefix_audit(...)` scans a finite arity prefix for one
-proposed `S_m`, reporting escaped arities and truncations while keeping the
-"no bounded escape" case explicitly finite evidence rather than proof.
-`proofs/point_pushing_fixed_variety_domination.md` removes the symmetric-only
-phrasing: for any fixed finite group `G`, the detector rack `A_G` dominates
-`X` iff every point-pushing action image `P_k(X)` lies in `var(G)`.  Thus
-global Sawin domination is exactly the existence of one finite group `G_X`
-whose generated variety contains all `P_k(X)`.  A negative proof must
-diagonalize failures of this fixed-variety containment into the recorded
-normalized-law sequence.
+`proofs/sawin_last_strand_law_reduction.md` now records only the safe
+last-strand law direction.  On the last-strand point-pushing subgroup,
+identity finite-`G` longitude data implies the pushed word is an ordinary law
+on `G`; the converse is false.  Fadell-Neuwirth layer extraction still shows
+that any moving braid in `K_G(n)` has a moving point-pushing layer
+`iota_r(w)` which remains in `K_G(r)`, and hence whose word is necessarily a
+law on `G`.  The helper `last_strand_law_exactness_audit(...)` compares
+ordinary law identity with actual finite-longitude identity and flags gaps.
+`proofs/point_pushing_action_image_variety.md` is therefore a superseded
+moving-variety diagnostic rather than an equivalent reformulation.  For
+`P_k(X)=<rho_{X,k+1}(A_{1,k+1}),...,rho_{X,k+1}(A_{k,k+1})>`, variety escapes
+produce candidate point-pushing movers, but they become B evidence only after
+the corresponding point-pushed words are also proved to lie in the actual
+finite-longitude kernels.  The helper `point_pushing_variety_escape_audit(...)`
+computes bounded action-image escape rows with generator-word representatives,
+while `point_pushing_variety_prefix_audit(...)` scans finite arity prefixes as
+finite evidence only.
+`proofs/point_pushing_fixed_variety_domination.md` is likewise retained as a
+sufficient positive route and search heuristic, not as a proved equivalence:
+if one fixed finite variety contains all point-pushing action images, then the
+actual `K_G` point-pushing layers are killed; fixed-variety failure alone does
+not give a normalized-law counterexample.
 `proofs/fadell_neuwirth_layer_extraction_guardrail.md` now isolates the
 convention-sensitive bridge behind that equivalence.  It records that deleting
 the last strand and adding an unused right strand preserve `K_G`, decomposes a
 pure braid recursively into standard right-stabilized point-pushing layers,
 and proves that if each layer is trivial on its own `X^r`, then its
 right-stabilized extension is trivial on `X^n`.  Hence a moving `K_G` braid
-does force a moving ordinary last-strand law layer.  The note is also a
-guardrail: conjugated layers or non-right embeddings require their own
-triviality proof.
+does force a moving actual point-pushing `K_G` layer; its word is an ordinary
+law only as a necessary condition.  The note is also a guardrail: conjugated
+layers or non-right embeddings require their own triviality proof.
 `proofs/last_strand_law_gap_audit.md` now corrects the strongest
 point-pushing reformulation.  The implication
 `w in Law_k(G) => iota_{k+1}(w) in K_G(k+1)` is false for `k>=2`: the
@@ -878,6 +869,17 @@ law identity is only a necessary-condition filter for last-strand
 finite-longitude identity, not a replacement for it.  The helper
 `point_pushing_exponent_escape_audit(...)` now records this finite guardrail
 row and flags `exposes_naive_law_gap`.
+`proofs/point_pushing_kernel_layer_criterion.md` records the repaired exact
+form.  For a fixed finite group `G`, `K_G(n) <= ker rho_X,n` for all `n` iff
+every last-strand point-pushing braid `iota_r(w)` that actually lies in
+`K_G(r)` acts trivially on `X^r`.  The proof uses the Fadell-Neuwirth layer
+extraction: any moving braid in `K_G` has a moving right-stabilized
+point-pushing layer, and that layer remains in `K_G`.  Thus ordinary laws are
+only a necessary filter; the B route must produce moving point-pushing layers
+with genuine finite-longitude invisibility.  The same note records the
+derivative-detector sufficient condition: laws on the finite Artin detector
+permutation group `D_k(G)` force point-pushed membership in `K_G`, while the
+exact condition is fixation of all endpoint-identity detector states.
 `proofs/symmetric_repair_contract_bridge.md` now connects this symmetric fork
 back to the proof-critic repair contract.  If a supplied repair package proves
 the local implication using a fixed product detector `H(pi,Q)`, then the left

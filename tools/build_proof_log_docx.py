@@ -48,6 +48,7 @@ EXTRA_MD.append(ROOT / "proofs" / "fadell_neuwirth_layer_extraction_guardrail.md
 EXTRA_MD.append(ROOT / "proofs" / "point_pushing_action_image_variety.md")
 EXTRA_MD.append(ROOT / "proofs" / "point_pushing_fixed_variety_domination.md")
 EXTRA_MD.append(ROOT / "proofs" / "last_strand_law_gap_audit.md")
+EXTRA_MD.append(ROOT / "proofs" / "point_pushing_kernel_layer_criterion.md")
 EXTRA_MD.append(ROOT / "proofs" / "symmetric_repair_contract_bridge.md")
 EXTRA_MD.append(ROOT / "proofs" / "normalized_law_counterexample_certificate.md")
 EXTRA_MD.append(ROOT / "proofs" / "symmetric_tower_counterexample_certificate.md")

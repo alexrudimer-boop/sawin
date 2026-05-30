@@ -14,6 +14,7 @@ from ybe_domination import (
     law_braid_longitudes,
     law_word_on_last_strand,
     longitude_identity_profile_for_law_braid,
+    point_pushing_kernel_membership_audit,
     pure_braid_generator,
     reverse_braid_word,
     symmetric_group,
@@ -69,7 +70,7 @@ class BraidLawTests(unittest.TestCase):
                         has_identity_longitude_signature(group, n, braid)
                     )
 
-    def test_last_strand_law_exactness_audit_accepts_law_and_nonlaw(self):
+    def test_last_strand_law_audit_records_necessary_condition(self):
         law = free_word_power(0, 6)
         law_audit = last_strand_law_exactness_audit(
             symmetric_group(3),
@@ -79,6 +80,8 @@ class BraidLawTests(unittest.TestCase):
 
         self.assertTrue(law_audit.word_is_law)
         self.assertTrue(law_audit.identity_longitude_signature)
+        self.assertTrue(law_audit.necessary_law_condition_holds)
+        self.assertTrue(law_audit.law_implies_kernel_holds)
         self.assertTrue(law_audit.point_pushing_exactness_holds)
 
         nonlaw = commutator(free_word_power(0, 1), free_word_power(1, 1))
@@ -90,7 +93,53 @@ class BraidLawTests(unittest.TestCase):
 
         self.assertFalse(nonlaw_audit.word_is_law)
         self.assertFalse(nonlaw_audit.identity_longitude_signature)
+        self.assertTrue(nonlaw_audit.necessary_law_condition_holds)
+        self.assertTrue(nonlaw_audit.law_implies_kernel_holds)
         self.assertTrue(nonlaw_audit.point_pushing_exactness_holds)
+
+    def test_last_strand_law_audit_exposes_forward_gap(self):
+        flattened = tuple(letter for _ in range(6) for letter in ((0, 1), (1, -1)))
+        audit = last_strand_law_exactness_audit(
+            symmetric_group(3),
+            flattened,
+            arity=2,
+        )
+
+        self.assertTrue(audit.word_is_law)
+        self.assertFalse(audit.identity_longitude_signature)
+        self.assertTrue(audit.necessary_law_condition_holds)
+        self.assertFalse(audit.law_implies_kernel_holds)
+        self.assertFalse(audit.point_pushing_exactness_holds)
+        self.assertTrue(audit.exposes_law_to_kernel_gap)
+
+    def test_point_pushing_kernel_membership_matches_detector_states(self):
+        law = free_word_power(0, 6)
+        audit = point_pushing_kernel_membership_audit(
+            symmetric_group(3),
+            law,
+            arity=1,
+        )
+
+        self.assertTrue(audit.word_is_law)
+        self.assertTrue(audit.identity_longitude_signature)
+        self.assertTrue(audit.initial_detector_states_fixed)
+        self.assertTrue(audit.detector_states_match_longitude_signature)
+        self.assertTrue(audit.necessary_law_condition_holds)
+
+    def test_point_pushing_kernel_membership_exposes_law_gap(self):
+        law_gap = tuple(letter for _ in range(6) for letter in ((0, 1), (1, -1)))
+        audit = point_pushing_kernel_membership_audit(
+            symmetric_group(3),
+            law_gap,
+            arity=2,
+        )
+
+        self.assertTrue(audit.word_is_law)
+        self.assertFalse(audit.identity_longitude_signature)
+        self.assertFalse(audit.initial_detector_states_fixed)
+        self.assertTrue(audit.detector_states_match_longitude_signature)
+        self.assertTrue(audit.necessary_law_condition_holds)
+        self.assertTrue(audit.exposes_law_to_kernel_gap)
 
 
 if __name__ == "__main__":

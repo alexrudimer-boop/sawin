@@ -161,15 +161,15 @@ forces at least one layer `lambda_r=iota_r(w_r)` to satisfy
 rho_{X,r}(iota_r(w_r)) != 1.
 ```
 
-Since `lambda_r in K_G(r)`, the point-pushing exactness lemma in
+Since `lambda_r in K_G(r)`, the necessary last-strand law lemma in
 `proofs/sawin_last_strand_law_reduction.md` gives
 
 ```text
 w_r in Law_{r-1}(G).
 ```
 
-This is the exact moving-layer extraction used in the fixed-variety
-criterion.
+This is the exact moving-layer extraction used in the repaired kernel-layer
+criterion and in the superseded fixed-variety diagnostic.
 
 ## Guardrail
 

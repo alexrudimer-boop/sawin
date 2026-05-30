@@ -228,10 +228,10 @@ const rows = [
   ],
   [
     "Last-strand law reduction",
-    "Replace arbitrary symmetric-kernel pure braids by point-pushed ordinary group laws.",
-    "proofs/sawin_last_strand_law_reduction.md proves iota_n(w) is in K_G(n) iff w is a law on G, and extracts a moving point-pushing layer from any moving K_G braid; last_strand_law_exactness_audit checks finite instances.",
-    "Reduction ready",
-    "Prove a fixed S_m kills all law point-pushing actions on X, or construct S_j-law words whose point-pushing braids move X.",
+    "Replace arbitrary symmetric-kernel pure braids by point-pushed layers while retaining actual finite-longitude kernel membership.",
+    "proofs/sawin_last_strand_law_reduction.md now records only the safe necessary law condition iota_n(w) in K_G(n) => w is a law on G; proofs/last_strand_law_gap_audit.md shows the converse is false.",
+    "Repaired reduction",
+    "Prove a fixed S_m kills all point-pushing layers in K_{S_m}, or construct such K_{S_j} layers that move X.",
   ],
   [
     "Fadell-Neuwirth layer extraction",
@@ -242,10 +242,10 @@ const rows = [
   ],
   [
     "Point-pushing action-image variety",
-    "Rephrase the last-strand law test as membership of pure point-pushing action images in one fixed symmetric variety.",
-    "proofs/point_pushing_action_image_variety.md proves that all S_m-law point-pushing braids act trivially on X iff every P_k(X)=<rho(A_{i,k+1})> lies in var(S_m); point_pushing_variety_escape_audit records bounded escape rows with generator-word representatives and point_pushing_variety_prefix_audit scans finite arity prefixes.",
-    "Reduction ready",
-    "Prove all P_k(X) lie in one var(S_m), or produce explicit variety escapes with representing generator words.",
+    "Retain the action-image variety test only as a necessary-condition/search diagnostic after the law-to-kernel gap.",
+    "proofs/point_pushing_action_image_variety.md now marks the variety equivalence as superseded: variety escapes produce candidate point-pushing movers, but they require a separate K_{S_m} finite-longitude membership check.",
+    "Superseded diagnostic",
+    "Use variety escapes only with an actual finite-longitude kernel check; ordinary S_m-laws are insufficient.",
   ],
   [
     "Point-pushing fixed-variety criterion",
@@ -260,6 +260,13 @@ const rows = [
     "proofs/last_strand_law_gap_audit.md gives the dihedral-rack S3-law point-pushing mover and streamed longitude check showing nonidentity S3 finite-longitude data; point_pushing_exponent_escape_audit exposes this finite row.",
     "Guardrail counterexample",
     "Repair any theorem using w in Law(G) => iota(w) in K_G; only the converse is safe.",
+  ],
+  [
+    "Point-pushing kernel-layer criterion",
+    "State the exact repaired last-strand criterion using K_G membership rather than ordinary laws.",
+    "proofs/point_pushing_kernel_layer_criterion.md proves K_G dominates X iff every last-strand point-pushing braid lying in K_G acts trivially on X, and records the Artin derivative detector D_k(G) sufficient condition.",
+    "Exact reformulation",
+    "Characterize or eliminate moving point-pushing K_{S_j} layers; ordinary S_j-law movers are insufficient.",
   ],
   [
     "Action images",

@@ -13,6 +13,7 @@ from ybe_domination import (
     artin_defect_abelianization_barrier_audit,
     artin_detector_rack,
     artin_detector_lift_braid_audit,
+    artin_detector_lift_general_state,
     artin_detector_lift_inverse_row_audit,
     artin_detector_lift_negative_update,
     artin_detector_lift_positive_update,
@@ -114,6 +115,17 @@ class ArtinLongitudeTests(unittest.TestCase):
         self.assertEqual(
             has_identity_longitude_signature_streamed(group, 3, braid),
             has_identity_longitude_signature(group, 3, braid),
+        )
+
+    def test_general_detector_state_extends_meridian_state(self):
+        group = symmetric_group(3)
+        meridians = group.elements[:3]
+        braid = (2, 1, 1, -2)
+        initial_state = tuple((meridian, group.identity) for meridian in meridians)
+
+        self.assertEqual(
+            artin_detector_lift_general_state(group, initial_state, braid),
+            artin_detector_lift_state(group, meridians, braid),
         )
 
     def test_longitude_value_subgroup_for_positive_generator(self):

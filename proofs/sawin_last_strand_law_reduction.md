@@ -4,9 +4,9 @@ Date: 2026-05-30
 
 This note follows `proofs/symmetric_detector_reduction.md` and
 `proofs/symmetric_tower_counterexample_certificate.md`.  It does not prove
-outcome A or B.  It sharpens the remaining detector question from arbitrary
-pure braids in a symmetric longitude kernel to ordinary group-law words
-embedded by last-strand point pushing.
+outcome A or B.  Its original strongest form tried to sharpen the remaining
+detector question from arbitrary pure braids in a symmetric longitude kernel
+to ordinary group-law words embedded by last-strand point pushing.
 
 **Superseded guardrail.**  The forward direction of Lemma 1 below is too
 strong as stated for `k>=2`.  See
@@ -16,11 +16,11 @@ nonidentity `S_3` finite-longitude data.  The valid direction retained from
 this note is the necessary condition
 `iota_n(w) in K_G(n) => w in Law_{n-1}(G)`.
 
-The executable finite-instance mirror is
-`last_strand_law_exactness_audit(...)`.  It checks, for one supplied finite
-group and one supplied word, that the last-strand point-pushing braid has
-identity finite-group longitude data exactly when the word is a law on that
-group.
+The executable finite-instance mirror is now
+`last_strand_law_exactness_audit(...)`.  It compares, for one supplied finite
+group and one supplied word, the ordinary law condition with the actual
+finite-longitude identity condition for the last-strand point-pushing braid.
+The forward implication may fail; the necessary implication is the safe one.
 
 ## Setup
 
@@ -58,21 +58,15 @@ sigma_{i+1}^{-1} ... sigma_{n-1}^{-1}.
 Let `Law_k(G)` denote the words in `F_k` which evaluate to identity under
 every assignment of their variables in `G`.
 
-## Lemma 1: Point-Pushing Exactness
+## Lemma 1: Point-Pushing Necessary Law Condition
 
 For every finite group `G`, every `n>=2`, and every `w in F_{n-1}`,
 
 ```text
-iota_n(w) in K_G(n)    iff    w in Law_{n-1}(G).
+iota_n(w) in K_G(n)    =>    w in Law_{n-1}(G).
 ```
 
-Proof.  The forward direction is the one already used by the law-braid
-helpers: if `w` is a law on `G`, then each recursive Artin longitude of the
-point-pushing braid is a conjugate/substitution of that law, hence evaluates
-trivially in `G`.
-
-For the converse, compute the last recursive Artin longitude of
-`iota_n(w)`.  It is
+Proof.  Compute the last recursive Artin longitude of `iota_n(w)`.  It is
 
 ```text
 theta_n(w),
@@ -91,6 +85,9 @@ assignment `F_n->G`.  Restricting to assignments of the first `n-1` variables
 shows that `theta_n(w)` is a law on `G`.  Since `theta_n` is an automorphism,
 precomposing assignments with `theta_n^{-1}` shows that `w` itself is a law on
 `G`.  QED.
+
+The converse is false in general; see
+`proofs/last_strand_law_gap_audit.md`.
 
 ## Lemma 2: Moving Kernel Braids Have A Moving Last-Strand Law Layer
 
@@ -162,7 +159,7 @@ The convention-sensitive parts of this extraction are isolated in
 right-strand splitting preserve `K_G`, and a layer which is trivial on its
 own `X^r` remains trivial after the standard right stabilization to `X^n`.
 
-## Reformulation
+## Exact Remaining Layer Criterion
 
 By the symmetric detector reduction, finite-rack domination of `X` is
 equivalent to the existence of an integer `m` such that
@@ -171,50 +168,53 @@ equivalent to the existence of an integer `m` such that
 K_{S_m}(n) subset ker rho_{X,n}
 ```
 
-for every `n`.  Lemma 2 reduces this to the point-pushing law test:
+for every `n`.  Lemma 2 reduces this to the exact point-pushing kernel-layer
+test:
 
 ```text
-exists m such that, for every k>=1 and every w in Law_k(S_m),
+exists m such that, for every k>=1 and every w with
+iota_{k+1}(w) in K_{S_m}(k+1),
 rho_{X,k+1}(iota_{k+1}(w))=1.
 ```
 
-The converse is immediate from Lemma 1: every such point-pushing law braid
-lies in `K_{S_m}`.
-
-Thus the remaining global question may be stated as a pure group-law
-point-pushing problem.
+The ordinary law condition `w in Law_k(S_m)` is only necessary for membership
+in this point-pushing kernel.  Replacing the displayed condition by all
+ordinary `S_m`-laws gives a stronger sufficient A-route, not an equivalent
+criterion.
 
 ## B Certificate
 
-A negative solution is equivalently a finite YBE solution `X` and, for every
-`j`, explicit data
+A last-strand negative certificate must therefore give a finite YBE solution
+`X` and, for every `j`, explicit data
 
 ```text
 k_j >= 1,
-w_j in Law_{k_j}(S_j),
+iota_{k_j+1}(w_j) in K_{S_j}(k_j+1),
 rho_{X,k_j+1}(iota_{k_j+1}(w_j)) != 1.
 ```
 
-Then `beta_j=iota_{k_j+1}(w_j)` has identity `S_j` longitude data by Lemma 1.
-The symmetric tower monotonicity gives eventual invisibility to every fixed
-finite group, while the displayed action remains nontrivial.  This is exactly
-the normalized-law obstruction required by outcome B.
+Then `w_j` is automatically an `S_j`-law by Lemma 1, but the law condition
+alone is not enough.  The identity `S_j` longitude data and symmetric tower
+monotonicity give eventual invisibility to every fixed finite group, while
+the displayed action remains nontrivial.  This is exactly the normalized-law
+obstruction required by outcome B.
 
 ## Consequence
 
 The next positive theorem is now:
 
 ```text
-For each finite bijective YBE solution X, find m such that every S_m-law
-point-pushing braid acts trivially on X.
+For each finite bijective YBE solution X, find m such that every
+last-strand point-pushing braid in K_{S_m} acts trivially on X.
 ```
 
 The next negative theorem is:
 
 ```text
-Construct one finite X and S_j-law words w_j whose last-strand
-point-pushing braids move X for all j.
+Construct one finite X and words w_j whose last-strand point-pushing braids
+lie in K_{S_j} and move X for all j.
 ```
 
 No bounded braid search can replace either statement.  The reduction only
-removes arbitrary pure-braid noise from the final all-`n` question.
+removes arbitrary pure-braid noise from the final all-`n` question after the
+actual finite-longitude kernel condition has been checked.

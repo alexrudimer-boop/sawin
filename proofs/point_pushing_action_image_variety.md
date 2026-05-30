@@ -113,31 +113,34 @@ u(a_1,...,a_r)=1.
 Thus every law of `S_m` is a law on `P_k(X)`, so
 `P_k(X) in var(S_m)`.  QED.
 
-## Consequence For A
+## Superseded Consequence For A
 
-By the last-strand law reduction and symmetric detector reduction, Sawin
-finite-rack domination for `X` is equivalent to the existence of one `m` such
-that
+This section records the diagnostic that the false shortcut would have
+provided.  It is not an equivalent form of Sawin domination after
+`proofs/last_strand_law_gap_audit.md`.
+
+If one could separately prove that all ordinary `S_m`-law point-pushing
+braids have identity `S_m` finite-longitude data, then the displayed theorem
+would make the condition
 
 ```text
 P_k(X) in var(S_m)        for every k>=1.
 ```
 
-This is a weaker-looking condition than giving explicit recursive-longitude
-endpoint witnesses, but for the last-strand law formulation it is exactly
-equivalent.
+a sufficient A-route.  Without that extra Artin-derivative control, it is
+only an action-image necessary-condition/search diagnostic.
 
-## Consequence For B
+## Superseded Consequence For B
 
-A negative proof may be given by constructing, for every `j`, a degree `k_j`
-such that
+A bounded or uniform escape
 
 ```text
 P_{k_j}(X) notin var(S_j),
 ```
 
-together with an explicit separating law and generator-word substitution.
-Concretely, one needs:
+together with an explicit separating law and generator-word substitution
+still produces a point-pushing mover.  It does not by itself prove finite
+longitude invisibility.  Concretely, the action-image diagnostic records:
 
 1. a word `u_j` which is a law on `S_j`;
 2. elements `a_1,...,a_r in P_{k_j}(X)` with
@@ -160,9 +163,13 @@ Concretely, one needs:
    w_j(rho(A_{1,k_j+1}),...,rho(A_{k_j,k_j+1})) != 1.
    ```
 
-Then `iota_{k_j+1}(w_j)` is the required point-pushing mover invisible to
-`S_j`.  Symmetric tower monotonicity upgrades this to eventual invisibility
-to every fixed finite group.
+The additional, indispensable B-side check is:
+
+```text
+iota_{k_j+1}(w_j) in K_{S_j}(k_j+1).
+```
+
+The `S_j`-law condition alone does not imply this check.
 
 ## Existing Diagnostics
 
@@ -197,8 +204,9 @@ computes the marked group `P_k(X)`, searches bounded words for a law of
 - the substituted `k`-variable word;
 - the direct braid action of the corresponding point-pushing braid.
 
-This is exactly the finite row shape required by the B certificate above.  It
-is still bounded evidence unless supplied uniformly for every `j`.
+This is exactly the finite row shape of the action-image mover.  It becomes a
+B certificate only after the actual finite-longitude identity check is also
+proved.
 
 The prefix helper
 
@@ -212,11 +220,11 @@ escape actually gives a point-pushing mover.  A prefix with no bounded escapes
 is only finite evidence for the positive side; it is not proof that all
 `P_k(X)` lie in `var(S_m)`.
 
-This note therefore converts the final problem into a clean moving-variety
-question:
+This note therefore supplies a useful but superseded moving-variety
+diagnostic:
 
 ```text
-either all point-pushing action images P_k(X) lie in one fixed finite variety,
-or they escape every fixed symmetric variety in a way that yields explicit
-S_j-law point-pushing movers.
+point-pushing action-image variety escape
+plus
+actual K_{S_j} finite-longitude membership.
 ```

@@ -1040,8 +1040,21 @@ def artin_detector_lift_state(
     """Sweep a braid with active ``G x G`` Artin detector labels."""
 
     meridians = _check_group_assignment(group, initial_meridians)
-    state: list[ArtinDetectorLiftLabel] = [
+    initial_state: list[ArtinDetectorLiftLabel] = [
         (meridian, group.identity) for meridian in meridians
+    ]
+    return artin_detector_lift_general_state(group, initial_state, braid_word)
+
+
+def artin_detector_lift_general_state(
+    group: FiniteGroup,
+    initial_state: Sequence[ArtinDetectorLiftLabel],
+    braid_word: BraidWord,
+) -> Tuple[ArtinDetectorLiftLabel, ...]:
+    """Sweep a braid from arbitrary active ``G x G`` detector labels."""
+
+    state: list[ArtinDetectorLiftLabel] = [
+        _check_detector_lift_label(group, label) for label in initial_state
     ]
     n = len(state)
     for signed_generator in braid_word:

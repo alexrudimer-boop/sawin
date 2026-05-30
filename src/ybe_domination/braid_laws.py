@@ -1,13 +1,15 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from itertools import product
 from typing import Mapping, Tuple
 
 from .artin_longitudes import (
     BraidWord,
     FreeWord,
+    artin_detector_lift_general_state,
     artin_longitudes,
-    has_identity_longitude_signature,
+    has_identity_longitude_signature_streamed,
     longitude_subgroup_profile,
 )
 from .finite_group import FiniteGroup
@@ -16,7 +18,7 @@ from .group_laws import is_law_on_group
 
 @dataclass(frozen=True)
 class LastStrandLawExactnessAudit:
-    """Finite check of the point-pushing law/kernel equivalence."""
+    """Finite check comparing ordinary laws with point-pushing K_G membership."""
 
     group_order: int
     arity: int
@@ -28,6 +30,43 @@ class LastStrandLawExactnessAudit:
     @property
     def point_pushing_exactness_holds(self) -> bool:
         return self.word_is_law == self.identity_longitude_signature
+
+    @property
+    def necessary_law_condition_holds(self) -> bool:
+        return (not self.identity_longitude_signature) or self.word_is_law
+
+    @property
+    def law_implies_kernel_holds(self) -> bool:
+        return (not self.word_is_law) or self.identity_longitude_signature
+
+    @property
+    def exposes_law_to_kernel_gap(self) -> bool:
+        return self.word_is_law and not self.identity_longitude_signature
+
+
+@dataclass(frozen=True)
+class PointPushingKernelMembershipAudit:
+    """Finite audit of actual point-pushing K_G membership."""
+
+    group_order: int
+    arity: int
+    braid_index: int
+    braid_word: BraidWord
+    word_is_law: bool
+    identity_longitude_signature: bool
+    initial_detector_states_fixed: bool
+
+    @property
+    def detector_states_match_longitude_signature(self) -> bool:
+        return self.identity_longitude_signature == self.initial_detector_states_fixed
+
+    @property
+    def necessary_law_condition_holds(self) -> bool:
+        return (not self.identity_longitude_signature) or self.word_is_law
+
+    @property
+    def exposes_law_to_kernel_gap(self) -> bool:
+        return self.word_is_law and not self.identity_longitude_signature
 
 
 def invert_braid_word(word: BraidWord) -> Tuple[int, ...]:
@@ -90,7 +129,7 @@ def last_strand_law_exactness_audit(
     word: FreeWord,
     arity: int,
 ) -> LastStrandLawExactnessAudit:
-    """Check one instance of ``iota(w) in K_G`` iff ``w`` is a law on ``G``."""
+    """Compare ``iota(w) in K_G`` with the ordinary law condition on ``w``."""
 
     n, braid = law_word_on_last_strand(word, arity)
     return LastStrandLawExactnessAudit(
@@ -99,11 +138,46 @@ def last_strand_law_exactness_audit(
         braid_index=n,
         braid_word=braid,
         word_is_law=is_law_on_group(group, word, arity=arity),
-        identity_longitude_signature=has_identity_longitude_signature(
+        identity_longitude_signature=has_identity_longitude_signature_streamed(
             group,
             n,
             braid,
         ),
+    )
+
+
+def point_pushing_kernel_membership_audit(
+    group: FiniteGroup,
+    word: FreeWord,
+    arity: int,
+) -> PointPushingKernelMembershipAudit:
+    """Audit actual membership of a point-pushed word in ``K_G``.
+
+    The detector-state condition checks all initial states
+    ``((m_1,1),...,(m_n,1))`` and is equivalent to identity finite-longitude
+    data for the pure point-pushing braid.
+    """
+
+    n, braid = law_word_on_last_strand(word, arity)
+    identity = group.identity
+    states_fixed = True
+    for meridians in product(group.elements, repeat=n):
+        initial_state = tuple((meridian, identity) for meridian in meridians)
+        if (
+            artin_detector_lift_general_state(group, initial_state, braid)
+            != initial_state
+        ):
+            states_fixed = False
+            break
+    identity_signature = has_identity_longitude_signature_streamed(group, n, braid)
+    return PointPushingKernelMembershipAudit(
+        group_order=len(group.elements),
+        arity=arity,
+        braid_index=n,
+        braid_word=braid,
+        word_is_law=is_law_on_group(group, word, arity=arity),
+        identity_longitude_signature=identity_signature,
+        initial_detector_states_fixed=states_fixed,
     )
 
 
@@ -114,7 +188,7 @@ def longitude_identity_profile_for_law_braid(
     invisible = []
     visible = []
     for name, group in groups.items():
-        if has_identity_longitude_signature(group, n, braid):
+        if has_identity_longitude_signature_streamed(group, n, braid):
             invisible.append(name)
         else:
             visible.append(name)
