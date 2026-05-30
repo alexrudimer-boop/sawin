@@ -18,6 +18,7 @@ from ybe_domination import (
     coordinate_kernel_pair_closure_audits,
     coordinate_kernel_pair_closure_failures,
     latin_triangular_ybe_audit,
+    local_minimal_descent_readout_collapse_audit,
     local_minimal_seed_saturation_dichotomy_audit,
     lost_edge_external_routing_audit,
     one_color_latin_triangular_collapse_audit,
@@ -838,6 +839,46 @@ class LocalIntervalTests(unittest.TestCase):
 
         self.assertFalse(audit.interval_is_local_minimal)
         self.assertFalse(audit.proves_local_minimal_seed_saturation_dichotomy)
+
+    def test_local_minimal_descent_readout_collapse_keeps_equality_no_seed_case(self):
+        interval = one_color_flip_interval()
+        labels = {"*": {0: "zero", 1: "one"}}
+
+        audit = local_minimal_descent_readout_collapse_audit(interval, labels)
+
+        self.assertTrue(audit.interval_is_local_minimal)
+        self.assertEqual(audit.readout_kind, "equality")
+        self.assertFalse(audit.has_nontrivial_continuation_seed)
+        self.assertTrue(audit.equality_case_is_strand_continuing)
+        self.assertFalse(audit.universal_case_needs_external_recovery)
+        self.assertTrue(audit.nontrivial_seed_forces_universal)
+        self.assertTrue(audit.proves_local_minimal_descent_readout_collapse)
+
+    def test_local_minimal_descent_readout_collapse_flags_universal_seed_case(self):
+        interval = one_color_identity_interval()
+        labels = {"*": {0: "same", 1: "same"}}
+
+        audit = local_minimal_descent_readout_collapse_audit(interval, labels)
+
+        self.assertTrue(audit.interval_is_local_minimal)
+        self.assertEqual(audit.readout_kind, "universal")
+        self.assertTrue(audit.has_nontrivial_continuation_seed)
+        self.assertFalse(audit.equality_case_is_strand_continuing)
+        self.assertTrue(audit.universal_case_needs_external_recovery)
+        self.assertTrue(audit.nontrivial_seed_forces_universal)
+        self.assertTrue(audit.proves_local_minimal_descent_readout_collapse)
+
+    def test_local_minimal_descent_readout_collapse_rejects_nonminimal_interval(self):
+        interval = two_color_identity_interval()
+        labels = {
+            "a": {0: "zero", 1: "one"},
+            "b": {0: "zero", 1: "one"},
+        }
+
+        audit = local_minimal_descent_readout_collapse_audit(interval, labels)
+
+        self.assertFalse(audit.interval_is_local_minimal)
+        self.assertFalse(audit.proves_local_minimal_descent_readout_collapse)
 
     def test_lost_edge_external_routing_records_routed_collapse_edges(self):
         interval = one_color_identity_interval()

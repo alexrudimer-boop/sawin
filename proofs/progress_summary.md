@@ -785,6 +785,8 @@ otherwise any nontrivial seed forces the readout kernel to be universal.  Thus
 no proper partial descent quotient can be the hidden final layer in a genuine
 local-minimal bottleneck; the lost information must be recovered by fixed
 external endpoint factors or by a normalized-law escape.
+The helper `local_minimal_descent_readout_collapse_audit(...)` records the
+same split in executable form for supplied interval/readout data.
 
 `proofs/normalized_law_domination_dichotomy.md` now proves that the
 normalized-law obstruction format is forced, not optional.  For a finite

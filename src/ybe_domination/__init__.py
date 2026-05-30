@@ -156,6 +156,7 @@ from .chain_rack import (
 )
 from .local_interval import (
     LocalInterval,
+    LocalMinimalDescentReadoutCollapseAudit,
     LocalMinimalSeedSaturationDichotomyAudit,
     ContinuationCongruenceAudit,
     ContinuationSeedPairClosureAudit,
@@ -209,6 +210,7 @@ from .local_interval import (
     generated_admissible_congruence_audit,
     generated_admissible_congruence_family,
     latin_triangular_ybe_audit,
+    local_minimal_descent_readout_collapse_audit,
     local_minimal_seed_saturation_dichotomy_audit,
     lost_edge_external_routing_audit,
     one_color_latin_triangular_collapse_audit,
@@ -791,6 +793,7 @@ __all__ = [
     "LongitudeSubgroupWitness",
     "LongitudeSubgroupWitnessLetter",
     "LocalInterval",
+    "LocalMinimalDescentReadoutCollapseAudit",
     "LocalMinimalSeedSaturationDichotomyAudit",
     "LocalMasterBottleneckSummary",
     "LostEdgeExternalRoutingAudit",
@@ -1155,6 +1158,7 @@ __all__ = [
     "longitude_subgroup_mover_profiles",
     "longitude_value_generators",
     "longitude_value_subgroup_elements",
+    "local_minimal_descent_readout_collapse_audit",
     "local_minimal_seed_saturation_dichotomy_audit",
     "local_master_bottleneck_summary",
     "lost_edge_external_routing_audit",

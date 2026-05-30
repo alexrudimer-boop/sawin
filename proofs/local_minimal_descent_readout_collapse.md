@@ -8,6 +8,12 @@ Master Local-Minimal Residual Theorem.  It records the immediate consequence
 of local-minimality for the *combined* descent readout used in the repair
 contract.
 
+The executable mirror is
+`local_minimal_descent_readout_collapse_audit(...)`.  It checks the supplied
+readout kernel, the continuation seeds, local-minimality, and whether the
+certificate is in the equality/no-seed case or the universal/constant-observer
+case below.
+
 ## Setup
 
 Let

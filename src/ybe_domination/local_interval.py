@@ -1077,6 +1077,55 @@ class LocalMinimalSeedSaturationDichotomyAudit:
 
 
 @dataclass(frozen=True)
+class LocalMinimalDescentReadoutCollapseAudit:
+    """Local-minimal collapse check for a combined descent readout."""
+
+    descent: ReadoutDescentSeparationAudit
+    interval_is_local_minimal: bool
+
+    @property
+    def readout_kind(self) -> str:
+        return self.descent.readout_kernel.kind
+
+    @property
+    def readout_has_local_minimal_kind(self) -> bool:
+        return self.readout_kind in ("equality", "universal")
+
+    @property
+    def has_nontrivial_continuation_seed(self) -> bool:
+        return self.descent.continuation.nontrivial_seed_count > 0
+
+    @property
+    def equality_case_is_strand_continuing(self) -> bool:
+        return (
+            self.readout_kind == "equality"
+            and not self.has_nontrivial_continuation_seed
+            and self.descent.all_continuation_seeds_killed
+        )
+
+    @property
+    def universal_case_needs_external_recovery(self) -> bool:
+        return self.readout_kind == "universal" and self.descent.all_continuation_seeds_killed
+
+    @property
+    def nontrivial_seed_forces_universal(self) -> bool:
+        return (
+            not self.has_nontrivial_continuation_seed
+            or self.readout_kind == "universal"
+        )
+
+    @property
+    def proves_local_minimal_descent_readout_collapse(self) -> bool:
+        return (
+            self.interval_is_local_minimal
+            and self.descent.readout_is_admissible
+            and self.descent.all_continuation_seeds_killed
+            and self.readout_has_local_minimal_kind
+            and self.nontrivial_seed_forces_universal
+        )
+
+
+@dataclass(frozen=True)
 class LostEdgeExternalRoutingAudit:
     """External routing ledger for edges collapsed by seed-saturation."""
 
@@ -2814,6 +2863,18 @@ def local_minimal_seed_saturation_dichotomy_audit(
         expected_saturation_kind=_expected_local_minimal_seed_saturation_kind(
             seed_saturation,
         ),
+    )
+
+
+def local_minimal_descent_readout_collapse_audit(
+    interval: "LocalInterval",
+    labels: ReadoutLabels,
+) -> LocalMinimalDescentReadoutCollapseAudit:
+    """Audit the local-minimal equality/universal collapse of a descent readout."""
+
+    return LocalMinimalDescentReadoutCollapseAudit(
+        descent=readout_descent_separation_audit(interval, labels),
+        interval_is_local_minimal=interval.is_local_minimal(),
     )
 
 

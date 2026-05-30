@@ -670,7 +670,7 @@ const rows = [
   [
     "Local-minimal descent readout collapse",
     "Collapse combined descent-separating readout kernels in local-minimal intervals.",
-    "proofs/local_minimal_descent_readout_collapse.md proves that an admissible readout killing continuation seeds is equality with no nontrivial seeds, or universal once any nontrivial seed exists.",
+    "proofs/local_minimal_descent_readout_collapse.md; local_minimal_descent_readout_collapse_audit checks that an admissible readout killing continuation seeds is equality with no nontrivial seeds, or universal once any nontrivial seed exists.",
     "Structural guardrail",
     "Route universal/constant-observer lost information through fixed endpoint families, or construct a normalized-law escape.",
   ],
