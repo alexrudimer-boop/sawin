@@ -1306,6 +1306,11 @@ class ActionImageTests(unittest.TestCase):
         self.assertFalse(audit.quotient_is_cyclic)
         self.assertEqual(audit.quotient_generator_internal_normal_closure_order, 2)
         self.assertFalse(audit.quotient_generator_internally_normally_generates)
+        self.assertEqual(audit.quotient_abelianization_order, 4)
+        self.assertEqual(audit.quotient_abelianization_exponent, 2)
+        self.assertFalse(audit.quotient_abelianization_is_cyclic)
+        self.assertEqual(audit.generator_abelianization_order, 2)
+        self.assertFalse(audit.generator_generates_quotient_abelianization)
         self.assertEqual(audit.generator_order, 4)
         self.assertEqual(audit.generator_image_order, 2)
         self.assertTrue(audit.monolith_central_in_normal_closure)
@@ -1332,6 +1337,27 @@ class ActionImageTests(unittest.TestCase):
             "invalid_centralizer_stem_generation_data",
         )
         self.assertEqual(cyclic.tail_regime, "invalid_centralizer_stem_multiplier_data")
+
+        internal = point_pushing_centralizer_stem_multiplier_audit(
+            group,
+            [((1, 0), 0), ((-1, 0), 0)],
+            ((1, 0), 1),
+            normal_generator_order_bound=6,
+        )
+
+        self.assertEqual(internal.normal_closure_order, 24)
+        self.assertEqual(internal.quotient_order, 12)
+        self.assertEqual(internal.generator_image_order, 3)
+        self.assertEqual(internal.quotient_generator_internal_normal_closure_order, 12)
+        self.assertTrue(internal.quotient_generator_internally_normally_generates)
+        self.assertEqual(internal.quotient_abelianization_order, 3)
+        self.assertTrue(internal.quotient_abelianization_is_cyclic)
+        self.assertEqual(internal.generator_abelianization_order, 3)
+        self.assertTrue(internal.generator_generates_quotient_abelianization)
+        self.assertEqual(
+            internal.quotient_generation_regime,
+            "internal_bounded_normal_generator_quotient",
+        )
 
     def test_central_stem_relation_audit_records_stem_extension(self):
         group = build_group(

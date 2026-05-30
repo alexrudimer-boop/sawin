@@ -658,6 +658,11 @@ class PointPushingCentralizerStemMultiplierAudit:
     quotient_is_cyclic: bool
     quotient_generator_internal_normal_closure_order: int
     quotient_generator_internally_normally_generates: bool
+    quotient_abelianization_order: int
+    quotient_abelianization_exponent: int
+    quotient_abelianization_is_cyclic: bool
+    generator_abelianization_order: int
+    generator_generates_quotient_abelianization: bool
     generator_order: int
     generator_image_order: int
     generator_order_divides_bound: bool
@@ -2787,6 +2792,11 @@ def point_pushing_centralizer_stem_multiplier_audit(
     quotient_is_cyclic = False
     quotient_generator_internal_normal_closure_order = 0
     quotient_generator_internally_normally_generates = False
+    quotient_abelianization_order = 0
+    quotient_abelianization_exponent = 0
+    quotient_abelianization_is_cyclic = False
+    generator_abelianization_order = 0
+    generator_generates_quotient_abelianization = False
     generator_image_order = 0
     if (
         monolith_is_elementary_abelian
@@ -2811,6 +2821,26 @@ def point_pushing_centralizer_stem_multiplier_audit(
         quotient_generator_internal_normal_closure_order = len(internal_closure)
         quotient_generator_internally_normally_generates = (
             quotient_generator_internal_normal_closure_order == quotient_order
+        )
+        quotient_commutator = frozenset(commutator_subgroup_elements(quotient))
+        quotient_abelianization, ab_projection = quotient_group_by_normal_subgroup(
+            quotient,
+            quotient_commutator,
+        )
+        quotient_abelianization_order = len(quotient_abelianization.elements)
+        quotient_abelianization_exponent = group_exponent(quotient_abelianization)
+        quotient_abelianization_is_cyclic = any(
+            element_order(quotient_abelianization, element)
+            == quotient_abelianization_order
+            for element in quotient_abelianization.elements
+        )
+        generator_abelianization = ab_projection.apply(generator_image)
+        generator_abelianization_order = element_order(
+            quotient_abelianization,
+            generator_abelianization,
+        )
+        generator_generates_quotient_abelianization = (
+            generator_abelianization_order == quotient_abelianization_order
         )
     generator_order = element_order(group, generator)
     generator_order_divides_bound = normal_generator_order_bound % generator_order == 0
@@ -2841,6 +2871,13 @@ def point_pushing_centralizer_stem_multiplier_audit(
         ),
         quotient_generator_internally_normally_generates=(
             quotient_generator_internally_normally_generates
+        ),
+        quotient_abelianization_order=quotient_abelianization_order,
+        quotient_abelianization_exponent=quotient_abelianization_exponent,
+        quotient_abelianization_is_cyclic=quotient_abelianization_is_cyclic,
+        generator_abelianization_order=generator_abelianization_order,
+        generator_generates_quotient_abelianization=(
+            generator_generates_quotient_abelianization
         ),
         generator_order=generator_order,
         generator_image_order=generator_image_order,

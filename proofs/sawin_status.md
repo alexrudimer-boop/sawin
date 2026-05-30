@@ -2256,6 +2256,11 @@ The noncyclic quotient branch has now been split in
 `proofs/point_pushing_centralizer_stem_transport_split.md`: either the
 bounded generator image normally generates `N/M` internally, or the quotient
 requires ambient transported conjugates of that internal normal closure.
+On the internal side,
+`proofs/point_pushing_internal_stem_abelianization_bound.md` proves that the
+abelianization of `N/M` is cyclic of order dividing `B_X`; any escape there
+must be in the commutator/perfect part or multiplier growth, not in
+unbounded abelianization.
 
 ## Completion audit checklist
 
