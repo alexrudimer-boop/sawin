@@ -777,6 +777,14 @@ descent, endpoint-action, and routed-edge certificates and reports which part
 of a proposed repair package fails.  Routed lost-edge ledgers must match the
 same saturated descent quotient as the supplied descent certificate, so valid
 endpoint witnesses cannot be imported from a different local repair package.
+`proofs/local_minimal_descent_readout_collapse.md` now records the
+local-minimal consequence for the combined descent readout itself.  If its
+kernel is admissible and contains every continuation seed, then equality means
+there were no nontrivial seeds and the row was already strand-continuing;
+otherwise any nontrivial seed forces the readout kernel to be universal.  Thus
+no proper partial descent quotient can be the hidden final layer in a genuine
+local-minimal bottleneck; the lost information must be recovered by fixed
+external endpoint factors or by a normalized-law escape.
 
 `proofs/normalized_law_domination_dichotomy.md` now proves that the
 normalized-law obstruction format is forced, not optional.  For a finite

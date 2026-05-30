@@ -122,6 +122,7 @@ EXTRA_MD.append(ROOT / "proofs" / "universal_continuation_derivation_certificate
 EXTRA_MD.append(ROOT / "proofs" / "continuation_readout_propagation.md")
 EXTRA_MD.append(ROOT / "proofs" / "readout_kernel_admissibility.md")
 EXTRA_MD.append(ROOT / "proofs" / "readout_descent_separation_certificate.md")
+EXTRA_MD.append(ROOT / "proofs" / "local_minimal_descent_readout_collapse.md")
 EXTRA_MD.append(ROOT / "proofs" / "readout_kernel_quotient_interval.md")
 EXTRA_MD.append(ROOT / "proofs" / "product_readout_kernel_assembly.md")
 EXTRA_MD.append(ROOT / "proofs" / "product_readout_descent_separation.md")
