@@ -137,6 +137,10 @@ The follow-up `proofs/point_pushing_centralizer_layer_commutator_split.md`
 further divides the centralizer-layer extension tail: if `N=<<t>>_H` is the
 normal closure of the bounded generator in the centralizer of `M`, then
 minimality forces either `[N,N]=1` or `M<=Z(N) cap [N,N]`.
+The abelian side is sharpened in
+`proofs/point_pushing_abelian_centralizer_layer_prime_bound.md`: there `N` is
+`p`-primary and `exp(N)|ord(t)|B_X`, so that subcase has no module-prime
+escape.
 
 ## Audit Hook
 

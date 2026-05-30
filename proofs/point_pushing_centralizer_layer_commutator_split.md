@@ -126,6 +126,12 @@ Thus the noncentral module branch now has two active forms:
 The theorem does not close either form, but it removes the possibility of an
 unstructured centralizer-layer obstruction.
 
+The follow-up
+`proofs/point_pushing_abelian_centralizer_layer_prime_bound.md` further
+constrains the abelian centralizer-layer form: `N=<<t>>_H` must be a
+`p`-primary abelian layer whose exponent divides `ord(t)|B_X`.  Hence this
+subcase has no module-prime escape.
+
 ## Audit Hook
 
 The helper

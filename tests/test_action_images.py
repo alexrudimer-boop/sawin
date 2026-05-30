@@ -18,6 +18,7 @@ from ybe_domination import (
     delete_right_based_new_strand_word,
     point_pushing_active_module_generator_audit,
     point_pushing_abelian_chief_relation_module_audit,
+    point_pushing_abelian_centralizer_layer_prime_audit,
     point_pushing_abelian_relation_action_split_audit,
     point_pushing_action_group,
     point_pushing_action_quotient_separation_audit,
@@ -1245,6 +1246,43 @@ class ActionImageTests(unittest.TestCase):
         self.assertEqual(stem.normal_closure_commutator_order, 2)
         self.assertEqual(stem.layer_regime, "centralizer_stem_layer")
         self.assertTrue(stem.proves_centralizer_layer_commutator_split)
+
+    def test_abelian_centralizer_layer_prime_audit_records_p_primary_bound(self):
+        cyclic = cyclic_group(4)
+        bounded = point_pushing_abelian_centralizer_layer_prime_audit(
+            cyclic,
+            [0, 2],
+            1,
+            normal_generator_order_bound=8,
+        )
+
+        self.assertEqual(bounded.monolith_prime, 2)
+        self.assertEqual(bounded.normal_closure_order, 4)
+        self.assertEqual(bounded.normal_closure_exponent, 4)
+        self.assertEqual(bounded.generator_order, 4)
+        self.assertEqual(bounded.normal_closure_prime_set, (2,))
+        self.assertTrue(bounded.generator_order_divides_bound)
+        self.assertTrue(bounded.normal_closure_exponent_divides_generator_order)
+        self.assertTrue(bounded.normal_closure_exponent_divides_bound)
+        self.assertTrue(bounded.prime_divides_generator_order)
+        self.assertTrue(bounded.prime_divides_bound)
+        self.assertEqual(
+            bounded.tail_regime,
+            "bounded_p_primary_abelian_centralizer_layer",
+        )
+        self.assertTrue(bounded.proves_abelian_centralizer_layer_prime_bound)
+
+        mixed = point_pushing_abelian_centralizer_layer_prime_audit(
+            cyclic_group(6),
+            [0, 3],
+            1,
+            normal_generator_order_bound=6,
+        )
+
+        self.assertEqual(mixed.normal_closure_prime_set, (2, 3))
+        self.assertFalse(mixed.same_prime_as_monolith)
+        self.assertEqual(mixed.tail_regime, "mixed_prime_or_unbounded_generator_layer")
+        self.assertFalse(mixed.proves_abelian_centralizer_layer_prime_bound)
 
     def test_central_stem_relation_audit_records_stem_extension(self):
         group = build_group(

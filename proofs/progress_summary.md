@@ -1286,6 +1286,13 @@ contains `M`, then minimality leaves only two forms: `[N,N]=1`, an abelian
 centralizer layer, or `M<=Z(N) cap [N,N]`, a centralizer stem layer.  The
 helper `point_pushing_centralizer_layer_commutator_audit(...)` records the
 finite row labels `abelian_centralizer_layer` and `centralizer_stem_layer`.
+`proofs/point_pushing_abelian_centralizer_layer_prime_bound.md` now removes
+prime escape from the abelian centralizer-layer form.  In that case
+`N=<<t>>_H` is a finite abelian `p`-group and `exp(N)|ord(t)|B_X`, so the
+prime is one of the finitely many divisors of `B_X` and the layer exponent is
+bounded.  The helper
+`point_pushing_abelian_centralizer_layer_prime_audit(...)` records finite
+prime-support and exponent labels.
 `proofs/point_pushing_nonabelian_chief_relation_quotient.md` now gives the
 parallel nonabelian-chief compression.  If `R` is the same detector orbit
 relation group and the chief layer is `M=S^r`, then the minimal vertical

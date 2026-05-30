@@ -143,6 +143,10 @@ The follow-up
 centralizer-layer branch itself: for `N=<<t>>_H` inside `C_H(M)`, minimality
 forces either an abelian centralizer layer `[N,N]=1` or a centralizer stem
 layer `M<=Z(N) cap [N,N]`.
+The abelian centralizer-layer side is further bounded in
+`proofs/point_pushing_abelian_centralizer_layer_prime_bound.md`: the normal
+closure `N` is a `p`-group and `exp(N)|ord(t)|B_X`, so centralizer-layer prime
+escape is impossible.
 
 ## Audit Hook
 

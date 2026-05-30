@@ -617,6 +617,33 @@ class PointPushingCentralizerLayerCommutatorAudit:
 
 
 @dataclass(frozen=True)
+class PointPushingAbelianCentralizerLayerPrimeAudit:
+    """Constrain abelian centralizer-layer rows to bounded p-primary layers."""
+
+    normal_generator_order_bound: int
+    group_order: int
+    monolith_order: int
+    monolith_prime: int | None
+    normal_closure_order: int
+    normal_closure_exponent: int
+    generator_order: int
+    generator_order_divides_bound: bool
+    normal_closure_exponent_divides_generator_order: bool
+    normal_closure_exponent_divides_bound: bool
+    normal_closure_abelian: bool
+    normal_closure_prime_set: Tuple[int, ...]
+    monolith_in_normal_closure: bool
+    same_prime_as_monolith: bool
+    prime_divides_generator_order: bool
+    prime_divides_bound: bool
+    tail_regime: str
+
+    @property
+    def proves_abelian_centralizer_layer_prime_bound(self) -> bool:
+        return self.tail_regime == "bounded_p_primary_abelian_centralizer_layer"
+
+
+@dataclass(frozen=True)
 class PointPushingCentralStemRelationAudit:
     """Bookkeeping for central trivial relation tails as stem extensions."""
 
@@ -2367,6 +2394,23 @@ def _is_prime_integer(value: int) -> bool:
     return True
 
 
+def _prime_divisors_integer(value: int) -> Tuple[int, ...]:
+    if value < 1:
+        raise ValueError("value must be positive")
+    primes = []
+    divisor = 2
+    remaining = value
+    while divisor * divisor <= remaining:
+        if remaining % divisor == 0:
+            primes.append(divisor)
+            while remaining % divisor == 0:
+                remaining //= divisor
+        divisor += 1
+    if remaining > 1:
+        primes.append(remaining)
+    return tuple(primes)
+
+
 def _monolith_type_data(
     group: FiniteGroup,
     monolith: frozenset[object],
@@ -2588,6 +2632,86 @@ def point_pushing_centralizer_layer_commutator_audit(
         monolith_in_normal_closure=monolith_in_normal_closure,
         monolith_in_normal_closure_commutator=monolith_in_commutator,
         layer_regime=layer_regime,
+    )
+
+
+def point_pushing_abelian_centralizer_layer_prime_audit(
+    group: FiniteGroup,
+    monolith: Iterable[object],
+    generator: object,
+    normal_generator_order_bound: int,
+) -> PointPushingAbelianCentralizerLayerPrimeAudit:
+    """Audit the p-primary constraint on an abelian centralizer layer."""
+
+    from .finite_group import normal_closure_elements
+    from .group_laws import element_order, lcm
+
+    if normal_generator_order_bound <= 0:
+        raise ValueError("normal_generator_order_bound must be positive")
+    if generator not in group.elements:
+        raise ValueError("generator must be a group element")
+    monolith_set = frozenset(monolith)
+    monolith_type, monolith_prime, _orders = _monolith_type_data(group, monolith_set)
+    normal_closure = frozenset(normal_closure_elements(group, [generator]))
+    commutator = frozenset(commutator_subgroup_elements(group, normal_closure))
+    element_orders = tuple(
+        element_order(group, element)
+        for element in normal_closure
+        if element != group.identity
+    )
+    normal_closure_exponent = 1
+    for order in element_orders:
+        normal_closure_exponent = lcm(normal_closure_exponent, order)
+    normal_closure_prime_set = _prime_divisors_integer(normal_closure_exponent)
+    generator_order = element_order(group, generator)
+    generator_order_divides_bound = normal_generator_order_bound % generator_order == 0
+    exponent_divides_generator_order = generator_order % normal_closure_exponent == 0
+    exponent_divides_bound = normal_generator_order_bound % normal_closure_exponent == 0
+    normal_closure_abelian = len(commutator) == 1
+    monolith_in_normal_closure = monolith_set <= normal_closure
+    same_prime_as_monolith = (
+        monolith_prime is not None
+        and normal_closure_prime_set == (monolith_prime,)
+    )
+    prime_divides_generator_order = (
+        monolith_prime is not None and generator_order % monolith_prime == 0
+    )
+    prime_divides_bound = (
+        monolith_prime is not None
+        and normal_generator_order_bound % monolith_prime == 0
+    )
+    if not (
+        monolith_type == "elementary_abelian"
+        and normal_closure_abelian
+        and monolith_in_normal_closure
+    ):
+        tail_regime = "invalid_abelian_centralizer_layer_data"
+    elif (
+        same_prime_as_monolith
+        and generator_order_divides_bound
+        and exponent_divides_generator_order
+    ):
+        tail_regime = "bounded_p_primary_abelian_centralizer_layer"
+    else:
+        tail_regime = "mixed_prime_or_unbounded_generator_layer"
+    return PointPushingAbelianCentralizerLayerPrimeAudit(
+        normal_generator_order_bound=normal_generator_order_bound,
+        group_order=len(group.elements),
+        monolith_order=len(monolith_set),
+        monolith_prime=monolith_prime,
+        normal_closure_order=len(normal_closure),
+        normal_closure_exponent=normal_closure_exponent,
+        generator_order=generator_order,
+        generator_order_divides_bound=generator_order_divides_bound,
+        normal_closure_exponent_divides_generator_order=exponent_divides_generator_order,
+        normal_closure_exponent_divides_bound=exponent_divides_bound,
+        normal_closure_abelian=normal_closure_abelian,
+        normal_closure_prime_set=normal_closure_prime_set,
+        monolith_in_normal_closure=monolith_in_normal_closure,
+        same_prime_as_monolith=same_prime_as_monolith,
+        prime_divides_generator_order=prime_divides_generator_order,
+        prime_divides_bound=prime_divides_bound,
+        tail_regime=tail_regime,
     )
 
 

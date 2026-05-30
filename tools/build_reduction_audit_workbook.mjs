@@ -381,6 +381,13 @@ const rows = [
     "Rule out abelian centralizer-layer tails and centralizer-stem tails, or construct one for B.",
   ],
   [
+    "Abelian centralizer-layer prime bound",
+    "Remove prime escape from abelian centralizer-layer generator tails.",
+    "proofs/point_pushing_abelian_centralizer_layer_prime_bound.md proves that an abelian N=<<t>>_H containing M is p-primary and exp(N)|ord(t)|B_X, so p divides the fixed bound B_X. point_pushing_abelian_centralizer_layer_prime_audit records finite prime-support labels.",
+    "Prime escape ruled out here",
+    "Rule out bounded-prime bounded-exponent centralizer-layer rank/extension tails, or construct one for B.",
+  ],
+  [
     "Nonabelian-chief relation quotient",
     "Compress nonabelian-chief Brunnian failures to detector relation-group quotients.",
     "proofs/point_pushing_nonabelian_chief_relation_quotient.md proves that a minimal nonabelian-chief first failure has mu_H(R)=M=S^r, and the detector orbit group controls the outer action on M. point_pushing_nonabelian_chief_relation_quotient_audit records finite chief-layer bookkeeping.",

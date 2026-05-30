@@ -2237,6 +2237,12 @@ centralizer layer `[N,N]=1` or a centralizer stem layer
 `M<=Z(N) cap [N,N]`.  Thus the remaining noncentral module branch is now:
 active bounded-order linear-generator tails, abelian centralizer-layer tails,
 or centralizer-stem tails.
+The abelian centralizer-layer tail is not a prime-escape mechanism:
+`proofs/point_pushing_abelian_centralizer_layer_prime_bound.md` proves that
+such an `N` is a finite abelian `p`-group with `exp(N)|ord(t)|B_X`, hence
+`p|B_X`.  Any surviving abelian centralizer-layer tail must therefore have
+bounded prime support and bounded exponent; only rank or extension structure
+can still escape.
 
 ## Completion audit checklist
 
