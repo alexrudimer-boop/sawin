@@ -1630,6 +1630,50 @@ def evaluate_artin_longitudes(
     return tuple(evaluate_free_word(group, assignment, longitude) for longitude in data.longitudes)
 
 
+def evaluate_artin_longitudes_streamed(
+    group: FiniteGroup, assignment: Sequence[GroupElement], braid_word: BraidWord
+) -> Tuple[GroupElement, ...]:
+    """Evaluate recursive Artin longitudes without expanding free words."""
+
+    images = list(_check_group_assignment(group, assignment))
+    longitudes = [group.identity for _ in images]
+    n = len(images)
+    for signed_generator in braid_word:
+        if signed_generator == 0:
+            raise ValueError("braid generators are nonzero")
+        i = abs(signed_generator) - 1
+        if i < 0 or i + 1 >= n:
+            raise IndexError(i)
+        image_i, image_j = images[i], images[i + 1]
+        longitude_i, longitude_j = longitudes[i], longitudes[i + 1]
+        if signed_generator > 0:
+            images[i] = group.mul(group.mul(image_i, image_j), group.inv(image_i))
+            images[i + 1] = image_i
+            longitudes[i] = group.mul(image_i, longitude_j)
+            longitudes[i + 1] = longitude_i
+        else:
+            images[i] = image_j
+            images[i + 1] = group.mul(group.mul(group.inv(image_j), image_i), image_j)
+            longitudes[i] = longitude_j
+            longitudes[i + 1] = group.mul(group.inv(image_j), longitude_i)
+    return tuple(longitudes)
+
+
+def has_identity_longitude_signature_streamed(
+    group: FiniteGroup, n: int, braid_word: BraidWord
+) -> bool:
+    """Streaming version of ``has_identity_longitude_signature``."""
+
+    if braid_permutation(n, braid_word) != tuple(range(n)):
+        return False
+    identity_row = tuple(group.identity for _ in range(n))
+    return all(
+        evaluate_artin_longitudes_streamed(group, assignment, braid_word)
+        == identity_row
+        for assignment in product(group.elements, repeat=n)
+    )
+
+
 def evaluate_longitude_expression(
     group: FiniteGroup,
     assignment: Sequence[GroupElement],

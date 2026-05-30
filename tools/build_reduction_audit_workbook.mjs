@@ -250,9 +250,16 @@ const rows = [
   [
     "Point-pushing fixed-variety criterion",
     "State the exact global equivalence between finite-rack domination and one fixed finite variety containing all point-pushing images.",
-    "proofs/point_pushing_fixed_variety_domination.md proves that A_G dominates X iff P_k(X) lies in var(G) for every k.",
-    "Equivalent reformulation",
-    "Construct one finite G_X with all P_k(X) in var(G_X), or diagonalize variety escapes into normalized-law B.",
+    "proofs/last_strand_law_gap_audit.md now shows the forward law-to-K_G implication used by proofs/point_pushing_fixed_variety_domination.md is false; the criterion is retained only as a necessary-condition/search heuristic.",
+    "Superseded gap",
+    "Use actual finite-longitude identity, not ordinary law identity, for A or B certificates.",
+  ],
+  [
+    "Last-strand law gap",
+    "Prevent replacing finite-longitude identity by ordinary group-law identity.",
+    "proofs/last_strand_law_gap_audit.md gives the dihedral-rack S3-law point-pushing mover and streamed longitude check showing nonidentity S3 finite-longitude data; point_pushing_exponent_escape_audit exposes this finite row.",
+    "Guardrail counterexample",
+    "Repair any theorem using w in Law(G) => iota(w) in K_G; only the converse is safe.",
   ],
   [
     "Action images",

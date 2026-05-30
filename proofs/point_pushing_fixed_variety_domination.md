@@ -7,6 +7,12 @@ This note follows `proofs/sawin_last_strand_law_reduction.md` and
 or B.  It records the exact global reformulation obtained by allowing the
 fixed detector to be an arbitrary finite group, not only a symmetric group.
 
+**Superseded guardrail.**  The equivalence below depends on the false forward
+implication `w in Law_k(G) => iota_{k+1}(w) in K_G(k+1)`.  The counterexample
+is recorded in `proofs/last_strand_law_gap_audit.md`.  This file is retained
+as a necessary-condition/search heuristic, not as an established equivalent
+form of Sawin domination.
+
 ## Setup
 
 Let `X` be a finite bijective set-theoretic YBE solution.  For `k>=1`, set

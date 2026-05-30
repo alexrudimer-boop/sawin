@@ -33,6 +33,7 @@ from ybe_domination import (
     diagonal_product_invisibility_audit,
     evaluate_artin_images,
     evaluate_artin_longitudes,
+    evaluate_artin_longitudes_streamed,
     evaluate_abelian_longitude_matrix_witness,
     evaluate_longitude_expression,
     evaluate_longitude_subgroup_witness,
@@ -40,6 +41,7 @@ from ybe_domination import (
     FiniteBraidedSet,
     FiniteGroupHomomorphism,
     has_identity_longitude_signature,
+    has_identity_longitude_signature_streamed,
     has_identity_abelian_longitude_signature,
     has_trivial_abelian_longitudes_mod,
     homomorphic_longitude_subgroup_audit,
@@ -99,6 +101,20 @@ class ArtinLongitudeTests(unittest.TestCase):
     def test_positive_generator_is_not_identity_signature(self):
         group = cyclic_group(2)
         self.assertFalse(has_identity_longitude_signature(group, 2, [1]))
+
+    def test_streamed_longitude_evaluation_matches_symbolic(self):
+        group = symmetric_group(3)
+        assignment = group.elements[:3]
+        braid = (2, 1, 1, -2, -2, -2)
+
+        self.assertEqual(
+            evaluate_artin_longitudes_streamed(group, assignment, braid),
+            evaluate_artin_longitudes(group, assignment, braid),
+        )
+        self.assertEqual(
+            has_identity_longitude_signature_streamed(group, 3, braid),
+            has_identity_longitude_signature(group, 3, braid),
+        )
 
     def test_longitude_value_subgroup_for_positive_generator(self):
         group = cyclic_group(3)

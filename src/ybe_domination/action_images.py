@@ -136,6 +136,46 @@ class PointPushingVarietyPrefixAudit:
         return not self.escape_rows and not self.truncated_rows
 
 
+@dataclass(frozen=True)
+class PointPushingExponentEscapeAudit:
+    """One finite row where a power law moves a point-pushing action image."""
+
+    law_bound: int
+    point_pushing_arity: int
+    exponent_bound: int
+    braid_index: int
+    tuple_count: int
+    action_image_size: int | None
+    truncated: bool
+    escaping_element_order: int | None
+    escaping_element_word: FreeWord | None
+    exponent_law_word: FreeWord | None
+    evaluated_permutation: Permutation | None
+    direct_braid_permutation: Permutation | None
+    symmetric_identity_longitude_signature: bool | None
+    moved_index: int | None
+
+    @property
+    def found_exponent_escape(self) -> bool:
+        return self.escaping_element_word is not None and self.moved_index is not None
+
+    @property
+    def direct_matches_evaluated(self) -> bool:
+        return (
+            self.evaluated_permutation is not None
+            and self.direct_braid_permutation is not None
+            and self.evaluated_permutation == self.direct_braid_permutation
+        )
+
+    @property
+    def gives_power_law_mover(self) -> bool:
+        return self.found_exponent_escape and self.direct_matches_evaluated
+
+    @property
+    def exposes_naive_law_gap(self) -> bool:
+        return self.gives_power_law_mover and self.symmetric_identity_longitude_signature is False
+
+
 def identity_permutation(size: int) -> Permutation:
     return tuple(range(size))
 
@@ -562,6 +602,133 @@ def point_pushing_variety_prefix_audit(
         law_arity=law_arity,
         max_length=max_length,
         rows=rows,
+    )
+
+
+def _free_word_power_word(word: FreeWord, exponent: int) -> FreeWord:
+    if exponent < 0:
+        raise ValueError("exponent must be nonnegative")
+    from .group_laws import multiply_free_words
+
+    out: FreeWord = tuple()
+    for _ in range(exponent):
+        out = multiply_free_words(out, word)
+    return out
+
+
+def point_pushing_exponent_escape_audit(
+    solution: FiniteBraidedSet,
+    law_bound: int,
+    point_pushing_arity: int,
+    *,
+    max_subgroup_size: int | None = None,
+) -> PointPushingExponentEscapeAudit:
+    """Audit one exponent-law point-pushing action escape.
+
+    If an element of ``P_k(X)`` has order not dividing ``lcm(1,...,j)``, a
+    representative word for that element, raised to this lcm, is a law on
+    every group of order at most ``j`` but moves the YBE action.  This does
+    *not* by itself certify finite-longitude invisibility: the returned row
+    also records whether the corresponding braid has identity longitude data
+    in ``S_j``.  Rows with ``exposes_naive_law_gap`` true are counterexamples
+    to the naive implication "word law => point-pushing braid in K_G".
+    """
+
+    from .braid_laws import law_word_on_last_strand, pure_braid_generator
+    from .artin_longitudes import has_identity_longitude_signature_streamed
+    from .finite_group import symmetric_group
+    from .group_laws import lcm_upto
+
+    if law_bound < 1:
+        raise ValueError("law_bound must be positive")
+    if point_pushing_arity < 1:
+        raise ValueError("point_pushing_arity must be positive")
+
+    exponent_bound = lcm_upto(law_bound)
+    n = point_pushing_arity + 1
+    tuple_count = len(solution.elements) ** n
+    generator_braids = {
+        generator: pure_braid_generator(generator + 1, n)
+        for generator in range(point_pushing_arity)
+    }
+    images = braid_images_for_words(solution, n, generator_braids)
+    try:
+        subgroup_words = generated_permutation_subgroup_with_words(
+            images,
+            max_size=max_subgroup_size,
+        )
+    except ValueError:
+        return PointPushingExponentEscapeAudit(
+            law_bound=law_bound,
+            point_pushing_arity=point_pushing_arity,
+            exponent_bound=exponent_bound,
+            braid_index=n,
+            tuple_count=tuple_count,
+            action_image_size=None,
+            truncated=True,
+            escaping_element_order=None,
+            escaping_element_word=None,
+            exponent_law_word=None,
+            evaluated_permutation=None,
+            direct_braid_permutation=None,
+            symmetric_identity_longitude_signature=None,
+            moved_index=None,
+        )
+
+    identity = identity_permutation(tuple_count)
+    for element, representative in subgroup_words.items():
+        order = permutation_order(element)
+        if exponent_bound % order == 0:
+            continue
+        exponent_word = _free_word_power_word(representative, exponent_bound)
+        evaluated = evaluate_free_word_on_permutations(exponent_word, images)
+        if evaluated == identity:
+            continue
+        braid_n, braid = law_word_on_last_strand(
+            exponent_word,
+            point_pushing_arity,
+        )
+        direct = braid_word_permutation_image(solution, braid_n, braid)
+        symmetric_identity = has_identity_longitude_signature_streamed(
+            symmetric_group(law_bound),
+            braid_n,
+            braid,
+        )
+        moved_index = next(
+            index for index, image in enumerate(evaluated) if image != index
+        )
+        return PointPushingExponentEscapeAudit(
+            law_bound=law_bound,
+            point_pushing_arity=point_pushing_arity,
+            exponent_bound=exponent_bound,
+            braid_index=n,
+            tuple_count=tuple_count,
+            action_image_size=len(subgroup_words),
+            truncated=False,
+            escaping_element_order=order,
+            escaping_element_word=representative,
+            exponent_law_word=exponent_word,
+            evaluated_permutation=evaluated,
+            direct_braid_permutation=direct,
+            symmetric_identity_longitude_signature=symmetric_identity,
+            moved_index=moved_index,
+        )
+
+    return PointPushingExponentEscapeAudit(
+        law_bound=law_bound,
+        point_pushing_arity=point_pushing_arity,
+        exponent_bound=exponent_bound,
+        braid_index=n,
+        tuple_count=tuple_count,
+        action_image_size=len(subgroup_words),
+        truncated=False,
+        escaping_element_order=None,
+        escaping_element_word=None,
+        exponent_law_word=None,
+        evaluated_permutation=None,
+        direct_braid_permutation=None,
+        symmetric_identity_longitude_signature=None,
+        moved_index=None,
     )
 
 

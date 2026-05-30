@@ -868,6 +868,16 @@ right-stabilized extension is trivial on `X^n`.  Hence a moving `K_G` braid
 does force a moving ordinary last-strand law layer.  The note is also a
 guardrail: conjugated layers or non-right embeddings require their own
 triviality proof.
+`proofs/last_strand_law_gap_audit.md` now corrects the strongest
+point-pushing reformulation.  The implication
+`w in Law_k(G) => iota_{k+1}(w) in K_G(k+1)` is false for `k>=2`: the
+three-element dihedral rack and the word `(x_1 x_2^{-1})^6`, a law on `S_3`,
+give a last-strand point-pushing braid that moves `X^3`, while the streamed
+Artin-longitude check shows nonidentity `S_3` longitude data.  Thus ordinary
+law identity is only a necessary-condition filter for last-strand
+finite-longitude identity, not a replacement for it.  The helper
+`point_pushing_exponent_escape_audit(...)` now records this finite guardrail
+row and flags `exposes_naive_law_gap`.
 `proofs/symmetric_repair_contract_bridge.md` now connects this symmetric fork
 back to the proof-critic repair contract.  If a supplied repair package proves
 the local implication using a fixed product detector `H(pi,Q)`, then the left

@@ -7,6 +7,12 @@ This note follows `proofs/sawin_last_strand_law_reduction.md` and
 rephrases the final point-pushing law test as a moving action-image variety
 condition.
 
+**Superseded guardrail.**  The law test below is not equivalent to
+finite-longitude identity: `proofs/last_strand_law_gap_audit.md` gives an
+`S_3`-law point-pushing word that moves a three-element rack while having
+nonidentity `S_3` finite-longitude data.  This note remains useful only as an
+action-image necessary-condition/search diagnostic.
+
 ## Setup
 
 Let `X` be a finite bijective set-theoretic YBE solution.  For each `k>=1`,

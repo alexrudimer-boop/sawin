@@ -8,6 +8,14 @@ outcome A or B.  It sharpens the remaining detector question from arbitrary
 pure braids in a symmetric longitude kernel to ordinary group-law words
 embedded by last-strand point pushing.
 
+**Superseded guardrail.**  The forward direction of Lemma 1 below is too
+strong as stated for `k>=2`.  See
+`proofs/last_strand_law_gap_audit.md`, which gives a three-element rack and an
+`S_3`-law word whose last-strand point-pushing braid moves the rack and has
+nonidentity `S_3` finite-longitude data.  The valid direction retained from
+this note is the necessary condition
+`iota_n(w) in K_G(n) => w in Law_{n-1}(G)`.
+
 The executable finite-instance mirror is
 `last_strand_law_exactness_audit(...)`.  It checks, for one supplied finite
 group and one supplied word, that the last-strand point-pushing braid has

@@ -15,6 +15,7 @@ from ybe_domination import (
     invert_permutation,
     law_braid_action_certificate,
     law_word_on_last_strand,
+    point_pushing_exponent_escape_audit,
     point_pushing_variety_escape_audit,
     point_pushing_variety_prefix_audit,
     pure_generator_order_profile,
@@ -188,6 +189,46 @@ class ActionImageTests(unittest.TestCase):
         self.assertEqual(audit.escape_rows, ())
         self.assertEqual(audit.truncated_rows, ())
         self.assertTrue(audit.no_bounded_escape_found)
+
+    def test_point_pushing_exponent_escape_records_power_law_mover(self):
+        solution = rack_solution([0, 1, 2], lambda a, b: (2 * a - b) % 3)
+
+        audit = point_pushing_exponent_escape_audit(
+            solution,
+            law_bound=3,
+            point_pushing_arity=2,
+        )
+
+        self.assertFalse(audit.truncated)
+        self.assertEqual(audit.exponent_bound, 6)
+        self.assertEqual(audit.action_image_size, 24)
+        self.assertEqual(audit.escaping_element_order, 4)
+        self.assertTrue(audit.found_exponent_escape)
+        self.assertTrue(audit.direct_matches_evaluated)
+        self.assertTrue(audit.gives_power_law_mover)
+        self.assertFalse(audit.symmetric_identity_longitude_signature)
+        self.assertTrue(audit.exposes_naive_law_gap)
+        self.assertIsNotNone(audit.exponent_law_word)
+        self.assertNotEqual(
+            audit.direct_braid_permutation[audit.moved_index],
+            audit.moved_index,
+        )
+
+    def test_point_pushing_exponent_escape_records_no_escape(self):
+        solution = rack_solution([0, 1, 2], lambda a, b: (2 * a - b) % 3)
+
+        audit = point_pushing_exponent_escape_audit(
+            solution,
+            law_bound=3,
+            point_pushing_arity=1,
+        )
+
+        self.assertFalse(audit.truncated)
+        self.assertEqual(audit.exponent_bound, 6)
+        self.assertEqual(audit.action_image_size, 3)
+        self.assertFalse(audit.found_exponent_escape)
+        self.assertFalse(audit.gives_power_law_mover)
+        self.assertIsNone(audit.symmetric_identity_longitude_signature)
 
 
 if __name__ == "__main__":
