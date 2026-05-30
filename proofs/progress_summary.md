@@ -965,6 +965,13 @@ point-pushing movers, and the A-side extension target is exactly
 `point_pushing_brunnian_witness_certificate(...)` checks supplied right-based
 candidate words by conversion to the existing left-based derivative detector,
 deletion of the new strand, and vertical-kernel action verification.
+`proofs/point_pushing_brunnian_orbit_criterion.md` then makes that extension
+target finite and exact at each arity: the Brunnian obstruction subgroup is
+the normal closure of the new-generator pair under the old suffix paired
+subgroup.  A one-new-strand jump exists exactly when this finite
+orbit-normal-closure subgroup contains a nontrivial vertical element.  The
+helper `point_pushing_brunnian_orbit_audit(...)` enumerates that subgroup in
+finite rows and returns a right-based Brunnian witness when one appears.
 `proofs/point_pushing_derivative_functoriality.md` records the compatibility
 of this exact criterion with detector changes.  A finite group homomorphism
 `G->H` induces coordinate equivariance on detector states.  Surjections give

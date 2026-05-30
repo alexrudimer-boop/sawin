@@ -135,6 +135,33 @@ class PointPushingBrunnianWitnessCertificate:
 
 
 @dataclass(frozen=True)
+class PointPushingBrunnianOrbitAudit:
+    """Finite normal-closure check for one Brunnian extension step."""
+
+    group_order: int
+    arity: int
+    braid_index: int
+    detector_state_count: int
+    ybe_tuple_count: int
+    old_pair_subgroup_size: int | None
+    conjugate_generator_count: int | None
+    relative_subgroup_size: int | None
+    truncated: bool
+    witness_right_word: FreeWord | None
+    witness_left_word: FreeWord | None
+    witness_action_value: Permutation | None
+    moved_index: int | None
+
+    @property
+    def found_brunnian_vertical_witness(self) -> bool:
+        return self.witness_right_word is not None and self.moved_index is not None
+
+    @property
+    def relative_vertical_kernel_trivial(self) -> bool:
+        return not self.truncated and not self.found_brunnian_vertical_witness
+
+
+@dataclass(frozen=True)
 class PointPushingMuPrefixRow:
     """One finite row in a bounded search for ``mu_X(k)``."""
 
@@ -403,6 +430,51 @@ def generated_permutation_subgroup_with_words(
             words[candidate] = candidate_word
             if max_size is not None and len(words) > max_size:
                 raise ValueError("generated subgroup exceeded max_size")
+            queue.append(candidate)
+    return words
+
+
+def _generated_pair_subgroup_with_words(
+    generators: Mapping[int, Tuple[Permutation, Permutation]],
+    max_size: int | None = None,
+) -> dict[Tuple[Permutation, Permutation], FreeWord]:
+    """Generate a subgroup of a direct product and remember generator words."""
+
+    gens = tuple(sorted(generators.items()))
+    if not gens:
+        return {(tuple(), tuple()): tuple()}
+    detector_size = len(gens[0][1][0])
+    action_size = len(gens[0][1][1])
+    identity_pair = (
+        identity_permutation(detector_size),
+        identity_permutation(action_size),
+    )
+    moves = []
+    for index, (detector, action) in gens:
+        moves.append((detector, action, ((index, 1),)))
+        moves.append(
+            (
+                invert_permutation(detector),
+                invert_permutation(action),
+                ((index, -1),),
+            )
+        )
+    words: dict[Tuple[Permutation, Permutation], FreeWord] = {identity_pair: tuple()}
+    queue = deque([identity_pair])
+    while queue:
+        current = queue.popleft()
+        current_word = words[current]
+        for detector_move, action_move, move_word in moves:
+            candidate = (
+                compose_permutations(detector_move, current[0]),
+                compose_permutations(action_move, current[1]),
+            )
+            if candidate in words:
+                continue
+            candidate_word = _reduce_free_word(current_word + move_word)
+            words[candidate] = candidate_word
+            if max_size is not None and len(words) > max_size:
+                raise ValueError("generated pair subgroup exceeded max_size")
             queue.append(candidate)
     return words
 
@@ -768,6 +840,174 @@ def point_pushing_brunnian_witness_certificate(
         deletion_word=deletion_word,
         deletion_trivial=deletion_word == tuple(),
         vertical=vertical,
+    )
+
+
+def _evaluate_free_word_on_pair_images(
+    word: FreeWord,
+    pair_images: Mapping[int, Tuple[Permutation, Permutation]],
+) -> Tuple[Permutation, Permutation]:
+    detector_images = {index: pair[0] for index, pair in pair_images.items()}
+    action_images = {index: pair[1] for index, pair in pair_images.items()}
+    return (
+        evaluate_free_word_on_permutations(word, detector_images),
+        evaluate_free_word_on_permutations(word, action_images),
+    )
+
+
+def point_pushing_brunnian_orbit_audit(
+    solution: FiniteBraidedSet,
+    group: FiniteGroup,
+    arity: int,
+    *,
+    max_detector_states: int | None = None,
+    max_old_pair_subgroup_size: int | None = None,
+    max_relative_subgroup_size: int | None = None,
+) -> PointPushingBrunnianOrbitAudit:
+    """Audit the relative Brunnian normal closure at one point-pushing arity.
+
+    Coordinates are right-based: the old suffix generators are
+    ``a_1,...,a_{k-1}`` and the newly added far-left generator is ``a_k``.
+    """
+
+    from .braid_laws import (
+        point_pushing_derivative_detector_generators,
+        pure_braid_generator,
+    )
+
+    if arity < 1:
+        raise ValueError("arity must be positive")
+
+    n = arity + 1
+    detector_left = point_pushing_derivative_detector_generators(
+        group,
+        arity,
+        max_states=max_detector_states,
+    )
+    action_braids = {
+        generator: pure_braid_generator(generator + 1, n)
+        for generator in range(arity)
+    }
+    action_left = braid_images_for_words(solution, n, action_braids)
+    detector_identity = identity_permutation(
+        len(next(iter(detector_left.values())))
+    )
+    action_identity = identity_permutation(len(next(iter(action_left.values()))))
+
+    pair_right = {
+        right_generator: (
+            detector_left[arity - 1 - right_generator],
+            action_left[arity - 1 - right_generator],
+        )
+        for right_generator in range(arity)
+    }
+    new_generator = arity - 1
+    old_pair_generators = {
+        generator: pair_right[generator] for generator in range(arity - 1)
+    }
+    try:
+        old_words = _generated_pair_subgroup_with_words(
+            old_pair_generators,
+            max_size=max_old_pair_subgroup_size,
+        )
+    except ValueError as exc:
+        if "exceeded max_size" not in str(exc):
+            raise
+        return PointPushingBrunnianOrbitAudit(
+            group_order=len(group.elements),
+            arity=arity,
+            braid_index=n,
+            detector_state_count=len(detector_identity),
+            ybe_tuple_count=len(action_identity),
+            old_pair_subgroup_size=None,
+            conjugate_generator_count=None,
+            relative_subgroup_size=None,
+            truncated=True,
+            witness_right_word=None,
+            witness_left_word=None,
+            witness_action_value=None,
+            moved_index=None,
+        )
+
+    conjugate_pairs: dict[FreeWord, Tuple[Permutation, Permutation]] = {}
+    for old_word in old_words.values():
+        conjugate_word = _reduce_free_word(
+            old_word + ((new_generator, 1),) + _invert_free_word(old_word)
+        )
+        conjugate_pairs[conjugate_word] = _evaluate_free_word_on_pair_images(
+            conjugate_word,
+            pair_right,
+        )
+
+    moves = []
+    for conjugate_word, (detector, action) in conjugate_pairs.items():
+        moves.append((detector, action, conjugate_word))
+        moves.append(
+            (
+                invert_permutation(detector),
+                invert_permutation(action),
+                _invert_free_word(conjugate_word),
+            )
+        )
+
+    identity_pair = (detector_identity, action_identity)
+    words: dict[Tuple[Permutation, Permutation], FreeWord] = {identity_pair: tuple()}
+    queue = deque([identity_pair])
+    truncated = False
+    witness_right_word: FreeWord | None = None
+    witness_action: Permutation | None = None
+    moved_index: int | None = None
+    while queue:
+        current = queue.popleft()
+        current_word = words[current]
+        for detector_move, action_move, move_word in moves:
+            candidate = (
+                compose_permutations(detector_move, current[0]),
+                compose_permutations(action_move, current[1]),
+            )
+            if candidate in words:
+                continue
+            candidate_word = _reduce_free_word(current_word + move_word)
+            if candidate[0] == detector_identity and candidate[1] != action_identity:
+                witness_right_word = candidate_word
+                witness_action = candidate[1]
+                moved_index = next(
+                    index
+                    for index, image in enumerate(candidate[1])
+                    if image != index
+                )
+                words[candidate] = candidate_word
+                queue.clear()
+                break
+            words[candidate] = candidate_word
+            if (
+                max_relative_subgroup_size is not None
+                and len(words) > max_relative_subgroup_size
+            ):
+                truncated = True
+                queue.clear()
+                break
+            queue.append(candidate)
+
+    witness_left_word = (
+        None
+        if witness_right_word is None
+        else right_based_point_pushing_word_to_left(witness_right_word, arity)
+    )
+    return PointPushingBrunnianOrbitAudit(
+        group_order=len(group.elements),
+        arity=arity,
+        braid_index=n,
+        detector_state_count=len(detector_identity),
+        ybe_tuple_count=len(action_identity),
+        old_pair_subgroup_size=len(old_words),
+        conjugate_generator_count=len(conjugate_pairs),
+        relative_subgroup_size=None if truncated else len(words),
+        truncated=truncated,
+        witness_right_word=witness_right_word,
+        witness_left_word=witness_left_word,
+        witness_action_value=witness_action,
+        moved_index=moved_index,
     )
 
 

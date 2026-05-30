@@ -339,6 +339,13 @@ const rows = [
     "Prove R_{m,k+1} cap ker(r_k) <= N_{X,k+1} for one fixed m, or construct an unbounded family of Brunnian vertical witnesses.",
   ],
   [
+    "Point-pushing Brunnian orbit criterion",
+    "Replace arbitrary Brunnian words by the finite orbit-normal-closure subgroup of the new generator.",
+    "proofs/point_pushing_brunnian_orbit_criterion.md proves that one-new-strand Brunnian witnesses are exactly nontrivial vertical elements in <<e>> under the old suffix paired subgroup; point_pushing_brunnian_orbit_audit checks finite rows.",
+    "Exact extension criterion",
+    "Prove the relative orbit-normal-closure vertical kernel is trivial for all k for one fixed m, or produce an unbounded symmetric-tail family of such vertical elements.",
+  ],
+  [
     "Derivative detector functoriality",
     "Show the exact D_k(G) criterion is compatible with quotients, embeddings, symmetric cofinality, and product prefixes.",
     "proofs/point_pushing_derivative_functoriality.md proves coordinate equivariance for finite group homomorphisms; point_pushing_derivative_functoriality_audit checks finite instances.",

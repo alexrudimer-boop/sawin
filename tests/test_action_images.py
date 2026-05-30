@@ -16,6 +16,7 @@ from ybe_domination import (
     law_braid_action_certificate,
     law_word_on_last_strand,
     delete_right_based_new_strand_word,
+    point_pushing_brunnian_orbit_audit,
     point_pushing_brunnian_witness_certificate,
     point_pushing_exponent_escape_audit,
     point_pushing_marked_quotient_audit,
@@ -370,6 +371,46 @@ class ActionImageTests(unittest.TestCase):
         self.assertEqual(certificate.deletion_word, right_word)
         self.assertFalse(certificate.deletion_trivial)
         self.assertFalse(certificate.valid_brunnian_witness)
+
+    def test_point_pushing_brunnian_orbit_audit_finds_relative_witness(self):
+        solution = rack_solution([0, 1, 2], lambda a, b: (2 * a - b) % 3)
+
+        audit = point_pushing_brunnian_orbit_audit(
+            solution,
+            cyclic_group(2),
+            arity=2,
+        )
+
+        self.assertFalse(audit.truncated)
+        self.assertTrue(audit.found_brunnian_vertical_witness)
+        self.assertFalse(audit.relative_vertical_kernel_trivial)
+        self.assertEqual(audit.braid_index, 3)
+        self.assertEqual(audit.detector_state_count, 64)
+        self.assertEqual(audit.ybe_tuple_count, 27)
+        self.assertIsNotNone(audit.witness_right_word)
+        self.assertEqual(
+            delete_right_based_new_strand_word(audit.witness_right_word, arity=2),
+            tuple(),
+        )
+        self.assertEqual(
+            right_based_point_pushing_word_to_left(audit.witness_right_word, arity=2),
+            audit.witness_left_word,
+        )
+        self.assertIsNotNone(audit.moved_index)
+
+    def test_point_pushing_brunnian_orbit_audit_records_trivial_relative_kernel(self):
+        solution = rack_solution([0, 1], lambda a, b: b)
+
+        audit = point_pushing_brunnian_orbit_audit(
+            solution,
+            cyclic_group(2),
+            arity=2,
+        )
+
+        self.assertFalse(audit.truncated)
+        self.assertFalse(audit.found_brunnian_vertical_witness)
+        self.assertTrue(audit.relative_vertical_kernel_trivial)
+        self.assertIsNone(audit.witness_right_word)
 
     def test_point_pushing_mu_prefix_audit_detects_trivial_prefix(self):
         solution = rack_solution([0, 1], lambda a, b: b)
