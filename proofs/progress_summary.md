@@ -828,6 +828,13 @@ left-regular embedding condition, and the corresponding sharp detector rack
 size.  This is only a detector-format bridge: it does not construct the
 missing descent readout, faithful decomposition, or all-`n` endpoint
 witnesses.
+`proofs/endpoint_family_symmetric_fork.md` now gives the matching endpoint
+family fork.  For any finite family of fixed endpoint groups `H_s`, all-`n`
+endpoint-longitude witnesses give one common symmetric cutoff
+`S_m`, while failure of every such cutoff gives a symmetric-tail endpoint seed
+which becomes normalized-law movement once the endpoint family is faithful.
+This keeps the positive and negative endpoint requirements in the same
+symmetric-detector language.
 `proofs/symmetric_tower_counterexample_certificate.md` now records the
 corresponding simplified B certificate: for every `j`, produce a braid
 `alpha_j` with identity `S_j` longitude data and a moved global or residual

@@ -325,6 +325,13 @@ const rows = [
     "Still need the repair contract's fixed descent readout, faithful decomposition, and all-n endpoint witnesses.",
   ],
   [
+    "Endpoint-family symmetric fork",
+    "Convert any finite fixed endpoint group family into a symmetric detector A/B fork.",
+    "proofs/endpoint_family_symmetric_fork.md proves that endpoint-longitude witnesses give a common S_m cutoff, while failure of every such cutoff yields a symmetric-tail normalized-law endpoint seed.",
+    "Endpoint fork",
+    "Use after constructing a finite faithful endpoint family; bounded endpoint misses remain nonfinal.",
+  ],
+  [
     "Symmetric-tower B certificate",
     "State the simplified constructive B data after reducing to symmetric groups.",
     "proofs/symmetric_tower_counterexample_certificate.md states that witnesses invisible to S_j for every j suffice; symmetric_normalized_law_prefix_witness_audit and local_symmetric_normalized_law_prefix_witness_audit check supplied rows.",
