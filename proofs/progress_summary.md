@@ -746,6 +746,12 @@ detector may be taken to be `S_m`, and a negative normalized-law construction
 may diagonalize against `S_j` only.  The helper
 `symmetric_detector_reduction_audit(...)` records this containment at the
 finite-signature level.
+`proofs/symmetric_tower_monotonicity.md` records the descending tower
+`K_{S_M}(n) subset K_{S_m}(n)` for `M>=m`, using the fixed-point inclusion
+`S_m -> S_M`.  Thus positive detector degrees are upward closed, and a
+sequence invisible to `S_j` is eventually invisible to every fixed `S_m`.  The
+helper `symmetric_tower_monotonicity_audit(...)` checks this inclusion at the
+finite-signature level.
 `proofs/symmetric_tower_counterexample_certificate.md` now records the
 corresponding simplified B certificate: for every `j`, produce a braid
 `alpha_j` with identity `S_j` longitude data and a moved global or residual

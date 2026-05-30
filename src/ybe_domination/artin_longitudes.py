@@ -20,6 +20,7 @@ from .finite_group import (
     left_regular_representation,
     permutation_group_from_generators,
     subgroup_generated_elements,
+    symmetric_group_inclusion,
     symmetric_group,
 )
 
@@ -817,6 +818,25 @@ class SymmetricDetectorReductionAudit:
     @property
     def proves_symmetric_detector_reduction(self) -> bool:
         return self.embedding_injective and self.symmetric_identity_implies_source_identity
+
+
+@dataclass(frozen=True)
+class SymmetricTowerMonotonicityAudit:
+    """Check the kernel containment ``K_{S_M} <= K_{S_m}`` for ``M>=m``."""
+
+    source_degree: int
+    target_degree: int
+    inclusion_injective: bool
+    smaller_identity_signature: bool
+    larger_identity_signature: bool
+
+    @property
+    def larger_identity_implies_smaller_identity(self) -> bool:
+        return not self.larger_identity_signature or self.smaller_identity_signature
+
+    @property
+    def proves_symmetric_tower_monotonicity(self) -> bool:
+        return self.inclusion_injective and self.larger_identity_implies_smaller_identity
 
 
 def artin_longitudes(n: int, braid_word: BraidWord) -> ArtinLongitudeData:
@@ -2149,6 +2169,39 @@ def symmetric_detector_reduction_audit(
         ),
         symmetric_identity_signature=has_identity_longitude_signature(
             target,
+            n,
+            braid_word,
+        ),
+    )
+
+
+def symmetric_tower_monotonicity_audit(
+    smaller_degree: int,
+    larger_degree: int,
+    n: int,
+    braid_word: BraidWord,
+) -> SymmetricTowerMonotonicityAudit:
+    """Audit the inclusion ``K_{S_larger} <= K_{S_smaller}``.
+
+    The group inclusion fixes the extra points.  If every assignment into
+    ``S_larger`` kills the recursive longitudes of a braid, then in particular
+    every assignment whose image lies in the embedded ``S_smaller`` kills them.
+    """
+
+    inclusion = symmetric_group_inclusion(smaller_degree, larger_degree)
+    smaller = inclusion.source
+    larger = inclusion.target
+    return SymmetricTowerMonotonicityAudit(
+        source_degree=smaller_degree,
+        target_degree=larger_degree,
+        inclusion_injective=len(set(inclusion.mapping.values())) == len(smaller.elements),
+        smaller_identity_signature=has_identity_longitude_signature(
+            smaller,
+            n,
+            braid_word,
+        ),
+        larger_identity_signature=has_identity_longitude_signature(
+            larger,
             n,
             braid_word,
         ),

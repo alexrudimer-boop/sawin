@@ -304,6 +304,13 @@ const rows = [
     "Positive route may construct S_m detectors; B route may diagonalize against S_j.",
   ],
   [
+    "Symmetric tower monotonicity",
+    "Record K_{S_M} subset K_{S_m} for M >= m.",
+    "proofs/symmetric_tower_monotonicity.md proves the fixed-point inclusion argument; symmetric_tower_monotonicity_audit checks supplied braid signatures.",
+    "Reduction ready",
+    "Positive detector degrees are upward closed; B invisibility to S_j implies eventual invisibility to every fixed S_m.",
+  ],
+  [
     "Symmetric-tower B certificate",
     "State the simplified constructive B data after reducing to symmetric groups.",
     "proofs/symmetric_tower_counterexample_certificate.md states that witnesses invisible to S_j for every j suffice; symmetric_normalized_law_prefix_witness_audit and local_symmetric_normalized_law_prefix_witness_audit check supplied rows.",

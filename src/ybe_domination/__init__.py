@@ -31,6 +31,7 @@ from .finite_group import (
     quotient_group_by_normal_subgroup,
     subgroup_as_group,
     subgroup_generated_elements,
+    symmetric_group_inclusion,
     symmetric_group,
 )
 from .artin_longitudes import (
@@ -58,6 +59,7 @@ from .artin_longitudes import (
     PrincipalGaugeCocycleFailure,
     PrincipalGaugeExtensionDetectorAudit,
     SymmetricDetectorReductionAudit,
+    SymmetricTowerMonotonicityAudit,
     RackInnerDetectorLiftAudit,
     RackInnerDetectorLiftRowAudit,
     RackExtensionDetectorAudit,
@@ -137,6 +139,7 @@ from .artin_longitudes import (
     sharp_obstruction_rack,
     symmetric_detector_reduction_audit,
     symmetric_normalized_law_prefix_witness_audit,
+    symmetric_tower_monotonicity_audit,
 )
 from .chain_rack import (
     CLOSED_LOCAL_DETECTOR_VERDICTS,
@@ -774,6 +777,7 @@ __all__ = [
     "NormalQuotientLongitudeLiftAudit",
     "NormalizedLawPrefixWitnessAudit",
     "SymmetricDetectorReductionAudit",
+    "SymmetricTowerMonotonicityAudit",
     "QuotientMap",
     "QuotientImageKernelSummary",
     "ResidualDependencySummary",
@@ -1225,6 +1229,7 @@ __all__ = [
     "sharp_obstruction_rack",
     "symmetric_detector_reduction_audit",
     "symmetric_normalized_law_prefix_witness_audit",
+    "symmetric_tower_monotonicity_audit",
     "short_law_separating_groups",
     "short_law_escaping_variety",
     "short_law_separating_permutation_assignment",
@@ -1241,6 +1246,7 @@ __all__ = [
     "structure_orbit_holonomy_summary",
     "structure_orbit_law_separation",
     "subgroup_generated_elements",
+    "symmetric_group_inclusion",
     "subsolution",
     "triangular_bundle_audit",
     "triangular_column_collapse_audit",

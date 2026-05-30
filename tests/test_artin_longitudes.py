@@ -72,7 +72,9 @@ from ybe_domination import (
     reverse_braid_word,
     sharp_obstruction_rack,
     symmetric_detector_reduction_audit,
+    symmetric_group_inclusion,
     symmetric_normalized_law_prefix_witness_audit,
+    symmetric_tower_monotonicity_audit,
     symmetric_group,
     transport_state_left_translation_failures,
     transport_state_rack,
@@ -1181,6 +1183,23 @@ class ArtinLongitudeTests(unittest.TestCase):
         self.assertTrue(trivial.proves_symmetric_detector_reduction)
         self.assertFalse(positive.symmetric_identity_signature)
         self.assertTrue(positive.proves_symmetric_detector_reduction)
+
+    def test_symmetric_group_inclusion_fixes_extra_points(self):
+        inclusion = symmetric_group_inclusion(2, 4)
+        transposition = (1, 0)
+
+        self.assertEqual(inclusion.apply(transposition), (1, 0, 2, 3))
+        self.assertEqual(len(set(inclusion.mapping.values())), len(inclusion.source.elements))
+
+    def test_symmetric_tower_monotonicity_audit_records_kernel_inclusion(self):
+        trivial = symmetric_tower_monotonicity_audit(2, 4, 2, (1, -1))
+        positive = symmetric_tower_monotonicity_audit(2, 4, 2, (1,))
+
+        self.assertTrue(trivial.larger_identity_signature)
+        self.assertTrue(trivial.smaller_identity_signature)
+        self.assertTrue(trivial.proves_symmetric_tower_monotonicity)
+        self.assertFalse(positive.larger_identity_signature)
+        self.assertTrue(positive.proves_symmetric_tower_monotonicity)
 
     def test_detector_action_readout_is_killed_by_identity_signature(self):
         group = cyclic_group(2)

@@ -367,6 +367,25 @@ def left_regular_representation(
     return FiniteGroupHomomorphism(group, target, mapping)
 
 
+def symmetric_group_inclusion(
+    source_degree: int,
+    target_degree: int,
+) -> FiniteGroupHomomorphism:
+    """Embed ``S_source_degree`` in ``S_target_degree`` by fixing extra points."""
+
+    if source_degree <= 0 or target_degree <= 0:
+        raise ValueError("degrees must be positive")
+    if target_degree < source_degree:
+        raise ValueError("target degree must be at least the source degree")
+    source = symmetric_group(source_degree)
+    target = symmetric_group(target_degree)
+    mapping = {}
+    fixed_tail = tuple(range(source_degree, target_degree))
+    for permutation in source.elements:
+        mapping[permutation] = tuple(permutation) + fixed_tail
+    return FiniteGroupHomomorphism(source, target, mapping)
+
+
 def compose_permutations(left: Permutation, right: Permutation) -> Permutation:
     """Return left after right."""
 
