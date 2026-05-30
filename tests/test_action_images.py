@@ -1306,6 +1306,13 @@ class ActionImageTests(unittest.TestCase):
         self.assertFalse(audit.quotient_is_cyclic)
         self.assertEqual(audit.quotient_generator_internal_normal_closure_order, 2)
         self.assertFalse(audit.quotient_generator_internally_normally_generates)
+        self.assertEqual(audit.transport_residual_quotient_order, 2)
+        self.assertEqual(audit.transport_residual_abelianization_order, 2)
+        self.assertFalse(audit.transport_residual_is_perfect)
+        self.assertEqual(
+            audit.transport_residual_regime,
+            "abelian_visible_transport_residual",
+        )
         self.assertEqual(audit.quotient_abelianization_order, 4)
         self.assertEqual(audit.quotient_abelianization_exponent, 2)
         self.assertFalse(audit.quotient_abelianization_is_cyclic)
@@ -1350,6 +1357,8 @@ class ActionImageTests(unittest.TestCase):
         self.assertEqual(internal.generator_image_order, 3)
         self.assertEqual(internal.quotient_generator_internal_normal_closure_order, 12)
         self.assertTrue(internal.quotient_generator_internally_normally_generates)
+        self.assertEqual(internal.transport_residual_quotient_order, 1)
+        self.assertEqual(internal.transport_residual_regime, "no_transport_residual")
         self.assertEqual(internal.quotient_abelianization_order, 3)
         self.assertTrue(internal.quotient_abelianization_is_cyclic)
         self.assertEqual(internal.generator_abelianization_order, 3)

@@ -658,6 +658,10 @@ class PointPushingCentralizerStemMultiplierAudit:
     quotient_is_cyclic: bool
     quotient_generator_internal_normal_closure_order: int
     quotient_generator_internally_normally_generates: bool
+    transport_residual_quotient_order: int
+    transport_residual_abelianization_order: int
+    transport_residual_is_perfect: bool
+    transport_residual_regime: str
     quotient_abelianization_order: int
     quotient_abelianization_exponent: int
     quotient_abelianization_is_cyclic: bool
@@ -2792,6 +2796,10 @@ def point_pushing_centralizer_stem_multiplier_audit(
     quotient_is_cyclic = False
     quotient_generator_internal_normal_closure_order = 0
     quotient_generator_internally_normally_generates = False
+    transport_residual_quotient_order = 0
+    transport_residual_abelianization_order = 0
+    transport_residual_is_perfect = False
+    transport_residual_regime = "invalid_transport_residual_data"
     quotient_abelianization_order = 0
     quotient_abelianization_exponent = 0
     quotient_abelianization_is_cyclic = False
@@ -2821,6 +2829,26 @@ def point_pushing_centralizer_stem_multiplier_audit(
         quotient_generator_internal_normal_closure_order = len(internal_closure)
         quotient_generator_internally_normally_generates = (
             quotient_generator_internal_normal_closure_order == quotient_order
+        )
+        transport_residual, _residual_projection = quotient_group_by_normal_subgroup(
+            quotient,
+            internal_closure,
+        )
+        transport_residual_quotient_order = len(transport_residual.elements)
+        residual_commutator = frozenset(
+            commutator_subgroup_elements(transport_residual)
+        )
+        residual_abelianization, _residual_ab_projection = (
+            quotient_group_by_normal_subgroup(
+                transport_residual,
+                residual_commutator,
+            )
+        )
+        transport_residual_abelianization_order = len(
+            residual_abelianization.elements
+        )
+        transport_residual_is_perfect = (
+            transport_residual_abelianization_order == 1
         )
         quotient_commutator = frozenset(commutator_subgroup_elements(quotient))
         quotient_abelianization, ab_projection = quotient_group_by_normal_subgroup(
@@ -2856,6 +2884,14 @@ def point_pushing_centralizer_stem_multiplier_audit(
         quotient_generation_regime = "internal_bounded_normal_generator_quotient"
     else:
         quotient_generation_regime = "transport_orbit_generated_quotient"
+    if quotient_generation_regime == "internal_bounded_normal_generator_quotient":
+        transport_residual_regime = "no_transport_residual"
+    elif quotient_generation_regime == "transport_orbit_generated_quotient":
+        transport_residual_regime = (
+            "perfect_transport_residual"
+            if transport_residual_is_perfect
+            else "abelian_visible_transport_residual"
+        )
     return PointPushingCentralizerStemMultiplierAudit(
         normal_generator_order_bound=normal_generator_order_bound,
         group_order=len(group.elements),
@@ -2872,6 +2908,12 @@ def point_pushing_centralizer_stem_multiplier_audit(
         quotient_generator_internally_normally_generates=(
             quotient_generator_internally_normally_generates
         ),
+        transport_residual_quotient_order=transport_residual_quotient_order,
+        transport_residual_abelianization_order=(
+            transport_residual_abelianization_order
+        ),
+        transport_residual_is_perfect=transport_residual_is_perfect,
+        transport_residual_regime=transport_residual_regime,
         quotient_abelianization_order=quotient_abelianization_order,
         quotient_abelianization_exponent=quotient_abelianization_exponent,
         quotient_abelianization_is_cyclic=quotient_abelianization_is_cyclic,

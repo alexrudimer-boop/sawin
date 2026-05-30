@@ -416,6 +416,13 @@ const rows = [
     "Rule out internal-generator tails through perfect/commutator or multiplier growth, or construct one for B.",
   ],
   [
+    "Transport residual quotient split",
+    "Split transport-orbit generated centralizer-stem quotients after collapsing the internal normal closure.",
+    "proofs/point_pushing_transport_residual_quotient_split.md proves that E=Q/<<q>>_Q has either nontrivial abelianization, making the missing transport abelian-visible, or E is perfect. point_pushing_centralizer_stem_multiplier_audit records transport residual orders.",
+    "Transport residual split",
+    "Rule out abelian-visible transport residuals and perfect transport residuals, or construct one for B.",
+  ],
+  [
     "Nonabelian-chief relation quotient",
     "Compress nonabelian-chief Brunnian failures to detector relation-group quotients.",
     "proofs/point_pushing_nonabelian_chief_relation_quotient.md proves that a minimal nonabelian-chief first failure has mu_H(R)=M=S^r, and the detector orbit group controls the outer action on M. point_pushing_nonabelian_chief_relation_quotient_audit records finite chief-layer bookkeeping.",

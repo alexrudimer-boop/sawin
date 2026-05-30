@@ -2261,6 +2261,10 @@ On the internal side,
 abelianization of `N/M` is cyclic of order dividing `B_X`; any escape there
 must be in the commutator/perfect part or multiplier growth, not in
 unbounded abelianization.
+On the transport side,
+`proofs/point_pushing_transport_residual_quotient_split.md` now forms
+`E=(N/M)/<<q>>` and splits the residue into abelian-visible transport
+residuals and perfect transport residuals.
 
 ## Completion audit checklist
 

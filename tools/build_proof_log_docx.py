@@ -70,6 +70,7 @@ EXTRA_MD.append(ROOT / "proofs" / "point_pushing_centralizer_stem_multiplier_tai
 EXTRA_MD.append(ROOT / "proofs" / "point_pushing_centralizer_stem_noncyclic_quotient.md")
 EXTRA_MD.append(ROOT / "proofs" / "point_pushing_centralizer_stem_transport_split.md")
 EXTRA_MD.append(ROOT / "proofs" / "point_pushing_internal_stem_abelianization_bound.md")
+EXTRA_MD.append(ROOT / "proofs" / "point_pushing_transport_residual_quotient_split.md")
 EXTRA_MD.append(ROOT / "proofs" / "point_pushing_nonabelian_chief_relation_quotient.md")
 EXTRA_MD.append(ROOT / "proofs" / "point_pushing_nonabelian_wreath_coordinate_lift.md")
 EXTRA_MD.append(ROOT / "proofs" / "point_pushing_noncentral_module_tail.md")

@@ -1,0 +1,115 @@
+# Point-Pushing Transport Residual Quotient Split
+
+Date: 2026-05-30
+
+This note refines the transport-orbit side of
+`proofs/point_pushing_centralizer_stem_transport_split.md`.
+
+It does not prove outcome A or B.  It isolates the quotient measuring exactly
+what internal normal generation fails to produce.
+
+## Setup
+
+Use the centralizer-stem notation:
+
+```text
+N = <<t>>_H,
+M <= Z(N) cap [N,N],
+Q = N/M,
+q = image(t) in Q.
+```
+
+Let
+
+```text
+L = <<q>>_Q.
+```
+
+In the transport-orbit branch, `L<Q`.  Define the transport residual quotient
+
+```text
+E = Q/L.
+```
+
+Since `L` is the normal closure of `q` inside `Q`, it is normal in `Q`, so
+`E` is a finite group.
+
+## Theorem
+
+Exactly one of the following holds.
+
+1. **Abelian-visible transport residual.**
+
+   ```text
+   E_ab != 1.
+   ```
+
+   Then the missing transport generation is already visible in a nontrivial
+   finite abelian quotient of `Q/L`.
+
+2. **Perfect transport residual.**
+
+   ```text
+   E_ab = 1.
+   ```
+
+   Then `E` is perfect, and any remaining transport obstruction is entirely
+   nonabelian/perfect after the internal normal closure is collapsed.
+
+## Proof
+
+The finite group `E=Q/L` has an abelianization
+
+```text
+E_ab = E/[E,E].
+```
+
+Either this abelianization is nontrivial or it is trivial.  In the first case,
+the quotient map
+
+```text
+Q -> E -> E_ab
+```
+
+exhibits an abelian quotient on which the internal normal closure of `q`
+vanishes but the transported orbit still has nontrivial image.  Thus the
+transport failure is abelian-visible.
+
+In the second case, `E=[E,E]`, so `E` is perfect.  This gives the perfect
+transport residual.  QED.
+
+## Consequence For The Fork
+
+The transport-orbit centralizer-stem branch has a smaller fork:
+
+1. an abelian-visible transport residual, which should be attacked by finite
+   abelian longitude/readout methods; or
+2. a perfect transport residual, which is the only genuinely nonabelian
+   transport residue after collapsing the internal normal closure.
+
+The `Q8/Z(Q8)` audit row lies in the first case: the internal normal closure
+has order `2` in `C_2 x C_2`, and the quotient `E` is another `C_2`.
+
+## Audit Hook
+
+The helper
+
+```text
+point_pushing_centralizer_stem_multiplier_audit(...)
+```
+
+now records
+
+```text
+transport_residual_quotient_order
+transport_residual_abelianization_order
+transport_residual_is_perfect
+transport_residual_regime.
+```
+
+Transport rows are labeled as either
+
+```text
+abelian_visible_transport_residual
+perfect_transport_residual.
+```
