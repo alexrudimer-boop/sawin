@@ -871,6 +871,12 @@ some fixed `S_m` with `m>=|P|` kills that channel uniformly, or every
 `j>=|P|` supplies a symmetric-tail seed.  This is still channel-local; A needs
 all channels and faithful decomposition, while B needs an explicit interval and
 all-tail moved rows.
+`proofs/unit_perfect_residual_finite_channel_fork.md` now assembles the finite
+family of terminal perfect-residual channels: either one symmetric degree
+`S_M` kills all channels simultaneously, or the family supplies an unbounded
+symmetric-tail normalized-law seed.  Since there are only finitely many
+channels, there is no additional global obstruction inside the nonsolvable
+terminal-unit family.
 
 ## Verification snapshot
 

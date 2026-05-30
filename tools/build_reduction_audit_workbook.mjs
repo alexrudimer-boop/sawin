@@ -836,6 +836,13 @@ const rows = [
     "Use with faithfulness/readout attachment; still need all endpoint channels for A or an explicit YBE interval for B.",
   ],
   [
+    "Perfect-residual finite-channel fork",
+    "Assemble finitely many terminal perfect-residual channels into one symmetric A/B fork.",
+    "proofs/unit_perfect_residual_finite_channel_fork.md proves that either one S_M kills all terminal perfect-residual channels, or the finite family supplies an unbounded symmetric-tail normalized-law seed.",
+    "Channel-family dichotomy",
+    "Use for the nonsolvable terminal-unit family; still need a uniform bound for A or explicit rows for B.",
+  ],
+  [
     "Unit-continuation derived product detector",
     "Assemble terminal-unit derived-series certificates into one fixed product detector.",
     "proofs/unit_continuation_derived_product_detector.md; unit_composite_product_derived_series_lift_audit embeds each factor's combined witness into prod_i U(M_i) and verifies the endpoint tuple.",
