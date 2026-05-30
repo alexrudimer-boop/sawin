@@ -851,6 +851,15 @@ helper `unit_perfect_residual_normalized_seed_audit(...)` pairs one
 explicit same-braid and same-readout assertions before marking the row as a
 perfect-residual normalized seed.  This is still only one row of a possible
 B construction; an all-`j` family is still required.
+`proofs/unit_perfect_residual_symmetric_seed.md` gives the symmetric-tower
+version of the same seed.  If the row is invisible to `S_j` and
+`j >= |P|` for the fixed perfect residual `P`, then left-regular embedding and
+the symmetric tower imply invisibility in `P`.  The helper
+`unit_perfect_residual_symmetric_seed_audit(...)` checks the declared
+`S_j` row, `j`-strand stabilization, the `j >= |P|` guardrail, and the same
+perfect-residual miss/readout attachment.  This removes finite-group
+enumeration from nonsolvable terminal-unit B attempts but still does not
+construct the required all-`j` sequence.
 
 ## Verification snapshot
 

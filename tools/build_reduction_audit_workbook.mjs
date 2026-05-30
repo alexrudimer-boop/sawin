@@ -822,6 +822,13 @@ const rows = [
     "Use only as one row of an all-j normalized-law construction; a bounded miss remains nonfinal.",
   ],
   [
+    "Perfect-residual symmetric seed",
+    "Replace product-prefix bookkeeping by a symmetric-tower row for terminal perfect residual misses.",
+    "proofs/unit_perfect_residual_symmetric_seed.md; unit_perfect_residual_symmetric_seed_audit checks a local S_j row, j-strand stabilization, j >= |P|, and the attached perfect-residual finite miss.",
+    "B-seed certificate",
+    "Use for nonsolvable terminal-unit B attempts; an all-j family is still required.",
+  ],
+  [
     "Unit-continuation derived product detector",
     "Assemble terminal-unit derived-series certificates into one fixed product detector.",
     "proofs/unit_continuation_derived_product_detector.md; unit_composite_product_derived_series_lift_audit embeds each factor's combined witness into prod_i U(M_i) and verifies the endpoint tuple.",

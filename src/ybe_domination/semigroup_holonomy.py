@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from itertools import product
+from math import factorial
 from typing import TYPE_CHECKING, Iterable, Sequence, Tuple
 
 from .artin_longitudes import (
@@ -445,6 +446,72 @@ class UnitPerfectResidualNormalizedSeedAudit:
         """Return whether this row has the required finite B-seed shape."""
 
         return self.perfect_residual_miss_is_attached_to_prefix
+
+
+@dataclass(frozen=True)
+class UnitPerfectResidualSymmetricSeedAudit:
+    """One symmetric-tower row carrying a perfect-residual unit miss."""
+
+    local_prefix: "LocalNormalizedLawPrefixWitnessAudit"
+    perfect_residual: UnitPerfectResidualLongitudeAudit
+    symmetric_degree: int
+    same_braid_word: bool
+    endpoint_readout_matches_residual_motion: bool
+
+    @property
+    def same_source_degree(self) -> bool:
+        return self.local_prefix.source_n == len(
+            self.perfect_residual.artin_permutation
+        )
+
+    @property
+    def uses_declared_symmetric_row(self) -> bool:
+        if self.symmetric_degree <= 0:
+            return False
+        expected_order = factorial(self.symmetric_degree)
+        return (
+            self.local_prefix.group_orders == (expected_order,)
+            and self.local_prefix.product_group_order == expected_order
+        )
+
+    @property
+    def right_stabilized_by_symmetric_degree(self) -> bool:
+        return self.local_prefix.target_n - self.local_prefix.source_n == self.symmetric_degree
+
+    @property
+    def symmetric_degree_covers_perfect_residual(self) -> bool:
+        return self.symmetric_degree >= self.perfect_residual.perfect_residual_size
+
+    @property
+    def local_prefix_is_symmetric_normalized_law_row(self) -> bool:
+        return (
+            self.local_prefix.proves_one_local_prefix_normalized_law_witness
+            and self.uses_declared_symmetric_row
+            and self.right_stabilized_by_symmetric_degree
+        )
+
+    @property
+    def perfect_residual_has_finite_detector_miss(self) -> bool:
+        return self.perfect_residual.is_finite_perfect_residual_detector_failure
+
+    @property
+    def symmetric_row_forces_perfect_residual_invisibility(self) -> bool:
+        """Record the left-regular implication ``K_{S_j} <= K_P``."""
+
+        return (
+            self.local_prefix_is_symmetric_normalized_law_row
+            and self.symmetric_degree_covers_perfect_residual
+        )
+
+    @property
+    def proves_one_local_perfect_residual_symmetric_seed(self) -> bool:
+        return (
+            self.symmetric_row_forces_perfect_residual_invisibility
+            and self.perfect_residual_has_finite_detector_miss
+            and self.same_source_degree
+            and self.same_braid_word
+            and self.endpoint_readout_matches_residual_motion
+        )
 
 
 @dataclass(frozen=True)
@@ -1324,6 +1391,33 @@ def unit_perfect_residual_normalized_seed_audit(
     return UnitPerfectResidualNormalizedSeedAudit(
         local_prefix=local_prefix,
         perfect_residual=perfect_residual,
+        same_braid_word=same_braid_word,
+        endpoint_readout_matches_residual_motion=endpoint_readout_matches_residual_motion,
+    )
+
+
+def unit_perfect_residual_symmetric_seed_audit(
+    local_prefix: "LocalNormalizedLawPrefixWitnessAudit",
+    perfect_residual: UnitPerfectResidualLongitudeAudit,
+    *,
+    symmetric_degree: int,
+    same_braid_word: bool,
+    endpoint_readout_matches_residual_motion: bool,
+) -> UnitPerfectResidualSymmetricSeedAudit:
+    """Pair one symmetric-tower local row with a perfect-residual miss.
+
+    This is the symmetric-detector version of
+    ``unit_perfect_residual_normalized_seed_audit``.  It additionally checks
+    that the supplied local row uses the declared ``S_j`` detector, that the
+    right stabilization added ``j`` strands, and that ``j`` is at least the
+    order of the fixed perfect residual.  The last condition is the finite
+    left-regular embedding guardrail behind ``K_{S_j} <= K_P``.
+    """
+
+    return UnitPerfectResidualSymmetricSeedAudit(
+        local_prefix=local_prefix,
+        perfect_residual=perfect_residual,
+        symmetric_degree=symmetric_degree,
         same_braid_word=same_braid_word,
         endpoint_readout_matches_residual_motion=endpoint_readout_matches_residual_motion,
     )

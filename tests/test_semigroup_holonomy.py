@@ -16,6 +16,7 @@ from ybe_domination import (
     is_aperiodic_monoid,
     is_permutation_transformation,
     local_normalized_law_prefix_witness_audit,
+    local_symmetric_normalized_law_prefix_witness_audit,
     monoid_permutation_group,
     permutation_elements,
     pure_braid_generator,
@@ -33,6 +34,7 @@ from ybe_domination import (
     unit_longitude_subgroup_audit,
     unit_perfect_residual_longitude_audit,
     unit_perfect_residual_normalized_seed_audit,
+    unit_perfect_residual_symmetric_seed_audit,
     unit_section_detection_audit,
     unit_section_product_detection_audit,
 )
@@ -529,6 +531,88 @@ class SemigroupHolonomyTests(unittest.TestCase):
         )
 
         self.assertFalse(audit.proves_one_local_perfect_residual_normalized_seed)
+
+    def test_unit_perfect_residual_symmetric_seed_records_tower_row(self):
+        total = rack_solution(list(range(5)), lambda _left, right: (right + 1) % 5)
+        quotient = identity_solution(["*"])
+        qmap = QuotientMap(total, quotient, {element: "*" for element in total.elements})
+        braid = (1,) * 12
+        local_prefix = local_symmetric_normalized_law_prefix_witness_audit(
+            qmap,
+            identity_solution(["q"]),
+            3,
+            2,
+            braid,
+            ("*", "*"),
+            (0, 0),
+            extra_strands=3,
+            fill_value=0,
+        )
+        perfect_miss = UnitPerfectResidualLongitudeAudit(
+            artin_permutation=(0, 1),
+            unit_group_order=3,
+            derived_subgroup_orders=(3,),
+            perfect_residual_size=3,
+            residual_endpoint=(1, 2, 0),
+            residual_endpoint_in_unit_group=True,
+            residual_endpoint_in_perfect_residual=True,
+            perfect_residual_longitude_subgroup_size=1,
+            residual_endpoint_lies_in_perfect_residual_longitude_subgroup=False,
+            perfect_residual_identity=(0, 1, 2),
+        )
+
+        audit = unit_perfect_residual_symmetric_seed_audit(
+            local_prefix,
+            perfect_miss,
+            symmetric_degree=3,
+            same_braid_word=True,
+            endpoint_readout_matches_residual_motion=True,
+        )
+
+        self.assertTrue(local_prefix.proves_one_local_prefix_normalized_law_witness)
+        self.assertTrue(audit.uses_declared_symmetric_row)
+        self.assertTrue(audit.right_stabilized_by_symmetric_degree)
+        self.assertTrue(audit.symmetric_degree_covers_perfect_residual)
+        self.assertTrue(audit.proves_one_local_perfect_residual_symmetric_seed)
+
+    def test_unit_perfect_residual_symmetric_seed_requires_degree_cover(self):
+        total = rack_solution(list(range(5)), lambda _left, right: (right + 1) % 5)
+        quotient = identity_solution(["*"])
+        qmap = QuotientMap(total, quotient, {element: "*" for element in total.elements})
+        local_prefix = local_symmetric_normalized_law_prefix_witness_audit(
+            qmap,
+            identity_solution(["q"]),
+            3,
+            2,
+            (1,) * 12,
+            ("*", "*"),
+            (0, 0),
+            extra_strands=3,
+            fill_value=0,
+        )
+        perfect_miss = UnitPerfectResidualLongitudeAudit(
+            artin_permutation=(0, 1),
+            unit_group_order=60,
+            derived_subgroup_orders=(60,),
+            perfect_residual_size=60,
+            residual_endpoint=(1, 2, 0, 3, 4),
+            residual_endpoint_in_unit_group=True,
+            residual_endpoint_in_perfect_residual=True,
+            perfect_residual_longitude_subgroup_size=1,
+            residual_endpoint_lies_in_perfect_residual_longitude_subgroup=False,
+            perfect_residual_identity=(0, 1, 2, 3, 4),
+        )
+
+        audit = unit_perfect_residual_symmetric_seed_audit(
+            local_prefix,
+            perfect_miss,
+            symmetric_degree=3,
+            same_braid_word=True,
+            endpoint_readout_matches_residual_motion=True,
+        )
+
+        self.assertFalse(audit.symmetric_degree_covers_perfect_residual)
+        self.assertFalse(audit.proves_one_local_perfect_residual_symmetric_seed)
 
     def test_unit_composite_detection_rejects_nonunit_composite(self):
         reset = (0, 0)
