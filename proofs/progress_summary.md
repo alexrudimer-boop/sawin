@@ -1008,6 +1008,14 @@ infinite subsequence has one stable non-base failure kind (`stabilizer`,
 `orbit_label`, or `orbit_relation`).  The helper
 `point_pushing_brunnian_tail_prefix_audit(...)` records finite symmetric-degree
 prefixes of this first-failure tail.
+`proofs/point_pushing_brunnian_failure_certificate.md` turns one non-base row
+of that tail into a braid-action certificate: a right-based Brunnian word,
+identity in the derivative detector, and an explicit moved tuple of `X`.  The
+helper `point_pushing_brunnian_failure_certificate(...)` wraps the orbit audit
+and rechecks the returned witness with
+`point_pushing_brunnian_witness_certificate(...)`.  This does not build the
+infinite tail required for outcome B, but it makes each finite non-base row
+self-certifying.
 `proofs/point_pushing_derivative_functoriality.md` records the compatibility
 of this exact criterion with detector changes.  A finite group homomorphism
 `G->H` induces coordinate equivariance on detector states.  Surjections give

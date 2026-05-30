@@ -16,6 +16,7 @@ from ybe_domination import (
     law_braid_action_certificate,
     law_word_on_last_strand,
     delete_right_based_new_strand_word,
+    point_pushing_brunnian_failure_certificate,
     point_pushing_brunnian_gate_prefix_audit,
     point_pushing_brunnian_orbit_audit,
     point_pushing_brunnian_tail_prefix_audit,
@@ -519,6 +520,40 @@ class ActionImageTests(unittest.TestCase):
         self.assertEqual(audit.unresolved_degrees, (1,))
         self.assertEqual(audit.failure_kinds, ("base_marked_quotient",))
         self.assertEqual(audit.rows[0].first_failure_arity, 1)
+
+    def test_point_pushing_brunnian_failure_certificate_records_moved_tuple(self):
+        solution = rack_solution([0, 1, 2], lambda a, b: (2 * a - b) % 3)
+
+        certificate = point_pushing_brunnian_failure_certificate(
+            solution,
+            cyclic_group(2),
+            arity=2,
+        )
+
+        self.assertEqual(certificate.failure_kind, "stabilizer")
+        self.assertTrue(certificate.has_real_failure_kind)
+        self.assertIsNotNone(certificate.witness)
+        self.assertTrue(certificate.valid_failure_certificate)
+        self.assertEqual(certificate.witness.right_based_word, certificate.orbit_audit.witness_right_word)
+        self.assertIsNotNone(certificate.witness.vertical.moved_tuple)
+        self.assertNotEqual(
+            certificate.witness.vertical.moved_tuple,
+            certificate.witness.vertical.moved_tuple_image,
+        )
+
+    def test_point_pushing_brunnian_failure_certificate_rejects_passing_row(self):
+        solution = rack_solution([0, 1], lambda a, b: b)
+
+        certificate = point_pushing_brunnian_failure_certificate(
+            solution,
+            cyclic_group(2),
+            arity=2,
+        )
+
+        self.assertEqual(certificate.failure_kind, "none")
+        self.assertFalse(certificate.has_real_failure_kind)
+        self.assertIsNone(certificate.witness)
+        self.assertFalse(certificate.valid_failure_certificate)
 
     def test_point_pushing_suffix_shuttle_matches_direct_action(self):
         solution = rack_solution([0, 1, 2], lambda a, b: (2 * a - b) % 3)

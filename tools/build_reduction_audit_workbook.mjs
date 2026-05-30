@@ -381,6 +381,13 @@ const rows = [
     "Construct one homogeneous infinite failure tail with explicit witness words, or prove no such tail exists.",
   ],
   [
+    "Point-pushing Brunnian failure certificate",
+    "Turn one non-base Brunnian gate failure into a full braid-action detector-kernel mover certificate.",
+    "proofs/point_pushing_brunnian_failure_certificate.md packages a stabilizer/orbit_label/orbit_relation row with a right-based word, derivative-detector identity, and moved X-tuple; point_pushing_brunnian_failure_certificate rechecks the row with the Brunnian witness certificate.",
+    "Finite B-row certificate",
+    "Promote these finite rows to a homogeneous infinite symmetric-tail family, or prove no such family exists.",
+  ],
+  [
     "Derivative detector functoriality",
     "Show the exact D_k(G) criterion is compatible with quotients, embeddings, symmetric cofinality, and product prefixes.",
     "proofs/point_pushing_derivative_functoriality.md proves coordinate equivariance for finite group homomorphisms; point_pushing_derivative_functoriality_audit checks finite instances.",

@@ -195,6 +195,29 @@ class PointPushingBrunnianGatePrefixAudit:
 
 
 @dataclass(frozen=True)
+class PointPushingBrunnianFailureCertificate:
+    """Braid-action certificate for one nontrivial Brunnian gate failure."""
+
+    group_order: int
+    arity: int
+    failure_kind: str
+    orbit_audit: PointPushingBrunnianOrbitAudit
+    witness: PointPushingBrunnianWitnessCertificate | None
+
+    @property
+    def has_real_failure_kind(self) -> bool:
+        return self.failure_kind in ("stabilizer", "orbit_label", "orbit_relation")
+
+    @property
+    def valid_failure_certificate(self) -> bool:
+        return (
+            self.has_real_failure_kind
+            and self.witness is not None
+            and self.witness.valid_brunnian_witness
+        )
+
+
+@dataclass(frozen=True)
 class PointPushingBrunnianTailRow:
     """One symmetric degree in a finite first-failure tail diagnostic."""
 
@@ -1412,6 +1435,42 @@ def point_pushing_brunnian_tail_prefix_audit(
         max_symmetric_degree=max_symmetric_degree,
         max_arity=max_arity,
         rows=tuple(rows),
+    )
+
+
+def point_pushing_brunnian_failure_certificate(
+    solution: FiniteBraidedSet,
+    group: FiniteGroup,
+    arity: int,
+    *,
+    max_detector_states: int | None = None,
+    max_pair_subgroup_size: int | None = None,
+) -> PointPushingBrunnianFailureCertificate:
+    """Return a braid-level certificate for one Brunnian gate failure."""
+
+    audit = point_pushing_brunnian_orbit_audit(
+        solution,
+        group,
+        arity=arity,
+        max_detector_states=max_detector_states,
+        max_old_pair_subgroup_size=max_pair_subgroup_size,
+        max_relative_subgroup_size=max_pair_subgroup_size,
+    )
+    witness = None
+    if audit.witness_right_word is not None:
+        witness = point_pushing_brunnian_witness_certificate(
+            solution,
+            group,
+            audit.witness_right_word,
+            arity,
+            max_detector_states=max_detector_states,
+        )
+    return PointPushingBrunnianFailureCertificate(
+        group_order=len(group.elements),
+        arity=arity,
+        failure_kind=audit.failure_kind,
+        orbit_audit=audit,
+        witness=witness,
     )
 
 
