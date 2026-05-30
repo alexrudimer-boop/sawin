@@ -66,6 +66,7 @@ EXTRA_MD.append(ROOT / "proofs" / "point_pushing_brunnian_orbit_quotient_certifi
 EXTRA_MD.append(ROOT / "proofs" / "point_pushing_brunnian_gate_induction.md")
 EXTRA_MD.append(ROOT / "proofs" / "point_pushing_base_arity_gate.md")
 EXTRA_MD.append(ROOT / "proofs" / "point_pushing_base_free_brunnian_tail.md")
+EXTRA_MD.append(ROOT / "proofs" / "point_pushing_base_free_thresholds.md")
 EXTRA_MD.append(ROOT / "proofs" / "point_pushing_brunnian_first_failure_stratification.md")
 EXTRA_MD.append(ROOT / "proofs" / "point_pushing_brunnian_failure_certificate.md")
 EXTRA_MD.append(ROOT / "proofs" / "point_pushing_brunnian_tail_certificate_prefix.md")

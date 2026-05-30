@@ -1013,6 +1013,13 @@ be one of the non-base Brunnian kinds (`stabilizer`, `orbit_label`, or
 `orbit_relation`).  The helper
 `point_pushing_base_free_brunnian_tail_prefix(...)` skips degrees below the
 cutoff and reports only the base-free finite prefix.
+`proofs/point_pushing_base_free_thresholds.md` packages the same reduction as
+a growth invariant `epsilon_X(K)`: the least `m>=s_X` whose `S_m` detector
+passes all Brunnian extension rows up to arity `K`.  Boundedness of this
+sequence is equivalent to the positive symmetric-detector route, while
+unboundedness is exactly the certified base-free non-base tail route.  The
+helper `point_pushing_base_free_threshold_audit(...)` records finite
+approximations to these thresholds.
 `proofs/point_pushing_brunnian_first_failure_stratification.md` sharpens the
 negative route: if no fixed symmetric detector works, first failing arities
 tend to infinity, base failures occur only below a finite cutoff, and an

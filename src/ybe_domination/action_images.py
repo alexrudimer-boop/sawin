@@ -371,6 +371,46 @@ class PointPushingBaseFreeBrunnianTailPrefix:
 
 
 @dataclass(frozen=True)
+class PointPushingBaseFreeThresholdAudit:
+    """Finite-prefix threshold audit after removing the base gate."""
+
+    base_free_prefix: PointPushingBaseFreeBrunnianTailPrefix
+    minimal_detecting_degree: int | None
+
+    @property
+    def base_cutoff(self) -> int:
+        return self.base_free_prefix.base_cutoff
+
+    @property
+    def max_symmetric_degree(self) -> int:
+        return self.base_free_prefix.max_symmetric_degree
+
+    @property
+    def max_arity(self) -> int:
+        return self.base_free_prefix.max_arity
+
+    @property
+    def checked_degrees(self) -> Tuple[int, ...]:
+        return self.base_free_prefix.checked_degrees
+
+    @property
+    def detected_within_bound(self) -> bool:
+        return self.minimal_detecting_degree is not None
+
+    @property
+    def bound_below_base_cutoff(self) -> bool:
+        return self.max_symmetric_degree < self.base_cutoff
+
+    @property
+    def unresolved_degrees(self) -> Tuple[int, ...]:
+        return tuple(
+            row.symmetric_degree
+            for row in self.base_free_prefix.rows
+            if not row.prefix_detected
+        )
+
+
+@dataclass(frozen=True)
 class PointPushingBrunnianNormalizedPrefixAudit:
     """One Brunnian row checked as a symmetric normalized-law prefix."""
 
@@ -1743,6 +1783,34 @@ def point_pushing_base_free_brunnian_tail_prefix(
         max_symmetric_degree=max_symmetric_degree,
         max_arity=max_arity,
         rows=tuple(rows),
+    )
+
+
+def point_pushing_base_free_threshold_audit(
+    solution: FiniteBraidedSet,
+    max_symmetric_degree: int,
+    max_arity: int,
+    *,
+    max_detector_states: int | None = None,
+    max_pair_subgroup_size: int | None = None,
+) -> PointPushingBaseFreeThresholdAudit:
+    """Find the first checked symmetric degree passing a base-free prefix."""
+
+    prefix = point_pushing_base_free_brunnian_tail_prefix(
+        solution,
+        max_symmetric_degree=max_symmetric_degree,
+        max_arity=max_arity,
+        max_detector_states=max_detector_states,
+        max_pair_subgroup_size=max_pair_subgroup_size,
+    )
+    minimal_detecting_degree = None
+    for row in prefix.rows:
+        if row.prefix_detected:
+            minimal_detecting_degree = row.symmetric_degree
+            break
+    return PointPushingBaseFreeThresholdAudit(
+        base_free_prefix=prefix,
+        minimal_detecting_degree=minimal_detecting_degree,
     )
 
 

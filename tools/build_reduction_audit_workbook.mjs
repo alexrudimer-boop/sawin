@@ -388,6 +388,13 @@ const rows = [
     "Prove one fixed S_m>=S_sX has all extension rows none, or construct an infinite certified non-base tail.",
   ],
   [
+    "Point-pushing base-free thresholds",
+    "Replace the remaining point-pushing fork by boundedness of base-free extension thresholds epsilon_X(K).",
+    "proofs/point_pushing_base_free_thresholds.md proves bounded epsilon_X(K) is equivalent to one fixed S_m passing all Brunnian extension rows; point_pushing_base_free_threshold_audit records finite rectangle approximations.",
+    "Growth-threshold fork",
+    "Prove sup_K epsilon_X(K)<infinity, or construct an unbounded certified non-base tail.",
+  ],
+  [
     "Point-pushing Brunnian first-failure stratification",
     "Show a negative tail can be chosen with one stable non-base failure kind.",
     "proofs/point_pushing_brunnian_first_failure_stratification.md uses fixed-arity cofinality and infinite pigeonhole to reduce B to a homogeneous infinite tail of stabilizer, orbit_label, or orbit_relation failures.",
