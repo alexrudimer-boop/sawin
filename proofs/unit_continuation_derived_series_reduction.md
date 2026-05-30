@@ -154,3 +154,45 @@ applied stage by stage.
 These helpers do not prove the all-`n` endpoint theorem.  They identify the
 finite quotient stages that any proof must supply with symbolic
 recursive-longitude witnesses.
+
+The endpoint certificate checker
+
+```text
+unit_composite_derived_series_lift_audit(M,n,beta,factors,
+                                         stage_lifted_witnesses,
+                                         final_witness)
+```
+
+now records the full supplied lift chain for a finite transition monoid
+`M`.  At stage `r` it checks:
+
+- the current residual endpoint lies in `U^(r)`;
+- the lifted longitude witness uses assignments in `U^(r)`;
+- the correction
+
+```text
+S_r v_r^-1
+```
+
+lies in `U^(r+1)`.
+
+After all derived quotient stages, it checks that the final residual endpoint
+in the stable perfect residual is represented by `final_witness`.  It also
+evaluates the combined witness
+
+```text
+final_witness * v_{m-1} * ... * v_0
+```
+
+inside the original unit group and verifies that it equals the terminal unit
+composite.
+
+Thus a supplied successful audit is a literal certificate that
+
+```text
+S_beta in V_beta(U(M)).
+```
+
+For solvable unit groups the perfect residual is trivial, so the final
+witness may be empty after all abelian quotient stages pass.  For nonsolvable
+groups, the audit isolates the exact perfect-residual witness still needed.

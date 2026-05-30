@@ -2129,6 +2129,13 @@ theorem; it only certifies that the abelian quotient has been handled and
 that the remaining problem is a commutator correction.  Failing it identifies
 the exact finite abelian quotient where an all-`n` symbolic proof or a
 normalized-law obstruction must focus.
+The helper `unit_composite_derived_series_lift_audit(...)` packages the
+iterated version of the same certificate.  Given lifted stage witnesses, it
+checks that each derived quotient correction lands in the next subgroup and
+that the final perfect-residual endpoint has its own witness.  The combined
+witness is then evaluated in the original unit group.  This closes supplied
+solvable-unit certificates once every derived abelian quotient stage is
+witnessed, and it isolates the perfect residual in nonsolvable cases.
 
 ## Completion audit checklist
 

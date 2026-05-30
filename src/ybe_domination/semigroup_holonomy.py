@@ -6,6 +6,7 @@ from typing import Iterable, Sequence, Tuple
 
 from .artin_longitudes import (
     BraidWord,
+    LongitudeSubgroupWitness,
     artin_longitudes,
     direct_product_longitude_subgroup_audit,
     direct_product_longitude_subgroup_witness,
@@ -19,6 +20,7 @@ from .finite_group import (
     FiniteGroup,
     GroupElement,
     commutator_subgroup_elements,
+    derived_series_subgroups,
     direct_product_group,
     permutation_group_from_generators,
     quotient_group_by_normal_subgroup,
@@ -255,6 +257,88 @@ class UnitCompositeAbelianizationAudit:
             self.is_permutation_branch
             and self.identity_abelian_longitude_signature
             and not self.abelian_endpoint_is_identity
+        )
+
+
+@dataclass(frozen=True)
+class UnitCompositeDerivedSeriesStageAudit:
+    """One quotient-lift step through a derived subgroup."""
+
+    stage_index: int
+    subgroup_size: int
+    next_subgroup_size: int
+    endpoint: GroupElement | None
+    lifted_witness: LongitudeSubgroupWitness
+    lifted_witness_value: GroupElement | None
+    witness_assignments_in_subgroup: bool
+    correction: GroupElement | None
+    correction_in_next_subgroup: bool
+
+    @property
+    def quotient_projection_matches(self) -> bool:
+        return self.correction_in_next_subgroup
+
+    @property
+    def stage_passes(self) -> bool:
+        return (
+            self.endpoint is not None
+            and self.lifted_witness_value is not None
+            and self.witness_assignments_in_subgroup
+            and self.correction_in_next_subgroup
+        )
+
+
+@dataclass(frozen=True)
+class UnitCompositeDerivedSeriesLiftAudit:
+    """Audit a supplied derived-series endpoint lift certificate."""
+
+    monoid_element_count: int
+    factors_in_monoid: bool
+    factorization: UnitFactorizationAudit
+    unit_group_order: int
+    derived_subgroup_orders: Tuple[int, ...]
+    expected_stage_count: int
+    supplied_stage_count: int
+    stage_audits: Tuple[UnitCompositeDerivedSeriesStageAudit, ...]
+    final_residual: GroupElement | None
+    perfect_residual_size: int
+    final_witness: LongitudeSubgroupWitness
+    final_witness_value: GroupElement | None
+    final_witness_assignments_in_perfect_residual: bool
+    final_witness_matches_residual: bool
+    combined_witness: LongitudeSubgroupWitness
+    combined_witness_value: GroupElement | None
+    combined_witness_matches_endpoint: bool
+    monoid_identity: Transformation
+
+    @property
+    def is_permutation_branch(self) -> bool:
+        return self.factorization.composite_is_unit
+
+    @property
+    def stage_count_matches_derived_series(self) -> bool:
+        return self.supplied_stage_count == self.expected_stage_count
+
+    @property
+    def all_stage_lifts_pass(self) -> bool:
+        return (
+            self.stage_count_matches_derived_series
+            and all(stage.stage_passes for stage in self.stage_audits)
+        )
+
+    @property
+    def perfect_residual_is_trivial(self) -> bool:
+        return self.perfect_residual_size == 1
+
+    @property
+    def proves_endpoint_in_longitude_subgroup_by_derived_lift(self) -> bool:
+        return (
+            self.factors_in_monoid
+            and self.is_permutation_branch
+            and self.all_stage_lifts_pass
+            and self.final_witness_assignments_in_perfect_residual
+            and self.final_witness_matches_residual
+            and self.combined_witness_matches_endpoint
         )
 
 
@@ -867,6 +951,140 @@ def unit_composite_abelianization_audit(
             None if subgroup is None else abelian_endpoint in subgroup
         ),
         abelian_identity=quotient.identity,
+        monoid_identity=monoid.identity,
+    )
+
+
+def unit_composite_derived_series_lift_audit(
+    monoid: TransformationMonoid,
+    n: int,
+    braid_word: BraidWord,
+    factors: Sequence[Transformation],
+    stage_lifted_witnesses: Sequence[Sequence],
+    final_witness: Sequence = (),
+) -> UnitCompositeDerivedSeriesLiftAudit:
+    """Audit a supplied derived-series lift certificate for a unit endpoint.
+
+    At stage ``r`` the current residual endpoint must lie in ``U^(r)``.  The
+    supplied lifted witness has assignments in ``U^(r)`` and must match the
+    current endpoint after projection to ``U^(r)/U^(r+1)``; equivalently the
+    correction ``endpoint * witness^-1`` lies in ``U^(r+1)``.  Iterating this
+    leaves one final endpoint in the stable perfect residual, checked by
+    ``final_witness``.
+    """
+
+    factor_tuple = tuple(factors)
+    factorization = unit_factorization_audit(
+        factor_tuple,
+        degree=len(monoid.identity),
+    )
+    unit_group = monoid_permutation_group(monoid)
+    unit_elements = set(unit_group.elements)
+    monoid_elements = set(monoid.elements)
+    series = derived_series_subgroups(unit_group)
+    expected_stage_count = max(0, len(series) - 1)
+    supplied_witnesses = tuple(
+        tuple(witness) for witness in stage_lifted_witnesses
+    )
+    current_endpoint = (
+        factorization.composite if factorization.composite in unit_elements else None
+    )
+    stage_audits = []
+    used_stage_witnesses = []
+    for stage_index, witness in enumerate(supplied_witnesses[:expected_stage_count]):
+        subgroup = frozenset(series[stage_index])
+        next_subgroup = frozenset(series[stage_index + 1])
+        witness_assignments_in_subgroup = all(
+            all(value in subgroup for value in assignment)
+            for assignment, _longitude_index, _exponent in witness
+        )
+        witness_value = evaluate_longitude_subgroup_witness(
+            unit_group,
+            n,
+            braid_word,
+            witness,
+        )
+        correction = None
+        correction_in_next = False
+        if current_endpoint is not None and current_endpoint in subgroup:
+            correction = unit_group.mul(
+                current_endpoint,
+                unit_group.inv(witness_value),
+            )
+            correction_in_next = correction in next_subgroup
+            if correction_in_next:
+                current_endpoint = correction
+            else:
+                current_endpoint = None
+        else:
+            current_endpoint = None
+        stage_audits.append(
+            UnitCompositeDerivedSeriesStageAudit(
+                stage_index=stage_index,
+                subgroup_size=len(subgroup),
+                next_subgroup_size=len(next_subgroup),
+                endpoint=(
+                    None if correction is None else unit_group.mul(correction, witness_value)
+                ),
+                lifted_witness=witness,
+                lifted_witness_value=witness_value,
+                witness_assignments_in_subgroup=witness_assignments_in_subgroup,
+                correction=correction,
+                correction_in_next_subgroup=correction_in_next,
+            )
+        )
+        used_stage_witnesses.append(witness)
+    perfect_residual = frozenset(series[-1])
+    final_witness_tuple = tuple(final_witness)
+    final_assignments_in_residual = all(
+        all(value in perfect_residual for value in assignment)
+        for assignment, _longitude_index, _exponent in final_witness_tuple
+    )
+    final_witness_value = evaluate_longitude_subgroup_witness(
+        unit_group,
+        n,
+        braid_word,
+        final_witness_tuple,
+    )
+    final_matches = (
+        current_endpoint is not None
+        and current_endpoint in perfect_residual
+        and final_witness_value == current_endpoint
+    )
+    combined_witness = (
+        final_witness_tuple
+        + tuple(
+            letter
+            for witness in reversed(tuple(used_stage_witnesses))
+            for letter in witness
+        )
+    )
+    combined_value = evaluate_longitude_subgroup_witness(
+        unit_group,
+        n,
+        braid_word,
+        combined_witness,
+    )
+    return UnitCompositeDerivedSeriesLiftAudit(
+        monoid_element_count=len(monoid.elements),
+        factors_in_monoid=all(factor in monoid_elements for factor in factor_tuple),
+        factorization=factorization,
+        unit_group_order=len(unit_group.elements),
+        derived_subgroup_orders=tuple(len(subgroup) for subgroup in series),
+        expected_stage_count=expected_stage_count,
+        supplied_stage_count=len(supplied_witnesses),
+        stage_audits=tuple(stage_audits),
+        final_residual=current_endpoint,
+        perfect_residual_size=len(perfect_residual),
+        final_witness=final_witness_tuple,
+        final_witness_value=final_witness_value,
+        final_witness_assignments_in_perfect_residual=final_assignments_in_residual,
+        final_witness_matches_residual=final_matches,
+        combined_witness=combined_witness,
+        combined_witness_value=combined_value,
+        combined_witness_matches_endpoint=(
+            factorization.composite_is_unit and combined_value == factorization.composite
+        ),
         monoid_identity=monoid.identity,
     )
 

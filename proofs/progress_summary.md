@@ -630,6 +630,13 @@ matrix-longitude witnesses in the derived quotients.  For nonsolvable unit
 groups, the remaining nonabelian endpoint must live in the stable perfect
 residual.  The helpers `derived_series_audit(...)` and
 `subgroup_as_group(...)` make the finite stages explicit.
+The helper `unit_composite_derived_series_lift_audit(...)` now checks a
+supplied endpoint lift through those stages: each stage witness must use
+assignments in the current derived subgroup and must push the correction into
+the next derived subgroup; the final witness handles the stable perfect
+residual.  A successful audit evaluates the combined witness back in the
+original unit group and proves the supplied terminal unit composite lies in
+`V_beta(U(M))`.
 The current sharpest positive statement is
 `proofs/terminal_gauge_artin_defect_target.md`: every remaining terminal
 gauge endpoint `S_beta=g_terminal g_initial^-1` in a fixed interval-level

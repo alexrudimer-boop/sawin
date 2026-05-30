@@ -16,6 +16,7 @@ from ybe_domination import (
     transformation_power,
     unit_composite_abelianization_audit,
     unit_composite_detection_audit,
+    unit_composite_derived_series_lift_audit,
     unit_composite_longitude_expression_audit,
     unit_composite_longitude_route_audit,
     unit_composite_product_detection_audit,
@@ -300,6 +301,83 @@ class SemigroupHolonomyTests(unittest.TestCase):
         self.assertIsNone(audit.abelian_longitude_subgroup_size)
         self.assertIsNone(audit.abelian_endpoint_lies_in_longitude_subgroup)
         self.assertFalse(audit.abelian_projection_closed_by_matrix_route)
+
+    def test_unit_composite_derived_series_lift_closes_cyclic_endpoint(self):
+        cycle = (1, 2, 0)
+        identity = (0, 1, 2)
+        monoid = TransformationMonoid.generated((cycle,))
+        stage_witness = (((cycle, identity), 1, 1),)
+
+        audit = unit_composite_derived_series_lift_audit(
+            monoid,
+            n=2,
+            braid_word=(1, 1),
+            factors=(cycle,),
+            stage_lifted_witnesses=(stage_witness,),
+        )
+
+        self.assertEqual(audit.derived_subgroup_orders, (3, 1))
+        self.assertEqual(audit.expected_stage_count, 1)
+        self.assertTrue(audit.stage_count_matches_derived_series)
+        self.assertTrue(audit.all_stage_lifts_pass)
+        self.assertTrue(audit.perfect_residual_is_trivial)
+        self.assertEqual(audit.final_residual, identity)
+        self.assertTrue(audit.final_witness_matches_residual)
+        self.assertEqual(audit.combined_witness_value, cycle)
+        self.assertTrue(audit.combined_witness_matches_endpoint)
+        self.assertTrue(audit.proves_endpoint_in_longitude_subgroup_by_derived_lift)
+
+    def test_unit_composite_derived_series_lift_handles_s3_endpoint(self):
+        transposition = (1, 0, 2)
+        three_cycle = (1, 2, 0)
+        identity = (0, 1, 2)
+        monoid = TransformationMonoid.generated((transposition, three_cycle))
+        group = monoid_permutation_group(monoid)
+        endpoint = group.mul(three_cycle, transposition)
+        stage0 = (((transposition, identity), 1, 1),)
+        stage1 = (((three_cycle, identity), 1, 1),)
+
+        audit = unit_composite_derived_series_lift_audit(
+            monoid,
+            n=2,
+            braid_word=(1, 1),
+            factors=(endpoint,),
+            stage_lifted_witnesses=(stage0, stage1),
+        )
+
+        self.assertEqual(audit.unit_group_order, 6)
+        self.assertEqual(audit.derived_subgroup_orders, (6, 3, 1))
+        self.assertEqual(tuple(stage.stage_passes for stage in audit.stage_audits), (True, True))
+        self.assertEqual(audit.stage_audits[0].correction, three_cycle)
+        self.assertEqual(audit.stage_audits[1].correction, identity)
+        self.assertEqual(audit.final_residual, identity)
+        self.assertEqual(audit.combined_witness_value, endpoint)
+        self.assertTrue(audit.proves_endpoint_in_longitude_subgroup_by_derived_lift)
+
+    def test_unit_composite_derived_series_lift_requires_all_stages(self):
+        transposition = (1, 0, 2)
+        three_cycle = (1, 2, 0)
+        identity = (0, 1, 2)
+        monoid = TransformationMonoid.generated((transposition, three_cycle))
+        group = monoid_permutation_group(monoid)
+        endpoint = group.mul(three_cycle, transposition)
+        stage0 = (((transposition, identity), 1, 1),)
+
+        audit = unit_composite_derived_series_lift_audit(
+            monoid,
+            n=2,
+            braid_word=(1, 1),
+            factors=(endpoint,),
+            stage_lifted_witnesses=(stage0,),
+        )
+
+        self.assertEqual(audit.expected_stage_count, 2)
+        self.assertEqual(audit.supplied_stage_count, 1)
+        self.assertFalse(audit.stage_count_matches_derived_series)
+        self.assertFalse(audit.all_stage_lifts_pass)
+        self.assertFalse(audit.final_witness_matches_residual)
+        self.assertFalse(audit.combined_witness_matches_endpoint)
+        self.assertFalse(audit.proves_endpoint_in_longitude_subgroup_by_derived_lift)
 
     def test_unit_composite_detection_rejects_nonunit_composite(self):
         reset = (0, 0)

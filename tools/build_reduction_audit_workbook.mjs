@@ -803,9 +803,9 @@ const rows = [
   [
     "Unit-continuation derived series",
     "Iterate the abelian-kernel split through the finite derived series of the fixed unit group.",
-    "proofs/unit_continuation_derived_series_reduction.md; derived_series_audit records solvable collapse or the perfect residual.",
-    "Reduction criterion",
-    "Solvable unit groups reduce to abelian matrix witnesses; nonsolvable obstruction must live in the perfect residual.",
+    "proofs/unit_continuation_derived_series_reduction.md; derived_series_audit records solvable collapse/perfect residual, and unit_composite_derived_series_lift_audit checks supplied stage witnesses and the combined endpoint witness.",
+    "Certificate criterion",
+    "Supply derived quotient witnesses stage-by-stage; solvable unit groups close when the final residual is identity, nonsolvable cases need a perfect-residual witness.",
   ],
   [
     "Bi-free subgroup certificate",
