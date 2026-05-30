@@ -749,6 +749,11 @@ kernel collision in a bijective local row is separated by the companion output.
 The remaining seed is a companion-shuttle cycle, audited by
 `section_kernel_companion_audit(...)`; do not treat an isolated nonunit
 section as a counterexample.
+Then use `proofs/rank_profile_collapse_mixed_unit.md`: proper nontrivial
+section-kernel profiles are Green/Schutzenberger-visible, so a hidden
+rank-losing section must be rank one/constant.  The next classification target
+is constant-section triangular YBE rows, audited by
+`section_rank_profile_collapse_audit(...)`.
 Then use `proofs/unit_continuation_abelian_kernel_lift.md`: split the final
 unit endpoint through `U/[U,U]`.  The abelian projection should be handled by
 the abelian longitude matrix criterion, while the residual correction must be

@@ -640,6 +640,13 @@ const rows = [
     "Route companion-shuttle edges through fixed readouts, or upgrade a shuttle cycle to normalized laws.",
   ],
   [
+    "Mixed-unit rank-profile collapse",
+    "Route proper section-kernel profiles through Green/Schutzenberger readouts and leave only constant-section triangular rows.",
+    "proofs/rank_profile_collapse_mixed_unit.md; section_rank_profile_collapse_audit records ranks, kernel kinds, and images.",
+    "Sharper open theorem",
+    "Classify constant-section triangular YBE rows in the local-minimal bottleneck branch.",
+  ],
+  [
     "Unit-continuation abelian-kernel lift",
     "Split the final unit endpoint into finite abelianization plus commutator-kernel correction.",
     "proofs/unit_continuation_abelian_kernel_lift.md; normal_quotient_longitude_lift_audit checks quotient witness, lifted witness, and kernel witness.",

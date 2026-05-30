@@ -32,6 +32,7 @@ from ybe_domination import (
     readout_kernel_quotient_interval,
     readout_seed_saturation_audit,
     section_kernel_companion_audit,
+    section_rank_profile_collapse_audit,
     section_unit_row_audits,
     two_sided_unit_collapse_audit,
 )
@@ -131,6 +132,32 @@ def one_color_mixed_unit_bijection_interval():
         ("*", "*", 1, 1): (0, 1),
     }
     return LocalInterval(colors, fibres, base_R, T)
+
+
+def one_color_proper_rank_loss_interval():
+    colors = ("*",)
+    fibres = {"*": (0, 1, 2)}
+    base_R = {("*", "*"): ("*", "*")}
+    values = {
+        (0, 0): (0, 0),
+        (0, 1): (0, 1),
+        (0, 2): (1, 0),
+        (1, 0): (1, 1),
+        (1, 1): (1, 2),
+        (1, 2): (2, 0),
+        (2, 0): (2, 1),
+        (2, 1): (2, 2),
+        (2, 2): (0, 2),
+    }
+    return LocalInterval(
+        colors,
+        fibres,
+        base_R,
+        {
+            ("*", "*", x, y): value
+            for (x, y), value in values.items()
+        },
+    )
 
 
 class LocalIntervalTests(unittest.TestCase):
@@ -389,6 +416,38 @@ class LocalIntervalTests(unittest.TestCase):
         self.assertEqual(companion.left_section_collision_rows, ())
         self.assertEqual(len(companion.right_section_collision_rows), 2)
         self.assertTrue(companion.every_collision_companion_separated)
+
+    def test_section_rank_profile_collapse_splits_constant_and_proper_kernels(self):
+        constant_interval = one_color_identity_interval()
+        constant_audit = section_rank_profile_collapse_audit(constant_interval)
+
+        self.assertEqual(len(constant_audit.nonunit_rows), 4)
+        self.assertEqual(len(constant_audit.constant_section_rows), 4)
+        self.assertEqual(constant_audit.proper_kernel_rows, ())
+        self.assertTrue(constant_audit.hidden_kernel_rows_are_constant)
+        self.assertEqual(
+            constant_audit.hidden_kernel_rows_after_proper_profiles_removed,
+            constant_audit.constant_section_rows,
+        )
+
+        proper_interval = one_color_proper_rank_loss_interval()
+        proper_audit = section_rank_profile_collapse_audit(proper_interval)
+
+        self.assertTrue(proper_audit.proper_kernel_rows)
+        self.assertTrue(
+            all(row.kernel_kind == "proper" for row in proper_audit.proper_kernel_rows)
+        )
+        self.assertTrue(any(row.rank == 2 for row in proper_audit.proper_kernel_rows))
+
+    def test_section_rank_profile_collapse_separates_two_sided_unit_rows(self):
+        interval = one_color_flip_interval()
+
+        audit = section_rank_profile_collapse_audit(interval)
+
+        self.assertEqual(audit.nonunit_rows, ())
+        self.assertEqual(audit.constant_section_rows, ())
+        self.assertEqual(audit.proper_kernel_rows, ())
+        self.assertTrue(all(row.is_bijective for row in audit.rows))
 
     def test_continuation_seed_readout_propagates_admissible_universal_readout(self):
         interval = one_color_identity_interval()

@@ -303,6 +303,14 @@ separated by the companion output coordinate.  The helper
 `section_kernel_companion_audit(...)` lists those collapse/separation edges.
 The remaining B seed is therefore a companion-shuttle cycle, not a bare
 nonunit section.
+The rank-profile collapse
+`proofs/rank_profile_collapse_mixed_unit.md` removes proper rank-loss from
+that seed: a proper nontrivial section-kernel profile is visible to the fixed
+Green/Schutzenberger readouts, so a hidden rank-losing section must have
+universal kernel, hence be constant.  The helper
+`section_rank_profile_collapse_audit(...)` records ranks, kernel kinds, and
+injective non-surjective side cases.  The remaining continuation seed is
+constant-section triangular.
 The follow-up note `proofs/unit_continuation_abelian_kernel_lift.md` splits
 that final endpoint certificate through the finite abelianization
 `U_cont/[U_cont,U_cont]`: prove the abelian projection by the matrix

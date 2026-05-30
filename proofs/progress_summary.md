@@ -530,6 +530,15 @@ section-kernel distinctions through companion outputs.  The helper
 companion outputs.  A positive proof must route these shuttle edges through
 fixed readouts or transport-rack quotients; a negative proof must upgrade a
 shuttle cycle to the normalized-law B sequence.
+The rank-profile collapse
+`proofs/rank_profile_collapse_mixed_unit.md` sharpens the shuttle seed again.
+Proper nontrivial section-kernel profiles are Green/Schutzenberger-visible,
+so after those fixed observers are constant the only hidden rank-losing
+section has universal kernel and is constant.  The helper
+`section_rank_profile_collapse_audit(...)` records rank, kernel kind, image,
+and injective non-surjective side cases.  The remaining make-or-break local
+classification is constant-section triangular YBE rows in the local-minimal
+bottleneck branch.
 The follow-up abelian-kernel lift note
 `proofs/unit_continuation_abelian_kernel_lift.md` splits this endpoint target
 through the finite abelianization of the fixed unit group.  It is enough to
@@ -623,13 +632,13 @@ Until one of these is done, the archive supports neither final A nor final B.
 
 At the latest verified snapshot:
 
-- `python -m unittest discover -s tests` passed with 366 tests;
+- `python -m unittest discover -s tests` passed with 368 tests;
 - `python -m compileall -q src tests tools` passed;
 - `node --check tools/build_reduction_audit_workbook.mjs` passed;
 - the proof log DOCX and reduction audit workbook were regenerated, and the
   workbook preview/OOXML marker checks included the routed-edge witness,
   unit-continuation, derived-series, two-sided unit-collapse, and
-  mixed-unit companion-separation rows;
+  mixed-unit companion-separation, and rank-profile collapse rows;
 - LibreOffice/`soffice` was unavailable, so DOCX visual render QA could not
   be completed;
 - the Desktop zip was overwritten rather than versioned separately.

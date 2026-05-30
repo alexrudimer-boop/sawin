@@ -1110,6 +1110,15 @@ and right section-kernel collisions together with the companion outputs that
 recover the distinction.  The remaining obstruction is therefore a
 companion-shuttle cycle that escapes the fixed readouts, not an isolated
 nonunit section.
+The rank-profile collapse note
+`proofs/rank_profile_collapse_mixed_unit.md` now removes proper rank-loss as
+a hidden obstruction.  A proper nontrivial section-kernel profile is visible
+to the Green/Schutzenberger kernel-block readouts; under `K^O=Nabla`, the
+only remaining hidden rank-losing section has universal kernel and is
+constant.  The helper `section_rank_profile_collapse_audit(...)` records the
+rank, kernel blocks, kernel kind, image, and injective non-surjective side
+cases.  The final continuation seed is therefore constant-section triangular
+context recovery.
 The follow-up note `proofs/unit_continuation_abelian_kernel_lift.md` now
 splits that last endpoint condition through abelianization.  For the finite
 unit group `U`, let `C=[U,U]` and `q:U->U/C`.  A quotient witness for

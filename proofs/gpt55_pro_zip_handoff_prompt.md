@@ -301,6 +301,10 @@ Then audit and use these reductions:
    row, any coordinate-section collision is separated by the companion output
    coordinate.  Use `section_kernel_companion_audit(...)` to audit the finite
    companion-shuttle edges; a bare nonunit section is not enough for B.
+   Then read `proofs/rank_profile_collapse_mixed_unit.md`: proper
+   section-kernel profiles are Green/Schutzenberger-visible, so the hidden
+   rank-losing residue is constant-section triangular.  Audit it with
+   `section_rank_profile_collapse_audit(...)`.
    Then read `proofs/unit_continuation_abelian_kernel_lift.md`: it splits
    `S_beta in V_beta(U_cont)` into an abelianized matrix-longitude witness and
    a commutator-kernel correction witness, audited by
