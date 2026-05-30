@@ -925,6 +925,15 @@ Nielsen automorphism `Theta_k`.  Given any finite-index normal subgroup
 arity prefix is detected by some symmetric group.  The remaining point-pushing
 problem is exactly whether `mu_X(k)=min{m:D_k(S_m)->P_k(X)}` is bounded in
 `k`.
+`proofs/point_pushing_mu_boundedness_dichotomy.md` now packages this as an
+exact A/B fork.  For a finite solution `X`, `X` is finite-rack dominated iff
+`sup_k mu_X(k)<infinity`; if `mu_X` is unbounded, choose `k_j` with
+`mu_X(k_j)>j`, use the paired graph criterion to obtain a vertical witness
+word for `D_{k_j}(S_j)->P_{k_j}(X)`, and right-stabilize to get the
+normalized-law obstruction sequence.  The helper
+`point_pushing_mu_prefix_audit(...)` checks bounded rectangles in `(k,m)` and
+records first detected symmetric degrees or first vertical witnesses, but it
+is only finite diagnostic evidence.
 `proofs/point_pushing_derivative_functoriality.md` records the compatibility
 of this exact criterion with detector changes.  A finite group homomorphism
 `G->H` induces coordinate equivariance on detector states.  Surjections give

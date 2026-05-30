@@ -17,6 +17,7 @@ from ybe_domination import (
     law_word_on_last_strand,
     point_pushing_exponent_escape_audit,
     point_pushing_marked_quotient_audit,
+    point_pushing_mu_prefix_audit,
     point_pushing_vertical_witness_certificate,
     point_pushing_variety_escape_audit,
     point_pushing_variety_prefix_audit,
@@ -312,6 +313,37 @@ class ActionImageTests(unittest.TestCase):
         self.assertTrue(certificate.direct_braid_identity)
         self.assertFalse(certificate.moves_solution)
         self.assertFalse(certificate.valid_vertical_witness)
+
+    def test_point_pushing_mu_prefix_audit_detects_trivial_prefix(self):
+        solution = rack_solution([0, 1], lambda a, b: b)
+
+        audit = point_pushing_mu_prefix_audit(
+            solution,
+            max_arity=2,
+            max_symmetric_degree=2,
+        )
+
+        self.assertTrue(audit.detected_prefix_within_bound)
+        self.assertEqual(audit.detected_arities, (1, 2))
+        self.assertEqual(audit.unresolved_arities, tuple())
+        self.assertEqual(
+            tuple(row.minimal_symmetric_degree for row in audit.rows),
+            (1, 1),
+        )
+
+    def test_point_pushing_mu_prefix_audit_records_vertical_witness(self):
+        solution = rack_solution([0, 1, 2], lambda a, b: (2 * a - b) % 3)
+
+        audit = point_pushing_mu_prefix_audit(
+            solution,
+            max_arity=2,
+            max_symmetric_degree=1,
+        )
+
+        self.assertFalse(audit.detected_prefix_within_bound)
+        self.assertEqual(audit.unresolved_arities, (1, 2))
+        self.assertTrue(all(row.has_vertical_witness_within_bound for row in audit.rows))
+        self.assertEqual(tuple(row.first_witness_degree for row in audit.rows), (1, 1))
 
 
 if __name__ == "__main__":

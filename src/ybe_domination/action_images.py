@@ -119,6 +119,49 @@ class PointPushingVerticalWitnessCertificate:
 
 
 @dataclass(frozen=True)
+class PointPushingMuPrefixRow:
+    """One finite row in a bounded search for ``mu_X(k)``."""
+
+    arity: int
+    max_symmetric_degree: int
+    minimal_symmetric_degree: int | None
+    checked_degrees: Tuple[int, ...]
+    truncated_degrees: Tuple[int, ...]
+    first_witness_degree: int | None
+    witness_word: FreeWord | None
+    witness_moved_index: int | None
+
+    @property
+    def detected_within_bound(self) -> bool:
+        return self.minimal_symmetric_degree is not None
+
+    @property
+    def has_vertical_witness_within_bound(self) -> bool:
+        return self.first_witness_degree is not None and self.witness_word is not None
+
+
+@dataclass(frozen=True)
+class PointPushingMuPrefixAudit:
+    """Bounded finite-prefix audit for the symmetric detector degree ``mu_X``."""
+
+    max_arity: int
+    max_symmetric_degree: int
+    rows: Tuple[PointPushingMuPrefixRow, ...]
+
+    @property
+    def detected_prefix_within_bound(self) -> bool:
+        return all(row.detected_within_bound for row in self.rows)
+
+    @property
+    def detected_arities(self) -> Tuple[int, ...]:
+        return tuple(row.arity for row in self.rows if row.detected_within_bound)
+
+    @property
+    def unresolved_arities(self) -> Tuple[int, ...]:
+        return tuple(row.arity for row in self.rows if not row.detected_within_bound)
+
+
+@dataclass(frozen=True)
 class PointPushingVarietyEscapeAudit:
     """Bounded finite row for a point-pushing action-image variety escape."""
 
@@ -603,6 +646,79 @@ def point_pushing_vertical_witness_certificate(
         moved_index=moved_index,
         moved_tuple=moved_tuple,
         moved_tuple_image=moved_tuple_image,
+    )
+
+
+def point_pushing_mu_prefix_audit(
+    solution: FiniteBraidedSet,
+    max_arity: int,
+    max_symmetric_degree: int,
+    *,
+    max_detector_states: int | None = None,
+    max_pair_subgroup_size: int | None = None,
+) -> PointPushingMuPrefixAudit:
+    """Bounded finite-prefix audit for the growth sequence ``mu_X(k)``.
+
+    This is a finite diagnostic only.  A positive proof needs a symbolic bound
+    independent of ``k``; a negative proof needs an infinite tail of witnesses.
+    """
+
+    from .finite_group import symmetric_group
+
+    if max_arity < 1:
+        raise ValueError("max_arity must be positive")
+    if max_symmetric_degree < 1:
+        raise ValueError("max_symmetric_degree must be positive")
+
+    rows = []
+    for arity in range(1, max_arity + 1):
+        checked = []
+        truncated = []
+        minimal_degree = None
+        first_witness_degree = None
+        witness_word = None
+        witness_moved_index = None
+        for degree in range(1, max_symmetric_degree + 1):
+            try:
+                row = point_pushing_marked_quotient_audit(
+                    solution,
+                    symmetric_group(degree),
+                    arity,
+                    max_detector_states=max_detector_states,
+                    max_pair_subgroup_size=max_pair_subgroup_size,
+                )
+            except ValueError as exc:
+                if "exceeded max_states" not in str(exc):
+                    raise
+                truncated.append(degree)
+                continue
+            checked.append(degree)
+            if row.truncated:
+                truncated.append(degree)
+                continue
+            if row.marked_quotient_holds:
+                minimal_degree = degree
+                break
+            if first_witness_degree is None and row.found_kernel_mover:
+                first_witness_degree = degree
+                witness_word = row.witness_word
+                witness_moved_index = row.moved_index
+        rows.append(
+            PointPushingMuPrefixRow(
+                arity=arity,
+                max_symmetric_degree=max_symmetric_degree,
+                minimal_symmetric_degree=minimal_degree,
+                checked_degrees=tuple(checked),
+                truncated_degrees=tuple(truncated),
+                first_witness_degree=first_witness_degree,
+                witness_word=witness_word,
+                witness_moved_index=witness_moved_index,
+            )
+        )
+    return PointPushingMuPrefixAudit(
+        max_arity=max_arity,
+        max_symmetric_degree=max_symmetric_degree,
+        rows=tuple(rows),
     )
 
 

@@ -304,6 +304,13 @@ const rows = [
     "The remaining global question is whether mu_X(k)=min{m:D_k(S_m)->P_k(X)} is bounded in k.",
   ],
   [
+    "Point-pushing mu boundedness dichotomy",
+    "State the exact A/B fork as boundedness or unboundedness of the symmetric detector degree sequence.",
+    "proofs/point_pushing_mu_boundedness_dichotomy.md proves X is finite-rack dominated iff sup_k mu_X(k)<infinity; unbounded mu_X gives symmetric-tail vertical witnesses and a normalized-law obstruction.",
+    "Exact growth fork",
+    "Prove a symbolic bound m(X), or exhibit explicit unbounded mu_X(k_j)>j witnesses.",
+  ],
+  [
     "Derivative detector functoriality",
     "Show the exact D_k(G) criterion is compatible with quotients, embeddings, symmetric cofinality, and product prefixes.",
     "proofs/point_pushing_derivative_functoriality.md proves coordinate equivariance for finite group homomorphisms; point_pushing_derivative_functoriality_audit checks finite instances.",
