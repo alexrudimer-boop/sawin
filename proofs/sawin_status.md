@@ -1092,6 +1092,15 @@ unit-continuation longitude theorem: every such residual unit-continuation
 endpoint lies in the longitude-value subgroup of the fixed unit group, or a
 failure must be upgraded to a normalized-law sequence invisible to every
 finite group.
+The two-sided unit-collapse note `proofs/two_sided_unit_collapse.md` then
+splits the remaining lower row by coordinate-section type.  A row whose left
+and right coordinate sections are all bijections is locally nondegenerate and
+is routed to the already closed nondegenerate/guitar branch; a
+strand-continuing row is already closed by transport-state rackification.
+Therefore the only continuation shape still capable of carrying the final
+obstruction is mixed-unit context recovery, where one-sided nonunit local
+information is lost and later recovered by the surrounding context.  The
+helper `two_sided_unit_collapse_audit(...)` records this row split exactly.
 The follow-up note `proofs/unit_continuation_abelian_kernel_lift.md` now
 splits that last endpoint condition through abelianization.  For the finite
 unit group `U`, let `C=[U,U]` and `q:U->U/C`.  A quotient witness for
@@ -1102,6 +1111,15 @@ unit group `U`, let `C=[U,U]` and `q:U->U/C`.  A quotient witness for
 value, kernel correction, kernel-assignment check, and combined witness.  Thus
 the final unit-continuation theorem now separates into an abelian matrix
 endpoint problem plus a commutator-kernel correction problem.
+The derived-series note
+`proofs/unit_continuation_derived_series_reduction.md` iterates this
+abelian-kernel split through `U^(r+1)=[U^(r),U^(r)]`.  If the derived series
+terminates at the identity, the unit endpoint is reduced to finitely many
+abelian matrix-longitude witnesses.  If it stabilizes at a nontrivial perfect
+residual, that residual endpoint is the only remaining nonabelian unit
+obstruction in this reduction.  The executable helpers
+`derived_series_audit(...)` and `subgroup_as_group(...)` expose the fixed
+finite stages.
 The single-endpoint route audit
 `unit_composite_longitude_route_audit(monoid,n,beta,factors)` now records the
 same ladder used in product-label work: endpoint identity, one evaluated

@@ -292,10 +292,19 @@ Then audit and use these reductions:
    unit endpoint `S_beta in U(M_cont)` whose membership in
    `V_beta(U(M_cont))` must be proved, or upgraded to a normalized-law B
    sequence if false.
+   Then read `proofs/two_sided_unit_collapse.md`: two-sided unit lower rows
+   are locally nondegenerate and routed to a closed branch, while
+   strand-continuing rows are transport-rackified.  The only remaining final
+   continuation seed is mixed-unit context recovery, exposed by
+   `two_sided_unit_collapse_audit(...)`.
    Then read `proofs/unit_continuation_abelian_kernel_lift.md`: it splits
    `S_beta in V_beta(U_cont)` into an abelianized matrix-longitude witness and
    a commutator-kernel correction witness, audited by
    `normal_quotient_longitude_lift_audit(...)`.
+   Then read `proofs/unit_continuation_derived_series_reduction.md`: it
+   iterates this abelian-kernel split through the derived series.  Solvable
+   unit groups reduce to finite abelian matrix witnesses; nonsolvable cases
+   leave only a stable perfect-residual endpoint.
    Also audit the Green atom-action layer through `proofs/green_branch_audit.md`
    and `atom_action_summary(...)`: it checks whether completed rows descend to
    operations on saturated atoms, `p(a) triangleright p(q)=p(a^q)` and

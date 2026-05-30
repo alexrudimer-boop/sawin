@@ -288,6 +288,14 @@ only unit continuation factors by the unit-factorization gate.  The last
 possible obstruction in this channel is therefore a unit endpoint
 `S_beta in U(M_cont)` whose membership in `V_beta(U(M_cont))` is still
 unproved; nonunit/reset labels cannot be final B evidence.
+The two-sided unit-collapse note
+`proofs/two_sided_unit_collapse.md` removes another false endpoint
+obstruction.  If every remaining lower coordinate section is bijective on
+both sides, the lower row is locally nondegenerate and routes to the closed
+nondegenerate/guitar branch; if it is strand-continuing, it has already been
+transport-rackified.  The only surviving continuation shape is therefore a
+mixed-unit context-recovery corridor, audited by
+`two_sided_unit_collapse_audit(...)`.
 The follow-up note `proofs/unit_continuation_abelian_kernel_lift.md` splits
 that final endpoint certificate through the finite abelianization
 `U_cont/[U_cont,U_cont]`: prove the abelian projection by the matrix
@@ -295,6 +303,13 @@ longitude criterion, lift that witness to `U_cont`, and prove the resulting
 commutator-kernel correction by a kernel witness.  The helper
 `normal_quotient_longitude_lift_audit(...)` checks this quotient-plus-kernel
 certificate.
+The derived-series refinement
+`proofs/unit_continuation_derived_series_reduction.md` then iterates the
+abelian-kernel lift through `U^(r+1)=[U^(r),U^(r)]`.  Solvable unit groups are
+reduced to finitely many abelian matrix-longitude witnesses, while a
+nonsolvable unit group leaves only a perfect-residual endpoint obstruction.
+The helpers `derived_series_audit(...)` and `subgroup_as_group(...)` expose
+those finite stages without adding any braid-index-dependent detector.
 The semisplit audit now has an exact Boolean-CSP view: each coloured crossing
 lists the allowed equality/universal bit patterns on its two source and two
 target colours, and satisfying non-extreme assignments agree with the

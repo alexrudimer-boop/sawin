@@ -31,6 +31,8 @@ from ybe_domination import (
     readout_kernel_family,
     readout_kernel_quotient_interval,
     readout_seed_saturation_audit,
+    section_unit_row_audits,
+    two_sided_unit_collapse_audit,
 )
 
 
@@ -300,6 +302,49 @@ class LocalIntervalTests(unittest.TestCase):
                 for row in audits[0].seed_closure.generated.derivation_rows
             )
         )
+
+    def test_two_sided_unit_collapse_accepts_strand_continuing_rack_row(self):
+        interval = one_color_flip_interval()
+
+        audit = two_sided_unit_collapse_audit(interval)
+
+        self.assertTrue(audit.colored_ybe)
+        self.assertTrue(audit.strand_continuing_case)
+        self.assertTrue(audit.all_rows_two_sided_unit)
+        self.assertTrue(audit.locally_nondegenerate_closed_branch)
+        self.assertFalse(audit.mixed_unit_context_recovery_remaining)
+        self.assertEqual(audit.only_mixed_unit_obstruction_rows, ())
+
+    def test_two_sided_unit_collapse_detects_nonunit_continuation_row(self):
+        interval = one_color_identity_interval()
+
+        row_audit = section_unit_row_audits(interval)[0]
+        audit = two_sided_unit_collapse_audit(interval)
+
+        self.assertFalse(row_audit.all_left_sections_bijective)
+        self.assertFalse(row_audit.all_right_sections_bijective)
+        self.assertEqual(row_audit.left_nonunit_inputs, (0, 1))
+        self.assertEqual(row_audit.right_nonunit_inputs, (0, 1))
+        self.assertFalse(row_audit.row_has_unit_section)
+        self.assertTrue(row_audit.row_has_nonunit_section)
+        self.assertFalse(row_audit.row_is_mixed_unit)
+        self.assertFalse(audit.all_rows_two_sided_unit)
+        self.assertFalse(audit.locally_nondegenerate_closed_branch)
+        self.assertFalse(audit.mixed_unit_context_recovery_remaining)
+        self.assertEqual(audit.non_two_sided_rows, audit.row_audits)
+        self.assertEqual(audit.only_mixed_unit_obstruction_rows, ())
+
+    def test_two_sided_unit_collapse_closes_non_strand_two_sided_unit_row(self):
+        interval = two_color_swap_interval()
+
+        audit = two_sided_unit_collapse_audit(interval)
+
+        self.assertTrue(audit.colored_ybe)
+        self.assertFalse(audit.strand_continuing_case)
+        self.assertTrue(audit.all_rows_two_sided_unit)
+        self.assertTrue(audit.two_sided_unit_closed_branch)
+        self.assertTrue(audit.locally_nondegenerate_closed_branch)
+        self.assertFalse(audit.mixed_unit_context_recovery_remaining)
 
     def test_continuation_seed_readout_propagates_admissible_universal_readout(self):
         interval = one_color_identity_interval()

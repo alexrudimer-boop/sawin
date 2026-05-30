@@ -101,6 +101,24 @@ class FiniteGroupHomomorphism:
         return set(self.image) == set(self.target.elements)
 
 
+@dataclass(frozen=True)
+class DerivedSeriesAudit:
+    """Derived-series summary for a finite group."""
+
+    subgroup_orders: Tuple[int, ...]
+    perfect_residual: Tuple[GroupElement, ...]
+    perfect_residual_order: int
+    terminates_at_identity: bool
+
+    @property
+    def is_solvable(self) -> bool:
+        return self.terminates_at_identity
+
+    @property
+    def derived_length(self) -> int:
+        return max(0, len(self.subgroup_orders) - 1)
+
+
 def build_group(
     elements: Iterable[GroupElement],
     identity: GroupElement,
@@ -168,6 +186,28 @@ def is_abelian_group(group: FiniteGroup) -> bool:
     )
 
 
+def subgroup_as_group(
+    group: FiniteGroup,
+    subgroup: Iterable[GroupElement],
+) -> FiniteGroup:
+    """Return a finite group obtained by restricting multiplication."""
+
+    subset = tuple(sorted(set(subgroup), key=repr))
+    if not subset:
+        raise ValueError("subgroup must be nonempty")
+    elements = set(group.elements)
+    if any(element not in elements for element in subset):
+        raise ValueError("subgroup element outside group")
+    subset_set = set(subset)
+    if group.identity not in subset_set:
+        raise ValueError("subgroup must contain identity")
+    if any(group.inv(element) not in subset_set for element in subset):
+        raise ValueError("subgroup must contain inverses")
+    if any(group.mul(left, right) not in subset_set for left in subset for right in subset):
+        raise ValueError("subgroup must be closed under multiplication")
+    return build_group(subset, group.identity, lambda left, right: group.mul(left, right))
+
+
 def normal_closure_elements(
     group: FiniteGroup,
     generators: Iterable[GroupElement],
@@ -202,6 +242,31 @@ def commutator_subgroup_elements(
         for right in subset
     ]
     return subgroup_generated_elements(group, commutators)
+
+
+def derived_series_subgroups(group: FiniteGroup) -> Tuple[Tuple[GroupElement, ...], ...]:
+    """Return the derived series ending at its stable perfect residual."""
+
+    series = [tuple(sorted(group.elements, key=repr))]
+    while True:
+        current = series[-1]
+        next_subgroup = commutator_subgroup_elements(group, current)
+        if set(next_subgroup) == set(current):
+            return tuple(series)
+        series.append(next_subgroup)
+
+
+def derived_series_audit(group: FiniteGroup) -> DerivedSeriesAudit:
+    """Audit the finite derived series of ``group``."""
+
+    series = derived_series_subgroups(group)
+    residual = series[-1]
+    return DerivedSeriesAudit(
+        subgroup_orders=tuple(len(subgroup) for subgroup in series),
+        perfect_residual=residual,
+        perfect_residual_order=len(residual),
+        terminates_at_identity=set(residual) == {group.identity},
+    )
 
 
 def is_normal_subgroup(

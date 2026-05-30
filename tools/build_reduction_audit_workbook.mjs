@@ -626,11 +626,25 @@ const rows = [
     "Prove every residual unit-continuation endpoint lies in V_beta(U_cont), or upgrade such a failure to normalized laws.",
   ],
   [
+    "Two-sided unit collapse",
+    "Split the final continuation rows into strand-continuing, two-sided unit nondegenerate, and mixed-unit context recovery.",
+    "proofs/two_sided_unit_collapse.md; two_sided_unit_collapse_audit records coordinate-section units, non-two-sided rows, and mixed rows.",
+    "Sharper open theorem",
+    "Prove no mixed-unit universal-continuation context recovery in a local-minimal bottleneck, or extract normalized laws.",
+  ],
+  [
     "Unit-continuation abelian-kernel lift",
     "Split the final unit endpoint into finite abelianization plus commutator-kernel correction.",
     "proofs/unit_continuation_abelian_kernel_lift.md; normal_quotient_longitude_lift_audit checks quotient witness, lifted witness, and kernel witness.",
     "Reduction criterion",
     "Prove abelian matrix witnesses and commutator-kernel witnesses for S_beta in the fixed unit group.",
+  ],
+  [
+    "Unit-continuation derived series",
+    "Iterate the abelian-kernel split through the finite derived series of the fixed unit group.",
+    "proofs/unit_continuation_derived_series_reduction.md; derived_series_audit records solvable collapse or the perfect residual.",
+    "Reduction criterion",
+    "Solvable unit groups reduce to abelian matrix witnesses; nonsolvable obstruction must live in the perfect residual.",
   ],
   [
     "Bi-free subgroup certificate",

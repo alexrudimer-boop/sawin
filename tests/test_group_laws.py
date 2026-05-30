@@ -8,6 +8,8 @@ from ybe_domination import (
     commutator,
     commutator_subgroup_elements,
     cyclic_group,
+    derived_series_audit,
+    derived_series_subgroups,
     exponent_law_profile,
     exponent_law_word,
     free_word_power,
@@ -23,6 +25,7 @@ from ybe_domination import (
     reduced_free_words,
     short_law_escaping_variety,
     short_law_separating_groups,
+    subgroup_as_group,
     subgroup_generated_elements,
     symmetric_group,
     two_strand_exponent_law_braid,
@@ -89,6 +92,28 @@ class GroupLawTests(unittest.TestCase):
             set(commutator_subgroup_elements(group)),
             {group.identity, (1, 2, 0), (2, 0, 1)},
         )
+
+    def test_derived_series_audit_for_solvable_groups(self):
+        self.assertEqual(
+            tuple(len(subgroup) for subgroup in derived_series_subgroups(cyclic_group(5))),
+            (5, 1),
+        )
+
+        audit = derived_series_audit(symmetric_group(3))
+
+        self.assertEqual(audit.subgroup_orders, (6, 3, 1))
+        self.assertEqual(audit.perfect_residual_order, 1)
+        self.assertTrue(audit.is_solvable)
+        self.assertEqual(audit.derived_length, 2)
+
+    def test_subgroup_as_group_restricts_multiplication(self):
+        group = symmetric_group(3)
+        alternating = commutator_subgroup_elements(group)
+        subgroup = subgroup_as_group(group, alternating)
+
+        self.assertEqual(len(subgroup.elements), 3)
+        self.assertTrue(set(subgroup.elements).issubset(set(group.elements)))
+        self.assertEqual(subgroup.identity, group.identity)
 
     def test_exponent_law_for_small_groups(self):
         word = exponent_law_word(3)
