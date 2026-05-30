@@ -794,6 +794,13 @@ const rows = [
     "Prove abelian matrix witnesses and commutator-kernel witnesses for S_beta in the fixed unit group.",
   ],
   [
+    "Unit-continuation abelian quotient audit",
+    "Isolate the first finite quotient checkpoint for terminal unit endpoints.",
+    "proofs/unit_continuation_abelian_quotient_audit.md; unit_composite_abelianization_audit projects the final unit composite to U/[U,U] and checks membership in V_beta of that abelian quotient.",
+    "Executable criterion",
+    "Use before any commutator-level Artin-defect claim; passing leaves only the commutator correction, failing gives an abelian quotient seed.",
+  ],
+  [
     "Unit-continuation derived series",
     "Iterate the abelian-kernel split through the finite derived series of the fixed unit group.",
     "proofs/unit_continuation_derived_series_reduction.md; derived_series_audit records solvable collapse or the perfect residual.",

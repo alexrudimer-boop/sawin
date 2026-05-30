@@ -17,8 +17,11 @@ from .artin_longitudes import (
 )
 from .finite_group import (
     FiniteGroup,
+    GroupElement,
+    commutator_subgroup_elements,
     direct_product_group,
     permutation_group_from_generators,
+    quotient_group_by_normal_subgroup,
     subgroup_generated_elements,
 )
 from .green_branch import (
@@ -179,6 +182,79 @@ class UnitCompositeDetectionAudit:
             self.is_permutation_branch
             and self.identity_longitude_signature
             and not self.composite_is_identity
+        )
+
+
+@dataclass(frozen=True)
+class UnitCompositeAbelianizationAudit:
+    """Project a residual unit endpoint to the abelianized unit group."""
+
+    monoid_element_count: int
+    factors_in_monoid: bool
+    factorization: UnitFactorizationAudit
+    artin_permutation: Tuple[int, ...]
+    unit_group_order: int
+    commutator_subgroup_size: int
+    abelianization_order: int
+    abelian_endpoint: GroupElement | None
+    abelian_longitude_subgroup_size: int | None
+    abelian_endpoint_lies_in_longitude_subgroup: bool | None
+    abelian_identity: GroupElement
+    monoid_identity: Transformation
+
+    @property
+    def is_permutation_branch(self) -> bool:
+        return self.factorization.composite_is_unit
+
+    @property
+    def composite_is_identity(self) -> bool:
+        return self.factorization.composite == self.monoid_identity
+
+    @property
+    def group_has_nontrivial_abelianization(self) -> bool:
+        return self.commutator_subgroup_size < self.unit_group_order
+
+    @property
+    def abelian_endpoint_is_identity(self) -> bool:
+        return self.abelian_endpoint == self.abelian_identity
+
+    @property
+    def identity_abelian_longitude_signature(self) -> bool:
+        return (
+            self.artin_permutation == tuple(range(len(self.artin_permutation)))
+            and self.abelian_longitude_subgroup_size == 1
+        )
+
+    @property
+    def abelian_projection_lies_in_longitude_subgroup(self) -> bool:
+        return self.abelian_endpoint_lies_in_longitude_subgroup is True
+
+    @property
+    def abelian_projection_closed_by_matrix_route(self) -> bool:
+        return (
+            self.factors_in_monoid
+            and self.is_permutation_branch
+            and self.abelian_projection_lies_in_longitude_subgroup
+        )
+
+    @property
+    def identity_abelian_longitudes_kill_projection(self) -> bool:
+        if not self.abelian_projection_closed_by_matrix_route:
+            return False
+        if not self.identity_abelian_longitude_signature:
+            return True
+        return self.abelian_endpoint_is_identity
+
+    @property
+    def commutator_correction_is_only_remaining_after_abelian_route(self) -> bool:
+        return self.abelian_projection_closed_by_matrix_route
+
+    @property
+    def is_finite_abelian_unit_detector_failure(self) -> bool:
+        return (
+            self.is_permutation_branch
+            and self.identity_abelian_longitude_signature
+            and not self.abelian_endpoint_is_identity
         )
 
 
@@ -729,6 +805,68 @@ def unit_composite_detection_audit(
         factors_in_monoid=all(factor in monoid_elements for factor in factor_tuple),
         factorization=factorization,
         longitude=longitude,
+        monoid_identity=monoid.identity,
+    )
+
+
+def unit_composite_abelianization_audit(
+    monoid: TransformationMonoid,
+    n: int,
+    braid_word: BraidWord,
+    factors: Sequence[Transformation],
+    *,
+    max_assignments: int | None = None,
+) -> UnitCompositeAbelianizationAudit:
+    """Check the abelian quotient part of a residual unit endpoint.
+
+    The terminal gauge theorem asks for the final unit composite to lie in
+    ``V_beta(U(M))``.  Before a commutator-level or Artin-defect argument can
+    finish that, the endpoint must pass the abelianized test in
+    ``U(M)/[U(M),U(M)]``.  This helper performs exactly that finite quotient
+    check for one supplied endpoint word.
+    """
+
+    factor_tuple = tuple(factors)
+    factorization = unit_factorization_audit(
+        factor_tuple,
+        degree=len(monoid.identity),
+    )
+    unit_group = monoid_permutation_group(monoid)
+    commutator = commutator_subgroup_elements(unit_group)
+    quotient, projection = quotient_group_by_normal_subgroup(
+        unit_group,
+        commutator,
+    )
+    subgroup = None
+    abelian_endpoint = None
+    if factorization.composite_is_unit:
+        abelian_endpoint = projection.apply(factorization.composite)
+        subgroup = set(
+            longitude_value_subgroup_elements(
+                quotient,
+                n,
+                braid_word,
+                max_assignments=max_assignments,
+            )
+        )
+    monoid_elements = set(monoid.elements)
+    data = artin_longitudes(n, braid_word)
+    return UnitCompositeAbelianizationAudit(
+        monoid_element_count=len(monoid.elements),
+        factors_in_monoid=all(factor in monoid_elements for factor in factor_tuple),
+        factorization=factorization,
+        artin_permutation=data.permutation,
+        unit_group_order=len(unit_group.elements),
+        commutator_subgroup_size=len(commutator),
+        abelianization_order=len(quotient.elements),
+        abelian_endpoint=abelian_endpoint,
+        abelian_longitude_subgroup_size=(
+            None if subgroup is None else len(subgroup)
+        ),
+        abelian_endpoint_lies_in_longitude_subgroup=(
+            None if subgroup is None else abelian_endpoint in subgroup
+        ),
+        abelian_identity=quotient.identity,
         monoid_identity=monoid.identity,
     )
 

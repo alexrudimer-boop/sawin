@@ -14,6 +14,7 @@ from ybe_domination import (
     monoid_permutation_group,
     permutation_elements,
     transformation_power,
+    unit_composite_abelianization_audit,
     unit_composite_detection_audit,
     unit_composite_longitude_expression_audit,
     unit_composite_longitude_route_audit,
@@ -237,6 +238,68 @@ class SemigroupHolonomyTests(unittest.TestCase):
         self.assertFalse(audit.composite_lies_in_longitude_subgroup)
         self.assertFalse(audit.identity_longitudes_kill_composite)
         self.assertTrue(audit.is_finite_unit_detector_failure)
+
+    def test_unit_composite_abelianization_accepts_visible_cyclic_endpoint(self):
+        cycle = (1, 2, 0)
+        monoid = TransformationMonoid.generated((cycle,))
+
+        audit = unit_composite_abelianization_audit(
+            monoid,
+            n=2,
+            braid_word=(1, 1),
+            factors=(cycle,),
+        )
+
+        self.assertTrue(audit.is_permutation_branch)
+        self.assertEqual(audit.unit_group_order, 3)
+        self.assertEqual(audit.commutator_subgroup_size, 1)
+        self.assertEqual(audit.abelianization_order, 3)
+        self.assertTrue(audit.group_has_nontrivial_abelianization)
+        self.assertEqual(audit.abelian_longitude_subgroup_size, 3)
+        self.assertTrue(audit.abelian_projection_lies_in_longitude_subgroup)
+        self.assertTrue(audit.abelian_projection_closed_by_matrix_route)
+        self.assertTrue(audit.identity_abelian_longitudes_kill_projection)
+        self.assertTrue(
+            audit.commutator_correction_is_only_remaining_after_abelian_route
+        )
+        self.assertFalse(audit.is_finite_abelian_unit_detector_failure)
+
+    def test_unit_composite_abelianization_flags_identity_signature_failure(self):
+        cycle = (1, 2, 0)
+        monoid = TransformationMonoid.generated((cycle,))
+
+        audit = unit_composite_abelianization_audit(
+            monoid,
+            n=2,
+            braid_word=(1,) * 6,
+            factors=(cycle,),
+        )
+
+        self.assertTrue(audit.is_permutation_branch)
+        self.assertTrue(audit.identity_abelian_longitude_signature)
+        self.assertFalse(audit.abelian_endpoint_is_identity)
+        self.assertEqual(audit.abelian_longitude_subgroup_size, 1)
+        self.assertFalse(audit.abelian_projection_lies_in_longitude_subgroup)
+        self.assertFalse(audit.abelian_projection_closed_by_matrix_route)
+        self.assertFalse(audit.identity_abelian_longitudes_kill_projection)
+        self.assertTrue(audit.is_finite_abelian_unit_detector_failure)
+
+    def test_unit_composite_abelianization_rejects_nonunit_endpoint(self):
+        reset = (0, 0)
+        monoid = TransformationMonoid.generated((reset,))
+
+        audit = unit_composite_abelianization_audit(
+            monoid,
+            n=2,
+            braid_word=(1, 1),
+            factors=(reset,),
+        )
+
+        self.assertFalse(audit.is_permutation_branch)
+        self.assertIsNone(audit.abelian_endpoint)
+        self.assertIsNone(audit.abelian_longitude_subgroup_size)
+        self.assertIsNone(audit.abelian_endpoint_lies_in_longitude_subgroup)
+        self.assertFalse(audit.abelian_projection_closed_by_matrix_route)
 
     def test_unit_composite_detection_rejects_nonunit_composite(self):
         reset = (0, 0)

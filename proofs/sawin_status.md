@@ -2121,6 +2121,14 @@ normal-quotient lift, not by a pure Artin-defect shortcut.  The honest final
 target is now: prove the abelianized terminal endpoint in `V_beta(U/[U,U])`,
 lift that witness to `U`, and prove the commutator or perfect-residual
 correction in the fixed unit factor.
+The helper `unit_composite_abelianization_audit(...)` now performs the
+finite quotient checkpoint for a supplied terminal unit word.  It computes
+`U(M)`, `[U,U]`, the abelianized endpoint, and the subgroup
+`V_beta(U/[U,U])`.  Passing this audit does not prove the whole endpoint
+theorem; it only certifies that the abelian quotient has been handled and
+that the remaining problem is a commutator correction.  Failing it identifies
+the exact finite abelian quotient where an all-`n` symbolic proof or a
+normalized-law obstruction must focus.
 
 ## Completion audit checklist
 
