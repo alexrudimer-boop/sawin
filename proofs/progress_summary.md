@@ -906,6 +906,25 @@ graph of the quotient homomorphism.  A nontrivial vertical element `(1,p)` is
 precisely a word trivial in the derivative detector but moving `X`, hence a
 genuine point-pushing `K_G` mover.  The audit helper now exposes this as
 `vertical_kernel_trivial` when the subgroup enumeration is not truncated.
+`proofs/point_pushing_vertical_witness_certificate.md` now spells out the
+finite B-seed certificate extracted from such a vertical element.  A row must
+give a word `w`, verify `w(d_i)=1`, verify that `w(h_i)` agrees with the
+direct point-pushed braid action, and exhibit a moved tuple
+`x -> rho_X(iota(w))(x)`.  The helper
+`point_pushing_vertical_witness_certificate(...)` checks one such row and
+reports `valid_vertical_witness`.  This remains a finite-row certificate only;
+outcome B still requires an infinite product-prefix or symmetric-tail family.
+`proofs/point_pushing_fixed_arity_cofinality.md` now proves that no fixed
+point-pushing arity can supply a B obstruction.  For fixed `k`, the last
+recursive longitude of `iota_{k+1}(w)` is `Theta_k(w)` for a triangular
+Nielsen automorphism `Theta_k`.  Given any finite-index normal subgroup
+`N normal F_k`, the finite quotient `G_N=F_k/Theta_k(N)` separates every
+`w notin N` through the last longitude, so
+`ker(F_k->D_k(G_N)) <= N`; after left-regular embedding,
+`D_k(S_m)` maps onto the quotient as a marked group.  Hence every finite
+arity prefix is detected by some symmetric group.  The remaining point-pushing
+problem is exactly whether `mu_X(k)=min{m:D_k(S_m)->P_k(X)}` is bounded in
+`k`.
 `proofs/point_pushing_derivative_functoriality.md` records the compatibility
 of this exact criterion with detector changes.  A finite group homomorphism
 `G->H` induces coordinate equivariance on detector states.  Surjections give

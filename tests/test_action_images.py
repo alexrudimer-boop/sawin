@@ -17,6 +17,7 @@ from ybe_domination import (
     law_word_on_last_strand,
     point_pushing_exponent_escape_audit,
     point_pushing_marked_quotient_audit,
+    point_pushing_vertical_witness_certificate,
     point_pushing_variety_escape_audit,
     point_pushing_variety_prefix_audit,
     pure_generator_order_profile,
@@ -268,6 +269,49 @@ class ActionImageTests(unittest.TestCase):
             audit.witness_action_value[audit.moved_index],
             audit.moved_index,
         )
+
+    def test_point_pushing_vertical_witness_certificate_checks_braid(self):
+        solution = rack_solution([0, 1, 2], lambda a, b: (2 * a - b) % 3)
+        word = ((0, 1), (0, 1))
+
+        certificate = point_pushing_vertical_witness_certificate(
+            solution,
+            cyclic_group(2),
+            word,
+            arity=2,
+        )
+
+        self.assertTrue(certificate.detector_word_identity)
+        self.assertFalse(certificate.evaluated_action_identity)
+        self.assertFalse(certificate.direct_braid_identity)
+        self.assertTrue(certificate.direct_matches_evaluated)
+        self.assertTrue(certificate.moves_solution)
+        self.assertTrue(certificate.valid_vertical_witness)
+        self.assertEqual(certificate.braid_index, 3)
+        self.assertEqual(certificate.detector_state_count, 64)
+        self.assertEqual(certificate.ybe_tuple_count, 27)
+        self.assertEqual(
+            certificate.braid_word,
+            pure_braid_generator(1, 3) + pure_braid_generator(1, 3),
+        )
+        self.assertIsNotNone(certificate.moved_tuple)
+        self.assertNotEqual(certificate.moved_tuple, certificate.moved_tuple_image)
+
+    def test_point_pushing_vertical_witness_certificate_rejects_nonmoving(self):
+        solution = rack_solution([0, 1], lambda a, b: b)
+        word = ((0, 1), (0, 1))
+
+        certificate = point_pushing_vertical_witness_certificate(
+            solution,
+            cyclic_group(2),
+            word,
+            arity=2,
+        )
+
+        self.assertTrue(certificate.detector_word_identity)
+        self.assertTrue(certificate.direct_braid_identity)
+        self.assertFalse(certificate.moves_solution)
+        self.assertFalse(certificate.valid_vertical_witness)
 
 
 if __name__ == "__main__":

@@ -87,6 +87,38 @@ class PointPushingMarkedQuotientAudit:
 
 
 @dataclass(frozen=True)
+class PointPushingVerticalWitnessCertificate:
+    """Checked finite row for a nontrivial paired vertical-kernel witness."""
+
+    group_order: int
+    arity: int
+    braid_index: int
+    detector_state_count: int
+    ybe_tuple_count: int
+    word: FreeWord
+    braid_word: BraidWord
+    detector_word_identity: bool
+    evaluated_action_identity: bool
+    direct_braid_identity: bool
+    direct_matches_evaluated: bool
+    moved_index: int | None
+    moved_tuple: Tuple[object, ...] | None
+    moved_tuple_image: Tuple[object, ...] | None
+
+    @property
+    def moves_solution(self) -> bool:
+        return self.moved_index is not None and not self.direct_braid_identity
+
+    @property
+    def valid_vertical_witness(self) -> bool:
+        return (
+            self.detector_word_identity
+            and self.direct_matches_evaluated
+            and self.moves_solution
+        )
+
+
+@dataclass(frozen=True)
 class PointPushingVarietyEscapeAudit:
     """Bounded finite row for a point-pushing action-image variety escape."""
 
@@ -498,6 +530,79 @@ def point_pushing_marked_quotient_audit(
         witness_word=witness_word,
         witness_action_value=witness_action,
         moved_index=moved_index,
+    )
+
+
+def point_pushing_vertical_witness_certificate(
+    solution: FiniteBraidedSet,
+    group: FiniteGroup,
+    word: FreeWord,
+    arity: int,
+    *,
+    max_detector_states: int | None = None,
+) -> PointPushingVerticalWitnessCertificate:
+    """Check one paired vertical-kernel witness.
+
+    A valid certificate means the point-pushed braid is in ``K_G`` by the
+    derivative detector criterion and still acts nontrivially on ``X``.
+    """
+
+    from .braid_laws import (
+        law_word_on_last_strand,
+        point_pushing_derivative_detector_generators,
+        pure_braid_generator,
+    )
+
+    if arity < 1:
+        raise ValueError("arity must be positive")
+    for generator, _exponent in word:
+        if generator < 0 or generator >= arity:
+            raise ValueError(f"free generator {generator} outside arity {arity}")
+
+    n, braid = law_word_on_last_strand(word, arity)
+    detector_images = point_pushing_derivative_detector_generators(
+        group,
+        arity,
+        max_states=max_detector_states,
+    )
+    detector_value = evaluate_free_word_on_permutations(word, detector_images)
+    detector_identity = identity_permutation(len(detector_value))
+
+    action_braids = {
+        generator: pure_braid_generator(generator + 1, n)
+        for generator in range(arity)
+    }
+    action_images = braid_images_for_words(solution, n, action_braids)
+    evaluated_action = evaluate_free_word_on_permutations(word, action_images)
+    direct_action = action_permutation(solution, n, braid)
+    action_identity = identity_permutation(len(direct_action))
+
+    moved_index = None
+    moved_tuple = None
+    moved_tuple_image = None
+    if direct_action != action_identity:
+        moved_index = next(
+            index for index, image in enumerate(direct_action) if image != index
+        )
+        tuples = tuple(product(solution.elements, repeat=n))
+        moved_tuple = tuples[moved_index]
+        moved_tuple_image = tuples[direct_action[moved_index]]
+
+    return PointPushingVerticalWitnessCertificate(
+        group_order=len(group.elements),
+        arity=arity,
+        braid_index=n,
+        detector_state_count=len(detector_identity),
+        ybe_tuple_count=len(action_identity),
+        word=tuple(word),
+        braid_word=braid,
+        detector_word_identity=detector_value == detector_identity,
+        evaluated_action_identity=evaluated_action == action_identity,
+        direct_braid_identity=direct_action == action_identity,
+        direct_matches_evaluated=direct_action == evaluated_action,
+        moved_index=moved_index,
+        moved_tuple=moved_tuple,
+        moved_tuple_image=moved_tuple_image,
     )
 
 

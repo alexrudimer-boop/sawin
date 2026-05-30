@@ -290,6 +290,20 @@ const rows = [
     "Prove vertical kernels vanish for all k for one fixed G, or construct an infinite product-prefix/symmetric-tail family of vertical witnesses.",
   ],
   [
+    "Point-pushing vertical witness certificate",
+    "Make each finite vertical-kernel B seed self-certifying at braid-action level.",
+    "proofs/point_pushing_vertical_witness_certificate.md proves a word trivial in D_k(G) but moving P_k(X), with direct braid agreement and moved tuple, is a genuine point-pushing K_G mover; point_pushing_vertical_witness_certificate checks one row.",
+    "Certificate shape",
+    "Build an all-j product-prefix or symmetric-tail family of valid_vertical_witness rows, or prove none can occur for one fixed detector.",
+  ],
+  [
+    "Point-pushing fixed-arity cofinality",
+    "Rule out fixed point-pushing arity as a possible B obstruction.",
+    "proofs/point_pushing_fixed_arity_cofinality.md uses the triangular Nielsen last-longitude automorphism to show every finite k-marked quotient of F_k is a quotient of D_k(S_m) for some m.",
+    "Growth reduction",
+    "The remaining global question is whether mu_X(k)=min{m:D_k(S_m)->P_k(X)} is bounded in k.",
+  ],
+  [
     "Derivative detector functoriality",
     "Show the exact D_k(G) criterion is compatible with quotients, embeddings, symmetric cofinality, and product prefixes.",
     "proofs/point_pushing_derivative_functoriality.md proves coordinate equivariance for finite group homomorphisms; point_pushing_derivative_functoriality_audit checks finite instances.",
