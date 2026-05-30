@@ -396,8 +396,10 @@ from .group_laws import (
     two_strand_symmetric_longitude_period,
 )
 from .braid_laws import (
+    LastStrandLawExactnessAudit,
     free_word_to_braid,
     invert_braid_word,
+    last_strand_law_exactness_audit,
     law_braid_longitudes,
     law_braid_longitude_subgroup_profile,
     law_word_on_last_strand,
@@ -622,9 +624,11 @@ from .endpoint_factorization import (
 from .repair_contract import (
     DescentEndpointRepairContractAudit,
     EndpointFamilySymmetricForkAudit,
+    EndpointFamilySymmetricSeedAudit,
     SymmetricRepairContractBridgeAudit,
     descent_endpoint_repair_contract_audit,
     endpoint_family_symmetric_fork_audit,
+    endpoint_family_symmetric_seed_audit,
     symmetric_repair_contract_bridge_audit,
 )
 from .small_search import (
@@ -758,6 +762,7 @@ __all__ = [
     "EndpointResidualReadoutAudit",
     "DescentEndpointRepairContractAudit",
     "EndpointFamilySymmetricForkAudit",
+    "EndpointFamilySymmetricSeedAudit",
     "SymmetricRepairContractBridgeAudit",
     "RoutedLostEdgeEndpointWitnessAudit",
     "TerminalGaugeLongitudeExpressionAudit",
@@ -791,6 +796,7 @@ __all__ = [
     "LawBraidActionCertificate",
     "LawSequencePrefixAudit",
     "LawSequencePrefixRow",
+    "LastStrandLawExactnessAudit",
     "LongitudeSubgroupMoverProfile",
     "LongitudeSubgroupProfileRow",
     "LongitudeSubgroupWitness",
@@ -1058,6 +1064,7 @@ __all__ = [
     "endpoint_residual_readout_audit",
     "descent_endpoint_repair_contract_audit",
     "endpoint_family_symmetric_fork_audit",
+    "endpoint_family_symmetric_seed_audit",
     "symmetric_repair_contract_bridge_audit",
     "routed_lost_edge_endpoint_witness_audit",
     "terminal_gauge_longitude_expression_audit",
@@ -1153,6 +1160,7 @@ __all__ = [
     "law_braid_longitudes",
     "law_braid_longitude_subgroup_profile",
     "law_braid_action_certificate",
+    "last_strand_law_exactness_audit",
     "law_word_on_last_strand",
     "lcm_upto",
     "longitude_blind_movers",

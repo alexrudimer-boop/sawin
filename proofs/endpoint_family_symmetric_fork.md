@@ -13,6 +13,14 @@ whether all endpoint witnesses and faithfulness have been supplied, and whether
 listed failed symmetric degrees form the finite prefix of the normalized-law
 tail shape.
 
+The one-row B-seed attachment helper
+`endpoint_family_symmetric_seed_audit(...)` pairs such an endpoint-family miss
+with a supplied `local_symmetric_normalized_law_prefix_witness_audit(...)` row.
+It requires the same symmetric degree, right stabilization by that degree, a
+nonidentity endpoint channel, endpoint-family faithfulness, and an explicit
+assertion that the endpoint miss is the residual motion recorded by the local
+prefix row.
+
 ## Setup
 
 Fix a local interval

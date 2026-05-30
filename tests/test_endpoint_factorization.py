@@ -20,7 +20,13 @@ from ybe_domination import (
     endpoint_residual_action_audit,
     endpoint_residual_readout_audit,
     endpoint_family_symmetric_fork_audit,
+    endpoint_family_symmetric_seed_audit,
+    identity_solution,
+    local_symmetric_normalized_law_prefix_witness_audit,
     lost_edge_external_routing_audit,
+    pure_braid_generator,
+    QuotientMap,
+    rack_solution,
     readout_descent_separation_audit,
     routed_lost_edge_endpoint_witness_audit,
     symmetric_repair_contract_bridge_audit,
@@ -734,6 +740,83 @@ class EndpointFactorizationTests(unittest.TestCase):
         self.assertFalse(audit.faithful_endpoint_cutoff_proved)
         self.assertFalse(audit.proves_supplied_symmetric_tail_endpoint_seed_prefix)
         self.assertEqual(audit.failure_reasons, ("endpoint_family_not_faithful",))
+
+    def test_endpoint_family_symmetric_seed_attaches_endpoint_miss_to_local_row(self):
+        total = rack_solution([0, 1, 2], lambda _left, right: (right + 1) % 3)
+        quotient = identity_solution(["*"])
+        qmap = QuotientMap(total, quotient, {element: "*" for element in total.elements})
+        base_detector = identity_solution(["q"])
+        degree = 2
+        local_prefix = local_symmetric_normalized_law_prefix_witness_audit(
+            qmap,
+            base_detector,
+            degree,
+            2,
+            (1, 1, 1, 1),
+            ("*", "*"),
+            (0, 0),
+            extra_strands=degree,
+            fill_value=0,
+        )
+        endpoint_family = endpoint_family_symmetric_fork_audit(
+            (2,),
+            all_endpoint_witnesses_supplied=False,
+            endpoint_family_faithful=True,
+            failed_symmetric_degrees=(2,),
+        )
+
+        audit = endpoint_family_symmetric_seed_audit(
+            endpoint_family,
+            local_prefix,
+            degree,
+            endpoint_channel_nonidentity=True,
+            endpoint_miss_matches_residual_motion=True,
+        )
+
+        self.assertTrue(audit.uses_declared_symmetric_row)
+        self.assertTrue(audit.right_stabilized_by_symmetric_degree)
+        self.assertTrue(audit.symmetric_degree_covers_endpoint_family)
+        self.assertTrue(audit.degree_is_declared_endpoint_failure)
+        self.assertTrue(audit.local_prefix_is_symmetric_normalized_law_row)
+        self.assertTrue(audit.endpoint_miss_is_attached_to_prefix)
+        self.assertTrue(audit.proves_one_endpoint_family_symmetric_seed)
+
+    def test_endpoint_family_symmetric_seed_requires_attachment_flags(self):
+        total = rack_solution([0, 1], lambda _left, right: 1 - right)
+        quotient = identity_solution(["*"])
+        qmap = QuotientMap(total, quotient, {element: "*" for element in total.elements})
+        base_detector = identity_solution(["q"])
+        local_prefix = local_symmetric_normalized_law_prefix_witness_audit(
+            qmap,
+            base_detector,
+            1,
+            2,
+            pure_braid_generator(1, 2),
+            ("*", "*"),
+            (0, 0),
+            extra_strands=1,
+            fill_value=0,
+        )
+        endpoint_family = endpoint_family_symmetric_fork_audit(
+            (2,),
+            all_endpoint_witnesses_supplied=False,
+            endpoint_family_faithful=True,
+            failed_symmetric_degrees=(2,),
+        )
+
+        audit = endpoint_family_symmetric_seed_audit(
+            endpoint_family,
+            local_prefix,
+            1,
+            endpoint_channel_nonidentity=True,
+            endpoint_miss_matches_residual_motion=False,
+        )
+
+        self.assertTrue(audit.local_prefix_is_symmetric_normalized_law_row)
+        self.assertFalse(audit.symmetric_degree_covers_endpoint_family)
+        self.assertFalse(audit.degree_is_declared_endpoint_failure)
+        self.assertFalse(audit.endpoint_miss_is_attached_to_prefix)
+        self.assertFalse(audit.proves_one_endpoint_family_symmetric_seed)
 
     def test_descent_endpoint_repair_contract_reports_descent_failure(self):
         interval = one_color_identity_interval()

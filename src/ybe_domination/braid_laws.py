@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from dataclasses import dataclass
 from typing import Mapping, Tuple
 
 from .artin_longitudes import (
@@ -10,6 +11,23 @@ from .artin_longitudes import (
     longitude_subgroup_profile,
 )
 from .finite_group import FiniteGroup
+from .group_laws import is_law_on_group
+
+
+@dataclass(frozen=True)
+class LastStrandLawExactnessAudit:
+    """Finite check of the point-pushing law/kernel equivalence."""
+
+    group_order: int
+    arity: int
+    braid_index: int
+    braid_word: BraidWord
+    word_is_law: bool
+    identity_longitude_signature: bool
+
+    @property
+    def point_pushing_exactness_holds(self) -> bool:
+        return self.word_is_law == self.identity_longitude_signature
 
 
 def invert_braid_word(word: BraidWord) -> Tuple[int, ...]:
@@ -65,6 +83,28 @@ def law_word_on_last_strand(word: FreeWord, arity: int) -> Tuple[int, Tuple[int,
     n = arity + 1
     images = {r: pure_braid_generator(r + 1, n) for r in range(arity)}
     return n, free_word_to_braid(word, images)
+
+
+def last_strand_law_exactness_audit(
+    group: FiniteGroup,
+    word: FreeWord,
+    arity: int,
+) -> LastStrandLawExactnessAudit:
+    """Check one instance of ``iota(w) in K_G`` iff ``w`` is a law on ``G``."""
+
+    n, braid = law_word_on_last_strand(word, arity)
+    return LastStrandLawExactnessAudit(
+        group_order=len(group.elements),
+        arity=arity,
+        braid_index=n,
+        braid_word=braid,
+        word_is_law=is_law_on_group(group, word, arity=arity),
+        identity_longitude_signature=has_identity_longitude_signature(
+            group,
+            n,
+            braid,
+        ),
+    )
 
 
 def longitude_identity_profile_for_law_braid(

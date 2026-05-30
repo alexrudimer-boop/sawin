@@ -10,6 +10,7 @@ from ybe_domination import (
     free_word_power,
     has_identity_longitude_signature,
     is_law_on_group,
+    last_strand_law_exactness_audit,
     law_braid_longitudes,
     law_word_on_last_strand,
     longitude_identity_profile_for_law_braid,
@@ -67,6 +68,29 @@ class BraidLawTests(unittest.TestCase):
                     self.assertTrue(
                         has_identity_longitude_signature(group, n, braid)
                     )
+
+    def test_last_strand_law_exactness_audit_accepts_law_and_nonlaw(self):
+        law = free_word_power(0, 6)
+        law_audit = last_strand_law_exactness_audit(
+            symmetric_group(3),
+            law,
+            arity=1,
+        )
+
+        self.assertTrue(law_audit.word_is_law)
+        self.assertTrue(law_audit.identity_longitude_signature)
+        self.assertTrue(law_audit.point_pushing_exactness_holds)
+
+        nonlaw = commutator(free_word_power(0, 1), free_word_power(1, 1))
+        nonlaw_audit = last_strand_law_exactness_audit(
+            symmetric_group(3),
+            nonlaw,
+            arity=2,
+        )
+
+        self.assertFalse(nonlaw_audit.word_is_law)
+        self.assertFalse(nonlaw_audit.identity_longitude_signature)
+        self.assertTrue(nonlaw_audit.point_pushing_exactness_holds)
 
 
 if __name__ == "__main__":

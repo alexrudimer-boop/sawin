@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from math import factorial
-from typing import Tuple
+from typing import TYPE_CHECKING, Tuple
 
 from .endpoint_factorization import (
     EndpointArtinDefectResidualActionAudit,
@@ -10,6 +10,10 @@ from .endpoint_factorization import (
     RoutedLostEdgeEndpointWitnessAudit,
 )
 from .local_interval import ReadoutDescentSeparationAudit
+
+
+if TYPE_CHECKING:  # pragma: no cover - typing only
+    from .residual import LocalNormalizedLawPrefixWitnessAudit
 
 
 EndpointActionAudit = EndpointResidualActionAudit | EndpointArtinDefectResidualActionAudit
@@ -289,4 +293,85 @@ def endpoint_family_symmetric_fork_audit(
         endpoint_family_faithful=endpoint_family_faithful,
         symmetric_degree=symmetric_degree,
         failed_symmetric_degrees=tuple(failed_symmetric_degrees),
+    )
+
+
+@dataclass(frozen=True)
+class EndpointFamilySymmetricSeedAudit:
+    """Attach one endpoint-family symmetric failure to a local residual mover."""
+
+    endpoint_family: EndpointFamilySymmetricForkAudit
+    local_prefix: "LocalNormalizedLawPrefixWitnessAudit"
+    symmetric_degree: int
+    endpoint_channel_nonidentity: bool
+    endpoint_miss_matches_residual_motion: bool
+
+    @property
+    def uses_declared_symmetric_row(self) -> bool:
+        if self.symmetric_degree <= 0:
+            return False
+        expected_order = factorial(self.symmetric_degree)
+        return (
+            self.local_prefix.group_orders == (expected_order,)
+            and self.local_prefix.product_group_order == expected_order
+        )
+
+    @property
+    def right_stabilized_by_symmetric_degree(self) -> bool:
+        return self.local_prefix.target_n - self.local_prefix.source_n == self.symmetric_degree
+
+    @property
+    def symmetric_degree_covers_endpoint_family(self) -> bool:
+        return (
+            self.endpoint_family.endpoint_group_orders_valid
+            and self.symmetric_degree >= self.endpoint_family.minimum_symmetric_degree
+        )
+
+    @property
+    def degree_is_declared_endpoint_failure(self) -> bool:
+        failed_degrees = self.endpoint_family.failed_symmetric_degrees
+        return not failed_degrees or self.symmetric_degree in failed_degrees
+
+    @property
+    def local_prefix_is_symmetric_normalized_law_row(self) -> bool:
+        return (
+            self.local_prefix.proves_one_local_prefix_normalized_law_witness
+            and self.uses_declared_symmetric_row
+            and self.right_stabilized_by_symmetric_degree
+        )
+
+    @property
+    def endpoint_miss_is_attached_to_prefix(self) -> bool:
+        return (
+            self.endpoint_family.endpoint_family_faithful
+            and self.endpoint_channel_nonidentity
+            and self.endpoint_miss_matches_residual_motion
+            and self.symmetric_degree_covers_endpoint_family
+            and self.degree_is_declared_endpoint_failure
+        )
+
+    @property
+    def proves_one_endpoint_family_symmetric_seed(self) -> bool:
+        return (
+            self.local_prefix_is_symmetric_normalized_law_row
+            and self.endpoint_miss_is_attached_to_prefix
+        )
+
+
+def endpoint_family_symmetric_seed_audit(
+    endpoint_family: EndpointFamilySymmetricForkAudit,
+    local_prefix: "LocalNormalizedLawPrefixWitnessAudit",
+    symmetric_degree: int,
+    *,
+    endpoint_channel_nonidentity: bool,
+    endpoint_miss_matches_residual_motion: bool,
+) -> EndpointFamilySymmetricSeedAudit:
+    """Pair one endpoint-family miss with one local symmetric prefix row."""
+
+    return EndpointFamilySymmetricSeedAudit(
+        endpoint_family=endpoint_family,
+        local_prefix=local_prefix,
+        symmetric_degree=symmetric_degree,
+        endpoint_channel_nonidentity=endpoint_channel_nonidentity,
+        endpoint_miss_matches_residual_motion=endpoint_miss_matches_residual_motion,
     )

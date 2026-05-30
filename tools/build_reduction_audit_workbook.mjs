@@ -227,6 +227,13 @@ const rows = [
     "Find fixed moved YBE action.",
   ],
   [
+    "Last-strand law reduction",
+    "Replace arbitrary symmetric-kernel pure braids by point-pushed ordinary group laws.",
+    "proofs/sawin_last_strand_law_reduction.md proves iota_n(w) is in K_G(n) iff w is a law on G, and extracts a moving point-pushing layer from any moving K_G braid; last_strand_law_exactness_audit checks finite instances.",
+    "Reduction ready",
+    "Prove a fixed S_m kills all law point-pushing actions on X, or construct S_j-law words whose point-pushing braids move X.",
+  ],
+  [
     "Action images",
     "Law words vanish on fixed finite action images.",
     "Fixed-image certificate implemented.",
@@ -327,7 +334,7 @@ const rows = [
   [
     "Endpoint-family symmetric fork",
     "Convert any finite fixed endpoint group family into a symmetric detector A/B fork.",
-    "proofs/endpoint_family_symmetric_fork.md; endpoint_family_symmetric_fork_audit records the common S_m cutoff and finite symmetric-tail endpoint seed-prefix shape.",
+    "proofs/endpoint_family_symmetric_fork.md; endpoint_family_symmetric_fork_audit records the common S_m cutoff and finite symmetric-tail endpoint seed-prefix shape, and endpoint_family_symmetric_seed_audit attaches one endpoint miss to a local symmetric normalized-law row.",
     "Endpoint fork",
     "Use after constructing a finite faithful endpoint family; bounded endpoint misses remain nonfinal.",
   ],

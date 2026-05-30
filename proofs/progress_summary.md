@@ -828,6 +828,16 @@ interval for all braid indices, or for every `j` there is a local residual
 mover invisible to `S_j`.  The helper
 `local_symmetric_tower_prefix_sequence_audit(...)` checks supplied finite
 prefixes of the second alternative.
+`proofs/sawin_last_strand_law_reduction.md` now sharpens that fork further.
+On the last-strand point-pushing subgroup, identity finite-`G` longitude data
+is exactly the ordinary law condition: `iota_n(w) in K_G(n)` iff `w` is a law
+on `G`.  Fadell-Neuwirth layer extraction then shows that any moving braid in
+`K_G(n)` has a moving point-pushing layer `iota_r(w)` with `w` a law on `G`.
+Thus the symmetric detector question is equivalent to asking whether some
+`S_m` kills all `S_m`-law point-pushing actions on `X`, and the B route may be
+given by `S_j`-law words whose point-pushing braids move.  The helper
+`last_strand_law_exactness_audit(...)` checks finite instances of the
+point-pushing exactness lemma.
 `proofs/symmetric_repair_contract_bridge.md` now connects this symmetric fork
 back to the proof-critic repair contract.  If a supplied repair package proves
 the local implication using a fixed product detector `H(pi,Q)`, then the left
@@ -847,7 +857,11 @@ This keeps the positive and negative endpoint requirements in the same
 symmetric-detector language.  The helper
 `endpoint_family_symmetric_fork_audit(...)` records the finite factor orders,
 the cutoff degree, witness and faithfulness flags, and finite tail-prefix
-degrees for supplied endpoint-family rows.
+degrees for supplied endpoint-family rows.  The helper
+`endpoint_family_symmetric_seed_audit(...)` additionally attaches one
+nonidentity endpoint channel to a local symmetric normalized-law prefix row,
+requiring the same symmetric degree, right stabilization by that degree,
+endpoint-family faithfulness, and an explicit same-motion assertion.
 `proofs/symmetric_tower_counterexample_certificate.md` now records the
 corresponding simplified B certificate: for every `j`, produce a braid
 `alpha_j` with identity `S_j` longitude data and a moved global or residual
