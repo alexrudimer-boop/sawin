@@ -119,6 +119,22 @@ class PointPushingVerticalWitnessCertificate:
 
 
 @dataclass(frozen=True)
+class PointPushingBrunnianWitnessCertificate:
+    """Right-based one-new-strand Brunnian vertical witness certificate."""
+
+    arity: int
+    right_based_word: FreeWord
+    left_based_word: FreeWord
+    deletion_word: FreeWord
+    deletion_trivial: bool
+    vertical: PointPushingVerticalWitnessCertificate
+
+    @property
+    def valid_brunnian_witness(self) -> bool:
+        return self.deletion_trivial and self.vertical.valid_vertical_witness
+
+
+@dataclass(frozen=True)
 class PointPushingMuPrefixRow:
     """One finite row in a bounded search for ``mu_X(k)``."""
 
@@ -172,6 +188,27 @@ class PointPushingSuffixShuttleAudit:
     first_failure_input: Tuple[object, ...] | None
     first_failure_direct: Tuple[object, ...] | None
     first_failure_shuttle: Tuple[object, ...] | None
+
+
+@dataclass(frozen=True)
+class PointPushingRecursiveConjugacyAudit:
+    """Check recursive conjugacy and suffix-shift formulas for point pushing."""
+
+    braid_index: int
+    tuple_count: int
+    first_generator_recursion_matches: bool
+    all_suffix_shift_generators_match: bool
+    first_failure_generator: int | None
+    first_failure_input: Tuple[object, ...] | None
+    first_failure_direct: Tuple[object, ...] | None
+    first_failure_recursive: Tuple[object, ...] | None
+
+    @property
+    def point_pushing_recursion_verified(self) -> bool:
+        return (
+            self.first_generator_recursion_matches
+            and self.all_suffix_shift_generators_match
+        )
 
 
 @dataclass(frozen=True)
@@ -662,6 +699,78 @@ def point_pushing_vertical_witness_certificate(
     )
 
 
+def right_based_point_pushing_word_to_left(word: FreeWord, arity: int) -> FreeWord:
+    """Convert right-based point-pushing coordinates to left-based coordinates.
+
+    In right-based arity ``k``, generator ``a_1`` is nearest the moving last
+    strand and ``a_k`` is farthest.  The existing point-pushing helpers use
+    left-based coordinates, where generator ``0`` is ``A_{1,k+1}``.
+    """
+
+    if arity < 1:
+        raise ValueError("arity must be positive")
+    converted = []
+    for generator, exponent in word:
+        if generator < 0 or generator >= arity:
+            raise ValueError(f"free generator {generator} outside arity {arity}")
+        converted.append((arity - 1 - generator, exponent))
+    return _reduce_free_word(tuple(converted))
+
+
+def delete_right_based_new_strand_word(word: FreeWord, arity: int) -> FreeWord:
+    """Delete the newly added far-left stationary strand in right-based form.
+
+    Passing from arity ``k-1`` to arity ``k`` adds the farthest generator
+    ``a_k``.  The deletion retraction kills that generator and fixes the old
+    suffix generators ``a_1,...,a_{k-1}``.
+    """
+
+    if arity < 1:
+        raise ValueError("arity must be positive")
+    kept = []
+    for generator, exponent in word:
+        if generator < 0 or generator >= arity:
+            raise ValueError(f"free generator {generator} outside arity {arity}")
+        if generator == arity - 1:
+            continue
+        kept.append((generator, exponent))
+    return _reduce_free_word(tuple(kept))
+
+
+def point_pushing_brunnian_witness_certificate(
+    solution: FiniteBraidedSet,
+    group: FiniteGroup,
+    right_based_word: FreeWord,
+    arity: int,
+    *,
+    max_detector_states: int | None = None,
+) -> PointPushingBrunnianWitnessCertificate:
+    """Check a right-based one-new-strand Brunnian vertical witness.
+
+    A valid certificate means the word is killed by deleting the newly added
+    far-left stationary strand, is invisible to the derivative detector for
+    ``group``, and still moves the YBE action.
+    """
+
+    left_word = right_based_point_pushing_word_to_left(right_based_word, arity)
+    deletion_word = delete_right_based_new_strand_word(right_based_word, arity)
+    vertical = point_pushing_vertical_witness_certificate(
+        solution,
+        group,
+        left_word,
+        arity,
+        max_detector_states=max_detector_states,
+    )
+    return PointPushingBrunnianWitnessCertificate(
+        arity=arity,
+        right_based_word=tuple(right_based_word),
+        left_based_word=left_word,
+        deletion_word=deletion_word,
+        deletion_trivial=deletion_word == tuple(),
+        vertical=vertical,
+    )
+
+
 def point_pushing_mu_prefix_audit(
     solution: FiniteBraidedSet,
     max_arity: int,
@@ -816,6 +925,97 @@ def point_pushing_suffix_shuttle_audit(
         first_failure_input=None,
         first_failure_direct=None,
         first_failure_shuttle=None,
+    )
+
+
+def _apply_word_to_slice(
+    solution: FiniteBraidedSet,
+    tuple_value: Sequence[object],
+    start: int,
+    braid_word: BraidWord,
+) -> Tuple[object, ...]:
+    out = list(tuple_value)
+    suffix = tuple(out[start:])
+    image = solution.braid_action(braid_word, suffix)
+    out[start:] = image
+    return tuple(out)
+
+
+def point_pushing_recursive_conjugacy_audit(
+    solution: FiniteBraidedSet,
+    braid_index: int,
+) -> PointPushingRecursiveConjugacyAudit:
+    """Check the recursive ``A_{1,n}`` and suffix-shift point-pushing forms."""
+
+    from .braid_laws import invert_braid_word, pure_braid_generator
+
+    if braid_index < 2:
+        raise ValueError("braid_index must be at least two")
+
+    tuple_count = 0
+    for tuple_value in product(solution.elements, repeat=braid_index):
+        tuple_count += 1
+        direct = solution.braid_action(
+            pure_braid_generator(1, braid_index),
+            tuple_value,
+        )
+        if braid_index == 2:
+            recursive = solution.braid_action((1, 1), tuple_value)
+        else:
+            crossing = (braid_index - 1,)
+            inverse_crossing = invert_braid_word(crossing)
+            recursive = solution.braid_action(crossing, tuple_value)
+            recursive = _apply_word_to_slice(
+                solution,
+                recursive,
+                0,
+                pure_braid_generator(1, braid_index - 1),
+            )
+            recursive = solution.braid_action(inverse_crossing, recursive)
+        if direct != recursive:
+            return PointPushingRecursiveConjugacyAudit(
+                braid_index=braid_index,
+                tuple_count=tuple_count,
+                first_generator_recursion_matches=False,
+                all_suffix_shift_generators_match=False,
+                first_failure_generator=1,
+                first_failure_input=tuple_value,
+                first_failure_direct=direct,
+                first_failure_recursive=recursive,
+            )
+
+    for generator in range(1, braid_index):
+        suffix_length = braid_index - generator + 1
+        suffix_braid = pure_braid_generator(1, suffix_length)
+        direct_braid = pure_braid_generator(generator, braid_index)
+        for tuple_value in product(solution.elements, repeat=braid_index):
+            direct = solution.braid_action(direct_braid, tuple_value)
+            recursive = _apply_word_to_slice(
+                solution,
+                tuple_value,
+                generator - 1,
+                suffix_braid,
+            )
+            if direct != recursive:
+                return PointPushingRecursiveConjugacyAudit(
+                    braid_index=braid_index,
+                    tuple_count=tuple_count,
+                    first_generator_recursion_matches=True,
+                    all_suffix_shift_generators_match=False,
+                    first_failure_generator=generator,
+                    first_failure_input=tuple_value,
+                    first_failure_direct=direct,
+                    first_failure_recursive=recursive,
+                )
+    return PointPushingRecursiveConjugacyAudit(
+        braid_index=braid_index,
+        tuple_count=tuple_count,
+        first_generator_recursion_matches=True,
+        all_suffix_shift_generators_match=True,
+        first_failure_generator=None,
+        first_failure_input=None,
+        first_failure_direct=None,
+        first_failure_recursive=None,
     )
 
 

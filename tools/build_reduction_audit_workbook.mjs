@@ -325,6 +325,20 @@ const rows = [
     "Prove this suffix-shuttle transducer family has bounded mu, or build unbounded vertical witnesses from it.",
   ],
   [
+    "Point-pushing recursive conjugacy",
+    "Reduce all point-pushing generators to suffix shifts of one recursive family.",
+    "proofs/point_pushing_recursive_conjugacy.md proves a_n=rho(A_{1,n}) satisfies a_n=s_{n-1}(a_{n-1} x id)s_{n-1}^{-1} and A_{i,n}=id^{i-1} x a_{n-i+1}; point_pushing_recursive_conjugacy_audit checks finite instances.",
+    "Recursive finite-state reduction",
+    "Bound mu for the suffix shifts of the single family a_n, or construct unbounded vertical witnesses from that family.",
+  ],
+  [
+    "Point-pushing jump normalization",
+    "Normalize every detector-degree increase to one deletion-trivial new-strand relation.",
+    "proofs/point_pushing_jump_normalization.md proves that if S_m works at arity k and fails at k+1, then the failure has a witness in ker(F_{k+1}->F_k); point_pushing_brunnian_witness_certificate checks right-based candidate rows.",
+    "Relative obstruction reduction",
+    "Prove R_{m,k+1} cap ker(r_k) <= N_{X,k+1} for one fixed m, or construct an unbounded family of Brunnian vertical witnesses.",
+  ],
+  [
     "Derivative detector functoriality",
     "Show the exact D_k(G) criterion is compatible with quotients, embeddings, symmetric cofinality, and product prefixes.",
     "proofs/point_pushing_derivative_functoriality.md proves coordinate equivariance for finite group homomorphisms; point_pushing_derivative_functoriality_audit checks finite instances.",

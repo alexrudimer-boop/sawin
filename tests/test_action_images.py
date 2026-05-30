@@ -15,15 +15,19 @@ from ybe_domination import (
     invert_permutation,
     law_braid_action_certificate,
     law_word_on_last_strand,
+    delete_right_based_new_strand_word,
+    point_pushing_brunnian_witness_certificate,
     point_pushing_exponent_escape_audit,
     point_pushing_marked_quotient_audit,
     point_pushing_mu_prefix_audit,
+    point_pushing_recursive_conjugacy_audit,
     point_pushing_suffix_shuttle_action,
     point_pushing_suffix_shuttle_audit,
     point_pushing_vertical_witness_certificate,
     point_pushing_variety_escape_audit,
     point_pushing_variety_prefix_audit,
     pure_generator_order_profile,
+    right_based_point_pushing_word_to_left,
     pure_braid_generator,
     pure_subgroup_growth_profile,
     rack_solution,
@@ -316,6 +320,57 @@ class ActionImageTests(unittest.TestCase):
         self.assertFalse(certificate.moves_solution)
         self.assertFalse(certificate.valid_vertical_witness)
 
+    def test_right_based_point_pushing_conversion_and_deletion(self):
+        word = ((1, 1), (0, 1), (1, -1), (0, -1))
+
+        self.assertEqual(
+            right_based_point_pushing_word_to_left(word, arity=2),
+            ((0, 1), (1, 1), (0, -1), (1, -1)),
+        )
+        self.assertEqual(
+            delete_right_based_new_strand_word(word, arity=2),
+            tuple(),
+        )
+
+        with self.assertRaises(ValueError):
+            right_based_point_pushing_word_to_left(((2, 1),), arity=2)
+        with self.assertRaises(ValueError):
+            delete_right_based_new_strand_word(((0, 1),), arity=0)
+
+    def test_point_pushing_brunnian_witness_certificate_checks_new_strand(self):
+        solution = rack_solution([0, 1, 2], lambda a, b: (2 * a - b) % 3)
+        right_word = ((1, 1), (1, 1))
+
+        certificate = point_pushing_brunnian_witness_certificate(
+            solution,
+            cyclic_group(2),
+            right_word,
+            arity=2,
+        )
+
+        self.assertEqual(certificate.right_based_word, right_word)
+        self.assertEqual(certificate.left_based_word, ((0, 1), (0, 1)))
+        self.assertEqual(certificate.deletion_word, tuple())
+        self.assertTrue(certificate.deletion_trivial)
+        self.assertTrue(certificate.vertical.valid_vertical_witness)
+        self.assertTrue(certificate.valid_brunnian_witness)
+
+    def test_point_pushing_brunnian_witness_rejects_old_suffix_word(self):
+        solution = rack_solution([0, 1, 2], lambda a, b: (2 * a - b) % 3)
+        right_word = ((0, 1), (0, 1))
+
+        certificate = point_pushing_brunnian_witness_certificate(
+            solution,
+            cyclic_group(2),
+            right_word,
+            arity=2,
+        )
+
+        self.assertEqual(certificate.left_based_word, ((1, 1), (1, 1)))
+        self.assertEqual(certificate.deletion_word, right_word)
+        self.assertFalse(certificate.deletion_trivial)
+        self.assertFalse(certificate.valid_brunnian_witness)
+
     def test_point_pushing_mu_prefix_audit_detects_trivial_prefix(self):
         solution = rack_solution([0, 1], lambda a, b: b)
 
@@ -369,6 +424,26 @@ class ActionImageTests(unittest.TestCase):
             point_pushing_suffix_shuttle_action(solution, 3, 3, (0, 0, 0))
         with self.assertRaises(ValueError):
             point_pushing_suffix_shuttle_action(solution, 3, 1, (0, 0))
+
+    def test_point_pushing_recursive_conjugacy_audit(self):
+        solution = rack_solution([0, 1, 2], lambda a, b: (2 * a - b) % 3)
+
+        for braid_index in (2, 3, 4):
+            audit = point_pushing_recursive_conjugacy_audit(
+                solution,
+                braid_index=braid_index,
+            )
+            self.assertTrue(audit.first_generator_recursion_matches)
+            self.assertTrue(audit.all_suffix_shift_generators_match)
+            self.assertTrue(audit.point_pushing_recursion_verified)
+            self.assertEqual(audit.tuple_count, 3**braid_index)
+            self.assertIsNone(audit.first_failure_generator)
+
+    def test_point_pushing_recursive_conjugacy_validates_braid_index(self):
+        solution = rack_solution([0, 1], lambda a, b: b)
+
+        with self.assertRaises(ValueError):
+            point_pushing_recursive_conjugacy_audit(solution, braid_index=1)
 
 
 if __name__ == "__main__":
