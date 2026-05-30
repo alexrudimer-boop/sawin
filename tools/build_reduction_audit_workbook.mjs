@@ -311,6 +311,13 @@ const rows = [
     "Positive detector degrees are upward closed; B invisibility to S_j implies eventual invisibility to every fixed S_m.",
   ],
   [
+    "Local symmetric detector dichotomy",
+    "Package the final local A/B fork into fixed S_m detection versus S_j movers for every j.",
+    "proofs/local_symmetric_detector_dichotomy.md proves the dichotomy; local_symmetric_tower_prefix_sequence_audit checks finite supplied prefixes.",
+    "Reduction ready",
+    "Still need either a uniform proof of some m(pi,Q), or a symbolic all-j construction.",
+  ],
+  [
     "Symmetric-tower B certificate",
     "State the simplified constructive B data after reducing to symmetric groups.",
     "proofs/symmetric_tower_counterexample_certificate.md states that witnesses invisible to S_j for every j suffice; symmetric_normalized_law_prefix_witness_audit and local_symmetric_normalized_law_prefix_witness_audit check supplied rows.",

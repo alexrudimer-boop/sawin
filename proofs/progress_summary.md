@@ -752,6 +752,12 @@ finite-signature level.
 sequence invisible to `S_j` is eventually invisible to every fixed `S_m`.  The
 helper `symmetric_tower_monotonicity_audit(...)` checks this inclusion at the
 finite-signature level.
+`proofs/local_symmetric_detector_dichotomy.md` now packages the final local
+fork as a symmetric-degree dichotomy: either some fixed `S_m` detects the
+interval for all braid indices, or for every `j` there is a local residual
+mover invisible to `S_j`.  The helper
+`local_symmetric_tower_prefix_sequence_audit(...)` checks supplied finite
+prefixes of the second alternative.
 `proofs/symmetric_tower_counterexample_certificate.md` now records the
 corresponding simplified B certificate: for every `j`, produce a braid
 `alpha_j` with identity `S_j` longitude data and a moved global or residual

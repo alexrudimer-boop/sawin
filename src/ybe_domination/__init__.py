@@ -639,6 +639,7 @@ from .small_search import (
 )
 from .residual import (
     LocalNormalizedLawPrefixWitnessAudit,
+    LocalSymmetricTowerPrefixSequenceAudit,
     QuotientMap,
     QuotientImageKernelSummary,
     ResidualDependencySummary,
@@ -649,6 +650,7 @@ from .residual import (
     is_identity_action,
     local_normalized_law_prefix_witness_audit,
     local_symmetric_normalized_law_prefix_witness_audit,
+    local_symmetric_tower_prefix_sequence_audit,
     permutation_order,
     quotient_image_kernel_summary,
     residual_coordinate_dependency_summary,
@@ -774,6 +776,7 @@ __all__ = [
     "LatinTriangularYBEAudit",
     "LatinTriangularYBETripleAudit",
     "LocalNormalizedLawPrefixWitnessAudit",
+    "LocalSymmetricTowerPrefixSequenceAudit",
     "NormalQuotientLongitudeLiftAudit",
     "NormalizedLawPrefixWitnessAudit",
     "SymmetricDetectorReductionAudit",
@@ -1194,6 +1197,7 @@ __all__ = [
     "pure_subgroup_growth_profile",
     "local_normalized_law_prefix_witness_audit",
     "local_symmetric_normalized_law_prefix_witness_audit",
+    "local_symmetric_tower_prefix_sequence_audit",
     "quotient_group_by_normal_subgroup",
     "subgroup_as_group",
     "quotient_interval_by_family",

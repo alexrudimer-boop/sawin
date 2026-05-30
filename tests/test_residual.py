@@ -14,6 +14,7 @@ from ybe_domination import (
     is_identity_action,
     local_normalized_law_prefix_witness_audit,
     local_symmetric_normalized_law_prefix_witness_audit,
+    local_symmetric_tower_prefix_sequence_audit,
     is_nondegenerate,
     product_solution,
     quotient_image_kernel_summary,
@@ -261,6 +262,52 @@ class ResidualTests(unittest.TestCase):
         self.assertEqual(audit.group_orders, (1,))
         self.assertEqual(audit.product_group_order, 1)
         self.assertTrue(audit.proves_one_local_prefix_normalized_law_witness)
+
+    def test_local_symmetric_tower_prefix_sequence_audit_checks_initial_segment(self):
+        total = rack_solution([0, 1], lambda _left, right: 1 - right)
+        quotient = identity_solution(["*"])
+        qmap = QuotientMap(total, quotient, {element: "*" for element in total.elements})
+        base_detector = identity_solution(["q"])
+        row = local_symmetric_normalized_law_prefix_witness_audit(
+            qmap,
+            base_detector,
+            1,
+            2,
+            pure_braid_generator(1, 2),
+            ("*", "*"),
+            (0, 0),
+            extra_strands=1,
+            fill_value=0,
+        )
+
+        audit = local_symmetric_tower_prefix_sequence_audit((1,), (row,))
+
+        self.assertTrue(audit.degrees_are_initial_segment)
+        self.assertTrue(audit.rows_use_expected_symmetric_orders)
+        self.assertTrue(audit.stabilization_lengths_match_degrees)
+        self.assertTrue(audit.proves_supplied_local_symmetric_tower_prefix)
+
+    def test_local_symmetric_tower_prefix_sequence_audit_rejects_skipped_degree(self):
+        total = rack_solution([0, 1], lambda _left, right: 1 - right)
+        quotient = identity_solution(["*"])
+        qmap = QuotientMap(total, quotient, {element: "*" for element in total.elements})
+        base_detector = identity_solution(["q"])
+        row = local_symmetric_normalized_law_prefix_witness_audit(
+            qmap,
+            base_detector,
+            2,
+            2,
+            tuple(),
+            ("*", "*"),
+            (0, 1),
+            extra_strands=2,
+            fill_value=0,
+        )
+
+        audit = local_symmetric_tower_prefix_sequence_audit((2,), (row,))
+
+        self.assertFalse(audit.degrees_are_initial_segment)
+        self.assertFalse(audit.proves_supplied_local_symmetric_tower_prefix)
 
 
 if __name__ == "__main__":

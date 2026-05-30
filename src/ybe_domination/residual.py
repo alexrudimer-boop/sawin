@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from itertools import product
-from math import gcd
+from math import factorial, gcd
 from typing import Dict, Hashable, Iterable, List, Mapping, Sequence, Tuple
 
 from .artin_longitudes import (
@@ -251,6 +251,55 @@ class LocalNormalizedLawPrefixWitnessAudit:
         )
 
 
+@dataclass(frozen=True)
+class LocalSymmetricTowerPrefixSequenceAudit:
+    """Finite-prefix check for local witnesses against ``S_1,...,S_k``."""
+
+    degrees: Tuple[int, ...]
+    rows: Tuple[LocalNormalizedLawPrefixWitnessAudit, ...]
+
+    @property
+    def degrees_are_initial_segment(self) -> bool:
+        return self.degrees == tuple(range(1, len(self.degrees) + 1))
+
+    @property
+    def row_count_matches_degrees(self) -> bool:
+        return len(self.rows) == len(self.degrees)
+
+    @property
+    def rows_use_expected_symmetric_orders(self) -> bool:
+        if not self.row_count_matches_degrees:
+            return False
+        return all(
+            row.group_orders == (factorial(degree),)
+            and row.product_group_order == factorial(degree)
+            for degree, row in zip(self.degrees, self.rows)
+        )
+
+    @property
+    def stabilization_lengths_match_degrees(self) -> bool:
+        if not self.row_count_matches_degrees:
+            return False
+        return all(
+            row.target_n - row.source_n == degree
+            for degree, row in zip(self.degrees, self.rows)
+        )
+
+    @property
+    def all_rows_pass(self) -> bool:
+        return all(row.proves_one_local_prefix_normalized_law_witness for row in self.rows)
+
+    @property
+    def proves_supplied_local_symmetric_tower_prefix(self) -> bool:
+        return (
+            self.degrees_are_initial_segment
+            and self.row_count_matches_degrees
+            and self.rows_use_expected_symmetric_orders
+            and self.stabilization_lengths_match_degrees
+            and self.all_rows_pass
+        )
+
+
 def residual_coordinate_dependency_summary(
     quotient_map: QuotientMap,
     base_tuple: Sequence[Hashable],
@@ -438,6 +487,21 @@ def local_symmetric_normalized_law_prefix_witness_audit(
         fibre_tuple,
         extra_strands,
         fill_value,
+    )
+
+
+def local_symmetric_tower_prefix_sequence_audit(
+    degrees: Sequence[int],
+    rows: Sequence[LocalNormalizedLawPrefixWitnessAudit],
+) -> LocalSymmetricTowerPrefixSequenceAudit:
+    """Bundle supplied local symmetric-tower rows into one finite-prefix audit."""
+
+    degree_tuple = tuple(degrees)
+    if any(degree <= 0 for degree in degree_tuple):
+        raise ValueError("symmetric degrees must be positive")
+    return LocalSymmetricTowerPrefixSequenceAudit(
+        degrees=degree_tuple,
+        rows=tuple(rows),
     )
 
 
