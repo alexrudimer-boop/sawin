@@ -85,6 +85,37 @@ is still only a one-row certificate.  A final B proof must provide a symbolic
 family of such rows for unbounded `j`, or otherwise invoke the local symmetric
 detector dichotomy to show that no fixed symmetric detector exists.
 
+## Tail-prefix audit
+
+Since the fixed perfect residual has order `|P|`, the symmetric seed certificate
+only needs the tail of the symmetric tower:
+
+```text
+S_|P|, S_{|P|+1}, S_{|P|+2}, ...
+```
+
+The helper
+
+```text
+unit_perfect_residual_symmetric_tower_prefix_audit(...)
+```
+
+checks a finite supplied tail prefix.  It requires:
+
+- all rows use the same perfect-residual size;
+- the symmetric degrees are exactly
+
+```text
+|P|, |P|+1, ..., |P|+r-1;
+```
+
+- every row passes
+  `proves_one_local_perfect_residual_symmetric_seed`.
+
+This is the finite-prefix shadow of a real B proof in this channel.  It still
+does not prove outcome B unless a symbolic construction supplies such rows for
+the whole infinite tail.
+
 ## Consequence
 
 The terminal-unit nonsolvable B route can now be stated without enumerating all

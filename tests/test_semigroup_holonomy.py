@@ -1,12 +1,15 @@
 import sys
 import unittest
+from math import factorial
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from ybe_domination import (
     QuotientMap,
+    RightStabilizationLongitudeAudit,
     TransformationMonoid,
+    LocalNormalizedLawPrefixWitnessAudit,
     UnitPerfectResidualLongitudeAudit,
     aperiodic_permutation_audit,
     compose_transformation_word,
@@ -35,6 +38,7 @@ from ybe_domination import (
     unit_perfect_residual_longitude_audit,
     unit_perfect_residual_normalized_seed_audit,
     unit_perfect_residual_symmetric_seed_audit,
+    unit_perfect_residual_symmetric_tower_prefix_audit,
     unit_section_detection_audit,
     unit_section_product_detection_audit,
 )
@@ -614,6 +618,27 @@ class SemigroupHolonomyTests(unittest.TestCase):
         self.assertFalse(audit.symmetric_degree_covers_perfect_residual)
         self.assertFalse(audit.proves_one_local_perfect_residual_symmetric_seed)
 
+    def test_unit_perfect_residual_symmetric_tower_prefix_checks_tail_degrees(self):
+        row60 = self._synthetic_perfect_residual_symmetric_seed_row(60)
+        row61 = self._synthetic_perfect_residual_symmetric_seed_row(61)
+
+        audit = unit_perfect_residual_symmetric_tower_prefix_audit((row60, row61))
+
+        self.assertEqual(audit.common_residual_size, 60)
+        self.assertEqual(audit.symmetric_degrees, (60, 61))
+        self.assertTrue(audit.degrees_are_tail_prefix_from_residual_size)
+        self.assertTrue(audit.proves_supplied_perfect_residual_symmetric_tail_prefix)
+
+    def test_unit_perfect_residual_symmetric_tower_prefix_rejects_gap(self):
+        row60 = self._synthetic_perfect_residual_symmetric_seed_row(60)
+        row62 = self._synthetic_perfect_residual_symmetric_seed_row(62)
+
+        audit = unit_perfect_residual_symmetric_tower_prefix_audit((row60, row62))
+
+        self.assertEqual(audit.symmetric_degrees, (60, 62))
+        self.assertFalse(audit.degrees_are_tail_prefix_from_residual_size)
+        self.assertFalse(audit.proves_supplied_perfect_residual_symmetric_tail_prefix)
+
     def test_unit_composite_detection_rejects_nonunit_composite(self):
         reset = (0, 0)
         monoid = TransformationMonoid.generated((reset,))
@@ -628,6 +653,67 @@ class SemigroupHolonomyTests(unittest.TestCase):
         self.assertFalse(audit.is_permutation_branch)
         self.assertFalse(audit.composite_lies_in_longitude_subgroup)
         self.assertFalse(audit.identity_longitudes_kill_composite)
+
+    def _synthetic_perfect_residual_symmetric_seed_row(self, symmetric_degree):
+        source_n = 2
+        local_prefix = LocalNormalizedLawPrefixWitnessAudit(
+            source_n=source_n,
+            target_n=source_n + symmetric_degree,
+            braid_word=tuple(),
+            group_orders=(factorial(symmetric_degree),),
+            product_group_order=factorial(symmetric_degree),
+            source_base_detector_identity_action=True,
+            target_base_detector_identity_action=True,
+            source_product_identity_signature=True,
+            target_product_identity_signature=True,
+            source_factor_identity_signatures=(True,),
+            target_factor_identity_signatures=(True,),
+            right_stabilization=RightStabilizationLongitudeAudit(
+                old_n=source_n,
+                new_n=source_n + symmetric_degree,
+                braid_word=tuple(),
+                old_permutation=(0, 1),
+                new_permutation=tuple(range(source_n + symmetric_degree)),
+                old_longitudes=((), ()),
+                new_restricted_longitudes=((), ()),
+                added_longitudes=tuple(() for _ in range(symmetric_degree)),
+            ),
+            base_tuple=("*", "*"),
+            source_base_image=("*", "*"),
+            source_quotient_base_fixed=True,
+            fibre_tuple=(0, 0),
+            source_image=(1, 1),
+            source_image_base=("*", "*"),
+            source_stays_over_base=True,
+            source_residual_tuple_moved=True,
+            stabilized_base_tuple=tuple("*" for _ in range(source_n + symmetric_degree)),
+            target_base_image=tuple("*" for _ in range(source_n + symmetric_degree)),
+            target_quotient_base_fixed=True,
+            stabilized_fibre_tuple=tuple(0 for _ in range(source_n + symmetric_degree)),
+            stabilized_image=(1, 1) + tuple(0 for _ in range(symmetric_degree)),
+            stabilized_image_base=tuple("*" for _ in range(source_n + symmetric_degree)),
+            target_stays_over_base=True,
+            target_residual_tuple_moved=True,
+        )
+        perfect_miss = UnitPerfectResidualLongitudeAudit(
+            artin_permutation=(0, 1),
+            unit_group_order=60,
+            derived_subgroup_orders=(60,),
+            perfect_residual_size=60,
+            residual_endpoint=(1, 2, 0, 3, 4),
+            residual_endpoint_in_unit_group=True,
+            residual_endpoint_in_perfect_residual=True,
+            perfect_residual_longitude_subgroup_size=1,
+            residual_endpoint_lies_in_perfect_residual_longitude_subgroup=False,
+            perfect_residual_identity=(0, 1, 2, 3, 4),
+        )
+        return unit_perfect_residual_symmetric_seed_audit(
+            local_prefix,
+            perfect_miss,
+            symmetric_degree=symmetric_degree,
+            same_braid_word=True,
+            endpoint_readout_matches_residual_motion=True,
+        )
 
     def test_unit_composite_longitude_route_records_single_witness(self):
         swap = (1, 0)

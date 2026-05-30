@@ -824,7 +824,7 @@ const rows = [
   [
     "Perfect-residual symmetric seed",
     "Replace product-prefix bookkeeping by a symmetric-tower row for terminal perfect residual misses.",
-    "proofs/unit_perfect_residual_symmetric_seed.md; unit_perfect_residual_symmetric_seed_audit checks a local S_j row, j-strand stabilization, j >= |P|, and the attached perfect-residual finite miss.",
+    "proofs/unit_perfect_residual_symmetric_seed.md; unit_perfect_residual_symmetric_seed_audit checks a local S_j row, j-strand stabilization, j >= |P|, and the attached perfect-residual finite miss; unit_perfect_residual_symmetric_tower_prefix_audit checks finite tail prefixes starting at |P|.",
     "B-seed certificate",
     "Use for nonsolvable terminal-unit B attempts; an all-j family is still required.",
   ],

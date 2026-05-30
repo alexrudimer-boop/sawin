@@ -860,6 +860,11 @@ the symmetric tower imply invisibility in `P`.  The helper
 perfect-residual miss/readout attachment.  This removes finite-group
 enumeration from nonsolvable terminal-unit B attempts but still does not
 construct the required all-`j` sequence.
+The same note now records a tail-prefix check:
+`unit_perfect_residual_symmetric_tower_prefix_audit(...)` requires a supplied
+finite prefix of rows to start at degree `|P|`, continue without gaps, and pass
+the one-row symmetric seed audit at every degree.  This is only the finite
+shadow of the required infinite tail construction.
 
 ## Verification snapshot
 

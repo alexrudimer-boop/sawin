@@ -515,6 +515,55 @@ class UnitPerfectResidualSymmetricSeedAudit:
 
 
 @dataclass(frozen=True)
+class UnitPerfectResidualSymmetricTowerPrefixAudit:
+    """Finite tail-prefix check for perfect-residual symmetric B seeds."""
+
+    rows: Tuple[UnitPerfectResidualSymmetricSeedAudit, ...]
+
+    @property
+    def row_count(self) -> int:
+        return len(self.rows)
+
+    @property
+    def residual_sizes(self) -> Tuple[int, ...]:
+        return tuple(row.perfect_residual.perfect_residual_size for row in self.rows)
+
+    @property
+    def residual_size_is_constant(self) -> bool:
+        return len(set(self.residual_sizes)) <= 1
+
+    @property
+    def common_residual_size(self) -> int | None:
+        if not self.rows or not self.residual_size_is_constant:
+            return None
+        return self.residual_sizes[0]
+
+    @property
+    def symmetric_degrees(self) -> Tuple[int, ...]:
+        return tuple(row.symmetric_degree for row in self.rows)
+
+    @property
+    def degrees_are_tail_prefix_from_residual_size(self) -> bool:
+        size = self.common_residual_size
+        if size is None:
+            return False
+        return self.symmetric_degrees == tuple(range(size, size + len(self.rows)))
+
+    @property
+    def all_rows_pass(self) -> bool:
+        return all(row.proves_one_local_perfect_residual_symmetric_seed for row in self.rows)
+
+    @property
+    def proves_supplied_perfect_residual_symmetric_tail_prefix(self) -> bool:
+        return (
+            self.row_count > 0
+            and self.residual_size_is_constant
+            and self.degrees_are_tail_prefix_from_residual_size
+            and self.all_rows_pass
+        )
+
+
+@dataclass(frozen=True)
 class UnitCompositeLongitudeRouteAudit:
     """Compare endpoint-unit detection routes for one braid word."""
 
@@ -1421,6 +1470,14 @@ def unit_perfect_residual_symmetric_seed_audit(
         same_braid_word=same_braid_word,
         endpoint_readout_matches_residual_motion=endpoint_readout_matches_residual_motion,
     )
+
+
+def unit_perfect_residual_symmetric_tower_prefix_audit(
+    rows: Sequence[UnitPerfectResidualSymmetricSeedAudit],
+) -> UnitPerfectResidualSymmetricTowerPrefixAudit:
+    """Bundle perfect-residual symmetric seed rows into a tail-prefix check."""
+
+    return UnitPerfectResidualSymmetricTowerPrefixAudit(rows=tuple(rows))
 
 
 def unit_composite_longitude_route_audit(
