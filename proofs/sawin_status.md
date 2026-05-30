@@ -2189,6 +2189,11 @@ minimal abelian-chief first failure induces a nonzero, hence surjective,
 abelian monolith.  Thus an abelian B tail must be an unbounded
 relation-module quotient tail; the complementary chief-layer branch is a
 nonabelian simple-power relation-lift tail.
+The abelian relation-module tail has now been split by
+`proofs/point_pushing_abelian_relation_action_split.md`: trivial detector
+orbit action forces a one-dimensional central coinvariant quotient
+`(Rel_D tensor F_p)_{N_D}->>F_p`, while nontrivial action gives a noncentral
+irreducible module quotient with `[N_D,M]=M`.
 The complementary branch has now been compressed in
 `proofs/point_pushing_nonabelian_chief_relation_quotient.md`: if the monolith
 is `M=S^r`, then the detector orbit relation image is all of `M`, and the old

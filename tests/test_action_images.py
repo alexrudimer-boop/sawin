@@ -17,6 +17,7 @@ from ybe_domination import (
     law_word_on_last_strand,
     delete_right_based_new_strand_word,
     point_pushing_abelian_chief_relation_module_audit,
+    point_pushing_abelian_relation_action_split_audit,
     point_pushing_action_group,
     point_pushing_action_quotient_separation_audit,
     point_pushing_base_arity_certificate,
@@ -1107,6 +1108,43 @@ class ActionImageTests(unittest.TestCase):
         self.assertTrue(audit.monolith_is_abelian)
         self.assertTrue(audit.relation_image_equals_monolith)
         self.assertTrue(audit.proves_abelian_chief_relation_module_quotient)
+
+    def test_abelian_relation_action_split_audit_records_central_and_noncentral(self):
+        central_group = cyclic_group(3)
+        central_audit = point_pushing_abelian_relation_action_split_audit(
+            central_group,
+            central_group.elements,
+            [1],
+        )
+
+        self.assertEqual(central_audit.monolith_prime, 3)
+        self.assertTrue(central_audit.monolith_is_central)
+        self.assertEqual(central_audit.split_regime, "central_trivial_coinvariant")
+        self.assertTrue(central_audit.proves_abelian_relation_action_split)
+
+        noncentral_group = symmetric_group(3)
+        alternating = [
+            element
+            for element in noncentral_group.elements
+            if sum(
+                1
+                for i in range(3)
+                for j in range(i + 1, 3)
+                if element[i] > element[j]
+            )
+            % 2
+            == 0
+        ]
+        generator = next(element for element in alternating if element != noncentral_group.identity)
+        noncentral_audit = point_pushing_abelian_relation_action_split_audit(
+            noncentral_group,
+            alternating,
+            [generator],
+        )
+
+        self.assertFalse(noncentral_audit.monolith_is_central)
+        self.assertEqual(noncentral_audit.split_regime, "noncentral_irreducible_module")
+        self.assertTrue(noncentral_audit.proves_abelian_relation_action_split)
 
     def test_nonabelian_chief_relation_quotient_audit_records_surjective_image(self):
         symmetric = symmetric_group(5)

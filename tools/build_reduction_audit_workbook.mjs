@@ -346,6 +346,13 @@ const rows = [
     "Rule out unbounded irreducible relation-module quotients, or construct one for B.",
   ],
   [
+    "Abelian relation action split",
+    "Split abelian-chief relation quotients by trivial versus nontrivial detector-orbit action.",
+    "proofs/point_pushing_abelian_relation_action_split.md proves that a trivial action forces M ~= F_p and factors through coinvariants, while a nontrivial action gives a nontrivial irreducible module with [N_D,M]=M. point_pushing_abelian_relation_action_split_audit records finite row regimes.",
+    "Abelian branch split",
+    "Rule out central trivial coinvariant tails and noncentral irreducible module tails, or construct one for B.",
+  ],
+  [
     "Nonabelian-chief relation quotient",
     "Compress nonabelian-chief Brunnian failures to detector relation-group quotients.",
     "proofs/point_pushing_nonabelian_chief_relation_quotient.md proves that a minimal nonabelian-chief first failure has mu_H(R)=M=S^r, and the detector orbit group controls the outer action on M. point_pushing_nonabelian_chief_relation_quotient_audit records finite chief-layer bookkeeping.",

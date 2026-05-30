@@ -536,6 +536,28 @@ class PointPushingAbelianChiefRelationModuleAudit:
 
 
 @dataclass(frozen=True)
+class PointPushingAbelianRelationActionSplitAudit:
+    """Split abelian-chief relation quotients by trivial/nontrivial action."""
+
+    group_order: int
+    monolith_order: int
+    monolith_prime: int | None
+    relation_image_order: int
+    monolith_is_abelian: bool
+    monolith_is_central: bool
+    monolith_is_unique_minimal_normal: bool
+    relation_image_equals_monolith: bool
+    split_regime: str
+
+    @property
+    def proves_abelian_relation_action_split(self) -> bool:
+        return self.split_regime in (
+            "central_trivial_coinvariant",
+            "noncentral_irreducible_module",
+        )
+
+
+@dataclass(frozen=True)
 class PointPushingNonabelianChiefRelationQuotientAudit:
     """Bookkeeping for nonabelian-chief relation-group compression."""
 
@@ -2296,6 +2318,60 @@ def point_pushing_abelian_chief_relation_module_audit(
         relation_image_nontrivial=relation_image_nontrivial,
         relation_image_inside_monolith=relation_image_inside_monolith,
         relation_image_equals_monolith=relation_image_equals_monolith,
+    )
+
+
+def point_pushing_abelian_relation_action_split_audit(
+    group: FiniteGroup,
+    monolith: Iterable[object],
+    relation_image_generators: Iterable[object],
+) -> PointPushingAbelianRelationActionSplitAudit:
+    """Audit the central/noncentral split for an abelian-chief relation row."""
+
+    from .finite_group import is_normal_subgroup, subgroup_as_group
+
+    monolith_set = frozenset(monolith)
+    relation_image = frozenset(
+        subgroup_generated_elements(group, relation_image_generators)
+    )
+    normal_subgroups = _normal_subgroups_bruteforce(group)
+    minimal_normals = _minimal_normal_subgroups(group, normal_subgroups)
+    monolith_is_normal = is_normal_subgroup(group, monolith_set)
+    monolith_group = subgroup_as_group(group, monolith_set)
+    monolith_is_abelian = monolith_is_normal and is_abelian_group(monolith_group)
+    monolith_type, monolith_prime, _orders = _monolith_type_data(group, monolith_set)
+    monolith_is_central = monolith_is_normal and all(
+        group.conjugate(element, monolith_element) == monolith_element
+        for element in group.elements
+        for monolith_element in monolith_set
+    )
+    monolith_is_unique_minimal_normal = (
+        len(minimal_normals) == 1 and minimal_normals[0] == monolith_set
+    )
+    relation_image_equals_monolith = relation_image == monolith_set
+    if not (
+        monolith_is_abelian
+        and monolith_type == "elementary_abelian"
+        and monolith_is_unique_minimal_normal
+        and relation_image_equals_monolith
+    ):
+        split_regime = "invalid_abelian_relation_action_data"
+    elif monolith_is_central and len(monolith_set) == monolith_prime:
+        split_regime = "central_trivial_coinvariant"
+    elif monolith_is_central:
+        split_regime = "invalid_central_monolith_dimension"
+    else:
+        split_regime = "noncentral_irreducible_module"
+    return PointPushingAbelianRelationActionSplitAudit(
+        group_order=len(group.elements),
+        monolith_order=len(monolith_set),
+        monolith_prime=monolith_prime,
+        relation_image_order=len(relation_image),
+        monolith_is_abelian=monolith_is_abelian,
+        monolith_is_central=monolith_is_central,
+        monolith_is_unique_minimal_normal=monolith_is_unique_minimal_normal,
+        relation_image_equals_monolith=relation_image_equals_monolith,
+        split_regime=split_regime,
     )
 
 

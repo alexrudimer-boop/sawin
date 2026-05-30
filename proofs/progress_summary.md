@@ -1250,6 +1250,14 @@ nonzero, hence surjective, `F_p[N_D]`-module quotient
 tail, while the other side is a nonabelian simple-power relation-lift tail.
 The helper `point_pushing_abelian_chief_relation_module_audit(...)` records
 finite chief-layer bookkeeping.
+`proofs/point_pushing_abelian_relation_action_split.md` now splits that
+abelian chief layer by action type.  If the `N_D` action is trivial, the
+unique minimal normal condition forces `M ~= F_p`, and the relation quotient
+factors through the coinvariants `(Rel_D tensor F_p)_{N_D}`.  If the action is
+nontrivial, then `M` is a nontrivial irreducible module and `[N_D,M]=M`.  The
+helper `point_pushing_abelian_relation_action_split_audit(...)` records the
+finite row regimes `central_trivial_coinvariant` and
+`noncentral_irreducible_module`.
 `proofs/point_pushing_nonabelian_chief_relation_quotient.md` now gives the
 parallel nonabelian-chief compression.  If `R` is the same detector orbit
 relation group and the chief layer is `M=S^r`, then the minimal vertical

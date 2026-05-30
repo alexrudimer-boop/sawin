@@ -206,6 +206,12 @@ negative proof must construct one explicit infinite tail of one of those two
 types, which then right-stabilizes to the normalized-law obstruction sequence
 by the product-prefix obstruction theorem.
 
+The follow-up note `proofs/point_pushing_abelian_relation_action_split.md`
+splits the abelian side further.  If the detector orbit action on `M` is
+trivial, then `M ~= F_p` and the quotient factors through the coinvariants of
+`Rel_D tensor F_p`.  If the action is nontrivial, then `M` is a nontrivial
+irreducible module and `[N_D,M]=M`.
+
 ## Audit Hook
 
 The helper
