@@ -138,18 +138,22 @@ Thus
 w in Law_k(D_k(G))  =>  iota_{k+1}(w) in K_G(k+1).
 ```
 
-The exact condition is slightly weaker:
+The exact condition is not that `w` be a law on the whole group `D_k(G)`.
+It is the marked-generator identity
 
 ```text
 iota_{k+1}(w) in K_G(k+1)
+  iff
+w(d_1,...,d_k)=1 in D_k(G),
 ```
 
-if and only if `w` fixes every endpoint-identity initial state
-`((m_1,1),...,(m_{k+1},1))` under the generated detector action.  It need not
-be a law on the whole derivative detector `D_k(G)`, because arbitrary
-nonidentity initial endpoint labels are not part of the finite-longitude
-signature.  This is the corrected replacement for the false ordinary-law
-shortcut.
+where `d_i` is the detector permutation induced by `A_{i,k+1}`.  Equivalently,
+`w` fixes every endpoint-identity initial state
+`((m_1,1),...,(m_{k+1},1))` under the generated detector action.  Since the
+braid is pure, this endpoint-slice condition is the same as fixing the full
+detector state space for the marked tuple.  The stronger sufficient condition
+`w in Law_k(D_k(G))` is usually more than needed.  See
+`proofs/point_pushing_marked_quotient_criterion.md` for the quotient form.
 
 Thus the exact last-strand B certificate is:
 

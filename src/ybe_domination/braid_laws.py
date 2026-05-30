@@ -12,7 +12,7 @@ from .artin_longitudes import (
     has_identity_longitude_signature_streamed,
     longitude_subgroup_profile,
 )
-from .finite_group import FiniteGroup
+from .finite_group import FiniteGroup, Permutation
 from .group_laws import is_law_on_group
 
 
@@ -179,6 +179,37 @@ def point_pushing_kernel_membership_audit(
         identity_longitude_signature=identity_signature,
         initial_detector_states_fixed=states_fixed,
     )
+
+
+def point_pushing_derivative_detector_generators(
+    group: FiniteGroup,
+    arity: int,
+    *,
+    max_states: int | None = None,
+) -> dict[int, Permutation]:
+    """Return the marked Artin-derivative detector permutations.
+
+    The returned generator ``i`` is the active detector action of the pure
+    braid ``A_{i+1,arity+1}`` on the full state space ``(G x G)^{arity+1}``.
+    """
+
+    if arity < 1:
+        raise ValueError("arity must be positive")
+    n = arity + 1
+    labels = tuple(product(group.elements, group.elements))
+    state_count = len(labels) ** n
+    if max_states is not None and state_count > max_states:
+        raise ValueError("detector state space exceeded max_states")
+    states = tuple(product(labels, repeat=n))
+    state_index = {state: index for index, state in enumerate(states)}
+    generators: dict[int, Permutation] = {}
+    for generator in range(arity):
+        braid = pure_braid_generator(generator + 1, n)
+        generators[generator] = tuple(
+            state_index[artin_detector_lift_general_state(group, state, braid)]
+            for state in states
+        )
+    return generators
 
 
 def longitude_identity_profile_for_law_braid(

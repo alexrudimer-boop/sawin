@@ -14,6 +14,7 @@ from ybe_domination import (
     law_braid_longitudes,
     law_word_on_last_strand,
     longitude_identity_profile_for_law_braid,
+    point_pushing_derivative_detector_generators,
     point_pushing_kernel_membership_audit,
     pure_braid_generator,
     reverse_braid_word,
@@ -125,6 +126,16 @@ class BraidLawTests(unittest.TestCase):
         self.assertTrue(audit.initial_detector_states_fixed)
         self.assertTrue(audit.detector_states_match_longitude_signature)
         self.assertTrue(audit.necessary_law_condition_holds)
+
+    def test_point_pushing_derivative_detector_generators_act_on_full_state_space(self):
+        generators = point_pushing_derivative_detector_generators(
+            cyclic_group(2),
+            arity=2,
+        )
+
+        self.assertEqual(set(generators), {0, 1})
+        self.assertEqual(len(generators[0]), 64)
+        self.assertEqual(len(generators[1]), 64)
 
     def test_point_pushing_kernel_membership_exposes_law_gap(self):
         law_gap = tuple(letter for _ in range(6) for letter in ((0, 1), (1, -1)))

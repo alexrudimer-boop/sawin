@@ -55,6 +55,32 @@ class AssignedLawSeparation:
 
 
 @dataclass(frozen=True)
+class PointPushingMarkedQuotientAudit:
+    """Exact finite arity check for the derivative-detector quotient criterion."""
+
+    group_order: int
+    arity: int
+    braid_index: int
+    detector_state_count: int
+    ybe_tuple_count: int
+    pair_subgroup_size: int | None
+    detector_image_size: int | None
+    action_image_size: int | None
+    truncated: bool
+    witness_word: FreeWord | None
+    witness_action_value: Permutation | None
+    moved_index: int | None
+
+    @property
+    def found_kernel_mover(self) -> bool:
+        return self.witness_word is not None and self.moved_index is not None
+
+    @property
+    def marked_quotient_holds(self) -> bool:
+        return not self.truncated and not self.found_kernel_mover
+
+
+@dataclass(frozen=True)
 class PointPushingVarietyEscapeAudit:
     """Bounded finite row for a point-pushing action-image variety escape."""
 
@@ -359,6 +385,113 @@ def short_law_separating_permutation_assignment(
         separating_word=None,
         evaluated_permutation=None,
         moved_index=None,
+    )
+
+
+def point_pushing_marked_quotient_audit(
+    solution: FiniteBraidedSet,
+    group: FiniteGroup,
+    arity: int,
+    *,
+    max_detector_states: int | None = None,
+    max_pair_subgroup_size: int | None = None,
+) -> PointPushingMarkedQuotientAudit:
+    """Audit whether the YBE point-pushing image is a marked detector quotient.
+
+    The audit generates the paired subgroup
+    ``<(d_i,h_i)> <= D_k(G) x P_k(X)``.  A pair ``(1, nonidentity)`` is exactly
+    a point-pushing word lying in ``K_G`` whose action on ``X`` is nontrivial.
+    """
+
+    from .braid_laws import (
+        point_pushing_derivative_detector_generators,
+        pure_braid_generator,
+    )
+
+    if arity < 1:
+        raise ValueError("arity must be positive")
+    n = arity + 1
+    detector_images = point_pushing_derivative_detector_generators(
+        group,
+        arity,
+        max_states=max_detector_states,
+    )
+    action_braids = {
+        generator: pure_braid_generator(generator + 1, n)
+        for generator in range(arity)
+    }
+    action_images = braid_images_for_words(solution, n, action_braids)
+    detector_identity = identity_permutation(
+        len(next(iter(detector_images.values())))
+    )
+    action_identity = identity_permutation(
+        len(next(iter(action_images.values())))
+    )
+    moves = []
+    for generator in range(arity):
+        detector = detector_images[generator]
+        action = action_images[generator]
+        moves.append((detector, action, ((generator, 1),)))
+        moves.append(
+            (
+                invert_permutation(detector),
+                invert_permutation(action),
+                ((generator, -1),),
+            )
+        )
+    identity_pair = (detector_identity, action_identity)
+    words: dict[Tuple[Permutation, Permutation], FreeWord] = {identity_pair: tuple()}
+    queue = deque([identity_pair])
+    truncated = False
+    witness_word: FreeWord | None = None
+    witness_action: Permutation | None = None
+    moved_index: int | None = None
+    while queue:
+        current = queue.popleft()
+        current_word = words[current]
+        for detector_move, action_move, move_word in moves:
+            candidate = (
+                compose_permutations(detector_move, current[0]),
+                compose_permutations(action_move, current[1]),
+            )
+            if candidate in words:
+                continue
+            candidate_word = _reduce_free_word(current_word + move_word)
+            if candidate[0] == detector_identity and candidate[1] != action_identity:
+                witness_word = candidate_word
+                witness_action = candidate[1]
+                moved_index = next(
+                    index
+                    for index, image in enumerate(candidate[1])
+                    if image != index
+                )
+                words[candidate] = candidate_word
+                queue.clear()
+                break
+            words[candidate] = candidate_word
+            if (
+                max_pair_subgroup_size is not None
+                and len(words) > max_pair_subgroup_size
+            ):
+                truncated = True
+                queue.clear()
+                break
+            queue.append(candidate)
+    detector_projection = {pair[0] for pair in words}
+    action_projection = {pair[1] for pair in words}
+    return PointPushingMarkedQuotientAudit(
+        group_order=len(group.elements),
+        arity=arity,
+        braid_index=n,
+        detector_state_count=len(detector_identity),
+        ybe_tuple_count=len(action_identity),
+        pair_subgroup_size=None if truncated else len(words),
+        detector_image_size=None if truncated else len(detector_projection),
+        action_image_size=None if truncated else len(action_projection),
+        truncated=truncated,
+        witness_word=witness_word,
+        witness_action_value=witness_action,
+        moved_index=moved_index,
     )
 
 

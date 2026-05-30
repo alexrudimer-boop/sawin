@@ -16,6 +16,7 @@ from ybe_domination import (
     law_braid_action_certificate,
     law_word_on_last_strand,
     point_pushing_exponent_escape_audit,
+    point_pushing_marked_quotient_audit,
     point_pushing_variety_escape_audit,
     point_pushing_variety_prefix_audit,
     pure_generator_order_profile,
@@ -229,6 +230,42 @@ class ActionImageTests(unittest.TestCase):
         self.assertFalse(audit.found_exponent_escape)
         self.assertFalse(audit.gives_power_law_mover)
         self.assertIsNone(audit.symmetric_identity_longitude_signature)
+
+    def test_point_pushing_marked_quotient_holds_for_trivial_action(self):
+        solution = rack_solution([0, 1], lambda a, b: b)
+
+        audit = point_pushing_marked_quotient_audit(
+            solution,
+            cyclic_group(2),
+            arity=2,
+        )
+
+        self.assertFalse(audit.truncated)
+        self.assertTrue(audit.marked_quotient_holds)
+        self.assertFalse(audit.found_kernel_mover)
+        self.assertEqual(audit.detector_state_count, 64)
+        self.assertEqual(audit.ybe_tuple_count, 8)
+        self.assertEqual(audit.action_image_size, 1)
+
+    def test_point_pushing_marked_quotient_finds_kernel_mover(self):
+        solution = rack_solution([0, 1, 2], lambda a, b: (2 * a - b) % 3)
+
+        audit = point_pushing_marked_quotient_audit(
+            solution,
+            cyclic_group(2),
+            arity=2,
+        )
+
+        self.assertFalse(audit.truncated)
+        self.assertFalse(audit.marked_quotient_holds)
+        self.assertTrue(audit.found_kernel_mover)
+        self.assertEqual(audit.witness_word, ((0, 1), (0, 1)))
+        self.assertIsNotNone(audit.witness_action_value)
+        self.assertIsNotNone(audit.moved_index)
+        self.assertNotEqual(
+            audit.witness_action_value[audit.moved_index],
+            audit.moved_index,
+        )
 
 
 if __name__ == "__main__":

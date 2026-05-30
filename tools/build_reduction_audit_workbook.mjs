@@ -276,6 +276,13 @@ const rows = [
     "A B proof may search for moving point-pushing layers in K_{P_j}; ordinary P_j-law words remain insufficient without the K_{P_j} check.",
   ],
   [
+    "Point-pushing marked quotient criterion",
+    "Replace fixed-variety containment by the exact derivative-detector marked quotient condition.",
+    "proofs/point_pushing_marked_quotient_criterion.md proves A_G dominates X iff every P_k(X) is a marked quotient of D_k(G); point_pushing_marked_quotient_audit checks finite arity instances.",
+    "Exact reformulation",
+    "Prove one fixed G has all marked quotients D_k(G)->P_k(X), or find product-prefix derivative relations that move X.",
+  ],
+  [
     "Action images",
     "Law words vanish on fixed finite action images.",
     "Fixed-image certificate implemented.",
