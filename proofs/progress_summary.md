@@ -995,6 +995,12 @@ paired orbit subgroup `B` must project injectively to its detector projection
 and `relative_action_projection_size`.  Thus every finite Brunnian row is now
 classified as `stabilizer`, `orbit_label`, `orbit_relation`, `none`, or a
 truncation diagnostic.
+`proofs/point_pushing_brunnian_gate_induction.md` assembles these finite gates
+back into the exact all-arity criterion: for fixed `G`, the rack `A_G`
+dominates `X` iff arity `1` satisfies the marked quotient criterion and every
+successive Brunnian extension row has `failure_kind="none"`.  The helper
+`point_pushing_brunnian_gate_prefix_audit(...)` checks finite prefixes
+sequentially and stops at the first base or extension failure.
 `proofs/point_pushing_derivative_functoriality.md` records the compatibility
 of this exact criterion with detector changes.  A finite group homomorphism
 `G->H` induces coordinate equivariance on detector states.  Surjections give

@@ -175,6 +175,26 @@ class PointPushingBrunnianOrbitAudit:
 
 
 @dataclass(frozen=True)
+class PointPushingBrunnianGatePrefixAudit:
+    """Sequential finite-prefix check for the Brunnian extension induction."""
+
+    group_order: int
+    max_arity: int
+    base_audit: PointPushingMarkedQuotientAudit
+    extension_rows: Tuple[PointPushingBrunnianOrbitAudit, ...]
+    first_failure_arity: int | None
+    first_failure_kind: str | None
+
+    @property
+    def prefix_detected(self) -> bool:
+        return self.first_failure_arity is None
+
+    @property
+    def checked_arities(self) -> Tuple[int, ...]:
+        return (1,) + tuple(row.arity for row in self.extension_rows)
+
+
+@dataclass(frozen=True)
 class PointPushingMuPrefixRow:
     """One finite row in a bounded search for ``mu_X(k)``."""
 
@@ -1231,6 +1251,89 @@ def point_pushing_mu_prefix_audit(
         max_arity=max_arity,
         max_symmetric_degree=max_symmetric_degree,
         rows=tuple(rows),
+    )
+
+
+def point_pushing_brunnian_gate_prefix_audit(
+    solution: FiniteBraidedSet,
+    group: FiniteGroup,
+    max_arity: int,
+    *,
+    max_detector_states: int | None = None,
+    max_pair_subgroup_size: int | None = None,
+) -> PointPushingBrunnianGatePrefixAudit:
+    """Sequential finite-prefix audit for the Brunnian gate induction.
+
+    A successful row means arity ``1`` satisfies the marked quotient criterion
+    and each extension arity has ``failure_kind == "none"``.
+    """
+
+    if max_arity < 1:
+        raise ValueError("max_arity must be positive")
+
+    base_audit = point_pushing_marked_quotient_audit(
+        solution,
+        group,
+        arity=1,
+        max_detector_states=max_detector_states,
+        max_pair_subgroup_size=max_pair_subgroup_size,
+    )
+    if base_audit.truncated:
+        return PointPushingBrunnianGatePrefixAudit(
+            group_order=len(group.elements),
+            max_arity=max_arity,
+            base_audit=base_audit,
+            extension_rows=tuple(),
+            first_failure_arity=1,
+            first_failure_kind="truncated_base",
+        )
+    if not base_audit.marked_quotient_holds:
+        return PointPushingBrunnianGatePrefixAudit(
+            group_order=len(group.elements),
+            max_arity=max_arity,
+            base_audit=base_audit,
+            extension_rows=tuple(),
+            first_failure_arity=1,
+            first_failure_kind="base_marked_quotient",
+        )
+
+    rows = []
+    for arity in range(2, max_arity + 1):
+        row = point_pushing_brunnian_orbit_audit(
+            solution,
+            group,
+            arity=arity,
+            max_detector_states=max_detector_states,
+            max_old_pair_subgroup_size=max_pair_subgroup_size,
+            max_relative_subgroup_size=max_pair_subgroup_size,
+        )
+        rows.append(row)
+        if row.truncated:
+            return PointPushingBrunnianGatePrefixAudit(
+                group_order=len(group.elements),
+                max_arity=max_arity,
+                base_audit=base_audit,
+                extension_rows=tuple(rows),
+                first_failure_arity=arity,
+                first_failure_kind=row.failure_kind,
+            )
+        if row.failure_kind != "none":
+            return PointPushingBrunnianGatePrefixAudit(
+                group_order=len(group.elements),
+                max_arity=max_arity,
+                base_audit=base_audit,
+                extension_rows=tuple(rows),
+                first_failure_arity=arity,
+                first_failure_kind=row.failure_kind,
+            )
+
+    return PointPushingBrunnianGatePrefixAudit(
+        group_order=len(group.elements),
+        max_arity=max_arity,
+        base_audit=base_audit,
+        extension_rows=tuple(rows),
+        first_failure_arity=None,
+        first_failure_kind=None,
     )
 
 

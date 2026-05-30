@@ -367,6 +367,13 @@ const rows = [
     "Prove every arity has failure_kind=none for one fixed m, or produce an infinite symmetric-tail family with stabilizer/orbit_label/orbit_relation witnesses.",
   ],
   [
+    "Point-pushing Brunnian gate induction",
+    "Replace all marked quotient checks by a base arity and sequential one-new-strand gates.",
+    "proofs/point_pushing_brunnian_gate_induction.md proves A_G dominates X iff arity 1 is detected and every Brunnian extension row has failure_kind=none; point_pushing_brunnian_gate_prefix_audit checks finite prefixes.",
+    "Exact induction criterion",
+    "Prove one fixed S_m passes all gates, or construct an infinite symmetric-tail sequence of first failures.",
+  ],
+  [
     "Derivative detector functoriality",
     "Show the exact D_k(G) criterion is compatible with quotients, embeddings, symmetric cofinality, and product prefixes.",
     "proofs/point_pushing_derivative_functoriality.md proves coordinate equivariance for finite group homomorphisms; point_pushing_derivative_functoriality_audit checks finite instances.",

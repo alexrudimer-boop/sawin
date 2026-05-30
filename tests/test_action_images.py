@@ -16,6 +16,7 @@ from ybe_domination import (
     law_braid_action_certificate,
     law_word_on_last_strand,
     delete_right_based_new_strand_word,
+    point_pushing_brunnian_gate_prefix_audit,
     point_pushing_brunnian_orbit_audit,
     point_pushing_brunnian_witness_certificate,
     point_pushing_exponent_escape_audit,
@@ -457,6 +458,38 @@ class ActionImageTests(unittest.TestCase):
         self.assertEqual(audit.unresolved_arities, (1, 2))
         self.assertTrue(all(row.has_vertical_witness_within_bound for row in audit.rows))
         self.assertEqual(tuple(row.first_witness_degree for row in audit.rows), (1, 1))
+
+    def test_point_pushing_brunnian_gate_prefix_detects_trivial_prefix(self):
+        solution = rack_solution([0, 1], lambda a, b: b)
+
+        audit = point_pushing_brunnian_gate_prefix_audit(
+            solution,
+            cyclic_group(2),
+            max_arity=3,
+        )
+
+        self.assertTrue(audit.prefix_detected)
+        self.assertEqual(audit.checked_arities, (1, 2, 3))
+        self.assertTrue(audit.base_audit.marked_quotient_holds)
+        self.assertEqual(tuple(row.failure_kind for row in audit.extension_rows), ("none", "none"))
+        self.assertIsNone(audit.first_failure_arity)
+        self.assertIsNone(audit.first_failure_kind)
+
+    def test_point_pushing_brunnian_gate_prefix_records_base_failure(self):
+        solution = rack_solution([0, 1, 2], lambda a, b: (2 * a - b) % 3)
+
+        audit = point_pushing_brunnian_gate_prefix_audit(
+            solution,
+            cyclic_group(1),
+            max_arity=3,
+        )
+
+        self.assertFalse(audit.prefix_detected)
+        self.assertEqual(audit.checked_arities, (1,))
+        self.assertFalse(audit.base_audit.marked_quotient_holds)
+        self.assertEqual(audit.first_failure_arity, 1)
+        self.assertEqual(audit.first_failure_kind, "base_marked_quotient")
+        self.assertEqual(audit.extension_rows, tuple())
 
     def test_point_pushing_suffix_shuttle_matches_direct_action(self):
         solution = rack_solution([0, 1, 2], lambda a, b: (2 * a - b) % 3)
