@@ -972,6 +972,14 @@ subgroup.  A one-new-strand jump exists exactly when this finite
 orbit-normal-closure subgroup contains a nontrivial vertical element.  The
 helper `point_pushing_brunnian_orbit_audit(...)` enumerates that subgroup in
 finite rows and returns a right-based Brunnian witness when one appears.
+`proofs/point_pushing_brunnian_relation_lift.md` splits this finite subgroup
+criterion into the exact relation package for a positive proof: the
+transported action label on the detector conjugacy orbit of the new generator
+must be well-defined, and every relation among detector orbit generators must
+lift to the transported action labels.  The same audit helper now records
+`detector_orbit_size`, `action_orbit_size`, and
+`orbit_map_well_defined`, so finite B seeds can be classified as either orbit
+ambiguities or later relation-lift failures.
 `proofs/point_pushing_derivative_functoriality.md` records the compatibility
 of this exact criterion with detector changes.  A finite group homomorphism
 `G->H` induces coordinate equivariance on detector states.  Surjections give

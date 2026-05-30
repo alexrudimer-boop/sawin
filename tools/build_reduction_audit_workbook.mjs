@@ -346,6 +346,13 @@ const rows = [
     "Prove the relative orbit-normal-closure vertical kernel is trivial for all k for one fixed m, or produce an unbounded symmetric-tail family of such vertical elements.",
   ],
   [
+    "Point-pushing Brunnian relation lift",
+    "Split the one-new-strand obstruction into orbit-label ambiguity and failed relation lifting.",
+    "proofs/point_pushing_brunnian_relation_lift.md proves that, under the old graph hypothesis, extension holds iff the new-generator detector conjugacy orbit has a well-defined transported action label and all orbit relations lift.",
+    "Relation package",
+    "Prove orbit-label well-definedness plus relation lifting uniformly, or build a symmetric-tail ambiguity/relation-failure sequence.",
+  ],
+  [
     "Derivative detector functoriality",
     "Show the exact D_k(G) criterion is compatible with quotients, embeddings, symmetric cofinality, and product prefixes.",
     "proofs/point_pushing_derivative_functoriality.md proves coordinate equivariance for finite group homomorphisms; point_pushing_derivative_functoriality_audit checks finite instances.",

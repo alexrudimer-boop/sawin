@@ -145,6 +145,9 @@ class PointPushingBrunnianOrbitAudit:
     ybe_tuple_count: int
     old_pair_subgroup_size: int | None
     conjugate_generator_count: int | None
+    detector_orbit_size: int | None
+    action_orbit_size: int | None
+    orbit_map_well_defined: bool | None
     relative_subgroup_size: int | None
     truncated: bool
     witness_right_word: FreeWord | None
@@ -158,7 +161,11 @@ class PointPushingBrunnianOrbitAudit:
 
     @property
     def relative_vertical_kernel_trivial(self) -> bool:
-        return not self.truncated and not self.found_brunnian_vertical_witness
+        return (
+            not self.truncated
+            and self.orbit_map_well_defined is not False
+            and not self.found_brunnian_vertical_witness
+        )
 
 
 @dataclass(frozen=True)
@@ -921,6 +928,9 @@ def point_pushing_brunnian_orbit_audit(
             ybe_tuple_count=len(action_identity),
             old_pair_subgroup_size=None,
             conjugate_generator_count=None,
+            detector_orbit_size=None,
+            action_orbit_size=None,
+            orbit_map_well_defined=None,
             relative_subgroup_size=None,
             truncated=True,
             witness_right_word=None,
@@ -930,14 +940,59 @@ def point_pushing_brunnian_orbit_audit(
         )
 
     conjugate_pairs: dict[FreeWord, Tuple[Permutation, Permutation]] = {}
+    detector_orbit_words: dict[Permutation, FreeWord] = {}
+    detector_orbit_actions: dict[Permutation, Permutation] = {}
+    action_orbit: set[Permutation] = set()
     for old_word in old_words.values():
         conjugate_word = _reduce_free_word(
             old_word + ((new_generator, 1),) + _invert_free_word(old_word)
         )
-        conjugate_pairs[conjugate_word] = _evaluate_free_word_on_pair_images(
+        conjugate_pair = _evaluate_free_word_on_pair_images(
             conjugate_word,
             pair_right,
         )
+        detector_conjugate, action_conjugate = conjugate_pair
+        action_orbit.add(action_conjugate)
+        previous_action = detector_orbit_actions.get(detector_conjugate)
+        if previous_action is not None and previous_action != action_conjugate:
+            previous_word = detector_orbit_words[detector_conjugate]
+            witness_right_word = _reduce_free_word(
+                conjugate_word + _invert_free_word(previous_word)
+            )
+            witness_pair = _evaluate_free_word_on_pair_images(
+                witness_right_word,
+                pair_right,
+            )
+            moved_index = next(
+                index
+                for index, image in enumerate(witness_pair[1])
+                if image != index
+            )
+            return PointPushingBrunnianOrbitAudit(
+                group_order=len(group.elements),
+                arity=arity,
+                braid_index=n,
+                detector_state_count=len(detector_identity),
+                ybe_tuple_count=len(action_identity),
+                old_pair_subgroup_size=len(old_words),
+                conjugate_generator_count=len(conjugate_pairs),
+                detector_orbit_size=len(detector_orbit_actions),
+                action_orbit_size=len(action_orbit),
+                orbit_map_well_defined=False,
+                relative_subgroup_size=None,
+                truncated=False,
+                witness_right_word=witness_right_word,
+                witness_left_word=right_based_point_pushing_word_to_left(
+                    witness_right_word,
+                    arity,
+                ),
+                witness_action_value=witness_pair[1],
+                moved_index=moved_index,
+            )
+        if previous_action is None:
+            detector_orbit_words[detector_conjugate] = conjugate_word
+            detector_orbit_actions[detector_conjugate] = action_conjugate
+        conjugate_pairs[conjugate_word] = conjugate_pair
 
     moves = []
     for conjugate_word, (detector, action) in conjugate_pairs.items():
@@ -1002,6 +1057,9 @@ def point_pushing_brunnian_orbit_audit(
         ybe_tuple_count=len(action_identity),
         old_pair_subgroup_size=len(old_words),
         conjugate_generator_count=len(conjugate_pairs),
+        detector_orbit_size=len(detector_orbit_actions),
+        action_orbit_size=len(action_orbit),
+        orbit_map_well_defined=True,
         relative_subgroup_size=None if truncated else len(words),
         truncated=truncated,
         witness_right_word=witness_right_word,
