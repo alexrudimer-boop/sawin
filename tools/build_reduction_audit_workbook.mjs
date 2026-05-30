@@ -297,6 +297,13 @@ const rows = [
     "Rule out unbounded monolithic first-failure quotients, or construct such a tail for B.",
   ],
   [
+    "Monolith type split",
+    "Split critical monolithic quotients into abelian and nonabelian monolith regimes.",
+    "proofs/point_pushing_monolith_type_split.md proves the monolith is characteristically simple: elementary abelian (C_p)^r or S^r for a nonabelian finite simple S; point_pushing_monolithic_compression_audit records finite row type data.",
+    "Two-tail reduction",
+    "Rule out both unbounded elementary-abelian and nonabelian-simple-product monolith tails, or construct one for B.",
+  ],
+  [
     "Point-pushing marked quotient criterion",
     "Replace fixed-variety containment by the exact derivative-detector marked quotient condition.",
     "proofs/point_pushing_marked_quotient_criterion.md proves A_G dominates X iff every P_k(X) is a marked quotient of D_k(G); point_pushing_marked_quotient_audit checks finite arity instances.",

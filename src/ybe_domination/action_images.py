@@ -435,6 +435,9 @@ class PointPushingMonolithicCompressionAudit:
     quotient_order: int | None
     quotient_kernel_size: int | None
     monolith_order: int | None
+    monolith_type: str | None
+    monolith_prime: int | None
+    monolith_element_orders: Tuple[int, ...] | None
     quotient_is_monolithic: bool | None
     projected_value_in_monolith: bool | None
     prefix_order_bound: int | None
@@ -2058,6 +2061,43 @@ def _minimal_normal_subgroups(
     return tuple(minimal)
 
 
+def _is_prime_integer(value: int) -> bool:
+    if value < 2:
+        return False
+    divisor = 2
+    while divisor * divisor <= value:
+        if value % divisor == 0:
+            return False
+        divisor += 1
+    return True
+
+
+def _monolith_type_data(
+    group: FiniteGroup,
+    monolith: frozenset[object],
+) -> Tuple[str, int | None, Tuple[int, ...]]:
+    """Classify a finite monolith as abelian elementary or nonabelian."""
+
+    from .finite_group import is_abelian_group, subgroup_as_group
+    from .group_laws import element_order
+
+    monolith_group = subgroup_as_group(group, monolith)
+    orders = tuple(
+        sorted(
+            {
+                element_order(monolith_group, element)
+                for element in monolith_group.elements
+                if element != monolith_group.identity
+            }
+        )
+    )
+    if is_abelian_group(monolith_group):
+        prime = orders[0] if len(orders) == 1 and _is_prime_integer(orders[0]) else None
+        monolith_type = "elementary_abelian" if prime is not None else "abelian"
+        return monolith_type, prime, orders
+    return "nonabelian_characteristically_simple", None, orders
+
+
 def point_pushing_monolithic_compression_audit(
     solution: FiniteBraidedSet,
     word: FreeWord,
@@ -2092,6 +2132,9 @@ def point_pushing_monolithic_compression_audit(
             quotient_order=None,
             quotient_kernel_size=None,
             monolith_order=None,
+            monolith_type=None,
+            monolith_prime=None,
+            monolith_element_orders=None,
             quotient_is_monolithic=None,
             projected_value_in_monolith=None,
             prefix_order_bound=prefix_order_bound,
@@ -2111,6 +2154,9 @@ def point_pushing_monolithic_compression_audit(
             quotient_order=None,
             quotient_kernel_size=None,
             monolith_order=None,
+            monolith_type=None,
+            monolith_prime=None,
+            monolith_element_orders=None,
             quotient_is_monolithic=None,
             projected_value_in_monolith=None,
             prefix_order_bound=prefix_order_bound,
@@ -2132,6 +2178,9 @@ def point_pushing_monolithic_compression_audit(
             quotient_order=None,
             quotient_kernel_size=None,
             monolith_order=None,
+            monolith_type=None,
+            monolith_prime=None,
+            monolith_element_orders=None,
             quotient_is_monolithic=None,
             projected_value_in_monolith=None,
             prefix_order_bound=prefix_order_bound,
@@ -2158,6 +2207,9 @@ def point_pushing_monolithic_compression_audit(
             quotient_order=len(quotient.elements),
             quotient_kernel_size=len(kernel),
             monolith_order=None,
+            monolith_type=None,
+            monolith_prime=None,
+            monolith_element_orders=None,
             quotient_is_monolithic=None,
             projected_value_in_monolith=None,
             prefix_order_bound=prefix_order_bound,
@@ -2173,6 +2225,14 @@ def point_pushing_monolithic_compression_audit(
     monolith = minimal_normals[0] if len(minimal_normals) == 1 else None
     projected_value = projection.apply(action_value)
     quotient_order = len(quotient.elements)
+    monolith_type = None
+    monolith_prime = None
+    monolith_element_orders = None
+    if monolith is not None:
+        monolith_type, monolith_prime, monolith_element_orders = _monolith_type_data(
+            quotient,
+            monolith,
+        )
     return PointPushingMonolithicCompressionAudit(
         arity=arity,
         word=tuple(word),
@@ -2182,6 +2242,9 @@ def point_pushing_monolithic_compression_audit(
         quotient_order=quotient_order,
         quotient_kernel_size=len(kernel),
         monolith_order=None if monolith is None else len(monolith),
+        monolith_type=monolith_type,
+        monolith_prime=monolith_prime,
+        monolith_element_orders=monolith_element_orders,
         quotient_is_monolithic=monolith is not None,
         projected_value_in_monolith=(
             None if monolith is None else projected_value in monolith
