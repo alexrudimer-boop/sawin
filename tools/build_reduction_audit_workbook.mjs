@@ -815,6 +815,13 @@ const rows = [
     "Supply a perfect-residual recursive-longitude witness, or upgrade a perfect-residual finite miss to normalized laws.",
   ],
   [
+    "Unit-continuation derived product detector",
+    "Assemble terminal-unit derived-series certificates into one fixed product detector.",
+    "proofs/unit_continuation_derived_product_detector.md; unit_composite_product_derived_series_lift_audit embeds each factor's combined witness into prod_i U(M_i) and verifies the endpoint tuple.",
+    "Product certificate",
+    "Use for intervals with several endpoint/unit monoids so the sharp obstruction theorem sees one fixed group.",
+  ],
+  [
     "Bi-free subgroup certificate",
     "Profile candidate words against fixed corridor detector factors.",
     "Helper, extra-factor target support, direct-product subgroup audit, and tests added; affine commutator seen by S3 block factor.",

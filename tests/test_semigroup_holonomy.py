@@ -20,6 +20,7 @@ from ybe_domination import (
     unit_composite_longitude_expression_audit,
     unit_composite_longitude_route_audit,
     unit_composite_product_detection_audit,
+    unit_composite_product_derived_series_lift_audit,
     unit_composite_product_longitude_expression_audit,
     unit_factorization_audit,
     unit_longitude_subgroup_audit,
@@ -674,6 +675,65 @@ class SemigroupHolonomyTests(unittest.TestCase):
         self.assertFalse(audit.identity_product_longitude_signature)
         self.assertTrue(audit.identity_longitudes_kill_product_endpoint_by_expression)
         self.assertTrue(audit.proves_product_endpoint_detector_by_expression)
+
+    def test_unit_composite_product_derived_series_lift_uses_one_product_detector(self):
+        cycle = (1, 2, 0)
+        c3_identity = (0, 1, 2)
+        transposition = (1, 0, 2)
+        three_cycle = (1, 2, 0)
+        s3_identity = (0, 1, 2)
+        cyclic_monoid = TransformationMonoid.generated((cycle,))
+        s3_monoid = TransformationMonoid.generated((transposition, three_cycle))
+        s3_group = monoid_permutation_group(s3_monoid)
+        s3_endpoint = s3_group.mul(three_cycle, transposition)
+        c3_stage = (((cycle, c3_identity), 1, 1),)
+        s3_stage0 = (((transposition, s3_identity), 1, 1),)
+        s3_stage1 = (((three_cycle, s3_identity), 1, 1),)
+
+        audit = unit_composite_product_derived_series_lift_audit(
+            (cyclic_monoid, s3_monoid),
+            n=2,
+            braid_word=(1, 1),
+            factor_words=((cycle,), (s3_endpoint,)),
+            stage_lifted_witnesses=((c3_stage,), (s3_stage0, s3_stage1)),
+        )
+
+        self.assertEqual(audit.unit_group_orders, (3, 6))
+        self.assertEqual(audit.product_group_order, 18)
+        self.assertEqual(audit.product_endpoint, (cycle, s3_endpoint))
+        self.assertTrue(audit.all_factor_words_in_monoids)
+        self.assertTrue(audit.all_permutation_branches)
+        self.assertTrue(audit.all_derived_lifts_prove_factor_endpoints)
+        self.assertIsNotNone(audit.product_witness)
+        self.assertEqual(audit.product_witness_value, audit.product_endpoint)
+        self.assertTrue(audit.product_witness_matches_endpoint)
+        self.assertTrue(
+            audit.product_endpoint_lies_in_product_longitude_subgroup_by_derived_lift
+        )
+        self.assertTrue(audit.proves_product_endpoint_detector_by_derived_lift)
+
+    def test_unit_composite_product_derived_series_lift_rejects_bad_factor(self):
+        cycle = (1, 2, 0)
+        identity = (0, 1, 2)
+        monoid = TransformationMonoid.generated((cycle,))
+        stage_witness = (((identity, identity), 1, 1),)
+
+        audit = unit_composite_product_derived_series_lift_audit(
+            (monoid,),
+            n=2,
+            braid_word=(1, 1),
+            factor_words=((cycle,),),
+            stage_lifted_witnesses=((stage_witness,),),
+        )
+
+        self.assertFalse(audit.all_derived_lifts_prove_factor_endpoints)
+        self.assertIsNone(audit.product_witness)
+        self.assertIsNone(audit.product_witness_value)
+        self.assertFalse(audit.product_witness_matches_endpoint)
+        self.assertFalse(
+            audit.product_endpoint_lies_in_product_longitude_subgroup_by_derived_lift
+        )
+        self.assertFalse(audit.proves_product_endpoint_detector_by_derived_lift)
 
     def test_unit_composite_product_expression_kills_identity_signature_endpoint(self):
         swap = (1, 0)

@@ -203,3 +203,8 @@ nonsolvable checkpoint.  The helper
 `unit_perfect_residual_longitude_audit(...)` restricts the finite group to
 the stable perfect residual `P` and checks the final residual endpoint
 against `V_beta(P)`.
+
+For a finite list of unit factors, the product assembly is recorded in
+`proofs/unit_continuation_derived_product_detector.md`.  The helper
+`unit_composite_product_derived_series_lift_audit(...)` embeds each factor's
+combined derived-series witness into one direct-product unit group.

@@ -297,6 +297,7 @@ class UnitCompositeDerivedSeriesLiftAudit:
     factors_in_monoid: bool
     factorization: UnitFactorizationAudit
     unit_group_order: int
+    identity_longitude_signature: bool
     derived_subgroup_orders: Tuple[int, ...]
     expected_stage_count: int
     supplied_stage_count: int
@@ -688,6 +689,64 @@ class UnitCompositeProductExpressionAudit:
     @property
     def proves_product_endpoint_detector_by_expression(self) -> bool:
         return self.product_endpoint_lies_in_product_longitude_subgroup_by_expression
+
+
+@dataclass(frozen=True)
+class UnitCompositeDerivedSeriesProductLiftAudit:
+    """Combine derived-series unit endpoint certificates in one product group."""
+
+    factor_audits: Tuple[UnitCompositeDerivedSeriesLiftAudit, ...]
+    product_endpoint: ProductUnitGroupElement
+    unit_group_orders: Tuple[int, ...]
+    product_group_order: int
+    product_witness: ProductLongitudeWitness | None
+    product_witness_value: ProductUnitGroupElement | None
+    product_witness_matches_endpoint: bool
+
+    @property
+    def all_factor_words_in_monoids(self) -> bool:
+        return all(audit.factors_in_monoid for audit in self.factor_audits)
+
+    @property
+    def all_permutation_branches(self) -> bool:
+        return all(audit.is_permutation_branch for audit in self.factor_audits)
+
+    @property
+    def all_derived_lifts_prove_factor_endpoints(self) -> bool:
+        return all(
+            audit.proves_endpoint_in_longitude_subgroup_by_derived_lift
+            for audit in self.factor_audits
+        )
+
+    @property
+    def product_endpoint_lies_in_product_longitude_subgroup_by_derived_lift(self) -> bool:
+        return (
+            self.all_factor_words_in_monoids
+            and self.all_permutation_branches
+            and self.all_derived_lifts_prove_factor_endpoints
+            and self.product_witness_matches_endpoint
+        )
+
+    @property
+    def identity_product_longitude_signature(self) -> bool:
+        return all(
+            audit.identity_longitude_signature
+            for audit in self.factor_audits
+        )
+
+    @property
+    def identity_longitudes_kill_product_endpoint_by_derived_lift(self) -> bool:
+        if not self.product_endpoint_lies_in_product_longitude_subgroup_by_derived_lift:
+            return False
+        if not self.identity_product_longitude_signature:
+            return True
+        return self.product_endpoint == tuple(
+            audit.monoid_identity for audit in self.factor_audits
+        )
+
+    @property
+    def proves_product_endpoint_detector_by_derived_lift(self) -> bool:
+        return self.product_endpoint_lies_in_product_longitude_subgroup_by_derived_lift
 
 
 def is_permutation_transformation(element: Transformation) -> bool:
@@ -1125,6 +1184,11 @@ def unit_composite_derived_series_lift_audit(
         factors_in_monoid=all(factor in monoid_elements for factor in factor_tuple),
         factorization=factorization,
         unit_group_order=len(unit_group.elements),
+        identity_longitude_signature=has_identity_longitude_signature(
+            unit_group,
+            n,
+            braid_word,
+        ),
         derived_subgroup_orders=tuple(len(subgroup) for subgroup in series),
         expected_stage_count=expected_stage_count,
         supplied_stage_count=len(supplied_witnesses),
@@ -1545,6 +1609,87 @@ def unit_composite_product_longitude_expression_audit(
             product_witness,
         )
     return UnitCompositeProductExpressionAudit(
+        factor_audits=factor_audits,
+        product_endpoint=product_endpoint,
+        unit_group_orders=unit_group_orders,
+        product_group_order=product_order,
+        product_witness=product_witness,
+        product_witness_value=product_witness_value,
+        product_witness_matches_endpoint=product_witness_value == product_endpoint,
+    )
+
+
+def unit_composite_product_derived_series_lift_audit(
+    monoids: Sequence[TransformationMonoid],
+    n: int,
+    braid_word: BraidWord,
+    factor_words: Sequence[Sequence[Transformation]],
+    stage_lifted_witnesses: Sequence[Sequence[Sequence]],
+    final_witnesses: Sequence[Sequence] | None = None,
+) -> UnitCompositeDerivedSeriesProductLiftAudit:
+    """Assemble derived-series unit certificates into one product detector."""
+
+    monoid_tuple = tuple(monoids)
+    word_tuple = tuple(tuple(word) for word in factor_words)
+    stage_tuple = tuple(
+        tuple(tuple(stage) for stage in factor_stages)
+        for factor_stages in stage_lifted_witnesses
+    )
+    if final_witnesses is None:
+        final_tuple = tuple(tuple() for _monoid in monoid_tuple)
+    else:
+        final_tuple = tuple(tuple(witness) for witness in final_witnesses)
+    if not (
+        len(monoid_tuple)
+        == len(word_tuple)
+        == len(stage_tuple)
+        == len(final_tuple)
+    ):
+        raise ValueError(
+            "need one factor word, stage witness list, and final witness for each monoid"
+        )
+    factor_audits = tuple(
+        unit_composite_derived_series_lift_audit(
+            monoid,
+            n,
+            braid_word,
+            word,
+            stages,
+            final_witness,
+        )
+        for monoid, word, stages, final_witness in zip(
+            monoid_tuple,
+            word_tuple,
+            stage_tuple,
+            final_tuple,
+        )
+    )
+    unit_groups = tuple(monoid_permutation_group(monoid) for monoid in monoid_tuple)
+    unit_group_orders = tuple(audit.unit_group_order for audit in factor_audits)
+    product_order = 1
+    for order in unit_group_orders:
+        product_order *= order
+    product_endpoint = tuple(
+        audit.factorization.composite for audit in factor_audits
+    )
+    product_witness = None
+    product_witness_value = None
+    if all(
+        audit.proves_endpoint_in_longitude_subgroup_by_derived_lift
+        for audit in factor_audits
+    ):
+        product_witness = direct_product_longitude_subgroup_witness(
+            unit_groups,
+            n,
+            tuple(audit.combined_witness for audit in factor_audits),
+        )
+        product_witness_value = evaluate_longitude_subgroup_witness(
+            direct_product_group(unit_groups),
+            n,
+            braid_word,
+            product_witness,
+        )
+    return UnitCompositeDerivedSeriesProductLiftAudit(
         factor_audits=factor_audits,
         product_endpoint=product_endpoint,
         unit_group_orders=unit_group_orders,

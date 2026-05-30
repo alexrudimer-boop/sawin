@@ -2142,6 +2142,12 @@ residual `P`, computes `V_beta(P)`, and tests the supplied final residual
 endpoint there.  A failure at this stage is the precise nonsolvable terminal
 unit seed that would still need normalized-law upgrade before it could be
 outcome B.
+The helper `unit_composite_product_derived_series_lift_audit(...)` now
+assembles several supplied terminal-unit derived-series certificates into one
+direct-product detector.  It embeds each factor's combined witness in the
+corresponding coordinate and verifies the endpoint tuple in
+`V_beta(prod_i U(M_i))`, preserving the fixed interval-level detector
+requirement.
 
 ## Completion audit checklist
 

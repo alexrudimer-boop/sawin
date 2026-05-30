@@ -644,6 +644,13 @@ to its stable perfect residual `P` and checks whether the final derived
 residual endpoint lies in `V_beta(P)`.  Thus every terminal-unit obstruction
 after the abelian quotient stages is now explicitly located in a fixed
 perfect group.
+The product assembly note
+`proofs/unit_continuation_derived_product_detector.md` then packages multiple
+terminal-unit monoids into one fixed product detector.  The helper
+`unit_composite_product_derived_series_lift_audit(...)` takes the combined
+witness from each derived-series factor audit, embeds those witnesses into
+the direct product of the unit groups, and verifies the product endpoint
+inside `V_beta(prod_i U(M_i))`.
 The current sharpest positive statement is
 `proofs/terminal_gauge_artin_defect_target.md`: every remaining terminal
 gauge endpoint `S_beta=g_terminal g_initial^-1` in a fixed interval-level
