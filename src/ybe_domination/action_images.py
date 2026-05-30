@@ -644,6 +644,32 @@ class PointPushingAbelianCentralizerLayerPrimeAudit:
 
 
 @dataclass(frozen=True)
+class PointPushingCentralizerStemMultiplierAudit:
+    """Audit centralizer-stem rows as stem extensions of N/M."""
+
+    normal_generator_order_bound: int
+    group_order: int
+    monolith_order: int
+    monolith_prime: int | None
+    normal_closure_order: int
+    normal_closure_commutator_order: int
+    quotient_order: int
+    quotient_exponent: int
+    generator_order: int
+    generator_image_order: int
+    generator_order_divides_bound: bool
+    monolith_central_in_normal_closure: bool
+    monolith_in_normal_closure_commutator: bool
+    monolith_is_elementary_abelian: bool
+    quotient_is_stem_target: bool
+    tail_regime: str
+
+    @property
+    def proves_centralizer_stem_multiplier_tail(self) -> bool:
+        return self.tail_regime == "centralizer_stem_multiplier_tail"
+
+
+@dataclass(frozen=True)
 class PointPushingCentralStemRelationAudit:
     """Bookkeeping for central trivial relation tails as stem extensions."""
 
@@ -2711,6 +2737,80 @@ def point_pushing_abelian_centralizer_layer_prime_audit(
         same_prime_as_monolith=same_prime_as_monolith,
         prime_divides_generator_order=prime_divides_generator_order,
         prime_divides_bound=prime_divides_bound,
+        tail_regime=tail_regime,
+    )
+
+
+def point_pushing_centralizer_stem_multiplier_audit(
+    group: FiniteGroup,
+    monolith: Iterable[object],
+    generator: object,
+    normal_generator_order_bound: int,
+) -> PointPushingCentralizerStemMultiplierAudit:
+    """Audit a centralizer-stem layer as a stem extension of N/M."""
+
+    from .finite_group import (
+        normal_closure_elements,
+        quotient_group_by_normal_subgroup,
+        subgroup_as_group,
+    )
+    from .group_laws import element_order, group_exponent
+
+    if normal_generator_order_bound <= 0:
+        raise ValueError("normal_generator_order_bound must be positive")
+    if generator not in group.elements:
+        raise ValueError("generator must be a group element")
+    monolith_set = frozenset(monolith)
+    monolith_type, monolith_prime, _orders = _monolith_type_data(group, monolith_set)
+    normal_closure = frozenset(normal_closure_elements(group, [generator]))
+    normal_closure_group = subgroup_as_group(group, normal_closure)
+    commutator = frozenset(commutator_subgroup_elements(group, normal_closure))
+    monolith_central_in_normal_closure = all(
+        group.conjugate(element, monolith_element) == monolith_element
+        for element in normal_closure
+        for monolith_element in monolith_set
+    )
+    monolith_in_commutator = monolith_set <= commutator
+    monolith_is_elementary_abelian = monolith_type == "elementary_abelian"
+    quotient_is_stem_target = (
+        monolith_is_elementary_abelian
+        and monolith_central_in_normal_closure
+        and monolith_in_commutator
+    )
+    quotient_order = 0
+    quotient_exponent = 0
+    generator_image_order = 0
+    if quotient_is_stem_target and monolith_set <= normal_closure:
+        quotient, projection = quotient_group_by_normal_subgroup(
+            normal_closure_group,
+            monolith_set,
+        )
+        quotient_order = len(quotient.elements)
+        quotient_exponent = group_exponent(quotient)
+        generator_image_order = element_order(quotient, projection.apply(generator))
+    generator_order = element_order(group, generator)
+    generator_order_divides_bound = normal_generator_order_bound % generator_order == 0
+    tail_regime = (
+        "centralizer_stem_multiplier_tail"
+        if quotient_is_stem_target and generator_order_divides_bound
+        else "invalid_centralizer_stem_multiplier_data"
+    )
+    return PointPushingCentralizerStemMultiplierAudit(
+        normal_generator_order_bound=normal_generator_order_bound,
+        group_order=len(group.elements),
+        monolith_order=len(monolith_set),
+        monolith_prime=monolith_prime,
+        normal_closure_order=len(normal_closure),
+        normal_closure_commutator_order=len(commutator),
+        quotient_order=quotient_order,
+        quotient_exponent=quotient_exponent,
+        generator_order=generator_order,
+        generator_image_order=generator_image_order,
+        generator_order_divides_bound=generator_order_divides_bound,
+        monolith_central_in_normal_closure=monolith_central_in_normal_closure,
+        monolith_in_normal_closure_commutator=monolith_in_commutator,
+        monolith_is_elementary_abelian=monolith_is_elementary_abelian,
+        quotient_is_stem_target=quotient_is_stem_target,
         tail_regime=tail_regime,
     )
 

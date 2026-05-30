@@ -147,6 +147,10 @@ The abelian centralizer-layer side is further bounded in
 `proofs/point_pushing_abelian_centralizer_layer_prime_bound.md`: the normal
 closure `N` is a `p`-group and `exp(N)|ord(t)|B_X`, so centralizer-layer prime
 escape is impossible.
+The centralizer-stem side is further identified in
+`proofs/point_pushing_centralizer_stem_multiplier_tail.md`: the extension
+`1->M->N->N/M->1` is stem, so `M` is a Schur-multiplier quotient of `N/M`
+with bounded generator image inherited from `t`.
 
 ## Audit Hook
 

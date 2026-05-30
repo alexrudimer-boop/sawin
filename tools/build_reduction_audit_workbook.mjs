@@ -388,6 +388,13 @@ const rows = [
     "Rule out bounded-prime bounded-exponent centralizer-layer rank/extension tails, or construct one for B.",
   ],
   [
+    "Centralizer-stem multiplier tail",
+    "Convert centralizer-stem generator tails into Schur-multiplier quotient form.",
+    "proofs/point_pushing_centralizer_stem_multiplier_tail.md proves that if M<=Z(N) cap [N,N] for N=<<t>>_H, then 1->M->N->N/M->1 is a stem central extension and M is a quotient of H_2(N/M,Z). point_pushing_centralizer_stem_multiplier_audit records finite quotient data.",
+    "Stem layer homological",
+    "Rule out bounded-generator centralizer-stem multiplier tails, or construct one for B.",
+  ],
+  [
     "Nonabelian-chief relation quotient",
     "Compress nonabelian-chief Brunnian failures to detector relation-group quotients.",
     "proofs/point_pushing_nonabelian_chief_relation_quotient.md proves that a minimal nonabelian-chief first failure has mu_H(R)=M=S^r, and the detector orbit group controls the outer action on M. point_pushing_nonabelian_chief_relation_quotient_audit records finite chief-layer bookkeeping.",

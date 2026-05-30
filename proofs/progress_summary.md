@@ -1293,6 +1293,13 @@ prime is one of the finitely many divisors of `B_X` and the layer exponent is
 bounded.  The helper
 `point_pushing_abelian_centralizer_layer_prime_audit(...)` records finite
 prime-support and exponent labels.
+`proofs/point_pushing_centralizer_stem_multiplier_tail.md` now identifies the
+stem side of the same centralizer-layer split.  If `M<=Z(N) cap [N,N]` for
+`N=<<t>>_H`, then `1->M->N->N/M->1` is a stem central extension, so `M` is a
+Schur-multiplier quotient of `N/M`; the quotient is ambient-normally generated
+by the bounded-order image of `t`.  The helper
+`point_pushing_centralizer_stem_multiplier_audit(...)` records finite quotient
+and generator-image data.
 `proofs/point_pushing_nonabelian_chief_relation_quotient.md` now gives the
 parallel nonabelian-chief compression.  If `R` is the same detector orbit
 relation group and the chief layer is `M=S^r`, then the minimal vertical

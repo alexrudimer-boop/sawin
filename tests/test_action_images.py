@@ -35,6 +35,7 @@ from ybe_domination import (
     point_pushing_brunnian_witness_certificate,
     point_pushing_bounded_normal_generator_audit,
     point_pushing_centralizer_layer_commutator_audit,
+    point_pushing_centralizer_stem_multiplier_audit,
     point_pushing_central_stem_relation_audit,
     point_pushing_cyclic_tail_bound_audit,
     point_pushing_product_prefix_first_failure_audit,
@@ -71,6 +72,48 @@ from ybe_domination.action_images import (
     _normal_subgroups_bruteforce,
 )
 from ybe_domination.finite_group import build_group, subgroup_as_group
+
+
+def q8_c3_semidirect_group():
+    q8_elements = [(sign, axis) for sign in (1, -1) for axis in range(4)]
+    axis_product = {
+        (0, 0): (1, 0),
+        (0, 1): (1, 1),
+        (0, 2): (1, 2),
+        (0, 3): (1, 3),
+        (1, 0): (1, 1),
+        (1, 1): (-1, 0),
+        (1, 2): (1, 3),
+        (1, 3): (-1, 2),
+        (2, 0): (1, 2),
+        (2, 1): (-1, 3),
+        (2, 2): (-1, 0),
+        (2, 3): (1, 1),
+        (3, 0): (1, 3),
+        (3, 1): (1, 2),
+        (3, 2): (-1, 1),
+        (3, 3): (-1, 0),
+    }
+    cycle_axis = {0: 0, 1: 2, 2: 3, 3: 1}
+
+    def q8_mul(left, right):
+        sign, axis = axis_product[(left[1], right[1])]
+        return (left[0] * right[0] * sign, axis)
+
+    def q8_auto(element, power):
+        out = element
+        for _ in range(power % 3):
+            out = (out[0], cycle_axis[out[1]])
+        return out
+
+    return build_group(
+        [(element, power) for element in q8_elements for power in range(3)],
+        ((1, 0), 0),
+        lambda left, right: (
+            q8_mul(left[0], q8_auto(right[0], left[1])),
+            (left[1] + right[1]) % 3,
+        ),
+    )
 
 
 class ActionImageTests(unittest.TestCase):
@@ -1197,45 +1240,7 @@ class ActionImageTests(unittest.TestCase):
         self.assertEqual(abelian.layer_regime, "abelian_centralizer_layer")
         self.assertTrue(abelian.proves_centralizer_layer_commutator_split)
 
-        q8_elements = [(sign, axis) for sign in (1, -1) for axis in range(4)]
-        axis_product = {
-            (0, 0): (1, 0),
-            (0, 1): (1, 1),
-            (0, 2): (1, 2),
-            (0, 3): (1, 3),
-            (1, 0): (1, 1),
-            (1, 1): (-1, 0),
-            (1, 2): (1, 3),
-            (1, 3): (-1, 2),
-            (2, 0): (1, 2),
-            (2, 1): (-1, 3),
-            (2, 2): (-1, 0),
-            (2, 3): (1, 1),
-            (3, 0): (1, 3),
-            (3, 1): (1, 2),
-            (3, 2): (-1, 1),
-            (3, 3): (-1, 0),
-        }
-        cycle_axis = {0: 0, 1: 2, 2: 3, 3: 1}
-
-        def q8_mul(left, right):
-            sign, axis = axis_product[(left[1], right[1])]
-            return (left[0] * right[0] * sign, axis)
-
-        def q8_auto(element, power):
-            out = element
-            for _ in range(power % 3):
-                out = (out[0], cycle_axis[out[1]])
-            return out
-
-        semidirect = build_group(
-            [(element, power) for element in q8_elements for power in range(3)],
-            ((1, 0), 0),
-            lambda left, right: (
-                q8_mul(left[0], q8_auto(right[0], left[1])),
-                (left[1] + right[1]) % 3,
-            ),
-        )
+        semidirect = q8_c3_semidirect_group()
         stem = point_pushing_centralizer_layer_commutator_audit(
             semidirect,
             [((1, 0), 0), ((-1, 0), 0)],
@@ -1283,6 +1288,27 @@ class ActionImageTests(unittest.TestCase):
         self.assertFalse(mixed.same_prime_as_monolith)
         self.assertEqual(mixed.tail_regime, "mixed_prime_or_unbounded_generator_layer")
         self.assertFalse(mixed.proves_abelian_centralizer_layer_prime_bound)
+
+    def test_centralizer_stem_multiplier_audit_records_stem_target(self):
+        group = q8_c3_semidirect_group()
+        audit = point_pushing_centralizer_stem_multiplier_audit(
+            group,
+            [((1, 0), 0), ((-1, 0), 0)],
+            ((1, 1), 0),
+            normal_generator_order_bound=4,
+        )
+
+        self.assertEqual(audit.monolith_prime, 2)
+        self.assertEqual(audit.normal_closure_order, 8)
+        self.assertEqual(audit.normal_closure_commutator_order, 2)
+        self.assertEqual(audit.quotient_order, 4)
+        self.assertEqual(audit.quotient_exponent, 2)
+        self.assertEqual(audit.generator_order, 4)
+        self.assertEqual(audit.generator_image_order, 2)
+        self.assertTrue(audit.monolith_central_in_normal_closure)
+        self.assertTrue(audit.monolith_in_normal_closure_commutator)
+        self.assertEqual(audit.tail_regime, "centralizer_stem_multiplier_tail")
+        self.assertTrue(audit.proves_centralizer_stem_multiplier_tail)
 
     def test_central_stem_relation_audit_records_stem_extension(self):
         group = build_group(

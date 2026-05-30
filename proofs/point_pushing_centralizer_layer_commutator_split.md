@@ -131,6 +131,9 @@ The follow-up
 constrains the abelian centralizer-layer form: `N=<<t>>_H` must be a
 `p`-primary abelian layer whose exponent divides `ord(t)|B_X`.  Hence this
 subcase has no module-prime escape.
+The follow-up `proofs/point_pushing_centralizer_stem_multiplier_tail.md`
+identifies the stem form as a bounded-generator stem central extension
+`1->M->N->N/M->1`, so `M` is a quotient of the Schur multiplier of `N/M`.
 
 ## Audit Hook
 

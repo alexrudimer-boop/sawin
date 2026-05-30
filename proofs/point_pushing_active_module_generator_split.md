@@ -141,6 +141,10 @@ The abelian side is sharpened in
 `proofs/point_pushing_abelian_centralizer_layer_prime_bound.md`: there `N` is
 `p`-primary and `exp(N)|ord(t)|B_X`, so that subcase has no module-prime
 escape.
+The stem side is sharpened in
+`proofs/point_pushing_centralizer_stem_multiplier_tail.md`: there
+`1->M->N->N/M->1` is a stem central extension, and `M` is a quotient of the
+Schur multiplier of `N/M`.
 
 ## Audit Hook
 
