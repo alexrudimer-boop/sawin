@@ -234,6 +234,13 @@ const rows = [
     "Prove a fixed S_m kills all law point-pushing actions on X, or construct S_j-law words whose point-pushing braids move X.",
   ],
   [
+    "Fadell-Neuwirth layer extraction",
+    "Justify that a moving K_G braid yields a moving ordinary last-strand point-pushing law layer.",
+    "proofs/fadell_neuwirth_layer_extraction_guardrail.md records deletion/splitting preservation of K_G, the recursive right-stabilized layer decomposition, and the action-triviality guardrail for right-stabilized layers.",
+    "Guardrail theorem",
+    "Use only the standard right-strand splitting in point-pushing fixed-variety arguments unless a new embedding-triviality proof is supplied.",
+  ],
+  [
     "Point-pushing action-image variety",
     "Rephrase the last-strand law test as membership of pure point-pushing action images in one fixed symmetric variety.",
     "proofs/point_pushing_action_image_variety.md proves that all S_m-law point-pushing braids act trivially on X iff every P_k(X)=<rho(A_{i,k+1})> lies in var(S_m); point_pushing_variety_escape_audit records bounded escape rows with generator-word representatives and point_pushing_variety_prefix_audit scans finite arity prefixes.",

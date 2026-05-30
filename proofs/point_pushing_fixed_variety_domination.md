@@ -77,7 +77,9 @@ beta in K_G(n)
 ```
 
 and `rho_{X,n}(beta) != 1`.  By the moving-layer extraction lemma in
-`proofs/sawin_last_strand_law_reduction.md`, there are `r<=n` and
+`proofs/sawin_last_strand_law_reduction.md`, with the right-stabilized
+Fadell-Neuwirth convention made explicit in
+`proofs/fadell_neuwirth_layer_extraction_guardrail.md`, there are `r<=n` and
 
 ```text
 w in Law_{r-1}(G)

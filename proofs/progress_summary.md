@@ -859,6 +859,15 @@ global Sawin domination is exactly the existence of one finite group `G_X`
 whose generated variety contains all `P_k(X)`.  A negative proof must
 diagonalize failures of this fixed-variety containment into the recorded
 normalized-law sequence.
+`proofs/fadell_neuwirth_layer_extraction_guardrail.md` now isolates the
+convention-sensitive bridge behind that equivalence.  It records that deleting
+the last strand and adding an unused right strand preserve `K_G`, decomposes a
+pure braid recursively into standard right-stabilized point-pushing layers,
+and proves that if each layer is trivial on its own `X^r`, then its
+right-stabilized extension is trivial on `X^n`.  Hence a moving `K_G` braid
+does force a moving ordinary last-strand law layer.  The note is also a
+guardrail: conjugated layers or non-right embeddings require their own
+triviality proof.
 `proofs/symmetric_repair_contract_bridge.md` now connects this symmetric fork
 back to the proof-critic repair contract.  If a supplied repair package proves
 the local implication using a fixed product detector `H(pi,Q)`, then the left

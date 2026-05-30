@@ -149,6 +149,11 @@ right-hand strands would make every factor act trivially on `X^n`, and hence
 Write the moving layer as `iota_r(w)`.  Because the layer lies in `K_G(r)`,
 Lemma 1 gives `w in Law_{r-1}(G)`.  QED.
 
+The convention-sensitive parts of this extraction are isolated in
+`proofs/fadell_neuwirth_layer_extraction_guardrail.md`: deletion and
+right-strand splitting preserve `K_G`, and a layer which is trivial on its
+own `X^r` remains trivial after the standard right stabilization to `X^n`.
+
 ## Reformulation
 
 By the symmetric detector reduction, finite-rack domination of `X` is
