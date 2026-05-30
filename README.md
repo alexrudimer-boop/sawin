@@ -288,6 +288,13 @@ only unit continuation factors by the unit-factorization gate.  The last
 possible obstruction in this channel is therefore a unit endpoint
 `S_beta in U(M_cont)` whose membership in `V_beta(U(M_cont))` is still
 unproved; nonunit/reset labels cannot be final B evidence.
+The follow-up note `proofs/unit_continuation_abelian_kernel_lift.md` splits
+that final endpoint certificate through the finite abelianization
+`U_cont/[U_cont,U_cont]`: prove the abelian projection by the matrix
+longitude criterion, lift that witness to `U_cont`, and prove the resulting
+commutator-kernel correction by a kernel witness.  The helper
+`normal_quotient_longitude_lift_audit(...)` checks this quotient-plus-kernel
+certificate.
 The semisplit audit now has an exact Boolean-CSP view: each coloured crossing
 lists the allowed equality/universal bit patterns on its two source and two
 target colours, and satisfying non-extreme assignments agree with the

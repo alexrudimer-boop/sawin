@@ -50,12 +50,14 @@ from ybe_domination import (
     longitude_subgroup_profile,
     longitude_value_generators,
     longitude_value_subgroup_elements,
+    normal_quotient_longitude_lift_audit,
     pure_braid_generator,
     principal_gauge_cocycle_failures,
     principal_gauge_extension_detector_audit,
     principal_gauge_extension_rack,
     pushforward_longitude_subgroup_witness,
     pushforward_longitude_subgroup_witness_audit,
+    quotient_group_by_normal_subgroup,
     rack_extension_detector_audit,
     rack_inner_group,
     rack_inner_detector_lift_audit,
@@ -388,6 +390,84 @@ class ArtinLongitudeTests(unittest.TestCase):
                 quotient,
                 ((((7, 0), 1, 1),)),
             )
+
+    def test_normal_quotient_lift_splits_abelian_and_kernel_witnesses(self):
+        group = symmetric_group(3)
+        alternating = ((0, 1, 2), (1, 2, 0), (2, 0, 1))
+        quotient, projection = quotient_group_by_normal_subgroup(
+            group,
+            alternating,
+        )
+        braid = (1, 1)
+        identity = group.identity
+        transposition = (1, 0, 2)
+        three_cycle = (1, 2, 0)
+        endpoint = group.mul(three_cycle, transposition)
+        lifted_witness = (((transposition, identity), 1, 1),)
+        kernel_witness = (((three_cycle, identity), 1, 1),)
+        quotient_witness = (
+            (
+                tuple(projection.apply(value) for value in (transposition, identity)),
+                1,
+                1,
+            ),
+        )
+
+        audit = normal_quotient_longitude_lift_audit(
+            projection,
+            2,
+            braid,
+            endpoint,
+            quotient_witness,
+            lifted_witness,
+            kernel_witness,
+        )
+
+        self.assertEqual(audit.kernel_size, 3)
+        self.assertEqual(audit.quotient_endpoint, projection.apply(endpoint))
+        self.assertTrue(audit.quotient_witness_matches_endpoint)
+        self.assertTrue(audit.lifted_witness_projects_to_quotient_witness)
+        self.assertTrue(audit.kernel_correction_in_kernel)
+        self.assertTrue(audit.kernel_witness_assignments_in_kernel)
+        self.assertTrue(audit.kernel_witness_matches_correction)
+        self.assertTrue(audit.combined_witness_matches_endpoint)
+        self.assertTrue(audit.proves_endpoint_in_longitude_subgroup_by_normal_lift)
+
+    def test_normal_quotient_lift_rejects_nonkernel_correction_witness(self):
+        group = symmetric_group(3)
+        alternating = ((0, 1, 2), (1, 2, 0), (2, 0, 1))
+        _quotient, projection = quotient_group_by_normal_subgroup(
+            group,
+            alternating,
+        )
+        braid = (1, 1)
+        identity = group.identity
+        transposition = (1, 0, 2)
+        three_cycle = (1, 2, 0)
+        endpoint = group.mul(three_cycle, transposition)
+        lifted_witness = (((transposition, identity), 1, 1),)
+        bad_kernel_witness = (((transposition, identity), 1, 1),)
+        quotient_witness = (
+            (
+                tuple(projection.apply(value) for value in (transposition, identity)),
+                1,
+                1,
+            ),
+        )
+
+        audit = normal_quotient_longitude_lift_audit(
+            projection,
+            2,
+            braid,
+            endpoint,
+            quotient_witness,
+            lifted_witness,
+            bad_kernel_witness,
+        )
+
+        self.assertFalse(audit.kernel_witness_assignments_in_kernel)
+        self.assertFalse(audit.kernel_witness_matches_correction)
+        self.assertFalse(audit.proves_endpoint_in_longitude_subgroup_by_normal_lift)
 
     def test_longitude_subgroup_witness_is_stable_under_chart_conjugation(self):
         group = symmetric_group(3)

@@ -1092,6 +1092,16 @@ unit-continuation longitude theorem: every such residual unit-continuation
 endpoint lies in the longitude-value subgroup of the fixed unit group, or a
 failure must be upgraded to a normalized-law sequence invisible to every
 finite group.
+The follow-up note `proofs/unit_continuation_abelian_kernel_lift.md` now
+splits that last endpoint condition through abelianization.  For the finite
+unit group `U`, let `C=[U,U]` and `q:U->U/C`.  A quotient witness for
+`q(S_beta)`, a lifted witness in `U`, and a kernel witness for
+`S_beta*v_beta^-1` using only assignments into `C` together prove
+`S_beta in V_beta(U)`.  The helper
+`normal_quotient_longitude_lift_audit(...)` records the quotient value, lifted
+value, kernel correction, kernel-assignment check, and combined witness.  Thus
+the final unit-continuation theorem now separates into an abelian matrix
+endpoint problem plus a commutator-kernel correction problem.
 The single-endpoint route audit
 `unit_composite_longitude_route_audit(monoid,n,beta,factors)` now records the
 same ladder used in product-label work: endpoint identity, one evaluated

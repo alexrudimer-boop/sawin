@@ -738,6 +738,12 @@ to `delta_{n,z}(beta)` has a permutation composite.  The exact remaining
 target is the unit-continuation longitude theorem:
 `S_beta in V_beta(U(M_cont))` for the fixed interval-level unit group, or a
 normalized-law B sequence from a failure.
+Then use `proofs/unit_continuation_abelian_kernel_lift.md`: split the final
+unit endpoint through `U/[U,U]`.  The abelian projection should be handled by
+the abelian longitude matrix criterion, while the residual correction must be
+witnessed inside the commutator subgroup.  The code helper
+`normal_quotient_longitude_lift_audit(...)` checks the quotient witness,
+lifted witness, and kernel witness.
 Use `unit_composite_longitude_route_audit(...)` only as a fixed-word
 bookkeeping tool: a missing single-longitude witness is not an obstruction
 when the endpoint still lies in the longitude-value subgroup.

@@ -589,6 +589,56 @@ class PushforwardLongitudeSubgroupWitnessAudit:
 
 
 @dataclass(frozen=True)
+class NormalQuotientLongitudeLiftAudit:
+    """Lift a quotient longitude witness plus kernel correction to ``G``."""
+
+    n: int
+    braid_word: Tuple[int, ...]
+    endpoint: GroupElement
+    quotient_endpoint: GroupElement
+    quotient_witness: LongitudeSubgroupWitness
+    quotient_witness_value: GroupElement
+    lifted_witness: LongitudeSubgroupWitness
+    lifted_witness_value: GroupElement
+    lifted_witness_projection_value: GroupElement
+    kernel_size: int
+    kernel_correction: GroupElement
+    kernel_correction_in_kernel: bool
+    kernel_witness: LongitudeSubgroupWitness
+    kernel_witness_assignments_in_kernel: bool
+    kernel_witness_value: GroupElement
+    combined_witness: LongitudeSubgroupWitness
+    combined_witness_value: GroupElement
+
+    @property
+    def quotient_witness_matches_endpoint(self) -> bool:
+        return self.quotient_witness_value == self.quotient_endpoint
+
+    @property
+    def lifted_witness_projects_to_quotient_witness(self) -> bool:
+        return self.lifted_witness_projection_value == self.quotient_witness_value
+
+    @property
+    def kernel_witness_matches_correction(self) -> bool:
+        return self.kernel_witness_value == self.kernel_correction
+
+    @property
+    def combined_witness_matches_endpoint(self) -> bool:
+        return self.combined_witness_value == self.endpoint
+
+    @property
+    def proves_endpoint_in_longitude_subgroup_by_normal_lift(self) -> bool:
+        return (
+            self.quotient_witness_matches_endpoint
+            and self.lifted_witness_projects_to_quotient_witness
+            and self.kernel_correction_in_kernel
+            and self.kernel_witness_assignments_in_kernel
+            and self.kernel_witness_matches_correction
+            and self.combined_witness_matches_endpoint
+        )
+
+
+@dataclass(frozen=True)
 class ConjugateLongitudeSubgroupWitnessAudit:
     """Certificate-level normality for one longitude subgroup witness."""
 
@@ -1553,6 +1603,93 @@ def pushforward_longitude_subgroup_witness_audit(
         pushed_witness=pushed_witness,
         pushed_witness_value=pushed_witness_value,
         pushforward_matches_image=pushed_witness_value == target_image_value,
+    )
+
+
+def normal_quotient_longitude_lift_audit(
+    quotient: FiniteGroupHomomorphism,
+    n: int,
+    braid_word: BraidWord,
+    endpoint: GroupElement,
+    quotient_witness: Sequence[LongitudeSubgroupWitnessLetter],
+    lifted_witness: Sequence[LongitudeSubgroupWitnessLetter],
+    kernel_witness: Sequence[LongitudeSubgroupWitnessLetter],
+) -> NormalQuotientLongitudeLiftAudit:
+    """Audit the quotient-plus-kernel certificate for ``endpoint in V_beta(G)``.
+
+    Let ``q:G -> H`` be a surjective quotient map.  If ``q(endpoint)`` has a
+    longitude witness in ``H``, choose any lifted witness in ``G`` that projects
+    to that quotient value.  The correction
+
+    ``endpoint * lifted_value^-1``
+
+    lies in ``ker(q)``.  A witness for this correction using only assignments
+    into ``ker(q)`` completes a literal witness for ``endpoint`` in ``G``.
+    This is the certificate-level form of the abelianization-plus-commutator
+    split used for the final unit-continuation endpoint.
+    """
+
+    source = quotient.source
+    if endpoint not in set(source.elements):
+        raise ValueError("endpoint must be an element of the source group")
+    kernel = frozenset(
+        element
+        for element in source.elements
+        if quotient.apply(element) == quotient.target.identity
+    )
+    quotient_witness_tuple = tuple(quotient_witness)
+    lifted_witness_tuple = tuple(lifted_witness)
+    kernel_witness_tuple = tuple(kernel_witness)
+    quotient_endpoint = quotient.apply(endpoint)
+    quotient_witness_value = evaluate_longitude_subgroup_witness(
+        quotient.target,
+        n,
+        braid_word,
+        quotient_witness_tuple,
+    )
+    lifted_witness_value = evaluate_longitude_subgroup_witness(
+        source,
+        n,
+        braid_word,
+        lifted_witness_tuple,
+    )
+    lifted_witness_projection_value = quotient.apply(lifted_witness_value)
+    kernel_correction = source.mul(endpoint, source.inv(lifted_witness_value))
+    kernel_witness_assignments_in_kernel = all(
+        all(value in kernel for value in assignment)
+        for assignment, _longitude_index, _exponent in kernel_witness_tuple
+    )
+    kernel_witness_value = evaluate_longitude_subgroup_witness(
+        source,
+        n,
+        braid_word,
+        kernel_witness_tuple,
+    )
+    combined_witness = kernel_witness_tuple + lifted_witness_tuple
+    combined_witness_value = evaluate_longitude_subgroup_witness(
+        source,
+        n,
+        braid_word,
+        combined_witness,
+    )
+    return NormalQuotientLongitudeLiftAudit(
+        n=n,
+        braid_word=tuple(braid_word),
+        endpoint=endpoint,
+        quotient_endpoint=quotient_endpoint,
+        quotient_witness=quotient_witness_tuple,
+        quotient_witness_value=quotient_witness_value,
+        lifted_witness=lifted_witness_tuple,
+        lifted_witness_value=lifted_witness_value,
+        lifted_witness_projection_value=lifted_witness_projection_value,
+        kernel_size=len(kernel),
+        kernel_correction=kernel_correction,
+        kernel_correction_in_kernel=kernel_correction in kernel,
+        kernel_witness=kernel_witness_tuple,
+        kernel_witness_assignments_in_kernel=kernel_witness_assignments_in_kernel,
+        kernel_witness_value=kernel_witness_value,
+        combined_witness=combined_witness,
+        combined_witness_value=combined_witness_value,
     )
 
 

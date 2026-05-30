@@ -626,6 +626,13 @@ const rows = [
     "Prove every residual unit-continuation endpoint lies in V_beta(U_cont), or upgrade such a failure to normalized laws.",
   ],
   [
+    "Unit-continuation abelian-kernel lift",
+    "Split the final unit endpoint into finite abelianization plus commutator-kernel correction.",
+    "proofs/unit_continuation_abelian_kernel_lift.md; normal_quotient_longitude_lift_audit checks quotient witness, lifted witness, and kernel witness.",
+    "Reduction criterion",
+    "Prove abelian matrix witnesses and commutator-kernel witnesses for S_beta in the fixed unit group.",
+  ],
+  [
     "Bi-free subgroup certificate",
     "Profile candidate words against fixed corridor detector factors.",
     "Helper, extra-factor target support, direct-product subgroup audit, and tests added; affine commutator seen by S3 block factor.",

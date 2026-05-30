@@ -63,9 +63,10 @@ First read:
 30. `proofs/chart_transport_collapse.md`
 31. `proofs/descent_separation_transport_rack_closure.md`
 32. `proofs/unit_continuation_final_obstruction.md`
-33. `proofs/sawin_proof_log.docx`
-34. `tables/reduction_audit.xlsx`
-35. The code and tests under `src/`, `tools/`, and `tests/`
+33. `proofs/unit_continuation_abelian_kernel_lift.md`
+34. `proofs/sawin_proof_log.docx`
+35. `tables/reduction_audit.xlsx`
+36. The code and tests under `src/`, `tools/`, and `tests/`
 
 Then audit and use these reductions:
 
@@ -291,6 +292,10 @@ Then audit and use these reductions:
    unit endpoint `S_beta in U(M_cont)` whose membership in
    `V_beta(U(M_cont))` must be proved, or upgraded to a normalized-law B
    sequence if false.
+   Then read `proofs/unit_continuation_abelian_kernel_lift.md`: it splits
+   `S_beta in V_beta(U_cont)` into an abelianized matrix-longitude witness and
+   a commutator-kernel correction witness, audited by
+   `normal_quotient_longitude_lift_audit(...)`.
    Also audit the Green atom-action layer through `proofs/green_branch_audit.md`
    and `atom_action_summary(...)`: it checks whether completed rows descend to
    operations on saturated atoms, `p(a) triangleright p(q)=p(a^q)` and
