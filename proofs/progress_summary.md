@@ -980,6 +980,13 @@ lift to the transported action labels.  The same audit helper now records
 `detector_orbit_size`, `action_orbit_size`, and
 `orbit_map_well_defined`, so finite B seeds can be classified as either orbit
 ambiguities or later relation-lift failures.
+`proofs/point_pushing_brunnian_stabilizer_gate.md` identifies the first of
+these two failures with a stabilizer-centralizer inclusion:
+`q(Stab(d)) <= Cent(h)`.  When this fails, the commutator
+`u a_{k+1} u^{-1} a_{k+1}^{-1}` is already a right-based Brunnian vertical
+witness.  The orbit audit now records `detector_stabilizer_size` and
+`stabilizer_centralizes_new_action`, isolating the remaining relation-lift
+burden to relations among well-defined detector-orbit labels.
 `proofs/point_pushing_derivative_functoriality.md` records the compatibility
 of this exact criterion with detector changes.  A finite group homomorphism
 `G->H` induces coordinate equivariance on detector states.  Surjections give

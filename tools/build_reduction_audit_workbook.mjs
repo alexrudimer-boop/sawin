@@ -353,6 +353,13 @@ const rows = [
     "Prove orbit-label well-definedness plus relation lifting uniformly, or build a symmetric-tail ambiguity/relation-failure sequence.",
   ],
   [
+    "Point-pushing Brunnian stabilizer gate",
+    "Convert orbit-label well-definedness to a stabilizer-centralizer inclusion.",
+    "proofs/point_pushing_brunnian_stabilizer_gate.md proves q(Stab(d)) <= Cent(h) iff the transported new-generator orbit label is well-defined; point_pushing_brunnian_orbit_audit now exposes the stabilizer check.",
+    "First relation-lift gate",
+    "Prove the stabilizer-centralizer inclusion uniformly, or construct an infinite symmetric-tail family of stabilizer failures.",
+  ],
+  [
     "Derivative detector functoriality",
     "Show the exact D_k(G) criterion is compatible with quotients, embeddings, symmetric cofinality, and product prefixes.",
     "proofs/point_pushing_derivative_functoriality.md proves coordinate equivariance for finite group homomorphisms; point_pushing_derivative_functoriality_audit checks finite instances.",

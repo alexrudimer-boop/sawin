@@ -145,6 +145,8 @@ class PointPushingBrunnianOrbitAudit:
     ybe_tuple_count: int
     old_pair_subgroup_size: int | None
     conjugate_generator_count: int | None
+    detector_stabilizer_size: int | None
+    stabilizer_centralizes_new_action: bool | None
     detector_orbit_size: int | None
     action_orbit_size: int | None
     orbit_map_well_defined: bool | None
@@ -928,6 +930,8 @@ def point_pushing_brunnian_orbit_audit(
             ybe_tuple_count=len(action_identity),
             old_pair_subgroup_size=None,
             conjugate_generator_count=None,
+            detector_stabilizer_size=None,
+            stabilizer_centralizes_new_action=None,
             detector_orbit_size=None,
             action_orbit_size=None,
             orbit_map_well_defined=None,
@@ -943,7 +947,64 @@ def point_pushing_brunnian_orbit_audit(
     detector_orbit_words: dict[Permutation, FreeWord] = {}
     detector_orbit_actions: dict[Permutation, Permutation] = {}
     action_orbit: set[Permutation] = set()
+    new_detector, new_action = pair_right[new_generator]
+    detector_stabilizer_size = 0
     for old_word in old_words.values():
+        old_detector, old_action = _evaluate_free_word_on_pair_images(
+            old_word,
+            pair_right,
+        )
+        old_detector_inverse = invert_permutation(old_detector)
+        old_action_inverse = invert_permutation(old_action)
+        old_detector_conjugate = compose_permutations(
+            compose_permutations(old_detector, new_detector),
+            old_detector_inverse,
+        )
+        if old_detector_conjugate == new_detector:
+            detector_stabilizer_size += 1
+            old_action_conjugate = compose_permutations(
+                compose_permutations(old_action, new_action),
+                old_action_inverse,
+            )
+            if old_action_conjugate != new_action:
+                witness_right_word = _reduce_free_word(
+                    old_word
+                    + ((new_generator, 1),)
+                    + _invert_free_word(old_word)
+                    + ((new_generator, -1),)
+                )
+                witness_pair = _evaluate_free_word_on_pair_images(
+                    witness_right_word,
+                    pair_right,
+                )
+                moved_index = next(
+                    index
+                    for index, image in enumerate(witness_pair[1])
+                    if image != index
+                )
+                return PointPushingBrunnianOrbitAudit(
+                    group_order=len(group.elements),
+                    arity=arity,
+                    braid_index=n,
+                    detector_state_count=len(detector_identity),
+                    ybe_tuple_count=len(action_identity),
+                    old_pair_subgroup_size=len(old_words),
+                    conjugate_generator_count=len(conjugate_pairs),
+                    detector_stabilizer_size=detector_stabilizer_size,
+                    stabilizer_centralizes_new_action=False,
+                    detector_orbit_size=len(detector_orbit_actions),
+                    action_orbit_size=len(action_orbit),
+                    orbit_map_well_defined=False,
+                    relative_subgroup_size=None,
+                    truncated=False,
+                    witness_right_word=witness_right_word,
+                    witness_left_word=right_based_point_pushing_word_to_left(
+                        witness_right_word,
+                        arity,
+                    ),
+                    witness_action_value=witness_pair[1],
+                    moved_index=moved_index,
+                )
         conjugate_word = _reduce_free_word(
             old_word + ((new_generator, 1),) + _invert_free_word(old_word)
         )
@@ -976,6 +1037,8 @@ def point_pushing_brunnian_orbit_audit(
                 ybe_tuple_count=len(action_identity),
                 old_pair_subgroup_size=len(old_words),
                 conjugate_generator_count=len(conjugate_pairs),
+                detector_stabilizer_size=detector_stabilizer_size,
+                stabilizer_centralizes_new_action=True,
                 detector_orbit_size=len(detector_orbit_actions),
                 action_orbit_size=len(action_orbit),
                 orbit_map_well_defined=False,
@@ -1057,6 +1120,8 @@ def point_pushing_brunnian_orbit_audit(
         ybe_tuple_count=len(action_identity),
         old_pair_subgroup_size=len(old_words),
         conjugate_generator_count=len(conjugate_pairs),
+        detector_stabilizer_size=detector_stabilizer_size,
+        stabilizer_centralizes_new_action=True,
         detector_orbit_size=len(detector_orbit_actions),
         action_orbit_size=len(action_orbit),
         orbit_map_well_defined=True,

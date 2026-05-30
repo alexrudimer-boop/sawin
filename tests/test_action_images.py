@@ -387,6 +387,9 @@ class ActionImageTests(unittest.TestCase):
         self.assertEqual(audit.braid_index, 3)
         self.assertEqual(audit.detector_state_count, 64)
         self.assertEqual(audit.ybe_tuple_count, 27)
+        self.assertIsNotNone(audit.detector_stabilizer_size)
+        self.assertGreaterEqual(audit.detector_stabilizer_size, 1)
+        self.assertFalse(audit.stabilizer_centralizes_new_action)
         self.assertFalse(audit.orbit_map_well_defined)
         self.assertIsNotNone(audit.detector_orbit_size)
         self.assertIsNotNone(audit.action_orbit_size)
@@ -412,6 +415,8 @@ class ActionImageTests(unittest.TestCase):
         )
 
         self.assertFalse(audit.truncated)
+        self.assertIsNotNone(audit.detector_stabilizer_size)
+        self.assertTrue(audit.stabilizer_centralizes_new_action)
         self.assertTrue(audit.orbit_map_well_defined)
         self.assertFalse(audit.found_brunnian_vertical_witness)
         self.assertTrue(audit.relative_vertical_kernel_trivial)
