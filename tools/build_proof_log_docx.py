@@ -56,6 +56,7 @@ EXTRA_MD.append(ROOT / "proofs" / "point_pushing_vertical_witness_certificate.md
 EXTRA_MD.append(ROOT / "proofs" / "point_pushing_fixed_arity_cofinality.md")
 EXTRA_MD.append(ROOT / "proofs" / "point_pushing_mu_boundedness_dichotomy.md")
 EXTRA_MD.append(ROOT / "proofs" / "point_pushing_mu_functoriality.md")
+EXTRA_MD.append(ROOT / "proofs" / "point_pushing_suffix_shuttle_normal_form.md")
 EXTRA_MD.append(ROOT / "proofs" / "point_pushing_derivative_functoriality.md")
 EXTRA_MD.append(ROOT / "proofs" / "symmetric_derivative_quotient_fork.md")
 EXTRA_MD.append(ROOT / "proofs" / "symmetric_repair_contract_bridge.md")

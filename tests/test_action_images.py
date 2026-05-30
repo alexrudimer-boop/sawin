@@ -18,6 +18,8 @@ from ybe_domination import (
     point_pushing_exponent_escape_audit,
     point_pushing_marked_quotient_audit,
     point_pushing_mu_prefix_audit,
+    point_pushing_suffix_shuttle_action,
+    point_pushing_suffix_shuttle_audit,
     point_pushing_vertical_witness_certificate,
     point_pushing_variety_escape_audit,
     point_pushing_variety_prefix_audit,
@@ -344,6 +346,29 @@ class ActionImageTests(unittest.TestCase):
         self.assertEqual(audit.unresolved_arities, (1, 2))
         self.assertTrue(all(row.has_vertical_witness_within_bound for row in audit.rows))
         self.assertEqual(tuple(row.first_witness_degree for row in audit.rows), (1, 1))
+
+    def test_point_pushing_suffix_shuttle_matches_direct_action(self):
+        solution = rack_solution([0, 1, 2], lambda a, b: (2 * a - b) % 3)
+
+        for generator in (1, 2, 3):
+            audit = point_pushing_suffix_shuttle_audit(
+                solution,
+                braid_index=4,
+                generator=generator,
+            )
+            self.assertTrue(audit.matches_direct_action)
+            self.assertEqual(audit.tuple_count, 81)
+            self.assertIsNone(audit.first_failure_input)
+
+    def test_point_pushing_suffix_shuttle_action_validates_indices(self):
+        solution = rack_solution([0, 1], lambda a, b: b)
+
+        with self.assertRaises(ValueError):
+            point_pushing_suffix_shuttle_action(solution, 1, 1, (0,))
+        with self.assertRaises(ValueError):
+            point_pushing_suffix_shuttle_action(solution, 3, 3, (0, 0, 0))
+        with self.assertRaises(ValueError):
+            point_pushing_suffix_shuttle_action(solution, 3, 1, (0, 0))
 
 
 if __name__ == "__main__":

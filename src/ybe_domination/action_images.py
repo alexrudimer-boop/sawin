@@ -162,6 +162,19 @@ class PointPushingMuPrefixAudit:
 
 
 @dataclass(frozen=True)
+class PointPushingSuffixShuttleAudit:
+    """Check the two-pass suffix shuttle formula for one point-pushing generator."""
+
+    braid_index: int
+    generator: int
+    tuple_count: int
+    matches_direct_action: bool
+    first_failure_input: Tuple[object, ...] | None
+    first_failure_direct: Tuple[object, ...] | None
+    first_failure_shuttle: Tuple[object, ...] | None
+
+
+@dataclass(frozen=True)
 class PointPushingVarietyEscapeAudit:
     """Bounded finite row for a point-pushing action-image variety escape."""
 
@@ -719,6 +732,90 @@ def point_pushing_mu_prefix_audit(
         max_arity=max_arity,
         max_symmetric_degree=max_symmetric_degree,
         rows=tuple(rows),
+    )
+
+
+def point_pushing_suffix_shuttle_action(
+    solution: FiniteBraidedSet,
+    braid_index: int,
+    generator: int,
+    tuple_value: Sequence[object],
+) -> Tuple[object, ...]:
+    """Apply ``A_{generator,braid_index}`` by the suffix-shuttle normal form.
+
+    Indices are one-based.  The formula expands
+    ``A_{i,n}=sigma_{n-1}...sigma_{i+1} sigma_i^2
+    sigma_{i+1}^{-1}...sigma_{n-1}^{-1}``.
+    """
+
+    if braid_index < 2:
+        raise ValueError("braid_index must be at least two")
+    if generator < 1 or generator >= braid_index:
+        raise ValueError("require 1 <= generator < braid_index")
+    if len(tuple_value) != braid_index:
+        raise ValueError("tuple length must equal braid_index")
+
+    out = list(tuple_value)
+    for crossing in range(braid_index - 1, generator, -1):
+        index = crossing - 1
+        out[index], out[index + 1] = solution.R[(out[index], out[index + 1])]
+    core_index = generator - 1
+    out[core_index], out[core_index + 1] = solution.R[
+        (out[core_index], out[core_index + 1])
+    ]
+    out[core_index], out[core_index + 1] = solution.R[
+        (out[core_index], out[core_index + 1])
+    ]
+    inverse = solution.inverse_R
+    for crossing in range(generator + 1, braid_index):
+        index = crossing - 1
+        out[index], out[index + 1] = inverse[(out[index], out[index + 1])]
+    return tuple(out)
+
+
+def point_pushing_suffix_shuttle_audit(
+    solution: FiniteBraidedSet,
+    braid_index: int,
+    generator: int,
+) -> PointPushingSuffixShuttleAudit:
+    """Check the suffix-shuttle normal form against direct braid action."""
+
+    from .braid_laws import pure_braid_generator
+
+    if braid_index < 2:
+        raise ValueError("braid_index must be at least two")
+    if generator < 1 or generator >= braid_index:
+        raise ValueError("require 1 <= generator < braid_index")
+
+    braid = pure_braid_generator(generator, braid_index)
+    tuple_count = 0
+    for tuple_value in product(solution.elements, repeat=braid_index):
+        tuple_count += 1
+        direct = solution.braid_action(braid, tuple_value)
+        shuttle = point_pushing_suffix_shuttle_action(
+            solution,
+            braid_index,
+            generator,
+            tuple_value,
+        )
+        if direct != shuttle:
+            return PointPushingSuffixShuttleAudit(
+                braid_index=braid_index,
+                generator=generator,
+                tuple_count=tuple_count,
+                matches_direct_action=False,
+                first_failure_input=tuple_value,
+                first_failure_direct=direct,
+                first_failure_shuttle=shuttle,
+            )
+    return PointPushingSuffixShuttleAudit(
+        braid_index=braid_index,
+        generator=generator,
+        tuple_count=tuple_count,
+        matches_direct_action=True,
+        first_failure_input=None,
+        first_failure_direct=None,
+        first_failure_shuttle=None,
     )
 
 

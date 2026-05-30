@@ -318,6 +318,13 @@ const rows = [
     "Search for unbounded mu only in primitive components; finite products of bounded factors cannot yield B.",
   ],
   [
+    "Point-pushing suffix-shuttle normal form",
+    "Express every point-pushing generator by one fixed reversible two-pass finite-state schema.",
+    "proofs/point_pushing_suffix_shuttle_normal_form.md expands A_{i,n} as a left R-scan, local square, and right R^{-1}-scan; point_pushing_suffix_shuttle_audit checks the convention.",
+    "Finite-state reduction",
+    "Prove this suffix-shuttle transducer family has bounded mu, or build unbounded vertical witnesses from it.",
+  ],
+  [
     "Derivative detector functoriality",
     "Show the exact D_k(G) criterion is compatible with quotients, embeddings, symmetric cofinality, and product prefixes.",
     "proofs/point_pushing_derivative_functoriality.md proves coordinate equivariance for finite group homomorphisms; point_pushing_derivative_functoriality_audit checks finite instances.",
