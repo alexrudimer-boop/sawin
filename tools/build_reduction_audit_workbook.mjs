@@ -290,6 +290,13 @@ const rows = [
     "Use symmetric groups or product-prefix groups in the marked-quotient fork without invoking ordinary law shortcuts.",
   ],
   [
+    "Symmetric derivative quotient fork",
+    "State the corrected global symmetric fork replacing the false ordinary-law theorem.",
+    "proofs/symmetric_derivative_quotient_fork.md proves finite-rack domination is equivalent to one S_m supplying all marked quotients D_k(S_m)->P_k(X), and failure gives S_j derivative relations that form a normalized-law obstruction after right stabilization.",
+    "Exact global fork",
+    "Prove the all-k marked quotient theorem for every X, or construct explicit S_j derivative relations that move one X.",
+  ],
+  [
     "Action images",
     "Law words vanish on fixed finite action images.",
     "Fixed-image certificate implemented.",
