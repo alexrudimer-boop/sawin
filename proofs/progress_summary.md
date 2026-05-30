@@ -1231,6 +1231,25 @@ entirely.  Every point-pushing generator `A_{i,k+1}` is braid-conjugate to
 `p^e>b(j)` is impossible once `b(j)>=B_X`.  The helper
 `point_pushing_cyclic_tail_bound_audit(...)` records this bound and finite
 prefix convention checks.
+`proofs/point_pushing_bounded_normal_generator_tail.md` now adds the
+first-failure normal-generator constraint.  In any Brunnian first-failure
+monolithic quotient, if `t` is the image of the newest point-pushing generator,
+then `ord(t)` divides the same fixed integer `B_X`, and the critical monolith
+`M` lies in `<<t>>`.  Thus every remaining monolithic tail must be built from
+one transported endpoint generator of bounded order, not from an arbitrary
+large quotient of the action image.  The helper
+`point_pushing_bounded_normal_generator_audit(...)` records the convention
+guardrail for this bound.
+`proofs/point_pushing_abelian_chief_relation_module.md` now linearizes the
+abelian-chief side of the Brunnian fork.  For the detector orbit generators
+`o_c=c d c^{-1}`, let `R` be the relation subgroup of their detector orbit
+group `N_D`.  In any minimal abelian-chief first failure, the vertical relation
+image `R -> M` lands in the unique elementary-abelian monolith and induces a
+nonzero, hence surjective, `F_p[N_D]`-module quotient
+`R/[R,R] tensor F_p -> M`.  Thus the abelian B-side is now a relation-module
+tail, while the other side is a nonabelian simple-power relation-lift tail.
+The helper `point_pushing_abelian_chief_relation_module_audit(...)` records
+finite chief-layer bookkeeping.
 
 ## Verification snapshot
 

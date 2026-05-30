@@ -16,6 +16,7 @@ from ybe_domination import (
     law_braid_action_certificate,
     law_word_on_last_strand,
     delete_right_based_new_strand_word,
+    point_pushing_abelian_chief_relation_module_audit,
     point_pushing_action_group,
     point_pushing_action_quotient_separation_audit,
     point_pushing_base_arity_certificate,
@@ -29,6 +30,7 @@ from ybe_domination import (
     point_pushing_brunnian_tail_certificate_prefix,
     point_pushing_brunnian_tail_prefix_audit,
     point_pushing_brunnian_witness_certificate,
+    point_pushing_bounded_normal_generator_audit,
     point_pushing_cyclic_tail_bound_audit,
     point_pushing_product_prefix_first_failure_audit,
     point_pushing_exponent_escape_audit,
@@ -1060,6 +1062,50 @@ class ActionImageTests(unittest.TestCase):
         self.assertEqual([row.max_order for row in audit.rows], [3, 3, 3])
         self.assertTrue(audit.checked_generator_orders_divide_bound)
         self.assertTrue(audit.closes_cyclic_tails_symbolically)
+
+    def test_point_pushing_bounded_normal_generator_audit_records_uniform_order(self):
+        solution = rack_solution([0, 1, 2], lambda a, b: (2 * a - b) % 3)
+
+        audit = point_pushing_bounded_normal_generator_audit(
+            solution,
+            max_braid_index=4,
+        )
+
+        self.assertEqual(audit.normal_generator_order_bound, 3)
+        self.assertEqual(audit.max_braid_index_checked, 4)
+        self.assertEqual([row.max_order for row in audit.rows], [3, 3, 3])
+        self.assertTrue(audit.checked_generator_orders_divide_bound)
+        self.assertTrue(audit.supports_bounded_normal_generator_reduction)
+
+    def test_abelian_chief_relation_module_audit_records_surjective_image(self):
+        group = symmetric_group(3)
+        monolith = [
+            element
+            for element in group.elements
+            if sum(
+                1
+                for i in range(3)
+                for j in range(i + 1, 3)
+                if element[i] > element[j]
+            )
+            % 2
+            == 0
+        ]
+        generator = next(element for element in monolith if element != group.identity)
+
+        audit = point_pushing_abelian_chief_relation_module_audit(
+            group,
+            monolith,
+            [generator],
+        )
+
+        self.assertEqual(audit.group_order, 6)
+        self.assertEqual(audit.monolith_order, 3)
+        self.assertEqual(audit.relation_image_order, 3)
+        self.assertTrue(audit.monolith_is_unique_minimal_normal)
+        self.assertTrue(audit.monolith_is_abelian)
+        self.assertTrue(audit.relation_image_equals_monolith)
+        self.assertTrue(audit.proves_abelian_chief_relation_module_quotient)
 
     def test_point_pushing_brunnian_normalized_prefix_audit_keeps_nonfailures_uncertified(self):
         solution = rack_solution([0, 1], lambda a, b: b)

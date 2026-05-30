@@ -121,20 +121,14 @@ The third case is the deepest extension case: the actual irreducible module
 and its finite linear action shadow stay bounded, while the quotient grows in
 the centralizer over that module.
 
-Together with `proofs/point_pushing_cyclic_p_power_tail.md` and
-`proofs/point_pushing_central_monolith_depth.md`, the current B fork is:
-
-1. cyclic prime escape;
-2. cyclic p-power depth escape;
-3. central stem depth;
-4. noncentral module prime escape;
-5. noncentral module dimension escape;
-6. noncentral bounded-module centralizer-layer escape;
-7. nonabelian simple-product monolith tails.
-
-Rule out all seven uniformly for finite YBE point-pushing action images and
-outcome A follows from the product-prefix criterion.  Construct one unbounded
-tail of any one type and outcome B follows after right stabilization.
+The follow-up notes close the cyclic p-power branch and further constrain the
+remaining module branch.  In
+`proofs/point_pushing_bounded_normal_generator_tail.md`, the monolith is shown
+to lie in the normal closure of one bounded-order point-pushing generator.  In
+`proofs/point_pushing_abelian_chief_relation_module.md`, every abelian-chief
+first failure is linearized as a nonzero quotient of the detector orbit
+relation module.  Thus the noncentral module branch is now a relation-module
+tail with the parameter escapes listed above.
 
 ## Audit Hook
 

@@ -122,17 +122,12 @@ again into prime escape and p-power depth escape.
 The second form is nonabelian but abelianization-invisible because the moved
 monolith is contained in `Z(H) cap [H,H]`.
 
-Thus the current global point-pushing obstruction fork is now:
-
-1. cyclic prime escape;
-2. cyclic p-power depth escape;
-3. stem central depth;
-4. noncentral irreducible `F_p` module tails;
-5. nonabelian simple-product monolith tails.
-
-Rule out all four uniformly for finite YBE point-pushing action images and
-outcome A follows from the product-prefix criterion.  Construct one unbounded
-tail of any one type and outcome B follows after right stabilization.
+The follow-up note `proofs/point_pushing_cyclic_tail_closure.md` closes the
+cyclic p-power branch by a uniform point-pushing generator order bound.  The
+remaining central abelian branch is therefore the central stem-depth case,
+and `proofs/point_pushing_bounded_normal_generator_tail.md` further shows that
+the stem monolith must lie in the normal closure of one bounded-order
+point-pushing generator.
 
 ## Audit Hook
 

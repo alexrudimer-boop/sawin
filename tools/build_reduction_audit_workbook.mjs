@@ -332,6 +332,20 @@ const rows = [
     "Remaining monolithic tails: central stem, noncentral module prime/dimension/centralizer-layer, and nonabelian simple-factor/multiplicity.",
   ],
   [
+    "Bounded normal generator tail",
+    "Normalize every product-prefix first-failure monolithic quotient to one bounded-order normal generator.",
+    "proofs/point_pushing_bounded_normal_generator_tail.md proves that in a Brunnian first failure the critical monolith M is contained in the normal closure of t=phi(h_new), with ord(t) dividing B_X. point_pushing_bounded_normal_generator_audit records finite convention checks.",
+    "All remaining tails constrained",
+    "Rule out the six bounded-order normal-generator tails, or construct one for B.",
+  ],
+  [
+    "Abelian-chief relation module",
+    "Linearize abelian-chief Brunnian failures as detector orbit relation-module quotients.",
+    "proofs/point_pushing_abelian_chief_relation_module.md proves that a minimal abelian-chief first failure gives a nonzero, hence surjective, F_p[N_D]-module quotient Rel_D tensor F_p -> M. point_pushing_abelian_chief_relation_module_audit records finite chief-layer bookkeeping.",
+    "Abelian chief linearized",
+    "Rule out unbounded irreducible relation-module quotients, or construct one for B.",
+  ],
+  [
     "Noncentral module tail",
     "Split noncentral elementary-abelian monolith failures by module prime, module dimension, and centralizer-extension layer.",
     "proofs/point_pushing_noncentral_module_tail.md proves |H|=p^r |H/C_H(M)| |C_H(M)/M|; an infinite tail has module prime escape, fixed-prime dimension escape, or bounded-module centralizer-layer escape. The audit records dimension, layer size, product check, and row regime.",

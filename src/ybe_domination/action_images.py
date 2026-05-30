@@ -230,6 +230,21 @@ class PointPushingCyclicTailBoundAudit:
 
 
 @dataclass(frozen=True)
+class PointPushingBoundedNormalGeneratorAudit:
+    """Uniform bound for first-failure monolith normal generators."""
+
+    tuple_count: int
+    normal_generator_order_bound: int
+    max_braid_index_checked: int
+    rows: Tuple[PureGeneratorOrderRow, ...]
+    checked_generator_orders_divide_bound: bool
+
+    @property
+    def supports_bounded_normal_generator_reduction(self) -> bool:
+        return self.normal_generator_order_bound >= 1
+
+
+@dataclass(frozen=True)
 class PointPushingBrunnianFailureCertificate:
     """Braid-action certificate for one nontrivial Brunnian gate failure."""
 
@@ -489,6 +504,34 @@ class PointPushingMonolithicCompressionAudit:
             and self.action_value_nontrivial
             and self.quotient_is_monolithic is True
             and self.projected_value_in_monolith is True
+        )
+
+
+@dataclass(frozen=True)
+class PointPushingAbelianChiefRelationModuleAudit:
+    """Bookkeeping for abelian-chief relation-module compression."""
+
+    group_order: int
+    monolith_order: int
+    relation_image_order: int
+    monolith_is_normal: bool
+    relation_image_is_normal: bool
+    monolith_is_unique_minimal_normal: bool
+    monolith_is_abelian: bool
+    relation_image_nontrivial: bool
+    relation_image_inside_monolith: bool
+    relation_image_equals_monolith: bool
+
+    @property
+    def proves_abelian_chief_relation_module_quotient(self) -> bool:
+        return (
+            self.monolith_is_normal
+            and self.relation_image_is_normal
+            and self.monolith_is_unique_minimal_normal
+            and self.monolith_is_abelian
+            and self.relation_image_nontrivial
+            and self.relation_image_inside_monolith
+            and self.relation_image_equals_monolith
         )
 
 
@@ -1912,6 +1955,32 @@ def point_pushing_cyclic_tail_bound_audit(
     )
 
 
+def point_pushing_bounded_normal_generator_audit(
+    solution: FiniteBraidedSet,
+    *,
+    max_braid_index: int = 5,
+) -> PointPushingBoundedNormalGeneratorAudit:
+    """Record the bounded-order normal-generator constraint."""
+
+    if max_braid_index < 2:
+        raise ValueError("max_braid_index must be at least 2")
+    pure_action = action_permutation(solution, 2, (1, 1))
+    bound = permutation_order(pure_action)
+    rows = pure_generator_order_profile(solution, max_braid_index)
+    divides = all(
+        bound % order == 0
+        for row in rows
+        for order in row.generator_orders
+    )
+    return PointPushingBoundedNormalGeneratorAudit(
+        tuple_count=len(pure_action),
+        normal_generator_order_bound=bound,
+        max_braid_index_checked=max_braid_index,
+        rows=rows,
+        checked_generator_orders_divide_bound=divides,
+    )
+
+
 def point_pushing_brunnian_failure_certificate(
     solution: FiniteBraidedSet,
     group: FiniteGroup,
@@ -2160,6 +2229,46 @@ def _monolith_type_data(
         monolith_type = "elementary_abelian" if prime is not None else "abelian"
         return monolith_type, prime, orders
     return "nonabelian_characteristically_simple", None, orders
+
+
+def point_pushing_abelian_chief_relation_module_audit(
+    group: FiniteGroup,
+    monolith: Iterable[object],
+    relation_image_generators: Iterable[object],
+) -> PointPushingAbelianChiefRelationModuleAudit:
+    """Audit the finite-group side of an abelian-chief relation module row."""
+
+    from .finite_group import is_normal_subgroup, subgroup_as_group
+
+    monolith_set = frozenset(monolith)
+    relation_image = frozenset(
+        subgroup_generated_elements(group, relation_image_generators)
+    )
+    normal_subgroups = _normal_subgroups_bruteforce(group)
+    minimal_normals = _minimal_normal_subgroups(group, normal_subgroups)
+    monolith_is_normal = is_normal_subgroup(group, monolith_set)
+    relation_image_is_normal = is_normal_subgroup(group, relation_image)
+    monolith_is_unique_minimal_normal = (
+        len(minimal_normals) == 1 and minimal_normals[0] == monolith_set
+    )
+    monolith_is_abelian = (
+        monolith_is_normal and is_abelian_group(subgroup_as_group(group, monolith_set))
+    )
+    relation_image_nontrivial = relation_image != frozenset((group.identity,))
+    relation_image_inside_monolith = relation_image <= monolith_set
+    relation_image_equals_monolith = relation_image == monolith_set
+    return PointPushingAbelianChiefRelationModuleAudit(
+        group_order=len(group.elements),
+        monolith_order=len(monolith_set),
+        relation_image_order=len(relation_image),
+        monolith_is_normal=monolith_is_normal,
+        relation_image_is_normal=relation_image_is_normal,
+        monolith_is_unique_minimal_normal=monolith_is_unique_minimal_normal,
+        monolith_is_abelian=monolith_is_abelian,
+        relation_image_nontrivial=relation_image_nontrivial,
+        relation_image_inside_monolith=relation_image_inside_monolith,
+        relation_image_equals_monolith=relation_image_equals_monolith,
+    )
 
 
 def _monolith_conjugation_data(

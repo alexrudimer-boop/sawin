@@ -124,20 +124,13 @@ fixed simple factor with unbounded product multiplicity.
 
 There is no separate centralizer-extension tail in the nonabelian case.
 
-Together with the abelian monolith refinements, the current B fork is:
-
-1. cyclic prime escape;
-2. cyclic p-power depth escape;
-3. central stem depth;
-4. noncentral module prime escape;
-5. noncentral module dimension escape;
-6. noncentral bounded-module centralizer-layer escape;
-7. nonabelian simple-factor escape;
-8. nonabelian multiplicity escape.
-
-Rule out all eight uniformly for finite YBE point-pushing action images and
-outcome A follows from the product-prefix criterion.  Construct one unbounded
-tail of any one type and outcome B follows after right stabilization.
+The follow-up notes close the cyclic p-power branch and linearize the
+abelian-chief branch.  Thus the complementary nonabelian branch can be viewed
+as a nonabelian simple-power relation-lift tail, with the two unbounded
+parameters above: simple-factor escape or fixed-factor multiplicity escape.
+Rule those out together with the abelian relation-module tails and outcome A
+follows from the product-prefix criterion; construct one such infinite tail
+and outcome B follows after right stabilization.
 
 ## Audit Hook
 

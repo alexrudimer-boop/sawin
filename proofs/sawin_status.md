@@ -2175,6 +2175,20 @@ point-pushing action image `P_k(X)` has order dividing the fixed bound
 `ord(rho_{X,2}(sigma_1^2))`, because the point-pushing generators are
 braid-conjugate to crossing squares.  Hence cyclic product-prefix failures are
 impossible once `b(j)` exceeds this bound.
+The first-failure quotient itself has also been sharpened by
+`proofs/point_pushing_bounded_normal_generator_tail.md`: after Brunnian
+normalization and monolithic compression, the moved monolith `M` lies in the
+normal closure of the newest point-pushing generator image `t`, and
+`ord(t)` divides the same fixed bound `ord(rho_{X,2}(sigma_1^2))`.  Thus every
+remaining monolithic tail is a bounded-order normal-generator tail.
+The abelian-chief side is now linearized in
+`proofs/point_pushing_abelian_chief_relation_module.md`.  If `R` is the
+relation subgroup among detector orbit generators `o_c=c d c^{-1}`, then a
+minimal abelian-chief first failure induces a nonzero, hence surjective,
+`F_p[N_D]`-module quotient `R/[R,R] tensor F_p -> M` onto the elementary
+abelian monolith.  Thus an abelian B tail must be an unbounded
+relation-module quotient tail; the complementary chief-layer branch is a
+nonabelian simple-power relation-lift tail.
 The noncentral elementary-abelian branch now has a parameter split too:
 `proofs/point_pushing_noncentral_module_tail.md` uses
 `|H|=p^r |H/C_H(M)| |C_H(M)/M|` to force an infinite tail into module prime
