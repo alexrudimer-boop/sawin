@@ -1304,11 +1304,17 @@ class ActionImageTests(unittest.TestCase):
         self.assertEqual(audit.quotient_order, 4)
         self.assertEqual(audit.quotient_exponent, 2)
         self.assertFalse(audit.quotient_is_cyclic)
+        self.assertEqual(audit.quotient_generator_internal_normal_closure_order, 2)
+        self.assertFalse(audit.quotient_generator_internally_normally_generates)
         self.assertEqual(audit.generator_order, 4)
         self.assertEqual(audit.generator_image_order, 2)
         self.assertTrue(audit.monolith_central_in_normal_closure)
         self.assertTrue(audit.monolith_in_normal_closure_commutator)
         self.assertTrue(audit.quotient_is_noncyclic_stem_target)
+        self.assertEqual(
+            audit.quotient_generation_regime,
+            "transport_orbit_generated_quotient",
+        )
         self.assertEqual(audit.tail_regime, "centralizer_stem_multiplier_tail")
         self.assertTrue(audit.proves_centralizer_stem_multiplier_tail)
 
@@ -1321,6 +1327,10 @@ class ActionImageTests(unittest.TestCase):
 
         self.assertTrue(cyclic.quotient_is_cyclic)
         self.assertFalse(cyclic.quotient_is_noncyclic_stem_target)
+        self.assertEqual(
+            cyclic.quotient_generation_regime,
+            "invalid_centralizer_stem_generation_data",
+        )
         self.assertEqual(cyclic.tail_regime, "invalid_centralizer_stem_multiplier_data")
 
     def test_central_stem_relation_audit_records_stem_extension(self):

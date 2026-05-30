@@ -119,6 +119,9 @@ The follow-up
 `proofs/point_pushing_centralizer_stem_noncyclic_quotient.md` removes the
 cyclic quotient subcase: if `N/M` were cyclic, centrality of `M` would make
 `N` abelian, contradicting `M<=[N,N]`.
+The follow-up `proofs/point_pushing_centralizer_stem_transport_split.md`
+then splits the noncyclic quotient by whether the bounded generator image
+normally generates `N/M` internally or requires ambient transport conjugates.
 
 ## Audit Hook
 

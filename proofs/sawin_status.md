@@ -2252,6 +2252,10 @@ The quotient in that stem branch cannot be cyclic:
 `proofs/point_pushing_centralizer_stem_noncyclic_quotient.md` proves that a
 cyclic `N/M` would make `N` abelian because `M<=Z(N)`, contradicting
 `M<=[N,N]`.
+The noncyclic quotient branch has now been split in
+`proofs/point_pushing_centralizer_stem_transport_split.md`: either the
+bounded generator image normally generates `N/M` internally, or the quotient
+requires ambient transported conjugates of that internal normal closure.
 
 ## Completion audit checklist
 

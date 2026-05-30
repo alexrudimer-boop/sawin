@@ -1305,6 +1305,12 @@ cyclic quotient subcase of that stem branch.  If `N/M` were cyclic, then the
 centrality of `M` in `N` would force `N` abelian, contradicting
 `M<=[N,N]`.  The helper records `quotient_is_cyclic` and only accepts
 noncyclic stem quotient rows.
+`proofs/point_pushing_centralizer_stem_transport_split.md` now splits those
+noncyclic stem quotient rows by generation mechanism.  Either the bounded
+generator image internally normally generates `Q=N/M`, or its internal normal
+closure is proper and the quotient is generated only by the ambient
+transported orbit of that closure.  The helper records the internal normal
+closure order and the regime label.
 `proofs/point_pushing_nonabelian_chief_relation_quotient.md` now gives the
 parallel nonabelian-chief compression.  If `R` is the same detector orbit
 relation group and the chief layer is `M=S^r`, then the minimal vertical

@@ -68,6 +68,7 @@ EXTRA_MD.append(ROOT / "proofs" / "point_pushing_centralizer_layer_commutator_sp
 EXTRA_MD.append(ROOT / "proofs" / "point_pushing_abelian_centralizer_layer_prime_bound.md")
 EXTRA_MD.append(ROOT / "proofs" / "point_pushing_centralizer_stem_multiplier_tail.md")
 EXTRA_MD.append(ROOT / "proofs" / "point_pushing_centralizer_stem_noncyclic_quotient.md")
+EXTRA_MD.append(ROOT / "proofs" / "point_pushing_centralizer_stem_transport_split.md")
 EXTRA_MD.append(ROOT / "proofs" / "point_pushing_nonabelian_chief_relation_quotient.md")
 EXTRA_MD.append(ROOT / "proofs" / "point_pushing_nonabelian_wreath_coordinate_lift.md")
 EXTRA_MD.append(ROOT / "proofs" / "point_pushing_noncentral_module_tail.md")

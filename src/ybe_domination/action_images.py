@@ -656,6 +656,8 @@ class PointPushingCentralizerStemMultiplierAudit:
     quotient_order: int
     quotient_exponent: int
     quotient_is_cyclic: bool
+    quotient_generator_internal_normal_closure_order: int
+    quotient_generator_internally_normally_generates: bool
     generator_order: int
     generator_image_order: int
     generator_order_divides_bound: bool
@@ -664,6 +666,7 @@ class PointPushingCentralizerStemMultiplierAudit:
     monolith_is_elementary_abelian: bool
     quotient_is_stem_target: bool
     quotient_is_noncyclic_stem_target: bool
+    quotient_generation_regime: str
     tail_regime: str
 
     @property
@@ -2782,6 +2785,8 @@ def point_pushing_centralizer_stem_multiplier_audit(
     quotient_order = 0
     quotient_exponent = 0
     quotient_is_cyclic = False
+    quotient_generator_internal_normal_closure_order = 0
+    quotient_generator_internally_normally_generates = False
     generator_image_order = 0
     if (
         monolith_is_elementary_abelian
@@ -2798,7 +2803,15 @@ def point_pushing_centralizer_stem_multiplier_audit(
             element_order(quotient, element) == quotient_order
             for element in quotient.elements
         )
-        generator_image_order = element_order(quotient, projection.apply(generator))
+        generator_image = projection.apply(generator)
+        generator_image_order = element_order(quotient, generator_image)
+        internal_closure = frozenset(
+            normal_closure_elements(quotient, [generator_image])
+        )
+        quotient_generator_internal_normal_closure_order = len(internal_closure)
+        quotient_generator_internally_normally_generates = (
+            quotient_generator_internal_normal_closure_order == quotient_order
+        )
     generator_order = element_order(group, generator)
     generator_order_divides_bound = normal_generator_order_bound % generator_order == 0
     quotient_is_noncyclic_stem_target = quotient_is_stem_target and not quotient_is_cyclic
@@ -2807,6 +2820,12 @@ def point_pushing_centralizer_stem_multiplier_audit(
         if quotient_is_noncyclic_stem_target and generator_order_divides_bound
         else "invalid_centralizer_stem_multiplier_data"
     )
+    if tail_regime != "centralizer_stem_multiplier_tail":
+        quotient_generation_regime = "invalid_centralizer_stem_generation_data"
+    elif quotient_generator_internally_normally_generates:
+        quotient_generation_regime = "internal_bounded_normal_generator_quotient"
+    else:
+        quotient_generation_regime = "transport_orbit_generated_quotient"
     return PointPushingCentralizerStemMultiplierAudit(
         normal_generator_order_bound=normal_generator_order_bound,
         group_order=len(group.elements),
@@ -2817,6 +2836,12 @@ def point_pushing_centralizer_stem_multiplier_audit(
         quotient_order=quotient_order,
         quotient_exponent=quotient_exponent,
         quotient_is_cyclic=quotient_is_cyclic,
+        quotient_generator_internal_normal_closure_order=(
+            quotient_generator_internal_normal_closure_order
+        ),
+        quotient_generator_internally_normally_generates=(
+            quotient_generator_internally_normally_generates
+        ),
         generator_order=generator_order,
         generator_image_order=generator_image_order,
         generator_order_divides_bound=generator_order_divides_bound,
@@ -2825,6 +2850,7 @@ def point_pushing_centralizer_stem_multiplier_audit(
         monolith_is_elementary_abelian=monolith_is_elementary_abelian,
         quotient_is_stem_target=quotient_is_stem_target,
         quotient_is_noncyclic_stem_target=quotient_is_noncyclic_stem_target,
+        quotient_generation_regime=quotient_generation_regime,
         tail_regime=tail_regime,
     )
 

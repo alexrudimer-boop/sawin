@@ -402,6 +402,13 @@ const rows = [
     "Rule out noncyclic bounded-generator centralizer-stem multiplier tails, or construct one for B.",
   ],
   [
+    "Centralizer-stem transport split",
+    "Split noncyclic centralizer-stem multiplier quotients by internal normal generation versus ambient transport generation.",
+    "proofs/point_pushing_centralizer_stem_transport_split.md proves that for q=image(t) in Q=N/M, either <<q>>_Q=Q or the quotient is generated only by the ambient transported orbit of that proper internal normal closure. point_pushing_centralizer_stem_multiplier_audit records the internal normal closure order and regime.",
+    "Transport split",
+    "Rule out internally normally generated bounded quotients and transport-orbit generated quotients, or construct one for B.",
+  ],
+  [
     "Nonabelian-chief relation quotient",
     "Compress nonabelian-chief Brunnian failures to detector relation-group quotients.",
     "proofs/point_pushing_nonabelian_chief_relation_quotient.md proves that a minimal nonabelian-chief first failure has mu_H(R)=M=S^r, and the detector orbit group controls the outer action on M. point_pushing_nonabelian_chief_relation_quotient_audit records finite chief-layer bookkeeping.",

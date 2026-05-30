@@ -154,6 +154,10 @@ with bounded generator image inherited from `t`.
 The follow-up `proofs/point_pushing_centralizer_stem_noncyclic_quotient.md`
 rules out cyclic `N/M`: a cyclic central quotient would make `N` abelian,
 contradicting `M<=[N,N]`.
+The follow-up `proofs/point_pushing_centralizer_stem_transport_split.md`
+then separates noncyclic `N/M` by whether the bounded generator image
+internally normally generates the quotient or whether generation requires the
+ambient transported orbit.
 
 ## Audit Hook
 

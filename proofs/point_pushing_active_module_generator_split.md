@@ -147,6 +147,9 @@ The stem side is sharpened in
 Schur multiplier of `N/M`.
 The cyclic quotient case of that stem side is ruled out in
 `proofs/point_pushing_centralizer_stem_noncyclic_quotient.md`.
+The remaining noncyclic quotient is split in
+`proofs/point_pushing_centralizer_stem_transport_split.md` by internal normal
+generation versus ambient transport-orbit generation.
 
 ## Audit Hook
 
