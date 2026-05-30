@@ -13,7 +13,10 @@ index.
 B. An explicit finite bijective YBE solution not dominated by any finite rack,
 with a normalized-law obstruction sequence.
 
-This file is a working proof log, not the final answer.
+This file is a working proof log, not the final answer.  The current
+proof-side positive assembly is recorded in
+`proofs/master_local_residual_positive_closure.md`, and the final checklist is
+recorded in `proofs/final_completion_audit.md`.
 
 ## External-state check
 

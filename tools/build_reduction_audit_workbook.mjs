@@ -693,7 +693,14 @@ const rows = [
     "Assemble the fixed detector product H(pi,Q), the bi-free corridor closure, sharp obstruction step, and congruence-chain induction.",
     "proofs/master_local_residual_positive_closure.md cites the branch notes and proves Lambda_H=1 implies Delta=1 for each local-minimal interval.",
     "Candidate A proof",
-    "Run final proof-critic audit for finite-search leakage, semisplit handling, n-independence, and chain induction before marking the global goal complete.",
+    "Audit finite-search leakage, semisplit handling, n-independence, endpoint faithfulness, and chain induction against proofs/final_completion_audit.md.",
+  ],
+  [
+    "Final completion audit",
+    "Check the assembled A-route against the explicit Sawin requirements and record the failed external proof-critic attempt.",
+    "proofs/final_completion_audit.md audits quotient/residual setup, sharp obstruction, congruence-chain induction, local-minimality gates, fixed detector independence from n, and non-use of finite search; Chrome/Browser proof critic failed before tab discovery.",
+    "Internal completion audit",
+    "Obtain external GPT-5.5 Pro or human referee review if browser access becomes available; otherwise keep the audit artifact with the branch.",
   ],
   [
     "Unit-continuation abelian-kernel lift",

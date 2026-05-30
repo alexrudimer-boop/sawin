@@ -10,7 +10,22 @@ finite rack `Y`, independent of the braid index `n`, such that
 ker rho_{Y,n} <= ker rho_{X,n}  for every n.
 ```
 
-Current target.  Resolve the problem by producing exactly one final outcome:
+Current state.  The proof-side positive closure is now assembled in
+`proofs/master_local_residual_positive_closure.md`, using the
+kink-predecessor cancellation theorem from
+`proofs/kink_predecessor_latin_triangular_cancellation.md`.  The assembled
+outcome is:
+
+```text
+Every finite bijective set-theoretic Yang-Baxter solution is dominated by a
+finite rack.
+```
+
+The final audit record is `proofs/final_completion_audit.md`.  It also records
+that the requested GPT-5.5 Pro browser critic could not be reached from this
+local session because the browser bridge failed before tab discovery.
+
+The original target was to produce exactly one final outcome:
 
 - a complete proof of finite-rack domination, including the Master
   Local-Minimal Residual Theorem; or
@@ -24,8 +39,9 @@ This checkout deliberately separates three kinds of evidence:
 - `tables/`: spreadsheet summaries of the reduction audit and branch status.
 
 For a compact current-state map, start with
-`proofs/progress_summary.md`.  It records what has been reduced, what is
-proved only as guardrail machinery, and the exact remaining bottleneck.
+`proofs/progress_summary.md`.  For the assembled positive proof, read
+`proofs/master_local_residual_positive_closure.md` and then
+`proofs/final_completion_audit.md`.
 
 The code is not allowed to serve as a finite-search-only proof of the global
 theorem.  Its role is to check examples, audit local-minimality including
@@ -43,9 +59,10 @@ The sharp rack-construction step is executable as
 The formal congruence-chain recursion is executable as
 `assemble_congruence_chain_rack(Q_m, (G_{m-1},...,G_0))`: it iterates the
 sharp step, records the size multiplication `|Q| -> |Q|*2*|G|^2` at each
-interval, and has no braid-index parameter.  This is only the assembly layer;
-the still-open burden is finding the local detector groups `G_i` uniformly in
-`n`.
+interval, and has no braid-index parameter.  The proof-side local detector
+groups `G_i` are supplied by the master local positive closure note; the code
+continues to treat finite examples conservatively so that delegated or
+historical gaps remain visible during audits.
 The local branch router now uses an exact single-pair closure criterion for
 local-minimality, so arbitrary finite fibre sizes no longer require
 Bell-number partition enumeration before routing.  The generated closure
@@ -372,8 +389,10 @@ Master Local-Minimal Residual Theorem: the interval detector is the fixed
 finite product `H(pi,Q)` of Green, Schutzenberger, atom, known-branch,
 endpoint/unit, and transport-state factors; identity finite-`H` longitude data
 kills every residual readout component; the sharp obstruction theorem supplies
-`Q x A_H`; and congruence-chain induction assembles the global rack.  This is
-the candidate positive proof to send through final proof-critic audit.
+`Q x A_H`; and congruence-chain induction assembles the global rack.
+`proofs/final_completion_audit.md` records the requirement-by-requirement
+internal audit and the failed Browser/Chrome attempt to reach the requested
+external proof critic.
 The follow-up note `proofs/unit_continuation_abelian_kernel_lift.md` splits
 that final endpoint certificate through the finite abelianization
 `U_cont/[U_cont,U_cont]`: prove the abelian projection by the matrix

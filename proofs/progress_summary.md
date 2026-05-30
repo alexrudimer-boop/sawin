@@ -707,7 +707,27 @@ At the latest verified snapshot:
   mixed-unit companion-separation, rank-profile collapse, triangular
   bundle-partition, triangular recovery-inverse, constant-column collapse,
   Latin triangular YBE-split, one-colour Latin-collapse, and kink-predecessor
-  Latin-cancellation rows, plus the master local positive-closure assembly;
+  Latin-cancellation rows, plus the master local positive-closure assembly
+  and final completion audit;
 - LibreOffice/`soffice` was unavailable, so DOCX visual render QA could not
   be completed;
 - the Desktop zip was overwritten rather than versioned separately.
+
+## Final Completion Audit
+
+`proofs/final_completion_audit.md` records the final checklist after the
+master local positive closure assembly.  It audits the required reductions:
+quotient/residual setup, sharp obstruction theorem, congruence-chain
+induction, semisplit local-minimality, known branches, fixed detector
+independence from `n`, and the non-use of finite search as the all-`n` proof.
+
+The requested GPT-5.5 Pro proof critic could not be reached from this local
+session.  Chrome and in-app Browser control both failed before tab discovery
+with the browser bridge diagnostic
+
+```text
+windows sandbox failed: spawn setup refresh
+```
+
+so the repository records an internal completion audit rather than an external
+model review.
