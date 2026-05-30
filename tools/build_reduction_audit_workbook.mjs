@@ -815,6 +815,13 @@ const rows = [
     "Supply a perfect-residual recursive-longitude witness, or upgrade a perfect-residual finite miss to normalized laws.",
   ],
   [
+    "Perfect-residual normalized seed",
+    "Attach a nonsolvable terminal-unit finite miss to one local normalized-law prefix row.",
+    "proofs/unit_perfect_residual_normalized_seed.md; unit_perfect_residual_normalized_seed_audit pairs a local product-prefix row with a perfect-residual identity-signature miss and explicit same-readout assertions.",
+    "B-seed certificate",
+    "Use only as one row of an all-j normalized-law construction; a bounded miss remains nonfinal.",
+  ],
+  [
     "Unit-continuation derived product detector",
     "Assemble terminal-unit derived-series certificates into one fixed product detector.",
     "proofs/unit_continuation_derived_product_detector.md; unit_composite_product_derived_series_lift_audit embeds each factor's combined witness into prod_i U(M_i) and verifies the endpoint tuple.",

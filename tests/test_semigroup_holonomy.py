@@ -5,14 +5,21 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from ybe_domination import (
+    QuotientMap,
     TransformationMonoid,
+    UnitPerfectResidualLongitudeAudit,
     aperiodic_permutation_audit,
     compose_transformation_word,
+    cyclic_group,
+    identity_solution,
     is_aperiodic_element,
     is_aperiodic_monoid,
     is_permutation_transformation,
+    local_normalized_law_prefix_witness_audit,
     monoid_permutation_group,
     permutation_elements,
+    pure_braid_generator,
+    rack_solution,
     transformation_power,
     unit_composite_abelianization_audit,
     unit_composite_detection_audit,
@@ -25,6 +32,7 @@ from ybe_domination import (
     unit_factorization_audit,
     unit_longitude_subgroup_audit,
     unit_perfect_residual_longitude_audit,
+    unit_perfect_residual_normalized_seed_audit,
     unit_section_detection_audit,
     unit_section_product_detection_audit,
 )
@@ -443,6 +451,84 @@ class SemigroupHolonomyTests(unittest.TestCase):
         self.assertFalse(audit.proves_perfect_residual_endpoint_in_longitude_subgroup)
         self.assertFalse(audit.identity_longitudes_kill_perfect_residual_endpoint)
         self.assertTrue(audit.is_finite_perfect_residual_detector_failure)
+
+    def test_unit_perfect_residual_normalized_seed_pairs_one_prefix_row(self):
+        total = rack_solution([0, 1], lambda _left, right: 1 - right)
+        quotient = identity_solution(["*"])
+        qmap = QuotientMap(total, quotient, {element: "*" for element in total.elements})
+        local_prefix = local_normalized_law_prefix_witness_audit(
+            qmap,
+            identity_solution(["q"]),
+            (cyclic_group(1),),
+            2,
+            pure_braid_generator(1, 2),
+            ("*", "*"),
+            (0, 0),
+            extra_strands=1,
+            fill_value=0,
+        )
+        three_cycle = (1, 2, 0, 3, 4)
+        perfect_miss = UnitPerfectResidualLongitudeAudit(
+            artin_permutation=(0, 1),
+            unit_group_order=60,
+            derived_subgroup_orders=(60,),
+            perfect_residual_size=60,
+            residual_endpoint=three_cycle,
+            residual_endpoint_in_unit_group=True,
+            residual_endpoint_in_perfect_residual=True,
+            perfect_residual_longitude_subgroup_size=1,
+            residual_endpoint_lies_in_perfect_residual_longitude_subgroup=False,
+            perfect_residual_identity=(0, 1, 2, 3, 4),
+        )
+
+        audit = unit_perfect_residual_normalized_seed_audit(
+            local_prefix,
+            perfect_miss,
+            same_braid_word=True,
+            endpoint_readout_matches_residual_motion=True,
+        )
+
+        self.assertTrue(local_prefix.proves_one_local_prefix_normalized_law_witness)
+        self.assertTrue(audit.same_source_degree)
+        self.assertTrue(audit.perfect_residual_has_finite_detector_miss)
+        self.assertTrue(audit.proves_one_local_perfect_residual_normalized_seed)
+
+    def test_unit_perfect_residual_normalized_seed_requires_readout_match(self):
+        total = rack_solution([0, 1], lambda _left, right: 1 - right)
+        quotient = identity_solution(["*"])
+        qmap = QuotientMap(total, quotient, {element: "*" for element in total.elements})
+        local_prefix = local_normalized_law_prefix_witness_audit(
+            qmap,
+            identity_solution(["q"]),
+            (cyclic_group(1),),
+            2,
+            pure_braid_generator(1, 2),
+            ("*", "*"),
+            (0, 0),
+            extra_strands=1,
+            fill_value=0,
+        )
+        perfect_miss = UnitPerfectResidualLongitudeAudit(
+            artin_permutation=(0, 1),
+            unit_group_order=60,
+            derived_subgroup_orders=(60,),
+            perfect_residual_size=60,
+            residual_endpoint=(1, 2, 0, 3, 4),
+            residual_endpoint_in_unit_group=True,
+            residual_endpoint_in_perfect_residual=True,
+            perfect_residual_longitude_subgroup_size=1,
+            residual_endpoint_lies_in_perfect_residual_longitude_subgroup=False,
+            perfect_residual_identity=(0, 1, 2, 3, 4),
+        )
+
+        audit = unit_perfect_residual_normalized_seed_audit(
+            local_prefix,
+            perfect_miss,
+            same_braid_word=True,
+            endpoint_readout_matches_residual_motion=False,
+        )
+
+        self.assertFalse(audit.proves_one_local_perfect_residual_normalized_seed)
 
     def test_unit_composite_detection_rejects_nonunit_composite(self):
         reset = (0, 0)

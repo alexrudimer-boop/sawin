@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from itertools import product
-from typing import Iterable, Sequence, Tuple
+from typing import TYPE_CHECKING, Iterable, Sequence, Tuple
 
 from .artin_longitudes import (
     BraidWord,
@@ -33,6 +33,9 @@ from .green_branch import (
     compose_transformations,
     identity_transformation,
 )
+
+if TYPE_CHECKING:
+    from .residual import LocalNormalizedLawPrefixWitnessAudit
 
 ProductUnitGroupElement = Tuple[Transformation, ...]
 ProductLongitudeWitnessLetter = Tuple[Tuple[ProductUnitGroupElement, ...], int, int]
@@ -396,6 +399,52 @@ class UnitPerfectResidualLongitudeAudit:
             and self.identity_perfect_residual_longitude_signature
             and not self.residual_endpoint_is_identity
         )
+
+
+@dataclass(frozen=True)
+class UnitPerfectResidualNormalizedSeedAudit:
+    """Attach a perfect-residual unit miss to one local normalized-law row.
+
+    This is a one-prefix B-seed check.  It does not construct the all-prefix
+    normalized-law sequence required for outcome B; it only verifies that a
+    supplied finite perfect-residual miss has been paired with one valid local
+    product-prefix row and with the caller's readout-identification data.
+    """
+
+    local_prefix: "LocalNormalizedLawPrefixWitnessAudit"
+    perfect_residual: UnitPerfectResidualLongitudeAudit
+    same_braid_word: bool
+    endpoint_readout_matches_residual_motion: bool
+
+    @property
+    def same_source_degree(self) -> bool:
+        return self.local_prefix.source_n == len(
+            self.perfect_residual.artin_permutation
+        )
+
+    @property
+    def local_prefix_is_normalized_law_row(self) -> bool:
+        return self.local_prefix.proves_one_local_prefix_normalized_law_witness
+
+    @property
+    def perfect_residual_has_finite_detector_miss(self) -> bool:
+        return self.perfect_residual.is_finite_perfect_residual_detector_failure
+
+    @property
+    def perfect_residual_miss_is_attached_to_prefix(self) -> bool:
+        return (
+            self.local_prefix_is_normalized_law_row
+            and self.perfect_residual_has_finite_detector_miss
+            and self.same_source_degree
+            and self.same_braid_word
+            and self.endpoint_readout_matches_residual_motion
+        )
+
+    @property
+    def proves_one_local_perfect_residual_normalized_seed(self) -> bool:
+        """Return whether this row has the required finite B-seed shape."""
+
+        return self.perfect_residual_miss_is_attached_to_prefix
 
 
 @dataclass(frozen=True)
@@ -1252,6 +1301,31 @@ def unit_perfect_residual_longitude_audit(
             residual_endpoint in subgroup
         ),
         perfect_residual_identity=perfect_group.identity,
+    )
+
+
+def unit_perfect_residual_normalized_seed_audit(
+    local_prefix: "LocalNormalizedLawPrefixWitnessAudit",
+    perfect_residual: UnitPerfectResidualLongitudeAudit,
+    *,
+    same_braid_word: bool,
+    endpoint_readout_matches_residual_motion: bool,
+) -> UnitPerfectResidualNormalizedSeedAudit:
+    """Pair one local normalized-law prefix with a perfect-residual miss.
+
+    The local prefix audit verifies the product-prefix normalized-law row.  The
+    perfect-residual audit verifies that the same braid has identity finite-``P``
+    longitude data while a nonidentity endpoint survives in the stable perfect
+    residual.  The two keyword flags are deliberately explicit because the
+    finite group audit cannot infer that the monoid endpoint is the actual
+    residual readout of the local interval.
+    """
+
+    return UnitPerfectResidualNormalizedSeedAudit(
+        local_prefix=local_prefix,
+        perfect_residual=perfect_residual,
+        same_braid_word=same_braid_word,
+        endpoint_readout_matches_residual_motion=endpoint_readout_matches_residual_motion,
     )
 
 

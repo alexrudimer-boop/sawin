@@ -843,6 +843,14 @@ identity `P_j` longitude signature, then right-stabilize.  The helper
 including product invisibility, factor projection invisibility, stabilization,
 and movement before and after stabilization.  It is a certificate-shape check,
 not an all-`j` proof.
+`proofs/unit_perfect_residual_normalized_seed.md` now connects the last
+nonsolvable terminal-unit checkpoint to that local B certificate format.  The
+helper `unit_perfect_residual_normalized_seed_audit(...)` pairs one
+`local_normalized_law_prefix_witness_audit(...)` row with one
+`unit_perfect_residual_longitude_audit(...)` finite miss, and it requires
+explicit same-braid and same-readout assertions before marking the row as a
+perfect-residual normalized seed.  This is still only one row of a possible
+B construction; an all-`j` family is still required.
 
 ## Verification snapshot
 
