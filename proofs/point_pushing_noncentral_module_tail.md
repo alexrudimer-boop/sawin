@@ -138,6 +138,11 @@ separates this branch by the image of the bounded newest generator in
 `H/C_H(M)`: if the image is trivial, the row belongs to the centralizer-layer
 branch; otherwise a bounded-order linear operator has conjugate commutator
 images generating the irreducible module.
+The follow-up
+`proofs/point_pushing_centralizer_layer_commutator_split.md` then splits the
+centralizer-layer branch itself: for `N=<<t>>_H` inside `C_H(M)`, minimality
+forces either an abelian centralizer layer `[N,N]=1` or a centralizer stem
+layer `M<=Z(N) cap [N,N]`.
 
 ## Audit Hook
 

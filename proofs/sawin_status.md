@@ -2230,6 +2230,13 @@ noncentral module rows by the newest generator's image in `H/C_H(M)`: trivial
 image routes to centralizer-layer generator tails, while nontrivial image gives
 a bounded-order linear operator whose conjugate commutator images generate the
 irreducible module.
+The centralizer-layer case has now been split in
+`proofs/point_pushing_centralizer_layer_commutator_split.md`: for
+`N=<<t>>_H` inside `C_H(M)` with `M<=N`, minimality forces either an abelian
+centralizer layer `[N,N]=1` or a centralizer stem layer
+`M<=Z(N) cap [N,N]`.  Thus the remaining noncentral module branch is now:
+active bounded-order linear-generator tails, abelian centralizer-layer tails,
+or centralizer-stem tails.
 
 ## Completion audit checklist
 

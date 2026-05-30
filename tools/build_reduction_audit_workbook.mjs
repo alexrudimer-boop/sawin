@@ -374,6 +374,13 @@ const rows = [
     "Rule out centralizer-layer generator tails and active bounded-order linear-generator tails, or construct one for B.",
   ],
   [
+    "Centralizer-layer commutator split",
+    "Split centralizer-layer generator tails by the commutator subgroup of the normal closure of the bounded newest generator.",
+    "proofs/point_pushing_centralizer_layer_commutator_split.md proves that if N=<<t>>_H lies in C_H(M), contains M, and is minimal as a separating row, then either [N,N]=1 or M<=Z(N) cap [N,N]. point_pushing_centralizer_layer_commutator_audit records finite row labels.",
+    "Centralizer layer split",
+    "Rule out abelian centralizer-layer tails and centralizer-stem tails, or construct one for B.",
+  ],
+  [
     "Nonabelian-chief relation quotient",
     "Compress nonabelian-chief Brunnian failures to detector relation-group quotients.",
     "proofs/point_pushing_nonabelian_chief_relation_quotient.md proves that a minimal nonabelian-chief first failure has mu_H(R)=M=S^r, and the detector orbit group controls the outer action on M. point_pushing_nonabelian_chief_relation_quotient_audit records finite chief-layer bookkeeping.",

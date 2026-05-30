@@ -594,6 +594,29 @@ class PointPushingActiveModuleGeneratorAudit:
 
 
 @dataclass(frozen=True)
+class PointPushingCentralizerLayerCommutatorAudit:
+    """Split centralizer-layer generator rows by the commutator of <<t>>."""
+
+    group_order: int
+    monolith_order: int
+    normal_closure_order: int
+    normal_closure_commutator_order: int
+    generator_order: int
+    generator_centralizes_monolith: bool
+    normal_closure_centralizes_monolith: bool
+    monolith_in_normal_closure: bool
+    monolith_in_normal_closure_commutator: bool
+    layer_regime: str
+
+    @property
+    def proves_centralizer_layer_commutator_split(self) -> bool:
+        return self.layer_regime in (
+            "abelian_centralizer_layer",
+            "centralizer_stem_layer",
+        )
+
+
+@dataclass(frozen=True)
 class PointPushingCentralStemRelationAudit:
     """Bookkeeping for central trivial relation tails as stem extensions."""
 
@@ -2513,6 +2536,58 @@ def point_pushing_active_module_generator_audit(
         action_order_divides_bound=action_order_divides_bound,
         active_on_module=active_on_module,
         tail_regime=tail_regime,
+    )
+
+
+def point_pushing_centralizer_layer_commutator_audit(
+    group: FiniteGroup,
+    monolith: Iterable[object],
+    generator: object,
+) -> PointPushingCentralizerLayerCommutatorAudit:
+    """Audit the abelian/stem split inside a centralizer-layer row."""
+
+    from .finite_group import normal_closure_elements
+    from .group_laws import element_order
+
+    if generator not in group.elements:
+        raise ValueError("generator must be a group element")
+    monolith_set = frozenset(monolith)
+    normal_closure = frozenset(normal_closure_elements(group, [generator]))
+    commutator = frozenset(commutator_subgroup_elements(group, normal_closure))
+    generator_centralizes_monolith = all(
+        group.conjugate(generator, monolith_element) == monolith_element
+        for monolith_element in monolith_set
+    )
+    normal_closure_centralizes_monolith = all(
+        group.conjugate(element, monolith_element) == monolith_element
+        for element in normal_closure
+        for monolith_element in monolith_set
+    )
+    monolith_in_normal_closure = monolith_set <= normal_closure
+    monolith_in_commutator = monolith_set <= commutator
+    if not (
+        generator_centralizes_monolith
+        and normal_closure_centralizes_monolith
+        and monolith_in_normal_closure
+    ):
+        layer_regime = "invalid_centralizer_layer_data"
+    elif len(commutator) == 1:
+        layer_regime = "abelian_centralizer_layer"
+    elif monolith_in_commutator:
+        layer_regime = "centralizer_stem_layer"
+    else:
+        layer_regime = "abelianization_visible_centralizer_layer"
+    return PointPushingCentralizerLayerCommutatorAudit(
+        group_order=len(group.elements),
+        monolith_order=len(monolith_set),
+        normal_closure_order=len(normal_closure),
+        normal_closure_commutator_order=len(commutator),
+        generator_order=element_order(group, generator),
+        generator_centralizes_monolith=generator_centralizes_monolith,
+        normal_closure_centralizes_monolith=normal_closure_centralizes_monolith,
+        monolith_in_normal_closure=monolith_in_normal_closure,
+        monolith_in_normal_closure_commutator=monolith_in_commutator,
+        layer_regime=layer_regime,
     )
 
 

@@ -1280,6 +1280,12 @@ conjugate commutator images whose sum is the irreducible module `M`; in a
 prime-escape tail this is cross-characteristic.  The helper
 `point_pushing_active_module_generator_audit(...)` records the finite row
 label.
+`proofs/point_pushing_centralizer_layer_commutator_split.md` now sharpens the
+centralizer-layer generator tail.  If `N=<<t>>_H` lies in `C_H(M)` and
+contains `M`, then minimality leaves only two forms: `[N,N]=1`, an abelian
+centralizer layer, or `M<=Z(N) cap [N,N]`, a centralizer stem layer.  The
+helper `point_pushing_centralizer_layer_commutator_audit(...)` records the
+finite row labels `abelian_centralizer_layer` and `centralizer_stem_layer`.
 `proofs/point_pushing_nonabelian_chief_relation_quotient.md` now gives the
 parallel nonabelian-chief compression.  If `R` is the same detector orbit
 relation group and the chief layer is `M=S^r`, then the minimal vertical
