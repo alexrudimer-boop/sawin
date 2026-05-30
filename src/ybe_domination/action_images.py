@@ -79,6 +79,12 @@ class PointPushingMarkedQuotientAudit:
     def marked_quotient_holds(self) -> bool:
         return not self.truncated and not self.found_kernel_mover
 
+    @property
+    def vertical_kernel_trivial(self) -> bool:
+        """Whether ``<(d_i,h_i)>`` has no nontrivial ``(1,p)`` witness."""
+
+        return self.marked_quotient_holds
+
 
 @dataclass(frozen=True)
 class PointPushingVarietyEscapeAudit:

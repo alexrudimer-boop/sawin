@@ -283,6 +283,13 @@ const rows = [
     "Prove one fixed G has all marked quotients D_k(G)->P_k(X), or find product-prefix derivative relations that move X.",
   ],
   [
+    "Point-pushing paired graph criterion",
+    "Make the finite marked quotient test a vertical-kernel graph condition.",
+    "proofs/point_pushing_paired_graph_criterion.md proves D_k(G)->P_k(X) exists iff <(d_i,h_i)> has no nontrivial (1,p); point_pushing_marked_quotient_audit now exposes vertical_kernel_trivial.",
+    "Exact finite criterion",
+    "Prove vertical kernels vanish for all k for one fixed G, or construct an infinite product-prefix/symmetric-tail family of vertical witnesses.",
+  ],
+  [
     "Derivative detector functoriality",
     "Show the exact D_k(G) criterion is compatible with quotients, embeddings, symmetric cofinality, and product prefixes.",
     "proofs/point_pushing_derivative_functoriality.md proves coordinate equivariance for finite group homomorphisms; point_pushing_derivative_functoriality_audit checks finite instances.",

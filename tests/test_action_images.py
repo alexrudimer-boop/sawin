@@ -242,6 +242,7 @@ class ActionImageTests(unittest.TestCase):
 
         self.assertFalse(audit.truncated)
         self.assertTrue(audit.marked_quotient_holds)
+        self.assertTrue(audit.vertical_kernel_trivial)
         self.assertFalse(audit.found_kernel_mover)
         self.assertEqual(audit.detector_state_count, 64)
         self.assertEqual(audit.ybe_tuple_count, 8)
@@ -258,6 +259,7 @@ class ActionImageTests(unittest.TestCase):
 
         self.assertFalse(audit.truncated)
         self.assertFalse(audit.marked_quotient_holds)
+        self.assertFalse(audit.vertical_kernel_trivial)
         self.assertTrue(audit.found_kernel_mover)
         self.assertEqual(audit.witness_word, ((0, 1), (0, 1)))
         self.assertIsNotNone(audit.witness_action_value)

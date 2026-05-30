@@ -897,6 +897,15 @@ YBE point-pushing image.  Then `A_G` dominates `X` iff, for every `k`,
 YBE generator `h_i`.  The helper `point_pushing_marked_quotient_audit(...)`
 checks finite arity instances by searching the paired subgroup for
 `(1,nonidentity)` kernel movers.
+`proofs/point_pushing_paired_graph_criterion.md` now records the exact paired
+subgroup form of the same criterion.  Let
+`M_k(G,X)=< (d_i,h_i) > <= D_k(G) x P_k(X)`.  The marked quotient
+`D_k(G)->P_k(X)` exists iff the vertical kernel
+`M_k(G,X) cap ({1} x P_k(X))` is trivial, equivalently iff `M_k(G,X)` is the
+graph of the quotient homomorphism.  A nontrivial vertical element `(1,p)` is
+precisely a word trivial in the derivative detector but moving `X`, hence a
+genuine point-pushing `K_G` mover.  The audit helper now exposes this as
+`vertical_kernel_trivial` when the subgroup enumeration is not truncated.
 `proofs/point_pushing_derivative_functoriality.md` records the compatibility
 of this exact criterion with detector changes.  A finite group homomorphism
 `G->H` induces coordinate equivariance on detector states.  Surjections give
