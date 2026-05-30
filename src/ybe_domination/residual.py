@@ -12,7 +12,7 @@ from .artin_longitudes import (
     right_stabilization_longitude_audit,
 )
 from .finite_braided_set import Element, FiniteBraidedSet, product_solution
-from .finite_group import FiniteGroup, direct_product_group
+from .finite_group import FiniteGroup, direct_product_group, symmetric_group
 
 BaseTuple = Tuple[Hashable, ...]
 FibreTuple = Tuple[Element, ...]
@@ -412,6 +412,32 @@ def local_normalized_law_prefix_witness_audit(
         stabilized_image_base=stabilized_image_base,
         target_stays_over_base=stabilized_image_base == stabilized_base,
         target_residual_tuple_moved=stabilized_image != stabilized_fibre,
+    )
+
+
+def local_symmetric_normalized_law_prefix_witness_audit(
+    quotient_map: QuotientMap,
+    base_detector: FiniteBraidedSet,
+    symmetric_degree: int,
+    n: int,
+    braid_word: BraidWord,
+    base_tuple: Sequence[Hashable],
+    fibre_tuple: Sequence[Element],
+    extra_strands: int,
+    fill_value: Element,
+) -> LocalNormalizedLawPrefixWitnessAudit:
+    """Check one local normalized-law prefix using only the detector ``S_j``."""
+
+    return local_normalized_law_prefix_witness_audit(
+        quotient_map,
+        base_detector,
+        (symmetric_group(symmetric_degree),),
+        n,
+        braid_word,
+        base_tuple,
+        fibre_tuple,
+        extra_strands,
+        fill_value,
     )
 
 

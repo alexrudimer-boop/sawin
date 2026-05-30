@@ -136,6 +136,7 @@ from .artin_longitudes import (
     right_stabilization_longitude_audit,
     sharp_obstruction_rack,
     symmetric_detector_reduction_audit,
+    symmetric_normalized_law_prefix_witness_audit,
 )
 from .chain_rack import (
     CLOSED_LOCAL_DETECTOR_VERDICTS,
@@ -644,6 +645,7 @@ from .residual import (
     bounded_words,
     is_identity_action,
     local_normalized_law_prefix_witness_audit,
+    local_symmetric_normalized_law_prefix_witness_audit,
     permutation_order,
     quotient_image_kernel_summary,
     residual_coordinate_dependency_summary,
@@ -1187,6 +1189,7 @@ __all__ = [
     "pure_generator_order_profile",
     "pure_subgroup_growth_profile",
     "local_normalized_law_prefix_witness_audit",
+    "local_symmetric_normalized_law_prefix_witness_audit",
     "quotient_group_by_normal_subgroup",
     "subgroup_as_group",
     "quotient_interval_by_family",
@@ -1221,6 +1224,7 @@ __all__ = [
     "sharp_kernel_implication_failures",
     "sharp_obstruction_rack",
     "symmetric_detector_reduction_audit",
+    "symmetric_normalized_law_prefix_witness_audit",
     "short_law_separating_groups",
     "short_law_escaping_variety",
     "short_law_separating_permutation_assignment",

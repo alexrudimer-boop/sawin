@@ -20,6 +20,7 @@ from .finite_group import (
     left_regular_representation,
     permutation_group_from_generators,
     subgroup_generated_elements,
+    symmetric_group,
 )
 
 FreeLetter = Tuple[int, int]
@@ -2378,6 +2379,33 @@ def normalized_law_prefix_witness_audit(
         stabilized_tuple=stabilized_tuple,
         stabilized_image=stabilized_image,
         stabilized_tuple_moved=stabilized_image != stabilized_tuple,
+    )
+
+
+def symmetric_normalized_law_prefix_witness_audit(
+    solution: FiniteBraidedSet,
+    symmetric_degree: int,
+    n: int,
+    braid_word: BraidWord,
+    moved_tuple: Sequence[object],
+    extra_strands: int,
+    fill_value: object,
+) -> NormalizedLawPrefixWitnessAudit:
+    """Check one global normalized-law prefix using only ``S_j``.
+
+    By the symmetric detector reduction, a final B construction may give
+    witnesses against the symmetric tower instead of product prefixes of all
+    finite groups.  This helper checks one supplied row for ``S_j``.
+    """
+
+    return normalized_law_prefix_witness_audit(
+        solution,
+        (symmetric_group(symmetric_degree),),
+        n,
+        braid_word,
+        moved_tuple,
+        extra_strands,
+        fill_value,
     )
 
 

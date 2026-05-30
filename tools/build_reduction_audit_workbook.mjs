@@ -304,6 +304,13 @@ const rows = [
     "Positive route may construct S_m detectors; B route may diagonalize against S_j.",
   ],
   [
+    "Symmetric-tower B certificate",
+    "State the simplified constructive B data after reducing to symmetric groups.",
+    "proofs/symmetric_tower_counterexample_certificate.md states that witnesses invisible to S_j for every j suffice; symmetric_normalized_law_prefix_witness_audit and local_symmetric_normalized_law_prefix_witness_audit check supplied rows.",
+    "Certificate format",
+    "A final B proof must still construct the all-j sequence and moved tuples symbolically.",
+  ],
+  [
     "Normalized-law B certificate",
     "Separate constructive B data from nonconstructive all-detector failure.",
     "proofs/normalized_law_counterexample_certificate.md states the product-prefix witness format; normalized_law_prefix_witness_audit checks one supplied prefix for product invisibility, right stabilization, and moved tuples.",

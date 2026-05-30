@@ -133,3 +133,11 @@ proves_one_local_prefix_normalized_law_witness
 
 means that the supplied braid is one valid row of the local diagonal
 construction in `proofs/global_local_normalized_fork.md`.
+
+After the symmetric detector reduction, a final B proof may use the simpler
+certificate in `proofs/symmetric_tower_counterexample_certificate.md`: give
+witnesses invisible to `S_j` for every `j`.  The helper
+`symmetric_normalized_law_prefix_witness_audit(...)` checks one global
+symmetric-tower row, and
+`local_symmetric_normalized_law_prefix_witness_audit(...)` checks one local
+residual row.

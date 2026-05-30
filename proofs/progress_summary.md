@@ -746,6 +746,13 @@ detector may be taken to be `S_m`, and a negative normalized-law construction
 may diagonalize against `S_j` only.  The helper
 `symmetric_detector_reduction_audit(...)` records this containment at the
 finite-signature level.
+`proofs/symmetric_tower_counterexample_certificate.md` now records the
+corresponding simplified B certificate: for every `j`, produce a braid
+`alpha_j` with identity `S_j` longitude data and a moved global or residual
+tuple, then right-stabilize.  The helpers
+`symmetric_normalized_law_prefix_witness_audit(...)` and
+`local_symmetric_normalized_law_prefix_witness_audit(...)` check one supplied
+global or local row of this symmetric-tower certificate.
 `proofs/normalized_law_counterexample_certificate.md` now records the
 constructive B data format: for every product prefix
 `P_j=G_1 x ... x G_j`, give an explicit braid `alpha_j`, moved tuple, and

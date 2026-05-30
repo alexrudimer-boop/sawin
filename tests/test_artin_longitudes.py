@@ -72,6 +72,7 @@ from ybe_domination import (
     reverse_braid_word,
     sharp_obstruction_rack,
     symmetric_detector_reduction_audit,
+    symmetric_normalized_law_prefix_witness_audit,
     symmetric_group,
     transport_state_left_translation_failures,
     transport_state_rack,
@@ -1143,6 +1144,24 @@ class ArtinLongitudeTests(unittest.TestCase):
         self.assertTrue(audit.product_invisibility_survives_stabilization)
         self.assertFalse(audit.movement_survives_stabilization)
         self.assertFalse(audit.proves_one_prefix_normalized_law_witness)
+
+    def test_symmetric_normalized_law_prefix_witness_uses_symmetric_tower(self):
+        solution = rack_solution([0, 1], lambda _left, right: 1 - right)
+        braid = pure_braid_generator(1, 2)
+
+        audit = symmetric_normalized_law_prefix_witness_audit(
+            solution,
+            1,
+            2,
+            braid,
+            (0, 0),
+            extra_strands=1,
+            fill_value=0,
+        )
+
+        self.assertEqual(audit.group_orders, (1,))
+        self.assertEqual(audit.product_group_order, 1)
+        self.assertTrue(audit.proves_one_prefix_normalized_law_witness)
 
     def test_left_regular_representation_embeds_group_in_symmetric_group(self):
         group = cyclic_group(3)

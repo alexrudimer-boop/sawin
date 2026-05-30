@@ -13,6 +13,7 @@ from ybe_domination import (
     identity_solution,
     is_identity_action,
     local_normalized_law_prefix_witness_audit,
+    local_symmetric_normalized_law_prefix_witness_audit,
     is_nondegenerate,
     product_solution,
     quotient_image_kernel_summary,
@@ -238,6 +239,28 @@ class ResidualTests(unittest.TestCase):
         self.assertTrue(audit.product_invisibility_survives_stabilization)
         self.assertFalse(audit.residual_movement_survives_stabilization)
         self.assertFalse(audit.proves_one_local_prefix_normalized_law_witness)
+
+    def test_local_symmetric_normalized_law_prefix_witness_uses_symmetric_tower(self):
+        total = rack_solution([0, 1], lambda _left, right: 1 - right)
+        quotient = identity_solution(["*"])
+        qmap = QuotientMap(total, quotient, {element: "*" for element in total.elements})
+        base_detector = identity_solution(["q"])
+
+        audit = local_symmetric_normalized_law_prefix_witness_audit(
+            qmap,
+            base_detector,
+            1,
+            2,
+            pure_braid_generator(1, 2),
+            ("*", "*"),
+            (0, 0),
+            extra_strands=1,
+            fill_value=0,
+        )
+
+        self.assertEqual(audit.group_orders, (1,))
+        self.assertEqual(audit.product_group_order, 1)
+        self.assertTrue(audit.proves_one_local_prefix_normalized_law_witness)
 
 
 if __name__ == "__main__":
