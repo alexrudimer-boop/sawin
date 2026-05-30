@@ -2109,6 +2109,19 @@ preserves old Artin data while adding only trivial strands.  They remain
 guardrails for the formal proof, not a finite-search substitute for the
 all-finite-group failure needed for outcome B.
 
+The current terminal-gauge target has also been sharpened.  A pure display
+as a product of Artin permutation defects can only see the commutator
+subgroup of the fixed endpoint factor: the defect word
+`beta(w)p_beta(w)^-1` is abelianization-trivial.  The note
+`proofs/terminal_gauge_abelianization_barrier.md` records this guardrail and
+the helper `artin_defect_abelianization_barrier_audit(...)` checks supplied
+finite endpoints against `[U,U]`.  Thus abelian terminal gauge holonomy must
+be handled by the ordinary abelian longitude matrix criterion and the
+normal-quotient lift, not by a pure Artin-defect shortcut.  The honest final
+target is now: prove the abelianized terminal endpoint in `V_beta(U/[U,U])`,
+lift that witness to `U`, and prove the commutator or perfect-residual
+correction in the fixed unit factor.
+
 ## Completion audit checklist
 
 Before claiming A, verify:

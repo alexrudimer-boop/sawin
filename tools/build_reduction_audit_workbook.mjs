@@ -557,10 +557,17 @@ const rows = [
   ],
   [
     "Terminal gauge Artin-defect target",
-    "State the smallest currently visible positive theorem for the corridor branch.",
-    "proofs/terminal_gauge_artin_defect_target.md records that every remaining terminal gauge endpoint should be a product of evaluated Artin permutation defects in a fixed factor U, hence lie in V_beta(U).",
-    "Open theorem target",
-    "Prove this symbolic identity, or turn the first true terminal-gauge failure into a normalized-law obstruction.",
+    "State the strongest commutator-level shortcut for the corridor branch.",
+    "proofs/terminal_gauge_artin_defect_target.md records that a pure Artin-defect display would put terminal gauge endpoints in V_beta(U), but now points to the abelianization guardrail.",
+    "Guarded target",
+    "Use only after abelian terminal holonomy has been killed or lifted by ordinary longitude witnesses.",
+  ],
+  [
+    "Terminal gauge abelianization barrier",
+    "Prevent a false pure Artin-defect proof for abelian terminal gauge holonomy.",
+    "proofs/terminal_gauge_abelianization_barrier.md proves Artin permutation defects lie in [U,U]; artin_defect_abelianization_barrier_audit reports endpoints outside [U,U].",
+    "Proof guardrail",
+    "Prove abelianized terminal endpoints by the abelian matrix criterion, then handle the commutator/perfect-residual correction.",
   ],
   [
     "Principal gauge extension",

@@ -40,6 +40,7 @@ from .artin_longitudes import (
     AbelianLongitudeMatrixWitnessAudit,
     AbelianLongitudeMatrixWitnessLetter,
     ArtinDetectorLiftBraidAudit,
+    ArtinDefectAbelianizationBarrierAudit,
     ArtinDetectorLiftInverseRowAudit,
     ArtinDetectorLiftLabel,
     ArtinDetectorLiftTransitionAudit,
@@ -74,6 +75,7 @@ from .artin_longitudes import (
     abelian_longitude_matrix_witness_to_subgroup_witness,
     abelian_longitude_value_generators,
     abelian_longitude_value_subgroup_elements,
+    artin_defect_abelianization_barrier_audit,
     apply_permutation_to_free_word,
     artin_detector_rack,
     artin_detector_lift_braid_audit,
@@ -674,6 +676,7 @@ from .structure_orbits import (
 
 __all__ = [
     "ArtinDetectorLiftBraidAudit",
+    "ArtinDefectAbelianizationBarrierAudit",
     "ArtinDetectorLiftInverseRowAudit",
     "ArtinDetectorLiftLabel",
     "ArtinDetectorLiftTransitionAudit",
@@ -889,6 +892,7 @@ __all__ = [
     "affine_cyclic_form",
     "all_bijection_solutions",
     "artin_detector_rack",
+    "artin_defect_abelianization_barrier_audit",
     "artin_detector_lift_braid_audit",
     "artin_detector_lift_inverse_row_audit",
     "artin_detector_lift_negative_update",

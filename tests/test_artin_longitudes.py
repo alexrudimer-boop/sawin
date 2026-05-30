@@ -10,6 +10,7 @@ from ybe_domination import (
     abelian_longitude_matrix_witness_to_subgroup_witness,
     abelian_longitude_value_generators,
     abelian_longitude_value_subgroup_elements,
+    artin_defect_abelianization_barrier_audit,
     artin_detector_rack,
     artin_detector_lift_braid_audit,
     artin_detector_lift_inverse_row_audit,
@@ -115,6 +116,33 @@ class ArtinLongitudeTests(unittest.TestCase):
         self.assertEqual(tuple(row.name for row in profile), ("C2", "C3"))
         self.assertTrue(all(row.identity_longitude_signature for row in profile))
         self.assertEqual(tuple(row.subgroup_size for row in profile), (1, 1))
+
+    def test_artin_defect_abelianization_barrier_rejects_cyclic_endpoint(self):
+        group = cyclic_group(3)
+
+        audit = artin_defect_abelianization_barrier_audit(group, (1,))
+
+        self.assertEqual(audit.group_order, 3)
+        self.assertEqual(audit.commutator_subgroup, (0,))
+        self.assertTrue(audit.group_has_nontrivial_abelianization)
+        self.assertFalse(audit.all_endpoints_have_trivial_abelianization)
+        self.assertEqual(audit.endpoints_outside_commutator, (1,))
+        self.assertFalse(audit.artin_defect_only_display_not_obstructed)
+
+    def test_artin_defect_abelianization_barrier_accepts_commutator_endpoint(self):
+        group = symmetric_group(3)
+        three_cycle = (1, 2, 0)
+        transposition = (1, 0, 2)
+
+        good = artin_defect_abelianization_barrier_audit(group, (three_cycle,))
+        bad = artin_defect_abelianization_barrier_audit(group, (transposition,))
+
+        self.assertEqual(good.commutator_subgroup_size, 3)
+        self.assertTrue(good.group_has_nontrivial_abelianization)
+        self.assertTrue(good.all_endpoints_have_trivial_abelianization)
+        self.assertTrue(good.artin_defect_only_display_not_obstructed)
+        self.assertFalse(bad.all_endpoints_have_trivial_abelianization)
+        self.assertEqual(bad.endpoints_outside_commutator, (transposition,))
 
     def test_pure_generator_abelian_longitude_matrix(self):
         braid = pure_braid_generator(1, 3)

@@ -122,6 +122,18 @@ The archive proves the certificate calculus around this statement:
 It does not yet prove that every remaining terminal gauge endpoint has the
 Artin-defect display above.  That symbolic identity is the missing theorem.
 
+There is also an abelianization guardrail.  The companion note
+`proofs/terminal_gauge_abelianization_barrier.md` proves that every Artin
+permutation-defect value lies in `[U,U]`.  Therefore the pure Artin-defect
+target can only handle terminal gauge endpoints whose image in
+`U/[U,U]` is trivial.  If the terminal gauge endpoint has nontrivial abelian
+projection, the correct target is the quotient-plus-kernel split from
+`proofs/unit_continuation_abelian_kernel_lift.md`: prove the abelianized
+endpoint by the abelian longitude matrix criterion, lift that witness to `U`,
+and then handle the commutator correction.  Thus the display above is the
+strongest useful commutator-level target, not a substitute for abelian
+longitude visibility.
+
 ## Exact negative seed if it fails
 
 If this lemma is false, a bounded endpoint miss is still not outcome B.  A

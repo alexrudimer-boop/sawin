@@ -15,6 +15,7 @@ from .finite_group import (
     FiniteGroup,
     FiniteGroupHomomorphism,
     GroupElement,
+    commutator_subgroup_elements,
     direct_product_group,
     is_abelian_group,
     left_regular_representation,
@@ -174,6 +175,32 @@ class ArtinPermutationDefectWitnessAudit:
     longitude_witness: LongitudeSubgroupWitness
     longitude_witness_value: GroupElement
     witness_matches_defect: bool
+
+
+@dataclass(frozen=True)
+class ArtinDefectAbelianizationBarrierAudit:
+    """Necessary abelianization test for an Artin-defect-only display."""
+
+    group_order: int
+    commutator_subgroup: Tuple[GroupElement, ...]
+    endpoints: Tuple[GroupElement, ...]
+    endpoints_outside_commutator: Tuple[GroupElement, ...]
+
+    @property
+    def commutator_subgroup_size(self) -> int:
+        return len(self.commutator_subgroup)
+
+    @property
+    def group_has_nontrivial_abelianization(self) -> bool:
+        return self.commutator_subgroup_size < self.group_order
+
+    @property
+    def all_endpoints_have_trivial_abelianization(self) -> bool:
+        return not self.endpoints_outside_commutator
+
+    @property
+    def artin_defect_only_display_not_obstructed(self) -> bool:
+        return self.all_endpoints_have_trivial_abelianization
 
 
 @dataclass(frozen=True)
@@ -1288,6 +1315,38 @@ def artin_permutation_defect_witness_audit(
         longitude_witness=longitude_witness,
         longitude_witness_value=longitude_witness_value,
         witness_matches_defect=longitude_witness_value == defect_value,
+    )
+
+
+def artin_defect_abelianization_barrier_audit(
+    group: FiniteGroup,
+    endpoints: Sequence[GroupElement],
+) -> ArtinDefectAbelianizationBarrierAudit:
+    """Check the abelianization obstruction to pure Artin-defect displays.
+
+    Every value of an Artin permutation defect
+    ``beta(w) p_beta(w)^-1`` lies in the commutator subgroup of the target
+    finite group.  Hence an endpoint outside ``[G,G]`` cannot be certified by
+    a product of such defect values, although it may still lie in ``V_beta(G)``
+    by an ordinary recursive-longitude or abelian matrix witness.
+    """
+
+    endpoint_tuple = tuple(endpoints)
+    element_set = set(group.elements)
+    if any(endpoint not in element_set for endpoint in endpoint_tuple):
+        raise ValueError("endpoint outside group")
+    commutator = commutator_subgroup_elements(group)
+    commutator_set = set(commutator)
+    outside = tuple(
+        endpoint
+        for endpoint in endpoint_tuple
+        if endpoint not in commutator_set
+    )
+    return ArtinDefectAbelianizationBarrierAudit(
+        group_order=len(group.elements),
+        commutator_subgroup=commutator,
+        endpoints=endpoint_tuple,
+        endpoints_outside_commutator=outside,
     )
 
 
