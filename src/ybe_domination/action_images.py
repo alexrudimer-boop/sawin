@@ -5,7 +5,7 @@ from dataclasses import dataclass
 from itertools import product
 from typing import Iterable, Mapping, Sequence, Tuple
 
-from .artin_longitudes import BraidWord, FreeWord
+from .artin_longitudes import BraidWord, FreeWord, NormalizedLawPrefixWitnessAudit
 from .finite_braided_set import FiniteBraidedSet
 from .finite_group import FiniteGroup
 from .residual import action_permutation, permutation_order
@@ -304,6 +304,29 @@ class PointPushingBrunnianTailCertificatePrefix:
             row.first_failure_kind
             for row in self.rows
             if row.has_valid_nonbase_certificate and row.first_failure_kind is not None
+        )
+
+
+@dataclass(frozen=True)
+class PointPushingBrunnianNormalizedPrefixAudit:
+    """One Brunnian row checked as a symmetric normalized-law prefix."""
+
+    symmetric_degree: int
+    arity: int
+    extra_strands: int
+    certificate: PointPushingBrunnianFailureCertificate
+    normalized_prefix: NormalizedLawPrefixWitnessAudit | None
+
+    @property
+    def has_valid_brunnian_row(self) -> bool:
+        return self.certificate.valid_failure_certificate
+
+    @property
+    def proves_one_symmetric_normalized_prefix(self) -> bool:
+        return (
+            self.has_valid_brunnian_row
+            and self.normalized_prefix is not None
+            and self.normalized_prefix.proves_one_prefix_normalized_law_witness
         )
 
 
@@ -1580,6 +1603,61 @@ def point_pushing_brunnian_tail_certificate_prefix(
         max_symmetric_degree=max_symmetric_degree,
         max_arity=max_arity,
         rows=tuple(rows),
+    )
+
+
+def point_pushing_brunnian_normalized_prefix_audit(
+    solution: FiniteBraidedSet,
+    symmetric_degree: int,
+    arity: int,
+    fill_value: object,
+    *,
+    extra_strands: int | None = None,
+    max_detector_states: int | None = None,
+    max_pair_subgroup_size: int | None = None,
+) -> PointPushingBrunnianNormalizedPrefixAudit:
+    """Turn one Brunnian failure row into a symmetric normalized-law row."""
+
+    from .finite_group import symmetric_group
+    from .artin_longitudes import symmetric_normalized_law_prefix_witness_audit
+
+    if symmetric_degree < 1:
+        raise ValueError("symmetric_degree must be positive")
+    if arity < 1:
+        raise ValueError("arity must be positive")
+    if extra_strands is None:
+        extra_strands = symmetric_degree
+    if extra_strands < 0:
+        raise ValueError("extra_strands must be nonnegative")
+
+    group = symmetric_group(symmetric_degree)
+    certificate = point_pushing_brunnian_failure_certificate(
+        solution,
+        group,
+        arity,
+        max_detector_states=max_detector_states,
+        max_pair_subgroup_size=max_pair_subgroup_size,
+    )
+    normalized_prefix = None
+    if certificate.valid_failure_certificate:
+        witness = certificate.witness
+        if witness is None or witness.vertical.moved_tuple is None:
+            raise AssertionError("valid Brunnian failure certificate lacks moved tuple")
+        normalized_prefix = symmetric_normalized_law_prefix_witness_audit(
+            solution,
+            symmetric_degree,
+            arity + 1,
+            witness.vertical.braid_word,
+            witness.vertical.moved_tuple,
+            extra_strands,
+            fill_value,
+        )
+    return PointPushingBrunnianNormalizedPrefixAudit(
+        symmetric_degree=symmetric_degree,
+        arity=arity,
+        extra_strands=extra_strands,
+        certificate=certificate,
+        normalized_prefix=normalized_prefix,
     )
 
 

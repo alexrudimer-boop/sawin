@@ -18,6 +18,7 @@ from ybe_domination import (
     delete_right_based_new_strand_word,
     point_pushing_brunnian_failure_certificate,
     point_pushing_brunnian_gate_prefix_audit,
+    point_pushing_brunnian_normalized_prefix_audit,
     point_pushing_brunnian_orbit_audit,
     point_pushing_brunnian_tail_certificate_prefix,
     point_pushing_brunnian_tail_prefix_audit,
@@ -585,6 +586,39 @@ class ActionImageTests(unittest.TestCase):
         self.assertEqual(prefix.uncertified_failure_degrees, (1,))
         self.assertEqual(prefix.rows[0].first_failure_kind, "base_marked_quotient")
         self.assertIsNone(prefix.rows[0].certificate)
+
+    def test_point_pushing_brunnian_normalized_prefix_audit_certifies_stabilized_row(self):
+        solution = rack_solution([0, 1, 2], lambda a, b: (2 * a - b) % 3)
+
+        audit = point_pushing_brunnian_normalized_prefix_audit(
+            solution,
+            symmetric_degree=2,
+            arity=2,
+            fill_value=0,
+        )
+
+        self.assertTrue(audit.certificate.valid_failure_certificate)
+        self.assertIsNotNone(audit.normalized_prefix)
+        self.assertEqual(audit.extra_strands, 2)
+        self.assertTrue(audit.proves_one_symmetric_normalized_prefix)
+        self.assertEqual(audit.normalized_prefix.source_n, 3)
+        self.assertEqual(audit.normalized_prefix.target_n, 5)
+        self.assertTrue(audit.normalized_prefix.product_invisibility_survives_stabilization)
+        self.assertTrue(audit.normalized_prefix.movement_survives_stabilization)
+
+    def test_point_pushing_brunnian_normalized_prefix_audit_keeps_nonfailures_uncertified(self):
+        solution = rack_solution([0, 1], lambda a, b: b)
+
+        audit = point_pushing_brunnian_normalized_prefix_audit(
+            solution,
+            symmetric_degree=2,
+            arity=2,
+            fill_value=0,
+        )
+
+        self.assertFalse(audit.certificate.valid_failure_certificate)
+        self.assertIsNone(audit.normalized_prefix)
+        self.assertFalse(audit.proves_one_symmetric_normalized_prefix)
 
     def test_point_pushing_suffix_shuttle_matches_direct_action(self):
         solution = rack_solution([0, 1, 2], lambda a, b: (2 * a - b) % 3)

@@ -395,6 +395,13 @@ const rows = [
     "Use the prefix certificate to guide a symbolic infinite tail construction, or prove a uniform no-tail theorem.",
   ],
   [
+    "Point-pushing Brunnian normalized-prefix bridge",
+    "Feed a certified non-base Brunnian row into the standard symmetric normalized-law prefix checker after right stabilization.",
+    "proofs/point_pushing_brunnian_normalized_prefix_bridge.md proves a valid Brunnian failure certificate for S_j gives one symmetric normalized-law prefix row; point_pushing_brunnian_normalized_prefix_audit checks the bridge.",
+    "Row-to-normalized-law bridge",
+    "Construct infinitely many such rows for B, or prove a fixed S_m prevents them for A.",
+  ],
+  [
     "Derivative detector functoriality",
     "Show the exact D_k(G) criterion is compatible with quotients, embeddings, symmetric cofinality, and product prefixes.",
     "proofs/point_pushing_derivative_functoriality.md proves coordinate equivariance for finite group homomorphisms; point_pushing_derivative_functoriality_audit checks finite instances.",

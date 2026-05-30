@@ -1022,6 +1022,13 @@ symmetric first-failure prefixes around those row certificates.  The helper
 degrees, base/truncated finite failures, and certified non-base rows.  It is
 still finite-prefix infrastructure: a B proof needs an infinite family of
 certified rows, and an A proof needs a uniform reason no such family exists.
+`proofs/point_pushing_brunnian_normalized_prefix_bridge.md` connects each
+certified non-base row to the existing symmetric normalized-law prefix audit:
+after right-stabilizing by `j` strands, a valid `S_j` Brunnian row remains in
+`K_{S_j}` and keeps its moved tuple.  The helper
+`point_pushing_brunnian_normalized_prefix_audit(...)` performs that row-level
+bridge, so an infinite family of certified rows would immediately have the
+standard normalized-law certificate format.
 `proofs/point_pushing_derivative_functoriality.md` records the compatibility
 of this exact criterion with detector changes.  A finite group homomorphism
 `G->H` induces coordinate equivariance on detector states.  Surjections give
