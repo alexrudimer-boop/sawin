@@ -297,6 +297,13 @@ const rows = [
     "The only remaining theorem is fixed finite detection for each local-minimal interval, especially the bi-free universal-corridor branch.",
   ],
   [
+    "Symmetric detector reduction",
+    "Replace arbitrary finite group detectors by symmetric group detectors.",
+    "proofs/symmetric_detector_reduction.md uses the left regular embedding G -> S_m; symmetric_detector_reduction_audit records that K_{S_m} is contained in K_G.",
+    "Reduction ready",
+    "Positive route may construct S_m detectors; B route may diagonalize against S_j.",
+  ],
+  [
     "Normalized-law B certificate",
     "Separate constructive B data from nonconstructive all-detector failure.",
     "proofs/normalized_law_counterexample_certificate.md states the product-prefix witness format; normalized_law_prefix_witness_audit checks one supplied prefix for product invisibility, right stabilization, and moved tuples.",

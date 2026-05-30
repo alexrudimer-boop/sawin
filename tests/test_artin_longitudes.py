@@ -46,6 +46,7 @@ from ybe_domination import (
     is_rack_solution,
     is_abelian_group,
     is_identity_action,
+    left_regular_representation,
     longitude_blind_movers,
     longitude_subgroup_profile,
     longitude_value_generators,
@@ -70,6 +71,7 @@ from ybe_domination import (
     rack_solution,
     reverse_braid_word,
     sharp_obstruction_rack,
+    symmetric_detector_reduction_audit,
     symmetric_group,
     transport_state_left_translation_failures,
     transport_state_rack,
@@ -1141,6 +1143,25 @@ class ArtinLongitudeTests(unittest.TestCase):
         self.assertTrue(audit.product_invisibility_survives_stabilization)
         self.assertFalse(audit.movement_survives_stabilization)
         self.assertFalse(audit.proves_one_prefix_normalized_law_witness)
+
+    def test_left_regular_representation_embeds_group_in_symmetric_group(self):
+        group = cyclic_group(3)
+        embedding = left_regular_representation(group, degree=5)
+
+        self.assertEqual(len(embedding.target.identity), 5)
+        self.assertEqual(len(set(embedding.mapping.values())), len(group.elements))
+        self.assertEqual(embedding.apply(group.identity), embedding.target.identity)
+
+    def test_symmetric_detector_reduction_audit_records_kernel_inclusion(self):
+        group = cyclic_group(3)
+        trivial = symmetric_detector_reduction_audit(group, 2, (1, -1), degree=3)
+        positive = symmetric_detector_reduction_audit(group, 2, (1,), degree=3)
+
+        self.assertTrue(trivial.symmetric_identity_signature)
+        self.assertTrue(trivial.source_identity_signature)
+        self.assertTrue(trivial.proves_symmetric_detector_reduction)
+        self.assertFalse(positive.symmetric_identity_signature)
+        self.assertTrue(positive.proves_symmetric_detector_reduction)
 
     def test_detector_action_readout_is_killed_by_identity_signature(self):
         group = cyclic_group(2)

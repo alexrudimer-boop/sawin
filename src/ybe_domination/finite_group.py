@@ -340,6 +340,33 @@ def symmetric_group(degree: int) -> FiniteGroup:
     return build_group(elems, identity, compose)
 
 
+def left_regular_representation(
+    group: FiniteGroup,
+    degree: int | None = None,
+) -> FiniteGroupHomomorphism:
+    """Embed a finite group into a symmetric group by left multiplication.
+
+    If ``degree`` is larger than ``|G|``, the extra points are fixed.  This is
+    the Cayley embedding used to replace arbitrary finite detector groups by
+    symmetric detector groups.
+    """
+
+    group_order = len(group.elements)
+    target_degree = group_order if degree is None else degree
+    if target_degree < group_order:
+        raise ValueError("degree must be at least the group order")
+    elements = tuple(group.elements)
+    index = {element: position for position, element in enumerate(elements)}
+    target = symmetric_group(target_degree)
+    mapping = {}
+    for left in elements:
+        images = list(range(target_degree))
+        for position, right in enumerate(elements):
+            images[position] = index[group.mul(left, right)]
+        mapping[left] = tuple(images)
+    return FiniteGroupHomomorphism(group, target, mapping)
+
+
 def compose_permutations(left: Permutation, right: Permutation) -> Permutation:
     """Return left after right."""
 

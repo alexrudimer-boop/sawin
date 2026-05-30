@@ -17,6 +17,7 @@ from .finite_group import (
     GroupElement,
     direct_product_group,
     is_abelian_group,
+    left_regular_representation,
     permutation_group_from_generators,
     subgroup_generated_elements,
 )
@@ -795,6 +796,26 @@ class NormalizedLawPrefixWitnessAudit:
             self.product_invisibility_survives_stabilization
             and self.movement_survives_stabilization
         )
+
+
+@dataclass(frozen=True)
+class SymmetricDetectorReductionAudit:
+    """Check the Cayley-embedding reduction to symmetric detector groups."""
+
+    group_order: int
+    symmetric_degree: int
+    symmetric_group_order: int
+    embedding_injective: bool
+    source_identity_signature: bool
+    symmetric_identity_signature: bool
+
+    @property
+    def symmetric_identity_implies_source_identity(self) -> bool:
+        return not self.symmetric_identity_signature or self.source_identity_signature
+
+    @property
+    def proves_symmetric_detector_reduction(self) -> bool:
+        return self.embedding_injective and self.symmetric_identity_implies_source_identity
 
 
 def artin_longitudes(n: int, braid_word: BraidWord) -> ArtinLongitudeData:
@@ -2096,6 +2117,41 @@ def has_identity_longitude_signature(group: FiniteGroup, n: int, braid_word: Bra
         return False
     identity_row = tuple(group.identity for _ in range(n))
     return all(row == identity_row for row in rows)
+
+
+def symmetric_detector_reduction_audit(
+    group: FiniteGroup,
+    n: int,
+    braid_word: BraidWord,
+    *,
+    degree: int | None = None,
+) -> SymmetricDetectorReductionAudit:
+    """Audit that identity data in a symmetric group implies identity in ``G``.
+
+    The group is embedded in ``S_degree`` by the left regular representation,
+    fixing any extra points.  If the braid has identity finite-longitude data in
+    that symmetric group, then restricting assignments to the embedded copy of
+    ``G`` gives identity data in ``G``.
+    """
+
+    embedding = left_regular_representation(group, degree)
+    target = embedding.target
+    return SymmetricDetectorReductionAudit(
+        group_order=len(group.elements),
+        symmetric_degree=len(target.identity),
+        symmetric_group_order=len(target.elements),
+        embedding_injective=len(set(embedding.mapping.values())) == len(group.elements),
+        source_identity_signature=has_identity_longitude_signature(
+            group,
+            n,
+            braid_word,
+        ),
+        symmetric_identity_signature=has_identity_longitude_signature(
+            target,
+            n,
+            braid_word,
+        ),
+    )
 
 
 def artin_detector_rack(group: FiniteGroup, include_trivial_two: bool = True) -> FiniteBraidedSet:
