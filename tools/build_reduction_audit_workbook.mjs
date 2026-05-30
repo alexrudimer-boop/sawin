@@ -374,6 +374,13 @@ const rows = [
     "Prove one fixed S_m passes all gates, or construct an infinite symmetric-tail sequence of first failures.",
   ],
   [
+    "Point-pushing Brunnian first-failure stratification",
+    "Show a negative tail can be chosen with one stable non-base failure kind.",
+    "proofs/point_pushing_brunnian_first_failure_stratification.md uses fixed-arity cofinality and infinite pigeonhole to reduce B to a homogeneous infinite tail of stabilizer, orbit_label, or orbit_relation failures.",
+    "B-tail stratification",
+    "Construct one homogeneous infinite failure tail with explicit witness words, or prove no such tail exists.",
+  ],
+  [
     "Derivative detector functoriality",
     "Show the exact D_k(G) criterion is compatible with quotients, embeddings, symmetric cofinality, and product prefixes.",
     "proofs/point_pushing_derivative_functoriality.md proves coordinate equivariance for finite group homomorphisms; point_pushing_derivative_functoriality_audit checks finite instances.",

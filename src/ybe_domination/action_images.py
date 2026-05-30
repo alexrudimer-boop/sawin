@@ -195,6 +195,42 @@ class PointPushingBrunnianGatePrefixAudit:
 
 
 @dataclass(frozen=True)
+class PointPushingBrunnianTailRow:
+    """One symmetric degree in a finite first-failure tail diagnostic."""
+
+    symmetric_degree: int
+    max_arity: int
+    prefix_detected: bool
+    first_failure_arity: int | None
+    first_failure_kind: str | None
+
+
+@dataclass(frozen=True)
+class PointPushingBrunnianTailPrefixAudit:
+    """Finite prefix of the symmetric first-failure tail."""
+
+    max_symmetric_degree: int
+    max_arity: int
+    rows: Tuple[PointPushingBrunnianTailRow, ...]
+
+    @property
+    def unresolved_degrees(self) -> Tuple[int, ...]:
+        return tuple(row.symmetric_degree for row in self.rows if not row.prefix_detected)
+
+    @property
+    def detected_degrees(self) -> Tuple[int, ...]:
+        return tuple(row.symmetric_degree for row in self.rows if row.prefix_detected)
+
+    @property
+    def failure_kinds(self) -> Tuple[str, ...]:
+        return tuple(
+            row.first_failure_kind
+            for row in self.rows
+            if row.first_failure_kind is not None
+        )
+
+
+@dataclass(frozen=True)
 class PointPushingMuPrefixRow:
     """One finite row in a bounded search for ``mu_X(k)``."""
 
@@ -1334,6 +1370,48 @@ def point_pushing_brunnian_gate_prefix_audit(
         extension_rows=tuple(rows),
         first_failure_arity=None,
         first_failure_kind=None,
+    )
+
+
+def point_pushing_brunnian_tail_prefix_audit(
+    solution: FiniteBraidedSet,
+    max_symmetric_degree: int,
+    max_arity: int,
+    *,
+    max_detector_states: int | None = None,
+    max_pair_subgroup_size: int | None = None,
+) -> PointPushingBrunnianTailPrefixAudit:
+    """Finite diagnostic for symmetric first-failure gate rows."""
+
+    from .finite_group import symmetric_group
+
+    if max_symmetric_degree < 1:
+        raise ValueError("max_symmetric_degree must be positive")
+    if max_arity < 1:
+        raise ValueError("max_arity must be positive")
+
+    rows = []
+    for degree in range(1, max_symmetric_degree + 1):
+        audit = point_pushing_brunnian_gate_prefix_audit(
+            solution,
+            symmetric_group(degree),
+            max_arity=max_arity,
+            max_detector_states=max_detector_states,
+            max_pair_subgroup_size=max_pair_subgroup_size,
+        )
+        rows.append(
+            PointPushingBrunnianTailRow(
+                symmetric_degree=degree,
+                max_arity=max_arity,
+                prefix_detected=audit.prefix_detected,
+                first_failure_arity=audit.first_failure_arity,
+                first_failure_kind=audit.first_failure_kind,
+            )
+        )
+    return PointPushingBrunnianTailPrefixAudit(
+        max_symmetric_degree=max_symmetric_degree,
+        max_arity=max_arity,
+        rows=tuple(rows),
     )
 
 

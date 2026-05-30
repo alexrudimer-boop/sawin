@@ -1001,6 +1001,13 @@ dominates `X` iff arity `1` satisfies the marked quotient criterion and every
 successive Brunnian extension row has `failure_kind="none"`.  The helper
 `point_pushing_brunnian_gate_prefix_audit(...)` checks finite prefixes
 sequentially and stops at the first base or extension failure.
+`proofs/point_pushing_brunnian_first_failure_stratification.md` sharpens the
+negative route: if no fixed symmetric detector works, first failing arities
+tend to infinity, base failures occur only below a finite cutoff, and an
+infinite subsequence has one stable non-base failure kind (`stabilizer`,
+`orbit_label`, or `orbit_relation`).  The helper
+`point_pushing_brunnian_tail_prefix_audit(...)` records finite symmetric-degree
+prefixes of this first-failure tail.
 `proofs/point_pushing_derivative_functoriality.md` records the compatibility
 of this exact criterion with detector changes.  A finite group homomorphism
 `G->H` induces coordinate equivariance on detector states.  Surjections give

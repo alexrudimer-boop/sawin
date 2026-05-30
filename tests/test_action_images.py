@@ -18,6 +18,7 @@ from ybe_domination import (
     delete_right_based_new_strand_word,
     point_pushing_brunnian_gate_prefix_audit,
     point_pushing_brunnian_orbit_audit,
+    point_pushing_brunnian_tail_prefix_audit,
     point_pushing_brunnian_witness_certificate,
     point_pushing_exponent_escape_audit,
     point_pushing_marked_quotient_audit,
@@ -490,6 +491,34 @@ class ActionImageTests(unittest.TestCase):
         self.assertEqual(audit.first_failure_arity, 1)
         self.assertEqual(audit.first_failure_kind, "base_marked_quotient")
         self.assertEqual(audit.extension_rows, tuple())
+
+    def test_point_pushing_brunnian_tail_prefix_records_degrees(self):
+        solution = rack_solution([0, 1], lambda a, b: b)
+
+        audit = point_pushing_brunnian_tail_prefix_audit(
+            solution,
+            max_symmetric_degree=2,
+            max_arity=2,
+        )
+
+        self.assertEqual(audit.detected_degrees, (1, 2))
+        self.assertEqual(audit.unresolved_degrees, tuple())
+        self.assertEqual(audit.failure_kinds, tuple())
+        self.assertTrue(all(row.prefix_detected for row in audit.rows))
+
+    def test_point_pushing_brunnian_tail_prefix_records_first_failure(self):
+        solution = rack_solution([0, 1, 2], lambda a, b: (2 * a - b) % 3)
+
+        audit = point_pushing_brunnian_tail_prefix_audit(
+            solution,
+            max_symmetric_degree=1,
+            max_arity=2,
+        )
+
+        self.assertEqual(audit.detected_degrees, tuple())
+        self.assertEqual(audit.unresolved_degrees, (1,))
+        self.assertEqual(audit.failure_kinds, ("base_marked_quotient",))
+        self.assertEqual(audit.rows[0].first_failure_arity, 1)
 
     def test_point_pushing_suffix_shuttle_matches_direct_action(self):
         solution = rack_solution([0, 1, 2], lambda a, b: (2 * a - b) % 3)
