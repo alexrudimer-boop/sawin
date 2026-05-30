@@ -8,6 +8,7 @@ from ybe_domination import (
     LocalInterval,
     artin_permutation_defect_witness_audit,
     cyclic_group,
+    descent_endpoint_repair_contract_audit,
     endpoint_artin_defect_audit,
     endpoint_artin_defect_coordinate_readout_audit,
     endpoint_artin_defect_residual_action_audit,
@@ -19,6 +20,7 @@ from ybe_domination import (
     endpoint_residual_action_audit,
     endpoint_residual_readout_audit,
     lost_edge_external_routing_audit,
+    readout_descent_separation_audit,
     routed_lost_edge_endpoint_witness_audit,
     symmetric_group,
     terminal_gauge_longitude_expression_audit,
@@ -565,6 +567,104 @@ class EndpointFactorizationTests(unittest.TestCase):
         self.assertTrue(action.residual_action_identity_on_supplied_rows)
         self.assertTrue(action.proves_supplied_rows_detector_implication)
         self.assertTrue(action.proves_complete_residual_action_implication)
+
+    def test_descent_endpoint_repair_contract_accepts_supplied_certificates(self):
+        interval = one_color_identity_interval()
+        descent = readout_descent_separation_audit(
+            interval,
+            {"*": {0: "collapsed", 1: "collapsed"}},
+        )
+        c2 = cyclic_group(2)
+        product_audit = endpoint_product_longitude_expression_audit(
+            (c2,),
+            n=2,
+            braid_word=(1, -1),
+            endpoints=(0,),
+            assignments=((1, 0),),
+            expressions=((),),
+        )
+        readout = endpoint_residual_readout_audit(
+            (endpoint_coordinate_readout_audit(product_audit, "p", "p"),)
+        )
+        action = endpoint_residual_action_audit(
+            2,
+            (1, -1),
+            (readout,),
+            expected_row_count=1,
+        )
+
+        audit = descent_endpoint_repair_contract_audit(descent, action)
+
+        self.assertTrue(descent.proves_descent_separation_readout)
+        self.assertTrue(action.proves_complete_residual_action_implication)
+        self.assertEqual(audit.failure_reasons, ())
+        self.assertTrue(audit.proves_repair_contract_for_supplied_data)
+
+    def test_descent_endpoint_repair_contract_reports_descent_failure(self):
+        interval = one_color_identity_interval()
+        descent = readout_descent_separation_audit(
+            interval,
+            {"*": {0: "zero", 1: "one"}},
+        )
+        c2 = cyclic_group(2)
+        product_audit = endpoint_product_longitude_expression_audit(
+            (c2,),
+            n=2,
+            braid_word=(1, -1),
+            endpoints=(0,),
+            assignments=((1, 0),),
+            expressions=((),),
+        )
+        readout = endpoint_residual_readout_audit(
+            (endpoint_coordinate_readout_audit(product_audit, "p", "p"),)
+        )
+        action = endpoint_residual_action_audit(
+            2,
+            (1, -1),
+            (readout,),
+            expected_row_count=1,
+        )
+
+        audit = descent_endpoint_repair_contract_audit(descent, action)
+
+        self.assertFalse(descent.proves_descent_separation_readout)
+        self.assertEqual(audit.failure_reasons, ("descent_separation_not_proved",))
+        self.assertFalse(audit.proves_repair_contract_for_supplied_data)
+
+    def test_descent_endpoint_repair_contract_reports_endpoint_failure(self):
+        interval = one_color_identity_interval()
+        descent = readout_descent_separation_audit(
+            interval,
+            {"*": {0: "collapsed", 1: "collapsed"}},
+        )
+        c2 = cyclic_group(2)
+        product_audit = endpoint_product_longitude_expression_audit(
+            (c2,),
+            n=2,
+            braid_word=(1, -1),
+            endpoints=(0,),
+            assignments=((1, 0),),
+            expressions=((),),
+        )
+        readout = endpoint_residual_readout_audit(
+            (endpoint_coordinate_readout_audit(product_audit, "p", "q"),)
+        )
+        action = endpoint_residual_action_audit(
+            2,
+            (1, -1),
+            (readout,),
+            expected_row_count=1,
+        )
+
+        audit = descent_endpoint_repair_contract_audit(descent, action)
+
+        self.assertTrue(descent.proves_descent_separation_readout)
+        self.assertFalse(action.proves_complete_residual_action_implication)
+        self.assertEqual(
+            audit.failure_reasons,
+            ("endpoint_action_detector_not_proved",),
+        )
+        self.assertFalse(audit.proves_repair_contract_for_supplied_data)
 
     def test_residual_action_audit_requires_expected_row_coverage(self):
         c2 = cyclic_group(2)

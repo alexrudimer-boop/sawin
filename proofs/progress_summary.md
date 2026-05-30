@@ -712,6 +712,9 @@ reconstruction rule, and all-`n` `V_beta` witnesses for routed endpoints, then
 the local finite detector implication follows.  A failure of any item is not
 yet outcome B, but it is the finite seed that must be upgraded to a
 normalized-law obstruction.
+The helper `descent_endpoint_repair_contract_audit(...)` now bundles supplied
+descent, endpoint-action, and routed-edge certificates and reports which part
+of a proposed repair package fails.
 
 ## Verification snapshot
 

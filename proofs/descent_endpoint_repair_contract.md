@@ -229,6 +229,33 @@ listed in the repair theorem.
 This is stronger than finite subgroup membership at a fixed braid index.  It
 is a symbolic all-`n` theorem.
 
+## Executable supplied-certificate audit
+
+The helper
+
+```text
+descent_endpoint_repair_contract_audit(...)
+```
+
+bundles supplied certificates for one proposed repair package:
+
+- a `ReadoutDescentSeparationAudit`;
+- an endpoint residual-action audit built from recursive-longitude or
+  Artin-defect endpoint witnesses;
+- optionally, a routed lost-edge endpoint witness audit.
+
+It returns `proves_repair_contract_for_supplied_data` exactly when:
+
+1. the descent readout proves descent separation;
+2. the endpoint action audit proves the detector implication for the supplied
+   residual rows;
+3. every routed lost edge has a visible fixed-factor endpoint witness.
+
+The helper deliberately does not discover the missing readout or endpoint
+witnesses.  It prevents the previous overclaim: supplied data must prove the
+descent, endpoint, and routing parts simultaneously before the local detector
+implication can be counted.
+
 ## Exact B seed if the theorem fails
 
 A failure of the repair contract has one of the following finite shapes:
