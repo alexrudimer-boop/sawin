@@ -67,16 +67,16 @@ detector.  This cyclic group embeds in `Sym(X)`.  Hence identity
 longitude formula from `proofs/involutive_permutation_detector.md` kills the
 action.
 
-## Nondegenerate/Guitar Branch
+## Left-Nondegenerate/Guitar Branch
 
-For a finite nondegenerate solution, the guitar-map theorem conjugates the
-braid action of `X` on every `X^n` to the braid action of the derived rack
+For a finite left-nondegenerate solution, the guitar-map theorem conjugates
+the braid action of `X` on every `X^n` to the braid action of the derived rack
 `D_X` on the same finite set.  The derived rack action is detected by
 `Inn(D_X) <= Sym(X)`.  Thus identity `Sym(X)` longitude data kills the
 derived rack action, and conjugacy kills the original action.
 
-This promotes the nondegenerate/guitar branch from the two-strand gate note
-to the full all-`n` direct-symmetric implication, for this branch only.
+This promotes the left-nondegenerate/guitar branch from the two-strand gate
+note to the full all-`n` direct-symmetric implication, for this branch only.
 
 ## Executable Filter
 
@@ -91,7 +91,7 @@ returns one of:
 - `rack_inner_group_subgroup`;
 - `involutive_artin_permutation`;
 - `permutation_twist_subgroup`;
-- `nondegenerate_guitar_derived_rack`;
+- `left_nondegenerate_guitar_derived_rack`;
 - `None`, when no branch proof in this note applies.
 
 The certificate helper
@@ -102,7 +102,7 @@ known_branch_detector_certificate(X)
 
 uses the smaller detectors from
 `proofs/involutive_permutation_detector.md` for involutive and
-permutation-form solutions.  For the rack-type and nondegenerate/guitar
+permutation-form solutions.  For the rack-type and left-nondegenerate/guitar
 branches recorded in this note, it returns the finite group `Sym(X)` itself.
 Thus every closed whole-solution branch exported to the local bottleneck
 ledger has an explicit detector group and sharp rack factor size

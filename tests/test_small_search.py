@@ -226,7 +226,7 @@ class SmallSearchTests(unittest.TestCase):
         self.assertTrue(is_nondegenerate(solution))
         self.assertEqual(
             two_strand_symmetric_gate_summary(solution).explanation,
-            "nondegenerate_derived_rack_branch",
+            "left_nondegenerate_derived_rack_branch",
         )
 
         operation = derived_rack_operation_table(solution)
@@ -255,7 +255,7 @@ class SmallSearchTests(unittest.TestCase):
             counts[explanation] = counts.get(explanation, 0) + 1
 
         self.assertNotIn("passes_unclassified", counts)
-        self.assertEqual(counts["nondegenerate_derived_rack_branch"], 35)
+        self.assertEqual(counts["left_nondegenerate_derived_rack_branch"], 35)
 
     def test_direct_symmetric_known_branch_filter_covers_size_three_corpus(self):
         counts = {}
@@ -269,7 +269,7 @@ class SmallSearchTests(unittest.TestCase):
             {
                 "involutive_artin_permutation": 18,
                 "rack_inner_group_subgroup": 13,
-                "nondegenerate_guitar_derived_rack": 35,
+                "left_nondegenerate_guitar_derived_rack": 35,
                 "permutation_twist_subgroup": 7,
             },
         )

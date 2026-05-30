@@ -159,6 +159,12 @@ state to `A x E`.  The remaining issue is descent separation: any lower
 motion that is not strand-continuing must be visible in the Green or
 Schutzenberger readout, rather than treated as endpoint gauge.
 
+The sharpened final positive target is recorded separately in
+`proofs/terminal_gauge_artin_defect_target.md`: prove that every remaining
+terminal gauge endpoint is a product of evaluated Artin permutation defects
+inside the fixed gauge factor.  The Artin-defect sieve would then convert the
+endpoint immediately into a `V_beta` witness.
+
 ## Executable audit hooks
 
 The code records this criterion through:

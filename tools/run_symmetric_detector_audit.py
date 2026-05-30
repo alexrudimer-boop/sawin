@@ -326,7 +326,7 @@ def write_markdown(report):
             "This filter is not a search proof.  It records rows where a separate",
             "all-`n` branch argument already implies direct `Sym(X)` detection:",
             "rack inner group, involutive Artin-permutation quotient,",
-            "permutation-form twist subgroup, or nondegenerate guitar-derived",
+            "permutation-form twist subgroup, or left-nondegenerate guitar-derived",
             "rack.  Exact detector-state enumeration may still truncate on such",
             "rows because it tracks many irrelevant longitude states.",
             "",

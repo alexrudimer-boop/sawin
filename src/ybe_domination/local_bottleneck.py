@@ -410,7 +410,7 @@ def _verdict_and_obligation(
     if output_kernel_kind == "equality":
         return (
             "locally_nondegenerate_branch",
-            "Use the already bookkept nondegenerate/guitar finite-G detector branch.",
+            "Use the already bookkept left-nondegenerate/guitar finite-G detector branch.",
         )
     if set(total_branch_tags) & {"involutive", "permutation_form", "rack_type"}:
         return (

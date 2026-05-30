@@ -25,7 +25,7 @@ two-strand Sym-gate bad rows: 0
 crossing-order histogram: {1:1, 2:42, 3:12, 4:36, 6:6}
 gate explanation counts:
   involutive_order_two: 42
-  nondegenerate_derived_rack_branch: 34
+  left_nondegenerate_derived_rack_branch: 34
   permutation_form_twist_order_2: 3
   permutation_form_twist_order_3: 4
   rack_inner_group_branch: 13

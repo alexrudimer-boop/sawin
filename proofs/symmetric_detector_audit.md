@@ -33,12 +33,12 @@ fixed braid-index finite-image closures.
 This filter is not a search proof.  It records rows where a separate
 all-`n` branch argument already implies direct `Sym(X)` detection:
 rack inner group, involutive Artin-permutation quotient,
-permutation-form twist subgroup, or nondegenerate guitar-derived
+permutation-form twist subgroup, or left-nondegenerate guitar-derived
 rack.  Exact detector-state enumeration may still truncate on such
 rows because it tracks many irrelevant longitude states.
 
 - size `2`: solutions `5`, unknown rows `0`, reason counts `{'involutive_artin_permutation': 2, 'permutation_twist_subgroup': 1, 'rack_inner_group_subgroup': 2}`.
-- size `3`: solutions `73`, unknown rows `0`, reason counts `{'involutive_artin_permutation': 18, 'nondegenerate_guitar_derived_rack': 35, 'permutation_twist_subgroup': 7, 'rack_inner_group_subgroup': 13}`.
+- size `3`: solutions `73`, unknown rows `0`, reason counts `{'involutive_artin_permutation': 18, 'left_nondegenerate_guitar_derived_rack': 35, 'permutation_twist_subgroup': 7, 'rack_inner_group_subgroup': 13}`.
 
 ## Exact two-strand crossing-order gate
 
@@ -52,7 +52,7 @@ exhaustive scans record this exact gate.
 - size `2`: solutions `5`, period `4`, bad rows `0`, order histogram `{'1': 1, '2': 2, '4': 2}`.
   Explanation counts: `{'involutive_order_two': 2, 'permutation_form_twist_order_2': 1, 'rack_inner_group_branch': 1, 'trivial_crossing_action': 1}`.
 - size `3`: solutions `73`, period `12`, bad rows `0`, order histogram `{'1': 1, '2': 18, '3': 12, '4': 36, '6': 6}`.
-  Explanation counts: `{'involutive_order_two': 18, 'nondegenerate_derived_rack_branch': 35, 'permutation_form_twist_order_2': 3, 'permutation_form_twist_order_3': 4, 'rack_inner_group_branch': 12, 'trivial_crossing_action': 1}`.
+  Explanation counts: `{'involutive_order_two': 18, 'left_nondegenerate_derived_rack_branch': 35, 'permutation_form_twist_order_2': 3, 'permutation_form_twist_order_3': 4, 'rack_inner_group_branch': 12, 'trivial_crossing_action': 1}`.
 
 ## Affine cyclic two-strand stress test
 

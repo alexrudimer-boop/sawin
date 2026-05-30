@@ -349,7 +349,7 @@
       "bad_count": 0,
       "explanation_counts": {
         "involutive_order_two": 18,
-        "nondegenerate_derived_rack_branch": 35,
+        "left_nondegenerate_derived_rack_branch": 35,
         "permutation_form_twist_order_2": 3,
         "permutation_form_twist_order_3": 4,
         "rack_inner_group_branch": 12,
@@ -449,7 +449,7 @@
       "first_unknown": null,
       "reason_counts": {
         "involutive_artin_permutation": 18,
-        "nondegenerate_guitar_derived_rack": 35,
+        "left_nondegenerate_guitar_derived_rack": 35,
         "permutation_twist_subgroup": 7,
         "rack_inner_group_subgroup": 13
       },

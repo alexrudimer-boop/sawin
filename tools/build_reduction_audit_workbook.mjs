@@ -236,7 +236,7 @@ const rows = [
   [
     "Symmetric detector",
     "Test global G_X=Sym(X) candidate.",
-    "Direct known-branch filter covers all size<=3 rows; direct fixed-n readout wrapper added.",
+    "Direct known-branch filter covers all size<=3 rows; left-nondegenerate guitar branch now routes through the derived rack; direct fixed-n readout wrapper added.",
     "Candidate audit",
     "Prove all-n context factorization outside known branches or find degenerate failure.",
   ],
@@ -556,6 +556,13 @@ const rows = [
     "Supply all-n terminal gauge certificates in fixed factors, or extract normalized-law gauge escape.",
   ],
   [
+    "Terminal gauge Artin-defect target",
+    "State the smallest currently visible positive theorem for the corridor branch.",
+    "proofs/terminal_gauge_artin_defect_target.md records that every remaining terminal gauge endpoint should be a product of evaluated Artin permutation defects in a fixed factor U, hence lie in V_beta(U).",
+    "Open theorem target",
+    "Prove this symbolic identity, or turn the first true terminal-gauge failure into a normalized-law obstruction.",
+  ],
+  [
     "Principal gauge extension",
     "Close lower endpoint/unit holonomy when the surviving gauge row is a principal finite rack-extension cocycle.",
     "proofs/principal_gauge_extension_detector.md proves the rack-cocycle criterion; principal_gauge_extension_detector_audit builds A x U and checks Inn(A x U) detector-lift rows.",
@@ -847,7 +854,7 @@ const rows = [
     "Swapped product extension over nondegenerate quotient is nondegenerate.",
     "All-n fibre-bijection proof added; regression fixture checks the known product row.",
     "Reduction ready",
-    "Route such rows to the nondegenerate/guitar branch, not to product holonomy.",
+    "Route such rows to the left-nondegenerate/guitar branch, not to product holonomy.",
   ],
   [
     "Identity-base product",
@@ -960,6 +967,13 @@ const rows = [
     "481 YBE; depth1 universals all involutive.",
     "Candidate audit",
     "Search non-affine or higher-rank affine.",
+  ],
+  [
+    "Affine-linear Sym stress",
+    "Stress the direct Sym(X) two-strand gate in larger affine-linear families.",
+    "proofs/affine_linear_direct_symmetric_stress.md records reported F2^3 and F3^2 affine-linear scans with 0 bad direct-Sym two-strand rows; every crossing order divides 2*lcm(1,...,|X|).",
+    "Guardrail",
+    "Do not treat this as proof; the remaining obstruction is all-n terminal gauge longitudinalization.",
   ],
   [
     "Known branches",

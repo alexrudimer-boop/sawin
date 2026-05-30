@@ -301,8 +301,8 @@ def two_strand_symmetric_gate_summary(
     elif is_permutation_solution_form(solution):
         twist_order = permutation_solution_twist_order(solution)
         explanation = f"permutation_form_twist_order_{twist_order}"
-    elif is_nondegenerate(solution) and two_strand_guitar_conjugacy_holds(solution):
-        explanation = "nondegenerate_derived_rack_branch"
+    elif is_left_nondegenerate(solution) and two_strand_guitar_conjugacy_holds(solution):
+        explanation = "left_nondegenerate_derived_rack_branch"
     else:
         explanation = "passes_unclassified"
     return TwoStrandSymmetricGateSummary(
@@ -413,7 +413,7 @@ def known_branch_detector_certificate(
 
     The involutive and permutation-form branches use the minimal detector
     groups from ``proofs/involutive_permutation_detector.md``.  Rack-type and
-    nondegenerate/guitar branches use the all-degree direct-symmetric
+    left-nondegenerate/guitar branches use the all-degree direct-symmetric
     implication from ``proofs/direct_symmetric_known_branches.md``.
     """
 
@@ -605,8 +605,8 @@ def direct_symmetric_known_branch_reason(solution: FiniteBraidedSet) -> str | No
         return "involutive_artin_permutation"
     if is_permutation_solution_form(solution):
         return "permutation_twist_subgroup"
-    if is_nondegenerate(solution) and derived_rack_solution(solution) is not None:
-        return "nondegenerate_guitar_derived_rack"
+    if is_left_nondegenerate(solution) and derived_rack_solution(solution) is not None:
+        return "left_nondegenerate_guitar_derived_rack"
     return None
 
 

@@ -3,7 +3,7 @@
     "checked_matrix_count": 65536,
     "crossing_gate_explanation_counts": {
       "involutive_order_two": 42,
-      "nondegenerate_derived_rack_branch": 34,
+      "left_nondegenerate_derived_rack_branch": 34,
       "permutation_form_twist_order_2": 3,
       "permutation_form_twist_order_3": 4,
       "rack_inner_group_branch": 13,

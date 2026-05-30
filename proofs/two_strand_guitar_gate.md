@@ -27,7 +27,8 @@ rack action is braid-action conjugate to the original nondegenerate solution.
 In particular, for all braid indices `n`, the derived rack has the same
 kernel as the original solution after conjugating `X^n` by the guitar map.
 
-This is one of the known nondegenerate/guitar branches in the main ledger.
+This is one of the known left-nondegenerate/guitar branches in the main
+ledger.
 It is not a finite-search claim.
 
 ## Two-strand identity
@@ -83,7 +84,7 @@ The exact finite-group longitude calculation from
 `proofs/two_strand_symmetric_gate.md` says that the `B_2` kernel for
 `G=Sym(X)` is `2 exp(Sym(X)) Z`.  The derived rack crossing is trivial on
 that power, hence the conjugate original crossing is also trivial.  Therefore
-every finite nondegenerate solution satisfies the exact direct-Sym
+every finite left-nondegenerate solution satisfies the exact direct-Sym
 two-strand gate:
 
 ```text
@@ -112,11 +113,11 @@ The summary helper
 two_strand_symmetric_gate_summary(X)
 ```
 
-now reports `nondegenerate_derived_rack_branch` for nondegenerate rows that
-pass through this derived-rack certificate.  Regenerated audits should
+now reports `left_nondegenerate_derived_rack_branch` for rows that pass
+through this derived-rack certificate.  Regenerated audits should
 therefore show no `passes_unclassified` rows in the exhaustive size-`3`
 two-strand corpus; any future `passes_unclassified` row must be outside the
-currently closed rack, involutive, permutation, and nondegenerate/guitar
+currently closed rack, involutive, permutation, and left-nondegenerate/guitar
 two-strand branches.
 
 ## Remaining limitation
