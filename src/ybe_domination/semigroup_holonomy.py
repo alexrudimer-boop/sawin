@@ -24,6 +24,7 @@ from .finite_group import (
     direct_product_group,
     permutation_group_from_generators,
     quotient_group_by_normal_subgroup,
+    subgroup_as_group,
     subgroup_generated_elements,
 )
 from .green_branch import (
@@ -339,6 +340,60 @@ class UnitCompositeDerivedSeriesLiftAudit:
             and self.final_witness_assignments_in_perfect_residual
             and self.final_witness_matches_residual
             and self.combined_witness_matches_endpoint
+        )
+
+
+@dataclass(frozen=True)
+class UnitPerfectResidualLongitudeAudit:
+    """Audit a final endpoint inside the stable perfect residual."""
+
+    artin_permutation: Tuple[int, ...]
+    unit_group_order: int
+    derived_subgroup_orders: Tuple[int, ...]
+    perfect_residual_size: int
+    residual_endpoint: GroupElement
+    residual_endpoint_in_unit_group: bool
+    residual_endpoint_in_perfect_residual: bool
+    perfect_residual_longitude_subgroup_size: int
+    residual_endpoint_lies_in_perfect_residual_longitude_subgroup: bool
+    perfect_residual_identity: GroupElement
+
+    @property
+    def perfect_residual_is_trivial(self) -> bool:
+        return self.perfect_residual_size == 1
+
+    @property
+    def residual_endpoint_is_identity(self) -> bool:
+        return self.residual_endpoint == self.perfect_residual_identity
+
+    @property
+    def identity_perfect_residual_longitude_signature(self) -> bool:
+        return (
+            self.artin_permutation == tuple(range(len(self.artin_permutation)))
+            and self.perfect_residual_longitude_subgroup_size == 1
+        )
+
+    @property
+    def proves_perfect_residual_endpoint_in_longitude_subgroup(self) -> bool:
+        return (
+            self.residual_endpoint_in_perfect_residual
+            and self.residual_endpoint_lies_in_perfect_residual_longitude_subgroup
+        )
+
+    @property
+    def identity_longitudes_kill_perfect_residual_endpoint(self) -> bool:
+        if not self.proves_perfect_residual_endpoint_in_longitude_subgroup:
+            return False
+        if not self.identity_perfect_residual_longitude_signature:
+            return True
+        return self.residual_endpoint_is_identity
+
+    @property
+    def is_finite_perfect_residual_detector_failure(self) -> bool:
+        return (
+            self.residual_endpoint_in_perfect_residual
+            and self.identity_perfect_residual_longitude_signature
+            and not self.residual_endpoint_is_identity
         )
 
 
@@ -1086,6 +1141,53 @@ def unit_composite_derived_series_lift_audit(
             factorization.composite_is_unit and combined_value == factorization.composite
         ),
         monoid_identity=monoid.identity,
+    )
+
+
+def unit_perfect_residual_longitude_audit(
+    monoid: TransformationMonoid,
+    n: int,
+    braid_word: BraidWord,
+    residual_endpoint: Transformation,
+    *,
+    max_assignments: int | None = None,
+) -> UnitPerfectResidualLongitudeAudit:
+    """Check the final perfect-residual endpoint after derived splitting.
+
+    Once all abelian derived quotient stages have been handled, the only
+    possible nonsolvable terminal-unit obstruction is an endpoint in the
+    stable perfect residual ``P`` of ``U(M)``.  This helper restricts the
+    finite group structure to ``P`` and checks whether the supplied residual
+    endpoint lies in ``V_beta(P)``.
+    """
+
+    unit_group = monoid_permutation_group(monoid)
+    unit_elements = set(unit_group.elements)
+    series = derived_series_subgroups(unit_group)
+    perfect_residual = tuple(series[-1])
+    perfect_group = subgroup_as_group(unit_group, perfect_residual)
+    subgroup = set(
+        longitude_value_subgroup_elements(
+            perfect_group,
+            n,
+            braid_word,
+            max_assignments=max_assignments,
+        )
+    )
+    data = artin_longitudes(n, braid_word)
+    return UnitPerfectResidualLongitudeAudit(
+        artin_permutation=data.permutation,
+        unit_group_order=len(unit_group.elements),
+        derived_subgroup_orders=tuple(len(subgroup_) for subgroup_ in series),
+        perfect_residual_size=len(perfect_residual),
+        residual_endpoint=residual_endpoint,
+        residual_endpoint_in_unit_group=residual_endpoint in unit_elements,
+        residual_endpoint_in_perfect_residual=residual_endpoint in set(perfect_residual),
+        perfect_residual_longitude_subgroup_size=len(subgroup),
+        residual_endpoint_lies_in_perfect_residual_longitude_subgroup=(
+            residual_endpoint in subgroup
+        ),
+        perfect_residual_identity=perfect_group.identity,
     )
 
 

@@ -23,6 +23,7 @@ from ybe_domination import (
     unit_composite_product_longitude_expression_audit,
     unit_factorization_audit,
     unit_longitude_subgroup_audit,
+    unit_perfect_residual_longitude_audit,
     unit_section_detection_audit,
     unit_section_product_detection_audit,
 )
@@ -378,6 +379,69 @@ class SemigroupHolonomyTests(unittest.TestCase):
         self.assertFalse(audit.final_witness_matches_residual)
         self.assertFalse(audit.combined_witness_matches_endpoint)
         self.assertFalse(audit.proves_endpoint_in_longitude_subgroup_by_derived_lift)
+
+    def test_unit_perfect_residual_audit_handles_trivial_residual(self):
+        transposition = (1, 0, 2)
+        three_cycle = (1, 2, 0)
+        identity = (0, 1, 2)
+        monoid = TransformationMonoid.generated((transposition, three_cycle))
+
+        audit = unit_perfect_residual_longitude_audit(
+            monoid,
+            n=2,
+            braid_word=(1, 1),
+            residual_endpoint=identity,
+        )
+
+        self.assertEqual(audit.derived_subgroup_orders, (6, 3, 1))
+        self.assertTrue(audit.perfect_residual_is_trivial)
+        self.assertTrue(audit.residual_endpoint_in_perfect_residual)
+        self.assertTrue(audit.residual_endpoint_lies_in_perfect_residual_longitude_subgroup)
+        self.assertTrue(audit.proves_perfect_residual_endpoint_in_longitude_subgroup)
+        self.assertTrue(audit.identity_longitudes_kill_perfect_residual_endpoint)
+
+    def test_unit_perfect_residual_audit_checks_a5_residual(self):
+        three_cycle = (1, 2, 0, 3, 4)
+        five_cycle = (1, 2, 3, 4, 0)
+        monoid = TransformationMonoid.generated((three_cycle, five_cycle))
+
+        audit = unit_perfect_residual_longitude_audit(
+            monoid,
+            n=2,
+            braid_word=(1, 1),
+            residual_endpoint=three_cycle,
+            max_assignments=10_000,
+        )
+
+        self.assertEqual(audit.unit_group_order, 60)
+        self.assertEqual(audit.derived_subgroup_orders, (60,))
+        self.assertFalse(audit.perfect_residual_is_trivial)
+        self.assertEqual(audit.perfect_residual_size, 60)
+        self.assertTrue(audit.residual_endpoint_in_perfect_residual)
+        self.assertEqual(audit.perfect_residual_longitude_subgroup_size, 60)
+        self.assertTrue(audit.proves_perfect_residual_endpoint_in_longitude_subgroup)
+        self.assertTrue(audit.identity_longitudes_kill_perfect_residual_endpoint)
+        self.assertFalse(audit.is_finite_perfect_residual_detector_failure)
+
+    def test_unit_perfect_residual_audit_flags_identity_signature_failure(self):
+        three_cycle = (1, 2, 0, 3, 4)
+        five_cycle = (1, 2, 3, 4, 0)
+        monoid = TransformationMonoid.generated((three_cycle, five_cycle))
+
+        audit = unit_perfect_residual_longitude_audit(
+            monoid,
+            n=2,
+            braid_word=(),
+            residual_endpoint=three_cycle,
+            max_assignments=10_000,
+        )
+
+        self.assertTrue(audit.residual_endpoint_in_perfect_residual)
+        self.assertTrue(audit.identity_perfect_residual_longitude_signature)
+        self.assertFalse(audit.residual_endpoint_lies_in_perfect_residual_longitude_subgroup)
+        self.assertFalse(audit.proves_perfect_residual_endpoint_in_longitude_subgroup)
+        self.assertFalse(audit.identity_longitudes_kill_perfect_residual_endpoint)
+        self.assertTrue(audit.is_finite_perfect_residual_detector_failure)
 
     def test_unit_composite_detection_rejects_nonunit_composite(self):
         reset = (0, 0)

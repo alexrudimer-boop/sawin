@@ -2136,6 +2136,12 @@ that the final perfect-residual endpoint has its own witness.  The combined
 witness is then evaluated in the original unit group.  This closes supplied
 solvable-unit certificates once every derived abelian quotient stage is
 witnessed, and it isolates the perfect residual in nonsolvable cases.
+The helper `unit_perfect_residual_longitude_audit(...)` now records that last
+checkpoint directly: it restricts the unit group to the stable perfect
+residual `P`, computes `V_beta(P)`, and tests the supplied final residual
+endpoint there.  A failure at this stage is the precise nonsolvable terminal
+unit seed that would still need normalized-law upgrade before it could be
+outcome B.
 
 ## Completion audit checklist
 

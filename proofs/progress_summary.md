@@ -637,6 +637,13 @@ the next derived subgroup; the final witness handles the stable perfect
 residual.  A successful audit evaluates the combined witness back in the
 original unit group and proves the supplied terminal unit composite lies in
 `V_beta(U(M))`.
+The companion `proofs/unit_continuation_perfect_residual_audit.md` isolates
+the final nonsolvable checkpoint.  The helper
+`unit_perfect_residual_longitude_audit(...)` restricts the finite unit group
+to its stable perfect residual `P` and checks whether the final derived
+residual endpoint lies in `V_beta(P)`.  Thus every terminal-unit obstruction
+after the abelian quotient stages is now explicitly located in a fixed
+perfect group.
 The current sharpest positive statement is
 `proofs/terminal_gauge_artin_defect_target.md`: every remaining terminal
 gauge endpoint `S_beta=g_terminal g_initial^-1` in a fixed interval-level

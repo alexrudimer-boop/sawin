@@ -196,3 +196,10 @@ S_beta in V_beta(U(M)).
 For solvable unit groups the perfect residual is trivial, so the final
 witness may be empty after all abelian quotient stages pass.  For nonsolvable
 groups, the audit isolates the exact perfect-residual witness still needed.
+
+The companion note
+`proofs/unit_continuation_perfect_residual_audit.md` packages that last
+nonsolvable checkpoint.  The helper
+`unit_perfect_residual_longitude_audit(...)` restricts the finite group to
+the stable perfect residual `P` and checks the final residual endpoint
+against `V_beta(P)`.

@@ -808,6 +808,13 @@ const rows = [
     "Supply derived quotient witnesses stage-by-stage; solvable unit groups close when the final residual is identity, nonsolvable cases need a perfect-residual witness.",
   ],
   [
+    "Unit-continuation perfect residual",
+    "Make the last nonsolvable terminal-unit checkpoint explicit.",
+    "proofs/unit_continuation_perfect_residual_audit.md; unit_perfect_residual_longitude_audit restricts U(M) to its stable perfect residual P and tests the final residual endpoint against V_beta(P).",
+    "Certificate criterion",
+    "Supply a perfect-residual recursive-longitude witness, or upgrade a perfect-residual finite miss to normalized laws.",
+  ],
+  [
     "Bi-free subgroup certificate",
     "Profile candidate words against fixed corridor detector factors.",
     "Helper, extra-factor target support, direct-product subgroup audit, and tests added; affine commutator seen by S3 block factor.",
