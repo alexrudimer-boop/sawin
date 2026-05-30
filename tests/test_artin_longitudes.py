@@ -1072,6 +1072,31 @@ class ArtinLongitudeTests(unittest.TestCase):
             self.assertEqual(rack_longitude_action(rack, braid, tup), tup)
             self.assertEqual(rack.braid_action(braid, tup), tup)
 
+    def test_inner_group_detector_kernel_is_inside_rack_kernel(self):
+        rack = rack_solution([0, 1], lambda _left, right: 1 - right)
+        group = rack_inner_group(rack)
+        detector = artin_detector_rack(group)
+        words = (
+            tuple(),
+            (1, -1),
+            pure_braid_generator(1, 2) * 2,
+            (1, 2, -2, -1),
+        )
+
+        for word in words:
+            if is_identity_action(detector, 3, word):
+                self.assertTrue(is_identity_action(rack, 3, word), msg=word)
+
+    def test_identity_longitude_signature_survives_right_stabilization(self):
+        group = cyclic_group(2)
+        braid = pure_braid_generator(1, 2) * 2
+
+        audit = right_stabilization_longitude_audit(2, braid, extra_strands=3)
+
+        self.assertTrue(has_identity_longitude_signature(group, 2, braid))
+        self.assertTrue(audit.stabilization_valid)
+        self.assertTrue(has_identity_longitude_signature(group, 5, braid))
+
     def test_detector_action_readout_is_killed_by_identity_signature(self):
         group = cyclic_group(2)
         detector = artin_detector_rack(group)

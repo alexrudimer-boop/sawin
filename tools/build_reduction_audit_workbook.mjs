@@ -283,6 +283,13 @@ const rows = [
     "Use only after explicit all-G detector failure.",
   ],
   [
+    "Normalized-law dichotomy",
+    "Show normalized-law obstruction is forced by failure of finite-rack domination.",
+    "proofs/normalized_law_domination_dichotomy.md proves finite-rack domination is equivalent to one finite group-longitude detector and that failure diagonalizes to a normalized-law sequence; local residual version included.",
+    "Reduction ready",
+    "Still need a positive uniform endpoint/descent theorem or an explicit interval with no finite group detector.",
+  ],
+  [
     "Small YBE scan",
     "Screen tiny YBE tables for law-braid motion.",
     "Size-2 full, size-3 capped scan.",

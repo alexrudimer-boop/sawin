@@ -718,6 +718,18 @@ of a proposed repair package fails.  Routed lost-edge ledgers must match the
 same saturated descent quotient as the supplied descent certificate, so valid
 endpoint witnesses cannot be imported from a different local repair package.
 
+`proofs/normalized_law_domination_dichotomy.md` now proves that the
+normalized-law obstruction format is forced, not optional.  For a finite
+solution `X`, finite-rack domination is equivalent to the existence of one
+finite group `G` whose identity Artin-longitude kernel lies in
+`ker rho_X` for every braid index.  Failure of such a group diagonalizes over
+finite groups and right-stabilizes to braid indices `q_j -> infinity`, giving
+eventual identity finite-`G` longitude data for every finite group while still
+moving `X`.  The same dichotomy is stated for a fixed quotient/residual
+interval with `beta_j in N_{q_j}`.  This does not construct outcome B, but it
+proves that a normalized-law sequence is the forced shape of any negative
+resolution.
+
 ## Verification snapshot
 
 At the latest verified snapshot:
