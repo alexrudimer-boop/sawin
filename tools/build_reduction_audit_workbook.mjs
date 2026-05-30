@@ -269,6 +269,13 @@ const rows = [
     "Characterize or eliminate moving point-pushing K_{S_j} layers; ordinary S_j-law movers are insufficient.",
   ],
   [
+    "Point-pushing product-prefix obstruction",
+    "Show that failure of finite-rack domination may be diagonalized using genuine point-pushing K_G layers.",
+    "proofs/point_pushing_product_prefix_obstruction.md applies the kernel-layer criterion to the product-prefix groups P_j=G_1 x ... x G_j, then right-stabilizes the moving layers to obtain a normalized-law sequence.",
+    "Exact B-route reduction",
+    "A B proof may search for moving point-pushing layers in K_{P_j}; ordinary P_j-law words remain insufficient without the K_{P_j} check.",
+  ],
+  [
     "Action images",
     "Law words vanish on fixed finite action images.",
     "Fixed-image certificate implemented.",

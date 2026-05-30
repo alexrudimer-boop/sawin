@@ -880,6 +880,14 @@ with genuine finite-longitude invisibility.  The same note records the
 derivative-detector sufficient condition: laws on the finite Artin detector
 permutation group `D_k(G)` force point-pushed membership in `K_G`, while the
 exact condition is fixation of all endpoint-identity detector states.
+`proofs/point_pushing_product_prefix_obstruction.md` now diagonalizes the
+repaired criterion.  If finite-rack domination fails, then for each
+product-prefix detector `P_j=G_1 x ... x G_j` there is a moving last-strand
+point-pushing layer `lambda_j=iota_{r_j}(w_j)` which genuinely lies in
+`K_{P_j}(r_j)`.  Right-stabilizing `lambda_j` by `j` unused strands gives a
+normalized-law sequence eventually invisible to every finite group.  This
+preserves the useful "point-pushing only" B format without relying on the
+false ordinary-law implication.
 `proofs/symmetric_repair_contract_bridge.md` now connects this symmetric fork
 back to the proof-critic repair contract.  If a supplied repair package proves
 the local implication using a fixed product detector `H(pi,Q)`, then the left
