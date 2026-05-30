@@ -215,6 +215,21 @@ class PointPushingBaseArityCertificate:
 
 
 @dataclass(frozen=True)
+class PointPushingCyclicTailBoundAudit:
+    """Uniform generator-order bound for cyclic point-pushing quotients."""
+
+    tuple_count: int
+    cyclic_quotient_order_bound: int
+    max_braid_index_checked: int
+    rows: Tuple[PureGeneratorOrderRow, ...]
+    checked_generator_orders_divide_bound: bool
+
+    @property
+    def closes_cyclic_tails_symbolically(self) -> bool:
+        return self.cyclic_quotient_order_bound >= 1
+
+
+@dataclass(frozen=True)
 class PointPushingBrunnianFailureCertificate:
     """Braid-action certificate for one nontrivial Brunnian gate failure."""
 
@@ -1868,6 +1883,32 @@ def point_pushing_base_arity_certificate(
         symmetric_degree_bound=symmetric_degree,
         symmetric_exponent=symmetric_exponent,
         symmetric_marked_quotient_holds=symmetric_exponent % pure_order == 0,
+    )
+
+
+def point_pushing_cyclic_tail_bound_audit(
+    solution: FiniteBraidedSet,
+    *,
+    max_braid_index: int = 5,
+) -> PointPushingCyclicTailBoundAudit:
+    """Record the uniform order bound for cyclic point-pushing quotients."""
+
+    if max_braid_index < 2:
+        raise ValueError("max_braid_index must be at least 2")
+    pure_action = action_permutation(solution, 2, (1, 1))
+    bound = permutation_order(pure_action)
+    rows = pure_generator_order_profile(solution, max_braid_index)
+    divides = all(
+        bound % order == 0
+        for row in rows
+        for order in row.generator_orders
+    )
+    return PointPushingCyclicTailBoundAudit(
+        tuple_count=len(pure_action),
+        cyclic_quotient_order_bound=bound,
+        max_braid_index_checked=max_braid_index,
+        rows=rows,
+        checked_generator_orders_divide_bound=divides,
     )
 
 

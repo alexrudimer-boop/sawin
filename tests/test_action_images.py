@@ -29,6 +29,7 @@ from ybe_domination import (
     point_pushing_brunnian_tail_certificate_prefix,
     point_pushing_brunnian_tail_prefix_audit,
     point_pushing_brunnian_witness_certificate,
+    point_pushing_cyclic_tail_bound_audit,
     point_pushing_product_prefix_first_failure_audit,
     point_pushing_exponent_escape_audit,
     point_pushing_monolithic_compression_audit,
@@ -1045,6 +1046,20 @@ class ActionImageTests(unittest.TestCase):
         self.assertEqual(audit.normalized_prefix.target_n, 5)
         self.assertTrue(audit.normalized_prefix.product_invisibility_survives_stabilization)
         self.assertTrue(audit.normalized_prefix.movement_survives_stabilization)
+
+    def test_point_pushing_cyclic_tail_bound_audit_records_uniform_order(self):
+        solution = rack_solution([0, 1, 2], lambda a, b: (2 * a - b) % 3)
+
+        audit = point_pushing_cyclic_tail_bound_audit(
+            solution,
+            max_braid_index=4,
+        )
+
+        self.assertEqual(audit.cyclic_quotient_order_bound, 3)
+        self.assertEqual(audit.max_braid_index_checked, 4)
+        self.assertEqual([row.max_order for row in audit.rows], [3, 3, 3])
+        self.assertTrue(audit.checked_generator_orders_divide_bound)
+        self.assertTrue(audit.closes_cyclic_tails_symbolically)
 
     def test_point_pushing_brunnian_normalized_prefix_audit_keeps_nonfailures_uncertified(self):
         solution = rack_solution([0, 1], lambda a, b: b)

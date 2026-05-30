@@ -1223,6 +1223,14 @@ monolith, then `C_H(M)=1`; hence the compressed quotient embeds into
 subsequence with unbounded simple factor size or fixed simple factor and
 unbounded multiplicity.  The finite audit helper records centralizer
 triviality, the quotient-over-monolith order, and a row prefix regime.
+`proofs/point_pushing_cyclic_tail_closure.md` now eliminates the cyclic branch
+entirely.  Every point-pushing generator `A_{i,k+1}` is braid-conjugate to
+`sigma_i^2`, so its action order divides the fixed integer
+`B_X=ord(rho_{X,2}(sigma_1^2))`.  Therefore every cyclic quotient of every
+`P_k(X)` has order dividing `B_X`, and a product-prefix cyclic failure
+`p^e>b(j)` is impossible once `b(j)>=B_X`.  The helper
+`point_pushing_cyclic_tail_bound_audit(...)` records this bound and finite
+prefix convention checks.
 
 ## Verification snapshot
 

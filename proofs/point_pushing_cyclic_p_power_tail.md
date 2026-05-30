@@ -112,8 +112,10 @@ The second case is stronger than a bounded cyclic quotient mover: it requires
 the action image to keep a nontrivial element in the bottom subgroup of cyclic
 quotients of arbitrarily large p-power order.
 
-A positive proof can close the cyclic branch by proving a uniform bound on
-these two phenomena for finite YBE point-pushing action images.
+The follow-up note `proofs/point_pushing_cyclic_tail_closure.md` proves this
+uniform bound: every cyclic quotient of every `P_k(X)` has order dividing
+`ord(rho_{X,2}(sigma_1^2))`.  Hence the cyclic branch is closed for the global
+point-pushing fork.
 
 ## Audit Hook
 

@@ -325,6 +325,13 @@ const rows = [
     "Rule out unbounded cyclic prime escape and fixed-prime unbounded p-adic depth, or construct one for B.",
   ],
   [
+    "Cyclic tail closure",
+    "Close cyclic product-prefix monolith tails by a uniform point-pushing generator order bound.",
+    "proofs/point_pushing_cyclic_tail_closure.md proves every cyclic quotient of every P_k(X) has order dividing B_X=ord(rho_X,2(sigma_1^2)); hence no cyclic p-power quotient can satisfy p^e>b(j) once b(j)>=B_X. point_pushing_cyclic_tail_bound_audit records finite convention checks.",
+    "Cyclic branch closed",
+    "Remaining monolithic tails: central stem, noncentral module prime/dimension/centralizer-layer, and nonabelian simple-factor/multiplicity.",
+  ],
+  [
     "Noncentral module tail",
     "Split noncentral elementary-abelian monolith failures by module prime, module dimension, and centralizer-extension layer.",
     "proofs/point_pushing_noncentral_module_tail.md proves |H|=p^r |H/C_H(M)| |C_H(M)/M|; an infinite tail has module prime escape, fixed-prime dimension escape, or bounded-module centralizer-layer escape. The audit records dimension, layer size, product check, and row regime.",
