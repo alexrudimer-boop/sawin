@@ -150,7 +150,10 @@ class PointPushingBrunnianOrbitAudit:
     detector_orbit_size: int | None
     action_orbit_size: int | None
     orbit_map_well_defined: bool | None
+    relative_detector_projection_size: int | None
+    relative_action_projection_size: int | None
     relative_subgroup_size: int | None
+    failure_kind: str
     truncated: bool
     witness_right_word: FreeWord | None
     witness_left_word: FreeWord | None
@@ -165,6 +168,7 @@ class PointPushingBrunnianOrbitAudit:
     def relative_vertical_kernel_trivial(self) -> bool:
         return (
             not self.truncated
+            and self.failure_kind == "none"
             and self.orbit_map_well_defined is not False
             and not self.found_brunnian_vertical_witness
         )
@@ -935,7 +939,10 @@ def point_pushing_brunnian_orbit_audit(
             detector_orbit_size=None,
             action_orbit_size=None,
             orbit_map_well_defined=None,
+            relative_detector_projection_size=None,
+            relative_action_projection_size=None,
             relative_subgroup_size=None,
+            failure_kind="truncated_old_suffix",
             truncated=True,
             witness_right_word=None,
             witness_left_word=None,
@@ -995,7 +1002,10 @@ def point_pushing_brunnian_orbit_audit(
                     detector_orbit_size=len(detector_orbit_actions),
                     action_orbit_size=len(action_orbit),
                     orbit_map_well_defined=False,
+                    relative_detector_projection_size=None,
+                    relative_action_projection_size=None,
                     relative_subgroup_size=None,
+                    failure_kind="stabilizer",
                     truncated=False,
                     witness_right_word=witness_right_word,
                     witness_left_word=right_based_point_pushing_word_to_left(
@@ -1042,7 +1052,10 @@ def point_pushing_brunnian_orbit_audit(
                 detector_orbit_size=len(detector_orbit_actions),
                 action_orbit_size=len(action_orbit),
                 orbit_map_well_defined=False,
+                relative_detector_projection_size=None,
+                relative_action_projection_size=None,
                 relative_subgroup_size=None,
+                failure_kind="orbit_label",
                 truncated=False,
                 witness_right_word=witness_right_word,
                 witness_left_word=right_based_point_pushing_word_to_left(
@@ -1112,6 +1125,13 @@ def point_pushing_brunnian_orbit_audit(
         if witness_right_word is None
         else right_based_point_pushing_word_to_left(witness_right_word, arity)
     )
+    relative_detector_projection = {pair[0] for pair in words}
+    relative_action_projection = {pair[1] for pair in words}
+    failure_kind = "none"
+    if truncated:
+        failure_kind = "truncated_relative"
+    elif witness_right_word is not None:
+        failure_kind = "orbit_relation"
     return PointPushingBrunnianOrbitAudit(
         group_order=len(group.elements),
         arity=arity,
@@ -1125,7 +1145,14 @@ def point_pushing_brunnian_orbit_audit(
         detector_orbit_size=len(detector_orbit_actions),
         action_orbit_size=len(action_orbit),
         orbit_map_well_defined=True,
+        relative_detector_projection_size=(
+            None if truncated else len(relative_detector_projection)
+        ),
+        relative_action_projection_size=(
+            None if truncated else len(relative_action_projection)
+        ),
         relative_subgroup_size=None if truncated else len(words),
+        failure_kind=failure_kind,
         truncated=truncated,
         witness_right_word=witness_right_word,
         witness_left_word=witness_left_word,

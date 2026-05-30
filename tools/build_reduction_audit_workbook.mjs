@@ -360,6 +360,13 @@ const rows = [
     "Prove the stabilizer-centralizer inclusion uniformly, or construct an infinite symmetric-tail family of stabilizer failures.",
   ],
   [
+    "Point-pushing Brunnian orbit quotient certificate",
+    "Package the post-stabilizer relation lift as a finite graph quotient test.",
+    "proofs/point_pushing_brunnian_orbit_quotient_certificate.md proves the remaining relation lift iff the paired orbit subgroup projects injectively to its detector projection, equivalently |B|=|B_D|.",
+    "Final one-strand gate",
+    "Prove every arity has failure_kind=none for one fixed m, or produce an infinite symmetric-tail family with stabilizer/orbit_label/orbit_relation witnesses.",
+  ],
+  [
     "Derivative detector functoriality",
     "Show the exact D_k(G) criterion is compatible with quotients, embeddings, symmetric cofinality, and product prefixes.",
     "proofs/point_pushing_derivative_functoriality.md proves coordinate equivariance for finite group homomorphisms; point_pushing_derivative_functoriality_audit checks finite instances.",

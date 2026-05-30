@@ -987,6 +987,14 @@ these two failures with a stabilizer-centralizer inclusion:
 witness.  The orbit audit now records `detector_stabilizer_size` and
 `stabilizer_centralizes_new_action`, isolating the remaining relation-lift
 burden to relations among well-defined detector-orbit labels.
+`proofs/point_pushing_brunnian_orbit_quotient_certificate.md` packages that
+remaining burden as a finite graph criterion: after the stabilizer gate, the
+paired orbit subgroup `B` must project injectively to its detector projection
+`B_D`, equivalently `|B|=|B_D|`.  The audit exposes this by recording
+`failure_kind`, `relative_subgroup_size`, `relative_detector_projection_size`,
+and `relative_action_projection_size`.  Thus every finite Brunnian row is now
+classified as `stabilizer`, `orbit_label`, `orbit_relation`, `none`, or a
+truncation diagnostic.
 `proofs/point_pushing_derivative_functoriality.md` records the compatibility
 of this exact criterion with detector changes.  A finite group homomorphism
 `G->H` induces coordinate equivariance on detector states.  Surjections give

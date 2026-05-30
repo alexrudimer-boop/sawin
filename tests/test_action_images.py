@@ -390,6 +390,7 @@ class ActionImageTests(unittest.TestCase):
         self.assertIsNotNone(audit.detector_stabilizer_size)
         self.assertGreaterEqual(audit.detector_stabilizer_size, 1)
         self.assertFalse(audit.stabilizer_centralizes_new_action)
+        self.assertEqual(audit.failure_kind, "stabilizer")
         self.assertFalse(audit.orbit_map_well_defined)
         self.assertIsNotNone(audit.detector_orbit_size)
         self.assertIsNotNone(audit.action_orbit_size)
@@ -420,6 +421,10 @@ class ActionImageTests(unittest.TestCase):
         self.assertTrue(audit.orbit_map_well_defined)
         self.assertFalse(audit.found_brunnian_vertical_witness)
         self.assertTrue(audit.relative_vertical_kernel_trivial)
+        self.assertEqual(audit.failure_kind, "none")
+        self.assertEqual(audit.relative_subgroup_size, 2)
+        self.assertEqual(audit.relative_detector_projection_size, 2)
+        self.assertEqual(audit.relative_action_projection_size, 1)
         self.assertIsNone(audit.witness_right_word)
 
     def test_point_pushing_mu_prefix_audit_detects_trivial_prefix(self):
