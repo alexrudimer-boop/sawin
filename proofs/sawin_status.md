@@ -2221,6 +2221,10 @@ multiplier/coinvariant tails, noncentral irreducible relation-module tails,
 and nonabelian simple-wreath coordinate relation-lift tails.  A positive proof
 may close the global point-pushing route by ruling out all three structural
 branches uniformly for finite YBE action images.
+Within the noncentral module branch,
+`proofs/point_pushing_module_prime_characteristic_split.md` now proves that
+module-prime escape is eventually cross-characteristic: the escaping primes
+do not divide the fixed point-pushing generator order bound `B_X`.
 
 ## Completion audit checklist
 

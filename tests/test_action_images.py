@@ -38,6 +38,7 @@ from ybe_domination import (
     point_pushing_exponent_escape_audit,
     point_pushing_monolithic_compression_audit,
     point_pushing_marked_quotient_audit,
+    point_pushing_module_prime_characteristic_audit,
     point_pushing_mu_prefix_audit,
     point_pushing_nonabelian_chief_relation_quotient_audit,
     point_pushing_nonabelian_wreath_coordinate_audit,
@@ -1147,6 +1148,25 @@ class ActionImageTests(unittest.TestCase):
         self.assertFalse(noncentral_audit.monolith_is_central)
         self.assertEqual(noncentral_audit.split_regime, "noncentral_irreducible_module")
         self.assertTrue(noncentral_audit.proves_abelian_relation_action_split)
+
+    def test_module_prime_characteristic_audit_splits_by_generator_bound(self):
+        same_characteristic = point_pushing_module_prime_characteristic_audit(6, 3)
+        cross_characteristic = point_pushing_module_prime_characteristic_audit(6, 5)
+
+        self.assertTrue(same_characteristic.prime_divides_bound)
+        self.assertFalse(same_characteristic.cross_characteristic)
+        self.assertEqual(
+            same_characteristic.tail_regime,
+            "bounded_prime_divides_generator_bound",
+        )
+        self.assertTrue(same_characteristic.proves_prime_tail_characteristic_split)
+        self.assertFalse(cross_characteristic.prime_divides_bound)
+        self.assertTrue(cross_characteristic.cross_characteristic)
+        self.assertEqual(
+            cross_characteristic.tail_regime,
+            "cross_characteristic_prime_escape",
+        )
+        self.assertTrue(cross_characteristic.proves_prime_tail_characteristic_split)
 
     def test_central_stem_relation_audit_records_stem_extension(self):
         group = build_group(

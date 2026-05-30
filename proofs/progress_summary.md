@@ -1265,6 +1265,13 @@ a central first-failure monolith must satisfy `F_p<=Z(H) cap [H,H]`; with
 detector-orbit quotient `Q` and the actual relation lift factors through the
 coinvariants `R/[F_C,R] tensor F_p`.  The helper
 `point_pushing_central_stem_relation_audit(...)` records the finite row shape.
+`proofs/point_pushing_module_prime_characteristic_split.md` now sharpens the
+noncentral module prime branch.  Since the newest point-pushing normal
+generator has order dividing the fixed integer `B_X`, only finitely many
+module primes can divide `B_X`; hence every true `p_j->infinity` module-prime
+tail is eventually cross-characteristic.  The helper
+`point_pushing_module_prime_characteristic_audit(...)` records the finite
+same/cross-characteristic label.
 `proofs/point_pushing_nonabelian_chief_relation_quotient.md` now gives the
 parallel nonabelian-chief compression.  If `R` is the same detector orbit
 relation group and the chief layer is `M=S^r`, then the minimal vertical

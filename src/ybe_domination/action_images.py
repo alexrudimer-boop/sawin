@@ -558,6 +558,24 @@ class PointPushingAbelianRelationActionSplitAudit:
 
 
 @dataclass(frozen=True)
+class PointPushingModulePrimeCharacteristicAudit:
+    """Split module-prime tails by the fixed point-pushing order bound."""
+
+    normal_generator_order_bound: int
+    module_prime: int
+    prime_divides_bound: bool
+    cross_characteristic: bool
+    tail_regime: str
+
+    @property
+    def proves_prime_tail_characteristic_split(self) -> bool:
+        return self.tail_regime in (
+            "bounded_prime_divides_generator_bound",
+            "cross_characteristic_prime_escape",
+        )
+
+
+@dataclass(frozen=True)
 class PointPushingCentralStemRelationAudit:
     """Bookkeeping for central trivial relation tails as stem extensions."""
 
@@ -2425,6 +2443,32 @@ def point_pushing_abelian_relation_action_split_audit(
         monolith_is_unique_minimal_normal=monolith_is_unique_minimal_normal,
         relation_image_equals_monolith=relation_image_equals_monolith,
         split_regime=split_regime,
+    )
+
+
+def point_pushing_module_prime_characteristic_audit(
+    normal_generator_order_bound: int,
+    module_prime: int,
+) -> PointPushingModulePrimeCharacteristicAudit:
+    """Record whether a module-prime row is same- or cross-characteristic."""
+
+    if normal_generator_order_bound <= 0:
+        raise ValueError("normal_generator_order_bound must be positive")
+    if not _is_prime_integer(module_prime):
+        raise ValueError("module_prime must be prime")
+    prime_divides_bound = normal_generator_order_bound % module_prime == 0
+    cross_characteristic = not prime_divides_bound
+    tail_regime = (
+        "bounded_prime_divides_generator_bound"
+        if prime_divides_bound
+        else "cross_characteristic_prime_escape"
+    )
+    return PointPushingModulePrimeCharacteristicAudit(
+        normal_generator_order_bound=normal_generator_order_bound,
+        module_prime=module_prime,
+        prime_divides_bound=prime_divides_bound,
+        cross_characteristic=cross_characteristic,
+        tail_regime=tail_regime,
     )
 
 

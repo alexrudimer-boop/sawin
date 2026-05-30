@@ -129,6 +129,10 @@ to lie in the normal closure of one bounded-order point-pushing generator.  In
 first failure is linearized as a nonzero quotient of the detector orbit
 relation module.  Thus the noncentral module branch is now a relation-module
 tail with the parameter escapes listed above.
+The follow-up `proofs/point_pushing_module_prime_characteristic_split.md`
+shows that the module-prime escape case is necessarily cross-characteristic:
+for all sufficiently far-out rows, the module prime `p_j` does not divide the
+fixed bound `B_X=ord(rho_{X,2}(sigma_1^2))`.
 
 ## Audit Hook
 

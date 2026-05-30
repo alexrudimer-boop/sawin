@@ -360,6 +360,13 @@ const rows = [
     "Rule out unbounded stem multiplier/coinvariant tails, or construct one for B.",
   ],
   [
+    "Module prime characteristic split",
+    "Force module-prime escape into cross-characteristic rows relative to the fixed generator-order bound.",
+    "proofs/point_pushing_module_prime_characteristic_split.md proves that since ord(t)|B_X, only finitely many module primes can divide B_X; any p_j->infinity module-prime tail is eventually p_j not dividing B_X. point_pushing_module_prime_characteristic_audit records finite row labels.",
+    "Prime escape cross-characteristic",
+    "Rule out unbounded cross-characteristic irreducible relation-module quotients, or construct one for B.",
+  ],
+  [
     "Nonabelian-chief relation quotient",
     "Compress nonabelian-chief Brunnian failures to detector relation-group quotients.",
     "proofs/point_pushing_nonabelian_chief_relation_quotient.md proves that a minimal nonabelian-chief first failure has mu_H(R)=M=S^r, and the detector orbit group controls the outer action on M. point_pushing_nonabelian_chief_relation_quotient_audit records finite chief-layer bookkeeping.",

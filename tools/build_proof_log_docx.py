@@ -62,6 +62,7 @@ EXTRA_MD.append(ROOT / "proofs" / "point_pushing_bounded_normal_generator_tail.m
 EXTRA_MD.append(ROOT / "proofs" / "point_pushing_abelian_chief_relation_module.md")
 EXTRA_MD.append(ROOT / "proofs" / "point_pushing_abelian_relation_action_split.md")
 EXTRA_MD.append(ROOT / "proofs" / "point_pushing_central_stem_relation_tail.md")
+EXTRA_MD.append(ROOT / "proofs" / "point_pushing_module_prime_characteristic_split.md")
 EXTRA_MD.append(ROOT / "proofs" / "point_pushing_nonabelian_chief_relation_quotient.md")
 EXTRA_MD.append(ROOT / "proofs" / "point_pushing_nonabelian_wreath_coordinate_lift.md")
 EXTRA_MD.append(ROOT / "proofs" / "point_pushing_noncentral_module_tail.md")

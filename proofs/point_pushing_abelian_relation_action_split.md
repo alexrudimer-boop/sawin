@@ -115,6 +115,11 @@ noncentral irreducible relation-module tails,
 nonabelian simple-wreath coordinate relation-lift tails.
 ```
 
+The follow-up note `proofs/point_pushing_module_prime_characteristic_split.md`
+shows that any noncentral module-prime escape subsequence is necessarily
+cross-characteristic: after finitely many terms, its primes do not divide the
+fixed bound `B_X=ord(rho_{X,2}(sigma_1^2))`.
+
 Rule out all three uniformly for finite YBE point-pushing action images and
 outcome A follows from the product-prefix criterion.  Construct one explicit
 infinite tail of any one type and outcome B follows after right stabilization.
