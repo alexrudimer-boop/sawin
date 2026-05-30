@@ -13,10 +13,12 @@ index.
 B. An explicit finite bijective YBE solution not dominated by any finite rack,
 with a normalized-law obstruction sequence.
 
-This file is a working proof log, not the final answer.  The current
+This file is a working proof log, not the final answer.  The candidate
 proof-side positive assembly is recorded in
-`proofs/master_local_residual_positive_closure.md`, and the final checklist is
-recorded in `proofs/final_completion_audit.md`.
+`proofs/master_local_residual_positive_closure.md`, but the proof-critic gap
+audit in `proofs/proof_critic_gap_audit.md` shows that the current branch does
+not yet prove outcome A.  The older `proofs/final_completion_audit.md` is
+superseded.
 
 ## External-state check
 
@@ -1076,13 +1078,13 @@ The chart-transport collapse in
 generator burden.  Since `V_beta(G)` is already normal in every finite group,
 a representative elementary-generator witness gives witnesses for all finite
 chart conjugates; `conjugate_longitude_subgroup_witness(...)` records the
-certificate-level operation.  The final A-route theorem is now stated in
+certificate-level operation.  At this point the final A-route theorem was
+stated in
 `proofs/descent_separation_transport_rack_closure.md`: transport-rack closure
-is proved, but descent separation remains open.  A complete proof must show
-fixed Green, Schutzenberger, atom, or unit readout labels whose kernel is
-admissible and kills each representative seed, so that the integrated descent
-separation audit passes and only strand-continuing transport-rack gauge
-remains.
+was proved, while descent separation remained to be routed.  The subsequent
+unit-continuation, two-sided unit, mixed-unit, triangular, kink-predecessor,
+and master-local positive-closure notes record that route and should be read
+as superseding this intermediate open-target statement.
 The final constant-observer universal-continuation corridor has now been
 split by `proofs/unit_continuation_final_obstruction.md`.  In the case
 `Theta^cont=Nabla` and `K^O=Nabla`, every certified observer is fibrewise
@@ -1090,13 +1092,11 @@ constant, but any completed-context continuation branch that actually
 contributes to `delta_{n,z}(beta)` has a permutation composite.  The
 unit-factorization lemma then forces every transition factor in that branch
 to be a unit/permutation; nonunit or reset-like continuation labels cannot be
-the moving residual obstruction.  The only remaining obstruction in this
-channel is a unit endpoint `S_beta in U(M_cont)` with unproved membership in
-`V_beta(U(M_cont))`.  Therefore the sharpened final theorem is the
-unit-continuation longitude theorem: every such residual unit-continuation
-endpoint lies in the longitude-value subgroup of the fixed unit group, or a
-failure must be upgraded to a normalized-law sequence invisible to every
-finite group.
+the moving residual obstruction.  The then-remaining unit endpoint
+`S_beta in U(M_cont)` is routed by the later lower-row classification:
+strand-continuing rows rackify, two-sided unit rows are nondegenerate, hidden
+mixed-unit rows reduce to triangular rows, and the final Latin triangular
+case collapses by one-colour and kink-predecessor cancellation.
 The two-sided unit-collapse note `proofs/two_sided_unit_collapse.md` then
 splits the remaining lower row by coordinate-section type.  A row whose left
 and right coordinate sections are all bijections is locally nondegenerate and

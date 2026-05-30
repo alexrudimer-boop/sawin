@@ -496,22 +496,22 @@ because `V_beta(G)` is normal for every finite group `G`, one
 endpoint-longitude witness for a representative elementary generator gives
 witnesses for all finite chart-conjugate transports.  The code-level helper
 `conjugate_longitude_subgroup_witness(...)` records this at certificate level.
-The final A-route theorem is now stated in
+At this stage the final A-route theorem was stated in
 `proofs/descent_separation_transport_rack_closure.md`: transport-rack closure
-is already proved, but descent separation remains open.  A full proof must
-construct fixed Green/Schutzenberger/atom/unit readout labels whose kernel is
-admissible and kills each representative seed, making the descent-separation
-audit pass and leaving only strand-continuing transport-rack gauge.
+was already proved, while descent separation remained to be routed.  The later
+unit-continuation, two-sided unit, mixed-unit, triangular, one-colour,
+kink-predecessor, and master-local notes now record that route: the remaining
+motion is either visible to fixed Green/Schutzenberger/atom/unit factors,
+rackified on a finite transport state, routed to a closed product/permutation
+branch, or forced to singleton fibres.
 The final constant-observer universal-continuation case has now been split by
 `proofs/unit_continuation_final_obstruction.md`.  In the case
 `Theta^cont=Nabla` and `K^O=Nabla`, a completed-context continuation branch
 that contributes to a residual braid action has a permutation composite, so
 the unit-factorization lemma forces every transition factor in that branch to
 be a unit.  Thus nonunit/reset continuation labels cannot be the moving
-obstruction.  The remaining theorem is the unit-continuation longitude
-statement: every residual unit endpoint `S_beta in U(M_cont)` must lie in
-`V_beta(U(M_cont))`, or a failure must be upgraded to a normalized-law B
-sequence.
+obstruction.  What was then the unit-continuation longitude target is consumed
+by the later lower-row classification and master-local assembly.
 The two-sided unit-collapse note `proofs/two_sided_unit_collapse.md` sharpens
 this last case again.  If all remaining lower coordinate sections are
 bijective on both sides, the row is locally nondegenerate and belongs to the
@@ -669,30 +669,41 @@ against listed groups.  This supplies only the finite-group invisibility side
 of B; a counterexample still needs a fixed finite YBE solution and moved
 tuples for the corresponding law braids.
 
-## Candidate positive closure
+## Proof-Critic Gap
 
-The Master Local-Minimal Residual Theorem is now assembled in
-`proofs/master_local_residual_positive_closure.md`.  The theorem constructs a
-finite interval-level product group
+The candidate Master Local-Minimal Residual Theorem assembly in
+`proofs/master_local_residual_positive_closure.md` was reviewed by a proof
+critic.  The critic found a fatal gap recorded in
+`proofs/proof_critic_gap_audit.md`.
+
+The proposed finite interval-level product group is
 
 ```text
 H(pi,Q)
 ```
 
 from Green, Schutzenberger, atom, known-branch, endpoint/unit, and
-transport-state factors, with no braid-index parameter, and proves
+transport-state factors, with no braid-index parameter.  However, the branch
+does not yet prove the required implication
 
 ```text
 Lambda_{H(pi,Q),n}(beta)=Lambda_{H(pi,Q),n}(1)
     => Delta_n(beta)=1.
 ```
 
-The proof then applies the sharp obstruction theorem to obtain the local rack
-`Q x A_H`, and congruence-chain induction assembles the global finite rack.
-This is the candidate positive resolution.  Before marking outcome A final,
-the required final proof-critic audit must check that no finite-search-only
-step entered, semisplit local-minimality is fully handled, `H(pi,Q)` is
-independent of `n`, and the congruence-chain induction is valid.
+The issue is not the sharp obstruction theorem or the congruence-chain kernel
+direction.  The gap is that
+`proofs/bifree_corridor_endpoint_factorization.md` supplies a conditional
+assembly lemma, not the missing endpoint expressions or the faithful residual
+decomposition, and
+`proofs/descent_separation_transport_rack_closure.md` still states descent
+separation as a theorem target rather than proving it.
+
+The current missing theorem package is uniform descent-separation and
+endpoint-longitudinalization for every local-minimal
+`bi_free_universal_corridor_bottleneck` interval.  It must prove fixed-factor
+faithful readouts and `V_beta` membership for all residual
+Green/Schutzenberger/atom/lower endpoint components, uniformly in `n`.
 
 ## Verification snapshot
 
@@ -713,13 +724,15 @@ At the latest verified snapshot:
   be completed;
 - the Desktop zip was overwritten rather than versioned separately.
 
-## Final Completion Audit
+## Superseded Final Completion Audit
 
 `proofs/final_completion_audit.md` records the final checklist after the
 master local positive closure assembly.  It audits the required reductions:
 quotient/residual setup, sharp obstruction theorem, congruence-chain
 induction, semisplit local-minimality, known branches, fixed detector
 independence from `n`, and the non-use of finite search as the all-`n` proof.
+That optimistic conclusion is now superseded by
+`proofs/proof_critic_gap_audit.md`.
 
 The requested GPT-5.5 Pro proof critic could not be reached from this local
 session.  Chrome and in-app Browser control both failed before tab discovery

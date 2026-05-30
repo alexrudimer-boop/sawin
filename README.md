@@ -10,20 +10,28 @@ finite rack `Y`, independent of the braid index `n`, such that
 ker rho_{Y,n} <= ker rho_{X,n}  for every n.
 ```
 
-Current state.  The proof-side positive closure is now assembled in
+Current state.  A proof-critic audit found a fatal gap in the candidate
+positive closure.  The branch has not yet proved outcome A and has not
+constructed outcome B.  The current gap record is
+`proofs/proof_critic_gap_audit.md`.
+
+The candidate positive assembly remains in
 `proofs/master_local_residual_positive_closure.md`, using the
 kink-predecessor cancellation theorem from
-`proofs/kink_predecessor_latin_triangular_cancellation.md`.  The assembled
-outcome is:
+`proofs/kink_predecessor_latin_triangular_cancellation.md`, but it is now
+treated as conditional rather than final.  The still-missing theorem package
+is:
 
 ```text
-Every finite bijective set-theoretic Yang-Baxter solution is dominated by a
-finite rack.
+Uniform descent-separation and endpoint-longitudinalization for every
+local-minimal bi_free_universal_corridor_bottleneck interval.
 ```
 
-The final audit record is `proofs/final_completion_audit.md`.  It also records
-that the requested GPT-5.5 Pro browser critic could not be reached from this
-local session because the browser bridge failed before tab discovery.
+The old internal completion audit is retained in
+`proofs/final_completion_audit.md` as a superseded historical note.  It also
+records that Browser/Chrome automation could not reach the requested proof
+critic from this local session because the browser bridge failed before tab
+discovery.
 
 The original target was to produce exactly one final outcome:
 
@@ -39,9 +47,9 @@ This checkout deliberately separates three kinds of evidence:
 - `tables/`: spreadsheet summaries of the reduction audit and branch status.
 
 For a compact current-state map, start with
-`proofs/progress_summary.md`.  For the assembled positive proof, read
-`proofs/master_local_residual_positive_closure.md` and then
-`proofs/final_completion_audit.md`.
+`proofs/progress_summary.md`.  For the current gap, read
+`proofs/proof_critic_gap_audit.md`; for the conditional positive assembly,
+read `proofs/master_local_residual_positive_closure.md`.
 
 The code is not allowed to serve as a finite-search-only proof of the global
 theorem.  Its role is to check examples, audit local-minimality including
@@ -59,10 +67,12 @@ The sharp rack-construction step is executable as
 The formal congruence-chain recursion is executable as
 `assemble_congruence_chain_rack(Q_m, (G_{m-1},...,G_0))`: it iterates the
 sharp step, records the size multiplication `|Q| -> |Q|*2*|G|^2` at each
-interval, and has no braid-index parameter.  The proof-side local detector
-groups `G_i` are supplied by the master local positive closure note; the code
-continues to treat finite examples conservatively so that delegated or
-historical gaps remain visible during audits.
+interval, and has no braid-index parameter.  The candidate proof-side local
+detector groups `G_i` are described by the master local positive closure note,
+but the proof-critic audit found that the missing endpoint expressions,
+faithful residual decomposition, and descent separation are not yet proved.
+The code continues to treat finite examples conservatively so that delegated
+or historical gaps remain visible during audits.
 The local branch router now uses an exact single-pair closure criterion for
 local-minimality, so arbitrary finite fibre sizes no longer require
 Bell-number partition enumeration before routing.  The generated closure
@@ -291,20 +301,20 @@ The chart-transport collapse
 `proofs/chart_transport_collapse.md` removes transported-generator noise:
 `V_beta(G)` is already normal, and
 `conjugate_longitude_subgroup_witness(...)` turns a representative witness into
-the witness for any finite chart conjugate.  The final open theorem is recorded
-in `proofs/descent_separation_transport_rack_closure.md`: transport-rack
-closure is proved, but descent separation itself remains unproved.  A positive
-solution now requires fixed Green/Schutzenberger/atom/unit readout labels whose
-kernel makes the descent-separation audit pass, or a normalized-law B
-construction from a non-separated seed.
-The final constant-observer universal-continuation case is now sharpened by
+the witness for any finite chart conjugate.  At this stage the remaining
+target was descent separation, recorded in
+`proofs/descent_separation_transport_rack_closure.md`; the later
+unit-continuation, mixed-unit, triangular, kink-predecessor, and master-local
+closure notes below supply the proof-side route through that target.
+The constant-observer universal-continuation case is sharpened by
 `proofs/unit_continuation_final_obstruction.md`.  If `Theta^cont=Nabla` and
 all certified observers are fibrewise constant, any completed-context branch
 that actually moves a residual tuple has a permutation composite, hence uses
 only unit continuation factors by the unit-factorization gate.  The last
 possible obstruction in this channel is therefore a unit endpoint
-`S_beta in U(M_cont)` whose membership in `V_beta(U(M_cont))` is still
-unproved; nonunit/reset labels cannot be final B evidence.
+`S_beta in U(M_cont)`; nonunit/reset labels cannot be final B evidence.  The
+subsequent triangular reduction chain routes this unit endpoint into closed
+product/permutation, transport-rack, or singleton-fibre cases.
 The two-sided unit-collapse note
 `proofs/two_sided_unit_collapse.md` removes another false endpoint
 obstruction.  If every remaining lower coordinate section is bijective on
@@ -389,10 +399,12 @@ Master Local-Minimal Residual Theorem: the interval detector is the fixed
 finite product `H(pi,Q)` of Green, Schutzenberger, atom, known-branch,
 endpoint/unit, and transport-state factors; identity finite-`H` longitude data
 kills every residual readout component; the sharp obstruction theorem supplies
-`Q x A_H`; and congruence-chain induction assembles the global rack.
-`proofs/final_completion_audit.md` records the requirement-by-requirement
-internal audit and the failed Browser/Chrome attempt to reach the requested
-external proof critic.
+`Q x A_H`; and congruence-chain induction would assemble the global rack if
+the master-local implication were proved.  The proof-critic response in
+`proofs/proof_critic_gap_audit.md` identifies the missing step: the cited
+endpoint factorization and transport-rackification notes are conditional and
+do not by themselves prove uniform endpoint longitudinalization or descent
+separation.
 The follow-up note `proofs/unit_continuation_abelian_kernel_lift.md` splits
 that final endpoint certificate through the finite abelianization
 `U_cont/[U_cont,U_cont]`: prove the abelian projection by the matrix

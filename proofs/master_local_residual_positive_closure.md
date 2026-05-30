@@ -8,6 +8,15 @@ the sharp obstruction theorem and the congruence-chain induction.  It is the
 proof-side closure of the Master Local-Minimal Residual Theorem, subject to the
 individual branch notes cited below.
 
+Update.  The proof-critic audit in `proofs/proof_critic_gap_audit.md` found
+that this note is not yet a complete proof.  The failure is in the
+bi-free universal-corridor closure: the cited endpoint factorization and
+transport-rackification notes are conditional criteria, not proofs of the
+missing endpoint expressions, faithful residual decomposition, or descent
+separation.  This file should therefore be read as a candidate assembly
+template whose missing input is the uniform descent-separation and
+endpoint-longitudinalization theorem.
+
 ## Theorem
 
 Let
@@ -283,4 +292,3 @@ The proof is not a finite search or timeout argument.  The executable audits
 serve only to check finite local certificates, detector bookkeeping, OOXML
 artifacts, and branch guardrails.  The all-`n` input is the symbolic
 factorwise longitude proof assembled above.
-

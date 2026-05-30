@@ -2,15 +2,23 @@
 
 Date: 2026-05-30
 
-This note records the completion audit after
+This note records an internal completion audit after
 `proofs/master_local_residual_positive_closure.md` and
 `proofs/kink_predecessor_latin_triangular_cancellation.md`.  It is not a new
 mathematical reduction.  Its purpose is to check the assembled positive
 A-route against the obligations in the Sawin finite-rack domination problem.
 
-## Candidate final outcome
+Update.  The subsequent proof-critic response recorded in
+`proofs/proof_critic_gap_audit.md` found a fatal gap in this optimistic
+completion audit.  In particular, the candidate master-local closure used the
+conditional endpoint-factorization and transport-rackification criteria as if
+they supplied the missing endpoint expressions and descent separation.  They
+do not.  This file is retained as a historical internal audit, not as the
+current final status.
 
-The current proof-side outcome is positive:
+## Superseded candidate final outcome
+
+The superseded internal audit claimed the proof-side outcome was positive:
 
 ```text
 Every finite bijective set-theoretic Yang-Baxter solution is dominated by a
@@ -177,7 +185,7 @@ windows sandbox failed: spawn setup refresh
 This audit therefore does not count as an external GPT-5.5 Pro review.  The
 candidate proof remains the repository's internal positive A-route assembly.
 
-## Completion checklist
+## Superseded completion checklist
 
 - No finite-search-only step is used for the all-`n` theorem.
 - Semisplit local-minimality is kept as a gate before local theorem use.
@@ -188,4 +196,5 @@ candidate proof remains the repository's internal positive A-route assembly.
 - Congruence-chain induction assembles finitely many local rack factors into
   one global finite rack independent of `n`.
 
-Subject to the cited proof notes, this is outcome A.
+This conclusion is superseded by `proofs/proof_critic_gap_audit.md`; outcome A
+is not currently proved.
