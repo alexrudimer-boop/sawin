@@ -15,6 +15,7 @@ from ybe_domination import (
     invert_permutation,
     law_braid_action_certificate,
     law_word_on_last_strand,
+    point_pushing_variety_escape_audit,
     pure_generator_order_profile,
     pure_braid_generator,
     pure_subgroup_growth_profile,
@@ -109,6 +110,49 @@ class ActionImageTests(unittest.TestCase):
             separation.evaluated_permutation[separation.moved_index],
             separation.moved_index,
         )
+
+    def test_point_pushing_variety_escape_keeps_representing_words(self):
+        solution = rack_solution([0, 1, 2], lambda a, b: (2 * a - b) % 3)
+
+        audit = point_pushing_variety_escape_audit(
+            solution,
+            symmetric_degree=2,
+            point_pushing_arity=1,
+            law_arity=1,
+            max_length=2,
+        )
+
+        self.assertFalse(audit.truncated)
+        self.assertEqual(audit.braid_index, 2)
+        self.assertEqual(audit.tuple_count, 9)
+        self.assertEqual(audit.action_image_size, 3)
+        self.assertTrue(audit.found_variety_escape)
+        self.assertIsNotNone(audit.separating_word)
+        self.assertEqual(len(audit.assignment_representatives), 1)
+        self.assertIsNotNone(audit.substituted_point_pushing_word)
+        self.assertTrue(audit.substituted_word_is_symmetric_law)
+        self.assertTrue(audit.direct_matches_evaluated)
+        self.assertTrue(audit.substituted_word_gives_point_pushing_mover)
+        self.assertNotEqual(
+            audit.direct_braid_permutation[audit.moved_index],
+            audit.moved_index,
+        )
+
+    def test_point_pushing_variety_escape_records_truncation(self):
+        solution = rack_solution([0, 1, 2], lambda a, b: (2 * a - b) % 3)
+
+        audit = point_pushing_variety_escape_audit(
+            solution,
+            symmetric_degree=2,
+            point_pushing_arity=1,
+            law_arity=1,
+            max_length=2,
+            max_subgroup_size=1,
+        )
+
+        self.assertTrue(audit.truncated)
+        self.assertIsNone(audit.action_image_size)
+        self.assertFalse(audit.found_variety_escape)
 
 
 if __name__ == "__main__":

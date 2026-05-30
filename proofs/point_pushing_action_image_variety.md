@@ -175,6 +175,25 @@ Similarly, `law_braid_action_certificate(...)` verifies, for one supplied
 word, that evaluation on the pure-generator action image matches the direct
 braid action on `X^{k+1}`.
 
+The more specific helper
+
+```text
+point_pushing_variety_escape_audit(...)
+```
+
+computes the marked group `P_k(X)`, searches bounded words for a law of
+`S_m` that fails on `P_k(X)`, and records:
+
+- the nonidentity permutation value;
+- a moved tuple index;
+- representatives of the chosen assignment as words in the marked
+  point-pushing generators;
+- the substituted `k`-variable word;
+- the direct braid action of the corresponding point-pushing braid.
+
+This is exactly the finite row shape required by the B certificate above.  It
+is still bounded evidence unless supplied uniformly for every `j`.
+
 This note therefore converts the final problem into a clean moving-variety
 question:
 

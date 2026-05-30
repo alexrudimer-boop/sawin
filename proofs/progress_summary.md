@@ -845,7 +845,10 @@ into a moving-variety condition.  For
 `P_k(X) in var(S_m)` for every `k`.  Thus A may be pursued by proving one
 fixed symmetric variety contains all point-pushing action images, while B must
 produce explicit `S_j`-variety escapes with representing words in the marked
-pure-generator tuple.
+pure-generator tuple.  The helper `point_pushing_variety_escape_audit(...)`
+computes a bounded `P_k(X)` image, searches for an `S_m`-law escape, and
+retains the moved permutation, moved tuple index, representing words, and
+substituted point-pushing word.
 `proofs/symmetric_repair_contract_bridge.md` now connects this symmetric fork
 back to the proof-critic repair contract.  If a supplied repair package proves
 the local implication using a fixed product detector `H(pi,Q)`, then the left

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from collections import deque
 from dataclasses import dataclass
+from itertools import product
 from typing import Iterable, Mapping, Sequence, Tuple
 
 from .artin_longitudes import BraidWord, FreeWord
@@ -53,6 +54,47 @@ class AssignedLawSeparation:
     moved_index: int | None
 
 
+@dataclass(frozen=True)
+class PointPushingVarietyEscapeAudit:
+    """Bounded finite row for a point-pushing action-image variety escape."""
+
+    symmetric_degree: int
+    point_pushing_arity: int
+    law_arity: int
+    braid_index: int
+    tuple_count: int
+    action_image_size: int | None
+    truncated: bool
+    assignment_count_checked: int
+    separating_word: FreeWord | None
+    assignment_representatives: Tuple[FreeWord, ...]
+    substituted_point_pushing_word: FreeWord | None
+    evaluated_permutation: Permutation | None
+    direct_braid_permutation: Permutation | None
+    moved_index: int | None
+    substituted_word_is_symmetric_law: bool | None
+
+    @property
+    def found_variety_escape(self) -> bool:
+        return self.separating_word is not None and self.moved_index is not None
+
+    @property
+    def direct_matches_evaluated(self) -> bool:
+        return (
+            self.evaluated_permutation is not None
+            and self.direct_braid_permutation is not None
+            and self.evaluated_permutation == self.direct_braid_permutation
+        )
+
+    @property
+    def substituted_word_gives_point_pushing_mover(self) -> bool:
+        return (
+            self.found_variety_escape
+            and self.substituted_word_is_symmetric_law is True
+            and self.direct_matches_evaluated
+        )
+
+
 def identity_permutation(size: int) -> Permutation:
     return tuple(range(size))
 
@@ -95,6 +137,38 @@ def generated_permutation_subgroup(generators: Iterable[Permutation], max_size: 
     return subgroup
 
 
+def generated_permutation_subgroup_with_words(
+    generators: Mapping[int, Permutation],
+    max_size: int | None = None,
+) -> dict[Permutation, FreeWord]:
+    """Generate a permutation subgroup and remember words in the generators."""
+
+    gens = tuple(sorted(generators.items()))
+    if not gens:
+        return {tuple(): tuple()}
+    size = len(gens[0][1])
+    identity = identity_permutation(size)
+    moves = []
+    for index, generator in gens:
+        moves.append((generator, ((index, 1),)))
+        moves.append((invert_permutation(generator), ((index, -1),)))
+    words: dict[Permutation, FreeWord] = {identity: tuple()}
+    queue = deque([identity])
+    while queue:
+        current = queue.popleft()
+        current_word = words[current]
+        for move, move_word in moves:
+            candidate = compose_permutations(move, current)
+            if candidate in words:
+                continue
+            candidate_word = _reduce_free_word(current_word + move_word)
+            words[candidate] = candidate_word
+            if max_size is not None and len(words) > max_size:
+                raise ValueError("generated subgroup exceeded max_size")
+            queue.append(candidate)
+    return words
+
+
 def permutation_group_from_subgroup(subgroup: Iterable[Permutation]):
     """View a finite permutation subgroup as a `FiniteGroup`."""
 
@@ -126,6 +200,30 @@ def evaluate_free_word_on_permutations(
         if exponent < 0:
             image = invert_permutation(image)
         out = compose_permutations(image, out)
+    return out
+
+
+def _reduce_free_word(word: FreeWord) -> FreeWord:
+    from .artin_longitudes import reduce_free_word
+
+    return reduce_free_word(word)
+
+
+def _invert_free_word(word: FreeWord) -> FreeWord:
+    from .artin_longitudes import invert_free_word
+
+    return invert_free_word(word)
+
+
+def substitute_free_word(word: FreeWord, substitutions: Sequence[FreeWord]) -> FreeWord:
+    """Substitute words in ``F_k`` for variables of another free word."""
+
+    out: FreeWord = tuple()
+    for generator, exponent in word:
+        replacement = substitutions[generator]
+        if exponent < 0:
+            replacement = _invert_free_word(replacement)
+        out = _reduce_free_word(out + replacement)
     return out
 
 
@@ -239,6 +337,155 @@ def law_braid_action_certificate(
         evaluated_word_is_identity=evaluated == identity,
         direct_braid_is_identity=direct == identity,
         direct_matches_evaluated=direct == evaluated,
+    )
+
+
+def point_pushing_variety_escape_audit(
+    solution: FiniteBraidedSet,
+    symmetric_degree: int,
+    point_pushing_arity: int,
+    *,
+    law_arity: int,
+    max_length: int,
+    max_subgroup_size: int | None = None,
+    max_assignments: int | None = None,
+) -> PointPushingVarietyEscapeAudit:
+    """Search one bounded point-pushing action image for a variety escape.
+
+    A returned separating word is a law on ``S_m`` but evaluates nontrivially
+    on the computed action image ``P_k(X)``.  The audit also records
+    representatives for the chosen assignment in the marked pure generators,
+    and verifies that the substituted point-pushing word moves the direct YBE
+    braid action.
+    """
+
+    from .braid_laws import law_word_on_last_strand, pure_braid_generator
+    from .finite_group import symmetric_group
+    from .group_laws import is_law_on_group, reduced_free_words
+
+    if symmetric_degree < 1:
+        raise ValueError("symmetric_degree must be positive")
+    if point_pushing_arity < 1:
+        raise ValueError("point_pushing_arity must be positive")
+    if law_arity < 1:
+        raise ValueError("law_arity must be positive")
+    if max_length < 1:
+        raise ValueError("max_length must be positive")
+
+    n = point_pushing_arity + 1
+    tuple_count = len(solution.elements) ** n
+    generator_braids = {
+        generator: pure_braid_generator(generator + 1, n)
+        for generator in range(point_pushing_arity)
+    }
+    images = braid_images_for_words(solution, n, generator_braids)
+    try:
+        subgroup_words = generated_permutation_subgroup_with_words(
+            images,
+            max_size=max_subgroup_size,
+        )
+    except ValueError:
+        return PointPushingVarietyEscapeAudit(
+            symmetric_degree=symmetric_degree,
+            point_pushing_arity=point_pushing_arity,
+            law_arity=law_arity,
+            braid_index=n,
+            tuple_count=tuple_count,
+            action_image_size=None,
+            truncated=True,
+            assignment_count_checked=0,
+            separating_word=None,
+            assignment_representatives=tuple(),
+            substituted_point_pushing_word=None,
+            evaluated_permutation=None,
+            direct_braid_permutation=None,
+            moved_index=None,
+            substituted_word_is_symmetric_law=None,
+        )
+
+    subgroup = tuple(subgroup_words)
+    detector = symmetric_group(symmetric_degree)
+    identity = identity_permutation(tuple_count)
+    assignment_count = 0
+    for word in reduced_free_words(law_arity, max_length):
+        if not is_law_on_group(detector, word, arity=law_arity):
+            continue
+        for assignment in product(subgroup, repeat=law_arity):
+            assignment_count += 1
+            if max_assignments is not None and assignment_count > max_assignments:
+                return PointPushingVarietyEscapeAudit(
+                    symmetric_degree=symmetric_degree,
+                    point_pushing_arity=point_pushing_arity,
+                    law_arity=law_arity,
+                    braid_index=n,
+                    tuple_count=tuple_count,
+                    action_image_size=len(subgroup),
+                    truncated=True,
+                    assignment_count_checked=assignment_count - 1,
+                    separating_word=None,
+                    assignment_representatives=tuple(),
+                    substituted_point_pushing_word=None,
+                    evaluated_permutation=None,
+                    direct_braid_permutation=None,
+                    moved_index=None,
+                    substituted_word_is_symmetric_law=None,
+                )
+            evaluated = evaluate_free_word_on_permutations(
+                word,
+                {index: value for index, value in enumerate(assignment)},
+            )
+            if evaluated == identity:
+                continue
+            representatives = tuple(subgroup_words[value] for value in assignment)
+            substituted = substitute_free_word(word, representatives)
+            braid_n, braid = law_word_on_last_strand(
+                substituted,
+                point_pushing_arity,
+            )
+            direct = braid_word_permutation_image(solution, braid_n, braid)
+            moved_index = next(
+                index
+                for index, image in enumerate(evaluated)
+                if image != index
+            )
+            return PointPushingVarietyEscapeAudit(
+                symmetric_degree=symmetric_degree,
+                point_pushing_arity=point_pushing_arity,
+                law_arity=law_arity,
+                braid_index=n,
+                tuple_count=tuple_count,
+                action_image_size=len(subgroup),
+                truncated=False,
+                assignment_count_checked=assignment_count,
+                separating_word=word,
+                assignment_representatives=representatives,
+                substituted_point_pushing_word=substituted,
+                evaluated_permutation=evaluated,
+                direct_braid_permutation=direct,
+                moved_index=moved_index,
+                substituted_word_is_symmetric_law=is_law_on_group(
+                    detector,
+                    substituted,
+                    arity=point_pushing_arity,
+                ),
+            )
+
+    return PointPushingVarietyEscapeAudit(
+        symmetric_degree=symmetric_degree,
+        point_pushing_arity=point_pushing_arity,
+        law_arity=law_arity,
+        braid_index=n,
+        tuple_count=tuple_count,
+        action_image_size=len(subgroup),
+        truncated=False,
+        assignment_count_checked=assignment_count,
+        separating_word=None,
+        assignment_representatives=tuple(),
+        substituted_point_pushing_word=None,
+        evaluated_permutation=None,
+        direct_braid_permutation=None,
+        moved_index=None,
+        substituted_word_is_symmetric_law=None,
     )
 
 
