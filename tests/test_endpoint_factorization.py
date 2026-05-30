@@ -19,6 +19,7 @@ from ybe_domination import (
     endpoint_product_longitude_expression_audit,
     endpoint_residual_action_audit,
     endpoint_residual_readout_audit,
+    endpoint_family_symmetric_fork_audit,
     lost_edge_external_routing_audit,
     readout_descent_separation_audit,
     routed_lost_edge_endpoint_witness_audit,
@@ -690,6 +691,49 @@ class EndpointFactorizationTests(unittest.TestCase):
             ("repair_contract_not_proved", "symmetric_degree_too_small"),
         )
         self.assertFalse(bridge.proves_symmetric_detector_from_repair_contract)
+
+    def test_endpoint_family_symmetric_fork_records_positive_cutoff(self):
+        audit = endpoint_family_symmetric_fork_audit(
+            (2, 6, 3),
+            all_endpoint_witnesses_supplied=True,
+            endpoint_family_faithful=True,
+        )
+
+        self.assertEqual(audit.minimum_symmetric_degree, 6)
+        self.assertEqual(audit.symmetric_degree, 6)
+        self.assertTrue(audit.endpoint_group_orders_valid)
+        self.assertTrue(audit.symmetric_degree_covers_endpoint_groups)
+        self.assertTrue(audit.endpoint_cutoff_proved)
+        self.assertTrue(audit.faithful_endpoint_cutoff_proved)
+        self.assertEqual(audit.failure_reasons, ())
+
+    def test_endpoint_family_symmetric_fork_records_tail_seed_prefix(self):
+        audit = endpoint_family_symmetric_fork_audit(
+            (2, 3),
+            all_endpoint_witnesses_supplied=False,
+            endpoint_family_faithful=True,
+            symmetric_degree=2,
+            failed_symmetric_degrees=(3, 4, 5),
+        )
+
+        self.assertEqual(audit.minimum_symmetric_degree, 3)
+        self.assertFalse(audit.endpoint_cutoff_proved)
+        self.assertTrue(audit.failed_degrees_are_tail_prefix)
+        self.assertTrue(audit.proves_supplied_symmetric_tail_endpoint_seed_prefix)
+        self.assertEqual(audit.failure_reasons, ("endpoint_witnesses_not_supplied", "symmetric_degree_too_small"))
+
+    def test_endpoint_family_symmetric_fork_requires_faithfulness_for_local_use(self):
+        audit = endpoint_family_symmetric_fork_audit(
+            (),
+            all_endpoint_witnesses_supplied=False,
+            endpoint_family_faithful=False,
+        )
+
+        self.assertTrue(audit.endpoint_family_empty)
+        self.assertTrue(audit.endpoint_cutoff_proved)
+        self.assertFalse(audit.faithful_endpoint_cutoff_proved)
+        self.assertFalse(audit.proves_supplied_symmetric_tail_endpoint_seed_prefix)
+        self.assertEqual(audit.failure_reasons, ("endpoint_family_not_faithful",))
 
     def test_descent_endpoint_repair_contract_reports_descent_failure(self):
         interval = one_color_identity_interval()

@@ -327,7 +327,7 @@ const rows = [
   [
     "Endpoint-family symmetric fork",
     "Convert any finite fixed endpoint group family into a symmetric detector A/B fork.",
-    "proofs/endpoint_family_symmetric_fork.md proves that endpoint-longitude witnesses give a common S_m cutoff, while failure of every such cutoff yields a symmetric-tail normalized-law endpoint seed.",
+    "proofs/endpoint_family_symmetric_fork.md; endpoint_family_symmetric_fork_audit records the common S_m cutoff and finite symmetric-tail endpoint seed-prefix shape.",
     "Endpoint fork",
     "Use after constructing a finite faithful endpoint family; bounded endpoint misses remain nonfinal.",
   ],

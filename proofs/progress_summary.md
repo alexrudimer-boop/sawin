@@ -844,7 +844,10 @@ endpoint-longitude witnesses give one common symmetric cutoff
 `S_m`, while failure of every such cutoff gives a symmetric-tail endpoint seed
 which becomes normalized-law movement once the endpoint family is faithful.
 This keeps the positive and negative endpoint requirements in the same
-symmetric-detector language.
+symmetric-detector language.  The helper
+`endpoint_family_symmetric_fork_audit(...)` records the finite factor orders,
+the cutoff degree, witness and faithfulness flags, and finite tail-prefix
+degrees for supplied endpoint-family rows.
 `proofs/symmetric_tower_counterexample_certificate.md` now records the
 corresponding simplified B certificate: for every `j`, produce a braid
 `alpha_j` with identity `S_j` longitude data and a moved global or residual

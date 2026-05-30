@@ -179,3 +179,114 @@ def symmetric_repair_contract_bridge_audit(
         detector_group_order=detector_group_order,
         symmetric_degree=symmetric_degree,
     )
+
+
+@dataclass(frozen=True)
+class EndpointFamilySymmetricForkAudit:
+    """Audit the symmetric cutoff fork for a finite endpoint family.
+
+    This is a certificate-shape audit for the endpoint-family theorem.  It
+    does not construct the missing all-``n`` endpoint witnesses.  It records
+    when a supplied finite family of fixed endpoint factors is killed by one
+    symmetric detector degree, and when supplied failed degrees form a finite
+    prefix of the symmetric-tail B-seed shape.
+    """
+
+    endpoint_group_orders: Tuple[int, ...]
+    all_endpoint_witnesses_supplied: bool
+    endpoint_family_faithful: bool
+    symmetric_degree: int
+    failed_symmetric_degrees: Tuple[int, ...] = ()
+
+    @property
+    def endpoint_family_empty(self) -> bool:
+        return not self.endpoint_group_orders
+
+    @property
+    def endpoint_group_orders_valid(self) -> bool:
+        return all(order > 0 for order in self.endpoint_group_orders)
+
+    @property
+    def minimum_symmetric_degree(self) -> int:
+        if self.endpoint_family_empty:
+            return 1
+        return max(self.endpoint_group_orders)
+
+    @property
+    def symmetric_degree_valid(self) -> bool:
+        return self.symmetric_degree > 0
+
+    @property
+    def symmetric_degree_covers_endpoint_groups(self) -> bool:
+        return (
+            self.endpoint_group_orders_valid
+            and self.symmetric_degree_valid
+            and self.symmetric_degree >= self.minimum_symmetric_degree
+        )
+
+    @property
+    def endpoint_cutoff_proved(self) -> bool:
+        return self.endpoint_family_empty or (
+            self.all_endpoint_witnesses_supplied
+            and self.symmetric_degree_covers_endpoint_groups
+        )
+
+    @property
+    def faithful_endpoint_cutoff_proved(self) -> bool:
+        return self.endpoint_cutoff_proved and self.endpoint_family_faithful
+
+    @property
+    def failed_degrees_are_tail_prefix(self) -> bool:
+        if not self.failed_symmetric_degrees:
+            return False
+        start = self.minimum_symmetric_degree
+        expected = tuple(range(start, start + len(self.failed_symmetric_degrees)))
+        return self.failed_symmetric_degrees == expected
+
+    @property
+    def proves_supplied_symmetric_tail_endpoint_seed_prefix(self) -> bool:
+        return (
+            self.endpoint_group_orders_valid
+            and self.endpoint_family_faithful
+            and self.failed_degrees_are_tail_prefix
+        )
+
+    @property
+    def failure_reasons(self) -> Tuple[str, ...]:
+        reasons = []
+        if not self.endpoint_group_orders_valid:
+            reasons.append("invalid_endpoint_group_order")
+        if not self.endpoint_family_empty and not self.all_endpoint_witnesses_supplied:
+            reasons.append("endpoint_witnesses_not_supplied")
+        if not self.symmetric_degree_valid:
+            reasons.append("invalid_symmetric_degree")
+        elif (
+            self.endpoint_group_orders_valid
+            and self.symmetric_degree < self.minimum_symmetric_degree
+        ):
+            reasons.append("symmetric_degree_too_small")
+        if not self.endpoint_family_faithful:
+            reasons.append("endpoint_family_not_faithful")
+        return tuple(reasons)
+
+
+def endpoint_family_symmetric_fork_audit(
+    endpoint_group_orders: Tuple[int, ...],
+    *,
+    all_endpoint_witnesses_supplied: bool,
+    endpoint_family_faithful: bool,
+    symmetric_degree: int | None = None,
+    failed_symmetric_degrees: Tuple[int, ...] = (),
+) -> EndpointFamilySymmetricForkAudit:
+    """Record the symmetric cutoff/tail fork for fixed endpoint factors."""
+
+    orders = tuple(endpoint_group_orders)
+    if symmetric_degree is None:
+        symmetric_degree = max(orders) if orders else 1
+    return EndpointFamilySymmetricForkAudit(
+        endpoint_group_orders=orders,
+        all_endpoint_witnesses_supplied=all_endpoint_witnesses_supplied,
+        endpoint_family_faithful=endpoint_family_faithful,
+        symmetric_degree=symmetric_degree,
+        failed_symmetric_degrees=tuple(failed_symmetric_degrees),
+    )

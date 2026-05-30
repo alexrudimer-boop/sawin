@@ -7,6 +7,12 @@ This note follows `proofs/descent_endpoint_repair_contract.md` and
 endpoint-longitudinalization theorem.  It records the exact symmetric-detector
 fork for any finite family of fixed endpoint groups.
 
+The executable mirror is `endpoint_family_symmetric_fork_audit(...)`.  It
+records the finite endpoint factor orders, the left-regular symmetric cutoff,
+whether all endpoint witnesses and faithfulness have been supplied, and whether
+listed failed symmetric degrees form the finite prefix of the normalized-law
+tail shape.
+
 ## Setup
 
 Fix a local interval
