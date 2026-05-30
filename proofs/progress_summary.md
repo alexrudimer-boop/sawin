@@ -852,6 +852,13 @@ substituted point-pushing word.  The companion
 `point_pushing_variety_prefix_audit(...)` scans a finite arity prefix for one
 proposed `S_m`, reporting escaped arities and truncations while keeping the
 "no bounded escape" case explicitly finite evidence rather than proof.
+`proofs/point_pushing_fixed_variety_domination.md` removes the symmetric-only
+phrasing: for any fixed finite group `G`, the detector rack `A_G` dominates
+`X` iff every point-pushing action image `P_k(X)` lies in `var(G)`.  Thus
+global Sawin domination is exactly the existence of one finite group `G_X`
+whose generated variety contains all `P_k(X)`.  A negative proof must
+diagonalize failures of this fixed-variety containment into the recorded
+normalized-law sequence.
 `proofs/symmetric_repair_contract_bridge.md` now connects this symmetric fork
 back to the proof-critic repair contract.  If a supplied repair package proves
 the local implication using a fixed product detector `H(pi,Q)`, then the left

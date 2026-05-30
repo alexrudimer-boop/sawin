@@ -241,6 +241,13 @@ const rows = [
     "Prove all P_k(X) lie in one var(S_m), or produce explicit variety escapes with representing generator words.",
   ],
   [
+    "Point-pushing fixed-variety criterion",
+    "State the exact global equivalence between finite-rack domination and one fixed finite variety containing all point-pushing images.",
+    "proofs/point_pushing_fixed_variety_domination.md proves that A_G dominates X iff P_k(X) lies in var(G) for every k.",
+    "Equivalent reformulation",
+    "Construct one finite G_X with all P_k(X) in var(G_X), or diagonalize variety escapes into normalized-law B.",
+  ],
+  [
     "Action images",
     "Law words vanish on fixed finite action images.",
     "Fixed-image certificate implemented.",
