@@ -350,7 +350,14 @@ const rows = [
     "Split abelian-chief relation quotients by trivial versus nontrivial detector-orbit action.",
     "proofs/point_pushing_abelian_relation_action_split.md proves that a trivial action forces M ~= F_p and factors through coinvariants, while a nontrivial action gives a nontrivial irreducible module with [N_D,M]=M. point_pushing_abelian_relation_action_split_audit records finite row regimes.",
     "Abelian branch split",
-    "Rule out central trivial coinvariant tails and noncentral irreducible module tails, or construct one for B.",
+    "Route central trivial coinvariant tails through the stem multiplier note; rule out noncentral irreducible module tails, or construct one for B.",
+  ],
+  [
+    "Central stem relation tail",
+    "Identify central trivial coinvariant tails as stem central-extension multiplier quotients.",
+    "proofs/point_pushing_central_stem_relation_tail.md proves that after cyclic closure a central trivial first failure is a stem extension F_p <= Z(H) cap [H,H], hence a p-quotient of a Schur multiplier of a detector-orbit quotient. point_pushing_central_stem_relation_audit records finite row shape.",
+    "Central branch homological",
+    "Rule out unbounded stem multiplier/coinvariant tails, or construct one for B.",
   ],
   [
     "Nonabelian-chief relation quotient",
@@ -358,6 +365,13 @@ const rows = [
     "proofs/point_pushing_nonabelian_chief_relation_quotient.md proves that a minimal nonabelian-chief first failure has mu_H(R)=M=S^r, and the detector orbit group controls the outer action on M. point_pushing_nonabelian_chief_relation_quotient_audit records finite chief-layer bookkeeping.",
     "Nonabelian chief compressed",
     "Rule out unbounded simple-power relation-group quotients, or construct one for B.",
+  ],
+  [
+    "Nonabelian wreath coordinate lift",
+    "Put nonabelian-chief failures into transitive simple-wreath coordinate normal form.",
+    "proofs/point_pushing_nonabelian_wreath_coordinate_lift.md proves that a minimal nonabelian failure embeds H faithfully in Aut(S) wr Omega with Omega transitive, the row succeeds modulo M=S^r, and failure is exactly a detector relation with a nontrivial S-coordinate. point_pushing_nonabelian_wreath_coordinate_audit records finite row shape.",
+    "Nonabelian branch localized",
+    "Rule out unbounded simple-wreath coordinate relation tails, or construct one for B.",
   ],
   [
     "Noncentral module tail",

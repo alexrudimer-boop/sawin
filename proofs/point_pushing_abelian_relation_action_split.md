@@ -103,13 +103,16 @@ The cyclic p-power quotient branch is already closed by
 `proofs/point_pushing_cyclic_tail_closure.md`.  Thus a surviving central
 abelian tail is a stem/coinvariant relation phenomenon, not a large cyclic
 quotient phenomenon.
+The follow-up note `proofs/point_pushing_central_stem_relation_tail.md`
+identifies this central phenomenon more precisely as a stem central-extension
+or Schur-multiplier quotient of a finite detector-orbit quotient.
 
 The remaining complete fork is:
 
 ```text
-central trivial coinvariant relation tails,
+central stem multiplier/coinvariant relation tails,
 noncentral irreducible relation-module tails,
-nonabelian simple-power relation-group tails.
+nonabelian simple-wreath coordinate relation-lift tails.
 ```
 
 Rule out all three uniformly for finite YBE point-pushing action images and

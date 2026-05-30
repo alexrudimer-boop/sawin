@@ -130,6 +130,11 @@ as a nonabelian simple-power relation-group quotient tail by
 `proofs/point_pushing_nonabelian_chief_relation_quotient.md`, with the two
 unbounded parameters above: simple-factor escape or fixed-factor multiplicity
 escape.
+The sharper normal form in
+`proofs/point_pushing_nonabelian_wreath_coordinate_lift.md` identifies the
+actual failure as a detector-orbit relation whose lifted value has a
+nontrivial coordinate in `S^r` inside a transitive subgroup of
+`Aut(S) wr Sym(r)`.
 Rule those out together with the abelian relation-module tails and outcome A
 follows from the product-prefix criterion; construct one such infinite tail
 and outcome B follows after right stabilization.

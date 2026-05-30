@@ -143,6 +143,10 @@ the following two forms.
 The earlier nonabelian parameter split still applies to the second case:
 either the simple factors `S_j` escape in size, or a fixed simple factor occurs
 with multiplicity `r_j -> infinity`.
+The follow-up note `proofs/point_pushing_nonabelian_wreath_coordinate_lift.md`
+puts this branch in simple-wreath coordinate normal form: after embedding
+`H <= Aut(S) wr Omega`, a failure is exactly a detector relation whose lift has
+a nontrivial `S`-coordinate.
 
 So the remaining positive target is no longer phrased in terms of arbitrary
 large action quotients.  It is:

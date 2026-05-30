@@ -32,6 +32,7 @@ from ybe_domination import (
     point_pushing_brunnian_tail_prefix_audit,
     point_pushing_brunnian_witness_certificate,
     point_pushing_bounded_normal_generator_audit,
+    point_pushing_central_stem_relation_audit,
     point_pushing_cyclic_tail_bound_audit,
     point_pushing_product_prefix_first_failure_audit,
     point_pushing_exponent_escape_audit,
@@ -39,6 +40,7 @@ from ybe_domination import (
     point_pushing_marked_quotient_audit,
     point_pushing_mu_prefix_audit,
     point_pushing_nonabelian_chief_relation_quotient_audit,
+    point_pushing_nonabelian_wreath_coordinate_audit,
     point_pushing_recursive_conjugacy_audit,
     point_pushing_suffix_shuttle_action,
     point_pushing_suffix_shuttle_audit,
@@ -1146,6 +1148,32 @@ class ActionImageTests(unittest.TestCase):
         self.assertEqual(noncentral_audit.split_regime, "noncentral_irreducible_module")
         self.assertTrue(noncentral_audit.proves_abelian_relation_action_split)
 
+    def test_central_stem_relation_audit_records_stem_extension(self):
+        group = build_group(
+            [(rotation, flip) for rotation in range(4) for flip in range(2)],
+            (0, 0),
+            lambda left, right: (
+                (left[0] + ((-1) ** left[1]) * right[0]) % 4,
+                (left[1] + right[1]) % 2,
+            ),
+        )
+        monolith = [(0, 0), (2, 0)]
+
+        audit = point_pushing_central_stem_relation_audit(
+            group,
+            monolith,
+            [(2, 0)],
+        )
+
+        self.assertEqual(audit.group_order, 8)
+        self.assertEqual(audit.monolith_order, 2)
+        self.assertEqual(audit.monolith_prime, 2)
+        self.assertEqual(audit.quotient_commutator_order, 2)
+        self.assertTrue(audit.monolith_is_central)
+        self.assertTrue(audit.monolith_in_commutator)
+        self.assertTrue(audit.relation_image_equals_monolith)
+        self.assertTrue(audit.proves_central_stem_relation_tail)
+
     def test_nonabelian_chief_relation_quotient_audit_records_surjective_image(self):
         symmetric = symmetric_group(5)
         alternating = [
@@ -1175,6 +1203,39 @@ class ActionImageTests(unittest.TestCase):
         self.assertTrue(audit.monolith_is_nonabelian)
         self.assertTrue(audit.relation_image_equals_monolith)
         self.assertTrue(audit.proves_nonabelian_chief_relation_quotient)
+
+    def test_nonabelian_wreath_coordinate_audit_records_simple_factor_row(self):
+        symmetric = symmetric_group(5)
+        alternating = [
+            element
+            for element in symmetric.elements
+            if sum(
+                1
+                for i in range(5)
+                for j in range(i + 1, 5)
+                if element[i] > element[j]
+            )
+            % 2
+            == 0
+        ]
+        group = subgroup_as_group(symmetric, alternating)
+
+        audit = point_pushing_nonabelian_wreath_coordinate_audit(
+            group,
+            group.elements,
+            group.elements,
+            simple_factor_order=60,
+            multiplicity=1,
+            factor_action_transitive=True,
+            coordinate_value_nontrivial=True,
+        )
+
+        self.assertEqual(audit.group_order, 60)
+        self.assertEqual(audit.monolith_order, 60)
+        self.assertEqual(audit.simple_factor_order, 60)
+        self.assertEqual(audit.multiplicity, 1)
+        self.assertTrue(audit.centralizer_trivial)
+        self.assertTrue(audit.proves_simple_wreath_coordinate_shape)
 
     def test_point_pushing_brunnian_normalized_prefix_audit_keeps_nonfailures_uncertified(self):
         solution = rack_solution([0, 1], lambda a, b: b)

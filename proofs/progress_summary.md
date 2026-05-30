@@ -1258,6 +1258,13 @@ nontrivial, then `M` is a nontrivial irreducible module and `[N_D,M]=M`.  The
 helper `point_pushing_abelian_relation_action_split_audit(...)` records the
 finite row regimes `central_trivial_coinvariant` and
 `noncentral_irreducible_module`.
+`proofs/point_pushing_central_stem_relation_tail.md` now identifies the
+central trivial branch as a stem central-extension tail.  After cyclic closure,
+a central first-failure monolith must satisfy `F_p<=Z(H) cap [H,H]`; with
+`Q=H/F_p`, it is a nonzero `p`-quotient of the Schur multiplier of a finite
+detector-orbit quotient `Q` and the actual relation lift factors through the
+coinvariants `R/[F_C,R] tensor F_p`.  The helper
+`point_pushing_central_stem_relation_audit(...)` records the finite row shape.
 `proofs/point_pushing_nonabelian_chief_relation_quotient.md` now gives the
 parallel nonabelian-chief compression.  If `R` is the same detector orbit
 relation group and the chief layer is `M=S^r`, then the minimal vertical
@@ -1267,6 +1274,13 @@ differ by an element of `M`.  Thus the nonabelian B-side is a simple-power
 relation-group quotient tail.  The helper
 `point_pushing_nonabelian_chief_relation_quotient_audit(...)` records the
 finite chief-layer bookkeeping.
+`proofs/point_pushing_nonabelian_wreath_coordinate_lift.md` now puts that
+nonabelian branch in coordinate normal form.  In a minimal quotient,
+`C_H(S^r)=1`, so `H` embeds in `Aut(S) wr Omega` for a transitive factor
+action `Omega`; the row succeeds modulo `S^r`, and failure is exactly a
+detector-orbit relation whose lift has a nontrivial `S`-coordinate.  The
+helper `point_pushing_nonabelian_wreath_coordinate_audit(...)` records the
+finite row shape.
 
 ## Verification snapshot
 

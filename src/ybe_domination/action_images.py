@@ -558,6 +558,30 @@ class PointPushingAbelianRelationActionSplitAudit:
 
 
 @dataclass(frozen=True)
+class PointPushingCentralStemRelationAudit:
+    """Bookkeeping for central trivial relation tails as stem extensions."""
+
+    group_order: int
+    monolith_order: int
+    monolith_prime: int | None
+    relation_image_order: int
+    quotient_commutator_order: int
+    monolith_is_central: bool
+    monolith_in_commutator: bool
+    relation_image_equals_monolith: bool
+    quotient_is_stem: bool
+
+    @property
+    def proves_central_stem_relation_tail(self) -> bool:
+        return (
+            self.monolith_is_central
+            and self.monolith_in_commutator
+            and self.relation_image_equals_monolith
+            and self.quotient_is_stem
+        )
+
+
+@dataclass(frozen=True)
 class PointPushingNonabelianChiefRelationQuotientAudit:
     """Bookkeeping for nonabelian-chief relation-group compression."""
 
@@ -582,6 +606,35 @@ class PointPushingNonabelianChiefRelationQuotientAudit:
             and self.relation_image_nontrivial
             and self.relation_image_inside_monolith
             and self.relation_image_equals_monolith
+        )
+
+
+@dataclass(frozen=True)
+class PointPushingNonabelianWreathCoordinateAudit:
+    """Bookkeeping for simple-wreath coordinate relation-lift rows."""
+
+    group_order: int
+    monolith_order: int
+    simple_factor_order: int
+    multiplicity: int
+    relation_image_order: int
+    centralizer_order: int
+    monolith_order_matches_simple_power: bool
+    monolith_is_nonabelian: bool
+    relation_image_equals_monolith: bool
+    centralizer_trivial: bool
+    factor_action_transitive: bool
+    coordinate_value_nontrivial: bool
+
+    @property
+    def proves_simple_wreath_coordinate_shape(self) -> bool:
+        return (
+            self.monolith_order_matches_simple_power
+            and self.monolith_is_nonabelian
+            and self.relation_image_equals_monolith
+            and self.centralizer_trivial
+            and self.factor_action_transitive
+            and self.coordinate_value_nontrivial
         )
 
 
@@ -2375,6 +2428,44 @@ def point_pushing_abelian_relation_action_split_audit(
     )
 
 
+def point_pushing_central_stem_relation_audit(
+    group: FiniteGroup,
+    monolith: Iterable[object],
+    relation_image_generators: Iterable[object],
+) -> PointPushingCentralStemRelationAudit:
+    """Audit a central trivial relation row as a stem central extension."""
+
+    monolith_set = frozenset(monolith)
+    relation_image = frozenset(
+        subgroup_generated_elements(group, relation_image_generators)
+    )
+    monolith_type, monolith_prime, _orders = _monolith_type_data(group, monolith_set)
+    commutator = frozenset(commutator_subgroup_elements(group))
+    monolith_is_central = all(
+        group.conjugate(element, monolith_element) == monolith_element
+        for element in group.elements
+        for monolith_element in monolith_set
+    )
+    monolith_in_commutator = monolith_set <= commutator
+    relation_image_equals_monolith = relation_image == monolith_set
+    quotient_is_stem = (
+        monolith_type == "elementary_abelian"
+        and monolith_is_central
+        and monolith_in_commutator
+    )
+    return PointPushingCentralStemRelationAudit(
+        group_order=len(group.elements),
+        monolith_order=len(monolith_set),
+        monolith_prime=monolith_prime,
+        relation_image_order=len(relation_image),
+        quotient_commutator_order=len(commutator),
+        monolith_is_central=monolith_is_central,
+        monolith_in_commutator=monolith_in_commutator,
+        relation_image_equals_monolith=relation_image_equals_monolith,
+        quotient_is_stem=quotient_is_stem,
+    )
+
+
 def point_pushing_nonabelian_chief_relation_quotient_audit(
     group: FiniteGroup,
     monolith: Iterable[object],
@@ -2410,6 +2501,59 @@ def point_pushing_nonabelian_chief_relation_quotient_audit(
         relation_image_nontrivial=relation_image_nontrivial,
         relation_image_inside_monolith=relation_image_inside_monolith,
         relation_image_equals_monolith=relation_image_equals_monolith,
+    )
+
+
+def point_pushing_nonabelian_wreath_coordinate_audit(
+    group: FiniteGroup,
+    monolith: Iterable[object],
+    relation_image_generators: Iterable[object],
+    *,
+    simple_factor_order: int,
+    multiplicity: int,
+    factor_action_transitive: bool,
+    coordinate_value_nontrivial: bool,
+) -> PointPushingNonabelianWreathCoordinateAudit:
+    """Audit the finite shape of a simple-wreath coordinate relation row."""
+
+    from .finite_group import subgroup_as_group
+
+    if simple_factor_order <= 1:
+        raise ValueError("simple_factor_order must be greater than 1")
+    if multiplicity <= 0:
+        raise ValueError("multiplicity must be positive")
+    monolith_set = frozenset(monolith)
+    monolith_group = subgroup_as_group(group, monolith_set)
+    relation_image = frozenset(
+        subgroup_generated_elements(group, relation_image_generators)
+    )
+    centralizer = frozenset(
+        element
+        for element in group.elements
+        if all(
+            group.conjugate(element, monolith_element) == monolith_element
+            for monolith_element in monolith_set
+        )
+    )
+    monolith_order_matches_simple_power = (
+        len(monolith_set) == simple_factor_order ** multiplicity
+    )
+    monolith_is_nonabelian = not is_abelian_group(monolith_group)
+    relation_image_equals_monolith = relation_image == monolith_set
+    centralizer_trivial = centralizer == frozenset((group.identity,))
+    return PointPushingNonabelianWreathCoordinateAudit(
+        group_order=len(group.elements),
+        monolith_order=len(monolith_set),
+        simple_factor_order=simple_factor_order,
+        multiplicity=multiplicity,
+        relation_image_order=len(relation_image),
+        centralizer_order=len(centralizer),
+        monolith_order_matches_simple_power=monolith_order_matches_simple_power,
+        monolith_is_nonabelian=monolith_is_nonabelian,
+        relation_image_equals_monolith=relation_image_equals_monolith,
+        centralizer_trivial=centralizer_trivial,
+        factor_action_transitive=factor_action_transitive,
+        coordinate_value_nontrivial=coordinate_value_nontrivial,
     )
 
 

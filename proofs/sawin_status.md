@@ -2194,26 +2194,33 @@ The abelian relation-module tail has now been split by
 orbit action forces a one-dimensional central coinvariant quotient
 `(Rel_D tensor F_p)_{N_D}->>F_p`, while nontrivial action gives a noncentral
 irreducible module quotient with `[N_D,M]=M`.
+The central trivial branch has been sharpened further in
+`proofs/point_pushing_central_stem_relation_tail.md`: after cyclic closure,
+the central quotient is a stem extension `F_p<=Z(H) cap [H,H]`, hence a
+nonzero `p`-quotient of the Schur multiplier of a finite detector-orbit
+quotient, with the actual relation lift factoring through coinvariants.
 The complementary branch has now been compressed in
 `proofs/point_pushing_nonabelian_chief_relation_quotient.md`: if the monolith
 is `M=S^r`, then the detector orbit relation image is all of `M`, and the old
 detector orbit group controls the conjugation action on `M` modulo inner
 automorphisms.  Thus the nonabelian B side is a simple-power relation-group
 quotient tail, not an arbitrary nonabelian action quotient.
-The noncentral elementary-abelian branch now has a parameter split too:
-`proofs/point_pushing_noncentral_module_tail.md` uses
-`|H|=p^r |H/C_H(M)| |C_H(M)/M|` to force an infinite tail into module prime
-escape, fixed-prime module-dimension escape, or bounded-module
-centralizer-layer escape.  The nonabelian simple-product branch has now split
-as well: `proofs/point_pushing_nonabelian_monolith_tail.md` proves
-`C_H(S^r)=1`, so the compressed quotient embeds into
-`Aut(S) wr Sym(r)`, and an infinite nonabelian tail has simple-factor escape
-or fixed-factor multiplicity escape.  Thus a negative proof must now produce
-one of six unbounded tails: central stem depth, noncentral module prime escape,
-noncentral module dimension escape, noncentral bounded-module
-centralizer-layer escape, nonabelian simple-factor escape, or nonabelian
-multiplicity escape.  A positive proof may close the global point-pushing
-route by ruling out all six for finite YBE action images.
+The nonabelian side has also been put into the simple-wreath coordinate normal
+form in `proofs/point_pushing_nonabelian_wreath_coordinate_lift.md`: a minimal
+failure has `H<=Aut(S) wr Omega` with `Omega` transitive, succeeds modulo
+`S^r`, and is witnessed by a detector relation whose lift has a nontrivial
+`S`-coordinate.
+The noncentral elementary-abelian branch still has the parameter split from
+`proofs/point_pushing_noncentral_module_tail.md`: module prime escape,
+fixed-prime module-dimension escape, or bounded-module centralizer-layer
+escape.  The nonabelian simple-wreath branch still has the parameter split
+from `proofs/point_pushing_nonabelian_monolith_tail.md`: simple-factor escape
+or fixed-factor multiplicity escape.  Thus the negative fork is now three
+structural branches, with parameter refinements: central stem
+multiplier/coinvariant tails, noncentral irreducible relation-module tails,
+and nonabelian simple-wreath coordinate relation-lift tails.  A positive proof
+may close the global point-pushing route by ruling out all three structural
+branches uniformly for finite YBE action images.
 
 ## Completion audit checklist
 
