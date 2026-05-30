@@ -297,6 +297,10 @@ Then audit and use these reductions:
    strand-continuing rows are transport-rackified.  The only remaining final
    continuation seed is mixed-unit context recovery, exposed by
    `two_sided_unit_collapse_audit(...)`.
+   Then read `proofs/mixed_unit_companion_separation.md`: in a bijective local
+   row, any coordinate-section collision is separated by the companion output
+   coordinate.  Use `section_kernel_companion_audit(...)` to audit the finite
+   companion-shuttle edges; a bare nonunit section is not enough for B.
    Then read `proofs/unit_continuation_abelian_kernel_lift.md`: it splits
    `S_beta in V_beta(U_cont)` into an abelianized matrix-longitude witness and
    a commutator-kernel correction witness, audited by

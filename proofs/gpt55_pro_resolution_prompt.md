@@ -744,6 +744,11 @@ nondegenerate and belongs to a closed branch; if it is strand-continuing, it
 is already transport-rackified.  The exact surviving shape is mixed-unit
 context recovery, audited by `two_sided_unit_collapse_audit(...)`.  Do not
 treat a two-sided unit row or a raw nonunit/reset label as final B evidence.
+Then use `proofs/mixed_unit_companion_separation.md`: every coordinate-section
+kernel collision in a bijective local row is separated by the companion output.
+The remaining seed is a companion-shuttle cycle, audited by
+`section_kernel_companion_audit(...)`; do not treat an isolated nonunit
+section as a counterexample.
 Then use `proofs/unit_continuation_abelian_kernel_lift.md`: split the final
 unit endpoint through `U/[U,U]`.  The abelian projection should be handled by
 the abelian longitude matrix criterion, while the residual correction must be

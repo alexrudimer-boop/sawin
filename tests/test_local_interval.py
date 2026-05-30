@@ -31,6 +31,7 @@ from ybe_domination import (
     readout_kernel_family,
     readout_kernel_quotient_interval,
     readout_seed_saturation_audit,
+    section_kernel_companion_audit,
     section_unit_row_audits,
     two_sided_unit_collapse_audit,
 )
@@ -115,6 +116,19 @@ def two_color_swap_interval():
         for b in colors
         for x in fibres[a]
         for y in fibres[b]
+    }
+    return LocalInterval(colors, fibres, base_R, T)
+
+
+def one_color_mixed_unit_bijection_interval():
+    colors = ("*",)
+    fibres = {"*": (0, 1)}
+    base_R = {("*", "*"): ("*", "*")}
+    T = {
+        ("*", "*", 0, 0): (0, 0),
+        ("*", "*", 0, 1): (1, 1),
+        ("*", "*", 1, 0): (1, 0),
+        ("*", "*", 1, 1): (0, 1),
     }
     return LocalInterval(colors, fibres, base_R, T)
 
@@ -345,6 +359,36 @@ class LocalIntervalTests(unittest.TestCase):
         self.assertTrue(audit.two_sided_unit_closed_branch)
         self.assertTrue(audit.locally_nondegenerate_closed_branch)
         self.assertFalse(audit.mixed_unit_context_recovery_remaining)
+
+    def test_section_kernel_companion_audit_records_recovered_collisions(self):
+        interval = one_color_identity_interval()
+
+        audit = section_kernel_companion_audit(interval)
+
+        self.assertTrue(audit.has_section_kernel)
+        self.assertEqual(len(audit.left_section_collision_rows), 2)
+        self.assertEqual(len(audit.right_section_collision_rows), 2)
+        self.assertTrue(audit.every_collision_companion_separated)
+        self.assertTrue(all(row.companion_outputs_distinct for row in audit.collision_rows))
+
+        rack_interval = one_color_flip_interval()
+        rack_audit = section_kernel_companion_audit(rack_interval)
+        self.assertFalse(rack_audit.has_section_kernel)
+        self.assertTrue(rack_audit.every_collision_companion_separated)
+
+    def test_section_kernel_companion_audit_exposes_mixed_unit_seed_shape(self):
+        interval = one_color_mixed_unit_bijection_interval()
+
+        row_audit = section_unit_row_audits(interval)[0]
+        companion = section_kernel_companion_audit(interval)
+
+        self.assertTrue(row_audit.row_is_mixed_unit)
+        self.assertTrue(row_audit.all_left_sections_bijective)
+        self.assertFalse(row_audit.all_right_sections_bijective)
+        self.assertEqual(row_audit.right_nonunit_inputs, (0, 1))
+        self.assertEqual(companion.left_section_collision_rows, ())
+        self.assertEqual(len(companion.right_section_collision_rows), 2)
+        self.assertTrue(companion.every_collision_companion_separated)
 
     def test_continuation_seed_readout_propagates_admissible_universal_readout(self):
         interval = one_color_identity_interval()

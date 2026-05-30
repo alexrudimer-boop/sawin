@@ -296,6 +296,13 @@ nondegenerate/guitar branch; if it is strand-continuing, it has already been
 transport-rackified.  The only surviving continuation shape is therefore a
 mixed-unit context-recovery corridor, audited by
 `two_sided_unit_collapse_audit(...)`.
+The companion-separation refinement
+`proofs/mixed_unit_companion_separation.md` makes that last phrase finite:
+any noninjective coordinate-section kernel in a bijective local row is
+separated by the companion output coordinate.  The helper
+`section_kernel_companion_audit(...)` lists those collapse/separation edges.
+The remaining B seed is therefore a companion-shuttle cycle, not a bare
+nonunit section.
 The follow-up note `proofs/unit_continuation_abelian_kernel_lift.md` splits
 that final endpoint certificate through the finite abelianization
 `U_cont/[U_cont,U_cont]`: prove the abelian projection by the matrix

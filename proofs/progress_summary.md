@@ -521,6 +521,15 @@ shape left after the fixed readouts is mixed-unit context recovery: some
 one-sided nonunit information is lost locally but recovered by context before
 endpoint readout.  The helper `two_sided_unit_collapse_audit(...)` records the
 section-unit split and lists the non-two-sided rows that remain.
+The companion-separation note `proofs/mixed_unit_companion_separation.md`
+makes the mixed-unit seed sharper.  In any bijective local row, if a
+coordinate section collapses two inputs, the companion output coordinate must
+separate them.  Thus mixed-unit context recovery is a finite shuttle of
+section-kernel distinctions through companion outputs.  The helper
+`section_kernel_companion_audit(...)` records every such collision and its
+companion outputs.  A positive proof must route these shuttle edges through
+fixed readouts or transport-rack quotients; a negative proof must upgrade a
+shuttle cycle to the normalized-law B sequence.
 The follow-up abelian-kernel lift note
 `proofs/unit_continuation_abelian_kernel_lift.md` splits this endpoint target
 through the finite abelianization of the fixed unit group.  It is enough to
@@ -614,12 +623,13 @@ Until one of these is done, the archive supports neither final A nor final B.
 
 At the latest verified snapshot:
 
-- `python -m unittest discover -s tests` passed with 364 tests;
+- `python -m unittest discover -s tests` passed with 366 tests;
 - `python -m compileall -q src tests tools` passed;
 - `node --check tools/build_reduction_audit_workbook.mjs` passed;
 - the proof log DOCX and reduction audit workbook were regenerated, and the
   workbook preview/OOXML marker checks included the routed-edge witness,
-  unit-continuation, derived-series, and two-sided unit-collapse rows;
+  unit-continuation, derived-series, two-sided unit-collapse, and
+  mixed-unit companion-separation rows;
 - LibreOffice/`soffice` was unavailable, so DOCX visual render QA could not
   be completed;
 - the Desktop zip was overwritten rather than versioned separately.

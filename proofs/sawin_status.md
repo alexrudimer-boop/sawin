@@ -1101,6 +1101,15 @@ Therefore the only continuation shape still capable of carrying the final
 obstruction is mixed-unit context recovery, where one-sided nonunit local
 information is lost and later recovered by the surrounding context.  The
 helper `two_sided_unit_collapse_audit(...)` records this row split exactly.
+The companion-separation refinement
+`proofs/mixed_unit_companion_separation.md` identifies the exact finite edges
+inside that mixed case.  Since each local row is a bijection, a collision in
+one coordinate section is necessarily separated by the companion output
+coordinate.  The helper `section_kernel_companion_audit(...)` records left
+and right section-kernel collisions together with the companion outputs that
+recover the distinction.  The remaining obstruction is therefore a
+companion-shuttle cycle that escapes the fixed readouts, not an isolated
+nonunit section.
 The follow-up note `proofs/unit_continuation_abelian_kernel_lift.md` now
 splits that last endpoint condition through abelianization.  For the finite
 unit group `U`, let `C=[U,U]` and `q:U->U/C`.  A quotient witness for

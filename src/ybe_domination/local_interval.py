@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from itertools import product
+from itertools import combinations, product
 from typing import Dict, FrozenSet, Hashable, Iterable, List, Mapping, Sequence, Tuple
 
 Color = Hashable
@@ -237,6 +237,48 @@ class TwoSidedUnitCollapseAudit:
         if not self.mixed_unit_context_recovery_remaining:
             return ()
         return self.mixed_unit_rows
+
+
+@dataclass(frozen=True)
+class SectionKernelCompanionRow:
+    """One coordinate-section collision and its companion-output separation."""
+
+    side: str
+    left_color: Color
+    right_color: Color
+    output_left_color: Color
+    output_right_color: Color
+    fixed_input: FibrePoint
+    collapsed_inputs: Tuple[FibrePoint, FibrePoint]
+    common_output: FibrePoint
+    companion_outputs: Tuple[FibrePoint, FibrePoint]
+
+    @property
+    def companion_outputs_distinct(self) -> bool:
+        return self.companion_outputs[0] != self.companion_outputs[1]
+
+
+@dataclass(frozen=True)
+class SectionKernelCompanionAudit:
+    """Finite ledger for where nonunit section kernels are recovered."""
+
+    collision_rows: Tuple[SectionKernelCompanionRow, ...]
+
+    @property
+    def has_section_kernel(self) -> bool:
+        return bool(self.collision_rows)
+
+    @property
+    def every_collision_companion_separated(self) -> bool:
+        return all(row.companion_outputs_distinct for row in self.collision_rows)
+
+    @property
+    def left_section_collision_rows(self) -> Tuple[SectionKernelCompanionRow, ...]:
+        return tuple(row for row in self.collision_rows if row.side == "left")
+
+    @property
+    def right_section_collision_rows(self) -> Tuple[SectionKernelCompanionRow, ...]:
+        return tuple(row for row in self.collision_rows if row.side == "right")
 
 
 @dataclass(frozen=True)
@@ -1028,6 +1070,60 @@ def two_sided_unit_collapse_audit(interval: "LocalInterval") -> TwoSidedUnitColl
         continuation=continuation_congruence_audit(interval),
         row_audits=section_unit_row_audits(interval),
     )
+
+
+def section_kernel_companion_audit(
+    interval: "LocalInterval",
+) -> SectionKernelCompanionAudit:
+    """Record companion-output recovery for noninjective coordinate sections."""
+
+    rows: List[SectionKernelCompanionRow] = []
+    for a, b in product(interval.colors, repeat=2):
+        c, d = interval.base_R[(a, b)]
+
+        for x in interval.fibres[a]:
+            by_left_output: Dict[FibrePoint, List[Tuple[FibrePoint, FibrePoint]]] = {}
+            for y in interval.fibres[b]:
+                u, v = interval.T[(a, b, x, y)]
+                by_left_output.setdefault(u, []).append((y, v))
+            for u, entries in by_left_output.items():
+                for (y0, v0), (y1, v1) in combinations(entries, 2):
+                    rows.append(
+                        SectionKernelCompanionRow(
+                            side="left",
+                            left_color=a,
+                            right_color=b,
+                            output_left_color=c,
+                            output_right_color=d,
+                            fixed_input=x,
+                            collapsed_inputs=(y0, y1),
+                            common_output=u,
+                            companion_outputs=(v0, v1),
+                        )
+                    )
+
+        for y in interval.fibres[b]:
+            by_right_output: Dict[FibrePoint, List[Tuple[FibrePoint, FibrePoint]]] = {}
+            for x in interval.fibres[a]:
+                u, v = interval.T[(a, b, x, y)]
+                by_right_output.setdefault(v, []).append((x, u))
+            for v, entries in by_right_output.items():
+                for (x0, u0), (x1, u1) in combinations(entries, 2):
+                    rows.append(
+                        SectionKernelCompanionRow(
+                            side="right",
+                            left_color=a,
+                            right_color=b,
+                            output_left_color=c,
+                            output_right_color=d,
+                            fixed_input=y,
+                            collapsed_inputs=(x0, x1),
+                            common_output=v,
+                            companion_outputs=(u0, u1),
+                        )
+                    )
+
+    return SectionKernelCompanionAudit(collision_rows=tuple(rows))
 
 
 def continuation_seed_pair_closure_audits(

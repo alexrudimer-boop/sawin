@@ -633,6 +633,13 @@ const rows = [
     "Prove no mixed-unit universal-continuation context recovery in a local-minimal bottleneck, or extract normalized laws.",
   ],
   [
+    "Mixed-unit companion separation",
+    "Show every noninjective coordinate-section kernel is separated by the companion output coordinate.",
+    "proofs/mixed_unit_companion_separation.md; section_kernel_companion_audit records section collisions and companion outputs.",
+    "Reduction criterion",
+    "Route companion-shuttle edges through fixed readouts, or upgrade a shuttle cycle to normalized laws.",
+  ],
+  [
     "Unit-continuation abelian-kernel lift",
     "Split the final unit endpoint into finite abelianization plus commutator-kernel correction.",
     "proofs/unit_continuation_abelian_kernel_lift.md; normal_quotient_longitude_lift_audit checks quotient witness, lifted witness, and kernel witness.",
