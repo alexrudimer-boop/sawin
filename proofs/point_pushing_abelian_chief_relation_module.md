@@ -194,7 +194,10 @@ Every product-prefix B tail has a subsequence of one of two forms.
    ```
 
    for nonabelian finite simple `S_j`, and the failure is a nontrivial
-   relation lift into that transitive simple-power monolith.
+   relation lift into that transitive simple-power monolith.  The follow-up
+   note `proofs/point_pushing_nonabelian_chief_relation_quotient.md`
+   compresses this case to a surjective relation-group quotient
+   `R_j ->> S_j^{r_j}` with detector-controlled outer action.
 
 Thus the abelian side of the remaining B route is a finite module-quotient
 problem, not a vague solvable quotient problem.  A positive proof may now rule

@@ -536,6 +536,34 @@ class PointPushingAbelianChiefRelationModuleAudit:
 
 
 @dataclass(frozen=True)
+class PointPushingNonabelianChiefRelationQuotientAudit:
+    """Bookkeeping for nonabelian-chief relation-group compression."""
+
+    group_order: int
+    monolith_order: int
+    relation_image_order: int
+    monolith_is_normal: bool
+    monolith_is_nonabelian: bool
+    monolith_is_unique_minimal_normal: bool
+    relation_image_is_normal: bool
+    relation_image_nontrivial: bool
+    relation_image_inside_monolith: bool
+    relation_image_equals_monolith: bool
+
+    @property
+    def proves_nonabelian_chief_relation_quotient(self) -> bool:
+        return (
+            self.monolith_is_normal
+            and self.monolith_is_nonabelian
+            and self.monolith_is_unique_minimal_normal
+            and self.relation_image_is_normal
+            and self.relation_image_nontrivial
+            and self.relation_image_inside_monolith
+            and self.relation_image_equals_monolith
+        )
+
+
+@dataclass(frozen=True)
 class PointPushingBaseFreeBrunnianTailPrefix:
     """Finite symmetric-tail prefix after the explicit base-arity cutoff."""
 
@@ -2265,6 +2293,44 @@ def point_pushing_abelian_chief_relation_module_audit(
         relation_image_is_normal=relation_image_is_normal,
         monolith_is_unique_minimal_normal=monolith_is_unique_minimal_normal,
         monolith_is_abelian=monolith_is_abelian,
+        relation_image_nontrivial=relation_image_nontrivial,
+        relation_image_inside_monolith=relation_image_inside_monolith,
+        relation_image_equals_monolith=relation_image_equals_monolith,
+    )
+
+
+def point_pushing_nonabelian_chief_relation_quotient_audit(
+    group: FiniteGroup,
+    monolith: Iterable[object],
+    relation_image_generators: Iterable[object],
+    *,
+    monolith_is_unique_minimal_normal: bool,
+) -> PointPushingNonabelianChiefRelationQuotientAudit:
+    """Audit the finite-group side of a nonabelian-chief relation row."""
+
+    from .finite_group import is_normal_subgroup, subgroup_as_group
+
+    monolith_set = frozenset(monolith)
+    relation_image = frozenset(
+        subgroup_generated_elements(group, relation_image_generators)
+    )
+    monolith_is_normal = is_normal_subgroup(group, monolith_set)
+    relation_image_is_normal = is_normal_subgroup(group, relation_image)
+    monolith_is_nonabelian = (
+        monolith_is_normal
+        and not is_abelian_group(subgroup_as_group(group, monolith_set))
+    )
+    relation_image_nontrivial = relation_image != frozenset((group.identity,))
+    relation_image_inside_monolith = relation_image <= monolith_set
+    relation_image_equals_monolith = relation_image == monolith_set
+    return PointPushingNonabelianChiefRelationQuotientAudit(
+        group_order=len(group.elements),
+        monolith_order=len(monolith_set),
+        relation_image_order=len(relation_image),
+        monolith_is_normal=monolith_is_normal,
+        monolith_is_nonabelian=monolith_is_nonabelian,
+        monolith_is_unique_minimal_normal=monolith_is_unique_minimal_normal,
+        relation_image_is_normal=relation_image_is_normal,
         relation_image_nontrivial=relation_image_nontrivial,
         relation_image_inside_monolith=relation_image_inside_monolith,
         relation_image_equals_monolith=relation_image_equals_monolith,

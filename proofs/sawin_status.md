@@ -2189,6 +2189,12 @@ minimal abelian-chief first failure induces a nonzero, hence surjective,
 abelian monolith.  Thus an abelian B tail must be an unbounded
 relation-module quotient tail; the complementary chief-layer branch is a
 nonabelian simple-power relation-lift tail.
+The complementary branch has now been compressed in
+`proofs/point_pushing_nonabelian_chief_relation_quotient.md`: if the monolith
+is `M=S^r`, then the detector orbit relation image is all of `M`, and the old
+detector orbit group controls the conjugation action on `M` modulo inner
+automorphisms.  Thus the nonabelian B side is a simple-power relation-group
+quotient tail, not an arbitrary nonabelian action quotient.
 The noncentral elementary-abelian branch now has a parameter split too:
 `proofs/point_pushing_noncentral_module_tail.md` uses
 `|H|=p^r |H/C_H(M)| |C_H(M)/M|` to force an infinite tail into module prime

@@ -37,6 +37,7 @@ from ybe_domination import (
     point_pushing_monolithic_compression_audit,
     point_pushing_marked_quotient_audit,
     point_pushing_mu_prefix_audit,
+    point_pushing_nonabelian_chief_relation_quotient_audit,
     point_pushing_recursive_conjugacy_audit,
     point_pushing_suffix_shuttle_action,
     point_pushing_suffix_shuttle_audit,
@@ -62,7 +63,7 @@ from ybe_domination.action_images import (
     _noncentral_abelian_module_tail_data,
     _normal_subgroups_bruteforce,
 )
-from ybe_domination.finite_group import build_group
+from ybe_domination.finite_group import build_group, subgroup_as_group
 
 
 class ActionImageTests(unittest.TestCase):
@@ -1106,6 +1107,36 @@ class ActionImageTests(unittest.TestCase):
         self.assertTrue(audit.monolith_is_abelian)
         self.assertTrue(audit.relation_image_equals_monolith)
         self.assertTrue(audit.proves_abelian_chief_relation_module_quotient)
+
+    def test_nonabelian_chief_relation_quotient_audit_records_surjective_image(self):
+        symmetric = symmetric_group(5)
+        alternating = [
+            element
+            for element in symmetric.elements
+            if sum(
+                1
+                for i in range(5)
+                for j in range(i + 1, 5)
+                if element[i] > element[j]
+            )
+            % 2
+            == 0
+        ]
+        group = subgroup_as_group(symmetric, alternating)
+
+        audit = point_pushing_nonabelian_chief_relation_quotient_audit(
+            group,
+            group.elements,
+            group.elements,
+            monolith_is_unique_minimal_normal=True,
+        )
+
+        self.assertEqual(audit.group_order, 60)
+        self.assertEqual(audit.monolith_order, 60)
+        self.assertEqual(audit.relation_image_order, 60)
+        self.assertTrue(audit.monolith_is_nonabelian)
+        self.assertTrue(audit.relation_image_equals_monolith)
+        self.assertTrue(audit.proves_nonabelian_chief_relation_quotient)
 
     def test_point_pushing_brunnian_normalized_prefix_audit_keeps_nonfailures_uncertified(self):
         solution = rack_solution([0, 1], lambda a, b: b)

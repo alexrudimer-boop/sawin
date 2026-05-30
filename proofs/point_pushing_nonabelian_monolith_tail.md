@@ -126,8 +126,10 @@ There is no separate centralizer-extension tail in the nonabelian case.
 
 The follow-up notes close the cyclic p-power branch and linearize the
 abelian-chief branch.  Thus the complementary nonabelian branch can be viewed
-as a nonabelian simple-power relation-lift tail, with the two unbounded
-parameters above: simple-factor escape or fixed-factor multiplicity escape.
+as a nonabelian simple-power relation-group quotient tail by
+`proofs/point_pushing_nonabelian_chief_relation_quotient.md`, with the two
+unbounded parameters above: simple-factor escape or fixed-factor multiplicity
+escape.
 Rule those out together with the abelian relation-module tails and outcome A
 follows from the product-prefix criterion; construct one such infinite tail
 and outcome B follows after right stabilization.

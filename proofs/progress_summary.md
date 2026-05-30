@@ -1250,6 +1250,15 @@ nonzero, hence surjective, `F_p[N_D]`-module quotient
 tail, while the other side is a nonabelian simple-power relation-lift tail.
 The helper `point_pushing_abelian_chief_relation_module_audit(...)` records
 finite chief-layer bookkeeping.
+`proofs/point_pushing_nonabelian_chief_relation_quotient.md` now gives the
+parallel nonabelian-chief compression.  If `R` is the same detector orbit
+relation group and the chief layer is `M=S^r`, then the minimal vertical
+failure has `mu_H(R)=M`.  The conjugation action of the detector orbit on `M`
+is well defined in `Out(M)`, because two lifts of the same detector element
+differ by an element of `M`.  Thus the nonabelian B-side is a simple-power
+relation-group quotient tail.  The helper
+`point_pushing_nonabelian_chief_relation_quotient_audit(...)` records the
+finite chief-layer bookkeeping.
 
 ## Verification snapshot
 

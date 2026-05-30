@@ -346,6 +346,13 @@ const rows = [
     "Rule out unbounded irreducible relation-module quotients, or construct one for B.",
   ],
   [
+    "Nonabelian-chief relation quotient",
+    "Compress nonabelian-chief Brunnian failures to detector relation-group quotients.",
+    "proofs/point_pushing_nonabelian_chief_relation_quotient.md proves that a minimal nonabelian-chief first failure has mu_H(R)=M=S^r, and the detector orbit group controls the outer action on M. point_pushing_nonabelian_chief_relation_quotient_audit records finite chief-layer bookkeeping.",
+    "Nonabelian chief compressed",
+    "Rule out unbounded simple-power relation-group quotients, or construct one for B.",
+  ],
+  [
     "Noncentral module tail",
     "Split noncentral elementary-abelian monolith failures by module prime, module dimension, and centralizer-extension layer.",
     "proofs/point_pushing_noncentral_module_tail.md proves |H|=p^r |H/C_H(M)| |C_H(M)/M|; an infinite tail has module prime escape, fixed-prime dimension escape, or bounded-module centralizer-layer escape. The audit records dimension, layer size, product check, and row regime.",
