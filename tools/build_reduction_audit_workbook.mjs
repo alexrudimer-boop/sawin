@@ -304,6 +304,13 @@ const rows = [
     "Rule out both unbounded elementary-abelian and nonabelian-simple-product monolith tails, or construct one for B.",
   ],
   [
+    "Abelian monolith split",
+    "Separate elementary-abelian monolith failures into central-depth and noncentral irreducible-module regimes.",
+    "proofs/point_pushing_abelian_monolith_split.md proves that an elementary-abelian monolith has [H,M]=1 or [H,M]=M; the first case is central-extension depth and the second gives a faithful irreducible conjugation-module quotient. The monolithic audit records centralizer/action/commutator data.",
+    "Two-regime abelian reduction",
+    "Rule out unbounded central monolithic depth and unbounded noncentral irreducible F_p-module tails, or construct one for B.",
+  ],
+  [
     "Point-pushing marked quotient criterion",
     "Replace fixed-variety containment by the exact derivative-detector marked quotient condition.",
     "proofs/point_pushing_marked_quotient_criterion.md proves A_G dominates X iff every P_k(X) is a marked quotient of D_k(G); point_pushing_marked_quotient_audit checks finite arity instances.",

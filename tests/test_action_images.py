@@ -48,6 +48,12 @@ from ybe_domination import (
     rack_solution,
     short_law_separating_permutation_assignment,
     cyclic_group,
+    symmetric_group,
+)
+from ybe_domination.action_images import (
+    _minimal_normal_subgroups,
+    _monolith_conjugation_data,
+    _normal_subgroups_bruteforce,
 )
 
 
@@ -807,10 +813,31 @@ class ActionImageTests(unittest.TestCase):
         self.assertEqual(audit.monolith_type, "elementary_abelian")
         self.assertEqual(audit.monolith_prime, 3)
         self.assertEqual(audit.monolith_element_orders, (3,))
+        self.assertEqual(audit.monolith_centralizer_order, 3)
+        self.assertEqual(audit.monolith_action_quotient_order, 1)
+        self.assertEqual(audit.monolith_commutator_order, 1)
+        self.assertTrue(audit.monolith_is_central)
         self.assertTrue(audit.quotient_is_monolithic)
         self.assertTrue(audit.projected_value_in_monolith)
         self.assertTrue(audit.quotient_escapes_prefix_bound)
         self.assertTrue(audit.proves_monolithic_compression)
+
+    def test_monolith_conjugation_data_splits_noncentral_abelian_case(self):
+        group = symmetric_group(3)
+        normals = _normal_subgroups_bruteforce(group, max_group_order=8)
+        self.assertIsNotNone(normals)
+        monoliths = _minimal_normal_subgroups(group, normals)
+
+        self.assertEqual(len(monoliths), 1)
+        centralizer_order, action_order, commutator_order, is_central = (
+            _monolith_conjugation_data(group, monoliths[0])
+        )
+
+        self.assertEqual(len(monoliths[0]), 3)
+        self.assertEqual(centralizer_order, 3)
+        self.assertEqual(action_order, 2)
+        self.assertEqual(commutator_order, 3)
+        self.assertFalse(is_central)
 
     def test_point_pushing_monolithic_compression_audit_keeps_identity_uncertified(self):
         solution = rack_solution([0, 1, 2], lambda a, b: (2 * a - b) % 3)

@@ -7,7 +7,7 @@ from typing import Iterable, Mapping, Sequence, Tuple
 
 from .artin_longitudes import BraidWord, FreeWord, NormalizedLawPrefixWitnessAudit
 from .finite_braided_set import FiniteBraidedSet
-from .finite_group import FiniteGroup
+from .finite_group import FiniteGroup, subgroup_generated_elements
 from .residual import action_permutation, permutation_order
 
 Permutation = Tuple[int, ...]
@@ -438,6 +438,10 @@ class PointPushingMonolithicCompressionAudit:
     monolith_type: str | None
     monolith_prime: int | None
     monolith_element_orders: Tuple[int, ...] | None
+    monolith_centralizer_order: int | None
+    monolith_action_quotient_order: int | None
+    monolith_commutator_order: int | None
+    monolith_is_central: bool | None
     quotient_is_monolithic: bool | None
     projected_value_in_monolith: bool | None
     prefix_order_bound: int | None
@@ -2098,6 +2102,37 @@ def _monolith_type_data(
     return "nonabelian_characteristically_simple", None, orders
 
 
+def _monolith_conjugation_data(
+    group: FiniteGroup,
+    monolith: frozenset[object],
+) -> Tuple[int, int, int, bool]:
+    """Return centralizer, action quotient, and ``[G,M]`` sizes."""
+
+    centralizer = frozenset(
+        element
+        for element in group.elements
+        if all(
+            group.conjugate(element, monolith_element) == monolith_element
+            for monolith_element in monolith
+        )
+    )
+    commutators = [
+        group.mul(
+            group.conjugate(element, monolith_element),
+            group.inv(monolith_element),
+        )
+        for element in group.elements
+        for monolith_element in monolith
+    ]
+    commutator_subgroup = subgroup_generated_elements(group, commutators)
+    return (
+        len(centralizer),
+        len(group.elements) // len(centralizer),
+        len(commutator_subgroup),
+        len(commutator_subgroup) == 1,
+    )
+
+
 def point_pushing_monolithic_compression_audit(
     solution: FiniteBraidedSet,
     word: FreeWord,
@@ -2135,6 +2170,10 @@ def point_pushing_monolithic_compression_audit(
             monolith_type=None,
             monolith_prime=None,
             monolith_element_orders=None,
+            monolith_centralizer_order=None,
+            monolith_action_quotient_order=None,
+            monolith_commutator_order=None,
+            monolith_is_central=None,
             quotient_is_monolithic=None,
             projected_value_in_monolith=None,
             prefix_order_bound=prefix_order_bound,
@@ -2157,6 +2196,10 @@ def point_pushing_monolithic_compression_audit(
             monolith_type=None,
             monolith_prime=None,
             monolith_element_orders=None,
+            monolith_centralizer_order=None,
+            monolith_action_quotient_order=None,
+            monolith_commutator_order=None,
+            monolith_is_central=None,
             quotient_is_monolithic=None,
             projected_value_in_monolith=None,
             prefix_order_bound=prefix_order_bound,
@@ -2181,6 +2224,10 @@ def point_pushing_monolithic_compression_audit(
             monolith_type=None,
             monolith_prime=None,
             monolith_element_orders=None,
+            monolith_centralizer_order=None,
+            monolith_action_quotient_order=None,
+            monolith_commutator_order=None,
+            monolith_is_central=None,
             quotient_is_monolithic=None,
             projected_value_in_monolith=None,
             prefix_order_bound=prefix_order_bound,
@@ -2210,6 +2257,10 @@ def point_pushing_monolithic_compression_audit(
             monolith_type=None,
             monolith_prime=None,
             monolith_element_orders=None,
+            monolith_centralizer_order=None,
+            monolith_action_quotient_order=None,
+            monolith_commutator_order=None,
+            monolith_is_central=None,
             quotient_is_monolithic=None,
             projected_value_in_monolith=None,
             prefix_order_bound=prefix_order_bound,
@@ -2228,11 +2279,21 @@ def point_pushing_monolithic_compression_audit(
     monolith_type = None
     monolith_prime = None
     monolith_element_orders = None
+    monolith_centralizer_order = None
+    monolith_action_quotient_order = None
+    monolith_commutator_order = None
+    monolith_is_central = None
     if monolith is not None:
         monolith_type, monolith_prime, monolith_element_orders = _monolith_type_data(
             quotient,
             monolith,
         )
+        (
+            monolith_centralizer_order,
+            monolith_action_quotient_order,
+            monolith_commutator_order,
+            monolith_is_central,
+        ) = _monolith_conjugation_data(quotient, monolith)
     return PointPushingMonolithicCompressionAudit(
         arity=arity,
         word=tuple(word),
@@ -2245,6 +2306,10 @@ def point_pushing_monolithic_compression_audit(
         monolith_type=monolith_type,
         monolith_prime=monolith_prime,
         monolith_element_orders=monolith_element_orders,
+        monolith_centralizer_order=monolith_centralizer_order,
+        monolith_action_quotient_order=monolith_action_quotient_order,
+        monolith_commutator_order=monolith_commutator_order,
+        monolith_is_central=monolith_is_central,
         quotient_is_monolithic=monolith is not None,
         projected_value_in_monolith=(
             None if monolith is None else projected_value in monolith
