@@ -55,6 +55,7 @@ from ybe_domination.action_images import (
     _cyclic_p_power_tail_data,
     _minimal_normal_subgroups,
     _monolith_conjugation_data,
+    _noncentral_abelian_module_tail_data,
     _normal_subgroups_bruteforce,
 )
 from ybe_domination.finite_group import build_group
@@ -872,6 +873,64 @@ class ActionImageTests(unittest.TestCase):
         self.assertEqual(action_order, 2)
         self.assertEqual(commutator_order, 3)
         self.assertFalse(is_central)
+
+    def test_noncentral_abelian_module_tail_data_records_parameters(self):
+        prime_escape = _noncentral_abelian_module_tail_data(
+            6,
+            3,
+            3,
+            "elementary_abelian",
+            False,
+            2,
+            3,
+            2,
+        )
+        dimension_escape = _noncentral_abelian_module_tail_data(
+            12,
+            4,
+            2,
+            "elementary_abelian",
+            False,
+            3,
+            4,
+            2,
+        )
+        action_escape = _noncentral_abelian_module_tail_data(
+            30,
+            5,
+            5,
+            "elementary_abelian",
+            False,
+            6,
+            5,
+            5,
+        )
+        centralizer_escape = _noncentral_abelian_module_tail_data(
+            60,
+            3,
+            3,
+            "elementary_abelian",
+            False,
+            2,
+            30,
+            5,
+        )
+        mixed_escape = _noncentral_abelian_module_tail_data(
+            27,
+            3,
+            3,
+            "elementary_abelian",
+            False,
+            3,
+            9,
+            5,
+        )
+
+        self.assertEqual(prime_escape, (1, 1, True, "module_prime_escape"))
+        self.assertEqual(dimension_escape, (2, 1, True, "module_dimension_escape"))
+        self.assertEqual(action_escape, (1, 1, True, "action_shadow_escape"))
+        self.assertEqual(centralizer_escape, (1, 10, True, "centralizer_layer_escape"))
+        self.assertEqual(mixed_escape, (1, 3, True, "mixed_parameter_escape"))
 
     def test_central_abelian_monolith_depth_data_detects_stem_case(self):
         def multiply(left, right):

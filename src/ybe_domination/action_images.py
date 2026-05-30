@@ -454,6 +454,10 @@ class PointPushingMonolithicCompressionAudit:
     central_cyclic_prime: int | None
     central_cyclic_exponent: int | None
     central_cyclic_prefix_regime: str | None
+    noncentral_module_dimension: int | None
+    noncentral_centralizer_layer_order: int | None
+    noncentral_size_product_matches_quotient: bool | None
+    noncentral_parameter_regime: str | None
     quotient_is_monolithic: bool | None
     projected_value_in_monolith: bool | None
     prefix_order_bound: int | None
@@ -2203,6 +2207,75 @@ def _cyclic_p_power_tail_data(
     return monolith_prime, exponent, "p_power_depth_escape"
 
 
+def _noncentral_abelian_module_tail_data(
+    quotient_order: int,
+    monolith_order: int | None,
+    monolith_prime: int | None,
+    monolith_type: str | None,
+    monolith_is_central: bool | None,
+    action_quotient_order: int | None,
+    centralizer_order: int | None,
+    prefix_order_bound: int | None,
+) -> Tuple[int | None, int | None, bool | None, str | None]:
+    """Return module dimension, centralizer layer, and escape regime."""
+
+    if monolith_type != "elementary_abelian" or monolith_is_central is not False:
+        return None, None, None, None
+    if (
+        monolith_order is None
+        or monolith_prime is None
+        or action_quotient_order is None
+        or centralizer_order is None
+    ):
+        return None, None, None, "invalid_noncentral_module_data"
+
+    dimension = 0
+    remaining = monolith_order
+    while remaining % monolith_prime == 0:
+        dimension += 1
+        remaining //= monolith_prime
+    if remaining != 1 or dimension == 0:
+        return None, None, None, "invalid_noncentral_module_data"
+    if centralizer_order % monolith_order != 0:
+        return dimension, None, False, "invalid_noncentral_module_data"
+
+    centralizer_layer_order = centralizer_order // monolith_order
+    product_matches = (
+        monolith_order * action_quotient_order * centralizer_layer_order
+        == quotient_order
+    )
+    if not product_matches:
+        return (
+            dimension,
+            centralizer_layer_order,
+            False,
+            "invalid_noncentral_module_data",
+        )
+    if prefix_order_bound is None:
+        return (
+            dimension,
+            centralizer_layer_order,
+            True,
+            "noncentral_irreducible_module",
+        )
+    if quotient_order <= prefix_order_bound:
+        return (
+            dimension,
+            centralizer_layer_order,
+            True,
+            "prefix_covers_noncentral_quotient",
+        )
+    if monolith_prime > prefix_order_bound:
+        return dimension, centralizer_layer_order, True, "module_prime_escape"
+    if monolith_order > prefix_order_bound:
+        return dimension, centralizer_layer_order, True, "module_dimension_escape"
+    if action_quotient_order > prefix_order_bound:
+        return dimension, centralizer_layer_order, True, "action_shadow_escape"
+    if centralizer_layer_order > prefix_order_bound:
+        return dimension, centralizer_layer_order, True, "centralizer_layer_escape"
+    return dimension, centralizer_layer_order, True, "mixed_parameter_escape"
+
+
 def point_pushing_monolithic_compression_audit(
     solution: FiniteBraidedSet,
     word: FreeWord,
@@ -2251,6 +2324,10 @@ def point_pushing_monolithic_compression_audit(
             central_cyclic_prime=None,
             central_cyclic_exponent=None,
             central_cyclic_prefix_regime=None,
+            noncentral_module_dimension=None,
+            noncentral_centralizer_layer_order=None,
+            noncentral_size_product_matches_quotient=None,
+            noncentral_parameter_regime=None,
             quotient_is_monolithic=None,
             projected_value_in_monolith=None,
             prefix_order_bound=prefix_order_bound,
@@ -2284,6 +2361,10 @@ def point_pushing_monolithic_compression_audit(
             central_cyclic_prime=None,
             central_cyclic_exponent=None,
             central_cyclic_prefix_regime=None,
+            noncentral_module_dimension=None,
+            noncentral_centralizer_layer_order=None,
+            noncentral_size_product_matches_quotient=None,
+            noncentral_parameter_regime=None,
             quotient_is_monolithic=None,
             projected_value_in_monolith=None,
             prefix_order_bound=prefix_order_bound,
@@ -2319,6 +2400,10 @@ def point_pushing_monolithic_compression_audit(
             central_cyclic_prime=None,
             central_cyclic_exponent=None,
             central_cyclic_prefix_regime=None,
+            noncentral_module_dimension=None,
+            noncentral_centralizer_layer_order=None,
+            noncentral_size_product_matches_quotient=None,
+            noncentral_parameter_regime=None,
             quotient_is_monolithic=None,
             projected_value_in_monolith=None,
             prefix_order_bound=prefix_order_bound,
@@ -2359,6 +2444,10 @@ def point_pushing_monolithic_compression_audit(
             central_cyclic_prime=None,
             central_cyclic_exponent=None,
             central_cyclic_prefix_regime=None,
+            noncentral_module_dimension=None,
+            noncentral_centralizer_layer_order=None,
+            noncentral_size_product_matches_quotient=None,
+            noncentral_parameter_regime=None,
             quotient_is_monolithic=None,
             projected_value_in_monolith=None,
             prefix_order_bound=prefix_order_bound,
@@ -2388,6 +2477,10 @@ def point_pushing_monolithic_compression_audit(
     central_cyclic_prime = None
     central_cyclic_exponent = None
     central_cyclic_prefix_regime = None
+    noncentral_module_dimension = None
+    noncentral_centralizer_layer_order = None
+    noncentral_size_product_matches_quotient = None
+    noncentral_parameter_regime = None
     if monolith is not None:
         monolith_type, monolith_prime, monolith_element_orders = _monolith_type_data(
             quotient,
@@ -2421,6 +2514,21 @@ def point_pushing_monolithic_compression_audit(
             prefix_order_bound,
             central_abelian_depth_regime=central_abelian_depth_regime,
         )
+        (
+            noncentral_module_dimension,
+            noncentral_centralizer_layer_order,
+            noncentral_size_product_matches_quotient,
+            noncentral_parameter_regime,
+        ) = _noncentral_abelian_module_tail_data(
+            quotient_order,
+            len(monolith),
+            monolith_prime,
+            monolith_type,
+            monolith_is_central,
+            monolith_action_quotient_order,
+            monolith_centralizer_order,
+            prefix_order_bound,
+        )
     return PointPushingMonolithicCompressionAudit(
         arity=arity,
         word=tuple(word),
@@ -2444,6 +2552,10 @@ def point_pushing_monolithic_compression_audit(
         central_cyclic_prime=central_cyclic_prime,
         central_cyclic_exponent=central_cyclic_exponent,
         central_cyclic_prefix_regime=central_cyclic_prefix_regime,
+        noncentral_module_dimension=noncentral_module_dimension,
+        noncentral_centralizer_layer_order=noncentral_centralizer_layer_order,
+        noncentral_size_product_matches_quotient=noncentral_size_product_matches_quotient,
+        noncentral_parameter_regime=noncentral_parameter_regime,
         quotient_is_monolithic=monolith is not None,
         projected_value_in_monolith=(
             None if monolith is None else projected_value in monolith

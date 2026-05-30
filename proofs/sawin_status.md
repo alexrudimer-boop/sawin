@@ -2168,12 +2168,17 @@ to be cyclic of prime-power order, or `M <= Z(H) cap [H,H]` and the
 obstruction is a stem central extension.  The cyclic case then splits again in
 `proofs/point_pushing_cyclic_p_power_tail.md`: a cyclic `C_{p^e}` first
 failure has either prime escape `p>b(j)` or p-power depth escape
-`p<=b(j)<p^e`, and proper quotients kill the bottom monolith element.  Thus a
-negative proof must now produce one of five unbounded tails: cyclic prime
-escape, cyclic p-power depth escape, central stem depth, noncentral irreducible
-linear-module tails, or nonabelian simple-product tails.  A positive proof may
-close the global point-pushing route by ruling out all five for finite YBE
-action images.
+`p<=b(j)<p^e`, and proper quotients kill the bottom monolith element.
+The noncentral elementary-abelian branch now has a parameter split too:
+`proofs/point_pushing_noncentral_module_tail.md` uses
+`|H|=p^r |H/C_H(M)| |C_H(M)/M|` to force an infinite tail into module prime
+escape, fixed-prime module-dimension escape, or bounded-module
+centralizer-layer escape.  Thus a negative proof must now produce one of seven
+unbounded tails: cyclic prime escape, cyclic p-power depth escape, central stem
+depth, noncentral module prime escape, noncentral module dimension escape,
+noncentral bounded-module centralizer-layer escape, or nonabelian
+simple-product tails.  A positive proof may close the global point-pushing
+route by ruling out all seven for finite YBE action images.
 
 ## Completion audit checklist
 

@@ -325,6 +325,13 @@ const rows = [
     "Rule out unbounded cyclic prime escape and fixed-prime unbounded p-adic depth, or construct one for B.",
   ],
   [
+    "Noncentral module tail",
+    "Split noncentral elementary-abelian monolith failures by module prime, module dimension, and centralizer-extension layer.",
+    "proofs/point_pushing_noncentral_module_tail.md proves |H|=p^r |H/C_H(M)| |C_H(M)/M|; an infinite tail has module prime escape, fixed-prime dimension escape, or bounded-module centralizer-layer escape. The audit records dimension, layer size, product check, and row regime.",
+    "Module/extension tail reduction",
+    "Rule out unbounded noncentral module primes, dimensions, and bounded-module centralizer layers, or construct one for B.",
+  ],
+  [
     "Point-pushing marked quotient criterion",
     "Replace fixed-variety containment by the exact derivative-detector marked quotient condition.",
     "proofs/point_pushing_marked_quotient_criterion.md proves A_G dominates X iff every P_k(X) is a marked quotient of D_k(G); point_pushing_marked_quotient_audit checks finite arity instances.",

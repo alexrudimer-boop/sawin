@@ -1208,6 +1208,14 @@ escape, or `p<=b(j)<p^e`, a genuine p-power depth escape.  Proper quotients of
 `C_{p^e}` kill the bottom order-`p` monolith element, so the latter case is not
 detected merely because `C_p` lies in the product prefix.  The audit helper now
 records the cyclic prime, p-power exponent, and prefix escape regime.
+`proofs/point_pushing_noncentral_module_tail.md` now performs the matching
+split on the noncentral elementary-abelian side.  For monolith
+`M ~= F_p^r`, the compressed quotient satisfies
+`|H|=p^r |H/C_H(M)| |C_H(M)/M|`.  Hence an infinite noncentral tail has a
+subsequence with module prime escape, fixed-prime module-dimension escape, or
+bounded-module centralizer-layer escape.  The audit helper now records the
+module dimension, centralizer-layer size, whether the size factorization
+matches the quotient, and a finite row parameter regime.
 
 ## Verification snapshot
 

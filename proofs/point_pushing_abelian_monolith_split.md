@@ -126,7 +126,10 @@ stem-extension tail with the monolith in `Z(H) cap [H,H]`.
 
 A B proof in the noncentral tail must produce unbounded irreducible
 conjugation-module shadows, possibly together with additional centralizer
-layers over the monolith.
+layers over the monolith.  The follow-up note
+`proofs/point_pushing_noncentral_module_tail.md` proves that such a tail has
+an infinite subsequence with module prime escape, fixed-prime module-dimension
+escape, or bounded-module centralizer-layer escape.
 
 Thus the remaining abelian regime is no longer a single black box.  A positive
 proof may close it by proving uniform bounds for both:
