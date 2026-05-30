@@ -838,6 +838,14 @@ Thus the symmetric detector question is equivalent to asking whether some
 given by `S_j`-law words whose point-pushing braids move.  The helper
 `last_strand_law_exactness_audit(...)` checks finite instances of the
 point-pushing exactness lemma.
+`proofs/point_pushing_action_image_variety.md` converts the same statement
+into a moving-variety condition.  For
+`P_k(X)=<rho_{X,k+1}(A_{1,k+1}),...,rho_{X,k+1}(A_{k,k+1})>`, a fixed degree
+`S_m` kills every `S_m`-law point-pushing braid exactly when
+`P_k(X) in var(S_m)` for every `k`.  Thus A may be pursued by proving one
+fixed symmetric variety contains all point-pushing action images, while B must
+produce explicit `S_j`-variety escapes with representing words in the marked
+pure-generator tuple.
 `proofs/symmetric_repair_contract_bridge.md` now connects this symmetric fork
 back to the proof-critic repair contract.  If a supplied repair package proves
 the local implication using a fixed product detector `H(pi,Q)`, then the left

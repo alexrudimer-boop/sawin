@@ -234,6 +234,13 @@ const rows = [
     "Prove a fixed S_m kills all law point-pushing actions on X, or construct S_j-law words whose point-pushing braids move X.",
   ],
   [
+    "Point-pushing action-image variety",
+    "Rephrase the last-strand law test as membership of pure point-pushing action images in one fixed symmetric variety.",
+    "proofs/point_pushing_action_image_variety.md proves that all S_m-law point-pushing braids act trivially on X iff every P_k(X)=<rho(A_{i,k+1})> lies in var(S_m).",
+    "Reduction ready",
+    "Prove all P_k(X) lie in one var(S_m), or produce explicit variety escapes with representing generator words.",
+  ],
+  [
     "Action images",
     "Law words vanish on fixed finite action images.",
     "Fixed-image certificate implemented.",
