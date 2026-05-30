@@ -115,6 +115,12 @@ multiplicity escape.
 Thus a final B proof cannot present an arbitrary quotient mover.  It must
 produce an unbounded sequence in one of these two monolith regimes.
 
+The follow-up `proofs/point_pushing_chief_layer_tail_split.md` reorganizes
+this dichotomy by escape mechanism: bounded nonabelian monoliths and bounded
+complemented abelian monoliths cannot escape product-prefix detectors, so a
+tail is either large-chief (`|M_j|->infinity`) or abelian Frattini-depth
+(`M_j<=Phi(H_j)`).
+
 ## Audit Hook
 
 The helper

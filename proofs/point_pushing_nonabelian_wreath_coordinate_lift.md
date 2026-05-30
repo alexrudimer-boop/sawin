@@ -204,6 +204,12 @@ a detector-orbit relation whose transported lift has a nontrivial S-coordinate
 inside a transitive simple-power wreath embedding.
 ```
 
+The follow-up `proofs/point_pushing_chief_layer_tail_split.md` records the
+global consequence of the faithful action: if `|M|` is bounded, then `|H|` is
+bounded because `H` embeds in `Aut(M)`.  Therefore a nonabelian
+product-prefix tail escaping all bounded prefixes must be a large-chief tail
+with `|M_j|->infinity`.
+
 Together with the abelian-chief reductions, the final point-pushing fork is:
 
 1. central stem multiplier/coinvariant tails;

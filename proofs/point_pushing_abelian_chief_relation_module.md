@@ -212,6 +212,12 @@ trivial, then `M ~= F_p` and the quotient factors through the coinvariants of
 `Rel_D tensor F_p`.  If the action is nontrivial, then `M` is a nontrivial
 irreducible module and `[N_D,M]=M`.
 
+The follow-up `proofs/point_pushing_chief_layer_tail_split.md` also separates
+the abelian side by Frattini position.  If `M` is complemented, then the whole
+smallest quotient is bounded by `|M| |Aut(M)|`, so an escaping complemented
+module tail must have `|M_j|->infinity`.  If `M<=Phi(H)`, the remaining
+mechanism is abelian Frattini depth.
+
 ## Audit Hook
 
 The helper

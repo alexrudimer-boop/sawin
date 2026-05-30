@@ -660,6 +660,10 @@ class PointPushingCentralizerStemMultiplierAudit:
     quotient_generator_internally_normally_generates: bool
     transport_residual_quotient_order: int
     transport_residual_abelianization_order: int
+    transport_residual_abelianization_exponent: int
+    transport_residual_abelianization_prime_set: Tuple[int, ...]
+    transport_residual_abelianization_exponent_divides_bound: bool
+    transport_residual_prime_support_bounded: bool
     transport_residual_is_perfect: bool
     transport_residual_regime: str
     quotient_abelianization_order: int
@@ -2798,6 +2802,10 @@ def point_pushing_centralizer_stem_multiplier_audit(
     quotient_generator_internally_normally_generates = False
     transport_residual_quotient_order = 0
     transport_residual_abelianization_order = 0
+    transport_residual_abelianization_exponent = 0
+    transport_residual_abelianization_prime_set: Tuple[int, ...] = ()
+    transport_residual_abelianization_exponent_divides_bound = False
+    transport_residual_prime_support_bounded = False
     transport_residual_is_perfect = False
     transport_residual_regime = "invalid_transport_residual_data"
     quotient_abelianization_order = 0
@@ -2847,6 +2855,21 @@ def point_pushing_centralizer_stem_multiplier_audit(
         transport_residual_abelianization_order = len(
             residual_abelianization.elements
         )
+        transport_residual_abelianization_exponent = group_exponent(
+            residual_abelianization
+        )
+        transport_residual_abelianization_prime_set = _prime_divisors_integer(
+            transport_residual_abelianization_exponent
+        )
+        transport_residual_abelianization_exponent_divides_bound = (
+            normal_generator_order_bound
+            % transport_residual_abelianization_exponent
+            == 0
+        )
+        bound_prime_set = set(_prime_divisors_integer(normal_generator_order_bound))
+        transport_residual_prime_support_bounded = set(
+            transport_residual_abelianization_prime_set
+        ) <= bound_prime_set
         transport_residual_is_perfect = (
             transport_residual_abelianization_order == 1
         )
@@ -2911,6 +2934,18 @@ def point_pushing_centralizer_stem_multiplier_audit(
         transport_residual_quotient_order=transport_residual_quotient_order,
         transport_residual_abelianization_order=(
             transport_residual_abelianization_order
+        ),
+        transport_residual_abelianization_exponent=(
+            transport_residual_abelianization_exponent
+        ),
+        transport_residual_abelianization_prime_set=(
+            transport_residual_abelianization_prime_set
+        ),
+        transport_residual_abelianization_exponent_divides_bound=(
+            transport_residual_abelianization_exponent_divides_bound
+        ),
+        transport_residual_prime_support_bounded=(
+            transport_residual_prime_support_bounded
         ),
         transport_residual_is_perfect=transport_residual_is_perfect,
         transport_residual_regime=transport_residual_regime,

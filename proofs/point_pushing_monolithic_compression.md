@@ -189,6 +189,11 @@ cannot be the final obstruction.
 Equivalently, A follows if one proves that finite YBE point-pushing action
 images cannot support unbounded monolithic first-failure quotients.
 
+The follow-up `proofs/point_pushing_chief_layer_tail_split.md` sharpens this
+target: every such quotient sequence has a subsequence that is either a
+large-chief tail, with `|M_j|->infinity`, or an abelian Frattini-depth tail
+with `M_j<=Phi(H_j)`.
+
 ## Audit Hook
 
 The helper

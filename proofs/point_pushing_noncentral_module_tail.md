@@ -166,6 +166,10 @@ The transport side is split in
 `proofs/point_pushing_transport_residual_quotient_split.md`: after quotienting
 by the internal normal closure, the residual is either abelian-visible or
 perfect.
+The abelian-visible residual is bounded further in
+`proofs/point_pushing_transport_residual_abelianization_bound.md`: its
+abelianization has exponent dividing `B_X` and no prime divisors outside the
+fixed prime support of `B_X`.
 
 ## Audit Hook
 

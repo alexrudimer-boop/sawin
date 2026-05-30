@@ -97,6 +97,10 @@ order and exponent dividing `B_X`.
 The follow-up `proofs/point_pushing_transport_residual_quotient_split.md`
 sharpens the second case by passing to `E=Q/<<q>>_Q`: either `E` has
 nontrivial abelianization, or it is a perfect transport residual.
+The follow-up
+`proofs/point_pushing_transport_residual_abelianization_bound.md` then bounds
+the exponent and prime support of the abelian-visible residual by the fixed
+normal-generator order bound.
 
 ## Audit Hook
 
