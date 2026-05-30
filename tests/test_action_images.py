@@ -51,10 +51,12 @@ from ybe_domination import (
     symmetric_group,
 )
 from ybe_domination.action_images import (
+    _central_abelian_monolith_depth_data,
     _minimal_normal_subgroups,
     _monolith_conjugation_data,
     _normal_subgroups_bruteforce,
 )
+from ybe_domination.finite_group import build_group
 
 
 class ActionImageTests(unittest.TestCase):
@@ -817,6 +819,10 @@ class ActionImageTests(unittest.TestCase):
         self.assertEqual(audit.monolith_action_quotient_order, 1)
         self.assertEqual(audit.monolith_commutator_order, 1)
         self.assertTrue(audit.monolith_is_central)
+        self.assertEqual(audit.quotient_commutator_order, 1)
+        self.assertFalse(audit.monolith_in_quotient_commutator)
+        self.assertFalse(audit.projected_value_in_quotient_commutator)
+        self.assertEqual(audit.central_abelian_depth_regime, "cyclic_p_power_depth")
         self.assertTrue(audit.quotient_is_monolithic)
         self.assertTrue(audit.projected_value_in_monolith)
         self.assertTrue(audit.quotient_escapes_prefix_bound)
@@ -838,6 +844,48 @@ class ActionImageTests(unittest.TestCase):
         self.assertEqual(action_order, 2)
         self.assertEqual(commutator_order, 3)
         self.assertFalse(is_central)
+
+    def test_central_abelian_monolith_depth_data_detects_stem_case(self):
+        def multiply(left, right):
+            sign_left, unit_left = left
+            sign_right, unit_right = right
+            sign = sign_left * sign_right
+            if unit_left == 0:
+                return (sign, unit_right)
+            if unit_right == 0:
+                return (sign, unit_left)
+            if unit_left == unit_right:
+                return (-sign, 0)
+            products = {
+                (1, 2): (1, 3),
+                (2, 3): (1, 1),
+                (3, 1): (1, 2),
+                (2, 1): (-1, 3),
+                (3, 2): (-1, 1),
+                (1, 3): (-1, 2),
+            }
+            extra_sign, unit = products[(unit_left, unit_right)]
+            return (sign * extra_sign, unit)
+
+        group = build_group(
+            tuple((sign, unit) for sign in (1, -1) for unit in range(4)),
+            (1, 0),
+            multiply,
+        )
+        normals = _normal_subgroups_bruteforce(group, max_group_order=8)
+        self.assertIsNotNone(normals)
+        monoliths = _minimal_normal_subgroups(group, normals)
+
+        self.assertEqual(len(monoliths), 1)
+        data = _central_abelian_monolith_depth_data(
+            group,
+            monoliths[0],
+            (-1, 0),
+            monolith_type="elementary_abelian",
+            monolith_is_central=True,
+        )
+
+        self.assertEqual(data, (2, True, True, "central_stem"))
 
     def test_point_pushing_monolithic_compression_audit_keeps_identity_uncertified(self):
         solution = rack_solution([0, 1, 2], lambda a, b: (2 * a - b) % 3)

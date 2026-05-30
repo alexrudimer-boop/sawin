@@ -7,7 +7,12 @@ from typing import Iterable, Mapping, Sequence, Tuple
 
 from .artin_longitudes import BraidWord, FreeWord, NormalizedLawPrefixWitnessAudit
 from .finite_braided_set import FiniteBraidedSet
-from .finite_group import FiniteGroup, subgroup_generated_elements
+from .finite_group import (
+    FiniteGroup,
+    commutator_subgroup_elements,
+    is_abelian_group,
+    subgroup_generated_elements,
+)
 from .residual import action_permutation, permutation_order
 
 Permutation = Tuple[int, ...]
@@ -442,6 +447,10 @@ class PointPushingMonolithicCompressionAudit:
     monolith_action_quotient_order: int | None
     monolith_commutator_order: int | None
     monolith_is_central: bool | None
+    quotient_commutator_order: int | None
+    monolith_in_quotient_commutator: bool | None
+    projected_value_in_quotient_commutator: bool | None
+    central_abelian_depth_regime: str | None
     quotient_is_monolithic: bool | None
     projected_value_in_monolith: bool | None
     prefix_order_bound: int | None
@@ -2082,7 +2091,7 @@ def _monolith_type_data(
 ) -> Tuple[str, int | None, Tuple[int, ...]]:
     """Classify a finite monolith as abelian elementary or nonabelian."""
 
-    from .finite_group import is_abelian_group, subgroup_as_group
+    from .finite_group import subgroup_as_group
     from .group_laws import element_order
 
     monolith_group = subgroup_as_group(group, monolith)
@@ -2133,6 +2142,35 @@ def _monolith_conjugation_data(
     )
 
 
+def _central_abelian_monolith_depth_data(
+    group: FiniteGroup,
+    monolith: frozenset[object],
+    projected_value: object,
+    *,
+    monolith_type: str | None,
+    monolith_is_central: bool | None,
+) -> Tuple[int, bool, bool, str | None]:
+    """Return derived-subgroup data and the central abelian depth regime."""
+
+    derived = frozenset(commutator_subgroup_elements(group))
+    monolith_in_derived = monolith.issubset(derived)
+    projected_value_in_derived = projected_value in derived
+    regime = None
+    if monolith_type == "elementary_abelian" and monolith_is_central is True:
+        if monolith_in_derived:
+            regime = "central_stem"
+        elif is_abelian_group(group):
+            regime = "cyclic_p_power_depth"
+        else:
+            regime = "abelianization_visible"
+    return (
+        len(derived),
+        monolith_in_derived,
+        projected_value_in_derived,
+        regime,
+    )
+
+
 def point_pushing_monolithic_compression_audit(
     solution: FiniteBraidedSet,
     word: FreeWord,
@@ -2174,6 +2212,10 @@ def point_pushing_monolithic_compression_audit(
             monolith_action_quotient_order=None,
             monolith_commutator_order=None,
             monolith_is_central=None,
+            quotient_commutator_order=None,
+            monolith_in_quotient_commutator=None,
+            projected_value_in_quotient_commutator=None,
+            central_abelian_depth_regime=None,
             quotient_is_monolithic=None,
             projected_value_in_monolith=None,
             prefix_order_bound=prefix_order_bound,
@@ -2200,6 +2242,10 @@ def point_pushing_monolithic_compression_audit(
             monolith_action_quotient_order=None,
             monolith_commutator_order=None,
             monolith_is_central=None,
+            quotient_commutator_order=None,
+            monolith_in_quotient_commutator=None,
+            projected_value_in_quotient_commutator=None,
+            central_abelian_depth_regime=None,
             quotient_is_monolithic=None,
             projected_value_in_monolith=None,
             prefix_order_bound=prefix_order_bound,
@@ -2228,6 +2274,10 @@ def point_pushing_monolithic_compression_audit(
             monolith_action_quotient_order=None,
             monolith_commutator_order=None,
             monolith_is_central=None,
+            quotient_commutator_order=None,
+            monolith_in_quotient_commutator=None,
+            projected_value_in_quotient_commutator=None,
+            central_abelian_depth_regime=None,
             quotient_is_monolithic=None,
             projected_value_in_monolith=None,
             prefix_order_bound=prefix_order_bound,
@@ -2261,6 +2311,10 @@ def point_pushing_monolithic_compression_audit(
             monolith_action_quotient_order=None,
             monolith_commutator_order=None,
             monolith_is_central=None,
+            quotient_commutator_order=None,
+            monolith_in_quotient_commutator=None,
+            projected_value_in_quotient_commutator=None,
+            central_abelian_depth_regime=None,
             quotient_is_monolithic=None,
             projected_value_in_monolith=None,
             prefix_order_bound=prefix_order_bound,
@@ -2283,6 +2337,10 @@ def point_pushing_monolithic_compression_audit(
     monolith_action_quotient_order = None
     monolith_commutator_order = None
     monolith_is_central = None
+    quotient_commutator_order = None
+    monolith_in_quotient_commutator = None
+    projected_value_in_quotient_commutator = None
+    central_abelian_depth_regime = None
     if monolith is not None:
         monolith_type, monolith_prime, monolith_element_orders = _monolith_type_data(
             quotient,
@@ -2294,6 +2352,18 @@ def point_pushing_monolithic_compression_audit(
             monolith_commutator_order,
             monolith_is_central,
         ) = _monolith_conjugation_data(quotient, monolith)
+        (
+            quotient_commutator_order,
+            monolith_in_quotient_commutator,
+            projected_value_in_quotient_commutator,
+            central_abelian_depth_regime,
+        ) = _central_abelian_monolith_depth_data(
+            quotient,
+            monolith,
+            projected_value,
+            monolith_type=monolith_type,
+            monolith_is_central=monolith_is_central,
+        )
     return PointPushingMonolithicCompressionAudit(
         arity=arity,
         word=tuple(word),
@@ -2310,6 +2380,10 @@ def point_pushing_monolithic_compression_audit(
         monolith_action_quotient_order=monolith_action_quotient_order,
         monolith_commutator_order=monolith_commutator_order,
         monolith_is_central=monolith_is_central,
+        quotient_commutator_order=quotient_commutator_order,
+        monolith_in_quotient_commutator=monolith_in_quotient_commutator,
+        projected_value_in_quotient_commutator=projected_value_in_quotient_commutator,
+        central_abelian_depth_regime=central_abelian_depth_regime,
         quotient_is_monolithic=monolith is not None,
         projected_value_in_monolith=(
             None if monolith is None else projected_value in monolith

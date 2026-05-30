@@ -120,8 +120,9 @@ noncentral irreducible-module tail.
 
 A B proof in the central tail must produce unbounded central monolithic
 quotients whose distinguished bottom element remains product-prefix invisible.
-Examples to rule out include cyclic `p`-power depth and perfect central
-extensions with a central monolith.
+The follow-up note `proofs/point_pushing_central_monolith_depth.md` proves
+that such a tail is either cyclic `p`-power bottom-layer depth or a central
+stem-extension tail with the monolith in `Z(H) cap [H,H]`.
 
 A B proof in the noncentral tail must produce unbounded irreducible
 conjugation-module shadows, possibly together with additional centralizer

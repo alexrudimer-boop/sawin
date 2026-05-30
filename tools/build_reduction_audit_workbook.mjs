@@ -311,6 +311,13 @@ const rows = [
     "Rule out unbounded central monolithic depth and unbounded noncentral irreducible F_p-module tails, or construct one for B.",
   ],
   [
+    "Central monolith depth",
+    "Split central elementary-abelian monolith failures into cyclic p-power depth and stem central-extension depth.",
+    "proofs/point_pushing_central_monolith_depth.md proves that if the central monolith is not inside [H,H], abelianization separates it and minimality forces H to be cyclic p-power; otherwise M <= Z(H) cap [H,H]. The audit records derived-subgroup membership and the central depth regime.",
+    "Four-tail reduction",
+    "Rule out cyclic p-power depth, central stem depth, noncentral irreducible module tails, and nonabelian simple-product tails, or construct one for B.",
+  ],
+  [
     "Point-pushing marked quotient criterion",
     "Replace fixed-variety containment by the exact derivative-detector marked quotient condition.",
     "proofs/point_pushing_marked_quotient_criterion.md proves A_G dominates X iff every P_k(X) is a marked quotient of D_k(G); point_pushing_marked_quotient_audit checks finite arity instances.",
