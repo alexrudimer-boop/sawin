@@ -19,6 +19,7 @@ from ybe_domination import (
     point_pushing_base_arity_certificate,
     point_pushing_base_free_brunnian_tail_prefix,
     point_pushing_base_free_threshold_audit,
+    point_pushing_base_free_threshold_prefix_audit,
     point_pushing_brunnian_failure_certificate,
     point_pushing_brunnian_gate_prefix_audit,
     point_pushing_brunnian_normalized_prefix_audit,
@@ -612,6 +613,36 @@ class ActionImageTests(unittest.TestCase):
         self.assertEqual(audit.checked_degrees, tuple())
         self.assertIsNone(audit.minimal_detecting_degree)
         self.assertFalse(audit.detected_within_bound)
+
+    def test_point_pushing_base_free_threshold_prefix_audit_records_sequence(self):
+        solution = rack_solution([0, 1], lambda a, b: b)
+
+        audit = point_pushing_base_free_threshold_prefix_audit(
+            solution,
+            max_symmetric_degree=2,
+            max_arity=3,
+        )
+
+        self.assertEqual(audit.base_cutoff, 1)
+        self.assertEqual(audit.threshold_sequence, (1, 1, 1))
+        self.assertEqual(audit.detected_arities, (1, 2, 3))
+        self.assertEqual(audit.unresolved_arities, tuple())
+        self.assertTrue(audit.detected_thresholds_weakly_increase)
+
+    def test_point_pushing_base_free_threshold_prefix_audit_records_unresolved_prefix(self):
+        solution = rack_solution([0, 1, 2], lambda a, b: (2 * a - b) % 3)
+
+        audit = point_pushing_base_free_threshold_prefix_audit(
+            solution,
+            max_symmetric_degree=2,
+            max_arity=2,
+        )
+
+        self.assertEqual(audit.base_cutoff, 3)
+        self.assertEqual(audit.threshold_sequence, (None, None))
+        self.assertEqual(audit.detected_arities, tuple())
+        self.assertEqual(audit.unresolved_arities, (1, 2))
+        self.assertTrue(audit.detected_thresholds_weakly_increase)
 
     def test_point_pushing_brunnian_failure_certificate_records_moved_tuple(self):
         solution = rack_solution([0, 1, 2], lambda a, b: (2 * a - b) % 3)

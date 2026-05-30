@@ -395,6 +395,13 @@ const rows = [
     "Prove sup_K epsilon_X(K)<infinity, or construct an unbounded certified non-base tail.",
   ],
   [
+    "Point-pushing base-free threshold sequence",
+    "Record finite prefixes of epsilon_X(K) as a weakly increasing threshold sequence.",
+    "proofs/point_pushing_base_free_threshold_sequence.md proves monotonicity and distinguishes finite threshold tables from all-K boundedness; point_pushing_base_free_threshold_prefix_audit records bounded approximations.",
+    "Threshold sequence audit",
+    "Use the finite prefix only as diagnostics; prove boundedness or construct an unbounded tail symbolically.",
+  ],
+  [
     "Point-pushing Brunnian first-failure stratification",
     "Show a negative tail can be chosen with one stable non-base failure kind.",
     "proofs/point_pushing_brunnian_first_failure_stratification.md uses fixed-arity cofinality and infinite pigeonhole to reduce B to a homogeneous infinite tail of stabilizer, orbit_label, or orbit_relation failures.",

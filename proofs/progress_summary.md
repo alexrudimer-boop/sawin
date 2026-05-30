@@ -1020,6 +1020,12 @@ sequence is equivalent to the positive symmetric-detector route, while
 unboundedness is exactly the certified base-free non-base tail route.  The
 helper `point_pushing_base_free_threshold_audit(...)` records finite
 approximations to these thresholds.
+`proofs/point_pushing_base_free_threshold_sequence.md` records finite prefixes
+of the threshold sequence.  The sequence is weakly increasing in `K`, and
+`point_pushing_base_free_threshold_prefix_audit(...)` records the detected and
+unresolved arities inside a bounded rectangle.  These tables remain
+diagnostic: the theorem target is still all-`K` boundedness, not a finite
+prefix.
 `proofs/point_pushing_brunnian_first_failure_stratification.md` sharpens the
 negative route: if no fixed symmetric detector works, first failing arities
 tend to infinity, base failures occur only below a finite cutoff, and an

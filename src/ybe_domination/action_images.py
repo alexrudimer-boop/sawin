@@ -411,6 +411,46 @@ class PointPushingBaseFreeThresholdAudit:
 
 
 @dataclass(frozen=True)
+class PointPushingBaseFreeThresholdPrefixAudit:
+    """Finite prefix of the base-free threshold sequence."""
+
+    max_symmetric_degree: int
+    max_arity: int
+    rows: Tuple[PointPushingBaseFreeThresholdAudit, ...]
+
+    @property
+    def base_cutoff(self) -> int:
+        return self.rows[0].base_cutoff if self.rows else 0
+
+    @property
+    def threshold_sequence(self) -> Tuple[int | None, ...]:
+        return tuple(row.minimal_detecting_degree for row in self.rows)
+
+    @property
+    def detected_arities(self) -> Tuple[int, ...]:
+        return tuple(
+            index + 1
+            for index, row in enumerate(self.rows)
+            if row.detected_within_bound
+        )
+
+    @property
+    def unresolved_arities(self) -> Tuple[int, ...]:
+        return tuple(
+            index + 1
+            for index, row in enumerate(self.rows)
+            if not row.detected_within_bound
+        )
+
+    @property
+    def detected_thresholds_weakly_increase(self) -> bool:
+        values = [
+            value for value in self.threshold_sequence if value is not None
+        ]
+        return all(left <= right for left, right in zip(values, values[1:]))
+
+
+@dataclass(frozen=True)
 class PointPushingBrunnianNormalizedPrefixAudit:
     """One Brunnian row checked as a symmetric normalized-law prefix."""
 
@@ -1811,6 +1851,36 @@ def point_pushing_base_free_threshold_audit(
     return PointPushingBaseFreeThresholdAudit(
         base_free_prefix=prefix,
         minimal_detecting_degree=minimal_detecting_degree,
+    )
+
+
+def point_pushing_base_free_threshold_prefix_audit(
+    solution: FiniteBraidedSet,
+    max_symmetric_degree: int,
+    max_arity: int,
+    *,
+    max_detector_states: int | None = None,
+    max_pair_subgroup_size: int | None = None,
+) -> PointPushingBaseFreeThresholdPrefixAudit:
+    """Audit ``epsilon_X(K)`` for ``1 <= K <= max_arity`` within a degree bound."""
+
+    if max_arity < 1:
+        raise ValueError("max_arity must be positive")
+    rows = []
+    for arity in range(1, max_arity + 1):
+        rows.append(
+            point_pushing_base_free_threshold_audit(
+                solution,
+                max_symmetric_degree=max_symmetric_degree,
+                max_arity=arity,
+                max_detector_states=max_detector_states,
+                max_pair_subgroup_size=max_pair_subgroup_size,
+            )
+        )
+    return PointPushingBaseFreeThresholdPrefixAudit(
+        max_symmetric_degree=max_symmetric_degree,
+        max_arity=max_arity,
+        rows=tuple(rows),
     )
 
 
