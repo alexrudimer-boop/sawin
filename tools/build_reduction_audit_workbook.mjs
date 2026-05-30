@@ -829,6 +829,13 @@ const rows = [
     "Use for nonsolvable terminal-unit B attempts; an all-j family is still required.",
   ],
   [
+    "Perfect-residual symmetric dichotomy",
+    "Remove the third-case ambiguity for one faithful terminal perfect-residual readout channel.",
+    "proofs/unit_perfect_residual_symmetric_dichotomy.md proves that either some S_m with m >= |P| kills the channel uniformly in n, or every j >= |P| supplies a symmetric-tail endpoint seed.",
+    "Channel dichotomy",
+    "Use with faithfulness/readout attachment; still need all endpoint channels for A or an explicit YBE interval for B.",
+  ],
+  [
     "Unit-continuation derived product detector",
     "Assemble terminal-unit derived-series certificates into one fixed product detector.",
     "proofs/unit_continuation_derived_product_detector.md; unit_composite_product_derived_series_lift_audit embeds each factor's combined witness into prod_i U(M_i) and verifies the endpoint tuple.",

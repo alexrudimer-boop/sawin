@@ -150,6 +150,7 @@ EXTRA_MD.append(ROOT / "proofs" / "unit_continuation_derived_series_reduction.md
 EXTRA_MD.append(ROOT / "proofs" / "unit_continuation_perfect_residual_audit.md")
 EXTRA_MD.append(ROOT / "proofs" / "unit_perfect_residual_normalized_seed.md")
 EXTRA_MD.append(ROOT / "proofs" / "unit_perfect_residual_symmetric_seed.md")
+EXTRA_MD.append(ROOT / "proofs" / "unit_perfect_residual_symmetric_dichotomy.md")
 EXTRA_MD.append(ROOT / "proofs" / "unit_continuation_derived_product_detector.md")
 EXTRA_MD.append(ROOT / "proofs" / "bifree_corridor_subgroup_certificate.md")
 EXTRA_MD.append(ROOT / "proofs" / "bifree_corridor_certificate_audit.md")

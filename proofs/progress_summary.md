@@ -865,6 +865,12 @@ The same note now records a tail-prefix check:
 finite prefix of rows to start at degree `|P|`, continue without gaps, and pass
 the one-row symmetric seed audit at every degree.  This is only the finite
 shadow of the required infinite tail construction.
+`proofs/unit_perfect_residual_symmetric_dichotomy.md` now states the matching
+all-`n` fork for one faithful terminal perfect-residual readout channel: either
+some fixed `S_m` with `m>=|P|` kills that channel uniformly, or every
+`j>=|P|` supplies a symmetric-tail seed.  This is still channel-local; A needs
+all channels and faithful decomposition, while B needs an explicit interval and
+all-tail moved rows.
 
 ## Verification snapshot
 
