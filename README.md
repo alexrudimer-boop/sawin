@@ -348,6 +348,24 @@ to the closed product/permutation branch.  The helper
 with the remaining middle-companion and endpoint-shear equations.  The final
 triangular target is now companion-shear longitude visibility in a fixed
 finite group `U_shear`.
+The one-colour collapse note
+`proofs/one_colour_latin_triangular_collapse.md` removes the one-colour
+version of that shear obstruction: the alpha equation forces `alpha=id`, the
+middle equation forces every `beta_x=id`, and opposite columns are therefore
+constant.  The helper `one_color_latin_triangular_collapse_audit(...)` records
+the product-collapse row and rejects the tempting non-YBE Latin shear
+`T(x,y)=(x,x+y mod 2)`.  Any remaining companion-shear obstruction must be
+genuinely multi-colour.
+The rack-kink cancellation note
+`proofs/kink_predecessor_latin_triangular_cancellation.md` removes that
+multi-colour rack-base shear as well.  For a rack base, kink predecessors
+force `alpha_{kappa(d),d}=id`; substituting `c=kappa^{-1}(b)` in the
+third-output equation makes `y -> y circ_{b,c} z` constant.  Latin-unit then
+forces `|X_b|=1`.  The helper
+`rack_kink_latin_triangular_collapse_audit(...)` records rack-form base data,
+kink predecessors, alpha identities, and predecessor-column constancy.  With
+the preceding reductions accepted, the bi-free universal-corridor lower-row
+obstruction is eliminated.
 The follow-up note `proofs/unit_continuation_abelian_kernel_lift.md` splits
 that final endpoint certificate through the finite abelianization
 `U_cont/[U_cont,U_cont]`: prove the abelian projection by the matrix

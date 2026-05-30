@@ -1158,6 +1158,26 @@ cocycle plus the middle-companion and endpoint-shear equations.  The remaining
 triangular theorem target is companion-shear longitude visibility in a fixed
 finite group `U_shear`; a counterexample seed must survive there, not in alpha
 transport.
+The one-colour collapse note
+`proofs/one_colour_latin_triangular_collapse.md` rules out the simplest shear
+seed.  In one colour, the alpha equation gives `alpha^2=alpha`, so bijectivity
+forces `alpha=id`; the middle equation then forces all companion maps
+`beta_x` to be identities.  Opposite columns are constant, so no nontrivial
+one-colour Latin-unit triangular YBE row exists.  The helper
+`one_color_latin_triangular_collapse_audit(...)` records this product-collapse
+route and the failure of the non-YBE Latin shear example.  Any remaining
+companion-shear obstruction must use genuinely multi-colour transport.
+The kink-predecessor cancellation note
+`proofs/kink_predecessor_latin_triangular_cancellation.md` removes the
+rack-base multi-colour shear obstruction.  In a rack base,
+`L_{kappa(b)}=L_b`; for `c=kappa^{-1}(b)` this gives `b*c=b`, while the alpha
+cocycle gives `alpha_{b,c}=id`.  Substituting this into the third-output shear
+equation forces the predecessor column `y -> y circ_{b,c} z` to be constant.
+Latin-unit says the same map is bijective, so `|X_b|=1`.  The helper
+`rack_kink_latin_triangular_collapse_audit(...)` records the rack-form base,
+kink predecessors, alpha identities, and predecessor-column constancy.  Thus,
+conditional on the preceding reductions in this branch, the final lower-row
+obstruction in the bi-free universal-corridor case is eliminated.
 The follow-up note `proofs/unit_continuation_abelian_kernel_lift.md` now
 splits that last endpoint condition through abelianization.  For the finite
 unit group `U`, let `C=[U,U]` and `q:U->U/C`.  A quotient witness for

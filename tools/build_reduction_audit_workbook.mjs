@@ -675,6 +675,20 @@ const rows = [
     "Route alpha through product/permutation holonomy and prove companion-shear endpoints lie in V_beta(U_shear), or upgrade a shear miss to normalized laws.",
   ],
   [
+    "One-colour Latin triangular collapse",
+    "Rule out nontrivial one-colour Latin-unit triangular YBE rows.",
+    "proofs/one_colour_latin_triangular_collapse.md; one_color_latin_triangular_collapse_audit records alpha identity, companion identity, and rejected Latin shear candidates.",
+    "Colour reduction",
+    "Any remaining companion-shear obstruction must be genuinely multi-colour.",
+  ],
+  [
+    "Kink-predecessor Latin cancellation",
+    "Use rack kink predecessors to prove rack-base Latin-unit triangular rows have singleton fibres.",
+    "proofs/kink_predecessor_latin_triangular_cancellation.md; rack_kink_latin_triangular_collapse_audit records rack form, kink predecessors, alpha identities, and predecessor-column constancy.",
+    "Conditional local closure",
+    "With prior branch reductions accepted, the bi-free universal-corridor lower-row obstruction is eliminated.",
+  ],
+  [
     "Unit-continuation abelian-kernel lift",
     "Split the final unit endpoint into finite abelianization plus commutator-kernel correction.",
     "proofs/unit_continuation_abelian_kernel_lift.md; normal_quotient_longitude_lift_audit checks quotient witness, lifted witness, and kernel witness.",

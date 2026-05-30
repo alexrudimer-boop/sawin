@@ -20,11 +20,13 @@ from ybe_domination import (
     latin_triangular_ybe_audit,
     local_minimal_seed_saturation_dichotomy_audit,
     lost_edge_external_routing_audit,
+    one_color_latin_triangular_collapse_audit,
     partition_readout_labels,
     product_readout_descent_separation_audit,
     product_readout_descent_separation_failures,
     product_readout_kernel_audit,
     product_readout_labels,
+    rack_kink_latin_triangular_collapse_audit,
     quotient_interval_by_family,
     readout_descent_separation_audit,
     readout_descent_separation_failures,
@@ -609,6 +611,50 @@ class LocalIntervalTests(unittest.TestCase):
         self.assertFalse(audit.all_companion_equations_hold)
         self.assertFalse(audit.all_equations_hold)
         self.assertTrue(audit.triples_with_endpoint_shear_failures)
+
+    def test_one_color_latin_triangular_collapse_routes_identity_to_product(self):
+        interval = one_color_identity_interval()
+
+        audit = one_color_latin_triangular_collapse_audit(interval)[0]
+
+        self.assertTrue(audit.colored_ybe)
+        self.assertTrue(audit.alpha_is_identity)
+        self.assertTrue(audit.companion_sections_are_identity)
+        self.assertFalse(audit.row_is_latin_unit_triangular)
+        self.assertTrue(audit.one_color_latin_obstruction_eliminated)
+
+    def test_one_color_latin_triangular_collapse_rejects_latin_shear_ybe(self):
+        interval = one_color_latin_unit_triangular_interval()
+
+        audit = one_color_latin_triangular_collapse_audit(interval)[0]
+
+        self.assertFalse(audit.colored_ybe)
+        self.assertTrue(audit.row_is_latin_unit_triangular)
+        self.assertTrue(audit.companion_identity_failures)
+        self.assertFalse(audit.nontrivial_latin_unit_ybe_candidate)
+        self.assertTrue(audit.one_color_latin_obstruction_eliminated)
+
+    def test_rack_kink_latin_triangular_collapse_accepts_singletons(self):
+        interval = one_color_singleton_identity_interval()
+
+        audit = rack_kink_latin_triangular_collapse_audit(interval)
+
+        self.assertTrue(audit.base_is_finite_rack)
+        self.assertTrue(audit.theorem_hypotheses_hold)
+        self.assertTrue(audit.kink_cancellation_verified)
+        self.assertTrue(audit.all_latin_fibres_forced_singleton)
+        self.assertEqual(audit.non_singleton_latin_colors, ())
+
+    def test_rack_kink_latin_triangular_collapse_rejects_non_ybe_shear(self):
+        interval = one_color_latin_unit_triangular_interval()
+
+        audit = rack_kink_latin_triangular_collapse_audit(interval)
+
+        self.assertTrue(audit.base_is_finite_rack)
+        self.assertTrue(audit.latin_rows_present_for_all_pairs)
+        self.assertFalse(audit.latin_ybe_equations_hold)
+        self.assertTrue(audit.kink_column_constancy_failures)
+        self.assertTrue(audit.nontrivial_latin_obstruction_eliminated)
 
     def test_continuation_seed_readout_propagates_admissible_universal_readout(self):
         interval = one_color_identity_interval()

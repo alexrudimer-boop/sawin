@@ -579,6 +579,29 @@ route.  The helper `latin_triangular_ybe_audit(...)` records that equation
 together with the middle-companion and endpoint-shear equations.  The final
 triangular obstruction is therefore companion-shear longitude visibility in a
 fixed group `U_shear`, not alpha transport.
+The one-colour collapse note
+`proofs/one_colour_latin_triangular_collapse.md` removes the one-colour shear
+case.  With one colour, the alpha equation is `alpha^2=alpha`, hence
+`alpha=id`; the middle equation then forces every companion map `beta_x` to be
+the identity, so opposite columns are constant and cannot be Latin unless the
+fibre is singleton.  The helper
+`one_color_latin_triangular_collapse_audit(...)` records this split and shows
+that the tempting row `T(x,y)=(x,x+y mod 2)` is Latin as a bijection but not a
+YBE row.  Any remaining companion-shear obstruction must be genuinely
+multi-colour.
+The kink-predecessor cancellation note
+`proofs/kink_predecessor_latin_triangular_cancellation.md` removes the
+rack-base multi-colour shear too.  For a rack base, the kink map
+`kappa(b)=b*b` satisfies `L_{kappa(b)}=L_b`; using
+`c=kappa^{-1}(b)` gives `b*c=b` and the alpha cocycle gives
+`alpha_{b,c}=id`.  The third-output shear equation then forces
+`y -> y circ_{b,c} z` to be constant, while Latin-unit says it is bijective,
+so `|X_b|=1`.  The helper
+`rack_kink_latin_triangular_collapse_audit(...)` records rack form, kink
+predecessors, alpha identities, predecessor-column constancy, and the absence
+of non-singleton Latin fibres under the theorem hypotheses.  Conditional on
+the preceding reductions, this eliminates the final lower-row obstruction in
+the bi-free universal-corridor branch.
 The follow-up abelian-kernel lift note
 `proofs/unit_continuation_abelian_kernel_lift.md` splits this endpoint target
 through the finite abelianization of the fixed unit group.  It is enough to
@@ -672,15 +695,16 @@ Until one of these is done, the archive supports neither final A nor final B.
 
 At the latest verified snapshot:
 
-- `python -m unittest discover -s tests` passed with 376 tests;
+- `python -m unittest discover -s tests` passed with 380 tests;
 - `python -m compileall -q src tests tools` passed;
 - `node --check tools/build_reduction_audit_workbook.mjs` passed;
 - the proof log DOCX and reduction audit workbook were regenerated, and the
   workbook preview/OOXML marker checks included the routed-edge witness,
   unit-continuation, derived-series, two-sided unit-collapse, and
   mixed-unit companion-separation, rank-profile collapse, triangular
-  bundle-partition, triangular recovery-inverse, constant-column collapse, and
-  Latin triangular YBE-split rows;
+  bundle-partition, triangular recovery-inverse, constant-column collapse,
+  Latin triangular YBE-split, one-colour Latin-collapse, and kink-predecessor
+  Latin-cancellation rows;
 - LibreOffice/`soffice` was unavailable, so DOCX visual render QA could not
   be completed;
 - the Desktop zip was overwritten rather than versioned separately.

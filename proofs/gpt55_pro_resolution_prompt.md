@@ -775,6 +775,16 @@ Latin triangular YBE gives the alpha product/permutation cocycle, audited by
 product/permutation branch.  The remaining triangular target is companion
 shear in `U_shear`, controlled by the middle-companion and endpoint-shear
 equations; a B seed must survive in that shear endpoint, not in alpha.
+Then use `proofs/one_colour_latin_triangular_collapse.md`: the one-colour
+Latin shear branch is empty except for singleton/product collapse.  Audit it
+with `one_color_latin_triangular_collapse_audit(...)`.  Any remaining
+companion-shear B seed must be genuinely multi-colour.
+Then use `proofs/kink_predecessor_latin_triangular_cancellation.md`: over a
+rack base, kink predecessors force `alpha_{b,kappa^{-1}(b)}=id` and make the
+predecessor shear columns constant; Latin-unit then forces singleton fibres.
+Audit this with `rack_kink_latin_triangular_collapse_audit(...)`.  This should
+remove the last lower-row obstruction if the earlier branch reductions are
+sound.
 Then use `proofs/unit_continuation_abelian_kernel_lift.md`: split the final
 unit endpoint through `U/[U,U]`.  The abelian projection should be handled by
 the abelian longitude matrix criterion, while the residual correction must be

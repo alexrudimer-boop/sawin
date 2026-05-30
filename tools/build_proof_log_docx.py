@@ -127,6 +127,8 @@ EXTRA_MD.append(ROOT / "proofs" / "constant_section_triangular_bundle_partition.
 EXTRA_MD.append(ROOT / "proofs" / "triangular_bundle_recovery_inverse.md")
 EXTRA_MD.append(ROOT / "proofs" / "constant_column_collapse_triangular.md")
 EXTRA_MD.append(ROOT / "proofs" / "latin_triangular_ybe_split.md")
+EXTRA_MD.append(ROOT / "proofs" / "one_colour_latin_triangular_collapse.md")
+EXTRA_MD.append(ROOT / "proofs" / "kink_predecessor_latin_triangular_cancellation.md")
 EXTRA_MD.append(ROOT / "proofs" / "unit_continuation_abelian_kernel_lift.md")
 EXTRA_MD.append(ROOT / "proofs" / "unit_continuation_derived_series_reduction.md")
 EXTRA_MD.append(ROOT / "proofs" / "bifree_corridor_subgroup_certificate.md")

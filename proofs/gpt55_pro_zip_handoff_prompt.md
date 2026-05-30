@@ -324,6 +324,15 @@ Then audit and use these reductions:
    `latin_triangular_ybe_audit(...)`.  The final triangular target is the
    companion-shear endpoint in `U_shear`, governed by the middle-companion and
    endpoint-shear equations.
+   Then read `proofs/one_colour_latin_triangular_collapse.md`: it rules out
+   nontrivial one-colour Latin-unit triangular YBE rows.  Use
+   `one_color_latin_triangular_collapse_audit(...)`; any remaining shear seed
+   must be genuinely multi-colour.
+   Then read `proofs/kink_predecessor_latin_triangular_cancellation.md`: over
+   a rack base, kink-predecessor cancellation forces Latin-unit triangular
+   fibres to be singleton.  Use
+   `rack_kink_latin_triangular_collapse_audit(...)` to inspect rack form,
+   kink predecessors, alpha identities, and predecessor-column constancy.
    Then read `proofs/unit_continuation_abelian_kernel_lift.md`: it splits
    `S_beta in V_beta(U_cont)` into an abelianized matrix-longitude witness and
    a commutator-kernel correction witness, audited by
