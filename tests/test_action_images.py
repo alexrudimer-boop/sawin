@@ -31,6 +31,7 @@ from ybe_domination import (
     point_pushing_brunnian_witness_certificate,
     point_pushing_product_prefix_first_failure_audit,
     point_pushing_exponent_escape_audit,
+    point_pushing_monolithic_compression_audit,
     point_pushing_marked_quotient_audit,
     point_pushing_mu_prefix_audit,
     point_pushing_recursive_conjugacy_audit,
@@ -786,6 +787,41 @@ class ActionImageTests(unittest.TestCase):
         self.assertEqual(audit.computed_arities, tuple())
         self.assertEqual(audit.truncated_arities, (1,))
         self.assertIsNone(audit.prefix_separation_bound)
+
+    def test_point_pushing_monolithic_compression_audit_compresses_mover(self):
+        solution = rack_solution([0, 1, 2], lambda a, b: (2 * a - b) % 3)
+
+        audit = point_pushing_monolithic_compression_audit(
+            solution,
+            ((0, 1),),
+            arity=1,
+            prefix_order_bound=2,
+            max_action_group_order=8,
+        )
+
+        self.assertTrue(audit.action_value_nontrivial)
+        self.assertEqual(audit.action_group_order, 3)
+        self.assertEqual(audit.quotient_order, 3)
+        self.assertEqual(audit.quotient_kernel_size, 1)
+        self.assertEqual(audit.monolith_order, 3)
+        self.assertTrue(audit.quotient_is_monolithic)
+        self.assertTrue(audit.projected_value_in_monolith)
+        self.assertTrue(audit.quotient_escapes_prefix_bound)
+        self.assertTrue(audit.proves_monolithic_compression)
+
+    def test_point_pushing_monolithic_compression_audit_keeps_identity_uncertified(self):
+        solution = rack_solution([0, 1, 2], lambda a, b: (2 * a - b) % 3)
+
+        audit = point_pushing_monolithic_compression_audit(
+            solution,
+            tuple(),
+            arity=1,
+            max_action_group_order=8,
+        )
+
+        self.assertFalse(audit.action_value_nontrivial)
+        self.assertIsNone(audit.quotient_order)
+        self.assertFalse(audit.proves_monolithic_compression)
 
     def test_point_pushing_brunnian_normalized_prefix_audit_certifies_stabilized_row(self):
         solution = rack_solution([0, 1, 2], lambda a, b: (2 * a - b) % 3)

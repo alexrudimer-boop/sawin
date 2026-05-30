@@ -424,6 +424,34 @@ class PointPushingActionQuotientSeparationAudit:
 
 
 @dataclass(frozen=True)
+class PointPushingMonolithicCompressionAudit:
+    """Compress one moving point-pushing action value to a minimal quotient."""
+
+    arity: int
+    word: FreeWord
+    action_group_order: int | None
+    action_value: object | None
+    action_value_nontrivial: bool
+    quotient_order: int | None
+    quotient_kernel_size: int | None
+    monolith_order: int | None
+    quotient_is_monolithic: bool | None
+    projected_value_in_monolith: bool | None
+    prefix_order_bound: int | None
+    quotient_escapes_prefix_bound: bool | None
+    truncated: bool
+
+    @property
+    def proves_monolithic_compression(self) -> bool:
+        return (
+            not self.truncated
+            and self.action_value_nontrivial
+            and self.quotient_is_monolithic is True
+            and self.projected_value_in_monolith is True
+        )
+
+
+@dataclass(frozen=True)
 class PointPushingBaseFreeBrunnianTailPrefix:
     """Finite symmetric-tail prefix after the explicit base-arity cutoff."""
 
@@ -917,6 +945,22 @@ def point_pushing_action_group(
 ) -> FiniteGroup:
     """Return the finite marked action image ``P_k(X)`` as a group."""
 
+    if arity < 1:
+        raise ValueError("arity must be positive")
+    action_images = _point_pushing_action_generator_images(solution, arity)
+    subgroup = generated_permutation_subgroup(
+        action_images.values(),
+        max_size=max_size,
+    )
+    return permutation_group_from_subgroup(subgroup)
+
+
+def _point_pushing_action_generator_images(
+    solution: FiniteBraidedSet,
+    arity: int,
+) -> Mapping[int, Permutation]:
+    """Return marked generator images for ``P_k(X)``."""
+
     from .braid_laws import pure_braid_generator
 
     if arity < 1:
@@ -926,12 +970,7 @@ def point_pushing_action_group(
         generator: pure_braid_generator(generator + 1, braid_index)
         for generator in range(arity)
     }
-    action_images = braid_images_for_words(solution, braid_index, action_braids)
-    subgroup = generated_permutation_subgroup(
-        action_images.values(),
-        max_size=max_size,
-    )
-    return permutation_group_from_subgroup(subgroup)
+    return braid_images_for_words(solution, braid_index, action_braids)
 
 
 def evaluate_free_word_on_permutations(
@@ -1980,6 +2019,179 @@ def _separating_quotient_size(
     if not candidates:
         raise ValueError("no quotient separates the supplied nonidentity element")
     return min(candidates)
+
+
+def _minimal_separating_quotient_data(
+    group: FiniteGroup,
+    element: object,
+    normal_subgroups: Sequence[frozenset[object]],
+):
+    """Return quotient data for a smallest quotient separating ``element``."""
+
+    from .finite_group import quotient_group_by_normal_subgroup
+
+    separating_normals = [
+        normal for normal in normal_subgroups if element not in normal
+    ]
+    if not separating_normals:
+        raise ValueError("no quotient separates the supplied nonidentity element")
+    kernel = max(separating_normals, key=len)
+    quotient, projection = quotient_group_by_normal_subgroup(group, kernel)
+    return kernel, quotient, projection
+
+
+def _minimal_normal_subgroups(
+    group: FiniteGroup,
+    normal_subgroups: Sequence[frozenset[object]],
+) -> Tuple[frozenset[object], ...]:
+    """Return minimal nontrivial normal subgroups of a finite group."""
+
+    identity_subgroup = frozenset((group.identity,))
+    nontrivial = [
+        normal for normal in normal_subgroups if normal != identity_subgroup
+    ]
+    minimal = []
+    for candidate in nontrivial:
+        if any(other < candidate for other in nontrivial):
+            continue
+        minimal.append(candidate)
+    return tuple(minimal)
+
+
+def point_pushing_monolithic_compression_audit(
+    solution: FiniteBraidedSet,
+    word: FreeWord,
+    arity: int,
+    *,
+    prefix_order_bound: int | None = None,
+    max_action_group_order: int | None = None,
+) -> PointPushingMonolithicCompressionAudit:
+    """Compress one nontrivial point-pushing action value to a monolith."""
+
+    if arity < 1:
+        raise ValueError("arity must be positive")
+    for generator, _exponent in word:
+        if generator < 0 or generator >= arity:
+            raise ValueError(f"free generator {generator} outside arity {arity}")
+
+    try:
+        action_group = point_pushing_action_group(
+            solution,
+            arity,
+            max_size=max_action_group_order,
+        )
+    except ValueError as exc:
+        if "exceeded max_size" not in str(exc):
+            raise
+        return PointPushingMonolithicCompressionAudit(
+            arity=arity,
+            word=tuple(word),
+            action_group_order=None,
+            action_value=None,
+            action_value_nontrivial=False,
+            quotient_order=None,
+            quotient_kernel_size=None,
+            monolith_order=None,
+            quotient_is_monolithic=None,
+            projected_value_in_monolith=None,
+            prefix_order_bound=prefix_order_bound,
+            quotient_escapes_prefix_bound=None,
+            truncated=True,
+        )
+
+    action_images = _point_pushing_action_generator_images(solution, arity)
+    action_value = evaluate_free_word_on_permutations(word, action_images)
+    if action_value == action_group.identity:
+        return PointPushingMonolithicCompressionAudit(
+            arity=arity,
+            word=tuple(word),
+            action_group_order=len(action_group.elements),
+            action_value=action_value,
+            action_value_nontrivial=False,
+            quotient_order=None,
+            quotient_kernel_size=None,
+            monolith_order=None,
+            quotient_is_monolithic=None,
+            projected_value_in_monolith=None,
+            prefix_order_bound=prefix_order_bound,
+            quotient_escapes_prefix_bound=None,
+            truncated=False,
+        )
+
+    normal_subgroups = _normal_subgroups_bruteforce(
+        action_group,
+        max_group_order=max_action_group_order,
+    )
+    if normal_subgroups is None:
+        return PointPushingMonolithicCompressionAudit(
+            arity=arity,
+            word=tuple(word),
+            action_group_order=len(action_group.elements),
+            action_value=action_value,
+            action_value_nontrivial=True,
+            quotient_order=None,
+            quotient_kernel_size=None,
+            monolith_order=None,
+            quotient_is_monolithic=None,
+            projected_value_in_monolith=None,
+            prefix_order_bound=prefix_order_bound,
+            quotient_escapes_prefix_bound=None,
+            truncated=True,
+        )
+
+    kernel, quotient, projection = _minimal_separating_quotient_data(
+        action_group,
+        action_value,
+        normal_subgroups,
+    )
+    quotient_normals = _normal_subgroups_bruteforce(
+        quotient,
+        max_group_order=max_action_group_order,
+    )
+    if quotient_normals is None:
+        return PointPushingMonolithicCompressionAudit(
+            arity=arity,
+            word=tuple(word),
+            action_group_order=len(action_group.elements),
+            action_value=action_value,
+            action_value_nontrivial=True,
+            quotient_order=len(quotient.elements),
+            quotient_kernel_size=len(kernel),
+            monolith_order=None,
+            quotient_is_monolithic=None,
+            projected_value_in_monolith=None,
+            prefix_order_bound=prefix_order_bound,
+            quotient_escapes_prefix_bound=(
+                None
+                if prefix_order_bound is None
+                else len(quotient.elements) > prefix_order_bound
+            ),
+            truncated=True,
+        )
+
+    minimal_normals = _minimal_normal_subgroups(quotient, quotient_normals)
+    monolith = minimal_normals[0] if len(minimal_normals) == 1 else None
+    projected_value = projection.apply(action_value)
+    quotient_order = len(quotient.elements)
+    return PointPushingMonolithicCompressionAudit(
+        arity=arity,
+        word=tuple(word),
+        action_group_order=len(action_group.elements),
+        action_value=action_value,
+        action_value_nontrivial=True,
+        quotient_order=quotient_order,
+        quotient_kernel_size=len(kernel),
+        monolith_order=None if monolith is None else len(monolith),
+        quotient_is_monolithic=monolith is not None,
+        projected_value_in_monolith=(
+            None if monolith is None else projected_value in monolith
+        ),
+        prefix_order_bound=prefix_order_bound,
+        quotient_escapes_prefix_bound=(
+            None if prefix_order_bound is None else quotient_order > prefix_order_bound
+        ),
+        truncated=False,
+    )
 
 
 def point_pushing_action_quotient_separation_audit(

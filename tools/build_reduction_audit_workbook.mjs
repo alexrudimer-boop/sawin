@@ -290,6 +290,13 @@ const rows = [
     "Prove uniformly bounded element-separating quotients for P_k(X), or construct product-prefix Brunnian movers with unbounded separation depth.",
   ],
   [
+    "Monolithic compression",
+    "Compress every product-prefix action mover to a smallest separating quotient.",
+    "proofs/point_pushing_monolithic_compression.md proves a minimal separating quotient of a product-prefix failure is monolithic, its moved value lands in the monolith, and its order exceeds b(j); point_pushing_monolithic_compression_audit checks finite rows.",
+    "Critical quotient reduction",
+    "Rule out unbounded monolithic first-failure quotients, or construct such a tail for B.",
+  ],
+  [
     "Point-pushing marked quotient criterion",
     "Replace fixed-variety containment by the exact derivative-detector marked quotient condition.",
     "proofs/point_pushing_marked_quotient_criterion.md proves A_G dominates X iff every P_k(X) is a marked quotient of D_k(G); point_pushing_marked_quotient_audit checks finite arity instances.",
