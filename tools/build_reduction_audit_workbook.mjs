@@ -388,6 +388,13 @@ const rows = [
     "Promote these finite rows to a homogeneous infinite symmetric-tail family, or prove no such family exists.",
   ],
   [
+    "Point-pushing Brunnian tail certificate prefix",
+    "Package finite symmetric first-failure prefixes into detected, uncertified, and certified non-base rows.",
+    "proofs/point_pushing_brunnian_tail_certificate_prefix.md records that only stabilizer/orbit_label/orbit_relation rows with checked Brunnian failure certificates are finite B-tail rows; point_pushing_brunnian_tail_certificate_prefix summarizes finite prefixes.",
+    "Finite B-prefix certificate",
+    "Use the prefix certificate to guide a symbolic infinite tail construction, or prove a uniform no-tail theorem.",
+  ],
+  [
     "Derivative detector functoriality",
     "Show the exact D_k(G) criterion is compatible with quotients, embeddings, symmetric cofinality, and product prefixes.",
     "proofs/point_pushing_derivative_functoriality.md proves coordinate equivariance for finite group homomorphisms; point_pushing_derivative_functoriality_audit checks finite instances.",

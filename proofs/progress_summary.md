@@ -1016,6 +1016,12 @@ and rechecks the returned witness with
 `point_pushing_brunnian_witness_certificate(...)`.  This does not build the
 infinite tail required for outcome B, but it makes each finite non-base row
 self-certifying.
+`proofs/point_pushing_brunnian_tail_certificate_prefix.md` packages finite
+symmetric first-failure prefixes around those row certificates.  The helper
+`point_pushing_brunnian_tail_certificate_prefix(...)` separates detected
+degrees, base/truncated finite failures, and certified non-base rows.  It is
+still finite-prefix infrastructure: a B proof needs an infinite family of
+certified rows, and an A proof needs a uniform reason no such family exists.
 `proofs/point_pushing_derivative_functoriality.md` records the compatibility
 of this exact criterion with detector changes.  A finite group homomorphism
 `G->H` induces coordinate equivariance on detector states.  Surjections give

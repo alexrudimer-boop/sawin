@@ -254,6 +254,60 @@ class PointPushingBrunnianTailPrefixAudit:
 
 
 @dataclass(frozen=True)
+class PointPushingBrunnianTailCertificateRow:
+    """One symmetric degree with its first-failure certificate when available."""
+
+    symmetric_degree: int
+    max_arity: int
+    prefix_detected: bool
+    first_failure_arity: int | None
+    first_failure_kind: str | None
+    certificate: PointPushingBrunnianFailureCertificate | None
+
+    @property
+    def has_valid_nonbase_certificate(self) -> bool:
+        return (
+            self.certificate is not None
+            and self.certificate.valid_failure_certificate
+        )
+
+
+@dataclass(frozen=True)
+class PointPushingBrunnianTailCertificatePrefix:
+    """Finite symmetric-tail prefix with braid-action certificates."""
+
+    max_symmetric_degree: int
+    max_arity: int
+    rows: Tuple[PointPushingBrunnianTailCertificateRow, ...]
+
+    @property
+    def detected_degrees(self) -> Tuple[int, ...]:
+        return tuple(row.symmetric_degree for row in self.rows if row.prefix_detected)
+
+    @property
+    def certified_nonbase_degrees(self) -> Tuple[int, ...]:
+        return tuple(
+            row.symmetric_degree for row in self.rows if row.has_valid_nonbase_certificate
+        )
+
+    @property
+    def uncertified_failure_degrees(self) -> Tuple[int, ...]:
+        return tuple(
+            row.symmetric_degree
+            for row in self.rows
+            if not row.prefix_detected and not row.has_valid_nonbase_certificate
+        )
+
+    @property
+    def certified_failure_kinds(self) -> Tuple[str, ...]:
+        return tuple(
+            row.first_failure_kind
+            for row in self.rows
+            if row.has_valid_nonbase_certificate and row.first_failure_kind is not None
+        )
+
+
+@dataclass(frozen=True)
 class PointPushingMuPrefixRow:
     """One finite row in a bounded search for ``mu_X(k)``."""
 
@@ -1471,6 +1525,61 @@ def point_pushing_brunnian_failure_certificate(
         failure_kind=audit.failure_kind,
         orbit_audit=audit,
         witness=witness,
+    )
+
+
+def point_pushing_brunnian_tail_certificate_prefix(
+    solution: FiniteBraidedSet,
+    max_symmetric_degree: int,
+    max_arity: int,
+    *,
+    max_detector_states: int | None = None,
+    max_pair_subgroup_size: int | None = None,
+) -> PointPushingBrunnianTailCertificatePrefix:
+    """Check a finite symmetric-tail prefix and certify real non-base failures."""
+
+    from .finite_group import symmetric_group
+
+    if max_symmetric_degree < 1:
+        raise ValueError("max_symmetric_degree must be positive")
+    if max_arity < 1:
+        raise ValueError("max_arity must be positive")
+
+    rows = []
+    for degree in range(1, max_symmetric_degree + 1):
+        group = symmetric_group(degree)
+        audit = point_pushing_brunnian_gate_prefix_audit(
+            solution,
+            group,
+            max_arity=max_arity,
+            max_detector_states=max_detector_states,
+            max_pair_subgroup_size=max_pair_subgroup_size,
+        )
+        certificate = None
+        if audit.first_failure_kind in ("stabilizer", "orbit_label", "orbit_relation"):
+            if audit.first_failure_arity is None:
+                raise AssertionError("non-base failure kind without failure arity")
+            certificate = point_pushing_brunnian_failure_certificate(
+                solution,
+                group,
+                audit.first_failure_arity,
+                max_detector_states=max_detector_states,
+                max_pair_subgroup_size=max_pair_subgroup_size,
+            )
+        rows.append(
+            PointPushingBrunnianTailCertificateRow(
+                symmetric_degree=degree,
+                max_arity=max_arity,
+                prefix_detected=audit.prefix_detected,
+                first_failure_arity=audit.first_failure_arity,
+                first_failure_kind=audit.first_failure_kind,
+                certificate=certificate,
+            )
+        )
+    return PointPushingBrunnianTailCertificatePrefix(
+        max_symmetric_degree=max_symmetric_degree,
+        max_arity=max_arity,
+        rows=tuple(rows),
     )
 
 
