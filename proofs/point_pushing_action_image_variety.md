@@ -194,6 +194,18 @@ computes the marked group `P_k(X)`, searches bounded words for a law of
 This is exactly the finite row shape required by the B certificate above.  It
 is still bounded evidence unless supplied uniformly for every `j`.
 
+The prefix helper
+
+```text
+point_pushing_variety_prefix_audit(...)
+```
+
+runs the same bounded check for `P_1(X),...,P_K(X)` against one proposed
+`S_m`.  It reports escaped arities, truncated rows, and whether every found
+escape actually gives a point-pushing mover.  A prefix with no bounded escapes
+is only finite evidence for the positive side; it is not proof that all
+`P_k(X)` lie in `var(S_m)`.
+
 This note therefore converts the final problem into a clean moving-variety
 question:
 

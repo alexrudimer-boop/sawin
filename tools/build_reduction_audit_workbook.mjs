@@ -236,7 +236,7 @@ const rows = [
   [
     "Point-pushing action-image variety",
     "Rephrase the last-strand law test as membership of pure point-pushing action images in one fixed symmetric variety.",
-    "proofs/point_pushing_action_image_variety.md proves that all S_m-law point-pushing braids act trivially on X iff every P_k(X)=<rho(A_{i,k+1})> lies in var(S_m); point_pushing_variety_escape_audit records bounded escape rows with generator-word representatives.",
+    "proofs/point_pushing_action_image_variety.md proves that all S_m-law point-pushing braids act trivially on X iff every P_k(X)=<rho(A_{i,k+1})> lies in var(S_m); point_pushing_variety_escape_audit records bounded escape rows with generator-word representatives and point_pushing_variety_prefix_audit scans finite arity prefixes.",
     "Reduction ready",
     "Prove all P_k(X) lie in one var(S_m), or produce explicit variety escapes with representing generator words.",
   ],

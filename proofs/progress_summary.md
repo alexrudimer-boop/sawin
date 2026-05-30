@@ -848,7 +848,10 @@ produce explicit `S_j`-variety escapes with representing words in the marked
 pure-generator tuple.  The helper `point_pushing_variety_escape_audit(...)`
 computes a bounded `P_k(X)` image, searches for an `S_m`-law escape, and
 retains the moved permutation, moved tuple index, representing words, and
-substituted point-pushing word.
+substituted point-pushing word.  The companion
+`point_pushing_variety_prefix_audit(...)` scans a finite arity prefix for one
+proposed `S_m`, reporting escaped arities and truncations while keeping the
+"no bounded escape" case explicitly finite evidence rather than proof.
 `proofs/symmetric_repair_contract_bridge.md` now connects this symmetric fork
 back to the proof-critic repair contract.  If a supplied repair package proves
 the local implication using a fixed product detector `H(pi,Q)`, then the left

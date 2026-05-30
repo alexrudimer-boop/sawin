@@ -16,6 +16,7 @@ from ybe_domination import (
     law_braid_action_certificate,
     law_word_on_last_strand,
     point_pushing_variety_escape_audit,
+    point_pushing_variety_prefix_audit,
     pure_generator_order_profile,
     pure_braid_generator,
     pure_subgroup_growth_profile,
@@ -153,6 +154,40 @@ class ActionImageTests(unittest.TestCase):
         self.assertTrue(audit.truncated)
         self.assertIsNone(audit.action_image_size)
         self.assertFalse(audit.found_variety_escape)
+
+    def test_point_pushing_variety_prefix_records_bounded_escapes(self):
+        solution = rack_solution([0, 1, 2], lambda a, b: (2 * a - b) % 3)
+
+        audit = point_pushing_variety_prefix_audit(
+            solution,
+            symmetric_degree=2,
+            max_point_pushing_arity=2,
+            law_arity=1,
+            max_length=2,
+        )
+
+        self.assertEqual(audit.row_count, 2)
+        self.assertTrue(audit.arities_are_initial_segment)
+        self.assertEqual(audit.escaped_arities, (1, 2))
+        self.assertEqual(audit.truncated_rows, ())
+        self.assertTrue(audit.all_escape_rows_give_movers)
+        self.assertFalse(audit.no_bounded_escape_found)
+
+    def test_point_pushing_variety_prefix_records_no_bounded_escape(self):
+        solution = rack_solution([0, 1, 2], lambda a, b: (2 * a - b) % 3)
+
+        audit = point_pushing_variety_prefix_audit(
+            solution,
+            symmetric_degree=3,
+            max_point_pushing_arity=1,
+            law_arity=1,
+            max_length=4,
+        )
+
+        self.assertEqual(audit.row_count, 1)
+        self.assertEqual(audit.escape_rows, ())
+        self.assertEqual(audit.truncated_rows, ())
+        self.assertTrue(audit.no_bounded_escape_found)
 
 
 if __name__ == "__main__":

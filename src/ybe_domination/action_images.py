@@ -95,6 +95,47 @@ class PointPushingVarietyEscapeAudit:
         )
 
 
+@dataclass(frozen=True)
+class PointPushingVarietyPrefixAudit:
+    """Bounded prefix scan for one proposed symmetric variety."""
+
+    symmetric_degree: int
+    max_point_pushing_arity: int
+    law_arity: int
+    max_length: int
+    rows: Tuple[PointPushingVarietyEscapeAudit, ...]
+
+    @property
+    def row_count(self) -> int:
+        return len(self.rows)
+
+    @property
+    def arities_are_initial_segment(self) -> bool:
+        return tuple(row.point_pushing_arity for row in self.rows) == tuple(
+            range(1, self.row_count + 1)
+        )
+
+    @property
+    def truncated_rows(self) -> Tuple[PointPushingVarietyEscapeAudit, ...]:
+        return tuple(row for row in self.rows if row.truncated)
+
+    @property
+    def escape_rows(self) -> Tuple[PointPushingVarietyEscapeAudit, ...]:
+        return tuple(row for row in self.rows if row.found_variety_escape)
+
+    @property
+    def escaped_arities(self) -> Tuple[int, ...]:
+        return tuple(row.point_pushing_arity for row in self.escape_rows)
+
+    @property
+    def all_escape_rows_give_movers(self) -> bool:
+        return all(row.substituted_word_gives_point_pushing_mover for row in self.escape_rows)
+
+    @property
+    def no_bounded_escape_found(self) -> bool:
+        return not self.escape_rows and not self.truncated_rows
+
+
 def identity_permutation(size: int) -> Permutation:
     return tuple(range(size))
 
@@ -486,6 +527,41 @@ def point_pushing_variety_escape_audit(
         direct_braid_permutation=None,
         moved_index=None,
         substituted_word_is_symmetric_law=None,
+    )
+
+
+def point_pushing_variety_prefix_audit(
+    solution: FiniteBraidedSet,
+    symmetric_degree: int,
+    max_point_pushing_arity: int,
+    *,
+    law_arity: int,
+    max_length: int,
+    max_subgroup_size: int | None = None,
+    max_assignments_per_row: int | None = None,
+) -> PointPushingVarietyPrefixAudit:
+    """Run bounded point-pushing variety escape checks for arities ``1..K``."""
+
+    if max_point_pushing_arity < 1:
+        raise ValueError("max_point_pushing_arity must be positive")
+    rows = tuple(
+        point_pushing_variety_escape_audit(
+            solution,
+            symmetric_degree,
+            arity,
+            law_arity=law_arity,
+            max_length=max_length,
+            max_subgroup_size=max_subgroup_size,
+            max_assignments=max_assignments_per_row,
+        )
+        for arity in range(1, max_point_pushing_arity + 1)
+    )
+    return PointPushingVarietyPrefixAudit(
+        symmetric_degree=symmetric_degree,
+        max_point_pushing_arity=max_point_pushing_arity,
+        law_arity=law_arity,
+        max_length=max_length,
+        rows=rows,
     )
 
 
