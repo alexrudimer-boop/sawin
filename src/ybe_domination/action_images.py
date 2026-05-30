@@ -576,6 +576,24 @@ class PointPushingModulePrimeCharacteristicAudit:
 
 
 @dataclass(frozen=True)
+class PointPushingActiveModuleGeneratorAudit:
+    """Split module rows by whether the bounded generator acts on the module."""
+
+    normal_generator_order_bound: int
+    generator_action_order: int
+    action_order_divides_bound: bool
+    active_on_module: bool
+    tail_regime: str
+
+    @property
+    def proves_active_module_generator_split(self) -> bool:
+        return self.tail_regime in (
+            "centralizer_layer_generator",
+            "active_bounded_order_linear_generator",
+        )
+
+
+@dataclass(frozen=True)
 class PointPushingCentralStemRelationAudit:
     """Bookkeeping for central trivial relation tails as stem extensions."""
 
@@ -2468,6 +2486,32 @@ def point_pushing_module_prime_characteristic_audit(
         module_prime=module_prime,
         prime_divides_bound=prime_divides_bound,
         cross_characteristic=cross_characteristic,
+        tail_regime=tail_regime,
+    )
+
+
+def point_pushing_active_module_generator_audit(
+    normal_generator_order_bound: int,
+    generator_action_order: int,
+) -> PointPushingActiveModuleGeneratorAudit:
+    """Record whether the bounded generator acts nontrivially on the module."""
+
+    if normal_generator_order_bound <= 0:
+        raise ValueError("normal_generator_order_bound must be positive")
+    if generator_action_order <= 0:
+        raise ValueError("generator_action_order must be positive")
+    action_order_divides_bound = normal_generator_order_bound % generator_action_order == 0
+    active_on_module = generator_action_order > 1
+    tail_regime = (
+        "active_bounded_order_linear_generator"
+        if active_on_module
+        else "centralizer_layer_generator"
+    )
+    return PointPushingActiveModuleGeneratorAudit(
+        normal_generator_order_bound=normal_generator_order_bound,
+        generator_action_order=generator_action_order,
+        action_order_divides_bound=action_order_divides_bound,
+        active_on_module=active_on_module,
         tail_regime=tail_regime,
     )
 

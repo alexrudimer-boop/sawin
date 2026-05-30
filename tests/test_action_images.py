@@ -16,6 +16,7 @@ from ybe_domination import (
     law_braid_action_certificate,
     law_word_on_last_strand,
     delete_right_based_new_strand_word,
+    point_pushing_active_module_generator_audit,
     point_pushing_abelian_chief_relation_module_audit,
     point_pushing_abelian_relation_action_split_audit,
     point_pushing_action_group,
@@ -1167,6 +1168,19 @@ class ActionImageTests(unittest.TestCase):
             "cross_characteristic_prime_escape",
         )
         self.assertTrue(cross_characteristic.proves_prime_tail_characteristic_split)
+
+    def test_active_module_generator_audit_splits_trivial_and_active_action(self):
+        centralizer = point_pushing_active_module_generator_audit(12, 1)
+        active = point_pushing_active_module_generator_audit(12, 3)
+
+        self.assertTrue(centralizer.action_order_divides_bound)
+        self.assertFalse(centralizer.active_on_module)
+        self.assertEqual(centralizer.tail_regime, "centralizer_layer_generator")
+        self.assertTrue(centralizer.proves_active_module_generator_split)
+        self.assertTrue(active.action_order_divides_bound)
+        self.assertTrue(active.active_on_module)
+        self.assertEqual(active.tail_regime, "active_bounded_order_linear_generator")
+        self.assertTrue(active.proves_active_module_generator_split)
 
     def test_central_stem_relation_audit_records_stem_extension(self):
         group = build_group(

@@ -2225,6 +2225,11 @@ Within the noncentral module branch,
 `proofs/point_pushing_module_prime_characteristic_split.md` now proves that
 module-prime escape is eventually cross-characteristic: the escaping primes
 do not divide the fixed point-pushing generator order bound `B_X`.
+`proofs/point_pushing_active_module_generator_split.md` then separates
+noncentral module rows by the newest generator's image in `H/C_H(M)`: trivial
+image routes to centralizer-layer generator tails, while nontrivial image gives
+a bounded-order linear operator whose conjugate commutator images generate the
+irreducible module.
 
 ## Completion audit checklist
 

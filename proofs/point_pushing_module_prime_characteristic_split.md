@@ -99,6 +99,13 @@ and rule out fixed-characteristic dimension/centralizer-layer tails.
 Constructing either kind explicitly would still give B after the usual
 product-prefix right stabilization.
 
+The follow-up note `proofs/point_pushing_active_module_generator_split.md`
+splits the noncentral module branch by the image of the bounded newest
+generator in the linear action shadow.  If that image is trivial, the row is a
+centralizer-layer generator tail.  If it is nontrivial, its conjugate
+commutator images generate the irreducible module, and prime escape is
+cross-characteristic for this bounded-order linear operator.
+
 ## Audit Hook
 
 The helper

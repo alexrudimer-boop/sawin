@@ -133,6 +133,11 @@ The follow-up `proofs/point_pushing_module_prime_characteristic_split.md`
 shows that the module-prime escape case is necessarily cross-characteristic:
 for all sufficiently far-out rows, the module prime `p_j` does not divide the
 fixed bound `B_X=ord(rho_{X,2}(sigma_1^2))`.
+The follow-up `proofs/point_pushing_active_module_generator_split.md` further
+separates this branch by the image of the bounded newest generator in
+`H/C_H(M)`: if the image is trivial, the row belongs to the centralizer-layer
+branch; otherwise a bounded-order linear operator has conjugate commutator
+images generating the irreducible module.
 
 ## Audit Hook
 

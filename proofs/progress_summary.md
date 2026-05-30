@@ -1272,6 +1272,14 @@ module primes can divide `B_X`; hence every true `p_j->infinity` module-prime
 tail is eventually cross-characteristic.  The helper
 `point_pushing_module_prime_characteristic_audit(...)` records the finite
 same/cross-characteristic label.
+`proofs/point_pushing_active_module_generator_split.md` now splits the
+noncentral module branch by the image of that bounded generator in the action
+shadow `H/C_H(M)`.  If the image is trivial, the row is a centralizer-layer
+generator tail.  If it is nontrivial, a bounded-order linear operator has
+conjugate commutator images whose sum is the irreducible module `M`; in a
+prime-escape tail this is cross-characteristic.  The helper
+`point_pushing_active_module_generator_audit(...)` records the finite row
+label.
 `proofs/point_pushing_nonabelian_chief_relation_quotient.md` now gives the
 parallel nonabelian-chief compression.  If `R` is the same detector orbit
 relation group and the chief layer is `M=S^r`, then the minimal vertical

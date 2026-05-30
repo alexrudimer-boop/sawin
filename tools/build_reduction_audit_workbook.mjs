@@ -367,6 +367,13 @@ const rows = [
     "Rule out unbounded cross-characteristic irreducible relation-module quotients, or construct one for B.",
   ],
   [
+    "Active module generator split",
+    "Split noncentral module tails by whether the bounded newest generator acts nontrivially on the module.",
+    "proofs/point_pushing_active_module_generator_split.md proves that if the generator image in H/C_H(M) is trivial the obstruction is centralizer-layer, while a nontrivial image is a bounded-order linear operator whose conjugate commutator images generate M. point_pushing_active_module_generator_audit records finite row labels.",
+    "Module branch sharpened",
+    "Rule out centralizer-layer generator tails and active bounded-order linear-generator tails, or construct one for B.",
+  ],
+  [
     "Nonabelian-chief relation quotient",
     "Compress nonabelian-chief Brunnian failures to detector relation-group quotients.",
     "proofs/point_pushing_nonabelian_chief_relation_quotient.md proves that a minimal nonabelian-chief first failure has mu_H(R)=M=S^r, and the detector orbit group controls the outer action on M. point_pushing_nonabelian_chief_relation_quotient_audit records finite chief-layer bookkeeping.",
