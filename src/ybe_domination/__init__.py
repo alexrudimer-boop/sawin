@@ -399,6 +399,7 @@ from .group_laws import (
     two_strand_symmetric_longitude_period,
 )
 from .braid_laws import (
+    DerivativeDetectorFunctorialityAudit,
     LastStrandLawExactnessAudit,
     PointPushingKernelMembershipAudit,
     free_word_to_braid,
@@ -409,6 +410,7 @@ from .braid_laws import (
     law_word_on_last_strand,
     longitude_identity_profile_for_law_braid,
     point_pushing_derivative_detector_generators,
+    point_pushing_derivative_functoriality_audit,
     point_pushing_kernel_membership_audit,
     pure_braid_generator,
     reverse_braid_word,
@@ -812,6 +814,7 @@ __all__ = [
     "LawBraidActionCertificate",
     "LawSequencePrefixAudit",
     "LawSequencePrefixRow",
+    "DerivativeDetectorFunctorialityAudit",
     "LastStrandLawExactnessAudit",
     "PointPushingKernelMembershipAudit",
     "LongitudeSubgroupMoverProfile",
@@ -1210,6 +1213,7 @@ __all__ = [
     "permutation_order",
     "permutation_group_from_subgroup",
     "point_pushing_derivative_detector_generators",
+    "point_pushing_derivative_functoriality_audit",
     "point_pushing_kernel_membership_audit",
     "point_pushing_marked_quotient_audit",
     "point_pushing_variety_escape_audit",

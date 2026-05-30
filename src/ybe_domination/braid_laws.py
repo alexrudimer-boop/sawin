@@ -12,7 +12,7 @@ from .artin_longitudes import (
     has_identity_longitude_signature_streamed,
     longitude_subgroup_profile,
 )
-from .finite_group import FiniteGroup, Permutation
+from .finite_group import FiniteGroup, FiniteGroupHomomorphism, Permutation
 from .group_laws import is_law_on_group
 
 
@@ -67,6 +67,27 @@ class PointPushingKernelMembershipAudit:
     @property
     def exposes_law_to_kernel_gap(self) -> bool:
         return self.word_is_law and not self.identity_longitude_signature
+
+
+@dataclass(frozen=True)
+class DerivativeDetectorFunctorialityAudit:
+    """Equivariance check for the derivative detector under a group map."""
+
+    arity: int
+    source_order: int
+    target_order: int
+    source_state_count: int
+    homomorphism_injective: bool
+    homomorphism_surjective: bool
+    generator_equivariant: bool
+
+    @property
+    def source_to_target_quotient_certified(self) -> bool:
+        return self.homomorphism_surjective and self.generator_equivariant
+
+    @property
+    def target_to_source_restriction_certified(self) -> bool:
+        return self.homomorphism_injective and self.generator_equivariant
 
 
 def invert_braid_word(word: BraidWord) -> Tuple[int, ...]:
@@ -210,6 +231,61 @@ def point_pushing_derivative_detector_generators(
             for state in states
         )
     return generators
+
+
+def point_pushing_derivative_functoriality_audit(
+    homomorphism: FiniteGroupHomomorphism,
+    arity: int,
+    *,
+    max_source_states: int | None = None,
+) -> DerivativeDetectorFunctorialityAudit:
+    """Audit coordinate equivariance of ``D_k`` for a finite group homomorphism."""
+
+    if arity < 1:
+        raise ValueError("arity must be positive")
+    n = arity + 1
+    source = homomorphism.source
+    target = homomorphism.target
+    source_labels = tuple(product(source.elements, source.elements))
+    source_state_count = len(source_labels) ** n
+    if max_source_states is not None and source_state_count > max_source_states:
+        raise ValueError("source detector state space exceeded max_source_states")
+
+    def map_label(label):
+        return (homomorphism.apply(label[0]), homomorphism.apply(label[1]))
+
+    def map_state(state):
+        return tuple(map_label(label) for label in state)
+
+    equivariant = True
+    for generator in range(arity):
+        braid = pure_braid_generator(generator + 1, n)
+        for source_state in product(source_labels, repeat=n):
+            source_next = artin_detector_lift_general_state(
+                source,
+                source_state,
+                braid,
+            )
+            target_next = artin_detector_lift_general_state(
+                target,
+                map_state(source_state),
+                braid,
+            )
+            if map_state(source_next) != target_next:
+                equivariant = False
+                break
+        if not equivariant:
+            break
+    image_size = len(set(homomorphism.mapping.values()))
+    return DerivativeDetectorFunctorialityAudit(
+        arity=arity,
+        source_order=len(source.elements),
+        target_order=len(target.elements),
+        source_state_count=source_state_count,
+        homomorphism_injective=image_size == len(source.elements),
+        homomorphism_surjective=homomorphism.is_surjective,
+        generator_equivariant=equivariant,
+    )
 
 
 def longitude_identity_profile_for_law_braid(

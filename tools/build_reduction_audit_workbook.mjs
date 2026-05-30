@@ -283,6 +283,13 @@ const rows = [
     "Prove one fixed G has all marked quotients D_k(G)->P_k(X), or find product-prefix derivative relations that move X.",
   ],
   [
+    "Derivative detector functoriality",
+    "Show the exact D_k(G) criterion is compatible with quotients, embeddings, symmetric cofinality, and product prefixes.",
+    "proofs/point_pushing_derivative_functoriality.md proves coordinate equivariance for finite group homomorphisms; point_pushing_derivative_functoriality_audit checks finite instances.",
+    "Functorial bridge",
+    "Use symmetric groups or product-prefix groups in the marked-quotient fork without invoking ordinary law shortcuts.",
+  ],
+  [
     "Action images",
     "Law words vanish on fixed finite action images.",
     "Fixed-image certificate implemented.",

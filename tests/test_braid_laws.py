@@ -5,8 +5,10 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from ybe_domination import (
+    FiniteGroupHomomorphism,
     commutator,
     cyclic_group,
+    direct_product_group,
     free_word_power,
     has_identity_longitude_signature,
     is_law_on_group,
@@ -14,10 +16,12 @@ from ybe_domination import (
     law_braid_longitudes,
     law_word_on_last_strand,
     longitude_identity_profile_for_law_braid,
+    point_pushing_derivative_functoriality_audit,
     point_pushing_derivative_detector_generators,
     point_pushing_kernel_membership_audit,
     pure_braid_generator,
     reverse_braid_word,
+    symmetric_group_inclusion,
     symmetric_group,
 )
 
@@ -136,6 +140,35 @@ class BraidLawTests(unittest.TestCase):
         self.assertEqual(set(generators), {0, 1})
         self.assertEqual(len(generators[0]), 64)
         self.assertEqual(len(generators[1]), 64)
+
+    def test_point_pushing_derivative_functoriality_for_projection(self):
+        product_group = direct_product_group((cyclic_group(2), cyclic_group(3)))
+        projection = {
+            element: element[0]
+            for element in product_group.elements
+        }
+        audit = point_pushing_derivative_functoriality_audit(
+            FiniteGroupHomomorphism(product_group, cyclic_group(2), projection),
+            arity=1,
+        )
+
+        self.assertTrue(audit.generator_equivariant)
+        self.assertTrue(audit.homomorphism_surjective)
+        self.assertFalse(audit.homomorphism_injective)
+        self.assertTrue(audit.source_to_target_quotient_certified)
+        self.assertFalse(audit.target_to_source_restriction_certified)
+
+    def test_point_pushing_derivative_functoriality_for_symmetric_inclusion(self):
+        audit = point_pushing_derivative_functoriality_audit(
+            symmetric_group_inclusion(2, 3),
+            arity=1,
+        )
+
+        self.assertTrue(audit.generator_equivariant)
+        self.assertTrue(audit.homomorphism_injective)
+        self.assertFalse(audit.homomorphism_surjective)
+        self.assertFalse(audit.source_to_target_quotient_certified)
+        self.assertTrue(audit.target_to_source_restriction_certified)
 
     def test_point_pushing_kernel_membership_exposes_law_gap(self):
         law_gap = tuple(letter for _ in range(6) for letter in ((0, 1), (1, -1)))
