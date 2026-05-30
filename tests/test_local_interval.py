@@ -34,6 +34,7 @@ from ybe_domination import (
     section_kernel_companion_audit,
     section_rank_profile_collapse_audit,
     section_unit_row_audits,
+    triangular_bundle_audit,
     two_sided_unit_collapse_audit,
 )
 
@@ -158,6 +159,30 @@ def one_color_proper_rank_loss_interval():
             for (x, y), value in values.items()
         },
     )
+
+
+def two_color_nontrivial_triangular_bundle_interval():
+    colors = ("a", "b")
+    fibres = {"a": (0, 1, 2, 3), "b": ("p", "q")}
+    base_R = {(left, right): (right, left) for left in colors for right in colors}
+    T = {}
+    for left in colors:
+        for right in colors:
+            for x in fibres[left]:
+                for y in fibres[right]:
+                    T[(left, right, x, y)] = (y, x)
+
+    alpha = {0: "p", 1: "p", 2: "q", 3: "q"}
+    beta = {
+        0: {"p": 0, "q": 1},
+        1: {"p": 2, "q": 3},
+        2: {"p": 0, "q": 1},
+        3: {"p": 2, "q": 3},
+    }
+    for x in fibres["a"]:
+        for y in fibres["b"]:
+            T[("a", "b", x, y)] = (alpha[x], beta[x][y])
+    return LocalInterval(colors, fibres, base_R, T)
 
 
 class LocalIntervalTests(unittest.TestCase):
@@ -448,6 +473,36 @@ class LocalIntervalTests(unittest.TestCase):
         self.assertEqual(audit.constant_section_rows, ())
         self.assertEqual(audit.proper_kernel_rows, ())
         self.assertTrue(all(row.is_bijective for row in audit.rows))
+
+    def test_triangular_bundle_audit_records_bijective_bundle_partition(self):
+        interval = two_color_nontrivial_triangular_bundle_interval()
+
+        audit = triangular_bundle_audit(interval)
+        row = next(
+            row
+            for row in audit.left_triangular_rows
+            if row.left_color == "a" and row.right_color == "b"
+        )
+
+        self.assertTrue(row.bundle_partition_identity_holds)
+        self.assertFalse(row.constant_map_is_bijective)
+        self.assertEqual(len(row.nontrivial_bundle_fibres), 2)
+        self.assertTrue(all(fibre.blocks_partition_companion_codomain for fibre in row.bundle_fibres))
+        self.assertEqual(
+            {fibre.output_value: fibre.block_sizes for fibre in row.bundle_fibres},
+            {"p": (2, 2), "q": (2, 2)},
+        )
+
+    def test_triangular_bundle_audit_identifies_permutation_triangular_rows(self):
+        interval = one_color_identity_interval()
+
+        audit = triangular_bundle_audit(interval)
+
+        self.assertEqual(len(audit.left_triangular_rows), 1)
+        self.assertEqual(len(audit.right_triangular_rows), 1)
+        self.assertTrue(audit.every_bundle_partition_identity_holds)
+        self.assertEqual(audit.rows_with_nontrivial_bundles, ())
+        self.assertTrue(all(row.constant_map_is_bijective for row in audit.row_audits))
 
     def test_continuation_seed_readout_propagates_admissible_universal_readout(self):
         interval = one_color_identity_interval()

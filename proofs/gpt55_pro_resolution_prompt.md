@@ -754,6 +754,10 @@ section-kernel profiles are Green/Schutzenberger-visible, so a hidden
 rank-losing section must be rank one/constant.  The next classification target
 is constant-section triangular YBE rows, audited by
 `section_rank_profile_collapse_audit(...)`.
+Then use `proofs/constant_section_triangular_bundle_partition.md`: a bijective
+constant-section triangular row is a finite bundle partition over the constant
+map.  Audit it with `triangular_bundle_audit(...)`; the remaining obstruction
+is triangular bundle holonomy, not an arbitrary triangular map.
 Then use `proofs/unit_continuation_abelian_kernel_lift.md`: split the final
 unit endpoint through `U/[U,U]`.  The abelian projection should be handled by
 the abelian longitude matrix criterion, while the residual correction must be

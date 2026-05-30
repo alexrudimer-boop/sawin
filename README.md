@@ -311,6 +311,15 @@ universal kernel, hence be constant.  The helper
 `section_rank_profile_collapse_audit(...)` records ranks, kernel kinds, and
 injective non-surjective side cases.  The remaining continuation seed is
 constant-section triangular.
+The triangular bundle note
+`proofs/constant_section_triangular_bundle_partition.md` gives the exact
+row-level structure of that residue.  In a bijective triangular row
+`T(x,y)=(alpha(x),beta_x(y))`, `alpha` is surjective, every `beta_x` is
+injective, and over each output of `alpha` the images `beta_x(A_b)` partition
+the companion codomain.  The helper `triangular_bundle_audit(...)` records
+the constant-map fibres, companion image blocks, and nontrivial bundle fibres.
+The remaining obstruction is triangular bundle holonomy, not an arbitrary
+constant-section map.
 The follow-up note `proofs/unit_continuation_abelian_kernel_lift.md` splits
 that final endpoint certificate through the finite abelianization
 `U_cont/[U_cont,U_cont]`: prove the abelian projection by the matrix

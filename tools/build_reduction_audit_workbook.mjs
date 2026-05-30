@@ -647,6 +647,13 @@ const rows = [
     "Classify constant-section triangular YBE rows in the local-minimal bottleneck branch.",
   ],
   [
+    "Triangular bundle partition",
+    "Show bijective constant-section triangular rows are finite bundle partitions over the constant output map.",
+    "proofs/constant_section_triangular_bundle_partition.md; triangular_bundle_audit records constant-map fibres and companion image blocks.",
+    "Sharper open theorem",
+    "Classify triangular bundle holonomy or upgrade a bundle holonomy cycle to normalized laws.",
+  ],
+  [
     "Unit-continuation abelian-kernel lift",
     "Split the final unit endpoint into finite abelianization plus commutator-kernel correction.",
     "proofs/unit_continuation_abelian_kernel_lift.md; normal_quotient_longitude_lift_audit checks quotient witness, lifted witness, and kernel witness.",

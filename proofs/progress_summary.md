@@ -539,6 +539,16 @@ section has universal kernel and is constant.  The helper
 and injective non-surjective side cases.  The remaining make-or-break local
 classification is constant-section triangular YBE rows in the local-minimal
 bottleneck branch.
+The triangular bundle partition note
+`proofs/constant_section_triangular_bundle_partition.md` records the structure
+forced by bijectivity in that residue.  If
+`T(x,y)=(alpha(x),beta_x(y))`, then `alpha` is surjective, every `beta_x` is
+injective, and for each output `u`, the images `beta_x(A_b)` for
+`x in alpha^{-1}(u)` partition the companion codomain.  The side-dual
+statement holds for rows `T(x,y)=(lambda_y(x),gamma(y))`.  The helper
+`triangular_bundle_audit(...)` exposes the constant-map fibres and companion
+image blocks.  Thus the remaining local classification is triangular bundle
+holonomy, not an arbitrary constant-section triangular map.
 The follow-up abelian-kernel lift note
 `proofs/unit_continuation_abelian_kernel_lift.md` splits this endpoint target
 through the finite abelianization of the fixed unit group.  It is enough to
@@ -632,13 +642,14 @@ Until one of these is done, the archive supports neither final A nor final B.
 
 At the latest verified snapshot:
 
-- `python -m unittest discover -s tests` passed with 368 tests;
+- `python -m unittest discover -s tests` passed with 370 tests;
 - `python -m compileall -q src tests tools` passed;
 - `node --check tools/build_reduction_audit_workbook.mjs` passed;
 - the proof log DOCX and reduction audit workbook were regenerated, and the
   workbook preview/OOXML marker checks included the routed-edge witness,
   unit-continuation, derived-series, two-sided unit-collapse, and
-  mixed-unit companion-separation, and rank-profile collapse rows;
+  mixed-unit companion-separation, rank-profile collapse, and triangular
+  bundle-partition rows;
 - LibreOffice/`soffice` was unavailable, so DOCX visual render QA could not
   be completed;
 - the Desktop zip was overwritten rather than versioned separately.

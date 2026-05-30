@@ -305,6 +305,10 @@ Then audit and use these reductions:
    section-kernel profiles are Green/Schutzenberger-visible, so the hidden
    rank-losing residue is constant-section triangular.  Audit it with
    `section_rank_profile_collapse_audit(...)`.
+   Then read `proofs/constant_section_triangular_bundle_partition.md`: a
+   bijective constant-section triangular row is a bundle partition over the
+   constant map.  Use `triangular_bundle_audit(...)` to inspect constant-map
+   fibres, companion image blocks, and nontrivial bundle fibres.
    Then read `proofs/unit_continuation_abelian_kernel_lift.md`: it splits
    `S_beta in V_beta(U_cont)` into an abelianized matrix-longitude witness and
    a commutator-kernel correction witness, audited by

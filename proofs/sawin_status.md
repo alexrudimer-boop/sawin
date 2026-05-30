@@ -1119,6 +1119,15 @@ constant.  The helper `section_rank_profile_collapse_audit(...)` records the
 rank, kernel blocks, kernel kind, image, and injective non-surjective side
 cases.  The final continuation seed is therefore constant-section triangular
 context recovery.
+The triangular bundle partition note
+`proofs/constant_section_triangular_bundle_partition.md` then records the
+finite structure forced by bijectivity.  In a row
+`T(x,y)=(alpha(x), beta_x(y))`, the constant map `alpha` is surjective, every
+companion section `beta_x` is injective, and the images over each fibre
+`alpha^{-1}(u)` partition the companion codomain.  The helper
+`triangular_bundle_audit(...)` records these constant-map fibres, companion
+image blocks, and nontrivial bundle fibres.  The final obstruction is now
+triangular bundle holonomy.
 The follow-up note `proofs/unit_continuation_abelian_kernel_lift.md` now
 splits that last endpoint condition through abelianization.  For the finite
 unit group `U`, let `C=[U,U]` and `q:U->U/C`.  A quotient witness for
