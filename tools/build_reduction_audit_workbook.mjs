@@ -311,6 +311,13 @@ const rows = [
     "Prove a symbolic bound m(X), or exhibit explicit unbounded mu_X(k_j)>j witnesses.",
   ],
   [
+    "Point-pushing mu functoriality",
+    "Rule out quotient and product artifacts as sources of unbounded mu growth.",
+    "proofs/point_pushing_mu_functoriality.md proves quotient/domination monotonicity and the product formula mu_{X x Y}(k)=max(mu_X(k),mu_Y(k)).",
+    "Structural cleanup",
+    "Search for unbounded mu only in primitive components; finite products of bounded factors cannot yield B.",
+  ],
+  [
     "Derivative detector functoriality",
     "Show the exact D_k(G) criterion is compatible with quotients, embeddings, symmetric cofinality, and product prefixes.",
     "proofs/point_pushing_derivative_functoriality.md proves coordinate equivariance for finite group homomorphisms; point_pushing_derivative_functoriality_audit checks finite instances.",

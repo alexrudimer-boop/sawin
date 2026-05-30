@@ -934,6 +934,12 @@ normalized-law obstruction sequence.  The helper
 `point_pushing_mu_prefix_audit(...)` checks bounded rectangles in `(k,m)` and
 records first detected symmetric degrees or first vertical witnesses, but it
 is only finite diagnostic evidence.
+`proofs/point_pushing_mu_functoriality.md` records structural rules for the
+same growth invariant: surjective YBE quotients and domination can only lower
+`mu`, while finite products satisfy
+`mu_{X x Y}(k)=max(mu_X(k),mu_Y(k))`.  Hence unbounded `mu` cannot be created
+by quotient shadows or finite products of bounded factors; a B seed must live
+in a primitive component with genuinely unbounded detector degree.
 `proofs/point_pushing_derivative_functoriality.md` records the compatibility
 of this exact criterion with detector changes.  A finite group homomorphism
 `G->H` induces coordinate equivariance on detector states.  Surjections give
