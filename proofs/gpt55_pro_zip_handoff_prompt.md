@@ -333,6 +333,11 @@ Then audit and use these reductions:
    fibres to be singleton.  Use
    `rack_kink_latin_triangular_collapse_audit(...)` to inspect rack form,
    kink predecessors, alpha identities, and predecessor-column constancy.
+   Then read `proofs/master_local_residual_positive_closure.md`: it is the
+   candidate positive assembly of the local detector theorem, sharp
+   obstruction step, and congruence-chain induction.  Audit especially:
+   finite-search leakage, semisplit handling, detector independence from `n`,
+   and whether the local implication really gives `Delta_n(beta)=1`.
    Then read `proofs/unit_continuation_abelian_kernel_lift.md`: it splits
    `S_beta in V_beta(U_cont)` into an abelianized matrix-longitude witness and
    a commutator-kernel correction witness, audited by

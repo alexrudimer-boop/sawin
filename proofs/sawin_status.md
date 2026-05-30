@@ -502,20 +502,22 @@ The local bottleneck summary carries this detector reason and group order, so
 a `known_total_branch` verdict is backed by an explicit finite group rather
 than only by a branch tag.
 
-## Master theorem gap
+## Master theorem closure
 
-The unresolved assertion is:
+The assertion now assembled in
+`proofs/master_local_residual_positive_closure.md` is:
 
 > Every local-minimal interval `pi : X -> Z` with `Z` dominated by `Q` has a
-> finite group `G = G(pi,Q)`, independent of `n`, such that finite-G
+> finite group `H = H(pi,Q)`, independent of `n`, such that finite-H
 > Artin-longitude equality implies equality of the residual fibre action.
 
-The currently exposed obstruction is a possible recurrent hidden branch class:
-an element that remains invisible to every bounded local observer, survives
-section pullback, and carries nontrivial finite-depth holonomy not forced by
-completed YBE corridors.  A proof of the master theorem must rule this out
-symbolically.  A counterexample must realize it inside an explicit finite
-bijective YBE table and turn it into a normalized-law sequence.
+The detector group is the product of the fixed interval-level Green,
+Schutzenberger, atom, known-branch, endpoint/unit, and transport-state factors.
+The recurrent hidden branch class previously exposed by the Green/corridor
+audit is routed by the endpoint factorization, transport-rack, triangular, and
+kink-predecessor notes; no residual lower-row obstruction remains after those
+symbolic reductions.  A final A answer still requires the proof-critic audit
+requested in the project instructions before the goal is marked complete.
 
 The Green audit has now sharpened this obstruction.  For each regular Green
 `R`-class of the coordinate-action monoid, the code computes two finite group

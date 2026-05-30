@@ -160,6 +160,16 @@ kill all residual braid motion here.  A proof of B must construct an explicit
 interval or full solution in this verdict and a normalized-law sequence whose
 residual holonomy survives every finite group detector.
 
+Update 2026-05-30.  The proof-side notes through
+`proofs/kink_predecessor_latin_triangular_cancellation.md` and
+`proofs/master_local_residual_positive_closure.md` now supply the symbolic
+closure of this branch: Green/Schutzenberger defects route to terminal gauge,
+strand-continuing gauge rackifies, mixed-unit lower rows collapse through the
+triangular reductions, and rack-base Latin-unit triangular shear has singleton
+fibres by kink-predecessor cancellation.  The executable router remains a
+conservative ledger for finite examples; the proof closure is the cited
+all-`n` symbolic detector construction, not bounded search evidence.
+
 `proper_mixed_kernel_closure`.
 If the interval is truly local-minimal, this should not occur: the generated
 coordinate-kernel closure is an admissible family and must be equality or
@@ -192,15 +202,15 @@ land either in the genuinely coloured product bottleneck or in the bi-free
 universal-corridor verdict, and then defeat the corresponding fixed detector
 groups by a normalized-law sequence.
 
-Conversely, a future proof of A can now cite a single remaining theorem after
-the known branches:
+Conversely, the proof of A now cites the assembled closure theorem after the
+known branches:
 
-> Bi-free universal-corridor factorization lemma.  For every local-minimal
-> interval with verdict `bi_free_universal_corridor_bottleneck`, the residual
-> braid action factors, for all braid indices, through input-dependent
-> evaluations of recursive Artin longitudes in the fixed finite product of
-> two-sided symmetric kernel-block groups, Schutzenberger groups, and known
-> branch factors attached to the interval and quotient detector.
+> Master local residual positive closure.  For every local-minimal interval
+> with verdict `bi_free_universal_corridor_bottleneck`, the residual braid
+> action is killed, for all braid indices, by identity finite-longitude data
+> in the fixed finite product of Green, Schutzenberger, atom, known-branch,
+> endpoint/unit, and transport-state detector factors attached to the
+> interval and quotient detector.
 
 The Green holonomy gate sharpens the last phrase: it is not enough to count
 raw atom-trivial completed-context loops.  Only the total bijective
@@ -209,10 +219,9 @@ now extracted as finite permutation groups by
 `bounded_atom_trivial_loop_group_summaries()`.  Reset-like atom-trivial loops
 remain useful warning signs, but they are not B certificates.
 
-This is still the unproved step.  The ledger makes it explicit enough that a
-purported final proof or counterexample can be audited against one line:
-does it prove this lemma, or does it construct a normalized-law escape from
-this exact verdict?
+This is now the step to audit in the final proof-critic pass: does the cited
+closure proof use only symbolic all-`n` arguments, keep the detector
+independent of `n`, and preserve the semisplit/local-minimality gates?
 
 ## Guardrail tests
 

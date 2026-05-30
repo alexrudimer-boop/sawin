@@ -689,6 +689,13 @@ const rows = [
     "With prior branch reductions accepted, the bi-free universal-corridor lower-row obstruction is eliminated.",
   ],
   [
+    "Master local positive closure",
+    "Assemble the fixed detector product H(pi,Q), the bi-free corridor closure, sharp obstruction step, and congruence-chain induction.",
+    "proofs/master_local_residual_positive_closure.md cites the branch notes and proves Lambda_H=1 implies Delta=1 for each local-minimal interval.",
+    "Candidate A proof",
+    "Run final proof-critic audit for finite-search leakage, semisplit handling, n-independence, and chain induction before marking the global goal complete.",
+  ],
+  [
     "Unit-continuation abelian-kernel lift",
     "Split the final unit endpoint into finite abelianization plus commutator-kernel correction.",
     "proofs/unit_continuation_abelian_kernel_lift.md; normal_quotient_longitude_lift_audit checks quotient witness, lifted witness, and kernel witness.",

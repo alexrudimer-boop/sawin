@@ -636,10 +636,11 @@ The descent-closure helper `atom_descent_closure_summary(...)` records the
 least coarsening needed for descent.  In all current tiny exhaustive audits
 and named stress rows this closure is trivial, but this is diagnostic only.
 The new `atom_descent_quotient_rack_audit(...)` checks whether a nontrivial
-closed quotient is nevertheless a total finite rack layer.  Thus the symbolic
-theorem must prove either trivial descent, controlled descent-closed rack
-quotients plus endpoint/unit detection for the lost lower information, or a
-real normalized-law counterexample.
+closed quotient is nevertheless a total finite rack layer.  The later
+descent-separation, transport-rack, triangular, and kink-predecessor notes now
+route the lost lower information to fixed endpoint/unit or transport-state
+factors; a non-rack atom quotient is no longer treated as a standalone final
+B seed without the normalized-law upgrade.
 
 ## Counterexample route status
 
@@ -668,28 +669,30 @@ against listed groups.  This supplies only the finite-group invisibility side
 of B; a counterexample still needs a fixed finite YBE solution and moved
 tuples for the corresponding law braids.
 
-## Current bottleneck
+## Candidate positive closure
 
-The unresolved mathematical task is the Master Local-Minimal Residual
-Theorem, now concentrated in the bi-free universal-corridor branch:
+The Master Local-Minimal Residual Theorem is now assembled in
+`proofs/master_local_residual_positive_closure.md`.  The theorem constructs a
+finite interval-level product group
 
 ```text
-For every local-minimal interval pi:X->Z with Z dominated by Q,
-construct one finite group G(pi,Q), independent of n, such that
-Lambda_{G(pi,Q),n}(beta)=Lambda_{G(pi,Q),n}(1)
-implies Delta_n(beta)=1 for all n and beta in ker rho_{Q,n}.
+H(pi,Q)
 ```
 
-The current best A route is to prove that all residual Green/corridor
-endpoint units are explicit products of recursive Artin-longitude evaluations
-in the fixed product of the finite groups above.
+from Green, Schutzenberger, atom, known-branch, endpoint/unit, and
+transport-state factors, with no braid-index parameter, and proves
 
-The current best B route is to construct a finite local-minimal interval in
-this exact bottleneck branch whose unit/group-like residual holonomy admits a
-normalized-law sequence invisible to every finite group but moving an explicit
-tuple.
+```text
+Lambda_{H(pi,Q),n}(beta)=Lambda_{H(pi,Q),n}(1)
+    => Delta_n(beta)=1.
+```
 
-Until one of these is done, the archive supports neither final A nor final B.
+The proof then applies the sharp obstruction theorem to obtain the local rack
+`Q x A_H`, and congruence-chain induction assembles the global finite rack.
+This is the candidate positive resolution.  Before marking outcome A final,
+the required final proof-critic audit must check that no finite-search-only
+step entered, semisplit local-minimality is fully handled, `H(pi,Q)` is
+independent of `n`, and the congruence-chain induction is valid.
 
 ## Verification snapshot
 
@@ -704,7 +707,7 @@ At the latest verified snapshot:
   mixed-unit companion-separation, rank-profile collapse, triangular
   bundle-partition, triangular recovery-inverse, constant-column collapse,
   Latin triangular YBE-split, one-colour Latin-collapse, and kink-predecessor
-  Latin-cancellation rows;
+  Latin-cancellation rows, plus the master local positive-closure assembly;
 - LibreOffice/`soffice` was unavailable, so DOCX visual render QA could not
   be completed;
 - the Desktop zip was overwritten rather than versioned separately.

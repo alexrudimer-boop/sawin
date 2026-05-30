@@ -366,6 +366,14 @@ forces `|X_b|=1`.  The helper
 kink predecessors, alpha identities, and predecessor-column constancy.  With
 the preceding reductions accepted, the bi-free universal-corridor lower-row
 obstruction is eliminated.
+The proof-side assembly note
+`proofs/master_local_residual_positive_closure.md` now packages this into the
+Master Local-Minimal Residual Theorem: the interval detector is the fixed
+finite product `H(pi,Q)` of Green, Schutzenberger, atom, known-branch,
+endpoint/unit, and transport-state factors; identity finite-`H` longitude data
+kills every residual readout component; the sharp obstruction theorem supplies
+`Q x A_H`; and congruence-chain induction assembles the global rack.  This is
+the candidate positive proof to send through final proof-critic audit.
 The follow-up note `proofs/unit_continuation_abelian_kernel_lift.md` splits
 that final endpoint certificate through the finite abelianization
 `U_cont/[U_cont,U_cont]`: prove the abelian projection by the matrix

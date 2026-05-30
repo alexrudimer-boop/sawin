@@ -785,6 +785,13 @@ predecessor shear columns constant; Latin-unit then forces singleton fibres.
 Audit this with `rack_kink_latin_triangular_collapse_audit(...)`.  This should
 remove the last lower-row obstruction if the earlier branch reductions are
 sound.
+Then read `proofs/master_local_residual_positive_closure.md`: it assembles the
+fixed product detector `H(pi,Q)`, proves the local implication
+`Lambda_H(beta)=Lambda_H(1) => Delta_n(beta)=1`, applies the sharp rack
+`Q x A_H`, and finishes by congruence-chain induction.  Your final audit
+should explicitly check for any finite-search-only step, any missing semisplit
+case, any hidden dependence of `H` on braid index `n`, and any gap in the
+chain induction.
 Then use `proofs/unit_continuation_abelian_kernel_lift.md`: split the final
 unit endpoint through `U/[U,U]`.  The abelian projection should be handled by
 the abelian longitude matrix criterion, while the residual correction must be
