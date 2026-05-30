@@ -250,11 +250,14 @@ It returns `proves_repair_contract_for_supplied_data` exactly when:
 2. the endpoint action audit proves the detector implication for the supplied
    residual rows;
 3. every routed lost edge has a visible fixed-factor endpoint witness.
+4. when a routed lost-edge ledger is supplied, its saturated descent quotient
+   is exactly the same descent quotient used by the repair package.
 
 The helper deliberately does not discover the missing readout or endpoint
 witnesses.  It prevents the previous overclaim: supplied data must prove the
 descent, endpoint, and routing parts simultaneously before the local detector
-implication can be counted.
+implication can be counted.  It also prevents mixing a valid endpoint ledger
+from one saturated descent quotient with an unrelated descent certificate.
 
 ## Exact B seed if the theorem fails
 

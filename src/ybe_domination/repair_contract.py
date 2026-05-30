@@ -44,11 +44,21 @@ class DescentEndpointRepairContractAudit:
         )
 
     @property
+    def routed_edge_descent_matches_supplied_descent(self) -> bool:
+        if self.routed_edge_audit is None:
+            return True
+        saturated_descent = (
+            self.routed_edge_audit.routing_audit.dichotomy.seed_saturation.saturated_descent
+        )
+        return saturated_descent == self.descent_audit
+
+    @property
     def proves_repair_contract_for_supplied_data(self) -> bool:
         return (
             self.descent_separation_proved
             and self.endpoint_action_detector_proved
             and self.routed_edges_visible
+            and self.routed_edge_descent_matches_supplied_descent
         )
 
     @property
@@ -60,6 +70,8 @@ class DescentEndpointRepairContractAudit:
             reasons.append("endpoint_action_detector_not_proved")
         if not self.routed_edges_visible:
             reasons.append("routed_edges_not_visible")
+        if not self.routed_edge_descent_matches_supplied_descent:
+            reasons.append("routed_edge_descent_mismatch")
         return tuple(reasons)
 
 

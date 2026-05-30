@@ -714,7 +714,9 @@ yet outcome B, but it is the finite seed that must be upgraded to a
 normalized-law obstruction.
 The helper `descent_endpoint_repair_contract_audit(...)` now bundles supplied
 descent, endpoint-action, and routed-edge certificates and reports which part
-of a proposed repair package fails.
+of a proposed repair package fails.  Routed lost-edge ledgers must match the
+same saturated descent quotient as the supplied descent certificate, so valid
+endpoint witnesses cannot be imported from a different local repair package.
 
 ## Verification snapshot
 

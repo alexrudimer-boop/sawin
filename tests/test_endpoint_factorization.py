@@ -41,6 +41,18 @@ def one_color_identity_interval():
     return LocalInterval(colors, fibres, base_R, T)
 
 
+def one_color_flip_interval():
+    colors = ("*",)
+    fibres = {"*": (0, 1)}
+    base_R = {("*", "*"): ("*", "*")}
+    T = {
+        ("*", "*", x, y): (y, x)
+        for x in fibres["*"]
+        for y in fibres["*"]
+    }
+    return LocalInterval(colors, fibres, base_R, T)
+
+
 class EndpointFactorizationTests(unittest.TestCase):
     def test_single_endpoint_expression_certifies_membership(self):
         group = cyclic_group(3)
@@ -664,6 +676,112 @@ class EndpointFactorizationTests(unittest.TestCase):
             audit.failure_reasons,
             ("endpoint_action_detector_not_proved",),
         )
+        self.assertFalse(audit.proves_repair_contract_for_supplied_data)
+
+    def test_descent_endpoint_repair_contract_accepts_matching_routed_edges(self):
+        interval = one_color_identity_interval()
+        routing = lost_edge_external_routing_audit(
+            interval,
+            {"*": {0: "zero", 1: "one"}},
+            {"*": {0: "left", 1: "right"}},
+        )
+        descent = routing.dichotomy.seed_saturation.saturated_descent
+        c2 = cyclic_group(2)
+        edge = routing.routed_edges[0]
+        edge_endpoint = endpoint_product_longitude_expression_audit(
+            (c2,),
+            n=2,
+            braid_word=(1, -1),
+            endpoints=(0,),
+            assignments=((1, 0),),
+            expressions=((),),
+        )
+        routed_edges = routed_lost_edge_endpoint_witness_audit(
+            routing,
+            ((edge, edge_endpoint),),
+        )
+        product_audit = endpoint_product_longitude_expression_audit(
+            (c2,),
+            n=2,
+            braid_word=(1, -1),
+            endpoints=(0,),
+            assignments=((1, 0),),
+            expressions=((),),
+        )
+        readout = endpoint_residual_readout_audit(
+            (endpoint_coordinate_readout_audit(product_audit, "p", "p"),)
+        )
+        action = endpoint_residual_action_audit(
+            2,
+            (1, -1),
+            (readout,),
+            expected_row_count=1,
+        )
+
+        audit = descent_endpoint_repair_contract_audit(
+            descent,
+            action,
+            routed_edges,
+        )
+
+        self.assertTrue(routed_edges.proves_routed_lost_edge_endpoint_visibility)
+        self.assertTrue(audit.routed_edge_descent_matches_supplied_descent)
+        self.assertEqual(audit.failure_reasons, ())
+        self.assertTrue(audit.proves_repair_contract_for_supplied_data)
+
+    def test_descent_endpoint_repair_contract_reports_routed_descent_mismatch(self):
+        interval = one_color_identity_interval()
+        routing = lost_edge_external_routing_audit(
+            interval,
+            {"*": {0: "zero", 1: "one"}},
+            {"*": {0: "left", 1: "right"}},
+        )
+        mismatched_descent = readout_descent_separation_audit(
+            one_color_flip_interval(),
+            {"*": {0: "zero", 1: "one"}},
+        )
+        c2 = cyclic_group(2)
+        edge = routing.routed_edges[0]
+        edge_endpoint = endpoint_product_longitude_expression_audit(
+            (c2,),
+            n=2,
+            braid_word=(1, -1),
+            endpoints=(0,),
+            assignments=((1, 0),),
+            expressions=((),),
+        )
+        routed_edges = routed_lost_edge_endpoint_witness_audit(
+            routing,
+            ((edge, edge_endpoint),),
+        )
+        product_audit = endpoint_product_longitude_expression_audit(
+            (c2,),
+            n=2,
+            braid_word=(1, -1),
+            endpoints=(0,),
+            assignments=((1, 0),),
+            expressions=((),),
+        )
+        readout = endpoint_residual_readout_audit(
+            (endpoint_coordinate_readout_audit(product_audit, "p", "p"),)
+        )
+        action = endpoint_residual_action_audit(
+            2,
+            (1, -1),
+            (readout,),
+            expected_row_count=1,
+        )
+
+        audit = descent_endpoint_repair_contract_audit(
+            mismatched_descent,
+            action,
+            routed_edges,
+        )
+
+        self.assertTrue(mismatched_descent.proves_descent_separation_readout)
+        self.assertTrue(routed_edges.proves_routed_lost_edge_endpoint_visibility)
+        self.assertFalse(audit.routed_edge_descent_matches_supplied_descent)
+        self.assertEqual(audit.failure_reasons, ("routed_edge_descent_mismatch",))
         self.assertFalse(audit.proves_repair_contract_for_supplied_data)
 
     def test_residual_action_audit_requires_expected_row_coverage(self):
