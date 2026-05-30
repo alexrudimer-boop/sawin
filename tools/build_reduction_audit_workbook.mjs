@@ -381,6 +381,13 @@ const rows = [
     "Only the one-new-strand Brunnian extension gates remain in any asymptotic B tail.",
   ],
   [
+    "Point-pushing base-free Brunnian tail",
+    "Start symmetric-tail audits after the explicit base cutoff s_X=ord(rho_X(A_1,2)).",
+    "proofs/point_pushing_base_free_brunnian_tail.md proves every first failure for S_j with j>=s_X must be non-base; point_pushing_base_free_brunnian_tail_prefix records finite base-free prefixes.",
+    "Base-free B-tail fork",
+    "Prove one fixed S_m>=S_sX has all extension rows none, or construct an infinite certified non-base tail.",
+  ],
+  [
     "Point-pushing Brunnian first-failure stratification",
     "Show a negative tail can be chosen with one stable non-base failure kind.",
     "proofs/point_pushing_brunnian_first_failure_stratification.md uses fixed-arity cofinality and infinite pigeonhole to reduce B to a homogeneous infinite tail of stabilizer, orbit_label, or orbit_relation failures.",

@@ -1007,6 +1007,12 @@ if `s_X=ord(rho_X(A_{1,2}))`, then any group whose exponent is divisible by
 `s_X` detects the base gate.  In particular `S_{s_X}` works, and
 `point_pushing_base_arity_certificate(...)` records this finite cutoff.  Thus
 asymptotic B tails cannot consist of base failures.
+`proofs/point_pushing_base_free_brunnian_tail.md` folds that cutoff into the
+tail fork.  After symmetric degree `j>=s_X`, every symbolic first failure must
+be one of the non-base Brunnian kinds (`stabilizer`, `orbit_label`, or
+`orbit_relation`).  The helper
+`point_pushing_base_free_brunnian_tail_prefix(...)` skips degrees below the
+cutoff and reports only the base-free finite prefix.
 `proofs/point_pushing_brunnian_first_failure_stratification.md` sharpens the
 negative route: if no fixed symmetric detector works, first failing arities
 tend to infinity, base failures occur only below a finite cutoff, and an

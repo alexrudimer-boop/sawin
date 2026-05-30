@@ -17,6 +17,7 @@ from ybe_domination import (
     law_word_on_last_strand,
     delete_right_based_new_strand_word,
     point_pushing_base_arity_certificate,
+    point_pushing_base_free_brunnian_tail_prefix,
     point_pushing_brunnian_failure_certificate,
     point_pushing_brunnian_gate_prefix_audit,
     point_pushing_brunnian_normalized_prefix_audit,
@@ -550,6 +551,35 @@ class ActionImageTests(unittest.TestCase):
         self.assertEqual(certificate.pure_generator_order, 1)
         self.assertEqual(certificate.symmetric_degree_bound, 1)
         self.assertTrue(certificate.proves_base_arity_detected)
+
+    def test_point_pushing_base_free_tail_prefix_starts_at_base_cutoff(self):
+        solution = rack_solution([0, 1, 2], lambda a, b: (2 * a - b) % 3)
+
+        prefix = point_pushing_base_free_brunnian_tail_prefix(
+            solution,
+            max_symmetric_degree=2,
+            max_arity=2,
+        )
+
+        self.assertEqual(prefix.base_cutoff, 3)
+        self.assertEqual(prefix.checked_degrees, tuple())
+        self.assertTrue(prefix.base_cutoff_respected)
+        self.assertEqual(prefix.certified_nonbase_degrees, tuple())
+
+    def test_point_pushing_base_free_tail_prefix_checks_after_cutoff(self):
+        solution = rack_solution([0, 1], lambda a, b: b)
+
+        prefix = point_pushing_base_free_brunnian_tail_prefix(
+            solution,
+            max_symmetric_degree=2,
+            max_arity=2,
+        )
+
+        self.assertEqual(prefix.base_cutoff, 1)
+        self.assertEqual(prefix.checked_degrees, (1, 2))
+        self.assertEqual(prefix.detected_degrees, (1, 2))
+        self.assertEqual(prefix.uncertified_failure_degrees, tuple())
+        self.assertTrue(prefix.base_cutoff_respected)
 
     def test_point_pushing_brunnian_failure_certificate_records_moved_tuple(self):
         solution = rack_solution([0, 1, 2], lambda a, b: (2 * a - b) % 3)

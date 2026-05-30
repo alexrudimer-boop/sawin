@@ -323,6 +323,54 @@ class PointPushingBrunnianTailCertificatePrefix:
 
 
 @dataclass(frozen=True)
+class PointPushingBaseFreeBrunnianTailPrefix:
+    """Finite symmetric-tail prefix after the explicit base-arity cutoff."""
+
+    base_certificate: PointPushingBaseArityCertificate
+    max_symmetric_degree: int
+    max_arity: int
+    rows: Tuple[PointPushingBrunnianTailCertificateRow, ...]
+
+    @property
+    def base_cutoff(self) -> int:
+        return self.base_certificate.symmetric_degree_bound
+
+    @property
+    def checked_degrees(self) -> Tuple[int, ...]:
+        return tuple(row.symmetric_degree for row in self.rows)
+
+    @property
+    def detected_degrees(self) -> Tuple[int, ...]:
+        return tuple(row.symmetric_degree for row in self.rows if row.prefix_detected)
+
+    @property
+    def certified_nonbase_degrees(self) -> Tuple[int, ...]:
+        return tuple(
+            row.symmetric_degree for row in self.rows if row.has_valid_nonbase_certificate
+        )
+
+    @property
+    def uncertified_failure_degrees(self) -> Tuple[int, ...]:
+        return tuple(
+            row.symmetric_degree
+            for row in self.rows
+            if not row.prefix_detected and not row.has_valid_nonbase_certificate
+        )
+
+    @property
+    def base_failures_after_cutoff(self) -> Tuple[int, ...]:
+        return tuple(
+            row.symmetric_degree
+            for row in self.rows
+            if row.first_failure_kind in ("base_marked_quotient", "truncated_base")
+        )
+
+    @property
+    def base_cutoff_respected(self) -> bool:
+        return not self.base_failures_after_cutoff
+
+
+@dataclass(frozen=True)
 class PointPushingBrunnianNormalizedPrefixAudit:
     """One Brunnian row checked as a symmetric normalized-law prefix."""
 
@@ -1635,6 +1683,63 @@ def point_pushing_brunnian_tail_certificate_prefix(
             )
         )
     return PointPushingBrunnianTailCertificatePrefix(
+        max_symmetric_degree=max_symmetric_degree,
+        max_arity=max_arity,
+        rows=tuple(rows),
+    )
+
+
+def point_pushing_base_free_brunnian_tail_prefix(
+    solution: FiniteBraidedSet,
+    max_symmetric_degree: int,
+    max_arity: int,
+    *,
+    max_detector_states: int | None = None,
+    max_pair_subgroup_size: int | None = None,
+) -> PointPushingBaseFreeBrunnianTailPrefix:
+    """Check a finite symmetric-tail prefix after the base gate cutoff."""
+
+    from .finite_group import symmetric_group
+
+    if max_symmetric_degree < 1:
+        raise ValueError("max_symmetric_degree must be positive")
+    if max_arity < 1:
+        raise ValueError("max_arity must be positive")
+
+    base_certificate = point_pushing_base_arity_certificate(solution)
+    rows = []
+    for degree in range(base_certificate.symmetric_degree_bound, max_symmetric_degree + 1):
+        group = symmetric_group(degree)
+        audit = point_pushing_brunnian_gate_prefix_audit(
+            solution,
+            group,
+            max_arity=max_arity,
+            max_detector_states=max_detector_states,
+            max_pair_subgroup_size=max_pair_subgroup_size,
+        )
+        certificate = None
+        if audit.first_failure_kind in ("stabilizer", "orbit_label", "orbit_relation"):
+            if audit.first_failure_arity is None:
+                raise AssertionError("non-base failure kind without failure arity")
+            certificate = point_pushing_brunnian_failure_certificate(
+                solution,
+                group,
+                audit.first_failure_arity,
+                max_detector_states=max_detector_states,
+                max_pair_subgroup_size=max_pair_subgroup_size,
+            )
+        rows.append(
+            PointPushingBrunnianTailCertificateRow(
+                symmetric_degree=degree,
+                max_arity=max_arity,
+                prefix_detected=audit.prefix_detected,
+                first_failure_arity=audit.first_failure_arity,
+                first_failure_kind=audit.first_failure_kind,
+                certificate=certificate,
+            )
+        )
+    return PointPushingBaseFreeBrunnianTailPrefix(
+        base_certificate=base_certificate,
         max_symmetric_degree=max_symmetric_degree,
         max_arity=max_arity,
         rows=tuple(rows),
