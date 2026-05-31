@@ -1140,6 +1140,12 @@ degrees for supplied endpoint-family rows.  The helper
 nonidentity endpoint channel to a local symmetric normalized-law prefix row,
 requiring the same symmetric degree, right stabilization by that degree,
 endpoint-family faithfulness, and an explicit same-motion assertion.
+The triangular recovery endpoint layer now has the keyed specialization
+`triangular_recovery_symmetric_endpoint_fork_audit(...)`: it accepts only the
+single fixed group `U_tri`, requires exact coverage of the routed System U
+endpoint keys, and lets the post-linear classifier close U by a symmetric
+cutoff without hiding any still-unclosed continuation or mixed-unit endpoint
+families.
 `proofs/symmetric_tower_counterexample_certificate.md` now records the
 corresponding simplified B certificate: for every `j`, produce a braid
 `alpha_j` with identity `S_j` longitude data and a moved global or residual

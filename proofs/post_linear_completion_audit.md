@@ -266,6 +266,13 @@ serve as `[Resolution: B]`.
 If the U-route succeeds by a supplied triangular recovery endpoint witness,
 the classifier records `closed_by_triangular_recovery_endpoint_witness` and
 removes the row from the current finite-system list.
+The U-route now also has a keyed symmetric endpoint-family certificate:
+`triangular_recovery_symmetric_endpoint_fork_audit(...)` requires the supplied
+endpoint-family fork to use exactly the fixed group `U_tri` and to cover the
+routed U keys.  A positive cutoff records
+`closed_by_triangular_recovery_symmetric_endpoint_fork` in the U-only case,
+and in a U/C/M product removes only U from
+`unclosed_routed_endpoint_systems`.
 
 Equivalently, in the repair-contract format, construct:
 

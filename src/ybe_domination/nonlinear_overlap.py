@@ -77,7 +77,10 @@ if TYPE_CHECKING:  # pragma: no cover - typing only
         MixedUnitContextEndpointWitnessAudit,
         UniversalContinuationIdentityEndpointWitnessAudit,
     )
-    from .repair_contract import DescentEndpointRepairContractAudit
+    from .repair_contract import (
+        DescentEndpointRepairContractAudit,
+        EndpointFamilySymmetricForkAudit,
+    )
     from .residual import LocalNormalizedLawPrefixWitnessAudit
 
 
@@ -569,6 +572,110 @@ def triangular_recovery_endpoint_witness_audit(
 
 
 @dataclass(frozen=True)
+class TriangularRecoverySymmetricEndpointForkAudit:
+    """Symmetric cutoff certificate for routed triangular recovery endpoints.
+
+    This is the System U specialization of the finite endpoint-family fork.  It
+    does not construct endpoint witnesses.  It checks that a supplied symmetric
+    endpoint-family certificate is attached to exactly the routed U keys and to
+    the fixed triangular recovery unit group ``U_tri``.
+    """
+
+    observer: TriangularRecoveryUnitObserverAudit
+    routed_defects: Tuple[Tuple[Tuple[Color, Color], str], ...]
+    endpoint_family: "EndpointFamilySymmetricForkAudit"
+    covered_keys: Tuple[TriangularRecoveryEndpointKey, ...]
+
+    @property
+    def routed_keys(self) -> Tuple[TriangularRecoveryEndpointKey, ...]:
+        return _sorted_triangular_recovery_endpoint_keys(
+            tuple(
+                _triangular_recovery_endpoint_key(defect)
+                for defect in self.routed_defects
+            )
+        )
+
+    @property
+    def supplied_covered_keys(self) -> Tuple[TriangularRecoveryEndpointKey, ...]:
+        return _sorted_triangular_recovery_endpoint_keys(self.covered_keys)
+
+    @property
+    def missing_routed_keys(self) -> Tuple[TriangularRecoveryEndpointKey, ...]:
+        covered = set(self.supplied_covered_keys)
+        return _sorted_triangular_recovery_endpoint_keys(
+            tuple(key for key in self.routed_keys if key not in covered)
+        )
+
+    @property
+    def extra_covered_keys(self) -> Tuple[TriangularRecoveryEndpointKey, ...]:
+        routed = set(self.routed_keys)
+        return _sorted_triangular_recovery_endpoint_keys(
+            tuple(key for key in self.covered_keys if key not in routed)
+        )
+
+    @property
+    def endpoint_family_uses_recovery_unit_group(self) -> bool:
+        return self.endpoint_family.endpoint_group_orders == (
+            self.observer.unit_group_order,
+        )
+
+    @property
+    def all_routed_keys_covered(self) -> bool:
+        return bool(self.routed_keys) and not self.missing_routed_keys
+
+    @property
+    def proves_triangular_recovery_symmetric_endpoint_cutoff(self) -> bool:
+        return (
+            self.observer.proves_fixed_unit_observer
+            and self.endpoint_family_uses_recovery_unit_group
+            and self.all_routed_keys_covered
+            and not self.extra_covered_keys
+            and self.endpoint_family.faithful_endpoint_cutoff_proved
+        )
+
+    @property
+    def proves_triangular_recovery_symmetric_tail_seed_prefix(self) -> bool:
+        return (
+            self.observer.proves_fixed_unit_observer
+            and self.endpoint_family_uses_recovery_unit_group
+            and self.endpoint_family.proves_supplied_symmetric_tail_endpoint_seed_prefix
+            and bool(set(self.supplied_covered_keys).intersection(self.routed_keys))
+            and not self.extra_covered_keys
+        )
+
+    @property
+    def failure_reasons(self) -> Tuple[str, ...]:
+        reasons = []
+        if not self.observer.proves_fixed_unit_observer:
+            reasons.append("triangular_recovery_observer_not_proved")
+        if not self.endpoint_family_uses_recovery_unit_group:
+            reasons.append("endpoint_family_group_mismatch")
+        if not self.all_routed_keys_covered:
+            reasons.append("routed_recovery_keys_not_covered")
+        if self.extra_covered_keys:
+            reasons.append("extra_recovery_symmetric_keys")
+        if not self.endpoint_family.faithful_endpoint_cutoff_proved:
+            reasons.extend(self.endpoint_family.failure_reasons)
+        return tuple(reasons)
+
+
+def triangular_recovery_symmetric_endpoint_fork_audit(
+    observer: TriangularRecoveryUnitObserverAudit,
+    routed_defects: Sequence[Tuple[Tuple[Color, Color], str]],
+    endpoint_family: "EndpointFamilySymmetricForkAudit",
+    covered_keys: Sequence[TriangularRecoveryEndpointKey],
+) -> TriangularRecoverySymmetricEndpointForkAudit:
+    """Attach a finite symmetric endpoint-family certificate to System U keys."""
+
+    return TriangularRecoverySymmetricEndpointForkAudit(
+        observer=observer,
+        routed_defects=tuple(routed_defects),
+        endpoint_family=endpoint_family,
+        covered_keys=tuple(covered_keys),
+    )
+
+
+@dataclass(frozen=True)
 class PostLinearRemainingFiniteSystemAudit:
     """Classify the exact finite system left after finite-linear closure."""
 
@@ -596,6 +703,9 @@ class PostLinearRemainingFiniteSystemAudit:
     ) = None
     triangular_recovery_endpoint_witness: (
         TriangularRecoveryEndpointWitnessAudit | None
+    ) = None
+    triangular_recovery_symmetric_endpoint_fork: (
+        TriangularRecoverySymmetricEndpointForkAudit | None
     ) = None
     universal_continuation_endpoint_witness: (
         "UniversalContinuationIdentityEndpointWitnessAudit | None"
@@ -1081,6 +1191,30 @@ class PostLinearRemainingFiniteSystemAudit:
         )
 
     @property
+    def system_u_closed_by_symmetric_endpoint_fork(self) -> bool:
+        fork = self.triangular_recovery_symmetric_endpoint_fork
+        return (
+            self.system_u_active
+            and fork is not None
+            and fork.observer == self.refinement.triangular_recovery_unit_observer
+            and fork.routed_keys
+            == _sorted_triangular_recovery_endpoint_keys(
+                tuple(
+                    _triangular_recovery_endpoint_key(defect)
+                    for defect in self.system_u_endpoint_defects
+                )
+            )
+            and fork.proves_triangular_recovery_symmetric_endpoint_cutoff
+        )
+
+    @property
+    def system_u_closed_by_routed_certificate(self) -> bool:
+        return (
+            self.system_u_closed_by_endpoint_witness
+            or self.system_u_closed_by_symmetric_endpoint_fork
+        )
+
+    @property
     def system_c_closed_by_endpoint_witness(self) -> bool:
         witness = self.universal_continuation_endpoint_witness
         return (
@@ -1116,7 +1250,7 @@ class PostLinearRemainingFiniteSystemAudit:
     @property
     def unclosed_routed_endpoint_systems(self) -> Tuple[str, ...]:
         systems = []
-        if self.system_u_active and not self.system_u_closed_by_endpoint_witness:
+        if self.system_u_active and not self.system_u_closed_by_routed_certificate:
             systems.append("U")
         if self.system_c_active and not self.system_c_closed_by_endpoint_witness:
             systems.append("C")
@@ -1134,11 +1268,15 @@ class PostLinearRemainingFiniteSystemAudit:
             return "closed_by_recorded_branch"
         if self.all_active_routed_endpoint_systems_closed:
             if self.active_routed_endpoint_systems == ("U",):
-                return "closed_by_triangular_recovery_endpoint_witness"
+                if self.system_u_closed_by_endpoint_witness:
+                    return "closed_by_triangular_recovery_endpoint_witness"
+                return "closed_by_triangular_recovery_symmetric_endpoint_fork"
             if self.active_routed_endpoint_systems == ("C",):
                 return "closed_by_universal_continuation_endpoint_witness"
             if self.active_routed_endpoint_systems == ("M",):
                 return "closed_by_mixed_unit_context_endpoint_witness"
+            if self.triangular_recovery_symmetric_endpoint_fork is not None:
+                return "closed_by_routed_endpoint_certificates"
             return "closed_by_routed_endpoint_witnesses"
         if len(self.unclosed_routed_endpoint_systems) > 1:
             joined = "".join(system.lower() for system in self.unclosed_routed_endpoint_systems)
@@ -1147,7 +1285,7 @@ class PostLinearRemainingFiniteSystemAudit:
             return "closed_by_recorded_k_deficit_routing"
         if self.system_k_active:
             return "system_k_kink_completion_deficit"
-        if self.system_u_active and not self.system_u_closed_by_endpoint_witness:
+        if self.system_u_active and not self.system_u_closed_by_routed_certificate:
             return "system_u_triangular_recovery_unit_endpoint"
         if self.system_c_active and not self.system_c_closed_by_endpoint_witness:
             return "system_c_universal_continuation_endpoint"
@@ -1246,6 +1384,55 @@ class PostLinearRemainingFiniteSystemAudit:
             (
                 "triangular_recovery_endpoint_extra_keys",
                 witness.extra_witness_keys,
+            ),
+        )
+
+    @property
+    def _triangular_recovery_symmetric_endpoint_fork_data(
+        self,
+    ) -> Tuple[Tuple[str, object], ...]:
+        if self.triangular_recovery_symmetric_endpoint_fork is None:
+            return ()
+        fork = self.triangular_recovery_symmetric_endpoint_fork
+        return (
+            (
+                "triangular_recovery_symmetric_fork_matches_system",
+                fork.observer == self.refinement.triangular_recovery_unit_observer
+                and fork.routed_keys
+                == _sorted_triangular_recovery_endpoint_keys(
+                    tuple(
+                        _triangular_recovery_endpoint_key(defect)
+                        for defect in self.system_u_endpoint_defects
+                    )
+                ),
+            ),
+            (
+                "triangular_recovery_symmetric_fork_group_orders",
+                fork.endpoint_family.endpoint_group_orders,
+            ),
+            (
+                "triangular_recovery_symmetric_fork_minimum_degree",
+                fork.endpoint_family.minimum_symmetric_degree,
+            ),
+            (
+                "triangular_recovery_symmetric_fork_degree",
+                fork.endpoint_family.symmetric_degree,
+            ),
+            (
+                "triangular_recovery_symmetric_fork_cutoff_proved",
+                fork.proves_triangular_recovery_symmetric_endpoint_cutoff,
+            ),
+            (
+                "triangular_recovery_symmetric_fork_tail_seed_prefix_proved",
+                fork.proves_triangular_recovery_symmetric_tail_seed_prefix,
+            ),
+            (
+                "triangular_recovery_symmetric_fork_missing_keys",
+                fork.missing_routed_keys,
+            ),
+            (
+                "triangular_recovery_symmetric_fork_extra_keys",
+                fork.extra_covered_keys,
             ),
         )
 
@@ -1400,6 +1587,7 @@ class PostLinearRemainingFiniteSystemAudit:
         )
         data.extend(self._universal_continuation_identity_routing_data)
         data.extend(self._triangular_recovery_endpoint_witness_data)
+        data.extend(self._triangular_recovery_symmetric_endpoint_fork_data)
         data.extend(self._universal_continuation_endpoint_witness_data)
         data.extend(self._coordinate_unit_routing_data)
         data.extend(self._mixed_unit_endpoint_witness_data)
@@ -2082,7 +2270,7 @@ class PostLinearRemainingFiniteSystemAudit:
         endpoint_obligations = []
         if (
             self.system_u_active
-            and not self.system_u_closed_by_endpoint_witness
+            and not self.system_u_closed_by_routed_certificate
             and (
                 self.refinement.status == "triangular_recovery_unit_longitude_obstruction"
                 or (
@@ -3079,6 +3267,9 @@ def post_linear_remaining_finite_system_audit(
     triangular_recovery_endpoint_witness: (
         TriangularRecoveryEndpointWitnessAudit | None
     ) = None,
+    triangular_recovery_symmetric_endpoint_fork: (
+        TriangularRecoverySymmetricEndpointForkAudit | None
+    ) = None,
     universal_continuation_endpoint_witness: (
         "UniversalContinuationIdentityEndpointWitnessAudit | None"
     ) = None,
@@ -3119,6 +3310,7 @@ def post_linear_remaining_finite_system_audit(
             interval
         ),
         triangular_recovery_endpoint_witness=triangular_recovery_endpoint_witness,
+        triangular_recovery_symmetric_endpoint_fork=triangular_recovery_symmetric_endpoint_fork,
         universal_continuation_endpoint_witness=universal_continuation_endpoint_witness,
         mixed_unit_context_endpoint_witness=mixed_unit_context_endpoint_witness,
     )

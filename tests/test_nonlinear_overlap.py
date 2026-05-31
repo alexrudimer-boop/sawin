@@ -36,6 +36,7 @@ from ybe_domination import (
     TriangularLatinDefectClosureRow,
     TwoSidedUnitCollapseAudit,
     cyclic_group,
+    endpoint_family_symmetric_fork_audit,
     endpoint_product_longitude_expression_audit,
     latin_triangular_ybe_audit,
     mixed_unit_context_endpoint_witness_audit,
@@ -58,6 +59,7 @@ from ybe_domination import (
     triangular_recovery_detector_lift_braid_audit,
     triangular_recovery_detector_lift_transition_audit,
     triangular_recovery_endpoint_witness_audit,
+    triangular_recovery_symmetric_endpoint_fork_audit,
     triangular_recovery_longitude_expression_audit,
     triangular_recovery_longitude_route_audit,
     triangular_recovery_perfect_residual_audit,
@@ -2024,6 +2026,64 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             ("routed_recovery_keys_not_covered",),
         )
 
+    def test_triangular_recovery_symmetric_endpoint_fork_covers_routed_key(self):
+        observer = triangular_recovery_unit_observer_audit(
+            one_color_latin_unit_triangular_interval()
+        )
+        endpoint_family = endpoint_family_symmetric_fork_audit(
+            (observer.unit_group_order,),
+            all_endpoint_witnesses_supplied=True,
+            endpoint_family_faithful=True,
+        )
+
+        audit = triangular_recovery_symmetric_endpoint_fork_audit(
+            observer,
+            ((("*", "*"), "left_constant_map_universal_kernel"),),
+            endpoint_family,
+            (("*", "*", "left_constant_map_universal_kernel"),),
+        )
+
+        self.assertEqual(
+            audit.routed_keys,
+            (("*", "*", "left_constant_map_universal_kernel"),),
+        )
+        self.assertEqual(
+            audit.supplied_covered_keys,
+            (("*", "*", "left_constant_map_universal_kernel"),),
+        )
+        self.assertEqual(audit.missing_routed_keys, ())
+        self.assertEqual(audit.extra_covered_keys, ())
+        self.assertTrue(audit.endpoint_family_uses_recovery_unit_group)
+        self.assertTrue(audit.proves_triangular_recovery_symmetric_endpoint_cutoff)
+        self.assertEqual(audit.failure_reasons, ())
+
+    def test_triangular_recovery_symmetric_endpoint_fork_reports_missing_key(self):
+        observer = triangular_recovery_unit_observer_audit(
+            one_color_latin_unit_triangular_interval()
+        )
+        endpoint_family = endpoint_family_symmetric_fork_audit(
+            (observer.unit_group_order,),
+            all_endpoint_witnesses_supplied=True,
+            endpoint_family_faithful=True,
+        )
+
+        audit = triangular_recovery_symmetric_endpoint_fork_audit(
+            observer,
+            ((("*", "*"), "left_constant_map_universal_kernel"),),
+            endpoint_family,
+            (),
+        )
+
+        self.assertEqual(
+            audit.missing_routed_keys,
+            (("*", "*", "left_constant_map_universal_kernel"),),
+        )
+        self.assertFalse(audit.proves_triangular_recovery_symmetric_endpoint_cutoff)
+        self.assertEqual(
+            audit.failure_reasons,
+            ("routed_recovery_keys_not_covered",),
+        )
+
     def test_recovery_endpoint_witness_closes_system_u_when_matching(self):
         interval = one_color_latin_unit_triangular_interval()
         refinement = constant_map_kernel_only_system_k_refinement()
@@ -2104,6 +2164,153 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertIn(
             ("triangular_recovery_endpoint_missing_keys", ()),
             audit.finite_obstruction_data,
+        )
+
+    def test_recovery_symmetric_endpoint_fork_closes_system_u_when_matching(self):
+        refinement = constant_map_kernel_only_system_k_refinement()
+        closure = TriangularLatinDefectClosureAudit(
+            rows=(
+                TriangularLatinDefectClosureRow(
+                    side="left",
+                    defect="constant_map_kernel",
+                    left_color="*",
+                    right_color="*",
+                    domain_color="*",
+                    fixed_input=None,
+                    collapsed_inputs=(0, 1),
+                    generated=generated("universal"),
+                ),
+            ),
+        )
+        route = TriangularConstantKernelRecoveryRouteAudit(
+            rows=(
+                TriangularConstantKernelRecoveryRouteRow(
+                    side="left",
+                    left_color="*",
+                    right_color="*",
+                    domain_color="*",
+                    collapsed_inputs=(0, 1),
+                    closure_kind="universal",
+                    recovery_row_present=True,
+                    recovery_formula_bijective=True,
+                    witness_output_pairs=(
+                        (0, ((0, 0),)),
+                        (1, ((0, 1),)),
+                    ),
+                ),
+            ),
+        )
+        observer = refinement.triangular_recovery_unit_observer
+        endpoint_family = endpoint_family_symmetric_fork_audit(
+            (observer.unit_group_order,),
+            all_endpoint_witnesses_supplied=True,
+            endpoint_family_faithful=True,
+        )
+        fork = triangular_recovery_symmetric_endpoint_fork_audit(
+            observer,
+            ((("*", "*"), "left_constant_map_universal_kernel"),),
+            endpoint_family,
+            (("*", "*", "left_constant_map_universal_kernel"),),
+        )
+
+        audit = PostLinearRemainingFiniteSystemAudit(
+            refinement,
+            triangular_latin_defect_closure=closure,
+            triangular_constant_kernel_recovery_route=route,
+            triangular_recovery_symmetric_endpoint_fork=fork,
+        )
+
+        self.assertEqual(
+            audit.system_name,
+            "closed_by_triangular_recovery_symmetric_endpoint_fork",
+        )
+        self.assertTrue(audit.system_u_closed_by_symmetric_endpoint_fork)
+        self.assertTrue(audit.system_u_closed_by_routed_certificate)
+        self.assertFalse(audit.is_current_remaining_finite_system)
+        self.assertEqual(audit.remaining_obligations, ())
+        self.assertIn(
+            ("triangular_recovery_symmetric_fork_cutoff_proved", True),
+            audit.finite_obstruction_data,
+        )
+        self.assertIn(
+            ("triangular_recovery_symmetric_fork_missing_keys", ()),
+            audit.finite_obstruction_data,
+        )
+
+    def test_recovery_symmetric_endpoint_fork_does_not_hide_unclosed_continuation(
+        self,
+    ):
+        refinement = constant_map_kernel_system_k_refinement()
+        profile, partial_closure, partial_route = (
+            right_partial_constant_missing_row_profile_route_audits()
+        )
+        closure = TriangularLatinDefectClosureAudit(
+            rows=(
+                TriangularLatinDefectClosureRow(
+                    side="left",
+                    defect="constant_map_kernel",
+                    left_color="*",
+                    right_color="*",
+                    domain_color="*",
+                    fixed_input=None,
+                    collapsed_inputs=(0, 1),
+                    generated=generated("universal"),
+                ),
+            ),
+        )
+        route = TriangularConstantKernelRecoveryRouteAudit(
+            rows=(
+                TriangularConstantKernelRecoveryRouteRow(
+                    side="left",
+                    left_color="*",
+                    right_color="*",
+                    domain_color="*",
+                    collapsed_inputs=(0, 1),
+                    closure_kind="universal",
+                    recovery_row_present=True,
+                    recovery_formula_bijective=True,
+                    witness_output_pairs=(
+                        (0, ((0, 0),)),
+                        (1, ((0, 1),)),
+                    ),
+                ),
+            ),
+        )
+        observer = refinement.triangular_recovery_unit_observer
+        endpoint_family = endpoint_family_symmetric_fork_audit(
+            (observer.unit_group_order,),
+            all_endpoint_witnesses_supplied=True,
+            endpoint_family_faithful=True,
+        )
+        fork = triangular_recovery_symmetric_endpoint_fork_audit(
+            observer,
+            ((("*", "*"), "left_constant_map_universal_kernel"),),
+            endpoint_family,
+            (("*", "*", "left_constant_map_universal_kernel"),),
+        )
+
+        audit = PostLinearRemainingFiniteSystemAudit(
+            refinement,
+            triangular_latin_defect_closure=closure,
+            triangular_constant_kernel_recovery_route=route,
+            missing_triangular_row_profile=profile,
+            missing_triangular_partial_constant_closure=partial_closure,
+            missing_triangular_partial_constant_continuation_route=partial_route,
+            triangular_recovery_symmetric_endpoint_fork=fork,
+        )
+
+        self.assertEqual(audit.system_name, "system_c_universal_continuation_endpoint")
+        self.assertEqual(audit.active_routed_endpoint_systems, ("U", "C"))
+        self.assertEqual(audit.unclosed_routed_endpoint_systems, ("C",))
+        self.assertTrue(audit.system_u_closed_by_symmetric_endpoint_fork)
+        self.assertFalse(audit.system_c_closed_by_endpoint_witness)
+        self.assertTrue(audit.is_current_remaining_finite_system)
+        self.assertEqual(
+            audit.remaining_obligations,
+            (
+                "construct fixed endpoint witnesses for the routed universal-continuation seed closures",
+                "or upgrade one routed universal-continuation endpoint miss to a normalized-law sequence",
+            ),
         )
 
     def test_missing_latin_kernel_labels_require_nontrivial_fibres(self):

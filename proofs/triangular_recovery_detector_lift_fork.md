@@ -100,6 +100,14 @@ checks that a recovery endpoint word is an explicit product of evaluated
 recursive longitudes in `U_tri`, without subgroup enumeration.  A successful
 detector-lift induction supplies exactly this kind of expression certificate.
 
+The System U endpoint family also has a keyed symmetric-detector fork in
+`proofs/triangular_recovery_symmetric_endpoint_fork.md`.  A supplied positive
+fork proves that one symmetric degree `S_M`, with `M >= |U_tri|`, kills the
+finite routed `U_tri` endpoint family.  This is weaker than constructing the
+actual endpoint-longitude expressions, but it is still a valid fixed
+finite-detector certificate when the covered endpoint keys match the routed
+System U keys exactly.
+
 ## Derived-series alternative
 
 The detector-lift route is not the only finite `U_tri` route.  The companion

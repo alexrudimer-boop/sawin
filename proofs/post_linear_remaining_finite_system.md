@@ -686,12 +686,14 @@ triangular_recovery_derived_series_lift_audit(...)
 triangular_recovery_perfect_residual_audit(...)
 triangular_recovery_longitude_route_audit(...)
 triangular_recovery_endpoint_witness_audit(...)
+triangular_recovery_symmetric_endpoint_fork_audit(...)
 ```
 
 To close System U on the A side, prove uniformly in braid index that every
 triangular recovery endpoint lies in `V_beta(U_tri)`, by active detector-lift
 rows, explicit endpoint-longitude expressions, derived-series lifts plus a
-`P_tri` witness, or direct subgroup membership.
+`P_tri` witness, direct subgroup membership, or a fixed symmetric endpoint
+cutoff for the finite routed `U_tri` endpoint family.
 
 The post-linear wrapper now exposes and checks the bundled supplied
 certificate:
@@ -702,6 +704,14 @@ triangular_recovery_endpoint_witness_matches_system
 triangular_recovery_endpoint_witness_proved
 triangular_recovery_endpoint_missing_keys
 triangular_recovery_endpoint_extra_keys
+triangular_recovery_symmetric_fork_matches_system
+triangular_recovery_symmetric_fork_group_orders
+triangular_recovery_symmetric_fork_minimum_degree
+triangular_recovery_symmetric_fork_degree
+triangular_recovery_symmetric_fork_cutoff_proved
+triangular_recovery_symmetric_fork_tail_seed_prefix_proved
+triangular_recovery_symmetric_fork_missing_keys
+triangular_recovery_symmetric_fork_extra_keys
 ```
 
 The endpoint keys are exactly:
@@ -718,6 +728,16 @@ that supplied data.  The executable classifier returns
 `closed_by_triangular_recovery_endpoint_witness`, empties
 `remaining_obligations`, and no longer counts the row as a current remaining
 finite system.
+
+[Proved] If the supplied `triangular_recovery_symmetric_endpoint_fork` uses
+the same fixed `U_tri` observer, its endpoint-family group list is exactly
+`(|U_tri|,)`, it covers exactly the current `system_u_endpoint_defects`, and
+it proves a faithful symmetric endpoint cutoff, then System U is also closed.
+The executable classifier returns
+`closed_by_triangular_recovery_symmetric_endpoint_fork` for a U-only endpoint
+row.  In a product endpoint row, this certificate removes only U from
+`unclosed_routed_endpoint_systems`; any unclosed C or M endpoint family remains
+the reported current finite system.
 
 To turn System U into B, construct an explicit interval and a stable
 perfect-residual finite miss in `P_tri` that upgrades to the normalized-law

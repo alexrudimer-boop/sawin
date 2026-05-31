@@ -109,6 +109,24 @@ fixed observer, exact coverage of the routed keys, no extra keys, and proved
 endpoint visibility.  When supplied to the post-linear classifier, a matching
 bundle closes System U as `closed_by_triangular_recovery_endpoint_witness`.
 
+The coarser symmetric-detector supplied certificate is:
+
+```text
+triangular_recovery_symmetric_endpoint_fork_audit(
+    observer,
+    routed_defects,
+    endpoint_family,
+    covered_keys,
+)
+```
+
+where `endpoint_family` is the finite endpoint-family symmetric fork for the
+single fixed group `U_tri`.  It requires the endpoint-family group order list
+to be exactly `(|U_tri|,)` and the covered keys to match the routed System U
+keys.  A matching positive cutoff closes System U as
+`closed_by_triangular_recovery_symmetric_endpoint_fork`; in a routed product
+system it removes only U from `unclosed_routed_endpoint_systems`.
+
 The all-`n` symbolic route is sharpened in
 `proofs/triangular_recovery_detector_lift_fork.md`.  If the recovery observer
 admits active Artin detector-lift local rows in `U_tri`, then terminal
