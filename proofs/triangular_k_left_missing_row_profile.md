@@ -144,3 +144,11 @@ pair; partial-constant profiles are removed when their proper closures or
 continuation routes have been verified; and the finite cardinality/profile
 closure removes injective-nonsurjective, nonconstant-hidden, and unclassified
 profile rows when its proof flag is true.
+When a partial-constant row is removed by a continuation route, the wrapper
+keeps the downstream burden in
+`continuation_routed_k_missing_latin_row_defects` and reports
+`system_c_universal_continuation_endpoint` if no live K row remains.
+When a coordinate-unit row is removed by a mixed-unit-context route, the
+wrapper keeps that downstream burden in
+`mixed_context_routed_k_missing_latin_row_defects` and reports
+`system_m_mixed_unit_context_endpoint` if no live K row remains.

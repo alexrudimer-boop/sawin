@@ -115,6 +115,15 @@ edges as proper closures or as universal closures, and every universal edge is
 separated by `triangular_constant_kernel_recovery_route_audit`.  Other live
 defects for the same colour pair remain live; the route removes only the
 constant-map kernel reason it certifies.
+The removed reason is recorded in
+`recovery_routed_k_missing_latin_row_defects`.  If no other live K reason
+remains, the post-linear wrapper now reports the downstream
+`system_u_triangular_recovery_unit_endpoint` system, not
+`closed_by_recorded_k_deficit_routing`.
+
+The kernel wording is literal.  A singleton domain whose constant-map image
+misses codomain points is not a universal-kernel edge and is not routed here;
+it is a codomain defect handled by the structural ledger.
 
 The same route removes the companion injective-nonsurjective block-image
 reason for that side/pair.  In a triangular row, the image of an injective
@@ -122,11 +131,15 @@ nonsurjective companion section is one block in the same bundle partition
 whose constant-map kernel edge is separated by the recovery table.  This
 does not remove companion proper-kernel or companion constant reasons; those
 are kernel cases, not block-image cases, and must close through the
-structural inconsistency ledger.
+structural inconsistency ledger.  In particular, a one-point companion image
+is not counted as a companion constant-kernel reason.
+The audit records this as `active_companion_block_image_support_rows`: every
+active companion block-image row names the same-side constant-map kernel
+reason that the recovery table must separate.
 
 ## Remaining K-left work
 
 This routing does not close the no-triangular-row case and does not prove the
-all-`n` System U endpoint theorem.  It only prevents constant-map kernel
-edges and companion block-image edges from being counted as independent
-nonlinear obstructions once triangular recovery has been verified.
+all-`n` System U endpoint theorem.  It only moves constant-map kernel edges
+and companion block-image edges out of active System K and into the fixed
+triangular recovery endpoint problem.

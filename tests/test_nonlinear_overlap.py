@@ -12,6 +12,14 @@ from ybe_domination import (
     LatinTriangularYBEAudit,
     LocalInterval,
     LocalMasterBottleneckSummary,
+    MissingTriangularCoordinateUnitRoute,
+    MissingTriangularCoordinateUnitRoutingAudit,
+    MissingTriangularPartialConstantClosureAudit,
+    MissingTriangularPartialConstantClosureRow,
+    MissingTriangularPartialConstantContinuationRouteAudit,
+    MissingTriangularPartialConstantContinuationRouteRow,
+    MissingTriangularRowProfile,
+    MissingTriangularRowProfileAudit,
     NONLINEAR_OVERLAP_TARGET_VERDICT,
     NonlinearOverlapObstructionAudit,
     NonlinearOverlapRefinementAudit,
@@ -294,11 +302,11 @@ def companion_block_system_k_refinement():
         output_left_color="*",
         output_right_color="*",
         fixed_input=0,
-        domain_size=2,
-        codomain_size=3,
-        rank=2,
-        kernel_blocks=((0,), (1,)),
-        image=(0, 1),
+        domain_size=1,
+        codomain_size=2,
+        rank=1,
+        kernel_blocks=((0,),),
+        image=(0,),
     )
     opposite_section = SectionRankProfileRow(
         side="left-opposite",
@@ -328,6 +336,287 @@ def companion_block_system_k_refinement():
         refinement_for(interval, colored_ybe=False),
         triangular_column=TriangularColumnCollapseAudit((row,)),
     )
+
+
+def singleton_constant_map_non_surjective_refinement():
+    interval = one_color_latin_unit_triangular_interval()
+    unit_section = SectionRankProfileRow(
+        side="left-companion",
+        left_color="*",
+        right_color="*",
+        output_left_color="*",
+        output_right_color="*",
+        fixed_input=0,
+        domain_size=1,
+        codomain_size=1,
+        rank=1,
+        kernel_blocks=((0,),),
+        image=(0,),
+    )
+    row = TriangularColumnCollapseRowAudit(
+        side="left",
+        left_color="*",
+        right_color="*",
+        output_left_color="*",
+        output_right_color="*",
+        constant_codomain=(0, 1),
+        constant_map=((0, 0),),
+        companion_sections=(unit_section,),
+        opposite_sections=(unit_section,),
+    )
+    return replace(
+        refinement_for(interval, colored_ybe=False),
+        triangular_column=TriangularColumnCollapseAudit((row,)),
+    )
+
+
+def unsupported_companion_block_image_refinement():
+    interval = one_color_latin_unit_triangular_interval()
+    companion_section = SectionRankProfileRow(
+        side="left-companion",
+        left_color="*",
+        right_color="*",
+        output_left_color="*",
+        output_right_color="*",
+        fixed_input=0,
+        domain_size=1,
+        codomain_size=2,
+        rank=1,
+        kernel_blocks=((0,),),
+        image=(0,),
+    )
+    opposite_section = SectionRankProfileRow(
+        side="left-opposite",
+        left_color="*",
+        right_color="*",
+        output_left_color="*",
+        output_right_color="*",
+        fixed_input=0,
+        domain_size=1,
+        codomain_size=1,
+        rank=1,
+        kernel_blocks=((0,),),
+        image=(0,),
+    )
+    row = TriangularColumnCollapseRowAudit(
+        side="left",
+        left_color="*",
+        right_color="*",
+        output_left_color="*",
+        output_right_color="*",
+        constant_codomain=(0,),
+        constant_map=((0, 0),),
+        companion_sections=(companion_section,),
+        opposite_sections=(opposite_section,),
+    )
+    return replace(
+        refinement_for(interval, colored_ybe=False),
+        triangular_column=TriangularColumnCollapseAudit((row,)),
+    )
+
+
+def constant_map_kernel_only_system_k_refinement():
+    interval = one_color_latin_unit_triangular_interval()
+    left_unit_section = SectionRankProfileRow(
+        side="left-companion",
+        left_color="*",
+        right_color="*",
+        output_left_color="*",
+        output_right_color="*",
+        fixed_input=0,
+        domain_size=1,
+        codomain_size=1,
+        rank=1,
+        kernel_blocks=((0,),),
+        image=(0,),
+    )
+    left_row = TriangularColumnCollapseRowAudit(
+        side="left",
+        left_color="*",
+        right_color="*",
+        output_left_color="*",
+        output_right_color="*",
+        constant_codomain=(0,),
+        constant_map=((0, 0), (1, 0)),
+        companion_sections=(left_unit_section,),
+        opposite_sections=(left_unit_section,),
+    )
+    right_unit_section = SectionRankProfileRow(
+        side="right-companion",
+        left_color="*",
+        right_color="*",
+        output_left_color="*",
+        output_right_color="*",
+        fixed_input=0,
+        domain_size=1,
+        codomain_size=1,
+        rank=1,
+        kernel_blocks=((0,),),
+        image=(0,),
+    )
+    right_constant_opposite = SectionRankProfileRow(
+        side="right-opposite",
+        left_color="*",
+        right_color="*",
+        output_left_color="*",
+        output_right_color="*",
+        fixed_input=0,
+        domain_size=2,
+        codomain_size=1,
+        rank=1,
+        kernel_blocks=((0, 1),),
+        image=(0,),
+    )
+    right_product_row = TriangularColumnCollapseRowAudit(
+        side="right",
+        left_color="*",
+        right_color="*",
+        output_left_color="*",
+        output_right_color="*",
+        constant_codomain=(0,),
+        constant_map=((0, 0),),
+        companion_sections=(right_unit_section,),
+        opposite_sections=(right_constant_opposite,),
+    )
+    return replace(
+        refinement_for(interval, colored_ybe=False),
+        triangular_column=TriangularColumnCollapseAudit((left_row, right_product_row)),
+    )
+
+
+def partial_constant_missing_row_profile_route_audits():
+    unit_section = SectionRankProfileRow(
+        side="left",
+        left_color="*",
+        right_color="*",
+        output_left_color="*",
+        output_right_color="*",
+        fixed_input=0,
+        domain_size=2,
+        codomain_size=2,
+        rank=2,
+        kernel_blocks=((0,), (1,)),
+        image=(0, 1),
+    )
+    constant_section = SectionRankProfileRow(
+        side="left",
+        left_color="*",
+        right_color="*",
+        output_left_color="*",
+        output_right_color="*",
+        fixed_input=1,
+        domain_size=2,
+        codomain_size=2,
+        rank=1,
+        kernel_blocks=((0, 1),),
+        image=(0,),
+    )
+    profile = MissingTriangularRowProfileAudit(
+        rows=(
+            MissingTriangularRowProfile(
+                side="left",
+                left_color="*",
+                right_color="*",
+                output_left_color="*",
+                output_right_color="*",
+                section_profiles=(unit_section, constant_section),
+            ),
+        ),
+    )
+    closure = MissingTriangularPartialConstantClosureAudit(
+        rows=(
+            MissingTriangularPartialConstantClosureRow(
+                side="left",
+                left_color="*",
+                right_color="*",
+                output_left_color="*",
+                output_right_color="*",
+                fixed_input=1,
+                domain_color="*",
+                collapsed_inputs=(0, 1),
+                generated=generated("universal"),
+            ),
+        ),
+    )
+    route = MissingTriangularPartialConstantContinuationRouteAudit(
+        rows=(
+            MissingTriangularPartialConstantContinuationRouteRow(
+                side="left",
+                left_color="*",
+                right_color="*",
+                output_left_color="*",
+                output_right_color="*",
+                fixed_input=1,
+                domain_color="*",
+                collapsed_inputs=(0, 1),
+                closure_kind="universal",
+                companion_output_color="*",
+                companion_outputs=(0, 1),
+                continuation_seed_witnesses=(
+                    ContinuationSeedRow(
+                        left_color="*",
+                        right_color="*",
+                        output_left_color="*",
+                        output_right_color="*",
+                        left_input=1,
+                        right_input=0,
+                        continuing_output=1,
+                    ),
+                ),
+                continuation_seed_closure_kinds=("universal",),
+                partial_edge_contained_in_seed_closure=True,
+            ),
+        ),
+    )
+    return profile, closure, route
+
+
+def coordinate_unit_mixed_context_route_audits():
+    unit_section = SectionRankProfileRow(
+        side="left",
+        left_color="*",
+        right_color="*",
+        output_left_color="*",
+        output_right_color="*",
+        fixed_input=0,
+        domain_size=2,
+        codomain_size=2,
+        rank=2,
+        kernel_blocks=((0,), (1,)),
+        image=(0, 1),
+    )
+    profile = MissingTriangularRowProfileAudit(
+        rows=(
+            MissingTriangularRowProfile(
+                side="left",
+                left_color="*",
+                right_color="*",
+                output_left_color="*",
+                output_right_color="*",
+                section_profiles=(unit_section,),
+            ),
+        ),
+    )
+    routing = MissingTriangularCoordinateUnitRoutingAudit(
+        colored_ybe=False,
+        locally_nondegenerate_closed_branch=False,
+        rows=(
+            MissingTriangularCoordinateUnitRoute(
+                left_color="*",
+                right_color="*",
+                output_left_color="*",
+                output_right_color="*",
+                coordinate_unit_sides=("left",),
+                left_explanation="coordinate_side_unit_not_triangular",
+                right_explanation="proper_section_kernel_visible",
+                left_unit_inputs=(0,),
+                left_nonunit_inputs=(),
+                right_unit_inputs=(),
+                right_nonunit_inputs=(0,),
+            ),
+        ),
+    )
+    return profile, routing
 
 
 class PassingRepair:
@@ -514,6 +803,8 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
 
         self.assertTrue(audit.triangular_structural_inconsistency)
         self.assertEqual(audit.status, "triangular_structural_inconsistency")
+        self.assertEqual(audit.active_missing_left_latin_row_defects, ())
+        self.assertEqual(audit.active_missing_right_latin_row_defects, ())
         self.assertEqual(audit.remaining_obligations, ())
 
     def test_refinement_closes_impossible_rack_base_deficit_in_target(self):
@@ -932,6 +1223,73 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             audit.finite_obstruction_data,
         )
 
+    def test_partial_constant_no_triangular_route_becomes_continuation_endpoint(self):
+        profile, closure, route = partial_constant_missing_row_profile_route_audits()
+        audit = PostLinearRemainingFiniteSystemAudit(
+            active_system_k_refinement(),
+            missing_triangular_row_profile=profile,
+            missing_triangular_partial_constant_closure=closure,
+            missing_triangular_partial_constant_continuation_route=route,
+        )
+
+        self.assertEqual(
+            audit.system_name,
+            "system_c_universal_continuation_endpoint",
+        )
+        self.assertTrue(audit.system_c_active)
+        self.assertFalse(audit.k_deficits_closed_by_recorded_routing)
+        self.assertIn(
+            ("live_k_missing_latin_row_defects", ()),
+            audit.finite_obstruction_data,
+        )
+        self.assertIn(
+            (
+                "continuation_routed_k_missing_latin_row_defects",
+                ((("*", "*"), "no_left_triangular_row"),),
+            ),
+            audit.finite_obstruction_data,
+        )
+        self.assertEqual(
+            audit.remaining_obligations,
+            (
+                "construct fixed endpoint witnesses for the routed universal-continuation seed closures",
+                "or upgrade one routed universal-continuation endpoint miss to a normalized-law sequence",
+            ),
+        )
+
+    def test_coordinate_unit_mixed_context_route_becomes_mixed_endpoint(self):
+        profile, routing = coordinate_unit_mixed_context_route_audits()
+        audit = PostLinearRemainingFiniteSystemAudit(
+            active_system_k_refinement(),
+            missing_triangular_row_profile=profile,
+            missing_triangular_coordinate_unit_routing=routing,
+        )
+
+        self.assertEqual(
+            audit.system_name,
+            "system_m_mixed_unit_context_endpoint",
+        )
+        self.assertTrue(audit.system_m_active)
+        self.assertFalse(audit.k_deficits_closed_by_recorded_routing)
+        self.assertIn(
+            ("live_k_missing_latin_row_defects", ()),
+            audit.finite_obstruction_data,
+        )
+        self.assertIn(
+            (
+                "mixed_context_routed_k_missing_latin_row_defects",
+                ((("*", "*"), "no_left_triangular_row"),),
+            ),
+            audit.finite_obstruction_data,
+        )
+        self.assertEqual(
+            audit.remaining_obligations,
+            (
+                "prove each routed mixed-unit context endpoint factors through fixed detector/readout data",
+                "or upgrade one routed mixed-unit endpoint miss to a normalized-law sequence",
+            ),
+        )
+
     def test_post_linear_routes_constant_map_kernel_to_recovery_when_supplied(self):
         refinement = constant_map_kernel_system_k_refinement()
         closure = TriangularLatinDefectClosureAudit(
@@ -996,6 +1354,109 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             routed.finite_obstruction_data,
         )
 
+    def test_constant_map_kernel_only_route_becomes_system_u_endpoint(self):
+        refinement = constant_map_kernel_only_system_k_refinement()
+        closure = TriangularLatinDefectClosureAudit(
+            rows=(
+                TriangularLatinDefectClosureRow(
+                    side="left",
+                    defect="constant_map_kernel",
+                    left_color="*",
+                    right_color="*",
+                    domain_color="*",
+                    fixed_input=None,
+                    collapsed_inputs=(0, 1),
+                    generated=generated("universal"),
+                ),
+            ),
+        )
+        route = TriangularConstantKernelRecoveryRouteAudit(
+            rows=(
+                TriangularConstantKernelRecoveryRouteRow(
+                    side="left",
+                    left_color="*",
+                    right_color="*",
+                    domain_color="*",
+                    collapsed_inputs=(0, 1),
+                    closure_kind="universal",
+                    recovery_row_present=True,
+                    recovery_formula_bijective=True,
+                    witness_output_pairs=(
+                        (0, ((0, 0),)),
+                        (1, ((0, 1),)),
+                    ),
+                ),
+            ),
+        )
+        raw = PostLinearRemainingFiniteSystemAudit(refinement)
+        routed = PostLinearRemainingFiniteSystemAudit(
+            refinement,
+            triangular_latin_defect_closure=closure,
+            triangular_constant_kernel_recovery_route=route,
+        )
+
+        self.assertEqual(raw.system_name, "system_k_kink_completion_deficit")
+        self.assertIn(
+            (
+                "live_k_missing_latin_row_defects",
+                ((("*", "*"), "left_constant_map_universal_kernel"),),
+            ),
+            raw.finite_obstruction_data,
+        )
+        self.assertEqual(
+            routed.system_name,
+            "system_u_triangular_recovery_unit_endpoint",
+        )
+        self.assertTrue(routed.k_deficits_routed_to_recovery_endpoint)
+        self.assertFalse(routed.k_deficits_closed_by_recorded_routing)
+        self.assertIn(
+            (
+                "recovery_routed_k_missing_latin_row_defects",
+                ((("*", "*"), "left_constant_map_universal_kernel"),),
+            ),
+            routed.finite_obstruction_data,
+        )
+        self.assertIn(
+            ("live_k_missing_latin_row_defects", ()),
+            routed.finite_obstruction_data,
+        )
+        self.assertEqual(
+            routed.remaining_obligations,
+            (
+                "prove each routed triangular recovery endpoint composite lies in V_beta(U_tri)",
+                "or upgrade one routed U_tri endpoint miss to a normalized-law sequence",
+            ),
+        )
+
+    def test_missing_latin_kernel_labels_require_nontrivial_fibres(self):
+        refinement = singleton_constant_map_non_surjective_refinement()
+
+        self.assertEqual(refinement.status, "triangular_structural_inconsistency")
+        self.assertEqual(refinement.active_missing_left_latin_row_defects, ())
+        self.assertEqual(refinement.active_missing_right_latin_row_defects, ())
+        self.assertIn(
+            (("*", "*"), "left_constant_map_not_surjective"),
+            refinement.missing_left_latin_row_defects,
+        )
+        self.assertNotIn(
+            (("*", "*"), "left_constant_map_universal_kernel"),
+            refinement.missing_left_latin_row_defects,
+        )
+
+    def test_unsupported_companion_block_image_is_structural_not_active_k(self):
+        refinement = unsupported_companion_block_image_refinement()
+
+        self.assertEqual(refinement.status, "triangular_structural_inconsistency")
+        self.assertIn(
+            (("*", "*"), "left_companion_sections_injective_non_surjective"),
+            refinement.missing_left_latin_row_defects,
+        )
+        self.assertEqual(refinement.active_missing_left_latin_row_defects, ())
+        self.assertEqual(refinement.active_companion_block_image_support_rows, ())
+        self.assertTrue(
+            refinement.active_companion_block_images_have_constant_kernel_support
+        )
+
     def test_post_linear_routes_companion_block_image_by_constant_map_recovery(self):
         refinement = companion_block_system_k_refinement()
         closure = TriangularLatinDefectClosureAudit(
@@ -1042,6 +1503,38 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
                 "live_k_missing_latin_row_defects",
                 (
                     (("*", "*"), "left_constant_map_universal_kernel"),
+                    (("*", "*"), "left_companion_sections_injective_non_surjective"),
+                    (("*", "*"), "no_right_triangular_row"),
+                ),
+            ),
+            raw.finite_obstruction_data,
+        )
+        self.assertIn(
+            (
+                "active_companion_block_image_support_rows",
+                (
+                    (
+                        "left",
+                        ("*", "*"),
+                        ("left_constant_map_universal_kernel",),
+                    ),
+                ),
+            ),
+            raw.finite_obstruction_data,
+        )
+        self.assertIn(
+            (
+                "active_companion_block_images_have_constant_kernel_support",
+                True,
+            ),
+            raw.finite_obstruction_data,
+        )
+        self.assertNotIn(
+            (
+                "live_k_missing_latin_row_defects",
+                (
+                    (("*", "*"), "left_constant_map_universal_kernel"),
+                    (("*", "*"), "left_companion_sections_constant"),
                     (("*", "*"), "left_companion_sections_injective_non_surjective"),
                     (("*", "*"), "no_right_triangular_row"),
                 ),

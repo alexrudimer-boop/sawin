@@ -165,9 +165,24 @@ The K wrapper now exposes `live_kink_completion_deficits`; after these
 preemptions the only direct live deficit is
 `latin_rows_not_present_for_all_pairs`.  The side-dual all-pairs marker is a
 modifier on that missing-row state, not a separate endpoint branch.
-The wrapper also exposes `live_k_missing_latin_row_defects`; raw K rows with
-that tuple empty are now classified as `closed_by_recorded_k_deficit_routing`
-rather than active System K.
+The wrapper also exposes `live_k_missing_latin_row_defects` and
+`recovery_routed_k_missing_latin_row_defects`; raw K rows with both tuples
+empty are now classified as `closed_by_recorded_k_deficit_routing` rather
+than active System K, while rows emptied by triangular recovery routing move
+to System U.
+It also exposes `continuation_routed_k_missing_latin_row_defects`; rows
+emptied by partial-constant continuation routing move to
+`system_c_universal_continuation_endpoint`, preserving the universal
+continuation endpoint burden.
+Coordinate-unit rows emptied by mixed-unit-context routing are recorded in
+`mixed_context_routed_k_missing_latin_row_defects` and move to
+`system_m_mixed_unit_context_endpoint`, preserving the mixed-unit endpoint
+burden.
+The live tuple is status-faithful: it is populated only in the actual
+`triangular_recovery_kink_completion_deficit` branch.  Structural raw labels
+remain visible in `missing_left_latin_row_defects`, but once
+`triangular_structural_inconsistency` fires they are not active System K
+pressure.
 Side-dual non-Latin and no-replacement labels remain in
 `k_left_side_dual_replacement_rows`, but they are pointers to opposite-side
 row ledgers rather than members of the live K tuple.
@@ -183,6 +198,17 @@ recovery table before the constant-map reason is removed.
 That same triangular recovery separation removes the companion
 injective-nonsurjective block-image reason for the side/pair, while companion
 proper-kernel and constant reasons stay with the structural/kernel ledger.
+The executable ledger now treats these names as kernel-local: singleton
+constant-map or companion images are codomain/block-image defects, not
+universal-kernel or companion constant-kernel defects.
+It also records `active_companion_block_image_support_rows`, so every active
+companion block-image reason is witnessed by a same-side constant-map proper
+or universal kernel reason.
+When these kernel or block-image rows are separated by the triangular
+recovery table, they are recorded as
+`recovery_routed_k_missing_latin_row_defects`.  If no live K rows remain, the
+post-linear wrapper now exposes the downstream System U endpoint obligation
+instead of calling the branch closed.
 For the kernel subcases, `triangular_latin_defect_closure_audit` now proves
 that proper generated closures are incompatible with local minimality and
 records the universal generated seed edges that still require detector

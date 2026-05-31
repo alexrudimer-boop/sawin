@@ -503,6 +503,19 @@ class PostLinearRemainingFiniteSystemAudit:
                 return row.status != "unrouted_coordinate_unit_row"
         return False
 
+    def _coordinate_unit_profile_routes_to_mixed_context(
+        self, side: str, pair: Tuple[Color, Color]
+    ) -> bool:
+        if self.missing_triangular_coordinate_unit_routing is None:
+            return False
+        for row in self.missing_triangular_coordinate_unit_routing.rows:
+            if (
+                (row.left_color, row.right_color) == pair
+                and side in row.coordinate_unit_sides
+            ):
+                return row.status == "mixed_unit_context"
+        return False
+
     def _partial_constant_profile_routes(self, side: str, pair: Tuple[Color, Color]) -> bool:
         if self.missing_triangular_partial_constant_closure is None:
             return False
@@ -543,6 +556,49 @@ class PostLinearRemainingFiniteSystemAudit:
                 return False
         return True
 
+    def _partial_constant_profile_routes_to_continuation(
+        self, side: str, pair: Tuple[Color, Color]
+    ) -> bool:
+        if (
+            self.missing_triangular_partial_constant_closure is None
+            or self.missing_triangular_partial_constant_continuation_route is None
+        ):
+            return False
+        closure_rows = tuple(
+            row
+            for row in self.missing_triangular_partial_constant_closure.rows
+            if row.side == side and (row.left_color, row.right_color) == pair
+        )
+        if not closure_rows:
+            return False
+        route_by_key = {
+            (
+                row.side,
+                row.left_color,
+                row.right_color,
+                row.fixed_input,
+                row.domain_color,
+                row.collapsed_inputs,
+            ): row
+            for row in self.missing_triangular_partial_constant_continuation_route.rows
+        }
+        for row in closure_rows:
+            if row.closure_is_proper:
+                continue
+            route = route_by_key.get(
+                (
+                    row.side,
+                    row.left_color,
+                    row.right_color,
+                    row.fixed_input,
+                    row.domain_color,
+                    row.collapsed_inputs,
+                )
+            )
+            if route is not None and route.routes_to_continuation_seed_closure:
+                return True
+        return False
+
     def _no_triangular_row_routes_by_profile(
         self,
         side: str,
@@ -567,6 +623,30 @@ class PostLinearRemainingFiniteSystemAudit:
                 and self.missing_triangular_left_rack_cardinality.proves_left_rack_missing_triangular_cardinality_closure
             )
         return False
+
+    def _no_triangular_row_routes_to_continuation(
+        self,
+        side: str,
+        pair: Tuple[Color, Color],
+    ) -> bool:
+        row = self._missing_profile_row(side, pair)
+        return (
+            row is not None
+            and row.explanation == "partial_constant_hidden_rank_loss"
+            and self._partial_constant_profile_routes_to_continuation(side, pair)
+        )
+
+    def _no_triangular_row_routes_to_mixed_context(
+        self,
+        side: str,
+        pair: Tuple[Color, Color],
+    ) -> bool:
+        row = self._missing_profile_row(side, pair)
+        return (
+            row is not None
+            and row.explanation == "coordinate_side_unit_not_triangular"
+            and self._coordinate_unit_profile_routes_to_mixed_context(side, pair)
+        )
 
     def _constant_map_kernel_routes_by_recovery(
         self,
@@ -654,6 +734,62 @@ class PostLinearRemainingFiniteSystemAudit:
             live.append((pair, reason))
         return tuple(live)
 
+    def _recovery_routed_missing_latin_row_defects(
+        self,
+        defects: Tuple[Tuple[Tuple[Color, Color], str], ...],
+    ) -> Tuple[Tuple[Tuple[Color, Color], str], ...]:
+        routed = []
+        for pair, reason in defects:
+            if reason in (
+                "left_constant_map_proper_kernel",
+                "left_constant_map_universal_kernel",
+                "left_companion_sections_injective_non_surjective",
+            ) and self._constant_map_kernel_routes_by_recovery("left", pair):
+                routed.append((pair, reason))
+            if reason in (
+                "right_constant_map_proper_kernel",
+                "right_constant_map_universal_kernel",
+                "right_companion_sections_injective_non_surjective",
+            ) and self._constant_map_kernel_routes_by_recovery("right", pair):
+                routed.append((pair, reason))
+        return tuple(routed)
+
+    def _continuation_routed_missing_latin_row_defects(
+        self,
+        defects: Tuple[Tuple[Tuple[Color, Color], str], ...],
+    ) -> Tuple[Tuple[Tuple[Color, Color], str], ...]:
+        routed = []
+        for pair, reason in defects:
+            if reason == "no_left_triangular_row" and self._no_triangular_row_routes_to_continuation(
+                "left",
+                pair,
+            ):
+                routed.append((pair, reason))
+            if reason == "no_right_triangular_row" and self._no_triangular_row_routes_to_continuation(
+                "right",
+                pair,
+            ):
+                routed.append((pair, reason))
+        return tuple(routed)
+
+    def _mixed_context_routed_missing_latin_row_defects(
+        self,
+        defects: Tuple[Tuple[Tuple[Color, Color], str], ...],
+    ) -> Tuple[Tuple[Tuple[Color, Color], str], ...]:
+        routed = []
+        for pair, reason in defects:
+            if reason == "no_left_triangular_row" and self._no_triangular_row_routes_to_mixed_context(
+                "left",
+                pair,
+            ):
+                routed.append((pair, reason))
+            if reason == "no_right_triangular_row" and self._no_triangular_row_routes_to_mixed_context(
+                "right",
+                pair,
+            ):
+                routed.append((pair, reason))
+        return tuple(routed)
+
     @property
     def live_k_missing_latin_row_defects(self) -> Tuple[Tuple[Tuple[Color, Color], str], ...]:
         return self._live_missing_latin_row_defects(
@@ -662,10 +798,70 @@ class PostLinearRemainingFiniteSystemAudit:
         )
 
     @property
+    def recovery_routed_k_missing_latin_row_defects(
+        self,
+    ) -> Tuple[Tuple[Tuple[Color, Color], str], ...]:
+        return self._recovery_routed_missing_latin_row_defects(
+            self.refinement.active_missing_left_latin_row_defects
+            + self.refinement.active_missing_right_latin_row_defects,
+        )
+
+    @property
+    def continuation_routed_k_missing_latin_row_defects(
+        self,
+    ) -> Tuple[Tuple[Tuple[Color, Color], str], ...]:
+        return self._continuation_routed_missing_latin_row_defects(
+            self.refinement.active_missing_left_latin_row_defects
+            + self.refinement.active_missing_right_latin_row_defects,
+        )
+
+    @property
+    def mixed_context_routed_k_missing_latin_row_defects(
+        self,
+    ) -> Tuple[Tuple[Tuple[Color, Color], str], ...]:
+        return self._mixed_context_routed_missing_latin_row_defects(
+            self.refinement.active_missing_left_latin_row_defects
+            + self.refinement.active_missing_right_latin_row_defects,
+        )
+
+    @property
+    def k_deficits_routed_to_recovery_endpoint(self) -> bool:
+        return (
+            self.raw_system_k
+            and not self.kink_completion_deficits_routed
+            and bool(self.recovery_routed_k_missing_latin_row_defects)
+            and not self.live_k_missing_latin_row_defects
+        )
+
+    @property
+    def k_deficits_routed_to_continuation_endpoint(self) -> bool:
+        return (
+            self.raw_system_k
+            and not self.kink_completion_deficits_routed
+            and bool(self.continuation_routed_k_missing_latin_row_defects)
+            and not self.live_k_missing_latin_row_defects
+            and not self.recovery_routed_k_missing_latin_row_defects
+        )
+
+    @property
+    def k_deficits_routed_to_mixed_context_endpoint(self) -> bool:
+        return (
+            self.raw_system_k
+            and not self.kink_completion_deficits_routed
+            and bool(self.mixed_context_routed_k_missing_latin_row_defects)
+            and not self.live_k_missing_latin_row_defects
+            and not self.recovery_routed_k_missing_latin_row_defects
+            and not self.continuation_routed_k_missing_latin_row_defects
+        )
+
+    @property
     def k_deficits_closed_by_recorded_routing(self) -> bool:
         return (
             self.raw_system_k
             and not self.kink_completion_deficits_routed
+            and not self.k_deficits_routed_to_recovery_endpoint
+            and not self.k_deficits_routed_to_continuation_endpoint
+            and not self.k_deficits_routed_to_mixed_context_endpoint
             and not self.live_k_missing_latin_row_defects
         )
 
@@ -680,9 +876,12 @@ class PostLinearRemainingFiniteSystemAudit:
     @property
     def routed_system_k_to_u(self) -> bool:
         return (
-            self.raw_system_k
-            and self.kink_completion_deficits_routed
-            and bool(self.live_k_missing_latin_row_defects)
+            (
+                self.raw_system_k
+                and self.kink_completion_deficits_routed
+                and bool(self.live_k_missing_latin_row_defects)
+            )
+            or self.k_deficits_routed_to_recovery_endpoint
         )
 
     @property
@@ -691,6 +890,14 @@ class PostLinearRemainingFiniteSystemAudit:
             self.refinement.status == "triangular_recovery_unit_longitude_obstruction"
             or self.routed_system_k_to_u
         )
+
+    @property
+    def system_c_active(self) -> bool:
+        return self.k_deficits_routed_to_continuation_endpoint
+
+    @property
+    def system_m_active(self) -> bool:
+        return self.k_deficits_routed_to_mixed_context_endpoint
 
     @property
     def system_name(self) -> str:
@@ -702,11 +909,20 @@ class PostLinearRemainingFiniteSystemAudit:
             return "system_k_kink_completion_deficit"
         if self.system_u_active:
             return "system_u_triangular_recovery_unit_endpoint"
+        if self.system_c_active:
+            return "system_c_universal_continuation_endpoint"
+        if self.system_m_active:
+            return "system_m_mixed_unit_context_endpoint"
         return f"earlier_unrouted_status:{self.refinement.status}"
 
     @property
     def is_current_remaining_finite_system(self) -> bool:
-        return self.system_k_active or self.system_u_active
+        return (
+            self.system_k_active
+            or self.system_u_active
+            or self.system_c_active
+            or self.system_m_active
+        )
 
     @property
     def k_left_side_dual_replacement_rows(
@@ -746,7 +962,13 @@ class PostLinearRemainingFiniteSystemAudit:
 
     @property
     def finite_obstruction_data(self) -> Tuple[Tuple[str, object], ...]:
-        if self.raw_system_k and not self.kink_completion_deficits_routed:
+        if (
+            self.raw_system_k
+            and not self.kink_completion_deficits_routed
+            and not self.k_deficits_routed_to_recovery_endpoint
+            and not self.k_deficits_routed_to_continuation_endpoint
+            and not self.k_deficits_routed_to_mixed_context_endpoint
+        ):
             data = [
                 ("deficits", self.refinement.rack_kink_completion_deficits),
                 (
@@ -780,6 +1002,26 @@ class PostLinearRemainingFiniteSystemAudit:
                 (
                     "live_k_missing_latin_row_defects",
                     self.live_k_missing_latin_row_defects,
+                ),
+                (
+                    "recovery_routed_k_missing_latin_row_defects",
+                    self.recovery_routed_k_missing_latin_row_defects,
+                ),
+                (
+                    "continuation_routed_k_missing_latin_row_defects",
+                    self.continuation_routed_k_missing_latin_row_defects,
+                ),
+                (
+                    "mixed_context_routed_k_missing_latin_row_defects",
+                    self.mixed_context_routed_k_missing_latin_row_defects,
+                ),
+                (
+                    "active_companion_block_image_support_rows",
+                    self.refinement.active_companion_block_image_support_rows,
+                ),
+                (
+                    "active_companion_block_images_have_constant_kernel_support",
+                    self.refinement.active_companion_block_images_have_constant_kernel_support,
                 ),
                 (
                     "k_left_side_dual_replacement_rows",
@@ -1237,6 +1479,22 @@ class PostLinearRemainingFiniteSystemAudit:
                 ("recovery_row_count", observer.row_count),
                 ("left_latin_row_pairs", self.refinement.left_latin_row_pairs),
                 ("right_latin_row_pairs", self.refinement.right_latin_row_pairs),
+                (
+                    "live_k_missing_latin_row_defects",
+                    self.live_k_missing_latin_row_defects,
+                ),
+                (
+                    "recovery_routed_k_missing_latin_row_defects",
+                    self.recovery_routed_k_missing_latin_row_defects,
+                ),
+                (
+                    "continuation_routed_k_missing_latin_row_defects",
+                    self.continuation_routed_k_missing_latin_row_defects,
+                ),
+                (
+                    "mixed_context_routed_k_missing_latin_row_defects",
+                    self.mixed_context_routed_k_missing_latin_row_defects,
+                ),
             ]
             if self.universal_continuation_identity_routing is not None:
                 routing = self.universal_continuation_identity_routing
@@ -1257,16 +1515,74 @@ class PostLinearRemainingFiniteSystemAudit:
                     )
                 )
             return tuple(data)
+        if self.system_c_active:
+            data = [
+                (
+                    "live_k_missing_latin_row_defects",
+                    self.live_k_missing_latin_row_defects,
+                ),
+                (
+                    "continuation_routed_k_missing_latin_row_defects",
+                    self.continuation_routed_k_missing_latin_row_defects,
+                ),
+            ]
+            if self.universal_continuation_identity_routing is not None:
+                routing = self.universal_continuation_identity_routing
+                data.extend(
+                    (
+                        (
+                            "universal_continuation_identity_lost_edges",
+                            routing.routing.lost_edges,
+                        ),
+                        (
+                            "universal_continuation_identity_unrouted_edges",
+                            routing.routing.unrouted_edges,
+                        ),
+                        (
+                            "universal_continuation_identity_routing_proved",
+                            routing.proves_identity_routed_universal_continuation,
+                        ),
+                    )
+                )
+            return tuple(data)
+        if self.system_m_active:
+            return (
+                (
+                    "live_k_missing_latin_row_defects",
+                    self.live_k_missing_latin_row_defects,
+                ),
+                (
+                    "mixed_context_routed_k_missing_latin_row_defects",
+                    self.mixed_context_routed_k_missing_latin_row_defects,
+                ),
+            )
         return (("status", self.refinement.status),)
 
     @property
     def remaining_obligations(self) -> Tuple[str, ...]:
         if self.k_deficits_closed_by_recorded_routing:
             return ()
-        if self.system_u_active and self.raw_system_k and self.kink_completion_deficits_routed:
+        if (
+            self.system_u_active
+            and self.raw_system_k
+            and (
+                self.kink_completion_deficits_routed
+                or self.k_deficits_routed_to_recovery_endpoint
+            )
+        ):
             return (
                 "prove each routed triangular recovery endpoint composite lies in V_beta(U_tri)",
                 "or upgrade one routed U_tri endpoint miss to a normalized-law sequence",
+            )
+        if self.system_c_active:
+            return (
+                "construct fixed endpoint witnesses for the routed universal-continuation seed closures",
+                "or upgrade one routed universal-continuation endpoint miss to a normalized-law sequence",
+            )
+        if self.system_m_active:
+            return (
+                "prove each routed mixed-unit context endpoint factors through fixed detector/readout data",
+                "or upgrade one routed mixed-unit endpoint miss to a normalized-law sequence",
             )
         return self.refinement.remaining_obligations
 
@@ -1753,7 +2069,7 @@ class NonlinearOverlapRefinementAudit:
                     add(f"{side}_constant_map_not_surjective")
                 if row.constant_map_has_proper_kernel:
                     add(f"{side}_constant_map_proper_kernel")
-                elif row.constant_map_is_constant:
+                elif row.constant_kernel_kind == "universal":
                     add(f"{side}_constant_map_universal_kernel")
             if not row.companion_sections_bijective:
                 add(f"{side}_companion_sections_not_bijective")
@@ -1762,7 +2078,10 @@ class NonlinearOverlapRefinementAudit:
                     for section in row.companion_sections
                 ):
                     add(f"{side}_companion_sections_proper_kernel")
-                if any(section.is_constant for section in row.companion_sections):
+                if any(
+                    section.kernel_kind == "universal"
+                    for section in row.companion_sections
+                ):
                     add(f"{side}_companion_sections_constant")
                 if all(
                     section.is_injective_non_surjective
@@ -1829,7 +2148,7 @@ class NonlinearOverlapRefinementAudit:
     def active_missing_left_latin_row_defects(
         self,
     ) -> Tuple[Tuple[Tuple[Color, Color], str], ...]:
-        if not self.triangular_recovery_needs_kink_completion:
+        if self.status != "triangular_recovery_kink_completion_deficit":
             return ()
         routed_pair_reasons = {
             "left_row_product_collapse",
@@ -1839,31 +2158,39 @@ class NonlinearOverlapRefinementAudit:
         }
         active_reasons = {
             "no_left_triangular_row",
-            "left_constant_map_not_surjective",
             "left_constant_map_proper_kernel",
             "left_constant_map_universal_kernel",
-            "left_companion_sections_proper_kernel",
-            "left_companion_sections_constant",
             "left_companion_sections_injective_non_surjective",
-            "left_opposite_hidden_nonunit_unclassified",
         }
         active = []
         for pair in self.missing_left_latin_row_pairs:
             reasons = self._missing_latin_row_reasons("left", pair)
             if any(reason in routed_pair_reasons for reason in reasons):
                 continue
-            active.extend(
-                (pair, reason)
+            has_constant_kernel_support = any(
+                reason
+                in {
+                    "left_constant_map_proper_kernel",
+                    "left_constant_map_universal_kernel",
+                }
                 for reason in reasons
-                if reason in active_reasons
             )
+            for reason in reasons:
+                if reason not in active_reasons:
+                    continue
+                if (
+                    reason == "left_companion_sections_injective_non_surjective"
+                    and not has_constant_kernel_support
+                ):
+                    continue
+                active.append((pair, reason))
         return tuple(active)
 
     @property
     def active_missing_right_latin_row_defects(
         self,
     ) -> Tuple[Tuple[Tuple[Color, Color], str], ...]:
-        if not self.triangular_recovery_needs_kink_completion:
+        if self.status != "triangular_recovery_kink_completion_deficit":
             return ()
         routed_pair_reasons = {
             "right_row_product_collapse",
@@ -1873,25 +2200,71 @@ class NonlinearOverlapRefinementAudit:
         }
         active_reasons = {
             "no_right_triangular_row",
-            "right_constant_map_not_surjective",
             "right_constant_map_proper_kernel",
             "right_constant_map_universal_kernel",
-            "right_companion_sections_proper_kernel",
-            "right_companion_sections_constant",
             "right_companion_sections_injective_non_surjective",
-            "right_opposite_hidden_nonunit_unclassified",
         }
         active = []
         for pair in self.missing_right_latin_row_pairs:
             reasons = self._missing_latin_row_reasons("right", pair)
             if any(reason in routed_pair_reasons for reason in reasons):
                 continue
-            active.extend(
-                (pair, reason)
+            has_constant_kernel_support = any(
+                reason
+                in {
+                    "right_constant_map_proper_kernel",
+                    "right_constant_map_universal_kernel",
+                }
                 for reason in reasons
-                if reason in active_reasons
             )
+            for reason in reasons:
+                if reason not in active_reasons:
+                    continue
+                if (
+                    reason == "right_companion_sections_injective_non_surjective"
+                    and not has_constant_kernel_support
+                ):
+                    continue
+                active.append((pair, reason))
         return tuple(active)
+
+    @property
+    def active_companion_block_image_support_rows(
+        self,
+    ) -> Tuple[Tuple[str, Tuple[Color, Color], Tuple[str, ...]], ...]:
+        rows = []
+        for side, defects in (
+            ("left", self.active_missing_left_latin_row_defects),
+            ("right", self.active_missing_right_latin_row_defects),
+        ):
+            companion_reason = f"{side}_companion_sections_injective_non_surjective"
+            support_reasons = {
+                f"{side}_constant_map_proper_kernel",
+                f"{side}_constant_map_universal_kernel",
+            }
+            for pair, reason in defects:
+                if reason != companion_reason:
+                    continue
+                raw_reasons = self._missing_latin_row_reasons(side, pair)
+                rows.append(
+                    (
+                        side,
+                        pair,
+                        tuple(
+                            support
+                            for support in raw_reasons
+                            if support in support_reasons
+                        ),
+                    )
+                )
+        return tuple(rows)
+
+    @property
+    def active_companion_block_images_have_constant_kernel_support(self) -> bool:
+        return all(
+            bool(support_reasons)
+            for _side, _pair, support_reasons in self.active_companion_block_image_support_rows
+        )
 
     @property
     def missing_left_latin_row_pairs(self) -> Tuple[Tuple[Color, Color], ...]:

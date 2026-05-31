@@ -141,9 +141,12 @@ partial-constant kernel edge
 
 In a local-minimal remaining interval, any nontrivial continuation seed has
 universal generated closure.  Therefore a partial-constant universal seed edge
-is not an independent K-left endpoint.  It is one of the universal
-continuation seed closures already handled by the descent-endpoint repair
-contract target.
+is not an independent K-left endpoint and is not a closed K row.  The
+post-linear wrapper records it in
+`continuation_routed_k_missing_latin_row_defects` and moves the finite system
+to `system_c_universal_continuation_endpoint`, the universal-continuation
+endpoint layer already handled by the descent-endpoint repair contract
+target.
 
 ## Remaining burden
 

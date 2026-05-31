@@ -87,7 +87,10 @@ If a coordinate-unit missing side is paired with any nonunit opposite side,
 then it belongs to the mixed-unit context-recovery channel.  The nonunit
 information is carried by the opposite triangular, partial-constant,
 proper-kernel, injective-nonsurjective, or hidden-rank profile; it is not a
-new one-sided unit obstruction.
+new one-sided unit obstruction and it is not a closed K row.  The
+post-linear wrapper records such rows in
+`mixed_context_routed_k_missing_latin_row_defects` and reports
+`system_m_mixed_unit_context_endpoint` when no live K row remains.
 
 Thus the no-triangular K-left ledger is narrowed again:
 
@@ -113,6 +116,6 @@ nonconstant_hidden_rank_loss:
 
 [Open] This routing does not yet prove the uniform nonlinear endpoint theorem.
 After coordinate-unit rows are removed as independent obstructions, the
-remaining nonlinear work is still to prove that every mixed-unit/triangular
-recovery endpoint has a fixed finite `V_beta` witness, or to upgrade a
-specific failure into a normalized-law B sequence.
+remaining nonlinear work is still to prove that every mixed-unit endpoint has
+a fixed finite detector/readout witness, or to upgrade a specific failure
+into a normalized-law B sequence.

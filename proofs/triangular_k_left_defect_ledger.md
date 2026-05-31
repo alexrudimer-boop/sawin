@@ -90,7 +90,10 @@ left_constant_map_universal_kernel
 ```
 
 separate a size/codomain failure from a proper or universal kernel of
-`alpha_{a,b}`.
+`alpha_{a,b}`.  The universal-kernel label is kernel-local: it is used only
+when the fibre of `alpha_{a,b}` is nontrivial and all inputs collapse to one
+output.  A one-point domain that merely misses part of the codomain is only a
+codomain failure, not a universal kernel edge.
 
 ```text
 left_companion_sections_not_bijective
@@ -107,7 +110,9 @@ left_companion_sections_injective_non_surjective
 ```
 
 record whether the companion failure loses information by a proper kernel, is
-rank-one, or is injective but misses part of the companion codomain.
+rank-one with a nontrivial collapsed fibre, or is injective but misses part of
+the companion codomain.  Thus a one-point companion image is a block-image
+case, not a companion constant-kernel case.
 
 ```text
 left_opposite_sections_not_bijective
@@ -212,28 +217,47 @@ Find or rule out a local-minimal bi_free_universal_corridor_bottleneck
 interval with a colour pair (a,b) such that:
 
 1. triangular recovery is verified;
-2. no closed product, proper-kernel, injective-nonsurjective, kink, or
-   side-dual Latin route applies;
-3. the pair appears in missing_left_latin_row_defects with one of:
+2. no earlier status closes the pair as product collapse, structural
+   inconsistency, kink/YBE inconsistency, or side-dual Latin completion;
+3. the pair appears in `active_missing_left_latin_row_defects` with one of:
 
    no_left_triangular_row;
-   left_constant_map_not_surjective;
    left_constant_map_proper_kernel;
    left_constant_map_universal_kernel;
-   left_companion_sections_proper_kernel;
-   left_companion_sections_constant;
-   left_companion_sections_injective_non_surjective;
-   left_opposite_hidden_nonunit_unclassified.
+   left_companion_sections_injective_non_surjective tied to such a
+   constant-map kernel.
 ```
 
 This is now an explicit finite algebraic system on the tables of
-`R_C` and `T`.  Closing it on the A side means proving that every listed row
-reason either contradicts the local-minimal bi-free universal-corridor
-hypotheses or yields a fixed readout/detector.  Side-dual non-Latin or
-missing-replacement rows are still recorded, but only as pointers to the
-right-side finite systems.  Turning the residue into B means constructing one
-actual live left/right row defect and upgrading its finite miss to a
-normalized-law sequence invisible to every finite group.
+`R_C` and `T`.  Closing it on the A side means proving that every listed live
+row reason either yields a fixed readout/detector or routes onward to the
+fixed triangular recovery unit endpoint.  The structural labels
+`left_constant_map_not_surjective`, `left_companion_sections_proper_kernel`,
+`left_companion_sections_constant`, and
+`left_opposite_hidden_nonunit_unclassified` remain in the raw
+`missing_left_latin_row_defects` ledger, but they are not active K rows: they
+are closed earlier by `triangular_structural_inconsistency`.  Side-dual
+non-Latin or missing-replacement rows are still recorded, but only as
+pointers to the right-side finite systems.  Turning the residue into B means
+constructing one actual live left/right row defect and upgrading its finite
+miss to a normalized-law sequence invisible to every finite group.
+
+The kernel labels in the raw and active lists are now literal kernel labels.
+Singleton domain maps do not contribute `*_universal_kernel` or
+`*_companion_sections_constant`; their only possible non-bijective profile is
+the codomain/block-image label already routed by the appropriate structural
+or recovery-table ledger.
+
+The companion block-image case is therefore not an independent fourth active
+mechanism.  The audit records
+`active_companion_block_image_support_rows`, and each row must name a
+same-side constant-map proper or universal kernel reason.  Without that
+support, the companion injective-nonsurjective profile is closed earlier by
+the structural inconsistency ledger.
+When the recovery table separates the supported kernel edge, the row is
+listed in `recovery_routed_k_missing_latin_row_defects`.  If that exhausts
+the active K ledger, the remaining finite system is System U, not a closed
+K branch.
 
 ## Relation to System U
 

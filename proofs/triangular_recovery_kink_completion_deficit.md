@@ -164,8 +164,10 @@ status.  The direct finite target is the missing Latin-row completion ledger,
 with `side_dual_latin_rows_present_for_all_pairs` retained only as a
 side-dual modifier.
 
-The wrapper treats raw K rows with an empty
-`live_k_missing_latin_row_defects` tuple as:
+The wrapper treats raw K rows with empty
+`live_k_missing_latin_row_defects` and empty
+`recovery_routed_k_missing_latin_row_defects` and
+`continuation_routed_k_missing_latin_row_defects` tuples as:
 
 ```text
 closed_by_recorded_k_deficit_routing.
@@ -173,6 +175,10 @@ closed_by_recorded_k_deficit_routing.
 
 Thus active System K means a nonempty finite row ledger, not merely a raw
 status string in a synthetic or already-routed subcase.
+The active row ledger is also status-faithful: raw structural defect names
+remain in the diagnostic `missing_*_latin_row_defects` tables, but they are
+not included in `live_k_missing_latin_row_defects` after
+`triangular_structural_inconsistency` closes that branch.
 
 The tuple is now profile-aware.  A no-triangular-row reason remains live until
 the missing-row profile ledgers are supplied; after that it is removed when
@@ -189,6 +195,26 @@ live defects for the same pair remain in the tuple.
 The companion injective-nonsurjective block-image reason is removed by the
 same supplied recovery separation, while companion proper-kernel and constant
 reasons remain structural/kernel cases.
+These kernel labels are now reserved for actual nontrivial fibres: singleton
+constant-map or companion images are codomain/block-image cases, not
+universal-kernel or companion constant-kernel cases.
+The support row
+`active_companion_block_image_support_rows` records that any active companion
+block-image reason is attached to a same-side constant-map proper or
+universal kernel reason; unsupported companion block-images close
+structurally before System K.
+When the triangular recovery table separates all such constant-map kernel
+and supported companion block-image rows, the rows move to
+`recovery_routed_k_missing_latin_row_defects`.  If no live K row remains, the
+remaining obligation is no longer System K; it is the System U endpoint
+condition for the fixed recovery group `U_tri`.
+When a partial-constant no-triangular row is routed through continuation
+seeds, it moves instead to
+`continuation_routed_k_missing_latin_row_defects` and the remaining
+obligation is the universal-continuation endpoint witness layer.
+When a coordinate-unit no-triangular row is routed to mixed-unit context, it
+moves to `mixed_context_routed_k_missing_latin_row_defects` and the remaining
+obligation is the mixed-unit context endpoint/readout layer.
 
 This status says that the next A-proof cannot merely cite the
 kink-predecessor theorem.  It must either prove that the remaining corridor

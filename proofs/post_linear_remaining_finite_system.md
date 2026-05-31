@@ -59,7 +59,8 @@ remaining_obligations
 Raw interval data reaches active System K only if the real bottleneck ledger
 first certifies the `bi_free_universal_corridor_bottleneck` target and the
 active missing-Latin ledger is nonempty.  If the raw K status has no live
-unrouted row, the wrapper reports:
+unrouted row and no row has been routed to a triangular recovery endpoint,
+the wrapper reports:
 
 ```text
 closed_by_recorded_k_deficit_routing.
@@ -150,6 +151,9 @@ The executable wrapper now separates:
 live_kink_completion_deficits
 nonlive_kink_completion_deficits
 live_k_missing_latin_row_defects
+recovery_routed_k_missing_latin_row_defects
+continuation_routed_k_missing_latin_row_defects
+mixed_context_routed_k_missing_latin_row_defects
 ```
 
 After the recorded status-order closures, the only live direct K deficit is:
@@ -175,11 +179,18 @@ Active System K additionally requires:
 live_k_missing_latin_row_defects != empty.
 ```
 
-If this tuple is empty, the raw K row has no remaining finite obstruction row
-after product, kernel, injective-nonsurjective, side-dual-Latin, and
-nonlive-deficit preemptions.  The wrapper therefore classifies it as
-`closed_by_recorded_k_deficit_routing`, not as a current remaining finite
-system.
+If `live_k_missing_latin_row_defects` is empty and all routed endpoint tuples
+are empty, the raw K row has no remaining finite obstruction row after
+product, profile, side-dual-Latin, and nonlive-deficit preemptions.  The
+wrapper therefore classifies it as `closed_by_recorded_k_deficit_routing`,
+not as a current remaining finite system.  If the live tuple is empty because
+constant-map kernel rows have been separated by the triangular recovery
+table, the wrapper classifies the row as downstream System U instead.  If it
+is empty because a partial-constant no-triangular row has been routed to
+continuation seeds, the wrapper classifies the row as downstream System C,
+the universal-continuation endpoint system.  If it is empty because a
+coordinate-unit row has routed to mixed-unit context, the wrapper classifies
+the row as downstream System M.
 
 The side-dual replacement statuses are deliberately not members of this live
 tuple.  They remain in:
@@ -209,6 +220,14 @@ the recorded exits: proper-kernel visibility, coordinate-unit routing,
 partial-constant continuation routing, or the finite cardinality/profile
 closure.  Thus the live tuple is the raw active row list after applying the
 available profile proofs, not merely after string-level filtering.
+For partial-constant continuation routing, removal means "no longer System
+K"; the row is recorded in
+`continuation_routed_k_missing_latin_row_defects` and must be handled by the
+universal-continuation endpoint witness layer.
+For coordinate-unit routing, a two-sided-unit/global locally nondegenerate
+route is closed, but a mixed-unit-context route is only no longer System K.
+Such rows are recorded in `mixed_context_routed_k_missing_latin_row_defects`
+and must be handled by the mixed-unit context endpoint/readout layer.
 
 Constant-map kernel reasons are refined the same way.  Raw defects:
 
@@ -225,6 +244,12 @@ local minimality; universal generated closures must be separated by
 `triangular_constant_kernel_recovery_route_audit`.  When every constant-map
 kernel edge for the side/pair is handled in this way, the corresponding
 constant-map reason is removed from `live_k_missing_latin_row_defects`.
+The labels are kernel-local: a one-point constant map that is injective but
+not surjective is a codomain defect, not a universal-kernel edge.
+Removal here means "no longer System K."  The removed rows are recorded in
+`recovery_routed_k_missing_latin_row_defects`; when this tuple is nonempty
+and no live K rows remain, the current remaining finite system is the fixed
+triangular recovery endpoint problem in System U.
 
 The same supplied route removes the side/pair's companion
 injective-nonsurjective block-image reason.  The companion image is a block
@@ -232,6 +257,10 @@ in the constant-map bundle partition, so the recovery table separation that
 handles the universal constant-map kernel edge also accounts for that block.
 Companion proper-kernel and companion constant reasons are not filtered this
 way; they remain structural/kernel cases rather than block-image cases.
+Here `companion constant` means rank-one with a nontrivial collapsed
+companion fibre.  A one-point companion image is recorded only as
+injective-nonsurjective and is removed by the block-image route above once
+the recovery table separation is supplied.
 
 together with the concrete rows:
 
@@ -244,6 +273,12 @@ missing_left_latin_row_defects
 missing_right_latin_row_defects
 active_missing_left_latin_row_defects
 active_missing_right_latin_row_defects
+live_k_missing_latin_row_defects
+recovery_routed_k_missing_latin_row_defects
+continuation_routed_k_missing_latin_row_defects
+mixed_context_routed_k_missing_latin_row_defects
+active_companion_block_image_support_rows
+active_companion_block_images_have_constant_kernel_support
 k_left_side_dual_replacement_rows
 triangular_latin_defect_closure_rows
 triangular_latin_defect_proper_closure_rows
@@ -336,10 +371,14 @@ no_side_dual_right_latin_replacement
 After product collapse, proper-kernel visibility,
 injective-nonsurjective visibility, and side-dual Latin availability are
 routed out, the K-left subsystem is measured by the nonempty part of
-`active_missing_left_latin_row_defects`.  Side-dual non-Latin and missing
-replacement labels remain in the finite replacement ledger, but they are not
-themselves live defects; they point to the opposite-side active defect ledger
-or missing-row profile.
+`active_missing_left_latin_row_defects`.  This active tuple is status-faithful:
+it is empty unless the refinement status is exactly
+`triangular_recovery_kink_completion_deficit`.  Therefore structural labels
+that appear in the raw defect ledger do not leak into active System K after
+`triangular_structural_inconsistency` has closed them.  Side-dual non-Latin
+and missing replacement labels remain in the finite replacement ledger, but
+they are not themselves live defects; they point to the opposite-side active
+defect ledger or missing-row profile.
 
 ```text
 some required left Latin-unit triangular colour pair is missing,
@@ -348,6 +387,32 @@ readouts, side-dual Latin completion, or strand-continuing transport, and any
 non-Latin/missing side-dual replacement is accounted for on the opposite-side
 finite ledger.
 ```
+
+After the status-order closures, the active reason names are:
+
+```text
+no_left_triangular_row
+left_constant_map_proper_kernel
+left_constant_map_universal_kernel
+left_companion_sections_injective_non_surjective
+```
+
+and the symmetric right-handed names.  The companion
+injective-nonsurjective name can survive only as a block-image companion to a
+constant-map kernel; the supplied recovery-table route removes it together
+with the corresponding constant-map kernel reason.
+
+The executable ledger records this dependency explicitly:
+
+```text
+active_companion_block_image_support_rows
+active_companion_block_images_have_constant_kernel_support
+```
+
+Each support row lists the side, colour pair, and same-side
+`*_constant_map_proper_kernel` or `*_constant_map_universal_kernel` reason
+that carries the companion block-image.  An unsupported companion
+injective-nonsurjective row is structural, not active System K.
 
 For any active row with an actual kernel edge, the closure rows split the
 case further:
@@ -399,7 +464,10 @@ coordinate-side unit rows are routed by
 `proofs/triangular_k_left_coordinate_unit_routing.md`: if every colour pair is
 two-sided unit then the locally nondegenerate/guitar branch applies; otherwise
 the one-sided unit row is mixed-unit context with the nonunit data on the
-opposite side.  Nonconstant hidden rows are inconsistency certificates.
+opposite side.  Mixed-unit coordinate routes are recorded in
+`mixed_context_routed_k_missing_latin_row_defects`; if no live K row remains,
+the wrapper reports `system_m_mixed_unit_context_endpoint`.  Nonconstant
+hidden rows are inconsistency certificates.
 Injective-nonsurjective and unclassified profile rows are closed by
 `proofs/triangular_k_left_rack_cardinality_closure.md`: in a left-rack-base
 local interval, every relevant finite coordinate section has equal domain and
@@ -412,6 +480,10 @@ closures contradict local minimality, while universal generated closures are
 then routed by
 `proofs/triangular_k_left_partial_constant_continuation_route.md` into the
 universal continuation seed channel.
+Rows moved this way are recorded in
+`continuation_routed_k_missing_latin_row_defects`.  If no live K row remains,
+the wrapper reports `system_c_universal_continuation_endpoint` rather than a
+closed branch.
 
 `proofs/universal_continuation_identity_endpoint_witness.md` gives the
 supplied-certificate checker for the next endpoint layer: once endpoint
@@ -425,6 +497,47 @@ is visible in a fixed interval-level detector/readout.  To turn System K into
 B, construct one explicit interval with such a deficit and upgrade the
 resulting residual motion to a normalized-law sequence invisible to every
 finite group.
+
+## System C: universal-continuation endpoint
+
+The continuation endpoint layer is reached when:
+
+```text
+raw System K and
+live_k_missing_latin_row_defects == empty and
+continuation_routed_k_missing_latin_row_defects != empty.
+```
+
+This is not a triangular recovery endpoint.  It is the descent/continuation
+endpoint channel recorded by:
+
+```text
+universal_continuation_identity_lost_edges
+universal_continuation_identity_unrouted_edges
+universal_continuation_identity_routing_proved.
+```
+
+The remaining A-route is to construct fixed endpoint witnesses for those
+routed universal-continuation seed closures.  The B-route would have to
+upgrade one such endpoint miss to the normalized-law sequence required in the
+original problem.
+
+## System M: mixed-unit context endpoint
+
+The mixed-unit endpoint layer is reached when:
+
+```text
+raw System K and
+live_k_missing_latin_row_defects == empty and
+mixed_context_routed_k_missing_latin_row_defects != empty.
+```
+
+This layer is produced by coordinate-unit missing triangular rows whose
+opposite side carries the nonunit data.  The remaining A-route is to prove
+that each such mixed-unit context endpoint factors through fixed
+detector/readout data.  The B-route would have to upgrade one mixed-unit
+endpoint miss to the normalized-law sequence required in the original
+problem.
 
 ## System U: triangular recovery unit endpoint
 
@@ -451,12 +564,16 @@ can occur: either a non-singleton Latin fibre gives
 preempted by a closed kink status.
 
 Consequently System U should be read as the endpoint layer reached after a
-System K deficit has already been routed by external fixed-detector data:
+System K deficit has already been routed by external fixed-detector data or
+by the triangular recovery table:
 
 ```text
-raw System K and
-live_k_missing_latin_row_defects != empty and
-kink_completion_deficits_routed == True.
+raw System K and either
+  (live_k_missing_latin_row_defects != empty and
+   kink_completion_deficits_routed == True)
+or
+  (live_k_missing_latin_row_defects == empty and
+   recovery_routed_k_missing_latin_row_defects != empty).
 ```
 
 Here the finite recovery unit group

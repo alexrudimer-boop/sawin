@@ -118,6 +118,18 @@ left_companion_sections_injective_non_surjective without a constant-map kernel
 left_opposite_hidden_nonunit_unclassified without product collapse.
 ```
 
+The companion-constant label is kernel-local in the executable ledger: a
+one-point companion section is treated as an injective-nonsurjective
+block-image profile, not as a constant-kernel profile.
+The active K ledger is now status-faithful, so these structural labels remain
+available as raw diagnostics but are erased from
+`active_missing_left_latin_row_defects` once
+`triangular_structural_inconsistency` fires.
+The remaining companion injective-nonsurjective active label is supported:
+`active_companion_block_image_support_rows` records the same-side
+constant-map kernel reason carrying it.  If no such support exists, this note
+classifies the row as structural instead.
+
 Thus the independent K-left finite work is reduced to:
 
 ```text
