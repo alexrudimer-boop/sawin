@@ -98,7 +98,12 @@ hidden_nonunit_opposite_without_product_rows
 
 For genuine bijective local intervals, the structural lemmas force these rows
 to be empty.  If one appears in supplied finite data, it is an inconsistent
-row certificate rather than a live K-left obstruction.
+row certificate rather than a live K-left obstruction.  The nonlinear
+refinement now records this closed state as:
+
+```text
+triangular_structural_inconsistency.
+```
 
 ## Updated K-left residue
 

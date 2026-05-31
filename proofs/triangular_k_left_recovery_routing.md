@@ -99,9 +99,34 @@ prove the corresponding triangular recovery endpoint is in V_beta(U_tri),
 or upgrade an unrouted U_tri endpoint miss to a normalized-law sequence.
 ```
 
+The post-linear wrapper now applies this route to the live K tuple.  A raw
+constant-map reason:
+
+```text
+left_constant_map_proper_kernel
+left_constant_map_universal_kernel
+right_constant_map_proper_kernel
+right_constant_map_universal_kernel
+```
+
+is removed from `live_k_missing_latin_row_defects` when the supplied
+`triangular_latin_defect_closure_audit` records all of its constant-map kernel
+edges as proper closures or as universal closures, and every universal edge is
+separated by `triangular_constant_kernel_recovery_route_audit`.  Other live
+defects for the same colour pair remain live; the route removes only the
+constant-map kernel reason it certifies.
+
+The same route removes the companion injective-nonsurjective block-image
+reason for that side/pair.  In a triangular row, the image of an injective
+nonsurjective companion section is one block in the same bundle partition
+whose constant-map kernel edge is separated by the recovery table.  This
+does not remove companion proper-kernel or companion constant reasons; those
+are kernel cases, not block-image cases, and must close through the
+structural inconsistency ledger.
+
 ## Remaining K-left work
 
 This routing does not close the no-triangular-row case and does not prove the
 all-`n` System U endpoint theorem.  It only prevents constant-map kernel
-edges from being counted as an independent nonlinear obstruction once
-triangular recovery has been verified.
+edges and companion block-image edges from being counted as independent
+nonlinear obstructions once triangular recovery has been verified.

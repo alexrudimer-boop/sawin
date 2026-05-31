@@ -464,33 +464,240 @@ class PostLinearRemainingFiniteSystemAudit:
             "closed_by_locally_nondegenerate_branch",
             "section_kernel_visible_to_existing_readouts",
             "closed_by_product_triangular_collapse",
+            "triangular_structural_inconsistency",
+            "rack_base_consistency_inconsistent",
             "latin_triangular_kink_contradiction",
             "latin_triangular_kink_impossible",
             "latin_triangular_ybe_projection_inconsistent",
+            "latin_triangular_kink_cancellation_inconsistent",
             "side_dual_latin_triangular_kink_contradiction",
             "side_dual_latin_triangular_kink_impossible",
             "side_dual_latin_triangular_ybe_projection_inconsistent",
+            "side_dual_latin_triangular_diagonal_cancellation_inconsistent",
         }
 
     @property
     def raw_system_k(self) -> bool:
         return self.refinement.status == "triangular_recovery_kink_completion_deficit"
 
+    def _missing_profile_row(
+        self,
+        side: str,
+        pair: Tuple[Color, Color],
+    ):
+        if self.missing_triangular_row_profile is None:
+            return None
+        for row in self.missing_triangular_row_profile.rows:
+            if row.side == side and (row.left_color, row.right_color) == pair:
+                return row
+        return None
+
+    def _coordinate_unit_profile_routes(self, side: str, pair: Tuple[Color, Color]) -> bool:
+        if self.missing_triangular_coordinate_unit_routing is None:
+            return False
+        for row in self.missing_triangular_coordinate_unit_routing.rows:
+            if (
+                (row.left_color, row.right_color) == pair
+                and side in row.coordinate_unit_sides
+            ):
+                return row.status != "unrouted_coordinate_unit_row"
+        return False
+
+    def _partial_constant_profile_routes(self, side: str, pair: Tuple[Color, Color]) -> bool:
+        if self.missing_triangular_partial_constant_closure is None:
+            return False
+        closure_rows = tuple(
+            row
+            for row in self.missing_triangular_partial_constant_closure.rows
+            if row.side == side and (row.left_color, row.right_color) == pair
+        )
+        if not closure_rows:
+            return False
+        route_by_key = {}
+        if self.missing_triangular_partial_constant_continuation_route is not None:
+            route_by_key = {
+                (
+                    row.side,
+                    row.left_color,
+                    row.right_color,
+                    row.fixed_input,
+                    row.domain_color,
+                    row.collapsed_inputs,
+                ): row
+                for row in self.missing_triangular_partial_constant_continuation_route.rows
+            }
+        for row in closure_rows:
+            if row.closure_is_proper:
+                continue
+            route = route_by_key.get(
+                (
+                    row.side,
+                    row.left_color,
+                    row.right_color,
+                    row.fixed_input,
+                    row.domain_color,
+                    row.collapsed_inputs,
+                )
+            )
+            if route is None or not route.routes_to_continuation_seed_closure:
+                return False
+        return True
+
+    def _no_triangular_row_routes_by_profile(
+        self,
+        side: str,
+        pair: Tuple[Color, Color],
+    ) -> bool:
+        row = self._missing_profile_row(side, pair)
+        if row is None:
+            return False
+        if row.explanation == "proper_section_kernel_visible":
+            return True
+        if row.explanation == "coordinate_side_unit_not_triangular":
+            return self._coordinate_unit_profile_routes(side, pair)
+        if row.explanation == "partial_constant_hidden_rank_loss":
+            return self._partial_constant_profile_routes(side, pair)
+        if row.explanation in (
+            "injective_non_surjective_section",
+            "nonconstant_hidden_rank_loss",
+            "unclassified_missing_triangular_profile",
+        ):
+            return (
+                self.missing_triangular_left_rack_cardinality is not None
+                and self.missing_triangular_left_rack_cardinality.proves_left_rack_missing_triangular_cardinality_closure
+            )
+        return False
+
+    def _constant_map_kernel_routes_by_recovery(
+        self,
+        side: str,
+        pair: Tuple[Color, Color],
+    ) -> bool:
+        if (
+            self.triangular_latin_defect_closure is None
+            or self.triangular_constant_kernel_recovery_route is None
+        ):
+            return False
+        closure_rows = tuple(
+            row
+            for row in self.triangular_latin_defect_closure.rows
+            if row.side == side
+            and row.defect == "constant_map_kernel"
+            and (row.left_color, row.right_color) == pair
+        )
+        if not closure_rows:
+            return False
+        route_by_key = {
+            (
+                row.side,
+                row.left_color,
+                row.right_color,
+                row.domain_color,
+                row.collapsed_inputs,
+                row.closure_kind,
+            ): row
+            for row in self.triangular_constant_kernel_recovery_route.rows
+        }
+        for row in closure_rows:
+            if row.closure_is_proper:
+                continue
+            route = route_by_key.get(
+                (
+                    row.side,
+                    row.left_color,
+                    row.right_color,
+                    row.domain_color,
+                    row.collapsed_inputs,
+                    row.closure_kind,
+                )
+            )
+            if route is None or not route.routes_universal_kernel_edge_to_recovery:
+                return False
+        return True
+
+    def _live_missing_latin_row_defects(
+        self,
+        defects: Tuple[Tuple[Tuple[Color, Color], str], ...],
+    ) -> Tuple[Tuple[Tuple[Color, Color], str], ...]:
+        live = []
+        for pair, reason in defects:
+            if reason == "no_left_triangular_row" and self._no_triangular_row_routes_by_profile(
+                "left",
+                pair,
+            ):
+                continue
+            if reason == "no_right_triangular_row" and self._no_triangular_row_routes_by_profile(
+                "right",
+                pair,
+            ):
+                continue
+            if reason in (
+                "left_constant_map_proper_kernel",
+                "left_constant_map_universal_kernel",
+            ) and self._constant_map_kernel_routes_by_recovery("left", pair):
+                continue
+            if reason in (
+                "right_constant_map_proper_kernel",
+                "right_constant_map_universal_kernel",
+            ) and self._constant_map_kernel_routes_by_recovery("right", pair):
+                continue
+            if (
+                reason == "left_companion_sections_injective_non_surjective"
+                and self._constant_map_kernel_routes_by_recovery("left", pair)
+            ):
+                continue
+            if (
+                reason == "right_companion_sections_injective_non_surjective"
+                and self._constant_map_kernel_routes_by_recovery("right", pair)
+            ):
+                continue
+            live.append((pair, reason))
+        return tuple(live)
+
+    @property
+    def live_k_missing_latin_row_defects(self) -> Tuple[Tuple[Tuple[Color, Color], str], ...]:
+        return self._live_missing_latin_row_defects(
+            self.refinement.active_missing_left_latin_row_defects
+            + self.refinement.active_missing_right_latin_row_defects,
+        )
+
+    @property
+    def k_deficits_closed_by_recorded_routing(self) -> bool:
+        return (
+            self.raw_system_k
+            and not self.kink_completion_deficits_routed
+            and not self.live_k_missing_latin_row_defects
+        )
+
     @property
     def system_k_active(self) -> bool:
-        return self.raw_system_k and not self.kink_completion_deficits_routed
+        return (
+            self.raw_system_k
+            and not self.kink_completion_deficits_routed
+            and bool(self.live_k_missing_latin_row_defects)
+        )
+
+    @property
+    def routed_system_k_to_u(self) -> bool:
+        return (
+            self.raw_system_k
+            and self.kink_completion_deficits_routed
+            and bool(self.live_k_missing_latin_row_defects)
+        )
 
     @property
     def system_u_active(self) -> bool:
         return (
             self.refinement.status == "triangular_recovery_unit_longitude_obstruction"
-            or (self.raw_system_k and self.kink_completion_deficits_routed)
+            or self.routed_system_k_to_u
         )
 
     @property
     def system_name(self) -> str:
         if self.closed_by_recorded_branch:
             return "closed_by_recorded_branch"
+        if self.k_deficits_closed_by_recorded_routing:
+            return "closed_by_recorded_k_deficit_routing"
         if self.system_k_active:
             return "system_k_kink_completion_deficit"
         if self.system_u_active:
@@ -539,9 +746,17 @@ class PostLinearRemainingFiniteSystemAudit:
 
     @property
     def finite_obstruction_data(self) -> Tuple[Tuple[str, object], ...]:
-        if self.system_k_active:
+        if self.raw_system_k and not self.kink_completion_deficits_routed:
             data = [
                 ("deficits", self.refinement.rack_kink_completion_deficits),
+                (
+                    "live_kink_completion_deficits",
+                    self.refinement.live_kink_completion_deficits,
+                ),
+                (
+                    "nonlive_kink_completion_deficits",
+                    self.refinement.nonlive_kink_completion_deficits,
+                ),
                 ("left_triangular_row_pairs", self.refinement.left_triangular_row_pairs),
                 ("right_triangular_row_pairs", self.refinement.right_triangular_row_pairs),
                 ("missing_left_latin_row_pairs", self.refinement.missing_left_latin_row_pairs),
@@ -561,6 +776,10 @@ class PostLinearRemainingFiniteSystemAudit:
                 (
                     "active_missing_right_latin_row_defects",
                     self.refinement.active_missing_right_latin_row_defects,
+                ),
+                (
+                    "live_k_missing_latin_row_defects",
+                    self.live_k_missing_latin_row_defects,
                 ),
                 (
                     "k_left_side_dual_replacement_rows",
@@ -602,6 +821,10 @@ class PostLinearRemainingFiniteSystemAudit:
                 (
                     "side_dual_latin_ybe_failure_triples",
                     self.refinement.side_dual_latin_ybe_failure_triples,
+                ),
+                (
+                    "direct_unit_longitude_status_preempted_by_kink_dichotomy",
+                    self.refinement.direct_unit_longitude_status_preempted_by_kink_dichotomy,
                 ),
             ]
             if self.triangular_latin_defect_closure is not None:
@@ -1038,6 +1261,8 @@ class PostLinearRemainingFiniteSystemAudit:
 
     @property
     def remaining_obligations(self) -> Tuple[str, ...]:
+        if self.k_deficits_closed_by_recorded_routing:
+            return ()
         if self.system_u_active and self.raw_system_k and self.kink_completion_deficits_routed:
             return (
                 "prove each routed triangular recovery endpoint composite lies in V_beta(U_tri)",
@@ -1355,6 +1580,26 @@ class NonlinearOverlapRefinementAudit:
         )
 
     @property
+    def triangular_structural_inconsistency(self) -> bool:
+        return (
+            self.target_ready
+            and (
+                bool(self.triangular_column.constant_map_non_surjective_rows)
+                or bool(self.triangular_column.companion_kernel_rows)
+                or bool(
+                    self.triangular_column.companion_nonbijective_without_constant_kernel_rows
+                )
+                or bool(
+                    self.triangular_column.hidden_nonunit_opposite_without_product_rows
+                )
+            )
+        )
+
+    @property
+    def rack_base_consistency_inconsistent(self) -> bool:
+        return self.target_ready and not self.rack_kink.base_is_finite_rack
+
+    @property
     def latin_triangular_kink_impossible(self) -> bool:
         return self.target_ready and self.rack_kink.all_latin_fibres_forced_singleton
 
@@ -1365,6 +1610,14 @@ class NonlinearOverlapRefinementAudit:
             and self.rack_kink.theorem_hypotheses_hold
             and self.rack_kink.kink_cancellation_verified
             and bool(self.rack_kink.non_singleton_latin_colors)
+        )
+
+    @property
+    def latin_triangular_kink_cancellation_inconsistent(self) -> bool:
+        return (
+            self.target_ready
+            and self.rack_kink.theorem_hypotheses_hold
+            and not self.rack_kink.kink_cancellation_verified
         )
 
     @property
@@ -1381,6 +1634,14 @@ class NonlinearOverlapRefinementAudit:
             and self.side_dual_rack_kink.theorem_hypotheses_hold
             and self.side_dual_rack_kink.diagonal_cancellation_verified
             and bool(self.side_dual_rack_kink.non_singleton_latin_colors)
+        )
+
+    @property
+    def side_dual_latin_triangular_diagonal_cancellation_inconsistent(self) -> bool:
+        return (
+            self.target_ready
+            and self.side_dual_rack_kink.theorem_hypotheses_hold
+            and not self.side_dual_rack_kink.diagonal_cancellation_verified
         )
 
     @property
@@ -1585,8 +1846,6 @@ class NonlinearOverlapRefinementAudit:
             "left_companion_sections_constant",
             "left_companion_sections_injective_non_surjective",
             "left_opposite_hidden_nonunit_unclassified",
-            "side_dual_right_triangular_nonlatin",
-            "no_side_dual_right_latin_replacement",
         }
         active = []
         for pair in self.missing_left_latin_row_pairs:
@@ -1621,8 +1880,6 @@ class NonlinearOverlapRefinementAudit:
             "right_companion_sections_constant",
             "right_companion_sections_injective_non_surjective",
             "right_opposite_hidden_nonunit_unclassified",
-            "side_dual_left_triangular_nonlatin",
-            "no_side_dual_left_latin_replacement",
         }
         active = []
         for pair in self.missing_right_latin_row_pairs:
@@ -1717,6 +1974,25 @@ class NonlinearOverlapRefinementAudit:
         return tuple(deficits)
 
     @property
+    def live_kink_completion_deficits(self) -> Tuple[str, ...]:
+        if not self.triangular_recovery_needs_kink_completion:
+            return ()
+        return tuple(
+            deficit
+            for deficit in self.rack_kink_completion_deficits
+            if deficit == "latin_rows_not_present_for_all_pairs"
+        )
+
+    @property
+    def nonlive_kink_completion_deficits(self) -> Tuple[str, ...]:
+        live = set(self.live_kink_completion_deficits)
+        return tuple(
+            deficit
+            for deficit in self.rack_kink_completion_deficits
+            if deficit not in live
+        )
+
+    @property
     def triangular_recovery_needs_kink_completion(self) -> bool:
         return (
             self.triangular_endpoint_recovery_obstruction
@@ -1744,6 +2020,17 @@ class NonlinearOverlapRefinementAudit:
         )
 
     @property
+    def direct_unit_longitude_status_preempted_by_kink_dichotomy(self) -> bool:
+        return (
+            self.triangular_recovery_unit_observer_ready
+            and not self.rack_kink_completion_deficits
+            and (
+                self.latin_triangular_kink_contradiction
+                or self.latin_triangular_kink_impossible
+            )
+        )
+
+    @property
     def status(self) -> str:
         if self.closed_by_repair_contract:
             return "closed_by_repair_contract"
@@ -1757,14 +2044,22 @@ class NonlinearOverlapRefinementAudit:
             return "section_kernel_visible_to_existing_readouts"
         if self.all_triangular_rows_close_by_product:
             return "closed_by_product_triangular_collapse"
+        if self.triangular_structural_inconsistency:
+            return "triangular_structural_inconsistency"
+        if self.rack_base_consistency_inconsistent:
+            return "rack_base_consistency_inconsistent"
         if self.latin_triangular_ybe_projection_inconsistent:
             return "latin_triangular_ybe_projection_inconsistent"
+        if self.latin_triangular_kink_cancellation_inconsistent:
+            return "latin_triangular_kink_cancellation_inconsistent"
         if self.latin_triangular_kink_contradiction:
             return "latin_triangular_kink_contradiction"
         if self.latin_triangular_kink_impossible:
             return "latin_triangular_kink_impossible"
         if self.side_dual_latin_triangular_ybe_projection_inconsistent:
             return "side_dual_latin_triangular_ybe_projection_inconsistent"
+        if self.side_dual_latin_triangular_diagonal_cancellation_inconsistent:
+            return "side_dual_latin_triangular_diagonal_cancellation_inconsistent"
         if self.side_dual_latin_triangular_kink_contradiction:
             return "side_dual_latin_triangular_kink_contradiction"
         if self.side_dual_latin_triangular_kink_impossible:
@@ -1791,12 +2086,16 @@ class NonlinearOverlapRefinementAudit:
             "closed_by_locally_nondegenerate_branch",
             "section_kernel_visible_to_existing_readouts",
             "closed_by_product_triangular_collapse",
+            "triangular_structural_inconsistency",
+            "rack_base_consistency_inconsistent",
             "latin_triangular_kink_contradiction",
             "latin_triangular_kink_impossible",
             "latin_triangular_ybe_projection_inconsistent",
+            "latin_triangular_kink_cancellation_inconsistent",
             "side_dual_latin_triangular_kink_contradiction",
             "side_dual_latin_triangular_kink_impossible",
             "side_dual_latin_triangular_ybe_projection_inconsistent",
+            "side_dual_latin_triangular_diagonal_cancellation_inconsistent",
         }:
             return ()
         if self.status == "triangular_recovery_kink_completion_deficit":

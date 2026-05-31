@@ -1,5 +1,6 @@
 import sys
 import unittest
+from dataclasses import replace
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
@@ -8,6 +9,7 @@ from ybe_domination import (
     ContinuationCongruenceAudit,
     ContinuationSeedRow,
     GeneratedCongruenceAudit,
+    LatinTriangularYBEAudit,
     LocalInterval,
     LocalMasterBottleneckSummary,
     NONLINEAR_OVERLAP_TARGET_VERDICT,
@@ -16,6 +18,14 @@ from ybe_domination import (
     PostLinearRemainingFiniteSystemAudit,
     RackKinkLatinTriangularCollapseAudit,
     RightRackKinkLatinTriangularCollapseAudit,
+    SectionRankProfileCollapseAudit,
+    SectionRankProfileRow,
+    TriangularColumnCollapseAudit,
+    TriangularColumnCollapseRowAudit,
+    TriangularConstantKernelRecoveryRouteAudit,
+    TriangularConstantKernelRecoveryRouteRow,
+    TriangularLatinDefectClosureAudit,
+    TriangularLatinDefectClosureRow,
     TwoSidedUnitCollapseAudit,
     latin_triangular_ybe_audit,
     nonlinear_overlap_obstruction_audit,
@@ -236,6 +246,90 @@ def refinement_for(interval, *, colored_ybe=True):
     )
 
 
+def active_system_k_refinement():
+    return replace(
+        refinement_for(one_color_right_triangular_nonlatin_interval(), colored_ybe=False),
+        rank_profile=SectionRankProfileCollapseAudit(rows=()),
+    )
+
+
+def constant_map_kernel_system_k_refinement():
+    interval = one_color_latin_unit_triangular_interval()
+    unit_section = SectionRankProfileRow(
+        side="left-companion",
+        left_color="*",
+        right_color="*",
+        output_left_color="*",
+        output_right_color="*",
+        fixed_input=0,
+        domain_size=1,
+        codomain_size=1,
+        rank=1,
+        kernel_blocks=((0,),),
+        image=(0,),
+    )
+    row = TriangularColumnCollapseRowAudit(
+        side="left",
+        left_color="*",
+        right_color="*",
+        output_left_color="*",
+        output_right_color="*",
+        constant_codomain=(0,),
+        constant_map=((0, 0), (1, 0)),
+        companion_sections=(unit_section,),
+        opposite_sections=(unit_section,),
+    )
+    return replace(
+        refinement_for(interval, colored_ybe=False),
+        triangular_column=TriangularColumnCollapseAudit((row,)),
+    )
+
+
+def companion_block_system_k_refinement():
+    interval = one_color_latin_unit_triangular_interval()
+    companion_section = SectionRankProfileRow(
+        side="left-companion",
+        left_color="*",
+        right_color="*",
+        output_left_color="*",
+        output_right_color="*",
+        fixed_input=0,
+        domain_size=2,
+        codomain_size=3,
+        rank=2,
+        kernel_blocks=((0,), (1,)),
+        image=(0, 1),
+    )
+    opposite_section = SectionRankProfileRow(
+        side="left-opposite",
+        left_color="*",
+        right_color="*",
+        output_left_color="*",
+        output_right_color="*",
+        fixed_input=0,
+        domain_size=2,
+        codomain_size=2,
+        rank=2,
+        kernel_blocks=((0,), (1,)),
+        image=(0, 1),
+    )
+    row = TriangularColumnCollapseRowAudit(
+        side="left",
+        left_color="*",
+        right_color="*",
+        output_left_color="*",
+        output_right_color="*",
+        constant_codomain=(0,),
+        constant_map=((0, 0), (1, 0)),
+        companion_sections=(companion_section,),
+        opposite_sections=(opposite_section,),
+    )
+    return replace(
+        refinement_for(interval, colored_ybe=False),
+        triangular_column=TriangularColumnCollapseAudit((row,)),
+    )
+
+
 class PassingRepair:
     @property
     def proves_repair_contract_for_supplied_data(self):
@@ -371,6 +465,94 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertEqual(audit.status, "closed_by_product_triangular_collapse")
         self.assertEqual(audit.remaining_obligations, ())
 
+    def test_refinement_closes_impossible_triangular_structural_rows(self):
+        interval = one_color_latin_unit_triangular_interval()
+        unit_section = SectionRankProfileRow(
+            side="left",
+            left_color="*",
+            right_color="*",
+            output_left_color="*",
+            output_right_color="*",
+            fixed_input=0,
+            domain_size=2,
+            codomain_size=2,
+            rank=2,
+            kernel_blocks=((0,), (1,)),
+            image=(0, 1),
+        )
+        bad_row = TriangularColumnCollapseRowAudit(
+            side="left",
+            left_color="*",
+            right_color="*",
+            output_left_color="*",
+            output_right_color="*",
+            constant_codomain=(0, 1),
+            constant_map=((0, 0), (1, 0)),
+            companion_sections=(unit_section,),
+            opposite_sections=(unit_section,),
+        )
+        audit = NonlinearOverlapRefinementAudit(
+            obstruction=exact_obstruction(),
+            unit_collapse=TwoSidedUnitCollapseAudit(
+                colored_ybe=False,
+                continuation=continuation(),
+                row_audits=section_unit_row_audits(interval),
+            ),
+            rank_profile=section_rank_profile_collapse_audit(interval),
+            triangular_bundle=triangular_bundle_audit(interval),
+            triangular_recovery=triangular_recovery_audit(interval),
+            triangular_column=TriangularColumnCollapseAudit((bad_row,)),
+            latin_triangular=latin_triangular_ybe_audit(interval),
+            side_dual_latin_triangular=latin_triangular_ybe_audit(
+                side_opposite_local_interval(interval),
+            ),
+            rack_kink=rack_kink_latin_triangular_collapse_audit(interval),
+            side_dual_rack_kink=right_rack_kink_latin_triangular_collapse_audit(
+                side_opposite_local_interval(interval),
+            ),
+        )
+
+        self.assertTrue(audit.triangular_structural_inconsistency)
+        self.assertEqual(audit.status, "triangular_structural_inconsistency")
+        self.assertEqual(audit.remaining_obligations, ())
+
+    def test_refinement_closes_impossible_rack_base_deficit_in_target(self):
+        interval = one_color_latin_unit_triangular_interval()
+        audit = NonlinearOverlapRefinementAudit(
+            obstruction=exact_obstruction(),
+            unit_collapse=TwoSidedUnitCollapseAudit(
+                colored_ybe=False,
+                continuation=continuation(),
+                row_audits=section_unit_row_audits(interval),
+            ),
+            rank_profile=section_rank_profile_collapse_audit(interval),
+            triangular_bundle=triangular_bundle_audit(interval),
+            triangular_recovery=triangular_recovery_audit(interval),
+            triangular_column=triangular_column_collapse_audit(interval),
+            latin_triangular=latin_triangular_ybe_audit(interval),
+            side_dual_latin_triangular=latin_triangular_ybe_audit(
+                side_opposite_local_interval(interval),
+            ),
+            rack_kink=RackKinkLatinTriangularCollapseAudit(
+                base_rows_are_left_rack_form=True,
+                left_translations_bijective=False,
+                self_distributive=False,
+                kink_predecessors={},
+                latin_rows_present_for_all_pairs=True,
+                latin_ybe_equations_hold=False,
+                alpha_kink_identity_failures=(),
+                kink_column_constancy_failures=(),
+                non_singleton_latin_colors=("*",),
+            ),
+            side_dual_rack_kink=right_rack_kink_latin_triangular_collapse_audit(
+                side_opposite_local_interval(interval),
+            ),
+        )
+
+        self.assertTrue(audit.rack_base_consistency_inconsistent)
+        self.assertEqual(audit.status, "rack_base_consistency_inconsistent")
+        self.assertEqual(audit.remaining_obligations, ())
+
     def test_refinement_closes_left_latin_ybe_projection_inconsistency(self):
         audit = refinement_for(one_color_latin_unit_triangular_interval())
 
@@ -425,6 +607,43 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertEqual(audit.status, "latin_triangular_ybe_projection_inconsistent")
         self.assertEqual(audit.remaining_obligations, ())
 
+    def test_refinement_closes_kink_cancellation_failure_under_theorem_hypotheses(self):
+        interval = one_color_latin_unit_triangular_interval()
+        audit = NonlinearOverlapRefinementAudit(
+            obstruction=exact_obstruction(),
+            unit_collapse=TwoSidedUnitCollapseAudit(
+                colored_ybe=False,
+                continuation=continuation(),
+                row_audits=section_unit_row_audits(interval),
+            ),
+            rank_profile=section_rank_profile_collapse_audit(interval),
+            triangular_bundle=triangular_bundle_audit(interval),
+            triangular_recovery=triangular_recovery_audit(interval),
+            triangular_column=triangular_column_collapse_audit(interval),
+            latin_triangular=latin_triangular_ybe_audit(interval),
+            side_dual_latin_triangular=latin_triangular_ybe_audit(
+                side_opposite_local_interval(interval),
+            ),
+            rack_kink=RackKinkLatinTriangularCollapseAudit(
+                base_rows_are_left_rack_form=True,
+                left_translations_bijective=True,
+                self_distributive=True,
+                kink_predecessors={"*": "*"},
+                latin_rows_present_for_all_pairs=True,
+                latin_ybe_equations_hold=True,
+                alpha_kink_identity_failures=(("*", 0, 1),),
+                kink_column_constancy_failures=(),
+                non_singleton_latin_colors=("*",),
+            ),
+            side_dual_rack_kink=right_rack_kink_latin_triangular_collapse_audit(
+                side_opposite_local_interval(interval),
+            ),
+        )
+
+        self.assertTrue(audit.latin_triangular_kink_cancellation_inconsistent)
+        self.assertEqual(audit.status, "latin_triangular_kink_cancellation_inconsistent")
+        self.assertEqual(audit.remaining_obligations, ())
+
     def test_refinement_closes_side_dual_latin_ybe_projection_inconsistency(self):
         audit = refinement_for(one_color_right_latin_unit_triangular_interval())
 
@@ -442,6 +661,47 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertEqual(
             audit.status,
             "side_dual_latin_triangular_ybe_projection_inconsistent",
+        )
+        self.assertEqual(audit.remaining_obligations, ())
+
+    def test_refinement_closes_side_dual_diagonal_failure_under_theorem_hypotheses(
+        self,
+    ):
+        interval = one_color_right_latin_unit_triangular_interval()
+        audit = NonlinearOverlapRefinementAudit(
+            obstruction=exact_obstruction(),
+            unit_collapse=TwoSidedUnitCollapseAudit(
+                colored_ybe=False,
+                continuation=continuation(),
+                row_audits=section_unit_row_audits(interval),
+            ),
+            rank_profile=section_rank_profile_collapse_audit(interval),
+            triangular_bundle=triangular_bundle_audit(interval),
+            triangular_recovery=triangular_recovery_audit(interval),
+            triangular_column=triangular_column_collapse_audit(interval),
+            latin_triangular=latin_triangular_ybe_audit(interval),
+            side_dual_latin_triangular=latin_triangular_ybe_audit(
+                side_opposite_local_interval(interval),
+            ),
+            rack_kink=rack_kink_latin_triangular_collapse_audit(interval),
+            side_dual_rack_kink=RightRackKinkLatinTriangularCollapseAudit(
+                base_rows_are_right_rack_form=True,
+                right_translations_bijective=True,
+                right_self_distributive=True,
+                latin_rows_present_for_all_pairs=True,
+                latin_ybe_equations_hold=True,
+                alpha_diagonal_identity_failures=(("*", 0, 1),),
+                diagonal_column_constancy_failures=(),
+                non_singleton_latin_colors=("*",),
+            ),
+        )
+
+        self.assertTrue(
+            audit.side_dual_latin_triangular_diagonal_cancellation_inconsistent
+        )
+        self.assertEqual(
+            audit.status,
+            "side_dual_latin_triangular_diagonal_cancellation_inconsistent",
         )
         self.assertEqual(audit.remaining_obligations, ())
 
@@ -521,19 +781,35 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         )
         self.assertEqual(audit.remaining_obligations, ())
 
-    def test_post_linear_remaining_finite_system_audit_classifies_raw_system_k(self):
+    def test_post_linear_remaining_finite_system_audit_closes_nonlive_raw_k(self):
         audit = PostLinearRemainingFiniteSystemAudit(
             refinement_for(one_color_latin_unit_triangular_interval(), colored_ybe=False)
         )
 
-        self.assertEqual(audit.system_name, "system_k_kink_completion_deficit")
-        self.assertTrue(audit.is_current_remaining_finite_system)
+        self.assertEqual(audit.system_name, "closed_by_recorded_k_deficit_routing")
+        self.assertFalse(audit.is_current_remaining_finite_system)
+        self.assertEqual(audit.remaining_obligations, ())
+        self.assertIn(
+            ("live_kink_completion_deficits", ()),
+            audit.finite_obstruction_data,
+        )
+        self.assertIn(
+            (
+                "nonlive_kink_completion_deficits",
+                ("latin_ybe_equations_not_verified",),
+            ),
+            audit.finite_obstruction_data,
+        )
+        self.assertIn(
+            ("live_k_missing_latin_row_defects", ()),
+            audit.finite_obstruction_data,
+        )
         self.assertIn(
             ("latin_ybe_failure_triples", (("*", "*", "*", "middle"), ("*", "*", "*", "endpoint"))),
             audit.finite_obstruction_data,
         )
 
-    def test_post_linear_remaining_finite_system_audit_records_side_dual_k_data(self):
+    def test_post_linear_remaining_finite_system_audit_closes_routed_side_dual_k_data(self):
         audit = PostLinearRemainingFiniteSystemAudit(
             refinement_for(
                 one_color_right_latin_unit_triangular_interval(),
@@ -541,7 +817,20 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             )
         )
 
-        self.assertEqual(audit.system_name, "system_k_kink_completion_deficit")
+        self.assertEqual(audit.system_name, "closed_by_recorded_k_deficit_routing")
+        self.assertFalse(audit.is_current_remaining_finite_system)
+        self.assertEqual(audit.remaining_obligations, ())
+        self.assertIn(
+            ("live_kink_completion_deficits", ("latin_rows_not_present_for_all_pairs",)),
+            audit.finite_obstruction_data,
+        )
+        self.assertIn(
+            (
+                "nonlive_kink_completion_deficits",
+                ("side_dual_latin_rows_present_for_all_pairs",),
+            ),
+            audit.finite_obstruction_data,
+        )
         self.assertEqual(
             audit.k_left_side_dual_replacement_rows,
             (
@@ -575,6 +864,14 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             ("active_missing_left_latin_row_defects", ()),
             audit.finite_obstruction_data,
         )
+        self.assertIn(
+            ("live_k_missing_latin_row_defects", ()),
+            audit.finite_obstruction_data,
+        )
+        self.assertIn(
+            ("direct_unit_longitude_status_preempted_by_kink_dichotomy", False),
+            audit.finite_obstruction_data,
+        )
         for key in (
             "triangular_constant_map_non_surjective_rows",
             "triangular_companion_kernel_rows",
@@ -588,6 +885,172 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
                 (("*", "*", "*", "middle"), ("*", "*", "*", "endpoint")),
             ),
             audit.finite_obstruction_data,
+        )
+
+    def test_post_linear_remaining_finite_system_audit_keeps_active_k_rows(self):
+        audit = PostLinearRemainingFiniteSystemAudit(active_system_k_refinement())
+
+        self.assertEqual(audit.system_name, "system_k_kink_completion_deficit")
+        self.assertTrue(audit.is_current_remaining_finite_system)
+        self.assertIn(
+            ("live_kink_completion_deficits", ("latin_rows_not_present_for_all_pairs",)),
+            audit.finite_obstruction_data,
+        )
+        self.assertIn(
+            (
+                "live_k_missing_latin_row_defects",
+                ((("*", "*"), "no_left_triangular_row"),),
+            ),
+            audit.finite_obstruction_data,
+        )
+
+    def test_post_linear_routes_no_triangular_row_when_profile_is_supplied(self):
+        interval = one_color_right_triangular_nonlatin_interval()
+        audit = PostLinearRemainingFiniteSystemAudit(
+            active_system_k_refinement(),
+            missing_triangular_row_profile=missing_triangular_row_profile_audit(
+                interval
+            ),
+        )
+
+        self.assertEqual(audit.system_name, "closed_by_recorded_k_deficit_routing")
+        self.assertFalse(audit.is_current_remaining_finite_system)
+        self.assertEqual(audit.remaining_obligations, ())
+        self.assertIn(
+            ("active_missing_left_latin_row_defects", ((("*", "*"), "no_left_triangular_row"),)),
+            audit.finite_obstruction_data,
+        )
+        self.assertIn(
+            ("live_k_missing_latin_row_defects", ()),
+            audit.finite_obstruction_data,
+        )
+        self.assertIn(
+            (
+                "missing_triangular_row_profiles",
+                (("left", "*", "*", "proper_section_kernel_visible", (), (0, 1, 2)),),
+            ),
+            audit.finite_obstruction_data,
+        )
+
+    def test_post_linear_routes_constant_map_kernel_to_recovery_when_supplied(self):
+        refinement = constant_map_kernel_system_k_refinement()
+        closure = TriangularLatinDefectClosureAudit(
+            rows=(
+                TriangularLatinDefectClosureRow(
+                    side="left",
+                    defect="constant_map_kernel",
+                    left_color="*",
+                    right_color="*",
+                    domain_color="*",
+                    fixed_input=None,
+                    collapsed_inputs=(0, 1),
+                    generated=generated("universal"),
+                ),
+            ),
+        )
+        route = TriangularConstantKernelRecoveryRouteAudit(
+            rows=(
+                TriangularConstantKernelRecoveryRouteRow(
+                    side="left",
+                    left_color="*",
+                    right_color="*",
+                    domain_color="*",
+                    collapsed_inputs=(0, 1),
+                    closure_kind="universal",
+                    recovery_row_present=True,
+                    recovery_formula_bijective=True,
+                    witness_output_pairs=(
+                        (0, ((0, 0),)),
+                        (1, ((0, 1),)),
+                    ),
+                ),
+            ),
+        )
+        raw = PostLinearRemainingFiniteSystemAudit(refinement)
+        routed = PostLinearRemainingFiniteSystemAudit(
+            refinement,
+            triangular_latin_defect_closure=closure,
+            triangular_constant_kernel_recovery_route=route,
+        )
+
+        self.assertIn(
+            (
+                "live_k_missing_latin_row_defects",
+                (
+                    (("*", "*"), "left_constant_map_universal_kernel"),
+                    (("*", "*"), "no_right_triangular_row"),
+                ),
+            ),
+            raw.finite_obstruction_data,
+        )
+        self.assertEqual(routed.system_name, "system_k_kink_completion_deficit")
+        self.assertIn(
+            ("live_k_missing_latin_row_defects", ((("*", "*"), "no_right_triangular_row"),)),
+            routed.finite_obstruction_data,
+        )
+        self.assertIn(
+            (
+                "triangular_constant_kernel_unrouted_universal_rows",
+                (),
+            ),
+            routed.finite_obstruction_data,
+        )
+
+    def test_post_linear_routes_companion_block_image_by_constant_map_recovery(self):
+        refinement = companion_block_system_k_refinement()
+        closure = TriangularLatinDefectClosureAudit(
+            rows=(
+                TriangularLatinDefectClosureRow(
+                    side="left",
+                    defect="constant_map_kernel",
+                    left_color="*",
+                    right_color="*",
+                    domain_color="*",
+                    fixed_input=None,
+                    collapsed_inputs=(0, 1),
+                    generated=generated("universal"),
+                ),
+            ),
+        )
+        route = TriangularConstantKernelRecoveryRouteAudit(
+            rows=(
+                TriangularConstantKernelRecoveryRouteRow(
+                    side="left",
+                    left_color="*",
+                    right_color="*",
+                    domain_color="*",
+                    collapsed_inputs=(0, 1),
+                    closure_kind="universal",
+                    recovery_row_present=True,
+                    recovery_formula_bijective=True,
+                    witness_output_pairs=(
+                        (0, ((0, 0),)),
+                        (1, ((0, 1),)),
+                    ),
+                ),
+            ),
+        )
+        raw = PostLinearRemainingFiniteSystemAudit(refinement)
+        routed = PostLinearRemainingFiniteSystemAudit(
+            refinement,
+            triangular_latin_defect_closure=closure,
+            triangular_constant_kernel_recovery_route=route,
+        )
+
+        self.assertIn(
+            (
+                "live_k_missing_latin_row_defects",
+                (
+                    (("*", "*"), "left_constant_map_universal_kernel"),
+                    (("*", "*"), "left_companion_sections_injective_non_surjective"),
+                    (("*", "*"), "no_right_triangular_row"),
+                ),
+            ),
+            raw.finite_obstruction_data,
+        )
+        self.assertIn(
+            ("live_k_missing_latin_row_defects", ((("*", "*"), "no_right_triangular_row"),)),
+            routed.finite_obstruction_data,
         )
 
     def test_post_linear_side_dual_replacement_rows_record_nonlatin_right_defects(self):
@@ -724,7 +1187,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
 
     def test_post_linear_remaining_finite_system_audit_routes_k_to_system_u_when_supplied(self):
         audit = PostLinearRemainingFiniteSystemAudit(
-            refinement_for(one_color_latin_unit_triangular_interval(), colored_ybe=False),
+            active_system_k_refinement(),
             kink_completion_deficits_routed=True,
         )
 
@@ -733,13 +1196,56 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             "system_u_triangular_recovery_unit_endpoint",
         )
         self.assertTrue(audit.system_u_active)
-        self.assertIn(("unit_group_order", 2), audit.finite_obstruction_data)
+        self.assertIn(("unit_group_order", 3), audit.finite_obstruction_data)
         self.assertEqual(
             audit.remaining_obligations,
             (
                 "prove each routed triangular recovery endpoint composite lies in V_beta(U_tri)",
                 "or upgrade one routed U_tri endpoint miss to a normalized-law sequence",
             ),
+        )
+
+    def test_direct_unit_longitude_status_is_preempted_by_kink_dichotomy(self):
+        interval = one_color_latin_unit_triangular_interval()
+        audit = NonlinearOverlapRefinementAudit(
+            obstruction=exact_obstruction(),
+            unit_collapse=TwoSidedUnitCollapseAudit(
+                colored_ybe=False,
+                continuation=continuation(),
+                row_audits=section_unit_row_audits(interval),
+            ),
+            rank_profile=section_rank_profile_collapse_audit(interval),
+            triangular_bundle=triangular_bundle_audit(interval),
+            triangular_recovery=triangular_recovery_audit(interval),
+            triangular_column=triangular_column_collapse_audit(interval),
+            latin_triangular=LatinTriangularYBEAudit(row_audits=(), triple_audits=()),
+            side_dual_latin_triangular=LatinTriangularYBEAudit(
+                row_audits=(),
+                triple_audits=(),
+            ),
+            rack_kink=RackKinkLatinTriangularCollapseAudit(
+                base_rows_are_left_rack_form=True,
+                left_translations_bijective=True,
+                self_distributive=True,
+                kink_predecessors={"*": "*"},
+                latin_rows_present_for_all_pairs=True,
+                latin_ybe_equations_hold=True,
+                alpha_kink_identity_failures=(),
+                kink_column_constancy_failures=(),
+                non_singleton_latin_colors=("*",),
+            ),
+            side_dual_rack_kink=right_rack_kink_latin_triangular_collapse_audit(
+                side_opposite_local_interval(interval),
+            ),
+        )
+
+        self.assertTrue(audit.triangular_recovery_unit_observer_ready)
+        self.assertEqual(audit.rack_kink_completion_deficits, ())
+        self.assertTrue(audit.direct_unit_longitude_status_preempted_by_kink_dichotomy)
+        self.assertEqual(audit.status, "latin_triangular_kink_contradiction")
+        self.assertNotEqual(
+            audit.status,
+            "triangular_recovery_unit_longitude_obstruction",
         )
 
     def test_post_linear_remaining_finite_system_function_uses_real_bottleneck_ledger(self):

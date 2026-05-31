@@ -43,6 +43,12 @@ missing_triangular_partial_constant_mixed_unit_rows
 missing_triangular_nonconstant_hidden_rows
 ```
 
+It also uses the supplied profile ledgers to refine the active K tuple.  A raw
+`no_left_triangular_row` or `no_right_triangular_row` remains live if this
+profile audit is absent.  When the profile audit and the relevant route audit
+are supplied, the row is removed from `live_k_missing_latin_row_defects` if it
+falls into one of the routed or closed cases listed below.
+
 ## Meaning
 
 For a would-be left triangular row, inspect the maps
@@ -129,3 +135,12 @@ Thus the remaining independent K-left work is narrower again:
 partial-constant hidden profiles no longer create a separate endpoint system;
 they feed into the same universal continuation seed closures that the
 descent-endpoint repair theorem must handle.
+
+In the executable wrapper this means that a no-triangular-row defect is live
+only until its profile has been identified and routed.  Proper-kernel visible
+profiles are removed immediately; coordinate-unit profiles are removed when
+`missing_triangular_coordinate_unit_routing_audit` has no unrouted row for the
+pair; partial-constant profiles are removed when their proper closures or
+continuation routes have been verified; and the finite cardinality/profile
+closure removes injective-nonsurjective, nonconstant-hidden, and unclassified
+profile rows when its proof flag is true.

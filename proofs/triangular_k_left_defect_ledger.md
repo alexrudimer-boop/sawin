@@ -152,13 +152,17 @@ no_side_dual_right_latin_replacement.
 
 The first side-dual state is closed for genuine coloured-YBE data by the
 side-opposite Latin YBE consistency and right-rack diagonal cancellation
-notes.  The second and third states are the genuine K-left side-dual deficit
-states.
+notes.  The second and third states are not independent left defects; they
+point to the right-side finite row ledgers recorded in
+`proofs/triangular_k_left_side_dual_replacement_ledger.md`.
 
 The `active_*` ledgers are the same finite rows after deleting pairs already
 routed by product collapse, proper-kernel visibility,
-injective-nonsurjective visibility, or side-dual Latin availability.  They
-are only populated in the actual kink-completion status:
+injective-nonsurjective visibility, side-dual Latin availability, and
+side-dual pointer labels.  A side-dual triangular-but-non-Latin row is live
+through its opposite-side active defect rows; a missing side-dual triangular
+replacement is live through the opposite-side missing-row profile.  The active
+ledgers are only populated in the actual kink-completion status:
 
 ```text
 triangular_recovery_kink_completion_deficit.
@@ -219,16 +223,16 @@ interval with a colour pair (a,b) such that:
    left_companion_sections_proper_kernel;
    left_companion_sections_constant;
    left_companion_sections_injective_non_surjective;
-   left_opposite_hidden_nonunit_unclassified;
-   side_dual_right_triangular_nonlatin;
-   no_side_dual_right_latin_replacement.
+   left_opposite_hidden_nonunit_unclassified.
 ```
 
 This is now an explicit finite algebraic system on the tables of
 `R_C` and `T`.  Closing it on the A side means proving that every listed row
 reason either contradicts the local-minimal bi-free universal-corridor
-hypotheses or yields a fixed readout/detector.  Turning it into B means
-constructing one such interval and upgrading its finite miss to a
+hypotheses or yields a fixed readout/detector.  Side-dual non-Latin or
+missing-replacement rows are still recorded, but only as pointers to the
+right-side finite systems.  Turning the residue into B means constructing one
+actual live left/right row defect and upgrading its finite miss to a
 normalized-law sequence invisible to every finite group.
 
 ## Relation to System U

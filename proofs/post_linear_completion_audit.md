@@ -122,15 +122,21 @@ repair contract.  A supplied normalized-law prefix is recorded separately as
 one B-shaped row, not as `[Resolution: B]`.
 
 The refinement wrapper narrows the row-level survivor further.  Its final
-open status is:
+nominal unit-endpoint status is:
 
 ```text
 triangular_recovery_unit_longitude_obstruction
 ```
 
-meaning that the remaining nonlinear obstruction must be carried by
-triangular bundle-recovery endpoint composites.  The refinement now inserts an
-earlier status,
+but the direct occurrence of this status is now preempted by the kink
+dichotomy.  The executable predicate
+`direct_unit_longitude_status_preempted_by_kink_dichotomy` records that, once
+the triangular recovery unit observer is ready and the rack-kink completion
+deficit list is empty, the refinement must already close as
+`latin_triangular_kink_contradiction` or `latin_triangular_kink_impossible`.
+Thus `U_tri` remains as the endpoint layer reached after a K deficit has been
+routed, not as a separate direct survivor.  The refinement inserts the earlier
+status,
 
 ```text
 triangular_recovery_kink_completion_deficit
@@ -147,6 +153,36 @@ routed, the exact K-left row ledger is `missing_left_latin_row_defects`:
 no triangular row, a constant-map kernel/codomain defect, a companion-section
 kernel/rank defect, hidden nonunit opposite column, or missing/non-Latin
 side-dual replacement.
+Impossible triangular-row structural defects are now closed explicitly as
+`triangular_structural_inconsistency`.
+The raw `base_not_finite_rack` deficit is now closed as
+`rack_base_consistency_inconsistent` in target-ready data.
+Kink-cancellation and side-dual diagonal-cancellation failures under the full
+Latin theorem hypotheses are now recorded as closed inconsistency states:
+`latin_triangular_kink_cancellation_inconsistent` and
+`side_dual_latin_triangular_diagonal_cancellation_inconsistent`.
+The K wrapper now exposes `live_kink_completion_deficits`; after these
+preemptions the only direct live deficit is
+`latin_rows_not_present_for_all_pairs`.  The side-dual all-pairs marker is a
+modifier on that missing-row state, not a separate endpoint branch.
+The wrapper also exposes `live_k_missing_latin_row_defects`; raw K rows with
+that tuple empty are now classified as `closed_by_recorded_k_deficit_routing`
+rather than active System K.
+Side-dual non-Latin and no-replacement labels remain in
+`k_left_side_dual_replacement_rows`, but they are pointers to opposite-side
+row ledgers rather than members of the live K tuple.
+Raw no-triangular-row labels are now filtered by the supplied
+`missing_triangular_row_profile_audit` and its route ledgers: proper-kernel,
+coordinate-unit, partial-constant, and cardinality/profile-closed subcases are
+removed from the live tuple when their certificates are present.
+Constant-map kernel labels are now filtered by the supplied
+`triangular_latin_defect_closure_audit` plus
+`triangular_constant_kernel_recovery_route_audit`: proper closures contradict
+local minimality, while universal closures must be separated by the triangular
+recovery table before the constant-map reason is removed.
+That same triangular recovery separation removes the companion
+injective-nonsurjective block-image reason for the side/pair, while companion
+proper-kernel and constant reasons stay with the structural/kernel ledger.
 For the kernel subcases, `triangular_latin_defect_closure_audit` now proves
 that proper generated closures are incompatible with local minimality and
 records the universal generated seed edges that still require detector

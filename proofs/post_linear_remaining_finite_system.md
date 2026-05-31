@@ -56,12 +56,19 @@ finite_obstruction_data
 remaining_obligations
 ```
 
-Raw interval data reaches System K only if the real bottleneck ledger first
-certifies the `bi_free_universal_corridor_bottleneck` target.  A caller may
-mark `kink_completion_deficits_routed=True` only when an external supplied
-certificate has routed the K-deficits to fixed detector data; then the same
-finite recovery rows are classified as the downstream System U endpoint
-problem.
+Raw interval data reaches active System K only if the real bottleneck ledger
+first certifies the `bi_free_universal_corridor_bottleneck` target and the
+active missing-Latin ledger is nonempty.  If the raw K status has no live
+unrouted row, the wrapper reports:
+
+```text
+closed_by_recorded_k_deficit_routing.
+```
+
+A caller may mark `kink_completion_deficits_routed=True` only when an external
+supplied certificate has routed a nonempty K-deficit ledger to fixed detector
+data; then the same finite recovery rows are classified as the downstream
+System U endpoint problem.
 
 For either System K or System U, the universal-continuation descent ledger is
 made explicit by `proofs/universal_continuation_identity_routing.md`:
@@ -90,16 +97,20 @@ closed_by_transport_state_rackification
 closed_by_locally_nondegenerate_branch
 section_kernel_visible_to_existing_readouts
 closed_by_product_triangular_collapse
+triangular_structural_inconsistency
+rack_base_consistency_inconsistent
 latin_triangular_kink_contradiction
 latin_triangular_kink_impossible
 latin_triangular_ybe_projection_inconsistent
+latin_triangular_kink_cancellation_inconsistent
 side_dual_latin_triangular_ybe_projection_inconsistent
+side_dual_latin_triangular_diagonal_cancellation_inconsistent
 side_dual_latin_triangular_kink_contradiction
 side_dual_latin_triangular_kink_impossible
 ```
 
-Thus a genuine remaining nonlinear finite system has one of exactly two
-shapes.
+Thus a genuine remaining nonlinear finite system has one direct active shape,
+with a downstream endpoint layer after supplied K routing.
 
 ## System K: kink-completion deficit
 
@@ -127,6 +138,100 @@ side_dual_latin_rows_present_for_all_pairs
 latin_ybe_equations_not_verified
 kink_cancellation_not_verified
 ```
+
+In genuine target-ready data, `base_not_finite_rack` is closed by
+`rack_base_consistency_inconsistent`: left-rack base form plus bijective base
+map gives bijective left translations, coloured YBE gives
+self-distributivity, and the finite kink map is bijective.
+
+The executable wrapper now separates:
+
+```text
+live_kink_completion_deficits
+nonlive_kink_completion_deficits
+live_k_missing_latin_row_defects
+```
+
+After the recorded status-order closures, the only live direct K deficit is:
+
+```text
+latin_rows_not_present_for_all_pairs.
+```
+
+The other raw names are nonlive in the remaining target system:
+`base_not_finite_rack` is the rack-base consistency inconsistency,
+`latin_ybe_equations_not_verified` is a coloured-YBE projection
+inconsistency when all Latin rows are present, and
+`kink_cancellation_not_verified` is the kink-cancellation inconsistency under
+the theorem hypotheses.  The side-dual marker
+`side_dual_latin_rows_present_for_all_pairs` is not a separate live deficit;
+it is a modifier saying that the missing-left row has a complete side-dual
+candidate, which is then handled by the side-opposite YBE and right-rack
+diagonal-cancellation statuses.
+
+Active System K additionally requires:
+
+```text
+live_k_missing_latin_row_defects != empty.
+```
+
+If this tuple is empty, the raw K row has no remaining finite obstruction row
+after product, kernel, injective-nonsurjective, side-dual-Latin, and
+nonlive-deficit preemptions.  The wrapper therefore classifies it as
+`closed_by_recorded_k_deficit_routing`, not as a current remaining finite
+system.
+
+The side-dual replacement statuses are deliberately not members of this live
+tuple.  They remain in:
+
+```text
+k_left_side_dual_replacement_rows
+```
+
+as finite routing data.  A side-dual triangular-but-non-Latin row is handled
+by the opposite-side active defect ledger, and a missing side-dual triangular
+replacement is handled by the opposite-side missing-row profile.  Therefore
+the live tuple contains only actual left/right row defects, not side-dual
+pointer labels.
+
+The no-triangular-row reason is further refined by supplied profile ledgers. A
+raw defect:
+
+```text
+no_left_triangular_row
+no_right_triangular_row
+```
+
+stays live when no profile ledger has been supplied.  Once
+`missing_triangular_row_profile_audit` is supplied, the wrapper removes that
+row from `live_k_missing_latin_row_defects` whenever the profile proves one of
+the recorded exits: proper-kernel visibility, coordinate-unit routing,
+partial-constant continuation routing, or the finite cardinality/profile
+closure.  Thus the live tuple is the raw active row list after applying the
+available profile proofs, not merely after string-level filtering.
+
+Constant-map kernel reasons are refined the same way.  Raw defects:
+
+```text
+left_constant_map_proper_kernel
+left_constant_map_universal_kernel
+right_constant_map_proper_kernel
+right_constant_map_universal_kernel
+```
+
+stay live until the supplied kernel-closure and triangular-recovery route
+ledgers account for their kernel edges.  Proper generated closures contradict
+local minimality; universal generated closures must be separated by
+`triangular_constant_kernel_recovery_route_audit`.  When every constant-map
+kernel edge for the side/pair is handled in this way, the corresponding
+constant-map reason is removed from `live_k_missing_latin_row_defects`.
+
+The same supplied route removes the side/pair's companion
+injective-nonsurjective block-image reason.  The companion image is a block
+in the constant-map bundle partition, so the recovery table separation that
+handles the universal constant-map kernel edge also accounts for that block.
+Companion proper-kernel and companion constant reasons are not filtered this
+way; they remain structural/kernel cases rather than block-image cases.
 
 together with the concrete rows:
 
@@ -230,14 +335,18 @@ no_side_dual_right_latin_replacement
 
 After product collapse, proper-kernel visibility,
 injective-nonsurjective visibility, and side-dual Latin availability are
-routed out, the live K-left subsystem is exactly the nonempty part of
-`active_missing_left_latin_row_defects`:
+routed out, the K-left subsystem is measured by the nonempty part of
+`active_missing_left_latin_row_defects`.  Side-dual non-Latin and missing
+replacement labels remain in the finite replacement ledger, but they are not
+themselves live defects; they point to the opposite-side active defect ledger
+or missing-row profile.
 
 ```text
 some required left Latin-unit triangular colour pair is missing,
-there is no complete right/side-dual Latin replacement,
-and the row has not already routed to product triangular collapse, proper
-kernel readouts, or strand-continuing transport.
+the row has not already routed to product triangular collapse, proper kernel
+readouts, side-dual Latin completion, or strand-continuing transport, and any
+non-Latin/missing side-dual replacement is accounted for on the opposite-side
+finite ledger.
 ```
 
 For any active row with an actual kernel edge, the closure rows split the
@@ -266,7 +375,11 @@ triangular_hidden_nonunit_opposite_without_product_rows
 ```
 
 Nonempty structural rows are inconsistency certificates, not additional live
-branches.
+branches.  The refinement records them as:
+
+```text
+triangular_structural_inconsistency.
+```
 
 Finally, constant-map kernel rows are checked against the triangular recovery
 table:
@@ -315,10 +428,35 @@ finite group.
 
 ## System U: triangular recovery unit endpoint
 
-The second survivor shape is:
+The endpoint unit group is still needed, but it is no longer an independent
+direct survivor of the refinement status.  The nominal direct status is:
 
 ```text
 status == triangular_recovery_unit_longitude_obstruction.
+```
+
+The executable predicate
+
+```text
+direct_unit_longitude_status_preempted_by_kink_dichotomy
+```
+
+records the following closure.  If the triangular recovery unit observer is
+ready and the rack-kink completion deficit list is empty, then the rack-kink
+hypotheses, Latin triangular YBE equations, and kink cancellation identities
+all hold.  The kink dichotomy then fires before a direct unit-longitude status
+can occur: either a non-singleton Latin fibre gives
+`latin_triangular_kink_contradiction`, or all Latin fibres are singleton and
+`latin_triangular_kink_impossible` closes the row.  Thus direct System U is
+preempted by a closed kink status.
+
+Consequently System U should be read as the endpoint layer reached after a
+System K deficit has already been routed by external fixed-detector data:
+
+```text
+raw System K and
+live_k_missing_latin_row_defects != empty and
+kink_completion_deficits_routed == True.
 ```
 
 Here the finite recovery unit group
@@ -352,7 +490,8 @@ residual sequence required by the local normalized-law fork.
 
 [Proved relative to the recorded branch reductions] After the finite-linear
 overlap no-go theorem, any unresolved nonlinear primitive overlap must supply
-a survivor of System K or System U.
+a survivor of System K, followed by the System U endpoint layer only after the
+K deficit has been routed.
 
 Proof.  The obstruction audit localizes any survivor to a local-minimal
 `bi_free_universal_corridor_bottleneck` interval.  The refinement audit then
@@ -360,12 +499,18 @@ routes strand-continuing, locally nondegenerate, proper-kernel, product
 triangular, and rack-kink impossible/contradictory rows to closed branches.
 If triangular recovery is not verified, the status is an earlier
 constant-section or endpoint-recovery obstruction rather than a final
-post-linear survivor.  Once triangular recovery is verified, either the
-rack-kink completion deficits are nonempty, giving System K, or the recovery
-unit observer is fixed and the endpoint is a System U unit-longitude problem.
-These are exactly the two nonclosed statuses left by the current audit.
+post-linear survivor.  Once triangular recovery is verified, an empty
+rack-kink deficit list is preempted by the closed kink dichotomy: the status is
+`latin_triangular_kink_contradiction` when a non-singleton Latin fibre remains,
+and `latin_triangular_kink_impossible` when no such fibre remains.  Therefore
+the only direct nonclosed refinement status is System K, and the post-linear
+wrapper keeps it active only when `live_k_missing_latin_row_defects` is
+nonempty.  When such a K deficit is separately routed to fixed endpoint data,
+the remaining endpoint problem is the System U `V_beta(U_tri)` membership
+problem.
 QED.
 
 This equivalence does not itself solve the problem.  It is the current exact
-finite target: close both finite systems uniformly to prove A, or construct
-one explicit normalized-law counterexample from either system to prove B.
+finite target: close the nonempty `live_k_missing_latin_row_defects` ledger
+and its routed System U endpoint layer uniformly to prove A, or construct one
+explicit normalized-law counterexample from that finite chain to prove B.

@@ -48,6 +48,33 @@ latin_ybe_equations_not_verified
 kink_cancellation_not_verified
 ```
 
+For genuine target data, the first entry is a closed consistency failure.
+The obstruction hypothesis already gives a coloured-YBE local interval whose
+base has left-rack form.  Since the base map is bijective, every left
+translation is a bijection.  The coloured YBE projection gives left
+self-distributivity.  Finally, in any finite left rack the kink map
+
+```text
+kappa(a)=a*a
+```
+
+is surjective: for each `b`, let `c` be the unique element with `b*c=b`;
+then
+
+```text
+b*(c*c)=(b*c)*(b*c)=b*b,
+```
+
+so left-cancellation by `b` gives `c*c=b`.  Finite surjectivity makes
+`kappa` bijective.  Therefore `base_not_finite_rack` is now recorded as the
+closed status
+
+```text
+rack_base_consistency_inconsistent
+```
+
+rather than as a live System K branch.
+
 The same audit also exposes the finite row data behind those strings:
 
 ```text
@@ -90,6 +117,25 @@ Latin YBE projection failures remain.  The consistency note
 `proofs/triangular_latin_ybe_projection_consistency.md` closes those failures
 for actual coloured-YBE interval data.
 
+The cancellation rows are also closed once their own theorem hypotheses hold.
+If the rack-kink Latin hypotheses and Latin triangular YBE equations hold but
+the kink-cancellation identities fail, the refinement records:
+
+```text
+latin_triangular_kink_cancellation_inconsistent.
+```
+
+This is not a live System K row: it contradicts
+`proofs/kink_predecessor_latin_triangular_cancellation.md`, which derives the
+cancellation identities from exactly those hypotheses.  The side-dual/right
+rack orientation has the analogous closed status:
+
+```text
+side_dual_latin_triangular_diagonal_cancellation_inconsistent,
+```
+
+closed by `proofs/right_rack_kink_latin_triangular_cancellation.md`.
+
 If a triangular recovery endpoint remains and this list is nonempty, the
 status is:
 
@@ -97,10 +143,57 @@ status is:
 triangular_recovery_kink_completion_deficit
 ```
 
+The post-linear wrapper records both the raw and live lists:
+
+```text
+deficits
+live_kink_completion_deficits
+nonlive_kink_completion_deficits
+live_k_missing_latin_row_defects
+```
+
+After the recorded closure statuses above, the live list contains only:
+
+```text
+latin_rows_not_present_for_all_pairs.
+```
+
+Thus System K is no longer a mixture of base-rack, Latin-YBE, and
+cancellation failures.  Those failures are closed or preempted before the K
+status.  The direct finite target is the missing Latin-row completion ledger,
+with `side_dual_latin_rows_present_for_all_pairs` retained only as a
+side-dual modifier.
+
+The wrapper treats raw K rows with an empty
+`live_k_missing_latin_row_defects` tuple as:
+
+```text
+closed_by_recorded_k_deficit_routing.
+```
+
+Thus active System K means a nonempty finite row ledger, not merely a raw
+status string in a synthetic or already-routed subcase.
+
+The tuple is now profile-aware.  A no-triangular-row reason remains live until
+the missing-row profile ledgers are supplied; after that it is removed when
+the profile is proper-kernel visible, coordinate-unit routed,
+partial-constant routed to continuation, or closed by the finite
+cardinality/profile audit.
+
+It is also constant-map-kernel aware.  Constant-map proper/universal-kernel
+reasons remain live until the kernel-closure ledger and triangular recovery
+route ledger are supplied.  Proper closures are contradictions to local
+minimality; universal closures are removed only when the recovery table
+separates the collapsed inputs.  The filtering is reason-local, so unrelated
+live defects for the same pair remain in the tuple.
+The companion injective-nonsurjective block-image reason is removed by the
+same supplied recovery separation, while companion proper-kernel and constant
+reasons remain structural/kernel cases.
+
 This status says that the next A-proof cannot merely cite the
 kink-predecessor theorem.  It must either prove that the remaining corridor
 does satisfy the missing all-pairs Latin hypotheses, or route the failed
-hypothesis into a fixed detector/readout or a normalized-law seed.
+missing-hypothesis row into a fixed detector/readout or a normalized-law seed.
 
 ## Contradiction endpoint
 
@@ -121,10 +214,25 @@ but a non-singleton Latin fibre remains.
 That combination is impossible by the kink-predecessor cancellation theorem,
 so it is a closed row rather than a `U_tri` endpoint obstruction.
 
+The executable refinement also records the preemption explicitly as:
+
+```text
+direct_unit_longitude_status_preempted_by_kink_dichotomy.
+```
+
+If the triangular recovery unit observer is ready and
+`rack_kink_completion_deficits` is empty, then the all-pairs Latin hypotheses
+and kink cancellation are already in force.  The direct
+`triangular_recovery_unit_longitude_obstruction` status is therefore skipped:
+the row has already closed by `latin_triangular_kink_contradiction` in the
+non-singleton case or by `latin_triangular_kink_impossible` in the singleton
+case.  A `U_tri` endpoint problem appears only after a genuine K-deficit has
+first been routed into fixed endpoint data.
+
 For actual interval data, the direct audit should normally detect this earlier
-as a Latin YBE failure or a kink-cancellation failure.  The contradiction
-status is still useful in the proof ledger because it states the exact
-logical endpoint of the rack-kink route.
+as a Latin YBE projection failure or as one of the cancellation-inconsistency
+statuses above.  The contradiction status is still useful in the proof ledger
+because it states the exact logical endpoint of the rack-kink route.
 
 ## Updated fork
 

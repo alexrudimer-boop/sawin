@@ -63,6 +63,22 @@ after these ledgers.  It is a pointer to a right-side instance of the same
 finite row systems, or to System U when the right-side kernel route is
 triangular recovery.
 
+The post-linear wrapper now enforces this bookkeeping point in the active
+ledger.  The labels
+
+```text
+side_dual_right_triangular_nonlatin
+no_side_dual_right_latin_replacement
+```
+
+are recorded in `missing_left_latin_row_defects` and in
+`k_left_side_dual_replacement_rows`, but they are not included in
+`live_k_missing_latin_row_defects`.  A right triangular non-Latin replacement
+is live only through its right-side active defect rows; a missing right
+triangular replacement is live only through the right-side missing-row
+profile.  The left ledger therefore no longer double-counts side-dual
+pointers as independent K defects.
+
 ## Remaining pressure
 
 This note does not close System U and does not prove that every missing
