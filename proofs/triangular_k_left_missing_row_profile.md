@@ -110,8 +110,9 @@ injective_non_surjective_section:
 coordinate_side_unit_not_triangular:
   routed by `proofs/triangular_k_left_coordinate_unit_routing.md`: if all
   pairs are two-sided unit, the locally nondegenerate/guitar branch applies;
-  otherwise the row is mixed-unit context with the nonunit data on the
-  opposite side;
+  a two-sided unit row without that global branch certificate remains live;
+  otherwise the row is mixed-unit context when the opposite side carries
+  nonunit data;
 
 partial_constant_hidden_rank_loss:
   refined by `proofs/triangular_k_left_partial_constant_closure.md`: the
@@ -139,11 +140,12 @@ descent-endpoint repair theorem must handle.
 In the executable wrapper this means that a no-triangular-row defect is live
 only until its profile has been identified and routed.  Proper-kernel visible
 profiles are removed immediately; coordinate-unit profiles are removed when
-`missing_triangular_coordinate_unit_routing_audit` has no unrouted row for the
-pair; partial-constant profiles are removed when their proper closures or
-continuation routes have been verified; and the finite cardinality/profile
-closure removes injective-nonsurjective, nonconstant-hidden, and unclassified
-profile rows when its proof flag is true.
+`missing_triangular_coordinate_unit_routing_audit` has either routed the pair
+to mixed context or proved the global locally-nondegenerate branch for a
+two-sided unit pair; partial-constant profiles are removed when their proper
+closures or continuation routes have been verified; and the finite
+cardinality/profile closure removes injective-nonsurjective,
+nonconstant-hidden, and unclassified profile rows when its proof flag is true.
 When a partial-constant row is removed by a continuation route, the wrapper
 keeps the downstream burden in
 `continuation_routed_k_missing_latin_row_defects` and reports

@@ -182,9 +182,11 @@ not included in `live_k_missing_latin_row_defects` after
 
 The tuple is now profile-aware.  A no-triangular-row reason remains live until
 the missing-row profile ledgers are supplied; after that it is removed when
-the profile is proper-kernel visible, coordinate-unit routed,
-partial-constant routed to continuation, or closed by the finite
-cardinality/profile audit.
+the profile is proper-kernel visible, coordinate-unit routed by either a
+proved global two-sided-unit branch or mixed-unit context, partial-constant
+routed to continuation, or closed by the finite cardinality/profile audit.  A
+two-sided coordinate-unit row without the global locally-nondegenerate branch
+certificate remains live.
 
 It is also constant-map-kernel aware.  Constant-map proper/universal-kernel
 reasons remain live until the kernel-closure ledger and triangular recovery
@@ -215,6 +217,12 @@ obligation is the universal-continuation endpoint witness layer.
 When a coordinate-unit no-triangular row is routed to mixed-unit context, it
 moves to `mixed_context_routed_k_missing_latin_row_defects` and the remaining
 obligation is the mixed-unit context endpoint/readout layer.
+These routed endpoint ledgers can coexist.  The post-linear wrapper records
+all active endpoint families in `active_routed_endpoint_systems`; if, for
+example, a constant-map kernel route gives System U while a partial-constant
+missing row gives System C, the remaining finite system is the product
+endpoint system `system_uc_routed_endpoint_product` until both endpoint
+families have matching witnesses.
 
 This status says that the next A-proof cannot merely cite the
 kink-predecessor theorem.  It must either prove that the remaining corridor

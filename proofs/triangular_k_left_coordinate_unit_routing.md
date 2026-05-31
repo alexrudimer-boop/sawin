@@ -51,7 +51,9 @@ The post-linear finite-system wrapper reports the K-relevant part as:
 missing_triangular_coordinate_unit_routes
 missing_triangular_coordinate_unit_mixed_rows
 missing_triangular_coordinate_unit_unrouted_rows
+missing_triangular_coordinate_unit_unclosed_two_sided_rows
 missing_triangular_locally_nondegenerate_closed_branch
+missing_triangular_coordinate_unit_routing_proved
 ```
 
 ## Lemma: coordinate-unit missing sides are routed
@@ -60,9 +62,11 @@ missing_triangular_locally_nondegenerate_closed_branch
 coordinate side is missing triangular only because every section on that side
 is bijective.  Then exactly one of the following row-level alternatives holds.
 
-1. Both coordinate sides are unit.  The row is a two-sided unit pair.  If this
-   holds for every colour pair in a coloured YBE interval, then the whole
-   interval is in the locally nondegenerate/guitar branch.
+1. Both coordinate sides are unit.  The row is a two-sided unit pair.  This
+   closes only when the supplied global two-sided-unit audit proves the whole
+   coloured interval is in the locally nondegenerate/guitar branch.  A
+   two-sided unit row inside an otherwise nonunit interval is not silently
+   closed by this row-level audit.
 2. The opposite coordinate side has a nonunit section.  Since the original
    side has unit sections, the row is a mixed-unit context row.
 
@@ -81,7 +85,10 @@ a new finite algebraic obstruction in System K.
 If all colour pairs are two-sided unit and the interval satisfies coloured
 YBE, the interval routes to the already recorded locally nondegenerate/guitar
 branch (`proofs/left_nondegenerate_guitar_branch.md`, also stable under the
-side-opposite operation).
+side-opposite operation).  If a coordinate-unit row is two-sided unit but the
+global locally-nondegenerate branch is not proved, the row stays in active
+System K and is recorded in
+`missing_triangular_coordinate_unit_unclosed_two_sided_rows`.
 
 If a coordinate-unit missing side is paired with any nonunit opposite side,
 then it belongs to the mixed-unit context-recovery channel.  The nonunit
@@ -114,8 +121,27 @@ nonconstant_hidden_rank_loss:
 
 ## Remaining burden
 
-[Open] This routing does not yet prove the uniform nonlinear endpoint theorem.
-After coordinate-unit rows are removed as independent obstructions, the
-remaining nonlinear work is still to prove that every mixed-unit endpoint has
-a fixed finite detector/readout witness, or to upgrade a specific failure
-into a normalized-law B sequence.
+[Proved] The mixed-unit endpoint burden is now an explicit supplied-certificate
+finite system.  The helper
+
+```text
+mixed_unit_context_endpoint_witness_audit(...)
+```
+
+turns every mixed context route into endpoint keys
+
+```text
+(left_color, right_color, side)
+```
+
+and checks that each key has a product endpoint-longitude expression
+certificate.  The post-linear wrapper accepts a matching
+`mixed_unit_context_endpoint_witness`; if it proves the coordinate-unit routing
+ledger and covers exactly the mixed context keys, the wrapper reports
+`closed_by_mixed_unit_context_endpoint_witness` and no remaining System M
+obligations.
+
+[Open] This supplied-certificate checker does not yet prove the uniform
+nonlinear endpoint theorem.  The remaining nonlinear work is to construct
+those mixed-unit endpoint factors for every routed row, or to upgrade a
+specific missing/failing endpoint witness into a normalized-law B sequence.

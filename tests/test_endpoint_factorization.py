@@ -6,6 +6,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from ybe_domination import (
     LocalInterval,
+    MissingTriangularCoordinateUnitRoute,
+    MissingTriangularCoordinateUnitRoutingAudit,
     artin_permutation_defect_witness_audit,
     cyclic_group,
     descent_endpoint_repair_contract_audit,
@@ -24,6 +26,7 @@ from ybe_domination import (
     identity_solution,
     local_symmetric_normalized_law_prefix_witness_audit,
     lost_edge_external_routing_audit,
+    mixed_unit_context_endpoint_witness_audit,
     pure_braid_generator,
     QuotientMap,
     rack_solution,
@@ -523,6 +526,77 @@ class EndpointFactorizationTests(unittest.TestCase):
         self.assertFalse(
             audit.proves_universal_continuation_identity_endpoint_witnesses
         )
+
+    def test_mixed_unit_context_endpoint_witness_covers_routed_contexts(self):
+        routing = MissingTriangularCoordinateUnitRoutingAudit(
+            colored_ybe=True,
+            locally_nondegenerate_closed_branch=False,
+            rows=(
+                MissingTriangularCoordinateUnitRoute(
+                    left_color="*",
+                    right_color="*",
+                    output_left_color="*",
+                    output_right_color="*",
+                    coordinate_unit_sides=("left",),
+                    left_explanation="coordinate_side_unit_not_triangular",
+                    right_explanation="partial_constant_hidden_rank_loss",
+                    left_unit_inputs=(0, 1),
+                    left_nonunit_inputs=(),
+                    right_unit_inputs=(0,),
+                    right_nonunit_inputs=(1,),
+                ),
+            ),
+        )
+        c2 = cyclic_group(2)
+        endpoint = endpoint_product_longitude_expression_audit(
+            (c2,),
+            n=2,
+            braid_word=(1, 1),
+            endpoints=(1,),
+            assignments=((1, 0),),
+            expressions=(((1, 1),),),
+        )
+
+        audit = mixed_unit_context_endpoint_witness_audit(
+            routing,
+            ((("*", "*", "left"), endpoint),),
+        )
+
+        self.assertEqual(audit.mixed_context_keys, (("*", "*", "left"),))
+        self.assertEqual(audit.witnessed_mixed_context_keys, (("*", "*", "left"),))
+        self.assertEqual(audit.missing_mixed_context_keys, ())
+        self.assertEqual(audit.extra_witness_keys, ())
+        self.assertTrue(audit.coordinate_unit_routing_proved)
+        self.assertTrue(audit.all_endpoint_witnesses_visible)
+        self.assertTrue(audit.proves_mixed_unit_context_endpoint_witnesses)
+        self.assertEqual(audit.failure_reasons, ())
+
+    def test_mixed_unit_context_endpoint_witness_reports_missing_context(self):
+        routing = MissingTriangularCoordinateUnitRoutingAudit(
+            colored_ybe=True,
+            locally_nondegenerate_closed_branch=False,
+            rows=(
+                MissingTriangularCoordinateUnitRoute(
+                    left_color="*",
+                    right_color="*",
+                    output_left_color="*",
+                    output_right_color="*",
+                    coordinate_unit_sides=("left",),
+                    left_explanation="coordinate_side_unit_not_triangular",
+                    right_explanation="partial_constant_hidden_rank_loss",
+                    left_unit_inputs=(0, 1),
+                    left_nonunit_inputs=(),
+                    right_unit_inputs=(0,),
+                    right_nonunit_inputs=(1,),
+                ),
+            ),
+        )
+
+        audit = mixed_unit_context_endpoint_witness_audit(routing, ())
+
+        self.assertEqual(audit.missing_mixed_context_keys, (("*", "*", "left"),))
+        self.assertFalse(audit.proves_mixed_unit_context_endpoint_witnesses)
+        self.assertEqual(audit.failure_reasons, ("mixed_context_keys_not_covered",))
 
     def test_repair_contract_accepts_identity_endpoint_witness_wrapper(self):
         interval = one_color_identity_interval()

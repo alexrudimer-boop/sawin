@@ -99,6 +99,20 @@ prove the corresponding triangular recovery endpoint is in V_beta(U_tri),
 or upgrade an unrouted U_tri endpoint miss to a normalized-law sequence.
 ```
 
+The supplied-certificate form of the first alternative is now executable:
+
+```text
+triangular_recovery_endpoint_witness_audit(...)
+```
+
+The post-linear wrapper passes it the current
+`system_u_endpoint_defects`, whose keys are
+`(left_color, right_color, routed_defect_reason)`.  If each key has a matching
+triangular recovery endpoint certificate in `V_beta(U_tri)` and no extra key
+is supplied, the wrapper reports
+`closed_by_triangular_recovery_endpoint_witness` instead of an open System U
+row.
+
 The post-linear wrapper now applies this route to the live K tuple.  A raw
 constant-map reason:
 
@@ -118,7 +132,9 @@ constant-map kernel reason it certifies.
 The removed reason is recorded in
 `recovery_routed_k_missing_latin_row_defects`.  If no other live K reason
 remains, the post-linear wrapper now reports the downstream
-`system_u_triangular_recovery_unit_endpoint` system, not
+`system_u_triangular_recovery_unit_endpoint` system, or a product endpoint
+system such as `system_uc_routed_endpoint_product` when continuation or
+mixed-unit endpoint routes are present as well.  It does not report
 `closed_by_recorded_k_deficit_routing`.
 
 The kernel wording is literal.  A singleton domain whose constant-map image

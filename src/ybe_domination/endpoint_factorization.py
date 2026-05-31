@@ -22,11 +22,13 @@ from .local_interval import (
     Color,
     FibrePoint,
     LostEdgeExternalRoutingAudit,
+    MissingTriangularCoordinateUnitRoutingAudit,
     UniversalContinuationIdentityRoutingAudit,
 )
 
 ArtinDefectEndpointTerm = Tuple[Tuple[GroupElement, ...], FreeWord, int]
 LostEdgeKey = Tuple[Color, FibrePoint, FibrePoint]
+MixedUnitContextKey = Tuple[Color, Color, str]
 
 
 @dataclass(frozen=True)
@@ -698,6 +700,108 @@ def universal_continuation_identity_endpoint_witness_audit(
             identity_routing.routing,
             edge_endpoint_audits,
         ),
+    )
+
+
+@dataclass(frozen=True)
+class MixedUnitContextEndpointWitnessAudit:
+    """Endpoint witnesses for coordinate-unit rows routed to mixed context."""
+
+    coordinate_routing: MissingTriangularCoordinateUnitRoutingAudit
+    context_endpoint_audits: Tuple[
+        Tuple[MixedUnitContextKey, EndpointProductExpressionAudit],
+        ...,
+    ]
+
+    @property
+    def routing_audit(self) -> MissingTriangularCoordinateUnitRoutingAudit:
+        return self.coordinate_routing
+
+    @property
+    def mixed_context_keys(self) -> Tuple[MixedUnitContextKey, ...]:
+        return _sorted_mixed_context_keys(
+            (row.left_color, row.right_color, side)
+            for row in self.coordinate_routing.mixed_unit_context_rows
+            for side in row.coordinate_unit_sides
+        )
+
+    @property
+    def witnessed_mixed_context_keys(self) -> Tuple[MixedUnitContextKey, ...]:
+        return _sorted_mixed_context_keys(
+            key
+            for key, audit in self.context_endpoint_audits
+            if audit.proves_product_endpoint_detector_by_expression
+        )
+
+    @property
+    def missing_mixed_context_keys(self) -> Tuple[MixedUnitContextKey, ...]:
+        witnessed = set(self.witnessed_mixed_context_keys)
+        return _sorted_mixed_context_keys(
+            key for key in self.mixed_context_keys if key not in witnessed
+        )
+
+    @property
+    def extra_witness_keys(self) -> Tuple[MixedUnitContextKey, ...]:
+        routed = set(self.mixed_context_keys)
+        return _sorted_mixed_context_keys(
+            key for key, _audit in self.context_endpoint_audits if key not in routed
+        )
+
+    @property
+    def coordinate_unit_routing_proved(self) -> bool:
+        return self.coordinate_routing.proves_coordinate_unit_routing_ledger
+
+    @property
+    def all_endpoint_witnesses_visible(self) -> bool:
+        return all(
+            audit.proves_product_endpoint_detector_by_expression
+            for _key, audit in self.context_endpoint_audits
+        )
+
+    @property
+    def all_mixed_context_keys_have_endpoint_witnesses(self) -> bool:
+        return bool(self.mixed_context_keys) and not self.missing_mixed_context_keys
+
+    @property
+    def proves_mixed_unit_context_endpoint_witnesses(self) -> bool:
+        return (
+            self.coordinate_unit_routing_proved
+            and self.all_endpoint_witnesses_visible
+            and self.all_mixed_context_keys_have_endpoint_witnesses
+            and not self.extra_witness_keys
+        )
+
+    @property
+    def failure_reasons(self) -> Tuple[str, ...]:
+        reasons = []
+        if not self.coordinate_unit_routing_proved:
+            reasons.append("coordinate_unit_routing_not_proved")
+        if not self.all_endpoint_witnesses_visible:
+            reasons.append("endpoint_witnesses_not_proved")
+        if not self.all_mixed_context_keys_have_endpoint_witnesses:
+            reasons.append("mixed_context_keys_not_covered")
+        if self.extra_witness_keys:
+            reasons.append("extra_mixed_context_witness_keys")
+        return tuple(reasons)
+
+
+def _sorted_mixed_context_keys(
+    keys: Iterable[MixedUnitContextKey],
+) -> Tuple[MixedUnitContextKey, ...]:
+    return tuple(sorted(set(keys), key=repr))
+
+
+def mixed_unit_context_endpoint_witness_audit(
+    coordinate_routing: MissingTriangularCoordinateUnitRoutingAudit,
+    context_endpoint_audits: Sequence[
+        Tuple[MixedUnitContextKey, EndpointProductExpressionAudit]
+    ],
+) -> MixedUnitContextEndpointWitnessAudit:
+    """Bundle endpoint-longitude witnesses for mixed-unit context rows."""
+
+    return MixedUnitContextEndpointWitnessAudit(
+        coordinate_routing=coordinate_routing,
+        context_endpoint_audits=tuple(context_endpoint_audits),
     )
 
 

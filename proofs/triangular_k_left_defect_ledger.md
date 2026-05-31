@@ -189,7 +189,10 @@ The companion note `proofs/triangular_k_left_missing_row_profile.md` splits
 the raw `no_left_triangular_row` reason into coordinate-side unit,
 proper-kernel visible, injective-nonsurjective, partial-constant hidden, and
 nonconstant-hidden profile rows.  Its partial-constant rows are exactly
-mixed-unit context-recovery rows on the missing coordinate side.
+mixed-unit context-recovery rows on the missing coordinate side.  A
+coordinate-side unit row is removed only by a proved global two-sided-unit
+branch or by mixed-unit context; an isolated two-sided unit row without the
+global branch certificate remains live.
 
 The companion note
 `proofs/triangular_k_left_side_dual_replacement_ledger.md` splits the

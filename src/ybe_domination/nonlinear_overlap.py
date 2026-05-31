@@ -73,12 +73,17 @@ from .semigroup_holonomy import (
 )
 
 if TYPE_CHECKING:  # pragma: no cover - typing only
+    from .endpoint_factorization import (
+        MixedUnitContextEndpointWitnessAudit,
+        UniversalContinuationIdentityEndpointWitnessAudit,
+    )
     from .repair_contract import DescentEndpointRepairContractAudit
     from .residual import LocalNormalizedLawPrefixWitnessAudit
 
 
 NONLINEAR_OVERLAP_TARGET_VERDICT = "bi_free_universal_corridor_bottleneck"
 TriangularRecoveryState = Tuple[Color, Color, FibrePoint, FibrePoint]
+TriangularRecoveryEndpointKey = Tuple[Color, Color, str]
 
 
 def _is_permutation_transformation(transformation: Transformation) -> bool:
@@ -331,6 +336,13 @@ class TriangularRecoveryLongitudeRouteAudit:
         return self.unit_route.identity_longitudes_kill_composite
 
     @property
+    def proves_recovery_endpoint_by_longitude_route(self) -> bool:
+        return (
+            self.factors_are_triangular_recovery_generators
+            and self.endpoint_lies_in_recovery_unit_longitude_subgroup
+        )
+
+    @property
     def is_finite_recovery_unit_detector_failure(self) -> bool:
         return self.unit_route.is_finite_unit_detector_failure
 
@@ -429,6 +441,133 @@ class TriangularRecoveryPerfectResidualAudit:
         return self.perfect_residual.is_finite_perfect_residual_detector_failure
 
 
+def _triangular_recovery_endpoint_audit_proves(endpoint_audit: object) -> bool:
+    """Return whether a supplied recovery endpoint audit proves V_beta membership."""
+
+    for attribute in (
+        "proves_recovery_endpoint_by_longitude_route",
+        "proves_recovery_endpoint_by_longitude_expression",
+        "proves_recovery_endpoint_by_derived_lift",
+        "proves_recovery_residual_endpoint_by_perfect_route",
+    ):
+        value = getattr(endpoint_audit, attribute, None)
+        if value is True:
+            return True
+    return False
+
+
+def _triangular_recovery_endpoint_key(
+    defect: Tuple[Tuple[Color, Color], str],
+) -> TriangularRecoveryEndpointKey:
+    pair, reason = defect
+    return (pair[0], pair[1], reason)
+
+
+def _sorted_triangular_recovery_endpoint_keys(
+    keys: Sequence[TriangularRecoveryEndpointKey],
+) -> Tuple[TriangularRecoveryEndpointKey, ...]:
+    return tuple(sorted(set(keys), key=repr))
+
+
+@dataclass(frozen=True)
+class TriangularRecoveryEndpointWitnessAudit:
+    """Endpoint witnesses for K rows routed to the triangular recovery unit."""
+
+    observer: TriangularRecoveryUnitObserverAudit
+    routed_defects: Tuple[Tuple[Tuple[Color, Color], str], ...]
+    endpoint_audits: Tuple[Tuple[TriangularRecoveryEndpointKey, object], ...]
+
+    @property
+    def routed_keys(self) -> Tuple[TriangularRecoveryEndpointKey, ...]:
+        return _sorted_triangular_recovery_endpoint_keys(
+            tuple(
+                _triangular_recovery_endpoint_key(defect)
+                for defect in self.routed_defects
+            )
+        )
+
+    @property
+    def witnessed_keys(self) -> Tuple[TriangularRecoveryEndpointKey, ...]:
+        return _sorted_triangular_recovery_endpoint_keys(
+            tuple(
+                key
+                for key, audit in self.endpoint_audits
+                if _triangular_recovery_endpoint_audit_proves(audit)
+            )
+        )
+
+    @property
+    def missing_routed_keys(self) -> Tuple[TriangularRecoveryEndpointKey, ...]:
+        witnessed = set(self.witnessed_keys)
+        return _sorted_triangular_recovery_endpoint_keys(
+            tuple(key for key in self.routed_keys if key not in witnessed)
+        )
+
+    @property
+    def extra_witness_keys(self) -> Tuple[TriangularRecoveryEndpointKey, ...]:
+        routed = set(self.routed_keys)
+        return _sorted_triangular_recovery_endpoint_keys(
+            tuple(key for key, _audit in self.endpoint_audits if key not in routed)
+        )
+
+    @property
+    def all_endpoint_witnesses_match_observer(self) -> bool:
+        return all(
+            getattr(audit, "observer", None) == self.observer
+            for _key, audit in self.endpoint_audits
+        )
+
+    @property
+    def all_endpoint_witnesses_visible(self) -> bool:
+        return all(
+            _triangular_recovery_endpoint_audit_proves(audit)
+            for _key, audit in self.endpoint_audits
+        )
+
+    @property
+    def all_routed_keys_have_endpoint_witnesses(self) -> bool:
+        return bool(self.routed_keys) and not self.missing_routed_keys
+
+    @property
+    def proves_triangular_recovery_endpoint_witnesses(self) -> bool:
+        return (
+            self.observer.proves_fixed_unit_observer
+            and self.all_endpoint_witnesses_match_observer
+            and self.all_endpoint_witnesses_visible
+            and self.all_routed_keys_have_endpoint_witnesses
+            and not self.extra_witness_keys
+        )
+
+    @property
+    def failure_reasons(self) -> Tuple[str, ...]:
+        reasons = []
+        if not self.observer.proves_fixed_unit_observer:
+            reasons.append("triangular_recovery_observer_not_proved")
+        if not self.all_endpoint_witnesses_match_observer:
+            reasons.append("endpoint_witness_observer_mismatch")
+        if not self.all_endpoint_witnesses_visible:
+            reasons.append("endpoint_witnesses_not_proved")
+        if not self.all_routed_keys_have_endpoint_witnesses:
+            reasons.append("routed_recovery_keys_not_covered")
+        if self.extra_witness_keys:
+            reasons.append("extra_recovery_witness_keys")
+        return tuple(reasons)
+
+
+def triangular_recovery_endpoint_witness_audit(
+    observer: TriangularRecoveryUnitObserverAudit,
+    routed_defects: Sequence[Tuple[Tuple[Color, Color], str]],
+    endpoint_audits: Sequence[Tuple[TriangularRecoveryEndpointKey, object]],
+) -> TriangularRecoveryEndpointWitnessAudit:
+    """Bundle endpoint-longitude witnesses for System U routed K defects."""
+
+    return TriangularRecoveryEndpointWitnessAudit(
+        observer=observer,
+        routed_defects=tuple(routed_defects),
+        endpoint_audits=tuple(endpoint_audits),
+    )
+
+
 @dataclass(frozen=True)
 class PostLinearRemainingFiniteSystemAudit:
     """Classify the exact finite system left after finite-linear closure."""
@@ -454,6 +593,15 @@ class PostLinearRemainingFiniteSystemAudit:
     ) = None
     universal_continuation_identity_routing: (
         UniversalContinuationIdentityRoutingAudit | None
+    ) = None
+    triangular_recovery_endpoint_witness: (
+        TriangularRecoveryEndpointWitnessAudit | None
+    ) = None
+    universal_continuation_endpoint_witness: (
+        "UniversalContinuationIdentityEndpointWitnessAudit | None"
+    ) = None
+    mixed_unit_context_endpoint_witness: (
+        "MixedUnitContextEndpointWitnessAudit | None"
     ) = None
 
     @property
@@ -493,14 +641,19 @@ class PostLinearRemainingFiniteSystemAudit:
         return None
 
     def _coordinate_unit_profile_routes(self, side: str, pair: Tuple[Color, Color]) -> bool:
-        if self.missing_triangular_coordinate_unit_routing is None:
+        routing = self.missing_triangular_coordinate_unit_routing
+        if routing is None:
             return False
-        for row in self.missing_triangular_coordinate_unit_routing.rows:
+        for row in routing.rows:
             if (
                 (row.left_color, row.right_color) == pair
                 and side in row.coordinate_unit_sides
             ):
-                return row.status != "unrouted_coordinate_unit_row"
+                if row.status == "mixed_unit_context":
+                    return True
+                if row.status == "two_sided_unit_pair":
+                    return routing.locally_nondegenerate_closed_branch
+                return False
         return False
 
     def _coordinate_unit_profile_routes_to_mixed_context(
@@ -840,7 +993,6 @@ class PostLinearRemainingFiniteSystemAudit:
             and not self.kink_completion_deficits_routed
             and bool(self.continuation_routed_k_missing_latin_row_defects)
             and not self.live_k_missing_latin_row_defects
-            and not self.recovery_routed_k_missing_latin_row_defects
         )
 
     @property
@@ -850,8 +1002,6 @@ class PostLinearRemainingFiniteSystemAudit:
             and not self.kink_completion_deficits_routed
             and bool(self.mixed_context_routed_k_missing_latin_row_defects)
             and not self.live_k_missing_latin_row_defects
-            and not self.recovery_routed_k_missing_latin_row_defects
-            and not self.continuation_routed_k_missing_latin_row_defects
         )
 
     @property
@@ -892,6 +1042,20 @@ class PostLinearRemainingFiniteSystemAudit:
         )
 
     @property
+    def system_u_endpoint_defects(
+        self,
+    ) -> Tuple[Tuple[Tuple[Color, Color], str], ...]:
+        if (
+            self.raw_system_k
+            and self.kink_completion_deficits_routed
+            and self.live_k_missing_latin_row_defects
+        ):
+            return self.live_k_missing_latin_row_defects
+        if self.k_deficits_routed_to_recovery_endpoint:
+            return self.recovery_routed_k_missing_latin_row_defects
+        return ()
+
+    @property
     def system_c_active(self) -> bool:
         return self.k_deficits_routed_to_continuation_endpoint
 
@@ -900,18 +1064,94 @@ class PostLinearRemainingFiniteSystemAudit:
         return self.k_deficits_routed_to_mixed_context_endpoint
 
     @property
+    def system_u_closed_by_endpoint_witness(self) -> bool:
+        witness = self.triangular_recovery_endpoint_witness
+        return (
+            self.system_u_active
+            and witness is not None
+            and witness.observer == self.refinement.triangular_recovery_unit_observer
+            and witness.routed_keys
+            == _sorted_triangular_recovery_endpoint_keys(
+                tuple(
+                    _triangular_recovery_endpoint_key(defect)
+                    for defect in self.system_u_endpoint_defects
+                )
+            )
+            and witness.proves_triangular_recovery_endpoint_witnesses
+        )
+
+    @property
+    def system_c_closed_by_endpoint_witness(self) -> bool:
+        witness = self.universal_continuation_endpoint_witness
+        return (
+            self.k_deficits_routed_to_continuation_endpoint
+            and self.universal_continuation_identity_routing is not None
+            and witness is not None
+            and witness.identity_routing == self.universal_continuation_identity_routing
+            and witness.proves_universal_continuation_identity_endpoint_witnesses
+        )
+
+    @property
+    def system_m_closed_by_endpoint_witness(self) -> bool:
+        witness = self.mixed_unit_context_endpoint_witness
+        return (
+            self.k_deficits_routed_to_mixed_context_endpoint
+            and self.missing_triangular_coordinate_unit_routing is not None
+            and witness is not None
+            and witness.coordinate_routing == self.missing_triangular_coordinate_unit_routing
+            and witness.proves_mixed_unit_context_endpoint_witnesses
+        )
+
+    @property
+    def active_routed_endpoint_systems(self) -> Tuple[str, ...]:
+        systems = []
+        if self.system_u_active:
+            systems.append("U")
+        if self.system_c_active:
+            systems.append("C")
+        if self.system_m_active:
+            systems.append("M")
+        return tuple(systems)
+
+    @property
+    def unclosed_routed_endpoint_systems(self) -> Tuple[str, ...]:
+        systems = []
+        if self.system_u_active and not self.system_u_closed_by_endpoint_witness:
+            systems.append("U")
+        if self.system_c_active and not self.system_c_closed_by_endpoint_witness:
+            systems.append("C")
+        if self.system_m_active and not self.system_m_closed_by_endpoint_witness:
+            systems.append("M")
+        return tuple(systems)
+
+    @property
+    def all_active_routed_endpoint_systems_closed(self) -> bool:
+        return bool(self.active_routed_endpoint_systems) and not self.unclosed_routed_endpoint_systems
+
+    @property
     def system_name(self) -> str:
         if self.closed_by_recorded_branch:
             return "closed_by_recorded_branch"
+        if self.all_active_routed_endpoint_systems_closed:
+            if self.active_routed_endpoint_systems == ("U",):
+                return "closed_by_triangular_recovery_endpoint_witness"
+            if self.active_routed_endpoint_systems == ("C",):
+                return "closed_by_universal_continuation_endpoint_witness"
+            if self.active_routed_endpoint_systems == ("M",):
+                return "closed_by_mixed_unit_context_endpoint_witness"
+            return "closed_by_routed_endpoint_witnesses"
+        if len(self.unclosed_routed_endpoint_systems) > 1:
+            joined = "".join(system.lower() for system in self.unclosed_routed_endpoint_systems)
+            return f"system_{joined}_routed_endpoint_product"
         if self.k_deficits_closed_by_recorded_routing:
             return "closed_by_recorded_k_deficit_routing"
         if self.system_k_active:
             return "system_k_kink_completion_deficit"
-        if self.system_u_active:
+        if self.system_u_active and not self.system_u_closed_by_endpoint_witness:
             return "system_u_triangular_recovery_unit_endpoint"
-        if self.system_c_active:
+        if self.system_c_active and not self.system_c_closed_by_endpoint_witness:
             return "system_c_universal_continuation_endpoint"
-        if self.system_m_active:
+        if self.system_m_active and not self.system_m_closed_by_endpoint_witness:
             return "system_m_mixed_unit_context_endpoint"
         return f"earlier_unrouted_status:{self.refinement.status}"
 
@@ -919,9 +1159,7 @@ class PostLinearRemainingFiniteSystemAudit:
     def is_current_remaining_finite_system(self) -> bool:
         return (
             self.system_k_active
-            or self.system_u_active
-            or self.system_c_active
-            or self.system_m_active
+            or bool(self.unclosed_routed_endpoint_systems)
         )
 
     @property
@@ -959,6 +1197,213 @@ class PostLinearRemainingFiniteSystemAudit:
                 )
             )
         return tuple(rows)
+
+    @property
+    def _universal_continuation_identity_routing_data(self) -> Tuple[Tuple[str, object], ...]:
+        if self.universal_continuation_identity_routing is None:
+            return ()
+        routing = self.universal_continuation_identity_routing
+        return (
+            (
+                "universal_continuation_identity_lost_edges",
+                routing.routing.lost_edges,
+            ),
+            (
+                "universal_continuation_identity_unrouted_edges",
+                routing.routing.unrouted_edges,
+            ),
+            (
+                "universal_continuation_identity_routing_proved",
+                routing.proves_identity_routed_universal_continuation,
+            ),
+        )
+
+    @property
+    def _triangular_recovery_endpoint_witness_data(self) -> Tuple[Tuple[str, object], ...]:
+        if self.triangular_recovery_endpoint_witness is None:
+            return ()
+        witness = self.triangular_recovery_endpoint_witness
+        return (
+            (
+                "triangular_recovery_endpoint_witness_matches_system",
+                witness.observer == self.refinement.triangular_recovery_unit_observer
+                and witness.routed_keys
+                == _sorted_triangular_recovery_endpoint_keys(
+                    tuple(
+                        _triangular_recovery_endpoint_key(defect)
+                        for defect in self.system_u_endpoint_defects
+                    )
+                ),
+            ),
+            (
+                "triangular_recovery_endpoint_witness_proved",
+                witness.proves_triangular_recovery_endpoint_witnesses,
+            ),
+            (
+                "triangular_recovery_endpoint_missing_keys",
+                witness.missing_routed_keys,
+            ),
+            (
+                "triangular_recovery_endpoint_extra_keys",
+                witness.extra_witness_keys,
+            ),
+        )
+
+    @property
+    def _universal_continuation_endpoint_witness_data(
+        self,
+    ) -> Tuple[Tuple[str, object], ...]:
+        if self.universal_continuation_endpoint_witness is None:
+            return ()
+        witness = self.universal_continuation_endpoint_witness
+        return (
+            (
+                "universal_continuation_endpoint_witness_matches_routing",
+                self.universal_continuation_identity_routing is not None
+                and witness.identity_routing == self.universal_continuation_identity_routing,
+            ),
+            (
+                "universal_continuation_endpoint_witness_proved",
+                witness.proves_universal_continuation_identity_endpoint_witnesses,
+            ),
+            (
+                "universal_continuation_endpoint_missing_edges",
+                witness.missing_identity_routed_edges,
+            ),
+            (
+                "universal_continuation_endpoint_extra_edges",
+                witness.extra_witness_edges,
+            ),
+        )
+
+    @property
+    def _coordinate_unit_routing_data(self) -> Tuple[Tuple[str, object], ...]:
+        if self.missing_triangular_coordinate_unit_routing is None:
+            return ()
+        routing = self.missing_triangular_coordinate_unit_routing
+        return (
+            (
+                "missing_triangular_coordinate_unit_mixed_rows",
+                tuple(
+                    (
+                        row.left_color,
+                        row.right_color,
+                        row.coordinate_unit_sides,
+                        row.left_explanation,
+                        row.right_explanation,
+                    )
+                    for row in routing.mixed_unit_context_rows
+                ),
+            ),
+            (
+                "missing_triangular_coordinate_unit_unrouted_rows",
+                tuple(
+                    (
+                        row.left_color,
+                        row.right_color,
+                        row.coordinate_unit_sides,
+                        row.left_explanation,
+                        row.right_explanation,
+                    )
+                    for row in routing.unrouted_rows
+                ),
+            ),
+            (
+                "missing_triangular_coordinate_unit_unclosed_two_sided_rows",
+                tuple(
+                    (
+                        row.left_color,
+                        row.right_color,
+                        row.coordinate_unit_sides,
+                        row.left_explanation,
+                        row.right_explanation,
+                    )
+                    for row in routing.unclosed_two_sided_unit_pair_rows
+                ),
+            ),
+            (
+                "missing_triangular_coordinate_unit_routing_proved",
+                routing.proves_coordinate_unit_routing_ledger,
+            ),
+        )
+
+    @property
+    def _mixed_unit_endpoint_witness_data(self) -> Tuple[Tuple[str, object], ...]:
+        if self.mixed_unit_context_endpoint_witness is None:
+            return ()
+        witness = self.mixed_unit_context_endpoint_witness
+        return (
+            (
+                "mixed_unit_endpoint_witness_matches_routing",
+                self.missing_triangular_coordinate_unit_routing is not None
+                and witness.coordinate_routing
+                == self.missing_triangular_coordinate_unit_routing,
+            ),
+            (
+                "mixed_unit_endpoint_witness_proved",
+                witness.proves_mixed_unit_context_endpoint_witnesses,
+            ),
+            (
+                "mixed_unit_endpoint_missing_context_keys",
+                witness.missing_mixed_context_keys,
+            ),
+            (
+                "mixed_unit_endpoint_extra_context_keys",
+                witness.extra_witness_keys,
+            ),
+        )
+
+    @property
+    def routed_endpoint_obstruction_data(self) -> Tuple[Tuple[str, object], ...]:
+        data = []
+        if self.system_u_active:
+            observer = self.refinement.triangular_recovery_unit_observer
+            data.extend(
+                (
+                    ("unit_group_order", observer.unit_group_order),
+                    ("recovery_row_count", observer.row_count),
+                    ("left_latin_row_pairs", self.refinement.left_latin_row_pairs),
+                    ("right_latin_row_pairs", self.refinement.right_latin_row_pairs),
+                )
+            )
+        data.extend(
+            (
+                (
+                    "live_k_missing_latin_row_defects",
+                    self.live_k_missing_latin_row_defects,
+                ),
+                (
+                    "recovery_routed_k_missing_latin_row_defects",
+                    self.recovery_routed_k_missing_latin_row_defects,
+                ),
+                (
+                    "system_u_endpoint_defects",
+                    self.system_u_endpoint_defects,
+                ),
+                (
+                    "continuation_routed_k_missing_latin_row_defects",
+                    self.continuation_routed_k_missing_latin_row_defects,
+                ),
+                (
+                    "mixed_context_routed_k_missing_latin_row_defects",
+                    self.mixed_context_routed_k_missing_latin_row_defects,
+                ),
+                (
+                    "active_routed_endpoint_systems",
+                    self.active_routed_endpoint_systems,
+                ),
+                (
+                    "unclosed_routed_endpoint_systems",
+                    self.unclosed_routed_endpoint_systems,
+                ),
+            )
+        )
+        data.extend(self._universal_continuation_identity_routing_data)
+        data.extend(self._triangular_recovery_endpoint_witness_data)
+        data.extend(self._universal_continuation_endpoint_witness_data)
+        data.extend(self._coordinate_unit_routing_data)
+        data.extend(self._mixed_unit_endpoint_witness_data)
+        return tuple(data)
 
     @property
     def finite_obstruction_data(self) -> Tuple[Tuple[str, object], ...]:
@@ -1008,12 +1453,24 @@ class PostLinearRemainingFiniteSystemAudit:
                     self.recovery_routed_k_missing_latin_row_defects,
                 ),
                 (
+                    "system_u_endpoint_defects",
+                    self.system_u_endpoint_defects,
+                ),
+                (
                     "continuation_routed_k_missing_latin_row_defects",
                     self.continuation_routed_k_missing_latin_row_defects,
                 ),
                 (
                     "mixed_context_routed_k_missing_latin_row_defects",
                     self.mixed_context_routed_k_missing_latin_row_defects,
+                ),
+                (
+                    "active_routed_endpoint_systems",
+                    self.active_routed_endpoint_systems,
+                ),
+                (
+                    "unclosed_routed_endpoint_systems",
+                    self.unclosed_routed_endpoint_systems,
                 ),
                 (
                     "active_companion_block_image_support_rows",
@@ -1327,6 +1784,19 @@ class PostLinearRemainingFiniteSystemAudit:
                             ),
                         ),
                         (
+                            "missing_triangular_coordinate_unit_unclosed_two_sided_rows",
+                            tuple(
+                                (
+                                    row.left_color,
+                                    row.right_color,
+                                    row.coordinate_unit_sides,
+                                    row.left_explanation,
+                                    row.right_explanation,
+                                )
+                                for row in routing.unclosed_two_sided_unit_pair_rows
+                            ),
+                        ),
+                        (
                             "missing_triangular_locally_nondegenerate_closed_branch",
                             routing.locally_nondegenerate_closed_branch,
                         ),
@@ -1471,119 +1941,181 @@ class PostLinearRemainingFiniteSystemAudit:
                         ),
                     )
                 )
-            return tuple(data)
-        if self.system_u_active:
-            observer = self.refinement.triangular_recovery_unit_observer
-            data = [
-                ("unit_group_order", observer.unit_group_order),
-                ("recovery_row_count", observer.row_count),
-                ("left_latin_row_pairs", self.refinement.left_latin_row_pairs),
-                ("right_latin_row_pairs", self.refinement.right_latin_row_pairs),
-                (
-                    "live_k_missing_latin_row_defects",
-                    self.live_k_missing_latin_row_defects,
-                ),
-                (
-                    "recovery_routed_k_missing_latin_row_defects",
-                    self.recovery_routed_k_missing_latin_row_defects,
-                ),
-                (
-                    "continuation_routed_k_missing_latin_row_defects",
-                    self.continuation_routed_k_missing_latin_row_defects,
-                ),
-                (
-                    "mixed_context_routed_k_missing_latin_row_defects",
-                    self.mixed_context_routed_k_missing_latin_row_defects,
-                ),
-            ]
-            if self.universal_continuation_identity_routing is not None:
-                routing = self.universal_continuation_identity_routing
+            if self.triangular_recovery_endpoint_witness is not None:
+                witness = self.triangular_recovery_endpoint_witness
                 data.extend(
                     (
                         (
-                            "universal_continuation_identity_lost_edges",
-                            routing.routing.lost_edges,
+                            "triangular_recovery_endpoint_witness_matches_system",
+                            witness.observer
+                            == self.refinement.triangular_recovery_unit_observer
+                            and witness.routed_keys
+                            == _sorted_triangular_recovery_endpoint_keys(
+                                tuple(
+                                    _triangular_recovery_endpoint_key(defect)
+                                    for defect in self.system_u_endpoint_defects
+                                )
+                            ),
                         ),
                         (
-                            "universal_continuation_identity_unrouted_edges",
-                            routing.routing.unrouted_edges,
+                            "triangular_recovery_endpoint_witness_proved",
+                            witness.proves_triangular_recovery_endpoint_witnesses,
                         ),
                         (
-                            "universal_continuation_identity_routing_proved",
-                            routing.proves_identity_routed_universal_continuation,
+                            "triangular_recovery_endpoint_missing_keys",
+                            witness.missing_routed_keys,
+                        ),
+                        (
+                            "triangular_recovery_endpoint_extra_keys",
+                            witness.extra_witness_keys,
+                        ),
+                    )
+                )
+            if self.universal_continuation_endpoint_witness is not None:
+                witness = self.universal_continuation_endpoint_witness
+                data.extend(
+                    (
+                        (
+                            "universal_continuation_endpoint_witness_matches_routing",
+                            self.universal_continuation_identity_routing is not None
+                            and witness.identity_routing
+                            == self.universal_continuation_identity_routing,
+                        ),
+                        (
+                            "universal_continuation_endpoint_witness_proved",
+                            witness.proves_universal_continuation_identity_endpoint_witnesses,
+                        ),
+                        (
+                            "universal_continuation_endpoint_missing_edges",
+                            witness.missing_identity_routed_edges,
+                        ),
+                        (
+                            "universal_continuation_endpoint_extra_edges",
+                            witness.extra_witness_edges,
+                        ),
+                    )
+                )
+            if self.missing_triangular_coordinate_unit_routing is not None:
+                routing = self.missing_triangular_coordinate_unit_routing
+                data.extend(
+                    (
+                        (
+                            "missing_triangular_coordinate_unit_mixed_rows",
+                            tuple(
+                                (
+                                    row.left_color,
+                                    row.right_color,
+                                    row.coordinate_unit_sides,
+                                    row.left_explanation,
+                                    row.right_explanation,
+                                )
+                                for row in routing.mixed_unit_context_rows
+                            ),
+                        ),
+                        (
+                            "missing_triangular_coordinate_unit_unrouted_rows",
+                            tuple(
+                                (
+                                    row.left_color,
+                                    row.right_color,
+                                    row.coordinate_unit_sides,
+                                    row.left_explanation,
+                                    row.right_explanation,
+                                )
+                                for row in routing.unrouted_rows
+                            ),
+                        ),
+                        (
+                            "missing_triangular_coordinate_unit_unclosed_two_sided_rows",
+                            tuple(
+                                (
+                                    row.left_color,
+                                    row.right_color,
+                                    row.coordinate_unit_sides,
+                                    row.left_explanation,
+                                    row.right_explanation,
+                                )
+                                for row in routing.unclosed_two_sided_unit_pair_rows
+                            ),
+                        ),
+                        (
+                            "missing_triangular_coordinate_unit_routing_proved",
+                            routing.proves_coordinate_unit_routing_ledger,
+                        ),
+                    )
+                )
+            if self.mixed_unit_context_endpoint_witness is not None:
+                witness = self.mixed_unit_context_endpoint_witness
+                data.extend(
+                    (
+                        (
+                            "mixed_unit_endpoint_witness_matches_routing",
+                            self.missing_triangular_coordinate_unit_routing is not None
+                            and witness.coordinate_routing
+                            == self.missing_triangular_coordinate_unit_routing,
+                        ),
+                        (
+                            "mixed_unit_endpoint_witness_proved",
+                            witness.proves_mixed_unit_context_endpoint_witnesses,
+                        ),
+                        (
+                            "mixed_unit_endpoint_missing_context_keys",
+                            witness.missing_mixed_context_keys,
+                        ),
+                        (
+                            "mixed_unit_endpoint_extra_context_keys",
+                            witness.extra_witness_keys,
                         ),
                     )
                 )
             return tuple(data)
-        if self.system_c_active:
-            data = [
-                (
-                    "live_k_missing_latin_row_defects",
-                    self.live_k_missing_latin_row_defects,
-                ),
-                (
-                    "continuation_routed_k_missing_latin_row_defects",
-                    self.continuation_routed_k_missing_latin_row_defects,
-                ),
-            ]
-            if self.universal_continuation_identity_routing is not None:
-                routing = self.universal_continuation_identity_routing
-                data.extend(
-                    (
-                        (
-                            "universal_continuation_identity_lost_edges",
-                            routing.routing.lost_edges,
-                        ),
-                        (
-                            "universal_continuation_identity_unrouted_edges",
-                            routing.routing.unrouted_edges,
-                        ),
-                        (
-                            "universal_continuation_identity_routing_proved",
-                            routing.proves_identity_routed_universal_continuation,
-                        ),
-                    )
-                )
-            return tuple(data)
-        if self.system_m_active:
-            return (
-                (
-                    "live_k_missing_latin_row_defects",
-                    self.live_k_missing_latin_row_defects,
-                ),
-                (
-                    "mixed_context_routed_k_missing_latin_row_defects",
-                    self.mixed_context_routed_k_missing_latin_row_defects,
-                ),
-            )
+        if self.system_u_active or self.system_c_active or self.system_m_active:
+            return self.routed_endpoint_obstruction_data
         return (("status", self.refinement.status),)
 
     @property
     def remaining_obligations(self) -> Tuple[str, ...]:
         if self.k_deficits_closed_by_recorded_routing:
             return ()
+        if self.all_active_routed_endpoint_systems_closed:
+            return ()
+        endpoint_obligations = []
         if (
             self.system_u_active
-            and self.raw_system_k
+            and not self.system_u_closed_by_endpoint_witness
             and (
-                self.kink_completion_deficits_routed
-                or self.k_deficits_routed_to_recovery_endpoint
+                self.refinement.status == "triangular_recovery_unit_longitude_obstruction"
+                or (
+                    self.raw_system_k
+                    and (
+                        self.kink_completion_deficits_routed
+                        or self.k_deficits_routed_to_recovery_endpoint
+                    )
+                )
             )
         ):
-            return (
-                "prove each routed triangular recovery endpoint composite lies in V_beta(U_tri)",
-                "or upgrade one routed U_tri endpoint miss to a normalized-law sequence",
+            endpoint_obligations.extend(
+                (
+                    "prove each routed triangular recovery endpoint composite lies in V_beta(U_tri)",
+                    "or upgrade one routed U_tri endpoint miss to a normalized-law sequence",
+                )
             )
-        if self.system_c_active:
-            return (
-                "construct fixed endpoint witnesses for the routed universal-continuation seed closures",
-                "or upgrade one routed universal-continuation endpoint miss to a normalized-law sequence",
+        if self.system_c_active and not self.system_c_closed_by_endpoint_witness:
+            endpoint_obligations.extend(
+                (
+                    "construct fixed endpoint witnesses for the routed universal-continuation seed closures",
+                    "or upgrade one routed universal-continuation endpoint miss to a normalized-law sequence",
+                )
             )
-        if self.system_m_active:
-            return (
-                "prove each routed mixed-unit context endpoint factors through fixed detector/readout data",
-                "or upgrade one routed mixed-unit endpoint miss to a normalized-law sequence",
+        if self.system_m_active and not self.system_m_closed_by_endpoint_witness:
+            endpoint_obligations.extend(
+                (
+                    "prove each routed mixed-unit context endpoint factors through fixed detector/readout data",
+                    "or upgrade one routed mixed-unit endpoint miss to a normalized-law sequence",
+                )
             )
+        if endpoint_obligations:
+            return tuple(endpoint_obligations)
         return self.refinement.remaining_obligations
 
 
@@ -2544,6 +3076,15 @@ def post_linear_remaining_finite_system_audit(
     normalized_prefix: "LocalNormalizedLawPrefixWitnessAudit | None" = None,
     max_kernel_degree: int | None = None,
     kink_completion_deficits_routed: bool = False,
+    triangular_recovery_endpoint_witness: (
+        TriangularRecoveryEndpointWitnessAudit | None
+    ) = None,
+    universal_continuation_endpoint_witness: (
+        "UniversalContinuationIdentityEndpointWitnessAudit | None"
+    ) = None,
+    mixed_unit_context_endpoint_witness: (
+        "MixedUnitContextEndpointWitnessAudit | None"
+    ) = None,
 ) -> PostLinearRemainingFiniteSystemAudit:
     """Return the K/U finite-system classifier after finite-linear closure."""
 
@@ -2577,4 +3118,7 @@ def post_linear_remaining_finite_system_audit(
         universal_continuation_identity_routing=universal_continuation_identity_routing_audit(
             interval
         ),
+        triangular_recovery_endpoint_witness=triangular_recovery_endpoint_witness,
+        universal_continuation_endpoint_witness=universal_continuation_endpoint_witness,
+        mixed_unit_context_endpoint_witness=mixed_unit_context_endpoint_witness,
     )

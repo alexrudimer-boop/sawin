@@ -86,6 +86,29 @@ triangular_recovery_longitude_route_audit(
 It delegates the endpoint subgroup check to
 `unit_composite_longitude_route_audit(...)`.
 
+The bundled post-linear supplied-certificate checker is:
+
+```text
+triangular_recovery_endpoint_witness_audit(
+    observer,
+    routed_defects,
+    endpoint_audits,
+)
+```
+
+It keys endpoint certificates by
+
+```text
+(left_color, right_color, routed_defect_reason)
+```
+
+and accepts any of the existing recovery endpoint certificates which prove
+membership in `V_beta(U_tri)`: subgroup-route, explicit longitude expression,
+derived-series lift, or perfect-residual route.  The audit requires the same
+fixed observer, exact coverage of the routed keys, no extra keys, and proved
+endpoint visibility.  When supplied to the post-linear classifier, a matching
+bundle closes System U as `closed_by_triangular_recovery_endpoint_witness`.
+
 The all-`n` symbolic route is sharpened in
 `proofs/triangular_recovery_detector_lift_fork.md`.  If the recovery observer
 admits active Artin detector-lift local rows in `U_tri`, then terminal

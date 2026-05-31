@@ -35,7 +35,10 @@ from ybe_domination import (
     TriangularLatinDefectClosureAudit,
     TriangularLatinDefectClosureRow,
     TwoSidedUnitCollapseAudit,
+    cyclic_group,
+    endpoint_product_longitude_expression_audit,
     latin_triangular_ybe_audit,
+    mixed_unit_context_endpoint_witness_audit,
     nonlinear_overlap_obstruction_audit,
     nonlinear_overlap_refinement_audit,
     post_linear_remaining_finite_system_audit,
@@ -54,12 +57,14 @@ from ybe_domination import (
     triangular_recovery_derived_series_lift_audit,
     triangular_recovery_detector_lift_braid_audit,
     triangular_recovery_detector_lift_transition_audit,
+    triangular_recovery_endpoint_witness_audit,
     triangular_recovery_longitude_expression_audit,
     triangular_recovery_longitude_route_audit,
     triangular_recovery_perfect_residual_audit,
     triangular_recovery_audit,
     triangular_recovery_unit_observer_audit,
     triangular_recovery_unit_group,
+    universal_continuation_identity_endpoint_witness_audit,
     universal_continuation_identity_routing_audit,
 )
 
@@ -571,6 +576,93 @@ def partial_constant_missing_row_profile_route_audits():
     return profile, closure, route
 
 
+def right_partial_constant_missing_row_profile_route_audits():
+    unit_section = SectionRankProfileRow(
+        side="right",
+        left_color="*",
+        right_color="*",
+        output_left_color="*",
+        output_right_color="*",
+        fixed_input=0,
+        domain_size=2,
+        codomain_size=2,
+        rank=2,
+        kernel_blocks=((0,), (1,)),
+        image=(0, 1),
+    )
+    constant_section = SectionRankProfileRow(
+        side="right",
+        left_color="*",
+        right_color="*",
+        output_left_color="*",
+        output_right_color="*",
+        fixed_input=1,
+        domain_size=2,
+        codomain_size=2,
+        rank=1,
+        kernel_blocks=((0, 1),),
+        image=(0,),
+    )
+    profile = MissingTriangularRowProfileAudit(
+        rows=(
+            MissingTriangularRowProfile(
+                side="right",
+                left_color="*",
+                right_color="*",
+                output_left_color="*",
+                output_right_color="*",
+                section_profiles=(unit_section, constant_section),
+            ),
+        ),
+    )
+    closure = MissingTriangularPartialConstantClosureAudit(
+        rows=(
+            MissingTriangularPartialConstantClosureRow(
+                side="right",
+                left_color="*",
+                right_color="*",
+                output_left_color="*",
+                output_right_color="*",
+                fixed_input=1,
+                domain_color="*",
+                collapsed_inputs=(0, 1),
+                generated=generated("universal"),
+            ),
+        ),
+    )
+    route = MissingTriangularPartialConstantContinuationRouteAudit(
+        rows=(
+            MissingTriangularPartialConstantContinuationRouteRow(
+                side="right",
+                left_color="*",
+                right_color="*",
+                output_left_color="*",
+                output_right_color="*",
+                fixed_input=1,
+                domain_color="*",
+                collapsed_inputs=(0, 1),
+                closure_kind="universal",
+                companion_output_color="*",
+                companion_outputs=(0, 1),
+                continuation_seed_witnesses=(
+                    ContinuationSeedRow(
+                        left_color="*",
+                        right_color="*",
+                        output_left_color="*",
+                        output_right_color="*",
+                        left_input=0,
+                        right_input=1,
+                        continuing_output=1,
+                    ),
+                ),
+                continuation_seed_closure_kinds=("universal",),
+                partial_edge_contained_in_seed_closure=True,
+            ),
+        ),
+    )
+    return profile, closure, route
+
+
 def coordinate_unit_mixed_context_route_audits():
     unit_section = SectionRankProfileRow(
         side="left",
@@ -598,7 +690,7 @@ def coordinate_unit_mixed_context_route_audits():
         ),
     )
     routing = MissingTriangularCoordinateUnitRoutingAudit(
-        colored_ybe=False,
+        colored_ybe=True,
         locally_nondegenerate_closed_branch=False,
         rows=(
             MissingTriangularCoordinateUnitRoute(
@@ -617,6 +709,108 @@ def coordinate_unit_mixed_context_route_audits():
         ),
     )
     return profile, routing
+
+
+def coordinate_unit_unclosed_two_sided_route_audits():
+    unit_section = SectionRankProfileRow(
+        side="left",
+        left_color="*",
+        right_color="*",
+        output_left_color="*",
+        output_right_color="*",
+        fixed_input=0,
+        domain_size=2,
+        codomain_size=2,
+        rank=2,
+        kernel_blocks=((0,), (1,)),
+        image=(0, 1),
+    )
+    profile = MissingTriangularRowProfileAudit(
+        rows=(
+            MissingTriangularRowProfile(
+                side="left",
+                left_color="*",
+                right_color="*",
+                output_left_color="*",
+                output_right_color="*",
+                section_profiles=(unit_section,),
+            ),
+        ),
+    )
+    routing = MissingTriangularCoordinateUnitRoutingAudit(
+        colored_ybe=True,
+        locally_nondegenerate_closed_branch=False,
+        rows=(
+            MissingTriangularCoordinateUnitRoute(
+                left_color="*",
+                right_color="*",
+                output_left_color="*",
+                output_right_color="*",
+                coordinate_unit_sides=("left",),
+                left_explanation="coordinate_side_unit_not_triangular",
+                right_explanation="coordinate_side_unit_not_triangular",
+                left_unit_inputs=(0,),
+                left_nonunit_inputs=(),
+                right_unit_inputs=(0,),
+                right_nonunit_inputs=(),
+            ),
+        ),
+    )
+    return profile, routing
+
+
+def continuation_and_mixed_context_route_audits():
+    continuation_profile, closure, route = partial_constant_missing_row_profile_route_audits()
+    unit_section = SectionRankProfileRow(
+        side="right",
+        left_color="*",
+        right_color="*",
+        output_left_color="*",
+        output_right_color="*",
+        fixed_input=0,
+        domain_size=2,
+        codomain_size=2,
+        rank=2,
+        kernel_blocks=((0,), (1,)),
+        image=(0, 1),
+    )
+    mixed_profile = MissingTriangularRowProfile(
+        side="right",
+        left_color="*",
+        right_color="*",
+        output_left_color="*",
+        output_right_color="*",
+        section_profiles=(unit_section,),
+    )
+    profile = MissingTriangularRowProfileAudit(
+        rows=continuation_profile.rows + (mixed_profile,),
+    )
+    coordinate_routing = MissingTriangularCoordinateUnitRoutingAudit(
+        colored_ybe=True,
+        locally_nondegenerate_closed_branch=False,
+        rows=(
+            MissingTriangularCoordinateUnitRoute(
+                left_color="*",
+                right_color="*",
+                output_left_color="*",
+                output_right_color="*",
+                coordinate_unit_sides=("right",),
+                left_explanation="partial_constant_hidden_rank_loss",
+                right_explanation="coordinate_side_unit_not_triangular",
+                left_unit_inputs=(),
+                left_nonunit_inputs=(0,),
+                right_unit_inputs=(0,),
+                right_nonunit_inputs=(),
+            ),
+        ),
+    )
+    return profile, closure, route, coordinate_routing
+
+
+class TwoNoTriangularRawKRefinement:
+    status = "triangular_recovery_kink_completion_deficit"
+    active_missing_left_latin_row_defects = ((("*", "*"), "no_left_triangular_row"),)
+    active_missing_right_latin_row_defects = ((("*", "*"), "no_right_triangular_row"),)
 
 
 class PassingRepair:
@@ -1290,6 +1484,128 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             ),
         )
 
+    def test_coordinate_unit_two_sided_row_stays_live_without_global_branch(self):
+        profile, routing = coordinate_unit_unclosed_two_sided_route_audits()
+        audit = PostLinearRemainingFiniteSystemAudit(
+            active_system_k_refinement(),
+            missing_triangular_row_profile=profile,
+            missing_triangular_coordinate_unit_routing=routing,
+        )
+
+        self.assertEqual(routing.two_sided_unit_pair_rows, routing.rows)
+        self.assertEqual(routing.unclosed_two_sided_unit_pair_rows, routing.rows)
+        self.assertFalse(routing.all_coordinate_unit_rows_routed)
+        self.assertFalse(routing.proves_coordinate_unit_routing_ledger)
+        self.assertEqual(audit.system_name, "system_k_kink_completion_deficit")
+        self.assertTrue(audit.system_k_active)
+        self.assertIn(
+            (
+                "live_k_missing_latin_row_defects",
+                ((("*", "*"), "no_left_triangular_row"),),
+            ),
+            audit.finite_obstruction_data,
+        )
+        self.assertIn(
+            (
+                "missing_triangular_coordinate_unit_unclosed_two_sided_rows",
+                (
+                    (
+                        "*",
+                        "*",
+                        ("left",),
+                        "coordinate_side_unit_not_triangular",
+                        "coordinate_side_unit_not_triangular",
+                    ),
+                ),
+            ),
+            audit.finite_obstruction_data,
+        )
+
+    def test_continuation_endpoint_witness_closes_system_c_when_matching(self):
+        profile, closure, route = partial_constant_missing_row_profile_route_audits()
+        identity_routing = universal_continuation_identity_routing_audit(
+            one_color_identity_interval()
+        )
+        c2 = cyclic_group(2)
+        endpoint = endpoint_product_longitude_expression_audit(
+            (c2,),
+            n=2,
+            braid_word=(1, 1),
+            endpoints=(1,),
+            assignments=((1, 0),),
+            expressions=(((1, 1),),),
+        )
+        witness = universal_continuation_identity_endpoint_witness_audit(
+            identity_routing,
+            ((identity_routing.routing.routed_edges[0], endpoint),),
+        )
+        audit = PostLinearRemainingFiniteSystemAudit(
+            active_system_k_refinement(),
+            missing_triangular_row_profile=profile,
+            missing_triangular_partial_constant_closure=closure,
+            missing_triangular_partial_constant_continuation_route=route,
+            universal_continuation_identity_routing=identity_routing,
+            universal_continuation_endpoint_witness=witness,
+        )
+
+        self.assertEqual(
+            audit.system_name,
+            "closed_by_universal_continuation_endpoint_witness",
+        )
+        self.assertTrue(audit.system_c_closed_by_endpoint_witness)
+        self.assertFalse(audit.is_current_remaining_finite_system)
+        self.assertEqual(audit.remaining_obligations, ())
+        self.assertIn(
+            ("universal_continuation_endpoint_witness_proved", True),
+            audit.finite_obstruction_data,
+        )
+        self.assertIn(
+            ("universal_continuation_endpoint_missing_edges", ()),
+            audit.finite_obstruction_data,
+        )
+
+    def test_mixed_unit_endpoint_witness_closes_system_m_when_matching(self):
+        profile, routing = coordinate_unit_mixed_context_route_audits()
+        c2 = cyclic_group(2)
+        endpoint = endpoint_product_longitude_expression_audit(
+            (c2,),
+            n=2,
+            braid_word=(1, 1),
+            endpoints=(1,),
+            assignments=((1, 0),),
+            expressions=(((1, 1),),),
+        )
+        witness = mixed_unit_context_endpoint_witness_audit(
+            routing,
+            ((("*", "*", "left"), endpoint),),
+        )
+        audit = PostLinearRemainingFiniteSystemAudit(
+            active_system_k_refinement(),
+            missing_triangular_row_profile=profile,
+            missing_triangular_coordinate_unit_routing=routing,
+            mixed_unit_context_endpoint_witness=witness,
+        )
+
+        self.assertEqual(
+            audit.system_name,
+            "closed_by_mixed_unit_context_endpoint_witness",
+        )
+        self.assertTrue(audit.system_m_closed_by_endpoint_witness)
+        self.assertFalse(audit.is_current_remaining_finite_system)
+        self.assertEqual(audit.remaining_obligations, ())
+        self.assertIn(
+            ("missing_triangular_coordinate_unit_routing_proved", True),
+            audit.finite_obstruction_data,
+        )
+        self.assertIn(
+            ("mixed_unit_endpoint_witness_proved", True),
+            audit.finite_obstruction_data,
+        )
+        self.assertIn(
+            ("mixed_unit_endpoint_missing_context_keys", ()),
+            audit.finite_obstruction_data,
+        )
+
     def test_post_linear_routes_constant_map_kernel_to_recovery_when_supplied(self):
         refinement = constant_map_kernel_system_k_refinement()
         closure = TriangularLatinDefectClosureAudit(
@@ -1352,6 +1668,231 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
                 (),
             ),
             routed.finite_obstruction_data,
+        )
+
+    def test_post_linear_reports_combined_recovery_and_continuation_endpoints(self):
+        refinement = constant_map_kernel_system_k_refinement()
+        profile, partial_closure, partial_route = (
+            right_partial_constant_missing_row_profile_route_audits()
+        )
+        closure = TriangularLatinDefectClosureAudit(
+            rows=(
+                TriangularLatinDefectClosureRow(
+                    side="left",
+                    defect="constant_map_kernel",
+                    left_color="*",
+                    right_color="*",
+                    domain_color="*",
+                    fixed_input=None,
+                    collapsed_inputs=(0, 1),
+                    generated=generated("universal"),
+                ),
+            ),
+        )
+        route = TriangularConstantKernelRecoveryRouteAudit(
+            rows=(
+                TriangularConstantKernelRecoveryRouteRow(
+                    side="left",
+                    left_color="*",
+                    right_color="*",
+                    domain_color="*",
+                    collapsed_inputs=(0, 1),
+                    closure_kind="universal",
+                    recovery_row_present=True,
+                    recovery_formula_bijective=True,
+                    witness_output_pairs=(
+                        (0, ((0, 0),)),
+                        (1, ((0, 1),)),
+                    ),
+                ),
+            ),
+        )
+        audit = PostLinearRemainingFiniteSystemAudit(
+            refinement,
+            triangular_latin_defect_closure=closure,
+            triangular_constant_kernel_recovery_route=route,
+            missing_triangular_row_profile=profile,
+            missing_triangular_partial_constant_closure=partial_closure,
+            missing_triangular_partial_constant_continuation_route=partial_route,
+        )
+
+        self.assertEqual(audit.system_name, "system_uc_routed_endpoint_product")
+        self.assertEqual(audit.active_routed_endpoint_systems, ("U", "C"))
+        self.assertEqual(audit.unclosed_routed_endpoint_systems, ("U", "C"))
+        self.assertTrue(audit.system_u_active)
+        self.assertTrue(audit.system_c_active)
+        self.assertFalse(audit.system_m_active)
+        self.assertIn(
+            (
+                "recovery_routed_k_missing_latin_row_defects",
+                ((("*", "*"), "left_constant_map_universal_kernel"),),
+            ),
+            audit.finite_obstruction_data,
+        )
+        self.assertIn(
+            (
+                "continuation_routed_k_missing_latin_row_defects",
+                ((("*", "*"), "no_right_triangular_row"),),
+            ),
+            audit.finite_obstruction_data,
+        )
+        self.assertIn(
+            ("active_routed_endpoint_systems", ("U", "C")),
+            audit.finite_obstruction_data,
+        )
+        self.assertEqual(
+            audit.remaining_obligations,
+            (
+                "prove each routed triangular recovery endpoint composite lies in V_beta(U_tri)",
+                "or upgrade one routed U_tri endpoint miss to a normalized-law sequence",
+                "construct fixed endpoint witnesses for the routed universal-continuation seed closures",
+                "or upgrade one routed universal-continuation endpoint miss to a normalized-law sequence",
+            ),
+        )
+
+    def test_closed_recovery_endpoint_does_not_hide_unclosed_continuation_endpoint(self):
+        interval = one_color_latin_unit_triangular_interval()
+        refinement = constant_map_kernel_system_k_refinement()
+        profile, partial_closure, partial_route = (
+            right_partial_constant_missing_row_profile_route_audits()
+        )
+        closure = TriangularLatinDefectClosureAudit(
+            rows=(
+                TriangularLatinDefectClosureRow(
+                    side="left",
+                    defect="constant_map_kernel",
+                    left_color="*",
+                    right_color="*",
+                    domain_color="*",
+                    fixed_input=None,
+                    collapsed_inputs=(0, 1),
+                    generated=generated("universal"),
+                ),
+            ),
+        )
+        route = TriangularConstantKernelRecoveryRouteAudit(
+            rows=(
+                TriangularConstantKernelRecoveryRouteRow(
+                    side="left",
+                    left_color="*",
+                    right_color="*",
+                    domain_color="*",
+                    collapsed_inputs=(0, 1),
+                    closure_kind="universal",
+                    recovery_row_present=True,
+                    recovery_formula_bijective=True,
+                    witness_output_pairs=(
+                        (0, ((0, 0),)),
+                        (1, ((0, 1),)),
+                    ),
+                ),
+            ),
+        )
+        observer = refinement.triangular_recovery_unit_observer
+        generator = observer.generator_transformations[0]
+        identity = observer.monoid.identity
+        endpoint = triangular_recovery_longitude_expression_audit(
+            interval,
+            n=2,
+            braid_word=(1, 1),
+            factor_row_indices=(0,),
+            assignment=(generator, identity),
+            expression=((1, 1),),
+        )
+        witness = triangular_recovery_endpoint_witness_audit(
+            observer,
+            ((("*", "*"), "left_constant_map_universal_kernel"),),
+            ((("*", "*", "left_constant_map_universal_kernel"), endpoint),),
+        )
+        audit = PostLinearRemainingFiniteSystemAudit(
+            refinement,
+            triangular_latin_defect_closure=closure,
+            triangular_constant_kernel_recovery_route=route,
+            missing_triangular_row_profile=profile,
+            missing_triangular_partial_constant_closure=partial_closure,
+            missing_triangular_partial_constant_continuation_route=partial_route,
+            triangular_recovery_endpoint_witness=witness,
+        )
+
+        self.assertEqual(audit.system_name, "system_c_universal_continuation_endpoint")
+        self.assertEqual(audit.active_routed_endpoint_systems, ("U", "C"))
+        self.assertEqual(audit.unclosed_routed_endpoint_systems, ("C",))
+        self.assertTrue(audit.system_u_closed_by_endpoint_witness)
+        self.assertFalse(audit.system_c_closed_by_endpoint_witness)
+        self.assertTrue(audit.is_current_remaining_finite_system)
+        self.assertEqual(
+            audit.remaining_obligations,
+            (
+                "construct fixed endpoint witnesses for the routed universal-continuation seed closures",
+                "or upgrade one routed universal-continuation endpoint miss to a normalized-law sequence",
+            ),
+        )
+
+    def test_closed_continuation_and_mixed_product_reports_both_witnesses(self):
+        profile, closure, route, coordinate_routing = (
+            continuation_and_mixed_context_route_audits()
+        )
+        identity_routing = universal_continuation_identity_routing_audit(
+            one_color_identity_interval()
+        )
+        c2 = cyclic_group(2)
+        endpoint = endpoint_product_longitude_expression_audit(
+            (c2,),
+            n=2,
+            braid_word=(1, 1),
+            endpoints=(1,),
+            assignments=((1, 0),),
+            expressions=(((1, 1),),),
+        )
+        continuation_witness = universal_continuation_identity_endpoint_witness_audit(
+            identity_routing,
+            ((identity_routing.routing.routed_edges[0], endpoint),),
+        )
+        mixed_witness = mixed_unit_context_endpoint_witness_audit(
+            coordinate_routing,
+            ((("*", "*", "right"), endpoint),),
+        )
+        audit = PostLinearRemainingFiniteSystemAudit(
+            TwoNoTriangularRawKRefinement(),
+            missing_triangular_row_profile=profile,
+            missing_triangular_partial_constant_closure=closure,
+            missing_triangular_partial_constant_continuation_route=route,
+            missing_triangular_coordinate_unit_routing=coordinate_routing,
+            universal_continuation_identity_routing=identity_routing,
+            universal_continuation_endpoint_witness=continuation_witness,
+            mixed_unit_context_endpoint_witness=mixed_witness,
+        )
+
+        self.assertEqual(audit.system_name, "closed_by_routed_endpoint_witnesses")
+        self.assertEqual(audit.active_routed_endpoint_systems, ("C", "M"))
+        self.assertEqual(audit.unclosed_routed_endpoint_systems, ())
+        self.assertFalse(audit.is_current_remaining_finite_system)
+        self.assertEqual(audit.remaining_obligations, ())
+        self.assertIn(
+            (
+                "continuation_routed_k_missing_latin_row_defects",
+                ((("*", "*"), "no_left_triangular_row"),),
+            ),
+            audit.finite_obstruction_data,
+        )
+        self.assertIn(
+            (
+                "mixed_context_routed_k_missing_latin_row_defects",
+                ((("*", "*"), "no_right_triangular_row"),),
+            ),
+            audit.finite_obstruction_data,
+        )
+        self.assertIn(
+            ("universal_continuation_endpoint_witness_proved", True),
+            audit.finite_obstruction_data,
+        )
+        self.assertIn(
+            ("mixed_unit_endpoint_witness_proved", True),
+            audit.finite_obstruction_data,
+        )
+        self.assertIn(
+            ("mixed_unit_endpoint_missing_context_keys", ()),
+            audit.finite_obstruction_data,
         )
 
     def test_constant_map_kernel_only_route_becomes_system_u_endpoint(self):
@@ -1426,6 +1967,143 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
                 "prove each routed triangular recovery endpoint composite lies in V_beta(U_tri)",
                 "or upgrade one routed U_tri endpoint miss to a normalized-law sequence",
             ),
+        )
+
+    def test_triangular_recovery_endpoint_witness_covers_routed_k_defect(self):
+        interval = one_color_latin_unit_triangular_interval()
+        observer = triangular_recovery_unit_observer_audit(interval)
+        generator = observer.generator_transformations[0]
+        identity = observer.monoid.identity
+        endpoint = triangular_recovery_longitude_expression_audit(
+            interval,
+            n=2,
+            braid_word=(1, 1),
+            factor_row_indices=(0,),
+            assignment=(generator, identity),
+            expression=((1, 1),),
+        )
+
+        audit = triangular_recovery_endpoint_witness_audit(
+            observer,
+            ((("*", "*"), "left_constant_map_universal_kernel"),),
+            ((("*", "*", "left_constant_map_universal_kernel"), endpoint),),
+        )
+
+        self.assertEqual(
+            audit.routed_keys,
+            (("*", "*", "left_constant_map_universal_kernel"),),
+        )
+        self.assertEqual(
+            audit.witnessed_keys,
+            (("*", "*", "left_constant_map_universal_kernel"),),
+        )
+        self.assertEqual(audit.missing_routed_keys, ())
+        self.assertEqual(audit.extra_witness_keys, ())
+        self.assertTrue(audit.all_endpoint_witnesses_match_observer)
+        self.assertTrue(audit.proves_triangular_recovery_endpoint_witnesses)
+        self.assertEqual(audit.failure_reasons, ())
+
+    def test_triangular_recovery_endpoint_witness_reports_missing_routed_key(self):
+        observer = triangular_recovery_unit_observer_audit(
+            one_color_latin_unit_triangular_interval()
+        )
+
+        audit = triangular_recovery_endpoint_witness_audit(
+            observer,
+            ((("*", "*"), "left_constant_map_universal_kernel"),),
+            (),
+        )
+
+        self.assertEqual(
+            audit.missing_routed_keys,
+            (("*", "*", "left_constant_map_universal_kernel"),),
+        )
+        self.assertFalse(audit.proves_triangular_recovery_endpoint_witnesses)
+        self.assertEqual(
+            audit.failure_reasons,
+            ("routed_recovery_keys_not_covered",),
+        )
+
+    def test_recovery_endpoint_witness_closes_system_u_when_matching(self):
+        interval = one_color_latin_unit_triangular_interval()
+        refinement = constant_map_kernel_only_system_k_refinement()
+        closure = TriangularLatinDefectClosureAudit(
+            rows=(
+                TriangularLatinDefectClosureRow(
+                    side="left",
+                    defect="constant_map_kernel",
+                    left_color="*",
+                    right_color="*",
+                    domain_color="*",
+                    fixed_input=None,
+                    collapsed_inputs=(0, 1),
+                    generated=generated("universal"),
+                ),
+            ),
+        )
+        route = TriangularConstantKernelRecoveryRouteAudit(
+            rows=(
+                TriangularConstantKernelRecoveryRouteRow(
+                    side="left",
+                    left_color="*",
+                    right_color="*",
+                    domain_color="*",
+                    collapsed_inputs=(0, 1),
+                    closure_kind="universal",
+                    recovery_row_present=True,
+                    recovery_formula_bijective=True,
+                    witness_output_pairs=(
+                        (0, ((0, 0),)),
+                        (1, ((0, 1),)),
+                    ),
+                ),
+            ),
+        )
+        observer = refinement.triangular_recovery_unit_observer
+        generator = observer.generator_transformations[0]
+        identity = observer.monoid.identity
+        endpoint = triangular_recovery_longitude_expression_audit(
+            interval,
+            n=2,
+            braid_word=(1, 1),
+            factor_row_indices=(0,),
+            assignment=(generator, identity),
+            expression=((1, 1),),
+        )
+        witness = triangular_recovery_endpoint_witness_audit(
+            observer,
+            ((("*", "*"), "left_constant_map_universal_kernel"),),
+            ((("*", "*", "left_constant_map_universal_kernel"), endpoint),),
+        )
+
+        audit = PostLinearRemainingFiniteSystemAudit(
+            refinement,
+            triangular_latin_defect_closure=closure,
+            triangular_constant_kernel_recovery_route=route,
+            triangular_recovery_endpoint_witness=witness,
+        )
+
+        self.assertEqual(
+            audit.system_name,
+            "closed_by_triangular_recovery_endpoint_witness",
+        )
+        self.assertTrue(audit.system_u_closed_by_endpoint_witness)
+        self.assertFalse(audit.is_current_remaining_finite_system)
+        self.assertEqual(audit.remaining_obligations, ())
+        self.assertIn(
+            (
+                "system_u_endpoint_defects",
+                ((("*", "*"), "left_constant_map_universal_kernel"),),
+            ),
+            audit.finite_obstruction_data,
+        )
+        self.assertIn(
+            ("triangular_recovery_endpoint_witness_proved", True),
+            audit.finite_obstruction_data,
+        )
+        self.assertIn(
+            ("triangular_recovery_endpoint_missing_keys", ()),
+            audit.finite_obstruction_data,
         )
 
     def test_missing_latin_kernel_labels_require_nontrivial_fibres(self):

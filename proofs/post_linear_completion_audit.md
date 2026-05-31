@@ -178,6 +178,21 @@ Coordinate-unit rows emptied by mixed-unit-context routing are recorded in
 `mixed_context_routed_k_missing_latin_row_defects` and move to
 `system_m_mixed_unit_context_endpoint`, preserving the mixed-unit endpoint
 burden.
+The endpoint layer is now executable in both routed cases: a matching
+`triangular_recovery_endpoint_witness` closes System U, a matching
+`universal_continuation_endpoint_witness` closes System C, and a matching
+`mixed_unit_context_endpoint_witness` closes System M.  These are
+supplied-certificate closures; they do not construct the missing uniform
+endpoint factors, but they prevent a completed endpoint package from being
+reported as an open finite system.
+The routed endpoint layer is now product-aware: U, C, and M endpoint
+obligations may coexist.  The classifier records
+`active_routed_endpoint_systems` and `unclosed_routed_endpoint_systems`; a
+closed U witness no longer masks an unclosed C or M endpoint family.
+The evidence payload is shared across the routed endpoint product: when C and
+M are both closed, the finite data reports both the universal-continuation
+endpoint witness and the mixed-unit endpoint witness, rather than only the
+first branch reached by `system_name`.
 The live tuple is status-faithful: it is populated only in the actual
 `triangular_recovery_kink_completion_deficit` branch.  Structural raw labels
 remain visible in `missing_left_latin_row_defects`, but once
@@ -224,8 +239,11 @@ For no-triangular-row subcases, the missing-row profile audit now separates
 proper-kernel, injective-nonsurjective, coordinate-unit, partial-constant,
 and nonconstant-hidden profiles; the partial-constant rows are exactly
 mixed-unit context-recovery rows on that coordinate side, while coordinate-unit
-rows are two-sided-unit branch rows when global and otherwise mixed-unit
-context with the nonunit data on the opposite side.  The constant sections in
+rows are removed only by the global two-sided-unit locally-nondegenerate
+branch or by mixed-unit context with nonunit data on the opposite side.  A
+two-sided unit coordinate row without the global branch certificate remains a
+live System K row, recorded as an unclosed two-sided coordinate-unit route.
+The constant sections in
 partial-constant rows now produce explicit generated seed-edge closures:
 proper closure contradicts local minimality, and universal closure is the
 exact seed edge.  Companion separation then routes those seed edges into
@@ -233,12 +251,21 @@ nontrivial continuation seed closures, so they are part of the
 descent-endpoint repair channel rather than a separate K-left endpoint system.
 For the universal-continuation channel itself, identity external routing now
 lists every saturation-lost fibre edge whose fixed endpoint witness is still
-required.
+required.  If the identity-specific endpoint witness covers exactly those
+edges, the classifier records
+`closed_by_universal_continuation_endpoint_witness`.
+For mixed-unit coordinate routes, the endpoint witness keys are now exactly
+`(left_color, right_color, side)` for every mixed coordinate-unit side.  If
+the supplied endpoint-longitude certificates cover exactly those keys, the
+classifier records `closed_by_mixed_unit_context_endpoint_witness`.
 For side-dual replacement subcases, `k_left_side_dual_replacement_rows`
 records the right-side defect ledger or missing-row profile explicitly.
 If the U-route fails after K is routed, the finite miss has been localized to
 `P_tri`, where it must be upgraded to a normalized-law sequence before it can
 serve as `[Resolution: B]`.
+If the U-route succeeds by a supplied triangular recovery endpoint witness,
+the classifier records `closed_by_triangular_recovery_endpoint_witness` and
+removes the row from the current finite-system list.
 
 Equivalently, in the repair-contract format, construct:
 

@@ -112,6 +112,16 @@ identity routing audit
 Any successful certificate now proves the whole supplied-data repair package
 for that edge set, including the endpoint visibility obligations.
 
+## Post-linear System C consequence
+
+The post-linear finite-system wrapper accepts the identity-specific wrapper as
+`universal_continuation_endpoint_witness`.  If it matches the same
+`universal_continuation_identity_routing` ledger and proves every routed
+endpoint witness, then the classifier reports
+`closed_by_universal_continuation_endpoint_witness`, no longer counts the row
+as a current remaining finite system, and returns no remaining obligations for
+System C.
+
 ## Exact remaining fork
 
 [Open] To prove `[Resolution: A]`, construct the missing fixed endpoint factors

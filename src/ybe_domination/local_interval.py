@@ -1114,6 +1114,14 @@ class MissingTriangularCoordinateUnitRoutingAudit:
         return tuple(row for row in self.rows if row.status == "mixed_unit_context")
 
     @property
+    def unclosed_two_sided_unit_pair_rows(
+        self,
+    ) -> Tuple[MissingTriangularCoordinateUnitRoute, ...]:
+        if self.locally_nondegenerate_closed_branch:
+            return ()
+        return tuple(row for row in self.rows if row.status == "two_sided_unit_pair")
+
+    @property
     def unrouted_rows(self) -> Tuple[MissingTriangularCoordinateUnitRoute, ...]:
         return tuple(
             row for row in self.rows if row.status == "unrouted_coordinate_unit_row"
@@ -1121,7 +1129,11 @@ class MissingTriangularCoordinateUnitRoutingAudit:
 
     @property
     def all_coordinate_unit_rows_routed(self) -> bool:
-        return not self.unrouted_rows
+        return not self.unrouted_rows and not self.unclosed_two_sided_unit_pair_rows
+
+    @property
+    def proves_coordinate_unit_routing_ledger(self) -> bool:
+        return self.colored_ybe and self.all_coordinate_unit_rows_routed
 
 
 @dataclass(frozen=True)

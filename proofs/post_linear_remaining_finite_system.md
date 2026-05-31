@@ -192,6 +192,40 @@ the universal-continuation endpoint system.  If it is empty because a
 coordinate-unit row has routed to mixed-unit context, the wrapper classifies
 the row as downstream System M.
 
+These endpoint systems are not mutually exclusive.  A single finite ledger can
+route one K defect to triangular recovery and another to universal
+continuation or mixed-unit context.  The executable wrapper therefore records:
+
+```text
+active_routed_endpoint_systems
+unclosed_routed_endpoint_systems
+```
+
+If more than one endpoint system remains unclosed, `system_name` is a product
+name such as `system_uc_routed_endpoint_product` and `remaining_obligations`
+contains every unclosed endpoint obligation.  A supplied witness for one
+endpoint family removes only that family from the unclosed tuple; it does not
+hide the remaining endpoint families.
+
+The finite obstruction payload is product-aware as well.  For any routed
+endpoint system it uses one shared evidence table containing all routed
+families:
+
+```text
+recovery_routed_k_missing_latin_row_defects
+system_u_endpoint_defects
+continuation_routed_k_missing_latin_row_defects
+mixed_context_routed_k_missing_latin_row_defects
+active_routed_endpoint_systems
+unclosed_routed_endpoint_systems
+```
+
+and then appends all supplied witness/routing ledgers for U, C, and M.  Thus a
+closed C/M product reports both
+`universal_continuation_endpoint_witness_proved` and
+`mixed_unit_endpoint_witness_proved`; a closed U witness does not erase the C
+or M witness fields, and an unclosed C or M family remains visible.
+
 The side-dual replacement statuses are deliberately not members of this live
 tuple.  They remain in:
 
@@ -300,6 +334,7 @@ missing_triangular_left_rack_cardinality_proved
 missing_triangular_coordinate_unit_routes
 missing_triangular_coordinate_unit_mixed_rows
 missing_triangular_coordinate_unit_unrouted_rows
+missing_triangular_coordinate_unit_unclosed_two_sided_rows
 missing_triangular_locally_nondegenerate_closed_branch
 missing_triangular_partial_constant_closure_rows
 missing_triangular_partial_constant_proper_closure_rows
@@ -464,7 +499,11 @@ coordinate-side unit rows are routed by
 `proofs/triangular_k_left_coordinate_unit_routing.md`: if every colour pair is
 two-sided unit then the locally nondegenerate/guitar branch applies; otherwise
 the one-sided unit row is mixed-unit context with the nonunit data on the
-opposite side.  Mixed-unit coordinate routes are recorded in
+opposite side.  A two-sided unit row is removed from live K only when the
+global locally-nondegenerate branch is actually proved; otherwise it remains
+live and is listed in
+`missing_triangular_coordinate_unit_unclosed_two_sided_rows`.  Mixed-unit
+coordinate routes are recorded in
 `mixed_context_routed_k_missing_latin_row_defects`; if no live K row remains,
 the wrapper reports `system_m_mixed_unit_context_endpoint`.  Nonconstant
 hidden rows are inconsistency certificates.
@@ -489,7 +528,12 @@ closed branch.
 supplied-certificate checker for the next endpoint layer: once endpoint
 factors are supplied for the identity-routed lost edges, the executable audit
 checks exact coverage and exposes the resulting endpoint-visibility certificate
-to the repair-contract audit.
+to the repair-contract audit.  The post-linear wrapper now accepts that same
+certificate as `universal_continuation_endpoint_witness`; when it matches the
+supplied `universal_continuation_identity_routing` object and proves all
+identity-routed endpoint witnesses, System C is reported as
+`closed_by_universal_continuation_endpoint_witness` rather than as a current
+remaining finite system.
 
 To close System K on the A side, prove that every such finite deficit either
 cannot occur in a genuine local-minimal bi-free universal-corridor interval or
@@ -515,12 +559,23 @@ endpoint channel recorded by:
 universal_continuation_identity_lost_edges
 universal_continuation_identity_unrouted_edges
 universal_continuation_identity_routing_proved.
+universal_continuation_endpoint_witness_matches_routing
+universal_continuation_endpoint_witness_proved
+universal_continuation_endpoint_missing_edges
+universal_continuation_endpoint_extra_edges
 ```
 
 The remaining A-route is to construct fixed endpoint witnesses for those
 routed universal-continuation seed closures.  The B-route would have to
 upgrade one such endpoint miss to the normalized-law sequence required in the
 original problem.
+
+[Proved] If the supplied `universal_continuation_endpoint_witness` matches the
+same identity-routing ledger and proves all routed endpoint witnesses, then
+this row has no remaining System C obligation.  The executable classifier
+returns `closed_by_universal_continuation_endpoint_witness`, empties
+`remaining_obligations`, and no longer counts the row as a current remaining
+finite system.
 
 ## System M: mixed-unit context endpoint
 
@@ -538,6 +593,44 @@ that each such mixed-unit context endpoint factors through fixed
 detector/readout data.  The B-route would have to upgrade one mixed-unit
 endpoint miss to the normalized-law sequence required in the original
 problem.
+
+The supplied-certificate checker for this endpoint layer is:
+
+```text
+mixed_unit_context_endpoint_witness_audit(...)
+```
+
+It uses the coordinate-unit routing ledger itself as the list of endpoint
+channels.  Each mixed row contributes one key
+
+```text
+(left_color, right_color, side)
+```
+
+for every coordinate-unit side routed to mixed context.  A witness proves the
+layer only when the coordinate-unit routing ledger is proved, every mixed
+context key has a product endpoint-longitude expression certificate, no
+endpoint display fails, and no extra key is supplied.
+
+The post-linear data records:
+
+```text
+missing_triangular_coordinate_unit_mixed_rows
+missing_triangular_coordinate_unit_unrouted_rows
+missing_triangular_coordinate_unit_routing_proved
+mixed_unit_endpoint_witness_matches_routing
+mixed_unit_endpoint_witness_proved
+mixed_unit_endpoint_missing_context_keys
+mixed_unit_endpoint_extra_context_keys
+```
+
+[Proved] If the supplied `mixed_unit_context_endpoint_witness` matches the
+same coordinate-unit routing ledger and proves all mixed context endpoint
+witnesses, the wrapper returns
+`closed_by_mixed_unit_context_endpoint_witness`, empties
+`remaining_obligations`, and removes the row from the current remaining
+finite-system list.  This is not a uniform endpoint theorem; it is the exact
+finite certificate interface that a positive proof must fill.
 
 ## System U: triangular recovery unit endpoint
 
@@ -573,7 +666,7 @@ raw System K and either
    kink_completion_deficits_routed == True)
 or
   (live_k_missing_latin_row_defects == empty and
-   recovery_routed_k_missing_latin_row_defects != empty).
+    recovery_routed_k_missing_latin_row_defects != empty).
 ```
 
 Here the finite recovery unit group
@@ -592,12 +685,39 @@ triangular_recovery_longitude_expression_audit(...)
 triangular_recovery_derived_series_lift_audit(...)
 triangular_recovery_perfect_residual_audit(...)
 triangular_recovery_longitude_route_audit(...)
+triangular_recovery_endpoint_witness_audit(...)
 ```
 
 To close System U on the A side, prove uniformly in braid index that every
 triangular recovery endpoint lies in `V_beta(U_tri)`, by active detector-lift
 rows, explicit endpoint-longitude expressions, derived-series lifts plus a
 `P_tri` witness, or direct subgroup membership.
+
+The post-linear wrapper now exposes and checks the bundled supplied
+certificate:
+
+```text
+system_u_endpoint_defects
+triangular_recovery_endpoint_witness_matches_system
+triangular_recovery_endpoint_witness_proved
+triangular_recovery_endpoint_missing_keys
+triangular_recovery_endpoint_extra_keys
+```
+
+The endpoint keys are exactly:
+
+```text
+(left_color, right_color, routed_defect_reason).
+```
+
+[Proved] If the supplied `triangular_recovery_endpoint_witness` uses the same
+fixed `U_tri` observer, covers exactly the current
+`system_u_endpoint_defects`, and each covered key carries a recovery endpoint
+certificate proving membership in `V_beta(U_tri)`, then System U is closed for
+that supplied data.  The executable classifier returns
+`closed_by_triangular_recovery_endpoint_witness`, empties
+`remaining_obligations`, and no longer counts the row as a current remaining
+finite system.
 
 To turn System U into B, construct an explicit interval and a stable
 perfect-residual finite miss in `P_tri` that upgrades to the normalized-law
