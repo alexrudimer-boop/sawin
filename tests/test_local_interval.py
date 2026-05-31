@@ -21,6 +21,11 @@ from ybe_domination import (
     local_minimal_descent_readout_collapse_audit,
     local_minimal_seed_saturation_dichotomy_audit,
     lost_edge_external_routing_audit,
+    missing_triangular_coordinate_unit_routing_audit,
+    missing_triangular_left_rack_cardinality_audit,
+    missing_triangular_partial_constant_closure_audit,
+    missing_triangular_partial_constant_continuation_route_audit,
+    missing_triangular_row_profile_audit,
     one_color_latin_triangular_collapse_audit,
     partition_readout_labels,
     product_readout_descent_separation_audit,
@@ -35,13 +40,18 @@ from ybe_domination import (
     readout_kernel_family,
     readout_kernel_quotient_interval,
     readout_seed_saturation_audit,
+    right_rack_kink_latin_triangular_collapse_audit,
     section_kernel_companion_audit,
     section_rank_profile_collapse_audit,
     section_unit_row_audits,
+    side_opposite_local_interval,
     triangular_bundle_audit,
     triangular_column_collapse_audit,
+    triangular_constant_kernel_recovery_route_audit,
+    triangular_latin_defect_closure_audit,
     triangular_recovery_audit,
     two_sided_unit_collapse_audit,
+    universal_continuation_identity_routing_audit,
 )
 
 
@@ -199,12 +209,44 @@ def two_color_nontrivial_triangular_bundle_interval():
     return LocalInterval(colors, fibres, base_R, T)
 
 
+def two_color_partial_constant_missing_triangular_interval():
+    colors = ("a", "b")
+    fibres = {"a": (0, 1, 2), "b": ("p", "q")}
+    base_R = {(left, right): (right, left) for left in colors for right in colors}
+    T = {}
+    for left in colors:
+        for right in colors:
+            for x in fibres[left]:
+                for y in fibres[right]:
+                    T[(left, right, x, y)] = (y, x)
+
+    T[("a", "b", 0, "p")] = ("p", 0)
+    T[("a", "b", 0, "q")] = ("p", 1)
+    T[("a", "b", 1, "p")] = ("p", 2)
+    T[("a", "b", 1, "q")] = ("q", 0)
+    T[("a", "b", 2, "p")] = ("q", 1)
+    T[("a", "b", 2, "q")] = ("q", 2)
+    return LocalInterval(colors, fibres, base_R, T)
+
+
 def one_color_latin_unit_triangular_interval():
     colors = ("*",)
     fibres = {"*": (0, 1)}
     base_R = {("*", "*"): ("*", "*")}
     T = {
         ("*", "*", x, y): (x, (x + y) % 2)
+        for x in fibres["*"]
+        for y in fibres["*"]
+    }
+    return LocalInterval(colors, fibres, base_R, T)
+
+
+def one_color_right_latin_unit_triangular_interval():
+    colors = ("*",)
+    fibres = {"*": (0, 1)}
+    base_R = {("*", "*"): ("*", "*")}
+    T = {
+        ("*", "*", x, y): ((x + y) % 2, y)
         for x in fibres["*"]
         for y in fibres["*"]
     }
@@ -242,6 +284,26 @@ class LocalIntervalTests(unittest.TestCase):
         failures = nonminimal.pair_generated_local_minimality_failures()
         self.assertTrue(failures)
         self.assertTrue(all(failure.generated.kind != "universal" for failure in failures))
+
+    def test_side_opposite_local_interval_is_involutive_and_preserves_ybe(self):
+        interval = one_color_flip_interval()
+        opposite = side_opposite_local_interval(interval)
+        roundtrip = side_opposite_local_interval(opposite)
+
+        self.assertTrue(opposite.is_colored_ybe())
+        self.assertEqual(roundtrip.base_R, interval.base_R)
+        self.assertEqual(roundtrip.T, interval.T)
+
+    def test_side_opposite_turns_right_triangular_rows_left_triangular(self):
+        interval = one_color_right_latin_unit_triangular_interval()
+        opposite = side_opposite_local_interval(interval)
+
+        self.assertEqual(opposite.T, one_color_latin_unit_triangular_interval().T)
+        column = triangular_column_collapse_audit(opposite)
+        self.assertEqual(
+            tuple((row.side, row.left_color, row.right_color) for row in column.latin_unit_rows),
+            (("left", "*", "*"),),
+        )
 
     def test_coordinate_kernel_pair_closures_certify_universal_corridor(self):
         local_minimal_degenerate = one_color_identity_interval()
@@ -574,9 +636,12 @@ class LocalIntervalTests(unittest.TestCase):
                 row.constant_map_is_bijective
                 and row.companion_sections_bijective
                 and row.opposite_sections_all_constant
+                and row.has_hidden_nonunit_opposite_section
+                and row.hidden_nonunit_opposite_forces_product_verified
                 for row in audit.product_collapse_rows
             )
         )
+        self.assertEqual(audit.hidden_nonunit_opposite_without_product_rows, ())
 
     def test_triangular_column_collapse_identifies_latin_unit_rows(self):
         interval = one_color_latin_unit_triangular_interval()
@@ -590,6 +655,244 @@ class LocalIntervalTests(unittest.TestCase):
         self.assertTrue(row.opposite_sections_all_bijective)
         self.assertEqual(audit.latin_unit_rows, (row,))
         self.assertEqual(audit.product_collapse_rows, ())
+        self.assertTrue(row.companion_nonbijective_requires_constant_kernel)
+        self.assertFalse(row.has_hidden_nonunit_opposite_section)
+
+    def test_triangular_column_collapse_records_constant_map_kernel_type(self):
+        interval = two_color_nontrivial_triangular_bundle_interval()
+
+        audit = triangular_column_collapse_audit(interval)
+
+        row = audit.row_audits[0]
+        self.assertEqual((row.side, row.left_color, row.right_color), ("left", "a", "b"))
+        self.assertTrue(row.constant_map_surjective)
+        self.assertFalse(row.constant_map_is_bijective)
+        self.assertEqual(row.constant_kernel_kind, "proper")
+        self.assertEqual(row.constant_kernel_blocks, ((0, 1), (2, 3)))
+        self.assertTrue(row.constant_map_has_proper_kernel)
+        self.assertFalse(row.constant_map_is_constant)
+        self.assertTrue(
+            all(section.is_injective_non_surjective for section in row.companion_sections)
+        )
+        self.assertTrue(row.companion_sections_injective)
+        self.assertFalse(row.companion_sections_have_kernel)
+        self.assertTrue(row.companion_nonbijective_requires_constant_kernel)
+        self.assertEqual(audit.constant_map_non_surjective_rows, ())
+        self.assertEqual(audit.companion_kernel_rows, ())
+        self.assertEqual(audit.companion_nonbijective_without_constant_kernel_rows, ())
+
+    def test_triangular_latin_defect_closure_records_generated_seed_kinds(self):
+        interval = two_color_nontrivial_triangular_bundle_interval()
+
+        audit = triangular_latin_defect_closure_audit(interval)
+
+        constant_rows = tuple(
+            row for row in audit.rows if row.defect == "constant_map_kernel"
+        )
+        self.assertEqual(
+            tuple(row.collapsed_inputs for row in constant_rows),
+            ((0, 1), (2, 3)),
+        )
+        self.assertTrue(audit.all_kernel_edges_force_universal_closure)
+        self.assertEqual(audit.proper_closure_rows, ())
+        self.assertEqual(len(audit.universal_closure_rows), len(audit.rows))
+
+    def test_triangular_constant_kernel_recovery_routes_universal_edges(self):
+        interval = two_color_nontrivial_triangular_bundle_interval()
+
+        audit = triangular_constant_kernel_recovery_route_audit(interval)
+
+        self.assertEqual(len(audit.rows), 2)
+        self.assertTrue(audit.all_universal_constant_kernel_edges_route_to_recovery)
+        self.assertEqual(audit.unrouted_universal_rows, ())
+        self.assertEqual(
+            tuple(row.collapsed_inputs for row in audit.rows),
+            ((0, 1), (2, 3)),
+        )
+        self.assertTrue(
+            all(row.recovery_separates_kernel_edge for row in audit.rows)
+        )
+        first = audit.rows[0]
+        self.assertEqual(
+            first.witness_output_pairs,
+            (
+                (0, (("p", 0), ("p", 1))),
+                (1, (("p", 2), ("p", 3))),
+            ),
+        )
+
+    def test_missing_triangular_row_profile_explains_nonconstant_sides(self):
+        affine = missing_triangular_row_profile_audit(size_three_affine_interval())
+
+        self.assertEqual(len(affine.rows), 2)
+        self.assertTrue(
+            all(
+                row.explanation == "coordinate_side_unit_not_triangular"
+                for row in affine.rows
+            )
+        )
+        self.assertEqual(affine.coordinate_unit_rows, affine.rows)
+        self.assertEqual(affine.proper_kernel_rows, ())
+
+        rank_loss = missing_triangular_row_profile_audit(
+            one_color_proper_rank_loss_interval()
+        )
+        self.assertEqual(
+            tuple(row.explanation for row in rank_loss.rows),
+            ("proper_section_kernel_visible", "proper_section_kernel_visible"),
+        )
+        self.assertEqual(rank_loss.proper_kernel_rows, rank_loss.rows)
+
+    def test_missing_triangular_row_profile_identifies_partial_constant_mixed_unit(self):
+        interval = two_color_partial_constant_missing_triangular_interval()
+
+        audit = missing_triangular_row_profile_audit(interval)
+
+        row = next(
+            row
+            for row in audit.rows
+            if (row.side, row.left_color, row.right_color) == ("left", "a", "b")
+        )
+        self.assertEqual(row.explanation, "partial_constant_hidden_rank_loss")
+        self.assertEqual(row.constant_section_inputs, (0, 2))
+        self.assertEqual(row.unit_section_inputs, (1,))
+        self.assertEqual(row.nonunit_section_inputs, (0, 2))
+        self.assertTrue(row.partial_constant_mixed_unit_context)
+        self.assertIn(row, audit.partial_constant_mixed_unit_rows)
+        self.assertEqual(audit.nonconstant_hidden_rows, ())
+        self.assertEqual(audit.unclassified_rows, ())
+        self.assertTrue(audit.finite_map_classification_exhaustive)
+
+    def test_missing_triangular_left_rack_cardinality_closes_injective_profiles(self):
+        interval = two_color_partial_constant_missing_triangular_interval()
+
+        audit = missing_triangular_left_rack_cardinality_audit(interval)
+
+        self.assertTrue(audit.base_rows_are_left_rack_form)
+        self.assertTrue(audit.all_section_domains_match_codomain)
+        self.assertEqual(audit.unequal_section_rows, ())
+        self.assertEqual(audit.injective_non_surjective_rows, ())
+        self.assertTrue(audit.injective_non_surjective_rows_eliminated)
+        self.assertEqual(audit.nonconstant_hidden_rows, ())
+        self.assertEqual(audit.unclassified_rows, ())
+        self.assertTrue(
+            audit.proves_left_rack_missing_triangular_cardinality_closure
+        )
+
+    def test_missing_triangular_partial_constant_closure_records_seed_edges(self):
+        interval = two_color_partial_constant_missing_triangular_interval()
+
+        audit = missing_triangular_partial_constant_closure_audit(interval)
+
+        self.assertEqual(len(audit.rows), 2)
+        self.assertTrue(audit.all_partial_constant_edges_force_universal_closure)
+        self.assertEqual(audit.proper_closure_rows, ())
+        self.assertEqual(audit.universal_closure_rows, audit.rows)
+        self.assertEqual(
+            tuple(
+                (
+                    row.side,
+                    row.left_color,
+                    row.right_color,
+                    row.fixed_input,
+                    row.domain_color,
+                    row.collapsed_inputs,
+                    row.closure_kind,
+                )
+                for row in audit.rows
+            ),
+            (
+                ("left", "a", "b", 0, "b", ("p", "q"), "universal"),
+                ("left", "a", "b", 2, "b", ("p", "q"), "universal"),
+            ),
+        )
+
+    def test_missing_triangular_partial_constant_routes_to_continuation_seed(self):
+        interval = two_color_partial_constant_missing_triangular_interval()
+
+        audit = missing_triangular_partial_constant_continuation_route_audit(
+            interval
+        )
+
+        self.assertEqual(len(audit.rows), 2)
+        self.assertTrue(audit.all_partial_constant_edges_route_to_continuation)
+        self.assertEqual(audit.unrouted_rows, ())
+        self.assertEqual(audit.universal_continuation_rows, audit.rows)
+        self.assertEqual(
+            tuple(
+                (
+                    row.fixed_input,
+                    row.collapsed_inputs,
+                    row.companion_outputs,
+                    row.continuation_seed_closure_kinds,
+                    row.partial_edge_contained_in_seed_closure,
+                    row.status,
+                    tuple(
+                        (
+                            witness.left_input,
+                            witness.right_input,
+                            witness.continuing_output,
+                        )
+                        for witness in row.continuation_seed_witnesses
+                    ),
+                )
+                for row in audit.rows
+            ),
+            (
+                (
+                    0,
+                    ("p", "q"),
+                    (0, 1),
+                    ("universal",),
+                    True,
+                    "routed_to_universal_continuation_seed",
+                    ((0, "q", 1),),
+                ),
+                (
+                    2,
+                    ("p", "q"),
+                    (1, 2),
+                    ("universal",),
+                    True,
+                    "routed_to_universal_continuation_seed",
+                    ((2, "p", 1),),
+                ),
+            ),
+        )
+
+    def test_missing_triangular_coordinate_unit_routing_closes_affine_pair(self):
+        audit = missing_triangular_coordinate_unit_routing_audit(
+            size_three_affine_interval()
+        )
+
+        self.assertTrue(audit.colored_ybe)
+        self.assertTrue(audit.locally_nondegenerate_closed_branch)
+        self.assertEqual(len(audit.rows), 1)
+        row = audit.rows[0]
+        self.assertEqual(row.coordinate_unit_sides, ("left", "right"))
+        self.assertEqual(row.left_explanation, "coordinate_side_unit_not_triangular")
+        self.assertEqual(row.right_explanation, "coordinate_side_unit_not_triangular")
+        self.assertEqual(row.status, "two_sided_unit_pair")
+        self.assertEqual(audit.mixed_unit_context_rows, ())
+        self.assertEqual(audit.unrouted_rows, ())
+        self.assertTrue(audit.all_coordinate_unit_rows_routed)
+
+    def test_missing_triangular_coordinate_unit_routing_finds_mixed_partner(self):
+        interval = two_color_partial_constant_missing_triangular_interval()
+
+        audit = missing_triangular_coordinate_unit_routing_audit(interval)
+
+        row = next(
+            row
+            for row in audit.rows
+            if (row.left_color, row.right_color) == ("a", "b")
+        )
+        self.assertEqual(row.coordinate_unit_sides, ("right",))
+        self.assertEqual(row.left_explanation, "partial_constant_hidden_rank_loss")
+        self.assertEqual(row.right_explanation, "coordinate_side_unit_not_triangular")
+        self.assertEqual(row.status, "mixed_unit_context")
+        self.assertIn(row, audit.mixed_unit_context_rows)
+        self.assertEqual(audit.unrouted_rows, ())
 
     def test_latin_triangular_ybe_audit_accepts_singleton_ybe_row(self):
         interval = one_color_singleton_identity_interval()
@@ -655,6 +958,30 @@ class LocalIntervalTests(unittest.TestCase):
         self.assertTrue(audit.latin_rows_present_for_all_pairs)
         self.assertFalse(audit.latin_ybe_equations_hold)
         self.assertTrue(audit.kink_column_constancy_failures)
+        self.assertTrue(audit.nontrivial_latin_obstruction_eliminated)
+
+    def test_right_rack_kink_latin_triangular_collapse_accepts_singletons(self):
+        interval = side_opposite_local_interval(one_color_singleton_identity_interval())
+
+        audit = right_rack_kink_latin_triangular_collapse_audit(interval)
+
+        self.assertTrue(audit.base_is_finite_right_rack)
+        self.assertTrue(audit.theorem_hypotheses_hold)
+        self.assertTrue(audit.diagonal_cancellation_verified)
+        self.assertTrue(audit.all_latin_fibres_forced_singleton)
+        self.assertEqual(audit.non_singleton_latin_colors, ())
+
+    def test_right_rack_kink_latin_triangular_collapse_rejects_non_ybe_shear(self):
+        interval = side_opposite_local_interval(
+            one_color_right_latin_unit_triangular_interval()
+        )
+
+        audit = right_rack_kink_latin_triangular_collapse_audit(interval)
+
+        self.assertTrue(audit.base_is_finite_right_rack)
+        self.assertTrue(audit.latin_rows_present_for_all_pairs)
+        self.assertFalse(audit.latin_ybe_equations_hold)
+        self.assertTrue(audit.diagonal_column_constancy_failures)
         self.assertTrue(audit.nontrivial_latin_obstruction_eliminated)
 
     def test_continuation_seed_readout_propagates_admissible_universal_readout(self):
@@ -915,6 +1242,28 @@ class LocalIntervalTests(unittest.TestCase):
         self.assertEqual(set(audit.unrouted_edges), set(audit.lost_edges))
         self.assertFalse(audit.all_lost_edges_routed)
         self.assertFalse(audit.proves_external_routing_ledger)
+
+    def test_universal_continuation_identity_routing_is_canonical_lost_edge_ledger(self):
+        interval = two_color_partial_constant_missing_triangular_interval()
+
+        audit = universal_continuation_identity_routing_audit(interval)
+
+        self.assertTrue(audit.equality_descent_readout)
+        self.assertTrue(audit.saturation_is_universal)
+        self.assertTrue(audit.has_nontrivial_continuation_seed)
+        self.assertTrue(audit.identity_routing_is_admissible)
+        self.assertTrue(audit.routes_all_saturation_lost_edges)
+        self.assertTrue(audit.proves_identity_routed_universal_continuation)
+        self.assertEqual(audit.routing.unrouted_edges, ())
+        self.assertEqual(
+            audit.routing.lost_edges,
+            (
+                ("a", 0, 1),
+                ("a", 0, 2),
+                ("a", 1, 2),
+                ("b", "p", "q"),
+            ),
+        )
 
     def test_product_readout_kernel_is_meet_of_factor_kernels(self):
         interval = two_color_identity_interval()

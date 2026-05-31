@@ -8,6 +8,7 @@ from .endpoint_factorization import (
     EndpointArtinDefectResidualActionAudit,
     EndpointResidualActionAudit,
     RoutedLostEdgeEndpointWitnessAudit,
+    UniversalContinuationIdentityEndpointWitnessAudit,
 )
 from .local_interval import ReadoutDescentSeparationAudit
 
@@ -17,6 +18,9 @@ if TYPE_CHECKING:  # pragma: no cover - typing only
 
 
 EndpointActionAudit = EndpointResidualActionAudit | EndpointArtinDefectResidualActionAudit
+RoutedEndpointWitnessAudit = (
+    RoutedLostEdgeEndpointWitnessAudit | UniversalContinuationIdentityEndpointWitnessAudit
+)
 
 
 @dataclass(frozen=True)
@@ -31,7 +35,7 @@ class DescentEndpointRepairContractAudit:
 
     descent_audit: ReadoutDescentSeparationAudit
     endpoint_action_audit: EndpointActionAudit
-    routed_edge_audit: RoutedLostEdgeEndpointWitnessAudit | None = None
+    routed_edge_audit: RoutedEndpointWitnessAudit | None = None
 
     @property
     def descent_separation_proved(self) -> bool:
@@ -83,7 +87,7 @@ class DescentEndpointRepairContractAudit:
 def descent_endpoint_repair_contract_audit(
     descent_audit: ReadoutDescentSeparationAudit,
     endpoint_action_audit: EndpointActionAudit,
-    routed_edge_audit: RoutedLostEdgeEndpointWitnessAudit | None = None,
+    routed_edge_audit: RoutedEndpointWitnessAudit | None = None,
 ) -> DescentEndpointRepairContractAudit:
     """Bundle supplied repair-contract certificates into one audit."""
 

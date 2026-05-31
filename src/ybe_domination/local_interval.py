@@ -579,14 +579,60 @@ class TriangularColumnCollapseRowAudit:
         return set(self.constant_outputs) == set(self.constant_codomain)
 
     @property
+    def constant_kernel_blocks(self) -> Tuple[Tuple[FibrePoint, ...], ...]:
+        blocks: Dict[FibrePoint, List[FibrePoint]] = {}
+        for source, output in self.constant_map:
+            blocks.setdefault(output, []).append(source)
+        return tuple(
+            tuple(sorted(block, key=repr))
+            for _output, block in sorted(blocks.items(), key=lambda item: repr(item[0]))
+        )
+
+    @property
+    def constant_kernel_block_sizes(self) -> Tuple[int, ...]:
+        return tuple(len(block) for block in self.constant_kernel_blocks)
+
+    @property
+    def constant_kernel_kind(self) -> str:
+        if all(size == 1 for size in self.constant_kernel_block_sizes):
+            return "equality"
+        if len(self.constant_kernel_blocks) == 1:
+            return "universal"
+        return "proper"
+
+    @property
+    def constant_map_injective(self) -> bool:
+        return self.constant_kernel_kind == "equality"
+
+    @property
+    def constant_map_is_constant(self) -> bool:
+        return len(set(self.constant_outputs)) == 1
+
+    @property
+    def constant_map_has_proper_kernel(self) -> bool:
+        return self.constant_kernel_kind == "proper"
+
+    @property
     def constant_map_is_bijective(self) -> bool:
         return self.constant_map_surjective and len(set(self.constant_outputs)) == len(
             self.constant_outputs
         )
 
     @property
+    def companion_sections_injective(self) -> bool:
+        return all(section.is_injective for section in self.companion_sections)
+
+    @property
+    def companion_sections_have_kernel(self) -> bool:
+        return any(not section.is_injective for section in self.companion_sections)
+
+    @property
     def companion_sections_bijective(self) -> bool:
         return all(section.is_bijective for section in self.companion_sections)
+
+    @property
+    def companion_nonbijective_requires_constant_kernel(self) -> bool:
+        return self.companion_sections_bijective or not self.constant_map_injective
 
     @property
     def opposite_sections_all_bijective(self) -> bool:
@@ -613,6 +659,24 @@ class TriangularColumnCollapseRowAudit:
     @property
     def has_injective_non_surjective_opposite_section(self) -> bool:
         return any(section.is_injective_non_surjective for section in self.opposite_sections)
+
+    @property
+    def has_hidden_nonunit_opposite_section(self) -> bool:
+        return (
+            self.has_nonbijective_opposite_section
+            and not self.has_proper_opposite_kernel
+            and not self.has_injective_non_surjective_opposite_section
+        )
+
+    @property
+    def hidden_nonunit_opposite_forces_product_verified(self) -> bool:
+        if not (
+            self.constant_map_is_bijective
+            and self.companion_sections_bijective
+            and self.has_hidden_nonunit_opposite_section
+        ):
+            return True
+        return self.product_collapse_for_hidden_nonunit
 
     @property
     def product_collapse_for_hidden_nonunit(self) -> bool:
@@ -661,6 +725,543 @@ class TriangularColumnCollapseAudit:
             for row in self.row_audits
             if row.has_injective_non_surjective_opposite_section
         )
+
+    @property
+    def constant_map_non_surjective_rows(self) -> Tuple[TriangularColumnCollapseRowAudit, ...]:
+        return tuple(row for row in self.row_audits if not row.constant_map_surjective)
+
+    @property
+    def companion_kernel_rows(self) -> Tuple[TriangularColumnCollapseRowAudit, ...]:
+        return tuple(row for row in self.row_audits if row.companion_sections_have_kernel)
+
+    @property
+    def companion_nonbijective_without_constant_kernel_rows(
+        self,
+    ) -> Tuple[TriangularColumnCollapseRowAudit, ...]:
+        return tuple(
+            row
+            for row in self.row_audits
+            if not row.companion_nonbijective_requires_constant_kernel
+        )
+
+    @property
+    def hidden_nonunit_opposite_without_product_rows(
+        self,
+    ) -> Tuple[TriangularColumnCollapseRowAudit, ...]:
+        return tuple(
+            row
+            for row in self.row_audits
+            if not row.hidden_nonunit_opposite_forces_product_verified
+        )
+
+
+@dataclass(frozen=True)
+class TriangularLatinDefectClosureRow:
+    """Generated-congruence closure of one non-Latin triangular kernel edge."""
+
+    side: str
+    defect: str
+    left_color: Color
+    right_color: Color
+    domain_color: Color
+    fixed_input: FibrePoint | None
+    collapsed_inputs: Tuple[FibrePoint, FibrePoint]
+    generated: GeneratedCongruenceAudit
+
+    @property
+    def closure_kind(self) -> str:
+        return self.generated.kind
+
+    @property
+    def closure_is_proper(self) -> bool:
+        return self.generated.kind not in ("equality", "universal")
+
+    @property
+    def closure_is_universal(self) -> bool:
+        return self.generated.kind == "universal"
+
+
+@dataclass(frozen=True)
+class TriangularLatinDefectClosureAudit:
+    """Closure ledger for kernel edges inside non-Latin triangular rows."""
+
+    rows: Tuple[TriangularLatinDefectClosureRow, ...]
+
+    @property
+    def proper_closure_rows(self) -> Tuple[TriangularLatinDefectClosureRow, ...]:
+        return tuple(row for row in self.rows if row.closure_is_proper)
+
+    @property
+    def universal_closure_rows(self) -> Tuple[TriangularLatinDefectClosureRow, ...]:
+        return tuple(row for row in self.rows if row.closure_is_universal)
+
+    @property
+    def has_proper_closure(self) -> bool:
+        return bool(self.proper_closure_rows)
+
+    @property
+    def all_kernel_edges_force_universal_closure(self) -> bool:
+        return bool(self.rows) and len(self.universal_closure_rows) == len(self.rows)
+
+
+@dataclass(frozen=True)
+class TriangularConstantKernelRecoveryRouteRow:
+    """Route one constant-map kernel edge through triangular recovery outputs."""
+
+    side: str
+    left_color: Color
+    right_color: Color
+    domain_color: Color
+    collapsed_inputs: Tuple[FibrePoint, FibrePoint]
+    closure_kind: str
+    recovery_row_present: bool
+    recovery_formula_bijective: bool
+    witness_output_pairs: Tuple[
+        Tuple[FibrePoint, Tuple[Tuple[FibrePoint, FibrePoint], ...]],
+        ...,
+    ]
+
+    @property
+    def witnessed_inputs(self) -> Tuple[FibrePoint, ...]:
+        return tuple(input_value for input_value, outputs in self.witness_output_pairs if outputs)
+
+    @property
+    def recovery_separates_kernel_edge(self) -> bool:
+        return (
+            self.recovery_row_present
+            and self.recovery_formula_bijective
+            and set(self.witnessed_inputs) == set(self.collapsed_inputs)
+        )
+
+    @property
+    def routes_universal_kernel_edge_to_recovery(self) -> bool:
+        return self.closure_kind == "universal" and self.recovery_separates_kernel_edge
+
+
+@dataclass(frozen=True)
+class TriangularConstantKernelRecoveryRouteAudit:
+    """Recovery-route ledger for constant-map kernels in triangular rows."""
+
+    rows: Tuple[TriangularConstantKernelRecoveryRouteRow, ...]
+
+    @property
+    def universal_rows(self) -> Tuple[TriangularConstantKernelRecoveryRouteRow, ...]:
+        return tuple(row for row in self.rows if row.closure_kind == "universal")
+
+    @property
+    def unrouted_universal_rows(
+        self,
+    ) -> Tuple[TriangularConstantKernelRecoveryRouteRow, ...]:
+        return tuple(
+            row
+            for row in self.universal_rows
+            if not row.routes_universal_kernel_edge_to_recovery
+        )
+
+    @property
+    def all_universal_constant_kernel_edges_route_to_recovery(self) -> bool:
+        return bool(self.universal_rows) and not self.unrouted_universal_rows
+
+
+@dataclass(frozen=True)
+class MissingTriangularRowProfile:
+    """Rank profile explaining why one side is not triangular."""
+
+    side: str
+    left_color: Color
+    right_color: Color
+    output_left_color: Color
+    output_right_color: Color
+    section_profiles: Tuple[SectionRankProfileRow, ...]
+
+    @property
+    def section_kinds(self) -> Tuple[Tuple[FibrePoint, str], ...]:
+        return tuple((row.fixed_input, row.kernel_kind) for row in self.section_profiles)
+
+    @property
+    def all_sections_constant(self) -> bool:
+        return all(row.is_constant for row in self.section_profiles)
+
+    @property
+    def constant_section_inputs(self) -> Tuple[FibrePoint, ...]:
+        return tuple(row.fixed_input for row in self.section_profiles if row.is_constant)
+
+    @property
+    def nonconstant_section_inputs(self) -> Tuple[FibrePoint, ...]:
+        return tuple(
+            row.fixed_input for row in self.section_profiles if not row.is_constant
+        )
+
+    @property
+    def unit_section_inputs(self) -> Tuple[FibrePoint, ...]:
+        return tuple(row.fixed_input for row in self.section_profiles if row.is_bijective)
+
+    @property
+    def nonunit_section_inputs(self) -> Tuple[FibrePoint, ...]:
+        return tuple(
+            row.fixed_input for row in self.section_profiles if not row.is_bijective
+        )
+
+    @property
+    def all_sections_bijective(self) -> bool:
+        return all(row.is_bijective for row in self.section_profiles)
+
+    @property
+    def has_proper_kernel_section(self) -> bool:
+        return any(row.has_proper_nontrivial_kernel for row in self.section_profiles)
+
+    @property
+    def has_injective_non_surjective_section(self) -> bool:
+        return any(row.is_injective_non_surjective for row in self.section_profiles)
+
+    @property
+    def hidden_nonunit_sections(self) -> Tuple[SectionRankProfileRow, ...]:
+        return tuple(
+            row
+            for row in self.section_profiles
+            if not row.is_bijective
+            and not row.has_proper_nontrivial_kernel
+            and not row.is_injective_non_surjective
+        )
+
+    @property
+    def hidden_nonunit_sections_are_constant(self) -> bool:
+        return all(row.is_constant for row in self.hidden_nonunit_sections)
+
+    @property
+    def partial_constant_hidden_rank_loss(self) -> bool:
+        return (
+            bool(self.hidden_nonunit_sections)
+            and self.hidden_nonunit_sections_are_constant
+            and not self.all_sections_constant
+        )
+
+    @property
+    def partial_constant_mixed_unit_context(self) -> bool:
+        return (
+            self.partial_constant_hidden_rank_loss
+            and bool(self.unit_section_inputs)
+            and set(self.nonunit_section_inputs) == set(self.constant_section_inputs)
+        )
+
+    @property
+    def explanation(self) -> str:
+        if self.all_sections_constant:
+            return "triangular_row_present"
+        if self.has_proper_kernel_section:
+            return "proper_section_kernel_visible"
+        if self.has_injective_non_surjective_section:
+            return "injective_non_surjective_section"
+        if self.all_sections_bijective:
+            return "coordinate_side_unit_not_triangular"
+        if self.partial_constant_hidden_rank_loss:
+            return "partial_constant_hidden_rank_loss"
+        if self.hidden_nonunit_sections:
+            return "nonconstant_hidden_rank_loss"
+        return "unclassified_missing_triangular_profile"
+
+
+@dataclass(frozen=True)
+class MissingTriangularRowProfileAudit:
+    """Finite profiles for sides that fail constant-section triangular form."""
+
+    rows: Tuple[MissingTriangularRowProfile, ...]
+
+    @property
+    def proper_kernel_rows(self) -> Tuple[MissingTriangularRowProfile, ...]:
+        return tuple(row for row in self.rows if row.explanation == "proper_section_kernel_visible")
+
+    @property
+    def injective_non_surjective_rows(self) -> Tuple[MissingTriangularRowProfile, ...]:
+        return tuple(
+            row for row in self.rows if row.explanation == "injective_non_surjective_section"
+        )
+
+    @property
+    def coordinate_unit_rows(self) -> Tuple[MissingTriangularRowProfile, ...]:
+        return tuple(
+            row for row in self.rows if row.explanation == "coordinate_side_unit_not_triangular"
+        )
+
+    @property
+    def partial_constant_rows(self) -> Tuple[MissingTriangularRowProfile, ...]:
+        return tuple(row for row in self.rows if row.explanation == "partial_constant_hidden_rank_loss")
+
+    @property
+    def nonconstant_hidden_rows(self) -> Tuple[MissingTriangularRowProfile, ...]:
+        return tuple(row for row in self.rows if row.explanation == "nonconstant_hidden_rank_loss")
+
+    @property
+    def partial_constant_mixed_unit_rows(self) -> Tuple[MissingTriangularRowProfile, ...]:
+        return tuple(row for row in self.rows if row.partial_constant_mixed_unit_context)
+
+    @property
+    def unclassified_rows(self) -> Tuple[MissingTriangularRowProfile, ...]:
+        return tuple(
+            row
+            for row in self.rows
+            if row.explanation == "unclassified_missing_triangular_profile"
+        )
+
+    @property
+    def finite_map_classification_exhaustive(self) -> bool:
+        return not self.nonconstant_hidden_rows and not self.unclassified_rows
+
+
+@dataclass(frozen=True)
+class MissingTriangularLeftRackCardinalityAudit:
+    """Cardinality closure for missing triangular profiles over a left rack base."""
+
+    continuation: ContinuationCongruenceAudit
+    profile: MissingTriangularRowProfileAudit
+    unequal_section_rows: Tuple[SectionRankProfileRow, ...]
+
+    @property
+    def base_rows_are_left_rack_form(self) -> bool:
+        return self.continuation.base_rows_are_left_rack_form
+
+    @property
+    def all_section_domains_match_codomain(self) -> bool:
+        return not self.unequal_section_rows
+
+    @property
+    def injective_non_surjective_rows(self) -> Tuple[MissingTriangularRowProfile, ...]:
+        return self.profile.injective_non_surjective_rows
+
+    @property
+    def injective_non_surjective_rows_eliminated(self) -> bool:
+        return not self.injective_non_surjective_rows
+
+    @property
+    def nonconstant_hidden_rows(self) -> Tuple[MissingTriangularRowProfile, ...]:
+        return self.profile.nonconstant_hidden_rows
+
+    @property
+    def unclassified_rows(self) -> Tuple[MissingTriangularRowProfile, ...]:
+        return self.profile.unclassified_rows
+
+    @property
+    def proves_left_rack_missing_triangular_cardinality_closure(self) -> bool:
+        return (
+            self.base_rows_are_left_rack_form
+            and self.all_section_domains_match_codomain
+            and self.injective_non_surjective_rows_eliminated
+            and self.profile.finite_map_classification_exhaustive
+        )
+
+
+@dataclass(frozen=True)
+class MissingTriangularCoordinateUnitRoute:
+    """Route a no-triangular coordinate-unit side through the unit ledger."""
+
+    left_color: Color
+    right_color: Color
+    output_left_color: Color
+    output_right_color: Color
+    coordinate_unit_sides: Tuple[str, ...]
+    left_explanation: str
+    right_explanation: str
+    left_unit_inputs: Tuple[FibrePoint, ...]
+    left_nonunit_inputs: Tuple[FibrePoint, ...]
+    right_unit_inputs: Tuple[FibrePoint, ...]
+    right_nonunit_inputs: Tuple[FibrePoint, ...]
+
+    @property
+    def all_left_sections_bijective(self) -> bool:
+        return not self.left_nonunit_inputs
+
+    @property
+    def all_right_sections_bijective(self) -> bool:
+        return not self.right_nonunit_inputs
+
+    @property
+    def row_is_two_sided_unit(self) -> bool:
+        return self.all_left_sections_bijective and self.all_right_sections_bijective
+
+    @property
+    def row_is_mixed_unit(self) -> bool:
+        has_unit = bool(self.left_unit_inputs or self.right_unit_inputs)
+        has_nonunit = bool(self.left_nonunit_inputs or self.right_nonunit_inputs)
+        return has_unit and has_nonunit
+
+    @property
+    def status(self) -> str:
+        if self.row_is_two_sided_unit:
+            return "two_sided_unit_pair"
+        if self.row_is_mixed_unit:
+            return "mixed_unit_context"
+        return "unrouted_coordinate_unit_row"
+
+
+@dataclass(frozen=True)
+class MissingTriangularCoordinateUnitRoutingAudit:
+    """Pair-level routing for coordinate-unit no-triangular profiles."""
+
+    colored_ybe: bool
+    locally_nondegenerate_closed_branch: bool
+    rows: Tuple[MissingTriangularCoordinateUnitRoute, ...]
+
+    @property
+    def two_sided_unit_pair_rows(
+        self,
+    ) -> Tuple[MissingTriangularCoordinateUnitRoute, ...]:
+        return tuple(row for row in self.rows if row.status == "two_sided_unit_pair")
+
+    @property
+    def mixed_unit_context_rows(
+        self,
+    ) -> Tuple[MissingTriangularCoordinateUnitRoute, ...]:
+        return tuple(row for row in self.rows if row.status == "mixed_unit_context")
+
+    @property
+    def unrouted_rows(self) -> Tuple[MissingTriangularCoordinateUnitRoute, ...]:
+        return tuple(
+            row for row in self.rows if row.status == "unrouted_coordinate_unit_row"
+        )
+
+    @property
+    def all_coordinate_unit_rows_routed(self) -> bool:
+        return not self.unrouted_rows
+
+
+@dataclass(frozen=True)
+class MissingTriangularPartialConstantClosureRow:
+    """Closure of one constant-section kernel in a missing triangular row."""
+
+    side: str
+    left_color: Color
+    right_color: Color
+    output_left_color: Color
+    output_right_color: Color
+    fixed_input: FibrePoint
+    domain_color: Color
+    collapsed_inputs: Tuple[FibrePoint, FibrePoint]
+    generated: GeneratedCongruenceAudit
+
+    @property
+    def closure_kind(self) -> str:
+        return self.generated.kind
+
+    @property
+    def closure_is_proper(self) -> bool:
+        return self.closure_kind not in ("equality", "universal")
+
+    @property
+    def closure_is_universal(self) -> bool:
+        return self.closure_kind == "universal"
+
+
+@dataclass(frozen=True)
+class MissingTriangularPartialConstantClosureAudit:
+    """Admissible closures generated by partial-constant missing rows."""
+
+    rows: Tuple[MissingTriangularPartialConstantClosureRow, ...]
+
+    @property
+    def proper_closure_rows(
+        self,
+    ) -> Tuple[MissingTriangularPartialConstantClosureRow, ...]:
+        return tuple(row for row in self.rows if row.closure_is_proper)
+
+    @property
+    def universal_closure_rows(
+        self,
+    ) -> Tuple[MissingTriangularPartialConstantClosureRow, ...]:
+        return tuple(row for row in self.rows if row.closure_is_universal)
+
+    @property
+    def all_partial_constant_edges_force_universal_closure(self) -> bool:
+        return bool(self.rows) and len(self.universal_closure_rows) == len(self.rows)
+
+
+@dataclass(frozen=True)
+class MissingTriangularPartialConstantContinuationRouteRow:
+    """Route a partial-constant kernel edge through continuation seeds."""
+
+    side: str
+    left_color: Color
+    right_color: Color
+    output_left_color: Color
+    output_right_color: Color
+    fixed_input: FibrePoint
+    domain_color: Color
+    collapsed_inputs: Tuple[FibrePoint, FibrePoint]
+    closure_kind: str
+    companion_output_color: Color
+    companion_outputs: Tuple[FibrePoint, FibrePoint]
+    continuation_seed_witnesses: Tuple[ContinuationSeedRow, ...]
+    continuation_seed_closure_kinds: Tuple[str, ...]
+    partial_edge_contained_in_seed_closure: bool
+
+    @property
+    def companion_outputs_distinct(self) -> bool:
+        return self.companion_outputs[0] != self.companion_outputs[1]
+
+    @property
+    def has_continuation_seed_witness(self) -> bool:
+        return bool(self.continuation_seed_witnesses)
+
+    @property
+    def has_universal_continuation_seed_witness(self) -> bool:
+        return "universal" in self.continuation_seed_closure_kinds
+
+    @property
+    def routes_to_continuation_seed_closure(self) -> bool:
+        return (
+            self.companion_outputs_distinct
+            and self.has_continuation_seed_witness
+            and self.partial_edge_contained_in_seed_closure
+        )
+
+    @property
+    def routes_to_universal_continuation_seed(self) -> bool:
+        return (
+            self.routes_to_continuation_seed_closure
+            and self.has_universal_continuation_seed_witness
+        )
+
+    @property
+    def status(self) -> str:
+        if self.routes_to_universal_continuation_seed:
+            return "routed_to_universal_continuation_seed"
+        if self.routes_to_continuation_seed_closure:
+            return "routed_to_continuation_seed_closure"
+        if not self.companion_outputs_distinct:
+            return "companion_outputs_not_separated"
+        if not self.has_continuation_seed_witness:
+            return "no_continuation_seed_witness"
+        return "continuation_seed_closure_missing_partial_edge"
+
+
+@dataclass(frozen=True)
+class MissingTriangularPartialConstantContinuationRouteAudit:
+    """Continuation-route ledger for partial-constant hidden rows."""
+
+    rows: Tuple[MissingTriangularPartialConstantContinuationRouteRow, ...]
+
+    @property
+    def routed_rows(
+        self,
+    ) -> Tuple[MissingTriangularPartialConstantContinuationRouteRow, ...]:
+        return tuple(row for row in self.rows if row.routes_to_continuation_seed_closure)
+
+    @property
+    def universal_continuation_rows(
+        self,
+    ) -> Tuple[MissingTriangularPartialConstantContinuationRouteRow, ...]:
+        return tuple(
+            row for row in self.rows if row.routes_to_universal_continuation_seed
+        )
+
+    @property
+    def unrouted_rows(
+        self,
+    ) -> Tuple[MissingTriangularPartialConstantContinuationRouteRow, ...]:
+        return tuple(row for row in self.rows if not row.routes_to_continuation_seed_closure)
+
+    @property
+    def all_partial_constant_edges_route_to_continuation(self) -> bool:
+        return bool(self.rows) and not self.unrouted_rows
 
 
 @dataclass(frozen=True)
@@ -827,6 +1428,62 @@ class RackKinkLatinTriangularCollapseAudit:
         return not (
             self.theorem_hypotheses_hold
             and self.kink_cancellation_verified
+            and self.non_singleton_latin_colors
+        )
+
+
+@dataclass(frozen=True)
+class RightRackKinkLatinTriangularCollapseAudit:
+    """Diagonal cancellation audit for right-rack-base Latin triangular rows."""
+
+    base_rows_are_right_rack_form: bool
+    right_translations_bijective: bool
+    right_self_distributive: bool
+    latin_rows_present_for_all_pairs: bool
+    latin_ybe_equations_hold: bool
+    alpha_diagonal_identity_failures: Tuple[Tuple[Color, FibrePoint, FibrePoint], ...]
+    diagonal_column_constancy_failures: Tuple[
+        Tuple[Color, FibrePoint, Tuple[FibrePoint, ...]],
+        ...,
+    ]
+    non_singleton_latin_colors: Tuple[Color, ...]
+
+    @property
+    def base_is_finite_right_rack(self) -> bool:
+        return (
+            self.base_rows_are_right_rack_form
+            and self.right_translations_bijective
+            and self.right_self_distributive
+        )
+
+    @property
+    def theorem_hypotheses_hold(self) -> bool:
+        return (
+            self.base_is_finite_right_rack
+            and self.latin_rows_present_for_all_pairs
+            and self.latin_ybe_equations_hold
+        )
+
+    @property
+    def diagonal_cancellation_verified(self) -> bool:
+        return (
+            not self.alpha_diagonal_identity_failures
+            and not self.diagonal_column_constancy_failures
+        )
+
+    @property
+    def all_latin_fibres_forced_singleton(self) -> bool:
+        return (
+            self.theorem_hypotheses_hold
+            and self.diagonal_cancellation_verified
+            and not self.non_singleton_latin_colors
+        )
+
+    @property
+    def nontrivial_latin_obstruction_eliminated(self) -> bool:
+        return not (
+            self.theorem_hypotheses_hold
+            and self.diagonal_cancellation_verified
             and self.non_singleton_latin_colors
         )
 
@@ -1152,6 +1809,44 @@ class LostEdgeExternalRoutingAudit:
                 not self.forced_collapse_requires_routing
                 or self.all_lost_edges_routed
             )
+        )
+
+
+@dataclass(frozen=True)
+class UniversalContinuationIdentityRoutingAudit:
+    """Canonical identity external routing for universal continuation collapse."""
+
+    descent_labels: ReadoutLabels
+    routing: LostEdgeExternalRoutingAudit
+
+    @property
+    def equality_descent_readout(self) -> bool:
+        return self.routing.dichotomy.seed_saturation.readout_kernel.kind == "equality"
+
+    @property
+    def saturation_is_universal(self) -> bool:
+        return self.routing.dichotomy.seed_saturation.saturation.kind == "universal"
+
+    @property
+    def has_nontrivial_continuation_seed(self) -> bool:
+        return bool(self.routing.dichotomy.seed_saturation.continuation.seed_rows)
+
+    @property
+    def identity_routing_is_admissible(self) -> bool:
+        return self.routing.routing_kernel.admissible
+
+    @property
+    def routes_all_saturation_lost_edges(self) -> bool:
+        return self.routing.all_lost_edges_routed
+
+    @property
+    def proves_identity_routed_universal_continuation(self) -> bool:
+        return (
+            self.equality_descent_readout
+            and self.saturation_is_universal
+            and self.has_nontrivial_continuation_seed
+            and self.identity_routing_is_admissible
+            and self.routing.proves_external_routing_ledger
         )
 
 
@@ -2190,6 +2885,427 @@ def triangular_column_collapse_audit(
     return TriangularColumnCollapseAudit(row_audits=tuple(audits))
 
 
+def _section_domain_color(section: SectionRankProfileRow) -> Color:
+    if section.side in ("left-companion", "right-opposite"):
+        return section.right_color
+    if section.side in ("left-opposite", "right-companion"):
+        return section.left_color
+    raise ValueError(f"unknown triangular section side {section.side!r}")
+
+
+def _kernel_edge_pairs(
+    blocks: Iterable[Iterable[FibrePoint]],
+) -> Tuple[Tuple[FibrePoint, FibrePoint], ...]:
+    pairs = []
+    for block in blocks:
+        for left, right in combinations(tuple(block), 2):
+            pairs.append(tuple(sorted((left, right), key=repr)))
+    return tuple(sorted(set(pairs), key=repr))
+
+
+def triangular_latin_defect_closure_audit(
+    interval: "LocalInterval",
+) -> TriangularLatinDefectClosureAudit:
+    """Close non-Latin triangular kernel edges under admissible congruence.
+
+    Proper closures are incompatible with a genuinely local-minimal remaining
+    interval.  Universal closures identify the exact seed edges that still need
+    fixed detector routing.
+    """
+
+    rows: List[TriangularLatinDefectClosureRow] = []
+    for row in triangular_column_collapse_audit(interval).row_audits:
+        if row.latin_unit_triangular:
+            continue
+
+        constant_domain = row.left_color if row.side == "left" else row.right_color
+        for left, right in _kernel_edge_pairs(row.constant_kernel_blocks):
+            rows.append(
+                TriangularLatinDefectClosureRow(
+                    side=row.side,
+                    defect="constant_map_kernel",
+                    left_color=row.left_color,
+                    right_color=row.right_color,
+                    domain_color=constant_domain,
+                    fixed_input=None,
+                    collapsed_inputs=(left, right),
+                    generated=generated_admissible_congruence_audit(
+                        interval,
+                        {constant_domain: ((left, right),)},
+                    ),
+                )
+            )
+
+        for section in row.companion_sections:
+            domain_color = _section_domain_color(section)
+            for left, right in _kernel_edge_pairs(section.kernel_blocks):
+                rows.append(
+                    TriangularLatinDefectClosureRow(
+                        side=row.side,
+                        defect="companion_section_kernel",
+                        left_color=row.left_color,
+                        right_color=row.right_color,
+                        domain_color=domain_color,
+                        fixed_input=section.fixed_input,
+                        collapsed_inputs=(left, right),
+                        generated=generated_admissible_congruence_audit(
+                            interval,
+                            {domain_color: ((left, right),)},
+                        ),
+                    )
+                )
+
+        for section in row.opposite_sections:
+            domain_color = _section_domain_color(section)
+            for left, right in _kernel_edge_pairs(section.kernel_blocks):
+                rows.append(
+                    TriangularLatinDefectClosureRow(
+                        side=row.side,
+                        defect="opposite_section_kernel",
+                        left_color=row.left_color,
+                        right_color=row.right_color,
+                        domain_color=domain_color,
+                        fixed_input=section.fixed_input,
+                        collapsed_inputs=(left, right),
+                        generated=generated_admissible_congruence_audit(
+                            interval,
+                            {domain_color: ((left, right),)},
+                        ),
+                    )
+                )
+
+    return TriangularLatinDefectClosureAudit(rows=tuple(rows))
+
+
+def triangular_constant_kernel_recovery_route_audit(
+    interval: "LocalInterval",
+) -> TriangularConstantKernelRecoveryRouteAudit:
+    """Route constant-map kernel edges to the triangular recovery table."""
+
+    recovery_rows = {
+        (row.side, row.left_color, row.right_color): row
+        for row in triangular_recovery_audit(interval).row_audits
+    }
+    rows = []
+    for closure in triangular_latin_defect_closure_audit(interval).rows:
+        if closure.defect != "constant_map_kernel":
+            continue
+        recovery = recovery_rows.get(
+            (closure.side, closure.left_color, closure.right_color)
+        )
+        witnesses = []
+        for input_value in closure.collapsed_inputs:
+            if recovery is None:
+                output_pairs: Tuple[Tuple[FibrePoint, FibrePoint], ...] = ()
+            elif closure.side == "left":
+                output_pairs = tuple(
+                    (entry.output_left, entry.output_right)
+                    for entry in recovery.entries
+                    if entry.recovered_left_input == input_value
+                )
+            else:
+                output_pairs = tuple(
+                    (entry.output_left, entry.output_right)
+                    for entry in recovery.entries
+                    if entry.recovered_right_input == input_value
+                )
+            witnesses.append((input_value, output_pairs))
+
+        rows.append(
+            TriangularConstantKernelRecoveryRouteRow(
+                side=closure.side,
+                left_color=closure.left_color,
+                right_color=closure.right_color,
+                domain_color=closure.domain_color,
+                collapsed_inputs=closure.collapsed_inputs,
+                closure_kind=closure.closure_kind,
+                recovery_row_present=recovery is not None,
+                recovery_formula_bijective=(
+                    recovery.recovery_formula_bijective if recovery is not None else False
+                ),
+                witness_output_pairs=tuple(witnesses),
+            )
+        )
+
+    return TriangularConstantKernelRecoveryRouteAudit(rows=tuple(rows))
+
+
+def missing_triangular_row_profile_audit(
+    interval: "LocalInterval",
+) -> MissingTriangularRowProfileAudit:
+    """Explain sides that do not have constant-section triangular form."""
+
+    column_rows = {
+        (row.side, row.left_color, row.right_color)
+        for row in triangular_column_collapse_audit(interval).row_audits
+    }
+    rank_rows = section_rank_profile_collapse_audit(interval).rows
+    rows: List[MissingTriangularRowProfile] = []
+    for a, b in product(interval.colors, repeat=2):
+        c, d = interval.base_R[(a, b)]
+        for side in ("left", "right"):
+            if (side, a, b) in column_rows:
+                continue
+            section_profiles = tuple(
+                row
+                for row in rank_rows
+                if row.side == side and row.left_color == a and row.right_color == b
+            )
+            rows.append(
+                MissingTriangularRowProfile(
+                    side=side,
+                    left_color=a,
+                    right_color=b,
+                    output_left_color=c,
+                    output_right_color=d,
+                    section_profiles=section_profiles,
+                )
+            )
+    return MissingTriangularRowProfileAudit(rows=tuple(rows))
+
+
+def missing_triangular_left_rack_cardinality_audit(
+    interval: "LocalInterval",
+) -> MissingTriangularLeftRackCardinalityAudit:
+    """Close injective-nonsurjective missing profiles over a left rack base."""
+
+    continuation = continuation_congruence_audit(interval)
+    profile = missing_triangular_row_profile_audit(interval)
+    section_rows = tuple(
+        section
+        for row in profile.rows
+        for section in row.section_profiles
+    )
+    unequal_rows = tuple(
+        section
+        for section in section_rows
+        if section.domain_size != section.codomain_size
+    )
+    return MissingTriangularLeftRackCardinalityAudit(
+        continuation=continuation,
+        profile=profile,
+        unequal_section_rows=unequal_rows,
+    )
+
+
+def missing_triangular_coordinate_unit_routing_audit(
+    interval: "LocalInterval",
+) -> MissingTriangularCoordinateUnitRoutingAudit:
+    """Route coordinate-unit missing triangular rows to closed/mixed branches."""
+
+    profile = missing_triangular_row_profile_audit(interval)
+    profile_by_side = {
+        (row.side, row.left_color, row.right_color): row for row in profile.rows
+    }
+    triangular_sides = {
+        (row.side, row.left_color, row.right_color)
+        for row in triangular_column_collapse_audit(interval).row_audits
+    }
+    unit_rows = {
+        (row.left_color, row.right_color): row
+        for row in section_unit_row_audits(interval)
+    }
+    unit_collapse = two_sided_unit_collapse_audit(interval)
+
+    coordinate_unit_sides: Dict[Tuple[Color, Color], List[str]] = {}
+    for row in profile.coordinate_unit_rows:
+        coordinate_unit_sides.setdefault((row.left_color, row.right_color), []).append(
+            row.side
+        )
+
+    def side_explanation(side: str, left: Color, right: Color) -> str:
+        row = profile_by_side.get((side, left, right))
+        if row is not None:
+            return row.explanation
+        if (side, left, right) in triangular_sides:
+            return "triangular_row_present"
+        return "missing_side_profile_absent"
+
+    rows: List[MissingTriangularCoordinateUnitRoute] = []
+    for (a, b), sides in sorted(
+        coordinate_unit_sides.items(), key=lambda item: (repr(item[0][0]), repr(item[0][1]))
+    ):
+        c, d = interval.base_R[(a, b)]
+        unit_row = unit_rows[(a, b)]
+        rows.append(
+            MissingTriangularCoordinateUnitRoute(
+                left_color=a,
+                right_color=b,
+                output_left_color=c,
+                output_right_color=d,
+                coordinate_unit_sides=tuple(
+                    side for side in ("left", "right") if side in set(sides)
+                ),
+                left_explanation=side_explanation("left", a, b),
+                right_explanation=side_explanation("right", a, b),
+                left_unit_inputs=unit_row.left_unit_inputs,
+                left_nonunit_inputs=unit_row.left_nonunit_inputs,
+                right_unit_inputs=unit_row.right_unit_inputs,
+                right_nonunit_inputs=unit_row.right_nonunit_inputs,
+            )
+        )
+
+    return MissingTriangularCoordinateUnitRoutingAudit(
+        colored_ybe=interval.is_colored_ybe(),
+        locally_nondegenerate_closed_branch=(
+            unit_collapse.locally_nondegenerate_closed_branch
+        ),
+        rows=tuple(rows),
+    )
+
+
+def missing_triangular_partial_constant_closure_audit(
+    interval: "LocalInterval",
+) -> MissingTriangularPartialConstantClosureAudit:
+    """Close constant-section kernels from partial-constant missing rows."""
+
+    rows: List[MissingTriangularPartialConstantClosureRow] = []
+    for profile in missing_triangular_row_profile_audit(interval).partial_constant_rows:
+        domain_color = (
+            profile.right_color if profile.side == "left" else profile.left_color
+        )
+        for section in profile.section_profiles:
+            if not section.is_constant:
+                continue
+            for left, right in _kernel_edge_pairs(section.kernel_blocks):
+                rows.append(
+                    MissingTriangularPartialConstantClosureRow(
+                        side=profile.side,
+                        left_color=profile.left_color,
+                        right_color=profile.right_color,
+                        output_left_color=profile.output_left_color,
+                        output_right_color=profile.output_right_color,
+                        fixed_input=section.fixed_input,
+                        domain_color=domain_color,
+                        collapsed_inputs=(left, right),
+                        generated=generated_admissible_congruence_audit(
+                            interval,
+                            {domain_color: ((left, right),)},
+                        ),
+                    )
+                )
+    return MissingTriangularPartialConstantClosureAudit(rows=tuple(rows))
+
+
+def missing_triangular_partial_constant_continuation_route_audit(
+    interval: "LocalInterval",
+) -> MissingTriangularPartialConstantContinuationRouteAudit:
+    """Route partial-constant section kernels through continuation seed closures."""
+
+    seed_closures = {}
+    for seed in continuation_seed_pair_closure_audits(interval):
+        key = (
+            seed.color,
+            *tuple(sorted((seed.left, seed.right), key=repr)),
+        )
+        seed_closures[key] = seed
+
+    rows: List[MissingTriangularPartialConstantContinuationRouteRow] = []
+    for closure in missing_triangular_partial_constant_closure_audit(interval).rows:
+        a = closure.left_color
+        b = closure.right_color
+        c = closure.output_left_color
+        d = closure.output_right_color
+        left, right = closure.collapsed_inputs
+        witnesses: List[ContinuationSeedRow] = []
+        seed_kinds: List[str] = []
+        partial_edge_contained = False
+
+        if closure.side == "left":
+            x = closure.fixed_input
+            _u0, v0 = interval.T[(a, b, x, left)]
+            _u1, v1 = interval.T[(a, b, x, right)]
+            companion_output_color = d
+            companion_outputs = (v0, v1)
+            if d == a:
+                for y, v in ((left, v0), (right, v1)):
+                    if v == x:
+                        continue
+                    witness = ContinuationSeedRow(
+                        left_color=a,
+                        right_color=b,
+                        output_left_color=c,
+                        output_right_color=d,
+                        left_input=x,
+                        right_input=y,
+                        continuing_output=v,
+                    )
+                    witnesses.append(witness)
+                    key = (
+                        a,
+                        *tuple(sorted((x, v), key=repr)),
+                    )
+                    seed_closure = seed_closures.get(key)
+                    if seed_closure is not None:
+                        seed_kinds.append(seed_closure.generated.kind)
+                        partial_edge_contained = (
+                            partial_edge_contained
+                            or _family_contains_pair(
+                                seed_closure.generated.family,
+                                closure.domain_color,
+                                left,
+                                right,
+                            )
+                        )
+        else:
+            y = closure.fixed_input
+            u0, v0 = interval.T[(a, b, left, y)]
+            u1, v1 = interval.T[(a, b, right, y)]
+            companion_output_color = c
+            companion_outputs = (u0, u1)
+            if d == a:
+                for x, v in ((left, v0), (right, v1)):
+                    if v == x:
+                        continue
+                    witness = ContinuationSeedRow(
+                        left_color=a,
+                        right_color=b,
+                        output_left_color=c,
+                        output_right_color=d,
+                        left_input=x,
+                        right_input=y,
+                        continuing_output=v,
+                    )
+                    witnesses.append(witness)
+                    key = (
+                        a,
+                        *tuple(sorted((x, v), key=repr)),
+                    )
+                    seed_closure = seed_closures.get(key)
+                    if seed_closure is not None:
+                        seed_kinds.append(seed_closure.generated.kind)
+                        partial_edge_contained = (
+                            partial_edge_contained
+                            or _family_contains_pair(
+                                seed_closure.generated.family,
+                                closure.domain_color,
+                                left,
+                                right,
+                            )
+                        )
+
+        rows.append(
+            MissingTriangularPartialConstantContinuationRouteRow(
+                side=closure.side,
+                left_color=a,
+                right_color=b,
+                output_left_color=c,
+                output_right_color=d,
+                fixed_input=closure.fixed_input,
+                domain_color=closure.domain_color,
+                collapsed_inputs=closure.collapsed_inputs,
+                closure_kind=closure.closure_kind,
+                companion_output_color=companion_output_color,
+                companion_outputs=companion_outputs,
+                continuation_seed_witnesses=tuple(witnesses),
+                continuation_seed_closure_kinds=tuple(sorted(set(seed_kinds), key=repr)),
+                partial_edge_contained_in_seed_closure=partial_edge_contained,
+            )
+        )
+
+    return MissingTriangularPartialConstantContinuationRouteAudit(rows=tuple(rows))
+
+
 def latin_triangular_ybe_audit(interval: "LocalInterval") -> LatinTriangularYBEAudit:
     """Expose the coloured YBE equations for left Latin-unit triangular rows."""
 
@@ -2457,6 +3573,97 @@ def rack_kink_latin_triangular_collapse_audit(
         latin_ybe_equations_hold=latin_ybe_equations_hold,
         alpha_kink_identity_failures=tuple(alpha_failures),
         kink_column_constancy_failures=tuple(column_failures),
+        non_singleton_latin_colors=non_singleton_latin_colors,
+    )
+
+
+def right_rack_kink_latin_triangular_collapse_audit(
+    interval: "LocalInterval",
+) -> RightRackKinkLatinTriangularCollapseAudit:
+    """Audit diagonal cancellation for right-rack-base Latin triangular rows.
+
+    The base convention is ``R(a,b)=(b,b*a)``.  For left Latin triangular rows
+    over such a base, the first Latin YBE equation gives
+    ``alpha_{b,b}=id``.  The endpoint equation with the third colour equal to
+    the middle colour then forces the diagonal shear columns
+    ``y -> beta_{b,b,y}(z)`` to be constant, hence singleton by Latinity.
+    """
+
+    colors = tuple(interval.colors)
+    base_rows_are_right_rack_form = all(
+        interval.base_R[(a, b)][0] == b
+        for a, b in product(colors, repeat=2)
+    )
+
+    def right_op(b: Color, a: Color) -> Color:
+        return interval.base_R[(a, b)][1]
+
+    right_translations_bijective = base_rows_are_right_rack_form and all(
+        set(right_op(b, a) for a in colors) == set(colors)
+        for b in colors
+    )
+    right_self_distributive = base_rows_are_right_rack_form and all(
+        right_op(c, right_op(b, a))
+        == right_op(right_op(c, b), right_op(c, a))
+        for a, b, c in product(colors, repeat=3)
+    )
+
+    column_audit = triangular_column_collapse_audit(interval)
+    left_latin_rows = {
+        (row.left_color, row.right_color): row
+        for row in column_audit.latin_unit_rows
+        if row.side == "left"
+    }
+    latin_rows_present_for_all_pairs = all(
+        (a, b) in left_latin_rows
+        for a, b in product(colors, repeat=2)
+    )
+    ybe_audit = latin_triangular_ybe_audit(interval)
+    latin_ybe_equations_hold = (
+        latin_rows_present_for_all_pairs
+        and len(ybe_audit.triple_audits) == len(colors) ** 3
+        and ybe_audit.all_equations_hold
+    )
+
+    alpha_failures: List[Tuple[Color, FibrePoint, FibrePoint]] = []
+    column_failures: List[Tuple[Color, FibrePoint, Tuple[FibrePoint, ...]]] = []
+    if latin_rows_present_for_all_pairs:
+        for b in colors:
+            row = left_latin_rows.get((b, b))
+            if row is None:
+                continue
+            alpha_map = dict(row.constant_map)
+            for x in interval.fibres[b]:
+                if alpha_map.get(x) != x:
+                    alpha_failures.append((b, x, alpha_map.get(x)))
+
+            for z in interval.fibres[b]:
+                image = tuple(
+                    sorted(
+                        {
+                            interval.T[(b, b, y, z)][1]
+                            for y in interval.fibres[b]
+                        },
+                        key=repr,
+                    )
+                )
+                if len(image) != 1:
+                    column_failures.append((b, z, image))
+
+    non_singleton_latin_colors = tuple(
+        color
+        for color in colors
+        if len(interval.fibres[color]) > 1
+    )
+
+    return RightRackKinkLatinTriangularCollapseAudit(
+        base_rows_are_right_rack_form=base_rows_are_right_rack_form,
+        right_translations_bijective=right_translations_bijective,
+        right_self_distributive=right_self_distributive,
+        latin_rows_present_for_all_pairs=latin_rows_present_for_all_pairs,
+        latin_ybe_equations_hold=latin_ybe_equations_hold,
+        alpha_diagonal_identity_failures=tuple(alpha_failures),
+        diagonal_column_constancy_failures=tuple(column_failures),
         non_singleton_latin_colors=non_singleton_latin_colors,
     )
 
@@ -2919,6 +4126,27 @@ def lost_edge_external_routing_audit(
         lost_edges=lost_edges,
         routed_edges=tuple(routed),
         unrouted_edges=tuple(unrouted),
+    )
+
+
+def identity_readout_labels(interval: "LocalInterval") -> Dict[Color, Dict[FibrePoint, FibrePoint]]:
+    """Return the equality readout that labels each fibre point by itself."""
+
+    return {
+        color: {point: point for point in interval.fibres[color]}
+        for color in interval.colors
+    }
+
+
+def universal_continuation_identity_routing_audit(
+    interval: "LocalInterval",
+) -> UniversalContinuationIdentityRoutingAudit:
+    """Route universal seed-saturation edges through the identity readout."""
+
+    labels = identity_readout_labels(interval)
+    return UniversalContinuationIdentityRoutingAudit(
+        descent_labels=labels,
+        routing=lost_edge_external_routing_audit(interval, labels, labels),
     )
 
 
@@ -3493,3 +4721,28 @@ class LocalInterval:
         """
 
         return not self.pair_generated_local_minimality_failures()
+
+
+def side_opposite_local_interval(interval: LocalInterval) -> LocalInterval:
+    """Return the side-opposite local interval ``P T P``.
+
+    This is the local analogue of the side-opposite braided set.  The coloured
+    crossing at ``(a,b)`` is obtained by applying the original crossing at
+    ``(b,a)`` to swapped fibre inputs and then swapping the two outputs.
+    """
+
+    opposite_base = {}
+    opposite_table = {}
+    for a, b in product(interval.colors, repeat=2):
+        c, d = interval.base_R[(b, a)]
+        opposite_base[(a, b)] = (d, c)
+        for x in interval.fibres[a]:
+            for y in interval.fibres[b]:
+                u, v = interval.T[(b, a, y, x)]
+                opposite_table[(a, b, x, y)] = (v, u)
+    return LocalInterval(
+        colors=interval.colors,
+        fibres=interval.fibres,
+        base_R=opposite_base,
+        T=opposite_table,
+    )

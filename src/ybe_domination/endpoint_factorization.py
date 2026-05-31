@@ -18,7 +18,12 @@ from .artin_longitudes import (
     invert_longitude_subgroup_witness,
 )
 from .finite_group import FiniteGroup, GroupElement, direct_product_group
-from .local_interval import Color, FibrePoint, LostEdgeExternalRoutingAudit
+from .local_interval import (
+    Color,
+    FibrePoint,
+    LostEdgeExternalRoutingAudit,
+    UniversalContinuationIdentityRoutingAudit,
+)
 
 ArtinDefectEndpointTerm = Tuple[Tuple[GroupElement, ...], FreeWord, int]
 LostEdgeKey = Tuple[Color, FibrePoint, FibrePoint]
@@ -609,6 +614,90 @@ def routed_lost_edge_endpoint_witness_audit(
     return RoutedLostEdgeEndpointWitnessAudit(
         routing_audit=routing_audit,
         edge_endpoint_audits=tuple(edge_endpoint_audits),
+    )
+
+
+@dataclass(frozen=True)
+class UniversalContinuationIdentityEndpointWitnessAudit:
+    """Endpoint witnesses for the canonical identity-routed continuation ledger."""
+
+    identity_routing: UniversalContinuationIdentityRoutingAudit
+    routed_edge_witness: RoutedLostEdgeEndpointWitnessAudit
+
+    @property
+    def routing_audit(self) -> LostEdgeExternalRoutingAudit:
+        return self.identity_routing.routing
+
+    @property
+    def edge_endpoint_audits(
+        self,
+    ) -> Tuple[Tuple[LostEdgeKey, EndpointProductExpressionAudit], ...]:
+        return self.routed_edge_witness.edge_endpoint_audits
+
+    @property
+    def identity_routing_proved(self) -> bool:
+        return self.identity_routing.proves_identity_routed_universal_continuation
+
+    @property
+    def endpoint_witnesses_proved(self) -> bool:
+        return self.routed_edge_witness.proves_routed_lost_edge_endpoint_visibility
+
+    @property
+    def routed_witness_uses_identity_routing(self) -> bool:
+        return self.routed_edge_witness.routing_audit == self.identity_routing.routing
+
+    @property
+    def routed_edges(self) -> Tuple[LostEdgeKey, ...]:
+        return self.routed_edge_witness.routed_edges
+
+    @property
+    def witnessed_edges(self) -> Tuple[LostEdgeKey, ...]:
+        return self.routed_edge_witness.witnessed_edges
+
+    @property
+    def missing_identity_routed_edges(self) -> Tuple[LostEdgeKey, ...]:
+        return self.routed_edge_witness.missing_routed_edges
+
+    @property
+    def extra_witness_edges(self) -> Tuple[LostEdgeKey, ...]:
+        return self.routed_edge_witness.extra_witness_edges
+
+    @property
+    def proves_routed_lost_edge_endpoint_visibility(self) -> bool:
+        return self.proves_universal_continuation_identity_endpoint_witnesses
+
+    @property
+    def proves_universal_continuation_identity_endpoint_witnesses(self) -> bool:
+        return (
+            self.identity_routing_proved
+            and self.endpoint_witnesses_proved
+            and self.routed_witness_uses_identity_routing
+        )
+
+    @property
+    def failure_reasons(self) -> Tuple[str, ...]:
+        reasons = []
+        if not self.identity_routing_proved:
+            reasons.append("identity_routing_not_proved")
+        if not self.endpoint_witnesses_proved:
+            reasons.append("endpoint_witnesses_not_proved")
+        if not self.routed_witness_uses_identity_routing:
+            reasons.append("routed_witness_identity_routing_mismatch")
+        return tuple(reasons)
+
+
+def universal_continuation_identity_endpoint_witness_audit(
+    identity_routing: UniversalContinuationIdentityRoutingAudit,
+    edge_endpoint_audits: Sequence[Tuple[LostEdgeKey, EndpointProductExpressionAudit]],
+) -> UniversalContinuationIdentityEndpointWitnessAudit:
+    """Bundle endpoint witnesses for the identity-routed continuation branch."""
+
+    return UniversalContinuationIdentityEndpointWitnessAudit(
+        identity_routing=identity_routing,
+        routed_edge_witness=routed_lost_edge_endpoint_witness_audit(
+            identity_routing.routing,
+            edge_endpoint_audits,
+        ),
     )
 
 

@@ -34,6 +34,8 @@ from ybe_domination import (
     terminal_gauge_longitude_expression_audit,
     terminal_gauge_product_longitude_expression_audit,
     terminal_gauge_telescoping_audit,
+    universal_continuation_identity_endpoint_witness_audit,
+    universal_continuation_identity_routing_audit,
 )
 
 
@@ -467,6 +469,103 @@ class EndpointFactorizationTests(unittest.TestCase):
         self.assertFalse(audit.all_endpoint_witnesses_visible)
         self.assertEqual(audit.missing_routed_edges, routing.routed_edges)
         self.assertFalse(audit.proves_routed_lost_edge_endpoint_visibility)
+
+    def test_universal_continuation_identity_endpoint_witness_covers_edges(self):
+        interval = one_color_identity_interval()
+        identity_routing = universal_continuation_identity_routing_audit(interval)
+        edge = identity_routing.routing.routed_edges[0]
+        c2 = cyclic_group(2)
+        endpoint = endpoint_product_longitude_expression_audit(
+            (c2,),
+            n=2,
+            braid_word=(1, 1),
+            endpoints=(1,),
+            assignments=((1, 0),),
+            expressions=(((1, 1),),),
+        )
+
+        audit = universal_continuation_identity_endpoint_witness_audit(
+            identity_routing,
+            ((edge, endpoint),),
+        )
+
+        self.assertTrue(audit.identity_routing_proved)
+        self.assertTrue(audit.endpoint_witnesses_proved)
+        self.assertTrue(audit.routed_witness_uses_identity_routing)
+        self.assertEqual(audit.routed_edges, identity_routing.routing.routed_edges)
+        self.assertEqual(audit.witnessed_edges, identity_routing.routing.routed_edges)
+        self.assertEqual(audit.missing_identity_routed_edges, ())
+        self.assertEqual(audit.extra_witness_edges, ())
+        self.assertEqual(audit.failure_reasons, ())
+        self.assertTrue(
+            audit.proves_universal_continuation_identity_endpoint_witnesses
+        )
+        self.assertTrue(audit.proves_routed_lost_edge_endpoint_visibility)
+
+    def test_universal_continuation_identity_endpoint_witness_reports_missing_edge(
+        self,
+    ):
+        interval = one_color_identity_interval()
+        identity_routing = universal_continuation_identity_routing_audit(interval)
+
+        audit = universal_continuation_identity_endpoint_witness_audit(
+            identity_routing,
+            (),
+        )
+
+        self.assertTrue(audit.identity_routing_proved)
+        self.assertFalse(audit.endpoint_witnesses_proved)
+        self.assertEqual(
+            audit.missing_identity_routed_edges,
+            identity_routing.routing.routed_edges,
+        )
+        self.assertEqual(audit.failure_reasons, ("endpoint_witnesses_not_proved",))
+        self.assertFalse(
+            audit.proves_universal_continuation_identity_endpoint_witnesses
+        )
+
+    def test_repair_contract_accepts_identity_endpoint_witness_wrapper(self):
+        interval = one_color_identity_interval()
+        identity_routing = universal_continuation_identity_routing_audit(interval)
+        descent = identity_routing.routing.dichotomy.seed_saturation.saturated_descent
+        c2 = cyclic_group(2)
+        product_audit = endpoint_product_longitude_expression_audit(
+            (c2,),
+            n=2,
+            braid_word=(1, -1),
+            endpoints=(0,),
+            assignments=((1, 0),),
+            expressions=((),),
+        )
+        readout = endpoint_residual_readout_audit(
+            (endpoint_coordinate_readout_audit(product_audit, "p", "p"),)
+        )
+        action = endpoint_residual_action_audit(
+            2,
+            (1, -1),
+            (readout,),
+            expected_row_count=1,
+        )
+        edge_endpoint = endpoint_product_longitude_expression_audit(
+            (c2,),
+            n=2,
+            braid_word=(1, 1),
+            endpoints=(1,),
+            assignments=((1, 0),),
+            expressions=(((1, 1),),),
+        )
+        routed = universal_continuation_identity_endpoint_witness_audit(
+            identity_routing,
+            ((identity_routing.routing.routed_edges[0], edge_endpoint),),
+        )
+
+        audit = descent_endpoint_repair_contract_audit(descent, action, routed)
+
+        self.assertTrue(routed.proves_routed_lost_edge_endpoint_visibility)
+        self.assertTrue(audit.routed_edges_visible)
+        self.assertTrue(audit.routed_edge_descent_matches_supplied_descent)
+        self.assertEqual(audit.failure_reasons, ())
+        self.assertTrue(audit.proves_repair_contract_for_supplied_data)
 
     def test_product_endpoint_expression_requires_parallel_data(self):
         with self.assertRaises(ValueError):

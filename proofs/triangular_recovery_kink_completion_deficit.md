@@ -1,0 +1,154 @@
+# Triangular recovery kink-completion deficit
+
+Date: 2026-05-31
+
+This note refines `proofs/nonlinear_overlap_refined_obstruction.md`.  It does
+not prove `[Resolution: A]` or construct `[Resolution: B]`.  It isolates the
+exact bridge that was hidden between triangular recovery and the
+rack-kink Latin cancellation theorem.
+
+## Why this split is needed
+
+The kink-predecessor theorem applies to a rack-base all-pairs Latin-unit
+triangular situation:
+
+```text
+base is a finite rack;
+left Latin-unit triangular rows are present for every colour pair;
+the Latin triangular YBE equations hold for every colour triple.
+```
+
+Under those hypotheses, the theorem proves that every Latin fibre is
+singleton.  Thus a nontrivial all-pairs rack-base Latin shear cannot be the
+remaining nonlinear obstruction.
+
+However, a triangular recovery endpoint audit by itself proves only that a
+constant-section triangular row has a finite inverse recovery table and hence
+a fixed recovery unit group `U_tri`.  It does not prove that the whole
+remaining corridor has reached the all-pairs Latin-unit hypotheses of the
+kink theorem.
+
+## Executable split
+
+The nonlinear refinement audit now exposes the bridge explicitly.  The new
+deficit list is:
+
+```text
+nonlinear_overlap_refinement_audit(interval).
+    rack_kink_completion_deficits
+```
+
+with possible entries:
+
+```text
+base_not_finite_rack
+latin_rows_not_present_for_all_pairs
+side_dual_latin_rows_present_for_all_pairs
+latin_ybe_equations_not_verified
+kink_cancellation_not_verified
+```
+
+The same audit also exposes the finite row data behind those strings:
+
+```text
+expected_latin_color_pairs
+left_latin_row_pairs
+right_latin_row_pairs
+missing_left_latin_row_pairs
+missing_right_latin_row_pairs
+missing_left_latin_row_defects
+missing_right_latin_row_defects
+active_missing_left_latin_row_defects
+active_missing_right_latin_row_defects
+side_dual_latin_completion_available
+latin_ybe_failure_triples
+side_dual_latin_ybe_failure_triples
+```
+
+Thus a completion failure is not a vague obstruction.  It is either a listed
+colour pair without a left Latin-unit triangular row, a side-dual situation
+where all right Latin-unit triangular rows are present but the left-handed
+kink theorem has not yet been transported, or a listed colour triple where the
+alpha, middle, or endpoint projection of the Latin triangular YBE system has
+not been verified.  The defect rows are expanded in
+`proofs/triangular_k_left_defect_ledger.md`; for example a missing left
+Latin row records whether there is no triangular row, a nonbijective
+constant map with proper/universal kernel or codomain failure, a nonbijective
+companion section with proper/constant/injective-nonsurjective profile, a
+hidden nonunit opposite column, or a side-dual right triangular replacement.
+The active ledgers remove pairs already closed by product collapse, visible
+opposite kernels, injective-nonsurjective sections, or side-dual Latin
+availability.
+
+The side-dual equations are audited by applying
+`latin_triangular_ybe_audit(...)` to `side_opposite_local_interval(interval)`,
+as recorded in `proofs/triangular_recovery_side_dual_completion.md`.  The
+right-rack diagonal cancellation theorem in
+`proofs/right_rack_kink_latin_triangular_cancellation.md` closes the
+side-dual subcase whenever those equations hold, so only listed side-dual
+Latin YBE projection failures remain.  The consistency note
+`proofs/triangular_latin_ybe_projection_consistency.md` closes those failures
+for actual coloured-YBE interval data.
+
+If a triangular recovery endpoint remains and this list is nonempty, the
+status is:
+
+```text
+triangular_recovery_kink_completion_deficit
+```
+
+This status says that the next A-proof cannot merely cite the
+kink-predecessor theorem.  It must either prove that the remaining corridor
+does satisfy the missing all-pairs Latin hypotheses, or route the failed
+hypothesis into a fixed detector/readout or a normalized-law seed.
+
+## Contradiction endpoint
+
+There is also an explicit contradiction status:
+
+```text
+latin_triangular_kink_contradiction
+```
+
+It records the formal combination:
+
+```text
+rack-kink theorem hypotheses hold,
+kink cancellation is verified,
+but a non-singleton Latin fibre remains.
+```
+
+That combination is impossible by the kink-predecessor cancellation theorem,
+so it is a closed row rather than a `U_tri` endpoint obstruction.
+
+For actual interval data, the direct audit should normally detect this earlier
+as a Latin YBE failure or a kink-cancellation failure.  The contradiction
+status is still useful in the proof ledger because it states the exact
+logical endpoint of the rack-kink route.
+
+## Updated fork
+
+After this refinement, the remaining triangular branch is not just:
+
+```text
+prove endpoint in V_beta(U_tri).
+```
+
+It is the ordered fork:
+
+```text
+1. complete the triangular recovery corridor to the rack-kink all-pairs
+   Latin hypotheses, in which case nontrivial fibres are impossible; or
+2. route the failed completion hypothesis through fixed detector data; or
+3. if the completion deficit cannot be routed away, use the fixed U_tri
+   endpoint fork:
+      - active Artin detector-lift rows;
+      - explicit endpoint-longitude expressions;
+      - derived-series quotient lifts plus a P_tri witness;
+      - or a normalized-law sequence from a P_tri finite miss.
+```
+
+This is a stricter restatement of the remaining proof burden.  It prevents
+the all-pairs rack-kink theorem from being used outside its hypotheses, while
+preserving the finite `U_tri` endpoint machinery for any genuine completion
+failure that survives.

@@ -229,6 +229,27 @@ listed in the repair theorem.
 This is stronger than finite subgroup membership at a fixed braid index.  It
 is a symbolic all-`n` theorem.
 
+The canonical finite local ledger for the universal-continuation case is now
+recorded in `proofs/universal_continuation_identity_routing.md`.  It uses the
+equality readout as the descent candidate, seed-saturates it to make the
+quotient strand-continuing, and routes every edge lost by that saturation
+through the identity external readout.  Thus the remaining endpoint theorem
+can be stated edgewise: every identity-routed lost edge must have fixed
+endpoint factors and all-`n` `V_beta` witnesses.
+
+The endpoint layer of that canonical branch is now executable as a
+supplied-certificate audit in
+`proofs/universal_continuation_identity_endpoint_witness.md`.  The helper
+
+```text
+universal_continuation_identity_endpoint_witness_audit(...)
+```
+
+checks that the supplied endpoint factors cover exactly the
+identity-routed lost edges and exposes the generic
+`proves_routed_lost_edge_endpoint_visibility` interface used by the repair
+contract.
+
 ## Executable supplied-certificate audit
 
 The helper
@@ -242,7 +263,8 @@ bundles supplied certificates for one proposed repair package:
 - a `ReadoutDescentSeparationAudit`;
 - an endpoint residual-action audit built from recursive-longitude or
   Artin-defect endpoint witnesses;
-- optionally, a routed lost-edge endpoint witness audit.
+- optionally, a routed lost-edge endpoint witness audit, including the
+  identity-specific universal-continuation wrapper.
 
 It returns `proves_repair_contract_for_supplied_data` exactly when:
 
