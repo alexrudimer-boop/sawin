@@ -1146,6 +1146,16 @@ single fixed group `U_tri`, requires exact coverage of the routed System U
 endpoint keys, and lets the post-linear classifier close U by a symmetric
 cutoff without hiding any still-unclosed continuation or mixed-unit endpoint
 families.
+The same supplied-certificate pattern now covers the routed continuation and
+mixed-unit endpoint families.  The helper
+`universal_continuation_identity_symmetric_endpoint_fork_audit(...)` attaches
+a faithful symmetric cutoff to exactly the identity-routed System C lost
+edges, while `mixed_unit_context_symmetric_endpoint_fork_audit(...)` attaches
+one to exactly the System M mixed-context keys.  In a routed endpoint product,
+each fork removes only its own family from `unclosed_routed_endpoint_systems`.
+The living handoff prompt
+`proofs/gpt55_pro_remaining_issues_prompt.md` records the current K/U/C/M
+remaining obligations for a future GPT-5.5 Pro pass.
 `proofs/symmetric_tower_counterexample_certificate.md` now records the
 corresponding simplified B certificate: for every `j`, produce a braid
 `alpha_j` with identity `S_j` longitude data and a moved global or residual

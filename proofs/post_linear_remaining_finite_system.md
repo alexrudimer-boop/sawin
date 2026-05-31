@@ -563,6 +563,14 @@ universal_continuation_endpoint_witness_matches_routing
 universal_continuation_endpoint_witness_proved
 universal_continuation_endpoint_missing_edges
 universal_continuation_endpoint_extra_edges
+universal_continuation_symmetric_fork_matches_routing
+universal_continuation_symmetric_fork_group_orders
+universal_continuation_symmetric_fork_minimum_degree
+universal_continuation_symmetric_fork_degree
+universal_continuation_symmetric_fork_cutoff_proved
+universal_continuation_symmetric_fork_tail_seed_prefix_proved
+universal_continuation_symmetric_fork_missing_edges
+universal_continuation_symmetric_fork_extra_edges
 ```
 
 The remaining A-route is to construct fixed endpoint witnesses for those
@@ -576,6 +584,16 @@ this row has no remaining System C obligation.  The executable classifier
 returns `closed_by_universal_continuation_endpoint_witness`, empties
 `remaining_obligations`, and no longer counts the row as a current remaining
 finite system.
+
+[Proved] If the supplied
+`universal_continuation_symmetric_endpoint_fork` matches the same
+identity-routing ledger, covers exactly the identity-routed lost edges, and
+proves a faithful symmetric endpoint cutoff for the fixed continuation
+endpoint family, then this row also has no remaining System C obligation.  The
+executable classifier returns
+`closed_by_universal_continuation_symmetric_endpoint_fork` in the C-only case.
+In a product endpoint row, this certificate removes only C from
+`unclosed_routed_endpoint_systems`.
 
 ## System M: mixed-unit context endpoint
 
@@ -622,6 +640,14 @@ mixed_unit_endpoint_witness_matches_routing
 mixed_unit_endpoint_witness_proved
 mixed_unit_endpoint_missing_context_keys
 mixed_unit_endpoint_extra_context_keys
+mixed_unit_symmetric_fork_matches_routing
+mixed_unit_symmetric_fork_group_orders
+mixed_unit_symmetric_fork_minimum_degree
+mixed_unit_symmetric_fork_degree
+mixed_unit_symmetric_fork_cutoff_proved
+mixed_unit_symmetric_fork_tail_seed_prefix_proved
+mixed_unit_symmetric_fork_missing_context_keys
+mixed_unit_symmetric_fork_extra_context_keys
 ```
 
 [Proved] If the supplied `mixed_unit_context_endpoint_witness` matches the
@@ -631,6 +657,14 @@ witnesses, the wrapper returns
 `remaining_obligations`, and removes the row from the current remaining
 finite-system list.  This is not a uniform endpoint theorem; it is the exact
 finite certificate interface that a positive proof must fill.
+
+[Proved] If the supplied `mixed_unit_context_symmetric_endpoint_fork` matches
+the same coordinate-unit routing ledger, covers exactly the mixed context
+keys, and proves a faithful symmetric endpoint cutoff for the fixed mixed-unit
+endpoint family, then this row also has no remaining System M obligation.  The
+executable classifier returns `closed_by_mixed_unit_symmetric_endpoint_fork`
+in the M-only case.  In a product endpoint row, this certificate removes only
+M from `unclosed_routed_endpoint_systems`.
 
 ## System U: triangular recovery unit endpoint
 

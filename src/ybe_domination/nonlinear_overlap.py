@@ -75,7 +75,9 @@ from .semigroup_holonomy import (
 if TYPE_CHECKING:  # pragma: no cover - typing only
     from .endpoint_factorization import (
         MixedUnitContextEndpointWitnessAudit,
+        MixedUnitContextSymmetricEndpointForkAudit,
         UniversalContinuationIdentityEndpointWitnessAudit,
+        UniversalContinuationIdentitySymmetricEndpointForkAudit,
     )
     from .repair_contract import (
         DescentEndpointRepairContractAudit,
@@ -710,8 +712,14 @@ class PostLinearRemainingFiniteSystemAudit:
     universal_continuation_endpoint_witness: (
         "UniversalContinuationIdentityEndpointWitnessAudit | None"
     ) = None
+    universal_continuation_symmetric_endpoint_fork: (
+        "UniversalContinuationIdentitySymmetricEndpointForkAudit | None"
+    ) = None
     mixed_unit_context_endpoint_witness: (
         "MixedUnitContextEndpointWitnessAudit | None"
+    ) = None
+    mixed_unit_context_symmetric_endpoint_fork: (
+        "MixedUnitContextSymmetricEndpointForkAudit | None"
     ) = None
 
     @property
@@ -1226,6 +1234,24 @@ class PostLinearRemainingFiniteSystemAudit:
         )
 
     @property
+    def system_c_closed_by_symmetric_endpoint_fork(self) -> bool:
+        fork = self.universal_continuation_symmetric_endpoint_fork
+        return (
+            self.k_deficits_routed_to_continuation_endpoint
+            and self.universal_continuation_identity_routing is not None
+            and fork is not None
+            and fork.identity_routing == self.universal_continuation_identity_routing
+            and fork.proves_universal_continuation_identity_symmetric_endpoint_cutoff
+        )
+
+    @property
+    def system_c_closed_by_routed_certificate(self) -> bool:
+        return (
+            self.system_c_closed_by_endpoint_witness
+            or self.system_c_closed_by_symmetric_endpoint_fork
+        )
+
+    @property
     def system_m_closed_by_endpoint_witness(self) -> bool:
         witness = self.mixed_unit_context_endpoint_witness
         return (
@@ -1234,6 +1260,24 @@ class PostLinearRemainingFiniteSystemAudit:
             and witness is not None
             and witness.coordinate_routing == self.missing_triangular_coordinate_unit_routing
             and witness.proves_mixed_unit_context_endpoint_witnesses
+        )
+
+    @property
+    def system_m_closed_by_symmetric_endpoint_fork(self) -> bool:
+        fork = self.mixed_unit_context_symmetric_endpoint_fork
+        return (
+            self.k_deficits_routed_to_mixed_context_endpoint
+            and self.missing_triangular_coordinate_unit_routing is not None
+            and fork is not None
+            and fork.coordinate_routing == self.missing_triangular_coordinate_unit_routing
+            and fork.proves_mixed_unit_context_symmetric_endpoint_cutoff
+        )
+
+    @property
+    def system_m_closed_by_routed_certificate(self) -> bool:
+        return (
+            self.system_m_closed_by_endpoint_witness
+            or self.system_m_closed_by_symmetric_endpoint_fork
         )
 
     @property
@@ -1252,9 +1296,9 @@ class PostLinearRemainingFiniteSystemAudit:
         systems = []
         if self.system_u_active and not self.system_u_closed_by_routed_certificate:
             systems.append("U")
-        if self.system_c_active and not self.system_c_closed_by_endpoint_witness:
+        if self.system_c_active and not self.system_c_closed_by_routed_certificate:
             systems.append("C")
-        if self.system_m_active and not self.system_m_closed_by_endpoint_witness:
+        if self.system_m_active and not self.system_m_closed_by_routed_certificate:
             systems.append("M")
         return tuple(systems)
 
@@ -1272,10 +1316,18 @@ class PostLinearRemainingFiniteSystemAudit:
                     return "closed_by_triangular_recovery_endpoint_witness"
                 return "closed_by_triangular_recovery_symmetric_endpoint_fork"
             if self.active_routed_endpoint_systems == ("C",):
-                return "closed_by_universal_continuation_endpoint_witness"
+                if self.system_c_closed_by_endpoint_witness:
+                    return "closed_by_universal_continuation_endpoint_witness"
+                return "closed_by_universal_continuation_symmetric_endpoint_fork"
             if self.active_routed_endpoint_systems == ("M",):
-                return "closed_by_mixed_unit_context_endpoint_witness"
-            if self.triangular_recovery_symmetric_endpoint_fork is not None:
+                if self.system_m_closed_by_endpoint_witness:
+                    return "closed_by_mixed_unit_context_endpoint_witness"
+                return "closed_by_mixed_unit_symmetric_endpoint_fork"
+            if (
+                self.triangular_recovery_symmetric_endpoint_fork is not None
+                or self.universal_continuation_symmetric_endpoint_fork is not None
+                or self.mixed_unit_context_symmetric_endpoint_fork is not None
+            ):
                 return "closed_by_routed_endpoint_certificates"
             return "closed_by_routed_endpoint_witnesses"
         if len(self.unclosed_routed_endpoint_systems) > 1:
@@ -1287,9 +1339,9 @@ class PostLinearRemainingFiniteSystemAudit:
             return "system_k_kink_completion_deficit"
         if self.system_u_active and not self.system_u_closed_by_routed_certificate:
             return "system_u_triangular_recovery_unit_endpoint"
-        if self.system_c_active and not self.system_c_closed_by_endpoint_witness:
+        if self.system_c_active and not self.system_c_closed_by_routed_certificate:
             return "system_c_universal_continuation_endpoint"
-        if self.system_m_active and not self.system_m_closed_by_endpoint_witness:
+        if self.system_m_active and not self.system_m_closed_by_routed_certificate:
             return "system_m_mixed_unit_context_endpoint"
         return f"earlier_unrouted_status:{self.refinement.status}"
 
@@ -1464,6 +1516,49 @@ class PostLinearRemainingFiniteSystemAudit:
         )
 
     @property
+    def _universal_continuation_symmetric_endpoint_fork_data(
+        self,
+    ) -> Tuple[Tuple[str, object], ...]:
+        if self.universal_continuation_symmetric_endpoint_fork is None:
+            return ()
+        fork = self.universal_continuation_symmetric_endpoint_fork
+        return (
+            (
+                "universal_continuation_symmetric_fork_matches_routing",
+                self.universal_continuation_identity_routing is not None
+                and fork.identity_routing == self.universal_continuation_identity_routing,
+            ),
+            (
+                "universal_continuation_symmetric_fork_group_orders",
+                fork.endpoint_family.endpoint_group_orders,
+            ),
+            (
+                "universal_continuation_symmetric_fork_minimum_degree",
+                fork.endpoint_family.minimum_symmetric_degree,
+            ),
+            (
+                "universal_continuation_symmetric_fork_degree",
+                fork.endpoint_family.symmetric_degree,
+            ),
+            (
+                "universal_continuation_symmetric_fork_cutoff_proved",
+                fork.proves_universal_continuation_identity_symmetric_endpoint_cutoff,
+            ),
+            (
+                "universal_continuation_symmetric_fork_tail_seed_prefix_proved",
+                fork.proves_universal_continuation_identity_symmetric_tail_seed_prefix,
+            ),
+            (
+                "universal_continuation_symmetric_fork_missing_edges",
+                fork.missing_identity_routed_edges,
+            ),
+            (
+                "universal_continuation_symmetric_fork_extra_edges",
+                fork.extra_covered_edges,
+            ),
+        )
+
+    @property
     def _coordinate_unit_routing_data(self) -> Tuple[Tuple[str, object], ...]:
         if self.missing_triangular_coordinate_unit_routing is None:
             return ()
@@ -1541,6 +1636,50 @@ class PostLinearRemainingFiniteSystemAudit:
         )
 
     @property
+    def _mixed_unit_symmetric_endpoint_fork_data(
+        self,
+    ) -> Tuple[Tuple[str, object], ...]:
+        if self.mixed_unit_context_symmetric_endpoint_fork is None:
+            return ()
+        fork = self.mixed_unit_context_symmetric_endpoint_fork
+        return (
+            (
+                "mixed_unit_symmetric_fork_matches_routing",
+                self.missing_triangular_coordinate_unit_routing is not None
+                and fork.coordinate_routing
+                == self.missing_triangular_coordinate_unit_routing,
+            ),
+            (
+                "mixed_unit_symmetric_fork_group_orders",
+                fork.endpoint_family.endpoint_group_orders,
+            ),
+            (
+                "mixed_unit_symmetric_fork_minimum_degree",
+                fork.endpoint_family.minimum_symmetric_degree,
+            ),
+            (
+                "mixed_unit_symmetric_fork_degree",
+                fork.endpoint_family.symmetric_degree,
+            ),
+            (
+                "mixed_unit_symmetric_fork_cutoff_proved",
+                fork.proves_mixed_unit_context_symmetric_endpoint_cutoff,
+            ),
+            (
+                "mixed_unit_symmetric_fork_tail_seed_prefix_proved",
+                fork.proves_mixed_unit_context_symmetric_tail_seed_prefix,
+            ),
+            (
+                "mixed_unit_symmetric_fork_missing_context_keys",
+                fork.missing_mixed_context_keys,
+            ),
+            (
+                "mixed_unit_symmetric_fork_extra_context_keys",
+                fork.extra_covered_keys,
+            ),
+        )
+
+    @property
     def routed_endpoint_obstruction_data(self) -> Tuple[Tuple[str, object], ...]:
         data = []
         if self.system_u_active:
@@ -1589,8 +1728,10 @@ class PostLinearRemainingFiniteSystemAudit:
         data.extend(self._triangular_recovery_endpoint_witness_data)
         data.extend(self._triangular_recovery_symmetric_endpoint_fork_data)
         data.extend(self._universal_continuation_endpoint_witness_data)
+        data.extend(self._universal_continuation_symmetric_endpoint_fork_data)
         data.extend(self._coordinate_unit_routing_data)
         data.extend(self._mixed_unit_endpoint_witness_data)
+        data.extend(self._mixed_unit_symmetric_endpoint_fork_data)
         return tuple(data)
 
     @property
@@ -2288,14 +2429,14 @@ class PostLinearRemainingFiniteSystemAudit:
                     "or upgrade one routed U_tri endpoint miss to a normalized-law sequence",
                 )
             )
-        if self.system_c_active and not self.system_c_closed_by_endpoint_witness:
+        if self.system_c_active and not self.system_c_closed_by_routed_certificate:
             endpoint_obligations.extend(
                 (
                     "construct fixed endpoint witnesses for the routed universal-continuation seed closures",
                     "or upgrade one routed universal-continuation endpoint miss to a normalized-law sequence",
                 )
             )
-        if self.system_m_active and not self.system_m_closed_by_endpoint_witness:
+        if self.system_m_active and not self.system_m_closed_by_routed_certificate:
             endpoint_obligations.extend(
                 (
                     "prove each routed mixed-unit context endpoint factors through fixed detector/readout data",
@@ -3273,8 +3414,14 @@ def post_linear_remaining_finite_system_audit(
     universal_continuation_endpoint_witness: (
         "UniversalContinuationIdentityEndpointWitnessAudit | None"
     ) = None,
+    universal_continuation_symmetric_endpoint_fork: (
+        "UniversalContinuationIdentitySymmetricEndpointForkAudit | None"
+    ) = None,
     mixed_unit_context_endpoint_witness: (
         "MixedUnitContextEndpointWitnessAudit | None"
+    ) = None,
+    mixed_unit_context_symmetric_endpoint_fork: (
+        "MixedUnitContextSymmetricEndpointForkAudit | None"
     ) = None,
 ) -> PostLinearRemainingFiniteSystemAudit:
     """Return the K/U finite-system classifier after finite-linear closure."""
@@ -3312,5 +3459,7 @@ def post_linear_remaining_finite_system_audit(
         triangular_recovery_endpoint_witness=triangular_recovery_endpoint_witness,
         triangular_recovery_symmetric_endpoint_fork=triangular_recovery_symmetric_endpoint_fork,
         universal_continuation_endpoint_witness=universal_continuation_endpoint_witness,
+        universal_continuation_symmetric_endpoint_fork=universal_continuation_symmetric_endpoint_fork,
         mixed_unit_context_endpoint_witness=mixed_unit_context_endpoint_witness,
+        mixed_unit_context_symmetric_endpoint_fork=mixed_unit_context_symmetric_endpoint_fork,
     )

@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Iterable, Sequence, Tuple
+from typing import TYPE_CHECKING, Iterable, Sequence, Tuple
 
 from .artin_longitudes import (
     BraidWord,
@@ -29,6 +29,9 @@ from .local_interval import (
 ArtinDefectEndpointTerm = Tuple[Tuple[GroupElement, ...], FreeWord, int]
 LostEdgeKey = Tuple[Color, FibrePoint, FibrePoint]
 MixedUnitContextKey = Tuple[Color, Color, str]
+
+if TYPE_CHECKING:  # pragma: no cover - typing only
+    from .repair_contract import EndpointFamilySymmetricForkAudit
 
 
 @dataclass(frozen=True)
@@ -704,6 +707,86 @@ def universal_continuation_identity_endpoint_witness_audit(
 
 
 @dataclass(frozen=True)
+class UniversalContinuationIdentitySymmetricEndpointForkAudit:
+    """Symmetric cutoff certificate for identity-routed continuation edges."""
+
+    identity_routing: UniversalContinuationIdentityRoutingAudit
+    endpoint_family: "EndpointFamilySymmetricForkAudit"
+    covered_edges: Tuple[LostEdgeKey, ...]
+
+    @property
+    def identity_routing_proved(self) -> bool:
+        return self.identity_routing.proves_identity_routed_universal_continuation
+
+    @property
+    def routed_edges(self) -> Tuple[LostEdgeKey, ...]:
+        return self.identity_routing.routing.routed_edges
+
+    @property
+    def supplied_covered_edges(self) -> Tuple[LostEdgeKey, ...]:
+        return _sorted_edges(self.covered_edges)
+
+    @property
+    def missing_identity_routed_edges(self) -> Tuple[LostEdgeKey, ...]:
+        covered = set(self.supplied_covered_edges)
+        return _sorted_edges(edge for edge in self.routed_edges if edge not in covered)
+
+    @property
+    def extra_covered_edges(self) -> Tuple[LostEdgeKey, ...]:
+        routed = set(self.routed_edges)
+        return _sorted_edges(edge for edge in self.covered_edges if edge not in routed)
+
+    @property
+    def all_identity_routed_edges_covered(self) -> bool:
+        return not self.missing_identity_routed_edges
+
+    @property
+    def proves_universal_continuation_identity_symmetric_endpoint_cutoff(self) -> bool:
+        return (
+            self.identity_routing_proved
+            and self.all_identity_routed_edges_covered
+            and not self.extra_covered_edges
+            and self.endpoint_family.faithful_endpoint_cutoff_proved
+        )
+
+    @property
+    def proves_universal_continuation_identity_symmetric_tail_seed_prefix(self) -> bool:
+        return (
+            self.identity_routing_proved
+            and self.endpoint_family.proves_supplied_symmetric_tail_endpoint_seed_prefix
+            and bool(set(self.supplied_covered_edges).intersection(self.routed_edges))
+            and not self.extra_covered_edges
+        )
+
+    @property
+    def failure_reasons(self) -> Tuple[str, ...]:
+        reasons = []
+        if not self.identity_routing_proved:
+            reasons.append("identity_routing_not_proved")
+        if not self.all_identity_routed_edges_covered:
+            reasons.append("identity_routed_edges_not_covered")
+        if self.extra_covered_edges:
+            reasons.append("extra_identity_symmetric_edges")
+        if not self.endpoint_family.faithful_endpoint_cutoff_proved:
+            reasons.extend(self.endpoint_family.failure_reasons)
+        return tuple(reasons)
+
+
+def universal_continuation_identity_symmetric_endpoint_fork_audit(
+    identity_routing: UniversalContinuationIdentityRoutingAudit,
+    endpoint_family: "EndpointFamilySymmetricForkAudit",
+    covered_edges: Sequence[LostEdgeKey],
+) -> UniversalContinuationIdentitySymmetricEndpointForkAudit:
+    """Attach a symmetric endpoint-family cutoff to identity-routed edges."""
+
+    return UniversalContinuationIdentitySymmetricEndpointForkAudit(
+        identity_routing=identity_routing,
+        endpoint_family=endpoint_family,
+        covered_edges=tuple(covered_edges),
+    )
+
+
+@dataclass(frozen=True)
 class MixedUnitContextEndpointWitnessAudit:
     """Endpoint witnesses for coordinate-unit rows routed to mixed context."""
 
@@ -789,6 +872,94 @@ def _sorted_mixed_context_keys(
     keys: Iterable[MixedUnitContextKey],
 ) -> Tuple[MixedUnitContextKey, ...]:
     return tuple(sorted(set(keys), key=repr))
+
+
+@dataclass(frozen=True)
+class MixedUnitContextSymmetricEndpointForkAudit:
+    """Symmetric cutoff certificate for mixed-unit context endpoint keys."""
+
+    coordinate_routing: MissingTriangularCoordinateUnitRoutingAudit
+    endpoint_family: "EndpointFamilySymmetricForkAudit"
+    covered_keys: Tuple[MixedUnitContextKey, ...]
+
+    @property
+    def mixed_context_keys(self) -> Tuple[MixedUnitContextKey, ...]:
+        return _sorted_mixed_context_keys(
+            (row.left_color, row.right_color, side)
+            for row in self.coordinate_routing.mixed_unit_context_rows
+            for side in row.coordinate_unit_sides
+        )
+
+    @property
+    def supplied_covered_keys(self) -> Tuple[MixedUnitContextKey, ...]:
+        return _sorted_mixed_context_keys(self.covered_keys)
+
+    @property
+    def missing_mixed_context_keys(self) -> Tuple[MixedUnitContextKey, ...]:
+        covered = set(self.supplied_covered_keys)
+        return _sorted_mixed_context_keys(
+            key for key in self.mixed_context_keys if key not in covered
+        )
+
+    @property
+    def extra_covered_keys(self) -> Tuple[MixedUnitContextKey, ...]:
+        routed = set(self.mixed_context_keys)
+        return _sorted_mixed_context_keys(
+            key for key in self.covered_keys if key not in routed
+        )
+
+    @property
+    def coordinate_unit_routing_proved(self) -> bool:
+        return self.coordinate_routing.proves_coordinate_unit_routing_ledger
+
+    @property
+    def all_mixed_context_keys_covered(self) -> bool:
+        return bool(self.mixed_context_keys) and not self.missing_mixed_context_keys
+
+    @property
+    def proves_mixed_unit_context_symmetric_endpoint_cutoff(self) -> bool:
+        return (
+            self.coordinate_unit_routing_proved
+            and self.all_mixed_context_keys_covered
+            and not self.extra_covered_keys
+            and self.endpoint_family.faithful_endpoint_cutoff_proved
+        )
+
+    @property
+    def proves_mixed_unit_context_symmetric_tail_seed_prefix(self) -> bool:
+        return (
+            self.coordinate_unit_routing_proved
+            and self.endpoint_family.proves_supplied_symmetric_tail_endpoint_seed_prefix
+            and bool(set(self.supplied_covered_keys).intersection(self.mixed_context_keys))
+            and not self.extra_covered_keys
+        )
+
+    @property
+    def failure_reasons(self) -> Tuple[str, ...]:
+        reasons = []
+        if not self.coordinate_unit_routing_proved:
+            reasons.append("coordinate_unit_routing_not_proved")
+        if not self.all_mixed_context_keys_covered:
+            reasons.append("mixed_context_keys_not_covered")
+        if self.extra_covered_keys:
+            reasons.append("extra_mixed_context_symmetric_keys")
+        if not self.endpoint_family.faithful_endpoint_cutoff_proved:
+            reasons.extend(self.endpoint_family.failure_reasons)
+        return tuple(reasons)
+
+
+def mixed_unit_context_symmetric_endpoint_fork_audit(
+    coordinate_routing: MissingTriangularCoordinateUnitRoutingAudit,
+    endpoint_family: "EndpointFamilySymmetricForkAudit",
+    covered_keys: Sequence[MixedUnitContextKey],
+) -> MixedUnitContextSymmetricEndpointForkAudit:
+    """Attach a symmetric endpoint-family cutoff to mixed-unit context keys."""
+
+    return MixedUnitContextSymmetricEndpointForkAudit(
+        coordinate_routing=coordinate_routing,
+        endpoint_family=endpoint_family,
+        covered_keys=tuple(covered_keys),
+    )
 
 
 def mixed_unit_context_endpoint_witness_audit(

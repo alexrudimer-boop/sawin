@@ -35,6 +35,9 @@ Start with these files in the attached zip:
 1. `proofs/progress_summary.md`
 2. `README.md`
 3. `proofs/sawin_status.md`
+Also read `proofs/gpt55_pro_remaining_issues_prompt.md`, which records the
+current post-linear K/U/C/M remaining obligations and the exact family-wise
+tasks needed to complete either outcome A or outcome B.
 4. `proofs/finite_longitude_factorization_criterion.md`
 5. `proofs/longitude_subgroup_profile.md`
 Also read `proofs/longitude_subgroup_functoriality.md`, which proves that

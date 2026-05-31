@@ -40,6 +40,7 @@ from ybe_domination import (
     endpoint_product_longitude_expression_audit,
     latin_triangular_ybe_audit,
     mixed_unit_context_endpoint_witness_audit,
+    mixed_unit_context_symmetric_endpoint_fork_audit,
     nonlinear_overlap_obstruction_audit,
     nonlinear_overlap_refinement_audit,
     post_linear_remaining_finite_system_audit,
@@ -67,6 +68,7 @@ from ybe_domination import (
     triangular_recovery_unit_observer_audit,
     triangular_recovery_unit_group,
     universal_continuation_identity_endpoint_witness_audit,
+    universal_continuation_identity_symmetric_endpoint_fork_audit,
     universal_continuation_identity_routing_audit,
 )
 
@@ -1566,6 +1568,50 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             audit.finite_obstruction_data,
         )
 
+    def test_continuation_symmetric_endpoint_fork_closes_system_c_when_matching(
+        self,
+    ):
+        profile, closure, route = partial_constant_missing_row_profile_route_audits()
+        identity_routing = universal_continuation_identity_routing_audit(
+            one_color_identity_interval()
+        )
+        endpoint_family = endpoint_family_symmetric_fork_audit(
+            (2,),
+            all_endpoint_witnesses_supplied=True,
+            endpoint_family_faithful=True,
+        )
+        fork = universal_continuation_identity_symmetric_endpoint_fork_audit(
+            identity_routing,
+            endpoint_family,
+            identity_routing.routing.routed_edges,
+        )
+
+        audit = PostLinearRemainingFiniteSystemAudit(
+            active_system_k_refinement(),
+            missing_triangular_row_profile=profile,
+            missing_triangular_partial_constant_closure=closure,
+            missing_triangular_partial_constant_continuation_route=route,
+            universal_continuation_identity_routing=identity_routing,
+            universal_continuation_symmetric_endpoint_fork=fork,
+        )
+
+        self.assertEqual(
+            audit.system_name,
+            "closed_by_universal_continuation_symmetric_endpoint_fork",
+        )
+        self.assertTrue(audit.system_c_closed_by_symmetric_endpoint_fork)
+        self.assertTrue(audit.system_c_closed_by_routed_certificate)
+        self.assertFalse(audit.is_current_remaining_finite_system)
+        self.assertEqual(audit.remaining_obligations, ())
+        self.assertIn(
+            ("universal_continuation_symmetric_fork_cutoff_proved", True),
+            audit.finite_obstruction_data,
+        )
+        self.assertIn(
+            ("universal_continuation_symmetric_fork_missing_edges", ()),
+            audit.finite_obstruction_data,
+        )
+
     def test_mixed_unit_endpoint_witness_closes_system_m_when_matching(self):
         profile, routing = coordinate_unit_mixed_context_route_audits()
         c2 = cyclic_group(2)
@@ -1605,6 +1651,43 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         )
         self.assertIn(
             ("mixed_unit_endpoint_missing_context_keys", ()),
+            audit.finite_obstruction_data,
+        )
+
+    def test_mixed_unit_symmetric_endpoint_fork_closes_system_m_when_matching(self):
+        profile, routing = coordinate_unit_mixed_context_route_audits()
+        endpoint_family = endpoint_family_symmetric_fork_audit(
+            (2,),
+            all_endpoint_witnesses_supplied=True,
+            endpoint_family_faithful=True,
+        )
+        fork = mixed_unit_context_symmetric_endpoint_fork_audit(
+            routing,
+            endpoint_family,
+            (("*", "*", "left"),),
+        )
+
+        audit = PostLinearRemainingFiniteSystemAudit(
+            active_system_k_refinement(),
+            missing_triangular_row_profile=profile,
+            missing_triangular_coordinate_unit_routing=routing,
+            mixed_unit_context_symmetric_endpoint_fork=fork,
+        )
+
+        self.assertEqual(
+            audit.system_name,
+            "closed_by_mixed_unit_symmetric_endpoint_fork",
+        )
+        self.assertTrue(audit.system_m_closed_by_symmetric_endpoint_fork)
+        self.assertTrue(audit.system_m_closed_by_routed_certificate)
+        self.assertFalse(audit.is_current_remaining_finite_system)
+        self.assertEqual(audit.remaining_obligations, ())
+        self.assertIn(
+            ("mixed_unit_symmetric_fork_cutoff_proved", True),
+            audit.finite_obstruction_data,
+        )
+        self.assertIn(
+            ("mixed_unit_symmetric_fork_missing_context_keys", ()),
             audit.finite_obstruction_data,
         )
 

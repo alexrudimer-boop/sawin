@@ -141,6 +141,19 @@ ledger and covers exactly the mixed context keys, the wrapper reports
 `closed_by_mixed_unit_context_endpoint_witness` and no remaining System M
 obligations.
 
+The symmetric-detector alternative is recorded in
+`proofs/mixed_unit_context_symmetric_endpoint_fork.md`.  Its helper
+
+```text
+mixed_unit_context_symmetric_endpoint_fork_audit(...)
+```
+
+checks that a faithful endpoint-family symmetric cutoff covers exactly the
+mixed context keys from the same coordinate-unit routing ledger.  When
+supplied to the post-linear wrapper, it closes System M as
+`closed_by_mixed_unit_symmetric_endpoint_fork`; in a product endpoint row it
+removes only M from `unclosed_routed_endpoint_systems`.
+
 [Open] This supplied-certificate checker does not yet prove the uniform
 nonlinear endpoint theorem.  The remaining nonlinear work is to construct
 those mixed-unit endpoint factors for every routed row, or to upgrade a

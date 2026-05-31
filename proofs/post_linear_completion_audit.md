@@ -273,6 +273,13 @@ routed U keys.  A positive cutoff records
 `closed_by_triangular_recovery_symmetric_endpoint_fork` in the U-only case,
 and in a U/C/M product removes only U from
 `unclosed_routed_endpoint_systems`.
+The C and M endpoint layers now have the same product-safe symmetric cutoff
+interfaces:
+`universal_continuation_identity_symmetric_endpoint_fork_audit(...)` covers
+the identity-routed continuation lost edges, and
+`mixed_unit_context_symmetric_endpoint_fork_audit(...)` covers the mixed-unit
+context keys.  Positive cutoffs close only their respective endpoint families;
+unclosed routed product factors remain visible.
 
 Equivalently, in the repair-contract format, construct:
 

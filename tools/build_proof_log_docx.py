@@ -8,6 +8,7 @@ from docx.shared import Inches, Pt
 ROOT = Path(__file__).resolve().parents[1]
 STATUS_MD = ROOT / "proofs" / "sawin_status.md"
 EXTRA_MD = [ROOT / "proofs" / "progress_summary.md"]
+EXTRA_MD.append(ROOT / "proofs" / "gpt55_pro_remaining_issues_prompt.md")
 EXTRA_MD.append(ROOT / "proofs" / "semisplit_families.md")
 EXTRA_MD.append(ROOT / "proofs" / "local_minimality_gate.md")
 EXTRA_MD.append(ROOT / "proofs" / "finite_group_longitudes.md")
@@ -229,6 +230,8 @@ EXTRA_MD.append(ROOT / "proofs" / "triangular_k_left_partial_constant_continuati
 EXTRA_MD.append(ROOT / "proofs" / "triangular_k_left_side_dual_replacement_ledger.md")
 EXTRA_MD.append(ROOT / "proofs" / "universal_continuation_identity_routing.md")
 EXTRA_MD.append(ROOT / "proofs" / "universal_continuation_identity_endpoint_witness.md")
+EXTRA_MD.append(ROOT / "proofs" / "universal_continuation_symmetric_endpoint_fork.md")
+EXTRA_MD.append(ROOT / "proofs" / "mixed_unit_context_symmetric_endpoint_fork.md")
 EXTRA_MD.append(ROOT / "proofs" / "post_linear_remaining_finite_system.md")
 EXTRA_MD.append(ROOT / "proofs" / "post_linear_completion_audit.md")
 EXTRA_MD.append(ROOT / "proofs" / "unit_continuation_abelian_kernel_lift.md")

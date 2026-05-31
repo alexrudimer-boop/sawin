@@ -122,6 +122,19 @@ endpoint witness, then the classifier reports
 as a current remaining finite system, and returns no remaining obligations for
 System C.
 
+The symmetric-detector alternative is recorded in
+`proofs/universal_continuation_symmetric_endpoint_fork.md`.  Its helper
+
+```text
+universal_continuation_identity_symmetric_endpoint_fork_audit(...)
+```
+
+checks exact coverage of the same identity-routed lost edges by a faithful
+endpoint-family symmetric cutoff.  When supplied to the post-linear wrapper,
+it closes System C as
+`closed_by_universal_continuation_symmetric_endpoint_fork`; in a product
+endpoint row it removes only C from `unclosed_routed_endpoint_systems`.
+
 ## Exact remaining fork
 
 [Open] To prove `[Resolution: A]`, construct the missing fixed endpoint factors

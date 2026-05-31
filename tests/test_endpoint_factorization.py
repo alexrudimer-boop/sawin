@@ -27,6 +27,7 @@ from ybe_domination import (
     local_symmetric_normalized_law_prefix_witness_audit,
     lost_edge_external_routing_audit,
     mixed_unit_context_endpoint_witness_audit,
+    mixed_unit_context_symmetric_endpoint_fork_audit,
     pure_braid_generator,
     QuotientMap,
     rack_solution,
@@ -38,6 +39,7 @@ from ybe_domination import (
     terminal_gauge_product_longitude_expression_audit,
     terminal_gauge_telescoping_audit,
     universal_continuation_identity_endpoint_witness_audit,
+    universal_continuation_identity_symmetric_endpoint_fork_audit,
     universal_continuation_identity_routing_audit,
 )
 
@@ -527,6 +529,63 @@ class EndpointFactorizationTests(unittest.TestCase):
             audit.proves_universal_continuation_identity_endpoint_witnesses
         )
 
+    def test_universal_continuation_symmetric_endpoint_fork_covers_edges(self):
+        interval = one_color_identity_interval()
+        identity_routing = universal_continuation_identity_routing_audit(interval)
+        endpoint_family = endpoint_family_symmetric_fork_audit(
+            (2, 3),
+            all_endpoint_witnesses_supplied=True,
+            endpoint_family_faithful=True,
+        )
+
+        audit = universal_continuation_identity_symmetric_endpoint_fork_audit(
+            identity_routing,
+            endpoint_family,
+            identity_routing.routing.routed_edges,
+        )
+
+        self.assertTrue(audit.identity_routing_proved)
+        self.assertEqual(audit.routed_edges, identity_routing.routing.routed_edges)
+        self.assertEqual(
+            audit.supplied_covered_edges,
+            identity_routing.routing.routed_edges,
+        )
+        self.assertEqual(audit.missing_identity_routed_edges, ())
+        self.assertEqual(audit.extra_covered_edges, ())
+        self.assertTrue(
+            audit.proves_universal_continuation_identity_symmetric_endpoint_cutoff
+        )
+        self.assertEqual(audit.failure_reasons, ())
+
+    def test_universal_continuation_symmetric_endpoint_fork_reports_missing_edge(
+        self,
+    ):
+        interval = one_color_identity_interval()
+        identity_routing = universal_continuation_identity_routing_audit(interval)
+        endpoint_family = endpoint_family_symmetric_fork_audit(
+            (2,),
+            all_endpoint_witnesses_supplied=True,
+            endpoint_family_faithful=True,
+        )
+
+        audit = universal_continuation_identity_symmetric_endpoint_fork_audit(
+            identity_routing,
+            endpoint_family,
+            (),
+        )
+
+        self.assertEqual(
+            audit.missing_identity_routed_edges,
+            identity_routing.routing.routed_edges,
+        )
+        self.assertFalse(
+            audit.proves_universal_continuation_identity_symmetric_endpoint_cutoff
+        )
+        self.assertEqual(
+            audit.failure_reasons,
+            ("identity_routed_edges_not_covered",),
+        )
+
     def test_mixed_unit_context_endpoint_witness_covers_routed_contexts(self):
         routing = MissingTriangularCoordinateUnitRoutingAudit(
             colored_ybe=True,
@@ -596,6 +655,82 @@ class EndpointFactorizationTests(unittest.TestCase):
 
         self.assertEqual(audit.missing_mixed_context_keys, (("*", "*", "left"),))
         self.assertFalse(audit.proves_mixed_unit_context_endpoint_witnesses)
+        self.assertEqual(audit.failure_reasons, ("mixed_context_keys_not_covered",))
+
+    def test_mixed_unit_symmetric_endpoint_fork_covers_routed_contexts(self):
+        routing = MissingTriangularCoordinateUnitRoutingAudit(
+            colored_ybe=True,
+            locally_nondegenerate_closed_branch=False,
+            rows=(
+                MissingTriangularCoordinateUnitRoute(
+                    left_color="*",
+                    right_color="*",
+                    output_left_color="*",
+                    output_right_color="*",
+                    coordinate_unit_sides=("left",),
+                    left_explanation="coordinate_side_unit_not_triangular",
+                    right_explanation="partial_constant_hidden_rank_loss",
+                    left_unit_inputs=(0, 1),
+                    left_nonunit_inputs=(),
+                    right_unit_inputs=(0,),
+                    right_nonunit_inputs=(1,),
+                ),
+            ),
+        )
+        endpoint_family = endpoint_family_symmetric_fork_audit(
+            (2,),
+            all_endpoint_witnesses_supplied=True,
+            endpoint_family_faithful=True,
+        )
+
+        audit = mixed_unit_context_symmetric_endpoint_fork_audit(
+            routing,
+            endpoint_family,
+            (("*", "*", "left"),),
+        )
+
+        self.assertEqual(audit.mixed_context_keys, (("*", "*", "left"),))
+        self.assertEqual(audit.supplied_covered_keys, (("*", "*", "left"),))
+        self.assertEqual(audit.missing_mixed_context_keys, ())
+        self.assertEqual(audit.extra_covered_keys, ())
+        self.assertTrue(audit.coordinate_unit_routing_proved)
+        self.assertTrue(audit.proves_mixed_unit_context_symmetric_endpoint_cutoff)
+        self.assertEqual(audit.failure_reasons, ())
+
+    def test_mixed_unit_symmetric_endpoint_fork_reports_missing_context(self):
+        routing = MissingTriangularCoordinateUnitRoutingAudit(
+            colored_ybe=True,
+            locally_nondegenerate_closed_branch=False,
+            rows=(
+                MissingTriangularCoordinateUnitRoute(
+                    left_color="*",
+                    right_color="*",
+                    output_left_color="*",
+                    output_right_color="*",
+                    coordinate_unit_sides=("left",),
+                    left_explanation="coordinate_side_unit_not_triangular",
+                    right_explanation="partial_constant_hidden_rank_loss",
+                    left_unit_inputs=(0, 1),
+                    left_nonunit_inputs=(),
+                    right_unit_inputs=(0,),
+                    right_nonunit_inputs=(1,),
+                ),
+            ),
+        )
+        endpoint_family = endpoint_family_symmetric_fork_audit(
+            (2,),
+            all_endpoint_witnesses_supplied=True,
+            endpoint_family_faithful=True,
+        )
+
+        audit = mixed_unit_context_symmetric_endpoint_fork_audit(
+            routing,
+            endpoint_family,
+            (),
+        )
+
+        self.assertEqual(audit.missing_mixed_context_keys, (("*", "*", "left"),))
+        self.assertFalse(audit.proves_mixed_unit_context_symmetric_endpoint_cutoff)
         self.assertEqual(audit.failure_reasons, ("mixed_context_keys_not_covered",))
 
     def test_repair_contract_accepts_identity_endpoint_witness_wrapper(self):
