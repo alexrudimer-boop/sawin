@@ -1316,6 +1316,9 @@ A concrete residual-faithfulness certificate must list the residual action
 rows it covers.  For each residual input tuple it must give the output tuple,
 decompose every moved coordinate into endpoint-controlled coordinates or
 cutoff readouts, and prove that identity endpoint data fixes each coordinate.
+Every supplied residual row must contain at least one coordinate readout; an
+empty coordinate bundle is vacuous and does not prove even the supplied-row
+detector implication.
 It must also state the exact expected residual input-tuple domain and the
 expected number of residual rows for the interval fibre action, then prove
 that the listed rows cover that domain without missing, extra, or duplicate

@@ -210,6 +210,19 @@ class EndpointFactorizationTests(unittest.TestCase):
         self.assertTrue(row_count_only.proves_supplied_rows_detector_implication)
         self.assertFalse(row_count_only.proves_complete_residual_action_implication)
 
+        empty_readout = endpoint_artin_defect_residual_readout_audit(())
+        empty_action = endpoint_artin_defect_residual_action_audit(
+            2,
+            (1,),
+            (empty_readout,),
+            expected_row_count=1,
+            expected_input_tuples=((),),
+        )
+        self.assertFalse(empty_readout.has_coordinates)
+        self.assertFalse(empty_action.all_rows_have_coordinates)
+        self.assertFalse(empty_action.proves_supplied_rows_detector_implication)
+        self.assertFalse(empty_action.proves_complete_residual_action_implication)
+
     def test_artin_defect_residual_action_rejects_unfaithful_identity_endpoint_row(self):
         group = symmetric_group(3)
         endpoint_audit = endpoint_product_artin_defect_audit(
@@ -997,6 +1010,19 @@ class EndpointFactorizationTests(unittest.TestCase):
         self.assertFalse(row_count_only.input_tuple_domain_exact)
         self.assertTrue(row_count_only.proves_supplied_rows_detector_implication)
         self.assertFalse(row_count_only.proves_complete_residual_action_implication)
+
+        empty_readout = endpoint_residual_readout_audit(())
+        empty_action = endpoint_residual_action_audit(
+            2,
+            (1,) * 4,
+            (empty_readout,),
+            expected_row_count=1,
+            expected_input_tuples=((),),
+        )
+        self.assertFalse(empty_readout.has_coordinates)
+        self.assertFalse(empty_action.all_rows_have_coordinates)
+        self.assertFalse(empty_action.proves_supplied_rows_detector_implication)
+        self.assertFalse(empty_action.proves_complete_residual_action_implication)
 
     def test_residual_action_audit_can_check_exact_input_tuple_domain(self):
         c2 = cyclic_group(2)

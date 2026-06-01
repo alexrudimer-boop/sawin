@@ -615,7 +615,10 @@ residual-action implication.  A supplied-row implication with missing
 residual rows is not enough; nor is a duplicate copy of one row that merely
 makes the row count match.  Omitting the expected row count or the expected
 input-tuple domain does not prove residual faithfulness for this signed
-endpoint layer.  The row proof must now carry its own scope audit as well:
+endpoint layer.  Each explicit residual row must also contain at least one
+coordinate readout; an empty coordinate bundle is a vacuous row and cannot
+prove the supplied-row detector implication.  The row proof must now carry
+its own scope audit as well:
 active and covered endpoint families, exact expected and covered endpoint
 seed states from the current `kappa`, exact row-count agreement with the
 explicit rows, and allowed dependency data.  Scope dependencies may use only

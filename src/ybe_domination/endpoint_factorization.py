@@ -364,6 +364,10 @@ class EndpointArtinDefectResidualReadoutAudit:
     coordinate_audits: Tuple[EndpointArtinDefectCoordinateReadoutAudit, ...]
 
     @property
+    def has_coordinates(self) -> bool:
+        return bool(self.coordinate_audits)
+
+    @property
     def input_tuple(self) -> Tuple[object, ...]:
         return tuple(audit.input_coordinate for audit in self.coordinate_audits)
 
@@ -476,13 +480,20 @@ class EndpointArtinDefectResidualActionAudit:
         )
 
     @property
+    def all_rows_have_coordinates(self) -> bool:
+        return bool(self.residual_readouts) and all(
+            readout.has_coordinates for readout in self.residual_readouts
+        )
+
+    @property
     def residual_action_identity_on_supplied_rows(self) -> bool:
         return all(readout.residual_tuple_fixed for readout in self.residual_readouts)
 
     @property
     def proves_supplied_rows_detector_implication(self) -> bool:
         return (
-            self.braid_data_consistent
+            self.all_rows_have_coordinates
+            and self.braid_data_consistent
             and self.all_identity_longitudes_kill_rows_by_artin_defects
         )
 
@@ -532,6 +543,10 @@ class EndpointResidualReadoutAudit:
     """Bundle coordinate readout rows for one residual tuple."""
 
     coordinate_audits: Tuple[EndpointCoordinateReadoutAudit, ...]
+
+    @property
+    def has_coordinates(self) -> bool:
+        return bool(self.coordinate_audits)
 
     @property
     def input_tuple(self) -> Tuple[object, ...]:
@@ -646,13 +661,20 @@ class EndpointResidualActionAudit:
         )
 
     @property
+    def all_rows_have_coordinates(self) -> bool:
+        return bool(self.residual_readouts) and all(
+            readout.has_coordinates for readout in self.residual_readouts
+        )
+
+    @property
     def residual_action_identity_on_supplied_rows(self) -> bool:
         return all(readout.residual_tuple_fixed for readout in self.residual_readouts)
 
     @property
     def proves_supplied_rows_detector_implication(self) -> bool:
         return (
-            self.braid_data_consistent
+            self.all_rows_have_coordinates
+            and self.braid_data_consistent
             and self.all_identity_longitudes_kill_rows_by_expression
         )
 
