@@ -1248,6 +1248,11 @@ The initial routed state must be normalized:
 W_{s_0}(1,...,1)=1.
 ```
 
+For a family with several routed initial seeds, this normalization must hold
+for every seed in `S_E^0` hit by `kappa`.  Normalizing only a later reachable
+state, or a state outside the current `kappa` seed image, is not enough to
+start the braid-word telescope.
+
 Then along a braid word the values `W_{s_t}(u(t))` telescope by the local
 identity, so `W_{s_m}(u(m))` equals the accumulated endpoint.  Since every
 variable in the terminal word is one of the current longitude values
@@ -1410,6 +1415,7 @@ word_potential_templates_use_only_current_longitude_variables,
 word_potential_artin_substitution_from_detector_recurrence,
 word_potential_identity_for_every_signed_row,
 initial_word_potential_normalization,
+initial_word_potential_normalizes_every_kappa_seed,
 fixed_detector_tracks_chosen_before_braid_word,
 exact_cutoff_readouts_for_C_and_M,
 cutoff_readout_seed_state_ledgers_duplicate_free,

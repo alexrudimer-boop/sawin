@@ -3505,6 +3505,20 @@ class UniversalKSignedEndpointGeneratorAudit:
         )
 
     @property
+    def word_potential_initial_seed_states_normalized(self) -> bool:
+        if (
+            self.telescoping_detector_audit is None
+            or self.telescoping_detector_audit.word_potential_certificate is None
+        ):
+            return False
+        certificate = self.telescoping_detector_audit.word_potential_certificate
+        normalized = set(certificate.normalized_seed_states_exact)
+        return (
+            bool(self.required_seed_states)
+            and set(self.required_seed_states).issubset(normalized)
+        )
+
+    @property
     def telescoping_detector_signed_row_mismatches(
         self,
     ) -> Tuple[UniversalKSignedEndpointLabelFailure, ...]:
@@ -3546,6 +3560,7 @@ class UniversalKSignedEndpointGeneratorAudit:
             self.telescoping_detector_audit is not None
             and self.telescoping_detector_scope_matches_required
             and self.telescoping_detector_endpoint_group_matches
+            and self.word_potential_initial_seed_states_normalized
             and not self.telescoping_detector_signed_row_mismatches
             and self.telescoping_detector_audit.proves_telescoping_detector_lift
         )
@@ -3646,6 +3661,8 @@ class UniversalKSignedEndpointGeneratorAudit:
                     reasons.append("telescoping_detector_scope_mismatch")
                 if not self.telescoping_detector_endpoint_group_matches:
                     reasons.append("telescoping_detector_endpoint_group_mismatch")
+                if not self.word_potential_initial_seed_states_normalized:
+                    reasons.append("word_potential_initial_seed_states_not_normalized")
                 if self.telescoping_detector_signed_row_mismatches:
                     reasons.append("telescoping_detector_signed_row_mismatch")
                 reasons.extend(self.telescoping_detector_audit.failure_reasons)
@@ -6323,6 +6340,10 @@ class PostLinearRemainingFiniteSystemAudit:
                     False,
                 ),
                 (
+                    "signed_endpoint_generator_word_potential_initial_seed_states_normalized",
+                    False,
+                ),
+                (
                     "signed_endpoint_generator_telescoping_braid_index_independent",
                     False,
                 ),
@@ -7045,6 +7066,10 @@ class PostLinearRemainingFiniteSystemAudit:
                     if telescoping_audit is not None
                     else False
                 ),
+            ),
+            (
+                "signed_endpoint_generator_word_potential_initial_seed_states_normalized",
+                audit.word_potential_initial_seed_states_normalized,
             ),
             (
                 "signed_endpoint_generator_telescoping_braid_index_independent",

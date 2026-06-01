@@ -3094,6 +3094,31 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             tautological_potential.failure_reasons,
         )
 
+        word_potential_certificate = (
+            theorem_complete.telescoping_detector_audit.word_potential_certificate
+        )
+        missing_initial_normalization = replace(
+            theorem_complete,
+            telescoping_detector_audit=replace(
+                theorem_complete.telescoping_detector_audit,
+                word_potential_certificate=replace(
+                    word_potential_certificate,
+                    normalized_seed_states=(),
+                ),
+            ),
+        )
+        self.assertFalse(
+            missing_initial_normalization.word_potential_initial_seed_states_normalized
+        )
+        self.assertFalse(missing_initial_normalization.telescoping_detector_proved)
+        self.assertFalse(
+            missing_initial_normalization.proves_signed_endpoint_generator_tables
+        )
+        self.assertIn(
+            "word_potential_initial_seed_states_not_normalized",
+            missing_initial_normalization.failure_reasons,
+        )
+
         incomplete_theorem = UniversalKResidualFaithfulnessAudit(
             active_endpoint_families=("U", "C"),
             covered_endpoint_families=("U",),

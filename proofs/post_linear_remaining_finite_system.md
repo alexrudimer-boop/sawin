@@ -506,6 +506,9 @@ W_{s'}(A_gamma^epsilon(U,A)) = W_s(U) h
 for every signed table row.  With initial normalization, this word-potential
 identity is what converts the finite signed row table into the all-`n`
 conclusion `endpoint_E(beta) in V_beta(H_E)`.
+The initial-normalization ledger must include every actual initial seed state
+hit by `kappa`; normalizing only a later reachable state or an unrelated
+state does not start the telescope for the routed endpoint obligation.
 
 The word-potential certificate is concrete finite data.  It records the
 template table `(E,s) |-> W_s`, one identity row for each signed
@@ -758,6 +761,7 @@ signed_endpoint_generator_word_potential_artin_substitution_failures
 signed_endpoint_generator_word_potential_identity_failures
 signed_endpoint_generator_terminal_readout_longitudes_verified
 signed_endpoint_generator_word_potential_initial_normalized
+signed_endpoint_generator_word_potential_initial_seed_states_normalized
 signed_endpoint_generator_telescoping_braid_index_independent
 signed_endpoint_generator_cutoff_readouts_required
 signed_endpoint_generator_cutoff_readouts_exact
