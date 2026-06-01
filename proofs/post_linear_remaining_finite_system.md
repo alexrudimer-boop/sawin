@@ -590,6 +590,10 @@ braid-prefix, braid-index, failed-detector, finite-search, normalized-law, or
 timeout dependencies make the row invalid.  The checker reports missing,
 extra, duplicate, and invalid initialization rows before the detector-lift
 gate can close.
+Every listed initialization entry must be an actual detector-track
+initialization row object with those fields.  Tuple-shaped stand-ins are
+malformed initialization rows, not abbreviations, and cannot initialize fixed
+detector tracks.
 It also validates the local assignment template in every row: assignments
 must use raw variables `A_{r,j}` for the same track index, must not repeat a
 raw variable, and must assign endpoint-group elements.  A row with allowed
@@ -1053,6 +1057,7 @@ signed_endpoint_generator_detector_track_initialization_missing_keys
 signed_endpoint_generator_detector_track_initialization_extra_keys
 signed_endpoint_generator_detector_track_initialization_duplicate_keys
 signed_endpoint_generator_detector_track_initialization_invalid_rows
+signed_endpoint_generator_detector_track_initialization_malformed_rows
 signed_endpoint_generator_detector_track_initialization_unfixed_rows
 signed_endpoint_generator_detector_track_initialization_template_failures
 signed_endpoint_generator_detector_track_initialization_rows_exact

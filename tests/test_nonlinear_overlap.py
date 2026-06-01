@@ -3485,6 +3485,29 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             malformed_track_index.failure_reasons,
         )
 
+        malformed_track_initialization_row = replace(
+            theorem_complete,
+            telescoping_detector_audit=replace(
+                theorem_complete.telescoping_detector_audit,
+                detector_track_initialization_rows=(("not", "a_track_row"),),
+            ),
+        )
+        malformed_track_initialization_audit = (
+            malformed_track_initialization_row.telescoping_detector_audit
+        )
+        self.assertEqual(
+            malformed_track_initialization_audit.malformed_detector_track_initialization_rows,
+            (("not", "a_track_row"),),
+        )
+        self.assertFalse(
+            malformed_track_initialization_audit.detector_track_initialization_rows_exact
+        )
+        self.assertFalse(malformed_track_initialization_row.telescoping_detector_proved)
+        self.assertIn(
+            "detector_track_initialization_malformed_rows",
+            malformed_track_initialization_row.failure_reasons,
+        )
+
         braid_word_dependent_track = replace(
             theorem_complete,
             telescoping_detector_audit=replace(

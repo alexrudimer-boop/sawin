@@ -5090,12 +5090,32 @@ class UniversalKTelescopingDetectorAudit:
         return tuple(sorted(keys, key=repr))
 
     @property
+    def detector_track_initialization_row_objects(
+        self,
+    ) -> Tuple[UniversalKDetectorTrackInitializationRow, ...]:
+        return tuple(
+            row
+            for row in self.detector_track_initialization_rows
+            if isinstance(row, UniversalKDetectorTrackInitializationRow)
+        )
+
+    @property
+    def malformed_detector_track_initialization_rows(self) -> Tuple[object, ...]:
+        return _unique_values(
+            tuple(
+                row
+                for row in self.detector_track_initialization_rows
+                if not isinstance(row, UniversalKDetectorTrackInitializationRow)
+            )
+        )
+
+    @property
     def covered_detector_track_keys(self) -> Tuple[UniversalKDetectorTrackKey, ...]:
         return tuple(
             sorted(
                 {
                     row.key
-                    for row in self.detector_track_initialization_rows
+                    for row in self.detector_track_initialization_row_objects
                     if _universal_k_detector_track_key_well_formed(row.key)
                 },
                 key=repr,
@@ -5109,7 +5129,7 @@ class UniversalKTelescopingDetectorAudit:
         return _duplicate_values(
             tuple(
                 row.key
-                for row in self.detector_track_initialization_rows
+                for row in self.detector_track_initialization_row_objects
                 if _universal_k_detector_track_key_well_formed(row.key)
             )
         )
@@ -5134,7 +5154,7 @@ class UniversalKTelescopingDetectorAudit:
     ) -> Tuple[UniversalKDetectorTrackInitializationRow, ...]:
         return tuple(
             row
-            for row in self.detector_track_initialization_rows
+            for row in self.detector_track_initialization_row_objects
             if not row.initialization_rule_finite
         )
 
@@ -5144,7 +5164,7 @@ class UniversalKTelescopingDetectorAudit:
     ) -> Tuple[UniversalKDetectorTrackInitializationRow, ...]:
         return tuple(
             row
-            for row in self.detector_track_initialization_rows
+            for row in self.detector_track_initialization_row_objects
             if not row.fixed_before_braid
         )
 
@@ -5163,7 +5183,7 @@ class UniversalKTelescopingDetectorAudit:
         group_elements = None
         if self.word_potential_certificate is not None:
             group_elements = set(self.word_potential_certificate.endpoint_group.elements)
-        for row in self.detector_track_initialization_rows:
+        for row in self.detector_track_initialization_row_objects:
             seen_variables = set()
             for assignment_entry in row.local_assignment_template:
                 parts = _universal_k_word_potential_substitution_parts(
@@ -5209,6 +5229,7 @@ class UniversalKTelescopingDetectorAudit:
     def detector_track_initialization_rows_exact(self) -> bool:
         return (
             bool(self.expected_detector_track_keys)
+            and not self.malformed_detector_track_initialization_rows
             and not self.duplicate_detector_track_initialization_keys
             and not self.missing_detector_track_initialization_keys
             and not self.extra_detector_track_initialization_keys
@@ -5218,6 +5239,7 @@ class UniversalKTelescopingDetectorAudit:
     def detector_track_initializations_verified(self) -> bool:
         return (
             self.detector_track_initialization_rows_exact
+            and not self.malformed_detector_track_initialization_rows
             and not self.invalid_detector_track_initialization_rows
             and not self.detector_track_initialization_template_failures
         )
@@ -5227,7 +5249,7 @@ class UniversalKTelescopingDetectorAudit:
         self,
     ) -> Mapping[str, Tuple[UniversalKWordPotentialVariable, ...]]:
         initialized: dict[str, set[UniversalKWordPotentialVariable]] = {}
-        for row in self.detector_track_initialization_rows:
+        for row in self.detector_track_initialization_row_objects:
             family_initialized = initialized.setdefault(row.endpoint_family, set())
             for assignment_entry in row.local_assignment_template:
                 parts = _universal_k_word_potential_substitution_parts(
@@ -5637,6 +5659,8 @@ class UniversalKTelescopingDetectorAudit:
             reasons.append("detector_track_initialization_extra_keys")
         if self.duplicate_detector_track_initialization_keys:
             reasons.append("detector_track_initialization_duplicate_keys")
+        if self.malformed_detector_track_initialization_rows:
+            reasons.append("detector_track_initialization_malformed_rows")
         if self.invalid_detector_track_initialization_rows:
             reasons.append("detector_track_initialization_invalid_rows")
         if self.detector_track_initialization_rows_not_fixed_before_braid:
@@ -8114,6 +8138,8 @@ def _universal_k_detector_track_counts_from_initialization_rows(
 ) -> Tuple[Tuple[str, int], ...]:
     counts: dict[str, int] = {}
     for row in rows:
+        if not isinstance(row, UniversalKDetectorTrackInitializationRow):
+            continue
         if (
             row.endpoint_family not in UNIVERSAL_K_ENDPOINT_FAMILIES
             or not _universal_k_nonnegative_int(row.track_index)
@@ -10117,6 +10143,10 @@ class PostLinearRemainingFiniteSystemAudit:
                     (),
                 ),
                 (
+                    "signed_endpoint_generator_detector_track_initialization_malformed_rows",
+                    (),
+                ),
+                (
                     "signed_endpoint_generator_detector_track_initialization_unfixed_rows",
                     (),
                 ),
@@ -11084,7 +11114,7 @@ class PostLinearRemainingFiniteSystemAudit:
                             row.dependencies,
                             row.local_assignment_template,
                         )
-                        for row in telescoping_audit.detector_track_initialization_rows
+                        for row in telescoping_audit.detector_track_initialization_row_objects
                     )
                     if telescoping_audit is not None
                     else ()
@@ -11118,6 +11148,14 @@ class PostLinearRemainingFiniteSystemAudit:
                 "signed_endpoint_generator_detector_track_initialization_invalid_rows",
                 (
                     tuple(row.key for row in telescoping_audit.invalid_detector_track_initialization_rows)
+                    if telescoping_audit is not None
+                    else ()
+                ),
+            ),
+            (
+                "signed_endpoint_generator_detector_track_initialization_malformed_rows",
+                (
+                    telescoping_audit.malformed_detector_track_initialization_rows
                     if telescoping_audit is not None
                     else ()
                 ),

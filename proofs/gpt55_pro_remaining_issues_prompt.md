@@ -1359,6 +1359,10 @@ are forbidden.  The initialization ledger must have no missing, extra, or
 duplicate `(E,r)` rows.  A claim that detector tracks are "fixed before the
 braid" or that initialization is "verified" is not a certificate unless this
 finite row table is present and exact.
+Every detector-track initialization entry must be an actual initialization
+row object carrying the endpoint family, track index, assignment rule,
+dependencies, and local assignment template.  A tuple-shaped stand-in is a
+malformed initialization row, not an abbreviation.
 The fixed-before-braid check is separate from template validity: forbidden
 braid-prefix, braid-word, search, timeout, or braid-index dependencies make a
 row unfixed, while an otherwise fixed row with a malformed local assignment
@@ -1829,6 +1833,7 @@ detector_track_count_rows_use_only_U_C_M_families,
 detector_track_count_rows_have_positive_integer_counts,
 detector_track_count_rows_have_two_field_shape,
 detector_track_initialization_rows_exact,
+detector_track_initialization_rows_are_finite_row_objects,
 detector_track_initialization_rules_use_only_allowed_initial_data,
 detector_track_initialization_keys_have_nonnegative_integer_indices,
 detector_track_initialization_templates_use_same_track_raw_variables,
