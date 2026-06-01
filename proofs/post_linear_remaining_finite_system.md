@@ -766,12 +766,21 @@ build rows, checks that each build is single-family scoped with exactly the
 family's seed classifier entries and seed states, and only closes when every
 family build proves its endpoint observer.  Thus a combined product endpoint
 row cannot hide the absence of a C or M observer behind a successful U build.
+For a multi-family product endpoint row, the family ledger also requires a
+separate product residual-faithfulness theorem scoped to the full active
+family set and the full set of seed states hit by `kappa`.  Per-family
+residual-faithfulness rows prove the individual observers, but they do not by
+themselves prove that killing all endpoint channels forces the bundled
+residual fibre action to be trivial.  The product theorem is not required in
+the one-family case, where the family build's own residual-faithfulness audit
+already has the full active-family scope.
 The top-level post-linear audit can now retain this family-build ledger
 directly, or derive it from per-family word-potential certificates, endpoint
 target audits, C/M cutoff readouts, and per-family residual-faithfulness
 theorems.  Its routed-endpoint obstruction data reports the expected,
 covered, missing, extra, duplicate, malformed, scope-mismatched, and unproved
-family builds separately from the older combined signed-generator audit.
+family builds, plus the product residual-faithfulness gate, separately from
+the older combined signed-generator audit.
 It also rechecks any retained family-build ledger against the current
 `K_nabla` seed classifier and the current endpoint interval table.  For each
 family build it recomputes the full `D_Gamma` domain from the current
@@ -1021,6 +1030,13 @@ endpoint_observer_family_build_current_inverse_pairing_failures
 endpoint_observer_family_build_current_inverse_cancellation_failures
 endpoint_observer_family_build_current_positive_ybe_path_failures
 endpoint_observer_family_build_current_far_commutativity_path_failures
+endpoint_observer_family_build_product_closure_proved
+endpoint_observer_family_build_product_residual_faithfulness_required
+endpoint_observer_family_build_product_residual_faithfulness_present
+endpoint_observer_family_build_product_residual_faithfulness_proved
+endpoint_observer_family_build_product_residual_faithfulness_family_scope_matches
+endpoint_observer_family_build_product_residual_faithfulness_seed_scope_matches
+endpoint_observer_family_build_product_residual_faithfulness_failure_reasons
 endpoint_observer_family_build_closes_current_kappa
 endpoint_observer_family_build_expected_families
 endpoint_observer_family_build_covered_families

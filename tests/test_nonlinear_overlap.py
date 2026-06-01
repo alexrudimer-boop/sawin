@@ -4628,6 +4628,14 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         )
         self.assertEqual(family_audit.failure_reasons, ())
         self.assertTrue(family_audit.proves_family_endpoint_observers)
+        self.assertTrue(family_audit.product_residual_faithfulness_required)
+        self.assertFalse(family_audit.product_residual_faithfulness_present)
+        self.assertFalse(family_audit.product_residual_faithfulness_proved)
+        self.assertFalse(family_audit.proves_family_endpoint_product_closure)
+        self.assertEqual(
+            family_audit.product_residual_faithfulness_failure_reasons,
+            ("endpoint_observer_product_residual_faithfulness_missing",),
+        )
         for family, build in family_audit.build_rows_exact:
             self.assertEqual(build.audit.required_endpoint_families, (family,))
             self.assertTrue(build.proves_endpoint_observer)
@@ -4646,6 +4654,68 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertIn(
             ("endpoint_observer_family_build_expected_families", ("C", "M", "U")),
             wrapper.routed_endpoint_obstruction_data,
+        )
+        self.assertIn(
+            ("endpoint_observer_family_build_product_closure_proved", False),
+            wrapper.routed_endpoint_obstruction_data,
+        )
+
+        product_seed_states = tuple(
+            (family, seed_state_by_family[family]) for family in ("C", "M", "U")
+        )
+        product_residual = UniversalKResidualFaithfulnessAudit(
+            active_endpoint_families=("C", "M", "U"),
+            covered_endpoint_families=("C", "M", "U"),
+            expected_residual_row_count=3,
+            covered_residual_row_count=3,
+            expected_residual_rows_by_family=(("C", 1), ("M", 1), ("U", 1)),
+            covered_residual_rows_by_family=(("C", 1), ("M", 1), ("U", 1)),
+            expected_residual_input_tuples=(("p", "C"), ("p", "M"), ("p", "U")),
+            covered_residual_input_tuples=(("p", "C"), ("p", "M"), ("p", "U")),
+            endpoint_channels_exact=True,
+            identity_endpoint_data_forces_residual_identity=True,
+            braid_index_independent=True,
+            product_families_separated=True,
+            expected_endpoint_seed_states=product_seed_states,
+            covered_endpoint_seed_states=product_seed_states,
+            residual_rows=(
+                trivial_residual_faithfulness_rows(
+                    "C",
+                    seed_states=(("C", seed_state_by_family["C"]),),
+                    input_tuples=(("p", "C"),),
+                )
+                + trivial_residual_faithfulness_rows(
+                    "M",
+                    seed_states=(("M", seed_state_by_family["M"]),),
+                    input_tuples=(("p", "M"),),
+                )
+                + trivial_residual_faithfulness_rows(
+                    "U",
+                    seed_states=(("U", seed_state_by_family["U"]),),
+                    input_tuples=(("p", "U"),),
+                )
+            ),
+        )
+        family_audit_with_product = universal_k_endpoint_observer_builds_by_family(
+            interval,
+            seed_entries,
+            tuple(certificates),
+            detector_track_initialization_rows=tuple(detector_rows),
+            endpoint_target_audits_by_family=tuple(endpoint_targets),
+            cutoff_readout_audits_by_family=tuple(cutoff_readouts),
+            residual_faithfulness_theorems_by_family=tuple(residual_theorems),
+            product_residual_faithfulness_theorem=product_residual,
+        )
+
+        self.assertTrue(product_residual.proves_residual_faithfulness)
+        self.assertTrue(
+            family_audit_with_product.product_residual_faithfulness_present
+        )
+        self.assertTrue(
+            family_audit_with_product.product_residual_faithfulness_proved
+        )
+        self.assertTrue(
+            family_audit_with_product.proves_family_endpoint_product_closure
         )
 
         missing_m = universal_k_endpoint_observer_family_build_audit(

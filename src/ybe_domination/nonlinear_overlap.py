@@ -8074,6 +8074,9 @@ class UniversalKEndpointObserverFamilyBuildAudit:
     seed_classifier_entries: Tuple[UniversalKSeedClassifierEntry, ...]
     builds: Tuple[Tuple[str, UniversalKEndpointObserverBuild], ...]
     word_potential_certificate_rows: Tuple[object, ...] = ()
+    product_residual_faithfulness_theorem: (
+        UniversalKResidualFaithfulnessAudit | None
+    ) = None
 
     @property
     def expected_seed_states(
@@ -8359,6 +8362,77 @@ class UniversalKEndpointObserverFamilyBuildAudit:
         )
 
     @property
+    def product_residual_faithfulness_required(self) -> bool:
+        return len(set(self.expected_endpoint_families_exact)) > 1
+
+    @property
+    def product_residual_faithfulness_present(self) -> bool:
+        return self.product_residual_faithfulness_theorem is not None
+
+    @property
+    def product_residual_faithfulness_scope_matches_families(self) -> bool:
+        theorem = self.product_residual_faithfulness_theorem
+        if theorem is None:
+            return False
+        expected = set(self.expected_endpoint_families_exact)
+        return (
+            set(theorem.active_endpoint_families) == expected
+            and set(theorem.covered_endpoint_families) == expected
+        )
+
+    @property
+    def product_residual_faithfulness_scope_matches_seed_states(self) -> bool:
+        theorem = self.product_residual_faithfulness_theorem
+        if theorem is None:
+            return False
+        expected = set(self.expected_seed_states)
+        return (
+            set(theorem.expected_endpoint_seed_states_exact) == expected
+            and set(theorem.covered_endpoint_seed_states_exact) == expected
+        )
+
+    @property
+    def product_residual_faithfulness_proved(self) -> bool:
+        if not self.product_residual_faithfulness_required:
+            return True
+        theorem = self.product_residual_faithfulness_theorem
+        return (
+            theorem is not None
+            and self.product_residual_faithfulness_scope_matches_families
+            and self.product_residual_faithfulness_scope_matches_seed_states
+            and theorem.proves_residual_faithfulness
+        )
+
+    @property
+    def product_residual_faithfulness_failure_reasons(self) -> Tuple[str, ...]:
+        if not self.product_residual_faithfulness_required:
+            return ()
+        reasons = []
+        theorem = self.product_residual_faithfulness_theorem
+        if theorem is None:
+            reasons.append("endpoint_observer_product_residual_faithfulness_missing")
+            return tuple(reasons)
+        if not self.product_residual_faithfulness_scope_matches_families:
+            reasons.append(
+                "endpoint_observer_product_residual_faithfulness_family_scope_mismatch"
+            )
+        if not self.product_residual_faithfulness_scope_matches_seed_states:
+            reasons.append(
+                "endpoint_observer_product_residual_faithfulness_seed_scope_mismatch"
+            )
+        if not theorem.proves_residual_faithfulness:
+            reasons.append("endpoint_observer_product_residual_faithfulness_not_proved")
+            reasons.extend(theorem.failure_reasons)
+        return tuple(reasons)
+
+    @property
+    def proves_family_endpoint_product_closure(self) -> bool:
+        return (
+            self.proves_family_endpoint_observers
+            and self.product_residual_faithfulness_proved
+        )
+
+    @property
     def failure_reasons(self) -> Tuple[str, ...]:
         reasons = []
         if not self.expected_endpoint_families_exact:
@@ -8611,6 +8685,9 @@ def universal_k_endpoint_observer_family_build_audit(
     builds: Sequence[Tuple[str, UniversalKEndpointObserverBuild]],
     *,
     word_potential_certificate_rows: Sequence[object] = (),
+    product_residual_faithfulness_theorem: (
+        UniversalKResidualFaithfulnessAudit | None
+    ) = None,
 ) -> UniversalKEndpointObserverFamilyBuildAudit:
     """Audit one constructed endpoint observer for each active U/C/M family."""
 
@@ -8618,6 +8695,7 @@ def universal_k_endpoint_observer_family_build_audit(
         seed_classifier_entries=tuple(seed_classifier_entries),
         builds=tuple(builds),
         word_potential_certificate_rows=tuple(word_potential_certificate_rows),
+        product_residual_faithfulness_theorem=product_residual_faithfulness_theorem,
     )
 
 
@@ -8672,6 +8750,9 @@ def universal_k_endpoint_observer_builds_by_family(
     residual_faithfulness_theorems_by_family: Sequence[
         Tuple[str, UniversalKResidualFaithfulnessAudit]
     ] = (),
+    product_residual_faithfulness_theorem: (
+        UniversalKResidualFaithfulnessAudit | None
+    ) = None,
 ) -> UniversalKEndpointObserverFamilyBuildAudit:
     """Construct and audit separate endpoint observers for active U/C/M families."""
 
@@ -8729,6 +8810,7 @@ def universal_k_endpoint_observer_builds_by_family(
         seed_classifier_entries,
         tuple(builds),
         word_potential_certificate_rows=tuple(word_potential_certificates_by_family),
+        product_residual_faithfulness_theorem=product_residual_faithfulness_theorem,
     )
 
 
@@ -9975,7 +10057,7 @@ class PostLinearRemainingFiniteSystemAudit:
             and self.endpoint_observer_family_build_matches_current_kappa
             and self.endpoint_observer_family_build_entry_domain_matches_current_interval
             and self.endpoint_observer_family_build_rows_match_current_interval
-            and audit.proves_family_endpoint_observers
+            and audit.proves_family_endpoint_product_closure
         )
 
     @property
@@ -12873,6 +12955,31 @@ class PostLinearRemainingFiniteSystemAudit:
                     "endpoint_observer_family_build_current_far_commutativity_path_failures",
                     (),
                 ),
+                ("endpoint_observer_family_build_product_closure_proved", False),
+                (
+                    "endpoint_observer_family_build_product_residual_faithfulness_required",
+                    False,
+                ),
+                (
+                    "endpoint_observer_family_build_product_residual_faithfulness_present",
+                    False,
+                ),
+                (
+                    "endpoint_observer_family_build_product_residual_faithfulness_proved",
+                    False,
+                ),
+                (
+                    "endpoint_observer_family_build_product_residual_faithfulness_family_scope_matches",
+                    False,
+                ),
+                (
+                    "endpoint_observer_family_build_product_residual_faithfulness_seed_scope_matches",
+                    False,
+                ),
+                (
+                    "endpoint_observer_family_build_product_residual_faithfulness_failure_reasons",
+                    (),
+                ),
                 ("endpoint_observer_family_build_closes_current_kappa", False),
                 ("endpoint_observer_family_build_expected_families", ()),
                 ("endpoint_observer_family_build_covered_families", ()),
@@ -12937,6 +13044,34 @@ class PostLinearRemainingFiniteSystemAudit:
             (
                 "endpoint_observer_family_build_current_far_commutativity_path_failures",
                 self.endpoint_observer_family_build_current_far_commutativity_path_failures,
+            ),
+            (
+                "endpoint_observer_family_build_product_closure_proved",
+                audit.proves_family_endpoint_product_closure,
+            ),
+            (
+                "endpoint_observer_family_build_product_residual_faithfulness_required",
+                audit.product_residual_faithfulness_required,
+            ),
+            (
+                "endpoint_observer_family_build_product_residual_faithfulness_present",
+                audit.product_residual_faithfulness_present,
+            ),
+            (
+                "endpoint_observer_family_build_product_residual_faithfulness_proved",
+                audit.product_residual_faithfulness_proved,
+            ),
+            (
+                "endpoint_observer_family_build_product_residual_faithfulness_family_scope_matches",
+                audit.product_residual_faithfulness_scope_matches_families,
+            ),
+            (
+                "endpoint_observer_family_build_product_residual_faithfulness_seed_scope_matches",
+                audit.product_residual_faithfulness_scope_matches_seed_states,
+            ),
+            (
+                "endpoint_observer_family_build_product_residual_faithfulness_failure_reasons",
+                audit.product_residual_faithfulness_failure_reasons,
             ),
             (
                 "endpoint_observer_family_build_closes_current_kappa",
@@ -14983,6 +15118,9 @@ def post_linear_remaining_finite_system_audit(
                     ),
                     residual_faithfulness_theorems_by_family=(
                         universal_k_residual_faithfulness_theorems_by_family
+                    ),
+                    product_residual_faithfulness_theorem=(
+                        universal_k_residual_faithfulness_theorem
                     ),
                 )
             )

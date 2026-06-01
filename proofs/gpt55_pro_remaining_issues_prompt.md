@@ -1535,6 +1535,23 @@ current interval table and endpoint group.  A per-family observer built for
 a stale interval, stale reachable-state domain, or stale seed classifier may
 remain diagnostic data, but it does not close the current routed endpoint
 obligation.
+When more than one of `U`, `C`, and `M` is active, the retained family ledger
+must also include a product residual-faithfulness theorem scoped to the full
+active family set and the full set of endpoint seed states hit by `kappa`.
+Per-family residual-faithfulness rows are enough to prove the individual
+observers, but they do not by themselves prove that killing all active
+endpoint channels forces the true bundled residual fibre action to be
+trivial.  The product theorem must have exact family coverage, exact seed
+state coverage, exact residual input rows, product-family row separation, and
+must prove
+
+```text
+all active endpoint channels killed => Delta_n(beta)=1
+```
+
+for the actual product endpoint row.  In the one-family case this extra
+product theorem is not required because the individual observer's
+residual-faithfulness theorem already has the full active-family scope.
 The per-family word-potential certificate input rows must also be audited as
 finite data.  A malformed two-field row, a non-certificate value, an unknown
 family, a duplicate family, a missing active-family certificate, or an extra
@@ -1865,6 +1882,7 @@ endpoint_observer_family_build_ledger_exact,
 endpoint_observer_family_certificate_input_ledger_exact,
 endpoint_observer_each_active_family_single_scoped_and_proved,
 endpoint_observer_family_build_matches_current_kappa_and_interval,
+endpoint_observer_product_residual_faithfulness_for_multifamily_rows,
 endpoint_observer_positive_rows_forced_from_typed_identity_rows,
 endpoint_observer_monodromy_contexts_exposed,
 coordinate_components_match_T_plus_and_T_inverse,
