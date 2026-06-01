@@ -341,13 +341,25 @@ def trivial_endpoint_target_audit(*families):
 
 def trivial_telescoping_detector_audit(keys):
     keys = tuple(keys)
+    seed_states = tuple(
+        sorted({(family, state) for family, state, *_rest in keys}, key=repr)
+    )
+    families = tuple(sorted({family for family, _state in seed_states}, key=repr))
     return UniversalKTelescopingDetectorAudit(
         expected_entry_keys=keys,
         covered_entry_keys=keys,
-        detector_track_count=1,
+        expected_endpoint_seed_states=seed_states,
+        covered_endpoint_seed_states=seed_states,
+        detector_track_counts_by_family=tuple((family, 1) for family in families),
+        expected_word_potential_seed_states=seed_states,
+        covered_word_potential_seed_states=seed_states,
+        detector_track_count=len(families),
         detector_tracks_fixed_before_braid=True,
         detector_track_initialization_verified=True,
         artin_detector_recurrence_verified=True,
+        word_potential_templates_use_only_current_longitudes=True,
+        word_potential_artin_substitution_verified=True,
+        word_potential_identity_verified=True,
         telescoping_identity_verified=True,
         terminal_readout_longitudes_verified=True,
         initial_readout_normalized=True,
@@ -2828,6 +2840,43 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertIn(
             "artin_detector_recurrence_not_verified",
             unfixed_tracks.failure_reasons,
+        )
+
+        tautological_potential = replace(
+            theorem_complete,
+            telescoping_detector_audit=UniversalKTelescopingDetectorAudit(
+                expected_entry_keys=required_entry_keys,
+                covered_entry_keys=required_entry_keys,
+                expected_endpoint_seed_states=(("U", seed_state),),
+                covered_endpoint_seed_states=(("U", seed_state),),
+                detector_track_counts_by_family=(("U", 1),),
+                expected_word_potential_seed_states=(("U", seed_state),),
+                covered_word_potential_seed_states=(("U", seed_state),),
+                detector_track_count=1,
+                detector_tracks_fixed_before_braid=True,
+                detector_track_initialization_verified=True,
+                artin_detector_recurrence_verified=True,
+                telescoping_identity_verified=True,
+                terminal_readout_longitudes_verified=True,
+                initial_readout_normalized=True,
+                braid_index_independent=True,
+            ),
+        )
+        self.assertFalse(tautological_potential.telescoping_detector_proved)
+        self.assertFalse(
+            tautological_potential.proves_signed_endpoint_generator_tables
+        )
+        self.assertIn(
+            "word_potential_uses_raw_assignment_variables",
+            tautological_potential.failure_reasons,
+        )
+        self.assertIn(
+            "word_potential_artin_substitution_not_verified",
+            tautological_potential.failure_reasons,
+        )
+        self.assertIn(
+            "word_potential_identity_not_verified",
+            tautological_potential.failure_reasons,
         )
 
         incomplete_theorem = UniversalKResidualFaithfulnessAudit(
