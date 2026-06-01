@@ -1151,6 +1151,9 @@ class UniversalKSignedEndpointGeneratorAudit:
         UniversalKSignedEndpointPositiveYBEFailure, ...
     ] = ()
     positive_ybe_cocycle_failures: Tuple[UniversalKSignedEndpointLabelFailure, ...] = ()
+    two_strand_witness_domain_failures: Tuple[
+        UniversalKSignedEndpointLabelFailure, ...
+    ] = ()
     two_strand_base_failures: Tuple[UniversalKSignedEndpointLabelFailure, ...] = ()
     artin_update_failures: Tuple[UniversalKSignedEndpointLabelFailure, ...] = ()
     cutoff_readouts_exact: bool = False
@@ -1571,6 +1574,10 @@ class UniversalKSignedEndpointGeneratorAudit:
         )
 
     @property
+    def two_strand_witness_domain_exact(self) -> bool:
+        return not self.two_strand_witness_domain_failures
+
+    @property
     def proves_signed_endpoint_generator_tables(self) -> bool:
         return (
             self.signed_generator_domain_exact
@@ -1582,6 +1589,7 @@ class UniversalKSignedEndpointGeneratorAudit:
             and self.inverse_cancellation_verified
             and self.positive_ybe_path_verified
             and self.positive_ybe_cocycle_verified
+            and self.two_strand_witness_domain_exact
             and self.signed_two_strand_base_verified
             and self.artin_homomorphism_update_verified
             and self.exact_cutoff_readouts_proved
@@ -1658,6 +1666,8 @@ class UniversalKSignedEndpointGeneratorAudit:
             reasons.append("positive_ybe_path_not_verified")
         if not self.positive_ybe_cocycle_verified:
             reasons.append("positive_ybe_cocycle_not_verified")
+        if not self.two_strand_witness_domain_exact:
+            reasons.append("signed_two_strand_witness_domain_not_exact")
         if not self.signed_two_strand_base_verified:
             reasons.append("signed_two_strand_base_not_verified")
         if not self.artin_homomorphism_update_verified:
@@ -2321,6 +2331,28 @@ def universal_k_signed_endpoint_two_strand_base_failures(
     return tuple(failures)
 
 
+def universal_k_signed_endpoint_two_strand_witness_domain_failures(
+    rows: Sequence[UniversalKSignedEndpointGeneratorRow],
+    witnesses: Mapping[
+        UniversalKSignedEndpointEntryKey,
+        LongitudeSubgroupWitness,
+    ],
+) -> Tuple[UniversalKSignedEndpointLabelFailure, ...]:
+    """Return missing or extra longitude witness keys for the signed row domain."""
+
+    row_keys = {row.entry_key for row in rows}
+    witness_keys = set(witnesses)
+    failures = [
+        (key, "missing_two_strand_witness_domain_entry", None)
+        for key in sorted(row_keys - witness_keys, key=repr)
+    ]
+    failures.extend(
+        (key, "extra_two_strand_witness_domain_entry", None)
+        for key in sorted(witness_keys - row_keys, key=repr)
+    )
+    return tuple(failures)
+
+
 def _precompose_two_strand_assignment(
     endpoint_group: FiniteGroup,
     assignment: Sequence[GroupElement],
@@ -2523,6 +2555,7 @@ def universal_k_signed_endpoint_generator_audit(
     if endpoint_group is None:
         inverse_cancellation_failures = ()
         positive_ybe_cocycle_failures = ()
+        two_strand_witness_domain_failures = ()
         two_strand_base_failures = ()
         artin_update_failures = ()
     else:
@@ -2536,6 +2569,12 @@ def universal_k_signed_endpoint_generator_audit(
             interval,
             reachable_tuple,
             row_tuple,
+        )
+        two_strand_witness_domain_failures = (
+            universal_k_signed_endpoint_two_strand_witness_domain_failures(
+                row_tuple,
+                witness_map,
+            )
         )
         two_strand_base_failures = universal_k_signed_endpoint_two_strand_base_failures(
             endpoint_group,
@@ -2577,6 +2616,7 @@ def universal_k_signed_endpoint_generator_audit(
         inverse_cancellation_failures=inverse_cancellation_failures,
         positive_ybe_path_failures=positive_ybe_failures,
         positive_ybe_cocycle_failures=positive_ybe_cocycle_failures,
+        two_strand_witness_domain_failures=two_strand_witness_domain_failures,
         two_strand_base_failures=two_strand_base_failures,
         artin_update_failures=artin_update_failures,
         cutoff_readouts_exact=cutoff_readouts_exact,
@@ -4044,6 +4084,8 @@ class PostLinearRemainingFiniteSystemAudit:
                 ("signed_endpoint_generator_positive_ybe_path_failures", ()),
                 ("signed_endpoint_generator_positive_ybe_cocycle_verified", False),
                 ("signed_endpoint_generator_positive_ybe_cocycle_failures", ()),
+                ("signed_endpoint_generator_two_strand_witness_domain_exact", False),
+                ("signed_endpoint_generator_two_strand_witness_domain_failures", ()),
                 ("signed_endpoint_generator_two_strand_base_verified", False),
                 ("signed_endpoint_generator_two_strand_base_failures", ()),
                 ("signed_endpoint_generator_artin_update_verified", False),
@@ -4304,6 +4346,14 @@ class PostLinearRemainingFiniteSystemAudit:
             (
                 "signed_endpoint_generator_positive_ybe_cocycle_failures",
                 audit.positive_ybe_cocycle_failures,
+            ),
+            (
+                "signed_endpoint_generator_two_strand_witness_domain_exact",
+                audit.two_strand_witness_domain_exact,
+            ),
+            (
+                "signed_endpoint_generator_two_strand_witness_domain_failures",
+                audit.two_strand_witness_domain_failures,
             ),
             (
                 "signed_endpoint_generator_two_strand_base_verified",

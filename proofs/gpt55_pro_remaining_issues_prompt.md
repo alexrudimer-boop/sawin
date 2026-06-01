@@ -1028,7 +1028,11 @@ Equivalently, the certificate may list literal subgroup-witness letters
 `delta in {+1,-1}`.  Evaluating those letters against the recursive
 two-strand longitudes for `sigma_1^epsilon` must produce exactly the emitted
 label `h`, and no table row may be missing such a witness or use a witness
-outside the fixed group.
+outside the fixed group.  The witness ledger itself must have exactly one
+key for every signed table row key in `D_Gamma` and no key outside
+`D_Gamma`; a missing witness key or an extra witness key is an inexact
+two-strand certificate even if the listed witnesses that remain evaluate
+correctly.
 
 The Artin-homomorphism update must also be compatible with the state update:
 
@@ -1126,6 +1130,7 @@ signed_inverse_row_pairing,
 signed_inverse_cancellation,
 positive_local_endpoint_ybe_path,
 positive_local_endpoint_ybe_cocycle,
+signed_two_strand_witness_domain_exact,
 signed_two_strand_artin_longitude_base,
 compatible_artin_homomorphism_update,
 exact_cutoff_readouts_for_C_and_M,
@@ -1590,8 +1595,9 @@ Before returning a claimed resolution, explicitly answer:
    one entry per seed and sign?
 8. Do the signed endpoint generator tables satisfy inverse cancellation, the
    positive local endpoint YBE cocycle identity, and the signed two-strand
-   Artin-longitude base identity for both signs, including the compatible
-   Artin-homomorphism update rule?
+   Artin-longitude base identity for both signs, with a witness ledger whose
+   keys are exactly `D_Gamma`, including the compatible Artin-homomorphism
+   update rule?
 9. For cutoff families C and M, are the readouts faithful on exactly their
    routed ledgers with no extra channels and no duplicated seed-state entries?
 10. Is every detector group, endpoint group, cutoff group, and rack

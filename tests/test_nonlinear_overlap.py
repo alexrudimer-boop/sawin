@@ -86,6 +86,7 @@ from ybe_domination import (
     universal_k_signed_endpoint_required_entry_keys,
     universal_k_signed_endpoint_transition_closure,
     universal_k_signed_endpoint_two_strand_base_failures,
+    universal_k_signed_endpoint_two_strand_witness_domain_failures,
     universal_continuation_identity_endpoint_witness_audit,
     universal_continuation_identity_symmetric_endpoint_fork_audit,
     universal_continuation_identity_routing_audit,
@@ -3418,6 +3419,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertTrue(audit.inverse_cancellation_verified)
         self.assertTrue(audit.positive_ybe_path_verified)
         self.assertTrue(audit.positive_ybe_cocycle_verified)
+        self.assertTrue(audit.two_strand_witness_domain_exact)
         self.assertTrue(audit.signed_two_strand_base_verified)
         self.assertTrue(audit.artin_homomorphism_update_verified)
         self.assertTrue(audit.endpoint_target_scope_matches_required)
@@ -3428,8 +3430,54 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         )
         self.assertEqual(audit.coordinate_component_failures, ())
         self.assertEqual(audit.inverse_pairing_failures, ())
+        self.assertEqual(audit.two_strand_witness_domain_failures, ())
         self.assertEqual(audit.two_strand_base_failures, ())
         self.assertTrue(audit.proves_signed_endpoint_generator_tables)
+
+    def test_signed_endpoint_generator_factory_reports_inexact_witness_domain(self):
+        seed_state = ("*", "*", "left_constant_map_universal_kernel")
+        reachable = (("U", seed_state),)
+        interval = one_color_identity_interval()
+        keys = universal_k_signed_endpoint_required_entry_keys(interval, reachable)
+        rows = identity_signed_endpoint_rows(keys)
+        witnesses = {row.entry_key: () for row in rows}
+        witnesses[("U", seed_state, 1, "*", "*", "extra", "extra")] = ()
+        del witnesses[rows[0].entry_key]
+        audit = universal_k_signed_endpoint_generator_audit(
+            interval,
+            (
+                (
+                    (
+                        "*",
+                        "*",
+                        "L",
+                        "constant_map_kernel",
+                        ("*", (0, 1), "universal", "universal"),
+                    ),
+                    ("U", seed_state),
+                ),
+            ),
+            reachable,
+            rows,
+            endpoint_group=cyclic_group(2),
+            witnesses=witnesses,
+            residual_action_scope=trivial_endpoint_residual_action_scope("U"),
+            residual_action_audit=trivial_endpoint_residual_action_audit(),
+        )
+
+        self.assertFalse(audit.two_strand_witness_domain_exact)
+        self.assertEqual(
+            tuple(failure[1] for failure in audit.two_strand_witness_domain_failures),
+            (
+                "missing_two_strand_witness_domain_entry",
+                "extra_two_strand_witness_domain_entry",
+            ),
+        )
+        self.assertFalse(audit.proves_signed_endpoint_generator_tables)
+        self.assertIn(
+            "signed_two_strand_witness_domain_not_exact",
+            audit.failure_reasons,
+        )
 
     def test_signed_endpoint_generator_factory_reports_coordinate_failure(self):
         seed_state = ("*", "*", "left_constant_map_universal_kernel")
@@ -3951,6 +3999,21 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertIn(
             "extra_two_strand_base_witness",
             tuple(failure[1] for failure in failures),
+        )
+
+        domain_failures = universal_k_signed_endpoint_two_strand_witness_domain_failures(
+            (positive,),
+            {
+                replace(positive, input_left=1).entry_key: (((1, 0), 0, 1),),
+            },
+        )
+
+        self.assertEqual(
+            tuple(failure[1] for failure in domain_failures),
+            (
+                "missing_two_strand_witness_domain_entry",
+                "extra_two_strand_witness_domain_entry",
+            ),
         )
 
     def test_signed_endpoint_artin_update_failures_check_witness_precomposition(self):

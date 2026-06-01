@@ -449,6 +449,12 @@ The signed two-strand base gate is likewise executable: every signed row
 must carry a literal subgroup witness in the fixed endpoint group, evaluated
 against the recursive two-strand longitudes for `sigma_1` or `sigma_1^-1`,
 and the value must equal the emitted endpoint label.
+The witness ledger is now audited as its own exact-domain obligation: it
+must contain exactly the signed row keys in the interval-derived `D_Gamma`
+table and no extra witness key.  Missing and extra keys are reported as
+`signed_endpoint_generator_two_strand_witness_domain_failures`, so a
+candidate cannot close the endpoint layer by proving only a selected
+subfamily of row witnesses.
 
 The compatible Artin-homomorphism update gate is also checked on those
 literal witness assignments: the target row's assignment is obtained by
@@ -586,6 +592,8 @@ signed_endpoint_generator_positive_ybe_path_verified
 signed_endpoint_generator_positive_ybe_path_failures
 signed_endpoint_generator_positive_ybe_cocycle_verified
 signed_endpoint_generator_positive_ybe_cocycle_failures
+signed_endpoint_generator_two_strand_witness_domain_exact
+signed_endpoint_generator_two_strand_witness_domain_failures
 signed_endpoint_generator_two_strand_base_verified
 signed_endpoint_generator_two_strand_base_failures
 signed_endpoint_generator_artin_update_verified
