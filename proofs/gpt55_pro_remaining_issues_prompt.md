@@ -906,6 +906,10 @@ where R_C(a,b)=(c,d),
 then s2=s, u2=u, v2=v, and k k2 = 1 in H_E.
 ```
 
+The multiplication table of `H_E`, or the corresponding finite cutoff target,
+must be supplied so these label products are directly evaluated for every
+signed row pair.
+
 The positive local endpoint YBE cocycle law is the equality of the two
 three-strand table products obtained from the coloured YBE square.  Starting
 from `(s,x,y,z)` over colours `(a,b,c)`, compose the three positive entries

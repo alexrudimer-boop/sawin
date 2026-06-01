@@ -70,7 +70,9 @@ from ybe_domination import (
     triangular_recovery_unit_observer_audit,
     triangular_recovery_unit_group,
     universal_k_signed_endpoint_coordinate_failures,
+    universal_k_signed_endpoint_inverse_cancellation_failures,
     universal_k_signed_endpoint_inverse_failures,
+    universal_k_signed_endpoint_positive_ybe_cocycle_failures,
     universal_k_signed_endpoint_positive_ybe_failures,
     universal_k_signed_endpoint_required_entry_keys,
     universal_continuation_identity_endpoint_witness_audit,
@@ -2709,6 +2711,76 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             tuple(failure[1] for failure in failures),
         )
 
+    def test_signed_endpoint_inverse_cancellation_failures_check_group_labels(self):
+        source_state = ("*", "*", "left_constant_map_universal_kernel")
+        target_state = ("*", "*", "left_constant_map_universal_kernel", "next")
+        interval = one_color_flip_interval()
+        group = cyclic_group(3)
+        positive = UniversalKSignedEndpointGeneratorRow(
+            endpoint_family="U",
+            seed_state=source_state,
+            sign=1,
+            left_color="*",
+            right_color="*",
+            input_left=0,
+            input_right=1,
+            output_left=1,
+            output_right=0,
+            next_seed_state=target_state,
+            endpoint_value=1,
+        )
+        negative = UniversalKSignedEndpointGeneratorRow(
+            endpoint_family="U",
+            seed_state=target_state,
+            sign=-1,
+            left_color="*",
+            right_color="*",
+            input_left=1,
+            input_right=0,
+            output_left=0,
+            output_right=1,
+            next_seed_state=source_state,
+            endpoint_value=2,
+        )
+
+        self.assertEqual(
+            universal_k_signed_endpoint_inverse_cancellation_failures(
+                group,
+                interval,
+                (positive, negative),
+            ),
+            (),
+        )
+
+        bad_negative = replace(negative, endpoint_value=1)
+        failures = universal_k_signed_endpoint_inverse_cancellation_failures(
+            group,
+            interval,
+            (positive, bad_negative),
+        )
+
+        self.assertIn(
+            "negative_inverse_label_mismatch",
+            tuple(failure[1] for failure in failures),
+        )
+        self.assertIn(
+            "positive_inverse_label_mismatch",
+            tuple(failure[1] for failure in failures),
+        )
+
+        outside_group = replace(negative, endpoint_value=99)
+        self.assertIn(
+            "endpoint_value_outside_group",
+            tuple(
+                failure[1]
+                for failure in universal_k_signed_endpoint_inverse_cancellation_failures(
+                    group,
+                    interval,
+                    (positive, outside_group),
+                )
+            ),
+        )
+
     def test_signed_endpoint_positive_ybe_failures_check_state_and_fibre_paths(self):
         seed_state = ("*", "*", "left_constant_map_universal_kernel")
         interval = one_color_identity_interval()
@@ -2784,6 +2856,52 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
 
         self.assertIn(
             "positive_ybe_terminal_mismatch",
+            tuple(failure[1] for failure in failures),
+        )
+
+    def test_signed_endpoint_positive_ybe_cocycle_failures_check_group_labels(self):
+        seed_state = ("*", "*", "left_constant_map_universal_kernel")
+        interval = one_color_identity_interval()
+        group = cyclic_group(3)
+
+        def rows_with_label(label_by_pair):
+            return tuple(
+                UniversalKSignedEndpointGeneratorRow(
+                    endpoint_family="U",
+                    seed_state=seed_state,
+                    sign=1,
+                    left_color="*",
+                    right_color="*",
+                    input_left=x,
+                    input_right=y,
+                    output_left=x,
+                    output_right=y,
+                    next_seed_state=seed_state,
+                    endpoint_value=label_by_pair(x, y),
+                )
+                for x in interval.fibres["*"]
+                for y in interval.fibres["*"]
+            )
+
+        self.assertEqual(
+            universal_k_signed_endpoint_positive_ybe_cocycle_failures(
+                group,
+                interval,
+                (("U", seed_state),),
+                rows_with_label(lambda _x, _y: 0),
+            ),
+            (),
+        )
+
+        failures = universal_k_signed_endpoint_positive_ybe_cocycle_failures(
+            group,
+            interval,
+            (("U", seed_state),),
+            rows_with_label(lambda x, y: 1 if (x, y) == (0, 1) else 0),
+        )
+
+        self.assertIn(
+            "positive_ybe_label_mismatch",
             tuple(failure[1] for failure in failures),
         )
 

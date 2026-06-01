@@ -120,6 +120,11 @@ UniversalKSignedEndpointPositiveYBEFailure = Tuple[
     str,
     object,
 ]
+UniversalKSignedEndpointLabelFailure = Tuple[
+    Tuple[object, ...],
+    str,
+    object,
+]
 
 
 def _is_permutation_transformation(transformation: Transformation) -> bool:
@@ -1016,6 +1021,109 @@ def universal_k_signed_endpoint_inverse_failures(
     return tuple(failures)
 
 
+def universal_k_signed_endpoint_inverse_cancellation_failures(
+    endpoint_group: FiniteGroup,
+    interval: LocalInterval,
+    rows: Sequence[UniversalKSignedEndpointGeneratorRow],
+) -> Tuple[UniversalKSignedEndpointLabelFailure, ...]:
+    """Return signed inverse pairs whose endpoint labels do not cancel."""
+
+    inverse_base = {target: source for source, target in interval.base_R.items()}
+    row_by_key = {}
+    duplicate_keys = set()
+    group_elements = set(endpoint_group.elements)
+    failures = []
+    for row in rows:
+        if row.entry_key in row_by_key:
+            duplicate_keys.add(row.entry_key)
+            continue
+        row_by_key[row.entry_key] = row
+        if row.endpoint_value not in group_elements:
+            failures.append(
+                (row.entry_key, "endpoint_value_outside_group", row.endpoint_value)
+            )
+
+    failures.extend(
+        (key, "duplicate_entry_key", None)
+        for key in sorted(duplicate_keys, key=repr)
+    )
+    for row in rows:
+        if row.endpoint_value not in group_elements:
+            continue
+        if row.sign == 1:
+            target_colors = interval.base_R.get((row.left_color, row.right_color))
+            if target_colors is None:
+                failures.append((row.entry_key, "positive_color_pair_outside_base", None))
+                continue
+            expected_key = (
+                row.endpoint_family,
+                row.next_seed_state,
+                -1,
+                target_colors[0],
+                target_colors[1],
+                row.output_left,
+                row.output_right,
+            )
+            inverse_row = row_by_key.get(expected_key)
+            if inverse_row is None:
+                failures.append(
+                    (row.entry_key, "missing_negative_inverse_row", expected_key)
+                )
+                continue
+            if inverse_row.endpoint_value not in group_elements:
+                continue
+            label_product = endpoint_group.mul(
+                row.endpoint_value,
+                inverse_row.endpoint_value,
+            )
+            if label_product != endpoint_group.identity:
+                failures.append(
+                    (
+                        row.entry_key,
+                        "negative_inverse_label_mismatch",
+                        label_product,
+                    )
+                )
+            continue
+        if row.sign == -1:
+            source_colors = inverse_base.get((row.left_color, row.right_color))
+            if source_colors is None:
+                failures.append((row.entry_key, "negative_color_pair_not_in_image", None))
+                continue
+            expected_key = (
+                row.endpoint_family,
+                row.next_seed_state,
+                1,
+                source_colors[0],
+                source_colors[1],
+                row.output_left,
+                row.output_right,
+            )
+            inverse_row = row_by_key.get(expected_key)
+            if inverse_row is None:
+                failures.append(
+                    (row.entry_key, "missing_positive_inverse_row", expected_key)
+                )
+                continue
+            if inverse_row.endpoint_value not in group_elements:
+                continue
+            label_product = endpoint_group.mul(
+                row.endpoint_value,
+                inverse_row.endpoint_value,
+            )
+            if label_product != endpoint_group.identity:
+                failures.append(
+                    (
+                        row.entry_key,
+                        "positive_inverse_label_mismatch",
+                        label_product,
+                    )
+                )
+            continue
+        failures.append((row.entry_key, "unknown_sign", row.sign))
+    return tuple(failures)
+
+
 def universal_k_signed_endpoint_positive_ybe_failures(
     interval: LocalInterval,
     reachable_seed_states: Sequence[Tuple[str, UniversalKSeedState]],
@@ -1133,6 +1241,167 @@ def universal_k_signed_endpoint_positive_ybe_failures(
                             ),
                             "positive_ybe_terminal_mismatch",
                             (left_result, right_result),
+                        )
+                    )
+    return tuple(failures)
+
+
+def universal_k_signed_endpoint_positive_ybe_cocycle_failures(
+    endpoint_group: FiniteGroup,
+    interval: LocalInterval,
+    reachable_seed_states: Sequence[Tuple[str, UniversalKSeedState]],
+    rows: Sequence[UniversalKSignedEndpointGeneratorRow],
+) -> Tuple[UniversalKSignedEndpointLabelFailure, ...]:
+    """Return positive 121/212 endpoint label cocycle mismatches."""
+
+    row_by_key = {}
+    duplicate_keys = set()
+    group_elements = set(endpoint_group.elements)
+    failures = []
+    for row in rows:
+        if row.sign != 1:
+            continue
+        if row.entry_key in row_by_key:
+            duplicate_keys.add(row.entry_key)
+            continue
+        row_by_key[row.entry_key] = row
+        if row.endpoint_value not in group_elements:
+            failures.append(
+                (row.entry_key, "endpoint_value_outside_group", row.endpoint_value)
+            )
+
+    failures.extend(
+        (key, "duplicate_positive_entry_key", None)
+        for key in sorted(duplicate_keys, key=repr)
+    )
+
+    def run_path(
+        endpoint_family: str,
+        seed_state: UniversalKSeedState,
+        start_colors: Tuple[Color, Color, Color],
+        start_fibres: Tuple[FibrePoint, FibrePoint, FibrePoint],
+        indices: Tuple[int, int, int],
+    ) -> Tuple[
+        Tuple[
+            UniversalKSeedState,
+            Tuple[Color, ...],
+            Tuple[FibrePoint, ...],
+            GroupElement,
+        ]
+        | None,
+        UniversalKSignedEndpointLabelFailure | None,
+    ]:
+        state = seed_state
+        colors = tuple(start_colors)
+        fibres = tuple(start_fibres)
+        label_product = endpoint_group.identity
+        for step, index in enumerate(indices):
+            key = (
+                endpoint_family,
+                state,
+                1,
+                colors[index],
+                colors[index + 1],
+                fibres[index],
+                fibres[index + 1],
+            )
+            row = row_by_key.get(key)
+            if row is None:
+                return None, (
+                    key,
+                    "missing_positive_ybe_row",
+                    (indices, step, colors, fibres),
+                )
+            if row.endpoint_value not in group_elements:
+                return None, (
+                    key,
+                    "endpoint_value_outside_group",
+                    row.endpoint_value,
+                )
+            target_colors = interval.base_R.get((row.left_color, row.right_color))
+            if target_colors is None:
+                return None, (
+                    key,
+                    "positive_color_pair_outside_base",
+                    (indices, step),
+                )
+            label_product = endpoint_group.mul(label_product, row.endpoint_value)
+            next_colors = list(colors)
+            next_fibres = list(fibres)
+            next_colors[index], next_colors[index + 1] = target_colors
+            next_fibres[index], next_fibres[index + 1] = (
+                row.output_left,
+                row.output_right,
+            )
+            state = row.next_seed_state
+            colors = tuple(next_colors)
+            fibres = tuple(next_fibres)
+        return (state, colors, fibres, label_product), None
+
+    for endpoint_family, seed_state in sorted(set(reachable_seed_states), key=repr):
+        for a, b, c in product(interval.colors, repeat=3):
+            for x, y, z in product(
+                interval.fibres[a],
+                interval.fibres[b],
+                interval.fibres[c],
+            ):
+                start_colors = (a, b, c)
+                start_fibres = (x, y, z)
+                left_result, left_failure = run_path(
+                    endpoint_family,
+                    seed_state,
+                    start_colors,
+                    start_fibres,
+                    (0, 1, 0),
+                )
+                right_result, right_failure = run_path(
+                    endpoint_family,
+                    seed_state,
+                    start_colors,
+                    start_fibres,
+                    (1, 0, 1),
+                )
+                if left_failure is not None:
+                    failures.append(left_failure)
+                if right_failure is not None:
+                    failures.append(right_failure)
+                if left_failure is not None or right_failure is not None:
+                    continue
+                assert left_result is not None
+                assert right_result is not None
+                if left_result[:3] != right_result[:3]:
+                    failures.append(
+                        (
+                            (
+                                endpoint_family,
+                                seed_state,
+                                a,
+                                b,
+                                c,
+                                x,
+                                y,
+                                z,
+                            ),
+                            "positive_ybe_terminal_mismatch",
+                            (left_result[:3], right_result[:3]),
+                        )
+                    )
+                    continue
+                if left_result[3] != right_result[3]:
+                    failures.append(
+                        (
+                            (
+                                endpoint_family,
+                                seed_state,
+                                a,
+                                b,
+                                c,
+                                x,
+                                y,
+                                z,
+                            ),
+                            "positive_ybe_label_mismatch",
+                            (left_result[3], right_result[3]),
                         )
                     )
     return tuple(failures)

@@ -395,6 +395,11 @@ compatible Artin-homomorphism update
 exact C/M cutoff readouts when cutoff families are present
 ```
 
+When a finite endpoint group is supplied, the inverse-cancellation and
+positive-YBE cocycle gates are checked by multiplying the emitted endpoint
+labels in that group.  Thus those gates require a concrete group table and
+cannot be discharged by naming a candidate label set alone.
+
 This audit does not by itself close U, C, or M; it records the missing finite
 generator-table proof needed before the endpoint witnesses or symmetric
 cutoffs can be promoted to an all-strand proof.
