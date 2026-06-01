@@ -886,6 +886,41 @@ Each support row lists the side, colour pair, and same-side
 that carries the companion block-image.  An unsupported companion
 injective-nonsurjective row is structural, not active System K.
 
+That structural exclusion is now also certificate-gated.  The post-linear
+wrapper exposes the finite unsupported row ledger
+
+```text
+unsupported_companion_block_image_rows
+```
+
+with row keys `(side,left_color,right_color)`.  A complete close of this
+upstream branch requires an `UnsupportedCompanionStructuralContradictionAudit`
+whose expected and covered ledgers match those row keys exactly, with no
+missing, extra, or duplicate rows.  It must also supply at least one finite
+contradiction row for every expected row.  Each contradiction row is either a
+coordinate-level coloured-YBE mismatch
+
+```text
+(side,left_color,right_color,
+ witness_kind=colored_ybe_coordinate_contradiction,
+ ybe_triple=(a,b,c),
+ coordinate in {left,right,pair,fibre,state},
+ left_value != right_value)
+```
+
+or a pointer to a non-circular previously closed branch
+
+```text
+(side,left_color,right_color,
+ witness_kind=already_closed_branch,
+ closed_branch)
+```
+
+where `closed_branch` cannot be `triangular_structural_inconsistency` itself.
+If this finite table is absent or incomplete, the wrapper reports
+`unsupported_companion_structural_contradiction_obligation`; the row remains
+excluded from `K_nabla`, but the proof has not justified the exclusion.
+
 For any active row with an actual kernel edge, the closure rows split the
 case further:
 
@@ -923,6 +958,11 @@ branches.  The refinement records them as:
 ```text
 triangular_structural_inconsistency.
 ```
+
+For unsupported companion block-image rows, that status is treated as closed
+only after the finite structural-contradiction audit above proves exact
+coverage.  Other structural rows remain ordinary recorded structural closes
+under the previously supplied branch audits.
 
 Finally, constant-map kernel rows are checked against the triangular recovery
 table:

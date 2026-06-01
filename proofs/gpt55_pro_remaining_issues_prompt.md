@@ -630,6 +630,40 @@ same-side constant-map kernel support exists, the descriptor has reason
 `unsupported_companion_block_image` and is a structural inconsistency, not a
 member of `K_nabla`.
 
+This exclusion is not allowed to be a prose assumption in a complete proof.
+For every unsupported companion block-image row one must give a finite
+structural-contradiction certificate.  The certificate has an exact expected
+row ledger
+
+```text
+(side,left_color,right_color)
+```
+
+for all unsupported companion block-image rows, an exact covered-row ledger
+with no missing, extra, or duplicate rows, and at least one contradiction row
+for every expected row.  A contradiction row must be one of:
+
+```text
+colored_ybe_coordinate_contradiction:
+  (side,left_color,right_color,
+   ybe_triple=(a,b,c),
+   coordinate in {left,right,pair,fibre,state},
+   left_value != right_value)
+
+already_closed_branch:
+  (side,left_color,right_color,
+   closed_branch)
+```
+
+where `closed_branch` is a non-circular previously proved branch such as
+product collapse, rack-base inconsistency, a locally nondegenerate/guitar
+closure, a proper-kernel readout closure, or a Latin-kink/YBE projection
+contradiction.  The branch `triangular_structural_inconsistency` itself
+cannot be used as the cited closed branch.  Without this exact finite
+contradiction table, unsupported companion rows remain an upstream open
+obligation; they are still excluded from `K_nabla`, but the reduction has
+not proved that the exclusion is valid.
+
 Partial-constant hidden-rank descriptor:
 
 ```text
@@ -1656,7 +1690,10 @@ If returning B, you must give:
    local-minimal finite YBE interval, or route it through `kappa` into fixed
    detector data for U, C, or M.  Proper generated closures are already
    terminal contradictions; universal closures are the only endpoint-routing
-   candidates.
+   candidates.  Unsupported companion block-image rows are not endpoint
+   candidates, but they must be excluded by the exact finite
+   structural-contradiction table described above; otherwise they remain an
+   upstream open obligation.
 
    To prove B from K, construct a genuine live K interval, prove all fixed
    finite detector groups fail, and upgrade the failure to a normalized-law
@@ -1732,7 +1769,10 @@ Before returning a claimed resolution, explicitly answer:
    one of `S_U`, `S_C`, or `S_M`, and is the classifier ledger duplicate-free
    and functional on row descriptors, with no target outside `{U,C,M}`?
 5. Are unsupported companion block-image rows proved structural
-   inconsistencies rather than endpoint seeds?
+   inconsistencies rather than endpoint seeds by an exact finite
+   contradiction table covering every `(side,left_color,right_color)` row,
+   with no missing, extra, or duplicate rows and no circular appeal to
+   `triangular_structural_inconsistency`?
 6. Are `S_U`, `S_C`, and `S_M` the exact finite seed state spaces, and are
    the finite reachable sets `S_U^reach`, `S_C^reach`, and `S_M^reach`
    constructed as duplicate-free exact signed-transition closures of those

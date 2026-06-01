@@ -34,6 +34,8 @@ from ybe_domination import (
     TriangularConstantKernelRecoveryRouteRow,
     TriangularLatinDefectClosureAudit,
     TriangularLatinDefectClosureRow,
+    UnsupportedCompanionStructuralContradictionAudit,
+    UnsupportedCompanionStructuralContradictionRow,
     UniversalKCutoffReadoutAudit,
     UniversalKCutoffReadoutRow,
     UniversalKEndpointTargetAudit,
@@ -5163,8 +5165,77 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertTrue(
             refinement.active_companion_block_images_have_constant_kernel_support
         )
+        self.assertEqual(
+            audit.unsupported_companion_block_image_rows,
+            (("left", "*", "*"),),
+        )
+        self.assertEqual(
+            audit.system_name,
+            "unsupported_companion_structural_contradiction_obligation",
+        )
+        self.assertTrue(audit.unsupported_companion_structural_obligation_active)
+        self.assertTrue(audit.is_current_remaining_finite_system)
+        self.assertEqual(
+            audit.remaining_obligations,
+            (
+                "prove unsupported companion block-image rows contradict the coloured YBE equations or an already closed branch",
+                "or upgrade one unsupported companion row to a normalized-law counterexample",
+            ),
+        )
         self.assertEqual(audit.universal_k_row_normal_form_domain, ())
         self.assertEqual(audit.universal_k_seed_classifier_entries, ())
+
+    def test_unsupported_companion_block_image_requires_contradiction_certificate(self):
+        refinement = unsupported_companion_block_image_refinement()
+        incomplete = UnsupportedCompanionStructuralContradictionAudit(
+            expected_rows=(("left", "*", "*"),),
+            covered_rows=(("left", "*", "*"),),
+        )
+        audit = PostLinearRemainingFiniteSystemAudit(
+            refinement,
+            unsupported_companion_structural_contradiction=incomplete,
+        )
+
+        self.assertFalse(
+            audit.unsupported_companion_structural_contradiction_proved
+        )
+        self.assertIn(
+            "unsupported_companion_missing_contradiction_rows",
+            incomplete.failure_reasons,
+        )
+        self.assertTrue(audit.unsupported_companion_structural_obligation_active)
+
+        contradiction = UnsupportedCompanionStructuralContradictionAudit(
+            expected_rows=(("left", "*", "*"),),
+            covered_rows=(("left", "*", "*"),),
+            contradiction_rows=(
+                UnsupportedCompanionStructuralContradictionRow(
+                    side="left",
+                    left_color="*",
+                    right_color="*",
+                    witness_kind="colored_ybe_coordinate_contradiction",
+                    ybe_triple=("*", "*", "*"),
+                    coordinate="left",
+                    left_value=(0, 0),
+                    right_value=(0, 1),
+                ),
+            ),
+        )
+        closed = PostLinearRemainingFiniteSystemAudit(
+            refinement,
+            unsupported_companion_structural_contradiction=contradiction,
+        )
+
+        self.assertTrue(
+            contradiction.proves_unsupported_companion_structural_contradiction
+        )
+        self.assertTrue(
+            closed.unsupported_companion_structural_contradiction_proved
+        )
+        self.assertFalse(closed.unsupported_companion_structural_obligation_active)
+        self.assertEqual(closed.system_name, "closed_by_recorded_branch")
+        self.assertFalse(closed.is_current_remaining_finite_system)
+        self.assertEqual(closed.remaining_obligations, ())
 
     def test_post_linear_routes_companion_block_image_by_constant_map_recovery(self):
         refinement = companion_block_system_k_refinement()

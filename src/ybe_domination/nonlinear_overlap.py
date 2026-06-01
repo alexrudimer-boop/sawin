@@ -101,6 +101,7 @@ UniversalKSeedClassifierEntry = Tuple[
     UniversalKRowDescriptor,
     Tuple[str, UniversalKSeedState],
 ]
+UnsupportedCompanionBlockImageRowKey = Tuple[str, Color, Color]
 UniversalKSignedEndpointEntryKey = Tuple[
     str,
     UniversalKSeedState,
@@ -138,6 +139,201 @@ UniversalKWordPotentialSubstitution = Tuple[
     ...,
 ]
 UniversalKWordPotentialFailure = Tuple[object, str, object]
+
+
+_NONCIRCULAR_CLOSED_BRANCH_STATUSES = frozenset(
+    (
+        "closed_by_repair_contract",
+        "closed_by_transport_state_rackification",
+        "closed_by_locally_nondegenerate_branch",
+        "section_kernel_visible_to_existing_readouts",
+        "closed_by_product_triangular_collapse",
+        "rack_base_consistency_inconsistent",
+        "latin_triangular_kink_contradiction",
+        "latin_triangular_kink_impossible",
+        "latin_triangular_ybe_projection_inconsistent",
+        "latin_triangular_kink_cancellation_inconsistent",
+        "side_dual_latin_triangular_kink_contradiction",
+        "side_dual_latin_triangular_kink_impossible",
+        "side_dual_latin_triangular_ybe_projection_inconsistent",
+        "side_dual_latin_triangular_diagonal_cancellation_inconsistent",
+    )
+)
+
+
+@dataclass(frozen=True)
+class UnsupportedCompanionStructuralContradictionRow:
+    """Finite witness excluding one unsupported companion block-image row."""
+
+    side: str
+    left_color: Color
+    right_color: Color
+    witness_kind: str
+    ybe_triple: Tuple[Color, Color, Color] = ()
+    coordinate: str = ""
+    left_value: object = None
+    right_value: object = None
+    closed_branch: str = ""
+
+    @property
+    def key(self) -> UnsupportedCompanionBlockImageRowKey:
+        return (self.side, self.left_color, self.right_color)
+
+    @property
+    def proves_coordinate_ybe_contradiction(self) -> bool:
+        return (
+            self.witness_kind == "colored_ybe_coordinate_contradiction"
+            and len(self.ybe_triple) == 3
+            and self.coordinate in {"left", "right", "pair", "fibre", "state"}
+            and self.left_value != self.right_value
+        )
+
+    @property
+    def proves_already_closed_branch(self) -> bool:
+        return (
+            self.witness_kind == "already_closed_branch"
+            and self.closed_branch in _NONCIRCULAR_CLOSED_BRANCH_STATUSES
+        )
+
+    @property
+    def proves_structural_contradiction(self) -> bool:
+        return (
+            self.proves_coordinate_ybe_contradiction
+            or self.proves_already_closed_branch
+        )
+
+
+@dataclass(frozen=True)
+class UnsupportedCompanionStructuralContradictionAudit:
+    """Exact finite certificate for unsupported companion block-image exclusions."""
+
+    expected_rows: Tuple[UnsupportedCompanionBlockImageRowKey, ...]
+    covered_rows: Tuple[UnsupportedCompanionBlockImageRowKey, ...]
+    contradiction_rows: Tuple[
+        UnsupportedCompanionStructuralContradictionRow,
+        ...,
+    ] = ()
+
+    @property
+    def expected_rows_exact(self) -> Tuple[UnsupportedCompanionBlockImageRowKey, ...]:
+        return tuple(sorted(set(self.expected_rows), key=repr))
+
+    @property
+    def covered_rows_exact(self) -> Tuple[UnsupportedCompanionBlockImageRowKey, ...]:
+        return tuple(sorted(set(self.covered_rows), key=repr))
+
+    @property
+    def duplicate_expected_rows(
+        self,
+    ) -> Tuple[UnsupportedCompanionBlockImageRowKey, ...]:
+        seen = set()
+        duplicates = []
+        for row in self.expected_rows:
+            if row in seen and row not in duplicates:
+                duplicates.append(row)
+            seen.add(row)
+        return tuple(duplicates)
+
+    @property
+    def duplicate_covered_rows(
+        self,
+    ) -> Tuple[UnsupportedCompanionBlockImageRowKey, ...]:
+        seen = set()
+        duplicates = []
+        for row in self.covered_rows:
+            if row in seen and row not in duplicates:
+                duplicates.append(row)
+            seen.add(row)
+        return tuple(duplicates)
+
+    @property
+    def missing_covered_rows(
+        self,
+    ) -> Tuple[UnsupportedCompanionBlockImageRowKey, ...]:
+        covered = set(self.covered_rows_exact)
+        return tuple(row for row in self.expected_rows_exact if row not in covered)
+
+    @property
+    def extra_covered_rows(
+        self,
+    ) -> Tuple[UnsupportedCompanionBlockImageRowKey, ...]:
+        expected = set(self.expected_rows_exact)
+        return tuple(row for row in self.covered_rows_exact if row not in expected)
+
+    @property
+    def invalid_contradiction_rows(
+        self,
+    ) -> Tuple[UnsupportedCompanionStructuralContradictionRow, ...]:
+        return tuple(
+            row
+            for row in self.contradiction_rows
+            if not row.proves_structural_contradiction
+        )
+
+    @property
+    def contradiction_row_keys(
+        self,
+    ) -> Tuple[UnsupportedCompanionBlockImageRowKey, ...]:
+        return tuple(
+            sorted(
+                {
+                    row.key
+                    for row in self.contradiction_rows
+                    if row.proves_structural_contradiction
+                },
+                key=repr,
+            )
+        )
+
+    @property
+    def missing_contradiction_rows(
+        self,
+    ) -> Tuple[UnsupportedCompanionBlockImageRowKey, ...]:
+        contradiction_keys = set(self.contradiction_row_keys)
+        return tuple(
+            row for row in self.expected_rows_exact if row not in contradiction_keys
+        )
+
+    @property
+    def extra_contradiction_rows(
+        self,
+    ) -> Tuple[UnsupportedCompanionBlockImageRowKey, ...]:
+        expected = set(self.expected_rows_exact)
+        return tuple(row for row in self.contradiction_row_keys if row not in expected)
+
+    @property
+    def proves_unsupported_companion_structural_contradiction(self) -> bool:
+        return (
+            bool(self.expected_rows_exact)
+            and not self.duplicate_expected_rows
+            and not self.duplicate_covered_rows
+            and not self.missing_covered_rows
+            and not self.extra_covered_rows
+            and not self.invalid_contradiction_rows
+            and not self.missing_contradiction_rows
+            and not self.extra_contradiction_rows
+        )
+
+    @property
+    def failure_reasons(self) -> Tuple[str, ...]:
+        reasons = []
+        if not self.expected_rows_exact:
+            reasons.append("unsupported_companion_expected_rows_empty")
+        if self.duplicate_expected_rows:
+            reasons.append("unsupported_companion_duplicate_expected_rows")
+        if self.duplicate_covered_rows:
+            reasons.append("unsupported_companion_duplicate_covered_rows")
+        if self.missing_covered_rows:
+            reasons.append("unsupported_companion_missing_covered_rows")
+        if self.extra_covered_rows:
+            reasons.append("unsupported_companion_extra_covered_rows")
+        if self.invalid_contradiction_rows:
+            reasons.append("unsupported_companion_invalid_contradiction_rows")
+        if self.missing_contradiction_rows:
+            reasons.append("unsupported_companion_missing_contradiction_rows")
+        if self.extra_contradiction_rows:
+            reasons.append("unsupported_companion_extra_contradiction_rows")
+        return tuple(reasons)
 
 
 def _is_permutation_transformation(transformation: Transformation) -> bool:
@@ -4202,16 +4398,61 @@ class PostLinearRemainingFiniteSystemAudit:
         UniversalKSignedEndpointGeneratorAudit | None
     ) = None
     universal_k_signed_endpoint_interval: LocalInterval | None = None
+    unsupported_companion_structural_contradiction: (
+        UnsupportedCompanionStructuralContradictionAudit | None
+    ) = None
+
+    @property
+    def unsupported_companion_block_image_rows(
+        self,
+    ) -> Tuple[UnsupportedCompanionBlockImageRowKey, ...]:
+        return tuple(
+            sorted(
+                {
+                    (row.side, row.left_color, row.right_color)
+                    for row in self.refinement.triangular_column.companion_nonbijective_without_constant_kernel_rows
+                },
+                key=repr,
+            )
+        )
+
+    @property
+    def unsupported_companion_structural_contradiction_expected_exact(self) -> bool:
+        if self.unsupported_companion_structural_contradiction is None:
+            return not self.unsupported_companion_block_image_rows
+        return (
+            self.unsupported_companion_structural_contradiction.expected_rows_exact
+            == self.unsupported_companion_block_image_rows
+        )
+
+    @property
+    def unsupported_companion_structural_contradiction_proved(self) -> bool:
+        if not self.unsupported_companion_block_image_rows:
+            return True
+        return (
+            self.unsupported_companion_structural_contradiction is not None
+            and self.unsupported_companion_structural_contradiction_expected_exact
+            and self.unsupported_companion_structural_contradiction.proves_unsupported_companion_structural_contradiction
+        )
+
+    @property
+    def unsupported_companion_structural_obligation_active(self) -> bool:
+        return (
+            self.refinement.status == "triangular_structural_inconsistency"
+            and bool(self.unsupported_companion_block_image_rows)
+            and not self.unsupported_companion_structural_contradiction_proved
+        )
 
     @property
     def closed_by_recorded_branch(self) -> bool:
+        if self.refinement.status == "triangular_structural_inconsistency":
+            return not self.unsupported_companion_structural_obligation_active
         return self.refinement.status in {
             "closed_by_repair_contract",
             "closed_by_transport_state_rackification",
             "closed_by_locally_nondegenerate_branch",
             "section_kernel_visible_to_existing_readouts",
             "closed_by_product_triangular_collapse",
-            "triangular_structural_inconsistency",
             "rack_base_consistency_inconsistent",
             "latin_triangular_kink_contradiction",
             "latin_triangular_kink_impossible",
@@ -5064,6 +5305,8 @@ class PostLinearRemainingFiniteSystemAudit:
     def system_name(self) -> str:
         if self.closed_by_recorded_branch:
             return "closed_by_recorded_branch"
+        if self.unsupported_companion_structural_obligation_active:
+            return "unsupported_companion_structural_contradiction_obligation"
         if self.system_k_closed_by_proper_defect_closure:
             return "closed_by_triangular_latin_proper_closure"
         if self.system_k_closed_by_partial_constant_proper_closure:
@@ -5105,6 +5348,8 @@ class PostLinearRemainingFiniteSystemAudit:
 
     @property
     def is_current_remaining_finite_system(self) -> bool:
+        if self.unsupported_companion_structural_obligation_active:
+            return True
         if self.system_k_closed_by_proper_generated_closure:
             return False
         return (
@@ -6690,6 +6935,53 @@ class PostLinearRemainingFiniteSystemAudit:
 
     @property
     def finite_obstruction_data(self) -> Tuple[Tuple[str, object], ...]:
+        if self.unsupported_companion_structural_obligation_active:
+            data = [
+                (
+                    "unsupported_companion_block_image_rows",
+                    self.unsupported_companion_block_image_rows,
+                ),
+                (
+                    "unsupported_companion_structural_contradiction_proved",
+                    self.unsupported_companion_structural_contradiction_proved,
+                ),
+            ]
+            audit = self.unsupported_companion_structural_contradiction
+            if audit is not None:
+                data.extend(
+                    (
+                        (
+                            "unsupported_companion_expected_rows",
+                            audit.expected_rows_exact,
+                        ),
+                        (
+                            "unsupported_companion_covered_rows",
+                            audit.covered_rows_exact,
+                        ),
+                        (
+                            "unsupported_companion_contradiction_rows",
+                            tuple(
+                                (
+                                    row.side,
+                                    row.left_color,
+                                    row.right_color,
+                                    row.witness_kind,
+                                    row.ybe_triple,
+                                    row.coordinate,
+                                    row.left_value,
+                                    row.right_value,
+                                    row.closed_branch,
+                                )
+                                for row in audit.contradiction_rows
+                            ),
+                        ),
+                        (
+                            "unsupported_companion_contradiction_failures",
+                            audit.failure_reasons,
+                        ),
+                    )
+                )
+            return tuple(data)
         if (
             self.raw_system_k
             and not self.kink_completion_deficits_routed
@@ -7367,6 +7659,11 @@ class PostLinearRemainingFiniteSystemAudit:
 
     @property
     def remaining_obligations(self) -> Tuple[str, ...]:
+        if self.unsupported_companion_structural_obligation_active:
+            return (
+                "prove unsupported companion block-image rows contradict the coloured YBE equations or an already closed branch",
+                "or upgrade one unsupported companion row to a normalized-law counterexample",
+            )
         if self.system_k_closed_by_proper_generated_closure:
             return ()
         if self.k_deficits_closed_by_recorded_routing:
@@ -8415,6 +8712,9 @@ def post_linear_remaining_finite_system_audit(
     universal_k_signed_endpoint_generator: (
         UniversalKSignedEndpointGeneratorAudit | None
     ) = None,
+    unsupported_companion_structural_contradiction: (
+        UnsupportedCompanionStructuralContradictionAudit | None
+    ) = None,
 ) -> PostLinearRemainingFiniteSystemAudit:
     """Return the K/U finite-system classifier after finite-linear closure."""
 
@@ -8479,6 +8779,7 @@ def post_linear_remaining_finite_system_audit(
             mixed_unit_context_endpoint_witness=mixed_unit_context_endpoint_witness,
             mixed_unit_context_symmetric_endpoint_fork=mixed_unit_context_symmetric_endpoint_fork,
             universal_k_signed_endpoint_interval=interval,
+            unsupported_companion_structural_contradiction=unsupported_companion_structural_contradiction,
         )
         reachable_states = universal_k_signed_endpoint_reachable_seed_states
         if reachable_states is None:
@@ -8522,4 +8823,5 @@ def post_linear_remaining_finite_system_audit(
         mixed_unit_context_symmetric_endpoint_fork=mixed_unit_context_symmetric_endpoint_fork,
         universal_k_signed_endpoint_generator=signed_endpoint_generator,
         universal_k_signed_endpoint_interval=interval,
+        unsupported_companion_structural_contradiction=unsupported_companion_structural_contradiction,
     )
