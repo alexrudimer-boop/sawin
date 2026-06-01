@@ -2869,7 +2869,7 @@ class UniversalKCutoffReadoutAudit:
 
     @property
     def cutoff_degree_supplied(self) -> bool:
-        return self.cutoff_degree is not None and self.cutoff_degree > 0
+        return _universal_k_positive_int(self.cutoff_degree)
 
     @property
     def row_cutoff_seed_states(self) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
@@ -2936,7 +2936,7 @@ class UniversalKCutoffReadoutAudit:
     def invalid_readout_permutation_rows(
         self,
     ) -> Tuple[Tuple[Tuple[str, UniversalKSeedState], str, object], ...]:
-        if self.cutoff_degree is None or self.cutoff_degree <= 0:
+        if not self.cutoff_degree_supplied:
             return tuple(
                 (
                     row.cutoff_seed_state,
@@ -2985,7 +2985,7 @@ class UniversalKCutoffReadoutAudit:
     def unkilled_readout_rows(
         self,
     ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
-        if self.cutoff_degree is None or self.cutoff_degree <= 0:
+        if not self.cutoff_degree_supplied:
             return tuple(row.cutoff_seed_state for row in self.readout_rows)
         return tuple(
             row.cutoff_seed_state
@@ -3169,11 +3169,47 @@ class UniversalKEndpointTargetAudit:
 
     @property
     def target_orders_positive(self) -> bool:
-        return all(order > 0 for _family, order in self.endpoint_group_orders)
+        return all(
+            _universal_k_positive_int(order)
+            for _family, order in self.endpoint_group_orders
+        )
 
     @property
     def cutoff_degrees_positive(self) -> bool:
-        return all(degree > 0 for _family, degree in self.cutoff_degrees)
+        return all(
+            _universal_k_positive_int(degree)
+            for _family, degree in self.cutoff_degrees
+        )
+
+    @property
+    def malformed_endpoint_group_orders(self) -> Tuple[Tuple[str, object], ...]:
+        malformed = []
+        seen = set()
+        for family, order in self.endpoint_group_orders:
+            if _universal_k_positive_int(order):
+                continue
+            value = (family, order)
+            marker = repr(value)
+            if marker in seen:
+                continue
+            seen.add(marker)
+            malformed.append(value)
+        return tuple(sorted(malformed, key=repr))
+
+    @property
+    def malformed_cutoff_degrees(self) -> Tuple[Tuple[str, object], ...]:
+        malformed = []
+        seen = set()
+        for family, degree in self.cutoff_degrees:
+            if _universal_k_positive_int(degree):
+                continue
+            value = (family, degree)
+            marker = repr(value)
+            if marker in seen:
+                continue
+            seen.add(marker)
+            malformed.append(value)
+        return tuple(sorted(malformed, key=repr))
 
     @property
     def target_families_exact(self) -> bool:
@@ -3226,8 +3262,12 @@ class UniversalKEndpointTargetAudit:
             reasons.append("endpoint_target_duplicate_target_families")
         if not self.target_orders_positive:
             reasons.append("endpoint_target_nonpositive_group_order")
+        if self.malformed_endpoint_group_orders:
+            reasons.append("endpoint_target_malformed_group_order")
         if not self.cutoff_degrees_positive:
             reasons.append("endpoint_target_nonpositive_cutoff_degree")
+        if self.malformed_cutoff_degrees:
+            reasons.append("endpoint_target_malformed_cutoff_degree")
         if not self.braid_index_independence_proved:
             reasons.append("endpoint_target_not_braid_index_independent")
         if not self.product_families_separated_proved:
@@ -8121,12 +8161,20 @@ class PostLinearRemainingFiniteSystemAudit:
                 ("signed_endpoint_generator_endpoint_target_covered_families", ()),
                 ("signed_endpoint_generator_endpoint_target_families", ()),
                 ("signed_endpoint_generator_endpoint_target_group_orders", ()),
+                (
+                    "signed_endpoint_generator_endpoint_target_malformed_group_orders",
+                    (),
+                ),
                 ("signed_endpoint_generator_endpoint_group_order", None),
                 (
                     "signed_endpoint_generator_endpoint_group_order_matches_target",
                     False,
                 ),
                 ("signed_endpoint_generator_endpoint_target_cutoff_degrees", ()),
+                (
+                    "signed_endpoint_generator_endpoint_target_malformed_cutoff_degrees",
+                    (),
+                ),
                 ("signed_endpoint_generator_endpoint_target_duplicate_families", ()),
                 ("signed_endpoint_generator_endpoint_target_unknown_families", ()),
                 (
@@ -8758,6 +8806,14 @@ class PostLinearRemainingFiniteSystemAudit:
                 ),
             ),
             (
+                "signed_endpoint_generator_endpoint_target_malformed_group_orders",
+                (
+                    endpoint_target_audit.malformed_endpoint_group_orders
+                    if endpoint_target_audit is not None
+                    else ()
+                ),
+            ),
+            (
                 "signed_endpoint_generator_endpoint_group_order",
                 (
                     len(audit.endpoint_group.elements)
@@ -8773,6 +8829,14 @@ class PostLinearRemainingFiniteSystemAudit:
                 "signed_endpoint_generator_endpoint_target_cutoff_degrees",
                 (
                     endpoint_target_audit.cutoff_degrees
+                    if endpoint_target_audit is not None
+                    else ()
+                ),
+            ),
+            (
+                "signed_endpoint_generator_endpoint_target_malformed_cutoff_degrees",
+                (
+                    endpoint_target_audit.malformed_cutoff_degrees
                     if endpoint_target_audit is not None
                     else ()
                 ),

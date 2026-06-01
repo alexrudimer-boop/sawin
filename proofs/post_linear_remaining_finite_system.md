@@ -482,9 +482,12 @@ channel killing.  The expected and covered cutoff seed-state ledgers must be
 duplicate-free; repeated seed entries are reported as an inexact readout
 ledger rather than silently collapsed.  Expected, covered, and row cutoff
 state keys must also be well formed endpoint states; malformed keys are
-reported even if the malformed sets agree.  Cutoff braid-index independence
-is derived from the positive fixed degree and exact finite readout rows, so the
-legacy `braid_index_independent` flag on this audit is diagnostic only.
+reported even if the malformed sets agree.  The cutoff degree itself must be
+a positive integer; strings, booleans, zero, negative values, or missing
+degrees are not finite symmetric cutoff targets.  Cutoff braid-index
+independence is derived from the positive fixed degree and exact finite
+readout rows, so the legacy `braid_index_independent` flag on this audit is
+diagnostic only.
 
 When a finite endpoint group is supplied, inverse cancellation is checked by
 multiplying the emitted endpoint labels in that group.  Adjacent-YBE and
@@ -498,7 +501,10 @@ the product of the endpoint-group orders listed for the active group-valued
 families.  Symmetric cutoff degrees are handled by the cutoff readout audit
 instead of being folded into this product.  A mismatch is reported as
 `endpoint_target_group_order_mismatch` and leaves the endpoint target gate
-open.
+open.  Every endpoint-group order and cutoff degree in the target ledger must
+be a positive integer attached to a known routed family; noninteger,
+boolean, zero, or negative sizes are malformed target rows rather than finite
+target factors.
 
 The signed endpoint observer is now audited as a reduced full-braid
 presentation observer.  Inverse-derived negative rows handle
@@ -887,9 +893,11 @@ signed_endpoint_generator_endpoint_target_expected_families
 signed_endpoint_generator_endpoint_target_covered_families
 signed_endpoint_generator_endpoint_target_families
 signed_endpoint_generator_endpoint_target_group_orders
+signed_endpoint_generator_endpoint_target_malformed_group_orders
 signed_endpoint_generator_endpoint_group_order
 signed_endpoint_generator_endpoint_group_order_matches_target
 signed_endpoint_generator_endpoint_target_cutoff_degrees
+signed_endpoint_generator_endpoint_target_malformed_cutoff_degrees
 signed_endpoint_generator_endpoint_target_duplicate_families
 signed_endpoint_generator_endpoint_target_unknown_families
 signed_endpoint_generator_endpoint_target_duplicate_target_families

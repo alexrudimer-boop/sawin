@@ -4971,6 +4971,67 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             unknown_family_target.failure_reasons,
         )
 
+        malformed_group_order_target = UniversalKEndpointTargetAudit(
+            expected_endpoint_families=("U",),
+            covered_endpoint_families=("U",),
+            endpoint_group_orders=(("U", "two"),),
+            braid_index_independent=True,
+            product_families_separated=True,
+        )
+        self.assertFalse(malformed_group_order_target.target_orders_positive)
+        self.assertFalse(malformed_group_order_target.proves_endpoint_targets)
+        self.assertEqual(
+            malformed_group_order_target.malformed_endpoint_group_orders,
+            (("U", "two"),),
+        )
+        self.assertIn(
+            "endpoint_target_malformed_group_order",
+            malformed_group_order_target.failure_reasons,
+        )
+
+        malformed_cutoff_degree_target = UniversalKEndpointTargetAudit(
+            expected_endpoint_families=("M",),
+            covered_endpoint_families=("M",),
+            cutoff_degrees=(("M", True),),
+            braid_index_independent=True,
+            product_families_separated=True,
+        )
+        self.assertFalse(malformed_cutoff_degree_target.cutoff_degrees_positive)
+        self.assertFalse(malformed_cutoff_degree_target.proves_endpoint_targets)
+        self.assertEqual(
+            malformed_cutoff_degree_target.malformed_cutoff_degrees,
+            (("M", True),),
+        )
+        self.assertIn(
+            "endpoint_target_malformed_cutoff_degree",
+            malformed_cutoff_degree_target.failure_reasons,
+        )
+
+    def test_cutoff_readout_rejects_malformed_cutoff_degree_without_crashing(self):
+        seed_state = ("C", ("*", "*", "continuation"))
+        audit = UniversalKCutoffReadoutAudit(
+            expected_cutoff_seed_states=(seed_state,),
+            covered_cutoff_seed_states=(seed_state,),
+            cutoff_degree="2",
+            readout_rows=(
+                UniversalKCutoffReadoutRow(
+                    cutoff_seed_state=seed_state,
+                    readout_permutation=(0, 1),
+                    killed_readout_permutation=(0, 1),
+                ),
+            ),
+            braid_index_independent=True,
+        )
+
+        self.assertFalse(audit.cutoff_degree_supplied)
+        self.assertFalse(audit.readout_permutations_valid)
+        self.assertFalse(audit.proves_exact_cutoff_readouts)
+        self.assertIn("cutoff_degree_not_supplied", audit.failure_reasons)
+        self.assertEqual(
+            audit.invalid_readout_permutation_rows,
+            ((seed_state, "cutoff_degree_not_supplied", "2"),),
+        )
+
     def test_signed_endpoint_generator_audit_requires_full_entry_domain(self):
         seed_state = ("*", "*", "left_constant_map_universal_kernel")
         seed_entries = (

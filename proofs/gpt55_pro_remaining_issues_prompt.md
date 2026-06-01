@@ -879,10 +879,11 @@ target: either a finite endpoint group order or a symmetric cutoff degree.
 It must also prove that these targets are independent of braid index and that
 product endpoint families are separated componentwise.  A bare assertion
 that an endpoint target is fixed is not a certificate; if the target list
-omits a routed family, includes an unrouted family, has a nonpositive order
-or cutoff degree, uses a family outside `{U,C,M}`, repeats a family, assigns
-both a group target and cutoff target to the same family, depends on `n`, or
-allows cross-family cancellation, the signed endpoint layer remains open.  A
+omits a routed family, includes an unrouted family, has a nonpositive or
+noninteger order or cutoff degree, uses a boolean as a size, uses a family
+outside `{U,C,M}`, repeats a family, assigns both a group target and cutoff
+target to the same family, depends on `n`, or allows cross-family
+cancellation, the signed endpoint layer remains open.  A
 single supplied endpoint group may be treated as an implicit target only for
 a single active routed family.  When two or more of U/C/M are active,
 product-family
@@ -892,6 +893,9 @@ group.
 Endpoint-target braid-index independence and product-family separation must
 be derived from the finite per-family target ledger and positive target
 sizes; they are not independent boolean gates.
+Each target size row must be a positive integer attached to a known endpoint
+family.  Strings, booleans, missing values, zero, and negative values are
+malformed endpoint-target rows, not finite detector factors.
 For C or M routed through a symmetric cutoff, the target ledger's cutoff
 degree must equal the symmetric degree used by the cutoff-readout table for
 that same family.  A certificate that declares a degree-`m` cutoff target but
@@ -1677,6 +1681,7 @@ all_signed_row_states_reachable,
 fixed_endpoint_group_or_cutoff,
 family_scoped_endpoint_target_coverage,
 endpoint_target_families_in_U_C_M,
+endpoint_target_size_rows_have_positive_integer_values,
 endpoint_target_braid_index_independence,
 endpoint_target_product_family_separation,
 endpoint_target_ledgers_duplicate_free,
