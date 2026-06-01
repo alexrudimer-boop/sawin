@@ -4965,6 +4965,34 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             "endpoint_observer_family_seed_classifier_invalid_targets",
             malformed_seed_classifier.failure_reasons,
         )
+        malformed_seed_classifier_wrapper = PostLinearRemainingFiniteSystemAudit(
+            active_system_k_refinement(),
+            universal_k_endpoint_observer_family_build=malformed_seed_classifier,
+        )
+        malformed_seed_classifier_data = dict(
+            malformed_seed_classifier_wrapper.routed_endpoint_obstruction_data
+        )
+        self.assertFalse(
+            malformed_seed_classifier_data[
+                "endpoint_observer_family_seed_classifier_ledger_well_formed"
+            ]
+        )
+        self.assertEqual(
+            malformed_seed_classifier_data[
+                "endpoint_observer_family_seed_classifier_malformed_entries"
+            ],
+            (malformed_seed_classifier_entry,),
+        )
+        self.assertEqual(
+            malformed_seed_classifier_data[
+                "endpoint_observer_family_seed_classifier_invalid_targets"
+            ],
+            (
+                unhashable_seed_classifier_target,
+                invalid_family_seed_classifier_target,
+                non_tuple_seed_classifier_target,
+            ),
+        )
 
         bad_auxiliary_ledgers = universal_k_endpoint_observer_builds_by_family(
             interval,

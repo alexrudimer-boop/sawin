@@ -13821,6 +13821,9 @@ class PostLinearRemainingFiniteSystemAudit:
                 ("endpoint_observer_family_build_missing_families", ()),
                 ("endpoint_observer_family_build_extra_families", ()),
                 ("endpoint_observer_family_build_duplicate_families", ()),
+                ("endpoint_observer_family_seed_classifier_ledger_well_formed", False),
+                ("endpoint_observer_family_seed_classifier_malformed_entries", ()),
+                ("endpoint_observer_family_seed_classifier_invalid_targets", ()),
                 ("endpoint_observer_family_certificate_rows", ()),
                 ("endpoint_observer_family_certificate_malformed_rows", ()),
                 ("endpoint_observer_family_certificate_unknown_families", ()),
@@ -13989,6 +13992,18 @@ class PostLinearRemainingFiniteSystemAudit:
             (
                 "endpoint_observer_family_build_duplicate_families",
                 audit.duplicate_build_families,
+            ),
+            (
+                "endpoint_observer_family_seed_classifier_ledger_well_formed",
+                audit.seed_classifier_ledger_well_formed,
+            ),
+            (
+                "endpoint_observer_family_seed_classifier_malformed_entries",
+                audit.malformed_seed_classifier_entries,
+            ),
+            (
+                "endpoint_observer_family_seed_classifier_invalid_targets",
+                audit.invalid_seed_classifier_targets,
             ),
             (
                 "endpoint_observer_family_certificate_rows",
