@@ -1515,11 +1515,37 @@ class UniversalKResidualActionScopeAudit:
 
 
 @dataclass(frozen=True)
+class UniversalKCutoffReadoutRow:
+    """One finite symmetric cutoff readout for a routed C/M seed state."""
+
+    cutoff_seed_state: Tuple[str, UniversalKSeedState]
+    readout_permutation: Tuple[int, ...]
+    killed_readout_permutation: Tuple[int, ...]
+
+    def readout_is_permutation(self, degree: int) -> bool:
+        return (
+            len(self.readout_permutation) == degree
+            and set(self.readout_permutation) == set(range(degree))
+        )
+
+    def killed_readout_is_permutation(self, degree: int) -> bool:
+        return (
+            len(self.killed_readout_permutation) == degree
+            and set(self.killed_readout_permutation) == set(range(degree))
+        )
+
+    def identity_data_kills_channel(self, degree: int) -> bool:
+        return self.killed_readout_permutation == tuple(range(degree))
+
+
+@dataclass(frozen=True)
 class UniversalKCutoffReadoutAudit:
     """Exact C/M symmetric-cutoff readout coverage for routed K seeds."""
 
     expected_cutoff_seed_states: Tuple[Tuple[str, UniversalKSeedState], ...]
     covered_cutoff_seed_states: Tuple[Tuple[str, UniversalKSeedState], ...]
+    cutoff_degree: int | None = None
+    readout_rows: Tuple[UniversalKCutoffReadoutRow, ...] = ()
     readouts_faithful: bool = False
     identity_cutoff_data_kills_channels: bool = False
     braid_index_independent: bool = False
@@ -1586,12 +1612,133 @@ class UniversalKCutoffReadoutAudit:
         )
 
     @property
+    def cutoff_degree_supplied(self) -> bool:
+        return self.cutoff_degree is not None and self.cutoff_degree > 0
+
+    @property
+    def row_cutoff_seed_states(self) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
+        return tuple(row.cutoff_seed_state for row in self.readout_rows)
+
+    @property
+    def row_cutoff_seed_states_exact(
+        self,
+    ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
+        return tuple(sorted(set(self.row_cutoff_seed_states), key=repr))
+
+    @property
+    def duplicate_row_cutoff_seed_states(
+        self,
+    ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
+        return _duplicate_values(self.row_cutoff_seed_states)
+
+    @property
+    def missing_readout_row_seed_states(
+        self,
+    ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
+        row_states = set(self.row_cutoff_seed_states_exact)
+        return tuple(
+            state
+            for state in self.expected_cutoff_seed_states_exact
+            if state not in row_states
+        )
+
+    @property
+    def extra_readout_row_seed_states(
+        self,
+    ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
+        expected = set(self.expected_cutoff_seed_states_exact)
+        return tuple(
+            state for state in self.row_cutoff_seed_states_exact if state not in expected
+        )
+
+    @property
+    def readout_rows_cover_expected_states(self) -> bool:
+        return (
+            bool(self.readout_rows)
+            and not self.duplicate_row_cutoff_seed_states
+            and not self.missing_readout_row_seed_states
+            and not self.extra_readout_row_seed_states
+        )
+
+    @property
+    def invalid_readout_permutation_rows(
+        self,
+    ) -> Tuple[Tuple[Tuple[str, UniversalKSeedState], str, object], ...]:
+        if self.cutoff_degree is None or self.cutoff_degree <= 0:
+            return tuple(
+                (
+                    row.cutoff_seed_state,
+                    "cutoff_degree_not_supplied",
+                    self.cutoff_degree,
+                )
+                for row in self.readout_rows
+            )
+        failures = []
+        for row in self.readout_rows:
+            if not row.readout_is_permutation(self.cutoff_degree):
+                failures.append(
+                    (
+                        row.cutoff_seed_state,
+                        "readout_not_permutation",
+                        row.readout_permutation,
+                    )
+                )
+            if not row.killed_readout_is_permutation(self.cutoff_degree):
+                failures.append(
+                    (
+                        row.cutoff_seed_state,
+                        "killed_readout_not_permutation",
+                        row.killed_readout_permutation,
+                    )
+                )
+        return tuple(failures)
+
+    @property
+    def readout_permutations_valid(self) -> bool:
+        return self.cutoff_degree_supplied and not self.invalid_readout_permutation_rows
+
+    @property
+    def duplicate_readout_permutations(
+        self,
+    ) -> Tuple[Tuple[int, ...], ...]:
+        return _duplicate_values(
+            tuple(row.readout_permutation for row in self.readout_rows)
+        )
+
+    @property
+    def readout_rows_faithful(self) -> bool:
+        return self.readout_permutations_valid and not self.duplicate_readout_permutations
+
+    @property
+    def unkilled_readout_rows(
+        self,
+    ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
+        if self.cutoff_degree is None or self.cutoff_degree <= 0:
+            return tuple(row.cutoff_seed_state for row in self.readout_rows)
+        return tuple(
+            row.cutoff_seed_state
+            for row in self.readout_rows
+            if not row.identity_data_kills_channel(self.cutoff_degree)
+        )
+
+    @property
+    def identity_cutoff_rows_kill_channels(self) -> bool:
+        return self.readout_permutations_valid and not self.unkilled_readout_rows
+
+    @property
+    def finite_readout_rows_verified(self) -> bool:
+        return (
+            self.readout_rows_cover_expected_states
+            and self.readout_rows_faithful
+            and self.identity_cutoff_rows_kill_channels
+        )
+
+    @property
     def proves_exact_cutoff_readouts(self) -> bool:
         return (
             self.cutoff_seed_coverage_exact
             and self.cutoff_seed_ledgers_have_no_duplicates
-            and self.readouts_faithful
-            and self.identity_cutoff_data_kills_channels
+            and self.finite_readout_rows_verified
             and self.braid_index_independent
         )
 
@@ -1606,10 +1753,26 @@ class UniversalKCutoffReadoutAudit:
             reasons.append("cutoff_readout_extra_seed_states")
         if not self.cutoff_seed_ledgers_have_no_duplicates:
             reasons.append("cutoff_readout_duplicate_seed_states")
-        if not self.readouts_faithful:
+        if not self.cutoff_degree_supplied:
+            reasons.append("cutoff_degree_not_supplied")
+        if not self.readout_rows_cover_expected_states:
+            reasons.append("cutoff_readout_rows_do_not_cover_expected_states")
+        if self.duplicate_row_cutoff_seed_states:
+            reasons.append("cutoff_readout_duplicate_row_states")
+        if self.missing_readout_row_seed_states:
+            reasons.append("cutoff_readout_missing_row_states")
+        if self.extra_readout_row_seed_states:
+            reasons.append("cutoff_readout_extra_row_states")
+        if not self.readout_permutations_valid:
+            reasons.append("cutoff_readout_permutations_invalid")
+        if not self.readout_rows_faithful:
             reasons.append("cutoff_readouts_not_faithful")
-        if not self.identity_cutoff_data_kills_channels:
+        if self.duplicate_readout_permutations:
+            reasons.append("cutoff_readout_duplicate_permutations")
+        if not self.identity_cutoff_rows_kill_channels:
             reasons.append("cutoff_identity_data_does_not_kill_channels")
+        if self.unkilled_readout_rows:
+            reasons.append("cutoff_readout_rows_not_killed_by_identity_data")
         if not self.braid_index_independent:
             reasons.append("cutoff_readouts_not_braid_index_independent")
         return tuple(reasons)
@@ -5437,6 +5600,20 @@ class PostLinearRemainingFiniteSystemAudit:
                 ("signed_endpoint_generator_cutoff_readout_missing_states", ()),
                 ("signed_endpoint_generator_cutoff_readout_extra_states", ()),
                 ("signed_endpoint_generator_cutoff_readout_duplicate_states", ()),
+                ("signed_endpoint_generator_cutoff_readout_degree", None),
+                ("signed_endpoint_generator_cutoff_readout_rows", ()),
+                (
+                    "signed_endpoint_generator_cutoff_readout_invalid_permutation_rows",
+                    (),
+                ),
+                (
+                    "signed_endpoint_generator_cutoff_readout_duplicate_permutations",
+                    (),
+                ),
+                (
+                    "signed_endpoint_generator_cutoff_readout_unkilled_rows",
+                    (),
+                ),
                 ("signed_endpoint_generator_cutoff_readout_audit_proved", False),
                 ("signed_endpoint_generator_residual_faithfulness_verified", False),
                 ("signed_endpoint_generator_residual_faithfulness_flag_supplied", False),
@@ -6120,6 +6297,53 @@ class PostLinearRemainingFiniteSystemAudit:
                 (
                     audit.cutoff_readout_audit.duplicate_expected_cutoff_seed_states
                     + audit.cutoff_readout_audit.duplicate_covered_cutoff_seed_states
+                    if audit.cutoff_readout_audit is not None
+                    else ()
+                ),
+            ),
+            (
+                "signed_endpoint_generator_cutoff_readout_degree",
+                (
+                    audit.cutoff_readout_audit.cutoff_degree
+                    if audit.cutoff_readout_audit is not None
+                    else None
+                ),
+            ),
+            (
+                "signed_endpoint_generator_cutoff_readout_rows",
+                (
+                    tuple(
+                        (
+                            row.cutoff_seed_state,
+                            row.readout_permutation,
+                            row.killed_readout_permutation,
+                        )
+                        for row in audit.cutoff_readout_audit.readout_rows
+                    )
+                    if audit.cutoff_readout_audit is not None
+                    else ()
+                ),
+            ),
+            (
+                "signed_endpoint_generator_cutoff_readout_invalid_permutation_rows",
+                (
+                    audit.cutoff_readout_audit.invalid_readout_permutation_rows
+                    if audit.cutoff_readout_audit is not None
+                    else ()
+                ),
+            ),
+            (
+                "signed_endpoint_generator_cutoff_readout_duplicate_permutations",
+                (
+                    audit.cutoff_readout_audit.duplicate_readout_permutations
+                    if audit.cutoff_readout_audit is not None
+                    else ()
+                ),
+            ),
+            (
+                "signed_endpoint_generator_cutoff_readout_unkilled_rows",
+                (
+                    audit.cutoff_readout_audit.unkilled_readout_rows
                     if audit.cutoff_readout_audit is not None
                     else ()
                 ),

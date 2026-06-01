@@ -441,9 +441,12 @@ certificate.
 The C/M cutoff gate is now scoped like the residual-faithfulness gate.  A bare
 `cutoff_readouts_exact` flag is recorded only as supplied data; it does not
 prove the gate.  The cutoff certificate must list the expected routed C/M seed
-states, the covered seed states, exact coverage, faithful readouts,
-identity-cutoff-data killing of exactly those channels, and braid-index
-independence.  The expected and covered cutoff seed-state ledgers must be
+states, the covered seed states, a positive symmetric degree, and one finite
+readout row for every routed C/M seed state.  A row records the seed state,
+the readout permutation, and the permutation left after identity cutoff data.
+The checker verifies row-domain exactness, actual membership in the symmetric
+group, injective readouts for faithfulness, and identity killed-readouts for
+channel killing.  The expected and covered cutoff seed-state ledgers must be
 duplicate-free; repeated seed entries are reported as an inexact readout
 ledger rather than silently collapsed.
 
@@ -701,6 +704,11 @@ signed_endpoint_generator_cutoff_readout_covered_states
 signed_endpoint_generator_cutoff_readout_missing_states
 signed_endpoint_generator_cutoff_readout_extra_states
 signed_endpoint_generator_cutoff_readout_duplicate_states
+signed_endpoint_generator_cutoff_readout_degree
+signed_endpoint_generator_cutoff_readout_rows
+signed_endpoint_generator_cutoff_readout_invalid_permutation_rows
+signed_endpoint_generator_cutoff_readout_duplicate_permutations
+signed_endpoint_generator_cutoff_readout_unkilled_rows
 signed_endpoint_generator_cutoff_readout_audit_proved
 signed_endpoint_generator_residual_faithfulness_verified
 signed_endpoint_generator_residual_faithfulness_flag_supplied

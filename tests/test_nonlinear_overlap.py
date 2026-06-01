@@ -35,6 +35,7 @@ from ybe_domination import (
     TriangularLatinDefectClosureAudit,
     TriangularLatinDefectClosureRow,
     UniversalKCutoffReadoutAudit,
+    UniversalKCutoffReadoutRow,
     UniversalKEndpointTargetAudit,
     UniversalKResidualActionScopeAudit,
     UniversalKResidualFaithfulnessAudit,
@@ -339,6 +340,26 @@ def trivial_endpoint_target_audit(*families):
         endpoint_group_orders=tuple((family, 1) for family in families),
         braid_index_independent=True,
         product_families_separated=True,
+    )
+
+
+def trivial_cutoff_readout_audit(seed_states, *, degree=2):
+    seed_states = tuple(seed_states)
+    return UniversalKCutoffReadoutAudit(
+        expected_cutoff_seed_states=seed_states,
+        covered_cutoff_seed_states=seed_states,
+        cutoff_degree=degree,
+        readout_rows=tuple(
+            UniversalKCutoffReadoutRow(
+                cutoff_seed_state=seed_state,
+                readout_permutation=tuple(
+                    (position + index) % degree for position in range(degree)
+                ),
+                killed_readout_permutation=tuple(range(degree)),
+            )
+            for index, seed_state in enumerate(seed_states)
+        ),
+        braid_index_independent=True,
     )
 
 
@@ -3793,13 +3814,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         keys = universal_k_signed_endpoint_required_entry_keys(interval, reachable)
         rows = identity_signed_endpoint_rows(keys)
         witnesses = {row.entry_key: () for row in rows}
-        cutoff = UniversalKCutoffReadoutAudit(
-            expected_cutoff_seed_states=(("M", m_state),),
-            covered_cutoff_seed_states=(("M", m_state),),
-            readouts_faithful=True,
-            identity_cutoff_data_kills_channels=True,
-            braid_index_independent=True,
-        )
+        cutoff = trivial_cutoff_readout_audit((("M", m_state),))
         residual_scope = trivial_endpoint_residual_action_scope(
             "U",
             "M",
@@ -4017,8 +4032,14 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         duplicate_cutoff = UniversalKCutoffReadoutAudit(
             expected_cutoff_seed_states=reachable + reachable,
             covered_cutoff_seed_states=reachable,
-            readouts_faithful=True,
-            identity_cutoff_data_kills_channels=True,
+            cutoff_degree=2,
+            readout_rows=(
+                UniversalKCutoffReadoutRow(
+                    cutoff_seed_state=reachable[0],
+                    readout_permutation=(0, 1),
+                    killed_readout_permutation=(0, 1),
+                ),
+            ),
             braid_index_independent=True,
         )
         duplicate_cutoff_audit = universal_k_signed_endpoint_generator_audit(
@@ -4044,13 +4065,40 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             duplicate_cutoff_audit.failure_reasons,
         )
 
-        scoped_cutoff = UniversalKCutoffReadoutAudit(
+        boolean_only_cutoff = UniversalKCutoffReadoutAudit(
             expected_cutoff_seed_states=reachable,
             covered_cutoff_seed_states=reachable,
             readouts_faithful=True,
             identity_cutoff_data_kills_channels=True,
             braid_index_independent=True,
         )
+        self.assertFalse(boolean_only_cutoff.proves_exact_cutoff_readouts)
+        self.assertIn(
+            "cutoff_readout_rows_do_not_cover_expected_states",
+            boolean_only_cutoff.failure_reasons,
+        )
+
+        unkilled_cutoff = UniversalKCutoffReadoutAudit(
+            expected_cutoff_seed_states=reachable,
+            covered_cutoff_seed_states=reachable,
+            cutoff_degree=2,
+            readout_rows=(
+                UniversalKCutoffReadoutRow(
+                    cutoff_seed_state=reachable[0],
+                    readout_permutation=(0, 1),
+                    killed_readout_permutation=(1, 0),
+                ),
+            ),
+            braid_index_independent=True,
+        )
+        self.assertFalse(unkilled_cutoff.proves_exact_cutoff_readouts)
+        self.assertEqual(unkilled_cutoff.unkilled_readout_rows, reachable)
+        self.assertIn(
+            "cutoff_readout_rows_not_killed_by_identity_data",
+            unkilled_cutoff.failure_reasons,
+        )
+
+        scoped_cutoff = trivial_cutoff_readout_audit(reachable)
         proved = universal_k_signed_endpoint_generator_audit(
             interval,
             seed_entries,

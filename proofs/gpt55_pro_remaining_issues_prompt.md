@@ -1167,12 +1167,23 @@ chi_M:S_M^reach -> S_mM,
 covering exactly the routed identity-continuation ledger for C and exactly
 the routed mixed-unit ledger for M, with no extra channels.
 The cutoff-readout certificate must list the expected routed C/M seed states,
-the covered seed states, the finite readout target, and the proof that the
-readouts are faithful and braid-index independent and that identity cutoff
-data kills precisely those channels.  A bare assertion that the cutoff
-readouts are exact is not a certificate.  The expected and covered cutoff
-seed-state ledgers must also be duplicate-free; silently deduplicating
-repeated C or M seed entries is not exact readout coverage.
+the covered seed states, the positive symmetric degree `m`, and one finite
+readout row for every routed C/M seed state:
+
+```text
+((E,s), readout permutation in S_m, killed-readout permutation in S_m).
+```
+
+The readout rows must cover exactly the expected seed states, with no
+missing, extra, or duplicate rows.  Each listed readout and killed-readout
+value must be an actual permutation of `{0,...,m-1}`.  Faithfulness is the
+finite injectivity check on the listed readout permutations.  Identity cutoff
+data kills the channel exactly when every killed-readout permutation is the
+identity permutation.  A bare assertion that the cutoff readouts are exact,
+faithful, or killed by identity cutoff data is not a certificate.  The
+expected and covered cutoff seed-state ledgers must also be duplicate-free;
+silently deduplicating repeated C or M seed entries is not exact readout
+coverage.
 
 The endpoint tables and readouts must also prove residual faithfulness:
 if all routed endpoint labels or cutoff readouts are killed, then the actual
@@ -1263,6 +1274,7 @@ initial_word_potential_normalization,
 fixed_detector_tracks_chosen_before_braid_word,
 exact_cutoff_readouts_for_C_and_M,
 cutoff_readout_seed_state_ledgers_duplicate_free,
+cutoff_readout_permutation_rows_exact_and_faithful,
 residual_faithfulness_for_actual_fibre_action.
 ```
 
