@@ -1232,6 +1232,8 @@ class UniversalKWordPotentialCertificate:
         template_map = self.template_map
         group_elements = set(self.endpoint_group.elements)
         for row in self.identity_rows:
+            if not _universal_k_signed_entry_key_well_formed(row.entry_key):
+                continue
             entry_family, source_state, _sign, *_rest = row.entry_key
             if _sign != 1:
                 continue
@@ -3182,6 +3184,8 @@ class UniversalKTelescopingDetectorAudit:
                         (state, "word_potential_track_index_out_of_scope", variable)
                     )
         for row in self.word_potential_certificate.identity_rows:
+            if not _universal_k_signed_entry_key_well_formed(row.entry_key):
+                continue
             family = row.entry_key[0]
             if not _universal_k_is_positive_entry_key(row.entry_key):
                 continue
@@ -3228,6 +3232,8 @@ class UniversalKTelescopingDetectorAudit:
         failures = []
         initialized_by_family = self.initialized_raw_assignment_variables_by_family
         for row in self.word_potential_certificate.identity_rows:
+            if not _universal_k_signed_entry_key_well_formed(row.entry_key):
+                continue
             family = row.entry_key[0]
             if not _universal_k_is_positive_entry_key(row.entry_key):
                 continue

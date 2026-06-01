@@ -1344,6 +1344,8 @@ More generally, every word-potential identity row and telescoping ledger key
 must be a full `D_Gamma` key `(E,epsilon,s,a,b,x,y)` with `E in {U,C,M}`,
 `epsilon in {+1,-1}`, and a tuple-valued reachable state `s`.  A shortened or
 wrong-family key is malformed even if its sign field is `+1`.
+Malformed keys must be rejected before any downstream template, detector-track,
+or identity diagnostic tries to interpret their fields.
 
 The initial routed state must be normalized:
 

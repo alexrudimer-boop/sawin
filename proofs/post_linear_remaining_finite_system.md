@@ -593,6 +593,8 @@ signs instead of filtering them away.  The same well-formedness gate checks
 that every identity-row and ledger key has the full `D_Gamma` shape
 `(E,epsilon,s,a,b,x,y)`, a known endpoint family, and a tuple-valued reachable
 state; a shortened positive key is malformed rather than an abbreviated row.
+Malformed rows are reported at that gate before downstream template,
+track-scope, raw-assignment, or identity diagnostics interpret row fields.
 The checker then exhausts all
 assignments of the finitely many variables in the positive row to the fixed
 endpoint group and checks the word identity in the group table.  This removes
