@@ -973,6 +973,11 @@ phi^{E,epsilon}_{r,s,x,y} o sigma_1^{-epsilon},
 
 using the same Artin convention as the recursive longitudes.  This is needed
 for braid-word induction; the two-strand base identity alone is not enough.
+For literal two-strand witnesses, this means that the witness for the next
+row is obtained by evaluating the Artin images of the free
+generators under the previous two-generator assignment, with
+`sigma_1^{-epsilon}` as the precomposition word.  The longitude index and
+exponent for each listed witness letter must be preserved under this update.
 
 For cutoff families, in particular C and M, the proof must define faithful
 readouts

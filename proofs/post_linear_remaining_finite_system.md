@@ -405,6 +405,12 @@ must carry a literal subgroup witness in the fixed endpoint group, evaluated
 against the recursive two-strand longitudes for `sigma_1` or `sigma_1^-1`,
 and the value must equal the emitted endpoint label.
 
+The compatible Artin-homomorphism update gate is also checked on those
+literal witness assignments: the target row's assignment is obtained by
+precomposing the source assignment with the Artin image of
+`sigma_1^{-epsilon}`, while the listed longitude index and exponent are
+preserved.
+
 This audit does not by itself close U, C, or M; it records the missing finite
 generator-table proof needed before the endpoint witnesses or symmetric
 cutoffs can be promoted to an all-strand proof.

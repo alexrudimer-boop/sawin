@@ -11,8 +11,10 @@ from .artin_longitudes import (
     BraidWord,
     LongitudeExpressionLetter,
     LongitudeSubgroupWitness,
+    artin_generator_images,
     artin_detector_lift_braid_audit,
     artin_detector_lift_transition_audit,
+    evaluate_free_word,
     evaluate_longitude_subgroup_witness,
 )
 from .finite_group import FiniteGroup, GroupElement
@@ -1469,6 +1471,141 @@ def universal_k_signed_endpoint_two_strand_base_failures(
         (key, "extra_two_strand_base_witness", None)
         for key in extra_keys
     )
+    return tuple(failures)
+
+
+def _precompose_two_strand_assignment(
+    endpoint_group: FiniteGroup,
+    assignment: Sequence[GroupElement],
+    signed_generator: int,
+) -> Tuple[GroupElement, GroupElement]:
+    assignment_tuple = tuple(assignment)
+    if len(assignment_tuple) != 2:
+        raise ValueError("two-strand assignments must have length 2")
+    if any(value not in endpoint_group.elements for value in assignment_tuple):
+        raise ValueError("assignment contains a value outside the group")
+    images = artin_generator_images(
+        2,
+        0,
+        inverse=signed_generator < 0,
+    )
+    return tuple(
+        evaluate_free_word(endpoint_group, assignment_tuple, image)
+        for image in images
+    )
+
+
+def universal_k_signed_endpoint_artin_update_failures(
+    endpoint_group: FiniteGroup,
+    interval: LocalInterval,
+    rows: Sequence[UniversalKSignedEndpointGeneratorRow],
+    witnesses: Mapping[
+        UniversalKSignedEndpointEntryKey,
+        LongitudeSubgroupWitness,
+    ],
+) -> Tuple[UniversalKSignedEndpointLabelFailure, ...]:
+    """Return rows whose literal witnesses do not satisfy Artin precomposition."""
+
+    inverse_base = {target: source for source, target in interval.base_R.items()}
+    row_keys = {row.entry_key for row in rows}
+    failures = []
+    for row in rows:
+        if row.sign == 1:
+            target_colors = interval.base_R.get((row.left_color, row.right_color))
+            if target_colors is None:
+                failures.append((row.entry_key, "positive_color_pair_outside_base", None))
+                continue
+            target_key = (
+                row.endpoint_family,
+                row.next_seed_state,
+                1,
+                target_colors[0],
+                target_colors[1],
+                row.output_left,
+                row.output_right,
+            )
+            precompose_sign = -1
+        elif row.sign == -1:
+            source_colors = inverse_base.get((row.left_color, row.right_color))
+            if source_colors is None:
+                failures.append((row.entry_key, "negative_color_pair_not_in_image", None))
+                continue
+            target_key = (
+                row.endpoint_family,
+                row.next_seed_state,
+                -1,
+                source_colors[0],
+                source_colors[1],
+                row.output_left,
+                row.output_right,
+            )
+            precompose_sign = 1
+        else:
+            failures.append((row.entry_key, "unknown_sign", row.sign))
+            continue
+
+        source_witness = witnesses.get(row.entry_key)
+        if source_witness is None:
+            failures.append((row.entry_key, "missing_artin_update_source_witness", None))
+            continue
+        if target_key not in row_keys:
+            failures.append((row.entry_key, "missing_artin_update_target_row", target_key))
+            continue
+        target_witness = witnesses.get(target_key)
+        if target_witness is None:
+            failures.append((row.entry_key, "missing_artin_update_target_witness", target_key))
+            continue
+        if len(source_witness) != len(target_witness):
+            failures.append(
+                (
+                    row.entry_key,
+                    "artin_update_witness_length_mismatch",
+                    (len(source_witness), len(target_witness)),
+                )
+            )
+            continue
+        for index, (source_letter, target_letter) in enumerate(
+            zip(source_witness, target_witness)
+        ):
+            source_assignment, source_longitude_index, source_exponent = source_letter
+            target_assignment, target_longitude_index, target_exponent = target_letter
+            try:
+                expected_assignment = _precompose_two_strand_assignment(
+                    endpoint_group,
+                    source_assignment,
+                    precompose_sign,
+                )
+            except ValueError as error:
+                failures.append(
+                    (
+                        row.entry_key,
+                        "invalid_artin_update_source_assignment",
+                        (index, repr(error)),
+                    )
+                )
+                continue
+            target_assignment_tuple = tuple(target_assignment)
+            if any(value not in endpoint_group.elements for value in target_assignment_tuple):
+                failures.append(
+                    (
+                        row.entry_key,
+                        "invalid_artin_update_target_assignment",
+                        (index, target_assignment_tuple),
+                    )
+                )
+                continue
+            if (
+                target_assignment_tuple != expected_assignment
+                or target_longitude_index != source_longitude_index
+                or target_exponent != source_exponent
+            ):
+                failures.append(
+                    (
+                        row.entry_key,
+                        "artin_update_witness_letter_mismatch",
+                        (index, target_letter, (expected_assignment, source_longitude_index, source_exponent)),
+                    )
+                )
     return tuple(failures)
 
 

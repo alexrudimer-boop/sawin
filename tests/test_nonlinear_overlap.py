@@ -69,6 +69,7 @@ from ybe_domination import (
     triangular_recovery_audit,
     triangular_recovery_unit_observer_audit,
     triangular_recovery_unit_group,
+    universal_k_signed_endpoint_artin_update_failures,
     universal_k_signed_endpoint_coordinate_failures,
     universal_k_signed_endpoint_inverse_cancellation_failures,
     universal_k_signed_endpoint_inverse_failures,
@@ -2977,6 +2978,90 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertIn(
             "extra_two_strand_base_witness",
             tuple(failure[1] for failure in failures),
+        )
+
+    def test_signed_endpoint_artin_update_failures_check_witness_precomposition(self):
+        seed_state = ("*", "*", "left_constant_map_universal_kernel")
+        next_state = ("*", "*", "left_constant_map_universal_kernel", "next")
+        interval = one_color_identity_interval()
+        group = cyclic_group(3)
+        positive = UniversalKSignedEndpointGeneratorRow(
+            endpoint_family="U",
+            seed_state=seed_state,
+            sign=1,
+            left_color="*",
+            right_color="*",
+            input_left=0,
+            input_right=1,
+            output_left=0,
+            output_right=1,
+            next_seed_state=next_state,
+            endpoint_value=1,
+        )
+        positive_target = replace(
+            positive,
+            seed_state=next_state,
+            next_seed_state=seed_state,
+        )
+        negative = UniversalKSignedEndpointGeneratorRow(
+            endpoint_family="U",
+            seed_state=seed_state,
+            sign=-1,
+            left_color="*",
+            right_color="*",
+            input_left=1,
+            input_right=0,
+            output_left=1,
+            output_right=0,
+            next_seed_state=next_state,
+            endpoint_value=1,
+        )
+        negative_target = replace(
+            negative,
+            seed_state=next_state,
+            next_seed_state=seed_state,
+        )
+
+        self.assertEqual(
+            universal_k_signed_endpoint_artin_update_failures(
+                group,
+                interval,
+                (positive, positive_target, negative, negative_target),
+                {
+                    positive.entry_key: (((1, 0), 0, 1),),
+                    positive_target.entry_key: (((0, 1), 0, 1),),
+                    negative.entry_key: (((0, 2), 1, 1),),
+                    negative_target.entry_key: (((2, 0), 1, 1),),
+                },
+            ),
+            (),
+        )
+
+        failures = universal_k_signed_endpoint_artin_update_failures(
+            group,
+            interval,
+            (positive, positive_target),
+            {
+                positive.entry_key: (((1, 0), 0, 1),),
+                positive_target.entry_key: (((1, 0), 0, 1),),
+            },
+        )
+
+        self.assertIn(
+            "artin_update_witness_letter_mismatch",
+            tuple(failure[1] for failure in failures),
+        )
+
+        failures = universal_k_signed_endpoint_artin_update_failures(
+            group,
+            interval,
+            (positive,),
+            {positive.entry_key: (((1, 0), 0, 1),)},
+        )
+
+        self.assertEqual(
+            tuple(failure[1] for failure in failures),
+            ("missing_artin_update_target_row",),
         )
 
     def test_post_linear_reports_signed_generator_table_audit(self):
