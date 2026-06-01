@@ -1009,6 +1009,15 @@ row subset proves only a supplied-row implication, not domination of the
 whole residual action.  Omitting the expected row count is not acceptable for
 this endpoint lemma, even if every listed row is internally certified.
 
+Alternatively, a symbolic residual-faithfulness theorem may replace explicit
+row listing only if it states all of the following finite-scope data:
+the active endpoint families, the covered endpoint families, the expected
+residual row count, the covered residual row count, exactness of endpoint
+channels, the implication from identity endpoint data to identity residual
+motion, independence from braid index, and family-by-family product
+separation.  A bare assertion that residual faithfulness holds is not a
+certificate.
+
 The signed-generator audit for a claimed A proof must therefore establish:
 
 ```text

@@ -34,6 +34,7 @@ from ybe_domination import (
     TriangularConstantKernelRecoveryRouteRow,
     TriangularLatinDefectClosureAudit,
     TriangularLatinDefectClosureRow,
+    UniversalKResidualFaithfulnessAudit,
     UniversalKSignedEndpointGeneratorAudit,
     UniversalKSignedEndpointGeneratorRow,
     TwoSidedUnitCollapseAudit,
@@ -2536,6 +2537,93 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertIn(
             "residual_faithfulness_not_verified",
             uncounted_residual.failure_reasons,
+        )
+
+        bare_flag = UniversalKSignedEndpointGeneratorAudit(
+            seed_classifier_entries=seed_entries,
+            reachable_seed_states=(("U", seed_state),),
+            required_entry_keys=required_entry_keys,
+            rows=(positive_row, negative_row),
+            endpoint_targets_fixed=True,
+            coordinate_components_verified=True,
+            inverse_pairing_verified=True,
+            inverse_cancellation_verified=True,
+            positive_ybe_path_verified=True,
+            positive_ybe_cocycle_verified=True,
+            signed_two_strand_base_verified=True,
+            artin_homomorphism_update_verified=True,
+            residual_faithfulness_verified=True,
+        )
+
+        self.assertFalse(bare_flag.residual_faithfulness_proved)
+        self.assertFalse(bare_flag.proves_signed_endpoint_generator_tables)
+        self.assertIn("residual_faithfulness_not_verified", bare_flag.failure_reasons)
+
+        theorem = UniversalKResidualFaithfulnessAudit(
+            active_endpoint_families=("U",),
+            covered_endpoint_families=("U",),
+            expected_residual_row_count=1,
+            covered_residual_row_count=1,
+            endpoint_channels_exact=True,
+            identity_endpoint_data_forces_residual_identity=True,
+            braid_index_independent=True,
+            product_families_separated=True,
+        )
+        theorem_complete = UniversalKSignedEndpointGeneratorAudit(
+            seed_classifier_entries=seed_entries,
+            reachable_seed_states=(("U", seed_state),),
+            required_entry_keys=required_entry_keys,
+            rows=(positive_row, negative_row),
+            endpoint_targets_fixed=True,
+            coordinate_components_verified=True,
+            inverse_pairing_verified=True,
+            inverse_cancellation_verified=True,
+            positive_ybe_path_verified=True,
+            positive_ybe_cocycle_verified=True,
+            signed_two_strand_base_verified=True,
+            artin_homomorphism_update_verified=True,
+            residual_faithfulness_theorem=theorem,
+        )
+
+        self.assertTrue(theorem.proves_residual_faithfulness)
+        self.assertTrue(theorem_complete.residual_faithfulness_proved)
+        self.assertTrue(theorem_complete.proves_signed_endpoint_generator_tables)
+
+        incomplete_theorem = UniversalKResidualFaithfulnessAudit(
+            active_endpoint_families=("U", "C"),
+            covered_endpoint_families=("U",),
+            expected_residual_row_count=None,
+            covered_residual_row_count=1,
+            endpoint_channels_exact=True,
+            identity_endpoint_data_forces_residual_identity=True,
+            braid_index_independent=True,
+            product_families_separated=True,
+        )
+        theorem_missing_scope = UniversalKSignedEndpointGeneratorAudit(
+            seed_classifier_entries=seed_entries,
+            reachable_seed_states=(("U", seed_state),),
+            required_entry_keys=required_entry_keys,
+            rows=(positive_row, negative_row),
+            endpoint_targets_fixed=True,
+            coordinate_components_verified=True,
+            inverse_pairing_verified=True,
+            inverse_cancellation_verified=True,
+            positive_ybe_path_verified=True,
+            positive_ybe_cocycle_verified=True,
+            signed_two_strand_base_verified=True,
+            artin_homomorphism_update_verified=True,
+            residual_faithfulness_theorem=incomplete_theorem,
+        )
+
+        self.assertFalse(incomplete_theorem.proves_residual_faithfulness)
+        self.assertFalse(theorem_missing_scope.residual_faithfulness_proved)
+        self.assertIn(
+            "residual_faithfulness_expected_row_count_missing",
+            theorem_missing_scope.failure_reasons,
+        )
+        self.assertIn(
+            "residual_faithfulness_family_coverage_not_exact",
+            theorem_missing_scope.failure_reasons,
         )
 
         complete = UniversalKSignedEndpointGeneratorAudit(

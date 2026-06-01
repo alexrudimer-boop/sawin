@@ -594,6 +594,66 @@ class UniversalKSignedEndpointGeneratorRow:
 
 
 @dataclass(frozen=True)
+class UniversalKResidualFaithfulnessAudit:
+    """Scoped theorem audit connecting endpoint collapse to residual action."""
+
+    active_endpoint_families: Tuple[str, ...]
+    covered_endpoint_families: Tuple[str, ...]
+    expected_residual_row_count: int | None
+    covered_residual_row_count: int
+    endpoint_channels_exact: bool = False
+    identity_endpoint_data_forces_residual_identity: bool = False
+    braid_index_independent: bool = False
+    product_families_separated: bool = False
+
+    @property
+    def family_coverage_exact(self) -> bool:
+        return set(self.active_endpoint_families) == set(self.covered_endpoint_families)
+
+    @property
+    def residual_row_count_supplied(self) -> bool:
+        return self.expected_residual_row_count is not None
+
+    @property
+    def residual_row_coverage_exact(self) -> bool:
+        return (
+            self.expected_residual_row_count is not None
+            and self.expected_residual_row_count >= 0
+            and self.covered_residual_row_count == self.expected_residual_row_count
+        )
+
+    @property
+    def proves_residual_faithfulness(self) -> bool:
+        return (
+            self.family_coverage_exact
+            and self.residual_row_coverage_exact
+            and self.endpoint_channels_exact
+            and self.identity_endpoint_data_forces_residual_identity
+            and self.braid_index_independent
+            and self.product_families_separated
+        )
+
+    @property
+    def failure_reasons(self) -> Tuple[str, ...]:
+        reasons = []
+        if not self.family_coverage_exact:
+            reasons.append("residual_faithfulness_family_coverage_not_exact")
+        if not self.residual_row_count_supplied:
+            reasons.append("residual_faithfulness_expected_row_count_missing")
+        elif not self.residual_row_coverage_exact:
+            reasons.append("residual_faithfulness_row_coverage_not_exact")
+        if not self.endpoint_channels_exact:
+            reasons.append("residual_faithfulness_endpoint_channels_not_exact")
+        if not self.identity_endpoint_data_forces_residual_identity:
+            reasons.append("residual_faithfulness_implication_not_proved")
+        if not self.braid_index_independent:
+            reasons.append("residual_faithfulness_not_braid_index_independent")
+        if not self.product_families_separated:
+            reasons.append("residual_faithfulness_product_families_not_separated")
+        return tuple(reasons)
+
+
+@dataclass(frozen=True)
 class UniversalKSignedEndpointGeneratorAudit:
     """Certificate-shape audit for signed endpoint tables on K_nabla seeds."""
 
@@ -611,6 +671,7 @@ class UniversalKSignedEndpointGeneratorAudit:
     artin_homomorphism_update_verified: bool = False
     cutoff_readouts_exact: bool = False
     residual_faithfulness_verified: bool = False
+    residual_faithfulness_theorem: UniversalKResidualFaithfulnessAudit | None = None
     residual_action_audit: "EndpointResidualActionAudit | None" = None
 
     @property
@@ -786,11 +847,25 @@ class UniversalKSignedEndpointGeneratorAudit:
         return not self.cutoff_readouts_required or self.cutoff_readouts_exact
 
     @property
-    def residual_faithfulness_proved(self) -> bool:
-        return self.residual_faithfulness_verified or (
+    def residual_action_faithfulness_proved(self) -> bool:
+        return (
             self.residual_action_audit is not None
             and self.residual_action_audit.expected_row_count is not None
             and self.residual_action_audit.proves_complete_residual_action_implication
+        )
+
+    @property
+    def residual_theorem_faithfulness_proved(self) -> bool:
+        return (
+            self.residual_faithfulness_theorem is not None
+            and self.residual_faithfulness_theorem.proves_residual_faithfulness
+        )
+
+    @property
+    def residual_faithfulness_proved(self) -> bool:
+        return (
+            self.residual_action_faithfulness_proved
+            or self.residual_theorem_faithfulness_proved
         )
 
     @property
@@ -859,6 +934,8 @@ class UniversalKSignedEndpointGeneratorAudit:
             reasons.append("cutoff_readouts_not_exact")
         if not self.residual_faithfulness_proved:
             reasons.append("residual_faithfulness_not_verified")
+            if self.residual_faithfulness_theorem is not None:
+                reasons.extend(self.residual_faithfulness_theorem.failure_reasons)
         return tuple(reasons)
 
 
@@ -3049,6 +3126,8 @@ class PostLinearRemainingFiniteSystemAudit:
                 ("signed_endpoint_generator_artin_update_verified", False),
                 ("signed_endpoint_generator_cutoff_readouts_exact", False),
                 ("signed_endpoint_generator_residual_faithfulness_verified", False),
+                ("signed_endpoint_generator_residual_faithfulness_flag_supplied", False),
+                ("signed_endpoint_generator_residual_theorem_proved", False),
                 ("signed_endpoint_generator_residual_action_rows", 0),
                 ("signed_endpoint_generator_residual_action_rows_expected", None),
                 ("signed_endpoint_generator_residual_action_complete", False),
@@ -3153,6 +3232,14 @@ class PostLinearRemainingFiniteSystemAudit:
             (
                 "signed_endpoint_generator_residual_faithfulness_verified",
                 audit.residual_faithfulness_proved,
+            ),
+            (
+                "signed_endpoint_generator_residual_faithfulness_flag_supplied",
+                audit.residual_faithfulness_verified,
+            ),
+            (
+                "signed_endpoint_generator_residual_theorem_proved",
+                audit.residual_theorem_faithfulness_proved,
             ),
             (
                 "signed_endpoint_generator_residual_action_rows",

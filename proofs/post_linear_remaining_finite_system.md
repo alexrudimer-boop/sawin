@@ -426,6 +426,13 @@ implication with missing residual rows is not enough, and omitting the
 expected row count does not prove residual faithfulness for this signed
 endpoint layer.
 
+When the bridge is supplied as a symbolic theorem rather than row data, the
+audit requires the theorem to specify exact active and covered endpoint
+families, exact residual row counts, exact endpoint-channel coverage, the
+identity-endpoint-to-identity-residual implication, braid-index independence,
+and product-family separation.  A bare boolean is recorded only as supplied
+data; it is not accepted as proof.
+
 together with the concrete rows:
 
 ```text
