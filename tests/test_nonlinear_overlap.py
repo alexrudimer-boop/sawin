@@ -4237,7 +4237,13 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertEqual(presentation.context_families, ("C", "M", "U"))
         self.assertEqual(len(presentation.contexts_exact), 12)
         self.assertEqual(len(presentation.adjacent_relations_exact), 24)
-        self.assertEqual(len(presentation.far_commutativity_relations_exact), 30)
+        self.assertEqual(len(presentation.far_commutativity_relations_exact), 18)
+        self.assertFalse(
+            any(
+                relation[0][0] == relation[0][1]
+                for relation in presentation.far_commutativity_relations_exact
+            )
+        )
         self.assertEqual(presentation.failure_reasons, ())
 
     def test_endpoint_monodromy_representation_audit_checks_relations(self):

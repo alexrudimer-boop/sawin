@@ -966,14 +966,15 @@ g_{r_3} g_{r_2} g_{r_1}
 g_{r'_3} g_{r'_2} g_{r'_1}.
 ```
 
-For every disjoint pair of positive contexts add the far relation
+For every nontrivial disjoint pair of positive contexts add the far relation
 
 ```text
 g_r g_{r'} = g_{r'} g_r.
 ```
 
-The resulting finitely presented endpoint monodromy group `Pi_E` may be
-infinite; the certificate only needs a finite permutation representation
+The case `r=r'` is a tautological self-swap and should be omitted from the
+finite relation ledger.  The resulting finitely presented endpoint monodromy
+group `Pi_E` may be infinite; the certificate only needs a finite permutation representation
 
 ```text
 rho_E: Pi_E -> Sym(S_E^reach).
@@ -1461,7 +1462,8 @@ emissions.  The finite construction is:
 positive local-context monodromy presentation:
   generators are all positive contexts r=(E,a,b,x,y);
   adjacent relations are the 121/212 context paths computed from T;
-  far relations are disjoint context swaps within each active family;
+  far relations are nontrivial disjoint context swaps within each active
+    family, with tautological self-swaps omitted;
 
 positive rows:
   Gamma^{E,+}_{a,b}(s,x,y)

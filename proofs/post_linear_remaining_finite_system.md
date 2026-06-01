@@ -726,10 +726,10 @@ audit.  The monodromy presentation is exposed as
 `UniversalKEndpointMonodromyPresentation`: its generators are exactly the
 positive local contexts `(E,a,b,x,y)`, its adjacent relations are the two
 positive 121/212 context paths computed from `T`, and its far-commutativity
-relations are the disjoint context swaps inside each active family.  Thus the
-endpoint-state representation is no longer implicit in later path checks; it
-is a finite object attached to the observer build for the exact U/C/M families
-hit by `kappa`.  The build also records
+relations are the nontrivial disjoint context swaps inside each active family;
+tautological self-swaps are omitted.  Thus the endpoint-state representation
+is no longer implicit in later path checks; it is a finite object attached to
+the observer build for the exact U/C/M families hit by `kappa`.  The build also records
 `UniversalKEndpointMonodromyRepresentationAudit`, which reads the positive
 rows as maps on the reachable seed states, checks that every context acts by
 a permutation of the seed states in its family, and verifies every explicit

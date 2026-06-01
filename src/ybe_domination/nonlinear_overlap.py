@@ -4033,9 +4033,10 @@ class UniversalKEndpointMonodromyPresentation:
 
     Contexts are the positive local crossings `(E,a,b,x,y)`.  Relations are
     stored in application order: `((r1,r2,r3),(r1',r2',r3'))` records the two
-    positive adjacent paths, and `((r,r'),(r',r))` records a far-commuting
-    disjoint-context pair.  A finite permutation representation of this
-    presentation is exactly the endpoint-state part of a positive observer.
+    positive adjacent paths, and `((r,r'),(r',r))` records a nontrivial
+    far-commuting disjoint-context pair.  Tautological self-pairs are omitted.
+    A finite permutation representation of this presentation is exactly the
+    endpoint-state part of a positive observer.
     """
 
     expected_endpoint_families: Tuple[str, ...]
@@ -4668,7 +4669,7 @@ def universal_k_endpoint_monodromy_presentation(
     for family in valid_families:
         family_contexts = contexts_by_family.get(family, ())
         for index, left_context in enumerate(family_contexts):
-            for right_context in family_contexts[index:]:
+            for right_context in family_contexts[index + 1:]:
                 far_relations.append(
                     ((left_context, right_context), (right_context, left_context))
                 )
