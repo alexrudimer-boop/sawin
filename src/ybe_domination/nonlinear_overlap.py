@@ -8073,6 +8073,7 @@ class UniversalKEndpointObserverFamilyBuildAudit:
 
     seed_classifier_entries: Tuple[UniversalKSeedClassifierEntry, ...]
     builds: Tuple[Tuple[str, UniversalKEndpointObserverBuild], ...]
+    word_potential_certificate_rows: Tuple[object, ...] = ()
 
     @property
     def expected_seed_states(
@@ -8149,6 +8150,103 @@ class UniversalKEndpointObserverFamilyBuildAudit:
     @property
     def duplicate_build_families(self) -> Tuple[str, ...]:
         return _duplicate_values(tuple(family for family, _build in self.build_rows_exact))
+
+    @property
+    def certificate_input_supplied(self) -> bool:
+        return bool(self.word_potential_certificate_rows)
+
+    @property
+    def certificate_row_parts(
+        self,
+    ) -> Tuple[Tuple[object, object], ...]:
+        return tuple(
+            parts
+            for row in self.word_potential_certificate_rows
+            for parts in (_universal_k_two_field_row_parts(row),)
+            if parts is not None
+        )
+
+    @property
+    def malformed_certificate_rows(self) -> Tuple[object, ...]:
+        return _unique_values(
+            tuple(
+                row
+                for row in self.word_potential_certificate_rows
+                if (
+                    _universal_k_two_field_row_parts(row) is None
+                    or not isinstance(
+                        _universal_k_two_field_row_parts(row)[1],
+                        UniversalKWordPotentialCertificate,
+                    )
+                )
+            )
+        )
+
+    @property
+    def invalid_certificate_families(self) -> Tuple[object, ...]:
+        return _unique_values(
+            tuple(
+                family
+                for family, certificate in self.certificate_row_parts
+                if isinstance(certificate, UniversalKWordPotentialCertificate)
+                and family not in UNIVERSAL_K_ENDPOINT_FAMILIES
+            )
+        )
+
+    @property
+    def certificate_families_exact(self) -> Tuple[str, ...]:
+        return tuple(
+            sorted(
+                {
+                    family
+                    for family, certificate in self.certificate_row_parts
+                    if family in UNIVERSAL_K_ENDPOINT_FAMILIES
+                    and isinstance(certificate, UniversalKWordPotentialCertificate)
+                },
+                key=repr,
+            )
+        )
+
+    @property
+    def duplicate_certificate_families(self) -> Tuple[str, ...]:
+        return _duplicate_values(
+            tuple(
+                family
+                for family, certificate in self.certificate_row_parts
+                if family in UNIVERSAL_K_ENDPOINT_FAMILIES
+                and isinstance(certificate, UniversalKWordPotentialCertificate)
+            )
+        )
+
+    @property
+    def missing_certificate_families(self) -> Tuple[str, ...]:
+        if not self.certificate_input_supplied:
+            return ()
+        covered = set(self.certificate_families_exact)
+        return tuple(
+            family
+            for family in self.expected_endpoint_families_exact
+            if family not in covered
+        )
+
+    @property
+    def extra_certificate_families(self) -> Tuple[str, ...]:
+        if not self.certificate_input_supplied:
+            return ()
+        expected = set(self.expected_endpoint_families_exact)
+        return tuple(
+            family for family in self.certificate_families_exact if family not in expected
+        )
+
+    @property
+    def certificate_input_rows_exact(self) -> bool:
+        return not self.certificate_input_supplied or (
+            not self.malformed_certificate_rows
+            and not self.invalid_certificate_families
+            and not self.duplicate_certificate_families
+            and not self.missing_certificate_families
+            and not self.extra_certificate_families
+        )
 
     @property
     def missing_build_families(self) -> Tuple[str, ...]:
@@ -8255,6 +8353,7 @@ class UniversalKEndpointObserverFamilyBuildAudit:
             and not self.malformed_build_rows
             and not self.invalid_build_families
             and not self.duplicate_build_families
+            and self.certificate_input_rows_exact
             and not self.build_scope_failures
             and not self.unproved_build_families
         )
@@ -8270,6 +8369,16 @@ class UniversalKEndpointObserverFamilyBuildAudit:
             reasons.append("endpoint_observer_family_builds_unknown_families")
         if self.duplicate_build_families:
             reasons.append("endpoint_observer_family_builds_duplicate_families")
+        if self.malformed_certificate_rows:
+            reasons.append("endpoint_observer_family_certificates_malformed_rows")
+        if self.invalid_certificate_families:
+            reasons.append("endpoint_observer_family_certificates_unknown_families")
+        if self.duplicate_certificate_families:
+            reasons.append("endpoint_observer_family_certificates_duplicate_families")
+        if self.missing_certificate_families:
+            reasons.append("endpoint_observer_family_certificates_missing_families")
+        if self.extra_certificate_families:
+            reasons.append("endpoint_observer_family_certificates_extra_families")
         if self.missing_build_families:
             reasons.append("endpoint_observer_family_builds_missing_families")
         if self.extra_build_families:
@@ -8500,12 +8609,15 @@ def universal_k_endpoint_observer_build(
 def universal_k_endpoint_observer_family_build_audit(
     seed_classifier_entries: Sequence[UniversalKSeedClassifierEntry],
     builds: Sequence[Tuple[str, UniversalKEndpointObserverBuild]],
+    *,
+    word_potential_certificate_rows: Sequence[object] = (),
 ) -> UniversalKEndpointObserverFamilyBuildAudit:
     """Audit one constructed endpoint observer for each active U/C/M family."""
 
     return UniversalKEndpointObserverFamilyBuildAudit(
         seed_classifier_entries=tuple(seed_classifier_entries),
         builds=tuple(builds),
+        word_potential_certificate_rows=tuple(word_potential_certificate_rows),
     )
 
 
@@ -8616,6 +8728,7 @@ def universal_k_endpoint_observer_builds_by_family(
     return universal_k_endpoint_observer_family_build_audit(
         seed_classifier_entries,
         tuple(builds),
+        word_potential_certificate_rows=tuple(word_potential_certificates_by_family),
     )
 
 
@@ -12552,6 +12665,12 @@ class PostLinearRemainingFiniteSystemAudit:
                 ("endpoint_observer_family_build_missing_families", ()),
                 ("endpoint_observer_family_build_extra_families", ()),
                 ("endpoint_observer_family_build_duplicate_families", ()),
+                ("endpoint_observer_family_certificate_rows", ()),
+                ("endpoint_observer_family_certificate_malformed_rows", ()),
+                ("endpoint_observer_family_certificate_unknown_families", ()),
+                ("endpoint_observer_family_certificate_duplicate_families", ()),
+                ("endpoint_observer_family_certificate_missing_families", ()),
+                ("endpoint_observer_family_certificate_extra_families", ()),
                 ("endpoint_observer_family_build_malformed_rows", ()),
                 ("endpoint_observer_family_build_unknown_families", ()),
                 ("endpoint_observer_family_build_scope_failures", ()),
@@ -12584,6 +12703,30 @@ class PostLinearRemainingFiniteSystemAudit:
             (
                 "endpoint_observer_family_build_duplicate_families",
                 audit.duplicate_build_families,
+            ),
+            (
+                "endpoint_observer_family_certificate_rows",
+                audit.word_potential_certificate_rows,
+            ),
+            (
+                "endpoint_observer_family_certificate_malformed_rows",
+                audit.malformed_certificate_rows,
+            ),
+            (
+                "endpoint_observer_family_certificate_unknown_families",
+                audit.invalid_certificate_families,
+            ),
+            (
+                "endpoint_observer_family_certificate_duplicate_families",
+                audit.duplicate_certificate_families,
+            ),
+            (
+                "endpoint_observer_family_certificate_missing_families",
+                audit.missing_certificate_families,
+            ),
+            (
+                "endpoint_observer_family_certificate_extra_families",
+                audit.extra_certificate_families,
             ),
             (
                 "endpoint_observer_family_build_malformed_rows",

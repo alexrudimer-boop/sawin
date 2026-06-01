@@ -1523,6 +1523,11 @@ covered, missing, extra, duplicate, malformed, scope-mismatched, and unproved
 family builds as finite data.  This ledger is separate from the combined
 signed-generator audit: it is evidence that the U/C/M observers were
 constructed family-by-family, not by an opaque product certificate.
+The per-family word-potential certificate input rows must also be audited as
+finite data.  A malformed two-field row, a non-certificate value, an unknown
+family, a duplicate family, a missing active-family certificate, or an extra
+certificate family must be reported explicitly rather than silently turning
+into a missing observer build.
 Positive observer rows may be forced only from actual word-potential identity
 row objects.  A tuple-shaped identity-row stand-in is a malformed certificate
 entry: it must be reported at the word-potential gate, must not be interpreted
@@ -1845,6 +1850,7 @@ finite_signed_row_checks_derived_from_tables,
 signed_generator_domain_exact,
 endpoint_observer_build_record_retained,
 endpoint_observer_family_build_ledger_exact,
+endpoint_observer_family_certificate_input_ledger_exact,
 endpoint_observer_each_active_family_single_scoped_and_proved,
 endpoint_observer_positive_rows_forced_from_typed_identity_rows,
 endpoint_observer_monodromy_contexts_exposed,

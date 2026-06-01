@@ -4660,6 +4660,48 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             missing_m.failure_reasons,
         )
 
+        malformed_inputs = universal_k_endpoint_observer_builds_by_family(
+            interval,
+            seed_entries,
+            tuple(certificates)
+            + (
+                ("Z", certificates[0][1]),
+                ("M", "not_a_certificate"),
+                ("C", certificates[1][1]),
+                ("short",),
+            ),
+            detector_track_initialization_rows=tuple(detector_rows),
+            endpoint_target_audits_by_family=tuple(endpoint_targets),
+            cutoff_readout_audits_by_family=tuple(cutoff_readouts),
+            residual_faithfulness_theorems_by_family=tuple(residual_theorems),
+        )
+
+        self.assertFalse(malformed_inputs.proves_family_endpoint_observers)
+        self.assertEqual(
+            malformed_inputs.invalid_certificate_families,
+            ("Z",),
+        )
+        self.assertEqual(
+            malformed_inputs.duplicate_certificate_families,
+            ("C",),
+        )
+        self.assertEqual(
+            malformed_inputs.malformed_certificate_rows,
+            (("M", "not_a_certificate"), ("short",)),
+        )
+        self.assertIn(
+            "endpoint_observer_family_certificates_malformed_rows",
+            malformed_inputs.failure_reasons,
+        )
+        self.assertIn(
+            "endpoint_observer_family_certificates_unknown_families",
+            malformed_inputs.failure_reasons,
+        )
+        self.assertIn(
+            "endpoint_observer_family_certificates_duplicate_families",
+            malformed_inputs.failure_reasons,
+        )
+
     def test_endpoint_observer_builder_rejects_omitted_positive_context(self):
         interval = one_color_identity_interval()
         group = cyclic_group(2)

@@ -772,6 +772,12 @@ target audits, C/M cutoff readouts, and per-family residual-faithfulness
 theorems.  Its routed-endpoint obstruction data reports the expected,
 covered, missing, extra, duplicate, malformed, scope-mismatched, and unproved
 family builds separately from the older combined signed-generator audit.
+When the ledger is derived from per-family word-potential certificates, the
+input certificate rows are themselves audited: malformed two-field rows,
+non-certificate values, unknown endpoint families, duplicate certificate
+families, missing active-family certificates, and extra certificate families
+are reported as finite data.  Such rows are not silently collapsed into a
+generic missing-build failure.
 When a fixed endpoint group is declared as a product over multiple endpoint
 families, the signed endpoint audit now also checks family support of each
 emitted label: a row in family `E` must have identity components in every
@@ -1000,6 +1006,12 @@ endpoint_observer_family_build_covered_families
 endpoint_observer_family_build_missing_families
 endpoint_observer_family_build_extra_families
 endpoint_observer_family_build_duplicate_families
+endpoint_observer_family_certificate_rows
+endpoint_observer_family_certificate_malformed_rows
+endpoint_observer_family_certificate_unknown_families
+endpoint_observer_family_certificate_duplicate_families
+endpoint_observer_family_certificate_missing_families
+endpoint_observer_family_certificate_extra_families
 endpoint_observer_family_build_malformed_rows
 endpoint_observer_family_build_unknown_families
 endpoint_observer_family_build_scope_failures
