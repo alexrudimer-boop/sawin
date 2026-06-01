@@ -940,7 +940,10 @@ repeated entries.
 The residual action scope seed-state ledgers must also be well formed
 endpoint states `(E,s)` with known family and tuple-valued seed state.  A
 malformed seed key is an inexact endpoint channel even if the malformed
-expected and covered sets agree.
+expected and covered sets agree.  These residual seed ledgers are normalized
+with duplicate-safe, hashability-safe markers before comparison, so an
+unhashable malformed seed key is reported as finite bad data rather than
+escaping as a runtime failure.
 The active and covered endpoint-family ledgers for the residual action scope
 must also be subsets of `{U,C,M}`; an unknown family label is rejected even if
 the active and covered ledgers match.
@@ -996,7 +999,9 @@ separation are recorded only as supplied data; they are not accepted as proof.
 The symbolic residual theorem applies the same well-formedness gate to its
 expected and covered seed-state ledgers and to the seed states named by each
 symbolic residual row.  Malformed row-local seed states make the row invalid;
-malformed theorem ledgers make endpoint-channel coverage inexact.
+malformed theorem ledgers make endpoint-channel coverage inexact.  The theorem
+uses the same hashability-safe marker comparison for residual seed coverage,
+so unhashable malformed row or ledger seeds are rejected as certificate data.
 The theorem's active and covered endpoint-family ledgers are checked the same
 way: every family must be one of `{U,C,M}`, and row-local endpoint family
 labels outside that set make the row invalid.

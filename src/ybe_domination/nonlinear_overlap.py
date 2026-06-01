@@ -2018,14 +2018,11 @@ class UniversalKResidualFaithfulnessRow:
     def malformed_endpoint_seed_states(
         self,
     ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
-        return tuple(
-            sorted(
-                {
-                    state
-                    for state in self.endpoint_seed_states
-                    if not _universal_k_endpoint_seed_state_well_formed(state)
-                },
-                key=repr,
+        return _unique_values(
+            tuple(
+                state
+                for state in self.endpoint_seed_states
+                if not _universal_k_endpoint_seed_state_well_formed(state)
             )
         )
 
@@ -2091,7 +2088,9 @@ class UniversalKResidualFaithfulnessRow:
 
     @property
     def seed_state_families_match_row(self) -> bool:
-        return not self.malformed_endpoint_seed_states and {
+        if self.malformed_endpoint_seed_states:
+            return False
+        return {
             family for family, _seed_state in self.endpoint_seed_states
         } == set(self.endpoint_families)
 
@@ -2207,19 +2206,19 @@ class UniversalKResidualFaithfulnessAudit:
     def expected_endpoint_seed_states_exact(
         self,
     ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
-        return tuple(sorted(set(self.expected_endpoint_seed_states), key=repr))
+        return _unique_values(self.expected_endpoint_seed_states)
 
     @property
     def covered_endpoint_seed_states_exact(
         self,
     ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
-        return tuple(sorted(set(self.covered_endpoint_seed_states), key=repr))
+        return _unique_values(self.covered_endpoint_seed_states)
 
     @property
     def seed_state_coverage_exact(self) -> bool:
-        return self.seed_state_ledgers_well_formed and set(
-            self.expected_endpoint_seed_states_exact
-        ) == set(self.covered_endpoint_seed_states_exact)
+        return self.seed_state_ledgers_well_formed and {
+            _value_marker(state) for state in self.expected_endpoint_seed_states_exact
+        } == {_value_marker(state) for state in self.covered_endpoint_seed_states_exact}
 
     @property
     def duplicate_expected_endpoint_seed_states(
@@ -2237,14 +2236,11 @@ class UniversalKResidualFaithfulnessAudit:
     def malformed_expected_endpoint_seed_states(
         self,
     ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
-        return tuple(
-            sorted(
-                {
-                    state
-                    for state in self.expected_endpoint_seed_states
-                    if not _universal_k_endpoint_seed_state_well_formed(state)
-                },
-                key=repr,
+        return _unique_values(
+            tuple(
+                state
+                for state in self.expected_endpoint_seed_states
+                if not _universal_k_endpoint_seed_state_well_formed(state)
             )
         )
 
@@ -2252,14 +2248,11 @@ class UniversalKResidualFaithfulnessAudit:
     def malformed_covered_endpoint_seed_states(
         self,
     ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
-        return tuple(
-            sorted(
-                {
-                    state
-                    for state in self.covered_endpoint_seed_states
-                    if not _universal_k_endpoint_seed_state_well_formed(state)
-                },
-                key=repr,
+        return _unique_values(
+            tuple(
+                state
+                for state in self.covered_endpoint_seed_states
+                if not _universal_k_endpoint_seed_state_well_formed(state)
             )
         )
 
@@ -2400,14 +2393,19 @@ class UniversalKResidualFaithfulnessAudit:
         self,
     ) -> Tuple[UniversalKResidualFaithfulnessRow, ...]:
         active = set(self.active_endpoint_families)
-        seeds = set(self.expected_endpoint_seed_states_exact)
+        seed_markers = {
+            _value_marker(state) for state in self.expected_endpoint_seed_states_exact
+        }
         return tuple(
             row
             for row in self.residual_rows
             if (
                 not row.row_scope_valid
                 or not set(row.endpoint_families) <= active
-                or not set(row.endpoint_seed_states) <= seeds
+                or not {
+                    _value_marker(state) for state in row.endpoint_seed_states
+                }
+                <= seed_markers
             )
         )
 
@@ -2460,12 +2458,14 @@ class UniversalKResidualFaithfulnessAudit:
 
     @property
     def residual_rows_cover_endpoint_seed_states(self) -> bool:
-        row_seed_states = {
-            seed_state
+        row_seed_state_markers = {
+            _value_marker(seed_state)
             for row in self.residual_rows
             for seed_state in row.endpoint_seed_states
         }
-        return row_seed_states == set(self.expected_endpoint_seed_states_exact)
+        return row_seed_state_markers == {
+            _value_marker(state) for state in self.expected_endpoint_seed_states_exact
+        }
 
     @property
     def residual_rows_cover_endpoint_families(self) -> bool:
@@ -2879,19 +2879,19 @@ class UniversalKResidualActionScopeAudit:
     def expected_endpoint_seed_states_exact(
         self,
     ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
-        return tuple(sorted(set(self.expected_endpoint_seed_states), key=repr))
+        return _unique_values(self.expected_endpoint_seed_states)
 
     @property
     def covered_endpoint_seed_states_exact(
         self,
     ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
-        return tuple(sorted(set(self.covered_endpoint_seed_states), key=repr))
+        return _unique_values(self.covered_endpoint_seed_states)
 
     @property
     def seed_state_coverage_exact(self) -> bool:
-        return self.seed_state_ledgers_well_formed and set(
-            self.expected_endpoint_seed_states_exact
-        ) == set(self.covered_endpoint_seed_states_exact)
+        return self.seed_state_ledgers_well_formed and {
+            _value_marker(state) for state in self.expected_endpoint_seed_states_exact
+        } == {_value_marker(state) for state in self.covered_endpoint_seed_states_exact}
 
     @property
     def duplicate_expected_endpoint_seed_states(
@@ -2909,14 +2909,11 @@ class UniversalKResidualActionScopeAudit:
     def malformed_expected_endpoint_seed_states(
         self,
     ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
-        return tuple(
-            sorted(
-                {
-                    state
-                    for state in self.expected_endpoint_seed_states
-                    if not _universal_k_endpoint_seed_state_well_formed(state)
-                },
-                key=repr,
+        return _unique_values(
+            tuple(
+                state
+                for state in self.expected_endpoint_seed_states
+                if not _universal_k_endpoint_seed_state_well_formed(state)
             )
         )
 
@@ -2924,14 +2921,11 @@ class UniversalKResidualActionScopeAudit:
     def malformed_covered_endpoint_seed_states(
         self,
     ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
-        return tuple(
-            sorted(
-                {
-                    state
-                    for state in self.covered_endpoint_seed_states
-                    if not _universal_k_endpoint_seed_state_well_formed(state)
-                },
-                key=repr,
+        return _unique_values(
+            tuple(
+                state
+                for state in self.covered_endpoint_seed_states
+                if not _universal_k_endpoint_seed_state_well_formed(state)
             )
         )
 
@@ -4929,16 +4923,22 @@ class UniversalKTelescopingDetectorAudit:
 
     @property
     def seed_state_scope_matches_entries(self) -> bool:
-        return set(self.expected_endpoint_seed_states_exact) == set(
-            self.entry_endpoint_seed_states
-        )
+        return {
+            _value_marker(state) for state in self.expected_endpoint_seed_states_exact
+        } == {_value_marker(state) for state in self.entry_endpoint_seed_states}
 
     @property
     def seed_state_coverage_exact(self) -> bool:
         return (
             bool(self.expected_endpoint_seed_states_exact)
-            and set(self.expected_endpoint_seed_states_exact)
-            == set(self.covered_endpoint_seed_states_exact)
+            and {
+                _value_marker(state)
+                for state in self.expected_endpoint_seed_states_exact
+            }
+            == {
+                _value_marker(state)
+                for state in self.covered_endpoint_seed_states_exact
+            }
         )
 
     @property
@@ -6487,8 +6487,11 @@ class UniversalKSignedEndpointGeneratorAudit:
     def residual_action_scope_matches_seed_states(self) -> bool:
         return (
             self.residual_action_scope is not None
-            and set(self.residual_action_scope.expected_endpoint_seed_states_exact)
-            == set(self.required_seed_states)
+            and {
+                _value_marker(state)
+                for state in self.residual_action_scope.expected_endpoint_seed_states_exact
+            }
+            == {_value_marker(state) for state in self.required_seed_states}
         )
 
     @property
@@ -6522,10 +6525,14 @@ class UniversalKSignedEndpointGeneratorAudit:
     def residual_theorem_scope_matches_seed_states(self) -> bool:
         return (
             self.residual_faithfulness_theorem is not None
-            and set(
-                self.residual_faithfulness_theorem.expected_endpoint_seed_states_exact
-            )
-            == set(self.required_seed_states)
+            and {
+                _value_marker(state)
+                for state in (
+                    self.residual_faithfulness_theorem
+                    .expected_endpoint_seed_states_exact
+                )
+            }
+            == {_value_marker(state) for state in self.required_seed_states}
         )
 
     @property
@@ -6612,10 +6619,14 @@ class UniversalKSignedEndpointGeneratorAudit:
         ):
             return False
         certificate = self.telescoping_detector_audit.word_potential_certificate
-        normalized = set(certificate.normalized_seed_states_exact)
+        normalized = {
+            _value_marker(state) for state in certificate.normalized_seed_states_exact
+        }
         return (
             bool(self.required_seed_states)
-            and set(self.required_seed_states).issubset(normalized)
+            and {
+                _value_marker(state) for state in self.required_seed_states
+            }.issubset(normalized)
         )
 
     @property
@@ -6636,20 +6647,25 @@ class UniversalKSignedEndpointGeneratorAudit:
     def missing_initial_normalized_seed_states(
         self,
     ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
-        normalized = set(self.normalized_word_potential_seed_states_exact)
+        normalized = {
+            _value_marker(state)
+            for state in self.normalized_word_potential_seed_states_exact
+        }
         return tuple(
-            state for state in self.required_seed_states if state not in normalized
+            state
+            for state in self.required_seed_states
+            if _value_marker(state) not in normalized
         )
 
     @property
     def extra_initial_normalized_seed_states(
         self,
     ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
-        required = set(self.required_seed_states)
+        required = {_value_marker(state) for state in self.required_seed_states}
         return tuple(
             state
             for state in self.normalized_word_potential_seed_states_exact
-            if state not in required
+            if _value_marker(state) not in required
         )
 
     @property

@@ -1791,7 +1791,10 @@ endpoint row because it can hide that one family has no residual readout.
 Every residual-action scope seed-state ledger entry must also be a
 well-formed endpoint state `(E,s)` with `E in {U,C,M}` and tuple-valued seed
 state `s`.  Malformed seed-state keys are not exact routed channels, even if
-the malformed expected and covered sets happen to agree.
+the malformed expected and covered sets happen to agree.  Residual seed
+coverage must be compared using duplicate-safe, hashability-safe markers, so
+an unhashable malformed seed key is reported as finite certificate data
+rather than becoming a runtime failure.
 The active and covered endpoint-family ledgers themselves must also use only
 the known families `{U,C,M}`.  A residual scope over an unknown family label
 is not an exact endpoint-channel certificate, even if the active and covered
@@ -1858,7 +1861,9 @@ Every symbolic residual theorem seed-state ledger entry and every row-local
 seed-state entry must be well formed as `(E,s)` with `E in {U,C,M}` and
 tuple-valued `s`.  A malformed seed key makes both endpoint-channel
 coverage and row scope invalid; it cannot be repaired by matching malformed
-expected, covered, and row sets.
+expected, covered, and row sets.  The same hashability-safe marker comparison
+must be used for theorem seed coverage, so unhashable malformed row or ledger
+seeds are explicit certificate errors.
 The theorem's active and covered endpoint-family ledgers must likewise be
 subsets of `{U,C,M}`, and every row-local endpoint family must be one of
 those known families.  Unknown family labels make the theorem scope invalid.
