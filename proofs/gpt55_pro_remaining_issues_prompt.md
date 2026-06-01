@@ -1335,6 +1335,8 @@ must evaluate the displayed word-potential identity for every assignment of
 the variables in that positive row to elements of the fixed group `H_E`.
 If negative substitutions are recorded, they are diagnostics only; closure
 comes from inverse-derived negative rows plus the positive telescope.
+Rows with any sign other than `+1` or `-1` are malformed certificate rows and
+must be rejected rather than silently ignored.
 
 The initial routed state must be normalized:
 

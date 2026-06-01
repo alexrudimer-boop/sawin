@@ -3772,6 +3772,28 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             ),
         )
 
+        malformed_sign_row = replace(
+            good_row,
+            entry_key=("U", source_state, 0, "*", "*", 0, 0),
+        )
+        malformed_sign_certificate = replace(
+            certificate,
+            identity_rows=(good_row, malformed_sign_row),
+        )
+        self.assertEqual(
+            malformed_sign_certificate.malformed_identity_entry_keys,
+            (malformed_sign_row.entry_key,),
+        )
+        self.assertFalse(malformed_sign_certificate.artin_substitutions_verified)
+        self.assertFalse(malformed_sign_certificate.identities_verified)
+        self.assertIn(
+            "unknown_signed_row_sign",
+            tuple(
+                failure[1]
+                for failure in malformed_sign_certificate.substitution_failures
+            ),
+        )
+
         raw_assignment_template = replace(
             certificate,
             templates=((source_key, ((("A", 0, 0), 1),)),),
@@ -3937,6 +3959,64 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         )
         self.assertTrue(audit.telescoping_detector_proved)
         self.assertEqual(audit.telescoping_detector_signed_row_mismatches, ())
+
+    def test_malformed_word_potential_identity_rows_are_rejected(self):
+        seed_state = ("*", "*", "left_constant_map_universal_kernel")
+        seed_entries = (
+            (
+                (
+                    "*",
+                    "*",
+                    "L",
+                    "constant_map_kernel",
+                    ("*", (0, 1), "universal", "universal"),
+                ),
+                ("U", seed_state),
+            ),
+        )
+        reachable = (("U", seed_state),)
+        interval = one_color_identity_interval()
+        keys = universal_k_signed_endpoint_required_entry_keys(interval, reachable)
+        positive_keys = tuple(key for key in keys if key[2] == 1)
+        rows = identity_signed_endpoint_rows(keys)
+        group = cyclic_group(2)
+        telescoping = trivial_telescoping_detector_audit(
+            positive_keys,
+            rows=rows,
+            endpoint_group=group,
+        )
+        certificate = telescoping.word_potential_certificate
+        malformed_identity = UniversalKWordPotentialIdentityRow(
+            entry_key=("U", seed_state, 0, "*", "*", 0, 0),
+            next_seed_state=seed_state,
+            endpoint_value=group.identity,
+            artin_substitution=(),
+        )
+        telescoping = replace(
+            telescoping,
+            word_potential_certificate=replace(
+                certificate,
+                identity_rows=certificate.identity_rows + (malformed_identity,),
+            ),
+        )
+        audit = universal_k_signed_endpoint_generator_audit(
+            interval,
+            seed_entries,
+            reachable,
+            rows,
+            endpoint_group=group,
+            telescoping_detector_audit=telescoping,
+        )
+
+        self.assertFalse(audit.telescoping_detector_proved)
+        self.assertIn(
+            "word_potential_certificate_malformed_identity_rows",
+            audit.failure_reasons,
+        )
+        self.assertEqual(
+            telescoping.word_potential_certificate.malformed_identity_entry_keys,
+            (malformed_identity.entry_key,),
+        )
 
     def test_signed_endpoint_audit_requires_family_scoped_endpoint_targets(self):
         seed_state = ("*", "*", "left_constant_map_universal_kernel")

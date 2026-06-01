@@ -1001,7 +1001,13 @@ def _universal_k_expected_artin_substitution(
 def _universal_k_is_positive_entry_key(
     key: UniversalKSignedEndpointEntryKey,
 ) -> bool:
-    return key[2] == 1
+    return len(key) > 2 and key[2] == 1
+
+
+def _universal_k_has_valid_signed_entry_key_sign(
+    key: UniversalKSignedEndpointEntryKey,
+) -> bool:
+    return len(key) > 2 and key[2] in {-1, 1}
 
 
 @dataclass(frozen=True)
@@ -1072,6 +1078,21 @@ class UniversalKWordPotentialCertificate:
         )
 
     @property
+    def malformed_identity_entry_keys(
+        self,
+    ) -> Tuple[UniversalKSignedEndpointEntryKey, ...]:
+        return tuple(
+            sorted(
+                {
+                    row.entry_key
+                    for row in self.identity_rows
+                    if not _universal_k_has_valid_signed_entry_key_sign(row.entry_key)
+                },
+                key=repr,
+            )
+        )
+
+    @property
     def normalized_seed_states_exact(
         self,
     ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
@@ -1108,6 +1129,10 @@ class UniversalKWordPotentialCertificate:
         failures = []
         template_map = self.template_map
         for row in self.identity_rows:
+            sign = row.entry_key[2] if len(row.entry_key) > 2 else None
+            if not _universal_k_has_valid_signed_entry_key_sign(row.entry_key):
+                failures.append((row.entry_key, "unknown_signed_row_sign", sign))
+                continue
             entry_family, _state, sign, *_rest = row.entry_key
             if sign != 1:
                 continue
@@ -1291,14 +1316,16 @@ class UniversalKWordPotentialCertificate:
     @property
     def artin_substitutions_verified(self) -> bool:
         return (
-            not self.duplicate_positive_identity_entry_keys
+            not self.malformed_identity_entry_keys
+            and not self.duplicate_positive_identity_entry_keys
             and not self.substitution_failures
         )
 
     @property
     def identities_verified(self) -> bool:
         return (
-            not self.duplicate_positive_identity_entry_keys
+            not self.malformed_identity_entry_keys
+            and not self.duplicate_positive_identity_entry_keys
             and not self.identity_failures
         )
 
@@ -3069,6 +3096,7 @@ class UniversalKTelescopingDetectorAudit:
     def word_potential_certificate_ledgers_have_no_duplicates(self) -> bool:
         return self.word_potential_certificate is not None and (
             not self.word_potential_certificate.duplicate_template_seed_states
+            and not self.word_potential_certificate.malformed_identity_entry_keys
             and not self.word_potential_certificate.duplicate_positive_identity_entry_keys
             and not self.word_potential_certificate.duplicate_normalized_seed_states
         )
@@ -3334,6 +3362,8 @@ class UniversalKTelescopingDetectorAudit:
         if not self.word_potential_identity_proved:
             reasons.append("word_potential_identity_not_verified")
         if self.word_potential_certificate is not None:
+            if self.word_potential_certificate.malformed_identity_entry_keys:
+                reasons.append("word_potential_certificate_malformed_identity_rows")
             if self.word_potential_certificate.raw_assignment_template_variables:
                 reasons.append("word_potential_template_contains_raw_assignments")
             if self.word_potential_certificate.substitution_failures:
@@ -7087,6 +7117,10 @@ class PostLinearRemainingFiniteSystemAudit:
                     False,
                 ),
                 (
+                    "signed_endpoint_generator_word_potential_malformed_identity_rows",
+                    (),
+                ),
+                (
                     "signed_endpoint_generator_terminal_readout_longitudes_verified",
                     False,
                 ),
@@ -7906,6 +7940,15 @@ class PostLinearRemainingFiniteSystemAudit:
                     telescoping_audit.word_potential_identity_proved
                     if telescoping_audit is not None
                     else False
+                ),
+            ),
+            (
+                "signed_endpoint_generator_word_potential_malformed_identity_rows",
+                (
+                    telescoping_audit.word_potential_certificate.malformed_identity_entry_keys
+                    if telescoping_audit is not None
+                    and telescoping_audit.word_potential_certificate is not None
+                    else ()
                 ),
             ),
             (

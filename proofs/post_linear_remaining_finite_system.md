@@ -433,7 +433,7 @@ label cocycles recorded only as word-potential diagnostics
 fixed-assignment detector-track initialization
 Artin detector recurrence on each track
 finite word-potential certificate table supplied
-word-potential identity rows match D_Gamma and Gamma labels
+positive word-potential identity rows match positive D_Gamma and Gamma labels
 word-potential template coverage for every reachable endpoint state
 word-potential templates use only current longitude variables
 word-potential variables use only declared fixed detector tracks
@@ -585,10 +585,12 @@ the next state and emitted label match the positive signed row, that terminal
 templates contain only current longitude variables `U_{r,j}`, and that the
 local substitutions are the positive Artin recurrences.  Negative
 word-potential rows, if present, are diagnostic only once the signed endpoint
-audit has proved that negative endpoint rows are actual inverses.  The checker
-then exhausts all assignments of the finitely many variables in the positive
-row to the fixed endpoint group and checks the word identity in the group
-table.  This removes the previous loophole
+audit has proved that negative endpoint rows are actual inverses.  Malformed
+identity rows with any sign other than `+1` or `-1` are rejected rather than
+being treated as harmless diagnostics.  The checker then exhausts all
+assignments of the finitely many variables in the positive row to the fixed
+endpoint group and checks the word identity in the group table.  This removes
+the previous loophole
 where a bare boolean could stand in for a tautological accumulated potential.
 The executable close criterion derives the Artin-recurrence and
 terminal-readout-longitude gates from these same substitution and template
@@ -863,6 +865,7 @@ signed_endpoint_generator_word_potential_raw_assignment_scope_verified
 signed_endpoint_generator_word_potential_raw_assignment_scope_failures
 signed_endpoint_generator_word_potential_artin_substitution_verified
 signed_endpoint_generator_word_potential_identity_verified
+signed_endpoint_generator_word_potential_malformed_identity_rows
 signed_endpoint_generator_word_potential_certificate_template_states
 signed_endpoint_generator_word_potential_certificate_identity_rows
 signed_endpoint_generator_word_potential_certificate_positive_identity_rows
