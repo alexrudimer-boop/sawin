@@ -102,6 +102,7 @@ UniversalKSeedClassifierEntry = Tuple[
     Tuple[str, UniversalKSeedState],
 ]
 UnsupportedCompanionBlockImageRowKey = Tuple[str, Color, Color]
+UniversalKDetectorTrackKey = Tuple[str, int]
 UniversalKSignedEndpointEntryKey = Tuple[
     str,
     UniversalKSeedState,
@@ -139,6 +140,86 @@ UniversalKWordPotentialSubstitution = Tuple[
     ...,
 ]
 UniversalKWordPotentialFailure = Tuple[object, str, object]
+
+
+_UNIVERSAL_K_DETECTOR_TRACK_ALLOWED_DEPENDENCIES = frozenset(
+    (
+        "interval_data",
+        "endpoint_family",
+        "routed_seed_state",
+        "initial_colour_tuple",
+        "initial_fibre_tuple",
+        "strand_index",
+        "strand_colour",
+        "local_input",
+        "local_output",
+    )
+)
+_UNIVERSAL_K_DETECTOR_TRACK_FORBIDDEN_DEPENDENCIES = frozenset(
+    (
+        "braid_word",
+        "braid_prefix",
+        "braid_index",
+        "failed_detector",
+        "finite_search_result",
+        "normalized_law_sequence",
+        "timeout",
+    )
+)
+
+
+@dataclass(frozen=True)
+class UniversalKDetectorTrackInitializationRow:
+    """Finite rule descriptor for one fixed endpoint detector track."""
+
+    endpoint_family: str
+    track_index: int
+    assignment_rule: str
+    dependencies: Tuple[str, ...] = ()
+    local_assignment_template: Tuple[Tuple[object, object], ...] = ()
+
+    @property
+    def key(self) -> UniversalKDetectorTrackKey:
+        return (self.endpoint_family, self.track_index)
+
+    @property
+    def key_valid(self) -> bool:
+        return (
+            self.endpoint_family in UNIVERSAL_K_ENDPOINT_FAMILIES
+            and self.track_index >= 0
+        )
+
+    @property
+    def assignment_rule_present(self) -> bool:
+        return bool(self.assignment_rule)
+
+    @property
+    def duplicate_dependencies(self) -> Tuple[str, ...]:
+        return _duplicate_values(self.dependencies)
+
+    @property
+    def forbidden_dependencies(self) -> Tuple[str, ...]:
+        forbidden = _UNIVERSAL_K_DETECTOR_TRACK_FORBIDDEN_DEPENDENCIES
+        return tuple(dependency for dependency in self.dependencies if dependency in forbidden)
+
+    @property
+    def unknown_dependencies(self) -> Tuple[str, ...]:
+        allowed = _UNIVERSAL_K_DETECTOR_TRACK_ALLOWED_DEPENDENCIES
+        return tuple(dependency for dependency in self.dependencies if dependency not in allowed)
+
+    @property
+    def fixed_before_braid(self) -> bool:
+        return (
+            self.key_valid
+            and self.assignment_rule_present
+            and not self.duplicate_dependencies
+            and not self.forbidden_dependencies
+            and not self.unknown_dependencies
+        )
+
+    @property
+    def initialization_rule_finite(self) -> bool:
+        return self.fixed_before_braid and bool(self.local_assignment_template)
 
 
 _NONCIRCULAR_CLOSED_BRANCH_STATUSES = frozenset(
@@ -2149,6 +2230,10 @@ class UniversalKTelescopingDetectorAudit:
     expected_endpoint_seed_states: Tuple[Tuple[str, UniversalKSeedState], ...] = ()
     covered_endpoint_seed_states: Tuple[Tuple[str, UniversalKSeedState], ...] = ()
     detector_track_counts_by_family: Tuple[Tuple[str, int], ...] = ()
+    detector_track_initialization_rows: Tuple[
+        UniversalKDetectorTrackInitializationRow,
+        ...,
+    ] = ()
     expected_word_potential_seed_states: Tuple[
         Tuple[str, UniversalKSeedState], ...
     ] = ()
@@ -2333,6 +2418,67 @@ class UniversalKTelescopingDetectorAudit:
         )
 
     @property
+    def expected_detector_track_keys(self) -> Tuple[UniversalKDetectorTrackKey, ...]:
+        keys = []
+        for family, count in self.detector_track_counts_by_family:
+            if count <= 0:
+                continue
+            keys.extend((family, index) for index in range(count))
+        return tuple(sorted(keys, key=repr))
+
+    @property
+    def covered_detector_track_keys(self) -> Tuple[UniversalKDetectorTrackKey, ...]:
+        return tuple(
+            sorted({row.key for row in self.detector_track_initialization_rows}, key=repr)
+        )
+
+    @property
+    def duplicate_detector_track_initialization_keys(
+        self,
+    ) -> Tuple[UniversalKDetectorTrackKey, ...]:
+        return _duplicate_values(tuple(row.key for row in self.detector_track_initialization_rows))
+
+    @property
+    def missing_detector_track_initialization_keys(
+        self,
+    ) -> Tuple[UniversalKDetectorTrackKey, ...]:
+        covered = set(self.covered_detector_track_keys)
+        return tuple(key for key in self.expected_detector_track_keys if key not in covered)
+
+    @property
+    def extra_detector_track_initialization_keys(
+        self,
+    ) -> Tuple[UniversalKDetectorTrackKey, ...]:
+        expected = set(self.expected_detector_track_keys)
+        return tuple(key for key in self.covered_detector_track_keys if key not in expected)
+
+    @property
+    def invalid_detector_track_initialization_rows(
+        self,
+    ) -> Tuple[UniversalKDetectorTrackInitializationRow, ...]:
+        return tuple(
+            row
+            for row in self.detector_track_initialization_rows
+            if not row.initialization_rule_finite
+        )
+
+    @property
+    def detector_track_initialization_rows_exact(self) -> bool:
+        return (
+            bool(self.expected_detector_track_keys)
+            and not self.duplicate_detector_track_initialization_keys
+            and not self.missing_detector_track_initialization_keys
+            and not self.extra_detector_track_initialization_keys
+        )
+
+    @property
+    def detector_track_initializations_verified(self) -> bool:
+        return (
+            self.detector_track_initialization_rows_exact
+            and not self.invalid_detector_track_initialization_rows
+        )
+
+    @property
     def expected_word_potential_seed_states_exact(
         self,
     ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
@@ -2470,8 +2616,7 @@ class UniversalKTelescopingDetectorAudit:
             and self.seed_state_coverage_exact
             and self.seed_state_ledgers_have_no_duplicates
             and self.detector_tracks_supplied
-            and self.detector_tracks_fixed_before_braid
-            and self.detector_track_initialization_verified
+            and self.detector_track_initializations_verified
             and self.artin_detector_recurrence_verified
             and self.word_potential_templates_verified
             and self.terminal_readout_longitudes_verified
@@ -2506,9 +2651,19 @@ class UniversalKTelescopingDetectorAudit:
             reasons.append("detector_track_count_family_scope_mismatch")
         if not self.detector_track_counts_positive:
             reasons.append("detector_track_count_nonpositive_family_count")
-        if not self.detector_tracks_fixed_before_braid:
+        if not self.detector_track_initialization_rows_exact:
+            reasons.append("detector_track_initialization_rows_not_exact")
+        if self.missing_detector_track_initialization_keys:
+            reasons.append("detector_track_initialization_missing_keys")
+        if self.extra_detector_track_initialization_keys:
+            reasons.append("detector_track_initialization_extra_keys")
+        if self.duplicate_detector_track_initialization_keys:
+            reasons.append("detector_track_initialization_duplicate_keys")
+        if self.invalid_detector_track_initialization_rows:
+            reasons.append("detector_track_initialization_invalid_rows")
+        if not self.detector_track_initializations_verified:
             reasons.append("detector_tracks_not_fixed_before_braid")
-        if not self.detector_track_initialization_verified:
+        if not self.detector_track_initializations_verified:
             reasons.append("detector_track_initialization_not_verified")
         if not self.artin_detector_recurrence_verified:
             reasons.append("artin_detector_recurrence_not_verified")
@@ -5794,6 +5949,27 @@ class PostLinearRemainingFiniteSystemAudit:
                     False,
                 ),
                 ("signed_endpoint_generator_fixed_detector_track_count", None),
+                ("signed_endpoint_generator_detector_track_initialization_rows", ()),
+                (
+                    "signed_endpoint_generator_detector_track_initialization_missing_keys",
+                    (),
+                ),
+                (
+                    "signed_endpoint_generator_detector_track_initialization_extra_keys",
+                    (),
+                ),
+                (
+                    "signed_endpoint_generator_detector_track_initialization_duplicate_keys",
+                    (),
+                ),
+                (
+                    "signed_endpoint_generator_detector_track_initialization_invalid_rows",
+                    (),
+                ),
+                (
+                    "signed_endpoint_generator_detector_track_initialization_rows_exact",
+                    False,
+                ),
                 (
                     "signed_endpoint_generator_detector_tracks_fixed_before_braid",
                     False,
@@ -6349,9 +6525,66 @@ class PostLinearRemainingFiniteSystemAudit:
                 ),
             ),
             (
+                "signed_endpoint_generator_detector_track_initialization_rows",
+                (
+                    tuple(
+                        (
+                            row.endpoint_family,
+                            row.track_index,
+                            row.assignment_rule,
+                            row.dependencies,
+                            row.local_assignment_template,
+                        )
+                        for row in telescoping_audit.detector_track_initialization_rows
+                    )
+                    if telescoping_audit is not None
+                    else ()
+                ),
+            ),
+            (
+                "signed_endpoint_generator_detector_track_initialization_missing_keys",
+                (
+                    telescoping_audit.missing_detector_track_initialization_keys
+                    if telescoping_audit is not None
+                    else ()
+                ),
+            ),
+            (
+                "signed_endpoint_generator_detector_track_initialization_extra_keys",
+                (
+                    telescoping_audit.extra_detector_track_initialization_keys
+                    if telescoping_audit is not None
+                    else ()
+                ),
+            ),
+            (
+                "signed_endpoint_generator_detector_track_initialization_duplicate_keys",
+                (
+                    telescoping_audit.duplicate_detector_track_initialization_keys
+                    if telescoping_audit is not None
+                    else ()
+                ),
+            ),
+            (
+                "signed_endpoint_generator_detector_track_initialization_invalid_rows",
+                (
+                    tuple(row.key for row in telescoping_audit.invalid_detector_track_initialization_rows)
+                    if telescoping_audit is not None
+                    else ()
+                ),
+            ),
+            (
+                "signed_endpoint_generator_detector_track_initialization_rows_exact",
+                (
+                    telescoping_audit.detector_track_initialization_rows_exact
+                    if telescoping_audit is not None
+                    else False
+                ),
+            ),
+            (
                 "signed_endpoint_generator_detector_tracks_fixed_before_braid",
                 (
-                    telescoping_audit.detector_tracks_fixed_before_braid
+                    telescoping_audit.detector_track_initializations_verified
                     if telescoping_audit is not None
                     else False
                 ),
@@ -6359,7 +6592,7 @@ class PostLinearRemainingFiniteSystemAudit:
             (
                 "signed_endpoint_generator_detector_track_initialization_verified",
                 (
-                    telescoping_audit.detector_track_initialization_verified
+                    telescoping_audit.detector_track_initializations_verified
                     if telescoping_audit is not None
                     else False
                 ),

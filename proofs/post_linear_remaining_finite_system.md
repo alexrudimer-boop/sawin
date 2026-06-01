@@ -471,6 +471,20 @@ endpoint family, chosen before the braid word is read.  Their initial
 assignments are derived from the initial interval data and each track follows
 the evaluated Artin detector recurrence.
 
+The fixed-track claim is no longer accepted as a standalone boolean.  For
+each family count `R_E`, the audit derives expected keys `(E,r)` for
+`0 <= r < R_E` and requires one finite initialization row for each key.  A
+row records the family, track index, assignment-rule name, the finite
+dependencies of the rule, and the local assignment template for the raw
+variables.  Allowed dependencies are interval and initial-state data:
+`interval_data`, `endpoint_family`, `routed_seed_state`,
+`initial_colour_tuple`, `initial_fibre_tuple`, `strand_index`,
+`strand_colour`, `local_input`, and `local_output`.  Braid-word,
+braid-prefix, braid-index, failed-detector, finite-search, normalized-law, or
+timeout dependencies make the row invalid.  The checker reports missing,
+extra, duplicate, and invalid initialization rows before the detector-lift
+gate can close.
+
 The endpoint potential itself may not be a tautological accumulated product.
 For every reachable endpoint state the certificate must supply a finite word
 template in current longitude variables only.  Raw generator-assignment

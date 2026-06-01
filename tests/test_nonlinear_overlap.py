@@ -38,6 +38,7 @@ from ybe_domination import (
     UnsupportedCompanionStructuralContradictionRow,
     UniversalKCutoffReadoutAudit,
     UniversalKCutoffReadoutRow,
+    UniversalKDetectorTrackInitializationRow,
     UniversalKEndpointTargetAudit,
     UniversalKResidualActionScopeAudit,
     UniversalKResidualFaithfulnessAudit,
@@ -399,6 +400,16 @@ def trivial_telescoping_detector_audit(keys, *, rows=(), endpoint_group=None):
         expected_endpoint_seed_states=seed_states,
         covered_endpoint_seed_states=seed_states,
         detector_track_counts_by_family=tuple((family, 1) for family in families),
+        detector_track_initialization_rows=tuple(
+            UniversalKDetectorTrackInitializationRow(
+                endpoint_family=family,
+                track_index=0,
+                assignment_rule="constant_identity_from_interval_seed",
+                dependencies=("interval_data", "routed_seed_state", "strand_index"),
+                local_assignment_template=((("A", 0, 0), endpoint_group.identity),),
+            )
+            for family in families
+        ),
         expected_word_potential_seed_states=seed_states,
         covered_word_potential_seed_states=seed_states,
         detector_track_count=len(families),
@@ -2900,8 +2911,33 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             unfixed_tracks.failure_reasons,
         )
         self.assertIn(
+            "detector_track_initialization_rows_not_exact",
+            unfixed_tracks.failure_reasons,
+        )
+        self.assertIn(
             "artin_detector_recurrence_not_verified",
             unfixed_tracks.failure_reasons,
+        )
+
+        braid_word_dependent_track = replace(
+            theorem_complete,
+            telescoping_detector_audit=replace(
+                theorem_complete.telescoping_detector_audit,
+                detector_track_initialization_rows=(
+                    UniversalKDetectorTrackInitializationRow(
+                        endpoint_family="U",
+                        track_index=0,
+                        assignment_rule="search_after_braid_word",
+                        dependencies=("braid_word",),
+                        local_assignment_template=((("A", 0, 0), 0),),
+                    ),
+                ),
+            ),
+        )
+        self.assertFalse(braid_word_dependent_track.telescoping_detector_proved)
+        self.assertIn(
+            "detector_track_initialization_invalid_rows",
+            braid_word_dependent_track.failure_reasons,
         )
 
         tautological_potential = replace(
@@ -2912,6 +2948,19 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
                 expected_endpoint_seed_states=(("U", seed_state),),
                 covered_endpoint_seed_states=(("U", seed_state),),
                 detector_track_counts_by_family=(("U", 1),),
+                detector_track_initialization_rows=(
+                    UniversalKDetectorTrackInitializationRow(
+                        endpoint_family="U",
+                        track_index=0,
+                        assignment_rule="constant_identity_from_interval_seed",
+                        dependencies=(
+                            "interval_data",
+                            "routed_seed_state",
+                            "strand_index",
+                        ),
+                        local_assignment_template=((("A", 0, 0), 0),),
+                    ),
+                ),
                 expected_word_potential_seed_states=(("U", seed_state),),
                 covered_word_potential_seed_states=(("U", seed_state),),
                 detector_track_count=1,

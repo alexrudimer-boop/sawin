@@ -1113,6 +1113,37 @@ failed detector.  For each track, the certificate must define the initial
 values `a_{r,i}=phi_r(x_i)` from the initial interval data and update
 `u_{r,i}(t)` by the Artin detector recurrence above.
 
+The detector-track initialization must also be finite table data, not a
+boolean.  For every active endpoint family `E`, the certificate must list the
+positive number of tracks `R_E` and then provide exactly one initialization
+row for every key
+
+```text
+(E,r),     0 <= r < R_E.
+```
+
+Each row must name an assignment rule, the finite dependencies used by that
+rule, and the local assignment template for the raw variables `A_{r,j}`.
+Allowed dependencies are only interval and initial-state data:
+
+```text
+interval_data, endpoint_family, routed_seed_state,
+initial_colour_tuple, initial_fibre_tuple,
+strand_index, strand_colour, local_input, local_output.
+```
+
+Dependencies such as
+
+```text
+braid_word, braid_prefix, braid_index, failed_detector,
+finite_search_result, normalized_law_sequence, timeout
+```
+
+are forbidden.  The initialization ledger must have no missing, extra, or
+duplicate `(E,r)` rows.  A claim that detector tracks are "fixed before the
+braid" or that initialization is "verified" is not a certificate unless this
+finite row table is present and exact.
+
 The same certificate must define finite word templates `W_s`, one for every
 reachable endpoint state `s in S_E^reach`.  Each word template is a fixed
 word in current longitude variables `U_{r,j}` only.  It may not use raw
@@ -1296,6 +1327,8 @@ signed_inverse_cancellation,
 positive_local_endpoint_ybe_path,
 positive_local_endpoint_ybe_cocycle,
 fixed_detector_track_initialization,
+detector_track_initialization_rows_exact,
+detector_track_initialization_rules_use_only_allowed_initial_data,
 artin_detector_recurrence,
 word_potential_certificate_table_supplied,
 word_potential_certificate_entry_domain_exact,
