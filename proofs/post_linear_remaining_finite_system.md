@@ -646,12 +646,13 @@ endpoint families and routed seed states controlling the row, endpoint channel
 keys, and the finite dependencies used by the row.  The checker requires the
 row inputs to cover the expected residual input-tuple domain exactly, with no
 missing, extra, or duplicate rows.  It rejects rows that mention unrouted
-families, unrouted seed states, missing endpoint channels, duplicate row
-ledgers, or dependencies on `braid_word`, `braid_prefix`, `braid_index`,
-failed detector searches, normalized-law sequences, or timeouts.  It derives
-endpoint-channel exactness from the union of row families and row seed states,
-derives the residual identity implication from
-`identity_endpoint_output_tuple=input_tuple` on every row, and derives
+families, unrouted seed states, missing or duplicate endpoint channels,
+arity-inconsistent input/output/identity-output tuples, empty residual input
+tuples, duplicate row ledgers, or dependencies on `braid_word`,
+`braid_prefix`, `braid_index`, failed detector searches, normalized-law
+sequences, or timeouts.  It derives endpoint-channel exactness from the union
+of row families and row seed states, derives the residual identity implication
+from `identity_endpoint_output_tuple=input_tuple` on every row, and derives
 braid-index independence from the absence of forbidden dependencies.  The
 same family-by-family residual row-count ledger is required for symbolic
 multi-family residual theorems.  Bare booleans for endpoint-channel

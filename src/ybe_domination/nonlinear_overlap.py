@@ -1322,6 +1322,10 @@ class UniversalKResidualFaithfulnessRow:
         return _duplicate_values(self.endpoint_seed_states)
 
     @property
+    def duplicate_endpoint_channel_keys(self) -> Tuple[object, ...]:
+        return _duplicate_values(self.endpoint_channel_keys)
+
+    @property
     def duplicate_dependencies(self) -> Tuple[str, ...]:
         return _duplicate_values(self.dependencies)
 
@@ -1354,11 +1358,22 @@ class UniversalKResidualFaithfulnessRow:
         return self.identity_endpoint_output_tuple == self.input_tuple
 
     @property
+    def tuple_arity_consistent(self) -> bool:
+        return (
+            bool(self.input_tuple)
+            and len(self.input_tuple)
+            == len(self.output_tuple)
+            == len(self.identity_endpoint_output_tuple)
+        )
+
+    @property
     def row_scope_valid(self) -> bool:
         return (
-            bool(self.endpoint_families)
+            self.tuple_arity_consistent
+            and bool(self.endpoint_families)
             and bool(self.endpoint_seed_states)
             and bool(self.endpoint_channel_keys)
+            and not self.duplicate_endpoint_channel_keys
             and not self.duplicate_endpoint_families
             and not self.duplicate_endpoint_seed_states
             and not self.invalid_endpoint_families

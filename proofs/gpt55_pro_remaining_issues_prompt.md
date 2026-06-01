@@ -1358,11 +1358,14 @@ The rows must cover exactly the expected residual input-tuple domain, with no
 missing, extra, or duplicate input rows.  Every row must use only active
 endpoint families and expected routed seed states, and the union of row
 families and row seed states must equal the active families and expected
-seed-state ledger.  `identity_endpoint_output_tuple` must equal `input_tuple`
-on every row; this is the finite implication from killed endpoint data to
-identity residual motion.  The row dependencies may use only interval data,
-routed seed states, residual input tuples, endpoint channels, local fibre
-coordinates, and the local row table.  Dependencies on `braid_word`,
+seed-state ledger.  Each row must have nonempty arity-consistent
+`input_tuple`, `actual output_tuple`, and `identity_endpoint_output_tuple`,
+and its `endpoint_channel_keys` ledger must be nonempty and duplicate-free.
+`identity_endpoint_output_tuple` must equal `input_tuple` on every row; this
+is the finite implication from killed endpoint data to identity residual
+motion.  The row dependencies may use only interval data, routed seed states,
+residual input tuples, endpoint channels, local fibre coordinates, and the
+local row table.  Dependencies on `braid_word`,
 `braid_prefix`, `braid_index`, failed detector search, normalized-law
 sequences, or timeouts are forbidden.  Endpoint-channel exactness,
 braid-index independence, and product-family separation must be derived from
@@ -1393,6 +1396,8 @@ endpoint_target_ledgers_duplicate_free,
 residual_endpoint_seed_state_coverage_exact,
 residual_endpoint_seed_state_ledgers_duplicate_free,
 multi_family_residual_row_counts_by_family_exact,
+residual_rows_have_nonempty_arity_consistent_tuples,
+residual_rows_have_duplicate_free_endpoint_channel_keys,
 residual_action_input_tuple_domain_exact,
 residual_theorem_rows_cover_input_domain,
 residual_theorem_rows_cover_endpoint_families_and_seed_states,

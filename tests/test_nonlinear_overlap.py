@@ -2983,6 +2983,38 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             theorem_with_braid_index_row.failure_reasons,
         )
 
+        theorem_with_duplicate_channel_key = replace(
+            theorem,
+            residual_rows=(
+                replace(
+                    theorem.residual_rows[0],
+                    endpoint_channel_keys=(("U", seed_state, "endpoint"),) * 2,
+                ),
+            ),
+        )
+        self.assertFalse(
+            theorem_with_duplicate_channel_key.proves_residual_faithfulness
+        )
+        self.assertIn(
+            "residual_faithfulness_invalid_rows",
+            theorem_with_duplicate_channel_key.failure_reasons,
+        )
+
+        theorem_with_bad_tuple_arity = replace(
+            theorem,
+            residual_rows=(
+                replace(
+                    theorem.residual_rows[0],
+                    output_tuple=("p", "extra"),
+                ),
+            ),
+        )
+        self.assertFalse(theorem_with_bad_tuple_arity.proves_residual_faithfulness)
+        self.assertIn(
+            "residual_faithfulness_invalid_rows",
+            theorem_with_bad_tuple_arity.failure_reasons,
+        )
+
         rowwise_only = replace(theorem_complete, telescoping_detector_audit=None)
         self.assertTrue(rowwise_only.signed_two_strand_base_verified)
         self.assertTrue(rowwise_only.artin_homomorphism_update_verified)
