@@ -653,6 +653,10 @@ signs instead of filtering them away.  The same well-formedness gate checks
 that every identity-row and ledger key has the full `D_Gamma` shape
 `(E,epsilon,s,a,b,x,y)`, a known endpoint family, and a tuple-valued reachable
 state; a shortened positive key is malformed rather than an abbreviated row.
+For positive identity rows, the `next_seed_state` must also be a tuple-valued
+hashable state in the same endpoint family.  A malformed or unhashable next
+state is a certificate error and must be reported before substitution or
+coboundary checks try to look up the next template.
 Malformed rows are reported at that gate before downstream template,
 track-scope, raw-assignment, or identity diagnostics interpret row fields.
 The reachable seed-state and telescoping ledgers use duplicate-safe
@@ -1053,6 +1057,7 @@ signed_endpoint_generator_word_potential_detector_domain_failures
 signed_endpoint_generator_word_potential_coboundary_defects_constant
 signed_endpoint_generator_word_potential_coboundary_defect_failures
 signed_endpoint_generator_word_potential_malformed_identity_rows
+signed_endpoint_generator_word_potential_certificate_malformed_next_seed_states
 signed_endpoint_generator_word_potential_certificate_malformed_template_states
 signed_endpoint_generator_word_potential_certificate_malformed_normalized_states
 signed_endpoint_generator_word_potential_certificate_template_states

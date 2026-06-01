@@ -1544,6 +1544,10 @@ must be a full `D_Gamma` key `(E,epsilon,s,a,b,x,y)` with `E in {U,C,M}`,
 wrong-family key is malformed even if its sign field is `+1`.
 Malformed keys must be rejected before any downstream template, detector-track,
 or identity diagnostic tries to interpret their fields.
+For every positive word-potential identity row, the `next_seed_state` must
+also be a tuple-valued hashable state in the same endpoint family.  A
+malformed or unhashable next state is a certificate error; it cannot be
+interpreted as a missing template after a crashing map lookup.
 Reachable seed-state ledgers, signed-entry ledgers, and telescoping ledgers
 must use duplicate-safe normalization before set comparison, so unhashable
 malformed keys are reported as malformed finite data rather than becoming
@@ -1813,6 +1817,7 @@ artin_detector_recurrence,
 word_potential_certificate_table_supplied,
 word_potential_certificate_entry_domain_exact,
 word_potential_certificate_next_states_and_labels_match_Gamma,
+word_potential_identity_next_states_are_well_formed,
 word_potential_templates_for_every_reachable_state,
 word_potential_templates_use_only_current_longitude_variables,
 word_potential_artin_substitution_from_detector_recurrence,

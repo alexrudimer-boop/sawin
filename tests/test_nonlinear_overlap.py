@@ -5146,6 +5146,81 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             (malformed_identity.entry_key,),
         )
 
+    def test_malformed_word_potential_next_states_are_rejected_without_crashing(self):
+        seed_state = ("*", "*", "left_constant_map_universal_kernel")
+        seed_entries = (
+            (
+                (
+                    "*",
+                    "*",
+                    "L",
+                    "constant_map_kernel",
+                    ("*", (0, 1), "universal", "universal"),
+                ),
+                ("U", seed_state),
+            ),
+        )
+        reachable = (("U", seed_state),)
+        interval = one_color_identity_interval()
+        keys = universal_k_signed_endpoint_required_entry_keys(interval, reachable)
+        positive_keys = tuple(key for key in keys if key[2] == 1)
+        rows = identity_signed_endpoint_rows(keys)
+        group = cyclic_group(2)
+        telescoping = trivial_telescoping_detector_audit(
+            positive_keys,
+            rows=rows,
+            endpoint_group=group,
+        )
+        certificate = telescoping.word_potential_certificate
+        bad_next_state = (["not-hashable"],)
+        malformed_next = replace(
+            certificate.identity_rows[0],
+            next_seed_state=bad_next_state,
+        )
+        telescoping = replace(
+            telescoping,
+            word_potential_certificate=replace(
+                certificate,
+                identity_rows=(malformed_next,) + certificate.identity_rows[1:],
+            ),
+        )
+        audit = universal_k_signed_endpoint_generator_audit(
+            interval,
+            seed_entries,
+            reachable,
+            rows,
+            endpoint_group=group,
+            telescoping_detector_audit=telescoping,
+        )
+
+        self.assertEqual(
+            telescoping.word_potential_certificate.malformed_identity_next_seed_states,
+            ((malformed_next.entry_key, bad_next_state),),
+        )
+        self.assertFalse(
+            telescoping.word_potential_certificate.artin_substitutions_verified
+        )
+        self.assertFalse(telescoping.word_potential_certificate.identities_verified)
+        self.assertIn(
+            "malformed_next_seed_state",
+            tuple(
+                failure[1]
+                for failure in telescoping.word_potential_certificate.substitution_failures
+            ),
+        )
+        self.assertIn(
+            "malformed_next_seed_state",
+            tuple(
+                failure[1]
+                for failure in telescoping.word_potential_certificate.identity_failures
+            ),
+        )
+        self.assertFalse(audit.telescoping_detector_proved)
+        self.assertIn(
+            "word_potential_certificate_malformed_next_seed_states",
+            audit.failure_reasons,
+        )
+
     def test_short_positive_word_potential_identity_rows_are_rejected(self):
         group = cyclic_group(2)
         source_state = ("*", "*", "left_constant_map_universal_kernel")

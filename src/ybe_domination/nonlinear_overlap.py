@@ -1290,6 +1290,22 @@ class UniversalKWordPotentialCertificate:
         )
 
     @property
+    def malformed_identity_next_seed_states(
+        self,
+    ) -> Tuple[Tuple[UniversalKSignedEndpointEntryKey, object], ...]:
+        return _unique_values(
+            tuple(
+                (row.entry_key, row.next_seed_state)
+                for row in self.identity_rows
+                if _universal_k_signed_entry_key_well_formed(row.entry_key)
+                if _universal_k_is_positive_entry_key(row.entry_key)
+                if not _universal_k_endpoint_seed_state_well_formed(
+                    (row.entry_key[0], row.next_seed_state)
+                )
+            )
+        )
+
+    @property
     def normalized_seed_states_exact(
         self,
     ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
@@ -1352,6 +1368,17 @@ class UniversalKWordPotentialCertificate:
                 continue
             entry_family, _state, sign, *_rest = row.entry_key
             if sign != 1:
+                continue
+            if not _universal_k_endpoint_seed_state_well_formed(
+                (entry_family, row.next_seed_state)
+            ):
+                failures.append(
+                    (
+                        row.entry_key,
+                        "malformed_next_seed_state",
+                        row.next_seed_state,
+                    )
+                )
                 continue
             next_key = (entry_family, row.next_seed_state)
             next_template = template_map.get(next_key)
@@ -1479,6 +1506,10 @@ class UniversalKWordPotentialCertificate:
             return None
         entry_family, source_state, sign, *_rest = row.entry_key
         if sign != 1:
+            return None
+        if not _universal_k_endpoint_seed_state_well_formed(
+            (entry_family, row.next_seed_state)
+        ):
             return None
         template_map = self.template_map
         source_template = template_map.get((entry_family, source_state))
@@ -1683,6 +1714,17 @@ class UniversalKWordPotentialCertificate:
             if _sign != 1:
                 continue
             source_key = (entry_family, source_state)
+            if not _universal_k_endpoint_seed_state_well_formed(
+                (entry_family, row.next_seed_state)
+            ):
+                failures.append(
+                    (
+                        row.entry_key,
+                        "malformed_next_seed_state",
+                        row.next_seed_state,
+                    )
+                )
+                continue
             next_key = (entry_family, row.next_seed_state)
             source_template = template_map.get(source_key)
             next_template = template_map.get(next_key)
@@ -1821,6 +1863,7 @@ class UniversalKWordPotentialCertificate:
     def artin_substitutions_verified(self) -> bool:
         return (
             not self.malformed_identity_entry_keys
+            and not self.malformed_identity_next_seed_states
             and not self.duplicate_positive_identity_entry_keys
             and not self.substitution_failures
         )
@@ -1829,6 +1872,7 @@ class UniversalKWordPotentialCertificate:
     def identities_verified(self) -> bool:
         return (
             not self.malformed_identity_entry_keys
+            and not self.malformed_identity_next_seed_states
             and not self.duplicate_positive_identity_entry_keys
             and not self.detector_domain_failures
             and not self.identity_failures
@@ -5037,6 +5081,7 @@ class UniversalKTelescopingDetectorAudit:
             not self.word_potential_certificate.duplicate_template_seed_states
             and not self.word_potential_certificate.malformed_template_seed_states
             and not self.word_potential_certificate.malformed_identity_entry_keys
+            and not self.word_potential_certificate.malformed_identity_next_seed_states
             and not self.word_potential_certificate.duplicate_positive_identity_entry_keys
             and not self.word_potential_certificate.malformed_normalized_seed_states
             and not self.word_potential_certificate.duplicate_normalized_seed_states
@@ -5356,6 +5401,10 @@ class UniversalKTelescopingDetectorAudit:
                 reasons.append("word_potential_certificate_malformed_template_states")
             if self.word_potential_certificate.malformed_identity_entry_keys:
                 reasons.append("word_potential_certificate_malformed_identity_rows")
+            if self.word_potential_certificate.malformed_identity_next_seed_states:
+                reasons.append(
+                    "word_potential_certificate_malformed_next_seed_states"
+                )
             if self.word_potential_certificate.malformed_normalized_seed_states:
                 reasons.append("word_potential_certificate_malformed_normalized_states")
             if self.word_potential_certificate.raw_assignment_template_variables:
@@ -9856,6 +9905,10 @@ class PostLinearRemainingFiniteSystemAudit:
                     (),
                 ),
                 (
+                    "signed_endpoint_generator_word_potential_certificate_malformed_next_seed_states",
+                    (),
+                ),
+                (
                     "signed_endpoint_generator_word_potential_certificate_malformed_template_states",
                     (),
                 ),
@@ -10924,6 +10977,15 @@ class PostLinearRemainingFiniteSystemAudit:
                 "signed_endpoint_generator_word_potential_malformed_identity_rows",
                 (
                     telescoping_audit.word_potential_certificate.malformed_identity_entry_keys
+                    if telescoping_audit is not None
+                    and telescoping_audit.word_potential_certificate is not None
+                    else ()
+                ),
+            ),
+            (
+                "signed_endpoint_generator_word_potential_certificate_malformed_next_seed_states",
+                (
+                    telescoping_audit.word_potential_certificate.malformed_identity_next_seed_states
                     if telescoping_audit is not None
                     and telescoping_audit.word_potential_certificate is not None
                     else ()
