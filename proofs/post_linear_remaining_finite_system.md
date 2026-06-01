@@ -445,6 +445,11 @@ product-family separation from the finite target ledger itself: each covered
 family must have a positive fixed group order or cutoff degree, and target
 families must match covered routed families without duplicates.  The legacy
 independence/separation flags are diagnostic only.
+For C/M cutoff families, the target cutoff degree must also match the
+cutoff-readout audit's symmetric degree.  A target ledger declaring an `S_m`
+cutoff and a readout audit over `S_k` with `k != m` is reported as
+`cutoff_readout_target_degree_mismatch`; the readout may be faithful for its
+own degree, but it does not certify the declared target.
 
 The C/M cutoff gate is now scoped like the residual-faithfulness gate.  A bare
 `cutoff_readouts_exact` flag is recorded only as supplied data; it does not
@@ -819,6 +824,9 @@ signed_endpoint_generator_cutoff_readouts_required
 signed_endpoint_generator_cutoff_readouts_exact
 signed_endpoint_generator_cutoff_readouts_flag_supplied
 signed_endpoint_generator_cutoff_readout_scope_matches_required
+signed_endpoint_generator_required_cutoff_families
+signed_endpoint_generator_cutoff_target_degrees_match_readout
+signed_endpoint_generator_cutoff_target_degree_mismatches
 signed_endpoint_generator_cutoff_readout_expected_states
 signed_endpoint_generator_cutoff_readout_covered_states
 signed_endpoint_generator_cutoff_readout_missing_states

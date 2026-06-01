@@ -4380,6 +4380,37 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             group_mismatch.failure_reasons,
         )
 
+        cutoff_degree_mismatch_target = replace(
+            explicit_target,
+            cutoff_degrees=(("M", 3),),
+        )
+        cutoff_degree_mismatch = universal_k_signed_endpoint_generator_audit(
+            interval,
+            seed_entries,
+            reachable,
+            rows,
+            endpoint_group=cyclic_group(2),
+            witnesses=witnesses,
+            endpoint_target_audit=cutoff_degree_mismatch_target,
+            telescoping_detector_audit=trivial_telescoping_detector_audit(keys),
+            cutoff_readout_audit=cutoff,
+            residual_action_scope=scoped_residual,
+            residual_action_audit=trivial_endpoint_residual_action_audit(),
+        )
+        self.assertTrue(cutoff_degree_mismatch.endpoint_targets_proved)
+        self.assertFalse(cutoff_degree_mismatch.exact_cutoff_readouts_proved)
+        self.assertFalse(
+            cutoff_degree_mismatch.proves_signed_endpoint_generator_tables
+        )
+        self.assertEqual(
+            cutoff_degree_mismatch.cutoff_target_degree_mismatches,
+            (("M", 3, 2),),
+        )
+        self.assertIn(
+            "cutoff_readout_target_degree_mismatch",
+            cutoff_degree_mismatch.failure_reasons,
+        )
+
     def test_signed_endpoint_generator_factory_reports_inexact_witness_domain(self):
         seed_state = ("*", "*", "left_constant_map_universal_kernel")
         reachable = (("U", seed_state),)
@@ -4597,6 +4628,9 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         )
 
         self.assertTrue(scoped_cutoff.proves_exact_cutoff_readouts)
+        self.assertEqual(proved.endpoint_target_audit.cutoff_degrees, (("C", 2),))
+        self.assertEqual(proved.required_cutoff_families, ("C",))
+        self.assertTrue(proved.cutoff_target_degrees_match_readout)
         self.assertTrue(proved.cutoff_readout_scope_matches_required)
         self.assertTrue(proved.exact_cutoff_readouts_proved)
         self.assertTrue(proved.proves_signed_endpoint_generator_tables)

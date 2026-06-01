@@ -891,6 +891,11 @@ group.
 Endpoint-target braid-index independence and product-family separation must
 be derived from the finite per-family target ledger and positive target
 sizes; they are not independent boolean gates.
+For C or M routed through a symmetric cutoff, the target ledger's cutoff
+degree must equal the symmetric degree used by the cutoff-readout table for
+that same family.  A certificate that declares a degree-`m` cutoff target but
+uses readout permutations in `S_k` with `k != m` has not connected the
+declared endpoint target to the residual readout that is supposed to kill it.
 
 If a symmetric endpoint-family fork is used as a cutoff route, it must also
 be finite-row backed.  For endpoint factor orders
@@ -1331,6 +1336,11 @@ silently deduplicating repeated C or M seed entries is not exact readout
 coverage.
 Cutoff braid-index independence must follow from the positive fixed degree
 and exact finite readout rows; it is not an independent boolean gate.
+For each active C/M cutoff family, this positive fixed degree must also match
+the cutoff degree listed in the endpoint-target ledger.  If multiple C/M
+families are handled by one readout audit, every listed cutoff target degree
+must be the same finite symmetric degree used by that audit, or else the
+families require separate explicitly scoped cutoff readout certificates.
 
 The endpoint tables and readouts must also prove residual faithfulness:
 if all routed endpoint labels or cutoff readouts are killed, then the actual
@@ -1965,7 +1975,8 @@ Before returning a claimed resolution, explicitly answer:
    independent of braid index `n`, and does the endpoint-target certificate
    cover exactly the routed U/C/M families with fixed positive orders or
    cutoff degrees and product-family separation, with the concrete endpoint
-   group order matching the product of the group-valued target orders?
+   group order matching the product of the group-valued target orders and
+   each C/M cutoff target degree matching the cutoff-readout symmetric degree?
 11. Are product endpoint rows handled family-by-family without hiding any
    unclosed U, C, or M obligation?
 12. Does every residual-faithfulness theorem or residual-action row proof

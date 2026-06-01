@@ -3560,6 +3560,15 @@ class UniversalKSignedEndpointGeneratorAudit:
         )
 
     @property
+    def required_cutoff_families(self) -> Tuple[str, ...]:
+        return tuple(
+            sorted(
+                {endpoint_family for endpoint_family, _state in self.required_cutoff_seed_states},
+                key=repr,
+            )
+        )
+
+    @property
     def cutoff_readout_scope_matches_required(self) -> bool:
         return (
             self.cutoff_readout_audit is not None
@@ -3568,10 +3577,43 @@ class UniversalKSignedEndpointGeneratorAudit:
         )
 
     @property
+    def endpoint_target_cutoff_degree_by_family(self) -> Mapping[str, int]:
+        if self.endpoint_target_audit is None:
+            return {}
+        return dict(self.endpoint_target_audit.cutoff_degrees)
+
+    @property
+    def cutoff_target_degree_mismatches(
+        self,
+    ) -> Tuple[Tuple[str, int | None, int | None], ...]:
+        if not self.cutoff_readouts_required:
+            return ()
+        target_degrees = self.endpoint_target_cutoff_degree_by_family
+        readout_degree = (
+            self.cutoff_readout_audit.cutoff_degree
+            if self.cutoff_readout_audit is not None
+            else None
+        )
+        return tuple(
+            (family, target_degrees.get(family), readout_degree)
+            for family in self.required_cutoff_families
+            if target_degrees.get(family) != readout_degree
+        )
+
+    @property
+    def cutoff_target_degrees_match_readout(self) -> bool:
+        return not self.cutoff_readouts_required or (
+            self.endpoint_target_audit is not None
+            and self.cutoff_readout_audit is not None
+            and not self.cutoff_target_degree_mismatches
+        )
+
+    @property
     def exact_cutoff_readouts_proved(self) -> bool:
         return not self.cutoff_readouts_required or (
             self.cutoff_readout_audit is not None
             and self.cutoff_readout_scope_matches_required
+            and self.cutoff_target_degrees_match_readout
             and self.cutoff_readout_audit.proves_exact_cutoff_readouts
         )
 
@@ -3949,6 +3991,12 @@ class UniversalKSignedEndpointGeneratorAudit:
                 and not self.cutoff_readout_scope_matches_required
             ):
                 reasons.append("cutoff_readout_scope_mismatch")
+            if (
+                self.endpoint_target_audit is not None
+                and self.cutoff_readout_audit is not None
+                and not self.cutoff_target_degrees_match_readout
+            ):
+                reasons.append("cutoff_readout_target_degree_mismatch")
             if self.cutoff_readout_audit is not None:
                 reasons.extend(self.cutoff_readout_audit.failure_reasons)
         if not self.residual_faithfulness_proved:
@@ -4797,16 +4845,26 @@ def universal_k_signed_endpoint_generator_audit(
     )
     if (
         endpoint_target_audit is None
-        and endpoint_group is not None
         and len(expected_endpoint_families) == 1
     ):
+        endpoint_family = expected_endpoint_families[0]
+        cutoff_target_degrees = ()
+        endpoint_group_orders = ()
+        if (
+            endpoint_family in {"C", "M"}
+            and cutoff_readout_audit is not None
+            and cutoff_readout_audit.cutoff_degree is not None
+        ):
+            cutoff_target_degrees = (
+                (endpoint_family, cutoff_readout_audit.cutoff_degree),
+            )
+        elif endpoint_group is not None:
+            endpoint_group_orders = ((endpoint_family, len(endpoint_group.elements)),)
         endpoint_target_audit = UniversalKEndpointTargetAudit(
             expected_endpoint_families=expected_endpoint_families,
             covered_endpoint_families=expected_endpoint_families,
-            endpoint_group_orders=tuple(
-                (family, len(endpoint_group.elements))
-                for family in expected_endpoint_families
-            ),
+            endpoint_group_orders=endpoint_group_orders,
+            cutoff_degrees=cutoff_target_degrees,
             braid_index_independent=True,
             product_families_separated=True,
         )
@@ -6669,6 +6727,15 @@ class PostLinearRemainingFiniteSystemAudit:
                 ("signed_endpoint_generator_cutoff_readouts_exact", False),
                 ("signed_endpoint_generator_cutoff_readouts_flag_supplied", False),
                 ("signed_endpoint_generator_cutoff_readout_scope_matches_required", False),
+                ("signed_endpoint_generator_required_cutoff_families", ()),
+                (
+                    "signed_endpoint_generator_cutoff_target_degrees_match_readout",
+                    False,
+                ),
+                (
+                    "signed_endpoint_generator_cutoff_target_degree_mismatches",
+                    (),
+                ),
                 ("signed_endpoint_generator_cutoff_readout_expected_states", ()),
                 ("signed_endpoint_generator_cutoff_readout_covered_states", ()),
                 ("signed_endpoint_generator_cutoff_readout_missing_states", ()),
@@ -7489,6 +7556,18 @@ class PostLinearRemainingFiniteSystemAudit:
             (
                 "signed_endpoint_generator_cutoff_readout_scope_matches_required",
                 audit.cutoff_readout_scope_matches_required,
+            ),
+            (
+                "signed_endpoint_generator_required_cutoff_families",
+                audit.required_cutoff_families,
+            ),
+            (
+                "signed_endpoint_generator_cutoff_target_degrees_match_readout",
+                audit.cutoff_target_degrees_match_readout,
+            ),
+            (
+                "signed_endpoint_generator_cutoff_target_degree_mismatches",
+                audit.cutoff_target_degree_mismatches,
             ),
             (
                 "signed_endpoint_generator_cutoff_readout_expected_states",
