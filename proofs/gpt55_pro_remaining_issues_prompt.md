@@ -1552,6 +1552,14 @@ all active endpoint channels killed => Delta_n(beta)=1
 for the actual product endpoint row.  In the one-family case this extra
 product theorem is not required because the individual observer's
 residual-faithfulness theorem already has the full active-family scope.
+If the retained family ledger matches the current `kappa`, matches the
+current interval, proves every active family observer, and passes the product
+residual-faithfulness gate, then it should be treated as a routed endpoint
+closure certificate.  The proof object must list exactly which active
+families are closed by this endpoint-observer family build, and those
+families must be removed from the unclosed U/C/M endpoint tuple.  A family
+observer ledger that is only diagnostic, stale, or missing product residual
+faithfulness must not close any active endpoint family.
 The per-family word-potential certificate input rows must also be audited as
 finite data.  A malformed two-field row, a non-certificate value, an unknown
 family, a duplicate family, a missing active-family certificate, or an extra
@@ -1883,6 +1891,7 @@ endpoint_observer_family_certificate_input_ledger_exact,
 endpoint_observer_each_active_family_single_scoped_and_proved,
 endpoint_observer_family_build_matches_current_kappa_and_interval,
 endpoint_observer_product_residual_faithfulness_for_multifamily_rows,
+endpoint_observer_family_build_closes_exact_active_families,
 endpoint_observer_positive_rows_forced_from_typed_identity_rows,
 endpoint_observer_monodromy_contexts_exposed,
 coordinate_components_match_T_plus_and_T_inverse,

@@ -9664,6 +9664,7 @@ class PostLinearRemainingFiniteSystemAudit:
             self.system_u_closed_by_endpoint_witness
             or self.system_u_closed_by_symmetric_endpoint_fork
             or self.system_u_closed_by_signed_endpoint_generator
+            or self.system_u_closed_by_endpoint_observer_family_build
         )
 
     @property
@@ -9694,6 +9695,7 @@ class PostLinearRemainingFiniteSystemAudit:
             self.system_c_closed_by_endpoint_witness
             or self.system_c_closed_by_symmetric_endpoint_fork
             or self.system_c_closed_by_signed_endpoint_generator
+            or self.system_c_closed_by_endpoint_observer_family_build
         )
 
     @property
@@ -10061,10 +10063,29 @@ class PostLinearRemainingFiniteSystemAudit:
         )
 
     @property
+    def endpoint_observer_family_build_closed_families(self) -> Tuple[str, ...]:
+        audit = self.universal_k_endpoint_observer_family_build
+        if not self.endpoint_observer_family_build_closes_current_kappa or audit is None:
+            return ()
+        active = set(self.active_routed_endpoint_systems)
+        return tuple(
+            family
+            for family in audit.expected_endpoint_families_exact
+            if family in active
+        )
+
+    @property
     def system_u_closed_by_signed_endpoint_generator(self) -> bool:
         return (
             self.system_u_active
             and "U" in self.signed_endpoint_generator_closed_families
+        )
+
+    @property
+    def system_u_closed_by_endpoint_observer_family_build(self) -> bool:
+        return (
+            self.system_u_active
+            and "U" in self.endpoint_observer_family_build_closed_families
         )
 
     @property
@@ -10073,6 +10094,7 @@ class PostLinearRemainingFiniteSystemAudit:
             self.system_m_closed_by_endpoint_witness
             or self.system_m_closed_by_symmetric_endpoint_fork
             or self.system_m_closed_by_signed_endpoint_generator
+            or self.system_m_closed_by_endpoint_observer_family_build
         )
 
     @property
@@ -10083,10 +10105,24 @@ class PostLinearRemainingFiniteSystemAudit:
         )
 
     @property
+    def system_c_closed_by_endpoint_observer_family_build(self) -> bool:
+        return (
+            self.system_c_active
+            and "C" in self.endpoint_observer_family_build_closed_families
+        )
+
+    @property
     def system_m_closed_by_signed_endpoint_generator(self) -> bool:
         return (
             self.system_m_active
             and "M" in self.signed_endpoint_generator_closed_families
+        )
+
+    @property
+    def system_m_closed_by_endpoint_observer_family_build(self) -> bool:
+        return (
+            self.system_m_active
+            and "M" in self.endpoint_observer_family_build_closed_families
         )
 
     @property
@@ -10255,17 +10291,25 @@ class PostLinearRemainingFiniteSystemAudit:
             return "closed_by_missing_triangular_partial_constant_proper_closure"
         if self.all_active_routed_endpoint_systems_closed:
             if self.active_routed_endpoint_systems == ("U",):
+                if self.system_u_closed_by_endpoint_observer_family_build:
+                    return "closed_by_triangular_recovery_endpoint_observer_family_build"
                 if self.system_u_closed_by_endpoint_witness:
                     return "closed_by_triangular_recovery_endpoint_witness"
                 return "closed_by_triangular_recovery_symmetric_endpoint_fork"
             if self.active_routed_endpoint_systems == ("C",):
+                if self.system_c_closed_by_endpoint_observer_family_build:
+                    return "closed_by_universal_continuation_endpoint_observer_family_build"
                 if self.system_c_closed_by_endpoint_witness:
                     return "closed_by_universal_continuation_endpoint_witness"
                 return "closed_by_universal_continuation_symmetric_endpoint_fork"
             if self.active_routed_endpoint_systems == ("M",):
+                if self.system_m_closed_by_endpoint_observer_family_build:
+                    return "closed_by_mixed_unit_endpoint_observer_family_build"
                 if self.system_m_closed_by_endpoint_witness:
                     return "closed_by_mixed_unit_context_endpoint_witness"
                 return "closed_by_mixed_unit_symmetric_endpoint_fork"
+            if self.endpoint_observer_family_build_closes_current_kappa:
+                return "closed_by_endpoint_observer_family_build"
             if (
                 self.triangular_recovery_symmetric_endpoint_fork is not None
                 or self.universal_continuation_symmetric_endpoint_fork is not None
@@ -12981,6 +13025,19 @@ class PostLinearRemainingFiniteSystemAudit:
                     (),
                 ),
                 ("endpoint_observer_family_build_closes_current_kappa", False),
+                ("endpoint_observer_family_build_closed_families", ()),
+                (
+                    "system_u_closed_by_endpoint_observer_family_build",
+                    False,
+                ),
+                (
+                    "system_c_closed_by_endpoint_observer_family_build",
+                    False,
+                ),
+                (
+                    "system_m_closed_by_endpoint_observer_family_build",
+                    False,
+                ),
                 ("endpoint_observer_family_build_expected_families", ()),
                 ("endpoint_observer_family_build_covered_families", ()),
                 ("endpoint_observer_family_build_missing_families", ()),
@@ -13076,6 +13133,22 @@ class PostLinearRemainingFiniteSystemAudit:
             (
                 "endpoint_observer_family_build_closes_current_kappa",
                 self.endpoint_observer_family_build_closes_current_kappa,
+            ),
+            (
+                "endpoint_observer_family_build_closed_families",
+                self.endpoint_observer_family_build_closed_families,
+            ),
+            (
+                "system_u_closed_by_endpoint_observer_family_build",
+                self.system_u_closed_by_endpoint_observer_family_build,
+            ),
+            (
+                "system_c_closed_by_endpoint_observer_family_build",
+                self.system_c_closed_by_endpoint_observer_family_build,
+            ),
+            (
+                "system_m_closed_by_endpoint_observer_family_build",
+                self.system_m_closed_by_endpoint_observer_family_build,
             ),
             (
                 "endpoint_observer_family_build_expected_families",

@@ -791,6 +791,13 @@ state/coordinate commutativity against the current table and endpoint group.
 Thus a family observer built for a stale interval or stale `kappa` ledger can
 still be retained as diagnostic evidence, but it cannot be reported as closing
 the current routed `K_nabla` obligations.
+When the retained ledger matches the current `kappa`, passes the current
+interval row checks, proves every family observer, and satisfies the product
+residual-faithfulness gate, it is now a routed endpoint closure certificate:
+`endpoint_observer_family_build_closed_families` lists the active U/C/M
+families it closes, and the corresponding
+`system_*_closed_by_endpoint_observer_family_build` predicates remove those
+families from `unclosed_routed_endpoint_systems`.
 When the ledger is derived from per-family word-potential certificates, the
 input certificate rows are themselves audited: malformed two-field rows,
 non-certificate values, unknown endpoint families, duplicate certificate
@@ -1038,6 +1045,10 @@ endpoint_observer_family_build_product_residual_faithfulness_family_scope_matche
 endpoint_observer_family_build_product_residual_faithfulness_seed_scope_matches
 endpoint_observer_family_build_product_residual_faithfulness_failure_reasons
 endpoint_observer_family_build_closes_current_kappa
+endpoint_observer_family_build_closed_families
+system_u_closed_by_endpoint_observer_family_build
+system_c_closed_by_endpoint_observer_family_build
+system_m_closed_by_endpoint_observer_family_build
 endpoint_observer_family_build_expected_families
 endpoint_observer_family_build_covered_families
 endpoint_observer_family_build_missing_families
