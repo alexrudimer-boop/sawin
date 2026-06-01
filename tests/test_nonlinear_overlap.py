@@ -4631,6 +4631,22 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         for family, build in family_audit.build_rows_exact:
             self.assertEqual(build.audit.required_endpoint_families, (family,))
             self.assertTrue(build.proves_endpoint_observer)
+        wrapper = PostLinearRemainingFiniteSystemAudit(
+            active_system_k_refinement(),
+            universal_k_endpoint_observer_family_build=family_audit,
+        )
+        self.assertIn(
+            ("endpoint_observer_family_build_present", True),
+            wrapper.routed_endpoint_obstruction_data,
+        )
+        self.assertIn(
+            ("endpoint_observer_family_build_proved", True),
+            wrapper.routed_endpoint_obstruction_data,
+        )
+        self.assertIn(
+            ("endpoint_observer_family_build_expected_families", ("C", "M", "U")),
+            wrapper.routed_endpoint_obstruction_data,
+        )
 
         missing_m = universal_k_endpoint_observer_family_build_audit(
             seed_entries,
@@ -8813,11 +8829,13 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         audit = post_linear_remaining_finite_system_audit(
             one_color_latin_unit_triangular_interval(),
             universal_k_word_potential_certificate=certificate,
+            universal_k_word_potential_certificates_by_family=(("U", certificate),),
         )
 
         signed = audit.universal_k_signed_endpoint_generator
         self.assertIsNotNone(signed)
         self.assertIsNotNone(audit.universal_k_endpoint_observer)
+        self.assertIsNotNone(audit.universal_k_endpoint_observer_family_build)
         self.assertIs(audit.universal_k_endpoint_observer.audit, signed)
         self.assertIs(
             signed.telescoping_detector_audit.word_potential_certificate,
@@ -8830,6 +8848,14 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         )
         self.assertIn(
             ("signed_endpoint_generator_endpoint_observer_build_proved", False),
+            audit.routed_endpoint_obstruction_data,
+        )
+        self.assertIn(
+            ("endpoint_observer_family_build_present", True),
+            audit.routed_endpoint_obstruction_data,
+        )
+        self.assertIn(
+            ("endpoint_observer_family_build_extra_families", ("U",)),
             audit.routed_endpoint_obstruction_data,
         )
         self.assertIn("no_routed_k_seed_states", signed.failure_reasons)

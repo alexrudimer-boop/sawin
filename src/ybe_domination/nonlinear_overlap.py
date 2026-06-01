@@ -8870,6 +8870,9 @@ class PostLinearRemainingFiniteSystemAudit:
         UniversalKSignedEndpointGeneratorAudit | None
     ) = None
     universal_k_endpoint_observer: UniversalKEndpointObserverBuild | None = None
+    universal_k_endpoint_observer_family_build: (
+        UniversalKEndpointObserverFamilyBuildAudit | None
+    ) = None
     universal_k_signed_endpoint_interval: LocalInterval | None = None
     unsupported_companion_structural_contradiction: (
         UnsupportedCompanionStructuralContradictionAudit | None
@@ -12536,6 +12539,87 @@ class PostLinearRemainingFiniteSystemAudit:
         )
 
     @property
+    def _universal_k_endpoint_observer_family_build_data(
+        self,
+    ) -> Tuple[Tuple[str, object], ...]:
+        audit = self.universal_k_endpoint_observer_family_build
+        if audit is None:
+            return (
+                ("endpoint_observer_family_build_present", False),
+                ("endpoint_observer_family_build_proved", False),
+                ("endpoint_observer_family_build_expected_families", ()),
+                ("endpoint_observer_family_build_covered_families", ()),
+                ("endpoint_observer_family_build_missing_families", ()),
+                ("endpoint_observer_family_build_extra_families", ()),
+                ("endpoint_observer_family_build_duplicate_families", ()),
+                ("endpoint_observer_family_build_malformed_rows", ()),
+                ("endpoint_observer_family_build_unknown_families", ()),
+                ("endpoint_observer_family_build_scope_failures", ()),
+                ("endpoint_observer_family_build_unproved_families", ()),
+                ("endpoint_observer_family_build_rows", ()),
+                ("endpoint_observer_family_build_failure_reasons", ()),
+            )
+        return (
+            ("endpoint_observer_family_build_present", True),
+            (
+                "endpoint_observer_family_build_proved",
+                audit.proves_family_endpoint_observers,
+            ),
+            (
+                "endpoint_observer_family_build_expected_families",
+                audit.expected_endpoint_families_exact,
+            ),
+            (
+                "endpoint_observer_family_build_covered_families",
+                audit.covered_endpoint_families_exact,
+            ),
+            (
+                "endpoint_observer_family_build_missing_families",
+                audit.missing_build_families,
+            ),
+            (
+                "endpoint_observer_family_build_extra_families",
+                audit.extra_build_families,
+            ),
+            (
+                "endpoint_observer_family_build_duplicate_families",
+                audit.duplicate_build_families,
+            ),
+            (
+                "endpoint_observer_family_build_malformed_rows",
+                audit.malformed_build_rows,
+            ),
+            (
+                "endpoint_observer_family_build_unknown_families",
+                audit.invalid_build_families,
+            ),
+            (
+                "endpoint_observer_family_build_scope_failures",
+                audit.build_scope_failures,
+            ),
+            (
+                "endpoint_observer_family_build_unproved_families",
+                audit.unproved_build_families,
+            ),
+            (
+                "endpoint_observer_family_build_rows",
+                tuple(
+                    (
+                        family,
+                        build.proves_endpoint_observer,
+                        build.reachable_seed_states,
+                        tuple(row.entry_key for row in build.positive_rows),
+                    )
+                    for family, build in audit.build_rows_exact
+                ),
+            ),
+            (
+                "endpoint_observer_family_build_failure_reasons",
+                audit.failure_reasons,
+            ),
+        )
+
+    @property
     def routed_endpoint_obstruction_data(self) -> Tuple[Tuple[str, object], ...]:
         data = []
         if self.system_u_active:
@@ -12597,6 +12681,7 @@ class PostLinearRemainingFiniteSystemAudit:
         data.extend(self._mixed_unit_endpoint_witness_data)
         data.extend(self._mixed_unit_symmetric_endpoint_fork_data)
         data.extend(self._universal_k_signed_endpoint_generator_data)
+        data.extend(self._universal_k_endpoint_observer_family_build_data)
         return tuple(data)
 
     @property
@@ -12776,6 +12861,7 @@ class PostLinearRemainingFiniteSystemAudit:
                 ),
             ]
             data.extend(self._universal_k_signed_endpoint_generator_data)
+            data.extend(self._universal_k_endpoint_observer_family_build_data)
             if self.triangular_latin_defect_closure is not None:
                 closure = self.triangular_latin_defect_closure
                 data.extend(
@@ -14364,14 +14450,23 @@ def post_linear_remaining_finite_system_audit(
     universal_k_word_potential_certificate: (
         UniversalKWordPotentialCertificate | None
     ) = None,
+    universal_k_word_potential_certificates_by_family: Sequence[
+        Tuple[str, UniversalKWordPotentialCertificate]
+    ] = (),
     universal_k_detector_track_counts_by_family: Tuple[Tuple[str, int], ...] = (),
     universal_k_detector_track_initialization_rows: Tuple[
         UniversalKDetectorTrackInitializationRow,
         ...,
     ] = (),
     universal_k_endpoint_target_audit: UniversalKEndpointTargetAudit | None = None,
+    universal_k_endpoint_target_audits_by_family: Sequence[
+        Tuple[str, UniversalKEndpointTargetAudit]
+    ] = (),
     universal_k_cutoff_readouts_exact: bool = False,
     universal_k_cutoff_readout_audit: UniversalKCutoffReadoutAudit | None = None,
+    universal_k_cutoff_readout_audits_by_family: Sequence[
+        Tuple[str, UniversalKCutoffReadoutAudit]
+    ] = (),
     universal_k_residual_faithfulness_verified: bool = False,
     universal_k_residual_action_scope: (
         UniversalKResidualActionScopeAudit | None
@@ -14379,12 +14474,18 @@ def post_linear_remaining_finite_system_audit(
     universal_k_residual_faithfulness_theorem: (
         UniversalKResidualFaithfulnessAudit | None
     ) = None,
+    universal_k_residual_faithfulness_theorems_by_family: Sequence[
+        Tuple[str, UniversalKResidualFaithfulnessAudit]
+    ] = (),
     universal_k_residual_action_audit: "EndpointResidualActionAudit | None" = None,
     universal_k_telescoping_detector_audit: (
         UniversalKTelescopingDetectorAudit | None
     ) = None,
     universal_k_signed_endpoint_generator: (
         UniversalKSignedEndpointGeneratorAudit | None
+    ) = None,
+    universal_k_endpoint_observer_family_build: (
+        UniversalKEndpointObserverFamilyBuildAudit | None
     ) = None,
     unsupported_companion_structural_contradiction: (
         UnsupportedCompanionStructuralContradictionAudit | None
@@ -14420,6 +14521,7 @@ def post_linear_remaining_finite_system_audit(
     )
     signed_endpoint_generator = universal_k_signed_endpoint_generator
     endpoint_observer_build = None
+    endpoint_observer_family_build = universal_k_endpoint_observer_family_build
     derive_signed_endpoint_generator = (
         signed_endpoint_generator is None
         and (
@@ -14438,7 +14540,11 @@ def post_linear_remaining_finite_system_audit(
             or universal_k_telescoping_detector_audit is not None
         )
     )
-    if derive_signed_endpoint_generator:
+    derive_endpoint_observer_family_build = (
+        endpoint_observer_family_build is None
+        and bool(universal_k_word_potential_certificates_by_family)
+    )
+    if derive_signed_endpoint_generator or derive_endpoint_observer_family_build:
         unsigned = PostLinearRemainingFiniteSystemAudit(
             refinement=refinement,
             kink_completion_deficits_routed=kink_completion_deficits_routed,
@@ -14459,48 +14565,69 @@ def post_linear_remaining_finite_system_audit(
             universal_k_signed_endpoint_interval=interval,
             unsupported_companion_structural_contradiction=unsupported_companion_structural_contradiction,
         )
-        reachable_states = universal_k_signed_endpoint_reachable_seed_states
-        if reachable_states is None:
-            reachable_states = universal_k_signed_endpoint_transition_closure(
-                unsigned.universal_k_seed_classifier_entries,
-                universal_k_signed_endpoint_rows or (),
+        if derive_endpoint_observer_family_build:
+            endpoint_observer_family_build = (
+                universal_k_endpoint_observer_builds_by_family(
+                    interval,
+                    unsigned.universal_k_seed_classifier_entries,
+                    universal_k_word_potential_certificates_by_family,
+                    detector_track_initialization_rows=(
+                        universal_k_detector_track_initialization_rows
+                    ),
+                    endpoint_target_audits_by_family=(
+                        universal_k_endpoint_target_audits_by_family
+                    ),
+                    cutoff_readout_audits_by_family=(
+                        universal_k_cutoff_readout_audits_by_family
+                    ),
+                    residual_faithfulness_theorems_by_family=(
+                        universal_k_residual_faithfulness_theorems_by_family
+                    ),
+                )
             )
-        if universal_k_word_potential_certificate is not None:
-            endpoint_observer_build = universal_k_endpoint_observer_build(
-                interval,
-                unsigned.universal_k_seed_classifier_entries,
-                universal_k_word_potential_certificate,
-                detector_track_counts_by_family=(
-                    universal_k_detector_track_counts_by_family
-                ),
-                detector_track_initialization_rows=(
-                    universal_k_detector_track_initialization_rows
-                ),
-                endpoint_target_audit=universal_k_endpoint_target_audit,
-                cutoff_readout_audit=universal_k_cutoff_readout_audit,
-                residual_faithfulness_theorem=universal_k_residual_faithfulness_theorem,
-                residual_action_scope=universal_k_residual_action_scope,
-                residual_action_audit=universal_k_residual_action_audit,
-                witnesses=universal_k_signed_endpoint_witnesses,
-            )
-            signed_endpoint_generator = endpoint_observer_build.audit
-        else:
-            signed_endpoint_generator = universal_k_signed_endpoint_generator_audit(
-                interval,
-                unsigned.universal_k_seed_classifier_entries,
-                reachable_states or (),
-                universal_k_signed_endpoint_rows or (),
-                endpoint_group=universal_k_signed_endpoint_group,
-                witnesses=universal_k_signed_endpoint_witnesses,
-                endpoint_target_audit=universal_k_endpoint_target_audit,
-                cutoff_readouts_exact=universal_k_cutoff_readouts_exact,
-                cutoff_readout_audit=universal_k_cutoff_readout_audit,
-                residual_faithfulness_verified=universal_k_residual_faithfulness_verified,
-                residual_action_scope=universal_k_residual_action_scope,
-                residual_faithfulness_theorem=universal_k_residual_faithfulness_theorem,
-                residual_action_audit=universal_k_residual_action_audit,
-                telescoping_detector_audit=universal_k_telescoping_detector_audit,
-            )
+        if derive_signed_endpoint_generator:
+            reachable_states = universal_k_signed_endpoint_reachable_seed_states
+            if reachable_states is None:
+                reachable_states = universal_k_signed_endpoint_transition_closure(
+                    unsigned.universal_k_seed_classifier_entries,
+                    universal_k_signed_endpoint_rows or (),
+                )
+            if universal_k_word_potential_certificate is not None:
+                endpoint_observer_build = universal_k_endpoint_observer_build(
+                    interval,
+                    unsigned.universal_k_seed_classifier_entries,
+                    universal_k_word_potential_certificate,
+                    detector_track_counts_by_family=(
+                        universal_k_detector_track_counts_by_family
+                    ),
+                    detector_track_initialization_rows=(
+                        universal_k_detector_track_initialization_rows
+                    ),
+                    endpoint_target_audit=universal_k_endpoint_target_audit,
+                    cutoff_readout_audit=universal_k_cutoff_readout_audit,
+                    residual_faithfulness_theorem=universal_k_residual_faithfulness_theorem,
+                    residual_action_scope=universal_k_residual_action_scope,
+                    residual_action_audit=universal_k_residual_action_audit,
+                    witnesses=universal_k_signed_endpoint_witnesses,
+                )
+                signed_endpoint_generator = endpoint_observer_build.audit
+            else:
+                signed_endpoint_generator = universal_k_signed_endpoint_generator_audit(
+                    interval,
+                    unsigned.universal_k_seed_classifier_entries,
+                    reachable_states or (),
+                    universal_k_signed_endpoint_rows or (),
+                    endpoint_group=universal_k_signed_endpoint_group,
+                    witnesses=universal_k_signed_endpoint_witnesses,
+                    endpoint_target_audit=universal_k_endpoint_target_audit,
+                    cutoff_readouts_exact=universal_k_cutoff_readouts_exact,
+                    cutoff_readout_audit=universal_k_cutoff_readout_audit,
+                    residual_faithfulness_verified=universal_k_residual_faithfulness_verified,
+                    residual_action_scope=universal_k_residual_action_scope,
+                    residual_faithfulness_theorem=universal_k_residual_faithfulness_theorem,
+                    residual_action_audit=universal_k_residual_action_audit,
+                    telescoping_detector_audit=universal_k_telescoping_detector_audit,
+                )
 
     return PostLinearRemainingFiniteSystemAudit(
         refinement=refinement,
@@ -14521,6 +14648,7 @@ def post_linear_remaining_finite_system_audit(
         mixed_unit_context_symmetric_endpoint_fork=mixed_unit_context_symmetric_endpoint_fork,
         universal_k_signed_endpoint_generator=signed_endpoint_generator,
         universal_k_endpoint_observer=endpoint_observer_build,
+        universal_k_endpoint_observer_family_build=endpoint_observer_family_build,
         universal_k_signed_endpoint_interval=interval,
         unsupported_companion_structural_contradiction=unsupported_companion_structural_contradiction,
     )

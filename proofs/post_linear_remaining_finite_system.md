@@ -766,6 +766,12 @@ build rows, checks that each build is single-family scoped with exactly the
 family's seed classifier entries and seed states, and only closes when every
 family build proves its endpoint observer.  Thus a combined product endpoint
 row cannot hide the absence of a C or M observer behind a successful U build.
+The top-level post-linear audit can now retain this family-build ledger
+directly, or derive it from per-family word-potential certificates, endpoint
+target audits, C/M cutoff readouts, and per-family residual-faithfulness
+theorems.  Its routed-endpoint obstruction data reports the expected,
+covered, missing, extra, duplicate, malformed, scope-mismatched, and unproved
+family builds separately from the older combined signed-generator audit.
 When a fixed endpoint group is declared as a product over multiple endpoint
 families, the signed endpoint audit now also checks family support of each
 emitted label: a row in family `E` must have identity components in every
@@ -987,6 +993,19 @@ signed_endpoint_generator_endpoint_observer_build_present
 signed_endpoint_generator_endpoint_observer_build_proved
 signed_endpoint_generator_endpoint_observer_positive_entry_keys
 signed_endpoint_generator_endpoint_observer_monodromy_contexts
+endpoint_observer_family_build_present
+endpoint_observer_family_build_proved
+endpoint_observer_family_build_expected_families
+endpoint_observer_family_build_covered_families
+endpoint_observer_family_build_missing_families
+endpoint_observer_family_build_extra_families
+endpoint_observer_family_build_duplicate_families
+endpoint_observer_family_build_malformed_rows
+endpoint_observer_family_build_unknown_families
+endpoint_observer_family_build_scope_failures
+endpoint_observer_family_build_unproved_families
+endpoint_observer_family_build_rows
+endpoint_observer_family_build_failure_reasons
 signed_endpoint_generator_reachable_seed_states
 signed_endpoint_generator_duplicate_reachable_seed_states
 signed_endpoint_generator_invalid_reachable_seed_states

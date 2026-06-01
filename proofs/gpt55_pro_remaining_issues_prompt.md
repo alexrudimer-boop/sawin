@@ -1517,6 +1517,12 @@ rows.  Each retained family build must be single-family scoped, must use
 exactly that family's seed classifier entries and reachable seed states, and
 must itself prove the endpoint observer.  A successful U observer cannot
 stand in for a missing C or M observer.
+The main post-linear proof object must retain or derive this family ledger
+from per-family word-potential certificates and must expose expected,
+covered, missing, extra, duplicate, malformed, scope-mismatched, and unproved
+family builds as finite data.  This ledger is separate from the combined
+signed-generator audit: it is evidence that the U/C/M observers were
+constructed family-by-family, not by an opaque product certificate.
 Positive observer rows may be forced only from actual word-potential identity
 row objects.  A tuple-shaped identity-row stand-in is a malformed certificate
 entry: it must be reported at the word-potential gate, must not be interpreted
