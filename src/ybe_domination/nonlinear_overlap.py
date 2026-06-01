@@ -998,16 +998,23 @@ def _universal_k_expected_artin_substitution(
     return ((variable, 1),)
 
 
+def _universal_k_is_positive_entry_key(
+    key: UniversalKSignedEndpointEntryKey,
+) -> bool:
+    return key[2] == 1
+
+
 @dataclass(frozen=True)
 class UniversalKWordPotentialCertificate:
     """Concrete finite word-potential detector-lift certificate.
 
     Templates are indexed by endpoint family and reachable seed state.  Each
-    signed table row supplies the Artin substitution for the next-state
-    template and the emitted endpoint label.  The checker exhausts all
-    assignments of the finitely many formal variables to the finite endpoint
-    group, so the certificate is mathematical data rather than a boolean
-    assertion.
+    positive table row supplies the Artin substitution for the next-state
+    template and the emitted endpoint label.  Negative rows are checked as
+    inverse-derived signed endpoint rows by the surrounding generator audit.
+    The checker exhausts all assignments of the finitely many formal variables
+    to the finite endpoint group, so the certificate is mathematical data
+    rather than a boolean assertion.
     """
 
     endpoint_group: FiniteGroup
@@ -1037,10 +1044,32 @@ class UniversalKWordPotentialCertificate:
         return tuple(sorted({row.entry_key for row in self.identity_rows}, key=repr))
 
     @property
+    def positive_identity_entry_keys_exact(
+        self,
+    ) -> Tuple[UniversalKSignedEndpointEntryKey, ...]:
+        return tuple(
+            key
+            for key in self.identity_entry_keys_exact
+            if _universal_k_is_positive_entry_key(key)
+        )
+
+    @property
     def duplicate_identity_entry_keys(
         self,
     ) -> Tuple[UniversalKSignedEndpointEntryKey, ...]:
         return _duplicate_values(tuple(row.entry_key for row in self.identity_rows))
+
+    @property
+    def duplicate_positive_identity_entry_keys(
+        self,
+    ) -> Tuple[UniversalKSignedEndpointEntryKey, ...]:
+        return _duplicate_values(
+            tuple(
+                row.entry_key
+                for row in self.identity_rows
+                if _universal_k_is_positive_entry_key(row.entry_key)
+            )
+        )
 
     @property
     def normalized_seed_states_exact(
@@ -1080,8 +1109,7 @@ class UniversalKWordPotentialCertificate:
         template_map = self.template_map
         for row in self.identity_rows:
             entry_family, _state, sign, *_rest = row.entry_key
-            if sign not in {-1, 1}:
-                failures.append((row.entry_key, "unknown_signed_row_sign", sign))
+            if sign != 1:
                 continue
             next_key = (entry_family, row.next_seed_state)
             next_template = template_map.get(next_key)
@@ -1168,6 +1196,8 @@ class UniversalKWordPotentialCertificate:
         group_elements = set(self.endpoint_group.elements)
         for row in self.identity_rows:
             entry_family, source_state, _sign, *_rest = row.entry_key
+            if _sign != 1:
+                continue
             source_key = (entry_family, source_state)
             next_key = (entry_family, row.next_seed_state)
             source_template = template_map.get(source_key)
@@ -1260,11 +1290,17 @@ class UniversalKWordPotentialCertificate:
 
     @property
     def artin_substitutions_verified(self) -> bool:
-        return not self.duplicate_identity_entry_keys and not self.substitution_failures
+        return (
+            not self.duplicate_positive_identity_entry_keys
+            and not self.substitution_failures
+        )
 
     @property
     def identities_verified(self) -> bool:
-        return not self.duplicate_identity_entry_keys and not self.identity_failures
+        return (
+            not self.duplicate_positive_identity_entry_keys
+            and not self.identity_failures
+        )
 
     @property
     def initial_readouts_normalized(self) -> bool:
@@ -2640,6 +2676,26 @@ class UniversalKTelescopingDetectorAudit:
         return tuple(sorted(set(self.covered_entry_keys), key=repr))
 
     @property
+    def expected_positive_entry_keys_exact(
+        self,
+    ) -> Tuple[UniversalKSignedEndpointEntryKey, ...]:
+        return tuple(
+            key
+            for key in self.expected_entry_keys_exact
+            if _universal_k_is_positive_entry_key(key)
+        )
+
+    @property
+    def covered_positive_entry_keys_exact(
+        self,
+    ) -> Tuple[UniversalKSignedEndpointEntryKey, ...]:
+        return tuple(
+            key
+            for key in self.covered_entry_keys_exact
+            if _universal_k_is_positive_entry_key(key)
+        )
+
+    @property
     def duplicate_expected_entry_keys(
         self,
     ) -> Tuple[UniversalKSignedEndpointEntryKey, ...]:
@@ -2652,34 +2708,58 @@ class UniversalKTelescopingDetectorAudit:
         return _duplicate_values(self.covered_entry_keys)
 
     @property
+    def duplicate_expected_positive_entry_keys(
+        self,
+    ) -> Tuple[UniversalKSignedEndpointEntryKey, ...]:
+        return _duplicate_values(
+            tuple(
+                key
+                for key in self.expected_entry_keys
+                if _universal_k_is_positive_entry_key(key)
+            )
+        )
+
+    @property
+    def duplicate_covered_positive_entry_keys(
+        self,
+    ) -> Tuple[UniversalKSignedEndpointEntryKey, ...]:
+        return _duplicate_values(
+            tuple(
+                key
+                for key in self.covered_entry_keys
+                if _universal_k_is_positive_entry_key(key)
+            )
+        )
+
+    @property
     def entry_ledgers_have_no_duplicates(self) -> bool:
         return (
-            not self.duplicate_expected_entry_keys
-            and not self.duplicate_covered_entry_keys
+            not self.duplicate_expected_positive_entry_keys
+            and not self.duplicate_covered_positive_entry_keys
         )
 
     @property
     def missing_entry_keys(
         self,
     ) -> Tuple[UniversalKSignedEndpointEntryKey, ...]:
-        covered = set(self.covered_entry_keys_exact)
+        covered = set(self.covered_positive_entry_keys_exact)
         return tuple(
-            key for key in self.expected_entry_keys_exact if key not in covered
+            key for key in self.expected_positive_entry_keys_exact if key not in covered
         )
 
     @property
     def extra_entry_keys(
         self,
     ) -> Tuple[UniversalKSignedEndpointEntryKey, ...]:
-        expected = set(self.expected_entry_keys_exact)
+        expected = set(self.expected_positive_entry_keys_exact)
         return tuple(
-            key for key in self.covered_entry_keys_exact if key not in expected
+            key for key in self.covered_positive_entry_keys_exact if key not in expected
         )
 
     @property
     def entry_coverage_exact(self) -> bool:
         return (
-            bool(self.expected_entry_keys_exact)
+            bool(self.expected_positive_entry_keys_exact)
             and not self.missing_entry_keys
             and not self.extra_entry_keys
         )
@@ -2690,7 +2770,7 @@ class UniversalKTelescopingDetectorAudit:
     ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
         return tuple(
             sorted(
-                {(key[0], key[1]) for key in self.expected_entry_keys_exact},
+                {(key[0], key[1]) for key in self.expected_positive_entry_keys_exact},
                 key=repr,
             )
         )
@@ -2981,15 +3061,15 @@ class UniversalKTelescopingDetectorAudit:
     def word_potential_certificate_entry_scope_exact(self) -> bool:
         return (
             self.word_potential_certificate is not None
-            and set(self.word_potential_certificate.identity_entry_keys_exact)
-            == set(self.expected_entry_keys_exact)
+            and set(self.word_potential_certificate.positive_identity_entry_keys_exact)
+            == set(self.expected_positive_entry_keys_exact)
         )
 
     @property
     def word_potential_certificate_ledgers_have_no_duplicates(self) -> bool:
         return self.word_potential_certificate is not None and (
             not self.word_potential_certificate.duplicate_template_seed_states
-            and not self.word_potential_certificate.duplicate_identity_entry_keys
+            and not self.word_potential_certificate.duplicate_positive_identity_entry_keys
             and not self.word_potential_certificate.duplicate_normalized_seed_states
         )
 
@@ -3026,6 +3106,8 @@ class UniversalKTelescopingDetectorAudit:
                     )
         for row in self.word_potential_certificate.identity_rows:
             family = row.entry_key[0]
+            if not _universal_k_is_positive_entry_key(row.entry_key):
+                continue
             count = counts_by_family.get(family)
             if count is None:
                 failures.append(
@@ -3070,6 +3152,8 @@ class UniversalKTelescopingDetectorAudit:
         initialized_by_family = self.initialized_raw_assignment_variables_by_family
         for row in self.word_potential_certificate.identity_rows:
             family = row.entry_key[0]
+            if not _universal_k_is_positive_entry_key(row.entry_key):
+                continue
             initialized = set(initialized_by_family.get(family, ()))
             row_raw_variables = []
             for variable, image in row.artin_substitution:
@@ -3181,8 +3265,8 @@ class UniversalKTelescopingDetectorAudit:
     @property
     def failure_reasons(self) -> Tuple[str, ...]:
         reasons = []
-        if not self.expected_entry_keys_exact:
-            reasons.append("telescoping_detector_expected_entry_keys_empty")
+        if not self.expected_positive_entry_keys_exact:
+            reasons.append("telescoping_detector_expected_positive_entry_keys_empty")
         if self.missing_entry_keys:
             reasons.append("telescoping_detector_missing_entry_keys")
         if self.extra_entry_keys:
@@ -3479,6 +3563,16 @@ class UniversalKSignedEndpointGeneratorAudit:
         self,
     ) -> Tuple[UniversalKSignedEndpointEntryKey, ...]:
         return tuple(sorted(set(self.required_entry_keys), key=repr))
+
+    @property
+    def required_positive_entry_keys_exact(
+        self,
+    ) -> Tuple[UniversalKSignedEndpointEntryKey, ...]:
+        return tuple(
+            key
+            for key in self.required_entry_keys_exact
+            if _universal_k_is_positive_entry_key(key)
+        )
 
     @property
     def required_entry_signed_seed_keys(
@@ -3827,8 +3921,8 @@ class UniversalKSignedEndpointGeneratorAudit:
     def telescoping_detector_scope_matches_required(self) -> bool:
         return (
             self.telescoping_detector_audit is not None
-            and set(self.telescoping_detector_audit.expected_entry_keys_exact)
-            == set(self.required_entry_keys_exact)
+            and set(self.telescoping_detector_audit.expected_positive_entry_keys_exact)
+            == set(self.required_positive_entry_keys_exact)
             and set(self.telescoping_detector_audit.expected_endpoint_seed_states_exact)
             == set(self.reachable_seed_states_exact)
         )
@@ -3913,6 +4007,8 @@ class UniversalKSignedEndpointGeneratorAudit:
         )
         failures = []
         for row in self.rows:
+            if row.sign != 1:
+                continue
             identity_row = identity_rows.get(row.entry_key)
             if identity_row is None:
                 continue
@@ -6885,9 +6981,21 @@ class PostLinearRemainingFiniteSystemAudit:
                 ),
                 ("signed_endpoint_generator_telescoping_expected_entry_keys", ()),
                 ("signed_endpoint_generator_telescoping_covered_entry_keys", ()),
+                (
+                    "signed_endpoint_generator_telescoping_expected_positive_entry_keys",
+                    (),
+                ),
+                (
+                    "signed_endpoint_generator_telescoping_covered_positive_entry_keys",
+                    (),
+                ),
                 ("signed_endpoint_generator_telescoping_missing_entry_keys", ()),
                 ("signed_endpoint_generator_telescoping_extra_entry_keys", ()),
                 ("signed_endpoint_generator_telescoping_duplicate_entry_keys", ()),
+                (
+                    "signed_endpoint_generator_telescoping_duplicate_positive_entry_keys",
+                    (),
+                ),
                 ("signed_endpoint_generator_telescoping_expected_seed_states", ()),
                 ("signed_endpoint_generator_telescoping_covered_seed_states", ()),
                 ("signed_endpoint_generator_telescoping_duplicate_seed_states", ()),
@@ -7500,6 +7608,22 @@ class PostLinearRemainingFiniteSystemAudit:
                 ),
             ),
             (
+                "signed_endpoint_generator_telescoping_expected_positive_entry_keys",
+                (
+                    telescoping_audit.expected_positive_entry_keys_exact
+                    if telescoping_audit is not None
+                    else ()
+                ),
+            ),
+            (
+                "signed_endpoint_generator_telescoping_covered_positive_entry_keys",
+                (
+                    telescoping_audit.covered_positive_entry_keys_exact
+                    if telescoping_audit is not None
+                    else ()
+                ),
+            ),
+            (
                 "signed_endpoint_generator_telescoping_missing_entry_keys",
                 (
                     telescoping_audit.missing_entry_keys
@@ -7520,6 +7644,15 @@ class PostLinearRemainingFiniteSystemAudit:
                 (
                     telescoping_audit.duplicate_expected_entry_keys
                     + telescoping_audit.duplicate_covered_entry_keys
+                    if telescoping_audit is not None
+                    else ()
+                ),
+            ),
+            (
+                "signed_endpoint_generator_telescoping_duplicate_positive_entry_keys",
+                (
+                    telescoping_audit.duplicate_expected_positive_entry_keys
+                    + telescoping_audit.duplicate_covered_positive_entry_keys
                     if telescoping_audit is not None
                     else ()
                 ),
@@ -7788,6 +7921,15 @@ class PostLinearRemainingFiniteSystemAudit:
                 "signed_endpoint_generator_word_potential_certificate_identity_rows",
                 (
                     telescoping_audit.word_potential_certificate.identity_entry_keys_exact
+                    if telescoping_audit is not None
+                    and telescoping_audit.word_potential_certificate is not None
+                    else ()
+                ),
+            ),
+            (
+                "signed_endpoint_generator_word_potential_certificate_positive_identity_rows",
+                (
+                    telescoping_audit.word_potential_certificate.positive_identity_entry_keys_exact
                     if telescoping_audit is not None
                     and telescoping_audit.word_potential_certificate is not None
                     else ()

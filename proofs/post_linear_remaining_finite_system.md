@@ -439,7 +439,7 @@ word-potential templates use only current longitude variables
 word-potential variables use only declared fixed detector tracks
 raw assignment variables in substitutions are initialized by fixed tracks
 word-potential Artin substitution from the detector recurrence
-word-potential identity for every signed row
+word-potential identity for every positive row
 initial word-potential normalization
 exact C/M cutoff readouts when cutoff families are present
 residual faithfulness for the actual interval fibre action
@@ -558,14 +558,16 @@ variables may appear in the local Artin substitution, but not in the terminal
 readout word.  The variables must also be scoped to the declared fixed track
 counts for their endpoint families; a word using `U_{999,j}` is not backed by
 an initialized detector track just because it has the right letter.  The audit
-must verify the induced Artin substitution and the finite local identity
+must verify the induced positive Artin substitution and the finite local
+identity
 
 ```text
-W_{s'}(A_gamma^epsilon(U,A)) = W_s(U) h
+W_{s'}(A_gamma^+(U,A)) = W_s(U) h
 ```
 
-for every signed table row.  With initial normalization, this word-potential
-identity is what converts the finite signed row table into the all-`n`
+for every positive table row.  With initial normalization and inverse-derived
+negative rows, this word-potential identity is what converts the finite signed
+row table into the all-`n`
 conclusion `endpoint_E(beta) in V_beta(H_E)`.
 The initial-normalization ledger must include every actual initial seed state
 hit by `kappa`; normalizing only a later reachable state or an unrelated
@@ -575,15 +577,18 @@ the current `kappa` seed image.  A later transition-reachable state may have a
 template, but it is not an initial state and must not be listed as one.
 
 The word-potential certificate is concrete finite data.  It records the
-template table `(E,s) |-> W_s`, one identity row for each signed
-`D_Gamma` entry, the next state, the emitted endpoint label, and the Artin
-substitution for that row.  The checker verifies that the identity-row table
-has the same entry domain as the signed endpoint table, that the next state
-and emitted label match the signed row, that terminal templates contain only
-current longitude variables `U_{r,j}`, and that the local substitutions are
-the positive/negative Artin recurrences.  It then exhausts all assignments of
-the finitely many variables in the row to the fixed endpoint group and checks
-the word identity in the group table.  This removes the previous loophole
+template table `(E,s) |-> W_s`, one identity row for each positive
+`D_Gamma` entry, the next state, the emitted endpoint label, and the positive
+Artin substitution for that row.  The checker verifies that the identity-row
+table has the same positive entry domain as the signed endpoint table, that
+the next state and emitted label match the positive signed row, that terminal
+templates contain only current longitude variables `U_{r,j}`, and that the
+local substitutions are the positive Artin recurrences.  Negative
+word-potential rows, if present, are diagnostic only once the signed endpoint
+audit has proved that negative endpoint rows are actual inverses.  The checker
+then exhausts all assignments of the finitely many variables in the positive
+row to the fixed endpoint group and checks the word identity in the group
+table.  This removes the previous loophole
 where a bare boolean could stand in for a tautological accumulated potential.
 The executable close criterion derives the Artin-recurrence and
 terminal-readout-longitude gates from these same substitution and template
@@ -822,9 +827,12 @@ signed_endpoint_generator_telescoping_endpoint_group_matches
 signed_endpoint_generator_telescoping_signed_row_mismatches
 signed_endpoint_generator_telescoping_expected_entry_keys
 signed_endpoint_generator_telescoping_covered_entry_keys
+signed_endpoint_generator_telescoping_expected_positive_entry_keys
+signed_endpoint_generator_telescoping_covered_positive_entry_keys
 signed_endpoint_generator_telescoping_missing_entry_keys
 signed_endpoint_generator_telescoping_extra_entry_keys
 signed_endpoint_generator_telescoping_duplicate_entry_keys
+signed_endpoint_generator_telescoping_duplicate_positive_entry_keys
 signed_endpoint_generator_telescoping_expected_seed_states
 signed_endpoint_generator_telescoping_covered_seed_states
 signed_endpoint_generator_telescoping_duplicate_seed_states
@@ -857,6 +865,7 @@ signed_endpoint_generator_word_potential_artin_substitution_verified
 signed_endpoint_generator_word_potential_identity_verified
 signed_endpoint_generator_word_potential_certificate_template_states
 signed_endpoint_generator_word_potential_certificate_identity_rows
+signed_endpoint_generator_word_potential_certificate_positive_identity_rows
 signed_endpoint_generator_word_potential_artin_substitution_failures
 signed_endpoint_generator_word_potential_identity_failures
 signed_endpoint_generator_terminal_readout_longitudes_verified

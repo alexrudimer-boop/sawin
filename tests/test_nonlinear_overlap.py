@@ -3354,23 +3354,28 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             out_of_scope_tracks.failure_reasons,
         )
 
-        in_scope_word_needing_right_assignment = (
-            (("U", 0, 1), 1),
-            (("U", 0, 1), -1),
+        in_scope_word_needing_left_assignment = (
+            (("U", 0, 0), 1),
+            (("U", 0, 0), -1),
         )
 
-        def right_assignment_substitution(sign):
+        def left_assignment_substitution(sign):
             if sign == 1:
-                return ((("U", 0, 1), ((("U", 0, 0), 1),)),)
+                return (
+                    (
+                        ("U", 0, 0),
+                        (
+                            (("U", 0, 0), 1),
+                            (("A", 0, 0), 1),
+                            (("U", 0, 0), -1),
+                            (("U", 0, 1), 1),
+                        ),
+                    ),
+                )
             return (
                 (
-                    ("U", 0, 1),
-                    (
-                        (("U", 0, 1), 1),
-                        (("A", 0, 1), -1),
-                        (("U", 0, 1), -1),
-                        (("U", 0, 0), 1),
-                    ),
+                    ("U", 0, 0),
+                    ((("U", 0, 1), 1),),
                 ),
             )
 
@@ -3378,12 +3383,25 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             theorem_complete,
             telescoping_detector_audit=replace(
                 theorem_complete.telescoping_detector_audit,
+                detector_track_initialization_rows=(
+                    UniversalKDetectorTrackInitializationRow(
+                        endpoint_family="U",
+                        track_index=0,
+                        assignment_rule="constant_identity_from_interval_seed",
+                        dependencies=(
+                            "interval_data",
+                            "routed_seed_state",
+                            "strand_index",
+                        ),
+                        local_assignment_template=((("A", 0, 1), 0),),
+                    ),
+                ),
                 word_potential_certificate=replace(
                     word_potential_certificate,
                     templates=(
                         (
                             ("U", seed_state),
-                            in_scope_word_needing_right_assignment,
+                            in_scope_word_needing_left_assignment,
                         ),
                     ),
                     identity_rows=tuple(
@@ -3393,7 +3411,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
                             endpoint_value=(
                                 word_potential_certificate.endpoint_group.identity
                             ),
-                            artin_substitution=right_assignment_substitution(key[2]),
+                            artin_substitution=left_assignment_substitution(key[2]),
                         )
                         for key in required_entry_keys
                     ),
@@ -3813,12 +3831,112 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
                 failure[1]
                 for failure in audit.telescoping_detector_signed_row_mismatches
             ),
-            ("word_potential_row_mismatch",) * len(keys),
+            (
+                "word_potential_row_mismatch",
+            ) * len(tuple(key for key in keys if key[2] == 1)),
         )
         self.assertIn(
             "telescoping_detector_signed_row_mismatch",
             audit.failure_reasons,
         )
+
+    def test_word_potential_certificate_scope_is_positive_only(self):
+        seed_state = ("*", "*", "left_constant_map_universal_kernel")
+        seed_entries = (
+            (
+                (
+                    "*",
+                    "*",
+                    "L",
+                    "constant_map_kernel",
+                    ("*", (0, 1), "universal", "universal"),
+                ),
+                ("U", seed_state),
+            ),
+        )
+        reachable = (("U", seed_state),)
+        interval = one_color_identity_interval()
+        keys = universal_k_signed_endpoint_required_entry_keys(interval, reachable)
+        positive_keys = tuple(key for key in keys if key[2] == 1)
+        rows = identity_signed_endpoint_rows(keys)
+        group = cyclic_group(2)
+        telescoping = trivial_telescoping_detector_audit(
+            positive_keys,
+            rows=rows,
+            endpoint_group=group,
+        )
+        audit = universal_k_signed_endpoint_generator_audit(
+            interval,
+            seed_entries,
+            reachable,
+            rows,
+            endpoint_group=group,
+            telescoping_detector_audit=telescoping,
+        )
+
+        self.assertEqual(
+            telescoping.expected_positive_entry_keys_exact,
+            tuple(sorted(set(positive_keys), key=repr)),
+        )
+        self.assertTrue(audit.telescoping_detector_scope_matches_required)
+        self.assertTrue(audit.telescoping_detector_proved)
+        self.assertEqual(audit.telescoping_detector_signed_row_mismatches, ())
+
+    def test_negative_word_potential_rows_are_ignored_after_inverse_derivation(self):
+        seed_state = ("*", "*", "left_constant_map_universal_kernel")
+        seed_entries = (
+            (
+                (
+                    "*",
+                    "*",
+                    "L",
+                    "constant_map_kernel",
+                    ("*", (0, 1), "universal", "universal"),
+                ),
+                ("U", seed_state),
+            ),
+        )
+        reachable = (("U", seed_state),)
+        interval = one_color_identity_interval()
+        keys = universal_k_signed_endpoint_required_entry_keys(interval, reachable)
+        positive_keys = tuple(key for key in keys if key[2] == 1)
+        negative_key = next(key for key in keys if key[2] == -1)
+        rows = identity_signed_endpoint_rows(keys)
+        group = cyclic_group(2)
+        telescoping = trivial_telescoping_detector_audit(
+            positive_keys,
+            rows=rows,
+            endpoint_group=group,
+        )
+        certificate = telescoping.word_potential_certificate
+        bad_negative_identity = UniversalKWordPotentialIdentityRow(
+            entry_key=negative_key,
+            next_seed_state=("unreachable",),
+            endpoint_value=99,
+            artin_substitution=((("U", 99, 0), ((("A", 99, 0), 1),)),),
+        )
+        telescoping = replace(
+            telescoping,
+            word_potential_certificate=replace(
+                certificate,
+                identity_rows=certificate.identity_rows + (bad_negative_identity,),
+            ),
+        )
+        audit = universal_k_signed_endpoint_generator_audit(
+            interval,
+            seed_entries,
+            reachable,
+            rows,
+            endpoint_group=group,
+            telescoping_detector_audit=telescoping,
+        )
+
+        self.assertTrue(telescoping.word_potential_certificate.identities_verified)
+        self.assertTrue(
+            telescoping.word_potential_certificate.artin_substitutions_verified
+        )
+        self.assertTrue(audit.telescoping_detector_proved)
+        self.assertEqual(audit.telescoping_detector_signed_row_mismatches, ())
 
     def test_signed_endpoint_audit_requires_family_scoped_endpoint_targets(self):
         seed_state = ("*", "*", "left_constant_map_universal_kernel")

@@ -1276,23 +1276,26 @@ For example, if the target family has `R_E` tracks, no variable `U_{r,j}` or
 terminal word is not a word in initialized evaluated longitudes, even if it
 uses the letter `U`.
 
-For every signed endpoint row
+For every positive endpoint row
 
 ```text
-Gamma^{E,epsilon}_{a,b}(s,x,y)=(s',x',y',h),
+Gamma^{E,+}_{a,b}(s,x,y)=(s',x',y',h),
 ```
 
 the certificate must give the corresponding Artin substitution
-`A_gamma^epsilon` on formal variables, induced by the positive or negative
-Artin recurrence.  The decisive finite local identity is
+`A_gamma^+` on formal variables, induced by the positive Artin recurrence.
+The decisive finite local identity is
 
 ```text
-W_{s'}(A_gamma^epsilon(U,A)) = W_s(U) h
+W_{s'}(A_gamma^+(U,A)) = W_s(U) h
 ```
 
 inside `H_E`, for every assignment of the involved formal variables to
 elements of `H_E`.  This is finite because `H_E`, the reachable state set,
-the signed row table, and the formal variable support are finite.
+the positive row table, and the formal variable support are finite.  Negative
+endpoint rows must still be present in the signed endpoint observer, but
+their word-potential identities are not independent certificate rows when the
+negative table is proved to be the actual inverse of the positive table.
 
 The certificate must be supplied as finite table data, not as a boolean.  It
 must include:
@@ -1302,37 +1305,36 @@ template table:
   (E,s) |-> W_s
 
 identity-row table:
-  (E,epsilon,s,a,b,x,y) |->
-  (next state s', emitted label h, Artin substitution A_gamma^epsilon)
+  (E,+,s,a,b,x,y) |->
+  (next state s', emitted label h, Artin substitution A_gamma^+)
 ```
 
-The identity-row table must cover exactly the full `D_Gamma(E)` entries for
-the same signed endpoint table.  Its `s'` and `h` must agree with the signed
-row
+The identity-row table must cover exactly the positive part of `D_Gamma(E)`
+for the same signed endpoint table.  It is not allowed to omit a positive
+reachable-state/fibre input, and it is not allowed to add extra positive
+channels.  Its `s'` and `h` must agree with the positive signed row
 
 ```text
-Gamma^{E,epsilon}_{a,b}(s,x,y)=(s',T^epsilon_{a,b}(x,y),h).
+Gamma^{E,+}_{a,b}(s,x,y)=(s',T_{a,b}(x,y),h).
 ```
 
 Each `W_s` is a word in variables `U_{r,j}` only.  The local substitution may
 use both `U_{r,j}` and raw assignment variables `A_{r,j}`, but the terminal
 template may not contain any `A` variable.  All such variables must use track
 indices in the finite declared range for the endpoint family.  For the active
-two local strands, the substitution must be the Artin detector recurrence:
+two local strands, the positive substitution must be the Artin detector
+recurrence:
 
 ```text
-epsilon=+1:
-  U_{r,0} -> U_{r,0} A_{r,0} U_{r,0}^{-1} U_{r,1}
-  U_{r,1} -> U_{r,0}
-
-epsilon=-1:
-  U_{r,0} -> U_{r,1}
-  U_{r,1} -> U_{r,1} A_{r,1}^{-1} U_{r,1}^{-1} U_{r,0}
+U_{r,0} -> U_{r,0} A_{r,0} U_{r,0}^{-1} U_{r,1}
+U_{r,1} -> U_{r,0}
 ```
 
 Variables outside the active local pair are unchanged.  The finite checker
 must evaluate the displayed word-potential identity for every assignment of
-the variables in that row to elements of the fixed group `H_E`.
+the variables in that positive row to elements of the fixed group `H_E`.
+If negative substitutions are recorded, they are diagnostics only; closure
+comes from inverse-derived negative rows plus the positive telescope.
 
 The initial routed state must be normalized:
 
@@ -1357,9 +1359,11 @@ word-potential detector-lift, not the rowwise two-strand identity and not a
 tautological accumulated potential, is the all-`n` local-to-global bridge.
 The Artin detector recurrence and terminal-readout-in-longitudes checks must
 therefore be derived from the finite substitution and template tables above.
-They are not separate boolean assertions: if the substitution is not the
-positive/negative Artin recurrence or if a terminal template contains a raw
-assignment variable, the detector lift is incomplete.
+They are not separate boolean assertions: if the positive substitution is not
+the positive Artin recurrence, or if a terminal template contains a raw
+assignment variable, the detector lift is incomplete.  Negative
+word-potential substitutions are unnecessary once the negative endpoint rows
+are proved to be actual inverses.
 Likewise, telescoping braid-index independence must follow from the finite
 family track counts, exact initialization rows, and the absence of any
 `braid_index` dependency in those rows; it is not a separate flag.
@@ -1537,7 +1541,7 @@ word_potential_certificate_next_states_and_labels_match_Gamma,
 word_potential_templates_for_every_reachable_state,
 word_potential_templates_use_only_current_longitude_variables,
 word_potential_artin_substitution_from_detector_recurrence,
-word_potential_identity_for_every_signed_row,
+word_potential_identity_for_every_positive_row,
 initial_word_potential_normalization,
 initial_word_potential_normalizes_every_kappa_seed,
 fixed_detector_tracks_chosen_before_braid_word,
