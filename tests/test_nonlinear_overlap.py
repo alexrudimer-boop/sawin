@@ -1447,6 +1447,23 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             ),
             audit.finite_obstruction_data,
         )
+        descriptor = (
+            "*",
+            "*",
+            "L",
+            "partial_constant_hidden_rank_loss",
+            (1, "*", (0, 1), "*", (0, 1), "universal", ("universal",), True),
+        )
+        self.assertEqual(audit.universal_k_row_normal_form_domain, (descriptor,))
+        self.assertEqual(
+            audit.universal_k_seed_classifier_entries,
+            (
+                (
+                    descriptor,
+                    ("C", ("*", "*", "left", 1, "*", (0, 1), "*", (0, 1))),
+                ),
+            ),
+        )
         self.assertEqual(
             audit.remaining_obligations,
             (
@@ -1601,6 +1618,26 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
                 ((("*", "*"), "no_left_triangular_row"),),
             ),
             audit.finite_obstruction_data,
+        )
+        descriptor = (
+            "*",
+            "*",
+            "L",
+            "coordinate_side_unit_not_triangular",
+            (
+                ("left",),
+                "coordinate_side_unit_not_triangular",
+                "proper_section_kernel_visible",
+                (0,),
+                (),
+                (),
+                (0,),
+            ),
+        )
+        self.assertEqual(audit.universal_k_row_normal_form_domain, (descriptor,))
+        self.assertEqual(
+            audit.universal_k_seed_classifier_entries,
+            ((descriptor, ("M", ("*", "*", "left"))),),
         )
         self.assertEqual(
             audit.remaining_obligations,
@@ -2287,6 +2324,23 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             ),
             routed.finite_obstruction_data,
         )
+        descriptor = (
+            "*",
+            "*",
+            "L",
+            "constant_map_kernel",
+            ("*", (0, 1), "universal", "universal"),
+        )
+        self.assertEqual(routed.universal_k_row_normal_form_domain, (descriptor,))
+        self.assertEqual(
+            routed.universal_k_seed_classifier_entries,
+            (
+                (
+                    descriptor,
+                    ("U", ("*", "*", "left_constant_map_universal_kernel")),
+                ),
+            ),
+        )
         self.assertIn(
             ("live_k_missing_latin_row_defects", ()),
             routed.finite_obstruction_data,
@@ -2658,6 +2712,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
 
     def test_unsupported_companion_block_image_is_structural_not_active_k(self):
         refinement = unsupported_companion_block_image_refinement()
+        audit = PostLinearRemainingFiniteSystemAudit(refinement)
 
         self.assertEqual(refinement.status, "triangular_structural_inconsistency")
         self.assertIn(
@@ -2669,6 +2724,8 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertTrue(
             refinement.active_companion_block_images_have_constant_kernel_support
         )
+        self.assertEqual(audit.universal_k_row_normal_form_domain, ())
+        self.assertEqual(audit.universal_k_seed_classifier_entries, ())
 
     def test_post_linear_routes_companion_block_image_by_constant_map_recovery(self):
         refinement = companion_block_system_k_refinement()
@@ -2757,6 +2814,44 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertIn(
             ("live_k_missing_latin_row_defects", ((("*", "*"), "no_right_triangular_row"),)),
             routed.finite_obstruction_data,
+        )
+        constant_descriptor = (
+            "*",
+            "*",
+            "L",
+            "constant_map_kernel",
+            ("*", (0, 1), "universal", "universal"),
+        )
+        companion_descriptor = (
+            "*",
+            "*",
+            "L",
+            "supported_companion_block_image",
+            ("support_constant_map_kernel", "*", (0, 1), "universal"),
+        )
+        self.assertEqual(
+            routed.universal_k_row_normal_form_domain,
+            (constant_descriptor, companion_descriptor),
+        )
+        self.assertEqual(
+            routed.universal_k_seed_classifier_entries,
+            (
+                (
+                    constant_descriptor,
+                    ("U", ("*", "*", "left_constant_map_universal_kernel")),
+                ),
+                (
+                    companion_descriptor,
+                    (
+                        "U",
+                        (
+                            "*",
+                            "*",
+                            "left_companion_sections_injective_non_surjective",
+                        ),
+                    ),
+                ),
+            ),
         )
 
     def test_post_linear_side_dual_replacement_rows_record_nonlatin_right_defects(self):

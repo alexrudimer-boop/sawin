@@ -302,6 +302,70 @@ companion fibre.  A one-point companion image is recorded only as
 injective-nonsurjective and is removed by the block-image route above once
 the recovery table separation is supplied.
 
+## Universal-K row normal form
+
+The row-routing layer now has an explicit finite normal-form target.  A
+universal-K row descriptor is:
+
+```text
+d=(a,b,lambda,rho,xi),     lambda in {L,R}
+```
+
+where `rho` is one of:
+
+```text
+constant_map_kernel
+supported_companion_block_image
+partial_constant_hidden_rank_loss
+coordinate_side_unit_not_triangular
+unsupported_companion_block_image
+```
+
+The witness tuple `xi` contains the actual finite data: the collapsed input
+pair, constant-map kernel kind, and generated admissible closure kind for
+constant-map kernels; the same-side support descriptor for companion block
+images; the fixed input, collapsed input pair, companion outputs, closure
+kind, and continuation-seed closure data for partial-constant rows; and the
+left/right section profiles, listed unit side, and coloured-YBE premise for
+coordinate-unit rows.
+
+Define `K_nabla` as exactly the descriptors whose generated admissible
+closure and route checks are universal and endpoint-producing:
+
+```text
+constant_map_kernel with universal closure and recovery separation,
+supported_companion_block_image whose support is such a constant-map kernel,
+partial_constant_hidden_rank_loss with universal partial closure and
+  universal continuation seed closure,
+coordinate_side_unit_not_triangular in the mixed-unit case.
+```
+
+Proper closures are terminal contradictions.  Equality closures, failed
+routes, and missing route rows stay live in System K.  Two-sided coordinate
+unit rows belong to the nondegenerate/guitar branch.  Unsupported companion
+block-image rows are structural inconsistencies, not endpoint seeds.
+
+The finite seed classifier is:
+
+```text
+kappa : K_nabla -> ({U} x S_U) union ({C} x S_C) union ({M} x S_M).
+```
+
+Its state spaces are:
+
+```text
+S_U = (left_color,right_color,defect_reason)
+S_C = (left_color,right_color,side,fixed_input,domain_color,
+       collapsed_inputs,companion_output_color,companion_outputs)
+S_M = (left_color,right_color,side)
+```
+
+Here `S_U` uses the actual active constant-map or companion reason, including
+proper-kernel and universal-kernel constant-map reasons.  The C fields are
+read from the partial-constant witness tuple.  Thus signed endpoint generator
+entries are not addressable until `d in K_nabla` and `kappa(d)=(E,s)` have
+been computed.
+
 together with the concrete rows:
 
 ```text
@@ -317,6 +381,8 @@ live_k_missing_latin_row_defects
 recovery_routed_k_missing_latin_row_defects
 continuation_routed_k_missing_latin_row_defects
 mixed_context_routed_k_missing_latin_row_defects
+universal_k_row_normal_form_domain
+universal_k_seed_classifier_entries
 active_companion_block_image_support_rows
 active_companion_block_images_have_constant_kernel_support
 k_left_side_dual_replacement_rows

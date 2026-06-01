@@ -89,6 +89,12 @@ if TYPE_CHECKING:  # pragma: no cover - typing only
 NONLINEAR_OVERLAP_TARGET_VERDICT = "bi_free_universal_corridor_bottleneck"
 TriangularRecoveryState = Tuple[Color, Color, FibrePoint, FibrePoint]
 TriangularRecoveryEndpointKey = Tuple[Color, Color, str]
+UniversalKRowDescriptor = Tuple[object, ...]
+UniversalKSeedState = Tuple[object, ...]
+UniversalKSeedClassifierEntry = Tuple[
+    UniversalKRowDescriptor,
+    Tuple[str, UniversalKSeedState],
+]
 
 
 def _is_permutation_transformation(transformation: Transformation) -> bool:
@@ -472,6 +478,30 @@ def _sorted_triangular_recovery_endpoint_keys(
     keys: Sequence[TriangularRecoveryEndpointKey],
 ) -> Tuple[TriangularRecoveryEndpointKey, ...]:
     return tuple(sorted(set(keys), key=repr))
+
+
+def _side_symbol(side: str) -> str:
+    if side == "left":
+        return "L"
+    if side == "right":
+        return "R"
+    return side
+
+
+def _side_from_reason(reason: str) -> str | None:
+    if reason.startswith("left_") or reason == "no_left_triangular_row":
+        return "left"
+    if reason.startswith("right_") or reason == "no_right_triangular_row":
+        return "right"
+    return None
+
+
+def _constant_map_kernel_kind_from_reason(reason: str) -> str:
+    if "_proper_kernel" in reason:
+        return "proper"
+    if "_universal_kernel" in reason:
+        return "universal"
+    return "supported"
 
 
 @dataclass(frozen=True)
@@ -1357,6 +1387,134 @@ class PostLinearRemainingFiniteSystemAudit:
         return bool(self.active_routed_endpoint_systems) and not self.unclosed_routed_endpoint_systems
 
     @property
+    def universal_k_seed_classifier_entries(
+        self,
+    ) -> Tuple[UniversalKSeedClassifierEntry, ...]:
+        """Finite K_nabla descriptors together with their kappa values."""
+
+        entries = []
+
+        if self.triangular_constant_kernel_recovery_route is not None:
+            for pair, reason in self.recovery_routed_k_missing_latin_row_defects:
+                side = _side_from_reason(reason)
+                if side is None:
+                    continue
+                descriptor_reason = (
+                    "supported_companion_block_image"
+                    if "companion_sections_injective_non_surjective" in reason
+                    else "constant_map_kernel"
+                )
+                for row in self.triangular_constant_kernel_recovery_route.rows:
+                    if (
+                        row.side == side
+                        and (row.left_color, row.right_color) == pair
+                        and row.routes_universal_kernel_edge_to_recovery
+                    ):
+                        kernel_kind = _constant_map_kernel_kind_from_reason(reason)
+                        witness = (
+                            row.domain_color,
+                            row.collapsed_inputs,
+                            kernel_kind,
+                            row.closure_kind,
+                        )
+                        if descriptor_reason == "supported_companion_block_image":
+                            witness = (
+                                "support_constant_map_kernel",
+                                row.domain_color,
+                                row.collapsed_inputs,
+                                row.closure_kind,
+                            )
+                        descriptor = (
+                            pair[0],
+                            pair[1],
+                            _side_symbol(side),
+                            descriptor_reason,
+                            witness,
+                        )
+                        entries.append(
+                            (
+                                descriptor,
+                                ("U", _triangular_recovery_endpoint_key((pair, reason))),
+                            )
+                        )
+
+        if self.missing_triangular_partial_constant_continuation_route is not None:
+            continuation_pairs = {
+                (_side_from_reason(reason), pair)
+                for pair, reason in self.continuation_routed_k_missing_latin_row_defects
+            }
+            for row in (
+                self.missing_triangular_partial_constant_continuation_route
+                .universal_continuation_rows
+            ):
+                if (row.side, (row.left_color, row.right_color)) not in continuation_pairs:
+                    continue
+                witness = (
+                    row.fixed_input,
+                    row.domain_color,
+                    row.collapsed_inputs,
+                    row.companion_output_color,
+                    row.companion_outputs,
+                    row.closure_kind,
+                    row.continuation_seed_closure_kinds,
+                    row.partial_edge_contained_in_seed_closure,
+                )
+                descriptor = (
+                    row.left_color,
+                    row.right_color,
+                    _side_symbol(row.side),
+                    "partial_constant_hidden_rank_loss",
+                    witness,
+                )
+                seed_state = (
+                    row.left_color,
+                    row.right_color,
+                    row.side,
+                    row.fixed_input,
+                    row.domain_color,
+                    row.collapsed_inputs,
+                    row.companion_output_color,
+                    row.companion_outputs,
+                )
+                entries.append((descriptor, ("C", seed_state)))
+
+        if self.missing_triangular_coordinate_unit_routing is not None:
+            mixed_pairs = {
+                (_side_from_reason(reason), pair)
+                for pair, reason in self.mixed_context_routed_k_missing_latin_row_defects
+            }
+            for row in self.missing_triangular_coordinate_unit_routing.mixed_unit_context_rows:
+                for side in row.coordinate_unit_sides:
+                    if (side, (row.left_color, row.right_color)) not in mixed_pairs:
+                        continue
+                    witness = (
+                        row.coordinate_unit_sides,
+                        row.left_explanation,
+                        row.right_explanation,
+                        row.left_unit_inputs,
+                        row.left_nonunit_inputs,
+                        row.right_unit_inputs,
+                        row.right_nonunit_inputs,
+                    )
+                    descriptor = (
+                        row.left_color,
+                        row.right_color,
+                        _side_symbol(side),
+                        "coordinate_side_unit_not_triangular",
+                        witness,
+                    )
+                    seed_state = (row.left_color, row.right_color, side)
+                    entries.append((descriptor, ("M", seed_state)))
+
+        return tuple(sorted(entries, key=repr))
+
+    @property
+    def universal_k_row_normal_form_domain(
+        self,
+    ) -> Tuple[UniversalKRowDescriptor, ...]:
+        return tuple(entry[0] for entry in self.universal_k_seed_classifier_entries)
+
+    @property
     def system_name(self) -> str:
         if self.closed_by_recorded_branch:
             return "closed_by_recorded_branch"
@@ -1771,6 +1929,14 @@ class PostLinearRemainingFiniteSystemAudit:
                     self.mixed_context_routed_k_missing_latin_row_defects,
                 ),
                 (
+                    "universal_k_row_normal_form_domain",
+                    self.universal_k_row_normal_form_domain,
+                ),
+                (
+                    "universal_k_seed_classifier_entries",
+                    self.universal_k_seed_classifier_entries,
+                ),
+                (
                     "active_routed_endpoint_systems",
                     self.active_routed_endpoint_systems,
                 ),
@@ -1848,6 +2014,14 @@ class PostLinearRemainingFiniteSystemAudit:
                 (
                     "mixed_context_routed_k_missing_latin_row_defects",
                     self.mixed_context_routed_k_missing_latin_row_defects,
+                ),
+                (
+                    "universal_k_row_normal_form_domain",
+                    self.universal_k_row_normal_form_domain,
+                ),
+                (
+                    "universal_k_seed_classifier_entries",
+                    self.universal_k_seed_classifier_entries,
                 ),
                 (
                     "active_routed_endpoint_systems",

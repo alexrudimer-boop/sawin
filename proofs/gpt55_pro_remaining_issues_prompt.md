@@ -520,6 +520,273 @@ coordinate-unit row is present.  An empty coordinate-unit routing ledger is
 not a proof.
 ```
 
+### Universal-K Row Normal Forms And Seed Classifier
+
+The transition laws above must be converted into an explicit finite domain
+before any signed endpoint generator can be addressed.  This subsection is
+that domain.
+
+For a finite interval `I=(C,(A_c),R_C,T)`, an admissible fibre congruence is a
+family `theta=(theta_c)_{c in C}` of equivalence relations on the finite
+fibres such that whenever
+
+```text
+x0 theta_a x1,     y0 theta_b y1,
+T_{a,b}(x_i,y_i)=(u_i,v_i),
+R_C(a,b)=(c,d),
+```
+
+then
+
+```text
+u0 theta_c u1,
+v0 theta_d v1,
+```
+
+and the same condition holds after applying the inverse bijection
+`T_{a,b}^{-1}`.  For a seed edge `e=(p0,p1)` in one fibre, write
+`<e>_adm` for the least admissible fibre congruence containing that edge.
+Its kind is:
+
+```text
+equality     if every block in every active fibre is a singleton,
+universal    if every active fibre has one block,
+proper       otherwise.
+```
+
+Here an active fibre is any fibre used by the local interval after the
+standard reductions in Section 5; semisplit equality/universal mixtures are
+not ignored.
+
+Use side symbols `L` and `R`, with `side_name(L)=left`,
+`side_name(R)=right`, `coord_L=L_x`, `coord_R=R_y`, `const_L=alpha`,
+`const_R=delta`, `comp_L=beta_x`, and `comp_R=gamma_y` as defined in the
+finite row vocabulary.  A universal-K row descriptor is a finite tuple
+
+```text
+d = (a,b,lambda,rho,xi),
+lambda in {L,R},
+```
+
+where `rho` is one of:
+
+```text
+constant_map_kernel
+supported_companion_block_image
+partial_constant_hidden_rank_loss
+coordinate_side_unit_not_triangular
+unsupported_companion_block_image
+```
+
+and `xi` is the finite witness data below.  The descriptor is always read
+directly from `T_{a,b}` and its coordinate projections.
+
+Constant-map kernel descriptor:
+
+```text
+lambda = L:
+  LeftTri(a,b) holds.
+  xi=(domain_color=a, collapsed_inputs=(x0,x1), kernel_kind, closure_kind,
+      recovery_witness_table).
+  x0 != x1 and alpha(x0)=alpha(x1).
+  kernel_kind is the kernel kind of alpha.
+  closure_kind is the kind of <(x0,x1)>_adm.
+
+lambda = R:
+  RightTri(a,b) holds.
+  xi=(domain_color=b, collapsed_inputs=(y0,y1), kernel_kind, closure_kind,
+      recovery_witness_table).
+  y0 != y1 and delta(y0)=delta(y1).
+  kernel_kind is the kernel kind of delta.
+  closure_kind is the kind of <(y0,y1)>_adm.
+```
+
+It is a universal-K seed only when `closure_kind=universal` and the
+triangular recovery witness table is present, bijective, and separates both
+collapsed inputs.  If `closure_kind=proper`, local-minimality is contradicted
+and no endpoint seed is produced.  If `closure_kind=equality` or the recovery
+separation is absent, the row stays live in System K.
+
+Supported companion block-image descriptor:
+
+```text
+lambda = L:
+  LeftTri(a,b) holds and some left companion section beta_x is injective
+  but not surjective.
+  xi names a same-side constant-map kernel descriptor
+  (a,b,L,constant_map_kernel,xi0) for the same colour pair.
+
+lambda = R:
+  RightTri(a,b) holds and some right companion section gamma_y is injective
+  but not surjective.
+  xi names a same-side constant-map kernel descriptor
+  (a,b,R,constant_map_kernel,xi0) for the same colour pair.
+```
+
+This descriptor is a universal-K seed exactly when the named support
+descriptor is a universal-K seed.  It uses the same recovery route and the
+System U companion defect-reason state for that side and colour pair.  If no
+same-side constant-map kernel support exists, the descriptor has reason
+`unsupported_companion_block_image` and is a structural inconsistency, not a
+member of `K_nabla`.
+
+Partial-constant hidden-rank descriptor:
+
+```text
+lambda = L:
+  LeftTri(a,b) fails.
+  The left missing-triangular profile is
+  partial_constant_hidden_rank_loss.
+  xi=(fixed_input=x, domain_color=b, collapsed_inputs=(y0,y1),
+      companion_output_color=d, companion_outputs=(v0,v1),
+      closure_kind, continuation_seed_witnesses,
+      continuation_seed_closure_kinds,
+      partial_edge_contained_in_seed_closure).
+  y0 != y1, L_x(y0)=L_x(y1), and
+  T_{a,b}(x,y_i)=(u,v_i).
+
+lambda = R:
+  RightTri(a,b) fails.
+  The right missing-triangular profile is
+  partial_constant_hidden_rank_loss.
+  xi=(fixed_input=y, domain_color=a, collapsed_inputs=(x0,x1),
+      companion_output_color=c, companion_outputs=(u0,u1),
+      closure_kind, continuation_seed_witnesses,
+      continuation_seed_closure_kinds,
+      partial_edge_contained_in_seed_closure).
+  x0 != x1, R_y(x0)=R_y(x1), and
+  T_{a,b}(x_i,y)=(u_i,v).
+```
+
+It is a universal-K seed only when:
+
+```text
+closure_kind=universal,
+companion_outputs are distinct,
+continuation_seed_witnesses is nonempty,
+universal is among continuation_seed_closure_kinds,
+partial_edge_contained_in_seed_closure is true.
+```
+
+If `closure_kind=proper`, local-minimality is contradicted and no endpoint
+seed is produced.  If `closure_kind=equality`, if the continuation seed
+closure is nonuniversal, or if any listed check fails, the no-triangular row
+stays live in System K.
+
+Coordinate-unit descriptor:
+
+```text
+lambda = L:
+  LeftTri(a,b) fails.
+  The left missing-triangular profile is
+  coordinate_side_unit_not_triangular.
+  Every left coordinate section L_x is bijective.
+  xi contains the left and right section-profile rows, the listed unit side
+  L, and the coloured-YBE premise.
+
+lambda = R:
+  RightTri(a,b) fails.
+  The right missing-triangular profile is
+  coordinate_side_unit_not_triangular.
+  Every right coordinate section R_y is bijective.
+  xi contains the left and right section-profile rows, the listed unit side
+  R, and the coloured-YBE premise.
+```
+
+It is a universal-K seed only in the mixed-unit case: the listed side is
+really unit, the opposite side has nonunit section data, the row is not a
+two-sided-unit pair, and the coloured-YBE premise is present.  If both sides
+are unit, the row belongs to the two-sided nondegenerate/guitar branch and
+closes only when that branch is proved.  If the side listing, explanation,
+unit condition, or coloured-YBE premise fails, the row stays live in System K.
+
+Now define `K_nabla` to be the finite set of all descriptors
+`d=(a,b,lambda,rho,xi)` satisfying exactly one of the four universal seed
+conditions:
+
+```text
+constant_map_kernel universal-K seed,
+supported_companion_block_image whose support is a constant_map_kernel
+  universal-K seed,
+partial_constant_hidden_rank_loss universal-K seed,
+coordinate_side_unit_not_triangular mixed-unit universal-K seed.
+```
+
+Proper-closure descriptors, equality-closure descriptors, failed-route
+descriptors, two-sided-unit descriptors, and unsupported companion
+descriptors are excluded from `K_nabla`; they are respectively terminal,
+still live in K, routed to the nondegenerate/guitar branch, or structural.
+
+The seed state spaces are finite:
+
+```text
+S_U =
+  { (a,b,reason) :
+      reason in {left_constant_map_proper_kernel,
+                 right_constant_map_proper_kernel,
+                 left_constant_map_universal_kernel,
+                 right_constant_map_universal_kernel,
+                 left_companion_sections_injective_non_surjective,
+                 right_companion_sections_injective_non_surjective}
+      and the corresponding recovery descriptor is in K_nabla }.
+
+S_C =
+  { (a,b,side_name(lambda),fixed_input,domain_color,collapsed_inputs,
+     companion_output_color,companion_outputs) :
+      the corresponding partial-constant descriptor is in K_nabla }.
+
+S_M =
+  { (a,b,side_name(lambda)) :
+      the corresponding coordinate-unit mixed descriptor is in K_nabla }.
+```
+
+The seed classifier is the total finite map
+
+```text
+kappa : K_nabla -> ({U} x S_U) union ({C} x S_C) union ({M} x S_M)
+```
+
+defined by:
+
+```text
+kappa(a,b,L,constant_map_kernel,xi)
+  = (U,(a,b,left_constant_map_proper_kernel)) if the constant-map kernel
+    kind is proper, and
+  = (U,(a,b,left_constant_map_universal_kernel)) if the constant-map kernel
+    kind is universal.
+
+kappa(a,b,R,constant_map_kernel,xi)
+  = (U,(a,b,right_constant_map_proper_kernel)) if the constant-map kernel
+    kind is proper, and
+  = (U,(a,b,right_constant_map_universal_kernel)) if the constant-map kernel
+    kind is universal.
+
+kappa(a,b,L,supported_companion_block_image,xi)
+  = (U,(a,b,left_companion_sections_injective_non_surjective)).
+
+kappa(a,b,R,supported_companion_block_image,xi)
+  = (U,(a,b,right_companion_sections_injective_non_surjective)).
+
+kappa(a,b,lambda,partial_constant_hidden_rank_loss,xi)
+  = (C,(a,b,side_name(lambda),fixed_input,domain_color,collapsed_inputs,
+        companion_output_color,companion_outputs)).
+
+kappa(a,b,lambda,coordinate_side_unit_not_triangular,xi)
+  = (M,(a,b,side_name(lambda))).
+```
+
+The values `fixed_input`, `domain_color`, `collapsed_inputs`,
+`companion_output_color`, and `companion_outputs` in the C line are read from
+`xi`.  This map is the routing-domain table required before signed endpoint
+generators can be written.  After `kappa(d)=(E,s)` is known, and only then,
+the remaining signed generator table has addressable entries
+
+```text
+Gamma^{E,+/-}_{a,b}(s,x,y) = (s',x',y',h),
+```
+
+where `(x',y')=T_{a,b}^{+/-}(x,y)`.
+
 System activation is then exact:
 
 ```text
@@ -885,11 +1152,13 @@ If returning B, you must give:
 2. Close or refute System K.
 
    A direct System K survivor has nonempty `live_k_missing_latin_row_defects`.
-   To prove A, show that every such missing-Latin triangular defect is
-   impossible in a genuine local-minimal finite YBE interval, or route it
-   through fixed detector data into U, C, or M.  Proper generated closures
-   are already terminal contradictions; universal closures are the only
-   endpoint-routing candidates.
+   First construct the finite normal-form table `K_nabla` and the seed
+   classifier `kappa` exactly as specified above.  To prove A, show that
+   every live missing-Latin triangular defect is impossible in a genuine
+   local-minimal finite YBE interval, or route it through `kappa` into fixed
+   detector data for U, C, or M.  Proper generated closures are already
+   terminal contradictions; universal closures are the only endpoint-routing
+   candidates.
 
    To prove B from K, construct a genuine live K interval, prove all fixed
    finite detector groups fail, and upgrade the failure to a normalized-law
@@ -897,22 +1166,26 @@ If returning B, you must give:
 
 3. Close or refute System U.
 
-   Prove uniformly in `n` that every routed triangular-recovery endpoint lies
-   in `V_beta(U_tri)`, or prove a faithful symmetric endpoint cutoff for the
-   exact routed U family.  Otherwise, extract a normalized-law B sequence
-   from a genuine U endpoint miss.
+   Define the signed endpoint generators on the exact `S_U` values hit by
+   `kappa`, then prove uniformly in `n` that every routed
+   triangular-recovery endpoint lies in `V_beta(U_tri)`, or prove a faithful
+   symmetric endpoint cutoff for the exact routed U family.  Otherwise,
+   extract a normalized-law B sequence from a genuine U endpoint miss.
 
 4. Close or refute System C.
 
-   Construct fixed endpoint-longitude witnesses or a faithful symmetric
-   cutoff for every identity-routed universal-continuation edge.  Otherwise,
-   extract a normalized-law B sequence from a genuine C endpoint miss.
+   Define the signed endpoint generators on the exact `S_C` values hit by
+   `kappa`, then construct fixed endpoint-longitude witnesses or a faithful
+   symmetric cutoff for every identity-routed universal-continuation edge.
+   Otherwise, extract a normalized-law B sequence from a genuine C endpoint
+   miss.
 
 5. Close or refute System M.
 
-   Construct fixed endpoint/readout witnesses or a faithful symmetric cutoff
-   for every mixed-unit context key.  Otherwise, extract a normalized-law B
-   sequence from a genuine M endpoint miss.
+   Define the signed endpoint generators on the exact `S_M` values hit by
+   `kappa`, then construct fixed endpoint/readout witnesses or a faithful
+   symmetric cutoff for every mixed-unit context key.  Otherwise, extract a
+   normalized-law B sequence from a genuine M endpoint miss.
 
 6. Assemble outcome A if K/U/C/M all close.
 
@@ -941,13 +1214,29 @@ Before returning a claimed resolution, explicitly answer:
 
 1. Is any decisive step finite-search-only?
 2. Are semisplit local-minimal families fully handled?
-3. Is every detector group and every rack independent of braid index `n`?
-4. Are product endpoint rows handled family-by-family without hiding any
+3. Is `K_nabla` exactly the finite universal-K row-normal-form domain above,
+   with no proper-closure, equality-closure, two-sided-unit, failed-route, or
+   unsupported companion row included?
+4. Is `kappa(d)` defined for every `d in K_nabla`, with values in exactly
+   one of `S_U`, `S_C`, or `S_M`?
+5. Are unsupported companion block-image rows proved structural
+   inconsistencies rather than endpoint seeds?
+6. Are `S_U`, `S_C`, and `S_M` the exact finite seed state spaces used to
+   index all signed endpoint generators?
+7. Are all signed endpoint generator tables
+   `Gamma^{U,+/-}`, `Gamma^{C,+/-}`, and `Gamma^{M,+/-}` defined on those
+   exact state spaces?
+8. Do the signed endpoint generator tables satisfy inverse cancellation, the
+   positive local endpoint YBE cocycle identity, and the signed two-strand
+   Artin-longitude base identity for both signs?
+9. Is every detector group, endpoint group, cutoff group, and rack
+   independent of braid index `n`?
+10. Are product endpoint rows handled family-by-family without hiding any
    unclosed U, C, or M obligation?
-5. If returning A, where exactly is `G(pi,Q)` constructed, why does it prove
+11. If returning A, where exactly is `G(pi,Q)` constructed, why does it prove
    the all-`n` residual implication, and how does the congruence-chain
    induction produce the final finite rack?
-6. If returning B, why does the obstruction defeat every finite group `G`,
+12. If returning B, why does the obstruction defeat every finite group `G`,
    hence every finite rack through the sharp obstruction theorem?
 
 Return outcome A or outcome B only if the proof is genuinely complete.  If
