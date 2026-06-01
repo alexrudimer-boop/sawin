@@ -1377,8 +1377,11 @@ or more endpoint families are active, the certificate must also split the
 residual-row ledger by family: it must list expected and covered residual row
 counts for each active family, with no duplicate family entries, nonnegative
 counts, matching expected and covered family counts, and sums equal to the
-total expected and covered residual row counts.  An aggregate row count alone
-is insufficient for a product endpoint row because it can hide that one
+total expected and covered residual row counts.  These family counts must also
+match the counts derived from the actual residual rows: a row that names an
+endpoint family contributes one row to that family, and no family ledger may
+claim zero rows for a family used by a supplied row.  An aggregate row count
+alone is insufficient for a product endpoint row because it can hide that one
 family has no residual readout.
 
 Alternatively, a symbolic residual-faithfulness theorem may replace explicit
@@ -1420,7 +1423,10 @@ faithfulness holds, or a certificate scoped only by family names while
 omitting the routed seed states, is not a certificate.  The expected and
 covered family ledgers and the expected and covered seed-state ledgers must
 also be duplicate-free; a repeated family or repeated seed is an ambiguous
-ledger entry, not an exact coverage proof.
+ledger entry, not an exact coverage proof.  The family row-count ledgers must
+match the symbolic theorem rows themselves: after counting, for each active
+family, the rows whose `endpoint_families` contain that family, the expected
+and covered family counts must equal those derived counts.
 
 The signed-generator audit for a claimed A proof must therefore establish:
 

@@ -3071,6 +3071,52 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             theorem_with_family_seed_mismatch.failure_reasons,
         )
 
+        theorem_with_family_count_row_mismatch = UniversalKResidualFaithfulnessAudit(
+            active_endpoint_families=("U", "C"),
+            covered_endpoint_families=("U", "C"),
+            expected_residual_row_count=1,
+            covered_residual_row_count=1,
+            expected_residual_rows_by_family=(("U", 1), ("C", 0)),
+            covered_residual_rows_by_family=(("U", 1), ("C", 0)),
+            endpoint_channels_exact=True,
+            identity_endpoint_data_forces_residual_identity=True,
+            braid_index_independent=True,
+            product_families_separated=True,
+            expected_endpoint_seed_states=(
+                ("U", seed_state),
+                ("C", ("*", "*", "left")),
+            ),
+            covered_endpoint_seed_states=(
+                ("U", seed_state),
+                ("C", ("*", "*", "left")),
+            ),
+            expected_residual_input_tuples=(("p",),),
+            covered_residual_input_tuples=(("p",),),
+            residual_rows=trivial_residual_faithfulness_rows(
+                "U",
+                "C",
+                seed_states=(
+                    ("U", seed_state),
+                    ("C", ("*", "*", "left")),
+                ),
+                input_tuples=(("p",),),
+            ),
+        )
+        self.assertEqual(
+            theorem_with_family_count_row_mismatch.actual_residual_rows_by_family,
+            (("C", 1), ("U", 1)),
+        )
+        self.assertFalse(
+            theorem_with_family_count_row_mismatch.residual_family_row_counts_match_rows
+        )
+        self.assertFalse(
+            theorem_with_family_count_row_mismatch.proves_residual_faithfulness
+        )
+        self.assertIn(
+            "residual_faithfulness_family_row_counts_do_not_match_rows",
+            theorem_with_family_count_row_mismatch.failure_reasons,
+        )
+
         rowwise_only = replace(theorem_complete, telescoping_detector_audit=None)
         self.assertTrue(rowwise_only.signed_two_strand_base_verified)
         self.assertTrue(rowwise_only.artin_homomorphism_update_verified)
@@ -3404,8 +3450,8 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         multi_family_theorem_missing_rows = UniversalKResidualFaithfulnessAudit(
             active_endpoint_families=("U", "C"),
             covered_endpoint_families=("U", "C"),
-            expected_residual_row_count=1,
-            covered_residual_row_count=1,
+            expected_residual_row_count=2,
+            covered_residual_row_count=2,
             endpoint_channels_exact=True,
             identity_endpoint_data_forces_residual_identity=True,
             braid_index_independent=True,
@@ -3418,22 +3464,25 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
                 ("U", seed_state),
                 ("C", ("*", "*", "left")),
             ),
-            expected_residual_input_tuples=(("p",),),
-            covered_residual_input_tuples=(("p",),),
-            residual_rows=trivial_residual_faithfulness_rows(
-                "U",
-                "C",
-                seed_states=(
-                    ("U", seed_state),
-                    ("C", ("*", "*", "left")),
+            expected_residual_input_tuples=(("pU",), ("pC",)),
+            covered_residual_input_tuples=(("pU",), ("pC",)),
+            residual_rows=(
+                *trivial_residual_faithfulness_rows(
+                    "U",
+                    seed_states=(("U", seed_state),),
+                    input_tuples=(("pU",),),
                 ),
-                input_tuples=(("p",),),
+                *trivial_residual_faithfulness_rows(
+                    "C",
+                    seed_states=(("C", ("*", "*", "left")),),
+                    input_tuples=(("pC",),),
+                ),
             ),
         )
         multi_family_theorem = replace(
             multi_family_theorem_missing_rows,
-            expected_residual_rows_by_family=(("U", 1), ("C", 0)),
-            covered_residual_rows_by_family=(("U", 1), ("C", 0)),
+            expected_residual_rows_by_family=(("U", 1), ("C", 1)),
+            covered_residual_rows_by_family=(("U", 1), ("C", 1)),
         )
 
         self.assertFalse(

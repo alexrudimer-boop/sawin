@@ -1712,6 +1712,37 @@ class UniversalKResidualFaithfulnessAudit:
         )
 
     @property
+    def actual_residual_rows_by_family(self) -> Tuple[Tuple[str, int], ...]:
+        return tuple(
+            sorted(
+                (
+                    family,
+                    sum(
+                        1
+                        for row in self.residual_rows
+                        if family in set(row.endpoint_families)
+                    ),
+                )
+                for family in set(self.active_endpoint_families)
+            )
+        )
+
+    @property
+    def residual_family_row_counts_match_rows(self) -> bool:
+        if (
+            not self.residual_family_row_counts_required
+            and not self.expected_residual_rows_by_family
+            and not self.covered_residual_rows_by_family
+        ):
+            return True
+        return (
+            dict(self.expected_residual_rows_by_family)
+            == dict(self.actual_residual_rows_by_family)
+            and dict(self.covered_residual_rows_by_family)
+            == dict(self.actual_residual_rows_by_family)
+        )
+
+    @property
     def residual_family_row_coverage_exact(self) -> bool:
         return (
             self.residual_family_row_ledgers_have_no_duplicates
@@ -1719,6 +1750,7 @@ class UniversalKResidualFaithfulnessAudit:
             and self.residual_family_row_counts_nonnegative
             and self.residual_family_row_counts_match
             and self.residual_family_row_count_sums_match
+            and self.residual_family_row_counts_match_rows
         )
 
     @property
@@ -1792,6 +1824,10 @@ class UniversalKResidualFaithfulnessAudit:
             reasons.append("residual_faithfulness_family_row_counts_mismatch")
         if not self.residual_family_row_count_sums_match:
             reasons.append("residual_faithfulness_family_row_count_sum_mismatch")
+        if not self.residual_family_row_counts_match_rows:
+            reasons.append(
+                "residual_faithfulness_family_row_counts_do_not_match_rows"
+            )
         if not self.endpoint_channels_exact_proved:
             reasons.append("residual_faithfulness_endpoint_channels_not_exact")
         if not self.identity_endpoint_data_forces_residual_identity_proved:
@@ -6801,6 +6837,14 @@ class PostLinearRemainingFiniteSystemAudit:
                     (),
                 ),
                 (
+                    "signed_endpoint_generator_residual_theorem_actual_family_rows",
+                    (),
+                ),
+                (
+                    "signed_endpoint_generator_residual_theorem_family_rows_match_actual",
+                    False,
+                ),
+                (
                     "signed_endpoint_generator_residual_theorem_expected_input_tuples",
                     (),
                 ),
@@ -7821,6 +7865,22 @@ class PostLinearRemainingFiniteSystemAudit:
                     + audit.residual_faithfulness_theorem.duplicate_covered_residual_row_families
                     if audit.residual_faithfulness_theorem is not None
                     else ()
+                ),
+            ),
+            (
+                "signed_endpoint_generator_residual_theorem_actual_family_rows",
+                (
+                    audit.residual_faithfulness_theorem.actual_residual_rows_by_family
+                    if audit.residual_faithfulness_theorem is not None
+                    else ()
+                ),
+            ),
+            (
+                "signed_endpoint_generator_residual_theorem_family_rows_match_actual",
+                (
+                    audit.residual_faithfulness_theorem.residual_family_row_counts_match_rows
+                    if audit.residual_faithfulness_theorem is not None
+                    else False
                 ),
             ),
             (

@@ -668,8 +668,11 @@ For multi-family residual products, aggregate row counts are no longer enough:
 the residual scope must also list expected and covered residual row counts by
 endpoint family, without duplicate family entries, with nonnegative matching
 counts whose sums equal the total expected and covered residual row counts.
-This keeps a complete-looking residual action proof from hiding that one
-active U/C/M family has no residual readout rows.
+Those ledgers must also match the actual residual rows: each row contributes
+one count to every endpoint family named by that row, and a family ledger
+cannot claim zero rows for a family that any supplied row uses.  This keeps a
+complete-looking residual action proof from hiding that one active U/C/M
+family has no residual readout rows.
 
 When the bridge is supplied as a symbolic theorem rather than explicit
 endpoint readout rows, the theorem now carries its own finite residual row
@@ -689,7 +692,9 @@ of row families and row seed states, derives the residual identity implication
 from `identity_endpoint_output_tuple=input_tuple` on every row, and derives
 braid-index independence from the absence of forbidden dependencies.  The
 same family-by-family residual row-count ledger is required for symbolic
-multi-family residual theorems.  Bare booleans for endpoint-channel
+multi-family residual theorems, and those family counts must agree with the
+counts obtained by scanning the symbolic residual rows themselves.  Bare
+booleans for endpoint-channel
 exactness, identity residual motion, braid-index independence, or product
 separation are recorded only as supplied data; they are not accepted as proof.
 
@@ -861,6 +866,8 @@ signed_endpoint_generator_residual_theorem_duplicate_seed_states
 signed_endpoint_generator_residual_theorem_family_rows
 signed_endpoint_generator_residual_theorem_family_rows_covered
 signed_endpoint_generator_residual_theorem_duplicate_family_rows
+signed_endpoint_generator_residual_theorem_actual_family_rows
+signed_endpoint_generator_residual_theorem_family_rows_match_actual
 signed_endpoint_generator_residual_theorem_expected_input_tuples
 signed_endpoint_generator_residual_theorem_covered_input_tuples
 signed_endpoint_generator_residual_theorem_missing_input_tuples
