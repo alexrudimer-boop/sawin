@@ -887,6 +887,25 @@ class UniversalKCutoffReadoutAudit:
         return tuple(sorted(set(self.covered_cutoff_seed_states), key=repr))
 
     @property
+    def duplicate_expected_cutoff_seed_states(
+        self,
+    ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
+        return _duplicate_values(self.expected_cutoff_seed_states)
+
+    @property
+    def duplicate_covered_cutoff_seed_states(
+        self,
+    ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
+        return _duplicate_values(self.covered_cutoff_seed_states)
+
+    @property
+    def cutoff_seed_ledgers_have_no_duplicates(self) -> bool:
+        return (
+            not self.duplicate_expected_cutoff_seed_states
+            and not self.duplicate_covered_cutoff_seed_states
+        )
+
+    @property
     def missing_cutoff_seed_states(
         self,
     ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
@@ -920,6 +939,7 @@ class UniversalKCutoffReadoutAudit:
     def proves_exact_cutoff_readouts(self) -> bool:
         return (
             self.cutoff_seed_coverage_exact
+            and self.cutoff_seed_ledgers_have_no_duplicates
             and self.readouts_faithful
             and self.identity_cutoff_data_kills_channels
             and self.braid_index_independent
@@ -934,6 +954,8 @@ class UniversalKCutoffReadoutAudit:
             reasons.append("cutoff_readout_missing_seed_states")
         if self.extra_cutoff_seed_states:
             reasons.append("cutoff_readout_extra_seed_states")
+        if not self.cutoff_seed_ledgers_have_no_duplicates:
+            reasons.append("cutoff_readout_duplicate_seed_states")
         if not self.readouts_faithful:
             reasons.append("cutoff_readouts_not_faithful")
         if not self.identity_cutoff_data_kills_channels:
@@ -3926,6 +3948,7 @@ class PostLinearRemainingFiniteSystemAudit:
                 ("signed_endpoint_generator_cutoff_readout_covered_states", ()),
                 ("signed_endpoint_generator_cutoff_readout_missing_states", ()),
                 ("signed_endpoint_generator_cutoff_readout_extra_states", ()),
+                ("signed_endpoint_generator_cutoff_readout_duplicate_states", ()),
                 ("signed_endpoint_generator_cutoff_readout_audit_proved", False),
                 ("signed_endpoint_generator_residual_faithfulness_verified", False),
                 ("signed_endpoint_generator_residual_faithfulness_flag_supplied", False),
@@ -4203,6 +4226,15 @@ class PostLinearRemainingFiniteSystemAudit:
                 "signed_endpoint_generator_cutoff_readout_extra_states",
                 (
                     audit.cutoff_readout_audit.extra_cutoff_seed_states
+                    if audit.cutoff_readout_audit is not None
+                    else ()
+                ),
+            ),
+            (
+                "signed_endpoint_generator_cutoff_readout_duplicate_states",
+                (
+                    audit.cutoff_readout_audit.duplicate_expected_cutoff_seed_states
+                    + audit.cutoff_readout_audit.duplicate_covered_cutoff_seed_states
                     if audit.cutoff_readout_audit is not None
                     else ()
                 ),

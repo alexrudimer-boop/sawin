@@ -3326,6 +3326,35 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertFalse(bare_flag.proves_signed_endpoint_generator_tables)
         self.assertIn("cutoff_readout_audit_missing", bare_flag.failure_reasons)
 
+        duplicate_cutoff = UniversalKCutoffReadoutAudit(
+            expected_cutoff_seed_states=reachable + reachable,
+            covered_cutoff_seed_states=reachable,
+            readouts_faithful=True,
+            identity_cutoff_data_kills_channels=True,
+            braid_index_independent=True,
+        )
+        duplicate_cutoff_audit = universal_k_signed_endpoint_generator_audit(
+            interval,
+            seed_entries,
+            reachable,
+            rows,
+            endpoint_group=cyclic_group(2),
+            witnesses=witnesses,
+            cutoff_readout_audit=duplicate_cutoff,
+            residual_action_scope=trivial_endpoint_residual_action_scope(
+                "C",
+                seed_states=reachable,
+            ),
+            residual_action_audit=trivial_endpoint_residual_action_audit(),
+        )
+
+        self.assertFalse(duplicate_cutoff.proves_exact_cutoff_readouts)
+        self.assertFalse(duplicate_cutoff_audit.proves_signed_endpoint_generator_tables)
+        self.assertIn(
+            "cutoff_readout_duplicate_seed_states",
+            duplicate_cutoff_audit.failure_reasons,
+        )
+
         scoped_cutoff = UniversalKCutoffReadoutAudit(
             expected_cutoff_seed_states=reachable,
             covered_cutoff_seed_states=reachable,

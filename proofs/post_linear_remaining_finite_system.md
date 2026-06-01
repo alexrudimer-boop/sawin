@@ -430,7 +430,9 @@ The C/M cutoff gate is now scoped like the residual-faithfulness gate.  A bare
 prove the gate.  The cutoff certificate must list the expected routed C/M seed
 states, the covered seed states, exact coverage, faithful readouts,
 identity-cutoff-data killing of exactly those channels, and braid-index
-independence.
+independence.  The expected and covered cutoff seed-state ledgers must be
+duplicate-free; repeated seed entries are reported as an inexact readout
+ledger rather than silently collapsed.
 
 When a finite endpoint group is supplied, the inverse-cancellation and
 positive-YBE cocycle gates are checked by multiplying the emitted endpoint

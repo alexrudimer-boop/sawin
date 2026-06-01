@@ -1042,7 +1042,9 @@ The cutoff-readout certificate must list the expected routed C/M seed states,
 the covered seed states, the finite readout target, and the proof that the
 readouts are faithful and braid-index independent and that identity cutoff
 data kills precisely those channels.  A bare assertion that the cutoff
-readouts are exact is not a certificate.
+readouts are exact is not a certificate.  The expected and covered cutoff
+seed-state ledgers must also be duplicate-free; silently deduplicating
+repeated C or M seed entries is not exact readout coverage.
 
 The endpoint tables and readouts must also prove residual faithfulness:
 if all routed endpoint labels or cutoff readouts are killed, then the actual
@@ -1103,6 +1105,7 @@ positive_local_endpoint_ybe_cocycle,
 signed_two_strand_artin_longitude_base,
 compatible_artin_homomorphism_update,
 exact_cutoff_readouts_for_C_and_M,
+cutoff_readout_seed_state_ledgers_duplicate_free,
 residual_faithfulness_for_actual_fibre_action.
 ```
 
@@ -1564,7 +1567,7 @@ Before returning a claimed resolution, explicitly answer:
    Artin-longitude base identity for both signs, including the compatible
    Artin-homomorphism update rule?
 9. For cutoff families C and M, are the readouts faithful on exactly their
-   routed ledgers with no extra channels?
+   routed ledgers with no extra channels and no duplicated seed-state entries?
 10. Is every detector group, endpoint group, cutoff group, and rack
    independent of braid index `n`, and does the endpoint-target certificate
    cover exactly the routed U/C/M families with fixed positive orders or
