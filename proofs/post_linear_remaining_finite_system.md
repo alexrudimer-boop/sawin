@@ -639,10 +639,16 @@ domain from the current interval and the audit's reachable seed states before
 allowing a signed-generator proof to close a routed endpoint family.  Thus a
 manually constructed audit with a too-small required-entry ledger is reported
 as `signed_entry_domain_mismatch_current_interval` even if its own boolean
-gates claim success.  Likewise, the finite row checks themselves must be
-derived from the supplied rows, actual interval table, endpoint group or
-cutoff multiplication, and fixed detector-lift data; unsupported success
-flags are recorded as `finite_signed_row_checks_not_derived_from_tables`.
+gates claim success.  The wrapper also recomputes coordinate compatibility,
+inverse pairing, inverse cancellation, positive state/coordinate YBE, and far
+state/coordinate commutativity against the current interval and endpoint
+group.  A table whose own booleans claim those row checks succeeded is still
+reported as `signed_row_checks_mismatch_current_interval` if the recomputed
+current-interval failures are nonempty.  Likewise, the finite row checks
+themselves must be derived from the supplied rows, actual interval table,
+endpoint group or cutoff multiplication, and fixed detector-lift data;
+unsupported success flags are recorded as
+`finite_signed_row_checks_not_derived_from_tables`.
 For group-valued endpoint rows, the concrete endpoint group must be supplied
 to evaluate inverse-cancellation and positive-YBE label products.  A row
 audit that names only an endpoint target order, or supplies success booleans
@@ -790,6 +796,12 @@ signed_endpoint_generator_matches_current_kappa
 signed_endpoint_generator_entry_domain_matches_current_interval
 signed_endpoint_generator_missing_current_interval_entry_keys
 signed_endpoint_generator_extra_current_interval_entry_keys
+signed_endpoint_generator_rows_match_current_interval
+signed_endpoint_generator_current_coordinate_failures
+signed_endpoint_generator_current_inverse_pairing_failures
+signed_endpoint_generator_current_inverse_cancellation_failures
+signed_endpoint_generator_current_positive_ybe_path_failures
+signed_endpoint_generator_current_far_commutativity_path_failures
 signed_endpoint_generator_closes_current_kappa
 signed_endpoint_generator_closed_families
 signed_endpoint_generator_reachable_seed_states

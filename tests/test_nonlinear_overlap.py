@@ -6175,6 +6175,65 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertTrue(audit.all_active_routed_endpoint_systems_closed)
         self.assertEqual(audit.remaining_obligations, ())
 
+        forged_rows = tuple(
+            replace(row, output_left=1)
+            if row.sign == 1
+            and row.input_left == 0
+            and row.input_right == 0
+            else row
+            for row in rows
+        )
+        forged_signed_generators = UniversalKSignedEndpointGeneratorAudit(
+            seed_classifier_entries=routed.universal_k_seed_classifier_entries,
+            reachable_seed_states=reachable,
+            required_entry_keys=keys,
+            entry_domain_derived_from_interval=True,
+            finite_row_checks_derived_from_tables=True,
+            rows=forged_rows,
+            endpoint_group=cyclic_group(2),
+            endpoint_targets_fixed=True,
+            endpoint_target_audit=trivial_endpoint_target_audit("U"),
+            coordinate_components_verified=True,
+            inverse_pairing_verified=True,
+            inverse_cancellation_verified=True,
+            positive_ybe_path_verified=True,
+            positive_ybe_cocycle_verified=True,
+            far_commutativity_verified=True,
+            signed_two_strand_base_verified=True,
+            artin_homomorphism_update_verified=True,
+            telescoping_detector_audit=trivial_telescoping_detector_audit(
+                keys,
+                rows=forged_rows,
+                endpoint_group=cyclic_group(2),
+            ),
+            residual_action_scope=trivial_endpoint_residual_action_scope("U"),
+            residual_action_audit=trivial_endpoint_residual_action_audit(),
+        )
+        forged_wrapper = PostLinearRemainingFiniteSystemAudit(
+            refinement,
+            triangular_latin_defect_closure=closure,
+            triangular_constant_kernel_recovery_route=route,
+            universal_k_signed_endpoint_generator=forged_signed_generators,
+            universal_k_signed_endpoint_interval=interval,
+        )
+        forged_data = dict(forged_wrapper.finite_obstruction_data)
+
+        self.assertTrue(
+            forged_signed_generators.proves_signed_endpoint_generator_tables
+        )
+        self.assertFalse(
+            forged_wrapper.signed_endpoint_generator_rows_match_current_interval
+        )
+        self.assertFalse(forged_wrapper.system_u_closed_by_signed_endpoint_generator)
+        self.assertIn(
+            "signed_row_checks_mismatch_current_interval",
+            forged_data["signed_endpoint_generator_failure_reasons"],
+        )
+        self.assertNotEqual(
+            forged_data["signed_endpoint_generator_current_coordinate_failures"],
+            (),
+        )
+
     def test_triangular_recovery_endpoint_witness_covers_routed_k_defect(self):
         interval = one_color_latin_unit_triangular_interval()
         observer = triangular_recovery_unit_observer_audit(interval)

@@ -997,9 +997,14 @@ subdomain is not a certificate even if all supplied rows satisfy the local
 identities on that smaller domain.  A checker receiving an already-built
 audit must recompute `D_Gamma` from the current interval and current
 reachable closure and compare it with the audit's required-entry ledger; a
-bare flag saying "derived from interval" is not enough.  The finite row checks
-themselves must be marked as derived from the supplied signed rows, actual
-interval table, endpoint group or cutoff multiplication, and explicit
+bare flag saying "derived from interval" is not enough.  The checker must
+also recompute the coordinate, inverse-pairing, inverse-cancellation,
+positive state/coordinate YBE, and far state/coordinate commutativity checks
+against the current interval table and supplied endpoint group.  An
+already-built audit whose booleans say those checks passed is still stale or
+irrelevant if these recomputed current-interval row checks fail.  The finite
+row checks themselves must be marked as derived from the supplied signed rows,
+actual interval table, endpoint group or cutoff multiplication, and explicit
 detector-lift data; manually asserted success flags for coordinate
 compatibility, inverse-derived negatives, positive state/coordinate YBE,
 state/coordinate far-commutativity, rowwise longitude diagnostics, or

@@ -6572,12 +6572,95 @@ class PostLinearRemainingFiniteSystemAudit:
         )
 
     @property
+    def signed_endpoint_generator_current_coordinate_failures(
+        self,
+    ) -> Tuple[UniversalKSignedEndpointCoordinateFailure, ...]:
+        audit = self.universal_k_signed_endpoint_generator
+        interval = self.universal_k_signed_endpoint_interval
+        if audit is None or interval is None:
+            return ()
+        return universal_k_signed_endpoint_coordinate_failures(interval, audit.rows)
+
+    @property
+    def signed_endpoint_generator_current_inverse_pairing_failures(
+        self,
+    ) -> Tuple[UniversalKSignedEndpointInverseFailure, ...]:
+        audit = self.universal_k_signed_endpoint_generator
+        interval = self.universal_k_signed_endpoint_interval
+        if audit is None or interval is None:
+            return ()
+        return universal_k_signed_endpoint_inverse_failures(interval, audit.rows)
+
+    @property
+    def signed_endpoint_generator_current_inverse_cancellation_failures(
+        self,
+    ) -> Tuple[UniversalKSignedEndpointLabelFailure, ...]:
+        audit = self.universal_k_signed_endpoint_generator
+        interval = self.universal_k_signed_endpoint_interval
+        if audit is None or interval is None or audit.endpoint_group is None:
+            return ()
+        return universal_k_signed_endpoint_inverse_cancellation_failures(
+            audit.endpoint_group,
+            interval,
+            audit.rows,
+        )
+
+    @property
+    def signed_endpoint_generator_current_positive_ybe_path_failures(
+        self,
+    ) -> Tuple[UniversalKSignedEndpointPositiveYBEFailure, ...]:
+        audit = self.universal_k_signed_endpoint_generator
+        interval = self.universal_k_signed_endpoint_interval
+        if audit is None or interval is None:
+            return ()
+        return universal_k_signed_endpoint_positive_ybe_failures(
+            interval,
+            audit.reachable_seed_states_exact,
+            audit.rows,
+        )
+
+    @property
+    def signed_endpoint_generator_current_far_commutativity_path_failures(
+        self,
+    ) -> Tuple[UniversalKSignedEndpointLabelFailure, ...]:
+        audit = self.universal_k_signed_endpoint_generator
+        interval = self.universal_k_signed_endpoint_interval
+        if audit is None or interval is None or audit.endpoint_group is None:
+            return ()
+        failures = universal_k_signed_endpoint_far_commutativity_failures(
+            audit.endpoint_group,
+            interval,
+            audit.reachable_seed_states_exact,
+            audit.rows,
+        )
+        return tuple(
+            failure
+            for failure in failures
+            if failure[1] != "far_commutativity_label_mismatch"
+        )
+
+    @property
+    def signed_endpoint_generator_rows_match_current_interval(self) -> bool:
+        audit = self.universal_k_signed_endpoint_generator
+        return (
+            audit is not None
+            and self.universal_k_signed_endpoint_interval is not None
+            and audit.endpoint_group is not None
+            and not self.signed_endpoint_generator_current_coordinate_failures
+            and not self.signed_endpoint_generator_current_inverse_pairing_failures
+            and not self.signed_endpoint_generator_current_inverse_cancellation_failures
+            and not self.signed_endpoint_generator_current_positive_ybe_path_failures
+            and not self.signed_endpoint_generator_current_far_commutativity_path_failures
+        )
+
+    @property
     def signed_endpoint_generator_closes_current_kappa(self) -> bool:
         audit = self.universal_k_signed_endpoint_generator
         return (
             audit is not None
             and self.signed_endpoint_generator_matches_current_kappa
             and self.signed_endpoint_generator_entry_domain_matches_current_interval
+            and self.signed_endpoint_generator_rows_match_current_interval
             and audit.proves_signed_endpoint_generator_tables
         )
 
@@ -7189,6 +7272,30 @@ class PostLinearRemainingFiniteSystemAudit:
                 ),
                 ("signed_endpoint_generator_missing_current_interval_entry_keys", ()),
                 ("signed_endpoint_generator_extra_current_interval_entry_keys", ()),
+                (
+                    "signed_endpoint_generator_rows_match_current_interval",
+                    False,
+                ),
+                (
+                    "signed_endpoint_generator_current_coordinate_failures",
+                    (),
+                ),
+                (
+                    "signed_endpoint_generator_current_inverse_pairing_failures",
+                    (),
+                ),
+                (
+                    "signed_endpoint_generator_current_inverse_cancellation_failures",
+                    (),
+                ),
+                (
+                    "signed_endpoint_generator_current_positive_ybe_path_failures",
+                    (),
+                ),
+                (
+                    "signed_endpoint_generator_current_far_commutativity_path_failures",
+                    (),
+                ),
                 ("signed_endpoint_generator_closes_current_kappa", False),
                 ("signed_endpoint_generator_closed_families", ()),
                 ("signed_endpoint_generator_reachable_seed_states", ()),
@@ -7596,6 +7703,10 @@ class PostLinearRemainingFiniteSystemAudit:
             failure_reasons = failure_reasons + (
                 "signed_entry_domain_mismatch_current_interval",
             )
+        if not self.signed_endpoint_generator_rows_match_current_interval:
+            failure_reasons = failure_reasons + (
+                "signed_row_checks_mismatch_current_interval",
+            )
         return (
             (
                 "signed_endpoint_generator_matches_current_kappa",
@@ -7612,6 +7723,30 @@ class PostLinearRemainingFiniteSystemAudit:
             (
                 "signed_endpoint_generator_extra_current_interval_entry_keys",
                 self.signed_endpoint_generator_extra_interval_entry_keys,
+            ),
+            (
+                "signed_endpoint_generator_rows_match_current_interval",
+                self.signed_endpoint_generator_rows_match_current_interval,
+            ),
+            (
+                "signed_endpoint_generator_current_coordinate_failures",
+                self.signed_endpoint_generator_current_coordinate_failures,
+            ),
+            (
+                "signed_endpoint_generator_current_inverse_pairing_failures",
+                self.signed_endpoint_generator_current_inverse_pairing_failures,
+            ),
+            (
+                "signed_endpoint_generator_current_inverse_cancellation_failures",
+                self.signed_endpoint_generator_current_inverse_cancellation_failures,
+            ),
+            (
+                "signed_endpoint_generator_current_positive_ybe_path_failures",
+                self.signed_endpoint_generator_current_positive_ybe_path_failures,
+            ),
+            (
+                "signed_endpoint_generator_current_far_commutativity_path_failures",
+                self.signed_endpoint_generator_current_far_commutativity_path_failures,
             ),
             (
                 "signed_endpoint_generator_closes_current_kappa",
