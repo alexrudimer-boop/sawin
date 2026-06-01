@@ -400,6 +400,11 @@ positive-YBE cocycle gates are checked by multiplying the emitted endpoint
 labels in that group.  Thus those gates require a concrete group table and
 cannot be discharged by naming a candidate label set alone.
 
+The signed two-strand base gate is likewise executable: every signed row
+must carry a literal subgroup witness in the fixed endpoint group, evaluated
+against the recursive two-strand longitudes for `sigma_1` or `sigma_1^-1`,
+and the value must equal the emitted endpoint label.
+
 This audit does not by itself close U, C, or M; it records the missing finite
 generator-table proof needed before the endpoint witnesses or symmetric
 cutoffs can be promoted to an all-strand proof.

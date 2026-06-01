@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from itertools import product
-from typing import TYPE_CHECKING, Sequence, Tuple
+from typing import TYPE_CHECKING, Mapping, Sequence, Tuple
 
 from .artin_longitudes import (
     ArtinDetectorLiftBraidAudit,
@@ -13,6 +13,7 @@ from .artin_longitudes import (
     LongitudeSubgroupWitness,
     artin_detector_lift_braid_audit,
     artin_detector_lift_transition_audit,
+    evaluate_longitude_subgroup_witness,
 )
 from .finite_group import FiniteGroup, GroupElement
 from .green_branch import (
@@ -1404,6 +1405,70 @@ def universal_k_signed_endpoint_positive_ybe_cocycle_failures(
                             (left_result[3], right_result[3]),
                         )
                     )
+    return tuple(failures)
+
+
+def universal_k_signed_endpoint_two_strand_base_failures(
+    endpoint_group: FiniteGroup,
+    rows: Sequence[UniversalKSignedEndpointGeneratorRow],
+    witnesses: Mapping[
+        UniversalKSignedEndpointEntryKey,
+        LongitudeSubgroupWitness,
+    ],
+) -> Tuple[UniversalKSignedEndpointLabelFailure, ...]:
+    """Return rows whose signed two-strand longitude witness is missing or wrong."""
+
+    duplicate_keys = set()
+    seen_keys = set()
+    group_elements = set(endpoint_group.elements)
+    failures = []
+    for row in rows:
+        if row.entry_key in seen_keys:
+            duplicate_keys.add(row.entry_key)
+            continue
+        seen_keys.add(row.entry_key)
+        if row.endpoint_value not in group_elements:
+            failures.append(
+                (row.entry_key, "endpoint_value_outside_group", row.endpoint_value)
+            )
+            continue
+        if row.sign not in {-1, 1}:
+            failures.append((row.entry_key, "unknown_sign", row.sign))
+            continue
+        if row.entry_key not in witnesses:
+            failures.append((row.entry_key, "missing_two_strand_base_witness", None))
+            continue
+        braid_word = (1,) if row.sign == 1 else (-1,)
+        try:
+            witness_value = evaluate_longitude_subgroup_witness(
+                endpoint_group,
+                2,
+                braid_word,
+                witnesses[row.entry_key],
+            )
+        except (IndexError, ValueError) as error:
+            failures.append(
+                (row.entry_key, "invalid_two_strand_base_witness", repr(error))
+            )
+            continue
+        if witness_value != row.endpoint_value:
+            failures.append(
+                (
+                    row.entry_key,
+                    "two_strand_base_value_mismatch",
+                    (row.endpoint_value, witness_value),
+                )
+            )
+
+    failures.extend(
+        (key, "duplicate_entry_key", None)
+        for key in sorted(duplicate_keys, key=repr)
+    )
+    extra_keys = tuple(sorted(set(witnesses) - seen_keys, key=repr))
+    failures.extend(
+        (key, "extra_two_strand_base_witness", None)
+        for key in extra_keys
+    )
     return tuple(failures)
 
 

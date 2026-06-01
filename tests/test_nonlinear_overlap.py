@@ -75,6 +75,7 @@ from ybe_domination import (
     universal_k_signed_endpoint_positive_ybe_cocycle_failures,
     universal_k_signed_endpoint_positive_ybe_failures,
     universal_k_signed_endpoint_required_entry_keys,
+    universal_k_signed_endpoint_two_strand_base_failures,
     universal_continuation_identity_endpoint_witness_audit,
     universal_continuation_identity_symmetric_endpoint_fork_audit,
     universal_continuation_identity_routing_audit,
@@ -2902,6 +2903,79 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
 
         self.assertIn(
             "positive_ybe_label_mismatch",
+            tuple(failure[1] for failure in failures),
+        )
+
+    def test_signed_endpoint_two_strand_base_failures_check_longitude_witnesses(self):
+        seed_state = ("*", "*", "left_constant_map_universal_kernel")
+        group = cyclic_group(3)
+        positive = UniversalKSignedEndpointGeneratorRow(
+            endpoint_family="U",
+            seed_state=seed_state,
+            sign=1,
+            left_color="*",
+            right_color="*",
+            input_left=0,
+            input_right=1,
+            output_left=0,
+            output_right=1,
+            next_seed_state=seed_state,
+            endpoint_value=1,
+        )
+        negative = replace(
+            positive,
+            sign=-1,
+            input_left=1,
+            input_right=0,
+            output_left=1,
+            output_right=0,
+        )
+
+        self.assertEqual(
+            universal_k_signed_endpoint_two_strand_base_failures(
+                group,
+                (positive, negative),
+                {
+                    positive.entry_key: (((1, 0), 0, 1),),
+                    negative.entry_key: (((0, 2), 1, 1),),
+                },
+            ),
+            (),
+        )
+
+        failures = universal_k_signed_endpoint_two_strand_base_failures(
+            group,
+            (positive,),
+            {},
+        )
+
+        self.assertEqual(
+            tuple(failure[1] for failure in failures),
+            ("missing_two_strand_base_witness",),
+        )
+
+        failures = universal_k_signed_endpoint_two_strand_base_failures(
+            group,
+            (positive,),
+            {positive.entry_key: (((2, 0), 0, 1),)},
+        )
+
+        self.assertEqual(
+            tuple(failure[1] for failure in failures),
+            ("two_strand_base_value_mismatch",),
+        )
+
+        failures = universal_k_signed_endpoint_two_strand_base_failures(
+            group,
+            (positive,),
+            {
+                positive.entry_key: (((1, 0), 0, 1),),
+                replace(positive, input_left=1).entry_key: (((1, 0), 0, 1),),
+            },
+        )
+
+        self.assertIn(
+            "extra_two_strand_base_witness",
             tuple(failure[1] for failure in failures),
         )
 

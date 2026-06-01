@@ -956,6 +956,13 @@ inside `H_E`, where each `phi_r:F_2->H_E` is a homomorphism, each
 for the two-strand generator `sigma_1^epsilon`.  The expression may depend
 on the finite row, but `H_E` may not depend on braid index.
 
+Equivalently, the certificate may list literal subgroup-witness letters
+`(assignment,j,delta)` with `assignment in H_E^2`, `j in {1,2}`, and
+`delta in {+1,-1}`.  Evaluating those letters against the recursive
+two-strand longitudes for `sigma_1^epsilon` must produce exactly the emitted
+label `h`, and no table row may be missing such a witness or use a witness
+outside the fixed group.
+
 The Artin-homomorphism update must also be compatible with the state update:
 
 ```text
