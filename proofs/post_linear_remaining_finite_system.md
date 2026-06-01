@@ -366,23 +366,28 @@ read from the partial-constant witness tuple.  Thus signed endpoint generator
 entries are not addressable until `d in K_nabla` and `kappa(d)=(E,s)` have
 been computed.
 
-The next finite audit layer is the signed endpoint generator table on these
-states.  For each `kappa(d)=(E,s)`, each sign, and each local row input, the
-table must supply one value
+The next finite audit layer is the reachable signed endpoint generator table
+on these states.  For each `kappa(d)=(E,s)`, first define the finite reachable
+state set `S_E^reach` containing the routed seed states.  For each reachable
+state, each sign, and each local row input, the table must supply one value
 
 ```text
 Gamma^{E,+/-}_{a,b}(s,x,y)=(s',x',y',h)
 ```
 
 with the coordinate pair equal to the positive or inverse local row and
-`h` in the fixed finite endpoint group for `E`.  The executable audit records
-the exact routed seed states, the required two signs, missing or extra signed
-seed keys, duplicate entries, and the three finite proof gates:
+`h` in the fixed finite endpoint group or cutoff target for `E`.  The
+executable audit records the exact routed seed states, reachable state set,
+required full entry domain, missing or extra table entries, duplicate
+entries, and the finite proof gates:
 
 ```text
+fixed endpoint group or cutoff target
 signed inverse cancellation
 positive local endpoint YBE cocycle
 signed two-strand Artin-longitude base identity
+compatible Artin-homomorphism update
+exact C/M cutoff readouts when cutoff families are present
 ```
 
 This audit does not by itself close U, C, or M; it records the missing finite
@@ -408,14 +413,24 @@ universal_k_row_normal_form_domain
 universal_k_seed_classifier_entries
 signed_endpoint_generator_required_seed_states
 signed_endpoint_generator_matches_current_kappa
+signed_endpoint_generator_reachable_seed_states
+signed_endpoint_generator_missing_initial_seed_states
 signed_endpoint_generator_required_signed_seed_keys
+signed_endpoint_generator_required_entry_keys
+signed_endpoint_generator_supplied_entry_keys
+signed_endpoint_generator_missing_entry_keys
+signed_endpoint_generator_extra_entry_keys
 signed_endpoint_generator_supplied_signed_seed_keys
 signed_endpoint_generator_missing_signed_seed_keys
 signed_endpoint_generator_extra_signed_seed_keys
 signed_endpoint_generator_duplicate_entries
+signed_endpoint_generator_endpoint_targets_fixed
 signed_endpoint_generator_inverse_cancellation_verified
 signed_endpoint_generator_positive_ybe_cocycle_verified
 signed_endpoint_generator_two_strand_base_verified
+signed_endpoint_generator_artin_update_verified
+signed_endpoint_generator_cutoff_readouts_required
+signed_endpoint_generator_cutoff_readouts_exact
 signed_endpoint_generator_tables_proved
 signed_endpoint_generator_failure_reasons
 active_companion_block_image_support_rows

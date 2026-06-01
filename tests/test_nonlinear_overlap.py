@@ -2382,32 +2382,102 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             next_seed_state=seed_state,
             endpoint_value=0,
         )
+        negative_row = replace(positive_row, sign=-1)
+        required_entry_keys = (positive_row.entry_key, negative_row.entry_key)
         incomplete = UniversalKSignedEndpointGeneratorAudit(
             seed_classifier_entries=seed_entries,
+            reachable_seed_states=(("U", seed_state),),
+            required_entry_keys=required_entry_keys,
             rows=(positive_row,),
+            endpoint_targets_fixed=True,
             inverse_cancellation_verified=True,
             positive_ybe_cocycle_verified=True,
             signed_two_strand_base_verified=True,
+            artin_homomorphism_update_verified=True,
         )
 
         self.assertEqual(incomplete.missing_signed_seed_keys, (("U", seed_state, -1),))
+        self.assertEqual(incomplete.missing_entry_keys, (negative_row.entry_key,))
         self.assertFalse(incomplete.proves_signed_endpoint_generator_tables)
         self.assertIn("signed_seed_keys_missing", incomplete.failure_reasons)
+        self.assertIn("signed_generator_entries_missing", incomplete.failure_reasons)
 
-        negative_row = replace(positive_row, sign=-1)
         complete = UniversalKSignedEndpointGeneratorAudit(
             seed_classifier_entries=seed_entries,
+            reachable_seed_states=(("U", seed_state),),
+            required_entry_keys=required_entry_keys,
             rows=(positive_row, negative_row),
+            endpoint_targets_fixed=True,
             inverse_cancellation_verified=True,
             positive_ybe_cocycle_verified=True,
             signed_two_strand_base_verified=True,
+            artin_homomorphism_update_verified=True,
         )
 
         self.assertEqual(complete.missing_signed_seed_keys, ())
+        self.assertEqual(complete.missing_entry_keys, ())
         self.assertEqual(complete.extra_signed_seed_keys, ())
+        self.assertEqual(complete.extra_entry_keys, ())
         self.assertTrue(complete.signed_generator_domain_exact)
         self.assertTrue(complete.proves_signed_endpoint_generator_tables)
         self.assertEqual(complete.failure_reasons, ())
+
+    def test_signed_endpoint_generator_audit_requires_full_entry_domain(self):
+        seed_state = ("*", "*", "left_constant_map_universal_kernel")
+        seed_entries = (
+            (
+                (
+                    "*",
+                    "*",
+                    "L",
+                    "constant_map_kernel",
+                    ("*", (0, 1), "universal", "universal"),
+                ),
+                ("U", seed_state),
+            ),
+        )
+        first_positive = UniversalKSignedEndpointGeneratorRow(
+            endpoint_family="U",
+            seed_state=seed_state,
+            sign=1,
+            left_color="*",
+            right_color="*",
+            input_left=0,
+            input_right=1,
+            output_left=0,
+            output_right=1,
+            next_seed_state=seed_state,
+            endpoint_value=0,
+        )
+        first_negative = replace(first_positive, sign=-1)
+        second_positive = replace(first_positive, input_left=1, input_right=0)
+        second_negative = replace(second_positive, sign=-1)
+        required_entry_keys = (
+            first_positive.entry_key,
+            first_negative.entry_key,
+            second_positive.entry_key,
+            second_negative.entry_key,
+        )
+        audit = UniversalKSignedEndpointGeneratorAudit(
+            seed_classifier_entries=seed_entries,
+            reachable_seed_states=(("U", seed_state),),
+            required_entry_keys=required_entry_keys,
+            rows=(first_positive, first_negative),
+            endpoint_targets_fixed=True,
+            inverse_cancellation_verified=True,
+            positive_ybe_cocycle_verified=True,
+            signed_two_strand_base_verified=True,
+            artin_homomorphism_update_verified=True,
+        )
+
+        self.assertEqual(audit.missing_signed_seed_keys, ())
+        self.assertEqual(
+            audit.missing_entry_keys,
+            (second_negative.entry_key, second_positive.entry_key),
+        )
+        self.assertFalse(audit.signed_generator_domain_exact)
+        self.assertFalse(audit.proves_signed_endpoint_generator_tables)
+        self.assertIn("signed_generator_entries_missing", audit.failure_reasons)
 
     def test_post_linear_reports_signed_generator_table_audit(self):
         refinement = constant_map_kernel_only_system_k_refinement()
@@ -2464,10 +2534,14 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         )
         signed_generators = UniversalKSignedEndpointGeneratorAudit(
             seed_classifier_entries=routed.universal_k_seed_classifier_entries,
+            reachable_seed_states=(("U", seed_state),),
+            required_entry_keys=(row.entry_key, replace(row, sign=-1).entry_key),
             rows=(row, replace(row, sign=-1)),
+            endpoint_targets_fixed=True,
             inverse_cancellation_verified=True,
             positive_ybe_cocycle_verified=True,
             signed_two_strand_base_verified=True,
+            artin_homomorphism_update_verified=True,
         )
         audit = PostLinearRemainingFiniteSystemAudit(
             refinement,

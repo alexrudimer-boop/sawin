@@ -789,14 +789,30 @@ where `(x',y')=T_{a,b}^{+/-}(x,y)`.
 
 ### Signed Endpoint Generator Tables
 
-For every endpoint family `E in {U,C,M}`, let `H_E` be the fixed finite
-endpoint group for that family.  The group must be independent of braid index
-`n`.  A signed endpoint generator table is a finite table
+This is the reachable signed U/C/M endpoint-certificate lemma.  It is now the
+first decisive A-side missing object after the `K_nabla` and `kappa` layer.
+
+For every endpoint family `E in {U,C,M}`, define the initial routed seed set
+
+```text
+S_E^0 = { s in S_E : kappa(d)=(E,s) for some d in K_nabla }.
+```
+
+The missing endpoint lemma must first construct a finite reachable state set
+
+```text
+S_E^reach superset S_E^0.
+```
+
+Let `H_E` be the fixed finite endpoint group for that family, or let `S_mE`
+be the fixed symmetric cutoff group in a cutoff proof.  The group must be
+finite and independent of braid index `n`.  A signed endpoint generator table
+is a finite table
 
 ```text
 Gamma^{E,epsilon}_{a,b}(s,x,y) = (s',x',y',h),
 epsilon in {+1,-1},
-s,s' in S_E,
+s,s' in S_E^reach,
 x in A_a,
 y in A_b,
 h in H_E.
@@ -823,7 +839,8 @@ The exact signed-generator domain for the routed K layer is:
 ```text
 D_Gamma =
 { (E,epsilon,s,a,b,x,y) :
-  (E,s)=kappa(d) for some d in K_nabla,
+  s in S_E^reach,
+  S_E^reach is reachable from S_E^0 by the signed tables,
   epsilon in {+1,-1},
   x in A_a,
   y in A_b,
@@ -833,7 +850,10 @@ D_Gamma =
 Every entry of `D_Gamma` must have exactly one table value and no extra table
 value outside `D_Gamma` may be used to close a routed endpoint family.  The
 signed table must be checked against the actual `kappa` table for the
-interval; a table built for a different seed classifier is irrelevant.
+interval; a table built for a different seed classifier is irrelevant.  A
+certificate must enumerate the full entry domain `D_Gamma`, not merely one
+entry per seed and sign.  Covering both signs for a seed while omitting some
+local input `(a,b,x,y)` is still an incomplete signed table.
 
 The signed inverse-cancellation law is:
 
@@ -871,7 +891,7 @@ Gamma^{E,+}_{a*(b dot c),b*c}.
 
 The final state and final three coordinates must agree, and the ordered
 products of the three `H_E` labels must agree in `H_E`.  This is a finite
-identity over all `s in S_E` and all local triples `(x,y,z)`.
+identity over all `s in S_E^reach` and all local triples `(x,y,z)`.
 
 The signed two-strand Artin-longitude base identity is a finite certificate
 for each signed table entry.  For every row
@@ -892,17 +912,44 @@ inside `H_E`, where each `phi_r:F_2->H_E` is a homomorphism, each
 for the two-strand generator `sigma_1^epsilon`.  The expression may depend
 on the finite row, but `H_E` may not depend on braid index.
 
+The Artin-homomorphism update must also be compatible with the state update:
+
+```text
+phi^{E,epsilon}_{r,s',x',y'}
+ =
+phi^{E,epsilon}_{r,s,x,y} o sigma_1^{-epsilon},
+```
+
+using the same Artin convention as the recursive longitudes.  This is needed
+for braid-word induction; the two-strand base identity alone is not enough.
+
+For cutoff families, in particular C and M, the proof must define faithful
+readouts
+
+```text
+chi_C:S_C^reach -> S_mC,
+chi_M:S_M^reach -> S_mM,
+```
+
+covering exactly the routed identity-continuation ledger for C and exactly
+the routed mixed-unit ledger for M, with no extra channels.
+
 The signed-generator audit for a claimed A proof must therefore establish:
 
 ```text
+reachable_state_set_contains_initial_seeds,
+all_signed_row_states_reachable,
+fixed_endpoint_group_or_cutoff,
 signed_generator_domain_exact,
 all_signed_rows_defined,
 signed_inverse_cancellation,
 positive_local_endpoint_ybe_cocycle,
-signed_two_strand_artin_longitude_base.
+signed_two_strand_artin_longitude_base,
+compatible_artin_homomorphism_update,
+exact_cutoff_readouts_for_C_and_M.
 ```
 
-Only after those five finite checks are proved may one use braid-word
+Only after those finite checks are proved may one use braid-word
 induction to claim that all endpoint labels for family `E` lie in
 `V_beta(H_E)` for every braid index.  Without them, endpoint witnesses or
 symmetric cutoffs are merely candidate certificate shapes, not a completed
@@ -1287,26 +1334,31 @@ If returning B, you must give:
 
 3. Close or refute System U.
 
-   Define the signed endpoint generators on the exact `S_U` values hit by
-   `kappa`, then prove uniformly in `n` that every routed
+   Define `S_U^reach` from the exact `S_U` values hit by `kappa`, define the
+   full signed endpoint table on `D_Gamma`, prove the Artin-homomorphism
+   update rule, then prove uniformly in `n` that every routed
    triangular-recovery endpoint lies in `V_beta(U_tri)`, or prove a faithful
    symmetric endpoint cutoff for the exact routed U family.  Otherwise,
    extract a normalized-law B sequence from a genuine U endpoint miss.
 
 4. Close or refute System C.
 
-   Define the signed endpoint generators on the exact `S_C` values hit by
-   `kappa`, then construct fixed endpoint-longitude witnesses or a faithful
-   symmetric cutoff for every identity-routed universal-continuation edge.
-   Otherwise, extract a normalized-law B sequence from a genuine C endpoint
-   miss.
+   Define `S_C^reach` from the exact `S_C` values hit by `kappa`, define the
+   full signed endpoint table on `D_Gamma`, prove the Artin-homomorphism
+   update rule, and construct exact faithful cutoff readouts for the routed
+   identity-continuation ledger.  Then construct fixed endpoint-longitude
+   witnesses or a faithful symmetric cutoff for every identity-routed
+   universal-continuation edge.  Otherwise, extract a normalized-law B
+   sequence from a genuine C endpoint miss.
 
 5. Close or refute System M.
 
-   Define the signed endpoint generators on the exact `S_M` values hit by
-   `kappa`, then construct fixed endpoint/readout witnesses or a faithful
-   symmetric cutoff for every mixed-unit context key.  Otherwise, extract a
-   normalized-law B sequence from a genuine M endpoint miss.
+   Define `S_M^reach` from the exact `S_M` values hit by `kappa`, define the
+   full signed endpoint table on `D_Gamma`, prove the Artin-homomorphism
+   update rule, and construct exact faithful cutoff readouts for the routed
+   mixed-unit ledger.  Then construct fixed endpoint/readout witnesses or a
+   faithful symmetric cutoff for every mixed-unit context key.  Otherwise,
+   extract a normalized-law B sequence from a genuine M endpoint miss.
 
 6. Assemble outcome A if K/U/C/M all close.
 
@@ -1342,22 +1394,27 @@ Before returning a claimed resolution, explicitly answer:
    one of `S_U`, `S_C`, or `S_M`?
 5. Are unsupported companion block-image rows proved structural
    inconsistencies rather than endpoint seeds?
-6. Are `S_U`, `S_C`, and `S_M` the exact finite seed state spaces used to
-   index all signed endpoint generators?
+6. Are `S_U`, `S_C`, and `S_M` the exact finite seed state spaces, and are
+   finite reachable supersets `S_U^reach`, `S_C^reach`, and `S_M^reach`
+   constructed from them?
 7. Are all signed endpoint generator tables
    `Gamma^{U,+/-}`, `Gamma^{C,+/-}`, and `Gamma^{M,+/-}` defined on those
-   exact state spaces?
+   exact reachable state spaces and on every entry of `D_Gamma`, not merely
+   one entry per seed and sign?
 8. Do the signed endpoint generator tables satisfy inverse cancellation, the
    positive local endpoint YBE cocycle identity, and the signed two-strand
-   Artin-longitude base identity for both signs?
-9. Is every detector group, endpoint group, cutoff group, and rack
+   Artin-longitude base identity for both signs, including the compatible
+   Artin-homomorphism update rule?
+9. For cutoff families C and M, are the readouts faithful on exactly their
+   routed ledgers with no extra channels?
+10. Is every detector group, endpoint group, cutoff group, and rack
    independent of braid index `n`?
-10. Are product endpoint rows handled family-by-family without hiding any
+11. Are product endpoint rows handled family-by-family without hiding any
    unclosed U, C, or M obligation?
-11. If returning A, where exactly is `G(pi,Q)` constructed, why does it prove
+12. If returning A, where exactly is `G(pi,Q)` constructed, why does it prove
    the all-`n` residual implication, and how does the congruence-chain
    induction produce the final finite rack?
-12. If returning B, why does the obstruction defeat every finite group `G`,
+13. If returning B, why does the obstruction defeat every finite group `G`,
    hence every finite rack through the sharp obstruction theorem?
 
 Return outcome A or outcome B only if the proof is genuinely complete.  If

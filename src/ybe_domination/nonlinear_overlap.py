@@ -95,6 +95,15 @@ UniversalKSeedClassifierEntry = Tuple[
     UniversalKRowDescriptor,
     Tuple[str, UniversalKSeedState],
 ]
+UniversalKSignedEndpointEntryKey = Tuple[
+    str,
+    UniversalKSeedState,
+    int,
+    Color,
+    Color,
+    FibrePoint,
+    FibrePoint,
+]
 
 
 def _is_permutation_transformation(transformation: Transformation) -> bool:
@@ -526,13 +535,7 @@ class UniversalKSignedEndpointGeneratorRow:
 
     @property
     def entry_key(self) -> Tuple[
-        str,
-        UniversalKSeedState,
-        int,
-        Color,
-        Color,
-        FibrePoint,
-        FibrePoint,
+        str, UniversalKSeedState, int, Color, Color, FibrePoint, FibrePoint
     ]:
         return (
             self.endpoint_family,
@@ -570,14 +573,47 @@ class UniversalKSignedEndpointGeneratorAudit:
     """Certificate-shape audit for signed endpoint tables on K_nabla seeds."""
 
     seed_classifier_entries: Tuple[UniversalKSeedClassifierEntry, ...]
+    reachable_seed_states: Tuple[Tuple[str, UniversalKSeedState], ...]
+    required_entry_keys: Tuple[UniversalKSignedEndpointEntryKey, ...]
     rows: Tuple[UniversalKSignedEndpointGeneratorRow, ...]
+    endpoint_targets_fixed: bool = False
     inverse_cancellation_verified: bool = False
     positive_ybe_cocycle_verified: bool = False
     signed_two_strand_base_verified: bool = False
+    artin_homomorphism_update_verified: bool = False
+    cutoff_readouts_exact: bool = False
 
     @property
     def required_seed_states(self) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
         return tuple(sorted({entry[1] for entry in self.seed_classifier_entries}, key=repr))
+
+    @property
+    def reachable_seed_states_exact(
+        self,
+    ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
+        return tuple(sorted(set(self.reachable_seed_states), key=repr))
+
+    @property
+    def missing_initial_seed_states(
+        self,
+    ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
+        reachable = set(self.reachable_seed_states_exact)
+        return tuple(state for state in self.required_seed_states if state not in reachable)
+
+    @property
+    def row_states_outside_reachable_set(
+        self,
+    ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
+        reachable = set(self.reachable_seed_states_exact)
+        outside = []
+        for row in self.rows:
+            current = (row.endpoint_family, row.seed_state)
+            next_state = (row.endpoint_family, row.next_seed_state)
+            if current not in reachable:
+                outside.append(current)
+            if next_state not in reachable:
+                outside.append(next_state)
+        return tuple(sorted(set(outside), key=repr))
 
     @property
     def required_signed_seed_keys(
@@ -601,6 +637,46 @@ class UniversalKSignedEndpointGeneratorAudit:
         return tuple(sorted({row.seed_key for row in self.rows}, key=repr))
 
     @property
+    def required_entry_keys_exact(
+        self,
+    ) -> Tuple[UniversalKSignedEndpointEntryKey, ...]:
+        return tuple(sorted(set(self.required_entry_keys), key=repr))
+
+    @property
+    def required_entry_signed_seed_keys(
+        self,
+    ) -> Tuple[Tuple[str, UniversalKSeedState, int], ...]:
+        return tuple(sorted({key[:3] for key in self.required_entry_keys_exact}, key=repr))
+
+    @property
+    def supplied_entry_keys(
+        self,
+    ) -> Tuple[UniversalKSignedEndpointEntryKey, ...]:
+        return tuple(sorted({row.entry_key for row in self.rows}, key=repr))
+
+    @property
+    def missing_required_entry_seed_keys(
+        self,
+    ) -> Tuple[Tuple[str, UniversalKSeedState, int], ...]:
+        required_by_entries = set(self.required_entry_signed_seed_keys)
+        return tuple(
+            key
+            for key in self.required_signed_seed_keys
+            if key not in required_by_entries
+        )
+
+    @property
+    def extra_required_entry_seed_keys(
+        self,
+    ) -> Tuple[Tuple[str, UniversalKSeedState, int], ...]:
+        required_by_kappa = set(self.required_signed_seed_keys)
+        return tuple(
+            key
+            for key in self.required_entry_signed_seed_keys
+            if key not in required_by_kappa
+        )
+
+    @property
     def missing_signed_seed_keys(
         self,
     ) -> Tuple[Tuple[str, UniversalKSeedState, int], ...]:
@@ -615,20 +691,25 @@ class UniversalKSignedEndpointGeneratorAudit:
         return tuple(key for key in self.supplied_signed_seed_keys if key not in required)
 
     @property
+    def missing_entry_keys(
+        self,
+    ) -> Tuple[UniversalKSignedEndpointEntryKey, ...]:
+        supplied = set(self.supplied_entry_keys)
+        return tuple(
+            key for key in self.required_entry_keys_exact if key not in supplied
+        )
+
+    @property
+    def extra_entry_keys(
+        self,
+    ) -> Tuple[UniversalKSignedEndpointEntryKey, ...]:
+        required = set(self.required_entry_keys_exact)
+        return tuple(key for key in self.supplied_entry_keys if key not in required)
+
+    @property
     def duplicate_entry_keys(
         self,
-    ) -> Tuple[
-        Tuple[
-            str,
-            UniversalKSeedState,
-            int,
-            Color,
-            Color,
-            FibrePoint,
-            FibrePoint,
-        ],
-        ...,
-    ]:
+    ) -> Tuple[UniversalKSignedEndpointEntryKey, ...]:
         seen = set()
         duplicates = []
         for row in self.rows:
@@ -646,9 +727,16 @@ class UniversalKSignedEndpointGeneratorAudit:
     @property
     def signed_generator_domain_exact(self) -> bool:
         return (
-            bool(self.required_signed_seed_keys)
+            bool(self.required_entry_keys_exact)
+            and bool(self.reachable_seed_states_exact)
+            and not self.missing_initial_seed_states
+            and not self.row_states_outside_reachable_set
+            and not self.missing_required_entry_seed_keys
+            and not self.extra_required_entry_seed_keys
             and not self.missing_signed_seed_keys
             and not self.extra_signed_seed_keys
+            and not self.missing_entry_keys
+            and not self.extra_entry_keys
             and not self.duplicate_entry_keys
         )
 
@@ -657,13 +745,27 @@ class UniversalKSignedEndpointGeneratorAudit:
         return bool(self.rows) and not self.undefined_rows
 
     @property
+    def cutoff_readouts_required(self) -> bool:
+        return any(
+            endpoint_family in {"C", "M"}
+            for endpoint_family, _state in self.required_seed_states
+        )
+
+    @property
+    def exact_cutoff_readouts_proved(self) -> bool:
+        return not self.cutoff_readouts_required or self.cutoff_readouts_exact
+
+    @property
     def proves_signed_endpoint_generator_tables(self) -> bool:
         return (
             self.signed_generator_domain_exact
             and self.all_rows_defined
+            and self.endpoint_targets_fixed
             and self.inverse_cancellation_verified
             and self.positive_ybe_cocycle_verified
             and self.signed_two_strand_base_verified
+            and self.artin_homomorphism_update_verified
+            and self.exact_cutoff_readouts_proved
         )
 
     @property
@@ -671,20 +773,42 @@ class UniversalKSignedEndpointGeneratorAudit:
         reasons = []
         if not self.required_signed_seed_keys:
             reasons.append("no_routed_k_seed_states")
+        if not self.reachable_seed_states_exact:
+            reasons.append("reachable_seed_states_not_supplied")
+        if self.missing_initial_seed_states:
+            reasons.append("reachable_seed_states_missing_initial_seeds")
+        if self.row_states_outside_reachable_set:
+            reasons.append("signed_generator_row_state_outside_reachable_set")
+        if not self.required_entry_keys_exact:
+            reasons.append("signed_entry_domain_not_supplied")
+        if self.missing_required_entry_seed_keys:
+            reasons.append("signed_entry_domain_missing_seed_keys")
+        if self.extra_required_entry_seed_keys:
+            reasons.append("signed_entry_domain_has_extra_seed_keys")
         if self.missing_signed_seed_keys:
             reasons.append("signed_seed_keys_missing")
         if self.extra_signed_seed_keys:
             reasons.append("extra_signed_seed_keys")
+        if self.missing_entry_keys:
+            reasons.append("signed_generator_entries_missing")
+        if self.extra_entry_keys:
+            reasons.append("extra_signed_generator_entries")
         if self.duplicate_entry_keys:
             reasons.append("duplicate_signed_generator_entries")
         if self.undefined_rows:
             reasons.append("undefined_signed_generator_rows")
+        if not self.endpoint_targets_fixed:
+            reasons.append("endpoint_targets_not_fixed")
         if not self.inverse_cancellation_verified:
             reasons.append("inverse_cancellation_not_verified")
         if not self.positive_ybe_cocycle_verified:
             reasons.append("positive_ybe_cocycle_not_verified")
         if not self.signed_two_strand_base_verified:
             reasons.append("signed_two_strand_base_not_verified")
+        if not self.artin_homomorphism_update_verified:
+            reasons.append("artin_homomorphism_update_not_verified")
+        if not self.exact_cutoff_readouts_proved:
+            reasons.append("cutoff_readouts_not_exact")
         return tuple(reasons)
 
 
@@ -2101,6 +2225,12 @@ class PostLinearRemainingFiniteSystemAudit:
                         )
                     ),
                 ),
+                ("signed_endpoint_generator_reachable_seed_states", ()),
+                ("signed_endpoint_generator_required_entry_keys", ()),
+                ("signed_endpoint_generator_missing_entry_keys", ()),
+                ("signed_endpoint_generator_endpoint_targets_fixed", False),
+                ("signed_endpoint_generator_artin_update_verified", False),
+                ("signed_endpoint_generator_cutoff_readouts_exact", False),
                 ("signed_endpoint_generator_tables_proved", False),
             )
         matches_current_kappa = (
@@ -2116,8 +2246,32 @@ class PostLinearRemainingFiniteSystemAudit:
                 audit.required_seed_states,
             ),
             (
+                "signed_endpoint_generator_reachable_seed_states",
+                audit.reachable_seed_states_exact,
+            ),
+            (
+                "signed_endpoint_generator_missing_initial_seed_states",
+                audit.missing_initial_seed_states,
+            ),
+            (
                 "signed_endpoint_generator_required_signed_seed_keys",
                 audit.required_signed_seed_keys,
+            ),
+            (
+                "signed_endpoint_generator_required_entry_keys",
+                audit.required_entry_keys_exact,
+            ),
+            (
+                "signed_endpoint_generator_supplied_entry_keys",
+                audit.supplied_entry_keys,
+            ),
+            (
+                "signed_endpoint_generator_missing_entry_keys",
+                audit.missing_entry_keys,
+            ),
+            (
+                "signed_endpoint_generator_extra_entry_keys",
+                audit.extra_entry_keys,
             ),
             (
                 "signed_endpoint_generator_supplied_signed_seed_keys",
@@ -2136,6 +2290,10 @@ class PostLinearRemainingFiniteSystemAudit:
                 audit.duplicate_entry_keys,
             ),
             (
+                "signed_endpoint_generator_endpoint_targets_fixed",
+                audit.endpoint_targets_fixed,
+            ),
+            (
                 "signed_endpoint_generator_inverse_cancellation_verified",
                 audit.inverse_cancellation_verified,
             ),
@@ -2146,6 +2304,18 @@ class PostLinearRemainingFiniteSystemAudit:
             (
                 "signed_endpoint_generator_two_strand_base_verified",
                 audit.signed_two_strand_base_verified,
+            ),
+            (
+                "signed_endpoint_generator_artin_update_verified",
+                audit.artin_homomorphism_update_verified,
+            ),
+            (
+                "signed_endpoint_generator_cutoff_readouts_required",
+                audit.cutoff_readouts_required,
+            ),
+            (
+                "signed_endpoint_generator_cutoff_readouts_exact",
+                audit.cutoff_readouts_exact,
             ),
             (
                 "signed_endpoint_generator_tables_proved",
