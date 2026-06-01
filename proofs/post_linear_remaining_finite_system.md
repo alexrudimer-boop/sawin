@@ -484,9 +484,10 @@ other malformed values are not elements of the symmetric group.  The expected
 and covered cutoff seed-state ledgers must be
 duplicate-free; repeated seed entries are reported as an inexact readout
 ledger rather than silently collapsed.  Expected, covered, and row cutoff
-state keys must also be well formed endpoint states; malformed keys are
-reported even if the malformed sets agree.  The cutoff degree itself must be
-a positive integer; strings, booleans, zero, negative values, or missing
+state keys must also be well formed C/M endpoint states.  A U-family seed,
+an unknown family, or a non-tuple seed is malformed for this cutoff-readout
+gate even if the malformed sets agree.  The cutoff degree itself must be a
+positive integer; strings, booleans, zero, negative values, or missing
 degrees are not finite symmetric cutoff targets.  Cutoff braid-index
 independence is derived from the positive fixed degree and exact finite
 readout rows, so the legacy `braid_index_independent` flag on this audit is

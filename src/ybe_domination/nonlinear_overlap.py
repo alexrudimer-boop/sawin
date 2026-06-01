@@ -93,6 +93,7 @@ if TYPE_CHECKING:  # pragma: no cover - typing only
 
 NONLINEAR_OVERLAP_TARGET_VERDICT = "bi_free_universal_corridor_bottleneck"
 UNIVERSAL_K_ENDPOINT_FAMILIES = frozenset(("U", "C", "M"))
+_UNIVERSAL_K_CUTOFF_READOUT_FAMILIES = frozenset(("C", "M"))
 TriangularRecoveryState = Tuple[Color, Color, FibrePoint, FibrePoint]
 TriangularRecoveryEndpointKey = Tuple[Color, Color, str]
 UniversalKRowDescriptor = Tuple[object, ...]
@@ -1072,6 +1073,13 @@ def _universal_k_endpoint_seed_state_well_formed(state: object) -> bool:
         and len(state) == 2
         and state[0] in UNIVERSAL_K_ENDPOINT_FAMILIES
         and isinstance(state[1], tuple)
+    )
+
+
+def _universal_k_cutoff_seed_state_well_formed(state: object) -> bool:
+    return (
+        _universal_k_endpoint_seed_state_well_formed(state)
+        and state[0] in _UNIVERSAL_K_CUTOFF_READOUT_FAMILIES
     )
 
 
@@ -2923,7 +2931,7 @@ class UniversalKCutoffReadoutAudit:
                 {
                     state
                     for state in self.expected_cutoff_seed_states
-                    if not _universal_k_endpoint_seed_state_well_formed(state)
+                    if not _universal_k_cutoff_seed_state_well_formed(state)
                 },
                 key=repr,
             )
@@ -2938,7 +2946,7 @@ class UniversalKCutoffReadoutAudit:
                 {
                     state
                     for state in self.covered_cutoff_seed_states
-                    if not _universal_k_endpoint_seed_state_well_formed(state)
+                    if not _universal_k_cutoff_seed_state_well_formed(state)
                 },
                 key=repr,
             )
@@ -3018,7 +3026,7 @@ class UniversalKCutoffReadoutAudit:
                 {
                     state
                     for state in self.row_cutoff_seed_states
-                    if not _universal_k_endpoint_seed_state_well_formed(state)
+                    if not _universal_k_cutoff_seed_state_well_formed(state)
                 },
                 key=repr,
             )
