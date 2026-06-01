@@ -330,6 +330,10 @@ closed_by_missing_triangular_partial_constant_proper_closure.
 ```
 
 Only universal partial-constant closure rows may route onward to System C.
+The supplied partial-constant continuation route must also land in a
+universal continuation seed closure.  Containment in a nonuniversal
+continuation seed closure is not enough to create a System C endpoint
+obligation; the row remains active System K.
 
 To prove A through System K, prove that every live K row is impossible in a
 genuine local-minimal finite YBE interval, or route it through fixed detector

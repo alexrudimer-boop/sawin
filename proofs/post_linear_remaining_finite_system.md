@@ -528,7 +528,10 @@ closures contradict local minimality and are classified as
 `closed_by_missing_triangular_partial_constant_proper_closure`, while
 universal generated closures are then routed by
 `proofs/triangular_k_left_partial_constant_continuation_route.md` into the
-universal continuation seed channel.
+universal continuation seed channel.  The supplied continuation route must
+reach a universal continuation seed closure; a merely nonuniversal
+continuation-seed containment leaves the row live in System K and does not
+create a System C endpoint obligation.
 Rows moved this way are recorded in
 `continuation_routed_k_missing_latin_row_defects`.  If no live K row remains,
 the wrapper reports `system_c_universal_continuation_endpoint` rather than a

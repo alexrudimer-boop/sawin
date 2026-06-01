@@ -1154,6 +1154,9 @@ obligation from that row.  Only universal closure rows may feed a routed
 endpoint family.  The same terminal treatment now applies to proper
 generated closures in the partial-constant no-triangular ledger, reported as
 `closed_by_missing_triangular_partial_constant_proper_closure`.
+Partial-constant continuation routing is now also universal-gated: a
+nonuniversal continuation seed closure no longer creates a System C endpoint
+obligation.
 The same supplied-certificate pattern now covers the routed continuation and
 mixed-unit endpoint families.  The helper
 `universal_continuation_identity_symmetric_endpoint_fork_audit(...)` attaches

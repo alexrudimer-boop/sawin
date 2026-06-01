@@ -1455,6 +1455,55 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             ),
         )
 
+    def test_partial_constant_route_requires_universal_continuation_seed(self):
+        profile, closure, route = partial_constant_missing_row_profile_route_audits()
+        nonuniversal_route = MissingTriangularPartialConstantContinuationRouteAudit(
+            rows=(
+                replace(
+                    route.rows[0],
+                    continuation_seed_closure_kinds=("proper",),
+                ),
+            ),
+        )
+        audit = PostLinearRemainingFiniteSystemAudit(
+            active_system_k_refinement(),
+            missing_triangular_row_profile=profile,
+            missing_triangular_partial_constant_closure=closure,
+            missing_triangular_partial_constant_continuation_route=nonuniversal_route,
+        )
+
+        self.assertEqual(audit.system_name, "system_k_kink_completion_deficit")
+        self.assertTrue(audit.system_k_active)
+        self.assertFalse(audit.system_c_active)
+        self.assertIn(
+            (
+                "live_k_missing_latin_row_defects",
+                ((("*", "*"), "no_left_triangular_row"),),
+            ),
+            audit.finite_obstruction_data,
+        )
+        self.assertIn(
+            ("continuation_routed_k_missing_latin_row_defects", ()),
+            audit.finite_obstruction_data,
+        )
+        self.assertIn(
+            (
+                "missing_triangular_partial_constant_unrouted_continuation_rows",
+                (
+                    (
+                        "left",
+                        "*",
+                        "*",
+                        1,
+                        "*",
+                        (0, 1),
+                        "routed_to_continuation_seed_closure",
+                    ),
+                ),
+            ),
+            audit.finite_obstruction_data,
+        )
+
     def test_partial_constant_proper_closure_closes_system_k(self):
         profile, closure, _route = partial_constant_missing_row_profile_route_audits()
         proper_closure = MissingTriangularPartialConstantClosureAudit(

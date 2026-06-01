@@ -851,7 +851,7 @@ class PostLinearRemainingFiniteSystemAudit:
                     row.collapsed_inputs,
                 )
             )
-            if route is None or not route.routes_to_continuation_seed_closure:
+            if route is None or not route.routes_to_universal_continuation_seed:
                 return False
         return True
 
@@ -894,7 +894,7 @@ class PostLinearRemainingFiniteSystemAudit:
                     row.collapsed_inputs,
                 )
             )
-            if route is not None and route.routes_to_continuation_seed_closure:
+            if route is not None and route.routes_to_universal_continuation_seed:
                 return True
         return False
 
@@ -2295,7 +2295,7 @@ class PostLinearRemainingFiniteSystemAudit:
                                     row.status,
                                 )
                                 for row in relevant_route_rows
-                                if not row.routes_to_continuation_seed_closure
+                                if not row.routes_to_universal_continuation_seed
                             ),
                         ),
                     )

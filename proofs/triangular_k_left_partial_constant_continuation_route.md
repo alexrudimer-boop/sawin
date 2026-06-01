@@ -124,8 +124,10 @@ practice:
 partial_edge_contained_in_seed_closure
 ```
 
-so the route can also be certified when a supplied continuation seed closure
-is not labelled universal but still contains the partial edge.
+The post-linear endpoint route additionally requires the supplied
+continuation seed closure to be universal.  A nonuniversal continuation-seed
+closure containing the partial edge is useful diagnostic data, but it is not
+enough to create the System C universal-continuation endpoint obligation.
 
 ## Consequence for System K
 
@@ -147,6 +149,11 @@ post-linear wrapper records it in
 to `system_c_universal_continuation_endpoint`, the universal-continuation
 endpoint layer already handled by the descent-endpoint repair contract
 target.
+
+If a supplied route reaches only `routed_to_continuation_seed_closure` and not
+`routed_to_universal_continuation_seed`, the wrapper leaves the original
+no-triangular row live in System K and lists the row in
+`missing_triangular_partial_constant_unrouted_continuation_rows`.
 
 ## Remaining burden
 
