@@ -1435,8 +1435,11 @@ Gamma^{E,+}_{a,b}(s,x,y)=(s',T_{a,b}(x,y),h).
 Each `W_s` is a word in variables `U_{r,j}` only.  The local substitution may
 use both `U_{r,j}` and raw assignment variables `A_{r,j}`, but the terminal
 template may not contain any `A` variable.  All such variables must use track
-indices in the finite declared range for the endpoint family.  For the active
-two local strands, the positive substitution must be the Artin detector
+and local-position indices that are genuine nonnegative integers in the
+finite declared ranges for the endpoint family.  Boolean indices, strings,
+negative values, and other non-index objects are malformed formal variables,
+not detector tracks.  For the active two local strands, the positive
+substitution must be the Artin detector
 recurrence:
 
 ```text

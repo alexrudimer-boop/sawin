@@ -963,10 +963,8 @@ def _universal_k_word_potential_variable_valid(
         isinstance(variable, tuple)
         and len(variable) == 3
         and variable[0] in {"U", "A"}
-        and isinstance(variable[1], int)
-        and variable[1] >= 0
-        and isinstance(variable[2], int)
-        and variable[2] >= 0
+        and _universal_k_nonnegative_int(variable[1])
+        and _universal_k_nonnegative_int(variable[2])
     )
 
 

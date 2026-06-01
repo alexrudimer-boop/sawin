@@ -4267,6 +4267,38 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             (("A", 0, 0),),
         )
 
+        boolean_track_template = replace(
+            certificate,
+            templates=((source_key, ((("U", True, 0), 1),)),),
+        )
+        self.assertFalse(boolean_track_template.word_potential_templates_verified)
+        self.assertEqual(
+            boolean_track_template.invalid_template_variable_failures,
+            (
+                (
+                    source_key,
+                    "invalid_word_potential_variable",
+                    ("U", True, 0),
+                ),
+            ),
+        )
+
+        boolean_position_template = replace(
+            certificate,
+            templates=((source_key, ((("U", 0, False), 1),)),),
+        )
+        self.assertFalse(boolean_position_template.word_potential_templates_verified)
+        self.assertEqual(
+            boolean_position_template.invalid_template_variable_failures,
+            (
+                (
+                    source_key,
+                    "invalid_word_potential_variable",
+                    ("U", 0, False),
+                ),
+            ),
+        )
+
     def test_word_potential_certificate_must_match_signed_rows(self):
         seed_state = ("*", "*", "left_constant_map_universal_kernel")
         seed_entries = (

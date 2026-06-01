@@ -629,8 +629,11 @@ row, and the finite domain used for the constant-defect check.  The checker
 verifies that the identity-row table has the same positive entry domain as
 the signed endpoint table, that the next state is the monodromy image, that
 the emitted label is the constant coboundary defect, that terminal templates
-contain only current longitude variables `U_{r,j}`, and that the local
-substitutions are the positive Artin recurrences.  Negative
+contain only current longitude variables `U_{r,j}` with nonnegative integer
+track and local-position indices, and that the local substitutions are the
+positive Artin recurrences.  Boolean indices, strings, negative values, and
+other non-index objects are malformed word-potential variables rather than
+finite detector-track references.  Negative
 word-potential rows, if present, are diagnostic only once the signed endpoint
 audit has proved that negative endpoint rows are actual inverses.  Malformed
 identity rows with any sign other than `+1` or `-1` are rejected rather than
