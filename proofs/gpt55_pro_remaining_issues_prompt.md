@@ -479,14 +479,18 @@ case is dual.
 The row routes to System C only when every relevant partial-constant edge has:
 
 1. universal generated admissible closure for the collapsed input pair;
-2. distinct companion outputs;
-3. at least one continuation seed witness;
-4. a universal continuation-seed generated closure among those witnesses;
-5. the original partial-constant collapsed edge contained in that seed
+2. a supplied continuation route keyed to the same side, colour pair, fixed
+   input, domain colour, collapsed input pair, and closure kind;
+3. distinct companion outputs;
+4. at least one continuation seed witness;
+5. a universal continuation-seed generated closure among those witnesses;
+6. the original partial-constant collapsed edge contained in that seed
    closure.
 
-If the route reaches only a nonuniversal continuation-seed closure, or if any
-listed check fails, the original no-triangular row remains live in System K.
+If the partial-constant closure row is nonuniversal, if the supplied route
+does not match that closure row including closure kind, if the route reaches
+only a nonuniversal continuation-seed closure, or if any listed check fails,
+the original no-triangular row remains live in System K.
 ```
 
 K-to-M coordinate-unit law:
@@ -597,10 +601,12 @@ closed_by_missing_triangular_partial_constant_proper_closure.
 ```
 
 Only universal partial-constant closure rows may route onward to System C.
-The supplied partial-constant continuation route must also land in a
-universal continuation seed closure.  Containment in a nonuniversal
-continuation seed closure is not enough to create a System C endpoint
-obligation; the row remains active System K.
+The supplied partial-constant continuation route must match the closure row,
+including closure kind, and must also land in a universal continuation seed
+closure.  Containment in a nonuniversal continuation seed closure, or a route
+whose closure kind does not match the partial-constant closure row, is not
+enough to create a System C endpoint obligation; the row remains active
+System K.
 
 To prove A through System K, prove that every live K row is impossible in a
 genuine local-minimal finite YBE interval, or route it through fixed detector

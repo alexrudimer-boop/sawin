@@ -1504,6 +1504,41 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             audit.finite_obstruction_data,
         )
 
+    def test_partial_constant_route_requires_universal_partial_closure(self):
+        profile, closure, route = partial_constant_missing_row_profile_route_audits()
+        equality_closure = MissingTriangularPartialConstantClosureAudit(
+            rows=(replace(closure.rows[0], generated=generated("equality")),),
+        )
+        equality_route = MissingTriangularPartialConstantContinuationRouteAudit(
+            rows=(replace(route.rows[0], closure_kind="equality"),),
+        )
+
+        self.assertFalse(
+            equality_route.rows[0].routes_to_universal_continuation_seed
+        )
+
+        audit = PostLinearRemainingFiniteSystemAudit(
+            active_system_k_refinement(),
+            missing_triangular_row_profile=profile,
+            missing_triangular_partial_constant_closure=equality_closure,
+            missing_triangular_partial_constant_continuation_route=equality_route,
+        )
+
+        self.assertEqual(audit.system_name, "system_k_kink_completion_deficit")
+        self.assertTrue(audit.system_k_active)
+        self.assertFalse(audit.system_c_active)
+        self.assertIn(
+            (
+                "live_k_missing_latin_row_defects",
+                ((("*", "*"), "no_left_triangular_row"),),
+            ),
+            audit.finite_obstruction_data,
+        )
+        self.assertIn(
+            ("continuation_routed_k_missing_latin_row_defects", ()),
+            audit.finite_obstruction_data,
+        )
+
     def test_partial_constant_proper_closure_closes_system_k(self):
         profile, closure, _route = partial_constant_missing_row_profile_route_audits()
         proper_closure = MissingTriangularPartialConstantClosureAudit(

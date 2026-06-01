@@ -835,12 +835,15 @@ class PostLinearRemainingFiniteSystemAudit:
                     row.fixed_input,
                     row.domain_color,
                     row.collapsed_inputs,
+                    row.closure_kind,
                 ): row
                 for row in self.missing_triangular_partial_constant_continuation_route.rows
             }
         for row in closure_rows:
             if row.closure_is_proper:
                 continue
+            if not row.closure_is_universal:
+                return False
             route = route_by_key.get(
                 (
                     row.side,
@@ -849,6 +852,7 @@ class PostLinearRemainingFiniteSystemAudit:
                     row.fixed_input,
                     row.domain_color,
                     row.collapsed_inputs,
+                    row.closure_kind,
                 )
             )
             if route is None or not route.routes_to_universal_continuation_seed:
@@ -878,12 +882,15 @@ class PostLinearRemainingFiniteSystemAudit:
                 row.fixed_input,
                 row.domain_color,
                 row.collapsed_inputs,
+                row.closure_kind,
             ): row
             for row in self.missing_triangular_partial_constant_continuation_route.rows
         }
         for row in closure_rows:
             if row.closure_is_proper:
                 continue
+            if not row.closure_is_universal:
+                return False
             route = route_by_key.get(
                 (
                     row.side,
@@ -892,6 +899,7 @@ class PostLinearRemainingFiniteSystemAudit:
                     row.fixed_input,
                     row.domain_color,
                     row.collapsed_inputs,
+                    row.closure_kind,
                 )
             )
             if route is not None and route.routes_to_universal_continuation_seed:

@@ -125,9 +125,14 @@ partial_edge_contained_in_seed_closure
 ```
 
 The post-linear endpoint route additionally requires the supplied
-continuation seed closure to be universal.  A nonuniversal continuation-seed
-closure containing the partial edge is useful diagnostic data, but it is not
-enough to create the System C universal-continuation endpoint obligation.
+partial-constant closure row itself to be universal and the supplied
+continuation seed closure to be universal.  The route is keyed by the
+partial-constant closure row, including its `closure_kind`; an equality,
+proper, or otherwise nonuniversal partial-constant closure row cannot be
+matched by a continuation route that merely claims a universal downstream
+seed.  A nonuniversal continuation-seed closure containing the partial edge
+is useful diagnostic data, but it is not enough to create the System C
+universal-continuation endpoint obligation.
 
 ## Consequence for System K
 
@@ -150,10 +155,12 @@ to `system_c_universal_continuation_endpoint`, the universal-continuation
 endpoint layer already handled by the descent-endpoint repair contract
 target.
 
-If a supplied route reaches only `routed_to_continuation_seed_closure` and not
+If the partial-constant closure row is not universal, or if a supplied route
+reaches only `routed_to_continuation_seed_closure` and not
 `routed_to_universal_continuation_seed`, the wrapper leaves the original
 no-triangular row live in System K and lists the row in
-`missing_triangular_partial_constant_unrouted_continuation_rows`.
+`missing_triangular_partial_constant_unrouted_continuation_rows` when the
+supplied route row itself is nonuniversal.
 
 ## Remaining burden
 

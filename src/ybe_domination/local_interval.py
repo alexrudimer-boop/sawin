@@ -1228,7 +1228,8 @@ class MissingTriangularPartialConstantContinuationRouteRow:
     @property
     def routes_to_universal_continuation_seed(self) -> bool:
         return (
-            self.routes_to_continuation_seed_closure
+            self.closure_kind == "universal"
+            and self.routes_to_continuation_seed_closure
             and self.has_universal_continuation_seed_witness
         )
 

@@ -1155,6 +1155,7 @@ endpoint family.  The same terminal treatment now applies to proper
 generated closures in the partial-constant no-triangular ledger, reported as
 `closed_by_missing_triangular_partial_constant_proper_closure`.
 Partial-constant continuation routing is now also universal-gated: a
+nonuniversal partial-constant closure row, a closure-kind mismatch, or a
 nonuniversal continuation seed closure no longer creates a System C endpoint
 obligation.
 The universal-continuation lost-edge ledger is now exact and non-vacuous: it

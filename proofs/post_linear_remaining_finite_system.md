@@ -529,9 +529,12 @@ closures contradict local minimality and are classified as
 universal generated closures are then routed by
 `proofs/triangular_k_left_partial_constant_continuation_route.md` into the
 universal continuation seed channel.  The supplied continuation route must
-reach a universal continuation seed closure; a merely nonuniversal
-continuation-seed containment leaves the row live in System K and does not
-create a System C endpoint obligation.
+match the partial-constant closure row including its closure kind, the
+partial-constant closure row itself must be universal, and the route must
+reach a universal continuation seed closure.  A nonuniversal
+partial-constant closure or a merely nonuniversal continuation-seed
+containment leaves the row live in System K and does not create a System C
+endpoint obligation.
 The downstream identity-routing ledger is also non-vacuous: a forced
 universal-continuation route proves only when its lost-edge tuple is exactly
 the seed-saturation lost-edge tuple, its routed and unrouted tuples partition
