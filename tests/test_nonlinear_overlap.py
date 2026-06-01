@@ -4557,6 +4557,43 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             build.telescoping_detector_audit.failure_reasons,
         )
 
+    def test_endpoint_observer_builder_rejects_malformed_identity_rows(self):
+        interval = one_color_identity_interval()
+        group = cyclic_group(2)
+        seed_state = ("*", "*", "left_constant_map_universal_kernel")
+        seed_key = ("U", seed_state)
+        seed_entries = ((("*", "*", "L", "constant_map_kernel", (0, 1)), seed_key),)
+        detector_rows = (
+            UniversalKDetectorTrackInitializationRow(
+                endpoint_family="U",
+                track_index=0,
+                assignment_rule="constant_identity_from_interval_seed",
+                dependencies=("interval_data", "routed_seed_state", "strand_index"),
+                local_assignment_template=((("A", 0, 0), group.identity),),
+            ),
+        )
+        certificate = UniversalKWordPotentialCertificate(
+            endpoint_group=group,
+            templates=((seed_key, ()),),
+            identity_rows=(("not", "an_identity_row"),),
+            normalized_seed_states=(seed_key,),
+        )
+
+        build = universal_k_endpoint_observer_build(
+            interval,
+            seed_entries,
+            certificate,
+            detector_track_initialization_rows=detector_rows,
+        )
+
+        self.assertEqual(build.positive_rows, ())
+        self.assertFalse(build.proves_endpoint_observer)
+        self.assertIn("signed_generator_entries_missing", build.audit.failure_reasons)
+        self.assertIn(
+            "word_potential_certificate_malformed_identity_row_objects",
+            build.telescoping_detector_audit.failure_reasons,
+        )
+
     def test_word_potential_certificate_reports_unhashable_keys_without_crashing(self):
         group = cyclic_group(2)
         bad_state = ("U", (["not-hashable"],))
@@ -8645,11 +8682,21 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
 
         signed = audit.universal_k_signed_endpoint_generator
         self.assertIsNotNone(signed)
+        self.assertIsNotNone(audit.universal_k_endpoint_observer)
+        self.assertIs(audit.universal_k_endpoint_observer.audit, signed)
         self.assertIs(
             signed.telescoping_detector_audit.word_potential_certificate,
             certificate,
         )
         self.assertEqual(signed.endpoint_group, certificate.endpoint_group)
+        self.assertIn(
+            ("signed_endpoint_generator_endpoint_observer_build_present", True),
+            audit.routed_endpoint_obstruction_data,
+        )
+        self.assertIn(
+            ("signed_endpoint_generator_endpoint_observer_build_proved", False),
+            audit.routed_endpoint_obstruction_data,
+        )
         self.assertIn("no_routed_k_seed_states", signed.failure_reasons)
         self.assertIn(
             "telescoping_detector_expected_positive_entry_keys_empty",

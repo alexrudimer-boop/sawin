@@ -8074,7 +8074,7 @@ def universal_k_endpoint_observer_positive_rows_from_word_potential(
     """Build positive endpoint rows from word-potential coboundary data."""
 
     rows = []
-    for identity_row in word_potential_certificate.identity_rows:
+    for identity_row in word_potential_certificate.identity_row_objects:
         key = identity_row.entry_key
         if not _universal_k_is_positive_entry_key(key):
             continue
@@ -8533,6 +8533,7 @@ class PostLinearRemainingFiniteSystemAudit:
     universal_k_signed_endpoint_generator: (
         UniversalKSignedEndpointGeneratorAudit | None
     ) = None
+    universal_k_endpoint_observer: UniversalKEndpointObserverBuild | None = None
     universal_k_signed_endpoint_interval: LocalInterval | None = None
     unsupported_companion_structural_contradiction: (
         UnsupportedCompanionStructuralContradictionAudit | None
@@ -9961,6 +9962,10 @@ class PostLinearRemainingFiniteSystemAudit:
                 ),
                 ("signed_endpoint_generator_closes_current_kappa", False),
                 ("signed_endpoint_generator_closed_families", ()),
+                ("signed_endpoint_generator_endpoint_observer_build_present", False),
+                ("signed_endpoint_generator_endpoint_observer_build_proved", False),
+                ("signed_endpoint_generator_endpoint_observer_positive_entry_keys", ()),
+                ("signed_endpoint_generator_endpoint_observer_monodromy_contexts", ()),
                 ("signed_endpoint_generator_reachable_seed_states", ()),
                 ("signed_endpoint_generator_duplicate_reachable_seed_states", ()),
                 ("signed_endpoint_generator_invalid_reachable_seed_states", ()),
@@ -10506,6 +10511,7 @@ class PostLinearRemainingFiniteSystemAudit:
         )
         endpoint_target_audit = audit.endpoint_target_audit
         telescoping_audit = audit.telescoping_detector_audit
+        endpoint_observer = self.universal_k_endpoint_observer
         failure_reasons = audit.failure_reasons
         if not matches_current_kappa:
             failure_reasons = failure_reasons + ("seed_classifier_entries_mismatch",)
@@ -10565,6 +10571,34 @@ class PostLinearRemainingFiniteSystemAudit:
             (
                 "signed_endpoint_generator_closed_families",
                 self.signed_endpoint_generator_closed_families,
+            ),
+            (
+                "signed_endpoint_generator_endpoint_observer_build_present",
+                endpoint_observer is not None,
+            ),
+            (
+                "signed_endpoint_generator_endpoint_observer_build_proved",
+                (
+                    endpoint_observer is not None
+                    and endpoint_observer.audit is audit
+                    and endpoint_observer.proves_endpoint_observer
+                ),
+            ),
+            (
+                "signed_endpoint_generator_endpoint_observer_positive_entry_keys",
+                (
+                    tuple(row.entry_key for row in endpoint_observer.positive_rows)
+                    if endpoint_observer is not None
+                    else ()
+                ),
+            ),
+            (
+                "signed_endpoint_generator_endpoint_observer_monodromy_contexts",
+                (
+                    endpoint_observer.monodromy_presentation.contexts_exact
+                    if endpoint_observer is not None
+                    else ()
+                ),
             ),
             (
                 "signed_endpoint_generator_required_seed_states",
@@ -14049,6 +14083,7 @@ def post_linear_remaining_finite_system_audit(
         universal_continuation_identity_routing_audit(interval)
     )
     signed_endpoint_generator = universal_k_signed_endpoint_generator
+    endpoint_observer_build = None
     derive_signed_endpoint_generator = (
         signed_endpoint_generator is None
         and (
@@ -14095,7 +14130,7 @@ def post_linear_remaining_finite_system_audit(
                 universal_k_signed_endpoint_rows or (),
             )
         if universal_k_word_potential_certificate is not None:
-            signed_endpoint_generator = universal_k_endpoint_observer_build(
+            endpoint_observer_build = universal_k_endpoint_observer_build(
                 interval,
                 unsigned.universal_k_seed_classifier_entries,
                 universal_k_word_potential_certificate,
@@ -14111,7 +14146,8 @@ def post_linear_remaining_finite_system_audit(
                 residual_action_scope=universal_k_residual_action_scope,
                 residual_action_audit=universal_k_residual_action_audit,
                 witnesses=universal_k_signed_endpoint_witnesses,
-            ).audit
+            )
+            signed_endpoint_generator = endpoint_observer_build.audit
         else:
             signed_endpoint_generator = universal_k_signed_endpoint_generator_audit(
                 interval,
@@ -14148,6 +14184,7 @@ def post_linear_remaining_finite_system_audit(
         mixed_unit_context_endpoint_witness=mixed_unit_context_endpoint_witness,
         mixed_unit_context_symmetric_endpoint_fork=mixed_unit_context_symmetric_endpoint_fork,
         universal_k_signed_endpoint_generator=signed_endpoint_generator,
+        universal_k_endpoint_observer=endpoint_observer_build,
         universal_k_signed_endpoint_interval=interval,
         unsupported_companion_structural_contradiction=unsupported_companion_structural_contradiction,
     )

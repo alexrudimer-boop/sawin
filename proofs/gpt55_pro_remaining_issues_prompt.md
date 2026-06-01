@@ -1505,6 +1505,15 @@ initialization rows, templates `W_s`, positive identity rows, C/M cutoff
 readouts if needed, and residual-faithfulness rows.  The signed endpoint
 table should then be derived from that data and rechecked against the current
 `kappa` seed ledger and interval table.
+The post-linear proof object should retain the resulting endpoint-observer
+build record, not only the derived signed-generator audit.  A complete
+certificate should expose whether the build is present, whether it proves the
+observer, the positive entry keys forced by the word-potential table, and the
+positive local-context monodromy presentation used by the build.
+Positive observer rows may be forced only from actual word-potential identity
+row objects.  A tuple-shaped identity-row stand-in is a malformed certificate
+entry: it must be reported at the word-potential gate, must not be interpreted
+as a positive endpoint row, and must leave the observer open.
 
 Each `W_s` is a word in variables `U_{r,j}` only.  The local substitution may
 use both `U_{r,j}` and raw assignment variables `A_{r,j}`, but the terminal
@@ -1821,6 +1830,9 @@ signed_entry_domain_derived_from_interval,
 signed_entry_domain_matches_current_interval,
 finite_signed_row_checks_derived_from_tables,
 signed_generator_domain_exact,
+endpoint_observer_build_record_retained,
+endpoint_observer_positive_rows_forced_from_typed_identity_rows,
+endpoint_observer_monodromy_contexts_exposed,
 coordinate_components_match_T_plus_and_T_inverse,
 all_signed_rows_defined,
 signed_inverse_row_pairing,

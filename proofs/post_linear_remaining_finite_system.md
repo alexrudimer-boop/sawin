@@ -738,12 +738,24 @@ contexts, nonconstant coboundary defects, out-of-scope detector tracks,
 missing C/M readouts, or missing residual faithfulness remain visible audit
 failures rather than being filled by defaults.  This keeps the local
 certificate from being a list of unsupported boolean claims.
+The builder reads only actual word-potential identity row objects when forcing
+positive endpoint rows.  Malformed tuple-shaped identity entries remain in
+the word-potential certificate as certificate errors and cause the observer to
+stay open; they are not interpreted as positive rows and are not silently
+discarded as harmless omissions.
 The signed endpoint audit itself now carries this explicit representation
 gate.  A supplied signed table cannot close merely by setting the older
 state/coordinate booleans: if an explicit monodromy representation audit is
 present, it must prove every context map and every presentation relation, and
 the derived constructor supplies that audit automatically from the current
 interval, reachable seed states, and rows.
+The top-level post-linear audit retains the constructed
+`UniversalKEndpointObserverBuild` whenever it derives the signed endpoint
+generator from a word-potential certificate.  The exported obstruction data
+records whether that observer build is present, whether it proves the
+endpoint observer, which positive entry keys it forced, and which monodromy
+contexts it used.  This prevents the U/C/M observer construction from being
+hidden behind the signed-generator audit alone.
 When a fixed endpoint group is declared as a product over multiple endpoint
 families, the signed endpoint audit now also checks family support of each
 emitted label: a row in family `E` must have identity components in every
@@ -961,6 +973,10 @@ signed_endpoint_generator_current_positive_ybe_path_failures
 signed_endpoint_generator_current_far_commutativity_path_failures
 signed_endpoint_generator_closes_current_kappa
 signed_endpoint_generator_closed_families
+signed_endpoint_generator_endpoint_observer_build_present
+signed_endpoint_generator_endpoint_observer_build_proved
+signed_endpoint_generator_endpoint_observer_positive_entry_keys
+signed_endpoint_generator_endpoint_observer_monodromy_contexts
 signed_endpoint_generator_reachable_seed_states
 signed_endpoint_generator_duplicate_reachable_seed_states
 signed_endpoint_generator_invalid_reachable_seed_states
