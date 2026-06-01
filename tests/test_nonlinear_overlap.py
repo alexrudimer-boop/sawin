@@ -3729,6 +3729,61 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertTrue(complete.proves_signed_endpoint_generator_tables)
         self.assertEqual(complete.failure_reasons, ())
 
+    def test_signed_endpoint_positive_rows_must_be_monodromy_permutations(self):
+        seed_a = ("*", "*", "left_constant_map_universal_kernel", "a")
+        seed_b = ("*", "*", "left_constant_map_universal_kernel", "b")
+        seed_entries = (
+            (
+                ("*", "*", "L", "constant_map_kernel", ("a",)),
+                ("U", seed_a),
+            ),
+            (
+                ("*", "*", "L", "constant_map_kernel", ("b",)),
+                ("U", seed_b),
+            ),
+        )
+        row_a = UniversalKSignedEndpointGeneratorRow(
+            endpoint_family="U",
+            seed_state=seed_a,
+            sign=1,
+            left_color="*",
+            right_color="*",
+            input_left=0,
+            input_right=0,
+            output_left=0,
+            output_right=0,
+            next_seed_state=seed_a,
+            endpoint_value=0,
+        )
+        row_b = replace(row_a, seed_state=seed_b, next_seed_state=seed_a)
+        audit = UniversalKSignedEndpointGeneratorAudit(
+            seed_classifier_entries=seed_entries,
+            reachable_seed_states=(("U", seed_a), ("U", seed_b)),
+            required_entry_keys=(row_a.entry_key, row_b.entry_key),
+            entry_domain_derived_from_interval=True,
+            finite_row_checks_derived_from_tables=True,
+            rows=(row_a, row_b),
+            endpoint_group=cyclic_group(2),
+            coordinate_components_verified=True,
+            inverse_pairing_verified=True,
+            inverse_cancellation_verified=True,
+            positive_ybe_path_verified=True,
+            far_commutativity_verified=True,
+        )
+
+        self.assertFalse(audit.positive_monodromy_representation_verified)
+        self.assertIn(
+            "monodromy_context_not_permutation",
+            tuple(
+                failure[1]
+                for failure in audit.positive_monodromy_permutation_failures
+            ),
+        )
+        self.assertIn(
+            "endpoint_monodromy_not_permutation_representation",
+            audit.failure_reasons,
+        )
+
     def test_word_potential_certificate_checks_finite_templates(self):
         group = cyclic_group(2)
         source_state = ("*", "*", "left_constant_map_universal_kernel")
@@ -3757,6 +3812,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertTrue(certificate.templates_use_only_current_longitudes)
         self.assertTrue(certificate.artin_substitutions_verified)
         self.assertTrue(certificate.identities_verified)
+        self.assertTrue(certificate.coboundary_defects_constant)
         self.assertTrue(certificate.initial_readouts_normalized)
 
         wrong_endpoint = replace(good_row, endpoint_value=1)
@@ -3765,8 +3821,12 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             identity_rows=(wrong_endpoint,),
         )
         self.assertFalse(wrong_endpoint_certificate.identities_verified)
+        self.assertFalse(wrong_endpoint_certificate.coboundary_defects_constant)
         self.assertEqual(
-            tuple(failure[1] for failure in wrong_endpoint_certificate.identity_failures),
+            tuple(
+                failure[1]
+                for failure in wrong_endpoint_certificate.coboundary_defect_failures
+            ),
             ("word_potential_identity_mismatch",),
         )
 
@@ -4768,7 +4828,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             keys,
             {
                 ("U", seed_state): next_state,
-                ("U", next_state): next_state,
+                ("U", next_state): seed_state,
             },
         )
         audit = UniversalKSignedEndpointGeneratorAudit(

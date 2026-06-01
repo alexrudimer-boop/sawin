@@ -427,6 +427,7 @@ endpoint-target product-family separation
 coordinate components match T and T inverse
 signed inverse row pairing
 signed inverse cancellation
+finite positive endpoint monodromy permutation representation
 positive state/coordinate endpoint YBE path
 state/coordinate far-commutativity for disjoint crossings
 label cocycles recorded only as word-potential diagnostics
@@ -434,6 +435,7 @@ fixed-assignment detector-track initialization
 Artin detector recurrence on each track
 finite word-potential certificate table supplied
 positive word-potential identity rows match positive D_Gamma and Gamma labels
+endpoint emissions are constant coboundary-defect values
 word-potential template coverage for every reachable endpoint state
 word-potential templates use only current longitude variables
 word-potential variables use only declared fixed detector tracks
@@ -513,6 +515,26 @@ they are forced to disappear by telescoping, so they do not need to be checked
 as separate local assumptions.  Without the state/coordinate path check, the
 endpoint accumulation can still be word-dependent.
 
+The remaining observer can be stated more tightly as a finite
+monodromy-coboundary-faithfulness certificate.  For each active U/C/M family,
+the positive local contexts `(a,b,x,y)` generate a finite presentation
+`Pi_E`: adjacent coloured-YBE triples impose the `121=212` context relation,
+and disjoint local contexts impose far-commutativity.  A positive endpoint
+state system is exactly a finite permutation representation
+`rho_E:Pi_E->Sym(S_E^reach)`, so every positive context must act as a
+permutation of the exact reachable seed states and the adjacent/far state
+relations must hold.
+
+Once this monodromy representation and the word templates are fixed, endpoint
+labels are no longer primitive choices.  For a positive context `r` and
+state `s`, the checker forms the nonabelian coboundary defect
+`W_s(U)^-1 W_{F_r(s)}(A_r^+(U,M))`.  The defect must be constant on a sound
+finite detector-variable domain, with the full finite group power `H_E^V`
+as the default sound domain.  The positive endpoint emission is the constant
+defect value, and the negative row is then forced by inversion.  A smaller
+detector domain is accepted only with a proof that all reachable detector
+values lie in it.
+
 The old rowwise two-strand witness gate is retained only as diagnostic data.
 It is not a decisive endpoint-closure condition: for the standard Artin
 convention, `L_1(sigma_1)=x_1`, `L_2(sigma_1)=1`,
@@ -567,9 +589,11 @@ identity
 W_{s'}(A_gamma^+(U,A)) = W_s(U) h
 ```
 
-for every positive table row.  With initial normalization and inverse-derived
-negative rows, this word-potential identity is what converts the finite signed
-row table into the all-`n`
+for every positive table row.  Equivalently, it checks that
+`W_s(U)^-1 W_{s'}(A_gamma^+(U,A))` is a constant coboundary defect on a sound
+detector domain and that the emitted label is exactly this constant.  With
+initial normalization and inverse-derived negative rows, this word-potential
+identity is what converts the finite signed row table into the all-`n`
 conclusion `endpoint_E(beta) in V_beta(H_E)`.
 Template-state keys, expected/covered word-potential seed-state ledger keys,
 and initial-normalization keys must also be well formed endpoint states
@@ -584,13 +608,15 @@ the current `kappa` seed image.  A later transition-reachable state may have a
 template, but it is not an initial state and must not be listed as one.
 
 The word-potential certificate is concrete finite data.  It records the
-template table `(E,s) |-> W_s`, one identity row for each positive
-`D_Gamma` entry, the next state, the emitted endpoint label, and the positive
-Artin substitution for that row.  The checker verifies that the identity-row
-table has the same positive entry domain as the signed endpoint table, that
-the next state and emitted label match the positive signed row, that terminal
-templates contain only current longitude variables `U_{r,j}`, and that the
-local substitutions are the positive Artin recurrences.  Negative
+template table `(E,s) |-> W_s`, the positive monodromy state map for each
+local context, one identity row for each positive `D_Gamma` entry, the next
+state, the emitted endpoint label, the positive Artin substitution for that
+row, and the finite domain used for the constant-defect check.  The checker
+verifies that the identity-row table has the same positive entry domain as
+the signed endpoint table, that the next state is the monodromy image, that
+the emitted label is the constant coboundary defect, that terminal templates
+contain only current longitude variables `U_{r,j}`, and that the local
+substitutions are the positive Artin recurrences.  Negative
 word-potential rows, if present, are diagnostic only once the signed endpoint
 audit has proved that negative endpoint rows are actual inverses.  Malformed
 identity rows with any sign other than `+1` or `-1` are rejected rather than
@@ -608,8 +634,9 @@ the interval-derived signed entry domain is an extra diagnostic channel, not a
 harmless ignored row.
 The checker then exhausts all
 assignments of the finitely many variables in the positive row to the fixed
-endpoint group and checks the word identity in the group table.  This removes
-the previous loophole
+endpoint group, or to a certified sound detector-domain subset, and checks
+that the coboundary defect is constant with value equal to the row label.
+This removes the previous loophole
 where a bare boolean could stand in for a tautological accumulated potential.
 The executable close criterion derives the Artin-recurrence and
 terminal-readout-longitude gates from these same substitution and template
@@ -853,6 +880,8 @@ signed_endpoint_generator_far_commutativity_verified
 signed_endpoint_generator_far_commutativity_failures
 signed_endpoint_generator_far_commutativity_path_failures
 signed_endpoint_generator_far_commutativity_label_diagnostics
+signed_endpoint_generator_positive_monodromy_permutation_failures
+signed_endpoint_generator_positive_monodromy_representation_verified
 signed_endpoint_generator_two_strand_witness_domain_exact
 signed_endpoint_generator_two_strand_witness_domain_failures
 signed_endpoint_generator_two_strand_base_verified
@@ -906,6 +935,8 @@ signed_endpoint_generator_word_potential_raw_assignment_scope_verified
 signed_endpoint_generator_word_potential_raw_assignment_scope_failures
 signed_endpoint_generator_word_potential_artin_substitution_verified
 signed_endpoint_generator_word_potential_identity_verified
+signed_endpoint_generator_word_potential_coboundary_defects_constant
+signed_endpoint_generator_word_potential_coboundary_defect_failures
 signed_endpoint_generator_word_potential_malformed_identity_rows
 signed_endpoint_generator_word_potential_certificate_malformed_template_states
 signed_endpoint_generator_word_potential_certificate_malformed_normalized_states

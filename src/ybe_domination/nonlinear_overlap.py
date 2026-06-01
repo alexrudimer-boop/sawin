@@ -137,6 +137,11 @@ UniversalKSignedEndpointLabelFailure = Tuple[
     str,
     object,
 ]
+UniversalKEndpointMonodromyFailure = Tuple[
+    Tuple[object, ...],
+    str,
+    object,
+]
 UniversalKWordPotentialVariable = Tuple[str, int, int]
 UniversalKWordPotentialLetter = Tuple[UniversalKWordPotentialVariable, int]
 UniversalKWordPotentialWord = Tuple[UniversalKWordPotentialLetter, ...]
@@ -1337,6 +1342,14 @@ class UniversalKWordPotentialCertificate:
                     )
                     break
         return tuple(failures)
+
+    @property
+    def coboundary_defect_failures(self) -> Tuple[UniversalKWordPotentialFailure, ...]:
+        return self.identity_failures
+
+    @property
+    def coboundary_defects_constant(self) -> bool:
+        return not self.coboundary_defect_failures
 
     @property
     def normalization_failures(self) -> Tuple[UniversalKWordPotentialFailure, ...]:
@@ -3636,6 +3649,8 @@ class UniversalKTelescopingDetectorAudit:
                 reasons.append("word_potential_artin_substitution_failures")
             if self.word_potential_certificate.identity_failures:
                 reasons.append("word_potential_identity_failures")
+            if self.word_potential_certificate.coboundary_defect_failures:
+                reasons.append("word_potential_coboundary_defect_not_constant")
             if self.word_potential_certificate.normalization_failures:
                 reasons.append("word_potential_normalization_failures")
         if not self.terminal_readout_longitudes_proved:
@@ -3954,6 +3969,166 @@ class UniversalKSignedEndpointGeneratorAudit:
         return tuple(row for row in self.rows if not row.row_is_defined)
 
     @property
+    def reachable_states_by_family(
+        self,
+    ) -> Mapping[str, Tuple[UniversalKSeedState, ...]]:
+        states_by_family: dict[str, set[UniversalKSeedState]] = {}
+        for state in self.reachable_seed_states_exact:
+            if not _universal_k_endpoint_seed_state_well_formed(state):
+                continue
+            family, seed_state = state
+            states_by_family.setdefault(family, set()).add(seed_state)
+        return {
+            family: tuple(sorted(states, key=repr))
+            for family, states in states_by_family.items()
+        }
+
+    @property
+    def positive_monodromy_contexts(
+        self,
+    ) -> Tuple[Tuple[str, Color, Color, FibrePoint, FibrePoint], ...]:
+        return tuple(
+            sorted(
+                {
+                    (key[0], key[3], key[4], key[5], key[6])
+                    for key in self.required_positive_entry_keys_exact
+                    if _universal_k_signed_entry_key_well_formed(key)
+                },
+                key=repr,
+            )
+        )
+
+    @property
+    def positive_monodromy_permutation_failures(
+        self,
+    ) -> Tuple[UniversalKEndpointMonodromyFailure, ...]:
+        states_by_family = self.reachable_states_by_family
+        rows_by_context: dict[
+            Tuple[str, Color, Color, FibrePoint, FibrePoint],
+            dict[UniversalKSeedState, UniversalKSeedState],
+        ] = {}
+        duplicate_state_rows: list[UniversalKEndpointMonodromyFailure] = []
+        for row in self.rows:
+            if row.sign != 1:
+                continue
+            context = (
+                row.endpoint_family,
+                row.left_color,
+                row.right_color,
+                row.input_left,
+                row.input_right,
+            )
+            state_map = rows_by_context.setdefault(context, {})
+            if row.seed_state in state_map:
+                duplicate_state_rows.append(
+                    (
+                        context,
+                        "monodromy_context_duplicate_state_row",
+                        row.seed_state,
+                    )
+                )
+                continue
+            state_map[row.seed_state] = row.next_seed_state
+
+        failures = list(duplicate_state_rows)
+        expected_contexts = set(self.positive_monodromy_contexts)
+        for context in self.positive_monodromy_contexts:
+            family = context[0]
+            states = states_by_family.get(family, ())
+            state_set = set(states)
+            state_map = rows_by_context.get(context, {})
+            missing_states = tuple(
+                sorted((state for state in states if state not in state_map), key=repr)
+            )
+            if missing_states:
+                failures.append(
+                    (context, "monodromy_context_missing_state_rows", missing_states)
+                )
+            extra_states = tuple(
+                sorted(
+                    (state for state in state_map if state not in state_set),
+                    key=repr,
+                )
+            )
+            if extra_states:
+                failures.append(
+                    (context, "monodromy_context_extra_state_rows", extra_states)
+                )
+            outside_next_states = tuple(
+                sorted(
+                    {
+                        next_state
+                        for next_state in state_map.values()
+                        if next_state not in state_set
+                    },
+                    key=repr,
+                )
+            )
+            if outside_next_states:
+                failures.append(
+                    (
+                        context,
+                        "monodromy_context_next_state_outside_reachable",
+                        outside_next_states,
+                    )
+                )
+            if not states:
+                failures.append(
+                    (context, "monodromy_context_family_has_no_states", family)
+                )
+                continue
+            if missing_states or extra_states or outside_next_states:
+                continue
+            image_states = set(state_map.values())
+            if (
+                image_states != state_set
+                or len(state_map.values()) != len(image_states)
+            ):
+                failures.append(
+                    (
+                        context,
+                        "monodromy_context_not_permutation",
+                        tuple(
+                            sorted(
+                                (
+                                    (source_state, target_state)
+                                    for source_state, target_state in state_map.items()
+                                ),
+                                key=repr,
+                            )
+                        ),
+                    )
+                )
+
+        extra_contexts = tuple(
+            sorted(
+                (
+                    context
+                    for context in rows_by_context
+                    if context not in expected_contexts
+                ),
+                key=repr,
+            )
+        )
+        if extra_contexts:
+            failures.append(
+                (
+                    ("positive_monodromy_contexts",),
+                    "monodromy_extra_context_rows",
+                    extra_contexts,
+                )
+            )
+        return tuple(failures)
+
+    @property
+    def positive_monodromy_representation_verified(self) -> bool:
+        return (
+            not self.positive_monodromy_permutation_failures
+            and self.positive_ybe_path_verified
+            and self.far_commutativity_verified
+        )
+
+    @property
     def signed_generator_domain_exact(self) -> bool:
         return (
             bool(self.required_entry_keys_exact)
@@ -3992,6 +4167,7 @@ class UniversalKSignedEndpointGeneratorAudit:
             and self.positive_ybe_path_verified == (not self.positive_ybe_path_failures)
             and self.far_commutativity_verified
             == (not self.far_commutativity_path_failures)
+            and self.positive_monodromy_representation_verified
         )
 
     @property
@@ -4449,6 +4625,8 @@ class UniversalKSignedEndpointGeneratorAudit:
             reasons.append("finite_signed_row_checks_missing_endpoint_group")
         if self.finite_row_checks_derived_from_tables and not self.signed_finite_row_checks_proved:
             reasons.append("finite_signed_row_checks_inconsistent")
+        if self.positive_monodromy_permutation_failures:
+            reasons.append("endpoint_monodromy_not_permutation_representation")
         if not self.endpoint_targets_proved:
             reasons.append("endpoint_targets_not_fixed")
             if self.required_seed_states and self.endpoint_target_audit is None:
@@ -7411,6 +7589,14 @@ class PostLinearRemainingFiniteSystemAudit:
                     "signed_endpoint_generator_far_commutativity_label_diagnostics",
                     (),
                 ),
+                (
+                    "signed_endpoint_generator_positive_monodromy_permutation_failures",
+                    (),
+                ),
+                (
+                    "signed_endpoint_generator_positive_monodromy_representation_verified",
+                    False,
+                ),
                 ("signed_endpoint_generator_two_strand_witness_domain_exact", False),
                 ("signed_endpoint_generator_two_strand_witness_domain_failures", ()),
                 ("signed_endpoint_generator_two_strand_base_verified", False),
@@ -7550,6 +7736,14 @@ class PostLinearRemainingFiniteSystemAudit:
                 (
                     "signed_endpoint_generator_word_potential_identity_verified",
                     False,
+                ),
+                (
+                    "signed_endpoint_generator_word_potential_coboundary_defects_constant",
+                    False,
+                ),
+                (
+                    "signed_endpoint_generator_word_potential_coboundary_defect_failures",
+                    (),
                 ),
                 (
                     "signed_endpoint_generator_word_potential_malformed_identity_rows",
@@ -8063,6 +8257,14 @@ class PostLinearRemainingFiniteSystemAudit:
                 audit.far_commutativity_label_diagnostic_failures,
             ),
             (
+                "signed_endpoint_generator_positive_monodromy_permutation_failures",
+                audit.positive_monodromy_permutation_failures,
+            ),
+            (
+                "signed_endpoint_generator_positive_monodromy_representation_verified",
+                audit.positive_monodromy_representation_verified,
+            ),
+            (
                 "signed_endpoint_generator_two_strand_witness_domain_exact",
                 audit.two_strand_witness_domain_exact,
             ),
@@ -8465,6 +8667,15 @@ class PostLinearRemainingFiniteSystemAudit:
                 ),
             ),
             (
+                "signed_endpoint_generator_word_potential_coboundary_defects_constant",
+                (
+                    telescoping_audit.word_potential_certificate.coboundary_defects_constant
+                    if telescoping_audit is not None
+                    and telescoping_audit.word_potential_certificate is not None
+                    else False
+                ),
+            ),
+            (
                 "signed_endpoint_generator_word_potential_malformed_identity_rows",
                 (
                     telescoping_audit.word_potential_certificate.malformed_identity_entry_keys
@@ -8531,6 +8742,15 @@ class PostLinearRemainingFiniteSystemAudit:
                 "signed_endpoint_generator_word_potential_identity_failures",
                 (
                     telescoping_audit.word_potential_certificate.identity_failures
+                    if telescoping_audit is not None
+                    and telescoping_audit.word_potential_certificate is not None
+                    else ()
+                ),
+            ),
+            (
+                "signed_endpoint_generator_word_potential_coboundary_defect_failures",
+                (
+                    telescoping_audit.word_potential_certificate.coboundary_defect_failures
                     if telescoping_audit is not None
                     and telescoping_audit.word_potential_certificate is not None
                     else ()

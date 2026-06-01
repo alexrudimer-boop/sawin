@@ -823,9 +823,9 @@ where `(x',y')=T_{a,b}^{+/-}(x,y)`.
 
 ### Signed Endpoint Generator Tables
 
-This is the uniform full-braid fixed-assignment word-potential
-endpoint-observer and residual-faithfulness lemma.  It is now the first
-decisive A-side missing object after the `K_nabla` and `kappa` layer.
+This is the uniform finite monodromy-coboundary endpoint-observer and
+residual-faithfulness lemma.  It is now the first decisive A-side missing
+object after the `K_nabla` and `kappa` layer.
 
 For every endpoint family `E in {U,C,M}`, define the initial routed seed set
 
@@ -927,6 +927,81 @@ and those tuples match the stabilized fibre tuple and stabilized image in the
 local normalized-law prefix row.  A boolean assertion that an endpoint
 channel is nonidentity or that the endpoint miss matches residual motion is
 not a certificate.
+
+The smaller endpoint-observer object is a finite
+monodromy-coboundary-faithfulness certificate.  For each active endpoint
+family `E`, let the positive local context set be
+
+```text
+R = { r=(a,b,x,y) : a,b in C, x in A_a, y in A_b }.
+```
+
+Write `T_{a,b}(x,y)=(u,v)` and introduce a formal generator `g_r` for every
+positive context `r`.  For every compatible local triple
+`(a,b,c;x,y,z)`, compute the three contexts on the positive `121` path and
+the three contexts on the positive `212` path.  Add the adjacent relation
+
+```text
+g_{r_3} g_{r_2} g_{r_1}
+=
+g_{r'_3} g_{r'_2} g_{r'_1}.
+```
+
+For every disjoint pair of positive contexts add the far relation
+
+```text
+g_r g_{r'} = g_{r'} g_r.
+```
+
+The resulting finitely presented endpoint monodromy group `Pi_E` may be
+infinite; the certificate only needs a finite permutation representation
+
+```text
+rho_E: Pi_E -> Sym(S_E^reach).
+```
+
+Equivalently, for each context `r` the certificate gives a permutation
+`F^E_r` of `S_E^reach`, and these permutations satisfy all adjacent and far
+relations above.  The positive endpoint state update is then `s'=F^E_r(s)`.
+Thus the endpoint state table is not arbitrary: it is exactly a finite
+representation of the routed local monodromy presentation on the exact
+reachable seed states hit from `kappa(K_nabla)`.
+
+The emitted endpoint labels are likewise not primitive data.  Given a fixed
+endpoint group `H_E` and word potentials `W_s`, define for every context `r`
+and reachable state `s` the nonabelian coboundary defect
+
+```text
+D^E_{r,s}(U,M)
+=
+W_s(U)^-1 W_{F^E_r(s)}(A_r^+(U,M)).
+```
+
+Here `A_r^+` is the positive Artin detector substitution for that local
+context, `U` denotes current evaluated longitude variables, and `M` denotes
+the fixed carrier labels from detector-track initialization.  The defect must
+be constant on a sound finite detector-variable domain.  The safest sound
+domain is the full finite set `H_E^V`, where `V` is the finite variable
+support of `D^E_{r,s}`; a smaller domain is valid only with a proof that all
+reachable detector values lie in it.  If the defect is constant, its value
+is the forced emission
+
+```text
+eta^E_r(s)=h^E_{r,s}.
+```
+
+The positive row is then
+
+```text
+Gamma^{E,+}_{a,b}(s,x,y)
+=
+(F^E_r(s), T_{a,b}(x,y), eta^E_r(s)),
+```
+
+and the negative row is forced by inversion.  A certificate that chooses
+endpoint emissions first and later searches for word-potential witnesses is
+not the reduced object; the emissions must be exactly the constant
+coboundary-defect values.
 
 With those target data fixed, a signed endpoint generator table is a finite
 table
@@ -1305,11 +1380,19 @@ W_{s'}(A_gamma^+(U,A)) = W_s(U) h
 ```
 
 inside `H_E`, for every assignment of the involved formal variables to
-elements of `H_E`.  This is finite because `H_E`, the reachable state set,
-the positive row table, and the formal variable support are finite.  Negative
-endpoint rows must still be present in the signed endpoint observer, but
-their word-potential identities are not independent certificate rows when the
-negative table is proved to be the actual inverse of the positive table.
+elements of `H_E`.  Equivalently, the nonabelian defect
+
+```text
+W_s(U)^-1 W_{s'}(A_gamma^+(U,A))
+```
+
+must be a constant element of `H_E` on a sound finite detector domain, and
+that constant must equal the emitted label `h`.  This is finite because
+`H_E`, the reachable state set, the positive row table, and the formal
+variable support are finite.  Negative endpoint rows must still be present in
+the signed endpoint observer, but their word-potential identities are not
+independent certificate rows when the negative table is proved to be the
+actual inverse of the positive table.
 
 The certificate must be supplied as finite table data, not as a boolean.  It
 must include:
@@ -1318,15 +1401,21 @@ must include:
 template table:
   (E,s) |-> W_s
 
+monodromy table:
+  (E,r,s) |-> F^E_r(s)
+
 identity-row table:
   (E,+,s,a,b,x,y) |->
-  (next state s', emitted label h, Artin substitution A_gamma^+)
+  (next state s', emitted label h, Artin substitution A_gamma^+,
+   sound detector-domain descriptor)
 ```
 
 The identity-row table must cover exactly the positive part of `D_Gamma(E)`
 for the same signed endpoint table.  It is not allowed to omit a positive
 reachable-state/fibre input, and it is not allowed to add extra positive
-channels.  Its `s'` and `h` must agree with the positive signed row
+channels.  Its `s'` must be the monodromy image `F^E_r(s)`, and its `h`
+must be the constant value of the coboundary defect on the declared sound
+domain.  These must agree with the positive signed row
 
 ```text
 Gamma^{E,+}_{a,b}(s,x,y)=(s',T_{a,b}(x,y),h).
@@ -1345,8 +1434,11 @@ U_{r,1} -> U_{r,0}
 ```
 
 Variables outside the active local pair are unchanged.  The finite checker
-must evaluate the displayed word-potential identity for every assignment of
-the variables in that positive row to elements of the fixed group `H_E`.
+must evaluate the coboundary defect for every assignment of the variables in
+that positive row to elements of the fixed group `H_E`, or to a smaller
+declared domain only after proving that domain contains all reachable detector
+values.  The defect must be constant, and the constant must be the emitted
+endpoint label.
 If negative substitutions are recorded, they are diagnostics only; closure
 comes from inverse-derived negative rows plus the positive telescope.
 Rows with any sign other than `+1` or `-1` are malformed certificate rows and
@@ -2075,13 +2167,14 @@ an open local gap.
 3. Close or refute System U.
 
    Define `S_U^reach` from the exact `S_U` values hit by `kappa`, define the
-   positive endpoint table on `D_Gamma`, define negative rows as actual
-   inverses, construct fixed detector-track initialization rules, prove
-   positive state/coordinate adjacent YBE and far-commutativity, prove the
-   Artin detector recurrence, define word templates `W_s` for all reachable
-   states, verify the positive finite word-potential identity, and prove the
-   terminal word uses only final evaluated longitudes.  Then prove uniformly in
-   `n` that every routed
+   positive local context monodromy presentation, construct a finite
+   permutation representation `rho_U:Pi_U->Sym(S_U^reach)`, define fixed
+   detector-track initialization rules, prove the Artin detector recurrence,
+   define word templates `W_s` for all reachable states, prove every
+   nonabelian coboundary defect is constant on a sound detector domain, and
+   derive the positive endpoint emissions from those constant values.  Define
+   negative rows as actual inverses and prove residual faithfulness.  Then
+   prove uniformly in `n` that every routed
    triangular-recovery endpoint lies in `V_beta(U_tri)`, or prove a faithful
    symmetric endpoint cutoff for the exact routed U family.  Otherwise,
    extract a normalized-law B sequence from a genuine U endpoint miss.
@@ -2089,12 +2182,13 @@ an open local gap.
 4. Close or refute System C.
 
    Define `S_C^reach` from the exact `S_C` values hit by `kappa`, define the
-   positive endpoint table on `D_Gamma`, define negative rows as actual
-   inverses, construct fixed detector-track initialization rules, prove
-   positive state/coordinate adjacent YBE and far-commutativity, prove the
-   Artin detector recurrence, define word templates, verify the positive
-   finite word-potential identity, and construct exact faithful cutoff
-   readouts for the routed identity-continuation ledger.
+   positive local context monodromy presentation, construct a finite
+   permutation representation `rho_C:Pi_C->Sym(S_C^reach)`, construct fixed
+   detector-track initialization rules, prove the Artin detector recurrence,
+   define word templates, prove every nonabelian coboundary defect is
+   constant on a sound detector domain, derive endpoint emissions from those
+   constants, define negative rows as actual inverses, and construct exact
+   faithful cutoff readouts for the routed identity-continuation ledger.
    Then construct fixed detector-lift endpoint witnesses or a faithful
    symmetric cutoff for every identity-routed
    universal-continuation edge.  Otherwise, extract a normalized-law B
@@ -2103,12 +2197,13 @@ an open local gap.
 5. Close or refute System M.
 
    Define `S_M^reach` from the exact `S_M` values hit by `kappa`, define the
-   positive endpoint table on `D_Gamma`, define negative rows as actual
-   inverses, construct fixed detector-track initialization rules, prove
-   positive state/coordinate adjacent YBE and far-commutativity, prove the
-   Artin detector recurrence, define word templates, verify the positive
-   finite word-potential identity, and construct exact faithful cutoff
-   readouts for the routed mixed-unit ledger.  Then construct
+   positive local context monodromy presentation, construct a finite
+   permutation representation `rho_M:Pi_M->Sym(S_M^reach)`, construct fixed
+   detector-track initialization rules, prove the Artin detector recurrence,
+   define word templates, prove every nonabelian coboundary defect is
+   constant on a sound detector domain, derive endpoint emissions from those
+   constants, define negative rows as actual inverses, and construct exact
+   faithful cutoff readouts for the routed mixed-unit ledger.  Then construct
    fixed detector-lift endpoint/readout witnesses or a faithful symmetric
    cutoff for every mixed-unit context key.  Otherwise, extract a
    normalized-law B sequence from a genuine M endpoint miss.
@@ -2160,20 +2255,24 @@ Before returning a claimed resolution, explicitly answer:
    exact reachable state spaces and on every entry of `D_Gamma`, not merely
    one entry per seed and sign?
 8. Do the endpoint generator tables satisfy the reduced full-braid observer
-   certificate: positive state/coordinate adjacent YBE path,
-   state/coordinate far-commutativity for disjoint crossings, negative rows
-   defined as actual inverses of positive rows, and the fixed-assignment
-   detector-lift telescope?  The telescope must include fixed detector tracks
-   chosen before the braid, track initialization from interval data, every
-   raw assignment variable used by a substitution initialized by its track,
-   the Artin detector recurrence, word templates `W_s` for every reachable
-   endpoint state using only current longitude variables whose track indices
-   are declared and initialized, the induced positive Artin substitution, the
-   identity `W_{s'}(A_gamma^+(U,A))=W_s(U)h` for every positive row, initial
-   normalization on exactly the current `kappa` seed image, and exact
-   `D_Gamma` coverage?  Are adjacent/far label cocycles treated as derived
-   from this word-potential certificate rather than as independent local
-   assumptions?
+   certificate: a finite monodromy presentation on positive local contexts,
+   a finite permutation representation on the exact reachable states,
+   positive state/coordinate adjacent YBE path, state/coordinate
+   far-commutativity for disjoint crossings, negative rows defined as actual
+   inverses of positive rows, and the fixed-assignment detector-lift
+   telescope?  The telescope must include fixed detector tracks chosen before
+   the braid, track initialization from interval data, every raw assignment
+   variable used by a substitution initialized by its track, the Artin
+   detector recurrence, word templates `W_s` for every reachable endpoint
+   state using only current longitude variables whose track indices are
+   declared and initialized, the induced positive Artin substitution, the
+   constant-defect identity
+   `W_s(U)^-1 W_{s'}(A_gamma^+(U,A))=h` for every positive row on a sound
+   detector domain, initial normalization on exactly the current `kappa` seed
+   image, and exact `D_Gamma` coverage?  Are endpoint emissions derived from
+   constant coboundary defects, and are adjacent/far label cocycles treated
+   as derived from this word-potential certificate rather than as independent
+   local assumptions?
 9. For cutoff families C and M, are the readouts faithful on exactly their
    routed ledgers with no extra channels and no duplicated seed-state entries?
 10. Is every detector group, endpoint group, cutoff group, and rack
