@@ -18,10 +18,11 @@ sharp rack detector replaces `Q` by `Q x A_{G(pi,Q)}`.  Iterating this along
 the finite congruence chain yields a rack independent of braid index.  Thus
 the remaining obstruction recorded here is local: construct those U/C/M
 endpoint observers, or construct a normalized-law counterexample.
-The congruence-chain helper now treats endpoint-observer closure verdicts as
-closed local summaries only when they carry the actual fixed detector product
-group; otherwise the row remains a local gap rather than being assembled into
-the final rack.
+The congruence-chain helper now treats endpoint-observer closure verdicts,
+including the one-family and product `endpoint_observer_family_build` verdicts,
+as closed local summaries only when they carry the actual fixed detector
+product group; otherwise the row remains a local gap rather than being
+assembled into the final rack.
 
 ## Input data
 

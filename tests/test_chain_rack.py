@@ -185,6 +185,50 @@ class CongruenceChainRackTests(unittest.TestCase):
         self.assertTrue(assembly.size_formula_holds)
         self.assertEqual(tuple(step.interval_index for step in assembly.steps), (20, 21))
 
+    def test_endpoint_observer_family_build_verdicts_feed_chain_assembly(self):
+        terminal = rack_solution(["top"], lambda _left, right: right)
+        summaries = (
+            FakeLocalSummary(
+                "closed_by_triangular_recovery_endpoint_observer_family_build",
+                cyclic_group(2),
+                (),
+            ),
+            FakeLocalSummary(
+                "closed_by_universal_continuation_endpoint_observer_family_build",
+                cyclic_group(1),
+                (),
+            ),
+            FakeLocalSummary(
+                "closed_by_mixed_unit_endpoint_observer_family_build",
+                cyclic_group(1),
+                (),
+            ),
+            FakeLocalSummary(
+                "closed_by_endpoint_observer_family_build",
+                cyclic_group(1),
+                (),
+            ),
+        )
+
+        chain = closed_local_detector_chain(summaries, first_interval_index=40)
+
+        self.assertTrue(chain.is_complete)
+        self.assertEqual(chain.detector_group_orders, (2, 1, 1, 1))
+
+        assembly = assemble_closed_local_detector_chain_rack(
+            terminal,
+            summaries,
+            first_interval_index=40,
+        )
+
+        self.assertEqual(assembly.detector_group_orders, (2, 1, 1, 1))
+        self.assertEqual(assembly.final_rack_size, 1 * 8 * 2 * 2 * 2)
+        self.assertTrue(assembly.size_formula_holds)
+        self.assertEqual(
+            tuple(step.interval_index for step in assembly.steps),
+            (40, 41, 42, 43),
+        )
+
     def test_endpoint_closed_verdict_still_requires_explicit_group(self):
         summaries = (
             FakeLocalSummary(

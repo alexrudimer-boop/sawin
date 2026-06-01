@@ -18,6 +18,10 @@ CLOSED_LOCAL_DETECTOR_VERDICTS = frozenset(
         "closed_by_universal_continuation_symmetric_endpoint_fork",
         "closed_by_mixed_unit_context_endpoint_witness",
         "closed_by_mixed_unit_symmetric_endpoint_fork",
+        "closed_by_triangular_recovery_endpoint_observer_family_build",
+        "closed_by_universal_continuation_endpoint_observer_family_build",
+        "closed_by_mixed_unit_endpoint_observer_family_build",
+        "closed_by_endpoint_observer_family_build",
         "closed_by_routed_endpoint_witnesses",
         "closed_by_routed_endpoint_certificates",
     }

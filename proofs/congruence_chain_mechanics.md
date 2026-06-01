@@ -128,8 +128,13 @@ Residual Theorem has been proved.
 
 The handoff now also recognizes the endpoint-observer closure verdicts from
 the post-linear U/C/M layer, including
-`closed_by_routed_endpoint_certificates` and the individual U, C, and M
-endpoint-witness or symmetric-fork closures.  These verdicts are accepted only
+`closed_by_routed_endpoint_certificates`, the individual U, C, and M
+endpoint-witness or symmetric-fork closures, and the monodromy-coboundary
+observer-build verdicts
+`closed_by_triangular_recovery_endpoint_observer_family_build`,
+`closed_by_universal_continuation_endpoint_observer_family_build`,
+`closed_by_mixed_unit_endpoint_observer_family_build`, and
+`closed_by_endpoint_observer_family_build`.  These verdicts are accepted only
 when the local summary supplies an actual fixed detector product group and no
 detector gap rows.  Gap rows dominate a supplied group: if a summary reports
 any delegated or residual gap, the chain records that row as incomplete rather

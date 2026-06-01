@@ -2422,8 +2422,10 @@ the finite triangular bijection cardinality contradiction recorded above.
 At the executable handoff level, an endpoint-observer closure verdict may be
 fed into the congruence-chain rack assembly only together with the actual
 fixed detector product group for that interval.  A bare verdict such as
-`closed_by_routed_endpoint_certificates` without its group `G(pi,Q)` is still
-an open local gap.
+`closed_by_routed_endpoint_certificates`, one of the one-family
+`closed_by_*_endpoint_observer_family_build` verdicts, or the product verdict
+`closed_by_endpoint_observer_family_build` without its group `G(pi,Q)` is
+still an open local gap.
 
 ## 11. What Must Be Done To Resolve The Problem
 
