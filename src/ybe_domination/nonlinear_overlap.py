@@ -5577,43 +5577,130 @@ def post_linear_remaining_finite_system_audit(
     mixed_unit_context_symmetric_endpoint_fork: (
         "MixedUnitContextSymmetricEndpointForkAudit | None"
     ) = None,
+    universal_k_signed_endpoint_reachable_seed_states: (
+        Sequence[Tuple[str, UniversalKSeedState]] | None
+    ) = None,
+    universal_k_signed_endpoint_rows: (
+        Sequence[UniversalKSignedEndpointGeneratorRow] | None
+    ) = None,
+    universal_k_signed_endpoint_group: FiniteGroup | None = None,
+    universal_k_signed_endpoint_witnesses: (
+        Mapping[UniversalKSignedEndpointEntryKey, LongitudeSubgroupWitness] | None
+    ) = None,
+    universal_k_cutoff_readouts_exact: bool = False,
+    universal_k_cutoff_readout_audit: UniversalKCutoffReadoutAudit | None = None,
+    universal_k_residual_faithfulness_verified: bool = False,
+    universal_k_residual_action_scope: (
+        UniversalKResidualActionScopeAudit | None
+    ) = None,
+    universal_k_residual_faithfulness_theorem: (
+        UniversalKResidualFaithfulnessAudit | None
+    ) = None,
+    universal_k_residual_action_audit: "EndpointResidualActionAudit | None" = None,
+    universal_k_signed_endpoint_generator: (
+        UniversalKSignedEndpointGeneratorAudit | None
+    ) = None,
 ) -> PostLinearRemainingFiniteSystemAudit:
     """Return the K/U finite-system classifier after finite-linear closure."""
 
-    return PostLinearRemainingFiniteSystemAudit(
-        refinement=nonlinear_overlap_refinement_audit(
+    refinement = nonlinear_overlap_refinement_audit(
+        interval,
+        repair_contract_audit=repair_contract_audit,
+        normalized_prefix=normalized_prefix,
+        max_kernel_degree=max_kernel_degree,
+    )
+    triangular_latin_defect_closure = triangular_latin_defect_closure_audit(interval)
+    triangular_constant_kernel_recovery_route = (
+        triangular_constant_kernel_recovery_route_audit(interval)
+    )
+    missing_triangular_row_profile = missing_triangular_row_profile_audit(interval)
+    missing_triangular_left_rack_cardinality = (
+        missing_triangular_left_rack_cardinality_audit(interval)
+    )
+    missing_triangular_coordinate_unit_routing = (
+        missing_triangular_coordinate_unit_routing_audit(interval)
+    )
+    missing_triangular_partial_constant_closure = (
+        missing_triangular_partial_constant_closure_audit(interval)
+    )
+    missing_triangular_partial_constant_continuation_route = (
+        missing_triangular_partial_constant_continuation_route_audit(interval)
+    )
+    universal_continuation_identity_routing = (
+        universal_continuation_identity_routing_audit(interval)
+    )
+    signed_endpoint_generator = universal_k_signed_endpoint_generator
+    derive_signed_endpoint_generator = (
+        signed_endpoint_generator is None
+        and (
+            universal_k_signed_endpoint_reachable_seed_states is not None
+            or universal_k_signed_endpoint_rows is not None
+            or universal_k_signed_endpoint_group is not None
+            or universal_k_signed_endpoint_witnesses is not None
+            or universal_k_cutoff_readout_audit is not None
+            or universal_k_residual_action_scope is not None
+            or universal_k_residual_faithfulness_theorem is not None
+            or universal_k_residual_action_audit is not None
+        )
+    )
+    if derive_signed_endpoint_generator:
+        unsigned = PostLinearRemainingFiniteSystemAudit(
+            refinement=refinement,
+            kink_completion_deficits_routed=kink_completion_deficits_routed,
+            triangular_latin_defect_closure=triangular_latin_defect_closure,
+            triangular_constant_kernel_recovery_route=triangular_constant_kernel_recovery_route,
+            missing_triangular_row_profile=missing_triangular_row_profile,
+            missing_triangular_left_rack_cardinality=missing_triangular_left_rack_cardinality,
+            missing_triangular_coordinate_unit_routing=missing_triangular_coordinate_unit_routing,
+            missing_triangular_partial_constant_closure=missing_triangular_partial_constant_closure,
+            missing_triangular_partial_constant_continuation_route=missing_triangular_partial_constant_continuation_route,
+            universal_continuation_identity_routing=universal_continuation_identity_routing,
+            triangular_recovery_endpoint_witness=triangular_recovery_endpoint_witness,
+            triangular_recovery_symmetric_endpoint_fork=triangular_recovery_symmetric_endpoint_fork,
+            universal_continuation_endpoint_witness=universal_continuation_endpoint_witness,
+            universal_continuation_symmetric_endpoint_fork=universal_continuation_symmetric_endpoint_fork,
+            mixed_unit_context_endpoint_witness=mixed_unit_context_endpoint_witness,
+            mixed_unit_context_symmetric_endpoint_fork=mixed_unit_context_symmetric_endpoint_fork,
+        )
+        reachable_states = universal_k_signed_endpoint_reachable_seed_states
+        if reachable_states is None:
+            reachable_states = tuple(
+                sorted(
+                    {entry[1] for entry in unsigned.universal_k_seed_classifier_entries},
+                    key=repr,
+                )
+            )
+        signed_endpoint_generator = universal_k_signed_endpoint_generator_audit(
             interval,
-            repair_contract_audit=repair_contract_audit,
-            normalized_prefix=normalized_prefix,
-            max_kernel_degree=max_kernel_degree,
-        ),
+            unsigned.universal_k_seed_classifier_entries,
+            reachable_states or (),
+            universal_k_signed_endpoint_rows or (),
+            endpoint_group=universal_k_signed_endpoint_group,
+            witnesses=universal_k_signed_endpoint_witnesses,
+            cutoff_readouts_exact=universal_k_cutoff_readouts_exact,
+            cutoff_readout_audit=universal_k_cutoff_readout_audit,
+            residual_faithfulness_verified=universal_k_residual_faithfulness_verified,
+            residual_action_scope=universal_k_residual_action_scope,
+            residual_faithfulness_theorem=universal_k_residual_faithfulness_theorem,
+            residual_action_audit=universal_k_residual_action_audit,
+        )
+
+    return PostLinearRemainingFiniteSystemAudit(
+        refinement=refinement,
         kink_completion_deficits_routed=kink_completion_deficits_routed,
-        triangular_latin_defect_closure=triangular_latin_defect_closure_audit(
-            interval
-        ),
-        triangular_constant_kernel_recovery_route=triangular_constant_kernel_recovery_route_audit(
-            interval
-        ),
-        missing_triangular_row_profile=missing_triangular_row_profile_audit(interval),
-        missing_triangular_left_rack_cardinality=missing_triangular_left_rack_cardinality_audit(
-            interval
-        ),
-        missing_triangular_coordinate_unit_routing=missing_triangular_coordinate_unit_routing_audit(
-            interval
-        ),
-        missing_triangular_partial_constant_closure=missing_triangular_partial_constant_closure_audit(
-            interval
-        ),
-        missing_triangular_partial_constant_continuation_route=missing_triangular_partial_constant_continuation_route_audit(
-            interval
-        ),
-        universal_continuation_identity_routing=universal_continuation_identity_routing_audit(
-            interval
-        ),
+        triangular_latin_defect_closure=triangular_latin_defect_closure,
+        triangular_constant_kernel_recovery_route=triangular_constant_kernel_recovery_route,
+        missing_triangular_row_profile=missing_triangular_row_profile,
+        missing_triangular_left_rack_cardinality=missing_triangular_left_rack_cardinality,
+        missing_triangular_coordinate_unit_routing=missing_triangular_coordinate_unit_routing,
+        missing_triangular_partial_constant_closure=missing_triangular_partial_constant_closure,
+        missing_triangular_partial_constant_continuation_route=missing_triangular_partial_constant_continuation_route,
+        universal_continuation_identity_routing=universal_continuation_identity_routing,
         triangular_recovery_endpoint_witness=triangular_recovery_endpoint_witness,
         triangular_recovery_symmetric_endpoint_fork=triangular_recovery_symmetric_endpoint_fork,
         universal_continuation_endpoint_witness=universal_continuation_endpoint_witness,
         universal_continuation_symmetric_endpoint_fork=universal_continuation_symmetric_endpoint_fork,
         mixed_unit_context_endpoint_witness=mixed_unit_context_endpoint_witness,
         mixed_unit_context_symmetric_endpoint_fork=mixed_unit_context_symmetric_endpoint_fork,
+        universal_k_signed_endpoint_generator=signed_endpoint_generator,
     )

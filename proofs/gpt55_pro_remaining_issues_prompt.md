@@ -870,6 +870,10 @@ certificate must enumerate this derived full entry domain `D_Gamma`, not a
 prover-selected subdomain and not merely one entry per seed and sign.
 Covering both signs for a seed while omitting some local input `(a,b,x,y)` is
 still an incomplete signed table.
+The current `K_nabla` and `kappa` data must be computed first, and the signed
+endpoint audit must then be derived against that current classifier; an
+endpoint table whose seed keys come from any other classifier does not address
+the interval.
 
 The finite audit must derive these domain and identity checks from the
 interval data, the reachable closure, the supplied rows, the endpoint group

@@ -442,6 +442,12 @@ The audit also records the concrete failure rows or local triples for each
 derived gate, so a failed certificate can be repaired without reverse
 engineering which table entry broke.
 
+The post-linear wrapper can now derive this signed endpoint audit directly
+from supplied table rows and witnesses after computing the interval's current
+`K_nabla` and `kappa` entries.  This makes a table built against a stale or
+different seed classifier visible as a mismatch in the obstruction data
+rather than a silently accepted external certificate.
+
 The residual-faithfulness gate is separate from the endpoint table identities:
 even a trivial endpoint group satisfies all label subgroup inclusions
 formally, but it closes nothing unless killed endpoint channels force the

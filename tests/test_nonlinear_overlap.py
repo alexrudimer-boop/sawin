@@ -4377,6 +4377,33 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertEqual(audit.system_name, "earlier_unrouted_status:not_corridor_target")
         self.assertFalse(audit.is_current_remaining_finite_system)
 
+    def test_post_linear_function_derives_signed_endpoint_audit_from_inputs(self):
+        residual_theorem = UniversalKResidualFaithfulnessAudit(
+            active_endpoint_families=(),
+            covered_endpoint_families=(),
+            expected_residual_row_count=0,
+            covered_residual_row_count=0,
+            endpoint_channels_exact=True,
+            identity_endpoint_data_forces_residual_identity=True,
+            braid_index_independent=True,
+            product_families_separated=True,
+        )
+        audit = post_linear_remaining_finite_system_audit(
+            one_color_latin_unit_triangular_interval(),
+            universal_k_signed_endpoint_group=cyclic_group(2),
+            universal_k_residual_faithfulness_theorem=residual_theorem,
+        )
+
+        self.assertIsNotNone(audit.universal_k_signed_endpoint_generator)
+        signed = audit.universal_k_signed_endpoint_generator
+        self.assertEqual(
+            signed.seed_classifier_entries,
+            audit.universal_k_seed_classifier_entries,
+        )
+        self.assertTrue(signed.endpoint_targets_fixed)
+        self.assertTrue(signed.residual_theorem_scope_matches_required)
+        self.assertIn("no_routed_k_seed_states", signed.failure_reasons)
+
     def test_triangular_recovery_unit_observer_extends_recovery_rows_to_units(self):
         observer = triangular_recovery_unit_observer_audit(
             one_color_latin_unit_triangular_interval()
