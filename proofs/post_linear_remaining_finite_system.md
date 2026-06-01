@@ -266,7 +266,8 @@ The coordinate-unit route is certificate-gated by the actual listed side: the
 listed coordinate-unit side must have the `coordinate_side_unit_not_triangular`
 explanation and must be a unit side in the supplied section data.  A row whose
 listed side is nonunit or whose explanation does not match remains live in
-System K.
+System K.  The coordinate-unit routing ledger is non-vacuous: an empty row
+tuple does not prove the route.
 
 Constant-map kernel reasons are refined the same way.  Raw defects:
 

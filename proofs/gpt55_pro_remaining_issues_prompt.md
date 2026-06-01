@@ -515,7 +515,9 @@ For each grouped pair:
    certified, the row remains live in System K.
 
 The coordinate-unit routing ledger proves only when there are no unrouted
-coordinate-unit rows and no unclosed two-sided-unit rows.
+coordinate-unit rows, no unclosed two-sided-unit rows, and at least one
+coordinate-unit row is present.  An empty coordinate-unit routing ledger is
+not a proof.
 ```
 
 System activation is then exact:

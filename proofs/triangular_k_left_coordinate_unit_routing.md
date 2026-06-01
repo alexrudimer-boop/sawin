@@ -52,6 +52,9 @@ matching `coordinate_side_unit_not_triangular` explanation, and are actually
 unit sides in the supplied section data.  A row whose listed side is not
 unit, or whose explanation does not match the listed coordinate-unit side, is
 treated as `unrouted_coordinate_unit_row`.
+The whole coordinate-unit routing ledger is also non-vacuous: with no
+coordinate-unit rows it does not prove `all_coordinate_unit_rows_routed` or
+`proves_coordinate_unit_routing_ledger`.
 
 The post-linear finite-system wrapper reports the K-relevant part as:
 

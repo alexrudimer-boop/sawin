@@ -1174,7 +1174,8 @@ each fork removes only its own family from `unclosed_routed_endpoint_systems`.
 Coordinate-unit routing is now side-exact as well: the listed
 coordinate-unit side must carry the coordinate-unit profile explanation and
 must actually be unit in the supplied section data before it can remove a K
-row or create a System M obligation.
+row or create a System M obligation.  The coordinate-unit routing ledger is
+also non-vacuous; an empty row tuple does not prove the route.
 The living handoff prompt
 `proofs/gpt55_pro_remaining_issues_prompt.md` records the current K/U/C/M
 remaining obligations as a model-independent, attachment-free prompt for a

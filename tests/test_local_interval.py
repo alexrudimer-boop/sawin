@@ -7,6 +7,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 from ybe_domination import (
     LocalInterval,
     LostEdgeExternalRoutingAudit,
+    MissingTriangularCoordinateUnitRoutingAudit,
     continuation_congruence_audit,
     continuation_seed_pair_closure_audits,
     continuation_seed_pair_closure_failures,
@@ -894,6 +895,16 @@ class LocalIntervalTests(unittest.TestCase):
         self.assertEqual(row.status, "mixed_unit_context")
         self.assertIn(row, audit.mixed_unit_context_rows)
         self.assertEqual(audit.unrouted_rows, ())
+
+    def test_coordinate_unit_routing_ledger_is_not_vacuous(self):
+        audit = MissingTriangularCoordinateUnitRoutingAudit(
+            colored_ybe=True,
+            locally_nondegenerate_closed_branch=True,
+            rows=(),
+        )
+
+        self.assertFalse(audit.all_coordinate_unit_rows_routed)
+        self.assertFalse(audit.proves_coordinate_unit_routing_ledger)
 
     def test_latin_triangular_ybe_audit_accepts_singleton_ybe_row(self):
         interval = one_color_singleton_identity_interval()

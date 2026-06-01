@@ -1180,7 +1180,11 @@ class MissingTriangularCoordinateUnitRoutingAudit:
 
     @property
     def all_coordinate_unit_rows_routed(self) -> bool:
-        return not self.unrouted_rows and not self.unclosed_two_sided_unit_pair_rows
+        return (
+            bool(self.rows)
+            and not self.unrouted_rows
+            and not self.unclosed_two_sided_unit_pair_rows
+        )
 
     @property
     def proves_coordinate_unit_routing_ledger(self) -> bool:
