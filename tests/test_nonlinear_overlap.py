@@ -83,6 +83,7 @@ from ybe_domination import (
     universal_k_signed_endpoint_positive_ybe_cocycle_failures,
     universal_k_signed_endpoint_positive_ybe_failures,
     universal_k_signed_endpoint_required_entry_keys,
+    universal_k_signed_endpoint_transition_closure,
     universal_k_signed_endpoint_two_strand_base_failures,
     universal_continuation_identity_endpoint_witness_audit,
     universal_continuation_identity_symmetric_endpoint_fork_audit,
@@ -2901,6 +2902,40 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertEqual(audit.extra_signed_seed_keys, ())
         self.assertTrue(audit.reachable_seed_state_closure_exact)
         self.assertTrue(audit.proves_signed_endpoint_generator_tables)
+
+    def test_signed_endpoint_transition_closure_is_derived_from_rows(self):
+        seed_state = ("*", "*", "left_constant_map_universal_kernel")
+        next_state = ("*", "*", "left_constant_map_universal_kernel", "next")
+        seed_entries = (
+            (
+                (
+                    "*",
+                    "*",
+                    "L",
+                    "constant_map_kernel",
+                    ("*", (0, 1), "universal", "universal"),
+                ),
+                ("U", seed_state),
+            ),
+        )
+        row = UniversalKSignedEndpointGeneratorRow(
+            endpoint_family="U",
+            seed_state=seed_state,
+            sign=1,
+            left_color="*",
+            right_color="*",
+            input_left=0,
+            input_right=1,
+            output_left=0,
+            output_right=1,
+            next_seed_state=next_state,
+            endpoint_value=0,
+        )
+
+        self.assertEqual(
+            universal_k_signed_endpoint_transition_closure(seed_entries, (row,)),
+            tuple(sorted((("U", seed_state), ("U", next_state)), key=repr)),
+        )
 
     def test_signed_endpoint_audit_rejects_unreachable_declared_state(self):
         seed_state = ("*", "*", "left_constant_map_universal_kernel")

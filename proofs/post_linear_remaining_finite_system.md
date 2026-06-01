@@ -446,7 +446,10 @@ The post-linear wrapper can now derive this signed endpoint audit directly
 from supplied table rows and witnesses after computing the interval's current
 `K_nabla` and `kappa` entries.  This makes a table built against a stale or
 different seed classifier visible as a mismatch in the obstruction data
-rather than a silently accepted external certificate.
+rather than a silently accepted external certificate.  When no reachable state
+set is supplied, the wrapper derives it as the least transition closure of
+the current `kappa` seeds under the supplied signed rows before forming the
+full `D_Gamma` domain.
 
 The residual-faithfulness gate is separate from the endpoint table identities:
 even a trivial endpoint group satisfies all label subgroup inclusions

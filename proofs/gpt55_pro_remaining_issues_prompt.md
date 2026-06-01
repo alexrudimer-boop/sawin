@@ -873,7 +873,10 @@ still an incomplete signed table.
 The current `K_nabla` and `kappa` data must be computed first, and the signed
 endpoint audit must then be derived against that current classifier; an
 endpoint table whose seed keys come from any other classifier does not address
-the interval.
+the interval.  If the reachable state set is not supplied independently, it
+must be derived as the least transition closure of the current `kappa` seeds
+under the supplied signed rows, and the full `D_Gamma` domain must then be
+formed over that derived closure.
 
 The finite audit must derive these domain and identity checks from the
 interval data, the reachable closure, the supplied rows, the endpoint group

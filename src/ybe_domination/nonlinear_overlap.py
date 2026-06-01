@@ -788,6 +788,35 @@ class UniversalKCutoffReadoutAudit:
         return tuple(reasons)
 
 
+def universal_k_signed_endpoint_seed_states(
+    seed_classifier_entries: Sequence[UniversalKSeedClassifierEntry],
+) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
+    """Return the initial endpoint states hit by the current kappa table."""
+
+    return tuple(sorted({entry[1] for entry in seed_classifier_entries}, key=repr))
+
+
+def universal_k_signed_endpoint_transition_closure(
+    seed_classifier_entries: Sequence[UniversalKSeedClassifierEntry],
+    rows: Sequence[UniversalKSignedEndpointGeneratorRow],
+) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
+    """Least signed endpoint state closure generated from kappa seeds."""
+
+    closure = set(universal_k_signed_endpoint_seed_states(seed_classifier_entries))
+    changed = True
+    while changed:
+        changed = False
+        for row in rows:
+            current = (row.endpoint_family, row.seed_state)
+            if current not in closure:
+                continue
+            next_state = (row.endpoint_family, row.next_seed_state)
+            if next_state not in closure:
+                closure.add(next_state)
+                changed = True
+    return tuple(sorted(closure, key=repr))
+
+
 @dataclass(frozen=True)
 class UniversalKSignedEndpointGeneratorAudit:
     """Certificate-shape audit for signed endpoint tables on K_nabla seeds."""
@@ -824,7 +853,7 @@ class UniversalKSignedEndpointGeneratorAudit:
 
     @property
     def required_seed_states(self) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
-        return tuple(sorted({entry[1] for entry in self.seed_classifier_entries}, key=repr))
+        return universal_k_signed_endpoint_seed_states(self.seed_classifier_entries)
 
     @property
     def reachable_seed_states_exact(
@@ -843,21 +872,10 @@ class UniversalKSignedEndpointGeneratorAudit:
     def transition_reachable_seed_states(
         self,
     ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
-        """Least state closure generated from kappa seeds by supplied rows."""
-
-        closure = set(self.required_seed_states)
-        changed = True
-        while changed:
-            changed = False
-            for row in self.rows:
-                current = (row.endpoint_family, row.seed_state)
-                if current not in closure:
-                    continue
-                next_state = (row.endpoint_family, row.next_seed_state)
-                if next_state not in closure:
-                    closure.add(next_state)
-                    changed = True
-        return tuple(sorted(closure, key=repr))
+        return universal_k_signed_endpoint_transition_closure(
+            self.seed_classifier_entries,
+            self.rows,
+        )
 
     @property
     def missing_transition_reachable_seed_states(
@@ -5664,11 +5682,9 @@ def post_linear_remaining_finite_system_audit(
         )
         reachable_states = universal_k_signed_endpoint_reachable_seed_states
         if reachable_states is None:
-            reachable_states = tuple(
-                sorted(
-                    {entry[1] for entry in unsigned.universal_k_seed_classifier_entries},
-                    key=repr,
-                )
+            reachable_states = universal_k_signed_endpoint_transition_closure(
+                unsigned.universal_k_seed_classifier_entries,
+                universal_k_signed_endpoint_rows or (),
             )
         signed_endpoint_generator = universal_k_signed_endpoint_generator_audit(
             interval,

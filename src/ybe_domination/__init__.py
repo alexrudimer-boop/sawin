@@ -430,7 +430,9 @@ from .nonlinear_overlap import (
     universal_k_signed_endpoint_positive_ybe_cocycle_failures,
     universal_k_signed_endpoint_positive_ybe_failures,
     universal_k_signed_endpoint_required_entry_keys,
+    universal_k_signed_endpoint_seed_states,
     universal_k_signed_endpoint_two_strand_base_failures,
+    universal_k_signed_endpoint_transition_closure,
 )
 from .bifree_corridor import (
     BiFreeCorridorDetectorTarget,
@@ -1012,7 +1014,9 @@ __all__ = [
     "universal_k_signed_endpoint_positive_ybe_cocycle_failures",
     "universal_k_signed_endpoint_positive_ybe_failures",
     "universal_k_signed_endpoint_required_entry_keys",
+    "universal_k_signed_endpoint_seed_states",
     "universal_k_signed_endpoint_two_strand_base_failures",
+    "universal_k_signed_endpoint_transition_closure",
     "NormalQuotientLongitudeLiftAudit",
     "NormalizedLawPrefixWitnessAudit",
     "SymmetricDetectorReductionAudit",
