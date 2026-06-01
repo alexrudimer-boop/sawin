@@ -553,10 +553,14 @@ the evaluated Artin detector recurrence.
 
 The fixed-track claim is no longer accepted as a standalone boolean.  For
 each family count `R_E`, the audit derives expected keys `(E,r)` for
-`0 <= r < R_E` and requires one finite initialization row for each key.  A
-row records the family, track index, assignment-rule name, the finite
-dependencies of the rule, and the local assignment template for the raw
-variables.  Allowed dependencies are interval and initial-state data:
+`0 <= r < R_E` and requires one finite initialization row for each key.  Each
+family count must be a positive integer attached to one of the known endpoint
+families `U`, `C`, or `M`; nonintegers, booleans, zero or negative counts, and
+unknown family names are malformed track-count rows, not empty detector-track
+families.  A row records the family, nonnegative integer track index,
+assignment-rule name, the finite dependencies of the rule, and the local
+assignment template for the raw variables.  Allowed dependencies are interval
+and initial-state data:
 `interval_data`, `endpoint_family`, `routed_seed_state`,
 `initial_colour_tuple`, `initial_fibre_tuple`, `strand_index`,
 `strand_colour`, `local_input`, and `local_output`.  Braid-word,
@@ -932,6 +936,8 @@ signed_endpoint_generator_telescoping_covered_seed_states
 signed_endpoint_generator_telescoping_duplicate_seed_states
 signed_endpoint_generator_telescoping_malformed_seed_states
 signed_endpoint_generator_detector_track_counts_by_family
+signed_endpoint_generator_detector_track_count_unknown_families
+signed_endpoint_generator_detector_track_count_malformed_values
 signed_endpoint_generator_detector_track_count_duplicate_families
 signed_endpoint_generator_detector_track_count_family_scope_exact
 signed_endpoint_generator_detector_track_count_matches_family_sum

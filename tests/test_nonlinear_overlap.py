@@ -3332,6 +3332,59 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             unfixed_tracks.failure_reasons,
         )
 
+        malformed_track_count = replace(
+            theorem_complete,
+            telescoping_detector_audit=replace(
+                theorem_complete.telescoping_detector_audit,
+                detector_track_counts_by_family=(("U", "one"),),
+                detector_track_count="one",
+            ),
+        )
+        malformed_track_count_audit = (
+            malformed_track_count.telescoping_detector_audit
+        )
+        self.assertFalse(
+            malformed_track_count_audit.detector_track_count_rows_well_formed
+        )
+        self.assertFalse(malformed_track_count.telescoping_detector_proved)
+        self.assertIn(
+            "detector_track_count_rows_malformed",
+            malformed_track_count.failure_reasons,
+        )
+        self.assertIn(
+            "detector_track_count_nonpositive_or_noninteger",
+            malformed_track_count.failure_reasons,
+        )
+
+        malformed_track_index = replace(
+            theorem_complete,
+            telescoping_detector_audit=replace(
+                theorem_complete.telescoping_detector_audit,
+                detector_track_initialization_rows=(
+                    UniversalKDetectorTrackInitializationRow(
+                        endpoint_family="U",
+                        track_index="0",
+                        assignment_rule="constant_identity_from_interval_seed",
+                        dependencies=(
+                            "interval_data",
+                            "routed_seed_state",
+                            "strand_index",
+                        ),
+                        local_assignment_template=((("A", 0, 0), 0),),
+                    ),
+                ),
+            ),
+        )
+        self.assertFalse(malformed_track_index.telescoping_detector_proved)
+        self.assertIn(
+            "detector_track_initialization_rows_not_exact",
+            malformed_track_index.failure_reasons,
+        )
+        self.assertIn(
+            "detector_track_initialization_invalid_rows",
+            malformed_track_index.failure_reasons,
+        )
+
         braid_word_dependent_track = replace(
             theorem_complete,
             telescoping_detector_audit=replace(

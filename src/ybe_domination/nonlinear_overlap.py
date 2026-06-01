@@ -184,6 +184,23 @@ _UNIVERSAL_K_DETECTOR_DOMAIN_SOUNDNESS_WITNESSES = frozenset(
 )
 
 
+def _universal_k_nonnegative_int(value: object) -> bool:
+    return isinstance(value, int) and not isinstance(value, bool) and value >= 0
+
+
+def _universal_k_positive_int(value: object) -> bool:
+    return isinstance(value, int) and not isinstance(value, bool) and value > 0
+
+
+def _universal_k_detector_track_key_well_formed(key: object) -> bool:
+    return (
+        isinstance(key, tuple)
+        and len(key) == 2
+        and key[0] in UNIVERSAL_K_ENDPOINT_FAMILIES
+        and _universal_k_nonnegative_int(key[1])
+    )
+
+
 @dataclass(frozen=True)
 class UniversalKDetectorTrackInitializationRow:
     """Finite rule descriptor for one fixed endpoint detector track."""
@@ -200,10 +217,7 @@ class UniversalKDetectorTrackInitializationRow:
 
     @property
     def key_valid(self) -> bool:
-        return (
-            self.endpoint_family in UNIVERSAL_K_ENDPOINT_FAMILIES
-            and self.track_index >= 0
-        )
+        return _universal_k_detector_track_key_well_formed(self.key)
 
     @property
     def assignment_rule_present(self) -> bool:
@@ -3538,14 +3552,65 @@ class UniversalKTelescopingDetectorAudit:
     def detector_track_count_families(self) -> Tuple[str, ...]:
         return tuple(
             sorted(
-                {family for family, _count in self.detector_track_counts_by_family},
+                {
+                    family
+                    for family, count in self.detector_track_counts_by_family
+                    if (
+                        family in UNIVERSAL_K_ENDPOINT_FAMILIES
+                        and _universal_k_positive_int(count)
+                    )
+                },
                 key=repr,
             )
         )
 
     @property
     def detector_track_count_by_family(self) -> Mapping[str, int]:
-        return dict(self.detector_track_counts_by_family)
+        return {
+            family: count
+            for family, count in self.detector_track_counts_by_family
+            if (
+                family in UNIVERSAL_K_ENDPOINT_FAMILIES
+                and _universal_k_positive_int(count)
+            )
+        }
+
+    @property
+    def invalid_detector_track_count_families(self) -> Tuple[str, ...]:
+        return tuple(
+            sorted(
+                {
+                    family
+                    for family, _count in self.detector_track_counts_by_family
+                    if family not in UNIVERSAL_K_ENDPOINT_FAMILIES
+                },
+                key=repr,
+            )
+        )
+
+    @property
+    def malformed_detector_track_count_values(
+        self,
+    ) -> Tuple[Tuple[str, object], ...]:
+        malformed = []
+        seen = set()
+        for family, count in self.detector_track_counts_by_family:
+            if _universal_k_positive_int(count):
+                continue
+            value = (family, count)
+            marker = repr(value)
+            if marker in seen:
+                continue
+            seen.add(marker)
+            malformed.append(value)
+        return tuple(sorted(malformed, key=repr))
+
+    @property
+    def detector_track_count_rows_well_formed(self) -> bool:
+        return (
+            not self.invalid_detector_track_count_families
+            and not self.malformed_detector_track_count_values
+        )
 
     @property
     def duplicate_detector_track_count_families(self) -> Tuple[str, ...]:
@@ -3565,14 +3630,16 @@ class UniversalKTelescopingDetectorAudit:
 
     @property
     def detector_track_counts_positive(self) -> bool:
-        return bool(self.detector_track_counts_by_family) and all(
-            count > 0 for _family, count in self.detector_track_counts_by_family
+        return (
+            bool(self.detector_track_counts_by_family)
+            and self.detector_track_count_rows_well_formed
         )
 
     @property
     def detector_track_count_matches_family_sum(self) -> bool:
         return (
-            self.detector_track_count is not None
+            _universal_k_positive_int(self.detector_track_count)
+            and self.detector_track_count_rows_well_formed
             and self.detector_track_count
             == sum(count for _family, count in self.detector_track_counts_by_family)
         )
@@ -3581,7 +3648,10 @@ class UniversalKTelescopingDetectorAudit:
     def expected_detector_track_keys(self) -> Tuple[UniversalKDetectorTrackKey, ...]:
         keys = []
         for family, count in self.detector_track_counts_by_family:
-            if count <= 0:
+            if (
+                family not in UNIVERSAL_K_ENDPOINT_FAMILIES
+                or not _universal_k_positive_int(count)
+            ):
                 continue
             keys.extend((family, index) for index in range(count))
         return tuple(sorted(keys, key=repr))
@@ -3589,14 +3659,27 @@ class UniversalKTelescopingDetectorAudit:
     @property
     def covered_detector_track_keys(self) -> Tuple[UniversalKDetectorTrackKey, ...]:
         return tuple(
-            sorted({row.key for row in self.detector_track_initialization_rows}, key=repr)
+            sorted(
+                {
+                    row.key
+                    for row in self.detector_track_initialization_rows
+                    if _universal_k_detector_track_key_well_formed(row.key)
+                },
+                key=repr,
+            )
         )
 
     @property
     def duplicate_detector_track_initialization_keys(
         self,
     ) -> Tuple[UniversalKDetectorTrackKey, ...]:
-        return _duplicate_values(tuple(row.key for row in self.detector_track_initialization_rows))
+        return _duplicate_values(
+            tuple(
+                row.key
+                for row in self.detector_track_initialization_rows
+                if _universal_k_detector_track_key_well_formed(row.key)
+            )
+        )
 
     @property
     def missing_detector_track_initialization_keys(
@@ -4004,7 +4087,8 @@ class UniversalKTelescopingDetectorAudit:
     def detector_tracks_supplied(self) -> bool:
         return (
             self.detector_track_count is not None
-            and self.detector_track_count > 0
+            and _universal_k_positive_int(self.detector_track_count)
+            and self.detector_track_count_rows_well_formed
             and self.detector_track_count_matches_family_sum
             and self.detector_track_count_ledgers_have_no_duplicates
             and self.detector_track_count_family_scope_exact
@@ -4055,6 +4139,12 @@ class UniversalKTelescopingDetectorAudit:
             reasons.append("fixed_detector_tracks_not_supplied")
         if not self.detector_track_count_matches_family_sum:
             reasons.append("detector_track_count_family_sum_mismatch")
+        if not self.detector_track_count_rows_well_formed:
+            reasons.append("detector_track_count_rows_malformed")
+        if self.invalid_detector_track_count_families:
+            reasons.append("detector_track_count_unknown_families")
+        if self.malformed_detector_track_count_values:
+            reasons.append("detector_track_count_nonpositive_or_noninteger")
         if not self.detector_track_count_ledgers_have_no_duplicates:
             reasons.append("detector_track_count_duplicate_families")
         if not self.detector_track_count_family_scope_exact:
@@ -8122,6 +8212,14 @@ class PostLinearRemainingFiniteSystemAudit:
                 ("signed_endpoint_generator_telescoping_duplicate_seed_states", ()),
                 ("signed_endpoint_generator_telescoping_malformed_seed_states", ()),
                 ("signed_endpoint_generator_detector_track_counts_by_family", ()),
+                (
+                    "signed_endpoint_generator_detector_track_count_unknown_families",
+                    (),
+                ),
+                (
+                    "signed_endpoint_generator_detector_track_count_malformed_values",
+                    (),
+                ),
                 ("signed_endpoint_generator_detector_track_count_duplicate_families", ()),
                 (
                     "signed_endpoint_generator_detector_track_count_family_scope_exact",
@@ -8939,6 +9037,22 @@ class PostLinearRemainingFiniteSystemAudit:
                 "signed_endpoint_generator_detector_track_counts_by_family",
                 (
                     telescoping_audit.detector_track_counts_by_family
+                    if telescoping_audit is not None
+                    else ()
+                ),
+            ),
+            (
+                "signed_endpoint_generator_detector_track_count_unknown_families",
+                (
+                    telescoping_audit.invalid_detector_track_count_families
+                    if telescoping_audit is not None
+                    else ()
+                ),
+            ),
+            (
+                "signed_endpoint_generator_detector_track_count_malformed_values",
+                (
+                    telescoping_audit.malformed_detector_track_count_values
                     if telescoping_audit is not None
                     else ()
                 ),

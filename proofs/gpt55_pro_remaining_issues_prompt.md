@@ -1311,8 +1311,14 @@ row for every key
 (E,r),     0 <= r < R_E.
 ```
 
-Each row must name an assignment rule, the finite dependencies used by that
-rule, and the local assignment template for the raw variables `A_{r,j}`.
+Each family track-count row must use one of the known endpoint families
+`U`, `C`, or `M`, and its count must be a positive integer.  Booleans,
+strings, zero, negative values, missing counts, and unknown family names are
+malformed detector-track ledgers; they do not define empty or harmless
+families.  Each initialization row must name a known endpoint family, a
+nonnegative integer track index, an assignment rule, the finite dependencies
+used by that rule, and the local assignment template for the raw variables
+`A_{r,j}`.
 Allowed dependencies are only interval and initial-state data:
 
 ```text
@@ -1700,8 +1706,11 @@ positive_state_coordinate_ybe_path,
 state_coordinate_far_commutativity_path,
 label_cocycles_derived_from_word_potential_not_independent,
 fixed_detector_track_initialization,
+detector_track_count_rows_use_only_U_C_M_families,
+detector_track_count_rows_have_positive_integer_counts,
 detector_track_initialization_rows_exact,
 detector_track_initialization_rules_use_only_allowed_initial_data,
+detector_track_initialization_keys_have_nonnegative_integer_indices,
 detector_track_initialization_templates_use_same_track_raw_variables,
 detector_track_initialization_values_in_endpoint_group,
 artin_detector_recurrence,
