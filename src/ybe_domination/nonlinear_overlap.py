@@ -8074,6 +8074,7 @@ class UniversalKEndpointObserverFamilyBuildAudit:
     seed_classifier_entries: Tuple[UniversalKSeedClassifierEntry, ...]
     builds: Tuple[Tuple[str, UniversalKEndpointObserverBuild], ...]
     word_potential_certificate_rows: Tuple[object, ...] = ()
+    detector_track_initialization_rows: Tuple[object, ...] = ()
     endpoint_target_audit_rows: Tuple[object, ...] = ()
     cutoff_readout_audit_rows: Tuple[object, ...] = ()
     residual_faithfulness_theorem_rows: Tuple[object, ...] = ()
@@ -8252,6 +8253,131 @@ class UniversalKEndpointObserverFamilyBuildAudit:
             and not self.duplicate_certificate_families
             and not self.missing_certificate_families
             and not self.extra_certificate_families
+        )
+
+    @property
+    def detector_track_initialization_input_supplied(self) -> bool:
+        return bool(self.detector_track_initialization_rows)
+
+    @property
+    def family_detector_track_initialization_row_objects(
+        self,
+    ) -> Tuple[UniversalKDetectorTrackInitializationRow, ...]:
+        return tuple(
+            row
+            for row in self.detector_track_initialization_rows
+            if isinstance(row, UniversalKDetectorTrackInitializationRow)
+        )
+
+    @property
+    def malformed_family_detector_track_initialization_rows(
+        self,
+    ) -> Tuple[object, ...]:
+        return _unique_values(
+            tuple(
+                row
+                for row in self.detector_track_initialization_rows
+                if not isinstance(row, UniversalKDetectorTrackInitializationRow)
+            )
+        )
+
+    @property
+    def invalid_family_detector_track_initialization_rows(
+        self,
+    ) -> Tuple[UniversalKDetectorTrackInitializationRow, ...]:
+        return tuple(
+            row
+            for row in self.family_detector_track_initialization_row_objects
+            if (
+                not _is_hashable(row.endpoint_family)
+                or row.endpoint_family not in UNIVERSAL_K_ENDPOINT_FAMILIES
+                or not _universal_k_nonnegative_int(row.track_index)
+            )
+        )
+
+    @property
+    def invalid_family_detector_track_initialization_families(
+        self,
+    ) -> Tuple[object, ...]:
+        return _unique_values(
+            tuple(
+                row.endpoint_family
+                for row in self.invalid_family_detector_track_initialization_rows
+                if (
+                    not _is_hashable(row.endpoint_family)
+                    or row.endpoint_family not in UNIVERSAL_K_ENDPOINT_FAMILIES
+                )
+            )
+        )
+
+    @property
+    def valid_family_detector_track_initialization_rows(
+        self,
+    ) -> Tuple[UniversalKDetectorTrackInitializationRow, ...]:
+        invalid_markers = {
+            _value_marker(row)
+            for row in self.invalid_family_detector_track_initialization_rows
+        }
+        return tuple(
+            row
+            for row in self.family_detector_track_initialization_row_objects
+            if _value_marker(row) not in invalid_markers
+        )
+
+    @property
+    def family_detector_track_initialization_families_exact(self) -> Tuple[str, ...]:
+        return tuple(
+            sorted(
+                {
+                    row.endpoint_family
+                    for row in self.valid_family_detector_track_initialization_rows
+                },
+                key=repr,
+            )
+        )
+
+    @property
+    def duplicate_family_detector_track_initialization_keys(
+        self,
+    ) -> Tuple[UniversalKDetectorTrackKey, ...]:
+        return _duplicate_values(
+            tuple(row.key for row in self.valid_family_detector_track_initialization_rows)
+        )
+
+    @property
+    def missing_family_detector_track_initialization_families(
+        self,
+    ) -> Tuple[str, ...]:
+        if not self.detector_track_initialization_input_supplied:
+            return ()
+        covered = set(self.family_detector_track_initialization_families_exact)
+        return tuple(
+            family
+            for family in self.expected_endpoint_families_exact
+            if family not in covered
+        )
+
+    @property
+    def extra_family_detector_track_initialization_families(
+        self,
+    ) -> Tuple[str, ...]:
+        if not self.detector_track_initialization_input_supplied:
+            return ()
+        expected = set(self.expected_endpoint_families_exact)
+        return tuple(
+            family
+            for family in self.family_detector_track_initialization_families_exact
+            if family not in expected
+        )
+
+    @property
+    def detector_track_initialization_input_rows_exact(self) -> bool:
+        return not self.detector_track_initialization_input_supplied or (
+            not self.malformed_family_detector_track_initialization_rows
+            and not self.invalid_family_detector_track_initialization_rows
+            and not self.duplicate_family_detector_track_initialization_keys
+            and not self.missing_family_detector_track_initialization_families
+            and not self.extra_family_detector_track_initialization_families
         )
 
     def _typed_auxiliary_row_parts(
@@ -8515,7 +8641,8 @@ class UniversalKEndpointObserverFamilyBuildAudit:
     @property
     def auxiliary_input_rows_exact(self) -> bool:
         return (
-            self.endpoint_target_input_rows_exact
+            self.detector_track_initialization_input_rows_exact
+            and self.endpoint_target_input_rows_exact
             and self.cutoff_readout_input_rows_exact
             and self.residual_theorem_input_rows_exact
         )
@@ -8723,6 +8850,18 @@ class UniversalKEndpointObserverFamilyBuildAudit:
             reasons.append("endpoint_observer_family_certificates_missing_families")
         if self.extra_certificate_families:
             reasons.append("endpoint_observer_family_certificates_extra_families")
+        if self.malformed_family_detector_track_initialization_rows:
+            reasons.append("endpoint_observer_family_detector_tracks_malformed_rows")
+        if self.invalid_family_detector_track_initialization_rows:
+            reasons.append("endpoint_observer_family_detector_tracks_invalid_rows")
+        if self.invalid_family_detector_track_initialization_families:
+            reasons.append("endpoint_observer_family_detector_tracks_unknown_families")
+        if self.duplicate_family_detector_track_initialization_keys:
+            reasons.append("endpoint_observer_family_detector_tracks_duplicate_keys")
+        if self.missing_family_detector_track_initialization_families:
+            reasons.append("endpoint_observer_family_detector_tracks_missing_families")
+        if self.extra_family_detector_track_initialization_families:
+            reasons.append("endpoint_observer_family_detector_tracks_extra_families")
         if self.malformed_endpoint_target_rows:
             reasons.append("endpoint_observer_family_endpoint_targets_malformed_rows")
         if self.invalid_endpoint_target_families:
@@ -8985,6 +9124,7 @@ def universal_k_endpoint_observer_family_build_audit(
     builds: Sequence[Tuple[str, UniversalKEndpointObserverBuild]],
     *,
     word_potential_certificate_rows: Sequence[object] = (),
+    detector_track_initialization_rows: Sequence[object] = (),
     endpoint_target_audit_rows: Sequence[object] = (),
     cutoff_readout_audit_rows: Sequence[object] = (),
     residual_faithfulness_theorem_rows: Sequence[object] = (),
@@ -8998,6 +9138,7 @@ def universal_k_endpoint_observer_family_build_audit(
         seed_classifier_entries=tuple(seed_classifier_entries),
         builds=tuple(builds),
         word_potential_certificate_rows=tuple(word_potential_certificate_rows),
+        detector_track_initialization_rows=tuple(detector_track_initialization_rows),
         endpoint_target_audit_rows=tuple(endpoint_target_audit_rows),
         cutoff_readout_audit_rows=tuple(cutoff_readout_audit_rows),
         residual_faithfulness_theorem_rows=tuple(residual_faithfulness_theorem_rows),
@@ -9120,6 +9261,7 @@ def universal_k_endpoint_observer_builds_by_family(
         seed_classifier_entries,
         tuple(builds),
         word_potential_certificate_rows=tuple(word_potential_certificates_by_family),
+        detector_track_initialization_rows=tuple(detector_track_initialization_rows),
         endpoint_target_audit_rows=tuple(endpoint_target_audits_by_family),
         cutoff_readout_audit_rows=tuple(cutoff_readout_audits_by_family),
         residual_faithfulness_theorem_rows=tuple(
@@ -13364,6 +13506,13 @@ class PostLinearRemainingFiniteSystemAudit:
                 ("endpoint_observer_family_certificate_duplicate_families", ()),
                 ("endpoint_observer_family_certificate_missing_families", ()),
                 ("endpoint_observer_family_certificate_extra_families", ()),
+                ("endpoint_observer_family_detector_track_rows", ()),
+                ("endpoint_observer_family_detector_track_malformed_rows", ()),
+                ("endpoint_observer_family_detector_track_invalid_rows", ()),
+                ("endpoint_observer_family_detector_track_unknown_families", ()),
+                ("endpoint_observer_family_detector_track_duplicate_keys", ()),
+                ("endpoint_observer_family_detector_track_missing_families", ()),
+                ("endpoint_observer_family_detector_track_extra_families", ()),
                 ("endpoint_observer_family_endpoint_target_rows", ()),
                 ("endpoint_observer_family_endpoint_target_malformed_rows", ()),
                 ("endpoint_observer_family_endpoint_target_unknown_families", ()),
@@ -13526,6 +13675,37 @@ class PostLinearRemainingFiniteSystemAudit:
             (
                 "endpoint_observer_family_certificate_extra_families",
                 audit.extra_certificate_families,
+            ),
+            (
+                "endpoint_observer_family_detector_track_rows",
+                audit.detector_track_initialization_rows,
+            ),
+            (
+                "endpoint_observer_family_detector_track_malformed_rows",
+                audit.malformed_family_detector_track_initialization_rows,
+            ),
+            (
+                "endpoint_observer_family_detector_track_invalid_rows",
+                tuple(
+                    row.key
+                    for row in audit.invalid_family_detector_track_initialization_rows
+                ),
+            ),
+            (
+                "endpoint_observer_family_detector_track_unknown_families",
+                audit.invalid_family_detector_track_initialization_families,
+            ),
+            (
+                "endpoint_observer_family_detector_track_duplicate_keys",
+                audit.duplicate_family_detector_track_initialization_keys,
+            ),
+            (
+                "endpoint_observer_family_detector_track_missing_families",
+                audit.missing_family_detector_track_initialization_families,
+            ),
+            (
+                "endpoint_observer_family_detector_track_extra_families",
+                audit.extra_family_detector_track_initialization_families,
             ),
             (
                 "endpoint_observer_family_endpoint_target_rows",

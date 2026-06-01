@@ -805,14 +805,16 @@ families, missing active-family certificates, and extra certificate families
 are reported as finite data.  Such rows are not silently collapsed into a
 generic missing-build failure.
 The same exact-ledger rule now applies to the auxiliary rows used to build
-the per-family observers.  Endpoint-target audit rows and residual-faithfulness
+the per-family observers.  Detector-track initialization rows must cover
+exactly the active families with no malformed rows, unknown families, or
+duplicate track keys.  Endpoint-target audit rows and residual-faithfulness
 theorem rows must cover exactly the active families when supplied; C/M cutoff
 readout audit rows must cover exactly the active cutoff families.  Malformed
-rows, unknown families, duplicate families, missing active families, and extra
-auxiliary families are reported separately.  The builder still lets the
-individual observer audit explain a genuinely absent target, cutoff, or
-residual proof, but it no longer allows a duplicate or stale auxiliary row to
-be hidden by the first valid row selected for a family.
+rows, unknown families, duplicate families or keys, missing active families,
+and extra auxiliary families are reported separately.  The builder still lets
+the individual observer audit explain a genuinely absent target, cutoff,
+detector track, or residual proof, but it no longer allows a duplicate or
+stale auxiliary row to be hidden by the first valid row selected for a family.
 When a fixed endpoint group is declared as a product over multiple endpoint
 families, the signed endpoint audit now also checks family support of each
 emitted label: a row in family `E` must have identity components in every
@@ -1069,6 +1071,13 @@ endpoint_observer_family_certificate_unknown_families
 endpoint_observer_family_certificate_duplicate_families
 endpoint_observer_family_certificate_missing_families
 endpoint_observer_family_certificate_extra_families
+endpoint_observer_family_detector_track_rows
+endpoint_observer_family_detector_track_malformed_rows
+endpoint_observer_family_detector_track_invalid_rows
+endpoint_observer_family_detector_track_unknown_families
+endpoint_observer_family_detector_track_duplicate_keys
+endpoint_observer_family_detector_track_missing_families
+endpoint_observer_family_detector_track_extra_families
 endpoint_observer_family_endpoint_target_rows
 endpoint_observer_family_endpoint_target_malformed_rows
 endpoint_observer_family_endpoint_target_unknown_families

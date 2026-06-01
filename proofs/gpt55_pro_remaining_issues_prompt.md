@@ -1566,15 +1566,17 @@ family, a duplicate family, a missing active-family certificate, or an extra
 certificate family must be reported explicitly rather than silently turning
 into a missing observer build.
 The same exact finite-ledger rule applies to the auxiliary rows used to build
-the family observers.  Endpoint-target audit rows and residual-faithfulness
+the family observers.  Detector-track initialization rows must cover exactly
+the active routed families with no malformed rows, unknown families, or
+duplicate track keys.  Endpoint-target audit rows and residual-faithfulness
 theorem rows must cover exactly the active routed families when they are
 supplied; C/M cutoff-readout audit rows must cover exactly the active cutoff
-families.  Malformed rows, unknown families, duplicate families, missing
-active families, and extra auxiliary families must be reported separately.
-Selecting the first valid auxiliary row for a family is not enough: an extra,
-duplicate, malformed, or stale endpoint-target, cutoff-readout, or residual
-theorem row must keep the family-build ledger from proving exact observer
-coverage.
+families.  Malformed rows, unknown families, duplicate families or keys,
+missing active families, and extra auxiliary families must be reported
+separately.  Selecting the first valid auxiliary row for a family is not
+enough: an extra, duplicate, malformed, or stale detector-track,
+endpoint-target, cutoff-readout, or residual theorem row must keep the
+family-build ledger from proving exact observer coverage.
 Positive observer rows may be forced only from actual word-potential identity
 row objects.  A tuple-shaped identity-row stand-in is a malformed certificate
 entry: it must be reported at the word-potential gate, must not be interpreted

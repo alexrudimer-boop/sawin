@@ -4848,6 +4848,67 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             bad_auxiliary_ledgers.failure_reasons,
         )
 
+        bad_detector_track_ledger = universal_k_endpoint_observer_builds_by_family(
+            interval,
+            seed_entries,
+            tuple(certificates),
+            detector_track_initialization_rows=tuple(detector_rows)
+            + (
+                UniversalKDetectorTrackInitializationRow(
+                    endpoint_family="Z",
+                    track_index=0,
+                    assignment_rule="constant_identity_from_interval_seed",
+                    dependencies=("interval_data", "routed_seed_state"),
+                    local_assignment_template=((("A", 0, 0), group.identity),),
+                ),
+                ("not", "a_track_row"),
+            ),
+            endpoint_target_audits_by_family=tuple(endpoint_targets),
+            cutoff_readout_audits_by_family=tuple(cutoff_readouts),
+            residual_faithfulness_theorems_by_family=tuple(residual_theorems),
+        )
+
+        self.assertFalse(bad_detector_track_ledger.proves_family_endpoint_observers)
+        self.assertEqual(bad_detector_track_ledger.unproved_build_families, ())
+        self.assertEqual(
+            bad_detector_track_ledger.invalid_family_detector_track_initialization_families,
+            ("Z",),
+        )
+        self.assertEqual(
+            bad_detector_track_ledger.malformed_family_detector_track_initialization_rows,
+            (("not", "a_track_row"),),
+        )
+        self.assertIn(
+            "endpoint_observer_family_detector_tracks_unknown_families",
+            bad_detector_track_ledger.failure_reasons,
+        )
+        self.assertIn(
+            "endpoint_observer_family_detector_tracks_malformed_rows",
+            bad_detector_track_ledger.failure_reasons,
+        )
+
+        duplicate_detector_track_ledger = universal_k_endpoint_observer_builds_by_family(
+            interval,
+            seed_entries,
+            tuple(certificates),
+            detector_track_initialization_rows=tuple(detector_rows) + (detector_rows[0],),
+            endpoint_target_audits_by_family=tuple(endpoint_targets),
+            cutoff_readout_audits_by_family=tuple(cutoff_readouts),
+            residual_faithfulness_theorems_by_family=tuple(residual_theorems),
+        )
+
+        self.assertFalse(
+            duplicate_detector_track_ledger.proves_family_endpoint_observers
+        )
+        self.assertEqual(
+            duplicate_detector_track_ledger.duplicate_family_detector_track_initialization_keys,
+            (("U", 0),),
+        )
+        self.assertIn(
+            "endpoint_observer_family_detector_tracks_duplicate_keys",
+            duplicate_detector_track_ledger.failure_reasons,
+        )
+
     def test_endpoint_observer_family_build_rechecks_current_kappa_and_interval(self):
         interval = one_color_identity_interval()
         refinement = constant_map_kernel_only_system_k_refinement()
