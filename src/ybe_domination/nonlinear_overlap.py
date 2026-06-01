@@ -3078,6 +3078,23 @@ class UniversalKTelescopingDetectorAudit:
         )
 
     @property
+    def detector_track_initialization_rows_not_fixed_before_braid(
+        self,
+    ) -> Tuple[UniversalKDetectorTrackInitializationRow, ...]:
+        return tuple(
+            row
+            for row in self.detector_track_initialization_rows
+            if not row.fixed_before_braid
+        )
+
+    @property
+    def detector_track_initializations_fixed_before_braid(self) -> bool:
+        return (
+            self.detector_track_initialization_rows_exact
+            and not self.detector_track_initialization_rows_not_fixed_before_braid
+        )
+
+    @property
     def detector_track_initialization_template_failures(
         self,
     ) -> Tuple[UniversalKDetectorTrackInitializationFailure, ...]:
@@ -3509,9 +3526,11 @@ class UniversalKTelescopingDetectorAudit:
             reasons.append("detector_track_initialization_duplicate_keys")
         if self.invalid_detector_track_initialization_rows:
             reasons.append("detector_track_initialization_invalid_rows")
+        if self.detector_track_initialization_rows_not_fixed_before_braid:
+            reasons.append("detector_track_initialization_depends_on_braid")
         if self.detector_track_initialization_template_failures:
             reasons.append("detector_track_initialization_invalid_templates")
-        if not self.detector_track_initializations_verified:
+        if not self.detector_track_initializations_fixed_before_braid:
             reasons.append("detector_tracks_not_fixed_before_braid")
         if not self.detector_track_initializations_verified:
             reasons.append("detector_track_initialization_not_verified")
@@ -7303,6 +7322,10 @@ class PostLinearRemainingFiniteSystemAudit:
                     (),
                 ),
                 (
+                    "signed_endpoint_generator_detector_track_initialization_unfixed_rows",
+                    (),
+                ),
+                (
                     "signed_endpoint_generator_detector_track_initialization_template_failures",
                     (),
                 ),
@@ -8086,6 +8109,20 @@ class PostLinearRemainingFiniteSystemAudit:
                 ),
             ),
             (
+                "signed_endpoint_generator_detector_track_initialization_unfixed_rows",
+                (
+                    tuple(
+                        row.key
+                        for row in (
+                            telescoping_audit
+                            .detector_track_initialization_rows_not_fixed_before_braid
+                        )
+                    )
+                    if telescoping_audit is not None
+                    else ()
+                ),
+            ),
+            (
                 "signed_endpoint_generator_detector_track_initialization_template_failures",
                 (
                     telescoping_audit.detector_track_initialization_template_failures
@@ -8104,7 +8141,7 @@ class PostLinearRemainingFiniteSystemAudit:
             (
                 "signed_endpoint_generator_detector_tracks_fixed_before_braid",
                 (
-                    telescoping_audit.detector_track_initializations_verified
+                    telescoping_audit.detector_track_initializations_fixed_before_braid
                     if telescoping_audit is not None
                     else False
                 ),

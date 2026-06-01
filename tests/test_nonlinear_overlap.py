@@ -3191,6 +3191,14 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             "detector_track_initialization_invalid_rows",
             braid_word_dependent_track.failure_reasons,
         )
+        self.assertIn(
+            "detector_track_initialization_depends_on_braid",
+            braid_word_dependent_track.failure_reasons,
+        )
+        self.assertIn(
+            "detector_tracks_not_fixed_before_braid",
+            braid_word_dependent_track.failure_reasons,
+        )
 
         invalid_track_template = replace(
             theorem_complete,
@@ -3219,7 +3227,14 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             "detector_track_initialization_invalid_templates",
             invalid_track_template.failure_reasons,
         )
+        self.assertNotIn(
+            "detector_tracks_not_fixed_before_braid",
+            invalid_track_template.failure_reasons,
+        )
         invalid_template_audit = invalid_track_template.telescoping_detector_audit
+        self.assertTrue(
+            invalid_template_audit.detector_track_initializations_fixed_before_braid
+        )
         invalid_template_failures = (
             invalid_template_audit.detector_track_initialization_template_failures
         )

@@ -616,6 +616,10 @@ checks; separate `artin_detector_recurrence_verified` or
 It also derives telescoping braid-index independence from the finite track
 counts and exact initialization rows, because those rows explicitly forbid
 `braid_index` and braid-word dependencies.
+The fixed-before-braid diagnostic is now separated from local assignment
+template validity: a row with forbidden braid-prefix or search dependencies
+is reported as an unfixed row, while a dependency-valid row with a malformed
+assignment template is reported only as a template error.
 
 The implementation now exposes an interval-derived constructor for this
 audit layer.  Given the interval, `kappa` entries, reachable states, signed
@@ -869,6 +873,7 @@ signed_endpoint_generator_detector_track_initialization_missing_keys
 signed_endpoint_generator_detector_track_initialization_extra_keys
 signed_endpoint_generator_detector_track_initialization_duplicate_keys
 signed_endpoint_generator_detector_track_initialization_invalid_rows
+signed_endpoint_generator_detector_track_initialization_unfixed_rows
 signed_endpoint_generator_detector_track_initialization_template_failures
 signed_endpoint_generator_detector_track_initialization_rows_exact
 signed_endpoint_generator_detector_tracks_fixed_before_braid

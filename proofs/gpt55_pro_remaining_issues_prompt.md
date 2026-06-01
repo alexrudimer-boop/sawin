@@ -1251,6 +1251,10 @@ are forbidden.  The initialization ledger must have no missing, extra, or
 duplicate `(E,r)` rows.  A claim that detector tracks are "fixed before the
 braid" or that initialization is "verified" is not a certificate unless this
 finite row table is present and exact.
+The fixed-before-braid check is separate from template validity: forbidden
+braid-prefix, braid-word, search, timeout, or braid-index dependencies make a
+row unfixed, while an otherwise fixed row with a malformed local assignment
+template is a template error rather than a braid-dependence error.
 The local assignment template in each row must also be checked: it may assign
 only raw variables `A_{r,j}` for that same track `r`, may not repeat an
 assigned raw variable, and every assigned value must be an element of the
