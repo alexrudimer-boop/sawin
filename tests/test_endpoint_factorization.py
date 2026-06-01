@@ -529,6 +529,40 @@ class EndpointFactorizationTests(unittest.TestCase):
             audit.proves_universal_continuation_identity_endpoint_witnesses
         )
 
+    def test_universal_continuation_identity_endpoint_witness_rejects_empty_route(
+        self,
+    ):
+        interval = one_color_identity_interval()
+        real = universal_continuation_identity_routing_audit(interval)
+        empty_routing = type(real.routing)(
+            dichotomy=real.routing.dichotomy,
+            routing_labels=real.routing.routing_labels,
+            routing_kernel=real.routing.routing_kernel,
+            lost_edges=(),
+            routed_edges=(),
+            unrouted_edges=(),
+        )
+        identity_routing = type(real)(
+            descent_labels=real.descent_labels,
+            routing=empty_routing,
+        )
+
+        audit = universal_continuation_identity_endpoint_witness_audit(
+            identity_routing,
+            (),
+        )
+
+        self.assertFalse(identity_routing.proves_identity_routed_universal_continuation)
+        self.assertEqual(audit.routed_edges, ())
+        self.assertFalse(audit.endpoint_witnesses_proved)
+        self.assertEqual(
+            audit.failure_reasons,
+            ("identity_routing_not_proved", "endpoint_witnesses_not_proved"),
+        )
+        self.assertFalse(
+            audit.proves_universal_continuation_identity_endpoint_witnesses
+        )
+
     def test_universal_continuation_symmetric_endpoint_fork_covers_edges(self):
         interval = one_color_identity_interval()
         identity_routing = universal_continuation_identity_routing_audit(interval)
@@ -584,6 +618,45 @@ class EndpointFactorizationTests(unittest.TestCase):
         self.assertEqual(
             audit.failure_reasons,
             ("identity_routed_edges_not_covered",),
+        )
+
+    def test_universal_continuation_symmetric_endpoint_fork_rejects_empty_route(
+        self,
+    ):
+        interval = one_color_identity_interval()
+        real = universal_continuation_identity_routing_audit(interval)
+        empty_routing = type(real.routing)(
+            dichotomy=real.routing.dichotomy,
+            routing_labels=real.routing.routing_labels,
+            routing_kernel=real.routing.routing_kernel,
+            lost_edges=(),
+            routed_edges=(),
+            unrouted_edges=(),
+        )
+        identity_routing = type(real)(
+            descent_labels=real.descent_labels,
+            routing=empty_routing,
+        )
+        endpoint_family = endpoint_family_symmetric_fork_audit(
+            (2,),
+            all_endpoint_witnesses_supplied=True,
+            endpoint_family_faithful=True,
+        )
+
+        audit = universal_continuation_identity_symmetric_endpoint_fork_audit(
+            identity_routing,
+            endpoint_family,
+            (),
+        )
+
+        self.assertEqual(audit.routed_edges, ())
+        self.assertFalse(audit.all_identity_routed_edges_covered)
+        self.assertFalse(
+            audit.proves_universal_continuation_identity_symmetric_endpoint_cutoff
+        )
+        self.assertEqual(
+            audit.failure_reasons,
+            ("identity_routing_not_proved", "identity_routed_edges_not_covered"),
         )
 
     def test_mixed_unit_context_endpoint_witness_covers_routed_contexts(self):

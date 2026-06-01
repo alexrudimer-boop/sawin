@@ -36,6 +36,11 @@ saturation_is_universal
 has_nontrivial_continuation_seed
 identity_routing_is_admissible
 routes_all_saturation_lost_edges
+lost_edges_match_saturation
+has_required_lost_edges
+routed_unrouted_edges_partition_lost_edges
+routed_edges_are_distinguished
+unrouted_edges_are_not_distinguished
 proves_identity_routed_universal_continuation
 ```
 
@@ -59,6 +64,23 @@ the distinct pairs added by the generated admissible closure beyond equality.
 Since the external routing labels are again `x |-> x`, each lost edge
 `(a,x,y)` has different external labels on `x` and `y`.  Thus every lost edge
 is routed.  QED.
+
+## Certificate guardrails
+
+[Proved, audit-side] A supplied external routing ledger is not accepted
+vacuously.  The ledger must satisfy all of the following finite checks:
+
+```text
+lost_edges = seed_saturation.new_saturation_edges
+routed_edges union unrouted_edges = lost_edges
+routed_edges cap unrouted_edges = empty
+each routed edge is distinguished by the routing labels
+each unrouted edge is not distinguished by the routing labels
+```
+
+When the local-minimal dichotomy forces universal collapse, the lost-edge
+ledger must also be nonempty.  Thus an empty supplied ledger cannot prove a
+forced universal-continuation route and cannot close System C.
 
 ## Consequence for the repair contract
 

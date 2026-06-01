@@ -87,6 +87,13 @@ universal-continuation identity routing theorem.  Hence the checked endpoint
 witnesses close every edge lost by the identity saturation and no unrelated
 edge has been mixed into the certificate.  QED.
 
+The generic routed-edge witness audit is non-vacuous: it requires the routed
+edge tuple to be nonempty before it can prove endpoint visibility.  Together
+with the routing guardrails in
+`proofs/universal_continuation_identity_routing.md`, this prevents a forced
+universal-continuation row from being closed by an empty or forged lost-edge
+ledger.
+
 ## Repair-contract consequence
 
 The descent-endpoint repair checker now accepts either the generic

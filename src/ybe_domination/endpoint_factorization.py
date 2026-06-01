@@ -594,7 +594,7 @@ class RoutedLostEdgeEndpointWitnessAudit:
 
     @property
     def all_routed_edges_have_endpoint_witnesses(self) -> bool:
-        return not self.missing_routed_edges
+        return bool(self.routed_edges) and not self.missing_routed_edges
 
     @property
     def proves_routed_lost_edge_endpoint_visibility(self) -> bool:
@@ -738,7 +738,7 @@ class UniversalContinuationIdentitySymmetricEndpointForkAudit:
 
     @property
     def all_identity_routed_edges_covered(self) -> bool:
-        return not self.missing_identity_routed_edges
+        return bool(self.routed_edges) and not self.missing_identity_routed_edges
 
     @property
     def proves_universal_continuation_identity_symmetric_endpoint_cutoff(self) -> bool:

@@ -532,6 +532,11 @@ universal continuation seed channel.  The supplied continuation route must
 reach a universal continuation seed closure; a merely nonuniversal
 continuation-seed containment leaves the row live in System K and does not
 create a System C endpoint obligation.
+The downstream identity-routing ledger is also non-vacuous: a forced
+universal-continuation route proves only when its lost-edge tuple is exactly
+the seed-saturation lost-edge tuple, its routed and unrouted tuples partition
+that lost tuple, its routing labels distinguish exactly the routed edges, and
+the forced lost-edge tuple is nonempty.
 Rows moved this way are recorded in
 `continuation_routed_k_missing_latin_row_defects`.  If no live K row remains,
 the wrapper reports `system_c_universal_continuation_endpoint` rather than a

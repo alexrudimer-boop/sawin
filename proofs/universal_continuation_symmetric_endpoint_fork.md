@@ -51,6 +51,8 @@ failure_reasons
 ```
 
 The covered edge set must match the identity-routed edge set exactly.
+It must also be nonempty: a faithful endpoint-family fork with no covered
+identity-routed edges is not a System C cutoff certificate.
 
 ## Lemma: keyed symmetric cutoff closes System C
 
@@ -60,7 +62,7 @@ The covered edge set must match the identity-routed edge set exactly.
    continuation route;
 2. a finite endpoint-family fork proves a faithful symmetric cutoff for the
    fixed endpoint groups used by those continuation edge channels;
-3. the covered edge set is exactly the identity-routed lost edge set.
+3. the covered edge set is exactly the nonempty identity-routed lost edge set.
 
 Then System C has no remaining endpoint obligation for this supplied data.
 

@@ -1157,6 +1157,12 @@ generated closures in the partial-constant no-triangular ledger, reported as
 Partial-constant continuation routing is now also universal-gated: a
 nonuniversal continuation seed closure no longer creates a System C endpoint
 obligation.
+The universal-continuation lost-edge ledger is now exact and non-vacuous: it
+must match the seed-saturation lost edges, partition them into routed and
+unrouted tuples, distinguish exactly the routed tuple with the supplied
+routing labels, and contain at least one lost edge when universal collapse is
+forced.  Consequently a System C endpoint witness or symmetric cutoff cannot
+close a live continuation route with an empty edge certificate.
 The same supplied-certificate pattern now covers the routed continuation and
 mixed-unit endpoint families.  The helper
 `universal_continuation_identity_symmetric_endpoint_fork_audit(...)` attaches

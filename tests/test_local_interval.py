@@ -6,6 +6,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from ybe_domination import (
     LocalInterval,
+    LostEdgeExternalRoutingAudit,
     continuation_congruence_audit,
     continuation_seed_pair_closure_audits,
     continuation_seed_pair_closure_failures,
@@ -1222,8 +1223,36 @@ class LocalIntervalTests(unittest.TestCase):
         self.assertEqual(len(audit.lost_edges), 1)
         self.assertEqual(set(audit.routed_edges), set(audit.lost_edges))
         self.assertEqual(audit.unrouted_edges, ())
+        self.assertTrue(audit.has_required_lost_edges)
+        self.assertTrue(audit.lost_edges_match_saturation)
+        self.assertTrue(audit.routed_unrouted_edges_partition_lost_edges)
+        self.assertTrue(audit.routed_edges_are_distinguished)
+        self.assertTrue(audit.unrouted_edges_are_not_distinguished)
         self.assertTrue(audit.all_lost_edges_routed)
         self.assertTrue(audit.proves_external_routing_ledger)
+
+    def test_lost_edge_external_routing_rejects_empty_forced_ledger(self):
+        interval = one_color_identity_interval()
+        real = lost_edge_external_routing_audit(
+            interval,
+            {"*": {0: "zero", 1: "one"}},
+            {"*": {0: "left", 1: "right"}},
+        )
+        forged = LostEdgeExternalRoutingAudit(
+            dichotomy=real.dichotomy,
+            routing_labels=real.routing_labels,
+            routing_kernel=real.routing_kernel,
+            lost_edges=(),
+            routed_edges=(),
+            unrouted_edges=(),
+        )
+
+        self.assertTrue(forged.forced_collapse_requires_routing)
+        self.assertFalse(forged.has_required_lost_edges)
+        self.assertFalse(forged.lost_edges_match_saturation)
+        self.assertTrue(forged.routed_unrouted_edges_partition_lost_edges)
+        self.assertFalse(forged.all_lost_edges_routed)
+        self.assertFalse(forged.proves_external_routing_ledger)
 
     def test_lost_edge_external_routing_reports_unrouted_collapse_edges(self):
         interval = one_color_identity_interval()

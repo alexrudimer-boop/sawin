@@ -1810,13 +1810,57 @@ class LostEdgeExternalRoutingAudit:
         return self.dichotomy.needs_external_routing_after_collapse
 
     @property
+    def lost_edges_match_saturation(self) -> bool:
+        return set(self.lost_edges) == set(
+            self.dichotomy.seed_saturation.new_saturation_edges
+        )
+
+    @property
+    def has_required_lost_edges(self) -> bool:
+        return not self.forced_collapse_requires_routing or bool(self.lost_edges)
+
+    @property
+    def routed_unrouted_edges_partition_lost_edges(self) -> bool:
+        routed = set(self.routed_edges)
+        unrouted = set(self.unrouted_edges)
+        return not routed.intersection(unrouted) and routed.union(unrouted) == set(
+            self.lost_edges
+        )
+
+    @property
+    def routed_edges_are_distinguished(self) -> bool:
+        return all(
+            _labels_distinguish_edge(self.routing_labels, color, left, right)
+            for color, left, right in self.routed_edges
+        )
+
+    @property
+    def unrouted_edges_are_not_distinguished(self) -> bool:
+        return all(
+            not _labels_distinguish_edge(self.routing_labels, color, left, right)
+            for color, left, right in self.unrouted_edges
+        )
+
+    @property
     def all_lost_edges_routed(self) -> bool:
-        return not self.unrouted_edges
+        return (
+            self.has_required_lost_edges
+            and self.lost_edges_match_saturation
+            and self.routed_unrouted_edges_partition_lost_edges
+            and self.routed_edges_are_distinguished
+            and self.unrouted_edges_are_not_distinguished
+            and not self.unrouted_edges
+        )
 
     @property
     def proves_external_routing_ledger(self) -> bool:
         return (
             self.dichotomy.proves_local_minimal_seed_saturation_dichotomy
+            and self.has_required_lost_edges
+            and self.lost_edges_match_saturation
+            and self.routed_unrouted_edges_partition_lost_edges
+            and self.routed_edges_are_distinguished
+            and self.unrouted_edges_are_not_distinguished
             and (
                 not self.forced_collapse_requires_routing
                 or self.all_lost_edges_routed

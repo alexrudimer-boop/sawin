@@ -1,6 +1,6 @@
 # Self-contained remaining-issues resolution prompt
 
-Date: 2026-05-31
+Date: 2026-06-01
 
 This is a standalone prompt.  Everything needed to understand the current
 proof state and the remaining tasks is stated here.  Do not use the internet
@@ -394,6 +394,17 @@ lost fibre edges of the form
 (color, input_0, input_1).
 ```
 
+The identity-routing ledger is valid only when it is non-vacuous and exact.
+It must satisfy all of the following:
+
+```text
+lost_edges = seed_saturation_lost_edges,
+routed_edges union unrouted_edges = lost_edges,
+routed_edges cap unrouted_edges = empty,
+the routing labels distinguish exactly the routed_edges,
+if universal collapse is forced then lost_edges is nonempty.
+```
+
 The A-side target is:
 
 ```text
@@ -405,10 +416,14 @@ faithful symmetric endpoint cutoff.
 A valid System C symmetric fork must:
 
 - match the same identity-routing ledger;
-- cover exactly the identity-routed lost edges;
+- cover exactly the nonempty identity-routed lost edges;
 - prove endpoint-family faithfulness;
 - prove that identity symmetric-longitude data kills those endpoint channels;
 - introduce no extra edges.
+
+Likewise, a System C endpoint-witness certificate must cover a nonempty
+identity-routed edge tuple.  An empty witness list can be a harmless absence
+of a C obligation, but it cannot close an active System C row.
 
 To prove B from C, exhibit a genuine routed continuation endpoint miss,
 prove that no fixed finite endpoint detector kills it, and upgrade it to a
