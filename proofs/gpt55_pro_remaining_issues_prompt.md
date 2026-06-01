@@ -1461,6 +1461,12 @@ the reachable closure, if the negative table is not single-valued, if the
 coboundary defect is not constant on a sound detector domain, or if residual
 faithfulness is not supplied, the observer remains open.  No default endpoint
 emission is allowed.
+The preferred handoff is therefore the finite monodromy-coboundary
+certificate itself: endpoint group or cutoff target, detector-track
+initialization rows, templates `W_s`, positive identity rows, C/M cutoff
+readouts if needed, and residual-faithfulness rows.  The signed endpoint
+table should then be derived from that data and rechecked against the current
+`kappa` seed ledger and interval table.
 
 Each `W_s` is a word in variables `U_{r,j}` only.  The local substitution may
 use both `U_{r,j}` and raw assignment variables `A_{r,j}`, but the terminal

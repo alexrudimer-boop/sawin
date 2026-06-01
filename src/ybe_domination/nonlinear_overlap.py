@@ -12512,6 +12512,14 @@ def post_linear_remaining_finite_system_audit(
     universal_k_signed_endpoint_witnesses: (
         Mapping[UniversalKSignedEndpointEntryKey, LongitudeSubgroupWitness] | None
     ) = None,
+    universal_k_word_potential_certificate: (
+        UniversalKWordPotentialCertificate | None
+    ) = None,
+    universal_k_detector_track_counts_by_family: Tuple[Tuple[str, int], ...] = (),
+    universal_k_detector_track_initialization_rows: Tuple[
+        UniversalKDetectorTrackInitializationRow,
+        ...,
+    ] = (),
     universal_k_endpoint_target_audit: UniversalKEndpointTargetAudit | None = None,
     universal_k_cutoff_readouts_exact: bool = False,
     universal_k_cutoff_readout_audit: UniversalKCutoffReadoutAudit | None = None,
@@ -12569,6 +12577,9 @@ def post_linear_remaining_finite_system_audit(
             or universal_k_signed_endpoint_rows is not None
             or universal_k_signed_endpoint_group is not None
             or universal_k_signed_endpoint_witnesses is not None
+            or universal_k_word_potential_certificate is not None
+            or bool(universal_k_detector_track_counts_by_family)
+            or bool(universal_k_detector_track_initialization_rows)
             or universal_k_endpoint_target_audit is not None
             or universal_k_cutoff_readout_audit is not None
             or universal_k_residual_action_scope is not None
@@ -12604,22 +12615,41 @@ def post_linear_remaining_finite_system_audit(
                 unsigned.universal_k_seed_classifier_entries,
                 universal_k_signed_endpoint_rows or (),
             )
-        signed_endpoint_generator = universal_k_signed_endpoint_generator_audit(
-            interval,
-            unsigned.universal_k_seed_classifier_entries,
-            reachable_states or (),
-            universal_k_signed_endpoint_rows or (),
-            endpoint_group=universal_k_signed_endpoint_group,
-            witnesses=universal_k_signed_endpoint_witnesses,
-            endpoint_target_audit=universal_k_endpoint_target_audit,
-            cutoff_readouts_exact=universal_k_cutoff_readouts_exact,
-            cutoff_readout_audit=universal_k_cutoff_readout_audit,
-            residual_faithfulness_verified=universal_k_residual_faithfulness_verified,
-            residual_action_scope=universal_k_residual_action_scope,
-            residual_faithfulness_theorem=universal_k_residual_faithfulness_theorem,
-            residual_action_audit=universal_k_residual_action_audit,
-            telescoping_detector_audit=universal_k_telescoping_detector_audit,
-        )
+        if universal_k_word_potential_certificate is not None:
+            signed_endpoint_generator = universal_k_endpoint_observer_build(
+                interval,
+                unsigned.universal_k_seed_classifier_entries,
+                universal_k_word_potential_certificate,
+                detector_track_counts_by_family=(
+                    universal_k_detector_track_counts_by_family
+                ),
+                detector_track_initialization_rows=(
+                    universal_k_detector_track_initialization_rows
+                ),
+                endpoint_target_audit=universal_k_endpoint_target_audit,
+                cutoff_readout_audit=universal_k_cutoff_readout_audit,
+                residual_faithfulness_theorem=universal_k_residual_faithfulness_theorem,
+                residual_action_scope=universal_k_residual_action_scope,
+                residual_action_audit=universal_k_residual_action_audit,
+                witnesses=universal_k_signed_endpoint_witnesses,
+            ).audit
+        else:
+            signed_endpoint_generator = universal_k_signed_endpoint_generator_audit(
+                interval,
+                unsigned.universal_k_seed_classifier_entries,
+                reachable_states or (),
+                universal_k_signed_endpoint_rows or (),
+                endpoint_group=universal_k_signed_endpoint_group,
+                witnesses=universal_k_signed_endpoint_witnesses,
+                endpoint_target_audit=universal_k_endpoint_target_audit,
+                cutoff_readouts_exact=universal_k_cutoff_readouts_exact,
+                cutoff_readout_audit=universal_k_cutoff_readout_audit,
+                residual_faithfulness_verified=universal_k_residual_faithfulness_verified,
+                residual_action_scope=universal_k_residual_action_scope,
+                residual_faithfulness_theorem=universal_k_residual_faithfulness_theorem,
+                residual_action_audit=universal_k_residual_action_audit,
+                telescoping_detector_audit=universal_k_telescoping_detector_audit,
+            )
 
     return PostLinearRemainingFiniteSystemAudit(
         refinement=refinement,

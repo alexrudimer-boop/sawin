@@ -700,6 +700,13 @@ out-of-scope detector tracks, missing C/M readouts, or missing residual
 faithfulness remain visible audit failures rather than being filled by
 defaults.  This keeps the local certificate from being a list of unsupported
 boolean claims.
+The post-linear function now accepts this builder-level input directly:
+supplying `universal_k_word_potential_certificate` plus detector-track
+initialization rows causes `post_linear_remaining_finite_system_audit(...)`
+to construct the observer and then run the same current-interval closure
+checks.  Thus a future U/C/M certificate does not need to pre-expand or
+hand-maintain a separate signed row table; the signed table is derived from
+the monodromy-coboundary data and checked against the current `kappa` ledger.
 The audit also records the concrete failure rows or local triples for each
 derived gate, so a failed certificate can be repaired without reverse
 engineering which table entry broke.  The signed endpoint table proof now

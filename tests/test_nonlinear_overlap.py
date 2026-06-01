@@ -8031,6 +8031,31 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertTrue(signed.residual_theorem_scope_matches_required)
         self.assertIn("no_routed_k_seed_states", signed.failure_reasons)
 
+    def test_post_linear_function_builds_endpoint_observer_from_word_potential(self):
+        certificate = UniversalKWordPotentialCertificate(
+            endpoint_group=cyclic_group(2),
+            templates=(),
+            identity_rows=(),
+            normalized_seed_states=(),
+        )
+        audit = post_linear_remaining_finite_system_audit(
+            one_color_latin_unit_triangular_interval(),
+            universal_k_word_potential_certificate=certificate,
+        )
+
+        signed = audit.universal_k_signed_endpoint_generator
+        self.assertIsNotNone(signed)
+        self.assertIs(
+            signed.telescoping_detector_audit.word_potential_certificate,
+            certificate,
+        )
+        self.assertEqual(signed.endpoint_group, certificate.endpoint_group)
+        self.assertIn("no_routed_k_seed_states", signed.failure_reasons)
+        self.assertIn(
+            "telescoping_detector_expected_positive_entry_keys_empty",
+            signed.failure_reasons,
+        )
+
     def test_triangular_recovery_unit_observer_extends_recovery_rows_to_units(self):
         observer = triangular_recovery_unit_observer_audit(
             one_color_latin_unit_triangular_interval()
