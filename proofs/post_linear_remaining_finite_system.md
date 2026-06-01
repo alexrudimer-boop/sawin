@@ -660,6 +660,12 @@ signs instead of filtering them away.  The same well-formedness gate checks
 that every identity-row and ledger key has the full `D_Gamma` shape
 `(E,epsilon,s,a,b,x,y)`, a known endpoint family, and a tuple-valued reachable
 state; a shortened positive key is malformed rather than an abbreviated row.
+The template table itself is also a finite row ledger: each template row must
+have exactly two fields, `((E,s), W_s)`.  A short, extra-field, non-tuple, or
+otherwise malformed template row is a certificate error.  Likewise, every
+identity-row entry must be an actual word-potential identity row carrying the
+required fields; arbitrary tuple-shaped objects are malformed identity-row
+objects, not implicit abbreviations.
 For positive identity rows, the `next_seed_state` must also be a tuple-valued
 hashable state in the same endpoint family.  A malformed or unhashable next
 state is a certificate error and must be reported before substitution or
@@ -1071,6 +1077,8 @@ signed_endpoint_generator_word_potential_detector_domain_failures
 signed_endpoint_generator_word_potential_coboundary_defects_constant
 signed_endpoint_generator_word_potential_coboundary_defect_failures
 signed_endpoint_generator_word_potential_malformed_identity_rows
+signed_endpoint_generator_word_potential_certificate_malformed_identity_row_objects
+signed_endpoint_generator_word_potential_certificate_malformed_template_rows
 signed_endpoint_generator_word_potential_certificate_malformed_next_seed_states
 signed_endpoint_generator_word_potential_certificate_malformed_template_states
 signed_endpoint_generator_word_potential_certificate_malformed_normalized_states

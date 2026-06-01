@@ -4821,6 +4821,21 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             ),
         )
 
+        malformed_template_row = replace(
+            certificate,
+            templates=(("not_a_template_pair",),),
+        )
+        self.assertEqual(
+            malformed_template_row.malformed_template_rows,
+            (("not_a_template_pair",),),
+        )
+        self.assertFalse(malformed_template_row.word_potential_templates_verified)
+        self.assertFalse(malformed_template_row.coboundary_defects_constant)
+        self.assertIn(
+            "malformed_word_potential_template_row",
+            tuple(failure[1] for failure in malformed_template_row.coboundary_defect_failures),
+        )
+
         boolean_track_template = replace(
             certificate,
             templates=((source_key, ((("U", True, 0), 1),)),),
@@ -4933,6 +4948,25 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             "malformed_artin_substitution_row",
             tuple(
                 failure[1] for failure in malformed_substitution_row.substitution_failures
+            ),
+        )
+
+        malformed_identity_row_object = replace(
+            certificate,
+            identity_rows=(("not", "an_identity_row"),),
+        )
+        self.assertEqual(
+            malformed_identity_row_object.malformed_identity_rows,
+            (("not", "an_identity_row"),),
+        )
+        self.assertFalse(malformed_identity_row_object.artin_substitutions_verified)
+        self.assertFalse(malformed_identity_row_object.identities_verified)
+        self.assertFalse(malformed_identity_row_object.coboundary_defects_constant)
+        self.assertIn(
+            "malformed_word_potential_identity_row_object",
+            tuple(
+                failure[1]
+                for failure in malformed_identity_row_object.coboundary_defect_failures
             ),
         )
 

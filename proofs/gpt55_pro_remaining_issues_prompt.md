@@ -1513,7 +1513,13 @@ reported as certificate errors rather than crashing duplicate, detector-domain,
 or normalization checks.  Each word-potential letter, Artin substitution row,
 detector-domain assignment entry, and detector-track assignment entry must
 have its declared two-field finite-row shape; malformed row shapes are
-certificate errors rather than implicit abbreviations.  For the active two
+certificate errors rather than implicit abbreviations.  The template table
+itself is also a finite row ledger: each row must have exactly two fields,
+`((E,s), W_s)`.  A short, extra-field, non-tuple, or otherwise malformed
+template row is a certificate error.  Every identity-row entry must be an
+actual word-potential identity row carrying the required fields; an arbitrary
+tuple-shaped object is a malformed identity-row object, not an implicit
+abbreviation.  For the active two
 local strands, the positive
 substitution must be the Artin detector
 recurrence:
@@ -1833,6 +1839,8 @@ word_potential_certificate_entry_domain_exact,
 word_potential_certificate_next_states_and_labels_match_Gamma,
 word_potential_identity_next_states_are_well_formed,
 word_potential_templates_for_every_reachable_state,
+word_potential_template_rows_have_two_field_shape,
+word_potential_identity_rows_are_finite_row_objects,
 word_potential_templates_use_only_current_longitude_variables,
 word_potential_artin_substitution_from_detector_recurrence,
 word_potential_identity_for_every_positive_row,

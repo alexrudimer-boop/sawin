@@ -1038,6 +1038,14 @@ def _universal_k_word_potential_substitution_parts(
     return substitution_row[0], substitution_row[1]
 
 
+def _universal_k_word_potential_template_row_parts(
+    template_row: object,
+) -> Tuple[object, object] | None:
+    if not isinstance(template_row, tuple) or len(template_row) != 2:
+        return None
+    return template_row[0], template_row[1]
+
+
 def _universal_k_word_potential_variable_valid(
     variable: object,
 ) -> bool:
@@ -1236,16 +1244,65 @@ class UniversalKWordPotentialCertificate:
     normalized_seed_states: Tuple[Tuple[str, UniversalKSeedState], ...] = ()
 
     @property
+    def template_rows(
+        self,
+    ) -> Tuple[Tuple[Tuple[str, UniversalKSeedState], UniversalKWordPotentialWord], ...]:
+        return tuple(
+            parts
+            for row in self.templates
+            for parts in (_universal_k_word_potential_template_row_parts(row),)
+            if parts is not None
+        )
+
+    @property
+    def malformed_template_rows(self) -> Tuple[object, ...]:
+        return _unique_values(
+            tuple(
+                row
+                for row in self.templates
+                if _universal_k_word_potential_template_row_parts(row) is None
+            )
+        )
+
+    @property
+    def identity_row_objects(self) -> Tuple[UniversalKWordPotentialIdentityRow, ...]:
+        return tuple(
+            row
+            for row in self.identity_rows
+            if isinstance(row, UniversalKWordPotentialIdentityRow)
+        )
+
+    @property
+    def malformed_identity_rows(self) -> Tuple[object, ...]:
+        return _unique_values(
+            tuple(
+                row
+                for row in self.identity_rows
+                if not isinstance(row, UniversalKWordPotentialIdentityRow)
+            )
+        )
+
+    @property
+    def malformed_row_failures(self) -> Tuple[UniversalKWordPotentialFailure, ...]:
+        return tuple(
+            (row, "malformed_word_potential_template_row", row)
+            for row in self.malformed_template_rows
+        ) + tuple(
+            (row, "malformed_word_potential_identity_row_object", row)
+            for row in self.malformed_identity_rows
+        )
+
+    @property
     def template_seed_states_exact(
         self,
     ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
-        return _unique_values(tuple(state for state, _word in self.templates))
+        return _unique_values(tuple(state for state, _word in self.template_rows))
 
     @property
     def duplicate_template_seed_states(
         self,
     ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
-        return _duplicate_values(tuple(state for state, _word in self.templates))
+        return _duplicate_values(tuple(state for state, _word in self.template_rows))
 
     @property
     def malformed_template_seed_states(
@@ -1254,7 +1311,7 @@ class UniversalKWordPotentialCertificate:
         return _unique_values(
             tuple(
                 state
-                for state, _word in self.templates
+                for state, _word in self.template_rows
                 if not _universal_k_endpoint_seed_state_well_formed(state)
             )
         )
@@ -1263,7 +1320,7 @@ class UniversalKWordPotentialCertificate:
     def identity_entry_keys_exact(
         self,
     ) -> Tuple[UniversalKSignedEndpointEntryKey, ...]:
-        return _unique_values(tuple(row.entry_key for row in self.identity_rows))
+        return _unique_values(tuple(row.entry_key for row in self.identity_row_objects))
 
     @property
     def positive_identity_entry_keys_exact(
@@ -1279,7 +1336,7 @@ class UniversalKWordPotentialCertificate:
     def duplicate_identity_entry_keys(
         self,
     ) -> Tuple[UniversalKSignedEndpointEntryKey, ...]:
-        return _duplicate_values(tuple(row.entry_key for row in self.identity_rows))
+        return _duplicate_values(tuple(row.entry_key for row in self.identity_row_objects))
 
     @property
     def duplicate_positive_identity_entry_keys(
@@ -1288,7 +1345,7 @@ class UniversalKWordPotentialCertificate:
         return _duplicate_values(
             tuple(
                 row.entry_key
-                for row in self.identity_rows
+                for row in self.identity_row_objects
                 if _universal_k_is_positive_entry_key(row.entry_key)
             )
         )
@@ -1300,7 +1357,7 @@ class UniversalKWordPotentialCertificate:
         return _unique_values(
             tuple(
                 row.entry_key
-                for row in self.identity_rows
+                for row in self.identity_row_objects
                 if not _universal_k_signed_entry_key_well_formed(row.entry_key)
             )
         )
@@ -1312,7 +1369,7 @@ class UniversalKWordPotentialCertificate:
         return _unique_values(
             tuple(
                 (row.entry_key, row.next_seed_state)
-                for row in self.identity_rows
+                for row in self.identity_row_objects
                 if _universal_k_signed_entry_key_well_formed(row.entry_key)
                 if _universal_k_is_positive_entry_key(row.entry_key)
                 if not _universal_k_endpoint_seed_state_well_formed(
@@ -1351,7 +1408,7 @@ class UniversalKWordPotentialCertificate:
     ) -> Mapping[Tuple[str, UniversalKSeedState], UniversalKWordPotentialWord]:
         return {
             state: word
-            for state, word in self.templates
+            for state, word in self.template_rows
             if _universal_k_endpoint_seed_state_well_formed(state)
         }
 
@@ -1361,14 +1418,14 @@ class UniversalKWordPotentialCertificate:
     ) -> Mapping[UniversalKSignedEndpointEntryKey, UniversalKWordPotentialIdentityRow]:
         return {
             row.entry_key: row
-            for row in self.identity_rows
+            for row in self.identity_row_objects
             if _universal_k_signed_entry_key_well_formed(row.entry_key)
         }
 
     @property
     def template_word_failures(self) -> Tuple[UniversalKWordPotentialFailure, ...]:
         failures = []
-        for state, word in self.templates:
+        for state, word in self.template_rows:
             for failure in _universal_k_word_potential_word_failures(word):
                 failures.append((state, failure[1], failure[2]))
         return tuple(failures)
@@ -1377,7 +1434,7 @@ class UniversalKWordPotentialCertificate:
     def substitution_failures(self) -> Tuple[UniversalKWordPotentialFailure, ...]:
         failures = []
         template_map = self.template_map
-        for row in self.identity_rows:
+        for row in self.identity_row_objects:
             sign = _universal_k_entry_key_sign(row.entry_key)
             if not _universal_k_signed_entry_key_well_formed(row.entry_key):
                 failures.append((row.entry_key, "malformed_signed_entry_key", sign))
@@ -1473,7 +1530,7 @@ class UniversalKWordPotentialCertificate:
 
     @property
     def templates_use_only_current_longitudes(self) -> bool:
-        for _state, word in self.templates:
+        for _state, word in self.template_rows:
             for letter in word:
                 parts = _universal_k_word_potential_letter_parts(letter)
                 if parts is None:
@@ -1501,7 +1558,7 @@ class UniversalKWordPotentialCertificate:
         self,
     ) -> Tuple[UniversalKWordPotentialVariable, ...]:
         raw_variables = []
-        for _state, word in self.templates:
+        for _state, word in self.template_rows:
             for letter in word:
                 parts = _universal_k_word_potential_letter_parts(letter)
                 if parts is None:
@@ -1554,7 +1611,7 @@ class UniversalKWordPotentialCertificate:
     def detector_domain_failures(self) -> Tuple[UniversalKWordPotentialFailure, ...]:
         failures = []
         group_elements = set(self.endpoint_group.elements)
-        for row in self.identity_rows:
+        for row in self.identity_row_objects:
             if not _universal_k_signed_entry_key_well_formed(row.entry_key):
                 continue
             if not _universal_k_is_positive_entry_key(row.entry_key):
@@ -1723,7 +1780,7 @@ class UniversalKWordPotentialCertificate:
         template_map = self.template_map
         group_elements = set(self.endpoint_group.elements)
         domain_failure_keys = {failure[0] for failure in self.detector_domain_failures}
-        for row in self.identity_rows:
+        for row in self.identity_row_objects:
             if not _universal_k_signed_entry_key_well_formed(row.entry_key):
                 continue
             entry_family, source_state, _sign, *_rest = row.entry_key
@@ -1816,7 +1873,11 @@ class UniversalKWordPotentialCertificate:
 
     @property
     def coboundary_defect_failures(self) -> Tuple[UniversalKWordPotentialFailure, ...]:
-        return self.detector_domain_failures + self.identity_failures
+        return (
+            self.malformed_row_failures
+            + self.detector_domain_failures
+            + self.identity_failures
+        )
 
     @property
     def coboundary_defects_constant(self) -> bool:
@@ -1870,6 +1931,7 @@ class UniversalKWordPotentialCertificate:
     def word_potential_templates_verified(self) -> bool:
         return (
             not self.duplicate_template_seed_states
+            and not self.malformed_template_rows
             and not self.malformed_template_seed_states
             and not self.template_word_failures
             and self.templates_use_only_current_longitudes
@@ -1879,6 +1941,7 @@ class UniversalKWordPotentialCertificate:
     def artin_substitutions_verified(self) -> bool:
         return (
             not self.malformed_identity_entry_keys
+            and not self.malformed_identity_rows
             and not self.malformed_identity_next_seed_states
             and not self.duplicate_positive_identity_entry_keys
             and not self.substitution_failures
@@ -1888,6 +1951,7 @@ class UniversalKWordPotentialCertificate:
     def identities_verified(self) -> bool:
         return (
             not self.malformed_identity_entry_keys
+            and not self.malformed_identity_rows
             and not self.malformed_identity_next_seed_states
             and not self.duplicate_positive_identity_entry_keys
             and not self.detector_domain_failures
@@ -5292,7 +5356,9 @@ class UniversalKTelescopingDetectorAudit:
     def word_potential_certificate_ledgers_have_no_duplicates(self) -> bool:
         return self.word_potential_certificate is not None and (
             not self.word_potential_certificate.duplicate_template_seed_states
+            and not self.word_potential_certificate.malformed_template_rows
             and not self.word_potential_certificate.malformed_template_seed_states
+            and not self.word_potential_certificate.malformed_identity_rows
             and not self.word_potential_certificate.malformed_identity_entry_keys
             and not self.word_potential_certificate.malformed_identity_next_seed_states
             and not self.word_potential_certificate.duplicate_positive_identity_entry_keys
@@ -5315,7 +5381,7 @@ class UniversalKTelescopingDetectorAudit:
             return ()
         failures = []
         counts_by_family = self.detector_track_count_by_family
-        for state, word in self.word_potential_certificate.templates:
+        for state, word in self.word_potential_certificate.template_rows:
             if not _universal_k_endpoint_seed_state_well_formed(state):
                 continue
             family, _seed_state = state
@@ -5337,7 +5403,7 @@ class UniversalKTelescopingDetectorAudit:
                     failures.append(
                         (state, "word_potential_track_index_out_of_scope", variable)
                     )
-        for row in self.word_potential_certificate.identity_rows:
+        for row in self.word_potential_certificate.identity_row_objects:
             if not _universal_k_signed_entry_key_well_formed(row.entry_key):
                 continue
             family = row.entry_key[0]
@@ -5396,7 +5462,7 @@ class UniversalKTelescopingDetectorAudit:
             return ()
         failures = []
         initialized_by_family = self.initialized_raw_assignment_variables_by_family
-        for row in self.word_potential_certificate.identity_rows:
+        for row in self.word_potential_certificate.identity_row_objects:
             if not _universal_k_signed_entry_key_well_formed(row.entry_key):
                 continue
             family = row.entry_key[0]
@@ -5612,8 +5678,12 @@ class UniversalKTelescopingDetectorAudit:
         if not self.word_potential_identity_proved:
             reasons.append("word_potential_identity_not_verified")
         if self.word_potential_certificate is not None:
+            if self.word_potential_certificate.malformed_template_rows:
+                reasons.append("word_potential_certificate_malformed_template_rows")
             if self.word_potential_certificate.malformed_template_seed_states:
                 reasons.append("word_potential_certificate_malformed_template_states")
+            if self.word_potential_certificate.malformed_identity_rows:
+                reasons.append("word_potential_certificate_malformed_identity_row_objects")
             if self.word_potential_certificate.malformed_identity_entry_keys:
                 reasons.append("word_potential_certificate_malformed_identity_rows")
             if self.word_potential_certificate.malformed_identity_next_seed_states:
@@ -10131,6 +10201,14 @@ class PostLinearRemainingFiniteSystemAudit:
                     (),
                 ),
                 (
+                    "signed_endpoint_generator_word_potential_certificate_malformed_identity_row_objects",
+                    (),
+                ),
+                (
+                    "signed_endpoint_generator_word_potential_certificate_malformed_template_rows",
+                    (),
+                ),
+                (
                     "signed_endpoint_generator_word_potential_certificate_malformed_next_seed_states",
                     (),
                 ),
@@ -11235,6 +11313,24 @@ class PostLinearRemainingFiniteSystemAudit:
                 "signed_endpoint_generator_word_potential_malformed_identity_rows",
                 (
                     telescoping_audit.word_potential_certificate.malformed_identity_entry_keys
+                    if telescoping_audit is not None
+                    and telescoping_audit.word_potential_certificate is not None
+                    else ()
+                ),
+            ),
+            (
+                "signed_endpoint_generator_word_potential_certificate_malformed_identity_row_objects",
+                (
+                    telescoping_audit.word_potential_certificate.malformed_identity_rows
+                    if telescoping_audit is not None
+                    and telescoping_audit.word_potential_certificate is not None
+                    else ()
+                ),
+            ),
+            (
+                "signed_endpoint_generator_word_potential_certificate_malformed_template_rows",
+                (
+                    telescoping_audit.word_potential_certificate.malformed_template_rows
                     if telescoping_audit is not None
                     and telescoping_audit.word_potential_certificate is not None
                     else ()
