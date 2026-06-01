@@ -419,6 +419,7 @@ finite word-potential certificate table supplied
 word-potential identity rows match D_Gamma and Gamma labels
 word-potential template coverage for every reachable endpoint state
 word-potential templates use only current longitude variables
+word-potential variables use only declared fixed detector tracks
 word-potential Artin substitution from the detector recurrence
 word-potential identity for every signed row
 initial word-potential normalization
@@ -507,8 +508,10 @@ The endpoint potential itself may not be a tautological accumulated product.
 For every reachable endpoint state the certificate must supply a finite word
 template in current longitude variables only.  Raw generator-assignment
 variables may appear in the local Artin substitution, but not in the terminal
-readout word.  The audit must verify the induced Artin substitution and the
-finite local identity
+readout word.  The variables must also be scoped to the declared fixed track
+counts for their endpoint families; a word using `U_{999,j}` is not backed by
+an initialized detector track just because it has the right letter.  The audit
+must verify the induced Artin substitution and the finite local identity
 
 ```text
 W_{s'}(A_gamma^epsilon(U,A)) = W_s(U) h
@@ -783,6 +786,8 @@ signed_endpoint_generator_word_potential_covered_seed_states
 signed_endpoint_generator_word_potential_duplicate_seed_states
 signed_endpoint_generator_word_potential_seed_state_scope_matches_expected
 signed_endpoint_generator_word_potential_templates_use_only_current_longitudes
+signed_endpoint_generator_word_potential_track_scope_verified
+signed_endpoint_generator_word_potential_track_scope_failures
 signed_endpoint_generator_word_potential_artin_substitution_verified
 signed_endpoint_generator_word_potential_identity_verified
 signed_endpoint_generator_word_potential_certificate_template_states

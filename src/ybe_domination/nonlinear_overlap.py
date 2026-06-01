@@ -2703,6 +2703,10 @@ class UniversalKTelescopingDetectorAudit:
         )
 
     @property
+    def detector_track_count_by_family(self) -> Mapping[str, int]:
+        return dict(self.detector_track_counts_by_family)
+
+    @property
     def duplicate_detector_track_count_families(self) -> Tuple[str, ...]:
         return _duplicate_values(
             tuple(family for family, _count in self.detector_track_counts_by_family)
@@ -2919,6 +2923,66 @@ class UniversalKTelescopingDetectorAudit:
         )
 
     @property
+    def word_potential_track_scope_failures(
+        self,
+    ) -> Tuple[UniversalKWordPotentialFailure, ...]:
+        if self.word_potential_certificate is None:
+            return ()
+        failures = []
+        counts_by_family = self.detector_track_count_by_family
+        for state, word in self.word_potential_certificate.templates:
+            family, _seed_state = state
+            count = counts_by_family.get(family)
+            if count is None:
+                failures.append(
+                    (state, "word_potential_family_has_no_track_count", family)
+                )
+                continue
+            for variable, _exponent in word:
+                if (
+                    _universal_k_word_potential_variable_valid(variable)
+                    and variable[1] >= count
+                ):
+                    failures.append(
+                        (state, "word_potential_track_index_out_of_scope", variable)
+                    )
+        for row in self.word_potential_certificate.identity_rows:
+            family = row.entry_key[0]
+            count = counts_by_family.get(family)
+            if count is None:
+                failures.append(
+                    (
+                        row.entry_key,
+                        "word_potential_row_family_has_no_track_count",
+                        family,
+                    )
+                )
+                continue
+            row_variables = []
+            for variable, image in row.artin_substitution:
+                row_variables.append(variable)
+                row_variables.extend(
+                    image_variable for image_variable, _exponent in image
+                )
+            for variable in row_variables:
+                if (
+                    _universal_k_word_potential_variable_valid(variable)
+                    and variable[1] >= count
+                ):
+                    failures.append(
+                        (
+                            row.entry_key,
+                            "word_potential_substitution_track_index_out_of_scope",
+                            variable,
+                        )
+                    )
+        return tuple(failures)
+
+    @property
+    def word_potential_track_scope_verified(self) -> bool:
+        return not self.word_potential_track_scope_failures
+
+    @property
     def word_potential_artin_substitution_proved(self) -> bool:
         return (
             self.word_potential_certificate is not None
@@ -2944,6 +3008,7 @@ class UniversalKTelescopingDetectorAudit:
         return (
             self.word_potential_templates_supplied
             and self.word_potential_templates_use_only_current_longitudes_verified
+            and self.word_potential_track_scope_verified
             and self.word_potential_artin_substitution_proved
             and self.word_potential_identity_proved
         )
@@ -2957,6 +3022,7 @@ class UniversalKTelescopingDetectorAudit:
         return (
             self.word_potential_templates_supplied
             and self.word_potential_templates_use_only_current_longitudes_verified
+            and self.word_potential_track_scope_verified
         )
 
     @property
@@ -2964,6 +3030,7 @@ class UniversalKTelescopingDetectorAudit:
         return (
             self.detector_track_initializations_verified
             and self.word_potential_templates_supplied
+            and self.word_potential_track_scope_verified
         )
 
     @property
@@ -3057,6 +3124,8 @@ class UniversalKTelescopingDetectorAudit:
             reasons.append("word_potential_certificate_duplicate_ledgers")
         if not self.word_potential_templates_use_only_current_longitudes_verified:
             reasons.append("word_potential_uses_raw_assignment_variables")
+        if not self.word_potential_track_scope_verified:
+            reasons.append("word_potential_track_variables_out_of_scope")
         if not self.word_potential_artin_substitution_proved:
             reasons.append("word_potential_artin_substitution_not_verified")
         if not self.word_potential_identity_proved:
@@ -7117,6 +7186,22 @@ class PostLinearRemainingFiniteSystemAudit:
                     telescoping_audit.word_potential_templates_use_only_current_longitudes_verified
                     if telescoping_audit is not None
                     else False
+                ),
+            ),
+            (
+                "signed_endpoint_generator_word_potential_track_scope_verified",
+                (
+                    telescoping_audit.word_potential_track_scope_verified
+                    if telescoping_audit is not None
+                    else False
+                ),
+            ),
+            (
+                "signed_endpoint_generator_word_potential_track_scope_failures",
+                (
+                    telescoping_audit.word_potential_track_scope_failures
+                    if telescoping_audit is not None
+                    else ()
                 ),
             ),
             (

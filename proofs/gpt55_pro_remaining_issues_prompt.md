@@ -1200,6 +1200,12 @@ word in current longitude variables `U_{r,j}` only.  It may not use raw
 generator-assignment variables `a_{r,j}` in the terminal readout word.  The
 raw assignments may appear only in the local Artin substitution that updates
 the formal variables.
+Every track index appearing in a terminal template or in a local substitution
+must be backed by the declared fixed track count for that endpoint family.
+For example, if the target family has `R_E` tracks, no variable `U_{r,j}` or
+`A_{r,j}` with `r >= R_E` is a valid detector-lift variable.  Otherwise the
+terminal word is not a word in initialized evaluated longitudes, even if it
+uses the letter `U`.
 
 For every signed endpoint row
 
@@ -1241,8 +1247,9 @@ Gamma^{E,epsilon}_{a,b}(s,x,y)=(s',T^epsilon_{a,b}(x,y),h).
 
 Each `W_s` is a word in variables `U_{r,j}` only.  The local substitution may
 use both `U_{r,j}` and raw assignment variables `A_{r,j}`, but the terminal
-template may not contain any `A` variable.  For the active two local strands,
-the substitution must be the Artin detector recurrence:
+template may not contain any `A` variable.  All such variables must use track
+indices in the finite declared range for the endpoint family.  For the active
+two local strands, the substitution must be the Artin detector recurrence:
 
 ```text
 epsilon=+1:
@@ -1936,7 +1943,8 @@ Before returning a claimed resolution, explicitly answer:
    detector-lift telescope: fixed detector tracks chosen before the braid,
    track initialization from interval data, the Artin detector recurrence,
    word templates `W_s` for every reachable endpoint state using only current
-   longitude variables, the induced Artin substitution, the identity
+   longitude variables whose track indices are declared and initialized, the
+   induced Artin substitution, the identity
    `W_{s'}(A_gamma^epsilon(U,A))=W_s(U)h` for every signed row, initial
    normalization, and exact `D_Gamma` coverage?
 9. For cutoff families C and M, are the readouts faithful on exactly their

@@ -3237,6 +3237,53 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             missing_initial_normalization.failure_reasons,
         )
 
+        out_of_scope_word = ((("U", 7, 0), 1), (("U", 7, 0), -1))
+
+        def out_of_scope_substitution(sign):
+            if sign == 1:
+                return (
+                    (
+                        ("U", 7, 0),
+                        (
+                            (("U", 7, 0), 1),
+                            (("A", 7, 0), 1),
+                            (("U", 7, 0), -1),
+                            (("U", 7, 1), 1),
+                        ),
+                    ),
+                )
+            return ((("U", 7, 0), ((("U", 7, 1), 1),)),)
+
+        out_of_scope_tracks = replace(
+            theorem_complete,
+            telescoping_detector_audit=replace(
+                theorem_complete.telescoping_detector_audit,
+                word_potential_certificate=replace(
+                    word_potential_certificate,
+                    templates=((("U", seed_state), out_of_scope_word),),
+                    identity_rows=tuple(
+                        UniversalKWordPotentialIdentityRow(
+                            entry_key=key,
+                            next_seed_state=key[1],
+                            endpoint_value=(
+                                word_potential_certificate.endpoint_group.identity
+                            ),
+                            artin_substitution=out_of_scope_substitution(key[2]),
+                        )
+                        for key in required_entry_keys
+                    ),
+                ),
+            ),
+        )
+        out_of_scope_audit = out_of_scope_tracks.telescoping_detector_audit
+        self.assertFalse(out_of_scope_audit.word_potential_track_scope_verified)
+        self.assertFalse(out_of_scope_tracks.telescoping_detector_proved)
+        self.assertFalse(out_of_scope_tracks.proves_signed_endpoint_generator_tables)
+        self.assertIn(
+            "word_potential_track_variables_out_of_scope",
+            out_of_scope_tracks.failure_reasons,
+        )
+
         incomplete_theorem = UniversalKResidualFaithfulnessAudit(
             active_endpoint_families=("U", "C"),
             covered_endpoint_families=("U",),
