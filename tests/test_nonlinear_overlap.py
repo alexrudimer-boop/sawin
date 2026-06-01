@@ -2673,6 +2673,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             entry_domain_derived_from_interval=True,
             finite_row_checks_derived_from_tables=True,
             rows=(positive_row, negative_row),
+            endpoint_group=cyclic_group(2),
             endpoint_targets_fixed=True,
             endpoint_target_audit=trivial_endpoint_target_audit("U"),
             coordinate_components_verified=True,
@@ -2855,6 +2856,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             entry_domain_derived_from_interval=True,
             finite_row_checks_derived_from_tables=True,
             rows=(positive_row, negative_row),
+            endpoint_group=cyclic_group(2),
             endpoint_targets_fixed=True,
             endpoint_target_audit=trivial_endpoint_target_audit("U"),
             coordinate_components_verified=True,
@@ -2929,6 +2931,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             entry_domain_derived_from_interval=True,
             finite_row_checks_derived_from_tables=True,
             rows=(positive_row, negative_row),
+            endpoint_group=cyclic_group(2),
             endpoint_targets_fixed=True,
             endpoint_target_audit=trivial_endpoint_target_audit("U"),
             coordinate_components_verified=True,
@@ -2947,6 +2950,16 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertTrue(theorem.proves_residual_faithfulness)
         self.assertTrue(theorem_complete.residual_faithfulness_proved)
         self.assertTrue(theorem_complete.proves_signed_endpoint_generator_tables)
+
+        theorem_without_group_table = replace(theorem_complete, endpoint_group=None)
+        self.assertFalse(theorem_without_group_table.signed_finite_row_checks_proved)
+        self.assertFalse(
+            theorem_without_group_table.proves_signed_endpoint_generator_tables
+        )
+        self.assertIn(
+            "finite_signed_row_checks_missing_endpoint_group",
+            theorem_without_group_table.failure_reasons,
+        )
 
         theorem_without_input_domain = replace(
             theorem,
@@ -3473,6 +3486,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             entry_domain_derived_from_interval=True,
             finite_row_checks_derived_from_tables=True,
             rows=(positive_row, negative_row),
+            endpoint_group=cyclic_group(2),
             endpoint_targets_fixed=True,
             endpoint_target_audit=trivial_endpoint_target_audit("U"),
             coordinate_components_verified=True,
@@ -3596,6 +3610,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             entry_domain_derived_from_interval=True,
             finite_row_checks_derived_from_tables=True,
             rows=rows,
+            endpoint_group=cyclic_group(2),
             endpoint_targets_fixed=True,
             endpoint_target_audit=trivial_endpoint_target_audit("U"),
             coordinate_components_verified=True,
@@ -3905,6 +3920,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             entry_domain_derived_from_interval=True,
             finite_row_checks_derived_from_tables=True,
             rows=rows,
+            endpoint_group=cyclic_group(2),
             endpoint_targets_fixed=True,
             endpoint_target_audit=trivial_endpoint_target_audit("U"),
             coordinate_components_verified=True,
@@ -4961,6 +4977,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             entry_domain_derived_from_interval=True,
             finite_row_checks_derived_from_tables=True,
             rows=(row, replace(row, sign=-1)),
+            endpoint_group=cyclic_group(2),
             endpoint_targets_fixed=True,
             endpoint_target_audit=trivial_endpoint_target_audit("U"),
             coordinate_components_verified=True,

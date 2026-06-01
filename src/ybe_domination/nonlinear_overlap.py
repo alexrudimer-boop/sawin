@@ -3399,6 +3399,21 @@ class UniversalKSignedEndpointGeneratorAudit:
         return bool(self.rows) and not self.undefined_rows
 
     @property
+    def signed_finite_row_checks_proved(self) -> bool:
+        return (
+            self.finite_row_checks_derived_from_tables
+            and self.endpoint_group is not None
+            and self.coordinate_components_verified
+            == (not self.coordinate_component_failures)
+            and self.inverse_pairing_verified == (not self.inverse_pairing_failures)
+            and self.inverse_cancellation_verified
+            == (not self.inverse_cancellation_failures)
+            and self.positive_ybe_path_verified == (not self.positive_ybe_path_failures)
+            and self.positive_ybe_cocycle_verified
+            == (not self.positive_ybe_cocycle_failures)
+        )
+
+    @property
     def cutoff_readouts_required(self) -> bool:
         return any(
             endpoint_family in {"C", "M"}
@@ -3629,7 +3644,7 @@ class UniversalKSignedEndpointGeneratorAudit:
         return (
             self.signed_generator_domain_exact
             and self.all_rows_defined
-            and self.finite_row_checks_derived_from_tables
+            and self.signed_finite_row_checks_proved
             and self.endpoint_targets_proved
             and self.coordinate_components_verified
             and self.inverse_pairing_verified
@@ -3690,6 +3705,10 @@ class UniversalKSignedEndpointGeneratorAudit:
             reasons.append("undefined_signed_generator_rows")
         if not self.finite_row_checks_derived_from_tables:
             reasons.append("finite_signed_row_checks_not_derived_from_tables")
+        if self.finite_row_checks_derived_from_tables and self.endpoint_group is None:
+            reasons.append("finite_signed_row_checks_missing_endpoint_group")
+        if self.finite_row_checks_derived_from_tables and not self.signed_finite_row_checks_proved:
+            reasons.append("finite_signed_row_checks_inconsistent")
         if not self.endpoint_targets_proved:
             reasons.append("endpoint_targets_not_fixed")
             if self.required_seed_states and self.endpoint_target_audit is None:

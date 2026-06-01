@@ -555,6 +555,11 @@ gates claim success.  Likewise, the finite row checks themselves must be
 derived from the supplied rows, actual interval table, endpoint group or
 cutoff multiplication, and fixed detector-lift data; unsupported success
 flags are recorded as `finite_signed_row_checks_not_derived_from_tables`.
+For group-valued endpoint rows, the concrete endpoint group must be supplied
+to evaluate inverse-cancellation and positive-YBE label products.  A row
+audit that names only an endpoint target order, or supplies success booleans
+without the group table, is reported as missing the endpoint group for finite
+signed row checks.
 
 The post-linear wrapper can now derive this signed endpoint audit directly
 from supplied table rows and witnesses after computing the interval's current

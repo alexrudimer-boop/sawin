@@ -1000,6 +1000,10 @@ compatibility, inverse cancellation, YBE cocycle, rowwise longitude
 diagnostics, or telescoping detector data are not certificates.  If a
 derived check fails, the certificate must
 report the actual failed rows or local triples, not only a failed boolean.
+For group-valued signed rows, inverse cancellation and positive YBE cocycle
+checks require the actual finite endpoint group multiplication table.  A
+signed endpoint audit with success booleans but no concrete endpoint group is
+not a finite row-check certificate, even if an endpoint target order is listed.
 
 Every supplied row must also pass the coordinate-component check against the
 actual interval table: positive rows must have `(x',y')=T_{a,b}(x,y)`, and
