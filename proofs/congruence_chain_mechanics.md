@@ -126,6 +126,18 @@ fixed finite group.  This makes the congruence-chain induction audit
 construction-shaped without pretending that the remaining Master Local-Minimal
 Residual Theorem has been proved.
 
+The handoff now also recognizes the endpoint-observer closure verdicts from
+the post-linear U/C/M layer, including
+`closed_by_routed_endpoint_certificates` and the individual U, C, and M
+endpoint-witness or symmetric-fork closures.  These verdicts are accepted only
+when the local summary supplies an actual fixed detector product group and no
+detector gap rows.  Gap rows dominate a supplied group: if a summary reports
+any delegated or residual gap, the chain records that row as incomplete rather
+than using the group.  Thus the conditional endpoint-observer theorem can
+feed the chain assembly directly once its local group `G(pi,Q)` is
+constructed, while a bare closed-looking endpoint verdict without that group,
+or with an unresolved residual gap, is still rejected.
+
 ## Limitation
 
 The congruence code enumerates finite partitions only for small examples.  It

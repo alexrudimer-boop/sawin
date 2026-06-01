@@ -1001,15 +1001,18 @@ bare flag saying "derived from interval" is not enough.  The finite row checks
 themselves must be marked as derived from the supplied signed rows, actual
 interval table, endpoint group or cutoff multiplication, and explicit
 detector-lift data; manually asserted success flags for coordinate
-compatibility, inverse cancellation, adjacent YBE cocycle,
-far-commutativity, rowwise longitude diagnostics, or telescoping detector
-data are not certificates.  If a derived check fails, the certificate must
-report the actual failed rows or local triples, not only a failed boolean.
-For group-valued signed rows, inverse cancellation, positive YBE cocycle, and
-far-commutativity checks require the actual finite endpoint group
-multiplication table.  A signed endpoint audit with success booleans but no
-concrete endpoint group is not a finite row-check certificate, even if an
-endpoint target order is listed.
+compatibility, inverse-derived negatives, positive state/coordinate YBE,
+state/coordinate far-commutativity, rowwise longitude diagnostics, or
+telescoping detector data are not certificates.  If a derived check fails,
+the certificate must report the actual failed rows or local triples, not only
+a failed boolean.  For group-valued signed rows, inverse cancellation requires
+the actual finite endpoint group multiplication table.  The adjacent-YBE and
+far-commutativity label products may still be recorded as diagnostics, but
+they are not independent closure gates once the word-potential detector lift
+is proved: the potential-implies-cocycle argument below derives those label
+relations from the state/coordinate braid relations.  A signed endpoint audit
+with success booleans but no concrete endpoint group is not a finite row-check
+certificate, even if an endpoint target order is listed.
 Moreover, the concrete endpoint group used for signed-row multiplication must
 match the group-valued target ledger: its order must equal the product of the
 listed endpoint-group orders for the active group-targeted families.  Symmetric
@@ -1071,8 +1074,8 @@ The multiplication table of `H_E`, or the corresponding finite cutoff target,
 must be supplied so these label products are directly evaluated for every
 signed row pair.
 
-The positive local endpoint YBE cocycle law is the equality of the two
-three-strand table products obtained from the coloured YBE square.  Starting
+The positive local endpoint YBE state/coordinate law is the equality of the
+two three-strand table paths obtained from the coloured YBE square.  Starting
 from `(s,x,y,z)` over colours `(a,b,c)`, compose the three positive entries
 on the left side:
 
@@ -1091,17 +1094,19 @@ Gamma^{E,+}_{a,b dot c},
 Gamma^{E,+}_{a*(b dot c),b*c}.
 ```
 
-There are two separate finite obligations here.  First, the positive-YBE
-path check must prove that every row used in both `121` and `212` paths is
-present and that the final endpoint state and final three fibre coordinates
-agree.  Second, the positive-YBE cocycle check must prove that the ordered
-products of the three `H_E` labels agree in `H_E`.  Both checks range over
-all `s in S_E^reach` and all local triples `(x,y,z)`.
+The positive-YBE path check must prove that every row used in both `121` and
+`212` paths is present and that the final endpoint state and final three
+fibre coordinates agree.  This check ranges over all `s in S_E^reach` and all
+local triples `(x,y,z)`.  The ordered products of the three endpoint labels
+may be recorded as diagnostics, but after a valid word-potential certificate
+is supplied the label equality follows automatically from the path equality
+and the Artin braid relation.
 
-The signed endpoint observer must also satisfy far-commutativity for disjoint
-crossings.  For every pair of positions with `|i-j|>1`, every sign pair
-`epsilon,delta in {+1,-1}`, every compatible four-strand colour/fibre tuple,
-and every reachable endpoint state, the two path products
+The signed endpoint observer must also satisfy state/coordinate
+far-commutativity for disjoint crossings.  For every pair of positions with
+`|i-j|>1`, every sign pair `epsilon,delta in {+1,-1}`, every compatible
+four-strand colour/fibre tuple, and every reachable endpoint state, the two
+paths
 
 ```text
 Gamma_i^epsilon Gamma_j^delta
@@ -1110,15 +1115,45 @@ Gamma_j^delta Gamma_i^epsilon
 ```
 
 must use defined rows and must have the same terminal endpoint state, the
-same terminal colour/fibre tuple, and the same ordered product of emitted
-labels in the endpoint group or cutoff target.  Equivalently, the endpoint
-observer must respect the braid presentation, not only one adjacent
+same terminal colour/fibre tuple.  The ordered products of emitted labels in
+the endpoint group or cutoff target may be recorded as diagnostics, but they
+are not separate closure obligations once the word-potential certificate is
+proved.  Equivalently, the endpoint observer must respect the braid
+presentation at the state/coordinate level, not only one adjacent
 Yang-Baxter square.  If negative rows are proved to be genuine inverses, it is
 enough to derive the signed far-commutativity variants from positive
-far-commutativity and inverse cancellation, but the proof must still contain
-some explicit finite far-commutativity gate.  Without it, endpoint
-accumulation may depend on the chosen braid word even when inverse
-cancellation and adjacent positive YBE hold.
+state/coordinate far-commutativity and inverse cancellation, but the proof
+must still contain some explicit finite far-commutativity path gate.  Without
+it, endpoint accumulation may depend on the chosen braid word.
+
+Potential-implies-cocycle lemma.  Write a positive endpoint row as
+
+```text
+Gamma_i^+(q)=(tau_i(q),h_i(q)),
+q=(s, fibre tuple).
+```
+
+Assume every positive row satisfies the word-potential identity
+
+```text
+W_{tau_i(q)}(A_i(U,M)) = W_s(U) h_i(q).
+```
+
+Here `A_i` is the Artin detector substitution and `M` is the fixed carrier
+data from detector-track initialization.  For any positive word `w=i_1...i_m`,
+induction gives
+
+```text
+W_{tau_w(q)}(A_w(U,M)) = W_s(U) h_w(q),
+```
+
+where `h_w(q)` is the ordered product of emitted labels along the word.  If
+two positive words have the same state/coordinate map and the same Artin
+substitution, their left sides are equal, so cancellation in `H_E` gives the
+same endpoint-label product.  Therefore adjacent label YBE and far label
+commutativity follow from the word-potential identity plus the positive
+state/coordinate braid relations.  If negative rows are defined as actual
+inverses of positive rows, signed label cancellation follows as well.
 
 The rowwise signed two-strand Artin-longitude identity is not a decisive
 closure condition.  Under the fixed Artin convention
@@ -1487,9 +1522,9 @@ coordinate_components_match_T_plus_and_T_inverse,
 all_signed_rows_defined,
 signed_inverse_row_pairing,
 signed_inverse_cancellation,
-positive_local_endpoint_ybe_path,
-positive_local_endpoint_ybe_cocycle,
-signed_far_commutativity,
+positive_state_coordinate_ybe_path,
+state_coordinate_far_commutativity_path,
+label_cocycles_derived_from_word_potential_not_independent,
 fixed_detector_track_initialization,
 detector_track_initialization_rows_exact,
 detector_track_initialization_rules_use_only_allowed_initial_data,
@@ -1900,8 +1935,9 @@ with exact cutoff readouts where needed, such that:
 ```text
 S_E^reach is the exact signed-transition closure of kappa(K_nabla);
 Gamma^{E,+/-} is defined on the full D_Gamma(E);
-the observer satisfies inverse cancellation, adjacent endpoint YBE, and
-  far-commutativity, so endpoint accumulation is a braid invariant;
+positive state/coordinate endpoint maps satisfy adjacent YBE and
+  far-commutativity;
+negative rows are actual inverses of positive rows;
 the fixed-assignment word-potential detector lift proves
   endpoint_E(beta) in V_beta(H_E) for every braid index n and every beta in N_n;
 product endpoint rows are separated family-by-family;
@@ -1964,6 +2000,12 @@ dominates `X`.  Thus a complete A proof now only needs the local U/C/M
 endpoint-observer lemma, plus the unsupported-companion contradiction if that
 exclusion is not accepted as a standing reduction.
 
+At the executable handoff level, an endpoint-observer closure verdict may be
+fed into the congruence-chain rack assembly only together with the actual
+fixed detector product group for that interval.  A bare verdict such as
+`closed_by_routed_endpoint_certificates` without its group `G(pi,Q)` is still
+an open local gap.
+
 ## 11. What Must Be Done To Resolve The Problem
 
 1. Prove or repair the post-linear reduction.
@@ -1995,12 +2037,12 @@ exclusion is not accepted as a standing reduction.
 3. Close or refute System U.
 
    Define `S_U^reach` from the exact `S_U` values hit by `kappa`, define the
-   full signed endpoint table on `D_Gamma`, construct fixed detector-track
-   initialization rules, prove inverse cancellation, adjacent endpoint YBE,
-   and far-commutativity, prove the Artin detector recurrence, define word
-   templates `W_s` for all reachable states, verify the finite word-potential
-   identity for every signed row, and prove the terminal word uses only final
-   evaluated longitudes.  Then prove uniformly in
+   positive endpoint table on `D_Gamma`, define negative rows as actual
+   inverses, construct fixed detector-track initialization rules, prove
+   positive state/coordinate adjacent YBE and far-commutativity, prove the
+   Artin detector recurrence, define word templates `W_s` for all reachable
+   states, verify the positive finite word-potential identity, and prove the
+   terminal word uses only final evaluated longitudes.  Then prove uniformly in
    `n` that every routed
    triangular-recovery endpoint lies in `V_beta(U_tri)`, or prove a faithful
    symmetric endpoint cutoff for the exact routed U family.  Otherwise,
@@ -2009,11 +2051,12 @@ exclusion is not accepted as a standing reduction.
 4. Close or refute System C.
 
    Define `S_C^reach` from the exact `S_C` values hit by `kappa`, define the
-   full signed endpoint table on `D_Gamma`, construct fixed detector-track
-   initialization rules, prove inverse cancellation, adjacent endpoint YBE,
-   and far-commutativity, prove the Artin detector recurrence, define word
-   templates, verify the finite word-potential identity, and construct exact
-   faithful cutoff readouts for the routed identity-continuation ledger.
+   positive endpoint table on `D_Gamma`, define negative rows as actual
+   inverses, construct fixed detector-track initialization rules, prove
+   positive state/coordinate adjacent YBE and far-commutativity, prove the
+   Artin detector recurrence, define word templates, verify the positive
+   finite word-potential identity, and construct exact faithful cutoff
+   readouts for the routed identity-continuation ledger.
    Then construct fixed detector-lift endpoint witnesses or a faithful
    symmetric cutoff for every identity-routed
    universal-continuation edge.  Otherwise, extract a normalized-law B
@@ -2022,11 +2065,12 @@ exclusion is not accepted as a standing reduction.
 5. Close or refute System M.
 
    Define `S_M^reach` from the exact `S_M` values hit by `kappa`, define the
-   full signed endpoint table on `D_Gamma`, construct fixed detector-track
-   initialization rules, prove inverse cancellation, adjacent endpoint YBE,
-   and far-commutativity, prove the Artin detector recurrence, define word
-   templates, verify the finite word-potential identity, and construct exact
-   faithful cutoff readouts for the routed mixed-unit ledger.  Then construct
+   positive endpoint table on `D_Gamma`, define negative rows as actual
+   inverses, construct fixed detector-track initialization rules, prove
+   positive state/coordinate adjacent YBE and far-commutativity, prove the
+   Artin detector recurrence, define word templates, verify the positive
+   finite word-potential identity, and construct exact faithful cutoff
+   readouts for the routed mixed-unit ledger.  Then construct
    fixed detector-lift endpoint/readout witnesses or a faithful symmetric
    cutoff for every mixed-unit context key.  Otherwise, extract a
    normalized-law B sequence from a genuine M endpoint miss.
@@ -2077,18 +2121,21 @@ Before returning a claimed resolution, explicitly answer:
    `Gamma^{U,+/-}`, `Gamma^{C,+/-}`, and `Gamma^{M,+/-}` defined on those
    exact reachable state spaces and on every entry of `D_Gamma`, not merely
    one entry per seed and sign?
-8. Do the signed endpoint generator tables satisfy full braid-presentation
-   coherence: inverse cancellation, adjacent positive endpoint YBE path and
-   cocycle, and far-commutativity for disjoint signed crossings, together
-   with the fixed-assignment detector-lift telescope: fixed detector tracks
+8. Do the endpoint generator tables satisfy the reduced full-braid observer
+   certificate: positive state/coordinate adjacent YBE path,
+   state/coordinate far-commutativity for disjoint crossings, negative rows
+   defined as actual inverses of positive rows, and the fixed-assignment
+   detector-lift telescope?  The telescope must include fixed detector tracks
    chosen before the braid, track initialization from interval data, every
    raw assignment variable used by a substitution initialized by its track,
    the Artin detector recurrence, word templates `W_s` for every reachable
    endpoint state using only current longitude variables whose track indices
-   are declared and initialized, the induced Artin substitution, the identity
-   `W_{s'}(A_gamma^epsilon(U,A))=W_s(U)h` for every signed row, initial
+   are declared and initialized, the induced positive Artin substitution, the
+   identity `W_{s'}(A_gamma^+(U,A))=W_s(U)h` for every positive row, initial
    normalization on exactly the current `kappa` seed image, and exact
-   `D_Gamma` coverage?
+   `D_Gamma` coverage?  Are adjacent/far label cocycles treated as derived
+   from this word-potential certificate rather than as independent local
+   assumptions?
 9. For cutoff families C and M, are the readouts faithful on exactly their
    routed ledgers with no extra channels and no duplicated seed-state entries?
 10. Is every detector group, endpoint group, cutoff group, and rack

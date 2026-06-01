@@ -66,6 +66,7 @@ from ybe_domination import (
     section_rank_profile_collapse_audit,
     section_unit_row_audits,
     side_opposite_local_interval,
+    symmetric_group,
     missing_triangular_coordinate_unit_routing_audit,
     missing_triangular_left_rack_cardinality_audit,
     missing_triangular_partial_constant_closure_audit,
@@ -5096,6 +5097,38 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             "far_commutativity_terminal_mismatch",
             tuple(failure[1] for failure in failures),
         )
+
+    def test_label_cocycle_mismatches_are_diagnostic_after_path_checks(self):
+        seed_state = ("*", "*", "left_constant_map_universal_kernel")
+        interval = one_color_identity_interval()
+        group = symmetric_group(3)
+        swap01 = (1, 0, 2)
+        swap12 = (0, 2, 1)
+        reachable = (("U", seed_state),)
+        keys = universal_k_signed_endpoint_required_entry_keys(interval, reachable)
+        rows = []
+        for row in identity_signed_endpoint_rows(keys):
+            endpoint_value = group.identity
+            if (row.input_left, row.input_right) == (0, 0):
+                endpoint_value = swap01
+            if (row.input_left, row.input_right) == (1, 1):
+                endpoint_value = swap12
+            rows.append(replace(row, endpoint_value=endpoint_value))
+
+        audit = universal_k_signed_endpoint_generator_audit(
+            interval,
+            (),
+            reachable,
+            tuple(rows),
+            endpoint_group=group,
+        )
+
+        self.assertTrue(audit.positive_ybe_path_verified)
+        self.assertFalse(audit.positive_ybe_cocycle_verified)
+        self.assertTrue(audit.far_commutativity_verified)
+        self.assertTrue(audit.far_commutativity_label_diagnostic_failures)
+        self.assertFalse(audit.far_commutativity_path_failures)
+        self.assertTrue(audit.signed_finite_row_checks_proved)
 
     def test_signed_endpoint_two_strand_base_failures_check_longitude_witnesses(self):
         seed_state = ("*", "*", "left_constant_map_universal_kernel")

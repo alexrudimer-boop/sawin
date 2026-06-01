@@ -154,6 +154,62 @@ class CongruenceChainRackTests(unittest.TestCase):
         self.assertTrue(assembly.size_formula_holds)
         self.assertEqual(tuple(step.interval_index for step in assembly.steps), (12, 13))
 
+    def test_endpoint_observer_closed_verdicts_feed_chain_assembly(self):
+        terminal = rack_solution(["top"], lambda _left, right: right)
+        summaries = (
+            FakeLocalSummary(
+                "closed_by_routed_endpoint_certificates",
+                cyclic_group(5),
+                (),
+            ),
+            FakeLocalSummary(
+                "closed_by_triangular_recovery_endpoint_witness",
+                cyclic_group(2),
+                (),
+            ),
+        )
+
+        chain = closed_local_detector_chain(summaries, first_interval_index=20)
+
+        self.assertTrue(chain.is_complete)
+        self.assertEqual(chain.detector_group_orders, (5, 2))
+
+        assembly = assemble_closed_local_detector_chain_rack(
+            terminal,
+            summaries,
+            first_interval_index=20,
+        )
+
+        self.assertEqual(assembly.detector_group_orders, (5, 2))
+        self.assertEqual(assembly.final_rack_size, 1 * 50 * 8)
+        self.assertTrue(assembly.size_formula_holds)
+        self.assertEqual(tuple(step.interval_index for step in assembly.steps), (20, 21))
+
+    def test_endpoint_closed_verdict_still_requires_explicit_group(self):
+        summaries = (
+            FakeLocalSummary(
+                "closed_by_routed_endpoint_certificates",
+                None,
+                (),
+                "missing endpoint observer product group",
+            ),
+            FakeLocalSummary(
+                "closed_by_mixed_unit_symmetric_endpoint_fork",
+                cyclic_group(3),
+                ("missing_residual_faithfulness",),
+            ),
+        )
+
+        chain = closed_local_detector_chain(summaries, first_interval_index=30)
+
+        self.assertFalse(chain.is_complete)
+        self.assertEqual(chain.detector_group_orders, ())
+        first_gap, second_gap = chain.gap_rows
+        self.assertFalse(first_gap.is_open_verdict)
+        self.assertEqual(first_gap.gaps, ("missing_closed_detector_group",))
+        self.assertFalse(second_gap.is_open_verdict)
+        self.assertEqual(second_gap.gaps, ("missing_residual_faithfulness",))
+
 
 if __name__ == "__main__":
     unittest.main()

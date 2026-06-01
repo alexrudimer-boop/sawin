@@ -18,6 +18,10 @@ sharp rack detector replaces `Q` by `Q x A_{G(pi,Q)}`.  Iterating this along
 the finite congruence chain yields a rack independent of braid index.  Thus
 the remaining obstruction recorded here is local: construct those U/C/M
 endpoint observers, or construct a normalized-law counterexample.
+The congruence-chain helper now treats endpoint-observer closure verdicts as
+closed local summaries only when they carry the actual fixed detector product
+group; otherwise the row remains a local gap rather than being assembled into
+the final rack.
 
 ## Input data
 
@@ -423,9 +427,9 @@ endpoint-target product-family separation
 coordinate components match T and T inverse
 signed inverse row pairing
 signed inverse cancellation
-positive local endpoint YBE path
-positive local endpoint YBE cocycle
-signed far-commutativity for disjoint crossings
+positive state/coordinate endpoint YBE path
+state/coordinate far-commutativity for disjoint crossings
+label cocycles recorded only as word-potential diagnostics
 fixed-assignment detector-track initialization
 Artin detector recurrence on each track
 finite word-potential certificate table supplied
@@ -478,11 +482,13 @@ ledger rather than silently collapsed.  Cutoff braid-index independence is
 derived from the positive fixed degree and exact finite readout rows, so the
 legacy `braid_index_independent` flag on this audit is diagnostic only.
 
-When a finite endpoint group is supplied, the inverse-cancellation,
-positive-YBE cocycle, and far-commutativity gates are checked by multiplying
-the emitted endpoint labels in that group.  Thus those gates require a
-concrete group table and cannot be discharged by naming a candidate label set
-alone.
+When a finite endpoint group is supplied, inverse cancellation is checked by
+multiplying the emitted endpoint labels in that group.  Adjacent-YBE and
+far-commutativity label products are still computed and reported as
+diagnostics, but they are no longer independent closure gates once the
+word-potential detector lift is present.  The potential-implies-cocycle
+argument derives those label relations from the state/coordinate braid
+relations and the local word-potential identities.
 The concrete group table must also match the target ledger: its order must be
 the product of the endpoint-group orders listed for the active group-valued
 families.  Symmetric cutoff degrees are handled by the cutoff readout audit
@@ -490,17 +496,20 @@ instead of being folded into this product.  A mismatch is reported as
 `endpoint_target_group_order_mismatch` and leaves the endpoint target gate
 open.
 
-The signed endpoint observer is now audited as a full braid-presentation
-observer.  Inverse cancellation handles `sigma_i sigma_i^-1`, the adjacent
-positive-YBE path and cocycle gates handle `sigma_i sigma_{i+1} sigma_i`,
-and the new far-commutativity gate handles disjoint crossings.  For every
-reachable state, every four-strand local colour/fibre tuple, and every sign
-pair, the checker compares the two paths
+The signed endpoint observer is now audited as a reduced full-braid
+presentation observer.  Inverse-derived negative rows handle
+`sigma_i sigma_i^-1`, the adjacent positive-YBE path gate handles
+`sigma_i sigma_{i+1} sigma_i` at the state/coordinate level, and the
+far-commutativity path gate handles disjoint crossings.  For every reachable
+state, every four-strand local colour/fibre tuple, and every sign pair, the
+checker compares the two paths
 `Gamma_i^epsilon Gamma_j^delta` and
 `Gamma_j^delta Gamma_i^epsilon` for `|i-j|>1`.  The paths must use defined
-rows and must return the same endpoint state, colour/fibre tuple, and ordered
-label product.  Without this finite row check, the endpoint accumulation can
-still be word-dependent even when inverse cancellation and adjacent YBE pass.
+rows and must return the same endpoint state and colour/fibre tuple.  Label
+product mismatches are kept as diagnostics; with a valid word-potential lift,
+they are forced to disappear by telescoping, so they do not need to be checked
+as separate local assumptions.  Without the state/coordinate path check, the
+endpoint accumulation can still be word-dependent.
 
 The old rowwise two-strand witness gate is retained only as diagnostic data.
 It is not a decisive endpoint-closure condition: for the standard Artin
@@ -799,6 +808,8 @@ signed_endpoint_generator_positive_ybe_cocycle_verified
 signed_endpoint_generator_positive_ybe_cocycle_failures
 signed_endpoint_generator_far_commutativity_verified
 signed_endpoint_generator_far_commutativity_failures
+signed_endpoint_generator_far_commutativity_path_failures
+signed_endpoint_generator_far_commutativity_label_diagnostics
 signed_endpoint_generator_two_strand_witness_domain_exact
 signed_endpoint_generator_two_strand_witness_domain_failures
 signed_endpoint_generator_two_strand_base_verified

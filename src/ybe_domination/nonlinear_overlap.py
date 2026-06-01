@@ -3599,10 +3599,28 @@ class UniversalKSignedEndpointGeneratorAudit:
             and self.inverse_cancellation_verified
             == (not self.inverse_cancellation_failures)
             and self.positive_ybe_path_verified == (not self.positive_ybe_path_failures)
-            and self.positive_ybe_cocycle_verified
-            == (not self.positive_ybe_cocycle_failures)
             and self.far_commutativity_verified
-            == (not self.far_commutativity_failures)
+            == (not self.far_commutativity_path_failures)
+        )
+
+    @property
+    def far_commutativity_path_failures(
+        self,
+    ) -> Tuple[UniversalKSignedEndpointLabelFailure, ...]:
+        return tuple(
+            failure
+            for failure in self.far_commutativity_failures
+            if failure[1] != "far_commutativity_label_mismatch"
+        )
+
+    @property
+    def far_commutativity_label_diagnostic_failures(
+        self,
+    ) -> Tuple[UniversalKSignedEndpointLabelFailure, ...]:
+        return tuple(
+            failure
+            for failure in self.far_commutativity_failures
+            if failure[1] == "far_commutativity_label_mismatch"
         )
 
     @property
@@ -3940,7 +3958,6 @@ class UniversalKSignedEndpointGeneratorAudit:
             and self.inverse_pairing_verified
             and self.inverse_cancellation_verified
             and self.positive_ybe_path_verified
-            and self.positive_ybe_cocycle_verified
             and self.far_commutativity_verified
             and self.telescoping_detector_proved
             and self.exact_cutoff_readouts_proved
@@ -4024,8 +4041,6 @@ class UniversalKSignedEndpointGeneratorAudit:
             reasons.append("inverse_cancellation_not_verified")
         if not self.positive_ybe_path_verified:
             reasons.append("positive_ybe_path_not_verified")
-        if not self.positive_ybe_cocycle_verified:
-            reasons.append("positive_ybe_cocycle_not_verified")
         if not self.far_commutativity_verified:
             reasons.append("far_commutativity_not_verified")
         if not self.telescoping_detector_proved:
@@ -5194,7 +5209,12 @@ def universal_k_signed_endpoint_generator_audit(
             endpoint_group is not None and not positive_ybe_cocycle_failures
         ),
         far_commutativity_verified=(
-            endpoint_group is not None and not far_commutativity_failures
+            endpoint_group is not None
+            and not tuple(
+                failure
+                for failure in far_commutativity_failures
+                if failure[1] != "far_commutativity_label_mismatch"
+            )
         ),
         signed_two_strand_base_verified=(
             endpoint_group is not None and not two_strand_base_failures
@@ -6839,6 +6859,11 @@ class PostLinearRemainingFiniteSystemAudit:
                 ("signed_endpoint_generator_positive_ybe_cocycle_failures", ()),
                 ("signed_endpoint_generator_far_commutativity_verified", False),
                 ("signed_endpoint_generator_far_commutativity_failures", ()),
+                ("signed_endpoint_generator_far_commutativity_path_failures", ()),
+                (
+                    "signed_endpoint_generator_far_commutativity_label_diagnostics",
+                    (),
+                ),
                 ("signed_endpoint_generator_two_strand_witness_domain_exact", False),
                 ("signed_endpoint_generator_two_strand_witness_domain_failures", ()),
                 ("signed_endpoint_generator_two_strand_base_verified", False),
@@ -7409,6 +7434,14 @@ class PostLinearRemainingFiniteSystemAudit:
             (
                 "signed_endpoint_generator_far_commutativity_failures",
                 audit.far_commutativity_failures,
+            ),
+            (
+                "signed_endpoint_generator_far_commutativity_path_failures",
+                audit.far_commutativity_path_failures,
+            ),
+            (
+                "signed_endpoint_generator_far_commutativity_label_diagnostics",
+                audit.far_commutativity_label_diagnostic_failures,
             ),
             (
                 "signed_endpoint_generator_two_strand_witness_domain_exact",

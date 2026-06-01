@@ -12,6 +12,14 @@ CLOSED_LOCAL_DETECTOR_VERDICTS = frozenset(
         "product_finite_g_branch",
         "known_total_branch",
         "locally_nondegenerate_branch",
+        "closed_by_triangular_recovery_endpoint_witness",
+        "closed_by_triangular_recovery_symmetric_endpoint_fork",
+        "closed_by_universal_continuation_endpoint_witness",
+        "closed_by_universal_continuation_symmetric_endpoint_fork",
+        "closed_by_mixed_unit_context_endpoint_witness",
+        "closed_by_mixed_unit_symmetric_endpoint_fork",
+        "closed_by_routed_endpoint_witnesses",
+        "closed_by_routed_endpoint_certificates",
     }
 )
 
@@ -186,6 +194,16 @@ def closed_local_detector_chain(
         gaps = tuple(summary.closed_detector_gaps)
         group = summary.closed_detector_product_group
         if summary.verdict not in CLOSED_LOCAL_DETECTOR_VERDICTS:
+            gap_rows.append(
+                ClosedLocalDetectorGap(
+                    interval_index=interval_index,
+                    verdict=summary.verdict,
+                    gaps=gaps,
+                    remaining_obligation=summary.remaining_obligation,
+                )
+            )
+            continue
+        if gaps:
             gap_rows.append(
                 ClosedLocalDetectorGap(
                     interval_index=interval_index,
