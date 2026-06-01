@@ -259,6 +259,15 @@ The current proof program has eliminated many standard branches:
   minimality.
 
 The remaining target is the post-linear nonlinear bottleneck described below.
+The label `bi_free_universal_corridor_bottleneck` is only shorthand for the
+branch that has survived the listed reductions: the local interval is
+coloured-YBE and local-minimal, semisplit congruence families have been ruled
+out, the known rack-type/nondegenerate/product/permutation/linear branches
+have been routed to fixed detectors, and the remaining coordinate-kernel
+closures are universal rather than equality or proper intermediate
+quotients.  Do not use the label as an extra theorem.  Its only role here is
+to say that the K/U/C/M transition laws below are the remaining finite
+state-machine obligations.
 
 ## 6. Current Remaining Post-Linear Systems
 
@@ -266,6 +275,264 @@ After the finite-linear overlap reductions, every unresolved primitive
 local-minimal bottleneck interval must be routed into one of the following
 finite systems.  The names are bookkeeping labels; a final proof must supply
 the actual all-`n` mathematics.
+
+### Finite Row Vocabulary
+
+Fix colours `(a,b)`, write
+
+```text
+R_C(a,b)=(c,d),
+T_{a,b}(x,y)=(u,v) in A_c x A_d.
+```
+
+The left coordinate section at `x in A_a` is
+
+```text
+L_x^{a,b}: A_b -> A_c,     y |-> pr_1 T_{a,b}(x,y).
+```
+
+The pair has a left triangular row when every `L_x^{a,b}` is constant.  In
+that case write
+
+```text
+T_{a,b}(x,y)=(alpha(x), beta_x(y)),
+```
+
+where `alpha:A_a->A_c` is the left constant map and
+`beta_x:A_b->A_d` are the left companion sections.  The left opposite
+sections are the maps
+
+```text
+O_y^{left}: A_a -> A_d,     x |-> beta_x(y).
+```
+
+Dually, the right coordinate section at `y in A_b` is
+
+```text
+R_y^{a,b}: A_a -> A_d,     x |-> pr_2 T_{a,b}(x,y).
+```
+
+The pair has a right triangular row when every `R_y^{a,b}` is constant.  In
+that case write
+
+```text
+T_{a,b}(x,y)=(gamma_y(x), delta(y)),
+```
+
+where `delta:A_b->A_d` is the right constant map,
+`gamma_y:A_a->A_c` are the right companion sections, and the right opposite
+sections are
+
+```text
+O_x^{right}: A_b -> A_c,     y |-> gamma_y(x).
+```
+
+For any finite map `f:P->Q`, its kernel kind is:
+
+```text
+equality   if every kernel block has size 1,
+universal  if there is exactly one kernel block,
+proper     otherwise.
+```
+
+A section is a unit section when it is bijective.  It is an
+injective-nonsurjective section when it is injective but not surjective.  It
+is constant when its image has one point.
+
+A left or right triangular row is a Latin-unit triangular row exactly when:
+
+```text
+the constant map is bijective,
+every companion section is bijective,
+every opposite section is bijective.
+```
+
+The rack-kink theorem requires these Latin-unit triangular rows for every
+relevant colour pair.  System K records the finite places where that all-pairs
+Latin condition has not yet been supplied.
+
+When a side is not triangular, its missing-triangular profile is obtained by
+inspecting the corresponding coordinate sections (`L_x` for a missing left
+triangular row, `R_y` for a missing right triangular row).  The profile has
+exactly one of the following explanations:
+
+```text
+proper_section_kernel_visible
+injective_non_surjective_section
+coordinate_side_unit_not_triangular
+partial_constant_hidden_rank_loss
+nonconstant_hidden_rank_loss
+unclassified_missing_triangular_profile
+```
+
+The meanings are:
+
+- `proper_section_kernel_visible`: some coordinate section has proper kernel.
+- `injective_non_surjective_section`: some coordinate section is injective
+  but not surjective.
+- `coordinate_side_unit_not_triangular`: every coordinate section on that
+  side is bijective, so the side is unit but not triangular.
+- `partial_constant_hidden_rank_loss`: after the proper-kernel and
+  injective-nonsurjective cases are removed, the nonunit sections are
+  constant, at least one unit section exists, and not all sections are
+  constant.
+- `nonconstant_hidden_rank_loss`: a nonunit hidden section remains but is not
+  constant.
+- `unclassified_missing_triangular_profile`: none of the finite alternatives
+  above was certified.
+
+In the left-rack-base branch,
+
+```text
+R_C(a,b)=(a triangleright b, a),
+```
+
+the finite cardinality/profile closure eliminates
+`injective_non_surjective_section`, `nonconstant_hidden_rank_loss`, and
+`unclassified_missing_triangular_profile` once the section-domain and
+codomain cardinalities are checked equal and the finite-map trichotomy above
+is proved.  These rows are not endpoint systems.
+
+### K/U/C/M Transition Laws
+
+The state machine starts from a raw post-linear K row only after all earlier
+branch closures listed in Section 5 have been removed.  A raw K row is a
+tuple
+
+```text
+((a,b), reason)
+```
+
+where `reason` is one of:
+
+```text
+no_left_triangular_row
+no_right_triangular_row
+left_constant_map_proper_kernel
+right_constant_map_proper_kernel
+left_constant_map_universal_kernel
+right_constant_map_universal_kernel
+left_companion_sections_injective_non_surjective
+right_companion_sections_injective_non_surjective
+```
+
+The companion injective-nonsurjective reason is active only when it is
+supported by a same-side constant-map kernel reason for the same colour pair.
+Without that support it is an earlier structural inconsistency, not a live K
+row.
+
+Define `live_k_missing_latin_row_defects` from the raw K tuple by applying
+the following transition laws, and leaving a row live whenever the matching
+certificate is absent or fails.
+
+K terminal proper-closure law:
+
+```text
+If any triangular constant-map kernel edge or partial-constant missing-row
+edge generates a proper admissible congruence closure, then local-minimality
+is contradicted.  The branch is terminal:
+
+closed_by_triangular_latin_proper_closure
+or
+closed_by_missing_triangular_partial_constant_proper_closure.
+
+No U/C/M endpoint obligation is created by a proper closure.
+```
+
+K-to-U recovery law:
+
+```text
+A constant-map kernel reason routes to System U only for the universal
+closure rows.  For each constant-map kernel edge on that side and colour
+pair:
+
+1. the generated admissible closure of the collapsed input pair is universal;
+2. the triangular recovery inverse table is bijective on the relevant
+   triangular row;
+3. the recovery table separates the two collapsed inputs by output pairs,
+   meaning the recovered left input (left case) or recovered right input
+   (right case) distinguishes the collapsed pair.
+
+If all universal constant-map kernel edges for that side and pair satisfy
+these checks, remove the corresponding constant-map reason from live K and
+record it in recovery_routed_k_missing_latin_row_defects.
+```
+
+The same K-to-U recovery law removes a supported companion
+injective-nonsurjective reason only when its supporting same-side constant-map
+kernel reason has been routed by the recovery table.  Other reasons for the
+same colour pair remain live.
+
+K-to-C partial-constant law:
+
+```text
+A no-triangular row with profile partial_constant_hidden_rank_loss is
+examined through its constant nonunit sections.  For a left missing row,
+if L_x is constant on distinct inputs y0,y1, write
+
+T_{a,b}(x,y_i)=(u,v_i).
+
+Bijectivity forces v0 != v1, and at least one v_i differs from x in the
+continuing fibre.  That gives a continuation seed x ~ v_i.  The right-side
+case is dual.
+
+The row routes to System C only when every relevant partial-constant edge has:
+
+1. universal generated admissible closure for the collapsed input pair;
+2. distinct companion outputs;
+3. at least one continuation seed witness;
+4. a universal continuation-seed generated closure among those witnesses;
+5. the original partial-constant collapsed edge contained in that seed
+   closure.
+
+If the route reaches only a nonuniversal continuation-seed closure, or if any
+listed check fails, the original no-triangular row remains live in System K.
+```
+
+K-to-M coordinate-unit law:
+
+```text
+A no-triangular row with profile coordinate_side_unit_not_triangular is
+grouped by colour pair.  The coordinate-unit routing certificate must include
+the coloured-YBE premise.
+
+For each grouped pair:
+
+1. if both coordinate sides are unit, the row is a two-sided-unit pair and
+   closes only when the global locally-nondegenerate/guitar branch has been
+   proved for the whole interval;
+2. if the opposite coordinate side has nonunit data, the row is a mixed-unit
+   context row and routes to System M;
+3. if neither alternative is certified, the row remains live in System K.
+
+The coordinate-unit routing ledger proves only when there are no unrouted
+coordinate-unit rows and no unclosed two-sided-unit rows.
+```
+
+System activation is then exact:
+
+```text
+System K active
+  iff the raw post-linear K branch is active, no terminal proper closure has
+      fired, and live_k_missing_latin_row_defects is nonempty.
+
+System U active
+  iff there is a direct triangular-recovery unit-longitude obstruction, or
+      all live K rows have been removed and
+      recovery_routed_k_missing_latin_row_defects is nonempty.
+
+System C active
+  iff all live K rows have been removed and
+      continuation_routed_k_missing_latin_row_defects is nonempty.
+
+System M active
+  iff all live K rows have been removed and
+      mixed_context_routed_k_missing_latin_row_defects is nonempty.
+```
+
+The endpoint systems U, C, and M may be active simultaneously.  Closing one
+endpoint family removes only that family from the unclosed tuple; it does not
+close the others.
 
 ### System K: Kink-Completion Missing-Latin Deficit
 
@@ -350,6 +617,13 @@ System U is reached when a K deficit has been routed through triangular
 recovery to a fixed finite unit group `U_tri`.  The group `U_tri` is the
 finite permutation/unit group generated by the triangular recovery inverse
 rows.  It is fixed by the interval and must not depend on `n`.
+For a K-routed U row, the routed endpoint key is
+
+```text
+(left_color, right_color, defect_reason),
+```
+
+where `defect_reason` is the K reason routed by the recovery law.
 
 The A-side target is:
 
@@ -374,10 +648,19 @@ Acceptable proof formats include:
 A supplied symmetric endpoint cutoff for U is valid only when:
 
 - it uses exactly the fixed group `U_tri`;
-- it covers exactly the routed U endpoint keys;
+- it covers exactly the nonempty routed U endpoint keys for the K-routed
+  family;
 - it proves endpoint-family faithfulness;
 - identity symmetric-longitude data kills the whole finite U endpoint
   family.
+
+A supplied U endpoint-witness certificate is valid only when:
+
+- it uses the same fixed triangular recovery observer that defines `U_tri`;
+- its keys are exactly the routed U endpoint keys and there are no extra keys;
+- every supplied key has an endpoint-longitude expression certificate proving
+  membership in `V_beta(U_tri)`;
+- the routed key tuple is nonempty for K-routed U rows.
 
 This is a certificate format, not a uniform theorem.  To prove A, construct
 such certificates uniformly for every interval.  To prove B, exhibit a real
@@ -424,6 +707,13 @@ A valid System C symmetric fork must:
 Likewise, a System C endpoint-witness certificate must cover a nonempty
 identity-routed edge tuple.  An empty witness list can be a harmless absence
 of a C obligation, but it cannot close an active System C row.
+The C endpoint-witness certificate is valid only when:
+
+- the identity routing ledger itself proves the exact non-vacuous
+  universal-continuation route;
+- the endpoint witness uses that same routing ledger;
+- every routed lost edge has an endpoint-longitude expression certificate;
+- no witness is supplied for an edge outside the routed lost-edge tuple.
 
 To prove B from C, exhibit a genuine routed continuation endpoint miss,
 prove that no fixed finite endpoint detector kills it, and upgrade it to a
@@ -452,9 +742,20 @@ symmetric endpoint cutoff.
 A valid System M symmetric fork must:
 
 - match the coordinate-unit routing ledger;
-- cover exactly the mixed-unit context keys;
+- cover exactly the nonempty mixed-unit context keys;
 - prove endpoint-family faithfulness;
 - prove that identity symmetric-longitude data kills those endpoint channels;
+- introduce no extra keys.
+
+A valid System M endpoint-witness certificate must:
+
+- use the same coordinate-unit routing ledger that created System M;
+- require that ledger to prove coloured-YBE and complete coordinate-unit
+  routing;
+- form keys `(left_color,right_color,side)` for every mixed-unit context row
+  and every routed coordinate-unit side in that row;
+- cover exactly that nonempty key tuple with endpoint-longitude expression
+  certificates;
 - introduce no extra keys.
 
 To prove B from M, find a genuine mixed-unit endpoint miss, prove it survives
