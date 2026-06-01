@@ -380,7 +380,7 @@ def trivial_endpoint_target_audit(*families):
     return UniversalKEndpointTargetAudit(
         expected_endpoint_families=tuple(families),
         covered_endpoint_families=tuple(families),
-        endpoint_group_orders=tuple((family, 1) for family in families),
+        endpoint_group_orders=tuple((family, 2) for family in families),
         braid_index_independent=True,
         product_families_separated=True,
     )
@@ -4156,7 +4156,8 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         explicit_target = UniversalKEndpointTargetAudit(
             expected_endpoint_families=("M", "U"),
             covered_endpoint_families=("M", "U"),
-            endpoint_group_orders=(("M", 2), ("U", 2)),
+            endpoint_group_orders=(("U", 2),),
+            cutoff_degrees=(("M", 2),),
             braid_index_independent=True,
             product_families_separated=True,
         )
@@ -4208,6 +4209,30 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
 
         self.assertTrue(proved.residual_action_scope.proves_residual_action_scope)
         self.assertTrue(proved.proves_signed_endpoint_generator_tables)
+
+        mismatched_target = replace(
+            explicit_target,
+            endpoint_group_orders=(("U", 3),),
+        )
+        group_mismatch = universal_k_signed_endpoint_generator_audit(
+            interval,
+            seed_entries,
+            reachable,
+            rows,
+            endpoint_group=cyclic_group(2),
+            witnesses=witnesses,
+            endpoint_target_audit=mismatched_target,
+            telescoping_detector_audit=trivial_telescoping_detector_audit(keys),
+            cutoff_readout_audit=cutoff,
+            residual_action_scope=scoped_residual,
+            residual_action_audit=trivial_endpoint_residual_action_audit(),
+        )
+        self.assertFalse(group_mismatch.endpoint_targets_proved)
+        self.assertFalse(group_mismatch.proves_signed_endpoint_generator_tables)
+        self.assertIn(
+            "endpoint_target_group_order_mismatch",
+            group_mismatch.failure_reasons,
+        )
 
     def test_signed_endpoint_generator_factory_reports_inexact_witness_domain(self):
         seed_state = ("*", "*", "left_constant_map_universal_kernel")

@@ -405,6 +405,7 @@ positive-YBE state/fibre path check, and the finite proof gates:
 ```text
 fixed endpoint group or cutoff target
 family-scoped endpoint target coverage
+concrete endpoint group order matches the group-valued target product
 endpoint-target braid-index independence
 endpoint-target product-family separation
 coordinate components match T and T inverse
@@ -461,6 +462,12 @@ When a finite endpoint group is supplied, the inverse-cancellation and
 positive-YBE cocycle gates are checked by multiplying the emitted endpoint
 labels in that group.  Thus those gates require a concrete group table and
 cannot be discharged by naming a candidate label set alone.
+The concrete group table must also match the target ledger: its order must be
+the product of the endpoint-group orders listed for the active group-valued
+families.  Symmetric cutoff degrees are handled by the cutoff readout audit
+instead of being folded into this product.  A mismatch is reported as
+`endpoint_target_group_order_mismatch` and leaves the endpoint target gate
+open.
 
 The old rowwise two-strand witness gate is retained only as diagnostic data.
 It is not a decisive endpoint-closure condition: for the standard Artin
@@ -722,6 +729,8 @@ signed_endpoint_generator_endpoint_target_expected_families
 signed_endpoint_generator_endpoint_target_covered_families
 signed_endpoint_generator_endpoint_target_families
 signed_endpoint_generator_endpoint_target_group_orders
+signed_endpoint_generator_endpoint_group_order
+signed_endpoint_generator_endpoint_group_order_matches_target
 signed_endpoint_generator_endpoint_target_cutoff_degrees
 signed_endpoint_generator_endpoint_target_duplicate_families
 signed_endpoint_generator_endpoint_target_duplicate_target_families

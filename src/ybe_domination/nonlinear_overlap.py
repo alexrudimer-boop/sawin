@@ -3469,7 +3469,20 @@ class UniversalKSignedEndpointGeneratorAudit:
             self.endpoint_target_audit is not None
             and self.endpoint_target_scope_matches_required
             and self.endpoint_target_audit.proves_endpoint_targets
+            and self.endpoint_group_order_matches_target_audit
         )
+
+    @property
+    def endpoint_group_order_matches_target_audit(self) -> bool:
+        if self.endpoint_group is None or self.endpoint_target_audit is None:
+            return False
+        group_orders = self.endpoint_target_audit.endpoint_group_orders
+        if not group_orders:
+            return True
+        target_order = 1
+        for _family, order in group_orders:
+            target_order *= order
+        return len(self.endpoint_group.elements) == target_order
 
     @property
     def residual_action_scope_matches_required(self) -> bool:
@@ -3718,6 +3731,11 @@ class UniversalKSignedEndpointGeneratorAudit:
                 and not self.endpoint_target_scope_matches_required
             ):
                 reasons.append("endpoint_target_scope_mismatch")
+            if (
+                self.endpoint_target_audit is not None
+                and not self.endpoint_group_order_matches_target_audit
+            ):
+                reasons.append("endpoint_target_group_order_mismatch")
             if self.endpoint_target_audit is not None:
                 reasons.extend(self.endpoint_target_audit.failure_reasons)
         if not self.coordinate_components_verified:
@@ -6739,6 +6757,18 @@ class PostLinearRemainingFiniteSystemAudit:
                     if endpoint_target_audit is not None
                     else ()
                 ),
+            ),
+            (
+                "signed_endpoint_generator_endpoint_group_order",
+                (
+                    len(audit.endpoint_group.elements)
+                    if audit.endpoint_group is not None
+                    else None
+                ),
+            ),
+            (
+                "signed_endpoint_generator_endpoint_group_order_matches_target",
+                audit.endpoint_group_order_matches_target_audit,
             ),
             (
                 "signed_endpoint_generator_endpoint_target_cutoff_degrees",

@@ -1004,6 +1004,13 @@ For group-valued signed rows, inverse cancellation and positive YBE cocycle
 checks require the actual finite endpoint group multiplication table.  A
 signed endpoint audit with success booleans but no concrete endpoint group is
 not a finite row-check certificate, even if an endpoint target order is listed.
+Moreover, the concrete endpoint group used for signed-row multiplication must
+match the group-valued target ledger: its order must equal the product of the
+listed endpoint-group orders for the active group-targeted families.  Symmetric
+cutoff degrees are checked by the cutoff-readout certificate and are not
+silently folded into this group order.  If the group table has a different
+order from the group-valued target product, the certificate has not connected
+its endpoint labels to the declared fixed target.
 
 Every supplied row must also pass the coordinate-component check against the
 actual interval table: positive rows must have `(x',y')=T_{a,b}(x,y)`, and
@@ -1937,7 +1944,8 @@ Before returning a claimed resolution, explicitly answer:
 10. Is every detector group, endpoint group, cutoff group, and rack
    independent of braid index `n`, and does the endpoint-target certificate
    cover exactly the routed U/C/M families with fixed positive orders or
-   cutoff degrees and product-family separation?
+   cutoff degrees and product-family separation, with the concrete endpoint
+   group order matching the product of the group-valued target orders?
 11. Are product endpoint rows handled family-by-family without hiding any
    unclosed U, C, or M obligation?
 12. Does every residual-faithfulness theorem or residual-action row proof
