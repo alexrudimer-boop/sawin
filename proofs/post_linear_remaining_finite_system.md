@@ -572,7 +572,10 @@ each family count `R_E`, the audit derives expected keys `(E,r)` for
 family count must be a positive integer attached to one of the known endpoint
 families `U`, `C`, or `M`; nonintegers, booleans, zero or negative counts, and
 unknown family names are malformed track-count rows, not empty detector-track
-families.  A row records the family, nonnegative integer track index,
+families.  Each family-count row must have the two-field finite shape
+`(endpoint_family, positive_track_count)`; shortened rows or rows with extra
+fields are malformed detector-track data, not alternate syntax.  An
+initialization row records the family, nonnegative integer track index,
 assignment-rule name, the finite dependencies of the rule, and the local
 assignment template for the raw variables.  Allowed dependencies are interval
 and initial-state data:
@@ -1022,6 +1025,7 @@ signed_endpoint_generator_telescoping_covered_seed_states
 signed_endpoint_generator_telescoping_duplicate_seed_states
 signed_endpoint_generator_telescoping_malformed_seed_states
 signed_endpoint_generator_detector_track_counts_by_family
+signed_endpoint_generator_detector_track_count_malformed_rows
 signed_endpoint_generator_detector_track_count_unknown_families
 signed_endpoint_generator_detector_track_count_malformed_values
 signed_endpoint_generator_detector_track_count_duplicate_families

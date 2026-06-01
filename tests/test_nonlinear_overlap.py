@@ -3408,6 +3408,34 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             malformed_track_count.failure_reasons,
         )
 
+        malformed_track_count_row = replace(
+            theorem_complete,
+            telescoping_detector_audit=replace(
+                theorem_complete.telescoping_detector_audit,
+                detector_track_counts_by_family=(("U", 1, "extra"),),
+                detector_track_count=1,
+            ),
+        )
+        malformed_track_count_row_audit = (
+            malformed_track_count_row.telescoping_detector_audit
+        )
+        self.assertEqual(
+            malformed_track_count_row_audit.malformed_detector_track_count_rows,
+            (("U", 1, "extra"),),
+        )
+        self.assertFalse(
+            malformed_track_count_row_audit.detector_track_count_rows_well_formed
+        )
+        self.assertFalse(malformed_track_count_row.telescoping_detector_proved)
+        self.assertIn(
+            "detector_track_count_malformed_rows",
+            malformed_track_count_row.failure_reasons,
+        )
+        self.assertIn(
+            "detector_track_count_rows_malformed",
+            malformed_track_count_row.failure_reasons,
+        )
+
         malformed_track_index = replace(
             theorem_complete,
             telescoping_detector_audit=replace(
