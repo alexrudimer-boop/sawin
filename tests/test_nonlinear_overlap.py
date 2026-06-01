@@ -34,6 +34,7 @@ from ybe_domination import (
     TriangularConstantKernelRecoveryRouteRow,
     TriangularLatinDefectClosureAudit,
     TriangularLatinDefectClosureRow,
+    UniversalKCutoffReadoutAudit,
     UniversalKResidualFaithfulnessAudit,
     UniversalKSignedEndpointGeneratorAudit,
     UniversalKSignedEndpointGeneratorRow,
@@ -2990,6 +2991,64 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertFalse(audit.coordinate_components_verified)
         self.assertFalse(audit.proves_signed_endpoint_generator_tables)
         self.assertIn("coordinate_components_not_verified", audit.failure_reasons)
+
+    def test_signed_endpoint_cutoff_readouts_require_scoped_audit(self):
+        seed_state = ("*", "*", "left", 0, "*", (0, 1), "*", (0, 1))
+        reachable = (("C", seed_state),)
+        interval = one_color_identity_interval()
+        keys = universal_k_signed_endpoint_required_entry_keys(interval, reachable)
+        rows = identity_signed_endpoint_rows(keys)
+        witnesses = {row.entry_key: () for row in rows}
+        seed_entries = (
+            (
+                (
+                    "*",
+                    "*",
+                    "L",
+                    "partial_constant_hidden_rank_loss",
+                    (0, "*", (0, 1), "*", (0, 1), "universal"),
+                ),
+                ("C", seed_state),
+            ),
+        )
+        bare_flag = universal_k_signed_endpoint_generator_audit(
+            interval,
+            seed_entries,
+            reachable,
+            rows,
+            endpoint_group=cyclic_group(2),
+            witnesses=witnesses,
+            cutoff_readouts_exact=True,
+            residual_action_audit=trivial_endpoint_residual_action_audit(),
+        )
+
+        self.assertTrue(bare_flag.cutoff_readouts_required)
+        self.assertFalse(bare_flag.exact_cutoff_readouts_proved)
+        self.assertFalse(bare_flag.proves_signed_endpoint_generator_tables)
+        self.assertIn("cutoff_readout_audit_missing", bare_flag.failure_reasons)
+
+        scoped_cutoff = UniversalKCutoffReadoutAudit(
+            expected_cutoff_seed_states=reachable,
+            covered_cutoff_seed_states=reachable,
+            readouts_faithful=True,
+            identity_cutoff_data_kills_channels=True,
+            braid_index_independent=True,
+        )
+        proved = universal_k_signed_endpoint_generator_audit(
+            interval,
+            seed_entries,
+            reachable,
+            rows,
+            endpoint_group=cyclic_group(2),
+            witnesses=witnesses,
+            cutoff_readout_audit=scoped_cutoff,
+            residual_action_audit=trivial_endpoint_residual_action_audit(),
+        )
+
+        self.assertTrue(scoped_cutoff.proves_exact_cutoff_readouts)
+        self.assertTrue(proved.cutoff_readout_scope_matches_required)
+        self.assertTrue(proved.exact_cutoff_readouts_proved)
+        self.assertTrue(proved.proves_signed_endpoint_generator_tables)
 
     def test_signed_endpoint_coordinate_failures_check_positive_and_inverse_rows(self):
         seed_state = ("*", "*", "left_constant_map_universal_kernel")

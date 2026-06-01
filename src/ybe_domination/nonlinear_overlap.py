@@ -654,6 +654,85 @@ class UniversalKResidualFaithfulnessAudit:
 
 
 @dataclass(frozen=True)
+class UniversalKCutoffReadoutAudit:
+    """Exact C/M symmetric-cutoff readout coverage for routed K seeds."""
+
+    expected_cutoff_seed_states: Tuple[Tuple[str, UniversalKSeedState], ...]
+    covered_cutoff_seed_states: Tuple[Tuple[str, UniversalKSeedState], ...]
+    readouts_faithful: bool = False
+    identity_cutoff_data_kills_channels: bool = False
+    braid_index_independent: bool = False
+
+    @property
+    def expected_cutoff_seed_states_exact(
+        self,
+    ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
+        return tuple(sorted(set(self.expected_cutoff_seed_states), key=repr))
+
+    @property
+    def covered_cutoff_seed_states_exact(
+        self,
+    ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
+        return tuple(sorted(set(self.covered_cutoff_seed_states), key=repr))
+
+    @property
+    def missing_cutoff_seed_states(
+        self,
+    ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
+        covered = set(self.covered_cutoff_seed_states_exact)
+        return tuple(
+            state
+            for state in self.expected_cutoff_seed_states_exact
+            if state not in covered
+        )
+
+    @property
+    def extra_cutoff_seed_states(
+        self,
+    ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
+        expected = set(self.expected_cutoff_seed_states_exact)
+        return tuple(
+            state
+            for state in self.covered_cutoff_seed_states_exact
+            if state not in expected
+        )
+
+    @property
+    def cutoff_seed_coverage_exact(self) -> bool:
+        return (
+            bool(self.expected_cutoff_seed_states_exact)
+            and not self.missing_cutoff_seed_states
+            and not self.extra_cutoff_seed_states
+        )
+
+    @property
+    def proves_exact_cutoff_readouts(self) -> bool:
+        return (
+            self.cutoff_seed_coverage_exact
+            and self.readouts_faithful
+            and self.identity_cutoff_data_kills_channels
+            and self.braid_index_independent
+        )
+
+    @property
+    def failure_reasons(self) -> Tuple[str, ...]:
+        reasons = []
+        if not self.expected_cutoff_seed_states_exact:
+            reasons.append("cutoff_readout_expected_states_empty")
+        if self.missing_cutoff_seed_states:
+            reasons.append("cutoff_readout_missing_seed_states")
+        if self.extra_cutoff_seed_states:
+            reasons.append("cutoff_readout_extra_seed_states")
+        if not self.readouts_faithful:
+            reasons.append("cutoff_readouts_not_faithful")
+        if not self.identity_cutoff_data_kills_channels:
+            reasons.append("cutoff_identity_data_does_not_kill_channels")
+        if not self.braid_index_independent:
+            reasons.append("cutoff_readouts_not_braid_index_independent")
+        return tuple(reasons)
+
+
+@dataclass(frozen=True)
 class UniversalKSignedEndpointGeneratorAudit:
     """Certificate-shape audit for signed endpoint tables on K_nabla seeds."""
 
@@ -671,6 +750,7 @@ class UniversalKSignedEndpointGeneratorAudit:
     artin_homomorphism_update_verified: bool = False
     cutoff_readouts_exact: bool = False
     residual_faithfulness_verified: bool = False
+    cutoff_readout_audit: UniversalKCutoffReadoutAudit | None = None
     residual_faithfulness_theorem: UniversalKResidualFaithfulnessAudit | None = None
     residual_action_audit: "EndpointResidualActionAudit | None" = None
 
@@ -893,8 +973,30 @@ class UniversalKSignedEndpointGeneratorAudit:
         )
 
     @property
+    def required_cutoff_seed_states(
+        self,
+    ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
+        return tuple(
+            (endpoint_family, seed_state)
+            for endpoint_family, seed_state in self.required_seed_states
+            if endpoint_family in {"C", "M"}
+        )
+
+    @property
+    def cutoff_readout_scope_matches_required(self) -> bool:
+        return (
+            self.cutoff_readout_audit is not None
+            and set(self.cutoff_readout_audit.expected_cutoff_seed_states_exact)
+            == set(self.required_cutoff_seed_states)
+        )
+
+    @property
     def exact_cutoff_readouts_proved(self) -> bool:
-        return not self.cutoff_readouts_required or self.cutoff_readouts_exact
+        return not self.cutoff_readouts_required or (
+            self.cutoff_readout_audit is not None
+            and self.cutoff_readout_scope_matches_required
+            and self.cutoff_readout_audit.proves_exact_cutoff_readouts
+        )
 
     @property
     def residual_action_faithfulness_proved(self) -> bool:
@@ -986,6 +1088,15 @@ class UniversalKSignedEndpointGeneratorAudit:
             reasons.append("artin_homomorphism_update_not_verified")
         if not self.exact_cutoff_readouts_proved:
             reasons.append("cutoff_readouts_not_exact")
+            if self.cutoff_readouts_required and self.cutoff_readout_audit is None:
+                reasons.append("cutoff_readout_audit_missing")
+            if (
+                self.cutoff_readout_audit is not None
+                and not self.cutoff_readout_scope_matches_required
+            ):
+                reasons.append("cutoff_readout_scope_mismatch")
+            if self.cutoff_readout_audit is not None:
+                reasons.extend(self.cutoff_readout_audit.failure_reasons)
         if not self.residual_faithfulness_proved:
             reasons.append("residual_faithfulness_not_verified")
             if self.residual_faithfulness_theorem is not None:
@@ -1769,6 +1880,7 @@ def universal_k_signed_endpoint_generator_audit(
         | None
     ) = None,
     cutoff_readouts_exact: bool = False,
+    cutoff_readout_audit: UniversalKCutoffReadoutAudit | None = None,
     residual_faithfulness_verified: bool = False,
     residual_faithfulness_theorem: UniversalKResidualFaithfulnessAudit | None = None,
     residual_action_audit: "EndpointResidualActionAudit | None" = None,
@@ -1853,6 +1965,7 @@ def universal_k_signed_endpoint_generator_audit(
         artin_homomorphism_update_verified=artin_homomorphism_update_verified,
         cutoff_readouts_exact=cutoff_readouts_exact,
         residual_faithfulness_verified=residual_faithfulness_verified,
+        cutoff_readout_audit=cutoff_readout_audit,
         residual_faithfulness_theorem=residual_faithfulness_theorem,
         residual_action_audit=residual_action_audit,
     )
@@ -3287,6 +3400,13 @@ class PostLinearRemainingFiniteSystemAudit:
                 ("signed_endpoint_generator_two_strand_base_verified", False),
                 ("signed_endpoint_generator_artin_update_verified", False),
                 ("signed_endpoint_generator_cutoff_readouts_exact", False),
+                ("signed_endpoint_generator_cutoff_readouts_flag_supplied", False),
+                ("signed_endpoint_generator_cutoff_readout_scope_matches_required", False),
+                ("signed_endpoint_generator_cutoff_readout_expected_states", ()),
+                ("signed_endpoint_generator_cutoff_readout_covered_states", ()),
+                ("signed_endpoint_generator_cutoff_readout_missing_states", ()),
+                ("signed_endpoint_generator_cutoff_readout_extra_states", ()),
+                ("signed_endpoint_generator_cutoff_readout_audit_proved", False),
                 ("signed_endpoint_generator_residual_faithfulness_verified", False),
                 ("signed_endpoint_generator_residual_faithfulness_flag_supplied", False),
                 ("signed_endpoint_generator_residual_theorem_proved", False),
@@ -3405,7 +3525,55 @@ class PostLinearRemainingFiniteSystemAudit:
             ),
             (
                 "signed_endpoint_generator_cutoff_readouts_exact",
+                audit.exact_cutoff_readouts_proved,
+            ),
+            (
+                "signed_endpoint_generator_cutoff_readouts_flag_supplied",
                 audit.cutoff_readouts_exact,
+            ),
+            (
+                "signed_endpoint_generator_cutoff_readout_scope_matches_required",
+                audit.cutoff_readout_scope_matches_required,
+            ),
+            (
+                "signed_endpoint_generator_cutoff_readout_expected_states",
+                (
+                    audit.cutoff_readout_audit.expected_cutoff_seed_states_exact
+                    if audit.cutoff_readout_audit is not None
+                    else ()
+                ),
+            ),
+            (
+                "signed_endpoint_generator_cutoff_readout_covered_states",
+                (
+                    audit.cutoff_readout_audit.covered_cutoff_seed_states_exact
+                    if audit.cutoff_readout_audit is not None
+                    else ()
+                ),
+            ),
+            (
+                "signed_endpoint_generator_cutoff_readout_missing_states",
+                (
+                    audit.cutoff_readout_audit.missing_cutoff_seed_states
+                    if audit.cutoff_readout_audit is not None
+                    else ()
+                ),
+            ),
+            (
+                "signed_endpoint_generator_cutoff_readout_extra_states",
+                (
+                    audit.cutoff_readout_audit.extra_cutoff_seed_states
+                    if audit.cutoff_readout_audit is not None
+                    else ()
+                ),
+            ),
+            (
+                "signed_endpoint_generator_cutoff_readout_audit_proved",
+                (
+                    audit.cutoff_readout_audit.proves_exact_cutoff_readouts
+                    if audit.cutoff_readout_audit is not None
+                    else False
+                ),
             ),
             (
                 "signed_endpoint_generator_residual_faithfulness_verified",

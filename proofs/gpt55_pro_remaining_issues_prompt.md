@@ -1010,6 +1010,11 @@ chi_M:S_M^reach -> S_mM,
 
 covering exactly the routed identity-continuation ledger for C and exactly
 the routed mixed-unit ledger for M, with no extra channels.
+The cutoff-readout certificate must list the expected routed C/M seed states,
+the covered seed states, the finite readout target, and the proof that the
+readouts are faithful and braid-index independent and that identity cutoff
+data kills precisely those channels.  A bare assertion that the cutoff
+readouts are exact is not a certificate.
 
 The endpoint tables and readouts must also prove residual faithfulness:
 if all routed endpoint labels or cutoff readouts are killed, then the actual
