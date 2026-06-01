@@ -2328,6 +2328,43 @@ class UniversalKCutoffReadoutAudit:
         return _duplicate_values(self.covered_cutoff_seed_states)
 
     @property
+    def malformed_expected_cutoff_seed_states(
+        self,
+    ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
+        return tuple(
+            sorted(
+                {
+                    state
+                    for state in self.expected_cutoff_seed_states
+                    if not _universal_k_endpoint_seed_state_well_formed(state)
+                },
+                key=repr,
+            )
+        )
+
+    @property
+    def malformed_covered_cutoff_seed_states(
+        self,
+    ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
+        return tuple(
+            sorted(
+                {
+                    state
+                    for state in self.covered_cutoff_seed_states
+                    if not _universal_k_endpoint_seed_state_well_formed(state)
+                },
+                key=repr,
+            )
+        )
+
+    @property
+    def cutoff_seed_ledgers_well_formed(self) -> bool:
+        return (
+            not self.malformed_expected_cutoff_seed_states
+            and not self.malformed_covered_cutoff_seed_states
+        )
+
+    @property
     def cutoff_seed_ledgers_have_no_duplicates(self) -> bool:
         return (
             not self.duplicate_expected_cutoff_seed_states
@@ -2360,6 +2397,7 @@ class UniversalKCutoffReadoutAudit:
     def cutoff_seed_coverage_exact(self) -> bool:
         return (
             bool(self.expected_cutoff_seed_states_exact)
+            and self.cutoff_seed_ledgers_well_formed
             and not self.missing_cutoff_seed_states
             and not self.extra_cutoff_seed_states
         )
@@ -2383,6 +2421,21 @@ class UniversalKCutoffReadoutAudit:
         self,
     ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
         return _duplicate_values(self.row_cutoff_seed_states)
+
+    @property
+    def malformed_row_cutoff_seed_states(
+        self,
+    ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
+        return tuple(
+            sorted(
+                {
+                    state
+                    for state in self.row_cutoff_seed_states
+                    if not _universal_k_endpoint_seed_state_well_formed(state)
+                },
+                key=repr,
+            )
+        )
 
     @property
     def missing_readout_row_seed_states(
@@ -2409,6 +2462,7 @@ class UniversalKCutoffReadoutAudit:
         return (
             bool(self.readout_rows)
             and not self.duplicate_row_cutoff_seed_states
+            and not self.malformed_row_cutoff_seed_states
             and not self.missing_readout_row_seed_states
             and not self.extra_readout_row_seed_states
         )
@@ -2494,6 +2548,7 @@ class UniversalKCutoffReadoutAudit:
     def proves_exact_cutoff_readouts(self) -> bool:
         return (
             self.cutoff_seed_coverage_exact
+            and self.cutoff_seed_ledgers_well_formed
             and self.cutoff_seed_ledgers_have_no_duplicates
             and self.finite_readout_rows_verified
             and self.braid_index_independence_proved
@@ -2508,6 +2563,8 @@ class UniversalKCutoffReadoutAudit:
             reasons.append("cutoff_readout_missing_seed_states")
         if self.extra_cutoff_seed_states:
             reasons.append("cutoff_readout_extra_seed_states")
+        if not self.cutoff_seed_ledgers_well_formed:
+            reasons.append("cutoff_readout_malformed_seed_states")
         if not self.cutoff_seed_ledgers_have_no_duplicates:
             reasons.append("cutoff_readout_duplicate_seed_states")
         if not self.cutoff_degree_supplied:
@@ -2520,6 +2577,8 @@ class UniversalKCutoffReadoutAudit:
             reasons.append("cutoff_readout_missing_row_states")
         if self.extra_readout_row_seed_states:
             reasons.append("cutoff_readout_extra_row_states")
+        if self.malformed_row_cutoff_seed_states:
+            reasons.append("cutoff_readout_malformed_row_states")
         if not self.readout_permutations_valid:
             reasons.append("cutoff_readout_permutations_invalid")
         if not self.readout_rows_faithful:
@@ -7553,8 +7612,10 @@ class PostLinearRemainingFiniteSystemAudit:
                 ("signed_endpoint_generator_cutoff_readout_missing_states", ()),
                 ("signed_endpoint_generator_cutoff_readout_extra_states", ()),
                 ("signed_endpoint_generator_cutoff_readout_duplicate_states", ()),
+                ("signed_endpoint_generator_cutoff_readout_malformed_states", ()),
                 ("signed_endpoint_generator_cutoff_readout_degree", None),
                 ("signed_endpoint_generator_cutoff_readout_rows", ()),
+                ("signed_endpoint_generator_cutoff_readout_malformed_row_states", ()),
                 (
                     "signed_endpoint_generator_cutoff_readout_invalid_permutation_rows",
                     (),
@@ -8589,6 +8650,15 @@ class PostLinearRemainingFiniteSystemAudit:
                 ),
             ),
             (
+                "signed_endpoint_generator_cutoff_readout_malformed_states",
+                (
+                    audit.cutoff_readout_audit.malformed_expected_cutoff_seed_states
+                    + audit.cutoff_readout_audit.malformed_covered_cutoff_seed_states
+                    if audit.cutoff_readout_audit is not None
+                    else ()
+                ),
+            ),
+            (
                 "signed_endpoint_generator_cutoff_readout_degree",
                 (
                     audit.cutoff_readout_audit.cutoff_degree
@@ -8607,6 +8677,14 @@ class PostLinearRemainingFiniteSystemAudit:
                         )
                         for row in audit.cutoff_readout_audit.readout_rows
                     )
+                    if audit.cutoff_readout_audit is not None
+                    else ()
+                ),
+            ),
+            (
+                "signed_endpoint_generator_cutoff_readout_malformed_row_states",
+                (
+                    audit.cutoff_readout_audit.malformed_row_cutoff_seed_states
                     if audit.cutoff_readout_audit is not None
                     else ()
                 ),

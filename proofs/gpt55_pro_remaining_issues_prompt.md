@@ -1426,6 +1426,10 @@ faithful, or killed by identity cutoff data is not a certificate.  The
 expected and covered cutoff seed-state ledgers must also be duplicate-free;
 silently deduplicating repeated C or M seed entries is not exact readout
 coverage.
+Every expected, covered, and row cutoff seed-state key must also be a
+well-formed endpoint state `(E,s)` with `E in {U,C,M}` and tuple-valued seed
+state `s`.  Malformed cutoff state keys are certificate errors, even if the
+malformed expected, covered, and row sets happen to agree.
 Cutoff braid-index independence must follow from the positive fixed degree
 and exact finite readout rows; it is not an independent boolean gate.
 For each active C/M cutoff family, this positive fixed degree must also match

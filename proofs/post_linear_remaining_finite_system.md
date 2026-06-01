@@ -478,8 +478,10 @@ The checker verifies row-domain exactness, actual membership in the symmetric
 group, injective readouts for faithfulness, and identity killed-readouts for
 channel killing.  The expected and covered cutoff seed-state ledgers must be
 duplicate-free; repeated seed entries are reported as an inexact readout
-ledger rather than silently collapsed.  Cutoff braid-index independence is
-derived from the positive fixed degree and exact finite readout rows, so the
+ledger rather than silently collapsed.  Expected, covered, and row cutoff
+state keys must also be well formed endpoint states; malformed keys are
+reported even if the malformed sets agree.  Cutoff braid-index independence
+is derived from the positive fixed degree and exact finite readout rows, so the
 legacy `braid_index_independent` flag on this audit is diagnostic only.
 
 When a finite endpoint group is supplied, inverse cancellation is checked by
@@ -932,8 +934,10 @@ signed_endpoint_generator_cutoff_readout_covered_states
 signed_endpoint_generator_cutoff_readout_missing_states
 signed_endpoint_generator_cutoff_readout_extra_states
 signed_endpoint_generator_cutoff_readout_duplicate_states
+signed_endpoint_generator_cutoff_readout_malformed_states
 signed_endpoint_generator_cutoff_readout_degree
 signed_endpoint_generator_cutoff_readout_rows
+signed_endpoint_generator_cutoff_readout_malformed_row_states
 signed_endpoint_generator_cutoff_readout_invalid_permutation_rows
 signed_endpoint_generator_cutoff_readout_duplicate_permutations
 signed_endpoint_generator_cutoff_readout_unkilled_rows

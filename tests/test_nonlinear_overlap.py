@@ -5361,6 +5361,32 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             duplicate_cutoff_audit.failure_reasons,
         )
 
+        malformed_cutoff_state = ("C", "not_a_tuple_seed_state")
+        malformed_cutoff = UniversalKCutoffReadoutAudit(
+            expected_cutoff_seed_states=(malformed_cutoff_state,),
+            covered_cutoff_seed_states=(malformed_cutoff_state,),
+            cutoff_degree=2,
+            readout_rows=(
+                UniversalKCutoffReadoutRow(
+                    cutoff_seed_state=malformed_cutoff_state,
+                    readout_permutation=(0, 1),
+                    killed_readout_permutation=(0, 1),
+                ),
+            ),
+            braid_index_independent=True,
+        )
+
+        self.assertFalse(malformed_cutoff.cutoff_seed_ledgers_well_formed)
+        self.assertFalse(malformed_cutoff.proves_exact_cutoff_readouts)
+        self.assertIn(
+            "cutoff_readout_malformed_seed_states",
+            malformed_cutoff.failure_reasons,
+        )
+        self.assertIn(
+            "cutoff_readout_malformed_row_states",
+            malformed_cutoff.failure_reasons,
+        )
+
         boolean_only_cutoff = UniversalKCutoffReadoutAudit(
             expected_cutoff_seed_states=reachable,
             covered_cutoff_seed_states=reachable,
