@@ -836,8 +836,9 @@ It must also prove that these targets are independent of braid index and that
 product endpoint families are separated componentwise.  A bare assertion
 that an endpoint target is fixed is not a certificate; if the target list
 omits a routed family, includes an unrouted family, has a nonpositive order
-or cutoff degree, depends on `n`, or allows cross-family cancellation, the
-signed endpoint layer remains open.
+or cutoff degree, repeats a family, assigns both a group target and cutoff
+target to the same family, depends on `n`, or allows cross-family
+cancellation, the signed endpoint layer remains open.
 
 With those target data fixed, a signed endpoint generator table is a finite
 table
@@ -1074,7 +1075,10 @@ exactness of endpoint channels, the implication from identity endpoint data
 to identity residual motion, independence from braid index, and
 family-by-family product separation.  A bare assertion that residual
 faithfulness holds, or a certificate scoped only by family names while
-omitting the routed seed states, is not a certificate.
+omitting the routed seed states, is not a certificate.  The expected and
+covered family ledgers and the expected and covered seed-state ledgers must
+also be duplicate-free; a repeated family or repeated seed is an ambiguous
+ledger entry, not an exact coverage proof.
 
 The signed-generator audit for a claimed A proof must therefore establish:
 
@@ -1086,7 +1090,9 @@ fixed_endpoint_group_or_cutoff,
 family_scoped_endpoint_target_coverage,
 endpoint_target_braid_index_independence,
 endpoint_target_product_family_separation,
+endpoint_target_ledgers_duplicate_free,
 residual_endpoint_seed_state_coverage_exact,
+residual_endpoint_seed_state_ledgers_duplicate_free,
 signed_generator_domain_exact,
 coordinate_components_match_T_plus_and_T_inverse,
 all_signed_rows_defined,
@@ -1568,10 +1574,13 @@ Before returning a claimed resolution, explicitly answer:
 12. Does every residual-faithfulness theorem or residual-action row proof
    cover exactly the routed endpoint seed states hit by `kappa`, not merely
    the family names?
-13. If returning A, where exactly is `G(pi,Q)` constructed, why does it prove
+13. Are the endpoint-target, residual-family, and residual-seed ledgers
+   duplicate-free, so exact coverage is not obtained only after silently
+   deduplicating repeated entries?
+14. If returning A, where exactly is `G(pi,Q)` constructed, why does it prove
    the all-`n` residual implication, and how does the congruence-chain
    induction produce the final finite rack?
-14. If returning B, why does the obstruction defeat every finite group `G`,
+15. If returning B, why does the obstruction defeat every finite group `G`,
    hence every finite rack through the sharp obstruction theorem?
 
 Return outcome A or outcome B only if the proof is genuinely complete.  If

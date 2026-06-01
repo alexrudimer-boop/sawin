@@ -2663,6 +2663,34 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             wrong_seed_residual.failure_reasons,
         )
 
+        duplicate_seed_residual = UniversalKSignedEndpointGeneratorAudit(
+            seed_classifier_entries=seed_entries,
+            reachable_seed_states=(("U", seed_state),),
+            required_entry_keys=required_entry_keys,
+            rows=(positive_row, negative_row),
+            endpoint_targets_fixed=True,
+            endpoint_target_audit=trivial_endpoint_target_audit("U"),
+            coordinate_components_verified=True,
+            inverse_pairing_verified=True,
+            inverse_cancellation_verified=True,
+            positive_ybe_path_verified=True,
+            positive_ybe_cocycle_verified=True,
+            signed_two_strand_base_verified=True,
+            artin_homomorphism_update_verified=True,
+            residual_action_scope=trivial_endpoint_residual_action_scope(
+                "U",
+                seed_states=(("U", seed_state), ("U", seed_state)),
+            ),
+            residual_action_audit=trivial_endpoint_residual_action_audit(),
+        )
+
+        self.assertFalse(duplicate_seed_residual.residual_faithfulness_proved)
+        self.assertFalse(duplicate_seed_residual.proves_signed_endpoint_generator_tables)
+        self.assertIn(
+            "residual_action_scope_duplicate_seed_states",
+            duplicate_seed_residual.failure_reasons,
+        )
+
         bare_flag = UniversalKSignedEndpointGeneratorAudit(
             seed_classifier_entries=seed_entries,
             reachable_seed_states=(("U", seed_state),),
@@ -2863,6 +2891,37 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertIn(
             "endpoint_target_scope_mismatch",
             wrong_family_target.failure_reasons,
+        )
+
+        duplicate_target = UniversalKSignedEndpointGeneratorAudit(
+            seed_classifier_entries=seed_entries,
+            reachable_seed_states=(("U", seed_state),),
+            required_entry_keys=required_entry_keys,
+            rows=(positive_row, negative_row),
+            endpoint_targets_fixed=True,
+            endpoint_target_audit=UniversalKEndpointTargetAudit(
+                expected_endpoint_families=("U",),
+                covered_endpoint_families=("U",),
+                endpoint_group_orders=(("U", 1), ("U", 1)),
+                braid_index_independent=True,
+                product_families_separated=True,
+            ),
+            coordinate_components_verified=True,
+            inverse_pairing_verified=True,
+            inverse_cancellation_verified=True,
+            positive_ybe_path_verified=True,
+            positive_ybe_cocycle_verified=True,
+            signed_two_strand_base_verified=True,
+            artin_homomorphism_update_verified=True,
+            residual_action_scope=trivial_endpoint_residual_action_scope("U"),
+            residual_action_audit=trivial_endpoint_residual_action_audit(),
+        )
+
+        self.assertFalse(duplicate_target.endpoint_targets_proved)
+        self.assertFalse(duplicate_target.proves_signed_endpoint_generator_tables)
+        self.assertIn(
+            "endpoint_target_duplicate_target_families",
+            duplicate_target.failure_reasons,
         )
 
     def test_signed_endpoint_generator_audit_requires_full_entry_domain(self):

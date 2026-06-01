@@ -538,6 +538,17 @@ def _constant_map_kernel_kind_from_reason(reason: str) -> str:
     return "supported"
 
 
+def _duplicate_values(values: Sequence[object]) -> Tuple[object, ...]:
+    seen = set()
+    duplicates = []
+    for value in values:
+        if value in seen:
+            duplicates.append(value)
+        else:
+            seen.add(value)
+    return tuple(sorted(set(duplicates), key=repr))
+
+
 @dataclass(frozen=True)
 class UniversalKSignedEndpointGeneratorRow:
     """One finite signed endpoint-generator entry on a routed K seed state."""
@@ -613,6 +624,21 @@ class UniversalKResidualFaithfulnessAudit:
         return set(self.active_endpoint_families) == set(self.covered_endpoint_families)
 
     @property
+    def duplicate_active_endpoint_families(self) -> Tuple[str, ...]:
+        return _duplicate_values(self.active_endpoint_families)
+
+    @property
+    def duplicate_covered_endpoint_families(self) -> Tuple[str, ...]:
+        return _duplicate_values(self.covered_endpoint_families)
+
+    @property
+    def family_ledgers_have_no_duplicates(self) -> bool:
+        return (
+            not self.duplicate_active_endpoint_families
+            and not self.duplicate_covered_endpoint_families
+        )
+
+    @property
     def expected_endpoint_seed_states_exact(
         self,
     ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
@@ -628,6 +654,25 @@ class UniversalKResidualFaithfulnessAudit:
     def seed_state_coverage_exact(self) -> bool:
         return set(self.expected_endpoint_seed_states_exact) == set(
             self.covered_endpoint_seed_states_exact
+        )
+
+    @property
+    def duplicate_expected_endpoint_seed_states(
+        self,
+    ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
+        return _duplicate_values(self.expected_endpoint_seed_states)
+
+    @property
+    def duplicate_covered_endpoint_seed_states(
+        self,
+    ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
+        return _duplicate_values(self.covered_endpoint_seed_states)
+
+    @property
+    def seed_state_ledgers_have_no_duplicates(self) -> bool:
+        return (
+            not self.duplicate_expected_endpoint_seed_states
+            and not self.duplicate_covered_endpoint_seed_states
         )
 
     @property
@@ -652,7 +697,9 @@ class UniversalKResidualFaithfulnessAudit:
     def proves_residual_faithfulness(self) -> bool:
         return (
             self.family_coverage_exact
+            and self.family_ledgers_have_no_duplicates
             and self.seed_state_coverage_exact
+            and self.seed_state_ledgers_have_no_duplicates
             and self.seed_state_families_match_active
             and self.residual_row_coverage_exact
             and self.endpoint_channels_exact
@@ -666,8 +713,12 @@ class UniversalKResidualFaithfulnessAudit:
         reasons = []
         if not self.family_coverage_exact:
             reasons.append("residual_faithfulness_family_coverage_not_exact")
+        if not self.family_ledgers_have_no_duplicates:
+            reasons.append("residual_faithfulness_duplicate_families")
         if not self.seed_state_coverage_exact:
             reasons.append("residual_faithfulness_seed_state_coverage_not_exact")
+        if not self.seed_state_ledgers_have_no_duplicates:
+            reasons.append("residual_faithfulness_duplicate_seed_states")
         if not self.seed_state_families_match_active:
             reasons.append("residual_faithfulness_seed_state_families_mismatch")
         if not self.residual_row_count_supplied:
@@ -704,6 +755,21 @@ class UniversalKResidualActionScopeAudit:
         return set(self.active_endpoint_families) == set(self.covered_endpoint_families)
 
     @property
+    def duplicate_active_endpoint_families(self) -> Tuple[str, ...]:
+        return _duplicate_values(self.active_endpoint_families)
+
+    @property
+    def duplicate_covered_endpoint_families(self) -> Tuple[str, ...]:
+        return _duplicate_values(self.covered_endpoint_families)
+
+    @property
+    def family_ledgers_have_no_duplicates(self) -> bool:
+        return (
+            not self.duplicate_active_endpoint_families
+            and not self.duplicate_covered_endpoint_families
+        )
+
+    @property
     def expected_endpoint_seed_states_exact(
         self,
     ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
@@ -719,6 +785,25 @@ class UniversalKResidualActionScopeAudit:
     def seed_state_coverage_exact(self) -> bool:
         return set(self.expected_endpoint_seed_states_exact) == set(
             self.covered_endpoint_seed_states_exact
+        )
+
+    @property
+    def duplicate_expected_endpoint_seed_states(
+        self,
+    ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
+        return _duplicate_values(self.expected_endpoint_seed_states)
+
+    @property
+    def duplicate_covered_endpoint_seed_states(
+        self,
+    ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
+        return _duplicate_values(self.covered_endpoint_seed_states)
+
+    @property
+    def seed_state_ledgers_have_no_duplicates(self) -> bool:
+        return (
+            not self.duplicate_expected_endpoint_seed_states
+            and not self.duplicate_covered_endpoint_seed_states
         )
 
     @property
@@ -743,7 +828,9 @@ class UniversalKResidualActionScopeAudit:
     def proves_residual_action_scope(self) -> bool:
         return (
             self.family_coverage_exact
+            and self.family_ledgers_have_no_duplicates
             and self.seed_state_coverage_exact
+            and self.seed_state_ledgers_have_no_duplicates
             and self.seed_state_families_match_active
             and self.residual_row_coverage_exact
             and self.endpoint_channels_exact
@@ -756,8 +843,12 @@ class UniversalKResidualActionScopeAudit:
         reasons = []
         if not self.family_coverage_exact:
             reasons.append("residual_action_scope_family_coverage_not_exact")
+        if not self.family_ledgers_have_no_duplicates:
+            reasons.append("residual_action_scope_duplicate_families")
         if not self.seed_state_coverage_exact:
             reasons.append("residual_action_scope_seed_state_coverage_not_exact")
+        if not self.seed_state_ledgers_have_no_duplicates:
+            reasons.append("residual_action_scope_duplicate_seed_states")
         if not self.seed_state_families_match_active:
             reasons.append("residual_action_scope_seed_state_families_mismatch")
         if not self.residual_row_count_supplied:
@@ -872,6 +963,21 @@ class UniversalKEndpointTargetAudit:
         return tuple(sorted(set(self.covered_endpoint_families), key=repr))
 
     @property
+    def duplicate_expected_endpoint_families(self) -> Tuple[str, ...]:
+        return _duplicate_values(self.expected_endpoint_families)
+
+    @property
+    def duplicate_covered_endpoint_families(self) -> Tuple[str, ...]:
+        return _duplicate_values(self.covered_endpoint_families)
+
+    @property
+    def family_ledgers_have_no_duplicates(self) -> bool:
+        return (
+            not self.duplicate_expected_endpoint_families
+            and not self.duplicate_covered_endpoint_families
+        )
+
+    @property
     def target_endpoint_families(self) -> Tuple[str, ...]:
         return tuple(
             sorted(
@@ -886,6 +992,14 @@ class UniversalKEndpointTargetAudit:
         return set(self.expected_endpoint_families_exact) == set(
             self.covered_endpoint_families_exact
         )
+
+    @property
+    def duplicate_target_endpoint_families(self) -> Tuple[str, ...]:
+        families = tuple(
+            family
+            for family, _target_size in self.endpoint_group_orders + self.cutoff_degrees
+        )
+        return _duplicate_values(families)
 
     @property
     def missing_target_families(self) -> Tuple[str, ...]:
@@ -918,10 +1032,16 @@ class UniversalKEndpointTargetAudit:
         return not self.missing_target_families and not self.extra_target_families
 
     @property
+    def target_ledgers_have_no_duplicates(self) -> bool:
+        return not self.duplicate_target_endpoint_families
+
+    @property
     def proves_endpoint_targets(self) -> bool:
         return (
             self.family_coverage_exact
+            and self.family_ledgers_have_no_duplicates
             and self.target_families_exact
+            and self.target_ledgers_have_no_duplicates
             and self.target_orders_positive
             and self.cutoff_degrees_positive
             and self.braid_index_independent
@@ -933,10 +1053,14 @@ class UniversalKEndpointTargetAudit:
         reasons = []
         if not self.family_coverage_exact:
             reasons.append("endpoint_target_family_coverage_not_exact")
+        if not self.family_ledgers_have_no_duplicates:
+            reasons.append("endpoint_target_duplicate_families")
         if self.missing_target_families:
             reasons.append("endpoint_target_missing_families")
         if self.extra_target_families:
             reasons.append("endpoint_target_extra_families")
+        if not self.target_ledgers_have_no_duplicates:
+            reasons.append("endpoint_target_duplicate_target_families")
         if not self.target_orders_positive:
             reasons.append("endpoint_target_nonpositive_group_order")
         if not self.cutoff_degrees_positive:
@@ -3775,6 +3899,11 @@ class PostLinearRemainingFiniteSystemAudit:
                 ("signed_endpoint_generator_endpoint_target_families", ()),
                 ("signed_endpoint_generator_endpoint_target_group_orders", ()),
                 ("signed_endpoint_generator_endpoint_target_cutoff_degrees", ()),
+                ("signed_endpoint_generator_endpoint_target_duplicate_families", ()),
+                (
+                    "signed_endpoint_generator_endpoint_target_duplicate_target_families",
+                    (),
+                ),
                 ("signed_endpoint_generator_endpoint_target_audit_proved", False),
                 ("signed_endpoint_generator_coordinate_components_verified", False),
                 ("signed_endpoint_generator_coordinate_failures", ()),
@@ -3805,12 +3934,20 @@ class PostLinearRemainingFiniteSystemAudit:
                 ("signed_endpoint_generator_residual_action_scope_matches_rows", False),
                 ("signed_endpoint_generator_residual_action_scope_expected_states", ()),
                 ("signed_endpoint_generator_residual_action_scope_covered_states", ()),
+                (
+                    "signed_endpoint_generator_residual_action_scope_duplicate_seed_states",
+                    (),
+                ),
                 ("signed_endpoint_generator_residual_action_scope_proved", False),
                 ("signed_endpoint_generator_residual_theorem_proved", False),
                 ("signed_endpoint_generator_residual_theorem_scope_matches_required", False),
                 ("signed_endpoint_generator_residual_theorem_scope_matches_seed_states", False),
                 ("signed_endpoint_generator_residual_theorem_expected_states", ()),
                 ("signed_endpoint_generator_residual_theorem_covered_states", ()),
+                (
+                    "signed_endpoint_generator_residual_theorem_duplicate_seed_states",
+                    (),
+                ),
                 ("signed_endpoint_generator_residual_action_rows", 0),
                 ("signed_endpoint_generator_residual_action_rows_expected", None),
                 ("signed_endpoint_generator_residual_action_complete", False),
@@ -3937,6 +4074,23 @@ class PostLinearRemainingFiniteSystemAudit:
                 "signed_endpoint_generator_endpoint_target_cutoff_degrees",
                 (
                     endpoint_target_audit.cutoff_degrees
+                    if endpoint_target_audit is not None
+                    else ()
+                ),
+            ),
+            (
+                "signed_endpoint_generator_endpoint_target_duplicate_families",
+                (
+                    endpoint_target_audit.duplicate_expected_endpoint_families
+                    + endpoint_target_audit.duplicate_covered_endpoint_families
+                    if endpoint_target_audit is not None
+                    else ()
+                ),
+            ),
+            (
+                "signed_endpoint_generator_endpoint_target_duplicate_target_families",
+                (
+                    endpoint_target_audit.duplicate_target_endpoint_families
                     if endpoint_target_audit is not None
                     else ()
                 ),
@@ -4098,6 +4252,15 @@ class PostLinearRemainingFiniteSystemAudit:
                 ),
             ),
             (
+                "signed_endpoint_generator_residual_action_scope_duplicate_seed_states",
+                (
+                    audit.residual_action_scope.duplicate_expected_endpoint_seed_states
+                    + audit.residual_action_scope.duplicate_covered_endpoint_seed_states
+                    if audit.residual_action_scope is not None
+                    else ()
+                ),
+            ),
+            (
                 "signed_endpoint_generator_residual_action_scope_proved",
                 (
                     audit.residual_action_scope.proves_residual_action_scope
@@ -4129,6 +4292,15 @@ class PostLinearRemainingFiniteSystemAudit:
                 "signed_endpoint_generator_residual_theorem_covered_states",
                 (
                     audit.residual_faithfulness_theorem.covered_endpoint_seed_states_exact
+                    if audit.residual_faithfulness_theorem is not None
+                    else ()
+                ),
+            ),
+            (
+                "signed_endpoint_generator_residual_theorem_duplicate_seed_states",
+                (
+                    audit.residual_faithfulness_theorem.duplicate_expected_endpoint_seed_states
+                    + audit.residual_faithfulness_theorem.duplicate_covered_endpoint_seed_states
                     if audit.residual_faithfulness_theorem is not None
                     else ()
                 ),

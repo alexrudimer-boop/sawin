@@ -420,7 +420,10 @@ families, the covered families, the finite endpoint group orders or cutoff
 degrees for those families, braid-index independence, and componentwise
 product-family separation.  Missing families, extra families, nonpositive
 orders, nonpositive cutoff degrees, `n`-dependence, or cross-family
-cancellation leave the signed endpoint layer open.
+cancellation leave the signed endpoint layer open.  The family and target
+ledgers must also be duplicate-free: repeating a routed family or assigning
+two target entries to the same family is not an exact one-target-per-family
+certificate.
 
 The C/M cutoff gate is now scoped like the residual-faithfulness gate.  A bare
 `cutoff_readouts_exact` flag is recorded only as supplied data; it does not
@@ -494,7 +497,9 @@ product-family separation.  Complete finite rows without this scope are only a
 fixed-row check, not an all-strand residual-faithfulness certificate.  A
 family-scoped proof that omits the exact seed states is also incomplete,
 because product endpoint rows can contain several routed seed channels within
-the same family.
+the same family.  These residual family and seed-state ledgers must be
+duplicate-free as well; exact coverage cannot rely on silently removing
+repeated entries.
 
 When the bridge is supplied as a symbolic theorem rather than row data, the
 audit requires the theorem to specify exact active and covered endpoint
