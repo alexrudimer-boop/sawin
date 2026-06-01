@@ -926,9 +926,12 @@ Gamma^{E,+}_{a,b dot c},
 Gamma^{E,+}_{a*(b dot c),b*c}.
 ```
 
-The final state and final three coordinates must agree, and the ordered
-products of the three `H_E` labels must agree in `H_E`.  This is a finite
-identity over all `s in S_E^reach` and all local triples `(x,y,z)`.
+There are two separate finite obligations here.  First, the positive-YBE
+path check must prove that every row used in both `121` and `212` paths is
+present and that the final endpoint state and final three fibre coordinates
+agree.  Second, the positive-YBE cocycle check must prove that the ordered
+products of the three `H_E` labels agree in `H_E`.  Both checks range over
+all `s in S_E^reach` and all local triples `(x,y,z)`.
 
 The signed two-strand Artin-longitude base identity is a finite certificate
 for each signed table entry.  For every row
@@ -982,6 +985,7 @@ coordinate_components_match_T_plus_and_T_inverse,
 all_signed_rows_defined,
 signed_inverse_row_pairing,
 signed_inverse_cancellation,
+positive_local_endpoint_ybe_path,
 positive_local_endpoint_ybe_cocycle,
 signed_two_strand_artin_longitude_base,
 compatible_artin_homomorphism_update,

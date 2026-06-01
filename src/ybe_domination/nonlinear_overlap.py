@@ -115,6 +115,11 @@ UniversalKSignedEndpointInverseFailure = Tuple[
     str,
     object,
 ]
+UniversalKSignedEndpointPositiveYBEFailure = Tuple[
+    Tuple[object, ...],
+    str,
+    object,
+]
 
 
 def _is_permutation_transformation(transformation: Transformation) -> bool:
@@ -591,6 +596,7 @@ class UniversalKSignedEndpointGeneratorAudit:
     coordinate_components_verified: bool = False
     inverse_pairing_verified: bool = False
     inverse_cancellation_verified: bool = False
+    positive_ybe_path_verified: bool = False
     positive_ybe_cocycle_verified: bool = False
     signed_two_strand_base_verified: bool = False
     artin_homomorphism_update_verified: bool = False
@@ -777,6 +783,7 @@ class UniversalKSignedEndpointGeneratorAudit:
             and self.coordinate_components_verified
             and self.inverse_pairing_verified
             and self.inverse_cancellation_verified
+            and self.positive_ybe_path_verified
             and self.positive_ybe_cocycle_verified
             and self.signed_two_strand_base_verified
             and self.artin_homomorphism_update_verified
@@ -820,6 +827,8 @@ class UniversalKSignedEndpointGeneratorAudit:
             reasons.append("inverse_pairing_not_verified")
         if not self.inverse_cancellation_verified:
             reasons.append("inverse_cancellation_not_verified")
+        if not self.positive_ybe_path_verified:
+            reasons.append("positive_ybe_path_not_verified")
         if not self.positive_ybe_cocycle_verified:
             reasons.append("positive_ybe_cocycle_not_verified")
         if not self.signed_two_strand_base_verified:
@@ -1004,6 +1013,128 @@ def universal_k_signed_endpoint_inverse_failures(
                 )
             continue
         failures.append((row.entry_key, "unknown_sign", row.sign))
+    return tuple(failures)
+
+
+def universal_k_signed_endpoint_positive_ybe_failures(
+    interval: LocalInterval,
+    reachable_seed_states: Sequence[Tuple[str, UniversalKSeedState]],
+    rows: Sequence[UniversalKSignedEndpointGeneratorRow],
+) -> Tuple[UniversalKSignedEndpointPositiveYBEFailure, ...]:
+    """Return positive 121/212 endpoint-table path mismatches."""
+
+    row_by_key = {}
+    duplicate_keys = set()
+    for row in rows:
+        if row.sign != 1:
+            continue
+        if row.entry_key in row_by_key:
+            duplicate_keys.add(row.entry_key)
+            continue
+        row_by_key[row.entry_key] = row
+
+    failures = [
+        (key, "duplicate_positive_entry_key", None)
+        for key in sorted(duplicate_keys, key=repr)
+    ]
+
+    def run_path(
+        endpoint_family: str,
+        seed_state: UniversalKSeedState,
+        start_colors: Tuple[Color, Color, Color],
+        start_fibres: Tuple[FibrePoint, FibrePoint, FibrePoint],
+        indices: Tuple[int, int, int],
+    ) -> Tuple[
+        Tuple[UniversalKSeedState, Tuple[Color, ...], Tuple[FibrePoint, ...]] | None,
+        UniversalKSignedEndpointPositiveYBEFailure | None,
+    ]:
+        state = seed_state
+        colors = tuple(start_colors)
+        fibres = tuple(start_fibres)
+        for step, index in enumerate(indices):
+            key = (
+                endpoint_family,
+                state,
+                1,
+                colors[index],
+                colors[index + 1],
+                fibres[index],
+                fibres[index + 1],
+            )
+            row = row_by_key.get(key)
+            if row is None:
+                return None, (
+                    key,
+                    "missing_positive_ybe_row",
+                    (indices, step, colors, fibres),
+                )
+            target_colors = interval.base_R.get((row.left_color, row.right_color))
+            if target_colors is None:
+                return None, (
+                    key,
+                    "positive_color_pair_outside_base",
+                    (indices, step),
+                )
+            next_colors = list(colors)
+            next_fibres = list(fibres)
+            next_colors[index], next_colors[index + 1] = target_colors
+            next_fibres[index], next_fibres[index + 1] = (
+                row.output_left,
+                row.output_right,
+            )
+            state = row.next_seed_state
+            colors = tuple(next_colors)
+            fibres = tuple(next_fibres)
+        return (state, colors, fibres), None
+
+    for endpoint_family, seed_state in sorted(set(reachable_seed_states), key=repr):
+        for a, b, c in product(interval.colors, repeat=3):
+            for x, y, z in product(
+                interval.fibres[a],
+                interval.fibres[b],
+                interval.fibres[c],
+            ):
+                start_colors = (a, b, c)
+                start_fibres = (x, y, z)
+                left_result, left_failure = run_path(
+                    endpoint_family,
+                    seed_state,
+                    start_colors,
+                    start_fibres,
+                    (0, 1, 0),
+                )
+                right_result, right_failure = run_path(
+                    endpoint_family,
+                    seed_state,
+                    start_colors,
+                    start_fibres,
+                    (1, 0, 1),
+                )
+                if left_failure is not None:
+                    failures.append(left_failure)
+                if right_failure is not None:
+                    failures.append(right_failure)
+                if (
+                    left_failure is None
+                    and right_failure is None
+                    and left_result != right_result
+                ):
+                    failures.append(
+                        (
+                            (
+                                endpoint_family,
+                                seed_state,
+                                a,
+                                b,
+                                c,
+                                x,
+                                y,
+                                z,
+                            ),
+                            "positive_ybe_terminal_mismatch",
+                            (left_result, right_result),
+                        )
+                    )
     return tuple(failures)
 
 
@@ -2427,6 +2558,7 @@ class PostLinearRemainingFiniteSystemAudit:
                 ("signed_endpoint_generator_coordinate_components_verified", False),
                 ("signed_endpoint_generator_inverse_pairing_verified", False),
                 ("signed_endpoint_generator_inverse_cancellation_verified", False),
+                ("signed_endpoint_generator_positive_ybe_path_verified", False),
                 ("signed_endpoint_generator_positive_ybe_cocycle_verified", False),
                 ("signed_endpoint_generator_two_strand_base_verified", False),
                 ("signed_endpoint_generator_artin_update_verified", False),
@@ -2504,6 +2636,10 @@ class PostLinearRemainingFiniteSystemAudit:
             (
                 "signed_endpoint_generator_inverse_cancellation_verified",
                 audit.inverse_cancellation_verified,
+            ),
+            (
+                "signed_endpoint_generator_positive_ybe_path_verified",
+                audit.positive_ybe_path_verified,
             ),
             (
                 "signed_endpoint_generator_positive_ybe_cocycle_verified",

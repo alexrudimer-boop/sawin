@@ -71,6 +71,7 @@ from ybe_domination import (
     triangular_recovery_unit_group,
     universal_k_signed_endpoint_coordinate_failures,
     universal_k_signed_endpoint_inverse_failures,
+    universal_k_signed_endpoint_positive_ybe_failures,
     universal_k_signed_endpoint_required_entry_keys,
     universal_continuation_identity_endpoint_witness_audit,
     universal_continuation_identity_symmetric_endpoint_fork_audit,
@@ -2396,6 +2397,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             coordinate_components_verified=True,
             inverse_pairing_verified=True,
             inverse_cancellation_verified=True,
+            positive_ybe_path_verified=True,
             positive_ybe_cocycle_verified=True,
             signed_two_strand_base_verified=True,
             artin_homomorphism_update_verified=True,
@@ -2415,6 +2417,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             endpoint_targets_fixed=True,
             coordinate_components_verified=True,
             inverse_cancellation_verified=True,
+            positive_ybe_path_verified=True,
             positive_ybe_cocycle_verified=True,
             signed_two_strand_base_verified=True,
             artin_homomorphism_update_verified=True,
@@ -2422,6 +2425,23 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
 
         self.assertFalse(unpaired.proves_signed_endpoint_generator_tables)
         self.assertIn("inverse_pairing_not_verified", unpaired.failure_reasons)
+
+        unpathed = UniversalKSignedEndpointGeneratorAudit(
+            seed_classifier_entries=seed_entries,
+            reachable_seed_states=(("U", seed_state),),
+            required_entry_keys=required_entry_keys,
+            rows=(positive_row, negative_row),
+            endpoint_targets_fixed=True,
+            coordinate_components_verified=True,
+            inverse_pairing_verified=True,
+            inverse_cancellation_verified=True,
+            positive_ybe_cocycle_verified=True,
+            signed_two_strand_base_verified=True,
+            artin_homomorphism_update_verified=True,
+        )
+
+        self.assertFalse(unpathed.proves_signed_endpoint_generator_tables)
+        self.assertIn("positive_ybe_path_not_verified", unpathed.failure_reasons)
 
         complete = UniversalKSignedEndpointGeneratorAudit(
             seed_classifier_entries=seed_entries,
@@ -2432,6 +2452,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             coordinate_components_verified=True,
             inverse_pairing_verified=True,
             inverse_cancellation_verified=True,
+            positive_ybe_path_verified=True,
             positive_ybe_cocycle_verified=True,
             signed_two_strand_base_verified=True,
             artin_homomorphism_update_verified=True,
@@ -2490,6 +2511,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             coordinate_components_verified=True,
             inverse_pairing_verified=True,
             inverse_cancellation_verified=True,
+            positive_ybe_path_verified=True,
             positive_ybe_cocycle_verified=True,
             signed_two_strand_base_verified=True,
             artin_homomorphism_update_verified=True,
@@ -2559,6 +2581,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             coordinate_components_verified=True,
             inverse_pairing_verified=True,
             inverse_cancellation_verified=True,
+            positive_ybe_path_verified=True,
             positive_ybe_cocycle_verified=True,
             signed_two_strand_base_verified=True,
             artin_homomorphism_update_verified=True,
@@ -2686,6 +2709,84 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             tuple(failure[1] for failure in failures),
         )
 
+    def test_signed_endpoint_positive_ybe_failures_check_state_and_fibre_paths(self):
+        seed_state = ("*", "*", "left_constant_map_universal_kernel")
+        interval = one_color_identity_interval()
+
+        rows = tuple(
+            UniversalKSignedEndpointGeneratorRow(
+                endpoint_family="U",
+                seed_state=seed_state,
+                sign=1,
+                left_color="*",
+                right_color="*",
+                input_left=x,
+                input_right=y,
+                output_left=x,
+                output_right=y,
+                next_seed_state=seed_state,
+                endpoint_value=0,
+            )
+            for x in interval.fibres["*"]
+            for y in interval.fibres["*"]
+        )
+
+        self.assertEqual(
+            universal_k_signed_endpoint_positive_ybe_failures(
+                interval,
+                (("U", seed_state),),
+                rows,
+            ),
+            (),
+        )
+        missing_failures = universal_k_signed_endpoint_positive_ybe_failures(
+            interval,
+            (("U", seed_state),),
+            rows[:-1],
+        )
+        self.assertIn(
+            "missing_positive_ybe_row",
+            tuple(failure[1] for failure in missing_failures),
+        )
+
+        left_state = ("*", "*", "left_constant_map_universal_kernel", "left")
+        right_state = ("*", "*", "left_constant_map_universal_kernel", "right")
+        state_rows = []
+        for state in (seed_state, left_state, right_state):
+            for x in interval.fibres["*"]:
+                for y in interval.fibres["*"]:
+                    next_state = state
+                    if state == seed_state and (x, y) == (0, 1):
+                        next_state = left_state
+                    if state == seed_state and (x, y) == (1, 1):
+                        next_state = right_state
+                    state_rows.append(
+                        UniversalKSignedEndpointGeneratorRow(
+                            endpoint_family="U",
+                            seed_state=state,
+                            sign=1,
+                            left_color="*",
+                            right_color="*",
+                            input_left=x,
+                            input_right=y,
+                            output_left=x,
+                            output_right=y,
+                            next_seed_state=next_state,
+                            endpoint_value=0,
+                        )
+                    )
+
+        failures = universal_k_signed_endpoint_positive_ybe_failures(
+            interval,
+            (("U", seed_state),),
+            tuple(state_rows),
+        )
+
+        self.assertIn(
+            "positive_ybe_terminal_mismatch",
+            tuple(failure[1] for failure in failures),
+        )
+
     def test_post_linear_reports_signed_generator_table_audit(self):
         refinement = constant_map_kernel_only_system_k_refinement()
         closure = TriangularLatinDefectClosureAudit(
@@ -2748,6 +2849,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             coordinate_components_verified=True,
             inverse_pairing_verified=True,
             inverse_cancellation_verified=True,
+            positive_ybe_path_verified=True,
             positive_ybe_cocycle_verified=True,
             signed_two_strand_base_verified=True,
             artin_homomorphism_update_verified=True,
