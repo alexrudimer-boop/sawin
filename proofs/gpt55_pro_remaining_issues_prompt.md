@@ -1193,6 +1193,12 @@ only raw variables `A_{r,j}` for that same track `r`, may not repeat an
 assigned raw variable, and every assigned value must be an element of the
 fixed endpoint group `H_E`.  A dependency-valid row with an invalid template
 does not initialize a detector track.
+The initialization template must also cover the raw assignment variables that
+the word-potential substitutions actually use.  If a local Artin substitution
+contains `A_{r,j}`, then the initialization row for `(E,r)` must include that
+same raw variable.  Otherwise the substitution is using an uninitialized
+generator assignment, so the detector track is not really fixed before the
+braid.
 
 The same certificate must define finite word templates `W_s`, one for every
 reachable endpoint state `s in S_E^reach`.  Each word template is a fixed
@@ -1941,7 +1947,8 @@ Before returning a claimed resolution, explicitly answer:
 8. Do the signed endpoint generator tables satisfy inverse cancellation, the
    positive local endpoint YBE cocycle identity, and the fixed-assignment
    detector-lift telescope: fixed detector tracks chosen before the braid,
-   track initialization from interval data, the Artin detector recurrence,
+   track initialization from interval data, every raw assignment variable used
+   by a substitution initialized by its track, the Artin detector recurrence,
    word templates `W_s` for every reachable endpoint state using only current
    longitude variables whose track indices are declared and initialized, the
    induced Artin substitution, the identity

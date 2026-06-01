@@ -3284,6 +3284,68 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             out_of_scope_tracks.failure_reasons,
         )
 
+        in_scope_word_needing_right_assignment = (
+            (("U", 0, 1), 1),
+            (("U", 0, 1), -1),
+        )
+
+        def right_assignment_substitution(sign):
+            if sign == 1:
+                return ((("U", 0, 1), ((("U", 0, 0), 1),)),)
+            return (
+                (
+                    ("U", 0, 1),
+                    (
+                        (("U", 0, 1), 1),
+                        (("A", 0, 1), -1),
+                        (("U", 0, 1), -1),
+                        (("U", 0, 0), 1),
+                    ),
+                ),
+            )
+
+        missing_raw_assignment = replace(
+            theorem_complete,
+            telescoping_detector_audit=replace(
+                theorem_complete.telescoping_detector_audit,
+                word_potential_certificate=replace(
+                    word_potential_certificate,
+                    templates=(
+                        (
+                            ("U", seed_state),
+                            in_scope_word_needing_right_assignment,
+                        ),
+                    ),
+                    identity_rows=tuple(
+                        UniversalKWordPotentialIdentityRow(
+                            entry_key=key,
+                            next_seed_state=key[1],
+                            endpoint_value=(
+                                word_potential_certificate.endpoint_group.identity
+                            ),
+                            artin_substitution=right_assignment_substitution(key[2]),
+                        )
+                        for key in required_entry_keys
+                    ),
+                ),
+            ),
+        )
+        missing_raw_assignment_audit = (
+            missing_raw_assignment.telescoping_detector_audit
+        )
+        self.assertTrue(
+            missing_raw_assignment_audit.word_potential_track_scope_verified
+        )
+        self.assertFalse(
+            missing_raw_assignment_audit.word_potential_raw_assignment_scope_verified
+        )
+        self.assertFalse(missing_raw_assignment.telescoping_detector_proved)
+        self.assertFalse(missing_raw_assignment.proves_signed_endpoint_generator_tables)
+        self.assertIn(
+            "word_potential_raw_assignments_not_initialized",
+            missing_raw_assignment.failure_reasons,
+        )
+
         incomplete_theorem = UniversalKResidualFaithfulnessAudit(
             active_endpoint_families=("U", "C"),
             covered_endpoint_families=("U",),

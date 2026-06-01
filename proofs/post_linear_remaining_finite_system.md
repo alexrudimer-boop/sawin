@@ -420,6 +420,7 @@ word-potential identity rows match D_Gamma and Gamma labels
 word-potential template coverage for every reachable endpoint state
 word-potential templates use only current longitude variables
 word-potential variables use only declared fixed detector tracks
+raw assignment variables in substitutions are initialized by fixed tracks
 word-potential Artin substitution from the detector recurrence
 word-potential identity for every signed row
 initial word-potential normalization
@@ -503,6 +504,12 @@ It also validates the local assignment template in every row: assignments
 must use raw variables `A_{r,j}` for the same track index, must not repeat a
 raw variable, and must assign endpoint-group elements.  A row with allowed
 dependencies but an invalid template is still not a fixed detector track.
+The checker also compares these initialized raw variables with the local
+word-potential substitutions: every `A_{r,j}` used by a substitution must be
+listed in the initialization template for the same endpoint family and track.
+This prevents the finite word identity from using an uninitialized generator
+assignment while still claiming the detector tracks were fixed before reading
+the braid.
 
 The endpoint potential itself may not be a tautological accumulated product.
 For every reachable endpoint state the certificate must supply a finite word
@@ -788,6 +795,9 @@ signed_endpoint_generator_word_potential_seed_state_scope_matches_expected
 signed_endpoint_generator_word_potential_templates_use_only_current_longitudes
 signed_endpoint_generator_word_potential_track_scope_verified
 signed_endpoint_generator_word_potential_track_scope_failures
+signed_endpoint_generator_initialized_raw_assignment_variables
+signed_endpoint_generator_word_potential_raw_assignment_scope_verified
+signed_endpoint_generator_word_potential_raw_assignment_scope_failures
 signed_endpoint_generator_word_potential_artin_substitution_verified
 signed_endpoint_generator_word_potential_identity_verified
 signed_endpoint_generator_word_potential_certificate_template_states

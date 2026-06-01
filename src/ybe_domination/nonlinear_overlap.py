@@ -2835,6 +2835,25 @@ class UniversalKTelescopingDetectorAudit:
         )
 
     @property
+    def initialized_raw_assignment_variables_by_family(
+        self,
+    ) -> Mapping[str, Tuple[UniversalKWordPotentialVariable, ...]]:
+        initialized: dict[str, set[UniversalKWordPotentialVariable]] = {}
+        for row in self.detector_track_initialization_rows:
+            family_initialized = initialized.setdefault(row.endpoint_family, set())
+            for variable, _value in row.local_assignment_template:
+                if (
+                    _universal_k_word_potential_variable_valid(variable)
+                    and variable[0] == "A"
+                    and variable[1] == row.track_index
+                ):
+                    family_initialized.add(variable)
+        return {
+            family: tuple(sorted(variables, key=repr))
+            for family, variables in initialized.items()
+        }
+
+    @property
     def expected_word_potential_seed_states_exact(
         self,
     ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
@@ -2983,6 +3002,42 @@ class UniversalKTelescopingDetectorAudit:
         return not self.word_potential_track_scope_failures
 
     @property
+    def word_potential_raw_assignment_scope_failures(
+        self,
+    ) -> Tuple[UniversalKWordPotentialFailure, ...]:
+        if self.word_potential_certificate is None:
+            return ()
+        failures = []
+        initialized_by_family = self.initialized_raw_assignment_variables_by_family
+        for row in self.word_potential_certificate.identity_rows:
+            family = row.entry_key[0]
+            initialized = set(initialized_by_family.get(family, ()))
+            row_raw_variables = []
+            for variable, image in row.artin_substitution:
+                row_raw_variables.append(variable)
+                row_raw_variables.extend(
+                    image_variable for image_variable, _exponent in image
+                )
+            for variable in sorted(set(row_raw_variables), key=repr):
+                if (
+                    _universal_k_word_potential_variable_valid(variable)
+                    and variable[0] == "A"
+                    and variable not in initialized
+                ):
+                    failures.append(
+                        (
+                            row.entry_key,
+                            "word_potential_raw_assignment_not_initialized",
+                            variable,
+                        )
+                    )
+        return tuple(failures)
+
+    @property
+    def word_potential_raw_assignment_scope_verified(self) -> bool:
+        return not self.word_potential_raw_assignment_scope_failures
+
+    @property
     def word_potential_artin_substitution_proved(self) -> bool:
         return (
             self.word_potential_certificate is not None
@@ -3009,6 +3064,7 @@ class UniversalKTelescopingDetectorAudit:
             self.word_potential_templates_supplied
             and self.word_potential_templates_use_only_current_longitudes_verified
             and self.word_potential_track_scope_verified
+            and self.word_potential_raw_assignment_scope_verified
             and self.word_potential_artin_substitution_proved
             and self.word_potential_identity_proved
         )
@@ -3023,6 +3079,7 @@ class UniversalKTelescopingDetectorAudit:
             self.word_potential_templates_supplied
             and self.word_potential_templates_use_only_current_longitudes_verified
             and self.word_potential_track_scope_verified
+            and self.word_potential_raw_assignment_scope_verified
         )
 
     @property
@@ -3031,6 +3088,7 @@ class UniversalKTelescopingDetectorAudit:
             self.detector_track_initializations_verified
             and self.word_potential_templates_supplied
             and self.word_potential_track_scope_verified
+            and self.word_potential_raw_assignment_scope_verified
         )
 
     @property
@@ -3126,6 +3184,8 @@ class UniversalKTelescopingDetectorAudit:
             reasons.append("word_potential_uses_raw_assignment_variables")
         if not self.word_potential_track_scope_verified:
             reasons.append("word_potential_track_variables_out_of_scope")
+        if not self.word_potential_raw_assignment_scope_verified:
+            reasons.append("word_potential_raw_assignments_not_initialized")
         if not self.word_potential_artin_substitution_proved:
             reasons.append("word_potential_artin_substitution_not_verified")
         if not self.word_potential_identity_proved:
@@ -7200,6 +7260,30 @@ class PostLinearRemainingFiniteSystemAudit:
                 "signed_endpoint_generator_word_potential_track_scope_failures",
                 (
                     telescoping_audit.word_potential_track_scope_failures
+                    if telescoping_audit is not None
+                    else ()
+                ),
+            ),
+            (
+                "signed_endpoint_generator_initialized_raw_assignment_variables",
+                (
+                    telescoping_audit.initialized_raw_assignment_variables_by_family
+                    if telescoping_audit is not None
+                    else {}
+                ),
+            ),
+            (
+                "signed_endpoint_generator_word_potential_raw_assignment_scope_verified",
+                (
+                    telescoping_audit.word_potential_raw_assignment_scope_verified
+                    if telescoping_audit is not None
+                    else False
+                ),
+            ),
+            (
+                "signed_endpoint_generator_word_potential_raw_assignment_scope_failures",
+                (
+                    telescoping_audit.word_potential_raw_assignment_scope_failures
                     if telescoping_audit is not None
                     else ()
                 ),
