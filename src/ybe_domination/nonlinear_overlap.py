@@ -1133,6 +1133,7 @@ class UniversalKSignedEndpointGeneratorAudit:
     required_entry_keys: Tuple[UniversalKSignedEndpointEntryKey, ...]
     rows: Tuple[UniversalKSignedEndpointGeneratorRow, ...]
     entry_domain_derived_from_interval: bool = False
+    finite_row_checks_derived_from_tables: bool = False
     endpoint_targets_fixed: bool = False
     coordinate_components_verified: bool = False
     inverse_pairing_verified: bool = False
@@ -1574,6 +1575,7 @@ class UniversalKSignedEndpointGeneratorAudit:
         return (
             self.signed_generator_domain_exact
             and self.all_rows_defined
+            and self.finite_row_checks_derived_from_tables
             and self.endpoint_targets_proved
             and self.coordinate_components_verified
             and self.inverse_pairing_verified
@@ -1633,6 +1635,8 @@ class UniversalKSignedEndpointGeneratorAudit:
             reasons.append("duplicate_signed_generator_entries")
         if self.undefined_rows:
             reasons.append("undefined_signed_generator_rows")
+        if not self.finite_row_checks_derived_from_tables:
+            reasons.append("finite_signed_row_checks_not_derived_from_tables")
         if not self.endpoint_targets_proved:
             reasons.append("endpoint_targets_not_fixed")
             if self.required_seed_states and self.endpoint_target_audit is None:
@@ -2551,6 +2555,7 @@ def universal_k_signed_endpoint_generator_audit(
         required_entry_keys=required_entry_keys,
         rows=row_tuple,
         entry_domain_derived_from_interval=True,
+        finite_row_checks_derived_from_tables=True,
         endpoint_targets_fixed=endpoint_group is not None,
         coordinate_components_verified=not coordinate_failures,
         inverse_pairing_verified=not inverse_failures,
@@ -4010,6 +4015,7 @@ class PostLinearRemainingFiniteSystemAudit:
                 ("signed_endpoint_generator_reachable_closure_exact", False),
                 ("signed_endpoint_generator_required_entry_keys", ()),
                 ("signed_endpoint_generator_entry_domain_derived_from_interval", False),
+                ("signed_endpoint_generator_finite_checks_derived_from_tables", False),
                 ("signed_endpoint_generator_missing_entry_keys", ()),
                 ("signed_endpoint_generator_endpoint_targets_fixed", False),
                 ("signed_endpoint_generator_endpoint_targets_flag_supplied", False),
@@ -4149,6 +4155,10 @@ class PostLinearRemainingFiniteSystemAudit:
             (
                 "signed_endpoint_generator_entry_domain_derived_from_interval",
                 audit.entry_domain_derived_from_interval,
+            ),
+            (
+                "signed_endpoint_generator_finite_checks_derived_from_tables",
+                audit.finite_row_checks_derived_from_tables,
             ),
             (
                 "signed_endpoint_generator_supplied_entry_keys",

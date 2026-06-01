@@ -468,7 +468,10 @@ engineering which table entry broke.  The signed endpoint table proof now
 also requires that the entry domain be derived from the interval; a manual
 audit that supplies a smaller prover-selected entry-key set is recorded as
 `signed_entry_domain_not_derived_from_interval` and cannot close the
-endpoint layer.
+endpoint layer.  Likewise, the finite row checks themselves must be derived
+from the supplied rows, actual interval table, endpoint group or cutoff
+multiplication, and literal longitude witnesses; unsupported success flags are
+recorded as `finite_signed_row_checks_not_derived_from_tables`.
 
 The post-linear wrapper can now derive this signed endpoint audit directly
 from supplied table rows and witnesses after computing the interval's current
@@ -554,6 +557,7 @@ signed_endpoint_generator_missing_initial_seed_states
 signed_endpoint_generator_required_signed_seed_keys
 signed_endpoint_generator_required_entry_keys
 signed_endpoint_generator_entry_domain_derived_from_interval
+signed_endpoint_generator_finite_checks_derived_from_tables
 signed_endpoint_generator_supplied_entry_keys
 signed_endpoint_generator_missing_entry_keys
 signed_endpoint_generator_extra_entry_keys

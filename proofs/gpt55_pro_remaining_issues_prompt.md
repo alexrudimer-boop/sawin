@@ -916,9 +916,13 @@ certificates unless accompanied by the finite table evaluation that proves
 the assertion.  The full entry domain itself must be marked as derived from
 the interval fibres and reachable states; a prover-selected `D_Gamma`
 subdomain is not a certificate even if all supplied rows satisfy the local
-identities on that smaller domain.  If a derived check fails, the certificate
-must report the actual failed rows or local triples, not only a failed
-boolean.
+identities on that smaller domain.  The finite row checks themselves must be
+marked as derived from the supplied signed rows, actual interval table,
+endpoint group or cutoff multiplication, and explicit longitude witnesses;
+manually asserted success flags for coordinate compatibility, inverse
+cancellation, YBE cocycle, two-strand base, or Artin update are not
+certificates.  If a derived check fails, the certificate must report the
+actual failed rows or local triples, not only a failed boolean.
 
 Every supplied row must also pass the coordinate-component check against the
 actual interval table: positive rows must have `(x',y')=T_{a,b}(x,y)`, and
@@ -1114,6 +1118,7 @@ endpoint_target_ledgers_duplicate_free,
 residual_endpoint_seed_state_coverage_exact,
 residual_endpoint_seed_state_ledgers_duplicate_free,
 signed_entry_domain_derived_from_interval,
+finite_signed_row_checks_derived_from_tables,
 signed_generator_domain_exact,
 coordinate_components_match_T_plus_and_T_inverse,
 all_signed_rows_defined,
