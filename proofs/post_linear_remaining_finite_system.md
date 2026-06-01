@@ -419,6 +419,11 @@ actual residual fibre action to be trivial.  This audit therefore records
 that bridge explicitly before endpoint witnesses or symmetric cutoffs can be
 promoted to an all-strand proof.
 
+When the bridge is supplied by residual action rows, the audit records the
+number of covered rows, the expected row count, and whether the endpoint
+readout rows prove the complete residual-action implication.  A supplied-row
+implication with missing residual rows is not enough.
+
 together with the concrete rows:
 
 ```text
@@ -460,6 +465,9 @@ signed_endpoint_generator_artin_update_verified
 signed_endpoint_generator_cutoff_readouts_required
 signed_endpoint_generator_cutoff_readouts_exact
 signed_endpoint_generator_residual_faithfulness_verified
+signed_endpoint_generator_residual_action_rows
+signed_endpoint_generator_residual_action_rows_expected
+signed_endpoint_generator_residual_action_complete
 signed_endpoint_generator_tables_proved
 signed_endpoint_generator_failure_reasons
 active_companion_block_image_support_rows

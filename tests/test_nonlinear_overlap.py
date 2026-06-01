@@ -38,8 +38,11 @@ from ybe_domination import (
     UniversalKSignedEndpointGeneratorRow,
     TwoSidedUnitCollapseAudit,
     cyclic_group,
+    endpoint_coordinate_readout_audit,
     endpoint_family_symmetric_fork_audit,
     endpoint_product_longitude_expression_audit,
+    endpoint_residual_action_audit,
+    endpoint_residual_readout_audit,
     latin_triangular_ybe_audit,
     mixed_unit_context_endpoint_witness_audit,
     mixed_unit_context_symmetric_endpoint_fork_audit,
@@ -247,6 +250,27 @@ def exact_obstruction():
     return NonlinearOverlapObstructionAudit(
         summary=target_summary(),
         continuation=continuation(),
+    )
+
+
+def trivial_endpoint_residual_action_audit():
+    group = cyclic_group(2)
+    endpoint = endpoint_product_longitude_expression_audit(
+        (group,),
+        n=2,
+        braid_word=(1, -1),
+        endpoints=(0,),
+        assignments=((1, 0),),
+        expressions=((),),
+    )
+    readout = endpoint_residual_readout_audit(
+        (endpoint_coordinate_readout_audit(endpoint, "p", "p"),)
+    )
+    return endpoint_residual_action_audit(
+        2,
+        (1, -1),
+        (readout,),
+        expected_row_count=1,
     )
 
 
@@ -2481,7 +2505,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             positive_ybe_cocycle_verified=True,
             signed_two_strand_base_verified=True,
             artin_homomorphism_update_verified=True,
-            residual_faithfulness_verified=True,
+            residual_action_audit=trivial_endpoint_residual_action_audit(),
         )
 
         self.assertEqual(complete.missing_signed_seed_keys, ())
@@ -2489,6 +2513,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertEqual(complete.extra_signed_seed_keys, ())
         self.assertEqual(complete.extra_entry_keys, ())
         self.assertTrue(complete.signed_generator_domain_exact)
+        self.assertTrue(complete.residual_faithfulness_proved)
         self.assertTrue(complete.proves_signed_endpoint_generator_tables)
         self.assertEqual(complete.failure_reasons, ())
 
@@ -2541,7 +2566,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             positive_ybe_cocycle_verified=True,
             signed_two_strand_base_verified=True,
             artin_homomorphism_update_verified=True,
-            residual_faithfulness_verified=True,
+            residual_action_audit=trivial_endpoint_residual_action_audit(),
         )
 
         self.assertEqual(audit.missing_signed_seed_keys, ())
@@ -2612,7 +2637,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             positive_ybe_cocycle_verified=True,
             signed_two_strand_base_verified=True,
             artin_homomorphism_update_verified=True,
-            residual_faithfulness_verified=True,
+            residual_action_audit=trivial_endpoint_residual_action_audit(),
         )
 
         self.assertEqual(audit.missing_entry_keys, (keys[-1],))
@@ -3154,7 +3179,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             positive_ybe_cocycle_verified=True,
             signed_two_strand_base_verified=True,
             artin_homomorphism_update_verified=True,
-            residual_faithfulness_verified=True,
+            residual_action_audit=trivial_endpoint_residual_action_audit(),
         )
         audit = PostLinearRemainingFiniteSystemAudit(
             refinement,
@@ -3173,6 +3198,14 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         )
         self.assertIn(
             ("signed_endpoint_generator_residual_faithfulness_verified", True),
+            audit.finite_obstruction_data,
+        )
+        self.assertIn(
+            ("signed_endpoint_generator_residual_action_rows", 1),
+            audit.finite_obstruction_data,
+        )
+        self.assertIn(
+            ("signed_endpoint_generator_residual_action_complete", True),
             audit.finite_obstruction_data,
         )
         self.assertIn(

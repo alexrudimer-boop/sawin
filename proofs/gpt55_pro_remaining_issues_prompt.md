@@ -999,6 +999,15 @@ A trivial endpoint group makes every label formally lie in `V_beta(H_E)`,
 but it does not prove residual domination unless this residual-faithfulness
 map from endpoint channels to real fibre motion is supplied.
 
+A concrete residual-faithfulness certificate must list the residual action
+rows it covers.  For each residual input tuple it must give the output tuple,
+decompose every moved coordinate into endpoint-controlled coordinates or
+cutoff readouts, and prove that identity endpoint data fixes each coordinate.
+It must also state the expected number of residual rows for the interval
+fibre action and prove that the listed rows cover that number.  A supplied
+row subset proves only a supplied-row implication, not domination of the
+whole residual action.
+
 The signed-generator audit for a claimed A proof must therefore establish:
 
 ```text

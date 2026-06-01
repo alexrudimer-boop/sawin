@@ -78,6 +78,7 @@ from .semigroup_holonomy import (
 
 if TYPE_CHECKING:  # pragma: no cover - typing only
     from .endpoint_factorization import (
+        EndpointResidualActionAudit,
         MixedUnitContextEndpointWitnessAudit,
         MixedUnitContextSymmetricEndpointForkAudit,
         UniversalContinuationIdentityEndpointWitnessAudit,
@@ -610,6 +611,7 @@ class UniversalKSignedEndpointGeneratorAudit:
     artin_homomorphism_update_verified: bool = False
     cutoff_readouts_exact: bool = False
     residual_faithfulness_verified: bool = False
+    residual_action_audit: "EndpointResidualActionAudit | None" = None
 
     @property
     def required_seed_states(self) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
@@ -784,6 +786,13 @@ class UniversalKSignedEndpointGeneratorAudit:
         return not self.cutoff_readouts_required or self.cutoff_readouts_exact
 
     @property
+    def residual_faithfulness_proved(self) -> bool:
+        return self.residual_faithfulness_verified or (
+            self.residual_action_audit is not None
+            and self.residual_action_audit.proves_complete_residual_action_implication
+        )
+
+    @property
     def proves_signed_endpoint_generator_tables(self) -> bool:
         return (
             self.signed_generator_domain_exact
@@ -797,7 +806,7 @@ class UniversalKSignedEndpointGeneratorAudit:
             and self.signed_two_strand_base_verified
             and self.artin_homomorphism_update_verified
             and self.exact_cutoff_readouts_proved
-            and self.residual_faithfulness_verified
+            and self.residual_faithfulness_proved
         )
 
     @property
@@ -847,7 +856,7 @@ class UniversalKSignedEndpointGeneratorAudit:
             reasons.append("artin_homomorphism_update_not_verified")
         if not self.exact_cutoff_readouts_proved:
             reasons.append("cutoff_readouts_not_exact")
-        if not self.residual_faithfulness_verified:
+        if not self.residual_faithfulness_proved:
             reasons.append("residual_faithfulness_not_verified")
         return tuple(reasons)
 
@@ -3039,6 +3048,9 @@ class PostLinearRemainingFiniteSystemAudit:
                 ("signed_endpoint_generator_artin_update_verified", False),
                 ("signed_endpoint_generator_cutoff_readouts_exact", False),
                 ("signed_endpoint_generator_residual_faithfulness_verified", False),
+                ("signed_endpoint_generator_residual_action_rows", 0),
+                ("signed_endpoint_generator_residual_action_rows_expected", None),
+                ("signed_endpoint_generator_residual_action_complete", False),
                 ("signed_endpoint_generator_tables_proved", False),
             )
         matches_current_kappa = (
@@ -3139,7 +3151,31 @@ class PostLinearRemainingFiniteSystemAudit:
             ),
             (
                 "signed_endpoint_generator_residual_faithfulness_verified",
-                audit.residual_faithfulness_verified,
+                audit.residual_faithfulness_proved,
+            ),
+            (
+                "signed_endpoint_generator_residual_action_rows",
+                (
+                    audit.residual_action_audit.row_count
+                    if audit.residual_action_audit is not None
+                    else 0
+                ),
+            ),
+            (
+                "signed_endpoint_generator_residual_action_rows_expected",
+                (
+                    audit.residual_action_audit.expected_row_count
+                    if audit.residual_action_audit is not None
+                    else None
+                ),
+            ),
+            (
+                "signed_endpoint_generator_residual_action_complete",
+                (
+                    audit.residual_action_audit.proves_complete_residual_action_implication
+                    if audit.residual_action_audit is not None
+                    else False
+                ),
             ),
             (
                 "signed_endpoint_generator_tables_proved",
