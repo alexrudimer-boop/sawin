@@ -1438,7 +1438,9 @@ template may not contain any `A` variable.  All such variables must use track
 and local-position indices that are genuine nonnegative integers in the
 finite declared ranges for the endpoint family.  Boolean indices, strings,
 negative values, and other non-index objects are malformed formal variables,
-not detector tracks.  For the active two local strands, the positive
+not detector tracks.  Malformed or unhashable formal-variable objects must be
+reported as certificate errors rather than crashing duplicate, detector-domain,
+or normalization checks.  For the active two local strands, the positive
 substitution must be the Artin detector
 recurrence:
 

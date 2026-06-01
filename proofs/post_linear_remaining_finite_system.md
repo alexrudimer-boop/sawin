@@ -633,7 +633,9 @@ contain only current longitude variables `U_{r,j}` with nonnegative integer
 track and local-position indices, and that the local substitutions are the
 positive Artin recurrences.  Boolean indices, strings, negative values, and
 other non-index objects are malformed word-potential variables rather than
-finite detector-track references.  Negative
+finite detector-track references; malformed or unhashable variable objects
+must be reported as certificate errors, not allowed to crash duplicate,
+domain, or normalization checks.  Negative
 word-potential rows, if present, are diagnostic only once the signed endpoint
 audit has proved that negative endpoint rows are actual inverses.  Malformed
 identity rows with any sign other than `+1` or `-1` are rejected rather than

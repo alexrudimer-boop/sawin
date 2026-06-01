@@ -869,14 +869,37 @@ def _constant_map_kernel_kind_from_reason(reason: str) -> str:
 
 
 def _duplicate_values(values: Sequence[object]) -> Tuple[object, ...]:
+    def marker(value: object) -> object:
+        try:
+            hash(value)
+        except TypeError:
+            return ("unhashable", repr(value))
+        return ("hashable", value)
+
     seen = set()
-    duplicates = []
+    duplicates = {}
     for value in values:
-        if value in seen:
-            duplicates.append(value)
+        key = marker(value)
+        if key in seen:
+            duplicates.setdefault(key, value)
         else:
-            seen.add(value)
-    return tuple(sorted(set(duplicates), key=repr))
+            seen.add(key)
+    return tuple(sorted(duplicates.values(), key=repr))
+
+
+def _value_marker(value: object) -> object:
+    try:
+        hash(value)
+    except TypeError:
+        return ("unhashable", repr(value))
+    return ("hashable", value)
+
+
+def _unique_values(values: Sequence[object]) -> Tuple[object, ...]:
+    unique = {}
+    for value in values:
+        unique.setdefault(_value_marker(value), value)
+    return tuple(sorted(unique.values(), key=repr))
 
 
 @dataclass(frozen=True)
@@ -953,7 +976,7 @@ class UniversalKWordPotentialIdentityRow:
 def _universal_k_word_potential_variables(
     word: UniversalKWordPotentialWord,
 ) -> Tuple[UniversalKWordPotentialVariable, ...]:
-    return tuple(sorted({variable for variable, _exponent in word}, key=repr))
+    return _unique_values(tuple(variable for variable, _exponent in word))
 
 
 def _universal_k_word_potential_variable_valid(
@@ -990,10 +1013,12 @@ def _universal_k_word_potential_substitute(
     word: UniversalKWordPotentialWord,
     substitution: UniversalKWordPotentialSubstitution,
 ) -> UniversalKWordPotentialWord:
-    substitution_map = dict(substitution)
+    substitution_map = {
+        _value_marker(variable): image for variable, image in substitution
+    }
     expanded = []
     for variable, exponent in word:
-        image = substitution_map.get(variable, ((variable, 1),))
+        image = substitution_map.get(_value_marker(variable), ((variable, 1),))
         if exponent < 0:
             image = _universal_k_word_potential_invert(image)
         expanded.extend(image)
@@ -1010,6 +1035,8 @@ def universal_k_evaluate_word_potential(
     out = endpoint_group.identity
     group_elements = set(endpoint_group.elements)
     for variable, exponent in word:
+        if not _universal_k_word_potential_variable_valid(variable):
+            raise ValueError(f"invalid word-potential variable {variable!r}")
         if variable not in assignment:
             raise ValueError(f"missing word-potential assignment for {variable!r}")
         value = assignment[variable]
@@ -1379,7 +1406,10 @@ class UniversalKWordPotentialCertificate:
             variables = self._identity_row_variable_support(row)
             if variables is None:
                 continue
-            variable_set = set(variables)
+            variable_by_marker = {
+                _value_marker(variable): variable for variable in variables
+            }
+            variable_markers = set(variable_by_marker)
             if not row.detector_domain_sound:
                 failures.append(
                     (
@@ -1437,9 +1467,21 @@ class UniversalKWordPotentialCertificate:
                             (index, variable),
                         )
                     )
-                assignment_variable_set = set(assignment_variables)
+                assignment_variable_by_marker = {
+                    _value_marker(variable): variable
+                    for variable in assignment_variables
+                }
+                assignment_variable_markers = set(assignment_variable_by_marker)
                 missing_variables = tuple(
-                    sorted(variable_set - assignment_variable_set, key=repr)
+                    sorted(
+                        (
+                            variable_by_marker[marker]
+                            for marker in (
+                                variable_markers - assignment_variable_markers
+                            )
+                        ),
+                        key=repr,
+                    )
                 )
                 if missing_variables:
                     failures.append(
@@ -1450,7 +1492,15 @@ class UniversalKWordPotentialCertificate:
                         )
                     )
                 extra_variables = tuple(
-                    sorted(assignment_variable_set - variable_set, key=repr)
+                    sorted(
+                        (
+                            assignment_variable_by_marker[marker]
+                            for marker in (
+                                assignment_variable_markers - variable_markers
+                            )
+                        ),
+                        key=repr,
+                    )
                 )
                 if extra_variables:
                     failures.append(
@@ -1587,12 +1637,36 @@ class UniversalKWordPotentialCertificate:
                 failures.append((state, "missing_normalized_state_template", None))
                 continue
             variables = _universal_k_word_potential_variables(template)
-            assignment = {variable: self.endpoint_group.identity for variable in variables}
-            value = universal_k_evaluate_word_potential(
-                self.endpoint_group,
-                assignment,
-                template,
+            invalid_variables = tuple(
+                variable
+                for variable in variables
+                if not _universal_k_word_potential_variable_valid(variable)
             )
+            if invalid_variables:
+                failures.append(
+                    (
+                        state,
+                        "word_potential_normalization_invalid_template",
+                        invalid_variables,
+                    )
+                )
+                continue
+            assignment = {variable: self.endpoint_group.identity for variable in variables}
+            try:
+                value = universal_k_evaluate_word_potential(
+                    self.endpoint_group,
+                    assignment,
+                    template,
+                )
+            except ValueError as error:
+                failures.append(
+                    (
+                        state,
+                        "word_potential_normalization_invalid_template",
+                        repr(error),
+                    )
+                )
+                continue
             if value != self.endpoint_group.identity:
                 failures.append((state, "word_potential_initial_value_mismatch", value))
         return tuple(failures)
@@ -3901,11 +3975,12 @@ class UniversalKTelescopingDetectorAudit:
         for row in self.detector_track_initialization_rows:
             seen_variables = set()
             for variable, value in row.local_assignment_template:
-                if variable in seen_variables:
+                variable_marker = _value_marker(variable)
+                if variable_marker in seen_variables:
                     failures.append(
                         (row.key, "duplicate_detector_track_assignment", variable)
                     )
-                seen_variables.add(variable)
+                seen_variables.add(variable_marker)
                 if not _universal_k_word_potential_variable_valid(variable):
                     failures.append(
                         (row.key, "invalid_detector_track_assignment_variable", variable)

@@ -3504,6 +3504,41 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             tuple(failure[1] for failure in invalid_template_failures),
         )
 
+        unhashable_track_template = replace(
+            theorem_complete,
+            telescoping_detector_audit=replace(
+                theorem_complete.telescoping_detector_audit,
+                detector_track_initialization_rows=(
+                    UniversalKDetectorTrackInitializationRow(
+                        endpoint_family="U",
+                        track_index=0,
+                        assignment_rule="constant_identity_from_interval_seed",
+                        dependencies=(
+                            "interval_data",
+                            "routed_seed_state",
+                            "strand_index",
+                        ),
+                        local_assignment_template=((["A", 0, 0], 0),),
+                    ),
+                ),
+            ),
+        )
+        self.assertFalse(unhashable_track_template.telescoping_detector_proved)
+        self.assertIn(
+            "detector_track_initialization_invalid_templates",
+            unhashable_track_template.failure_reasons,
+        )
+        self.assertIn(
+            "invalid_detector_track_assignment_variable",
+            tuple(
+                failure[1]
+                for failure in (
+                    unhashable_track_template.telescoping_detector_audit
+                    .detector_track_initialization_template_failures
+                )
+            ),
+        )
+
         tautological_potential = replace(
             theorem_complete,
             telescoping_detector_audit=UniversalKTelescopingDetectorAudit(
@@ -4296,6 +4331,51 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
                     "invalid_word_potential_variable",
                     ("U", 0, False),
                 ),
+            ),
+        )
+
+        unhashable_template = replace(
+            certificate,
+            templates=((source_key, ((["U", 0, 0], 1),)),),
+        )
+        self.assertFalse(unhashable_template.word_potential_templates_verified)
+        self.assertEqual(
+            unhashable_template.invalid_template_variable_failures,
+            (
+                (
+                    source_key,
+                    "invalid_word_potential_variable",
+                    ["U", 0, 0],
+                ),
+            ),
+        )
+        self.assertFalse(unhashable_template.initial_readouts_normalized)
+        self.assertIn(
+            "word_potential_normalization_invalid_template",
+            tuple(
+                failure[1] for failure in unhashable_template.normalization_failures
+            ),
+        )
+
+        unhashable_detector_domain = replace(
+            certificate,
+            identity_rows=(
+                replace(
+                    good_row,
+                    detector_domain_assignments=(((["U", 0, 0], group.identity),),),
+                    detector_domain_sound=True,
+                    detector_domain_soundness_witness=(
+                        "reachable_detector_values_enumerated",
+                    ),
+                ),
+            ),
+        )
+        self.assertFalse(unhashable_detector_domain.detector_domains_sound)
+        self.assertIn(
+            "detector_domain_assignment_invalid_variable",
+            tuple(
+                failure[1]
+                for failure in unhashable_detector_domain.detector_domain_failures
             ),
         )
 
