@@ -492,6 +492,11 @@ degrees are not finite symmetric cutoff targets.  Cutoff braid-index
 independence is derived from the positive fixed degree and exact finite
 readout rows, so the legacy `braid_index_independent` flag on this audit is
 diagnostic only.
+The cutoff audit now exposes a separate C/M family-scope ledger as well:
+expected families, covered families, and row families must agree exactly with
+the routed C/M families.  This is intentionally redundant with seed-state
+coverage, because product endpoint rows must not let a C readout certify an M
+channel, or vice versa, through an undifferentiated symmetric cutoff.
 
 When a finite endpoint group is supplied, inverse cancellation is checked by
 multiplying the emitted endpoint labels in that group.  Adjacent-YBE and
@@ -1072,6 +1077,14 @@ signed_endpoint_generator_cutoff_target_degrees_match_readout
 signed_endpoint_generator_cutoff_target_degree_mismatches
 signed_endpoint_generator_cutoff_readout_expected_states
 signed_endpoint_generator_cutoff_readout_covered_states
+signed_endpoint_generator_cutoff_readout_expected_families
+signed_endpoint_generator_cutoff_readout_covered_families
+signed_endpoint_generator_cutoff_readout_row_families
+signed_endpoint_generator_cutoff_readout_missing_families
+signed_endpoint_generator_cutoff_readout_extra_families
+signed_endpoint_generator_cutoff_readout_missing_row_families
+signed_endpoint_generator_cutoff_readout_extra_row_families
+signed_endpoint_generator_cutoff_readout_family_scope_exact
 signed_endpoint_generator_cutoff_readout_missing_states
 signed_endpoint_generator_cutoff_readout_extra_states
 signed_endpoint_generator_cutoff_readout_duplicate_states

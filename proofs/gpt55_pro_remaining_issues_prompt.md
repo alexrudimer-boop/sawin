@@ -1621,6 +1621,12 @@ well-formed C/M endpoint state `(E,s)` with `E in {C,M}` and tuple-valued
 seed state `s`.  A U-family seed state cannot be closed by this C/M cutoff
 readout gate.  Malformed cutoff state keys are certificate errors, even if
 the malformed expected, covered, and row sets happen to agree.
+The readout certificate must also expose the induced C/M family ledger:
+expected cutoff families, covered cutoff families, and readout-row cutoff
+families must agree exactly with the active routed C/M families.  This family
+scope check is deliberately separate from seed-state coverage so that a C
+cutoff row cannot be used to certify an M channel, or vice versa, through a
+single undifferentiated symmetric readout.
 Cutoff braid-index independence must follow from the positive fixed degree
 and exact finite readout rows; it is not an independent boolean gate.
 For each active C/M cutoff family, this positive fixed degree must also match
@@ -1817,6 +1823,7 @@ fixed_detector_tracks_chosen_before_braid_word,
 exact_cutoff_readouts_for_C_and_M,
 cutoff_readout_seed_states_are_C_or_M_only,
 cutoff_readout_seed_state_ledgers_duplicate_free,
+cutoff_readout_family_scope_matches_exact_routed_C_M_families,
 cutoff_readout_permutation_rows_exact_and_faithful,
 residual_faithfulness_for_actual_fibre_action.
 ```

@@ -3207,6 +3207,83 @@ class UniversalKCutoffReadoutAudit:
         )
 
     @property
+    def expected_cutoff_families(self) -> Tuple[str, ...]:
+        return tuple(
+            sorted(
+                {
+                    state[0]
+                    for state in self.expected_cutoff_seed_states
+                    if _universal_k_cutoff_seed_state_well_formed(state)
+                },
+                key=repr,
+            )
+        )
+
+    @property
+    def covered_cutoff_families(self) -> Tuple[str, ...]:
+        return tuple(
+            sorted(
+                {
+                    state[0]
+                    for state in self.covered_cutoff_seed_states
+                    if _universal_k_cutoff_seed_state_well_formed(state)
+                },
+                key=repr,
+            )
+        )
+
+    @property
+    def row_cutoff_families(self) -> Tuple[str, ...]:
+        return tuple(
+            sorted(
+                {
+                    state[0]
+                    for state in self.row_cutoff_seed_states
+                    if _universal_k_cutoff_seed_state_well_formed(state)
+                },
+                key=repr,
+            )
+        )
+
+    @property
+    def missing_cutoff_families(self) -> Tuple[str, ...]:
+        covered = set(self.covered_cutoff_families)
+        return tuple(
+            family for family in self.expected_cutoff_families if family not in covered
+        )
+
+    @property
+    def extra_cutoff_families(self) -> Tuple[str, ...]:
+        expected = set(self.expected_cutoff_families)
+        return tuple(
+            family for family in self.covered_cutoff_families if family not in expected
+        )
+
+    @property
+    def missing_readout_row_families(self) -> Tuple[str, ...]:
+        row_families = set(self.row_cutoff_families)
+        return tuple(
+            family for family in self.expected_cutoff_families if family not in row_families
+        )
+
+    @property
+    def extra_readout_row_families(self) -> Tuple[str, ...]:
+        expected = set(self.expected_cutoff_families)
+        return tuple(
+            family for family in self.row_cutoff_families if family not in expected
+        )
+
+    @property
+    def cutoff_family_scope_exact(self) -> bool:
+        return (
+            bool(self.expected_cutoff_families)
+            and not self.missing_cutoff_families
+            and not self.extra_cutoff_families
+            and not self.missing_readout_row_families
+            and not self.extra_readout_row_families
+        )
+
+    @property
     def cutoff_degree_supplied(self) -> bool:
         return _universal_k_positive_int(self.cutoff_degree)
 
@@ -3352,6 +3429,7 @@ class UniversalKCutoffReadoutAudit:
     def proves_exact_cutoff_readouts(self) -> bool:
         return (
             self.cutoff_seed_coverage_exact
+            and self.cutoff_family_scope_exact
             and self.cutoff_seed_ledgers_well_formed
             and self.cutoff_seed_ledgers_have_no_duplicates
             and self.finite_readout_rows_verified
@@ -3371,6 +3449,16 @@ class UniversalKCutoffReadoutAudit:
             reasons.append("cutoff_readout_malformed_seed_states")
         if not self.cutoff_seed_ledgers_have_no_duplicates:
             reasons.append("cutoff_readout_duplicate_seed_states")
+        if not self.cutoff_family_scope_exact:
+            reasons.append("cutoff_readout_family_scope_mismatch")
+        if self.missing_cutoff_families:
+            reasons.append("cutoff_readout_missing_families")
+        if self.extra_cutoff_families:
+            reasons.append("cutoff_readout_extra_families")
+        if self.missing_readout_row_families:
+            reasons.append("cutoff_readout_missing_row_families")
+        if self.extra_readout_row_families:
+            reasons.append("cutoff_readout_extra_row_families")
         if not self.cutoff_degree_supplied:
             reasons.append("cutoff_degree_not_supplied")
         if not self.readout_rows_cover_expected_states:
@@ -9821,6 +9909,20 @@ class PostLinearRemainingFiniteSystemAudit:
                 ),
                 ("signed_endpoint_generator_cutoff_readout_expected_states", ()),
                 ("signed_endpoint_generator_cutoff_readout_covered_states", ()),
+                ("signed_endpoint_generator_cutoff_readout_expected_families", ()),
+                ("signed_endpoint_generator_cutoff_readout_covered_families", ()),
+                ("signed_endpoint_generator_cutoff_readout_row_families", ()),
+                ("signed_endpoint_generator_cutoff_readout_missing_families", ()),
+                ("signed_endpoint_generator_cutoff_readout_extra_families", ()),
+                (
+                    "signed_endpoint_generator_cutoff_readout_missing_row_families",
+                    (),
+                ),
+                (
+                    "signed_endpoint_generator_cutoff_readout_extra_row_families",
+                    (),
+                ),
+                ("signed_endpoint_generator_cutoff_readout_family_scope_exact", False),
                 ("signed_endpoint_generator_cutoff_readout_missing_states", ()),
                 ("signed_endpoint_generator_cutoff_readout_extra_states", ()),
                 ("signed_endpoint_generator_cutoff_readout_duplicate_states", ()),
@@ -10985,6 +11087,70 @@ class PostLinearRemainingFiniteSystemAudit:
                     audit.cutoff_readout_audit.covered_cutoff_seed_states_exact
                     if audit.cutoff_readout_audit is not None
                     else ()
+                ),
+            ),
+            (
+                "signed_endpoint_generator_cutoff_readout_expected_families",
+                (
+                    audit.cutoff_readout_audit.expected_cutoff_families
+                    if audit.cutoff_readout_audit is not None
+                    else ()
+                ),
+            ),
+            (
+                "signed_endpoint_generator_cutoff_readout_covered_families",
+                (
+                    audit.cutoff_readout_audit.covered_cutoff_families
+                    if audit.cutoff_readout_audit is not None
+                    else ()
+                ),
+            ),
+            (
+                "signed_endpoint_generator_cutoff_readout_row_families",
+                (
+                    audit.cutoff_readout_audit.row_cutoff_families
+                    if audit.cutoff_readout_audit is not None
+                    else ()
+                ),
+            ),
+            (
+                "signed_endpoint_generator_cutoff_readout_missing_families",
+                (
+                    audit.cutoff_readout_audit.missing_cutoff_families
+                    if audit.cutoff_readout_audit is not None
+                    else ()
+                ),
+            ),
+            (
+                "signed_endpoint_generator_cutoff_readout_extra_families",
+                (
+                    audit.cutoff_readout_audit.extra_cutoff_families
+                    if audit.cutoff_readout_audit is not None
+                    else ()
+                ),
+            ),
+            (
+                "signed_endpoint_generator_cutoff_readout_missing_row_families",
+                (
+                    audit.cutoff_readout_audit.missing_readout_row_families
+                    if audit.cutoff_readout_audit is not None
+                    else ()
+                ),
+            ),
+            (
+                "signed_endpoint_generator_cutoff_readout_extra_row_families",
+                (
+                    audit.cutoff_readout_audit.extra_readout_row_families
+                    if audit.cutoff_readout_audit is not None
+                    else ()
+                ),
+            ),
+            (
+                "signed_endpoint_generator_cutoff_readout_family_scope_exact",
+                (
+                    audit.cutoff_readout_audit.cutoff_family_scope_exact
+                    if audit.cutoff_readout_audit is not None
+                    else False
                 ),
             ),
             (

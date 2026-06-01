@@ -6710,6 +6710,47 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             unkilled_cutoff.failure_reasons,
         )
 
+        mixed_state = ("*", "*", "left")
+        mixed_reachable = (("C", seed_state), ("M", mixed_state))
+        family_mismatch_cutoff = UniversalKCutoffReadoutAudit(
+            expected_cutoff_seed_states=mixed_reachable,
+            covered_cutoff_seed_states=reachable,
+            cutoff_degree=2,
+            readout_rows=(
+                UniversalKCutoffReadoutRow(
+                    cutoff_seed_state=reachable[0],
+                    readout_permutation=(0, 1),
+                    killed_readout_permutation=(0, 1),
+                ),
+            ),
+            braid_index_independent=True,
+        )
+        self.assertEqual(
+            family_mismatch_cutoff.expected_cutoff_families,
+            ("C", "M"),
+        )
+        self.assertEqual(family_mismatch_cutoff.covered_cutoff_families, ("C",))
+        self.assertEqual(family_mismatch_cutoff.row_cutoff_families, ("C",))
+        self.assertEqual(family_mismatch_cutoff.missing_cutoff_families, ("M",))
+        self.assertEqual(
+            family_mismatch_cutoff.missing_readout_row_families,
+            ("M",),
+        )
+        self.assertFalse(family_mismatch_cutoff.cutoff_family_scope_exact)
+        self.assertFalse(family_mismatch_cutoff.proves_exact_cutoff_readouts)
+        self.assertIn(
+            "cutoff_readout_family_scope_mismatch",
+            family_mismatch_cutoff.failure_reasons,
+        )
+        self.assertIn(
+            "cutoff_readout_missing_families",
+            family_mismatch_cutoff.failure_reasons,
+        )
+        self.assertIn(
+            "cutoff_readout_missing_row_families",
+            family_mismatch_cutoff.failure_reasons,
+        )
+
         scoped_cutoff = trivial_cutoff_readout_audit(reachable)
         proved = universal_k_signed_endpoint_generator_audit(
             interval,
@@ -6728,6 +6769,10 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         )
 
         self.assertTrue(scoped_cutoff.proves_exact_cutoff_readouts)
+        self.assertEqual(scoped_cutoff.expected_cutoff_families, ("C",))
+        self.assertEqual(scoped_cutoff.covered_cutoff_families, ("C",))
+        self.assertEqual(scoped_cutoff.row_cutoff_families, ("C",))
+        self.assertTrue(scoped_cutoff.cutoff_family_scope_exact)
         self.assertEqual(proved.endpoint_target_audit.cutoff_degrees, (("C", 2),))
         self.assertEqual(proved.required_cutoff_families, ("C",))
         self.assertTrue(proved.cutoff_target_degrees_match_readout)
