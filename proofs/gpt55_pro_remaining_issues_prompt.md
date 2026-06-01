@@ -848,7 +848,12 @@ that an endpoint target is fixed is not a certificate; if the target list
 omits a routed family, includes an unrouted family, has a nonpositive order
 or cutoff degree, repeats a family, assigns both a group target and cutoff
 target to the same family, depends on `n`, or allows cross-family
-cancellation, the signed endpoint layer remains open.
+cancellation, the signed endpoint layer remains open.  A single supplied
+endpoint group may be treated as an implicit target only for a single active
+routed family.  When two or more of U/C/M are active, product-family
+separation must be certified by an explicit target ledger; otherwise the
+certificate could hide cross-family cancellation in one undifferentiated
+group.
 
 With those target data fixed, a signed endpoint generator table is a finite
 table

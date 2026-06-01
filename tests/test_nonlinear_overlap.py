@@ -3434,6 +3434,88 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertEqual(audit.two_strand_base_failures, ())
         self.assertTrue(audit.proves_signed_endpoint_generator_tables)
 
+    def test_signed_endpoint_generator_factory_requires_explicit_multi_family_targets(self):
+        u_state = ("*", "*", "left_constant_map_universal_kernel")
+        m_state = ("*", "*", "left")
+        reachable = (("U", u_state), ("M", m_state))
+        seed_entries = (
+            (
+                (
+                    "*",
+                    "*",
+                    "L",
+                    "constant_map_kernel",
+                    ("*", (0, 1), "universal", "universal"),
+                ),
+                ("U", u_state),
+            ),
+            (
+                (
+                    "*",
+                    "*",
+                    "L",
+                    "coordinate_side_unit_not_triangular",
+                    ("left", "right", "colored_ybe"),
+                ),
+                ("M", m_state),
+            ),
+        )
+        interval = one_color_identity_interval()
+        keys = universal_k_signed_endpoint_required_entry_keys(interval, reachable)
+        rows = identity_signed_endpoint_rows(keys)
+        witnesses = {row.entry_key: () for row in rows}
+        cutoff = UniversalKCutoffReadoutAudit(
+            expected_cutoff_seed_states=(("M", m_state),),
+            covered_cutoff_seed_states=(("M", m_state),),
+            readouts_faithful=True,
+            identity_cutoff_data_kills_channels=True,
+            braid_index_independent=True,
+        )
+        residual_scope = trivial_endpoint_residual_action_scope(
+            "U",
+            "M",
+            seed_states=reachable,
+        )
+        implicit_target = universal_k_signed_endpoint_generator_audit(
+            interval,
+            seed_entries,
+            reachable,
+            rows,
+            endpoint_group=cyclic_group(2),
+            witnesses=witnesses,
+            cutoff_readout_audit=cutoff,
+            residual_action_scope=residual_scope,
+            residual_action_audit=trivial_endpoint_residual_action_audit(),
+        )
+
+        self.assertIsNone(implicit_target.endpoint_target_audit)
+        self.assertFalse(implicit_target.endpoint_targets_proved)
+        self.assertFalse(implicit_target.proves_signed_endpoint_generator_tables)
+        self.assertIn("endpoint_target_audit_missing", implicit_target.failure_reasons)
+
+        explicit_target = UniversalKEndpointTargetAudit(
+            expected_endpoint_families=("M", "U"),
+            covered_endpoint_families=("M", "U"),
+            endpoint_group_orders=(("M", 2), ("U", 2)),
+            braid_index_independent=True,
+            product_families_separated=True,
+        )
+        proved = universal_k_signed_endpoint_generator_audit(
+            interval,
+            seed_entries,
+            reachable,
+            rows,
+            endpoint_group=cyclic_group(2),
+            witnesses=witnesses,
+            endpoint_target_audit=explicit_target,
+            cutoff_readout_audit=cutoff,
+            residual_action_scope=residual_scope,
+            residual_action_audit=trivial_endpoint_residual_action_audit(),
+        )
+
+        self.assertTrue(proved.endpoint_targets_proved)
+        self.assertTrue(proved.proves_signed_endpoint_generator_tables)
+
     def test_signed_endpoint_generator_factory_reports_inexact_witness_domain(self):
         seed_state = ("*", "*", "left_constant_map_universal_kernel")
         reachable = (("U", seed_state),)

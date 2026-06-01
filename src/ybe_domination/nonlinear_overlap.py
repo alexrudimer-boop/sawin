@@ -2524,7 +2524,11 @@ def universal_k_signed_endpoint_generator_audit(
     expected_endpoint_families = tuple(
         sorted({entry[1][0] for entry in seed_classifier_entries}, key=repr)
     )
-    if endpoint_target_audit is None and endpoint_group is not None:
+    if (
+        endpoint_target_audit is None
+        and endpoint_group is not None
+        and len(expected_endpoint_families) == 1
+    ):
         endpoint_target_audit = UniversalKEndpointTargetAudit(
             expected_endpoint_families=expected_endpoint_families,
             covered_endpoint_families=expected_endpoint_families,

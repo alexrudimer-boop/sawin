@@ -498,7 +498,12 @@ only whether an endpoint group was supplied.  Its finite obstruction data now
 separates the raw supplied-target flag from the scoped target audit: expected
 families, covered families, target families, endpoint group orders, cutoff
 degrees, scope agreement with the current `kappa`, and whether the target
-audit proves the fixed endpoint target obligation.
+audit proves the fixed endpoint target obligation.  The convenience target
+audit built from a supplied endpoint group is now limited to the single-family
+case.  When more than one of U/C/M is routed, an explicit endpoint target
+audit is required to prove componentwise product separation; one generic
+group table is not enough to certify that no cross-family cancellation is
+being used.
 The residual bridge report likewise separates family coverage from exact
 seed-state coverage, so a residual theorem or row proof built for the wrong
 routed seeds is visible in the obstruction data.
