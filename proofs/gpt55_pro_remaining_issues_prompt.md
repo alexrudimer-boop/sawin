@@ -1340,6 +1340,10 @@ must be rejected rather than silently ignored.
 The expected and covered telescoping entry ledgers must obey the same sign
 discipline: their closure comparison is positive-only, but any malformed sign
 in either ledger invalidates the certificate.
+More generally, every word-potential identity row and telescoping ledger key
+must be a full `D_Gamma` key `(E,epsilon,s,a,b,x,y)` with `E in {U,C,M}`,
+`epsilon in {+1,-1}`, and a tuple-valued reachable state `s`.  A shortened or
+wrong-family key is malformed even if its sign field is `+1`.
 
 The initial routed state must be normalized:
 

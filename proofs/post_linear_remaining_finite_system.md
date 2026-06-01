@@ -589,7 +589,11 @@ audit has proved that negative endpoint rows are actual inverses.  Malformed
 identity rows with any sign other than `+1` or `-1` are rejected rather than
 being treated as harmless diagnostics.  The expected and covered telescoping
 entry ledgers are positive-only for closure, but they also reject malformed
-signs instead of filtering them away.  The checker then exhausts all
+signs instead of filtering them away.  The same well-formedness gate checks
+that every identity-row and ledger key has the full `D_Gamma` shape
+`(E,epsilon,s,a,b,x,y)`, a known endpoint family, and a tuple-valued reachable
+state; a shortened positive key is malformed rather than an abbreviated row.
+The checker then exhausts all
 assignments of the finitely many variables in the positive row to the fixed
 endpoint group and checks the word identity in the group table.  This removes
 the previous loophole

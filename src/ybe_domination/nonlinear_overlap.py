@@ -1001,13 +1001,25 @@ def _universal_k_expected_artin_substitution(
 def _universal_k_is_positive_entry_key(
     key: UniversalKSignedEndpointEntryKey,
 ) -> bool:
-    return len(key) > 2 and key[2] == 1
+    return _universal_k_signed_entry_key_well_formed(key) and key[2] == 1
 
 
-def _universal_k_has_valid_signed_entry_key_sign(
+def _universal_k_signed_entry_key_well_formed(
     key: UniversalKSignedEndpointEntryKey,
 ) -> bool:
-    return len(key) > 2 and key[2] in {-1, 1}
+    return (
+        isinstance(key, tuple)
+        and len(key) == 7
+        and key[0] in UNIVERSAL_K_ENDPOINT_FAMILIES
+        and isinstance(key[1], tuple)
+        and key[2] in {-1, 1}
+    )
+
+
+def _universal_k_entry_key_sign(key: object) -> object:
+    if not isinstance(key, tuple) or len(key) <= 2:
+        return None
+    return key[2]
 
 
 @dataclass(frozen=True)
@@ -1086,7 +1098,7 @@ class UniversalKWordPotentialCertificate:
                 {
                     row.entry_key
                     for row in self.identity_rows
-                    if not _universal_k_has_valid_signed_entry_key_sign(row.entry_key)
+                    if not _universal_k_signed_entry_key_well_formed(row.entry_key)
                 },
                 key=repr,
             )
@@ -1129,9 +1141,9 @@ class UniversalKWordPotentialCertificate:
         failures = []
         template_map = self.template_map
         for row in self.identity_rows:
-            sign = row.entry_key[2] if len(row.entry_key) > 2 else None
-            if not _universal_k_has_valid_signed_entry_key_sign(row.entry_key):
-                failures.append((row.entry_key, "unknown_signed_row_sign", sign))
+            sign = _universal_k_entry_key_sign(row.entry_key)
+            if not _universal_k_signed_entry_key_well_formed(row.entry_key):
+                failures.append((row.entry_key, "malformed_signed_entry_key", sign))
                 continue
             entry_family, _state, sign, *_rest = row.entry_key
             if sign != 1:
@@ -2767,7 +2779,7 @@ class UniversalKTelescopingDetectorAudit:
                 {
                     key
                     for key in self.expected_entry_keys
-                    if not _universal_k_has_valid_signed_entry_key_sign(key)
+                    if not _universal_k_signed_entry_key_well_formed(key)
                 },
                 key=repr,
             )
@@ -2782,7 +2794,7 @@ class UniversalKTelescopingDetectorAudit:
                 {
                     key
                     for key in self.covered_entry_keys
-                    if not _universal_k_has_valid_signed_entry_key_sign(key)
+                    if not _universal_k_signed_entry_key_well_formed(key)
                 },
                 key=repr,
             )

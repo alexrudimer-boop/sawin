@@ -3787,7 +3787,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertFalse(malformed_sign_certificate.artin_substitutions_verified)
         self.assertFalse(malformed_sign_certificate.identities_verified)
         self.assertIn(
-            "unknown_signed_row_sign",
+            "malformed_signed_entry_key",
             tuple(
                 failure[1]
                 for failure in malformed_sign_certificate.substitution_failures
@@ -4018,6 +4018,36 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             (malformed_identity.entry_key,),
         )
 
+    def test_short_positive_word_potential_identity_rows_are_rejected(self):
+        group = cyclic_group(2)
+        source_state = ("*", "*", "left_constant_map_universal_kernel")
+        source_key = ("U", source_state)
+        malformed_positive_key = ("U", source_state, 1)
+        certificate = UniversalKWordPotentialCertificate(
+            endpoint_group=group,
+            templates=((source_key, ()),),
+            identity_rows=(
+                UniversalKWordPotentialIdentityRow(
+                    entry_key=malformed_positive_key,
+                    next_seed_state=source_state,
+                    endpoint_value=group.identity,
+                    artin_substitution=(),
+                ),
+            ),
+            normalized_seed_states=(source_key,),
+        )
+
+        self.assertEqual(
+            certificate.malformed_identity_entry_keys,
+            (malformed_positive_key,),
+        )
+        self.assertEqual(certificate.positive_identity_entry_keys_exact, ())
+        self.assertFalse(certificate.artin_substitutions_verified)
+        self.assertIn(
+            "malformed_signed_entry_key",
+            tuple(failure[1] for failure in certificate.substitution_failures),
+        )
+
     def test_malformed_telescoping_entry_ledgers_are_rejected(self):
         seed_state = ("*", "*", "left_constant_map_universal_kernel")
         seed_entries = (
@@ -4059,6 +4089,57 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         )
 
         self.assertTrue(audit.telescoping_detector_scope_matches_required)
+        self.assertFalse(telescoping.entry_ledgers_well_formed)
+        self.assertFalse(audit.telescoping_detector_proved)
+        self.assertIn(
+            "telescoping_detector_malformed_entry_keys",
+            audit.failure_reasons,
+        )
+
+    def test_short_positive_telescoping_entry_ledgers_are_rejected(self):
+        seed_state = ("*", "*", "left_constant_map_universal_kernel")
+        seed_entries = (
+            (
+                (
+                    "*",
+                    "*",
+                    "L",
+                    "constant_map_kernel",
+                    ("*", (0, 1), "universal", "universal"),
+                ),
+                ("U", seed_state),
+            ),
+        )
+        reachable = (("U", seed_state),)
+        interval = one_color_identity_interval()
+        keys = universal_k_signed_endpoint_required_entry_keys(interval, reachable)
+        positive_keys = tuple(key for key in keys if key[2] == 1)
+        short_positive_key = ("U", seed_state, 1)
+        rows = identity_signed_endpoint_rows(keys)
+        group = cyclic_group(2)
+        telescoping = trivial_telescoping_detector_audit(
+            positive_keys,
+            rows=rows,
+            endpoint_group=group,
+        )
+        telescoping = replace(
+            telescoping,
+            expected_entry_keys=positive_keys + (short_positive_key,),
+            covered_entry_keys=positive_keys + (short_positive_key,),
+        )
+        audit = universal_k_signed_endpoint_generator_audit(
+            interval,
+            seed_entries,
+            reachable,
+            rows,
+            endpoint_group=group,
+            telescoping_detector_audit=telescoping,
+        )
+
+        self.assertEqual(
+            telescoping.expected_positive_entry_keys_exact,
+            tuple(sorted(set(positive_keys), key=repr)),
+        )
         self.assertFalse(telescoping.entry_ledgers_well_formed)
         self.assertFalse(audit.telescoping_detector_proved)
         self.assertIn(
