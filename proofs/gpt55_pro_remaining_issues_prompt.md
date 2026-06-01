@@ -1006,7 +1006,8 @@ cutoff readouts, and prove that identity endpoint data fixes each coordinate.
 It must also state the expected number of residual rows for the interval
 fibre action and prove that the listed rows cover that number.  A supplied
 row subset proves only a supplied-row implication, not domination of the
-whole residual action.
+whole residual action.  Omitting the expected row count is not acceptable for
+this endpoint lemma, even if every listed row is internally certified.
 
 The signed-generator audit for a claimed A proof must therefore establish:
 

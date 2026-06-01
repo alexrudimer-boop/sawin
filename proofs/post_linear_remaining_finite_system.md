@@ -422,7 +422,9 @@ promoted to an all-strand proof.
 When the bridge is supplied by residual action rows, the audit records the
 number of covered rows, the expected row count, and whether the endpoint
 readout rows prove the complete residual-action implication.  A supplied-row
-implication with missing residual rows is not enough.
+implication with missing residual rows is not enough, and omitting the
+expected row count does not prove residual faithfulness for this signed
+endpoint layer.
 
 together with the concrete rows:
 

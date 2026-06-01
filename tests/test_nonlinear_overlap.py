@@ -274,6 +274,26 @@ def trivial_endpoint_residual_action_audit():
     )
 
 
+def uncounted_endpoint_residual_action_audit():
+    group = cyclic_group(2)
+    endpoint = endpoint_product_longitude_expression_audit(
+        (group,),
+        n=2,
+        braid_word=(1, -1),
+        endpoints=(0,),
+        assignments=((1, 0),),
+        expressions=((),),
+    )
+    readout = endpoint_residual_readout_audit(
+        (endpoint_coordinate_readout_audit(endpoint, "p", "p"),)
+    )
+    return endpoint_residual_action_audit(
+        2,
+        (1, -1),
+        (readout,),
+    )
+
+
 def refinement_for(interval, *, colored_ybe=True):
     return NonlinearOverlapRefinementAudit(
         obstruction=exact_obstruction(),
@@ -2490,6 +2510,32 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertIn(
             "residual_faithfulness_not_verified",
             unfaithful.failure_reasons,
+        )
+
+        uncounted_residual = UniversalKSignedEndpointGeneratorAudit(
+            seed_classifier_entries=seed_entries,
+            reachable_seed_states=(("U", seed_state),),
+            required_entry_keys=required_entry_keys,
+            rows=(positive_row, negative_row),
+            endpoint_targets_fixed=True,
+            coordinate_components_verified=True,
+            inverse_pairing_verified=True,
+            inverse_cancellation_verified=True,
+            positive_ybe_path_verified=True,
+            positive_ybe_cocycle_verified=True,
+            signed_two_strand_base_verified=True,
+            artin_homomorphism_update_verified=True,
+            residual_action_audit=uncounted_endpoint_residual_action_audit(),
+        )
+
+        self.assertTrue(
+            uncounted_residual.residual_action_audit.proves_complete_residual_action_implication
+        )
+        self.assertFalse(uncounted_residual.residual_faithfulness_proved)
+        self.assertFalse(uncounted_residual.proves_signed_endpoint_generator_tables)
+        self.assertIn(
+            "residual_faithfulness_not_verified",
+            uncounted_residual.failure_reasons,
         )
 
         complete = UniversalKSignedEndpointGeneratorAudit(

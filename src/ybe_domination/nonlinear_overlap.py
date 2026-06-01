@@ -789,6 +789,7 @@ class UniversalKSignedEndpointGeneratorAudit:
     def residual_faithfulness_proved(self) -> bool:
         return self.residual_faithfulness_verified or (
             self.residual_action_audit is not None
+            and self.residual_action_audit.expected_row_count is not None
             and self.residual_action_audit.proves_complete_residual_action_implication
         )
 
