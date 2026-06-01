@@ -463,6 +463,12 @@ triangular_latin_defect_universal_closure_rows
 ```
 
 lists the exact universal seed edges that still need fixed detector routing.
+The executable post-linear wrapper reflects this distinction directly.  When
+a supplied triangular-Latin defect closure has a proper generated congruence
+row, the branch is classified as
+`closed_by_triangular_latin_proper_closure`, has no active routed endpoint
+systems, and is not a current remaining finite system.  Only universal
+closure rows may route onward to the System U recovery endpoint layer.
 
 The structural rows must be empty for genuine bijective triangular interval
 data:

@@ -1755,6 +1755,56 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             routed.finite_obstruction_data,
         )
 
+    def test_post_linear_proper_latin_defect_closure_closes_system_k(self):
+        refinement = constant_map_kernel_only_system_k_refinement()
+        closure = TriangularLatinDefectClosureAudit(
+            rows=(
+                TriangularLatinDefectClosureRow(
+                    side="left",
+                    defect="constant_map_kernel",
+                    left_color="*",
+                    right_color="*",
+                    domain_color="*",
+                    fixed_input=None,
+                    collapsed_inputs=(0, 1),
+                    generated=generated("proper"),
+                ),
+            ),
+        )
+
+        audit = PostLinearRemainingFiniteSystemAudit(
+            refinement,
+            triangular_latin_defect_closure=closure,
+        )
+
+        self.assertEqual(
+            audit.system_name,
+            "closed_by_triangular_latin_proper_closure",
+        )
+        self.assertFalse(audit.is_current_remaining_finite_system)
+        self.assertFalse(audit.system_k_active)
+        self.assertEqual(audit.live_k_missing_latin_row_defects, ())
+        self.assertEqual(audit.active_routed_endpoint_systems, ())
+        self.assertEqual(audit.remaining_obligations, ())
+        self.assertIn(
+            (
+                "triangular_latin_defect_proper_closure_rows",
+                (
+                    (
+                        "left",
+                        "constant_map_kernel",
+                        "*",
+                        "*",
+                        "*",
+                        None,
+                        (0, 1),
+                        "proper",
+                    ),
+                ),
+            ),
+            audit.finite_obstruction_data,
+        )
+
     def test_post_linear_reports_combined_recovery_and_continuation_endpoints(self):
         refinement = constant_map_kernel_system_k_refinement()
         profile, partial_closure, partial_route = (

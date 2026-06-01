@@ -84,6 +84,14 @@ and the proof must route those universal seed edges through fixed detector
 data or construct a normalized-law sequence from them.
 ```
 
+The post-linear wrapper now makes the proper-closure alternative terminal:
+if a supplied triangular-Latin defect closure contains a proper generated
+congruence row, it reports
+`closed_by_triangular_latin_proper_closure`, empties the live K ledger, and
+does not create any routed endpoint obligation.  This keeps the
+local-minimality contradiction separate from the universal-closure endpoint
+route.
+
 For constant-map kernel edges, the companion note
 `proofs/triangular_k_left_recovery_routing.md` supplies the next routing
 layer: the triangular recovery table separates the collapsed constant-map

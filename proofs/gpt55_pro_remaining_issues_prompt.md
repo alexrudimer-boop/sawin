@@ -133,6 +133,13 @@ every remaining local-minimal interval.  To prove B, you must turn failure of
 all such finite endpoint certificates into a normalized-law sequence with
 actual residual movement.
 
+One additional K guardrail is already closed in the executable wrapper: a
+supplied triangular-Latin defect closure with any proper generated
+congruence row is a local-minimality contradiction.  It is classified as
+`closed_by_triangular_latin_proper_closure` and must not be routed to an
+endpoint family.  Only universal closure rows are candidates for the System U
+recovery endpoint route.
+
 ## What Must Be Done To Resolve The Problem
 
 1. Audit the post-linear reduction.

@@ -1146,6 +1146,12 @@ single fixed group `U_tri`, requires exact coverage of the routed System U
 endpoint keys, and lets the post-linear classifier close U by a symmetric
 cutoff without hiding any still-unclosed continuation or mixed-unit endpoint
 families.
+The same post-linear classifier now keeps the K-stage local-minimality
+contradiction separate from endpoint routing: if the triangular-Latin defect
+closure supplies a proper generated congruence row, it reports
+`closed_by_triangular_latin_proper_closure` and creates no U/C/M endpoint
+obligation from that row.  Only universal closure rows may feed a routed
+endpoint family.
 The same supplied-certificate pattern now covers the routed continuation and
 mixed-unit endpoint families.  The helper
 `universal_continuation_identity_symmetric_endpoint_fork_audit(...)` attaches
