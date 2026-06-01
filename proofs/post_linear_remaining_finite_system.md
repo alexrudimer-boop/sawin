@@ -712,6 +712,12 @@ contexts, nonconstant coboundary defects, out-of-scope detector tracks,
 missing C/M readouts, or missing residual faithfulness remain visible audit
 failures rather than being filled by defaults.  This keeps the local
 certificate from being a list of unsupported boolean claims.
+The signed endpoint audit itself now carries this explicit representation
+gate.  A supplied signed table cannot close merely by setting the older
+state/coordinate booleans: if an explicit monodromy representation audit is
+present, it must prove every context map and every presentation relation, and
+the derived constructor supplies that audit automatically from the current
+interval, reachable seed states, and rows.
 When a fixed endpoint group is declared as a product over multiple endpoint
 families, the signed endpoint audit now also checks family support of each
 emitted label: a row in family `E` must have identity components in every
@@ -978,6 +984,8 @@ signed_endpoint_generator_far_commutativity_verified
 signed_endpoint_generator_far_commutativity_failures
 signed_endpoint_generator_far_commutativity_path_failures
 signed_endpoint_generator_far_commutativity_label_diagnostics
+signed_endpoint_generator_explicit_monodromy_representation_verified
+signed_endpoint_generator_explicit_monodromy_representation_failures
 signed_endpoint_generator_positive_monodromy_permutation_failures
 signed_endpoint_generator_positive_monodromy_representation_verified
 signed_endpoint_generator_two_strand_witness_domain_exact

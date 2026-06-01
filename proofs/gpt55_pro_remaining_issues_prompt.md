@@ -1483,6 +1483,11 @@ closure, if the negative table is not single-valued, if the coboundary defect
 is not constant on a sound detector domain, or if residual faithfulness is
 not supplied, the observer remains open.  No default endpoint emission is
 allowed.
+The signed endpoint proof gate itself must consume this explicit monodromy
+representation audit.  It is not enough to assert separate state/coordinate
+YBE and far-commutativity booleans: the finite representation audit must
+show that the supplied positive state maps define a representation of the
+declared positive local-context presentation on the exact reachable states.
 The preferred handoff is therefore the finite monodromy-coboundary
 certificate itself: endpoint group or cutoff target, detector-track
 initialization rows, templates `W_s`, positive identity rows, C/M cutoff

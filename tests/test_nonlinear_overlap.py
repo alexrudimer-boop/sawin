@@ -4230,6 +4230,47 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             audit.failure_reasons,
         )
 
+    def test_signed_endpoint_audit_uses_explicit_monodromy_representation(self):
+        interval = one_color_identity_interval()
+        seed_state = ("*", "*", "left_constant_map_universal_kernel")
+        reachable = (("U", seed_state),)
+        seed_entries = ((("*", "*", "L", "constant_map_kernel", ("u",)), ("U", seed_state)),)
+        keys = universal_k_signed_endpoint_required_entry_keys(interval, reachable)
+        rows = identity_signed_endpoint_rows(keys)
+        bad_context = ("U", "*", "*", 0, 0)
+        missing_context = ("U", "*", "*", "missing", "missing")
+        bad_presentation = UniversalKEndpointMonodromyPresentation(
+            expected_endpoint_families=("U",),
+            contexts=(bad_context,),
+            adjacent_relations=(((bad_context, bad_context, bad_context), (missing_context, missing_context, missing_context)),),
+        )
+        bad_monodromy = universal_k_endpoint_monodromy_representation_audit(
+            bad_presentation,
+            reachable,
+            rows,
+        )
+
+        audit = universal_k_signed_endpoint_generator_audit(
+            interval,
+            seed_entries,
+            reachable,
+            rows,
+            endpoint_group=cyclic_group(2),
+            witnesses={row.entry_key: () for row in rows},
+            telescoping_detector_audit=trivial_telescoping_detector_audit(keys),
+            residual_action_scope=trivial_endpoint_residual_action_scope("U"),
+            residual_action_audit=trivial_endpoint_residual_action_audit(),
+            monodromy_representation_audit=bad_monodromy,
+        )
+
+        self.assertFalse(audit.explicit_monodromy_representation_verified)
+        self.assertFalse(audit.positive_monodromy_representation_verified)
+        self.assertFalse(audit.proves_signed_endpoint_generator_tables)
+        self.assertIn(
+            "explicit_endpoint_monodromy_representation_not_verified",
+            audit.failure_reasons,
+        )
+
     def test_endpoint_observer_builder_forces_signed_rows_from_word_potential(self):
         interval = one_color_identity_interval()
         group = cyclic_group(2)

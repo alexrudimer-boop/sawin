@@ -5333,6 +5333,9 @@ class UniversalKSignedEndpointGeneratorAudit:
     residual_faithfulness_theorem: UniversalKResidualFaithfulnessAudit | None = None
     residual_action_audit: "EndpointResidualActionAudit | None" = None
     telescoping_detector_audit: UniversalKTelescopingDetectorAudit | None = None
+    monodromy_representation_audit: (
+        UniversalKEndpointMonodromyRepresentationAudit | None
+    ) = None
     endpoint_group: FiniteGroup | None = None
 
     @property
@@ -5752,6 +5755,14 @@ class UniversalKSignedEndpointGeneratorAudit:
             not self.positive_monodromy_permutation_failures
             and self.positive_ybe_path_verified
             and self.far_commutativity_verified
+            and self.explicit_monodromy_representation_verified
+        )
+
+    @property
+    def explicit_monodromy_representation_verified(self) -> bool:
+        return (
+            self.monodromy_representation_audit is None
+            or self.monodromy_representation_audit.proves_monodromy_representation
         )
 
     @property
@@ -6321,6 +6332,12 @@ class UniversalKSignedEndpointGeneratorAudit:
             reasons.append("finite_signed_row_checks_missing_endpoint_group")
         if self.finite_row_checks_derived_from_tables and not self.signed_finite_row_checks_proved:
             reasons.append("finite_signed_row_checks_inconsistent")
+        if (
+            self.monodromy_representation_audit is not None
+            and not self.monodromy_representation_audit.proves_monodromy_representation
+        ):
+            reasons.append("explicit_endpoint_monodromy_representation_not_verified")
+            reasons.extend(self.monodromy_representation_audit.failure_reasons)
         if self.positive_monodromy_permutation_failures:
             reasons.append("endpoint_monodromy_not_permutation_representation")
         if not self.endpoint_targets_proved:
@@ -7403,6 +7420,9 @@ def universal_k_signed_endpoint_generator_audit(
     residual_faithfulness_theorem: UniversalKResidualFaithfulnessAudit | None = None,
     residual_action_audit: "EndpointResidualActionAudit | None" = None,
     telescoping_detector_audit: UniversalKTelescopingDetectorAudit | None = None,
+    monodromy_representation_audit: (
+        UniversalKEndpointMonodromyRepresentationAudit | None
+    ) = None,
 ) -> UniversalKSignedEndpointGeneratorAudit:
     """Build a signed endpoint audit by deriving all finite row checks.
 
@@ -7447,6 +7467,22 @@ def universal_k_signed_endpoint_generator_audit(
         interval,
         reachable_tuple,
     )
+    if monodromy_representation_audit is None:
+        endpoint_families = tuple(
+            sorted(
+                {
+                    family
+                    for family, _seed_state in reachable_tuple
+                    if family in UNIVERSAL_K_ENDPOINT_FAMILIES
+                },
+                key=repr,
+            )
+        )
+        monodromy_representation_audit = universal_k_endpoint_monodromy_representation_audit(
+            universal_k_endpoint_monodromy_presentation(interval, endpoint_families),
+            reachable_tuple,
+            row_tuple,
+        )
     coordinate_failures = universal_k_signed_endpoint_coordinate_failures(
         interval,
         row_tuple,
@@ -7551,6 +7587,7 @@ def universal_k_signed_endpoint_generator_audit(
         residual_faithfulness_theorem=residual_faithfulness_theorem,
         residual_action_audit=residual_action_audit,
         telescoping_detector_audit=telescoping_detector_audit,
+        monodromy_representation_audit=monodromy_representation_audit,
         endpoint_group=endpoint_group,
     )
 
@@ -7783,6 +7820,7 @@ def universal_k_endpoint_observer_build(
         residual_action_scope=residual_action_scope,
         residual_action_audit=residual_action_audit,
         telescoping_detector_audit=telescoping_detector_audit,
+        monodromy_representation_audit=monodromy_representation_audit,
     )
     return UniversalKEndpointObserverBuild(
         reachable_seed_states=reachable_seed_states,
@@ -9546,6 +9584,14 @@ class PostLinearRemainingFiniteSystemAudit:
                     (),
                 ),
                 (
+                    "signed_endpoint_generator_explicit_monodromy_representation_verified",
+                    False,
+                ),
+                (
+                    "signed_endpoint_generator_explicit_monodromy_representation_failures",
+                    (),
+                ),
+                (
                     "signed_endpoint_generator_positive_monodromy_permutation_failures",
                     (),
                 ),
@@ -10305,6 +10351,19 @@ class PostLinearRemainingFiniteSystemAudit:
             (
                 "signed_endpoint_generator_far_commutativity_label_diagnostics",
                 audit.far_commutativity_label_diagnostic_failures,
+            ),
+            (
+                "signed_endpoint_generator_explicit_monodromy_representation_verified",
+                audit.explicit_monodromy_representation_verified,
+            ),
+            (
+                "signed_endpoint_generator_explicit_monodromy_representation_failures",
+                (
+                    audit.monodromy_representation_audit.context_map_failures
+                    + audit.monodromy_representation_audit.relation_failures
+                    if audit.monodromy_representation_audit is not None
+                    else ()
+                ),
             ),
             (
                 "signed_endpoint_generator_positive_monodromy_permutation_failures",
