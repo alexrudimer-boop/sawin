@@ -505,6 +505,190 @@ def _constant_map_kernel_kind_from_reason(reason: str) -> str:
 
 
 @dataclass(frozen=True)
+class UniversalKSignedEndpointGeneratorRow:
+    """One finite signed endpoint-generator entry on a routed K seed state."""
+
+    endpoint_family: str
+    seed_state: UniversalKSeedState
+    sign: int
+    left_color: Color
+    right_color: Color
+    input_left: FibrePoint
+    input_right: FibrePoint
+    output_left: FibrePoint
+    output_right: FibrePoint
+    next_seed_state: UniversalKSeedState
+    endpoint_value: object | None
+
+    @property
+    def seed_key(self) -> Tuple[str, UniversalKSeedState, int]:
+        return (self.endpoint_family, self.seed_state, self.sign)
+
+    @property
+    def entry_key(self) -> Tuple[
+        str,
+        UniversalKSeedState,
+        int,
+        Color,
+        Color,
+        FibrePoint,
+        FibrePoint,
+    ]:
+        return (
+            self.endpoint_family,
+            self.seed_state,
+            self.sign,
+            self.left_color,
+            self.right_color,
+            self.input_left,
+            self.input_right,
+        )
+
+    @property
+    def endpoint_family_known(self) -> bool:
+        return self.endpoint_family in {"U", "C", "M"}
+
+    @property
+    def sign_known(self) -> bool:
+        return self.sign in {-1, 1}
+
+    @property
+    def endpoint_value_supplied(self) -> bool:
+        return self.endpoint_value is not None
+
+    @property
+    def row_is_defined(self) -> bool:
+        return (
+            self.endpoint_family_known
+            and self.sign_known
+            and self.endpoint_value_supplied
+        )
+
+
+@dataclass(frozen=True)
+class UniversalKSignedEndpointGeneratorAudit:
+    """Certificate-shape audit for signed endpoint tables on K_nabla seeds."""
+
+    seed_classifier_entries: Tuple[UniversalKSeedClassifierEntry, ...]
+    rows: Tuple[UniversalKSignedEndpointGeneratorRow, ...]
+    inverse_cancellation_verified: bool = False
+    positive_ybe_cocycle_verified: bool = False
+    signed_two_strand_base_verified: bool = False
+
+    @property
+    def required_seed_states(self) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
+        return tuple(sorted({entry[1] for entry in self.seed_classifier_entries}, key=repr))
+
+    @property
+    def required_signed_seed_keys(
+        self,
+    ) -> Tuple[Tuple[str, UniversalKSeedState, int], ...]:
+        return tuple(
+            sorted(
+                (
+                    (endpoint_family, seed_state, sign)
+                    for endpoint_family, seed_state in self.required_seed_states
+                    for sign in (-1, 1)
+                ),
+                key=repr,
+            )
+        )
+
+    @property
+    def supplied_signed_seed_keys(
+        self,
+    ) -> Tuple[Tuple[str, UniversalKSeedState, int], ...]:
+        return tuple(sorted({row.seed_key for row in self.rows}, key=repr))
+
+    @property
+    def missing_signed_seed_keys(
+        self,
+    ) -> Tuple[Tuple[str, UniversalKSeedState, int], ...]:
+        supplied = set(self.supplied_signed_seed_keys)
+        return tuple(key for key in self.required_signed_seed_keys if key not in supplied)
+
+    @property
+    def extra_signed_seed_keys(
+        self,
+    ) -> Tuple[Tuple[str, UniversalKSeedState, int], ...]:
+        required = set(self.required_signed_seed_keys)
+        return tuple(key for key in self.supplied_signed_seed_keys if key not in required)
+
+    @property
+    def duplicate_entry_keys(
+        self,
+    ) -> Tuple[
+        Tuple[
+            str,
+            UniversalKSeedState,
+            int,
+            Color,
+            Color,
+            FibrePoint,
+            FibrePoint,
+        ],
+        ...,
+    ]:
+        seen = set()
+        duplicates = []
+        for row in self.rows:
+            key = row.entry_key
+            if key in seen:
+                duplicates.append(key)
+            else:
+                seen.add(key)
+        return tuple(sorted(set(duplicates), key=repr))
+
+    @property
+    def undefined_rows(self) -> Tuple[UniversalKSignedEndpointGeneratorRow, ...]:
+        return tuple(row for row in self.rows if not row.row_is_defined)
+
+    @property
+    def signed_generator_domain_exact(self) -> bool:
+        return (
+            bool(self.required_signed_seed_keys)
+            and not self.missing_signed_seed_keys
+            and not self.extra_signed_seed_keys
+            and not self.duplicate_entry_keys
+        )
+
+    @property
+    def all_rows_defined(self) -> bool:
+        return bool(self.rows) and not self.undefined_rows
+
+    @property
+    def proves_signed_endpoint_generator_tables(self) -> bool:
+        return (
+            self.signed_generator_domain_exact
+            and self.all_rows_defined
+            and self.inverse_cancellation_verified
+            and self.positive_ybe_cocycle_verified
+            and self.signed_two_strand_base_verified
+        )
+
+    @property
+    def failure_reasons(self) -> Tuple[str, ...]:
+        reasons = []
+        if not self.required_signed_seed_keys:
+            reasons.append("no_routed_k_seed_states")
+        if self.missing_signed_seed_keys:
+            reasons.append("signed_seed_keys_missing")
+        if self.extra_signed_seed_keys:
+            reasons.append("extra_signed_seed_keys")
+        if self.duplicate_entry_keys:
+            reasons.append("duplicate_signed_generator_entries")
+        if self.undefined_rows:
+            reasons.append("undefined_signed_generator_rows")
+        if not self.inverse_cancellation_verified:
+            reasons.append("inverse_cancellation_not_verified")
+        if not self.positive_ybe_cocycle_verified:
+            reasons.append("positive_ybe_cocycle_not_verified")
+        if not self.signed_two_strand_base_verified:
+            reasons.append("signed_two_strand_base_not_verified")
+        return tuple(reasons)
+
+
+@dataclass(frozen=True)
 class TriangularRecoveryEndpointWitnessAudit:
     """Endpoint witnesses for K rows routed to the triangular recovery unit."""
 
@@ -750,6 +934,9 @@ class PostLinearRemainingFiniteSystemAudit:
     ) = None
     mixed_unit_context_symmetric_endpoint_fork: (
         "MixedUnitContextSymmetricEndpointForkAudit | None"
+    ) = None
+    universal_k_signed_endpoint_generator: (
+        UniversalKSignedEndpointGeneratorAudit | None
     ) = None
 
     @property
@@ -1894,6 +2081,87 @@ class PostLinearRemainingFiniteSystemAudit:
         )
 
     @property
+    def _universal_k_signed_endpoint_generator_data(
+        self,
+    ) -> Tuple[Tuple[str, object], ...]:
+        audit = self.universal_k_signed_endpoint_generator
+        if audit is None:
+            return (
+                (
+                    "signed_endpoint_generator_required_seed_states",
+                    tuple(
+                        sorted(
+                            {
+                                classifier_entry[1]
+                                for classifier_entry in (
+                                    self.universal_k_seed_classifier_entries
+                                )
+                            },
+                            key=repr,
+                        )
+                    ),
+                ),
+                ("signed_endpoint_generator_tables_proved", False),
+            )
+        matches_current_kappa = (
+            audit.seed_classifier_entries == self.universal_k_seed_classifier_entries
+        )
+        return (
+            (
+                "signed_endpoint_generator_matches_current_kappa",
+                matches_current_kappa,
+            ),
+            (
+                "signed_endpoint_generator_required_seed_states",
+                audit.required_seed_states,
+            ),
+            (
+                "signed_endpoint_generator_required_signed_seed_keys",
+                audit.required_signed_seed_keys,
+            ),
+            (
+                "signed_endpoint_generator_supplied_signed_seed_keys",
+                audit.supplied_signed_seed_keys,
+            ),
+            (
+                "signed_endpoint_generator_missing_signed_seed_keys",
+                audit.missing_signed_seed_keys,
+            ),
+            (
+                "signed_endpoint_generator_extra_signed_seed_keys",
+                audit.extra_signed_seed_keys,
+            ),
+            (
+                "signed_endpoint_generator_duplicate_entries",
+                audit.duplicate_entry_keys,
+            ),
+            (
+                "signed_endpoint_generator_inverse_cancellation_verified",
+                audit.inverse_cancellation_verified,
+            ),
+            (
+                "signed_endpoint_generator_positive_ybe_cocycle_verified",
+                audit.positive_ybe_cocycle_verified,
+            ),
+            (
+                "signed_endpoint_generator_two_strand_base_verified",
+                audit.signed_two_strand_base_verified,
+            ),
+            (
+                "signed_endpoint_generator_tables_proved",
+                matches_current_kappa and audit.proves_signed_endpoint_generator_tables,
+            ),
+            (
+                "signed_endpoint_generator_failure_reasons",
+                (
+                    audit.failure_reasons
+                    if matches_current_kappa
+                    else audit.failure_reasons + ("seed_classifier_entries_mismatch",)
+                ),
+            ),
+        )
+
+    @property
     def routed_endpoint_obstruction_data(self) -> Tuple[Tuple[str, object], ...]:
         data = []
         if self.system_u_active:
@@ -1954,6 +2222,7 @@ class PostLinearRemainingFiniteSystemAudit:
         data.extend(self._coordinate_unit_routing_data)
         data.extend(self._mixed_unit_endpoint_witness_data)
         data.extend(self._mixed_unit_symmetric_endpoint_fork_data)
+        data.extend(self._universal_k_signed_endpoint_generator_data)
         return tuple(data)
 
     @property
@@ -2085,6 +2354,7 @@ class PostLinearRemainingFiniteSystemAudit:
                     self.refinement.direct_unit_longitude_status_preempted_by_kink_dichotomy,
                 ),
             ]
+            data.extend(self._universal_k_signed_endpoint_generator_data)
             if self.triangular_latin_defect_closure is not None:
                 closure = self.triangular_latin_defect_closure
                 data.extend(

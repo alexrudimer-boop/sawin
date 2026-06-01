@@ -34,6 +34,8 @@ from ybe_domination import (
     TriangularConstantKernelRecoveryRouteRow,
     TriangularLatinDefectClosureAudit,
     TriangularLatinDefectClosureRow,
+    UniversalKSignedEndpointGeneratorAudit,
+    UniversalKSignedEndpointGeneratorRow,
     TwoSidedUnitCollapseAudit,
     cyclic_group,
     endpoint_family_symmetric_fork_audit,
@@ -2351,6 +2353,140 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
                 "prove each routed triangular recovery endpoint composite lies in V_beta(U_tri)",
                 "or upgrade one routed U_tri endpoint miss to a normalized-law sequence",
             ),
+        )
+
+    def test_signed_endpoint_generator_audit_requires_both_signs_and_identities(self):
+        seed_state = ("*", "*", "left_constant_map_universal_kernel")
+        seed_entries = (
+            (
+                (
+                    "*",
+                    "*",
+                    "L",
+                    "constant_map_kernel",
+                    ("*", (0, 1), "universal", "universal"),
+                ),
+                ("U", seed_state),
+            ),
+        )
+        positive_row = UniversalKSignedEndpointGeneratorRow(
+            endpoint_family="U",
+            seed_state=seed_state,
+            sign=1,
+            left_color="*",
+            right_color="*",
+            input_left=0,
+            input_right=1,
+            output_left=0,
+            output_right=1,
+            next_seed_state=seed_state,
+            endpoint_value=0,
+        )
+        incomplete = UniversalKSignedEndpointGeneratorAudit(
+            seed_classifier_entries=seed_entries,
+            rows=(positive_row,),
+            inverse_cancellation_verified=True,
+            positive_ybe_cocycle_verified=True,
+            signed_two_strand_base_verified=True,
+        )
+
+        self.assertEqual(incomplete.missing_signed_seed_keys, (("U", seed_state, -1),))
+        self.assertFalse(incomplete.proves_signed_endpoint_generator_tables)
+        self.assertIn("signed_seed_keys_missing", incomplete.failure_reasons)
+
+        negative_row = replace(positive_row, sign=-1)
+        complete = UniversalKSignedEndpointGeneratorAudit(
+            seed_classifier_entries=seed_entries,
+            rows=(positive_row, negative_row),
+            inverse_cancellation_verified=True,
+            positive_ybe_cocycle_verified=True,
+            signed_two_strand_base_verified=True,
+        )
+
+        self.assertEqual(complete.missing_signed_seed_keys, ())
+        self.assertEqual(complete.extra_signed_seed_keys, ())
+        self.assertTrue(complete.signed_generator_domain_exact)
+        self.assertTrue(complete.proves_signed_endpoint_generator_tables)
+        self.assertEqual(complete.failure_reasons, ())
+
+    def test_post_linear_reports_signed_generator_table_audit(self):
+        refinement = constant_map_kernel_only_system_k_refinement()
+        closure = TriangularLatinDefectClosureAudit(
+            rows=(
+                TriangularLatinDefectClosureRow(
+                    side="left",
+                    defect="constant_map_kernel",
+                    left_color="*",
+                    right_color="*",
+                    domain_color="*",
+                    fixed_input=None,
+                    collapsed_inputs=(0, 1),
+                    generated=generated("universal"),
+                ),
+            ),
+        )
+        route = TriangularConstantKernelRecoveryRouteAudit(
+            rows=(
+                TriangularConstantKernelRecoveryRouteRow(
+                    side="left",
+                    left_color="*",
+                    right_color="*",
+                    domain_color="*",
+                    collapsed_inputs=(0, 1),
+                    closure_kind="universal",
+                    recovery_row_present=True,
+                    recovery_formula_bijective=True,
+                    witness_output_pairs=(
+                        (0, ((0, 0),)),
+                        (1, ((0, 1),)),
+                    ),
+                ),
+            ),
+        )
+        routed = PostLinearRemainingFiniteSystemAudit(
+            refinement,
+            triangular_latin_defect_closure=closure,
+            triangular_constant_kernel_recovery_route=route,
+        )
+        seed_state = ("*", "*", "left_constant_map_universal_kernel")
+        row = UniversalKSignedEndpointGeneratorRow(
+            endpoint_family="U",
+            seed_state=seed_state,
+            sign=1,
+            left_color="*",
+            right_color="*",
+            input_left=0,
+            input_right=1,
+            output_left=0,
+            output_right=1,
+            next_seed_state=seed_state,
+            endpoint_value=0,
+        )
+        signed_generators = UniversalKSignedEndpointGeneratorAudit(
+            seed_classifier_entries=routed.universal_k_seed_classifier_entries,
+            rows=(row, replace(row, sign=-1)),
+            inverse_cancellation_verified=True,
+            positive_ybe_cocycle_verified=True,
+            signed_two_strand_base_verified=True,
+        )
+        audit = PostLinearRemainingFiniteSystemAudit(
+            refinement,
+            triangular_latin_defect_closure=closure,
+            triangular_constant_kernel_recovery_route=route,
+            universal_k_signed_endpoint_generator=signed_generators,
+        )
+
+        self.assertIn(
+            ("signed_endpoint_generator_tables_proved", True),
+            audit.finite_obstruction_data,
+        )
+        self.assertIn(
+            ("signed_endpoint_generator_matches_current_kappa", True),
+            audit.finite_obstruction_data,
+        )
+        self.assertIn(
+            ("signed_endpoint_generator_failure_reasons", ()),
+            audit.finite_obstruction_data,
         )
 
     def test_triangular_recovery_endpoint_witness_covers_routed_k_defect(self):

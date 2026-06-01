@@ -787,6 +787,127 @@ Gamma^{E,+/-}_{a,b}(s,x,y) = (s',x',y',h),
 
 where `(x',y')=T_{a,b}^{+/-}(x,y)`.
 
+### Signed Endpoint Generator Tables
+
+For every endpoint family `E in {U,C,M}`, let `H_E` be the fixed finite
+endpoint group for that family.  The group must be independent of braid index
+`n`.  A signed endpoint generator table is a finite table
+
+```text
+Gamma^{E,epsilon}_{a,b}(s,x,y) = (s',x',y',h),
+epsilon in {+1,-1},
+s,s' in S_E,
+x in A_a,
+y in A_b,
+h in H_E.
+```
+
+For `epsilon=+1`, if `R_C(a,b)=(c,d)`, the coordinate part must satisfy
+
+```text
+(x',y') = T_{a,b}(x,y) in A_c x A_d.
+```
+
+For `epsilon=-1`, the input colours are already the output colours of a
+positive row.  The coordinate part must satisfy
+
+```text
+T_{a,b}(x',y')=(x,y),
+```
+
+with the corresponding inverse colour routing.  Thus `Gamma^-` is indexed by
+the inverse local row data, not by an unrelated table.
+
+The exact signed-generator domain for the routed K layer is:
+
+```text
+D_Gamma =
+{ (E,epsilon,s,a,b,x,y) :
+  (E,s)=kappa(d) for some d in K_nabla,
+  epsilon in {+1,-1},
+  x in A_a,
+  y in A_b,
+  and the local row T^{epsilon}_{a,b} is defined }.
+```
+
+Every entry of `D_Gamma` must have exactly one table value and no extra table
+value outside `D_Gamma` may be used to close a routed endpoint family.  The
+signed table must be checked against the actual `kappa` table for the
+interval; a table built for a different seed classifier is irrelevant.
+
+The signed inverse-cancellation law is:
+
+```text
+If Gamma^{E,+}_{a,b}(s,x,y)=(s1,u,v,h)
+and Gamma^{E,-}_{c,d}(s1,u,v)=(s2,x2,y2,h2),
+where R_C(a,b)=(c,d),
+then s2=s, x2=x, y2=y, and h h2 = 1 in H_E.
+
+If Gamma^{E,-}_{c,d}(s,u,v)=(s1,x,y,k)
+and Gamma^{E,+}_{a,b}(s1,x,y)=(s2,u2,v2,k2),
+where R_C(a,b)=(c,d),
+then s2=s, u2=u, v2=v, and k k2 = 1 in H_E.
+```
+
+The positive local endpoint YBE cocycle law is the equality of the two
+three-strand table products obtained from the coloured YBE square.  Starting
+from `(s,x,y,z)` over colours `(a,b,c)`, compose the three positive entries
+on the left side:
+
+```text
+Gamma^{E,+}_{a,b},
+Gamma^{E,+}_{a*b,c},
+Gamma^{E,+}_{a dot b,(a*b) dot c},
+```
+
+with the updated colours, states, and coordinates after each step.  Compose
+the three positive entries on the right side:
+
+```text
+Gamma^{E,+}_{b,c},
+Gamma^{E,+}_{a,b dot c},
+Gamma^{E,+}_{a*(b dot c),b*c}.
+```
+
+The final state and final three coordinates must agree, and the ordered
+products of the three `H_E` labels must agree in `H_E`.  This is a finite
+identity over all `s in S_E` and all local triples `(x,y,z)`.
+
+The signed two-strand Artin-longitude base identity is a finite certificate
+for each signed table entry.  For every row
+
+```text
+Gamma^{E,epsilon}_{a,b}(s,x,y)=(s',x',y',h),
+```
+
+one must provide a finite expression
+
+```text
+h =
+product_r phi_r(L_{j_r}(sigma_1^epsilon))^{delta_r}
+```
+
+inside `H_E`, where each `phi_r:F_2->H_E` is a homomorphism, each
+`delta_r` is `+1` or `-1`, and `L_1,L_2` are the recursive Artin longitudes
+for the two-strand generator `sigma_1^epsilon`.  The expression may depend
+on the finite row, but `H_E` may not depend on braid index.
+
+The signed-generator audit for a claimed A proof must therefore establish:
+
+```text
+signed_generator_domain_exact,
+all_signed_rows_defined,
+signed_inverse_cancellation,
+positive_local_endpoint_ybe_cocycle,
+signed_two_strand_artin_longitude_base.
+```
+
+Only after those five finite checks are proved may one use braid-word
+induction to claim that all endpoint labels for family `E` lie in
+`V_beta(H_E)` for every braid index.  Without them, endpoint witnesses or
+symmetric cutoffs are merely candidate certificate shapes, not a completed
+uniform proof.
+
 System activation is then exact:
 
 ```text

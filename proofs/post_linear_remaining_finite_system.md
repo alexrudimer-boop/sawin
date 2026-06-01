@@ -366,6 +366,29 @@ read from the partial-constant witness tuple.  Thus signed endpoint generator
 entries are not addressable until `d in K_nabla` and `kappa(d)=(E,s)` have
 been computed.
 
+The next finite audit layer is the signed endpoint generator table on these
+states.  For each `kappa(d)=(E,s)`, each sign, and each local row input, the
+table must supply one value
+
+```text
+Gamma^{E,+/-}_{a,b}(s,x,y)=(s',x',y',h)
+```
+
+with the coordinate pair equal to the positive or inverse local row and
+`h` in the fixed finite endpoint group for `E`.  The executable audit records
+the exact routed seed states, the required two signs, missing or extra signed
+seed keys, duplicate entries, and the three finite proof gates:
+
+```text
+signed inverse cancellation
+positive local endpoint YBE cocycle
+signed two-strand Artin-longitude base identity
+```
+
+This audit does not by itself close U, C, or M; it records the missing finite
+generator-table proof needed before the endpoint witnesses or symmetric
+cutoffs can be promoted to an all-strand proof.
+
 together with the concrete rows:
 
 ```text
@@ -383,6 +406,18 @@ continuation_routed_k_missing_latin_row_defects
 mixed_context_routed_k_missing_latin_row_defects
 universal_k_row_normal_form_domain
 universal_k_seed_classifier_entries
+signed_endpoint_generator_required_seed_states
+signed_endpoint_generator_matches_current_kappa
+signed_endpoint_generator_required_signed_seed_keys
+signed_endpoint_generator_supplied_signed_seed_keys
+signed_endpoint_generator_missing_signed_seed_keys
+signed_endpoint_generator_extra_signed_seed_keys
+signed_endpoint_generator_duplicate_entries
+signed_endpoint_generator_inverse_cancellation_verified
+signed_endpoint_generator_positive_ybe_cocycle_verified
+signed_endpoint_generator_two_strand_base_verified
+signed_endpoint_generator_tables_proved
+signed_endpoint_generator_failure_reasons
 active_companion_block_image_support_rows
 active_companion_block_images_have_constant_kernel_support
 k_left_side_dual_replacement_rows
