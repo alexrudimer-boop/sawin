@@ -630,39 +630,33 @@ same-side constant-map kernel support exists, the descriptor has reason
 `unsupported_companion_block_image` and is a structural inconsistency, not a
 member of `K_nabla`.
 
-This exclusion is not allowed to be a prose assumption in a complete proof.
-For every unsupported companion block-image row one must give a finite
-structural-contradiction certificate.  The certificate has an exact expected
-row ledger
+This exclusion is now closed by a finite cardinality contradiction.  For
+every unsupported companion block-image row, the finite
+structural-contradiction certificate has an exact expected row ledger
 
 ```text
 (side,left_color,right_color)
 ```
 
 for all unsupported companion block-image rows, an exact covered-row ledger
-with no missing, extra, or duplicate rows, and at least one contradiction row
-for every expected row.  A contradiction row must be one of:
+with no missing, extra, or duplicate rows, and the contradiction row
 
 ```text
-colored_ybe_coordinate_contradiction:
-  (side,left_color,right_color,
-   ybe_triple=(a,b,c),
-   coordinate in {left,right,pair,fibre,state},
-   left_value != right_value)
-
 already_closed_branch:
   (side,left_color,right_color,
-   closed_branch)
+   closed_branch = finite_triangular_bijection_cardinality_contradiction)
 ```
 
-where `closed_branch` is a non-circular previously proved branch such as
-product collapse, rack-base inconsistency, a locally nondegenerate/guitar
-closure, a proper-kernel readout closure, or a Latin-kink/YBE projection
-contradiction.  The branch `triangular_structural_inconsistency` itself
-cannot be used as the cited closed branch.  Without this exact finite
-contradiction table, unsupported companion rows remain an upstream open
-obligation; they are still excluded from `K_nabla`, but the reduction has
-not proved that the exclusion is valid.
+The proof is: in the left triangular case
+`T_{a,b}(x,y)=(alpha(x),beta_x(y))`, an unsupported injective
+nonsurjective companion section gives `|A_b|<|A_d|`, while absence of
+same-side constant-map kernel support makes `alpha` injective, so
+`|A_a|<=|A_c|`; hence `|A_a||A_b|<|A_c||A_d|`, contradicting bijectivity of
+`T_{a,b}:A_a x A_b -> A_c x A_d`.  The right triangular case is dual:
+unsupported injective nonsurjectivity of some `gamma_y:A_a->A_c` gives
+`|A_a|<|A_c|`, while injectivity of `delta` gives `|A_b|<=|A_d|`, again
+contradicting bijectivity.  Thus unsupported companion rows are structural
+contradictions, not endpoint seeds and not members of `K_nabla`.
 
 Partial-constant hidden-rank descriptor:
 
@@ -1874,6 +1868,15 @@ seeds are explicit certificate errors.
 The theorem's active and covered endpoint-family ledgers must likewise be
 subsets of `{U,C,M}`, and every row-local endpoint family must be one of
 those known families.  Unknown family labels make the theorem scope invalid.
+The residual input-tuple domain and the symbolic residual rows must be
+compared using duplicate-safe, hashability-safe markers.  Therefore an
+unhashable but otherwise exact finite residual input tuple may be used as
+explicit interval data, but missing, extra, and duplicate residual rows remain
+finite certificate errors.  The family-by-family residual row-count ledgers
+must use the same marker-safe comparison for count matching, while only known
+endpoint-family labels can contribute to exact family scope; malformed or
+unhashable family labels keep residual faithfulness open rather than causing
+a runtime failure.
 
 The signed-generator audit for a claimed A proof must therefore establish:
 
@@ -2413,8 +2416,8 @@ Q_i = Q_{i+1} x A_{G(pi_i,Q_{i+1})}.
 The chain is finite, and every group factor is finite and independent of
 braid index, so the final rack `Q_0` is finite, independent of `n`, and
 dominates `X`.  Thus a complete A proof now only needs the local U/C/M
-endpoint-observer lemma, plus the unsupported-companion contradiction if that
-exclusion is not accepted as a standing reduction.
+endpoint-observer lemma; unsupported companion block-image rows are closed by
+the finite triangular bijection cardinality contradiction recorded above.
 
 At the executable handoff level, an endpoint-observer closure verdict may be
 fed into the congruence-chain rack assembly only together with the actual
@@ -2442,9 +2445,9 @@ an open local gap.
    detector data for U, C, or M.  Proper generated closures are already
    terminal contradictions; universal closures are the only endpoint-routing
    candidates.  Unsupported companion block-image rows are not endpoint
-   candidates, but they must be excluded by the exact finite
-   structural-contradiction table described above; otherwise they remain an
-   upstream open obligation.
+   candidates; they are excluded by the exact finite
+   `finite_triangular_bijection_cardinality_contradiction` table described
+   above.
 
    To prove B from K, construct a genuine live K interval, prove all fixed
    finite detector groups fail, and upgrade the failure to a normalized-law
@@ -2531,10 +2534,10 @@ Before returning a claimed resolution, explicitly answer:
    one of `S_U`, `S_C`, or `S_M`, and is the classifier ledger duplicate-free
    and functional on row descriptors, with no target outside `{U,C,M}`?
 5. Are unsupported companion block-image rows proved structural
-   inconsistencies rather than endpoint seeds by an exact finite
-   contradiction table covering every `(side,left_color,right_color)` row,
-   with no missing, extra, or duplicate rows and no circular appeal to
-   `triangular_structural_inconsistency`?
+   inconsistencies rather than endpoint seeds by the exact finite
+   `finite_triangular_bijection_cardinality_contradiction` table covering
+   every `(side,left_color,right_color)` row, with no missing, extra, or
+   duplicate rows and no circular appeal to `triangular_structural_inconsistency`?
 6. Are `S_U`, `S_C`, and `S_M` the exact finite seed state spaces, and are
    the finite reachable sets `S_U^reach`, `S_C^reach`, and `S_M^reach`
    constructed as duplicate-free exact signed-transition closures of those

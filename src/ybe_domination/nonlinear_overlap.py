@@ -310,6 +310,7 @@ _NONCIRCULAR_CLOSED_BRANCH_STATUSES = frozenset(
         "side_dual_latin_triangular_kink_impossible",
         "side_dual_latin_triangular_ybe_projection_inconsistent",
         "side_dual_latin_triangular_diagonal_cancellation_inconsistent",
+        "finite_triangular_bijection_cardinality_contradiction",
     )
 )
 
@@ -487,6 +488,28 @@ class UnsupportedCompanionStructuralContradictionAudit:
         if self.extra_contradiction_rows:
             reasons.append("unsupported_companion_extra_contradiction_rows")
         return tuple(reasons)
+
+
+def unsupported_companion_cardinality_contradiction_audit(
+    rows: Sequence[UnsupportedCompanionBlockImageRowKey],
+) -> UnsupportedCompanionStructuralContradictionAudit:
+    """Derive the finite cardinality contradiction for unsupported companion rows."""
+
+    expected_rows = _unique_values(tuple(rows))
+    return UnsupportedCompanionStructuralContradictionAudit(
+        expected_rows=expected_rows,
+        covered_rows=expected_rows,
+        contradiction_rows=tuple(
+            UnsupportedCompanionStructuralContradictionRow(
+                side=side,
+                left_color=left_color,
+                right_color=right_color,
+                witness_kind="already_closed_branch",
+                closed_branch="finite_triangular_bijection_cardinality_contradiction",
+            )
+            for side, left_color, right_color in expected_rows
+        ),
+    )
 
 
 def _is_permutation_transformation(transformation: Transformation) -> bool:
@@ -2087,8 +2110,9 @@ class UniversalKResidualFaithfulnessRow:
     def endpoint_channel_keys_match_seed_states(self) -> bool:
         return (
             not self.malformed_endpoint_channel_keys
-            and set(self.endpoint_channel_key_seed_states)
-            == set(self.endpoint_seed_states)
+            and not self.malformed_endpoint_seed_states
+            and _value_marker_set(self.endpoint_channel_key_seed_states)
+            == _value_marker_set(self.endpoint_seed_states)
         )
 
     @property
@@ -2100,7 +2124,8 @@ class UniversalKResidualFaithfulnessRow:
         return tuple(
             family
             for family in self.endpoint_families
-            if family not in UNIVERSAL_K_ENDPOINT_FAMILIES
+            if not _is_hashable(family)
+            or family not in UNIVERSAL_K_ENDPOINT_FAMILIES
         )
 
     @property
@@ -2109,7 +2134,11 @@ class UniversalKResidualFaithfulnessRow:
             return False
         return {
             family for family, _seed_state in self.endpoint_seed_states
-        } == set(self.endpoint_families)
+        } == {
+            family
+            for family in self.endpoint_families
+            if _is_hashable(family) and family in UNIVERSAL_K_ENDPOINT_FAMILIES
+        }
 
     @property
     def forbidden_dependencies(self) -> Tuple[str, ...]:
@@ -2194,7 +2223,8 @@ class UniversalKResidualFaithfulnessAudit:
         return tuple(
             family
             for family in self.active_endpoint_families
-            if family not in UNIVERSAL_K_ENDPOINT_FAMILIES
+            if not _is_hashable(family)
+            or family not in UNIVERSAL_K_ENDPOINT_FAMILIES
         )
 
     @property
@@ -2202,7 +2232,8 @@ class UniversalKResidualFaithfulnessAudit:
         return tuple(
             family
             for family in self.covered_endpoint_families
-            if family not in UNIVERSAL_K_ENDPOINT_FAMILIES
+            if not _is_hashable(family)
+            or family not in UNIVERSAL_K_ENDPOINT_FAMILIES
         )
 
     @property
@@ -2289,13 +2320,20 @@ class UniversalKResidualFaithfulnessAudit:
 
     @property
     def seed_state_families_match_active(self) -> bool:
-        return self.seed_state_ledgers_well_formed and set(
-            self.active_endpoint_families
-        ) == {
+        return (
+            self.seed_state_ledgers_well_formed
+            and self.family_ledgers_known
+            and {
+                family
+                for family in self.active_endpoint_families
+                if _is_hashable(family) and family in UNIVERSAL_K_ENDPOINT_FAMILIES
+            }
+            == {
             state[0]
             for state in self.expected_endpoint_seed_states_exact
             if _universal_k_endpoint_seed_state_well_formed(state)
         }
+        )
 
     @property
     def residual_row_count_supplied(self) -> bool:
@@ -2349,20 +2387,20 @@ class UniversalKResidualFaithfulnessAudit:
 
     @property
     def missing_residual_input_tuples(self) -> Tuple[Tuple[object, ...], ...]:
-        covered = set(self.covered_residual_input_tuples)
+        covered = _value_marker_set(self.covered_residual_input_tuples)
         return tuple(
             input_tuple
             for input_tuple in self.expected_residual_input_tuples
-            if input_tuple not in covered
+            if _value_marker(input_tuple) not in covered
         )
 
     @property
     def extra_residual_input_tuples(self) -> Tuple[Tuple[object, ...], ...]:
-        expected = set(self.expected_residual_input_tuples)
+        expected = _value_marker_set(self.expected_residual_input_tuples)
         return tuple(
             input_tuple
             for input_tuple in self.covered_residual_input_tuples
-            if input_tuple not in expected
+            if _value_marker(input_tuple) not in expected
         )
 
     @property
@@ -2387,29 +2425,33 @@ class UniversalKResidualFaithfulnessAudit:
     def missing_residual_rows_for_input_tuples(
         self,
     ) -> Tuple[Tuple[object, ...], ...]:
-        row_inputs = set(self.residual_row_input_tuples)
+        row_inputs = _value_marker_set(self.residual_row_input_tuples)
         return tuple(
             input_tuple
             for input_tuple in self.expected_residual_input_tuples
-            if input_tuple not in row_inputs
+            if _value_marker(input_tuple) not in row_inputs
         )
 
     @property
     def extra_residual_rows_for_input_tuples(
         self,
     ) -> Tuple[Tuple[object, ...], ...]:
-        expected = set(self.expected_residual_input_tuples)
+        expected = _value_marker_set(self.expected_residual_input_tuples)
         return tuple(
             input_tuple
             for input_tuple in self.residual_row_input_tuples
-            if input_tuple not in expected
+            if _value_marker(input_tuple) not in expected
         )
 
     @property
     def invalid_residual_rows(
         self,
     ) -> Tuple[UniversalKResidualFaithfulnessRow, ...]:
-        active = set(self.active_endpoint_families)
+        active = {
+            family
+            for family in self.active_endpoint_families
+            if _is_hashable(family) and family in UNIVERSAL_K_ENDPOINT_FAMILIES
+        }
         seed_markers = {
             _value_marker(state) for state in self.expected_endpoint_seed_states_exact
         }
@@ -2418,7 +2460,12 @@ class UniversalKResidualFaithfulnessAudit:
             for row in self.residual_rows
             if (
                 not row.row_scope_valid
-                or not set(row.endpoint_families) <= active
+                or not {
+                    family
+                    for family in row.endpoint_families
+                    if _is_hashable(family)
+                }
+                <= active
                 or not {
                     _value_marker(state) for state in row.endpoint_seed_states
                 }
@@ -2487,9 +2534,20 @@ class UniversalKResidualFaithfulnessAudit:
     @property
     def residual_rows_cover_endpoint_families(self) -> bool:
         row_families = {
-            family for row in self.residual_rows for family in row.endpoint_families
+            family
+            for row in self.residual_rows
+            for family in row.endpoint_families
+            if _is_hashable(family) and family in UNIVERSAL_K_ENDPOINT_FAMILIES
         }
-        return row_families == set(self.active_endpoint_families)
+        return (
+            self.family_ledgers_known
+            and row_families
+            == {
+                family
+                for family in self.active_endpoint_families
+                if _is_hashable(family) and family in UNIVERSAL_K_ENDPOINT_FAMILIES
+            }
+        )
 
     @property
     def residual_rows_identity_endpoint_data_fixes_all(self) -> bool:
@@ -2523,14 +2581,14 @@ class UniversalKResidualFaithfulnessAudit:
         return (
             self.residual_family_row_coverage_exact
             and (
-                len(set(self.active_endpoint_families)) <= 1
+                len(_value_marker_set(self.active_endpoint_families)) <= 1
                 or bool(self.expected_residual_rows_by_family)
             )
         )
 
     @property
     def residual_family_row_counts_required(self) -> bool:
-        return len(set(self.active_endpoint_families)) > 1
+        return len(_value_marker_set(self.active_endpoint_families)) > 1
 
     @property
     def expected_residual_family_row_count_rows(
@@ -2606,11 +2664,29 @@ class UniversalKResidualFaithfulnessAudit:
             and not self.covered_residual_rows_by_family
         ):
             return True
+        expected_families = {
+            family
+            for family, _count in self.expected_residual_family_row_count_rows
+            if _is_hashable(family) and family in UNIVERSAL_K_ENDPOINT_FAMILIES
+        }
+        covered_families = {
+            family
+            for family, _count in self.covered_residual_family_row_count_rows
+            if _is_hashable(family) and family in UNIVERSAL_K_ENDPOINT_FAMILIES
+        }
         return (
-            {family for family, _count in self.expected_residual_family_row_count_rows}
-            == set(self.active_endpoint_families)
-            and {family for family, _count in self.covered_residual_family_row_count_rows}
-            == set(self.covered_endpoint_families)
+            expected_families
+            == {
+                family
+                for family in self.active_endpoint_families
+                if _is_hashable(family) and family in UNIVERSAL_K_ENDPOINT_FAMILIES
+            }
+            and covered_families
+            == {
+                family
+                for family in self.covered_endpoint_families
+                if _is_hashable(family) and family in UNIVERSAL_K_ENDPOINT_FAMILIES
+            }
         )
 
     @property
@@ -2652,9 +2728,15 @@ class UniversalKResidualFaithfulnessAudit:
             and not self.covered_residual_rows_by_family
         ):
             return True
-        return dict(self.expected_residual_family_row_count_rows) == dict(
-            self.covered_residual_family_row_count_rows
-        )
+        expected_counts = {
+            _value_marker(family): count
+            for family, count in self.expected_residual_family_row_count_rows
+        }
+        covered_counts = {
+            _value_marker(family): count
+            for family, count in self.covered_residual_family_row_count_rows
+        }
+        return expected_counts == covered_counts
 
     @property
     def residual_family_row_count_sums_match(self) -> bool:
@@ -2693,10 +2775,12 @@ class UniversalKResidualFaithfulnessAudit:
                     sum(
                         1
                         for row in self.residual_rows
-                        if family in set(row.endpoint_families)
+                        if _value_marker(family)
+                        in _value_marker_set(row.endpoint_families)
                     ),
                 )
-                for family in set(self.active_endpoint_families)
+                for family in _unique_values(self.active_endpoint_families)
+                if _is_hashable(family) and family in UNIVERSAL_K_ENDPOINT_FAMILIES
             )
         )
 
@@ -2710,11 +2794,23 @@ class UniversalKResidualFaithfulnessAudit:
             return True
         if not self.residual_family_row_counts_nonnegative:
             return False
+        expected_counts = {
+            _value_marker(family): count
+            for family, count in self.expected_residual_family_row_count_rows
+        }
+        covered_counts = {
+            _value_marker(family): count
+            for family, count in self.covered_residual_family_row_count_rows
+        }
+        actual_counts = {
+            _value_marker(family): count
+            for family, count in self.actual_residual_rows_by_family
+        }
         return (
-            dict(self.expected_residual_family_row_count_rows)
-            == dict(self.actual_residual_rows_by_family)
-            and dict(self.covered_residual_family_row_count_rows)
-            == dict(self.actual_residual_rows_by_family)
+            expected_counts
+            == actual_counts
+            and covered_counts
+            == actual_counts
         )
 
     @property
@@ -9589,22 +9685,35 @@ class PostLinearRemainingFiniteSystemAudit:
         )
 
     @property
+    def effective_unsupported_companion_structural_contradiction(
+        self,
+    ) -> UnsupportedCompanionStructuralContradictionAudit | None:
+        if self.unsupported_companion_structural_contradiction is not None:
+            return self.unsupported_companion_structural_contradiction
+        if not self.unsupported_companion_block_image_rows:
+            return None
+        return unsupported_companion_cardinality_contradiction_audit(
+            self.unsupported_companion_block_image_rows
+        )
+
+    @property
     def unsupported_companion_structural_contradiction_expected_exact(self) -> bool:
-        if self.unsupported_companion_structural_contradiction is None:
+        audit = self.effective_unsupported_companion_structural_contradiction
+        if audit is None:
             return not self.unsupported_companion_block_image_rows
         return (
-            self.unsupported_companion_structural_contradiction.expected_rows_exact
-            == self.unsupported_companion_block_image_rows
+            audit.expected_rows_exact == self.unsupported_companion_block_image_rows
         )
 
     @property
     def unsupported_companion_structural_contradiction_proved(self) -> bool:
         if not self.unsupported_companion_block_image_rows:
             return True
+        audit = self.effective_unsupported_companion_structural_contradiction
         return (
-            self.unsupported_companion_structural_contradiction is not None
+            audit is not None
             and self.unsupported_companion_structural_contradiction_expected_exact
-            and self.unsupported_companion_structural_contradiction.proves_unsupported_companion_structural_contradiction
+            and audit.proves_unsupported_companion_structural_contradiction
         )
 
     @property

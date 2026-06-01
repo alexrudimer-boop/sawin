@@ -3347,6 +3347,40 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             theorem_with_unhashable_seed_state.failure_reasons,
         )
 
+        unhashable_input_tuple = (["p"],)
+        theorem_with_unhashable_input_tuple = replace(
+            theorem,
+            expected_residual_input_tuples=(unhashable_input_tuple,),
+            covered_residual_input_tuples=(unhashable_input_tuple,),
+            residual_rows=(
+                replace(
+                    theorem.residual_rows[0],
+                    input_tuple=unhashable_input_tuple,
+                    output_tuple=unhashable_input_tuple,
+                    identity_endpoint_output_tuple=unhashable_input_tuple,
+                ),
+            ),
+        )
+        self.assertEqual(
+            theorem_with_unhashable_input_tuple.missing_residual_input_tuples,
+            (),
+        )
+        self.assertEqual(
+            theorem_with_unhashable_input_tuple.extra_residual_input_tuples,
+            (),
+        )
+        self.assertEqual(
+            theorem_with_unhashable_input_tuple.missing_residual_rows_for_input_tuples,
+            (),
+        )
+        self.assertEqual(
+            theorem_with_unhashable_input_tuple.extra_residual_rows_for_input_tuples,
+            (),
+        )
+        self.assertTrue(
+            theorem_with_unhashable_input_tuple.proves_residual_faithfulness
+        )
+
         theorem_with_unknown_family = replace(
             theorem,
             active_endpoint_families=("Z",),
@@ -9235,19 +9269,20 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             audit.unsupported_companion_block_image_rows,
             (("left", "*", "*"),),
         )
+        self.assertTrue(audit.unsupported_companion_structural_contradiction_proved)
+        self.assertFalse(audit.unsupported_companion_structural_obligation_active)
+        derived = audit.effective_unsupported_companion_structural_contradiction
+        self.assertIsNotNone(derived)
+        self.assertEqual(
+            tuple(row.closed_branch for row in derived.contradiction_rows),
+            ("finite_triangular_bijection_cardinality_contradiction",),
+        )
         self.assertEqual(
             audit.system_name,
-            "unsupported_companion_structural_contradiction_obligation",
+            "closed_by_recorded_branch",
         )
-        self.assertTrue(audit.unsupported_companion_structural_obligation_active)
-        self.assertTrue(audit.is_current_remaining_finite_system)
-        self.assertEqual(
-            audit.remaining_obligations,
-            (
-                "prove unsupported companion block-image rows contradict the coloured YBE equations or an already closed branch",
-                "or upgrade one unsupported companion row to a normalized-law counterexample",
-            ),
-        )
+        self.assertFalse(audit.is_current_remaining_finite_system)
+        self.assertEqual(audit.remaining_obligations, ())
         self.assertEqual(audit.universal_k_row_normal_form_domain, ())
         self.assertEqual(audit.universal_k_seed_classifier_entries, ())
 
@@ -9279,11 +9314,8 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
                     side="left",
                     left_color="*",
                     right_color="*",
-                    witness_kind="colored_ybe_coordinate_contradiction",
-                    ybe_triple=("*", "*", "*"),
-                    coordinate="left",
-                    left_value=(0, 0),
-                    right_value=(0, 1),
+                    witness_kind="already_closed_branch",
+                    closed_branch="finite_triangular_bijection_cardinality_contradiction",
                 ),
             ),
         )

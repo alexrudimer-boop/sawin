@@ -1011,6 +1011,15 @@ so unhashable malformed row or ledger seeds are rejected as certificate data.
 The theorem's active and covered endpoint-family ledgers are checked the same
 way: every family must be one of `{U,C,M}`, and row-local endpoint family
 labels outside that set make the row invalid.
+The residual input-tuple domain and the symbolic residual rows are also
+compared by duplicate-safe, hashability-safe markers.  Thus an unhashable but
+otherwise exact finite residual input tuple is allowed as explicit interval
+data, while missing, extra, or duplicate rows are still detected.  The
+family-by-family residual row-count ledgers use the same marker-safe
+comparison for count matching, but only known endpoint-family labels can
+contribute to an exact family scope; malformed or unhashable family labels
+keep the residual-faithfulness theorem open instead of escaping as runtime
+failures.
 
 together with the concrete rows:
 
@@ -1481,40 +1490,33 @@ Each support row lists the side, colour pair, and same-side
 that carries the companion block-image.  An unsupported companion
 injective-nonsurjective row is structural, not active System K.
 
-That structural exclusion is now also certificate-gated.  The post-linear
+That structural exclusion is now closed by a finite cardinality contradiction.  The post-linear
 wrapper exposes the finite unsupported row ledger
 
 ```text
 unsupported_companion_block_image_rows
 ```
 
-with row keys `(side,left_color,right_color)`.  A complete close of this
-upstream branch requires an `UnsupportedCompanionStructuralContradictionAudit`
-whose expected and covered ledgers match those row keys exactly, with no
-missing, extra, or duplicate rows.  It must also supply at least one finite
-contradiction row for every expected row.  Each contradiction row is either a
-coordinate-level coloured-YBE mismatch
-
-```text
-(side,left_color,right_color,
- witness_kind=colored_ybe_coordinate_contradiction,
- ybe_triple=(a,b,c),
- coordinate in {left,right,pair,fibre,state},
- left_value != right_value)
-```
-
-or a pointer to a non-circular previously closed branch
+with row keys `(side,left_color,right_color)`.  When no explicit
+contradiction audit is supplied, the wrapper derives an
+`UnsupportedCompanionStructuralContradictionAudit` whose expected and covered
+ledgers match those row keys exactly and whose contradiction row for each key
+is the non-circular closed branch
 
 ```text
 (side,left_color,right_color,
  witness_kind=already_closed_branch,
- closed_branch)
+ closed_branch=finite_triangular_bijection_cardinality_contradiction)
 ```
 
-where `closed_branch` cannot be `triangular_structural_inconsistency` itself.
-If this finite table is absent or incomplete, the wrapper reports
-`unsupported_companion_structural_contradiction_obligation`; the row remains
-excluded from `K_nabla`, but the proof has not justified the exclusion.
+The left triangular cardinality proof is:
+`T_{a,b}(x,y)=(alpha(x),beta_x(y))`, no same-side constant-map kernel support
+forces `alpha` injective, and an injective nonsurjective companion section
+forces `|A_b|<|A_d|`; hence `|A_a||A_b|<|A_c||A_d|`, contradicting bijectivity
+of `T_{a,b}`.  The right triangular proof is dual, with injective `delta` and
+an injective nonsurjective `gamma_y`.  If an explicit contradiction audit is
+supplied, it is still checked exactly and an incomplete supplied audit remains
+visible as a certificate failure.
 
 For any active row with an actual kernel edge, the closure rows split the
 case further:
@@ -1555,9 +1557,10 @@ triangular_structural_inconsistency.
 ```
 
 For unsupported companion block-image rows, that status is treated as closed
-only after the finite structural-contradiction audit above proves exact
-coverage.  Other structural rows remain ordinary recorded structural closes
-under the previously supplied branch audits.
+by the derived finite triangular bijection cardinality audit above, unless a
+caller supplies an explicit contradiction audit, in which case that explicit
+audit must prove exact coverage.  Other structural rows remain ordinary
+recorded structural closes under the previously supplied branch audits.
 
 Finally, constant-map kernel rows are checked against the triangular recovery
 table:
