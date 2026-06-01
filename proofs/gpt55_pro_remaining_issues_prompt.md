@@ -1537,7 +1537,11 @@ The U build closes System U only when its endpoint target is exactly the
 current `U_tri` target, recorded by the finite endpoint-group order.  A
 word-potential observer over a different finite group may still be retained
 as diagnostic data, but it cannot close a U obligation routed by the current
-`kappa` ledger.
+`kappa` ledger.  The checker should report this exact obstruction as
+`signed_endpoint_generator_current_u_tri_target_mismatch` for a combined
+signed-generator table and as
+`endpoint_observer_family_build_current_u_tri_target_mismatch` for a
+per-family observer build.
 When more than one of `U`, `C`, and `M` is active, the retained family ledger
 must also include a product residual-faithfulness theorem scoped to the full
 active family set and the full set of endpoint seed states hit by `kappa`.

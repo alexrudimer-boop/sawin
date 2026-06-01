@@ -5275,6 +5275,10 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertFalse(
             wrong_target_data["endpoint_observer_family_build_uses_current_u_tri_target"]
         )
+        self.assertIn(
+            "endpoint_observer_family_build_current_u_tri_target_mismatch",
+            wrong_target_data["endpoint_observer_family_build_failure_reasons"],
+        )
 
         stale_wrapper = PostLinearRemainingFiniteSystemAudit(
             refinement,
@@ -8972,6 +8976,10 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         )
         self.assertFalse(
             wrong_target_data["signed_endpoint_generator_uses_current_u_tri_target"]
+        )
+        self.assertIn(
+            "signed_endpoint_generator_current_u_tri_target_mismatch",
+            wrong_target_data["signed_endpoint_generator_failure_reasons"],
         )
 
         forged_rows = tuple(

@@ -800,7 +800,10 @@ recovery unit observer on the endpoint interval and requires the build's
 endpoint group to be exactly that current `U_tri` target by finite group
 order.  Thus a word-potential observer over some other finite group can remain
 diagnostic evidence, but it cannot close the System U obligation routed by
-the current `kappa` ledger.
+the current `kappa` ledger.  The retained obstruction ledger reports this as
+`signed_endpoint_generator_current_u_tri_target_mismatch` for combined signed
+tables and as `endpoint_observer_family_build_current_u_tri_target_mismatch`
+for per-family observer builds.
 Thus a family observer built for a stale interval or stale `kappa` ledger can
 still be retained as diagnostic evidence, but it cannot be reported as closing
 the current routed `K_nabla` obligations.

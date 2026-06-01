@@ -11965,6 +11965,10 @@ class PostLinearRemainingFiniteSystemAudit:
             failure_reasons = failure_reasons + (
                 "signed_row_checks_mismatch_current_interval",
             )
+        if not self.signed_endpoint_generator_uses_current_u_tri_target:
+            failure_reasons = failure_reasons + (
+                "signed_endpoint_generator_current_u_tri_target_mismatch",
+            )
         return (
             (
                 "signed_endpoint_generator_matches_current_kappa",
@@ -13775,6 +13779,11 @@ class PostLinearRemainingFiniteSystemAudit:
                 ("endpoint_observer_family_build_rows", ()),
                 ("endpoint_observer_family_build_failure_reasons", ()),
             )
+        failure_reasons = audit.failure_reasons
+        if not self.endpoint_observer_family_build_uses_current_u_tri_target:
+            failure_reasons = failure_reasons + (
+                "endpoint_observer_family_build_current_u_tri_target_mismatch",
+            )
         return (
             ("endpoint_observer_family_build_present", True),
             (
@@ -14058,7 +14067,7 @@ class PostLinearRemainingFiniteSystemAudit:
             ),
             (
                 "endpoint_observer_family_build_failure_reasons",
-                audit.failure_reasons,
+                failure_reasons,
             ),
         )
 
