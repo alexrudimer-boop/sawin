@@ -4275,6 +4275,34 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertFalse(certificate.word_potential_templates_verified)
         self.assertFalse(certificate.artin_substitutions_verified)
         self.assertFalse(certificate.initial_readouts_normalized)
+        self.assertEqual(
+            universal_k_signed_endpoint_transition_closure(
+                ((("descriptor",), bad_state),),
+                (),
+            ),
+            (bad_state,),
+        )
+
+        telescoping = UniversalKTelescopingDetectorAudit(
+            expected_entry_keys=(bad_key,),
+            covered_entry_keys=(bad_key,),
+            expected_endpoint_seed_states=(bad_state,),
+            covered_endpoint_seed_states=(bad_state,),
+            expected_word_potential_seed_states=(bad_state,),
+            covered_word_potential_seed_states=(bad_state,),
+        )
+        self.assertEqual(telescoping.expected_entry_keys_exact, (bad_key,))
+        self.assertEqual(telescoping.malformed_expected_entry_keys, (bad_key,))
+        self.assertEqual(telescoping.expected_endpoint_seed_states_exact, (bad_state,))
+        self.assertEqual(
+            telescoping.malformed_expected_endpoint_seed_states,
+            (bad_state,),
+        )
+        self.assertEqual(
+            telescoping.malformed_expected_word_potential_seed_states,
+            (bad_state,),
+        )
+        self.assertFalse(telescoping.proves_telescoping_detector_lift)
 
     def test_signed_endpoint_positive_rows_must_be_monodromy_permutations(self):
         seed_a = ("*", "*", "left_constant_map_universal_kernel", "a")

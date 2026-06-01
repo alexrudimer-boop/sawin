@@ -650,6 +650,9 @@ that every identity-row and ledger key has the full `D_Gamma` shape
 state; a shortened positive key is malformed rather than an abbreviated row.
 Malformed rows are reported at that gate before downstream template,
 track-scope, raw-assignment, or identity diagnostics interpret row fields.
+The reachable seed-state and telescoping ledgers use duplicate-safe
+normalization before set comparison, so unhashable malformed keys are reported
+as malformed finite data instead of escaping as runtime failures.
 Optional negative diagnostics are also scoped to the current signed
 `D_Gamma` domain: a negative identity row or telescoping ledger key outside
 the interval-derived signed entry domain is an extra diagnostic channel, not a

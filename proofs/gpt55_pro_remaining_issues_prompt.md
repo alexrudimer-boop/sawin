@@ -1511,6 +1511,10 @@ must be a full `D_Gamma` key `(E,epsilon,s,a,b,x,y)` with `E in {U,C,M}`,
 wrong-family key is malformed even if its sign field is `+1`.
 Malformed keys must be rejected before any downstream template, detector-track,
 or identity diagnostic tries to interpret their fields.
+Reachable seed-state ledgers, signed-entry ledgers, and telescoping ledgers
+must use duplicate-safe normalization before set comparison, so unhashable
+malformed keys are reported as malformed finite data rather than becoming
+runtime failures or silently filtered rows.
 If optional negative diagnostic identity rows or telescoping ledger keys are
 recorded, each such key must still belong to the actual signed `D_Gamma(E)`
 domain for the current interval and reachable states.  Positive closure is

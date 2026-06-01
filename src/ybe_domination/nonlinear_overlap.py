@@ -3607,7 +3607,7 @@ def universal_k_signed_endpoint_seed_states(
 ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
     """Return the initial endpoint states hit by the current kappa table."""
 
-    return tuple(sorted({entry[1] for entry in seed_classifier_entries}, key=repr))
+    return _unique_values(tuple(entry[1] for entry in seed_classifier_entries))
 
 
 def universal_k_signed_endpoint_transition_closure(
@@ -3616,17 +3616,20 @@ def universal_k_signed_endpoint_transition_closure(
 ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
     """Least signed endpoint state closure generated from kappa seeds."""
 
-    closure = set(universal_k_signed_endpoint_seed_states(seed_classifier_entries))
+    closure = list(universal_k_signed_endpoint_seed_states(seed_classifier_entries))
+    closure_markers = {_value_marker(state) for state in closure}
     changed = True
     while changed:
         changed = False
         for row in rows:
             current = (row.endpoint_family, row.seed_state)
-            if current not in closure:
+            if _value_marker(current) not in closure_markers:
                 continue
             next_state = (row.endpoint_family, row.next_seed_state)
-            if next_state not in closure:
-                closure.add(next_state)
+            next_marker = _value_marker(next_state)
+            if next_marker not in closure_markers:
+                closure.append(next_state)
+                closure_markers.add(next_marker)
                 changed = True
     return tuple(sorted(closure, key=repr))
 
@@ -3675,13 +3678,13 @@ class UniversalKTelescopingDetectorAudit:
     def expected_entry_keys_exact(
         self,
     ) -> Tuple[UniversalKSignedEndpointEntryKey, ...]:
-        return tuple(sorted(set(self.expected_entry_keys), key=repr))
+        return _unique_values(self.expected_entry_keys)
 
     @property
     def covered_entry_keys_exact(
         self,
     ) -> Tuple[UniversalKSignedEndpointEntryKey, ...]:
-        return tuple(sorted(set(self.covered_entry_keys), key=repr))
+        return _unique_values(self.covered_entry_keys)
 
     @property
     def expected_positive_entry_keys_exact(
@@ -3743,14 +3746,11 @@ class UniversalKTelescopingDetectorAudit:
     def malformed_expected_entry_keys(
         self,
     ) -> Tuple[UniversalKSignedEndpointEntryKey, ...]:
-        return tuple(
-            sorted(
-                {
-                    key
-                    for key in self.expected_entry_keys
-                    if not _universal_k_signed_entry_key_well_formed(key)
-                },
-                key=repr,
+        return _unique_values(
+            tuple(
+                key
+                for key in self.expected_entry_keys
+                if not _universal_k_signed_entry_key_well_formed(key)
             )
         )
 
@@ -3758,14 +3758,11 @@ class UniversalKTelescopingDetectorAudit:
     def malformed_covered_entry_keys(
         self,
     ) -> Tuple[UniversalKSignedEndpointEntryKey, ...]:
-        return tuple(
-            sorted(
-                {
-                    key
-                    for key in self.covered_entry_keys
-                    if not _universal_k_signed_entry_key_well_formed(key)
-                },
-                key=repr,
+        return _unique_values(
+            tuple(
+                key
+                for key in self.covered_entry_keys
+                if not _universal_k_signed_entry_key_well_formed(key)
             )
         )
 
@@ -3824,13 +3821,13 @@ class UniversalKTelescopingDetectorAudit:
     def expected_endpoint_seed_states_exact(
         self,
     ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
-        return tuple(sorted(set(self.expected_endpoint_seed_states), key=repr))
+        return _unique_values(self.expected_endpoint_seed_states)
 
     @property
     def covered_endpoint_seed_states_exact(
         self,
     ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
-        return tuple(sorted(set(self.covered_endpoint_seed_states), key=repr))
+        return _unique_values(self.covered_endpoint_seed_states)
 
     @property
     def duplicate_expected_endpoint_seed_states(
@@ -3848,14 +3845,11 @@ class UniversalKTelescopingDetectorAudit:
     def malformed_expected_endpoint_seed_states(
         self,
     ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
-        return tuple(
-            sorted(
-                {
-                    state
-                    for state in self.expected_endpoint_seed_states
-                    if not _universal_k_endpoint_seed_state_well_formed(state)
-                },
-                key=repr,
+        return _unique_values(
+            tuple(
+                state
+                for state in self.expected_endpoint_seed_states
+                if not _universal_k_endpoint_seed_state_well_formed(state)
             )
         )
 
@@ -3863,14 +3857,11 @@ class UniversalKTelescopingDetectorAudit:
     def malformed_covered_endpoint_seed_states(
         self,
     ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
-        return tuple(
-            sorted(
-                {
-                    state
-                    for state in self.covered_endpoint_seed_states
-                    if not _universal_k_endpoint_seed_state_well_formed(state)
-                },
-                key=repr,
+        return _unique_values(
+            tuple(
+                state
+                for state in self.covered_endpoint_seed_states
+                if not _universal_k_endpoint_seed_state_well_formed(state)
             )
         )
 
@@ -4185,13 +4176,13 @@ class UniversalKTelescopingDetectorAudit:
     def expected_word_potential_seed_states_exact(
         self,
     ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
-        return tuple(sorted(set(self.expected_word_potential_seed_states), key=repr))
+        return _unique_values(self.expected_word_potential_seed_states)
 
     @property
     def covered_word_potential_seed_states_exact(
         self,
     ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
-        return tuple(sorted(set(self.covered_word_potential_seed_states), key=repr))
+        return _unique_values(self.covered_word_potential_seed_states)
 
     @property
     def duplicate_expected_word_potential_seed_states(
@@ -4209,14 +4200,11 @@ class UniversalKTelescopingDetectorAudit:
     def malformed_expected_word_potential_seed_states(
         self,
     ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
-        return tuple(
-            sorted(
-                {
-                    state
-                    for state in self.expected_word_potential_seed_states
-                    if not _universal_k_endpoint_seed_state_well_formed(state)
-                },
-                key=repr,
+        return _unique_values(
+            tuple(
+                state
+                for state in self.expected_word_potential_seed_states
+                if not _universal_k_endpoint_seed_state_well_formed(state)
             )
         )
 
@@ -4224,14 +4212,11 @@ class UniversalKTelescopingDetectorAudit:
     def malformed_covered_word_potential_seed_states(
         self,
     ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
-        return tuple(
-            sorted(
-                {
-                    state
-                    for state in self.covered_word_potential_seed_states
-                    if not _universal_k_endpoint_seed_state_well_formed(state)
-                },
-                key=repr,
+        return _unique_values(
+            tuple(
+                state
+                for state in self.covered_word_potential_seed_states
+                if not _universal_k_endpoint_seed_state_well_formed(state)
             )
         )
 
@@ -4744,7 +4729,7 @@ class UniversalKSignedEndpointGeneratorAudit:
     def reachable_seed_states_exact(
         self,
     ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
-        return tuple(sorted(set(self.reachable_seed_states), key=repr))
+        return _unique_values(self.reachable_seed_states)
 
     @property
     def duplicate_reachable_seed_states(
@@ -4770,8 +4755,12 @@ class UniversalKSignedEndpointGeneratorAudit:
     def missing_initial_seed_states(
         self,
     ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
-        reachable = set(self.reachable_seed_states_exact)
-        return tuple(state for state in self.required_seed_states if state not in reachable)
+        reachable = {_value_marker(state) for state in self.reachable_seed_states_exact}
+        return tuple(
+            state
+            for state in self.required_seed_states
+            if _value_marker(state) not in reachable
+        )
 
     @property
     def transition_reachable_seed_states(
@@ -4786,45 +4775,46 @@ class UniversalKSignedEndpointGeneratorAudit:
     def missing_transition_reachable_seed_states(
         self,
     ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
-        declared = set(self.reachable_seed_states_exact)
+        declared = {_value_marker(state) for state in self.reachable_seed_states_exact}
         return tuple(
             state
             for state in self.transition_reachable_seed_states
-            if state not in declared
+            if _value_marker(state) not in declared
         )
 
     @property
     def unreachable_declared_seed_states(
         self,
     ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
-        transition_reachable = set(self.transition_reachable_seed_states)
+        transition_reachable = {
+            _value_marker(state) for state in self.transition_reachable_seed_states
+        }
         return tuple(
             state
             for state in self.reachable_seed_states_exact
-            if state not in transition_reachable
+            if _value_marker(state) not in transition_reachable
         )
 
     @property
     def reachable_seed_state_closure_exact(self) -> bool:
-        return (
-            set(self.reachable_seed_states_exact)
-            == set(self.transition_reachable_seed_states)
-        )
+        return {
+            _value_marker(state) for state in self.reachable_seed_states_exact
+        } == {_value_marker(state) for state in self.transition_reachable_seed_states}
 
     @property
     def row_states_outside_reachable_set(
         self,
     ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
-        reachable = set(self.reachable_seed_states_exact)
+        reachable = {_value_marker(state) for state in self.reachable_seed_states_exact}
         outside = []
         for row in self.rows:
             current = (row.endpoint_family, row.seed_state)
             next_state = (row.endpoint_family, row.next_seed_state)
-            if current not in reachable:
+            if _value_marker(current) not in reachable:
                 outside.append(current)
-            if next_state not in reachable:
+            if _value_marker(next_state) not in reachable:
                 outside.append(next_state)
-        return tuple(sorted(set(outside), key=repr))
+        return _unique_values(tuple(outside))
 
     @property
     def required_signed_seed_keys(
@@ -4846,13 +4836,13 @@ class UniversalKSignedEndpointGeneratorAudit:
     def supplied_signed_seed_keys(
         self,
     ) -> Tuple[Tuple[str, UniversalKSeedState, int], ...]:
-        return tuple(sorted({row.seed_key for row in self.rows}, key=repr))
+        return _unique_values(tuple(row.seed_key for row in self.rows))
 
     @property
     def required_entry_keys_exact(
         self,
     ) -> Tuple[UniversalKSignedEndpointEntryKey, ...]:
-        return tuple(sorted(set(self.required_entry_keys), key=repr))
+        return _unique_values(self.required_entry_keys)
 
     @property
     def required_positive_entry_keys_exact(
@@ -4874,7 +4864,7 @@ class UniversalKSignedEndpointGeneratorAudit:
     def supplied_entry_keys(
         self,
     ) -> Tuple[UniversalKSignedEndpointEntryKey, ...]:
-        return tuple(sorted({row.entry_key for row in self.rows}, key=repr))
+        return _unique_values(tuple(row.entry_key for row in self.rows))
 
     @property
     def missing_required_entry_seed_keys(
@@ -4932,15 +4922,7 @@ class UniversalKSignedEndpointGeneratorAudit:
     def duplicate_entry_keys(
         self,
     ) -> Tuple[UniversalKSignedEndpointEntryKey, ...]:
-        seen = set()
-        duplicates = []
-        for row in self.rows:
-            key = row.entry_key
-            if key in seen:
-                duplicates.append(key)
-            else:
-                seen.add(key)
-        return tuple(sorted(set(duplicates), key=repr))
+        return _duplicate_values(tuple(row.entry_key for row in self.rows))
 
     @property
     def undefined_rows(self) -> Tuple[UniversalKSignedEndpointGeneratorRow, ...]:
