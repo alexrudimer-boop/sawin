@@ -1171,6 +1171,10 @@ a faithful symmetric cutoff to exactly the identity-routed System C lost
 edges, while `mixed_unit_context_symmetric_endpoint_fork_audit(...)` attaches
 one to exactly the System M mixed-context keys.  In a routed endpoint product,
 each fork removes only its own family from `unclosed_routed_endpoint_systems`.
+Coordinate-unit routing is now side-exact as well: the listed
+coordinate-unit side must carry the coordinate-unit profile explanation and
+must actually be unit in the supplied section data before it can remove a K
+row or create a System M obligation.
 The living handoff prompt
 `proofs/gpt55_pro_remaining_issues_prompt.md` records the current K/U/C/M
 remaining obligations as a model-independent, attachment-free prompt for a

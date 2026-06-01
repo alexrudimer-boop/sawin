@@ -262,6 +262,11 @@ For coordinate-unit routing, a two-sided-unit/global locally nondegenerate
 route is closed, but a mixed-unit-context route is only no longer System K.
 Such rows are recorded in `mixed_context_routed_k_missing_latin_row_defects`
 and must be handled by the mixed-unit context endpoint/readout layer.
+The coordinate-unit route is certificate-gated by the actual listed side: the
+listed coordinate-unit side must have the `coordinate_side_unit_not_triangular`
+explanation and must be a unit side in the supplied section data.  A row whose
+listed side is nonunit or whose explanation does not match remains live in
+System K.
 
 Constant-map kernel reasons are refined the same way.  Raw defects:
 

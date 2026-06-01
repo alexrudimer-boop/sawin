@@ -1080,12 +1080,63 @@ class MissingTriangularCoordinateUnitRoute:
 
     @property
     def row_is_mixed_unit(self) -> bool:
-        has_unit = bool(self.left_unit_inputs or self.right_unit_inputs)
-        has_nonunit = bool(self.left_nonunit_inputs or self.right_nonunit_inputs)
-        return has_unit and has_nonunit
+        if not self.coordinate_unit_route_fields_consistent:
+            return False
+        return any(
+            (
+                side == "left"
+                and self.all_left_sections_bijective
+                and not self.all_right_sections_bijective
+            )
+            or (
+                side == "right"
+                and self.all_right_sections_bijective
+                and not self.all_left_sections_bijective
+            )
+            for side in self.coordinate_unit_sides
+        )
+
+    @property
+    def coordinate_unit_sides_known(self) -> bool:
+        return bool(self.coordinate_unit_sides) and set(
+            self.coordinate_unit_sides
+        ).issubset({"left", "right"})
+
+    @property
+    def coordinate_unit_side_explanations_match(self) -> bool:
+        return (
+            (
+                "left" not in self.coordinate_unit_sides
+                or self.left_explanation == "coordinate_side_unit_not_triangular"
+            )
+            and (
+                "right" not in self.coordinate_unit_sides
+                or self.right_explanation == "coordinate_side_unit_not_triangular"
+            )
+        )
+
+    @property
+    def listed_coordinate_unit_sides_are_unit(self) -> bool:
+        return (
+            ("left" not in self.coordinate_unit_sides or self.all_left_sections_bijective)
+            and (
+                "right" not in self.coordinate_unit_sides
+                or self.all_right_sections_bijective
+            )
+        )
+
+    @property
+    def coordinate_unit_route_fields_consistent(self) -> bool:
+        return (
+            self.coordinate_unit_sides_known
+            and self.coordinate_unit_side_explanations_match
+            and self.listed_coordinate_unit_sides_are_unit
+        )
 
     @property
     def status(self) -> str:
+        if not self.coordinate_unit_route_fields_consistent:
+            return "unrouted_coordinate_unit_row"
         if self.row_is_two_sided_unit:
             return "two_sided_unit_pair"
         if self.row_is_mixed_unit:

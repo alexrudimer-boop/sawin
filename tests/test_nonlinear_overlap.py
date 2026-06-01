@@ -1640,6 +1640,49 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             audit.finite_obstruction_data,
         )
 
+    def test_coordinate_unit_route_requires_listed_unit_side_certificate(self):
+        profile, routing = coordinate_unit_mixed_context_route_audits()
+        forged_rows = (
+            replace(
+                routing.rows[0],
+                left_unit_inputs=(),
+                left_nonunit_inputs=(0,),
+                right_unit_inputs=(0,),
+                right_nonunit_inputs=(),
+            ),
+            replace(
+                routing.rows[0],
+                left_explanation="proper_section_kernel_visible",
+            ),
+        )
+
+        for forged_row in forged_rows:
+            with self.subTest(forged_row=forged_row):
+                forged_routing = replace(routing, rows=(forged_row,))
+                audit = PostLinearRemainingFiniteSystemAudit(
+                    active_system_k_refinement(),
+                    missing_triangular_row_profile=profile,
+                    missing_triangular_coordinate_unit_routing=forged_routing,
+                )
+
+                self.assertFalse(forged_row.coordinate_unit_route_fields_consistent)
+                self.assertEqual(forged_row.status, "unrouted_coordinate_unit_row")
+                self.assertFalse(forged_routing.proves_coordinate_unit_routing_ledger)
+                self.assertEqual(audit.system_name, "system_k_kink_completion_deficit")
+                self.assertTrue(audit.system_k_active)
+                self.assertFalse(audit.system_m_active)
+                self.assertIn(
+                    (
+                        "live_k_missing_latin_row_defects",
+                        ((("*", "*"), "no_left_triangular_row"),),
+                    ),
+                    audit.finite_obstruction_data,
+                )
+                self.assertIn(
+                    ("mixed_context_routed_k_missing_latin_row_defects", ()),
+                    audit.finite_obstruction_data,
+                )
+
     def test_coordinate_unit_two_sided_row_stays_live_without_global_branch(self):
         profile, routing = coordinate_unit_unclosed_two_sided_route_audits()
         audit = PostLinearRemainingFiniteSystemAudit(

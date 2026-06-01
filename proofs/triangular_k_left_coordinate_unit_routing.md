@@ -35,6 +35,7 @@ left_nonunit_inputs
 right_unit_inputs
 right_nonunit_inputs
 status
+coordinate_unit_route_fields_consistent
 ```
 
 The route status is one of:
@@ -44,6 +45,13 @@ two_sided_unit_pair
 mixed_unit_context
 unrouted_coordinate_unit_row
 ```
+
+A row is route-field consistent only when the listed
+`coordinate_unit_sides` are nonempty, are drawn from `{left,right}`, have the
+matching `coordinate_side_unit_not_triangular` explanation, and are actually
+unit sides in the supplied section data.  A row whose listed side is not
+unit, or whose explanation does not match the listed coordinate-unit side, is
+treated as `unrouted_coordinate_unit_row`.
 
 The post-linear finite-system wrapper reports the K-relevant part as:
 
@@ -99,7 +107,9 @@ post-linear wrapper records such rows in
 `mixed_context_routed_k_missing_latin_row_defects` and reports
 `system_m_mixed_unit_context_endpoint` when no live K row remains.
 This route is certificate-gated: if the supplied coordinate-unit routing audit
-does not have the coloured-YBE premise, the post-linear wrapper does not
+does not have the coloured-YBE premise, if the row does not list the actual
+unit side, or if the listed side's explanation is not
+`coordinate_side_unit_not_triangular`, the post-linear wrapper does not
 remove the no-triangular row from active System K and does not create a
 System M endpoint obligation from that supplied data.
 
