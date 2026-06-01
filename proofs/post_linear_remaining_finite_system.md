@@ -703,11 +703,15 @@ positive 121/212 context paths computed from `T`, and its far-commutativity
 relations are the disjoint context swaps inside each active family.  Thus the
 endpoint-state representation is no longer implicit in later path checks; it
 is a finite object attached to the observer build for the exact U/C/M families
-hit by `kappa`.  Missing positive contexts, nonconstant coboundary defects,
-out-of-scope detector tracks, missing C/M readouts, or missing residual
-faithfulness remain visible audit failures rather than being filled by
-defaults.  This keeps the local certificate from being a list of unsupported
-boolean claims.
+hit by `kappa`.  The build also records
+`UniversalKEndpointMonodromyRepresentationAudit`, which reads the positive
+rows as maps on the reachable seed states, checks that every context acts by
+a permutation of the seed states in its family, and verifies every explicit
+adjacent/far relation in the monodromy presentation.  Missing positive
+contexts, nonconstant coboundary defects, out-of-scope detector tracks,
+missing C/M readouts, or missing residual faithfulness remain visible audit
+failures rather than being filled by defaults.  This keeps the local
+certificate from being a list of unsupported boolean claims.
 The post-linear function now accepts this builder-level input directly:
 supplying `universal_k_word_potential_certificate` plus detector-track
 initialization rows causes `post_linear_remaining_finite_system_audit(...)`

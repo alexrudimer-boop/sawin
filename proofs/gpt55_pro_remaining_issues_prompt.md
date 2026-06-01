@@ -1464,11 +1464,15 @@ audit the constructed observer against that domain.  The finite monodromy
 presentation itself should be attached to the observer build so that the
 permutation representation is checked against explicit positive local
 contexts and explicit adjacent/far relations, not hidden as later boolean
-claims.  If the positive identity-row table omits any reachable local context,
-if a next state leaves the reachable closure, if the negative table is not
-single-valued, if the coboundary defect is not constant on a sound detector
-domain, or if residual faithfulness is not supplied, the observer remains
-open.  No default endpoint emission is allowed.
+claims.  The representation audit must read the positive rows as maps on
+reachable seed states, prove every local context acts by a permutation of the
+seed states in its endpoint family, and verify every explicit adjacent and
+far relation in the monodromy presentation.  If the positive identity-row
+table omits any reachable local context, if a next state leaves the reachable
+closure, if the negative table is not single-valued, if the coboundary defect
+is not constant on a sound detector domain, or if residual faithfulness is
+not supplied, the observer remains open.  No default endpoint emission is
+allowed.
 The preferred handoff is therefore the finite monodromy-coboundary
 certificate itself: endpoint group or cutoff target, detector-track
 initialization rows, templates `W_s`, positive identity rows, C/M cutoff

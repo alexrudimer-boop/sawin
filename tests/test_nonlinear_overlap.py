@@ -40,6 +40,7 @@ from ybe_domination import (
     UniversalKCutoffReadoutRow,
     UniversalKDetectorTrackInitializationRow,
     UniversalKEndpointMonodromyPresentation,
+    UniversalKEndpointMonodromyRepresentationAudit,
     UniversalKEndpointObserverBuild,
     UniversalKEndpointTargetAudit,
     UniversalKResidualActionScopeAudit,
@@ -89,6 +90,7 @@ from ybe_domination import (
     triangular_recovery_unit_group,
     universal_k_signed_endpoint_artin_update_failures,
     universal_k_endpoint_monodromy_presentation,
+    universal_k_endpoint_monodromy_representation_audit,
     universal_k_endpoint_observer_build,
     universal_k_endpoint_observer_positive_rows_from_word_potential,
     universal_k_endpoint_observer_signed_rows_from_positive,
@@ -4143,6 +4145,90 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertEqual(len(presentation.far_commutativity_relations_exact), 30)
         self.assertEqual(presentation.failure_reasons, ())
 
+    def test_endpoint_monodromy_representation_audit_checks_relations(self):
+        context_a = ("U", "*", "*", 0, 0)
+        context_b = ("U", "*", "*", 1, 1)
+        presentation = UniversalKEndpointMonodromyPresentation(
+            expected_endpoint_families=("U",),
+            contexts=(context_a, context_b),
+            adjacent_relations=(((context_a, context_a, context_a), (context_b, context_b, context_b)),),
+        )
+        seed_a = ("*", "*", "left_constant_map_universal_kernel", "a")
+        seed_b = ("*", "*", "left_constant_map_universal_kernel", "b")
+        reachable = (("U", seed_a), ("U", seed_b))
+        rows = (
+            UniversalKSignedEndpointGeneratorRow(
+                endpoint_family="U",
+                seed_state=seed_a,
+                sign=1,
+                left_color="*",
+                right_color="*",
+                input_left=0,
+                input_right=0,
+                output_left=0,
+                output_right=0,
+                next_seed_state=seed_a,
+                endpoint_value=0,
+            ),
+            UniversalKSignedEndpointGeneratorRow(
+                endpoint_family="U",
+                seed_state=seed_b,
+                sign=1,
+                left_color="*",
+                right_color="*",
+                input_left=0,
+                input_right=0,
+                output_left=0,
+                output_right=0,
+                next_seed_state=seed_b,
+                endpoint_value=0,
+            ),
+            UniversalKSignedEndpointGeneratorRow(
+                endpoint_family="U",
+                seed_state=seed_a,
+                sign=1,
+                left_color="*",
+                right_color="*",
+                input_left=1,
+                input_right=1,
+                output_left=1,
+                output_right=1,
+                next_seed_state=seed_b,
+                endpoint_value=0,
+            ),
+            UniversalKSignedEndpointGeneratorRow(
+                endpoint_family="U",
+                seed_state=seed_b,
+                sign=1,
+                left_color="*",
+                right_color="*",
+                input_left=1,
+                input_right=1,
+                output_left=1,
+                output_right=1,
+                next_seed_state=seed_a,
+                endpoint_value=0,
+            ),
+        )
+
+        audit = universal_k_endpoint_monodromy_representation_audit(
+            presentation,
+            reachable,
+            rows,
+        )
+
+        self.assertIsInstance(audit, UniversalKEndpointMonodromyRepresentationAudit)
+        self.assertEqual(audit.context_map_failures, ())
+        self.assertFalse(audit.proves_monodromy_representation)
+        self.assertIn(
+            "monodromy_adjacent_relation_mismatch",
+            tuple(failure[1] for failure in audit.relation_failures),
+        )
+        self.assertIn(
+            "endpoint_monodromy_representation_relation_failures",
+            audit.failure_reasons,
+        )
+
     def test_endpoint_observer_builder_forces_signed_rows_from_word_potential(self):
         interval = one_color_identity_interval()
         group = cyclic_group(2)
@@ -4209,6 +4295,9 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertEqual(build.reachable_seed_states, seed_states)
         self.assertTrue(build.monodromy_presentation.presentation_is_finite)
         self.assertEqual(build.monodromy_presentation.context_families, ("U",))
+        self.assertTrue(
+            build.monodromy_representation_audit.proves_monodromy_representation
+        )
         self.assertEqual(
             tuple(row.entry_key for row in build.positive_rows),
             positive_keys,
@@ -4276,6 +4365,9 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertEqual(build.monodromy_presentation.context_families, ("C", "M", "U"))
         self.assertEqual(len(build.monodromy_presentation.contexts_exact), 12)
         self.assertTrue(build.monodromy_presentation.presentation_is_finite)
+        self.assertTrue(
+            build.monodromy_representation_audit.proves_monodromy_representation
+        )
         self.assertEqual(set(row.entry_key for row in build.rows), set(required_keys))
         self.assertTrue(build.audit.signed_generator_domain_exact)
         self.assertTrue(build.audit.positive_monodromy_representation_verified)

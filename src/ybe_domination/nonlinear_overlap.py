@@ -3865,6 +3865,342 @@ class UniversalKEndpointMonodromyPresentation:
         return tuple(reasons)
 
 
+@dataclass(frozen=True)
+class UniversalKEndpointMonodromyRepresentationAudit:
+    """Finite permutation representation of the endpoint monodromy presentation."""
+
+    presentation: UniversalKEndpointMonodromyPresentation
+    reachable_seed_states: Tuple[Tuple[str, UniversalKSeedState], ...]
+    rows: Tuple[UniversalKSignedEndpointGeneratorRow, ...]
+
+    @property
+    def reachable_seed_states_exact(
+        self,
+    ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
+        return _unique_values(self.reachable_seed_states)
+
+    @property
+    def malformed_reachable_seed_states(
+        self,
+    ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
+        return _unique_values(
+            tuple(
+                state
+                for state in self.reachable_seed_states
+                if not _universal_k_endpoint_seed_state_well_formed(state)
+            )
+        )
+
+    @property
+    def duplicate_reachable_seed_states(
+        self,
+    ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
+        return _duplicate_values(self.reachable_seed_states)
+
+    @property
+    def reachable_families(self) -> Tuple[str, ...]:
+        return tuple(
+            sorted(
+                {
+                    family
+                    for family, _state in self.reachable_seed_states_exact
+                    if family in UNIVERSAL_K_ENDPOINT_FAMILIES
+                },
+                key=repr,
+            )
+        )
+
+    @property
+    def family_scope_exact(self) -> bool:
+        return set(self.reachable_families) == set(
+            self.presentation.expected_endpoint_families_exact
+        )
+
+    @property
+    def states_by_family(self) -> Mapping[str, Tuple[UniversalKSeedState, ...]]:
+        states: dict[str, list[UniversalKSeedState]] = {}
+        seen: dict[str, set[object]] = {}
+        for family, seed_state in self.reachable_seed_states_exact:
+            if family not in UNIVERSAL_K_ENDPOINT_FAMILIES:
+                continue
+            marker = _value_marker(seed_state)
+            family_seen = seen.setdefault(family, set())
+            if marker in family_seen:
+                continue
+            family_seen.add(marker)
+            states.setdefault(family, []).append(seed_state)
+        return {
+            family: tuple(sorted(family_states, key=repr))
+            for family, family_states in states.items()
+        }
+
+    @property
+    def positive_rows_by_context(
+        self,
+    ) -> Mapping[
+        UniversalKEndpointMonodromyContext,
+        Mapping[UniversalKSeedState, UniversalKSeedState],
+    ]:
+        rows_by_context: dict[
+            UniversalKEndpointMonodromyContext,
+            dict[UniversalKSeedState, UniversalKSeedState],
+        ] = {}
+        for row in self.rows:
+            if row.sign != 1:
+                continue
+            context = (
+                row.endpoint_family,
+                row.left_color,
+                row.right_color,
+                row.input_left,
+                row.input_right,
+            )
+            if not UniversalKEndpointMonodromyPresentation._context_valid(context):
+                continue
+            if not _is_hashable(row.seed_state):
+                continue
+            rows_by_context.setdefault(context, {}).setdefault(
+                row.seed_state,
+                row.next_seed_state,
+            )
+        return rows_by_context
+
+    @property
+    def duplicate_context_state_rows(
+        self,
+    ) -> Tuple[UniversalKEndpointMonodromyFailure, ...]:
+        seen = set()
+        duplicates = []
+        for row in self.rows:
+            if row.sign != 1:
+                continue
+            context = (
+                row.endpoint_family,
+                row.left_color,
+                row.right_color,
+                row.input_left,
+                row.input_right,
+            )
+            key = (_value_marker(context), _value_marker(row.seed_state))
+            if key in seen:
+                duplicates.append((context, "monodromy_duplicate_state_row", row.seed_state))
+            seen.add(key)
+        return tuple(sorted(duplicates, key=repr))
+
+    @property
+    def extra_context_rows(self) -> Tuple[UniversalKEndpointMonodromyContext, ...]:
+        expected = {_value_marker(context) for context in self.presentation.contexts_exact}
+        return _unique_values(
+            tuple(
+                (
+                    row.endpoint_family,
+                    row.left_color,
+                    row.right_color,
+                    row.input_left,
+                    row.input_right,
+                )
+                for row in self.rows
+                if row.sign == 1
+                and _value_marker(
+                    (
+                        row.endpoint_family,
+                        row.left_color,
+                        row.right_color,
+                        row.input_left,
+                        row.input_right,
+                    )
+                )
+                not in expected
+            )
+        )
+
+    @property
+    def context_map_failures(self) -> Tuple[UniversalKEndpointMonodromyFailure, ...]:
+        failures = list(self.duplicate_context_state_rows)
+        rows_by_context = self.positive_rows_by_context
+        for context in self.presentation.contexts_exact:
+            if not UniversalKEndpointMonodromyPresentation._context_valid(context):
+                continue
+            family = context[0]
+            states = self.states_by_family.get(family, ())
+            state_markers = {_value_marker(state) for state in states}
+            state_map = rows_by_context.get(context, {})
+            missing_states = tuple(
+                state
+                for state in states
+                if _value_marker(state) not in {_value_marker(key) for key in state_map}
+            )
+            if missing_states:
+                failures.append(
+                    (context, "monodromy_representation_missing_state_rows", missing_states)
+                )
+            extra_states = tuple(
+                sorted(
+                    (
+                        state
+                        for state in state_map
+                        if _value_marker(state) not in state_markers
+                    ),
+                    key=repr,
+                )
+            )
+            if extra_states:
+                failures.append(
+                    (context, "monodromy_representation_extra_state_rows", extra_states)
+                )
+            outside_next_states = tuple(
+                sorted(
+                    {
+                        next_state
+                        for next_state in state_map.values()
+                        if _value_marker(next_state) not in state_markers
+                    },
+                    key=repr,
+                )
+            )
+            if outside_next_states:
+                failures.append(
+                    (
+                        context,
+                        "monodromy_representation_next_state_outside_family",
+                        outside_next_states,
+                    )
+                )
+            if not states:
+                failures.append(
+                    (context, "monodromy_representation_family_has_no_states", family)
+                )
+                continue
+            if missing_states or extra_states or outside_next_states:
+                continue
+            image_markers = tuple(_value_marker(state) for state in state_map.values())
+            if set(image_markers) != state_markers or len(image_markers) != len(
+                set(image_markers)
+            ):
+                failures.append(
+                    (
+                        context,
+                        "monodromy_representation_context_not_permutation",
+                        tuple(sorted(state_map.items(), key=repr)),
+                    )
+                )
+        if self.extra_context_rows:
+            failures.append(
+                (
+                    ("positive_monodromy_contexts",),
+                    "monodromy_representation_extra_context_rows",
+                    self.extra_context_rows,
+                )
+            )
+        return tuple(sorted(failures, key=repr))
+
+    def _apply_word(
+        self,
+        seed_state: UniversalKSeedState,
+        word: UniversalKEndpointMonodromyWord,
+    ) -> Tuple[UniversalKSeedState | None, UniversalKEndpointMonodromyFailure | None]:
+        state = seed_state
+        rows_by_context = self.positive_rows_by_context
+        for context in word:
+            state_map = rows_by_context.get(context)
+            if state_map is None:
+                return None, (context, "monodromy_relation_missing_context_map", None)
+            next_state = state_map.get(state)
+            if next_state is None:
+                return None, (
+                    context,
+                    "monodromy_relation_missing_state_map",
+                    state,
+                )
+            state = next_state
+        return state, None
+
+    @property
+    def relation_failures(self) -> Tuple[UniversalKEndpointMonodromyFailure, ...]:
+        if self.context_map_failures:
+            return ()
+        failures = []
+        relations = (
+            tuple((relation, "adjacent") for relation in self.presentation.adjacent_relations_exact)
+            + tuple(
+                (relation, "far")
+                for relation in self.presentation.far_commutativity_relations_exact
+            )
+        )
+        for relation, relation_kind in relations:
+            left_word, right_word = relation
+            families = {
+                context[0]
+                for context in tuple(left_word) + tuple(right_word)
+                if UniversalKEndpointMonodromyPresentation._context_valid(context)
+            }
+            if len(families) != 1:
+                failures.append(
+                    (relation, "monodromy_relation_family_mismatch", tuple(sorted(families)))
+                )
+                continue
+            family = next(iter(families))
+            for seed_state in self.states_by_family.get(family, ()):
+                left_state, left_failure = self._apply_word(seed_state, left_word)
+                right_state, right_failure = self._apply_word(seed_state, right_word)
+                if left_failure is not None:
+                    failures.append(left_failure)
+                if right_failure is not None:
+                    failures.append(right_failure)
+                if left_failure is None and right_failure is None and left_state != right_state:
+                    failures.append(
+                        (
+                            relation,
+                            f"monodromy_{relation_kind}_relation_mismatch",
+                            (seed_state, left_state, right_state),
+                        )
+                    )
+        return tuple(sorted(_unique_values(tuple(failures)), key=repr))
+
+    @property
+    def proves_monodromy_representation(self) -> bool:
+        return (
+            self.presentation.presentation_is_finite
+            and self.family_scope_exact
+            and not self.malformed_reachable_seed_states
+            and not self.duplicate_reachable_seed_states
+            and not self.context_map_failures
+            and not self.relation_failures
+        )
+
+    @property
+    def failure_reasons(self) -> Tuple[str, ...]:
+        reasons = []
+        if not self.presentation.presentation_is_finite:
+            reasons.append("endpoint_monodromy_presentation_not_finite")
+            reasons.extend(self.presentation.failure_reasons)
+        if not self.family_scope_exact:
+            reasons.append("endpoint_monodromy_representation_family_scope_mismatch")
+        if self.malformed_reachable_seed_states:
+            reasons.append("endpoint_monodromy_representation_malformed_seed_states")
+        if self.duplicate_reachable_seed_states:
+            reasons.append("endpoint_monodromy_representation_duplicate_seed_states")
+        if self.context_map_failures:
+            reasons.append("endpoint_monodromy_representation_context_map_failures")
+        if self.relation_failures:
+            reasons.append("endpoint_monodromy_representation_relation_failures")
+        return tuple(_unique_values(tuple(reasons)))
+
+
+def universal_k_endpoint_monodromy_representation_audit(
+    presentation: UniversalKEndpointMonodromyPresentation,
+    reachable_seed_states: Sequence[Tuple[str, UniversalKSeedState]],
+    rows: Sequence[UniversalKSignedEndpointGeneratorRow],
+) -> UniversalKEndpointMonodromyRepresentationAudit:
+    """Audit the positive endpoint state maps as a representation of Pi_E."""
+
+    return UniversalKEndpointMonodromyRepresentationAudit(
+        presentation=presentation,
+        reachable_seed_states=tuple(reachable_seed_states),
+        rows=tuple(rows),
+    )
+
+
 def _universal_k_positive_context_path(
     interval: LocalInterval,
     endpoint_family: str,
@@ -7160,6 +7496,7 @@ class UniversalKEndpointObserverBuild:
 
     reachable_seed_states: Tuple[Tuple[str, UniversalKSeedState], ...]
     monodromy_presentation: UniversalKEndpointMonodromyPresentation
+    monodromy_representation_audit: UniversalKEndpointMonodromyRepresentationAudit
     positive_rows: Tuple[UniversalKSignedEndpointGeneratorRow, ...]
     rows: Tuple[UniversalKSignedEndpointGeneratorRow, ...]
     telescoping_detector_audit: UniversalKTelescopingDetectorAudit
@@ -7167,7 +7504,10 @@ class UniversalKEndpointObserverBuild:
 
     @property
     def proves_endpoint_observer(self) -> bool:
-        return self.audit.proves_signed_endpoint_generator_tables
+        return (
+            self.monodromy_representation_audit.proves_monodromy_representation
+            and self.audit.proves_signed_endpoint_generator_tables
+        )
 
 
 def universal_k_endpoint_observer_positive_rows_from_word_potential(
@@ -7312,6 +7652,11 @@ def universal_k_endpoint_observer_build(
             )
         ),
     )
+    monodromy_representation_audit = universal_k_endpoint_monodromy_representation_audit(
+        monodromy_presentation,
+        reachable_seed_states,
+        rows,
+    )
     required_entry_keys = universal_k_signed_endpoint_required_entry_keys(
         interval,
         reachable_seed_states,
@@ -7370,6 +7715,7 @@ def universal_k_endpoint_observer_build(
     return UniversalKEndpointObserverBuild(
         reachable_seed_states=reachable_seed_states,
         monodromy_presentation=monodromy_presentation,
+        monodromy_representation_audit=monodromy_representation_audit,
         positive_rows=positive_rows,
         rows=rows,
         telescoping_detector_audit=telescoping_detector_audit,
