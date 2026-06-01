@@ -183,6 +183,7 @@ class EndpointFactorizationTests(unittest.TestCase):
             (1,),
             (residual,),
             expected_row_count=1,
+            expected_input_tuples=(("a",),),
         )
 
         self.assertFalse(coordinate.endpoint_tuple_is_identity)
@@ -197,6 +198,17 @@ class EndpointFactorizationTests(unittest.TestCase):
         self.assertTrue(action.braid_data_consistent)
         self.assertTrue(action.proves_supplied_rows_detector_implication)
         self.assertTrue(action.proves_complete_residual_action_implication)
+
+        row_count_only = endpoint_artin_defect_residual_action_audit(
+            2,
+            (1,),
+            (residual,),
+            expected_row_count=1,
+        )
+        self.assertFalse(row_count_only.expected_input_tuple_domain_supplied)
+        self.assertFalse(row_count_only.input_tuple_domain_exact)
+        self.assertTrue(row_count_only.proves_supplied_rows_detector_implication)
+        self.assertFalse(row_count_only.proves_complete_residual_action_implication)
 
     def test_artin_defect_residual_action_rejects_unfaithful_identity_endpoint_row(self):
         group = symmetric_group(3)
@@ -218,6 +230,7 @@ class EndpointFactorizationTests(unittest.TestCase):
             (1, -1),
             (residual,),
             expected_row_count=1,
+            expected_input_tuples=(("a",),),
         )
 
         self.assertTrue(coordinate.endpoint_tuple_is_identity)
@@ -830,6 +843,7 @@ class EndpointFactorizationTests(unittest.TestCase):
             (1, -1),
             (readout,),
             expected_row_count=1,
+            expected_input_tuples=(("p",),),
         )
         edge_endpoint = endpoint_product_longitude_expression_audit(
             (c2,),
@@ -961,6 +975,7 @@ class EndpointFactorizationTests(unittest.TestCase):
             (1,) * 4,
             (readout,),
             expected_row_count=1,
+            expected_input_tuples=(("a",),),
         )
 
         self.assertEqual(action.row_count, 1)
@@ -971,6 +986,17 @@ class EndpointFactorizationTests(unittest.TestCase):
         self.assertTrue(action.residual_action_identity_on_supplied_rows)
         self.assertTrue(action.proves_supplied_rows_detector_implication)
         self.assertTrue(action.proves_complete_residual_action_implication)
+
+        row_count_only = endpoint_residual_action_audit(
+            2,
+            (1,) * 4,
+            (readout,),
+            expected_row_count=1,
+        )
+        self.assertFalse(row_count_only.expected_input_tuple_domain_supplied)
+        self.assertFalse(row_count_only.input_tuple_domain_exact)
+        self.assertTrue(row_count_only.proves_supplied_rows_detector_implication)
+        self.assertFalse(row_count_only.proves_complete_residual_action_implication)
 
     def test_residual_action_audit_can_check_exact_input_tuple_domain(self):
         c2 = cyclic_group(2)
@@ -1038,6 +1064,7 @@ class EndpointFactorizationTests(unittest.TestCase):
             (1, -1),
             (readout,),
             expected_row_count=1,
+            expected_input_tuples=(("p",),),
         )
 
         audit = descent_endpoint_repair_contract_audit(descent, action)
@@ -1070,6 +1097,7 @@ class EndpointFactorizationTests(unittest.TestCase):
             (1, -1),
             (readout,),
             expected_row_count=1,
+            expected_input_tuples=(("p",),),
         )
         repair = descent_endpoint_repair_contract_audit(descent, action)
 
@@ -1108,6 +1136,7 @@ class EndpointFactorizationTests(unittest.TestCase):
             (1, -1),
             (readout,),
             expected_row_count=1,
+            expected_input_tuples=(("p",),),
         )
         repair = descent_endpoint_repair_contract_audit(descent, action)
 
@@ -1308,6 +1337,7 @@ class EndpointFactorizationTests(unittest.TestCase):
             (1, -1),
             (readout,),
             expected_row_count=1,
+            expected_input_tuples=(("p",),),
         )
 
         audit = descent_endpoint_repair_contract_audit(descent, action)
@@ -1339,6 +1369,7 @@ class EndpointFactorizationTests(unittest.TestCase):
             (1, -1),
             (readout,),
             expected_row_count=1,
+            expected_input_tuples=(("p",),),
         )
 
         audit = descent_endpoint_repair_contract_audit(descent, action)
@@ -1389,6 +1420,7 @@ class EndpointFactorizationTests(unittest.TestCase):
             (1, -1),
             (readout,),
             expected_row_count=1,
+            expected_input_tuples=(("p",),),
         )
 
         audit = descent_endpoint_repair_contract_audit(
@@ -1443,6 +1475,7 @@ class EndpointFactorizationTests(unittest.TestCase):
             (1, -1),
             (readout,),
             expected_row_count=1,
+            expected_input_tuples=(("p",),),
         )
 
         audit = descent_endpoint_repair_contract_audit(
@@ -1476,6 +1509,7 @@ class EndpointFactorizationTests(unittest.TestCase):
             (1,) * 4,
             (readout,),
             expected_row_count=2,
+            expected_input_tuples=(("a",), ("b",)),
         )
 
         self.assertFalse(action.covers_expected_rows)
@@ -1501,6 +1535,7 @@ class EndpointFactorizationTests(unittest.TestCase):
             (1,) * 4,
             (readout,),
             expected_row_count=1,
+            expected_input_tuples=(("a",),),
         )
 
         self.assertFalse(action.braid_data_consistent)
@@ -1545,6 +1580,7 @@ class EndpointFactorizationTests(unittest.TestCase):
             (1,) * 4,
             (readout,),
             expected_row_count=1,
+            expected_input_tuples=(("a",),),
         )
 
         self.assertFalse(action.all_identity_endpoints_fix_rows)

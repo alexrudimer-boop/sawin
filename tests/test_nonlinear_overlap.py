@@ -2750,6 +2750,9 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         )
 
         self.assertTrue(
+            uncounted_residual.residual_action_audit.proves_supplied_rows_detector_implication
+        )
+        self.assertFalse(
             uncounted_residual.residual_action_audit.proves_complete_residual_action_implication
         )
         self.assertFalse(uncounted_residual.residual_faithfulness_proved)
