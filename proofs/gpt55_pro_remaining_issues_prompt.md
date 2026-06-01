@@ -1277,18 +1277,22 @@ input tuples.  A supplied row subset, or the same row repeated until the row
 count matches, proves only a supplied-row implication, not domination of the
 whole residual action.  Omitting the expected row count or the expected input
 tuple domain is not acceptable for this endpoint lemma, even if every listed
-row is internally certified.  The explicit-row certificate must also state
-the active endpoint families, covered
-endpoint families, exact endpoint-channel coverage, braid-index independence,
-and family-by-family product separation; otherwise the listed row implication
-is not a uniform residual-faithfulness theorem.  If two or more endpoint
-families are active, the certificate must also split the residual-row ledger
-by family: it must list expected and covered residual row counts for each
-active family, with no duplicate family entries, nonnegative counts, matching
-expected and covered family counts, and sums equal to the total expected and
-covered residual row counts.  An aggregate row count alone is insufficient
-for a product endpoint row because it can hide that one family has no
-residual readout.
+row is internally certified.  The explicit-row certificate must also carry a
+finite scope audit: active endpoint families, covered endpoint families,
+exact expected and covered routed seed states, and allowed scope
+dependencies.  The scope dependencies may use only interval data, routed seed
+states, residual input tuples, endpoint channels, local fibre coordinates,
+and the local row table; dependencies on `braid_word`, `braid_prefix`,
+`braid_index`, failed detector search, normalized-law sequences, or timeouts
+are forbidden.  Endpoint-channel exactness and braid-index independence must
+be derived from that scope audit, not asserted as separate booleans.  If two
+or more endpoint families are active, the certificate must also split the
+residual-row ledger by family: it must list expected and covered residual row
+counts for each active family, with no duplicate family entries, nonnegative
+counts, matching expected and covered family counts, and sums equal to the
+total expected and covered residual row counts.  An aggregate row count alone
+is insufficient for a product endpoint row because it can hide that one
+family has no residual readout.
 
 Alternatively, a symbolic residual-faithfulness theorem may replace explicit
 action readout rows only if it supplies its own finite residual row table.

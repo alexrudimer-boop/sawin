@@ -583,8 +583,13 @@ input-tuple domain does not prove residual faithfulness for this signed
 endpoint layer.  The row proof must now carry its own scope audit as well:
 active and covered endpoint families, exact expected and covered endpoint
 seed states from the current `kappa`, exact row-count agreement with the
-explicit rows, exact endpoint-channel coverage, braid-index independence, and
-product-family separation.  Complete finite rows without this scope are only a
+explicit rows, and allowed dependency data.  Scope dependencies may use only
+interval data, routed seed states, residual input tuples, endpoint channels,
+local fibre coordinates, and the local row table; braid-word, braid-prefix,
+braid-index, failed-detector, finite-search, normalized-law, and timeout
+dependencies are rejected.  The audit derives exact endpoint-channel coverage
+and braid-index independence from this scope data, instead of accepting
+separate booleans.  Complete finite rows without this scope are only a
 fixed-row check, not an all-strand residual-faithfulness certificate.  A
 family-scoped proof that omits the exact seed states is also incomplete,
 because product endpoint rows can contain several routed seed channels within
@@ -752,6 +757,8 @@ signed_endpoint_generator_residual_action_scope_duplicate_seed_states
 signed_endpoint_generator_residual_action_scope_family_rows
 signed_endpoint_generator_residual_action_scope_family_rows_covered
 signed_endpoint_generator_residual_action_scope_duplicate_family_rows
+signed_endpoint_generator_residual_action_scope_dependencies
+signed_endpoint_generator_residual_action_scope_invalid_dependencies
 signed_endpoint_generator_residual_action_scope_proved
 signed_endpoint_generator_residual_theorem_proved
 signed_endpoint_generator_residual_theorem_scope_matches_required

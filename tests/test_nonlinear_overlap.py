@@ -334,6 +334,12 @@ def trivial_endpoint_residual_action_scope(
         product_families_separated=True,
         expected_endpoint_seed_states=tuple(seed_states),
         covered_endpoint_seed_states=tuple(seed_states),
+        scope_dependencies=(
+            "interval_data",
+            "routed_seed_state",
+            "residual_input_tuple",
+            "endpoint_channel",
+        ),
     )
 
 
@@ -2837,6 +2843,38 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertIn(
             "residual_action_scope_duplicate_seed_states",
             duplicate_seed_residual.failure_reasons,
+        )
+
+        braid_index_scoped_residual = UniversalKSignedEndpointGeneratorAudit(
+            seed_classifier_entries=seed_entries,
+            reachable_seed_states=(("U", seed_state),),
+            required_entry_keys=required_entry_keys,
+            entry_domain_derived_from_interval=True,
+            finite_row_checks_derived_from_tables=True,
+            rows=(positive_row, negative_row),
+            endpoint_targets_fixed=True,
+            endpoint_target_audit=trivial_endpoint_target_audit("U"),
+            coordinate_components_verified=True,
+            inverse_pairing_verified=True,
+            inverse_cancellation_verified=True,
+            positive_ybe_path_verified=True,
+            positive_ybe_cocycle_verified=True,
+            signed_two_strand_base_verified=True,
+            artin_homomorphism_update_verified=True,
+            residual_action_scope=replace(
+                trivial_endpoint_residual_action_scope(
+                    "U",
+                    seed_states=(("U", seed_state),),
+                ),
+                scope_dependencies=("braid_index",),
+            ),
+            residual_action_audit=trivial_endpoint_residual_action_audit(),
+        )
+
+        self.assertFalse(braid_index_scoped_residual.residual_faithfulness_proved)
+        self.assertIn(
+            "residual_action_scope_forbidden_dependencies",
+            braid_index_scoped_residual.failure_reasons,
         )
 
         bare_flag = UniversalKSignedEndpointGeneratorAudit(

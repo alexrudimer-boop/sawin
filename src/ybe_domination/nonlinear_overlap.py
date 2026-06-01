@@ -1798,6 +1798,7 @@ class UniversalKResidualActionScopeAudit:
     product_families_separated: bool = False
     expected_endpoint_seed_states: Tuple[Tuple[str, UniversalKSeedState], ...] = ()
     covered_endpoint_seed_states: Tuple[Tuple[str, UniversalKSeedState], ...] = ()
+    scope_dependencies: Tuple[str, ...] = ()
 
     @property
     def family_coverage_exact(self) -> bool:
@@ -1961,6 +1962,51 @@ class UniversalKResidualActionScopeAudit:
         )
 
     @property
+    def duplicate_scope_dependencies(self) -> Tuple[str, ...]:
+        return _duplicate_values(self.scope_dependencies)
+
+    @property
+    def forbidden_scope_dependencies(self) -> Tuple[str, ...]:
+        forbidden = _UNIVERSAL_K_RESIDUAL_FORBIDDEN_DEPENDENCIES
+        return tuple(dependency for dependency in self.scope_dependencies if dependency in forbidden)
+
+    @property
+    def unknown_scope_dependencies(self) -> Tuple[str, ...]:
+        allowed = _UNIVERSAL_K_RESIDUAL_ALLOWED_DEPENDENCIES
+        return tuple(dependency for dependency in self.scope_dependencies if dependency not in allowed)
+
+    @property
+    def scope_dependencies_valid(self) -> bool:
+        return (
+            bool(self.scope_dependencies)
+            and not self.duplicate_scope_dependencies
+            and not self.forbidden_scope_dependencies
+            and not self.unknown_scope_dependencies
+        )
+
+    @property
+    def endpoint_channels_exact_proved(self) -> bool:
+        return (
+            self.family_coverage_exact
+            and self.seed_state_coverage_exact
+            and self.seed_state_families_match_active
+        )
+
+    @property
+    def braid_index_independence_proved(self) -> bool:
+        return self.scope_dependencies_valid
+
+    @property
+    def product_families_separated_proved(self) -> bool:
+        return (
+            self.residual_family_row_coverage_exact
+            and (
+                len(set(self.active_endpoint_families)) <= 1
+                or bool(self.expected_residual_rows_by_family)
+            )
+        )
+
+    @property
     def proves_residual_action_scope(self) -> bool:
         return (
             self.family_coverage_exact
@@ -1970,9 +2016,9 @@ class UniversalKResidualActionScopeAudit:
             and self.seed_state_families_match_active
             and self.residual_row_coverage_exact
             and self.residual_family_row_coverage_exact
-            and self.endpoint_channels_exact
-            and self.braid_index_independent
-            and self.product_families_separated
+            and self.endpoint_channels_exact_proved
+            and self.braid_index_independence_proved
+            and self.product_families_separated_proved
         )
 
     @property
@@ -2007,11 +2053,19 @@ class UniversalKResidualActionScopeAudit:
             reasons.append("residual_action_scope_family_row_counts_mismatch")
         if not self.residual_family_row_count_sums_match:
             reasons.append("residual_action_scope_family_row_count_sum_mismatch")
-        if not self.endpoint_channels_exact:
+        if not self.endpoint_channels_exact_proved:
             reasons.append("residual_action_scope_endpoint_channels_not_exact")
-        if not self.braid_index_independent:
+        if not self.scope_dependencies_valid:
+            reasons.append("residual_action_scope_invalid_dependencies")
+        if self.duplicate_scope_dependencies:
+            reasons.append("residual_action_scope_duplicate_dependencies")
+        if self.forbidden_scope_dependencies:
+            reasons.append("residual_action_scope_forbidden_dependencies")
+        if self.unknown_scope_dependencies:
+            reasons.append("residual_action_scope_unknown_dependencies")
+        if not self.braid_index_independence_proved:
             reasons.append("residual_action_scope_not_braid_index_independent")
-        if not self.product_families_separated:
+        if not self.product_families_separated_proved:
             reasons.append("residual_action_scope_product_families_not_separated")
         return tuple(reasons)
 
@@ -6299,6 +6353,11 @@ class PostLinearRemainingFiniteSystemAudit:
                     "signed_endpoint_generator_residual_action_scope_duplicate_family_rows",
                     (),
                 ),
+                ("signed_endpoint_generator_residual_action_scope_dependencies", ()),
+                (
+                    "signed_endpoint_generator_residual_action_scope_invalid_dependencies",
+                    (),
+                ),
                 ("signed_endpoint_generator_residual_action_scope_proved", False),
                 ("signed_endpoint_generator_residual_theorem_proved", False),
                 ("signed_endpoint_generator_residual_theorem_scope_matches_required", False),
@@ -7157,6 +7216,24 @@ class PostLinearRemainingFiniteSystemAudit:
                 (
                     audit.residual_action_scope.duplicate_expected_residual_row_families
                     + audit.residual_action_scope.duplicate_covered_residual_row_families
+                    if audit.residual_action_scope is not None
+                    else ()
+                ),
+            ),
+            (
+                "signed_endpoint_generator_residual_action_scope_dependencies",
+                (
+                    audit.residual_action_scope.scope_dependencies
+                    if audit.residual_action_scope is not None
+                    else ()
+                ),
+            ),
+            (
+                "signed_endpoint_generator_residual_action_scope_invalid_dependencies",
+                (
+                    audit.residual_action_scope.duplicate_scope_dependencies
+                    + audit.residual_action_scope.forbidden_scope_dependencies
+                    + audit.residual_action_scope.unknown_scope_dependencies
                     if audit.residual_action_scope is not None
                     else ()
                 ),
