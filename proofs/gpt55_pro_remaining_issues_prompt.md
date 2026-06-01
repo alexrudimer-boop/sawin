@@ -816,7 +816,15 @@ Gamma^{E,epsilon}_{a,b}(s,x,y)=(s',x',y',h)
 has `s` already in the closure, add `s'`; iterate to a fixed point.  The
 result must be exactly `S_E^reach`.  A declared state outside this transition
 closure is an extra endpoint channel, and a transition target outside
-`S_E^reach` is a missing reachable state.
+`S_E^reach` is a missing reachable state.  The reachable-state ledger must be
+duplicate-free; exactness is not proved by silently converting a repeated list
+of states into a set.
+
+The classifier `kappa` used to seed the signed tables must also be a
+function on `K_nabla`: no row descriptor may appear twice, and no descriptor
+may be assigned to two different endpoint-family/state targets.  A
+conflicting or duplicate classifier ledger is not a usable seed map for the
+signed endpoint layer.
 
 Let `H_E` be the fixed finite endpoint group for that family, or let `S_mE`
 be the fixed symmetric cutoff group in a cutoff proof.  The group must be
@@ -1091,6 +1099,8 @@ The signed-generator audit for a claimed A proof must therefore establish:
 ```text
 reachable_state_set_contains_initial_seeds,
 reachable_state_set_is_signed_transition_closure,
+reachable_state_ledger_duplicate_free,
+kappa_seed_classifier_functional,
 all_signed_row_states_reachable,
 fixed_endpoint_group_or_cutoff,
 family_scoped_endpoint_target_coverage,
@@ -1557,12 +1567,14 @@ Before returning a claimed resolution, explicitly answer:
    with no proper-closure, equality-closure, two-sided-unit, failed-route, or
    unsupported companion row included?
 4. Is `kappa(d)` defined for every `d in K_nabla`, with values in exactly
-   one of `S_U`, `S_C`, or `S_M`?
+   one of `S_U`, `S_C`, or `S_M`, and is the classifier ledger duplicate-free
+   and functional on row descriptors?
 5. Are unsupported companion block-image rows proved structural
    inconsistencies rather than endpoint seeds?
 6. Are `S_U`, `S_C`, and `S_M` the exact finite seed state spaces, and are
    the finite reachable sets `S_U^reach`, `S_C^reach`, and `S_M^reach`
-   constructed as the exact signed-transition closures of those seeds?
+   constructed as duplicate-free exact signed-transition closures of those
+   seeds?
 7. Are all signed endpoint generator tables
    `Gamma^{U,+/-}`, `Gamma^{C,+/-}`, and `Gamma^{M,+/-}` defined on those
    exact reachable state spaces and on every entry of `D_Gamma`, not merely

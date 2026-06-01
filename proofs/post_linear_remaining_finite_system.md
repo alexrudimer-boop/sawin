@@ -379,7 +379,10 @@ Gamma^{E,+/-}_{a,b}(s,x,y)=(s',x',y',h)
 
 whose source state is already reached adds `s'`, and the fixed point must
 match the declared reachable set.  Extra declared states are extra endpoint
-channels, while omitted transition targets are missing reachable states.
+channels, while omitted transition targets are missing reachable states.  The
+declared reachable-state ledger must also be duplicate-free, and the `kappa`
+seed classifier must be a functional map on row descriptors: duplicate or
+conflicting descriptor entries leave the signed endpoint layer open.
 For each reachable
 state, each sign, and each local row input, the table must supply one value
 
@@ -532,8 +535,12 @@ mixed_context_routed_k_missing_latin_row_defects
 universal_k_row_normal_form_domain
 universal_k_seed_classifier_entries
 signed_endpoint_generator_required_seed_states
+signed_endpoint_generator_duplicate_seed_classifier_entries
+signed_endpoint_generator_duplicate_seed_classifier_descriptors
+signed_endpoint_generator_conflicting_seed_classifier_descriptors
 signed_endpoint_generator_matches_current_kappa
 signed_endpoint_generator_reachable_seed_states
+signed_endpoint_generator_duplicate_reachable_seed_states
 signed_endpoint_generator_transition_reachable_seed_states
 signed_endpoint_generator_unreachable_declared_seed_states
 signed_endpoint_generator_missing_transition_reachable_seed_states

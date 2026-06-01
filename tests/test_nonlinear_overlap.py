@@ -2824,6 +2824,63 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             underived_domain.failure_reasons,
         )
 
+        duplicate_reachable_state = UniversalKSignedEndpointGeneratorAudit(
+            seed_classifier_entries=seed_entries,
+            reachable_seed_states=(("U", seed_state), ("U", seed_state)),
+            required_entry_keys=required_entry_keys,
+            entry_domain_derived_from_interval=True,
+            rows=(positive_row, negative_row),
+            endpoint_targets_fixed=True,
+            endpoint_target_audit=trivial_endpoint_target_audit("U"),
+            coordinate_components_verified=True,
+            inverse_pairing_verified=True,
+            inverse_cancellation_verified=True,
+            positive_ybe_path_verified=True,
+            positive_ybe_cocycle_verified=True,
+            signed_two_strand_base_verified=True,
+            artin_homomorphism_update_verified=True,
+            residual_action_scope=trivial_endpoint_residual_action_scope("U"),
+            residual_action_audit=trivial_endpoint_residual_action_audit(),
+        )
+
+        self.assertFalse(duplicate_reachable_state.signed_generator_domain_exact)
+        self.assertFalse(
+            duplicate_reachable_state.proves_signed_endpoint_generator_tables
+        )
+        self.assertIn(
+            "reachable_seed_states_duplicate_entries",
+            duplicate_reachable_state.failure_reasons,
+        )
+
+        conflicting_kappa = UniversalKSignedEndpointGeneratorAudit(
+            seed_classifier_entries=(
+                seed_entries[0],
+                (seed_entries[0][0], ("C", ("*", "*", "left"))),
+            ),
+            reachable_seed_states=(("U", seed_state),),
+            required_entry_keys=required_entry_keys,
+            entry_domain_derived_from_interval=True,
+            rows=(positive_row, negative_row),
+            endpoint_targets_fixed=True,
+            endpoint_target_audit=trivial_endpoint_target_audit("U"),
+            coordinate_components_verified=True,
+            inverse_pairing_verified=True,
+            inverse_cancellation_verified=True,
+            positive_ybe_path_verified=True,
+            positive_ybe_cocycle_verified=True,
+            signed_two_strand_base_verified=True,
+            artin_homomorphism_update_verified=True,
+            residual_action_scope=trivial_endpoint_residual_action_scope("U"),
+            residual_action_audit=trivial_endpoint_residual_action_audit(),
+        )
+
+        self.assertFalse(conflicting_kappa.seed_classifier_is_functional)
+        self.assertFalse(conflicting_kappa.proves_signed_endpoint_generator_tables)
+        self.assertIn(
+            "seed_classifier_conflicting_descriptors",
+            conflicting_kappa.failure_reasons,
+        )
+
         complete = UniversalKSignedEndpointGeneratorAudit(
             seed_classifier_entries=seed_entries,
             reachable_seed_states=(("U", seed_state),),
