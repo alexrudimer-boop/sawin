@@ -35,6 +35,7 @@ from ybe_domination import (
     TriangularLatinDefectClosureAudit,
     TriangularLatinDefectClosureRow,
     UniversalKCutoffReadoutAudit,
+    UniversalKEndpointTargetAudit,
     UniversalKResidualActionScopeAudit,
     UniversalKResidualFaithfulnessAudit,
     UniversalKSignedEndpointGeneratorAudit,
@@ -306,6 +307,16 @@ def trivial_endpoint_residual_action_scope(*families):
         expected_residual_row_count=1,
         covered_residual_row_count=1,
         endpoint_channels_exact=True,
+        braid_index_independent=True,
+        product_families_separated=True,
+    )
+
+
+def trivial_endpoint_target_audit(*families):
+    return UniversalKEndpointTargetAudit(
+        expected_endpoint_families=tuple(families),
+        covered_endpoint_families=tuple(families),
+        endpoint_group_orders=tuple((family, 1) for family in families),
         braid_index_independent=True,
         product_families_separated=True,
     )
@@ -2492,6 +2503,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             required_entry_keys=required_entry_keys,
             rows=(positive_row,),
             endpoint_targets_fixed=True,
+            endpoint_target_audit=trivial_endpoint_target_audit("U"),
             coordinate_components_verified=True,
             inverse_pairing_verified=True,
             inverse_cancellation_verified=True,
@@ -2513,6 +2525,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             required_entry_keys=required_entry_keys,
             rows=(positive_row, negative_row),
             endpoint_targets_fixed=True,
+            endpoint_target_audit=trivial_endpoint_target_audit("U"),
             coordinate_components_verified=True,
             inverse_cancellation_verified=True,
             positive_ybe_path_verified=True,
@@ -2530,6 +2543,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             required_entry_keys=required_entry_keys,
             rows=(positive_row, negative_row),
             endpoint_targets_fixed=True,
+            endpoint_target_audit=trivial_endpoint_target_audit("U"),
             coordinate_components_verified=True,
             inverse_pairing_verified=True,
             inverse_cancellation_verified=True,
@@ -2547,6 +2561,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             required_entry_keys=required_entry_keys,
             rows=(positive_row, negative_row),
             endpoint_targets_fixed=True,
+            endpoint_target_audit=trivial_endpoint_target_audit("U"),
             coordinate_components_verified=True,
             inverse_pairing_verified=True,
             inverse_cancellation_verified=True,
@@ -2568,6 +2583,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             required_entry_keys=required_entry_keys,
             rows=(positive_row, negative_row),
             endpoint_targets_fixed=True,
+            endpoint_target_audit=trivial_endpoint_target_audit("U"),
             coordinate_components_verified=True,
             inverse_pairing_verified=True,
             inverse_cancellation_verified=True,
@@ -2594,6 +2610,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             required_entry_keys=required_entry_keys,
             rows=(positive_row, negative_row),
             endpoint_targets_fixed=True,
+            endpoint_target_audit=trivial_endpoint_target_audit("U"),
             coordinate_components_verified=True,
             inverse_pairing_verified=True,
             inverse_cancellation_verified=True,
@@ -2617,6 +2634,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             required_entry_keys=required_entry_keys,
             rows=(positive_row, negative_row),
             endpoint_targets_fixed=True,
+            endpoint_target_audit=trivial_endpoint_target_audit("U"),
             coordinate_components_verified=True,
             inverse_pairing_verified=True,
             inverse_cancellation_verified=True,
@@ -2647,6 +2665,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             required_entry_keys=required_entry_keys,
             rows=(positive_row, negative_row),
             endpoint_targets_fixed=True,
+            endpoint_target_audit=trivial_endpoint_target_audit("U"),
             coordinate_components_verified=True,
             inverse_pairing_verified=True,
             inverse_cancellation_verified=True,
@@ -2677,6 +2696,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             required_entry_keys=required_entry_keys,
             rows=(positive_row, negative_row),
             endpoint_targets_fixed=True,
+            endpoint_target_audit=trivial_endpoint_target_audit("U"),
             coordinate_components_verified=True,
             inverse_pairing_verified=True,
             inverse_cancellation_verified=True,
@@ -2704,6 +2724,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             required_entry_keys=required_entry_keys,
             rows=(positive_row, negative_row),
             endpoint_targets_fixed=True,
+            endpoint_target_audit=trivial_endpoint_target_audit("U"),
             coordinate_components_verified=True,
             inverse_pairing_verified=True,
             inverse_cancellation_verified=True,
@@ -2723,6 +2744,84 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertTrue(complete.residual_faithfulness_proved)
         self.assertTrue(complete.proves_signed_endpoint_generator_tables)
         self.assertEqual(complete.failure_reasons, ())
+
+    def test_signed_endpoint_audit_requires_family_scoped_endpoint_targets(self):
+        seed_state = ("*", "*", "left_constant_map_universal_kernel")
+        seed_entries = (
+            (
+                (
+                    "*",
+                    "*",
+                    "L",
+                    "constant_map_kernel",
+                    ("*", (0, 1), "universal", "universal"),
+                ),
+                ("U", seed_state),
+            ),
+        )
+        positive_row = UniversalKSignedEndpointGeneratorRow(
+            endpoint_family="U",
+            seed_state=seed_state,
+            sign=1,
+            left_color="*",
+            right_color="*",
+            input_left=0,
+            input_right=1,
+            output_left=0,
+            output_right=1,
+            next_seed_state=seed_state,
+            endpoint_value=0,
+        )
+        negative_row = replace(positive_row, sign=-1)
+        required_entry_keys = (positive_row.entry_key, negative_row.entry_key)
+        bare_endpoint_flag = UniversalKSignedEndpointGeneratorAudit(
+            seed_classifier_entries=seed_entries,
+            reachable_seed_states=(("U", seed_state),),
+            required_entry_keys=required_entry_keys,
+            rows=(positive_row, negative_row),
+            endpoint_targets_fixed=True,
+            coordinate_components_verified=True,
+            inverse_pairing_verified=True,
+            inverse_cancellation_verified=True,
+            positive_ybe_path_verified=True,
+            positive_ybe_cocycle_verified=True,
+            signed_two_strand_base_verified=True,
+            artin_homomorphism_update_verified=True,
+            residual_action_scope=trivial_endpoint_residual_action_scope("U"),
+            residual_action_audit=trivial_endpoint_residual_action_audit(),
+        )
+
+        self.assertFalse(bare_endpoint_flag.endpoint_targets_proved)
+        self.assertFalse(bare_endpoint_flag.proves_signed_endpoint_generator_tables)
+        self.assertIn(
+            "endpoint_target_audit_missing",
+            bare_endpoint_flag.failure_reasons,
+        )
+
+        wrong_family_target = UniversalKSignedEndpointGeneratorAudit(
+            seed_classifier_entries=seed_entries,
+            reachable_seed_states=(("U", seed_state),),
+            required_entry_keys=required_entry_keys,
+            rows=(positive_row, negative_row),
+            endpoint_targets_fixed=True,
+            endpoint_target_audit=trivial_endpoint_target_audit("C"),
+            coordinate_components_verified=True,
+            inverse_pairing_verified=True,
+            inverse_cancellation_verified=True,
+            positive_ybe_path_verified=True,
+            positive_ybe_cocycle_verified=True,
+            signed_two_strand_base_verified=True,
+            artin_homomorphism_update_verified=True,
+            residual_action_scope=trivial_endpoint_residual_action_scope("U"),
+            residual_action_audit=trivial_endpoint_residual_action_audit(),
+        )
+
+        self.assertFalse(wrong_family_target.endpoint_target_scope_matches_required)
+        self.assertFalse(wrong_family_target.endpoint_targets_proved)
+        self.assertIn(
+            "endpoint_target_scope_mismatch",
+            wrong_family_target.failure_reasons,
+        )
 
     def test_signed_endpoint_generator_audit_requires_full_entry_domain(self):
         seed_state = ("*", "*", "left_constant_map_universal_kernel")
@@ -2766,6 +2865,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             required_entry_keys=required_entry_keys,
             rows=(first_positive, first_negative),
             endpoint_targets_fixed=True,
+            endpoint_target_audit=trivial_endpoint_target_audit("U"),
             coordinate_components_verified=True,
             inverse_pairing_verified=True,
             inverse_cancellation_verified=True,
@@ -2838,6 +2938,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             required_entry_keys=keys,
             rows=rows[:-1],
             endpoint_targets_fixed=True,
+            endpoint_target_audit=trivial_endpoint_target_audit("U"),
             coordinate_components_verified=True,
             inverse_pairing_verified=True,
             inverse_cancellation_verified=True,
@@ -2882,6 +2983,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             required_entry_keys=keys,
             rows=rows,
             endpoint_targets_fixed=True,
+            endpoint_target_audit=trivial_endpoint_target_audit("U"),
             coordinate_components_verified=True,
             inverse_pairing_verified=True,
             inverse_cancellation_verified=True,
@@ -2966,6 +3068,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             required_entry_keys=keys,
             rows=rows,
             endpoint_targets_fixed=True,
+            endpoint_target_audit=trivial_endpoint_target_audit("U"),
             coordinate_components_verified=True,
             inverse_pairing_verified=True,
             inverse_cancellation_verified=True,
@@ -3031,6 +3134,12 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertTrue(audit.positive_ybe_cocycle_verified)
         self.assertTrue(audit.signed_two_strand_base_verified)
         self.assertTrue(audit.artin_homomorphism_update_verified)
+        self.assertTrue(audit.endpoint_target_scope_matches_required)
+        self.assertTrue(audit.endpoint_targets_proved)
+        self.assertEqual(
+            audit.endpoint_target_audit.endpoint_group_orders,
+            (("U", 2),),
+        )
         self.assertEqual(audit.coordinate_component_failures, ())
         self.assertEqual(audit.inverse_pairing_failures, ())
         self.assertEqual(audit.two_strand_base_failures, ())
@@ -3666,6 +3775,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             required_entry_keys=(row.entry_key, replace(row, sign=-1).entry_key),
             rows=(row, replace(row, sign=-1)),
             endpoint_targets_fixed=True,
+            endpoint_target_audit=trivial_endpoint_target_audit("U"),
             coordinate_components_verified=True,
             inverse_pairing_verified=True,
             inverse_cancellation_verified=True,
@@ -3693,6 +3803,21 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         )
         self.assertIn(
             ("signed_endpoint_generator_residual_faithfulness_verified", True),
+            audit.finite_obstruction_data,
+        )
+        self.assertIn(
+            ("signed_endpoint_generator_endpoint_targets_fixed", True),
+            audit.finite_obstruction_data,
+        )
+        self.assertIn(
+            (
+                "signed_endpoint_generator_endpoint_target_group_orders",
+                (("U", 1),),
+            ),
+            audit.finite_obstruction_data,
+        )
+        self.assertIn(
+            ("signed_endpoint_generator_endpoint_target_audit_proved", True),
             audit.finite_obstruction_data,
         )
         self.assertIn(

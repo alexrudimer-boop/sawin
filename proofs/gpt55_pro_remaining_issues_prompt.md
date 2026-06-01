@@ -820,8 +820,27 @@ closure is an extra endpoint channel, and a transition target outside
 
 Let `H_E` be the fixed finite endpoint group for that family, or let `S_mE`
 be the fixed symmetric cutoff group in a cutoff proof.  The group must be
-finite and independent of braid index `n`.  A signed endpoint generator table
-is a finite table
+finite and independent of braid index `n`.
+
+The fixed endpoint target itself must be certified family-by-family.  For
+the routed families
+
+```text
+F = { E : S_E^0 is nonempty },
+```
+
+the certificate must list exactly the expected families `F`, exactly the
+covered families, and for each covered family at least one fixed finite
+target: either a finite endpoint group order or a symmetric cutoff degree.
+It must also prove that these targets are independent of braid index and that
+product endpoint families are separated componentwise.  A bare assertion
+that an endpoint target is fixed is not a certificate; if the target list
+omits a routed family, includes an unrouted family, has a nonpositive order
+or cutoff degree, depends on `n`, or allows cross-family cancellation, the
+signed endpoint layer remains open.
+
+With those target data fixed, a signed endpoint generator table is a finite
+table
 
 ```text
 Gamma^{E,epsilon}_{a,b}(s,x,y) = (s',x',y',h),
@@ -1062,6 +1081,9 @@ reachable_state_set_contains_initial_seeds,
 reachable_state_set_is_signed_transition_closure,
 all_signed_row_states_reachable,
 fixed_endpoint_group_or_cutoff,
+family_scoped_endpoint_target_coverage,
+endpoint_target_braid_index_independence,
+endpoint_target_product_family_separation,
 signed_generator_domain_exact,
 coordinate_components_match_T_plus_and_T_inverse,
 all_signed_rows_defined,
@@ -1535,7 +1557,9 @@ Before returning a claimed resolution, explicitly answer:
 9. For cutoff families C and M, are the readouts faithful on exactly their
    routed ledgers with no extra channels?
 10. Is every detector group, endpoint group, cutoff group, and rack
-   independent of braid index `n`?
+   independent of braid index `n`, and does the endpoint-target certificate
+   cover exactly the routed U/C/M families with fixed positive orders or
+   cutoff degrees and product-family separation?
 11. Are product endpoint rows handled family-by-family without hiding any
    unclosed U, C, or M obligation?
 12. If returning A, where exactly is `G(pi,Q)` constructed, why does it prove

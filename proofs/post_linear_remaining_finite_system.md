@@ -398,6 +398,9 @@ positive-YBE state/fibre path check, and the finite proof gates:
 
 ```text
 fixed endpoint group or cutoff target
+family-scoped endpoint target coverage
+endpoint-target braid-index independence
+endpoint-target product-family separation
 coordinate components match T and T inverse
 signed inverse row pairing
 signed inverse cancellation
@@ -408,6 +411,16 @@ compatible Artin-homomorphism update
 exact C/M cutoff readouts when cutoff families are present
 residual faithfulness for the actual interval fibre action
 ```
+
+The fixed endpoint target gate is now scoped like the cutoff and residual
+gates.  A supplied endpoint group only proves that some table multiplication
+can be checked; it does not by itself prove that every routed U/C/M family
+has a fixed target.  The target certificate must list the expected routed
+families, the covered families, the finite endpoint group orders or cutoff
+degrees for those families, braid-index independence, and componentwise
+product-family separation.  Missing families, extra families, nonpositive
+orders, nonpositive cutoff degrees, `n`-dependence, or cross-family
+cancellation leave the signed endpoint layer open.
 
 The C/M cutoff gate is now scoped like the residual-faithfulness gate.  A bare
 `cutoff_readouts_exact` flag is recorded only as supplied data; it does not
@@ -450,6 +463,13 @@ rather than a silently accepted external certificate.  When no reachable state
 set is supplied, the wrapper derives it as the least transition closure of
 the current `kappa` seeds under the supplied signed rows before forming the
 full `D_Gamma` domain.
+
+The wrapper also reports whether endpoint targets are actually proved, not
+only whether an endpoint group was supplied.  Its finite obstruction data now
+separates the raw supplied-target flag from the scoped target audit: expected
+families, covered families, target families, endpoint group orders, cutoff
+degrees, scope agreement with the current `kappa`, and whether the target
+audit proves the fixed endpoint target obligation.
 
 The residual-faithfulness gate is separate from the endpoint table identities:
 even a trivial endpoint group satisfies all label subgroup inclusions

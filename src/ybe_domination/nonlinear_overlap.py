@@ -788,6 +788,102 @@ class UniversalKCutoffReadoutAudit:
         return tuple(reasons)
 
 
+@dataclass(frozen=True)
+class UniversalKEndpointTargetAudit:
+    """Family-scoped finite endpoint targets for signed U/C/M tables."""
+
+    expected_endpoint_families: Tuple[str, ...]
+    covered_endpoint_families: Tuple[str, ...]
+    endpoint_group_orders: Tuple[Tuple[str, int], ...] = ()
+    cutoff_degrees: Tuple[Tuple[str, int], ...] = ()
+    braid_index_independent: bool = False
+    product_families_separated: bool = False
+
+    @property
+    def expected_endpoint_families_exact(self) -> Tuple[str, ...]:
+        return tuple(sorted(set(self.expected_endpoint_families), key=repr))
+
+    @property
+    def covered_endpoint_families_exact(self) -> Tuple[str, ...]:
+        return tuple(sorted(set(self.covered_endpoint_families), key=repr))
+
+    @property
+    def target_endpoint_families(self) -> Tuple[str, ...]:
+        return tuple(
+            sorted(
+                {family for family, _order in self.endpoint_group_orders}
+                | {family for family, _degree in self.cutoff_degrees},
+                key=repr,
+            )
+        )
+
+    @property
+    def family_coverage_exact(self) -> bool:
+        return set(self.expected_endpoint_families_exact) == set(
+            self.covered_endpoint_families_exact
+        )
+
+    @property
+    def missing_target_families(self) -> Tuple[str, ...]:
+        targets = set(self.target_endpoint_families)
+        return tuple(
+            family
+            for family in self.covered_endpoint_families_exact
+            if family not in targets
+        )
+
+    @property
+    def extra_target_families(self) -> Tuple[str, ...]:
+        covered = set(self.covered_endpoint_families_exact)
+        return tuple(
+            family
+            for family in self.target_endpoint_families
+            if family not in covered
+        )
+
+    @property
+    def target_orders_positive(self) -> bool:
+        return all(order > 0 for _family, order in self.endpoint_group_orders)
+
+    @property
+    def cutoff_degrees_positive(self) -> bool:
+        return all(degree > 0 for _family, degree in self.cutoff_degrees)
+
+    @property
+    def target_families_exact(self) -> bool:
+        return not self.missing_target_families and not self.extra_target_families
+
+    @property
+    def proves_endpoint_targets(self) -> bool:
+        return (
+            self.family_coverage_exact
+            and self.target_families_exact
+            and self.target_orders_positive
+            and self.cutoff_degrees_positive
+            and self.braid_index_independent
+            and self.product_families_separated
+        )
+
+    @property
+    def failure_reasons(self) -> Tuple[str, ...]:
+        reasons = []
+        if not self.family_coverage_exact:
+            reasons.append("endpoint_target_family_coverage_not_exact")
+        if self.missing_target_families:
+            reasons.append("endpoint_target_missing_families")
+        if self.extra_target_families:
+            reasons.append("endpoint_target_extra_families")
+        if not self.target_orders_positive:
+            reasons.append("endpoint_target_nonpositive_group_order")
+        if not self.cutoff_degrees_positive:
+            reasons.append("endpoint_target_nonpositive_cutoff_degree")
+        if not self.braid_index_independent:
+            reasons.append("endpoint_target_not_braid_index_independent")
+        if not self.product_families_separated:
+            reasons.append("endpoint_target_product_families_not_separated")
+        return tuple(reasons)
+
+
 def universal_k_signed_endpoint_seed_states(
     seed_classifier_entries: Sequence[UniversalKSeedClassifierEntry],
 ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
@@ -846,6 +942,7 @@ class UniversalKSignedEndpointGeneratorAudit:
     artin_update_failures: Tuple[UniversalKSignedEndpointLabelFailure, ...] = ()
     cutoff_readouts_exact: bool = False
     residual_faithfulness_verified: bool = False
+    endpoint_target_audit: UniversalKEndpointTargetAudit | None = None
     cutoff_readout_audit: UniversalKCutoffReadoutAudit | None = None
     residual_action_scope: UniversalKResidualActionScopeAudit | None = None
     residual_faithfulness_theorem: UniversalKResidualFaithfulnessAudit | None = None
@@ -1094,6 +1191,22 @@ class UniversalKSignedEndpointGeneratorAudit:
         )
 
     @property
+    def endpoint_target_scope_matches_required(self) -> bool:
+        return (
+            self.endpoint_target_audit is not None
+            and set(self.endpoint_target_audit.expected_endpoint_families_exact)
+            == set(self.required_endpoint_families)
+        )
+
+    @property
+    def endpoint_targets_proved(self) -> bool:
+        return not self.required_seed_states or (
+            self.endpoint_target_audit is not None
+            and self.endpoint_target_scope_matches_required
+            and self.endpoint_target_audit.proves_endpoint_targets
+        )
+
+    @property
     def residual_action_scope_matches_required(self) -> bool:
         return (
             self.residual_action_scope is not None
@@ -1152,7 +1265,7 @@ class UniversalKSignedEndpointGeneratorAudit:
         return (
             self.signed_generator_domain_exact
             and self.all_rows_defined
-            and self.endpoint_targets_fixed
+            and self.endpoint_targets_proved
             and self.coordinate_components_verified
             and self.inverse_pairing_verified
             and self.inverse_cancellation_verified
@@ -1197,8 +1310,17 @@ class UniversalKSignedEndpointGeneratorAudit:
             reasons.append("duplicate_signed_generator_entries")
         if self.undefined_rows:
             reasons.append("undefined_signed_generator_rows")
-        if not self.endpoint_targets_fixed:
+        if not self.endpoint_targets_proved:
             reasons.append("endpoint_targets_not_fixed")
+            if self.required_seed_states and self.endpoint_target_audit is None:
+                reasons.append("endpoint_target_audit_missing")
+            if (
+                self.endpoint_target_audit is not None
+                and not self.endpoint_target_scope_matches_required
+            ):
+                reasons.append("endpoint_target_scope_mismatch")
+            if self.endpoint_target_audit is not None:
+                reasons.extend(self.endpoint_target_audit.failure_reasons)
         if not self.coordinate_components_verified:
             reasons.append("coordinate_components_not_verified")
         if not self.inverse_pairing_verified:
@@ -2017,6 +2139,7 @@ def universal_k_signed_endpoint_generator_audit(
         ]
         | None
     ) = None,
+    endpoint_target_audit: UniversalKEndpointTargetAudit | None = None,
     cutoff_readouts_exact: bool = False,
     cutoff_readout_audit: UniversalKCutoffReadoutAudit | None = None,
     residual_faithfulness_verified: bool = False,
@@ -2035,6 +2158,20 @@ def universal_k_signed_endpoint_generator_audit(
     reachable_tuple = tuple(reachable_seed_states)
     row_tuple = tuple(rows)
     witness_map = dict(witnesses or {})
+    expected_endpoint_families = tuple(
+        sorted({entry[1][0] for entry in seed_classifier_entries}, key=repr)
+    )
+    if endpoint_target_audit is None and endpoint_group is not None:
+        endpoint_target_audit = UniversalKEndpointTargetAudit(
+            expected_endpoint_families=expected_endpoint_families,
+            covered_endpoint_families=expected_endpoint_families,
+            endpoint_group_orders=tuple(
+                (family, len(endpoint_group.elements))
+                for family in expected_endpoint_families
+            ),
+            braid_index_independent=True,
+            product_families_separated=True,
+        )
     required_entry_keys = universal_k_signed_endpoint_required_entry_keys(
         interval,
         reachable_tuple,
@@ -2111,6 +2248,7 @@ def universal_k_signed_endpoint_generator_audit(
         artin_update_failures=artin_update_failures,
         cutoff_readouts_exact=cutoff_readouts_exact,
         residual_faithfulness_verified=residual_faithfulness_verified,
+        endpoint_target_audit=endpoint_target_audit,
         cutoff_readout_audit=cutoff_readout_audit,
         residual_action_scope=residual_action_scope,
         residual_faithfulness_theorem=residual_faithfulness_theorem,
@@ -3539,6 +3677,17 @@ class PostLinearRemainingFiniteSystemAudit:
                 ("signed_endpoint_generator_required_entry_keys", ()),
                 ("signed_endpoint_generator_missing_entry_keys", ()),
                 ("signed_endpoint_generator_endpoint_targets_fixed", False),
+                ("signed_endpoint_generator_endpoint_targets_flag_supplied", False),
+                (
+                    "signed_endpoint_generator_endpoint_target_scope_matches_required",
+                    False,
+                ),
+                ("signed_endpoint_generator_endpoint_target_expected_families", ()),
+                ("signed_endpoint_generator_endpoint_target_covered_families", ()),
+                ("signed_endpoint_generator_endpoint_target_families", ()),
+                ("signed_endpoint_generator_endpoint_target_group_orders", ()),
+                ("signed_endpoint_generator_endpoint_target_cutoff_degrees", ()),
+                ("signed_endpoint_generator_endpoint_target_audit_proved", False),
                 ("signed_endpoint_generator_coordinate_components_verified", False),
                 ("signed_endpoint_generator_coordinate_failures", ()),
                 ("signed_endpoint_generator_inverse_pairing_verified", False),
@@ -3576,6 +3725,7 @@ class PostLinearRemainingFiniteSystemAudit:
         matches_current_kappa = (
             audit.seed_classifier_entries == self.universal_k_seed_classifier_entries
         )
+        endpoint_target_audit = audit.endpoint_target_audit
         return (
             (
                 "signed_endpoint_generator_matches_current_kappa",
@@ -3647,7 +3797,63 @@ class PostLinearRemainingFiniteSystemAudit:
             ),
             (
                 "signed_endpoint_generator_endpoint_targets_fixed",
+                audit.endpoint_targets_proved,
+            ),
+            (
+                "signed_endpoint_generator_endpoint_targets_flag_supplied",
                 audit.endpoint_targets_fixed,
+            ),
+            (
+                "signed_endpoint_generator_endpoint_target_scope_matches_required",
+                audit.endpoint_target_scope_matches_required,
+            ),
+            (
+                "signed_endpoint_generator_endpoint_target_expected_families",
+                (
+                    endpoint_target_audit.expected_endpoint_families_exact
+                    if endpoint_target_audit is not None
+                    else ()
+                ),
+            ),
+            (
+                "signed_endpoint_generator_endpoint_target_covered_families",
+                (
+                    endpoint_target_audit.covered_endpoint_families_exact
+                    if endpoint_target_audit is not None
+                    else ()
+                ),
+            ),
+            (
+                "signed_endpoint_generator_endpoint_target_families",
+                (
+                    endpoint_target_audit.target_endpoint_families
+                    if endpoint_target_audit is not None
+                    else ()
+                ),
+            ),
+            (
+                "signed_endpoint_generator_endpoint_target_group_orders",
+                (
+                    endpoint_target_audit.endpoint_group_orders
+                    if endpoint_target_audit is not None
+                    else ()
+                ),
+            ),
+            (
+                "signed_endpoint_generator_endpoint_target_cutoff_degrees",
+                (
+                    endpoint_target_audit.cutoff_degrees
+                    if endpoint_target_audit is not None
+                    else ()
+                ),
+            ),
+            (
+                "signed_endpoint_generator_endpoint_target_audit_proved",
+                (
+                    endpoint_target_audit.proves_endpoint_targets
+                    if endpoint_target_audit is not None
+                    else False
+                ),
             ),
             (
                 "signed_endpoint_generator_coordinate_components_verified",
@@ -5605,6 +5811,7 @@ def post_linear_remaining_finite_system_audit(
     universal_k_signed_endpoint_witnesses: (
         Mapping[UniversalKSignedEndpointEntryKey, LongitudeSubgroupWitness] | None
     ) = None,
+    universal_k_endpoint_target_audit: UniversalKEndpointTargetAudit | None = None,
     universal_k_cutoff_readouts_exact: bool = False,
     universal_k_cutoff_readout_audit: UniversalKCutoffReadoutAudit | None = None,
     universal_k_residual_faithfulness_verified: bool = False,
@@ -5655,6 +5862,7 @@ def post_linear_remaining_finite_system_audit(
             or universal_k_signed_endpoint_rows is not None
             or universal_k_signed_endpoint_group is not None
             or universal_k_signed_endpoint_witnesses is not None
+            or universal_k_endpoint_target_audit is not None
             or universal_k_cutoff_readout_audit is not None
             or universal_k_residual_action_scope is not None
             or universal_k_residual_faithfulness_theorem is not None
@@ -5693,6 +5901,7 @@ def post_linear_remaining_finite_system_audit(
             universal_k_signed_endpoint_rows or (),
             endpoint_group=universal_k_signed_endpoint_group,
             witnesses=universal_k_signed_endpoint_witnesses,
+            endpoint_target_audit=universal_k_endpoint_target_audit,
             cutoff_readouts_exact=universal_k_cutoff_readouts_exact,
             cutoff_readout_audit=universal_k_cutoff_readout_audit,
             residual_faithfulness_verified=universal_k_residual_faithfulness_verified,
