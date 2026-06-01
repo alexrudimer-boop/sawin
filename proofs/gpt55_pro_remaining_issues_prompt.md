@@ -1358,7 +1358,10 @@ The rows must cover exactly the expected residual input-tuple domain, with no
 missing, extra, or duplicate input rows.  Every row must use only active
 endpoint families and expected routed seed states, and the union of row
 families and row seed states must equal the active families and expected
-seed-state ledger.  Each row must have nonempty arity-consistent
+seed-state ledger.  Row-by-row, the families named by the row must equal the
+families of the routed seed states named by that same row; a row cannot list
+a family whose seed appears only in another row.  Each row must have nonempty
+arity-consistent
 `input_tuple`, `actual output_tuple`, and `identity_endpoint_output_tuple`,
 and its `endpoint_channel_keys` ledger must be nonempty and duplicate-free.
 `identity_endpoint_output_tuple` must equal `input_tuple` on every row; this

@@ -647,8 +647,9 @@ keys, and the finite dependencies used by the row.  The checker requires the
 row inputs to cover the expected residual input-tuple domain exactly, with no
 missing, extra, or duplicate rows.  It rejects rows that mention unrouted
 families, unrouted seed states, missing or duplicate endpoint channels,
-arity-inconsistent input/output/identity-output tuples, empty residual input
-tuples, duplicate row ledgers, or dependencies on `braid_word`,
+row-local family/seed mismatches, arity-inconsistent
+input/output/identity-output tuples, empty residual input tuples, duplicate
+row ledgers, or dependencies on `braid_word`,
 `braid_prefix`, `braid_index`, failed detector searches, normalized-law
 sequences, or timeouts.  It derives endpoint-channel exactness from the union
 of row families and row seed states, derives the residual identity implication

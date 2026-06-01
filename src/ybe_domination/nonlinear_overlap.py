@@ -1341,7 +1341,7 @@ class UniversalKResidualFaithfulnessRow:
     def seed_state_families_match_row(self) -> bool:
         return {
             family for family, _seed_state in self.endpoint_seed_states
-        } <= set(self.endpoint_families)
+        } == set(self.endpoint_families)
 
     @property
     def forbidden_dependencies(self) -> Tuple[str, ...]:

@@ -3015,6 +3015,36 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             theorem_with_bad_tuple_arity.failure_reasons,
         )
 
+        theorem_with_family_seed_mismatch = replace(
+            theorem,
+            active_endpoint_families=("U", "C"),
+            covered_endpoint_families=("U", "C"),
+            expected_endpoint_seed_states=(
+                ("U", seed_state),
+                ("C", ("*", "*", "left")),
+            ),
+            covered_endpoint_seed_states=(
+                ("U", seed_state),
+                ("C", ("*", "*", "left")),
+            ),
+            expected_residual_rows_by_family=(("U", 1), ("C", 1)),
+            covered_residual_rows_by_family=(("U", 1), ("C", 1)),
+            residual_rows=(
+                replace(
+                    theorem.residual_rows[0],
+                    endpoint_families=("U", "C"),
+                    endpoint_seed_states=(("U", seed_state),),
+                ),
+            ),
+        )
+        self.assertFalse(
+            theorem_with_family_seed_mismatch.proves_residual_faithfulness
+        )
+        self.assertIn(
+            "residual_faithfulness_invalid_rows",
+            theorem_with_family_seed_mismatch.failure_reasons,
+        )
+
         rowwise_only = replace(theorem_complete, telescoping_detector_audit=None)
         self.assertTrue(rowwise_only.signed_two_strand_base_verified)
         self.assertTrue(rowwise_only.artin_homomorphism_update_verified)
