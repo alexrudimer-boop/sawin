@@ -895,6 +895,14 @@ def _value_marker(value: object) -> object:
     return ("hashable", value)
 
 
+def _is_hashable(value: object) -> bool:
+    try:
+        hash(value)
+    except TypeError:
+        return False
+    return True
+
+
 def _unique_values(values: Sequence[object]) -> Tuple[object, ...]:
     unique = {}
     for value in values:
@@ -1131,6 +1139,7 @@ def _universal_k_signed_entry_key_well_formed(
     return (
         isinstance(key, tuple)
         and len(key) == 7
+        and _is_hashable(key)
         and key[0] in UNIVERSAL_K_ENDPOINT_FAMILIES
         and isinstance(key[1], tuple)
         and key[2] in {-1, 1}
@@ -1147,6 +1156,7 @@ def _universal_k_endpoint_seed_state_well_formed(state: object) -> bool:
     return (
         isinstance(state, tuple)
         and len(state) == 2
+        and _is_hashable(state)
         and state[0] in UNIVERSAL_K_ENDPOINT_FAMILIES
         and isinstance(state[1], tuple)
     )
@@ -1201,7 +1211,7 @@ class UniversalKWordPotentialCertificate:
     def template_seed_states_exact(
         self,
     ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
-        return tuple(sorted({state for state, _word in self.templates}, key=repr))
+        return _unique_values(tuple(state for state, _word in self.templates))
 
     @property
     def duplicate_template_seed_states(
@@ -1213,14 +1223,11 @@ class UniversalKWordPotentialCertificate:
     def malformed_template_seed_states(
         self,
     ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
-        return tuple(
-            sorted(
-                {
-                    state
-                    for state, _word in self.templates
-                    if not _universal_k_endpoint_seed_state_well_formed(state)
-                },
-                key=repr,
+        return _unique_values(
+            tuple(
+                state
+                for state, _word in self.templates
+                if not _universal_k_endpoint_seed_state_well_formed(state)
             )
         )
 
@@ -1228,7 +1235,7 @@ class UniversalKWordPotentialCertificate:
     def identity_entry_keys_exact(
         self,
     ) -> Tuple[UniversalKSignedEndpointEntryKey, ...]:
-        return tuple(sorted({row.entry_key for row in self.identity_rows}, key=repr))
+        return _unique_values(tuple(row.entry_key for row in self.identity_rows))
 
     @property
     def positive_identity_entry_keys_exact(
@@ -1262,14 +1269,11 @@ class UniversalKWordPotentialCertificate:
     def malformed_identity_entry_keys(
         self,
     ) -> Tuple[UniversalKSignedEndpointEntryKey, ...]:
-        return tuple(
-            sorted(
-                {
-                    row.entry_key
-                    for row in self.identity_rows
-                    if not _universal_k_signed_entry_key_well_formed(row.entry_key)
-                },
-                key=repr,
+        return _unique_values(
+            tuple(
+                row.entry_key
+                for row in self.identity_rows
+                if not _universal_k_signed_entry_key_well_formed(row.entry_key)
             )
         )
 
@@ -1277,7 +1281,7 @@ class UniversalKWordPotentialCertificate:
     def normalized_seed_states_exact(
         self,
     ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
-        return tuple(sorted(set(self.normalized_seed_states), key=repr))
+        return _unique_values(self.normalized_seed_states)
 
     @property
     def duplicate_normalized_seed_states(
@@ -1289,14 +1293,11 @@ class UniversalKWordPotentialCertificate:
     def malformed_normalized_seed_states(
         self,
     ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
-        return tuple(
-            sorted(
-                {
-                    state
-                    for state in self.normalized_seed_states
-                    if not _universal_k_endpoint_seed_state_well_formed(state)
-                },
-                key=repr,
+        return _unique_values(
+            tuple(
+                state
+                for state in self.normalized_seed_states
+                if not _universal_k_endpoint_seed_state_well_formed(state)
             )
         )
 
@@ -1304,13 +1305,21 @@ class UniversalKWordPotentialCertificate:
     def template_map(
         self,
     ) -> Mapping[Tuple[str, UniversalKSeedState], UniversalKWordPotentialWord]:
-        return dict(self.templates)
+        return {
+            state: word
+            for state, word in self.templates
+            if _universal_k_endpoint_seed_state_well_formed(state)
+        }
 
     @property
     def identity_row_map(
         self,
     ) -> Mapping[UniversalKSignedEndpointEntryKey, UniversalKWordPotentialIdentityRow]:
-        return {row.entry_key: row for row in self.identity_rows}
+        return {
+            row.entry_key: row
+            for row in self.identity_rows
+            if _universal_k_signed_entry_key_well_formed(row.entry_key)
+        }
 
     @property
     def template_word_failures(self) -> Tuple[UniversalKWordPotentialFailure, ...]:
@@ -1448,7 +1457,7 @@ class UniversalKWordPotentialCertificate:
                     and variable[0] != "U"
                 ):
                     raw_variables.append(variable)
-        return tuple(sorted(set(raw_variables), key=repr))
+        return _unique_values(tuple(raw_variables))
 
     def _identity_row_variable_support(
         self,
@@ -6823,6 +6832,221 @@ def universal_k_signed_endpoint_generator_audit(
         residual_action_audit=residual_action_audit,
         telescoping_detector_audit=telescoping_detector_audit,
         endpoint_group=endpoint_group,
+    )
+
+
+@dataclass(frozen=True)
+class UniversalKEndpointObserverBuild:
+    """Constructed U/C/M endpoint observer plus its derived audit.
+
+    The build record is the executable version of the monodromy-coboundary
+    certificate: positive rows are read from the word-potential identity rows,
+    negative rows are forced by inversion, and the signed endpoint audit then
+    checks the full D_Gamma domain, braid-presentation coherence, telescoping,
+    cutoff readouts, and residual faithfulness.
+    """
+
+    reachable_seed_states: Tuple[Tuple[str, UniversalKSeedState], ...]
+    positive_rows: Tuple[UniversalKSignedEndpointGeneratorRow, ...]
+    rows: Tuple[UniversalKSignedEndpointGeneratorRow, ...]
+    telescoping_detector_audit: UniversalKTelescopingDetectorAudit
+    audit: UniversalKSignedEndpointGeneratorAudit
+
+    @property
+    def proves_endpoint_observer(self) -> bool:
+        return self.audit.proves_signed_endpoint_generator_tables
+
+
+def universal_k_endpoint_observer_positive_rows_from_word_potential(
+    interval: LocalInterval,
+    word_potential_certificate: UniversalKWordPotentialCertificate,
+) -> Tuple[UniversalKSignedEndpointGeneratorRow, ...]:
+    """Build positive endpoint rows from word-potential coboundary data."""
+
+    rows = []
+    for identity_row in word_potential_certificate.identity_rows:
+        key = identity_row.entry_key
+        if not _universal_k_is_positive_entry_key(key):
+            continue
+        endpoint_family, seed_state, _sign, left_color, right_color, x, y = key
+        output = interval.T.get((left_color, right_color, x, y))
+        if output is None:
+            continue
+        rows.append(
+            UniversalKSignedEndpointGeneratorRow(
+                endpoint_family=endpoint_family,
+                seed_state=seed_state,
+                sign=1,
+                left_color=left_color,
+                right_color=right_color,
+                input_left=x,
+                input_right=y,
+                output_left=output[0],
+                output_right=output[1],
+                next_seed_state=identity_row.next_seed_state,
+                endpoint_value=identity_row.endpoint_value,
+            )
+        )
+    return tuple(rows)
+
+
+def universal_k_endpoint_observer_signed_rows_from_positive(
+    interval: LocalInterval,
+    endpoint_group: FiniteGroup,
+    positive_rows: Sequence[UniversalKSignedEndpointGeneratorRow],
+) -> Tuple[UniversalKSignedEndpointGeneratorRow, ...]:
+    """Force the signed observer table by adjoining inverse negative rows."""
+
+    group_elements = set(endpoint_group.elements)
+    rows = list(positive_rows)
+    for row in positive_rows:
+        if row.sign != 1 or row.endpoint_value not in group_elements:
+            continue
+        target_colors = interval.base_R.get((row.left_color, row.right_color))
+        if target_colors is None:
+            continue
+        rows.append(
+            UniversalKSignedEndpointGeneratorRow(
+                endpoint_family=row.endpoint_family,
+                seed_state=row.next_seed_state,
+                sign=-1,
+                left_color=target_colors[0],
+                right_color=target_colors[1],
+                input_left=row.output_left,
+                input_right=row.output_right,
+                output_left=row.input_left,
+                output_right=row.input_right,
+                next_seed_state=row.seed_state,
+                endpoint_value=endpoint_group.inv(row.endpoint_value),
+            )
+        )
+    return tuple(rows)
+
+
+def _universal_k_detector_track_counts_from_initialization_rows(
+    rows: Sequence[UniversalKDetectorTrackInitializationRow],
+) -> Tuple[Tuple[str, int], ...]:
+    counts: dict[str, int] = {}
+    for row in rows:
+        if (
+            row.endpoint_family not in UNIVERSAL_K_ENDPOINT_FAMILIES
+            or not _universal_k_nonnegative_int(row.track_index)
+        ):
+            continue
+        counts[row.endpoint_family] = max(
+            counts.get(row.endpoint_family, 0),
+            row.track_index + 1,
+        )
+    return tuple(sorted(counts.items(), key=repr))
+
+
+def universal_k_endpoint_observer_build(
+    interval: LocalInterval,
+    seed_classifier_entries: Sequence[UniversalKSeedClassifierEntry],
+    word_potential_certificate: UniversalKWordPotentialCertificate,
+    *,
+    detector_track_counts_by_family: Tuple[Tuple[str, int], ...] = (),
+    detector_track_initialization_rows: Tuple[
+        UniversalKDetectorTrackInitializationRow,
+        ...,
+    ] = (),
+    endpoint_target_audit: UniversalKEndpointTargetAudit | None = None,
+    cutoff_readout_audit: UniversalKCutoffReadoutAudit | None = None,
+    residual_faithfulness_theorem: UniversalKResidualFaithfulnessAudit | None = None,
+    residual_action_scope: UniversalKResidualActionScopeAudit | None = None,
+    residual_action_audit: "EndpointResidualActionAudit | None" = None,
+    witnesses: (
+        Mapping[
+            UniversalKSignedEndpointEntryKey,
+            LongitudeSubgroupWitness,
+        ]
+        | None
+    ) = None,
+) -> UniversalKEndpointObserverBuild:
+    """Construct the finite U/C/M observer determined by a word-potential certificate.
+
+    This is intentionally not a theorem by itself.  It builds the observer rows
+    forced by the supplied monodromy-coboundary data and then returns the same
+    signed endpoint audit used elsewhere.  If the certificate omits a reachable
+    context, uses a non-constant coboundary defect, lacks exact C/M readouts, or
+    does not include residual faithfulness, the returned audit stays open.
+    """
+
+    endpoint_group = word_potential_certificate.endpoint_group
+    positive_rows = universal_k_endpoint_observer_positive_rows_from_word_potential(
+        interval,
+        word_potential_certificate,
+    )
+    rows = universal_k_endpoint_observer_signed_rows_from_positive(
+        interval,
+        endpoint_group,
+        positive_rows,
+    )
+    reachable_seed_states = universal_k_signed_endpoint_transition_closure(
+        seed_classifier_entries,
+        rows,
+    )
+    required_entry_keys = universal_k_signed_endpoint_required_entry_keys(
+        interval,
+        reachable_seed_states,
+    )
+    if not detector_track_counts_by_family:
+        detector_track_counts_by_family = (
+            _universal_k_detector_track_counts_from_initialization_rows(
+                detector_track_initialization_rows
+            )
+        )
+    detector_track_count = sum(
+        count
+        for _family, count in detector_track_counts_by_family
+        if _universal_k_positive_int(count)
+    )
+    telescoping_detector_audit = UniversalKTelescopingDetectorAudit(
+        expected_entry_keys=required_entry_keys,
+        covered_entry_keys=tuple(row.entry_key for row in rows),
+        expected_endpoint_seed_states=reachable_seed_states,
+        covered_endpoint_seed_states=reachable_seed_states,
+        detector_track_counts_by_family=tuple(detector_track_counts_by_family),
+        detector_track_initialization_rows=tuple(detector_track_initialization_rows),
+        expected_word_potential_seed_states=reachable_seed_states,
+        covered_word_potential_seed_states=reachable_seed_states,
+        detector_track_count=detector_track_count or None,
+        detector_tracks_fixed_before_braid=True,
+        detector_track_initialization_verified=True,
+        artin_detector_recurrence_verified=True,
+        word_potential_templates_use_only_current_longitudes=True,
+        word_potential_artin_substitution_verified=True,
+        word_potential_identity_verified=True,
+        word_potential_certificate=word_potential_certificate,
+        telescoping_identity_verified=True,
+        terminal_readout_longitudes_verified=True,
+        initial_readout_normalized=True,
+        braid_index_independent=True,
+    )
+    audit = universal_k_signed_endpoint_generator_audit(
+        interval,
+        seed_classifier_entries,
+        reachable_seed_states,
+        rows,
+        endpoint_group=endpoint_group,
+        witnesses=witnesses,
+        endpoint_target_audit=endpoint_target_audit,
+        cutoff_readout_audit=cutoff_readout_audit,
+        cutoff_readouts_exact=(
+            cutoff_readout_audit is not None
+            and cutoff_readout_audit.proves_exact_cutoff_readouts
+        ),
+        residual_faithfulness_theorem=residual_faithfulness_theorem,
+        residual_action_scope=residual_action_scope,
+        residual_action_audit=residual_action_audit,
+        telescoping_detector_audit=telescoping_detector_audit,
+    )
+    return UniversalKEndpointObserverBuild(
+        reachable_seed_states=reachable_seed_states,
+        positive_rows=positive_rows,
+        rows=rows,
+        telescoping_detector_audit=telescoping_detector_audit,
+        audit=audit,
     )
 
 

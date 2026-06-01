@@ -1432,6 +1432,36 @@ domain.  These must agree with the positive signed row
 Gamma^{E,+}_{a,b}(s,x,y)=(s',T_{a,b}(x,y),h).
 ```
 
+Executable construction discipline.  A valid observer should be built from
+the monodromy-coboundary table, not by independently inventing signed
+emissions.  The finite construction is:
+
+```text
+positive rows:
+  Gamma^{E,+}_{a,b}(s,x,y)
+  =
+  (s', T_{a,b}(x,y), h)
+
+where (s',h) is read from the positive identity-row table.
+
+negative rows:
+  Gamma^{E,-}_{c,d}(s',u,v)
+  =
+  (s,x,y,h^{-1})
+
+whenever R_C(a,b)=(c,d) and T_{a,b}(x,y)=(u,v).
+```
+
+Then compute `S_E^reach` as the exact signed-transition closure of the
+current `kappa` seed image under these derived rows, recompute the full
+signed domain `D_Gamma(E)` from the interval fibres and reachable states, and
+audit the constructed observer against that domain.  If the positive
+identity-row table omits any reachable local context, if a next state leaves
+the reachable closure, if the negative table is not single-valued, if the
+coboundary defect is not constant on a sound detector domain, or if residual
+faithfulness is not supplied, the observer remains open.  No default endpoint
+emission is allowed.
+
 Each `W_s` is a word in variables `U_{r,j}` only.  The local substitution may
 use both `U_{r,j}` and raw assignment variables `A_{r,j}`, but the terminal
 template may not contain any `A` variable.  All such variables must use track
@@ -2249,8 +2279,9 @@ an open local gap.
    detector-track initialization rules, prove the Artin detector recurrence,
    define word templates `W_s` for all reachable states, prove every
    nonabelian coboundary defect is constant on a sound detector domain, and
-   derive the positive endpoint emissions from those constant values.  Define
-   negative rows as actual inverses and prove residual faithfulness.  Then
+   derive the positive endpoint emissions from those constant values.  Build
+   the observer by deriving positive rows from the identity-row table and
+   negative rows as actual inverses, then prove residual faithfulness.  Then
    prove uniformly in `n` that every routed
    triangular-recovery endpoint lies in `V_beta(U_tri)`, or prove a faithful
    symmetric endpoint cutoff for the exact routed U family.  Otherwise,
@@ -2264,7 +2295,8 @@ an open local gap.
    detector-track initialization rules, prove the Artin detector recurrence,
    define word templates, prove every nonabelian coboundary defect is
    constant on a sound detector domain, derive endpoint emissions from those
-   constants, define negative rows as actual inverses, and construct exact
+   constants, build the observer with inverse-derived negative rows, and
+   construct exact
    faithful cutoff readouts for the routed identity-continuation ledger.
    Then construct fixed detector-lift endpoint witnesses or a faithful
    symmetric cutoff for every identity-routed
@@ -2279,7 +2311,8 @@ an open local gap.
    detector-track initialization rules, prove the Artin detector recurrence,
    define word templates, prove every nonabelian coboundary defect is
    constant on a sound detector domain, derive endpoint emissions from those
-   constants, define negative rows as actual inverses, and construct exact
+   constants, build the observer with inverse-derived negative rows, and
+   construct exact
    faithful cutoff readouts for the routed mixed-unit ledger.  Then construct
    fixed detector-lift endpoint/readout witnesses or a faithful symmetric
    cutoff for every mixed-unit context key.  Otherwise, extract a

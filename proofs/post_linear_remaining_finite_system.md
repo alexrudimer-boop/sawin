@@ -680,13 +680,23 @@ template validity: a row with forbidden braid-prefix or search dependencies
 is reported as an unfixed row, while a dependency-valid row with a malformed
 assignment template is reported only as a template error.
 
-The implementation now exposes an interval-derived constructor for this
-audit layer.  Given the interval, `kappa` entries, reachable states, signed
-rows, a fixed endpoint group, literal row diagnostics, and a fixed-assignment
-telescoping detector audit, it computes the full `D_Gamma` domain from the
-fibres and fills the coordinate, inverse, YBE, and fixed-track telescoping
-gates by running the finite checkers.  This
-keeps the local certificate from being a list of unsupported boolean claims.
+The implementation now exposes two interval-derived constructors for this
+audit layer.  The lower-level constructor
+`universal_k_signed_endpoint_generator_audit(...)` takes already-supplied
+signed rows and recomputes the full `D_Gamma` domain from the fibres, then
+fills the coordinate, inverse, YBE, and fixed-track telescoping gates by
+running the finite checkers.  The higher-level constructor
+`universal_k_endpoint_observer_build(...)` is the monodromy-coboundary
+observer builder: it reads the positive rows from the word-potential identity
+table, sets the positive coordinate part to the actual interval map
+`T_{a,b}`, derives negative rows by inversion in the fixed endpoint group,
+computes the reachable seed-state closure from the current `kappa` entries,
+builds the fixed-assignment telescoping audit, and then calls the same signed
+endpoint audit.  Missing positive contexts, nonconstant coboundary defects,
+out-of-scope detector tracks, missing C/M readouts, or missing residual
+faithfulness remain visible audit failures rather than being filled by
+defaults.  This keeps the local certificate from being a list of unsupported
+boolean claims.
 The audit also records the concrete failure rows or local triples for each
 derived gate, so a failed certificate can be repaired without reverse
 engineering which table entry broke.  The signed endpoint table proof now

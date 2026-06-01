@@ -39,6 +39,7 @@ from ybe_domination import (
     UniversalKCutoffReadoutAudit,
     UniversalKCutoffReadoutRow,
     UniversalKDetectorTrackInitializationRow,
+    UniversalKEndpointObserverBuild,
     UniversalKEndpointTargetAudit,
     UniversalKResidualActionScopeAudit,
     UniversalKResidualFaithfulnessAudit,
@@ -86,6 +87,9 @@ from ybe_domination import (
     triangular_recovery_unit_observer_audit,
     triangular_recovery_unit_group,
     universal_k_signed_endpoint_artin_update_failures,
+    universal_k_endpoint_observer_build,
+    universal_k_endpoint_observer_positive_rows_from_word_potential,
+    universal_k_endpoint_observer_signed_rows_from_positive,
     universal_k_signed_endpoint_coordinate_failures,
     universal_k_signed_endpoint_far_commutativity_failures,
     universal_k_signed_endpoint_generator_audit,
@@ -4120,6 +4124,157 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertTrue(complete.residual_faithfulness_proved)
         self.assertTrue(complete.proves_signed_endpoint_generator_tables)
         self.assertEqual(complete.failure_reasons, ())
+
+    def test_endpoint_observer_builder_forces_signed_rows_from_word_potential(self):
+        interval = one_color_identity_interval()
+        group = cyclic_group(2)
+        seed_state = ("*", "*", "left_constant_map_universal_kernel")
+        seed_key = ("U", seed_state)
+        seed_entries = ((("*", "*", "L", "constant_map_kernel", (0, 1)), seed_key),)
+        seed_states = (seed_key,)
+        required_keys = universal_k_signed_endpoint_required_entry_keys(
+            interval,
+            seed_states,
+        )
+        positive_keys = tuple(key for key in required_keys if key[2] == 1)
+        certificate = UniversalKWordPotentialCertificate(
+            endpoint_group=group,
+            templates=((seed_key, ()),),
+            identity_rows=tuple(
+                UniversalKWordPotentialIdentityRow(
+                    entry_key=key,
+                    next_seed_state=seed_state,
+                    endpoint_value=group.identity,
+                    artin_substitution=(),
+                )
+                for key in positive_keys
+            ),
+            normalized_seed_states=seed_states,
+        )
+        detector_rows = (
+            UniversalKDetectorTrackInitializationRow(
+                endpoint_family="U",
+                track_index=0,
+                assignment_rule="constant_identity_from_interval_seed",
+                dependencies=("interval_data", "routed_seed_state", "strand_index"),
+                local_assignment_template=((("A", 0, 0), group.identity),),
+            ),
+        )
+        residual_theorem = UniversalKResidualFaithfulnessAudit(
+            active_endpoint_families=("U",),
+            covered_endpoint_families=("U",),
+            expected_residual_row_count=1,
+            covered_residual_row_count=1,
+            expected_residual_input_tuples=(("p",),),
+            covered_residual_input_tuples=(("p",),),
+            endpoint_channels_exact=True,
+            identity_endpoint_data_forces_residual_identity=True,
+            braid_index_independent=True,
+            product_families_separated=True,
+            expected_endpoint_seed_states=seed_states,
+            covered_endpoint_seed_states=seed_states,
+            residual_rows=trivial_residual_faithfulness_rows(
+                "U",
+                seed_states=seed_states,
+            ),
+        )
+
+        build = universal_k_endpoint_observer_build(
+            interval,
+            seed_entries,
+            certificate,
+            detector_track_initialization_rows=detector_rows,
+            residual_faithfulness_theorem=residual_theorem,
+        )
+
+        self.assertIsInstance(build, UniversalKEndpointObserverBuild)
+        self.assertEqual(build.reachable_seed_states, seed_states)
+        self.assertEqual(
+            tuple(row.entry_key for row in build.positive_rows),
+            positive_keys,
+        )
+        self.assertEqual(
+            set(row.entry_key for row in build.rows),
+            set(required_keys),
+        )
+        self.assertTrue(build.telescoping_detector_audit.proves_telescoping_detector_lift)
+        self.assertTrue(build.audit.positive_monodromy_representation_verified)
+        self.assertTrue(build.proves_endpoint_observer)
+
+    def test_endpoint_observer_builder_rejects_omitted_positive_context(self):
+        interval = one_color_identity_interval()
+        group = cyclic_group(2)
+        seed_state = ("*", "*", "left_constant_map_universal_kernel")
+        seed_key = ("U", seed_state)
+        seed_entries = ((("*", "*", "L", "constant_map_kernel", (0, 1)), seed_key),)
+        required_keys = universal_k_signed_endpoint_required_entry_keys(
+            interval,
+            (seed_key,),
+        )
+        positive_keys = tuple(key for key in required_keys if key[2] == 1)
+        certificate = UniversalKWordPotentialCertificate(
+            endpoint_group=group,
+            templates=((seed_key, ()),),
+            identity_rows=(
+                UniversalKWordPotentialIdentityRow(
+                    entry_key=positive_keys[0],
+                    next_seed_state=seed_state,
+                    endpoint_value=group.identity,
+                    artin_substitution=(),
+                ),
+            ),
+            normalized_seed_states=(seed_key,),
+        )
+        detector_rows = (
+            UniversalKDetectorTrackInitializationRow(
+                endpoint_family="U",
+                track_index=0,
+                assignment_rule="constant_identity_from_interval_seed",
+                dependencies=("interval_data", "routed_seed_state", "strand_index"),
+                local_assignment_template=((("A", 0, 0), group.identity),),
+            ),
+        )
+
+        build = universal_k_endpoint_observer_build(
+            interval,
+            seed_entries,
+            certificate,
+            detector_track_initialization_rows=detector_rows,
+        )
+
+        self.assertFalse(build.proves_endpoint_observer)
+        self.assertIn("signed_generator_entries_missing", build.audit.failure_reasons)
+        self.assertIn(
+            "word_potential_certificate_entry_scope_mismatch",
+            build.telescoping_detector_audit.failure_reasons,
+        )
+
+    def test_word_potential_certificate_reports_unhashable_keys_without_crashing(self):
+        group = cyclic_group(2)
+        bad_state = ("U", (["not-hashable"],))
+        bad_key = ("U", (["not-hashable"],), 1, "*", "*", 0, 0)
+        certificate = UniversalKWordPotentialCertificate(
+            endpoint_group=group,
+            templates=((bad_state, ()),),
+            identity_rows=(
+                UniversalKWordPotentialIdentityRow(
+                    entry_key=bad_key,
+                    next_seed_state=(["not-hashable"],),
+                    endpoint_value=group.identity,
+                ),
+            ),
+            normalized_seed_states=(bad_state,),
+        )
+
+        self.assertEqual(certificate.template_seed_states_exact, (bad_state,))
+        self.assertEqual(certificate.identity_entry_keys_exact, (bad_key,))
+        self.assertEqual(certificate.normalized_seed_states_exact, (bad_state,))
+        self.assertEqual(certificate.malformed_template_seed_states, (bad_state,))
+        self.assertEqual(certificate.malformed_identity_entry_keys, (bad_key,))
+        self.assertEqual(certificate.malformed_normalized_seed_states, (bad_state,))
+        self.assertFalse(certificate.word_potential_templates_verified)
+        self.assertFalse(certificate.artin_substitutions_verified)
+        self.assertFalse(certificate.initial_readouts_normalized)
 
     def test_signed_endpoint_positive_rows_must_be_monodromy_permutations(self):
         seed_a = ("*", "*", "left_constant_map_universal_kernel", "a")
