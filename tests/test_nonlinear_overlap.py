@@ -3292,6 +3292,49 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             theorem_with_unknown_family.failure_reasons,
         )
 
+        theorem_with_malformed_row_count = replace(
+            theorem,
+            expected_residual_row_count="1",
+            covered_residual_row_count=True,
+        )
+        self.assertFalse(
+            theorem_with_malformed_row_count.residual_row_counts_well_formed
+        )
+        self.assertFalse(
+            theorem_with_malformed_row_count.proves_residual_faithfulness
+        )
+        self.assertEqual(
+            theorem_with_malformed_row_count.malformed_residual_row_counts,
+            (
+                ("expected_residual_row_count", "1"),
+                ("covered_residual_row_count", True),
+            ),
+        )
+        self.assertIn(
+            "residual_faithfulness_row_count_malformed",
+            theorem_with_malformed_row_count.failure_reasons,
+        )
+
+        theorem_with_malformed_family_count = replace(
+            theorem,
+            expected_residual_rows_by_family=(("U", "one"),),
+            covered_residual_rows_by_family=(("U", "one"),),
+        )
+        self.assertFalse(
+            theorem_with_malformed_family_count.residual_family_row_counts_nonnegative
+        )
+        self.assertFalse(
+            theorem_with_malformed_family_count.proves_residual_faithfulness
+        )
+        self.assertEqual(
+            theorem_with_malformed_family_count.malformed_residual_family_row_counts,
+            (("covered", "U", "one"), ("expected", "U", "one")),
+        )
+        self.assertIn(
+            "residual_faithfulness_family_row_count_malformed",
+            theorem_with_malformed_family_count.failure_reasons,
+        )
+
         rowwise_only = replace(theorem_complete, telescoping_detector_audit=None)
         self.assertTrue(rowwise_only.signed_two_strand_base_verified)
         self.assertTrue(rowwise_only.artin_homomorphism_update_verified)
@@ -3708,6 +3751,36 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             theorem_missing_scope.failure_reasons,
         )
 
+        malformed_action_scope_row_count = UniversalKResidualActionScopeAudit(
+            active_endpoint_families=("U",),
+            covered_endpoint_families=("U",),
+            expected_residual_row_count="1",
+            covered_residual_row_count=True,
+            endpoint_channels_exact=True,
+            braid_index_independent=True,
+            product_families_separated=True,
+            expected_endpoint_seed_states=(("U", seed_state),),
+            covered_endpoint_seed_states=(("U", seed_state),),
+            scope_dependencies=("interval_data",),
+        )
+        self.assertFalse(
+            malformed_action_scope_row_count.residual_row_counts_well_formed
+        )
+        self.assertFalse(
+            malformed_action_scope_row_count.proves_residual_action_scope
+        )
+        self.assertEqual(
+            malformed_action_scope_row_count.malformed_residual_row_counts,
+            (
+                ("expected_residual_row_count", "1"),
+                ("covered_residual_row_count", True),
+            ),
+        )
+        self.assertIn(
+            "residual_action_scope_row_count_malformed",
+            malformed_action_scope_row_count.failure_reasons,
+        )
+
         multi_family_theorem_missing_rows = UniversalKResidualFaithfulnessAudit(
             active_endpoint_families=("U", "C"),
             covered_endpoint_families=("U", "C"),
@@ -3754,6 +3827,41 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             multi_family_theorem_missing_rows.failure_reasons,
         )
         self.assertTrue(multi_family_theorem.proves_residual_faithfulness)
+
+        malformed_action_scope_family_count = UniversalKResidualActionScopeAudit(
+            active_endpoint_families=("U", "C"),
+            covered_endpoint_families=("U", "C"),
+            expected_residual_row_count=2,
+            covered_residual_row_count=2,
+            expected_residual_rows_by_family=(("U", 1), ("C", "one")),
+            covered_residual_rows_by_family=(("U", 1), ("C", "one")),
+            endpoint_channels_exact=True,
+            braid_index_independent=True,
+            product_families_separated=True,
+            expected_endpoint_seed_states=(
+                ("U", seed_state),
+                ("C", ("*", "*", "left")),
+            ),
+            covered_endpoint_seed_states=(
+                ("U", seed_state),
+                ("C", ("*", "*", "left")),
+            ),
+            scope_dependencies=("interval_data",),
+        )
+        self.assertFalse(
+            malformed_action_scope_family_count.residual_family_row_counts_nonnegative
+        )
+        self.assertFalse(
+            malformed_action_scope_family_count.proves_residual_action_scope
+        )
+        self.assertEqual(
+            malformed_action_scope_family_count.malformed_residual_family_row_counts,
+            (("covered", "C", "one"), ("expected", "C", "one")),
+        )
+        self.assertIn(
+            "residual_action_scope_family_row_count_malformed",
+            malformed_action_scope_family_count.failure_reasons,
+        )
 
         underived_domain = UniversalKSignedEndpointGeneratorAudit(
             seed_classifier_entries=seed_entries,

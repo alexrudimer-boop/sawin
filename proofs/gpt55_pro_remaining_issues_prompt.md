@@ -1583,9 +1583,12 @@ are forbidden.  Endpoint-channel exactness and braid-index independence must
 be derived from that scope audit, not asserted as separate booleans.  If two
 or more endpoint families are active, the certificate must also split the
 residual-row ledger by family: it must list expected and covered residual row
-counts for each active family, with no duplicate family entries, nonnegative
-counts, matching expected and covered family counts, and sums equal to the
-total expected and covered residual row counts.  These family counts must also
+counts for each active family, with no duplicate family entries,
+nonnegative integer counts, matching expected and covered family counts, and
+sums equal to the total expected and covered residual row counts.  The total
+expected and covered residual row counts are also nonnegative integer data;
+strings, booleans, negative values, and other non-count objects are malformed
+residual count ledgers, not finite row counts.  These family counts must also
 match the counts derived from the actual residual rows: a row that names an
 endpoint family contributes one row to that family, and no family ledger may
 claim zero rows for a family used by a supplied row.  On an explicit
@@ -1650,8 +1653,9 @@ sequences, or timeouts are forbidden.  Endpoint-channel exactness,
 braid-index independence, and product-family separation must be derived from
 these rows and the family/seed ledgers, not asserted as separate booleans.
 In the multi-family case, the theorem must also include the same expected and
-covered residual row counts by family.  A bare assertion that residual
-faithfulness holds, or a certificate scoped only by family names while
+covered residual row counts by family, again as nonnegative integer rows
+whose sums match the total nonnegative integer row counts.  A bare assertion
+that residual faithfulness holds, or a certificate scoped only by family names while
 omitting the routed seed states, is not a certificate.  The expected and
 covered family ledgers and the expected and covered seed-state ledgers must
 also be duplicate-free; a repeated family or repeated seed is an ambiguous
@@ -1690,6 +1694,8 @@ residual_endpoint_family_ledgers_in_U_C_M,
 residual_endpoint_seed_state_ledgers_duplicate_free,
 residual_endpoint_seed_state_ledgers_well_formed,
 multi_family_residual_row_counts_by_family_exact,
+residual_row_counts_are_nonnegative_integers,
+residual_family_row_counts_are_nonnegative_integers,
 residual_rows_have_nonempty_arity_consistent_tuples,
 residual_rows_have_duplicate_free_endpoint_channel_keys,
 residual_rows_have_well_formed_endpoint_channel_keys,

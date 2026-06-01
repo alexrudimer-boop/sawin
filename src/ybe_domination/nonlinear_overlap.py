@@ -1938,10 +1938,32 @@ class UniversalKResidualFaithfulnessAudit:
         return self.expected_residual_row_count is not None
 
     @property
+    def residual_row_counts_well_formed(self) -> bool:
+        return (
+            _universal_k_nonnegative_int(self.expected_residual_row_count)
+            and _universal_k_nonnegative_int(self.covered_residual_row_count)
+        )
+
+    @property
+    def malformed_residual_row_counts(self) -> Tuple[Tuple[str, object], ...]:
+        malformed = []
+        if (
+            self.expected_residual_row_count is not None
+            and not _universal_k_nonnegative_int(self.expected_residual_row_count)
+        ):
+            malformed.append(
+                ("expected_residual_row_count", self.expected_residual_row_count)
+            )
+        if not _universal_k_nonnegative_int(self.covered_residual_row_count):
+            malformed.append(
+                ("covered_residual_row_count", self.covered_residual_row_count)
+            )
+        return tuple(malformed)
+
+    @property
     def residual_row_coverage_exact(self) -> bool:
         return (
-            self.expected_residual_row_count is not None
-            and self.expected_residual_row_count >= 0
+            self.residual_row_counts_well_formed
             and self.covered_residual_row_count == self.expected_residual_row_count
         )
 
@@ -2176,12 +2198,33 @@ class UniversalKResidualFaithfulnessAudit:
     @property
     def residual_family_row_counts_nonnegative(self) -> bool:
         return all(
-            count >= 0
+            _universal_k_nonnegative_int(count)
             for _family, count in (
                 self.expected_residual_rows_by_family
                 + self.covered_residual_rows_by_family
             )
         )
+
+    @property
+    def malformed_residual_family_row_counts(
+        self,
+    ) -> Tuple[Tuple[str, str, object], ...]:
+        malformed = []
+        seen = set()
+        for ledger_name, rows in (
+            ("expected", self.expected_residual_rows_by_family),
+            ("covered", self.covered_residual_rows_by_family),
+        ):
+            for family, count in rows:
+                if _universal_k_nonnegative_int(count):
+                    continue
+                value = (ledger_name, family, count)
+                marker = repr(value)
+                if marker in seen:
+                    continue
+                seen.add(marker)
+                malformed.append(value)
+        return tuple(sorted(malformed, key=repr))
 
     @property
     def residual_family_row_counts_match(self) -> bool:
@@ -2204,6 +2247,11 @@ class UniversalKResidualFaithfulnessAudit:
         ):
             return True
         if self.expected_residual_row_count is None:
+            return False
+        if (
+            not self.residual_row_counts_well_formed
+            or not self.residual_family_row_counts_nonnegative
+        ):
             return False
         return (
             sum(count for _family, count in self.expected_residual_rows_by_family)
@@ -2236,6 +2284,8 @@ class UniversalKResidualFaithfulnessAudit:
             and not self.covered_residual_rows_by_family
         ):
             return True
+        if not self.residual_family_row_counts_nonnegative:
+            return False
         return (
             dict(self.expected_residual_rows_by_family)
             == dict(self.actual_residual_rows_by_family)
@@ -2294,6 +2344,8 @@ class UniversalKResidualFaithfulnessAudit:
             reasons.append("residual_faithfulness_seed_state_families_mismatch")
         if not self.residual_row_count_supplied:
             reasons.append("residual_faithfulness_expected_row_count_missing")
+        elif not self.residual_row_counts_well_formed:
+            reasons.append("residual_faithfulness_row_count_malformed")
         elif not self.residual_row_coverage_exact:
             reasons.append("residual_faithfulness_row_coverage_not_exact")
         if not self.residual_input_tuple_domain_supplied:
@@ -2331,6 +2383,8 @@ class UniversalKResidualFaithfulnessAudit:
             reasons.append("residual_faithfulness_family_row_count_scope_mismatch")
         if not self.residual_family_row_counts_nonnegative:
             reasons.append("residual_faithfulness_family_row_count_negative")
+        if self.malformed_residual_family_row_counts:
+            reasons.append("residual_faithfulness_family_row_count_malformed")
         if not self.residual_family_row_counts_match:
             reasons.append("residual_faithfulness_family_row_counts_mismatch")
         if not self.residual_family_row_count_sums_match:
@@ -2500,10 +2554,32 @@ class UniversalKResidualActionScopeAudit:
         return self.expected_residual_row_count is not None
 
     @property
+    def residual_row_counts_well_formed(self) -> bool:
+        return (
+            _universal_k_nonnegative_int(self.expected_residual_row_count)
+            and _universal_k_nonnegative_int(self.covered_residual_row_count)
+        )
+
+    @property
+    def malformed_residual_row_counts(self) -> Tuple[Tuple[str, object], ...]:
+        malformed = []
+        if (
+            self.expected_residual_row_count is not None
+            and not _universal_k_nonnegative_int(self.expected_residual_row_count)
+        ):
+            malformed.append(
+                ("expected_residual_row_count", self.expected_residual_row_count)
+            )
+        if not _universal_k_nonnegative_int(self.covered_residual_row_count):
+            malformed.append(
+                ("covered_residual_row_count", self.covered_residual_row_count)
+            )
+        return tuple(malformed)
+
+    @property
     def residual_row_coverage_exact(self) -> bool:
         return (
-            self.expected_residual_row_count is not None
-            and self.expected_residual_row_count >= 0
+            self.residual_row_counts_well_formed
             and self.covered_residual_row_count == self.expected_residual_row_count
         )
 
@@ -2548,12 +2624,33 @@ class UniversalKResidualActionScopeAudit:
     @property
     def residual_family_row_counts_nonnegative(self) -> bool:
         return all(
-            count >= 0
+            _universal_k_nonnegative_int(count)
             for _family, count in (
                 self.expected_residual_rows_by_family
                 + self.covered_residual_rows_by_family
             )
         )
+
+    @property
+    def malformed_residual_family_row_counts(
+        self,
+    ) -> Tuple[Tuple[str, str, object], ...]:
+        malformed = []
+        seen = set()
+        for ledger_name, rows in (
+            ("expected", self.expected_residual_rows_by_family),
+            ("covered", self.covered_residual_rows_by_family),
+        ):
+            for family, count in rows:
+                if _universal_k_nonnegative_int(count):
+                    continue
+                value = (ledger_name, family, count)
+                marker = repr(value)
+                if marker in seen:
+                    continue
+                seen.add(marker)
+                malformed.append(value)
+        return tuple(sorted(malformed, key=repr))
 
     @property
     def residual_family_row_counts_cover_active_families(self) -> bool:
@@ -2563,6 +2660,8 @@ class UniversalKResidualActionScopeAudit:
             and not self.covered_residual_rows_by_family
         ):
             return True
+        if not self.residual_family_row_counts_nonnegative:
+            return False
         expected_counts = dict(self.expected_residual_rows_by_family)
         covered_counts = dict(self.covered_residual_rows_by_family)
         return all(
@@ -2594,6 +2693,11 @@ class UniversalKResidualActionScopeAudit:
         ):
             return True
         if self.expected_residual_row_count is None:
+            return False
+        if (
+            not self.residual_row_counts_well_formed
+            or not self.residual_family_row_counts_nonnegative
+        ):
             return False
         return (
             sum(count for _family, count in self.expected_residual_rows_by_family)
@@ -2694,6 +2798,8 @@ class UniversalKResidualActionScopeAudit:
             reasons.append("residual_action_scope_seed_state_families_mismatch")
         if not self.residual_row_count_supplied:
             reasons.append("residual_action_scope_expected_row_count_missing")
+        elif not self.residual_row_counts_well_formed:
+            reasons.append("residual_action_scope_row_count_malformed")
         elif not self.residual_row_coverage_exact:
             reasons.append("residual_action_scope_row_coverage_not_exact")
         if (
@@ -2707,6 +2813,8 @@ class UniversalKResidualActionScopeAudit:
             reasons.append("residual_action_scope_family_row_count_scope_mismatch")
         if not self.residual_family_row_counts_nonnegative:
             reasons.append("residual_action_scope_family_row_count_negative")
+        if self.malformed_residual_family_row_counts:
+            reasons.append("residual_action_scope_family_row_count_malformed")
         if not self.residual_family_row_counts_cover_active_families:
             reasons.append(
                 "residual_action_scope_family_row_counts_do_not_cover_active_families"
@@ -8461,6 +8569,10 @@ class PostLinearRemainingFiniteSystemAudit:
                 ("signed_endpoint_generator_residual_action_scope_expected_states", ()),
                 ("signed_endpoint_generator_residual_action_scope_covered_states", ()),
                 (
+                    "signed_endpoint_generator_residual_action_scope_malformed_row_counts",
+                    (),
+                ),
+                (
                     "signed_endpoint_generator_residual_action_scope_duplicate_seed_states",
                     (),
                 ),
@@ -8482,6 +8594,10 @@ class PostLinearRemainingFiniteSystemAudit:
                     (),
                 ),
                 (
+                    "signed_endpoint_generator_residual_action_scope_malformed_family_rows",
+                    (),
+                ),
+                (
                     "signed_endpoint_generator_residual_action_scope_family_rows_cover_active",
                     False,
                 ),
@@ -8496,6 +8612,10 @@ class PostLinearRemainingFiniteSystemAudit:
                 ("signed_endpoint_generator_residual_theorem_scope_matches_seed_states", False),
                 ("signed_endpoint_generator_residual_theorem_expected_states", ()),
                 ("signed_endpoint_generator_residual_theorem_covered_states", ()),
+                (
+                    "signed_endpoint_generator_residual_theorem_malformed_row_counts",
+                    (),
+                ),
                 (
                     "signed_endpoint_generator_residual_theorem_duplicate_seed_states",
                     (),
@@ -8515,6 +8635,10 @@ class PostLinearRemainingFiniteSystemAudit:
                 ),
                 (
                     "signed_endpoint_generator_residual_theorem_duplicate_family_rows",
+                    (),
+                ),
+                (
+                    "signed_endpoint_generator_residual_theorem_malformed_family_rows",
                     (),
                 ),
                 (
@@ -9692,6 +9816,14 @@ class PostLinearRemainingFiniteSystemAudit:
                 ),
             ),
             (
+                "signed_endpoint_generator_residual_action_scope_malformed_row_counts",
+                (
+                    audit.residual_action_scope.malformed_residual_row_counts
+                    if audit.residual_action_scope is not None
+                    else ()
+                ),
+            ),
+            (
                 "signed_endpoint_generator_residual_action_scope_duplicate_seed_states",
                 (
                     audit.residual_action_scope.duplicate_expected_endpoint_seed_states
@@ -9739,6 +9871,14 @@ class PostLinearRemainingFiniteSystemAudit:
                 (
                     audit.residual_action_scope.duplicate_expected_residual_row_families
                     + audit.residual_action_scope.duplicate_covered_residual_row_families
+                    if audit.residual_action_scope is not None
+                    else ()
+                ),
+            ),
+            (
+                "signed_endpoint_generator_residual_action_scope_malformed_family_rows",
+                (
+                    audit.residual_action_scope.malformed_residual_family_row_counts
                     if audit.residual_action_scope is not None
                     else ()
                 ),
@@ -9806,6 +9946,14 @@ class PostLinearRemainingFiniteSystemAudit:
                 ),
             ),
             (
+                "signed_endpoint_generator_residual_theorem_malformed_row_counts",
+                (
+                    audit.residual_faithfulness_theorem.malformed_residual_row_counts
+                    if audit.residual_faithfulness_theorem is not None
+                    else ()
+                ),
+            ),
+            (
                 "signed_endpoint_generator_residual_theorem_duplicate_seed_states",
                 (
                     audit.residual_faithfulness_theorem.duplicate_expected_endpoint_seed_states
@@ -9853,6 +10001,14 @@ class PostLinearRemainingFiniteSystemAudit:
                 (
                     audit.residual_faithfulness_theorem.duplicate_expected_residual_row_families
                     + audit.residual_faithfulness_theorem.duplicate_covered_residual_row_families
+                    if audit.residual_faithfulness_theorem is not None
+                    else ()
+                ),
+            ),
+            (
+                "signed_endpoint_generator_residual_theorem_malformed_family_rows",
+                (
+                    audit.residual_faithfulness_theorem.malformed_residual_family_row_counts
                     if audit.residual_faithfulness_theorem is not None
                     else ()
                 ),

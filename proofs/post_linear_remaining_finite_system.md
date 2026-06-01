@@ -789,8 +789,12 @@ must also be subsets of `{U,C,M}`; an unknown family label is rejected even if
 the active and covered ledgers match.
 For multi-family residual products, aggregate row counts are no longer enough:
 the residual scope must also list expected and covered residual row counts by
-endpoint family, without duplicate family entries, with nonnegative matching
-counts whose sums equal the total expected and covered residual row counts.
+endpoint family, without duplicate family entries, with nonnegative integer
+matching counts whose sums equal the total expected and covered residual row
+counts.  The total expected and covered residual row counts are also finite
+nonnegative integer data; strings, booleans, negative values, and other
+non-count objects are malformed residual row-count ledgers rather than
+zero-row families.
 Those ledgers must also match the actual residual rows: each row contributes
 one count to every endpoint family named by that row, and a family ledger
 cannot claim zero rows for a family that any supplied row uses.  This keeps a
@@ -821,7 +825,10 @@ from `identity_endpoint_output_tuple=input_tuple` on every row, and derives
 braid-index independence from the absence of forbidden dependencies.  The
 same family-by-family residual row-count ledger is required for symbolic
 multi-family residual theorems, and those family counts must agree with the
-counts obtained by scanning the symbolic residual rows themselves.  Bare
+counts obtained by scanning the symbolic residual rows themselves.  The
+symbolic theorem's total row counts and family row counts must be finite
+nonnegative integers; malformed counts are reported before the theorem can
+claim residual faithfulness.  Bare
 booleans for endpoint-channel
 exactness, identity residual motion, braid-index independence, or product
 separation are recorded only as supplied data; they are not accepted as proof.
@@ -1021,12 +1028,14 @@ signed_endpoint_generator_residual_action_scope_matches_seed_states
 signed_endpoint_generator_residual_action_scope_matches_rows
 signed_endpoint_generator_residual_action_scope_expected_states
 signed_endpoint_generator_residual_action_scope_covered_states
+signed_endpoint_generator_residual_action_scope_malformed_row_counts
 signed_endpoint_generator_residual_action_scope_duplicate_seed_states
 signed_endpoint_generator_residual_action_scope_malformed_seed_states
 signed_endpoint_generator_residual_action_scope_unknown_families
 signed_endpoint_generator_residual_action_scope_family_rows
 signed_endpoint_generator_residual_action_scope_family_rows_covered
 signed_endpoint_generator_residual_action_scope_duplicate_family_rows
+signed_endpoint_generator_residual_action_scope_malformed_family_rows
 signed_endpoint_generator_residual_action_scope_family_rows_cover_active
 signed_endpoint_generator_residual_action_scope_dependencies
 signed_endpoint_generator_residual_action_scope_invalid_dependencies
@@ -1036,12 +1045,14 @@ signed_endpoint_generator_residual_theorem_scope_matches_required
 signed_endpoint_generator_residual_theorem_scope_matches_seed_states
 signed_endpoint_generator_residual_theorem_expected_states
 signed_endpoint_generator_residual_theorem_covered_states
+signed_endpoint_generator_residual_theorem_malformed_row_counts
 signed_endpoint_generator_residual_theorem_duplicate_seed_states
 signed_endpoint_generator_residual_theorem_malformed_seed_states
 signed_endpoint_generator_residual_theorem_unknown_families
 signed_endpoint_generator_residual_theorem_family_rows
 signed_endpoint_generator_residual_theorem_family_rows_covered
 signed_endpoint_generator_residual_theorem_duplicate_family_rows
+signed_endpoint_generator_residual_theorem_malformed_family_rows
 signed_endpoint_generator_residual_theorem_actual_family_rows
 signed_endpoint_generator_residual_theorem_family_rows_match_actual
 signed_endpoint_generator_residual_theorem_expected_input_tuples
