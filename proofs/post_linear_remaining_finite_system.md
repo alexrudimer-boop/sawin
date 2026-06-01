@@ -576,11 +576,13 @@ active U/C/M family has no residual readout rows.
 
 When the bridge is supplied as a symbolic theorem rather than row data, the
 audit requires the theorem to specify exact active and covered endpoint
-families, exact residual row counts, exact endpoint-channel coverage, the
+families, exact residual row counts, exact residual input-tuple-domain
+coverage, exact endpoint-channel coverage, the
 identity-endpoint-to-identity-residual implication, braid-index independence,
 and product-family separation.  The same family-by-family residual row-count
 ledger is required for symbolic multi-family residual theorems.  A bare
-boolean is recorded only as supplied data; it is not accepted as proof.
+boolean, row count, or duplicate-collapsed input-domain claim is recorded only
+as supplied data; it is not accepted as proof.
 
 together with the concrete rows:
 
@@ -721,6 +723,12 @@ signed_endpoint_generator_residual_theorem_duplicate_seed_states
 signed_endpoint_generator_residual_theorem_family_rows
 signed_endpoint_generator_residual_theorem_family_rows_covered
 signed_endpoint_generator_residual_theorem_duplicate_family_rows
+signed_endpoint_generator_residual_theorem_expected_input_tuples
+signed_endpoint_generator_residual_theorem_covered_input_tuples
+signed_endpoint_generator_residual_theorem_missing_input_tuples
+signed_endpoint_generator_residual_theorem_extra_input_tuples
+signed_endpoint_generator_residual_theorem_duplicate_input_tuples
+signed_endpoint_generator_residual_theorem_input_tuple_domain_exact
 signed_endpoint_generator_residual_action_rows
 signed_endpoint_generator_residual_action_rows_expected
 signed_endpoint_generator_residual_action_expected_input_tuples

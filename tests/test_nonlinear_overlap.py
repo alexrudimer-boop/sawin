@@ -2805,6 +2805,8 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             product_families_separated=True,
             expected_endpoint_seed_states=(("U", seed_state),),
             covered_endpoint_seed_states=(("U", seed_state),),
+            expected_residual_input_tuples=(("p",),),
+            covered_residual_input_tuples=(("p",),),
         )
         theorem_complete = UniversalKSignedEndpointGeneratorAudit(
             seed_classifier_entries=seed_entries,
@@ -2831,6 +2833,17 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertTrue(theorem.proves_residual_faithfulness)
         self.assertTrue(theorem_complete.residual_faithfulness_proved)
         self.assertTrue(theorem_complete.proves_signed_endpoint_generator_tables)
+
+        theorem_without_input_domain = replace(
+            theorem,
+            expected_residual_input_tuples=(),
+            covered_residual_input_tuples=(),
+        )
+        self.assertFalse(theorem_without_input_domain.proves_residual_faithfulness)
+        self.assertIn(
+            "residual_faithfulness_input_tuple_domain_missing",
+            theorem_without_input_domain.failure_reasons,
+        )
 
         rowwise_only = replace(theorem_complete, telescoping_detector_audit=None)
         self.assertTrue(rowwise_only.signed_two_strand_base_verified)
@@ -2967,6 +2980,8 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
                 ("U", seed_state),
                 ("C", ("*", "*", "left")),
             ),
+            expected_residual_input_tuples=(("p",),),
+            covered_residual_input_tuples=(("p",),),
         )
         multi_family_theorem = replace(
             multi_family_theorem_missing_rows,

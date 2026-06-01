@@ -1003,6 +1003,8 @@ class UniversalKResidualFaithfulnessAudit:
     covered_residual_row_count: int
     expected_residual_rows_by_family: Tuple[Tuple[str, int], ...] = ()
     covered_residual_rows_by_family: Tuple[Tuple[str, int], ...] = ()
+    expected_residual_input_tuples: Tuple[Tuple[object, ...], ...] = ()
+    covered_residual_input_tuples: Tuple[Tuple[object, ...], ...] = ()
     endpoint_channels_exact: bool = False
     identity_endpoint_data_forces_residual_identity: bool = False
     braid_index_independent: bool = False
@@ -1082,6 +1084,50 @@ class UniversalKResidualFaithfulnessAudit:
             self.expected_residual_row_count is not None
             and self.expected_residual_row_count >= 0
             and self.covered_residual_row_count == self.expected_residual_row_count
+        )
+
+    @property
+    def residual_input_tuple_domain_supplied(self) -> bool:
+        return bool(self.expected_residual_input_tuples)
+
+    @property
+    def duplicate_expected_residual_input_tuples(
+        self,
+    ) -> Tuple[Tuple[object, ...], ...]:
+        return _duplicate_values(self.expected_residual_input_tuples)
+
+    @property
+    def duplicate_covered_residual_input_tuples(
+        self,
+    ) -> Tuple[Tuple[object, ...], ...]:
+        return _duplicate_values(self.covered_residual_input_tuples)
+
+    @property
+    def missing_residual_input_tuples(self) -> Tuple[Tuple[object, ...], ...]:
+        covered = set(self.covered_residual_input_tuples)
+        return tuple(
+            input_tuple
+            for input_tuple in self.expected_residual_input_tuples
+            if input_tuple not in covered
+        )
+
+    @property
+    def extra_residual_input_tuples(self) -> Tuple[Tuple[object, ...], ...]:
+        expected = set(self.expected_residual_input_tuples)
+        return tuple(
+            input_tuple
+            for input_tuple in self.covered_residual_input_tuples
+            if input_tuple not in expected
+        )
+
+    @property
+    def residual_input_tuple_domain_exact(self) -> bool:
+        return (
+            self.residual_input_tuple_domain_supplied
+            and not self.duplicate_expected_residual_input_tuples
+            and not self.duplicate_covered_residual_input_tuples
+            and not self.missing_residual_input_tuples
+            and not self.extra_residual_input_tuples
         )
 
     @property
@@ -1180,6 +1226,7 @@ class UniversalKResidualFaithfulnessAudit:
             and self.seed_state_ledgers_have_no_duplicates
             and self.seed_state_families_match_active
             and self.residual_row_coverage_exact
+            and self.residual_input_tuple_domain_exact
             and self.residual_family_row_coverage_exact
             and self.endpoint_channels_exact
             and self.identity_endpoint_data_forces_residual_identity
@@ -1204,6 +1251,10 @@ class UniversalKResidualFaithfulnessAudit:
             reasons.append("residual_faithfulness_expected_row_count_missing")
         elif not self.residual_row_coverage_exact:
             reasons.append("residual_faithfulness_row_coverage_not_exact")
+        if not self.residual_input_tuple_domain_supplied:
+            reasons.append("residual_faithfulness_input_tuple_domain_missing")
+        elif not self.residual_input_tuple_domain_exact:
+            reasons.append("residual_faithfulness_input_tuple_domain_not_exact")
         if (
             self.residual_family_row_counts_required
             and not self.expected_residual_rows_by_family
@@ -5426,6 +5477,30 @@ class PostLinearRemainingFiniteSystemAudit:
                     "signed_endpoint_generator_residual_theorem_duplicate_family_rows",
                     (),
                 ),
+                (
+                    "signed_endpoint_generator_residual_theorem_expected_input_tuples",
+                    (),
+                ),
+                (
+                    "signed_endpoint_generator_residual_theorem_covered_input_tuples",
+                    (),
+                ),
+                (
+                    "signed_endpoint_generator_residual_theorem_missing_input_tuples",
+                    (),
+                ),
+                (
+                    "signed_endpoint_generator_residual_theorem_extra_input_tuples",
+                    (),
+                ),
+                (
+                    "signed_endpoint_generator_residual_theorem_duplicate_input_tuples",
+                    (),
+                ),
+                (
+                    "signed_endpoint_generator_residual_theorem_input_tuple_domain_exact",
+                    False,
+                ),
                 ("signed_endpoint_generator_residual_action_rows", 0),
                 ("signed_endpoint_generator_residual_action_rows_expected", None),
                 (
@@ -6195,6 +6270,55 @@ class PostLinearRemainingFiniteSystemAudit:
                     + audit.residual_faithfulness_theorem.duplicate_covered_residual_row_families
                     if audit.residual_faithfulness_theorem is not None
                     else ()
+                ),
+            ),
+            (
+                "signed_endpoint_generator_residual_theorem_expected_input_tuples",
+                (
+                    audit.residual_faithfulness_theorem.expected_residual_input_tuples
+                    if audit.residual_faithfulness_theorem is not None
+                    else ()
+                ),
+            ),
+            (
+                "signed_endpoint_generator_residual_theorem_covered_input_tuples",
+                (
+                    audit.residual_faithfulness_theorem.covered_residual_input_tuples
+                    if audit.residual_faithfulness_theorem is not None
+                    else ()
+                ),
+            ),
+            (
+                "signed_endpoint_generator_residual_theorem_missing_input_tuples",
+                (
+                    audit.residual_faithfulness_theorem.missing_residual_input_tuples
+                    if audit.residual_faithfulness_theorem is not None
+                    else ()
+                ),
+            ),
+            (
+                "signed_endpoint_generator_residual_theorem_extra_input_tuples",
+                (
+                    audit.residual_faithfulness_theorem.extra_residual_input_tuples
+                    if audit.residual_faithfulness_theorem is not None
+                    else ()
+                ),
+            ),
+            (
+                "signed_endpoint_generator_residual_theorem_duplicate_input_tuples",
+                (
+                    audit.residual_faithfulness_theorem.duplicate_expected_residual_input_tuples
+                    + audit.residual_faithfulness_theorem.duplicate_covered_residual_input_tuples
+                    if audit.residual_faithfulness_theorem is not None
+                    else ()
+                ),
+            ),
+            (
+                "signed_endpoint_generator_residual_theorem_input_tuple_domain_exact",
+                (
+                    audit.residual_faithfulness_theorem.residual_input_tuple_domain_exact
+                    if audit.residual_faithfulness_theorem is not None
+                    else False
                 ),
             ),
             (
