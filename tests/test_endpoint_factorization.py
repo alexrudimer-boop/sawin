@@ -21,6 +21,8 @@ from ybe_domination import (
     endpoint_product_longitude_expression_audit,
     endpoint_residual_action_audit,
     endpoint_residual_readout_audit,
+    EndpointFamilySymmetricForkAudit,
+    EndpointFamilySymmetricForkRow,
     endpoint_family_symmetric_fork_audit,
     endpoint_family_symmetric_seed_audit,
     identity_solution,
@@ -1133,9 +1135,35 @@ class EndpointFactorizationTests(unittest.TestCase):
         self.assertEqual(audit.symmetric_degree, 6)
         self.assertTrue(audit.endpoint_group_orders_valid)
         self.assertTrue(audit.symmetric_degree_covers_endpoint_groups)
+        self.assertTrue(audit.endpoint_rows_cover_factors)
+        self.assertTrue(audit.endpoint_rows_supply_witnesses)
+        self.assertTrue(audit.endpoint_rows_are_faithful)
         self.assertTrue(audit.endpoint_cutoff_proved)
         self.assertTrue(audit.faithful_endpoint_cutoff_proved)
         self.assertEqual(audit.failure_reasons, ())
+
+        boolean_only = EndpointFamilySymmetricForkAudit(
+            endpoint_group_orders=(2, 6, 3),
+            all_endpoint_witnesses_supplied=True,
+            endpoint_family_faithful=True,
+            symmetric_degree=6,
+        )
+        self.assertFalse(boolean_only.endpoint_cutoff_proved)
+        self.assertFalse(boolean_only.faithful_endpoint_cutoff_proved)
+        self.assertIn("endpoint_family_rows_not_exact", boolean_only.failure_reasons)
+
+        wrong_row = endpoint_family_symmetric_fork_audit(
+            (2, 6, 3),
+            all_endpoint_witnesses_supplied=True,
+            endpoint_family_faithful=True,
+            endpoint_rows=(
+                EndpointFamilySymmetricForkRow(0, 2, True, True),
+                EndpointFamilySymmetricForkRow(1, 5, True, True),
+                EndpointFamilySymmetricForkRow(2, 3, True, True),
+            ),
+        )
+        self.assertFalse(wrong_row.endpoint_cutoff_proved)
+        self.assertIn("endpoint_family_row_order_mismatch", wrong_row.failure_reasons)
 
     def test_endpoint_family_symmetric_fork_records_tail_seed_prefix(self):
         audit = endpoint_family_symmetric_fork_audit(

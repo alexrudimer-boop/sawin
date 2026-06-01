@@ -573,6 +573,14 @@ The residual bridge report likewise separates family coverage from exact
 seed-state coverage, so a residual theorem or row proof built for the wrong
 routed seeds is visible in the obstruction data.
 
+Symmetric endpoint-family fork certificates are also finite-row-backed.  An
+`EndpointFamilySymmetricForkAudit` now requires one endpoint factor row for
+each endpoint group order.  Rows record the factor index, group order, whether
+the endpoint witness is supplied, and whether the row readout is faithful.
+The cutoff proof checks exact factor-row coverage, order agreement, witness
+coverage, and row faithfulness; the older `all_endpoint_witnesses_supplied`
+and `endpoint_family_faithful` booleans are diagnostic only.
+
 The residual-faithfulness gate is separate from the endpoint table identities:
 even a trivial endpoint group satisfies all label subgroup inclusions
 formally, but it closes nothing unless killed endpoint channels force the

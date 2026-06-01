@@ -9,9 +9,23 @@ fork for any finite family of fixed endpoint groups.
 
 The executable mirror is `endpoint_family_symmetric_fork_audit(...)`.  It
 records the finite endpoint factor orders, the left-regular symmetric cutoff,
-whether all endpoint witnesses and faithfulness have been supplied, and whether
-listed failed symmetric degrees form the finite prefix of the normalized-law
-tail shape.
+one finite row for every endpoint factor, and whether listed failed symmetric
+degrees form the finite prefix of the normalized-law tail shape.
+
+Each endpoint factor row has the form
+
+```text
+(factor_index, endpoint_group_order, endpoint_witness_supplied,
+ faithful_readout).
+```
+
+The rows must cover exactly the endpoint factor order list, with no missing,
+extra, or duplicate factor indices and no order mismatch.  A positive
+symmetric cutoff requires every factor row to carry a supplied endpoint
+witness, and faithfulness is the finite conjunction of the row readout
+faithfulness entries.  The older booleans are retained as diagnostic input,
+but a boolean-only audit with no endpoint factor rows does not prove the
+cutoff.
 
 The one-row B-seed attachment helper
 `endpoint_family_symmetric_seed_audit(...)` pairs such an endpoint-family miss

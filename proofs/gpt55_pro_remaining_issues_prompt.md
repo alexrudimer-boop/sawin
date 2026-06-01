@@ -892,6 +892,27 @@ Endpoint-target braid-index independence and product-family separation must
 be derived from the finite per-family target ledger and positive target
 sizes; they are not independent boolean gates.
 
+If a symmetric endpoint-family fork is used as a cutoff route, it must also
+be finite-row backed.  For endpoint factor orders
+
+```text
+|H_1|,...,|H_t|,
+```
+
+the certificate must include one row for every factor index:
+
+```text
+(factor_index, endpoint_group_order, endpoint_witness_supplied,
+ faithful_readout).
+```
+
+The factor rows must cover exactly the listed endpoint factors, with no
+missing, extra, or duplicate indices and no order mismatch.  The cutoff
+requires every factor row to have an endpoint witness, and family faithfulness
+is the conjunction of the row faithful-readout entries.  A boolean assertion
+that all endpoint witnesses are supplied or that the endpoint family is
+faithful is not a certificate without these finite rows.
+
 With those target data fixed, a signed endpoint generator table is a finite
 table
 

@@ -799,6 +799,7 @@ from .endpoint_factorization import (
 from .repair_contract import (
     DescentEndpointRepairContractAudit,
     EndpointFamilySymmetricForkAudit,
+    EndpointFamilySymmetricForkRow,
     EndpointFamilySymmetricSeedAudit,
     SymmetricRepairContractBridgeAudit,
     descent_endpoint_repair_contract_audit,
@@ -937,6 +938,7 @@ __all__ = [
     "EndpointResidualReadoutAudit",
     "DescentEndpointRepairContractAudit",
     "EndpointFamilySymmetricForkAudit",
+    "EndpointFamilySymmetricForkRow",
     "EndpointFamilySymmetricSeedAudit",
     "SymmetricRepairContractBridgeAudit",
     "MixedUnitContextEndpointWitnessAudit",

@@ -190,6 +190,28 @@ def symmetric_repair_contract_bridge_audit(
 
 
 @dataclass(frozen=True)
+class EndpointFamilySymmetricForkRow:
+    """One finite endpoint factor row for a symmetric cutoff family."""
+
+    factor_index: int
+    endpoint_group_order: int
+    endpoint_witness_supplied: bool
+    faithful_readout: bool
+
+    @property
+    def factor_index_valid(self) -> bool:
+        return self.factor_index >= 0
+
+    @property
+    def endpoint_group_order_valid(self) -> bool:
+        return self.endpoint_group_order > 0
+
+    @property
+    def row_valid(self) -> bool:
+        return self.factor_index_valid and self.endpoint_group_order_valid
+
+
+@dataclass(frozen=True)
 class EndpointFamilySymmetricForkAudit:
     """Audit the symmetric cutoff fork for a finite endpoint family.
 
@@ -205,6 +227,7 @@ class EndpointFamilySymmetricForkAudit:
     endpoint_family_faithful: bool
     symmetric_degree: int
     failed_symmetric_degrees: Tuple[int, ...] = ()
+    endpoint_rows: Tuple[EndpointFamilySymmetricForkRow, ...] = ()
 
     @property
     def endpoint_family_empty(self) -> bool:
@@ -213,6 +236,77 @@ class EndpointFamilySymmetricForkAudit:
     @property
     def endpoint_group_orders_valid(self) -> bool:
         return all(order > 0 for order in self.endpoint_group_orders)
+
+    @property
+    def expected_endpoint_row_keys(self) -> Tuple[int, ...]:
+        return tuple(range(len(self.endpoint_group_orders)))
+
+    @property
+    def endpoint_row_keys(self) -> Tuple[int, ...]:
+        return tuple(row.factor_index for row in self.endpoint_rows)
+
+    @property
+    def duplicate_endpoint_row_keys(self) -> Tuple[int, ...]:
+        seen = set()
+        duplicates = []
+        for key in self.endpoint_row_keys:
+            if key in seen and key not in duplicates:
+                duplicates.append(key)
+            seen.add(key)
+        return tuple(duplicates)
+
+    @property
+    def missing_endpoint_row_keys(self) -> Tuple[int, ...]:
+        row_keys = set(self.endpoint_row_keys)
+        return tuple(key for key in self.expected_endpoint_row_keys if key not in row_keys)
+
+    @property
+    def extra_endpoint_row_keys(self) -> Tuple[int, ...]:
+        expected = set(self.expected_endpoint_row_keys)
+        return tuple(key for key in self.endpoint_row_keys if key not in expected)
+
+    @property
+    def endpoint_row_order_mismatches(self) -> Tuple[Tuple[int, int, int], ...]:
+        expected = dict(enumerate(self.endpoint_group_orders))
+        return tuple(
+            (row.factor_index, expected[row.factor_index], row.endpoint_group_order)
+            for row in self.endpoint_rows
+            if row.factor_index in expected
+            and row.endpoint_group_order != expected[row.factor_index]
+        )
+
+    @property
+    def invalid_endpoint_rows(self) -> Tuple[EndpointFamilySymmetricForkRow, ...]:
+        return tuple(row for row in self.endpoint_rows if not row.row_valid)
+
+    @property
+    def endpoint_rows_cover_factors(self) -> bool:
+        return (
+            not self.endpoint_family_empty
+            and not self.duplicate_endpoint_row_keys
+            and not self.missing_endpoint_row_keys
+            and not self.extra_endpoint_row_keys
+            and not self.endpoint_row_order_mismatches
+            and not self.invalid_endpoint_rows
+        )
+
+    @property
+    def endpoint_rows_supply_witnesses(self) -> bool:
+        return self.endpoint_rows_cover_factors and all(
+            row.endpoint_witness_supplied for row in self.endpoint_rows
+        )
+
+    @property
+    def endpoint_rows_are_faithful(self) -> bool:
+        return self.endpoint_rows_cover_factors and all(
+            row.faithful_readout for row in self.endpoint_rows
+        )
+
+    @property
+    def endpoint_family_faithfulness_proved(self) -> bool:
+        if self.endpoint_family_empty:
+            return self.endpoint_family_faithful
+        return self.endpoint_rows_are_faithful
 
     @property
     def minimum_symmetric_degree(self) -> int:
@@ -235,13 +329,13 @@ class EndpointFamilySymmetricForkAudit:
     @property
     def endpoint_cutoff_proved(self) -> bool:
         return self.endpoint_family_empty or (
-            self.all_endpoint_witnesses_supplied
+            self.endpoint_rows_supply_witnesses
             and self.symmetric_degree_covers_endpoint_groups
         )
 
     @property
     def faithful_endpoint_cutoff_proved(self) -> bool:
-        return self.endpoint_cutoff_proved and self.endpoint_family_faithful
+        return self.endpoint_cutoff_proved and self.endpoint_family_faithfulness_proved
 
     @property
     def failed_degrees_are_tail_prefix(self) -> bool:
@@ -255,7 +349,7 @@ class EndpointFamilySymmetricForkAudit:
     def proves_supplied_symmetric_tail_endpoint_seed_prefix(self) -> bool:
         return (
             self.endpoint_group_orders_valid
-            and self.endpoint_family_faithful
+            and self.endpoint_family_faithfulness_proved
             and self.failed_degrees_are_tail_prefix
         )
 
@@ -264,7 +358,19 @@ class EndpointFamilySymmetricForkAudit:
         reasons = []
         if not self.endpoint_group_orders_valid:
             reasons.append("invalid_endpoint_group_order")
-        if not self.endpoint_family_empty and not self.all_endpoint_witnesses_supplied:
+        if not self.endpoint_family_empty and not self.endpoint_rows_cover_factors:
+            reasons.append("endpoint_family_rows_not_exact")
+        if self.duplicate_endpoint_row_keys:
+            reasons.append("endpoint_family_duplicate_rows")
+        if self.missing_endpoint_row_keys:
+            reasons.append("endpoint_family_missing_rows")
+        if self.extra_endpoint_row_keys:
+            reasons.append("endpoint_family_extra_rows")
+        if self.endpoint_row_order_mismatches:
+            reasons.append("endpoint_family_row_order_mismatch")
+        if self.invalid_endpoint_rows:
+            reasons.append("endpoint_family_invalid_rows")
+        if not self.endpoint_family_empty and not self.endpoint_rows_supply_witnesses:
             reasons.append("endpoint_witnesses_not_supplied")
         if not self.symmetric_degree_valid:
             reasons.append("invalid_symmetric_degree")
@@ -273,7 +379,7 @@ class EndpointFamilySymmetricForkAudit:
             and self.symmetric_degree < self.minimum_symmetric_degree
         ):
             reasons.append("symmetric_degree_too_small")
-        if not self.endpoint_family_faithful:
+        if not self.endpoint_family_faithfulness_proved:
             reasons.append("endpoint_family_not_faithful")
         return tuple(reasons)
 
@@ -285,18 +391,30 @@ def endpoint_family_symmetric_fork_audit(
     endpoint_family_faithful: bool,
     symmetric_degree: int | None = None,
     failed_symmetric_degrees: Tuple[int, ...] = (),
+    endpoint_rows: Tuple[EndpointFamilySymmetricForkRow, ...] | None = None,
 ) -> EndpointFamilySymmetricForkAudit:
     """Record the symmetric cutoff/tail fork for fixed endpoint factors."""
 
     orders = tuple(endpoint_group_orders)
     if symmetric_degree is None:
         symmetric_degree = max(orders) if orders else 1
+    if endpoint_rows is None:
+        endpoint_rows = tuple(
+            EndpointFamilySymmetricForkRow(
+                factor_index=index,
+                endpoint_group_order=order,
+                endpoint_witness_supplied=all_endpoint_witnesses_supplied,
+                faithful_readout=endpoint_family_faithful,
+            )
+            for index, order in enumerate(orders)
+        )
     return EndpointFamilySymmetricForkAudit(
         endpoint_group_orders=orders,
         all_endpoint_witnesses_supplied=all_endpoint_witnesses_supplied,
         endpoint_family_faithful=endpoint_family_faithful,
         symmetric_degree=symmetric_degree,
         failed_symmetric_degrees=tuple(failed_symmetric_degrees),
+        endpoint_rows=tuple(endpoint_rows),
     )
 
 
@@ -347,7 +465,7 @@ class EndpointFamilySymmetricSeedAudit:
     @property
     def endpoint_miss_is_attached_to_prefix(self) -> bool:
         return (
-            self.endpoint_family.endpoint_family_faithful
+            self.endpoint_family.endpoint_family_faithfulness_proved
             and self.endpoint_channel_nonidentity
             and self.endpoint_miss_matches_residual_motion
             and self.symmetric_degree_covers_endpoint_family
