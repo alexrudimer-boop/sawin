@@ -805,6 +805,19 @@ The missing endpoint lemma must first construct a finite reachable state set
 S_E^reach superset S_E^0.
 ```
 
+This set must be exact: it is the least closure of `S_E^0` under the signed
+transition rows that are actually supplied.  Equivalently, start with
+`S_E^0`; whenever a row
+
+```text
+Gamma^{E,epsilon}_{a,b}(s,x,y)=(s',x',y',h)
+```
+
+has `s` already in the closure, add `s'`; iterate to a fixed point.  The
+result must be exactly `S_E^reach`.  A declared state outside this transition
+closure is an extra endpoint channel, and a transition target outside
+`S_E^reach` is a missing reachable state.
+
 Let `H_E` be the fixed finite endpoint group for that family, or let `S_mE`
 be the fixed symmetric cutoff group in a cutoff proof.  The group must be
 finite and independent of braid index `n`.  A signed endpoint generator table
@@ -842,7 +855,7 @@ derived from the interval fibres and reachable states:
 D_Gamma =
 { (E,epsilon,s,a,b,x,y) :
   s in S_E^reach,
-  S_E^reach is reachable from S_E^0 by the signed tables,
+  S_E^reach is exactly the signed-transition closure of S_E^0,
   epsilon in {+1,-1},
   x in A_a,
   y in A_b,
@@ -1022,6 +1035,7 @@ The signed-generator audit for a claimed A proof must therefore establish:
 
 ```text
 reachable_state_set_contains_initial_seeds,
+reachable_state_set_is_signed_transition_closure,
 all_signed_row_states_reachable,
 fixed_endpoint_group_or_cutoff,
 signed_generator_domain_exact,
@@ -1484,8 +1498,8 @@ Before returning a claimed resolution, explicitly answer:
 5. Are unsupported companion block-image rows proved structural
    inconsistencies rather than endpoint seeds?
 6. Are `S_U`, `S_C`, and `S_M` the exact finite seed state spaces, and are
-   finite reachable supersets `S_U^reach`, `S_C^reach`, and `S_M^reach`
-   constructed from them?
+   the finite reachable sets `S_U^reach`, `S_C^reach`, and `S_M^reach`
+   constructed as the exact signed-transition closures of those seeds?
 7. Are all signed endpoint generator tables
    `Gamma^{U,+/-}`, `Gamma^{C,+/-}`, and `Gamma^{M,+/-}` defined on those
    exact reachable state spaces and on every entry of `D_Gamma`, not merely

@@ -692,6 +692,55 @@ class UniversalKSignedEndpointGeneratorAudit:
         return tuple(state for state in self.required_seed_states if state not in reachable)
 
     @property
+    def transition_reachable_seed_states(
+        self,
+    ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
+        """Least state closure generated from kappa seeds by supplied rows."""
+
+        closure = set(self.required_seed_states)
+        changed = True
+        while changed:
+            changed = False
+            for row in self.rows:
+                current = (row.endpoint_family, row.seed_state)
+                if current not in closure:
+                    continue
+                next_state = (row.endpoint_family, row.next_seed_state)
+                if next_state not in closure:
+                    closure.add(next_state)
+                    changed = True
+        return tuple(sorted(closure, key=repr))
+
+    @property
+    def missing_transition_reachable_seed_states(
+        self,
+    ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
+        declared = set(self.reachable_seed_states_exact)
+        return tuple(
+            state
+            for state in self.transition_reachable_seed_states
+            if state not in declared
+        )
+
+    @property
+    def unreachable_declared_seed_states(
+        self,
+    ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
+        transition_reachable = set(self.transition_reachable_seed_states)
+        return tuple(
+            state
+            for state in self.reachable_seed_states_exact
+            if state not in transition_reachable
+        )
+
+    @property
+    def reachable_seed_state_closure_exact(self) -> bool:
+        return (
+            set(self.reachable_seed_states_exact)
+            == set(self.transition_reachable_seed_states)
+        )
+
+    @property
     def row_states_outside_reachable_set(
         self,
     ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
@@ -714,7 +763,7 @@ class UniversalKSignedEndpointGeneratorAudit:
             sorted(
                 (
                     (endpoint_family, seed_state, sign)
-                    for endpoint_family, seed_state in self.required_seed_states
+                    for endpoint_family, seed_state in self.reachable_seed_states_exact
                     for sign in (-1, 1)
                 ),
                 key=repr,
@@ -821,6 +870,7 @@ class UniversalKSignedEndpointGeneratorAudit:
             bool(self.required_entry_keys_exact)
             and bool(self.reachable_seed_states_exact)
             and not self.missing_initial_seed_states
+            and self.reachable_seed_state_closure_exact
             and not self.row_states_outside_reachable_set
             and not self.missing_required_entry_seed_keys
             and not self.extra_required_entry_seed_keys
@@ -888,12 +938,16 @@ class UniversalKSignedEndpointGeneratorAudit:
     @property
     def failure_reasons(self) -> Tuple[str, ...]:
         reasons = []
-        if not self.required_signed_seed_keys:
+        if not self.required_seed_states:
             reasons.append("no_routed_k_seed_states")
         if not self.reachable_seed_states_exact:
             reasons.append("reachable_seed_states_not_supplied")
         if self.missing_initial_seed_states:
             reasons.append("reachable_seed_states_missing_initial_seeds")
+        if self.missing_transition_reachable_seed_states:
+            reasons.append("reachable_seed_states_missing_transition_closure")
+        if self.unreachable_declared_seed_states:
+            reasons.append("reachable_seed_states_have_unreachable_extras")
         if self.row_states_outside_reachable_set:
             reasons.append("signed_generator_row_state_outside_reachable_set")
         if not self.required_entry_keys_exact:
@@ -3114,6 +3168,10 @@ class PostLinearRemainingFiniteSystemAudit:
                     ),
                 ),
                 ("signed_endpoint_generator_reachable_seed_states", ()),
+                ("signed_endpoint_generator_transition_reachable_seed_states", ()),
+                ("signed_endpoint_generator_unreachable_declared_seed_states", ()),
+                ("signed_endpoint_generator_missing_transition_reachable_seed_states", ()),
+                ("signed_endpoint_generator_reachable_closure_exact", False),
                 ("signed_endpoint_generator_required_entry_keys", ()),
                 ("signed_endpoint_generator_missing_entry_keys", ()),
                 ("signed_endpoint_generator_endpoint_targets_fixed", False),
@@ -3148,6 +3206,22 @@ class PostLinearRemainingFiniteSystemAudit:
             (
                 "signed_endpoint_generator_reachable_seed_states",
                 audit.reachable_seed_states_exact,
+            ),
+            (
+                "signed_endpoint_generator_transition_reachable_seed_states",
+                audit.transition_reachable_seed_states,
+            ),
+            (
+                "signed_endpoint_generator_unreachable_declared_seed_states",
+                audit.unreachable_declared_seed_states,
+            ),
+            (
+                "signed_endpoint_generator_missing_transition_reachable_seed_states",
+                audit.missing_transition_reachable_seed_states,
+            ),
+            (
+                "signed_endpoint_generator_reachable_closure_exact",
+                audit.reachable_seed_state_closure_exact,
             ),
             (
                 "signed_endpoint_generator_missing_initial_seed_states",

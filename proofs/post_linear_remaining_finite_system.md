@@ -368,7 +368,19 @@ been computed.
 
 The next finite audit layer is the reachable signed endpoint generator table
 on these states.  For each `kappa(d)=(E,s)`, first define the finite reachable
-state set `S_E^reach` containing the routed seed states.  For each reachable
+state set `S_E^reach` containing the routed seed states.  The set is not a
+free declaration: it must be exactly the least signed-transition closure of
+the routed seeds under the supplied rows.  Starting from the seed states, each
+row
+
+```text
+Gamma^{E,+/-}_{a,b}(s,x,y)=(s',x',y',h)
+```
+
+whose source state is already reached adds `s'`, and the fixed point must
+match the declared reachable set.  Extra declared states are extra endpoint
+channels, while omitted transition targets are missing reachable states.
+For each reachable
 state, each sign, and each local row input, the table must supply one value
 
 ```text
@@ -378,8 +390,9 @@ Gamma^{E,+/-}_{a,b}(s,x,y)=(s',x',y',h)
 with the coordinate pair equal to the positive or inverse local row and
 `h` in the fixed finite endpoint group or cutoff target for `E`.  The
 executable audit records the exact routed seed states, reachable state set,
-required full entry domain derived from the interval fibres, missing or extra
-table entries, duplicate entries, positive/inverse coordinate-component
+transition closure of the reachable state set, required full entry domain
+derived from the interval fibres, missing or extra table entries, duplicate
+entries, positive/inverse coordinate-component
 checks against `T`, structural opposite-sign inverse pairing, and the finite
 positive-YBE state/fibre path check, and the finite proof gates:
 
@@ -453,6 +466,10 @@ universal_k_seed_classifier_entries
 signed_endpoint_generator_required_seed_states
 signed_endpoint_generator_matches_current_kappa
 signed_endpoint_generator_reachable_seed_states
+signed_endpoint_generator_transition_reachable_seed_states
+signed_endpoint_generator_unreachable_declared_seed_states
+signed_endpoint_generator_missing_transition_reachable_seed_states
+signed_endpoint_generator_reachable_closure_exact
 signed_endpoint_generator_missing_initial_seed_states
 signed_endpoint_generator_required_signed_seed_keys
 signed_endpoint_generator_required_entry_keys

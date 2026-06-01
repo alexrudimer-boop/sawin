@@ -295,6 +295,39 @@ def uncounted_endpoint_residual_action_audit():
     )
 
 
+def identity_signed_endpoint_rows(keys, next_state_by_current=None):
+    next_state_by_current = dict(next_state_by_current or {})
+    rows = []
+    for (
+        endpoint_family,
+        state,
+        sign,
+        left_color,
+        right_color,
+        input_left,
+        input_right,
+    ) in keys:
+        rows.append(
+            UniversalKSignedEndpointGeneratorRow(
+                endpoint_family=endpoint_family,
+                seed_state=state,
+                sign=sign,
+                left_color=left_color,
+                right_color=right_color,
+                input_left=input_left,
+                input_right=input_right,
+                output_left=input_left,
+                output_right=input_right,
+                next_seed_state=next_state_by_current.get(
+                    (endpoint_family, state),
+                    state,
+                ),
+                endpoint_value=0,
+            )
+        )
+    return tuple(rows)
+
+
 def refinement_for(interval, *, colored_ybe=True):
     return NonlinearOverlapRefinementAudit(
         obstruction=exact_obstruction(),
@@ -2776,6 +2809,112 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
 
         self.assertEqual(audit.missing_entry_keys, (keys[-1],))
         self.assertFalse(audit.proves_signed_endpoint_generator_tables)
+
+    def test_signed_endpoint_audit_accepts_transition_reachable_state(self):
+        seed_state = ("*", "*", "left_constant_map_universal_kernel")
+        next_state = ("*", "*", "left_constant_map_universal_kernel", "next")
+        reachable = (("U", seed_state), ("U", next_state))
+        interval = one_color_identity_interval()
+        keys = universal_k_signed_endpoint_required_entry_keys(interval, reachable)
+        rows = identity_signed_endpoint_rows(
+            keys,
+            {
+                ("U", seed_state): next_state,
+                ("U", next_state): next_state,
+            },
+        )
+        audit = UniversalKSignedEndpointGeneratorAudit(
+            seed_classifier_entries=(
+                (
+                    (
+                        "*",
+                        "*",
+                        "L",
+                        "constant_map_kernel",
+                        ("*", (0, 1), "universal", "universal"),
+                    ),
+                    ("U", seed_state),
+                ),
+            ),
+            reachable_seed_states=reachable,
+            required_entry_keys=keys,
+            rows=rows,
+            endpoint_targets_fixed=True,
+            coordinate_components_verified=True,
+            inverse_pairing_verified=True,
+            inverse_cancellation_verified=True,
+            positive_ybe_path_verified=True,
+            positive_ybe_cocycle_verified=True,
+            signed_two_strand_base_verified=True,
+            artin_homomorphism_update_verified=True,
+            residual_action_audit=trivial_endpoint_residual_action_audit(),
+        )
+
+        self.assertEqual(
+            audit.transition_reachable_seed_states,
+            tuple(sorted(reachable, key=repr)),
+        )
+        self.assertEqual(audit.unreachable_declared_seed_states, ())
+        self.assertEqual(audit.missing_transition_reachable_seed_states, ())
+        self.assertEqual(audit.extra_signed_seed_keys, ())
+        self.assertTrue(audit.reachable_seed_state_closure_exact)
+        self.assertTrue(audit.proves_signed_endpoint_generator_tables)
+
+    def test_signed_endpoint_audit_rejects_unreachable_declared_state(self):
+        seed_state = ("*", "*", "left_constant_map_universal_kernel")
+        unreachable_state = (
+            "*",
+            "*",
+            "left_constant_map_universal_kernel",
+            "unreachable",
+        )
+        reachable = (("U", seed_state), ("U", unreachable_state))
+        interval = one_color_identity_interval()
+        keys = universal_k_signed_endpoint_required_entry_keys(interval, reachable)
+        rows = identity_signed_endpoint_rows(keys)
+        audit = UniversalKSignedEndpointGeneratorAudit(
+            seed_classifier_entries=(
+                (
+                    (
+                        "*",
+                        "*",
+                        "L",
+                        "constant_map_kernel",
+                        ("*", (0, 1), "universal", "universal"),
+                    ),
+                    ("U", seed_state),
+                ),
+            ),
+            reachable_seed_states=reachable,
+            required_entry_keys=keys,
+            rows=rows,
+            endpoint_targets_fixed=True,
+            coordinate_components_verified=True,
+            inverse_pairing_verified=True,
+            inverse_cancellation_verified=True,
+            positive_ybe_path_verified=True,
+            positive_ybe_cocycle_verified=True,
+            signed_two_strand_base_verified=True,
+            artin_homomorphism_update_verified=True,
+            residual_action_audit=trivial_endpoint_residual_action_audit(),
+        )
+
+        self.assertEqual(
+            audit.transition_reachable_seed_states,
+            (("U", seed_state),),
+        )
+        self.assertEqual(
+            audit.unreachable_declared_seed_states,
+            (("U", unreachable_state),),
+        )
+        self.assertEqual(audit.extra_signed_seed_keys, ())
+        self.assertFalse(audit.reachable_seed_state_closure_exact)
+        self.assertFalse(audit.signed_generator_domain_exact)
+        self.assertFalse(audit.proves_signed_endpoint_generator_tables)
+        self.assertIn(
+            "reachable_seed_states_have_unreachable_extras",
+            audit.failure_reasons,
+        )
 
     def test_signed_endpoint_coordinate_failures_check_positive_and_inverse_rows(self):
         seed_state = ("*", "*", "left_constant_map_universal_kernel")
