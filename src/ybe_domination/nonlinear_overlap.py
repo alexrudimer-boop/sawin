@@ -654,6 +654,62 @@ class UniversalKResidualFaithfulnessAudit:
 
 
 @dataclass(frozen=True)
+class UniversalKResidualActionScopeAudit:
+    """Scope data for explicit residual-action row certificates."""
+
+    active_endpoint_families: Tuple[str, ...]
+    covered_endpoint_families: Tuple[str, ...]
+    expected_residual_row_count: int | None
+    covered_residual_row_count: int
+    endpoint_channels_exact: bool = False
+    braid_index_independent: bool = False
+    product_families_separated: bool = False
+
+    @property
+    def family_coverage_exact(self) -> bool:
+        return set(self.active_endpoint_families) == set(self.covered_endpoint_families)
+
+    @property
+    def residual_row_count_supplied(self) -> bool:
+        return self.expected_residual_row_count is not None
+
+    @property
+    def residual_row_coverage_exact(self) -> bool:
+        return (
+            self.expected_residual_row_count is not None
+            and self.expected_residual_row_count >= 0
+            and self.covered_residual_row_count == self.expected_residual_row_count
+        )
+
+    @property
+    def proves_residual_action_scope(self) -> bool:
+        return (
+            self.family_coverage_exact
+            and self.residual_row_coverage_exact
+            and self.endpoint_channels_exact
+            and self.braid_index_independent
+            and self.product_families_separated
+        )
+
+    @property
+    def failure_reasons(self) -> Tuple[str, ...]:
+        reasons = []
+        if not self.family_coverage_exact:
+            reasons.append("residual_action_scope_family_coverage_not_exact")
+        if not self.residual_row_count_supplied:
+            reasons.append("residual_action_scope_expected_row_count_missing")
+        elif not self.residual_row_coverage_exact:
+            reasons.append("residual_action_scope_row_coverage_not_exact")
+        if not self.endpoint_channels_exact:
+            reasons.append("residual_action_scope_endpoint_channels_not_exact")
+        if not self.braid_index_independent:
+            reasons.append("residual_action_scope_not_braid_index_independent")
+        if not self.product_families_separated:
+            reasons.append("residual_action_scope_product_families_not_separated")
+        return tuple(reasons)
+
+
+@dataclass(frozen=True)
 class UniversalKCutoffReadoutAudit:
     """Exact C/M symmetric-cutoff readout coverage for routed K seeds."""
 
@@ -751,6 +807,7 @@ class UniversalKSignedEndpointGeneratorAudit:
     cutoff_readouts_exact: bool = False
     residual_faithfulness_verified: bool = False
     cutoff_readout_audit: UniversalKCutoffReadoutAudit | None = None
+    residual_action_scope: UniversalKResidualActionScopeAudit | None = None
     residual_faithfulness_theorem: UniversalKResidualFaithfulnessAudit | None = None
     residual_action_audit: "EndpointResidualActionAudit | None" = None
 
@@ -999,17 +1056,58 @@ class UniversalKSignedEndpointGeneratorAudit:
         )
 
     @property
+    def required_endpoint_families(self) -> Tuple[str, ...]:
+        return tuple(
+            sorted(
+                {endpoint_family for endpoint_family, _state in self.required_seed_states},
+                key=repr,
+            )
+        )
+
+    @property
+    def residual_action_scope_matches_required(self) -> bool:
+        return (
+            self.residual_action_scope is not None
+            and set(self.residual_action_scope.active_endpoint_families)
+            == set(self.required_endpoint_families)
+        )
+
+    @property
+    def residual_action_scope_matches_action_rows(self) -> bool:
+        return (
+            self.residual_action_scope is not None
+            and self.residual_action_audit is not None
+            and self.residual_action_scope.expected_residual_row_count
+            == self.residual_action_audit.expected_row_count
+            and self.residual_action_scope.covered_residual_row_count
+            == self.residual_action_audit.row_count
+        )
+
+    @property
+    def residual_theorem_scope_matches_required(self) -> bool:
+        return (
+            self.residual_faithfulness_theorem is not None
+            and set(self.residual_faithfulness_theorem.active_endpoint_families)
+            == set(self.required_endpoint_families)
+        )
+
+    @property
     def residual_action_faithfulness_proved(self) -> bool:
         return (
             self.residual_action_audit is not None
             and self.residual_action_audit.expected_row_count is not None
             and self.residual_action_audit.proves_complete_residual_action_implication
+            and self.residual_action_scope is not None
+            and self.residual_action_scope_matches_required
+            and self.residual_action_scope_matches_action_rows
+            and self.residual_action_scope.proves_residual_action_scope
         )
 
     @property
     def residual_theorem_faithfulness_proved(self) -> bool:
         return (
             self.residual_faithfulness_theorem is not None
+            and self.residual_theorem_scope_matches_required
             and self.residual_faithfulness_theorem.proves_residual_faithfulness
         )
 
@@ -1099,7 +1197,18 @@ class UniversalKSignedEndpointGeneratorAudit:
                 reasons.extend(self.cutoff_readout_audit.failure_reasons)
         if not self.residual_faithfulness_proved:
             reasons.append("residual_faithfulness_not_verified")
+            if self.residual_action_audit is not None:
+                if self.residual_action_scope is None:
+                    reasons.append("residual_action_scope_missing")
+                else:
+                    if not self.residual_action_scope_matches_required:
+                        reasons.append("residual_action_scope_mismatch")
+                    if not self.residual_action_scope_matches_action_rows:
+                        reasons.append("residual_action_scope_row_count_mismatch")
+                    reasons.extend(self.residual_action_scope.failure_reasons)
             if self.residual_faithfulness_theorem is not None:
+                if not self.residual_theorem_scope_matches_required:
+                    reasons.append("residual_theorem_scope_mismatch")
                 reasons.extend(self.residual_faithfulness_theorem.failure_reasons)
         return tuple(reasons)
 
@@ -1882,6 +1991,7 @@ def universal_k_signed_endpoint_generator_audit(
     cutoff_readouts_exact: bool = False,
     cutoff_readout_audit: UniversalKCutoffReadoutAudit | None = None,
     residual_faithfulness_verified: bool = False,
+    residual_action_scope: UniversalKResidualActionScopeAudit | None = None,
     residual_faithfulness_theorem: UniversalKResidualFaithfulnessAudit | None = None,
     residual_action_audit: "EndpointResidualActionAudit | None" = None,
 ) -> UniversalKSignedEndpointGeneratorAudit:
@@ -1966,6 +2076,7 @@ def universal_k_signed_endpoint_generator_audit(
         cutoff_readouts_exact=cutoff_readouts_exact,
         residual_faithfulness_verified=residual_faithfulness_verified,
         cutoff_readout_audit=cutoff_readout_audit,
+        residual_action_scope=residual_action_scope,
         residual_faithfulness_theorem=residual_faithfulness_theorem,
         residual_action_audit=residual_action_audit,
     )
@@ -3409,7 +3520,11 @@ class PostLinearRemainingFiniteSystemAudit:
                 ("signed_endpoint_generator_cutoff_readout_audit_proved", False),
                 ("signed_endpoint_generator_residual_faithfulness_verified", False),
                 ("signed_endpoint_generator_residual_faithfulness_flag_supplied", False),
+                ("signed_endpoint_generator_residual_action_scope_matches_required", False),
+                ("signed_endpoint_generator_residual_action_scope_matches_rows", False),
+                ("signed_endpoint_generator_residual_action_scope_proved", False),
                 ("signed_endpoint_generator_residual_theorem_proved", False),
+                ("signed_endpoint_generator_residual_theorem_scope_matches_required", False),
                 ("signed_endpoint_generator_residual_action_rows", 0),
                 ("signed_endpoint_generator_residual_action_rows_expected", None),
                 ("signed_endpoint_generator_residual_action_complete", False),
@@ -3584,8 +3699,28 @@ class PostLinearRemainingFiniteSystemAudit:
                 audit.residual_faithfulness_verified,
             ),
             (
+                "signed_endpoint_generator_residual_action_scope_matches_required",
+                audit.residual_action_scope_matches_required,
+            ),
+            (
+                "signed_endpoint_generator_residual_action_scope_matches_rows",
+                audit.residual_action_scope_matches_action_rows,
+            ),
+            (
+                "signed_endpoint_generator_residual_action_scope_proved",
+                (
+                    audit.residual_action_scope.proves_residual_action_scope
+                    if audit.residual_action_scope is not None
+                    else False
+                ),
+            ),
+            (
                 "signed_endpoint_generator_residual_theorem_proved",
                 audit.residual_theorem_faithfulness_proved,
+            ),
+            (
+                "signed_endpoint_generator_residual_theorem_scope_matches_required",
+                audit.residual_theorem_scope_matches_required,
             ),
             (
                 "signed_endpoint_generator_residual_action_rows",

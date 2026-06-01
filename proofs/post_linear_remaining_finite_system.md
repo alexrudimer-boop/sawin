@@ -451,7 +451,11 @@ number of covered rows, the expected row count, and whether the endpoint
 readout rows prove the complete residual-action implication.  A supplied-row
 implication with missing residual rows is not enough, and omitting the
 expected row count does not prove residual faithfulness for this signed
-endpoint layer.
+endpoint layer.  The row proof must now carry its own scope audit as well:
+active and covered endpoint families, exact row-count agreement with the
+explicit rows, exact endpoint-channel coverage, braid-index independence, and
+product-family separation.  Complete finite rows without this scope are only a
+fixed-row check, not an all-strand residual-faithfulness certificate.
 
 When the bridge is supplied as a symbolic theorem rather than row data, the
 audit requires the theorem to specify exact active and covered endpoint
@@ -512,6 +516,10 @@ signed_endpoint_generator_cutoff_readout_missing_states
 signed_endpoint_generator_cutoff_readout_extra_states
 signed_endpoint_generator_cutoff_readout_audit_proved
 signed_endpoint_generator_residual_faithfulness_verified
+signed_endpoint_generator_residual_action_scope_matches_required
+signed_endpoint_generator_residual_action_scope_matches_rows
+signed_endpoint_generator_residual_action_scope_proved
+signed_endpoint_generator_residual_theorem_scope_matches_required
 signed_endpoint_generator_residual_action_rows
 signed_endpoint_generator_residual_action_rows_expected
 signed_endpoint_generator_residual_action_complete

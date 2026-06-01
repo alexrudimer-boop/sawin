@@ -35,6 +35,7 @@ from ybe_domination import (
     TriangularLatinDefectClosureAudit,
     TriangularLatinDefectClosureRow,
     UniversalKCutoffReadoutAudit,
+    UniversalKResidualActionScopeAudit,
     UniversalKResidualFaithfulnessAudit,
     UniversalKSignedEndpointGeneratorAudit,
     UniversalKSignedEndpointGeneratorRow,
@@ -294,6 +295,18 @@ def uncounted_endpoint_residual_action_audit():
         2,
         (1, -1),
         (readout,),
+    )
+
+
+def trivial_endpoint_residual_action_scope(*families):
+    return UniversalKResidualActionScopeAudit(
+        active_endpoint_families=tuple(families),
+        covered_endpoint_families=tuple(families),
+        expected_residual_row_count=1,
+        covered_residual_row_count=1,
+        endpoint_channels_exact=True,
+        braid_index_independent=True,
+        product_families_separated=True,
     )
 
 
@@ -2574,6 +2587,29 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             uncounted_residual.failure_reasons,
         )
 
+        unscoped_residual = UniversalKSignedEndpointGeneratorAudit(
+            seed_classifier_entries=seed_entries,
+            reachable_seed_states=(("U", seed_state),),
+            required_entry_keys=required_entry_keys,
+            rows=(positive_row, negative_row),
+            endpoint_targets_fixed=True,
+            coordinate_components_verified=True,
+            inverse_pairing_verified=True,
+            inverse_cancellation_verified=True,
+            positive_ybe_path_verified=True,
+            positive_ybe_cocycle_verified=True,
+            signed_two_strand_base_verified=True,
+            artin_homomorphism_update_verified=True,
+            residual_action_audit=trivial_endpoint_residual_action_audit(),
+        )
+
+        self.assertFalse(unscoped_residual.residual_faithfulness_proved)
+        self.assertFalse(unscoped_residual.proves_signed_endpoint_generator_tables)
+        self.assertIn(
+            "residual_action_scope_missing",
+            unscoped_residual.failure_reasons,
+        )
+
         bare_flag = UniversalKSignedEndpointGeneratorAudit(
             seed_classifier_entries=seed_entries,
             reachable_seed_states=(("U", seed_state),),
@@ -2674,6 +2710,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             positive_ybe_cocycle_verified=True,
             signed_two_strand_base_verified=True,
             artin_homomorphism_update_verified=True,
+            residual_action_scope=trivial_endpoint_residual_action_scope("U"),
             residual_action_audit=trivial_endpoint_residual_action_audit(),
         )
 
@@ -2735,6 +2772,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             positive_ybe_cocycle_verified=True,
             signed_two_strand_base_verified=True,
             artin_homomorphism_update_verified=True,
+            residual_action_scope=trivial_endpoint_residual_action_scope("U"),
             residual_action_audit=trivial_endpoint_residual_action_audit(),
         )
 
@@ -2806,6 +2844,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             positive_ybe_cocycle_verified=True,
             signed_two_strand_base_verified=True,
             artin_homomorphism_update_verified=True,
+            residual_action_scope=trivial_endpoint_residual_action_scope("U"),
             residual_action_audit=trivial_endpoint_residual_action_audit(),
         )
 
@@ -2849,6 +2888,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             positive_ybe_cocycle_verified=True,
             signed_two_strand_base_verified=True,
             artin_homomorphism_update_verified=True,
+            residual_action_scope=trivial_endpoint_residual_action_scope("U"),
             residual_action_audit=trivial_endpoint_residual_action_audit(),
         )
 
@@ -2898,6 +2938,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             positive_ybe_cocycle_verified=True,
             signed_two_strand_base_verified=True,
             artin_homomorphism_update_verified=True,
+            residual_action_scope=trivial_endpoint_residual_action_scope("U"),
             residual_action_audit=trivial_endpoint_residual_action_audit(),
         )
 
@@ -2943,6 +2984,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             rows,
             endpoint_group=cyclic_group(2),
             witnesses=witnesses,
+            residual_action_scope=trivial_endpoint_residual_action_scope("U"),
             residual_action_audit=trivial_endpoint_residual_action_audit(),
         )
 
@@ -2985,6 +3027,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             bad_rows,
             endpoint_group=cyclic_group(2),
             witnesses=witnesses,
+            residual_action_scope=trivial_endpoint_residual_action_scope("U"),
             residual_action_audit=trivial_endpoint_residual_action_audit(),
         )
 
@@ -3019,6 +3062,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             endpoint_group=cyclic_group(2),
             witnesses=witnesses,
             cutoff_readouts_exact=True,
+            residual_action_scope=trivial_endpoint_residual_action_scope("C"),
             residual_action_audit=trivial_endpoint_residual_action_audit(),
         )
 
@@ -3042,6 +3086,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             endpoint_group=cyclic_group(2),
             witnesses=witnesses,
             cutoff_readout_audit=scoped_cutoff,
+            residual_action_scope=trivial_endpoint_residual_action_scope("C"),
             residual_action_audit=trivial_endpoint_residual_action_audit(),
         )
 
@@ -3586,6 +3631,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             positive_ybe_cocycle_verified=True,
             signed_two_strand_base_verified=True,
             artin_homomorphism_update_verified=True,
+            residual_action_scope=trivial_endpoint_residual_action_scope("U"),
             residual_action_audit=trivial_endpoint_residual_action_audit(),
         )
         audit = PostLinearRemainingFiniteSystemAudit(

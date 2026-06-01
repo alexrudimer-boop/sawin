@@ -1032,7 +1032,11 @@ It must also state the expected number of residual rows for the interval
 fibre action and prove that the listed rows cover that number.  A supplied
 row subset proves only a supplied-row implication, not domination of the
 whole residual action.  Omitting the expected row count is not acceptable for
-this endpoint lemma, even if every listed row is internally certified.
+this endpoint lemma, even if every listed row is internally certified.  The
+explicit-row certificate must also state the active endpoint families, covered
+endpoint families, exact endpoint-channel coverage, braid-index independence,
+and family-by-family product separation; otherwise the listed row implication
+is not a uniform residual-faithfulness theorem.
 
 Alternatively, a symbolic residual-faithfulness theorem may replace explicit
 row listing only if it states all of the following finite-scope data:
