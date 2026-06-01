@@ -521,8 +521,9 @@ Partial-constant hidden rows are mixed-unit context-recovery rows: their
 nonunit sections are constant and their remaining sections are units.  The
 constant nonunit sections now have their own closure ledger in
 `proofs/triangular_k_left_partial_constant_closure.md`: proper generated
-closures contradict local minimality, while universal generated closures are
-then routed by
+closures contradict local minimality and are classified as
+`closed_by_missing_triangular_partial_constant_proper_closure`, while
+universal generated closures are then routed by
 `proofs/triangular_k_left_partial_constant_continuation_route.md` into the
 universal continuation seed channel.
 Rows moved this way are recorded in

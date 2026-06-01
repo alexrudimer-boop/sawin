@@ -101,6 +101,13 @@ universal closure:
   sequence.
 ```
 
+The post-linear wrapper now treats the proper-closure case as terminal.  If a
+supplied partial-constant closure ledger contains any proper generated
+congruence row, it reports
+`closed_by_missing_triangular_partial_constant_proper_closure`, empties the
+live K ledger, and creates no continuation endpoint obligation.  Only
+universal partial-constant closure rows can route onward to System C.
+
 This is still not the all-`n` endpoint theorem.  It is a sharper equivalence:
 after proper-kernel, injective-nonsurjective, coordinate-unit, and side-dual
 rows have been routed, a partial-constant K-left survivor is exactly a finite

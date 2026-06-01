@@ -1455,6 +1455,44 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             ),
         )
 
+    def test_partial_constant_proper_closure_closes_system_k(self):
+        profile, closure, _route = partial_constant_missing_row_profile_route_audits()
+        proper_closure = MissingTriangularPartialConstantClosureAudit(
+            rows=(replace(closure.rows[0], generated=generated("proper")),),
+        )
+        audit = PostLinearRemainingFiniteSystemAudit(
+            active_system_k_refinement(),
+            missing_triangular_row_profile=profile,
+            missing_triangular_partial_constant_closure=proper_closure,
+        )
+
+        self.assertEqual(
+            audit.system_name,
+            "closed_by_missing_triangular_partial_constant_proper_closure",
+        )
+        self.assertFalse(audit.is_current_remaining_finite_system)
+        self.assertFalse(audit.system_k_active)
+        self.assertEqual(audit.live_k_missing_latin_row_defects, ())
+        self.assertEqual(audit.active_routed_endpoint_systems, ())
+        self.assertEqual(audit.remaining_obligations, ())
+        self.assertIn(
+            (
+                "missing_triangular_partial_constant_proper_closure_rows",
+                (
+                    (
+                        "left",
+                        "*",
+                        "*",
+                        1,
+                        "*",
+                        (0, 1),
+                        "proper",
+                    ),
+                ),
+            ),
+            audit.finite_obstruction_data,
+        )
+
     def test_coordinate_unit_mixed_context_route_becomes_mixed_endpoint(self):
         profile, routing = coordinate_unit_mixed_context_route_audits()
         audit = PostLinearRemainingFiniteSystemAudit(

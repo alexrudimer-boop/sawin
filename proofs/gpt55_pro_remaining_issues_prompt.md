@@ -321,6 +321,14 @@ profiled into proper-kernel visible, coordinate-unit, partial-constant, or
 cardinality/structural cases.  Coordinate-unit rows route to System M if
 the opposite coordinate side contains nonunit data; partial-constant rows
 route to System C if their universal continuation seed closure is supplied.
+If a partial-constant no-triangular row has a proper generated closure, that
+is also terminal:
+
+```text
+closed_by_missing_triangular_partial_constant_proper_closure.
+```
+
+Only universal partial-constant closure rows may route onward to System C.
 
 To prove A through System K, prove that every live K row is impossible in a
 genuine local-minimal finite YBE interval, or route it through fixed detector

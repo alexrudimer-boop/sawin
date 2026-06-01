@@ -1151,7 +1151,9 @@ contradiction separate from endpoint routing: if the triangular-Latin defect
 closure supplies a proper generated congruence row, it reports
 `closed_by_triangular_latin_proper_closure` and creates no U/C/M endpoint
 obligation from that row.  Only universal closure rows may feed a routed
-endpoint family.
+endpoint family.  The same terminal treatment now applies to proper
+generated closures in the partial-constant no-triangular ledger, reported as
+`closed_by_missing_triangular_partial_constant_proper_closure`.
 The same supplied-certificate pattern now covers the routed continuation and
 mixed-unit endpoint families.  The helper
 `universal_continuation_identity_symmetric_endpoint_fork_audit(...)` attaches

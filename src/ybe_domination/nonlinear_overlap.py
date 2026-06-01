@@ -754,6 +754,23 @@ class PostLinearRemainingFiniteSystemAudit:
             and self.triangular_latin_defect_closure.has_proper_closure
         )
 
+    @property
+    def system_k_closed_by_partial_constant_proper_closure(self) -> bool:
+        return (
+            self.raw_system_k
+            and self.missing_triangular_partial_constant_closure is not None
+            and bool(
+                self.missing_triangular_partial_constant_closure.proper_closure_rows
+            )
+        )
+
+    @property
+    def system_k_closed_by_proper_generated_closure(self) -> bool:
+        return (
+            self.system_k_closed_by_proper_defect_closure
+            or self.system_k_closed_by_partial_constant_proper_closure
+        )
+
     def _missing_profile_row(
         self,
         side: str,
@@ -1071,7 +1088,7 @@ class PostLinearRemainingFiniteSystemAudit:
 
     @property
     def live_k_missing_latin_row_defects(self) -> Tuple[Tuple[Tuple[Color, Color], str], ...]:
-        if self.system_k_closed_by_proper_defect_closure:
+        if self.system_k_closed_by_proper_generated_closure:
             return ()
         return self._live_missing_latin_row_defects(
             self.refinement.active_missing_left_latin_row_defects
@@ -1082,7 +1099,7 @@ class PostLinearRemainingFiniteSystemAudit:
     def recovery_routed_k_missing_latin_row_defects(
         self,
     ) -> Tuple[Tuple[Tuple[Color, Color], str], ...]:
-        if self.system_k_closed_by_proper_defect_closure:
+        if self.system_k_closed_by_proper_generated_closure:
             return ()
         return self._recovery_routed_missing_latin_row_defects(
             self.refinement.active_missing_left_latin_row_defects
@@ -1093,7 +1110,7 @@ class PostLinearRemainingFiniteSystemAudit:
     def continuation_routed_k_missing_latin_row_defects(
         self,
     ) -> Tuple[Tuple[Tuple[Color, Color], str], ...]:
-        if self.system_k_closed_by_proper_defect_closure:
+        if self.system_k_closed_by_proper_generated_closure:
             return ()
         return self._continuation_routed_missing_latin_row_defects(
             self.refinement.active_missing_left_latin_row_defects
@@ -1104,7 +1121,7 @@ class PostLinearRemainingFiniteSystemAudit:
     def mixed_context_routed_k_missing_latin_row_defects(
         self,
     ) -> Tuple[Tuple[Tuple[Color, Color], str], ...]:
-        if self.system_k_closed_by_proper_defect_closure:
+        if self.system_k_closed_by_proper_generated_closure:
             return ()
         return self._mixed_context_routed_missing_latin_row_defects(
             self.refinement.active_missing_left_latin_row_defects
@@ -1116,7 +1133,7 @@ class PostLinearRemainingFiniteSystemAudit:
         return (
             self.raw_system_k
             and not self.kink_completion_deficits_routed
-            and not self.system_k_closed_by_proper_defect_closure
+            and not self.system_k_closed_by_proper_generated_closure
             and bool(self.recovery_routed_k_missing_latin_row_defects)
             and not self.live_k_missing_latin_row_defects
         )
@@ -1126,7 +1143,7 @@ class PostLinearRemainingFiniteSystemAudit:
         return (
             self.raw_system_k
             and not self.kink_completion_deficits_routed
-            and not self.system_k_closed_by_proper_defect_closure
+            and not self.system_k_closed_by_proper_generated_closure
             and bool(self.continuation_routed_k_missing_latin_row_defects)
             and not self.live_k_missing_latin_row_defects
         )
@@ -1136,7 +1153,7 @@ class PostLinearRemainingFiniteSystemAudit:
         return (
             self.raw_system_k
             and not self.kink_completion_deficits_routed
-            and not self.system_k_closed_by_proper_defect_closure
+            and not self.system_k_closed_by_proper_generated_closure
             and bool(self.mixed_context_routed_k_missing_latin_row_defects)
             and not self.live_k_missing_latin_row_defects
         )
@@ -1146,7 +1163,7 @@ class PostLinearRemainingFiniteSystemAudit:
         return (
             self.raw_system_k
             and not self.kink_completion_deficits_routed
-            and not self.system_k_closed_by_proper_defect_closure
+            and not self.system_k_closed_by_proper_generated_closure
             and not self.k_deficits_routed_to_recovery_endpoint
             and not self.k_deficits_routed_to_continuation_endpoint
             and not self.k_deficits_routed_to_mixed_context_endpoint
@@ -1158,7 +1175,7 @@ class PostLinearRemainingFiniteSystemAudit:
         return (
             self.raw_system_k
             and not self.kink_completion_deficits_routed
-            and not self.system_k_closed_by_proper_defect_closure
+            and not self.system_k_closed_by_proper_generated_closure
             and bool(self.live_k_missing_latin_row_defects)
         )
 
@@ -1168,7 +1185,7 @@ class PostLinearRemainingFiniteSystemAudit:
             (
                 self.raw_system_k
                 and self.kink_completion_deficits_routed
-                and not self.system_k_closed_by_proper_defect_closure
+                and not self.system_k_closed_by_proper_generated_closure
                 and bool(self.live_k_missing_latin_row_defects)
             )
             or self.k_deficits_routed_to_recovery_endpoint
@@ -1334,6 +1351,8 @@ class PostLinearRemainingFiniteSystemAudit:
             return "closed_by_recorded_branch"
         if self.system_k_closed_by_proper_defect_closure:
             return "closed_by_triangular_latin_proper_closure"
+        if self.system_k_closed_by_partial_constant_proper_closure:
+            return "closed_by_missing_triangular_partial_constant_proper_closure"
         if self.all_active_routed_endpoint_systems_closed:
             if self.active_routed_endpoint_systems == ("U",):
                 if self.system_u_closed_by_endpoint_witness:
@@ -1371,7 +1390,7 @@ class PostLinearRemainingFiniteSystemAudit:
 
     @property
     def is_current_remaining_finite_system(self) -> bool:
-        if self.system_k_closed_by_proper_defect_closure:
+        if self.system_k_closed_by_proper_generated_closure:
             return False
         return (
             self.system_k_active
@@ -2430,7 +2449,7 @@ class PostLinearRemainingFiniteSystemAudit:
 
     @property
     def remaining_obligations(self) -> Tuple[str, ...]:
-        if self.system_k_closed_by_proper_defect_closure:
+        if self.system_k_closed_by_proper_generated_closure:
             return ()
         if self.k_deficits_closed_by_recorded_routing:
             return ()
