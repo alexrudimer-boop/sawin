@@ -470,6 +470,9 @@ separates the raw supplied-target flag from the scoped target audit: expected
 families, covered families, target families, endpoint group orders, cutoff
 degrees, scope agreement with the current `kappa`, and whether the target
 audit proves the fixed endpoint target obligation.
+The residual bridge report likewise separates family coverage from exact
+seed-state coverage, so a residual theorem or row proof built for the wrong
+routed seeds is visible in the obstruction data.
 
 The residual-faithfulness gate is separate from the endpoint table identities:
 even a trivial endpoint group satisfies all label subgroup inclusions
@@ -484,10 +487,14 @@ readout rows prove the complete residual-action implication.  A supplied-row
 implication with missing residual rows is not enough, and omitting the
 expected row count does not prove residual faithfulness for this signed
 endpoint layer.  The row proof must now carry its own scope audit as well:
-active and covered endpoint families, exact row-count agreement with the
+active and covered endpoint families, exact expected and covered endpoint
+seed states from the current `kappa`, exact row-count agreement with the
 explicit rows, exact endpoint-channel coverage, braid-index independence, and
 product-family separation.  Complete finite rows without this scope are only a
-fixed-row check, not an all-strand residual-faithfulness certificate.
+fixed-row check, not an all-strand residual-faithfulness certificate.  A
+family-scoped proof that omits the exact seed states is also incomplete,
+because product endpoint rows can contain several routed seed channels within
+the same family.
 
 When the bridge is supplied as a symbolic theorem rather than row data, the
 audit requires the theorem to specify exact active and covered endpoint

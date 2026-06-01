@@ -1067,12 +1067,14 @@ is not a uniform residual-faithfulness theorem.
 
 Alternatively, a symbolic residual-faithfulness theorem may replace explicit
 row listing only if it states all of the following finite-scope data:
-the active endpoint families, the covered endpoint families, the expected
-residual row count, the covered residual row count, exactness of endpoint
-channels, the implication from identity endpoint data to identity residual
-motion, independence from braid index, and family-by-family product
-separation.  A bare assertion that residual faithfulness holds is not a
-certificate.
+the active endpoint families, the covered endpoint families, the exact
+expected routed endpoint seed states from `kappa`, the covered endpoint seed
+states, the expected residual row count, the covered residual row count,
+exactness of endpoint channels, the implication from identity endpoint data
+to identity residual motion, independence from braid index, and
+family-by-family product separation.  A bare assertion that residual
+faithfulness holds, or a certificate scoped only by family names while
+omitting the routed seed states, is not a certificate.
 
 The signed-generator audit for a claimed A proof must therefore establish:
 
@@ -1084,6 +1086,7 @@ fixed_endpoint_group_or_cutoff,
 family_scoped_endpoint_target_coverage,
 endpoint_target_braid_index_independence,
 endpoint_target_product_family_separation,
+residual_endpoint_seed_state_coverage_exact,
 signed_generator_domain_exact,
 coordinate_components_match_T_plus_and_T_inverse,
 all_signed_rows_defined,
@@ -1562,10 +1565,13 @@ Before returning a claimed resolution, explicitly answer:
    cutoff degrees and product-family separation?
 11. Are product endpoint rows handled family-by-family without hiding any
    unclosed U, C, or M obligation?
-12. If returning A, where exactly is `G(pi,Q)` constructed, why does it prove
+12. Does every residual-faithfulness theorem or residual-action row proof
+   cover exactly the routed endpoint seed states hit by `kappa`, not merely
+   the family names?
+13. If returning A, where exactly is `G(pi,Q)` constructed, why does it prove
    the all-`n` residual implication, and how does the congruence-chain
    induction produce the final finite rack?
-13. If returning B, why does the obstruction defeat every finite group `G`,
+14. If returning B, why does the obstruction defeat every finite group `G`,
    hence every finite rack through the sharp obstruction theorem?
 
 Return outcome A or outcome B only if the proof is genuinely complete.  If

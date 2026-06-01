@@ -605,10 +605,36 @@ class UniversalKResidualFaithfulnessAudit:
     identity_endpoint_data_forces_residual_identity: bool = False
     braid_index_independent: bool = False
     product_families_separated: bool = False
+    expected_endpoint_seed_states: Tuple[Tuple[str, UniversalKSeedState], ...] = ()
+    covered_endpoint_seed_states: Tuple[Tuple[str, UniversalKSeedState], ...] = ()
 
     @property
     def family_coverage_exact(self) -> bool:
         return set(self.active_endpoint_families) == set(self.covered_endpoint_families)
+
+    @property
+    def expected_endpoint_seed_states_exact(
+        self,
+    ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
+        return tuple(sorted(set(self.expected_endpoint_seed_states), key=repr))
+
+    @property
+    def covered_endpoint_seed_states_exact(
+        self,
+    ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
+        return tuple(sorted(set(self.covered_endpoint_seed_states), key=repr))
+
+    @property
+    def seed_state_coverage_exact(self) -> bool:
+        return set(self.expected_endpoint_seed_states_exact) == set(
+            self.covered_endpoint_seed_states_exact
+        )
+
+    @property
+    def seed_state_families_match_active(self) -> bool:
+        return set(self.active_endpoint_families) == {
+            family for family, _state in self.expected_endpoint_seed_states_exact
+        }
 
     @property
     def residual_row_count_supplied(self) -> bool:
@@ -626,6 +652,8 @@ class UniversalKResidualFaithfulnessAudit:
     def proves_residual_faithfulness(self) -> bool:
         return (
             self.family_coverage_exact
+            and self.seed_state_coverage_exact
+            and self.seed_state_families_match_active
             and self.residual_row_coverage_exact
             and self.endpoint_channels_exact
             and self.identity_endpoint_data_forces_residual_identity
@@ -638,6 +666,10 @@ class UniversalKResidualFaithfulnessAudit:
         reasons = []
         if not self.family_coverage_exact:
             reasons.append("residual_faithfulness_family_coverage_not_exact")
+        if not self.seed_state_coverage_exact:
+            reasons.append("residual_faithfulness_seed_state_coverage_not_exact")
+        if not self.seed_state_families_match_active:
+            reasons.append("residual_faithfulness_seed_state_families_mismatch")
         if not self.residual_row_count_supplied:
             reasons.append("residual_faithfulness_expected_row_count_missing")
         elif not self.residual_row_coverage_exact:
@@ -664,10 +696,36 @@ class UniversalKResidualActionScopeAudit:
     endpoint_channels_exact: bool = False
     braid_index_independent: bool = False
     product_families_separated: bool = False
+    expected_endpoint_seed_states: Tuple[Tuple[str, UniversalKSeedState], ...] = ()
+    covered_endpoint_seed_states: Tuple[Tuple[str, UniversalKSeedState], ...] = ()
 
     @property
     def family_coverage_exact(self) -> bool:
         return set(self.active_endpoint_families) == set(self.covered_endpoint_families)
+
+    @property
+    def expected_endpoint_seed_states_exact(
+        self,
+    ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
+        return tuple(sorted(set(self.expected_endpoint_seed_states), key=repr))
+
+    @property
+    def covered_endpoint_seed_states_exact(
+        self,
+    ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
+        return tuple(sorted(set(self.covered_endpoint_seed_states), key=repr))
+
+    @property
+    def seed_state_coverage_exact(self) -> bool:
+        return set(self.expected_endpoint_seed_states_exact) == set(
+            self.covered_endpoint_seed_states_exact
+        )
+
+    @property
+    def seed_state_families_match_active(self) -> bool:
+        return set(self.active_endpoint_families) == {
+            family for family, _state in self.expected_endpoint_seed_states_exact
+        }
 
     @property
     def residual_row_count_supplied(self) -> bool:
@@ -685,6 +743,8 @@ class UniversalKResidualActionScopeAudit:
     def proves_residual_action_scope(self) -> bool:
         return (
             self.family_coverage_exact
+            and self.seed_state_coverage_exact
+            and self.seed_state_families_match_active
             and self.residual_row_coverage_exact
             and self.endpoint_channels_exact
             and self.braid_index_independent
@@ -696,6 +756,10 @@ class UniversalKResidualActionScopeAudit:
         reasons = []
         if not self.family_coverage_exact:
             reasons.append("residual_action_scope_family_coverage_not_exact")
+        if not self.seed_state_coverage_exact:
+            reasons.append("residual_action_scope_seed_state_coverage_not_exact")
+        if not self.seed_state_families_match_active:
+            reasons.append("residual_action_scope_seed_state_families_mismatch")
         if not self.residual_row_count_supplied:
             reasons.append("residual_action_scope_expected_row_count_missing")
         elif not self.residual_row_coverage_exact:
@@ -1215,6 +1279,14 @@ class UniversalKSignedEndpointGeneratorAudit:
         )
 
     @property
+    def residual_action_scope_matches_seed_states(self) -> bool:
+        return (
+            self.residual_action_scope is not None
+            and set(self.residual_action_scope.expected_endpoint_seed_states_exact)
+            == set(self.required_seed_states)
+        )
+
+    @property
     def residual_action_scope_matches_action_rows(self) -> bool:
         return (
             self.residual_action_scope is not None
@@ -1234,6 +1306,16 @@ class UniversalKSignedEndpointGeneratorAudit:
         )
 
     @property
+    def residual_theorem_scope_matches_seed_states(self) -> bool:
+        return (
+            self.residual_faithfulness_theorem is not None
+            and set(
+                self.residual_faithfulness_theorem.expected_endpoint_seed_states_exact
+            )
+            == set(self.required_seed_states)
+        )
+
+    @property
     def residual_action_faithfulness_proved(self) -> bool:
         return (
             self.residual_action_audit is not None
@@ -1241,6 +1323,7 @@ class UniversalKSignedEndpointGeneratorAudit:
             and self.residual_action_audit.proves_complete_residual_action_implication
             and self.residual_action_scope is not None
             and self.residual_action_scope_matches_required
+            and self.residual_action_scope_matches_seed_states
             and self.residual_action_scope_matches_action_rows
             and self.residual_action_scope.proves_residual_action_scope
         )
@@ -1250,6 +1333,7 @@ class UniversalKSignedEndpointGeneratorAudit:
         return (
             self.residual_faithfulness_theorem is not None
             and self.residual_theorem_scope_matches_required
+            and self.residual_theorem_scope_matches_seed_states
             and self.residual_faithfulness_theorem.proves_residual_faithfulness
         )
 
@@ -1354,12 +1438,16 @@ class UniversalKSignedEndpointGeneratorAudit:
                 else:
                     if not self.residual_action_scope_matches_required:
                         reasons.append("residual_action_scope_mismatch")
+                    if not self.residual_action_scope_matches_seed_states:
+                        reasons.append("residual_action_scope_seed_state_mismatch")
                     if not self.residual_action_scope_matches_action_rows:
                         reasons.append("residual_action_scope_row_count_mismatch")
                     reasons.extend(self.residual_action_scope.failure_reasons)
             if self.residual_faithfulness_theorem is not None:
                 if not self.residual_theorem_scope_matches_required:
                     reasons.append("residual_theorem_scope_mismatch")
+                if not self.residual_theorem_scope_matches_seed_states:
+                    reasons.append("residual_theorem_seed_state_mismatch")
                 reasons.extend(self.residual_faithfulness_theorem.failure_reasons)
         return tuple(reasons)
 
@@ -3713,10 +3801,16 @@ class PostLinearRemainingFiniteSystemAudit:
                 ("signed_endpoint_generator_residual_faithfulness_verified", False),
                 ("signed_endpoint_generator_residual_faithfulness_flag_supplied", False),
                 ("signed_endpoint_generator_residual_action_scope_matches_required", False),
+                ("signed_endpoint_generator_residual_action_scope_matches_seed_states", False),
                 ("signed_endpoint_generator_residual_action_scope_matches_rows", False),
+                ("signed_endpoint_generator_residual_action_scope_expected_states", ()),
+                ("signed_endpoint_generator_residual_action_scope_covered_states", ()),
                 ("signed_endpoint_generator_residual_action_scope_proved", False),
                 ("signed_endpoint_generator_residual_theorem_proved", False),
                 ("signed_endpoint_generator_residual_theorem_scope_matches_required", False),
+                ("signed_endpoint_generator_residual_theorem_scope_matches_seed_states", False),
+                ("signed_endpoint_generator_residual_theorem_expected_states", ()),
+                ("signed_endpoint_generator_residual_theorem_covered_states", ()),
                 ("signed_endpoint_generator_residual_action_rows", 0),
                 ("signed_endpoint_generator_residual_action_rows_expected", None),
                 ("signed_endpoint_generator_residual_action_complete", False),
@@ -3980,8 +4074,28 @@ class PostLinearRemainingFiniteSystemAudit:
                 audit.residual_action_scope_matches_required,
             ),
             (
+                "signed_endpoint_generator_residual_action_scope_matches_seed_states",
+                audit.residual_action_scope_matches_seed_states,
+            ),
+            (
                 "signed_endpoint_generator_residual_action_scope_matches_rows",
                 audit.residual_action_scope_matches_action_rows,
+            ),
+            (
+                "signed_endpoint_generator_residual_action_scope_expected_states",
+                (
+                    audit.residual_action_scope.expected_endpoint_seed_states_exact
+                    if audit.residual_action_scope is not None
+                    else ()
+                ),
+            ),
+            (
+                "signed_endpoint_generator_residual_action_scope_covered_states",
+                (
+                    audit.residual_action_scope.covered_endpoint_seed_states_exact
+                    if audit.residual_action_scope is not None
+                    else ()
+                ),
             ),
             (
                 "signed_endpoint_generator_residual_action_scope_proved",
@@ -3998,6 +4112,26 @@ class PostLinearRemainingFiniteSystemAudit:
             (
                 "signed_endpoint_generator_residual_theorem_scope_matches_required",
                 audit.residual_theorem_scope_matches_required,
+            ),
+            (
+                "signed_endpoint_generator_residual_theorem_scope_matches_seed_states",
+                audit.residual_theorem_scope_matches_seed_states,
+            ),
+            (
+                "signed_endpoint_generator_residual_theorem_expected_states",
+                (
+                    audit.residual_faithfulness_theorem.expected_endpoint_seed_states_exact
+                    if audit.residual_faithfulness_theorem is not None
+                    else ()
+                ),
+            ),
+            (
+                "signed_endpoint_generator_residual_theorem_covered_states",
+                (
+                    audit.residual_faithfulness_theorem.covered_endpoint_seed_states_exact
+                    if audit.residual_faithfulness_theorem is not None
+                    else ()
+                ),
             ),
             (
                 "signed_endpoint_generator_residual_action_rows",

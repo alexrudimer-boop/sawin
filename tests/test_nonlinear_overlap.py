@@ -300,7 +300,12 @@ def uncounted_endpoint_residual_action_audit():
     )
 
 
-def trivial_endpoint_residual_action_scope(*families):
+def trivial_endpoint_residual_action_scope(*families, seed_states=None):
+    if seed_states is None:
+        seed_states = tuple(
+            (family, ("*", "*", "left_constant_map_universal_kernel"))
+            for family in families
+        )
     return UniversalKResidualActionScopeAudit(
         active_endpoint_families=tuple(families),
         covered_endpoint_families=tuple(families),
@@ -309,6 +314,8 @@ def trivial_endpoint_residual_action_scope(*families):
         endpoint_channels_exact=True,
         braid_index_independent=True,
         product_families_separated=True,
+        expected_endpoint_seed_states=tuple(seed_states),
+        covered_endpoint_seed_states=tuple(seed_states),
     )
 
 
@@ -2628,6 +2635,34 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             unscoped_residual.failure_reasons,
         )
 
+        wrong_seed_residual = UniversalKSignedEndpointGeneratorAudit(
+            seed_classifier_entries=seed_entries,
+            reachable_seed_states=(("U", seed_state),),
+            required_entry_keys=required_entry_keys,
+            rows=(positive_row, negative_row),
+            endpoint_targets_fixed=True,
+            endpoint_target_audit=trivial_endpoint_target_audit("U"),
+            coordinate_components_verified=True,
+            inverse_pairing_verified=True,
+            inverse_cancellation_verified=True,
+            positive_ybe_path_verified=True,
+            positive_ybe_cocycle_verified=True,
+            signed_two_strand_base_verified=True,
+            artin_homomorphism_update_verified=True,
+            residual_action_scope=trivial_endpoint_residual_action_scope(
+                "U",
+                seed_states=(("U", ("wrong-seed",)),),
+            ),
+            residual_action_audit=trivial_endpoint_residual_action_audit(),
+        )
+
+        self.assertFalse(wrong_seed_residual.residual_faithfulness_proved)
+        self.assertFalse(wrong_seed_residual.proves_signed_endpoint_generator_tables)
+        self.assertIn(
+            "residual_action_scope_seed_state_mismatch",
+            wrong_seed_residual.failure_reasons,
+        )
+
         bare_flag = UniversalKSignedEndpointGeneratorAudit(
             seed_classifier_entries=seed_entries,
             reachable_seed_states=(("U", seed_state),),
@@ -2658,6 +2693,8 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             identity_endpoint_data_forces_residual_identity=True,
             braid_index_independent=True,
             product_families_separated=True,
+            expected_endpoint_seed_states=(("U", seed_state),),
+            covered_endpoint_seed_states=(("U", seed_state),),
         )
         theorem_complete = UniversalKSignedEndpointGeneratorAudit(
             seed_classifier_entries=seed_entries,
@@ -2689,6 +2726,11 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             identity_endpoint_data_forces_residual_identity=True,
             braid_index_independent=True,
             product_families_separated=True,
+            expected_endpoint_seed_states=(
+                ("U", seed_state),
+                ("C", ("*", "*", "left")),
+            ),
+            covered_endpoint_seed_states=(("U", seed_state),),
         )
         theorem_missing_scope = UniversalKSignedEndpointGeneratorAudit(
             seed_classifier_entries=seed_entries,
@@ -3213,7 +3255,10 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             endpoint_group=cyclic_group(2),
             witnesses=witnesses,
             cutoff_readouts_exact=True,
-            residual_action_scope=trivial_endpoint_residual_action_scope("C"),
+            residual_action_scope=trivial_endpoint_residual_action_scope(
+                "C",
+                seed_states=reachable,
+            ),
             residual_action_audit=trivial_endpoint_residual_action_audit(),
         )
 
@@ -3237,7 +3282,10 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             endpoint_group=cyclic_group(2),
             witnesses=witnesses,
             cutoff_readout_audit=scoped_cutoff,
-            residual_action_scope=trivial_endpoint_residual_action_scope("C"),
+            residual_action_scope=trivial_endpoint_residual_action_scope(
+                "C",
+                seed_states=reachable,
+            ),
             residual_action_audit=trivial_endpoint_residual_action_audit(),
         )
 
