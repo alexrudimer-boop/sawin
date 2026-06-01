@@ -3927,6 +3927,16 @@ class UniversalKSignedEndpointGeneratorAudit:
         )
 
     @property
+    def positive_ybe_label_diagnostic_failures(
+        self,
+    ) -> Tuple[UniversalKSignedEndpointLabelFailure, ...]:
+        return tuple(
+            failure
+            for failure in self.positive_ybe_cocycle_failures
+            if failure[1] == "positive_ybe_label_mismatch"
+        )
+
+    @property
     def far_commutativity_label_diagnostic_failures(
         self,
     ) -> Tuple[UniversalKSignedEndpointLabelFailure, ...]:
@@ -5554,7 +5564,7 @@ def universal_k_signed_endpoint_generator_audit(
         ),
         positive_ybe_path_verified=not positive_ybe_failures,
         positive_ybe_cocycle_verified=(
-            endpoint_group is not None and not positive_ybe_cocycle_failures
+            endpoint_group is not None and not positive_ybe_failures
         ),
         far_commutativity_verified=(
             endpoint_group is not None
@@ -7205,6 +7215,10 @@ class PostLinearRemainingFiniteSystemAudit:
                 ("signed_endpoint_generator_positive_ybe_path_failures", ()),
                 ("signed_endpoint_generator_positive_ybe_cocycle_verified", False),
                 ("signed_endpoint_generator_positive_ybe_cocycle_failures", ()),
+                (
+                    "signed_endpoint_generator_positive_ybe_label_diagnostics",
+                    (),
+                ),
                 ("signed_endpoint_generator_far_commutativity_verified", False),
                 ("signed_endpoint_generator_far_commutativity_failures", ()),
                 ("signed_endpoint_generator_far_commutativity_path_failures", ()),
@@ -7808,6 +7822,10 @@ class PostLinearRemainingFiniteSystemAudit:
             (
                 "signed_endpoint_generator_positive_ybe_cocycle_failures",
                 audit.positive_ybe_cocycle_failures,
+            ),
+            (
+                "signed_endpoint_generator_positive_ybe_label_diagnostics",
+                audit.positive_ybe_label_diagnostic_failures,
             ),
             (
                 "signed_endpoint_generator_far_commutativity_verified",

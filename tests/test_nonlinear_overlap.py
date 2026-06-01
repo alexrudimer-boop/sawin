@@ -5792,7 +5792,8 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         )
 
         self.assertTrue(audit.positive_ybe_path_verified)
-        self.assertFalse(audit.positive_ybe_cocycle_verified)
+        self.assertTrue(audit.positive_ybe_cocycle_verified)
+        self.assertTrue(audit.positive_ybe_label_diagnostic_failures)
         self.assertTrue(audit.far_commutativity_verified)
         self.assertTrue(audit.far_commutativity_label_diagnostic_failures)
         self.assertFalse(audit.far_commutativity_path_failures)
