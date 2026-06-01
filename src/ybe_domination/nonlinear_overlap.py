@@ -9147,7 +9147,8 @@ def universal_k_endpoint_observer_family_build_audit(
 
 
 def _universal_k_family_object_map(
-    rows: Sequence[Tuple[str, object]],
+    rows: Sequence[object],
+    row_type: type | None = None,
 ) -> Mapping[str, object]:
     mapped: dict[str, object] = {}
     for row in rows:
@@ -9155,6 +9156,8 @@ def _universal_k_family_object_map(
         if parts is None:
             continue
         family, value = parts
+        if row_type is not None and not isinstance(value, row_type):
+            continue
         if (
             not _is_hashable(family)
             or family not in UNIVERSAL_K_ENDPOINT_FAMILIES
@@ -9208,13 +9211,16 @@ def universal_k_endpoint_observer_builds_by_family(
     """Construct and audit separate endpoint observers for active U/C/M families."""
 
     endpoint_target_audits = _universal_k_family_object_map(
-        endpoint_target_audits_by_family
+        endpoint_target_audits_by_family,
+        UniversalKEndpointTargetAudit,
     )
     cutoff_readout_audits = _universal_k_family_object_map(
-        cutoff_readout_audits_by_family
+        cutoff_readout_audits_by_family,
+        UniversalKCutoffReadoutAudit,
     )
     residual_faithfulness_theorems = _universal_k_family_object_map(
-        residual_faithfulness_theorems_by_family
+        residual_faithfulness_theorems_by_family,
+        UniversalKResidualFaithfulnessAudit,
     )
     builds = []
     for row in word_potential_certificates_by_family:

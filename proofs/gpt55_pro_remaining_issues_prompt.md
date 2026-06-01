@@ -1573,7 +1573,10 @@ theorem rows must cover exactly the active routed families when they are
 supplied; C/M cutoff-readout audit rows must cover exactly the active cutoff
 families.  Malformed rows, unknown families, duplicate families or keys,
 missing active families, and extra auxiliary families must be reported
-separately.  Selecting the first valid auxiliary row for a family is not
+separately.  A wrong-typed auxiliary value is malformed finite data: an
+endpoint-target ledger may select only endpoint target audits, a cutoff
+ledger may select only cutoff readout audits, and a residual ledger may
+select only residual-faithfulness audits.  Selecting the first valid auxiliary row for a family is not
 enough: an extra, duplicate, malformed, or stale detector-track,
 endpoint-target, cutoff-readout, or residual theorem row must keep the
 family-build ledger from proving exact observer coverage.

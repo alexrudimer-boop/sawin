@@ -810,7 +810,10 @@ exactly the active families with no malformed rows, unknown families, or
 duplicate track keys.  Endpoint-target audit rows and residual-faithfulness
 theorem rows must cover exactly the active families when supplied; C/M cutoff
 readout audit rows must cover exactly the active cutoff families.  Malformed
-rows, unknown families, duplicate families or keys, missing active families,
+rows include wrong-typed auxiliary values, not merely wrong tuple shapes; the
+builder may select only endpoint target audits for the endpoint target ledger,
+cutoff readout audits for the cutoff ledger, and residual-faithfulness audits
+for the residual ledger.  Unknown families, duplicate families or keys, missing active families,
 and extra auxiliary families are reported separately.  The builder still lets
 the individual observer audit explain a genuinely absent target, cutoff,
 detector track, or residual proof, but it no longer allows a duplicate or

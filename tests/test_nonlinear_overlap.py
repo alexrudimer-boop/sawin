@@ -4848,6 +4848,54 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             bad_auxiliary_ledgers.failure_reasons,
         )
 
+        wrong_typed_auxiliary_ledgers = universal_k_endpoint_observer_builds_by_family(
+            interval,
+            seed_entries,
+            tuple(certificates),
+            detector_track_initialization_rows=tuple(detector_rows),
+            endpoint_target_audits_by_family=(
+                ("U", "not_an_endpoint_target_audit"),
+            )
+            + tuple(endpoint_targets),
+            cutoff_readout_audits_by_family=(
+                ("C", "not_a_cutoff_readout_audit"),
+            )
+            + tuple(cutoff_readouts),
+            residual_faithfulness_theorems_by_family=(
+                ("M", "not_a_residual_faithfulness_audit"),
+            )
+            + tuple(residual_theorems),
+        )
+
+        self.assertFalse(
+            wrong_typed_auxiliary_ledgers.proves_family_endpoint_observers
+        )
+        self.assertEqual(wrong_typed_auxiliary_ledgers.unproved_build_families, ())
+        self.assertEqual(
+            wrong_typed_auxiliary_ledgers.malformed_endpoint_target_rows,
+            (("U", "not_an_endpoint_target_audit"),),
+        )
+        self.assertEqual(
+            wrong_typed_auxiliary_ledgers.malformed_cutoff_readout_rows,
+            (("C", "not_a_cutoff_readout_audit"),),
+        )
+        self.assertEqual(
+            wrong_typed_auxiliary_ledgers.malformed_residual_theorem_rows,
+            (("M", "not_a_residual_faithfulness_audit"),),
+        )
+        self.assertIn(
+            "endpoint_observer_family_endpoint_targets_malformed_rows",
+            wrong_typed_auxiliary_ledgers.failure_reasons,
+        )
+        self.assertIn(
+            "endpoint_observer_family_cutoff_readouts_malformed_rows",
+            wrong_typed_auxiliary_ledgers.failure_reasons,
+        )
+        self.assertIn(
+            "endpoint_observer_family_residual_theorems_malformed_rows",
+            wrong_typed_auxiliary_ledgers.failure_reasons,
+        )
+
         bad_detector_track_ledger = universal_k_endpoint_observer_builds_by_family(
             interval,
             seed_entries,
