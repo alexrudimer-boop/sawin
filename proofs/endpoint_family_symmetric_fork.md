@@ -31,9 +31,13 @@ The one-row B-seed attachment helper
 `endpoint_family_symmetric_seed_audit(...)` pairs such an endpoint-family miss
 with a supplied `local_symmetric_normalized_law_prefix_witness_audit(...)` row.
 It requires the same symmetric degree, right stabilization by that degree, a
-nonidentity endpoint channel, endpoint-family faithfulness, and an explicit
-assertion that the endpoint miss is the residual motion recorded by the local
-prefix row.
+nonidentity endpoint channel, endpoint-family faithfulness, and a finite
+residual motion row matching the stabilized local prefix.  The endpoint miss
+row records an endpoint value and endpoint identity, plus residual input and
+output tuples.  It proves attachment only when the endpoint value differs
+from identity, the residual row is moved, and the row equals the local prefix
+stabilized fibre tuple and stabilized image.  The older attachment booleans
+are diagnostic only; a boolean-only seed audit is not a B-side row.
 
 ## Setup
 

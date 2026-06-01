@@ -913,6 +913,16 @@ is the conjunction of the row faithful-readout entries.  A boolean assertion
 that all endpoint witnesses are supplied or that the endpoint family is
 faithful is not a certificate without these finite rows.
 
+If the symmetric fork is used on the B side as an endpoint-family symmetric
+seed, the attachment must also be finite-row backed.  The seed row must list
+the symmetric degree, endpoint channel value, endpoint identity, residual
+input tuple, and residual output tuple.  It proves a B-side seed only when
+the endpoint value is nonidentity, the residual input/output tuple is moved,
+and those tuples match the stabilized fibre tuple and stabilized image in the
+local normalized-law prefix row.  A boolean assertion that an endpoint
+channel is nonidentity or that the endpoint miss matches residual motion is
+not a certificate.
+
 With those target data fixed, a signed endpoint generator table is a finite
 table
 

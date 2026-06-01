@@ -580,6 +580,13 @@ the endpoint witness is supplied, and whether the row readout is faithful.
 The cutoff proof checks exact factor-row coverage, order agreement, witness
 coverage, and row faithfulness; the older `all_endpoint_witnesses_supplied`
 and `endpoint_family_faithful` booleans are diagnostic only.
+The companion B-side symmetric seed attachment is row-backed as well: it
+records endpoint value versus endpoint identity and the residual input/output
+tuple claimed to move.  The attachment closes only when that row is
+nonidentity, genuinely moved, and equal to the stabilized fibre tuple and
+stabilized image in the normalized-law prefix row.  The old
+`endpoint_channel_nonidentity` and `endpoint_miss_matches_residual_motion`
+flags are diagnostic only.
 
 The residual-faithfulness gate is separate from the endpoint table identities:
 even a trivial endpoint group satisfies all label subgroup inclusions

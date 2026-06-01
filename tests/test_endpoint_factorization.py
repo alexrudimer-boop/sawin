@@ -23,6 +23,7 @@ from ybe_domination import (
     endpoint_residual_readout_audit,
     EndpointFamilySymmetricForkAudit,
     EndpointFamilySymmetricForkRow,
+    EndpointFamilySymmetricSeedAudit,
     endpoint_family_symmetric_fork_audit,
     endpoint_family_symmetric_seed_audit,
     identity_solution,
@@ -1230,8 +1231,22 @@ class EndpointFactorizationTests(unittest.TestCase):
         self.assertTrue(audit.symmetric_degree_covers_endpoint_family)
         self.assertTrue(audit.degree_is_declared_endpoint_failure)
         self.assertTrue(audit.local_prefix_is_symmetric_normalized_law_row)
+        self.assertTrue(audit.endpoint_channel_miss_is_nonidentity)
+        self.assertTrue(audit.endpoint_miss_matches_prefix_motion)
         self.assertTrue(audit.endpoint_miss_is_attached_to_prefix)
         self.assertTrue(audit.proves_one_endpoint_family_symmetric_seed)
+
+        boolean_only = EndpointFamilySymmetricSeedAudit(
+            endpoint_family,
+            local_prefix,
+            degree,
+            endpoint_channel_nonidentity=True,
+            endpoint_miss_matches_residual_motion=True,
+        )
+        self.assertFalse(boolean_only.endpoint_channel_miss_is_nonidentity)
+        self.assertFalse(boolean_only.endpoint_miss_matches_prefix_motion)
+        self.assertFalse(boolean_only.endpoint_miss_is_attached_to_prefix)
+        self.assertFalse(boolean_only.proves_one_endpoint_family_symmetric_seed)
 
     def test_endpoint_family_symmetric_seed_requires_attachment_flags(self):
         total = rack_solution([0, 1], lambda _left, right: 1 - right)

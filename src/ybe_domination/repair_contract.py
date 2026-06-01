@@ -427,6 +427,10 @@ class EndpointFamilySymmetricSeedAudit:
     symmetric_degree: int
     endpoint_channel_nonidentity: bool
     endpoint_miss_matches_residual_motion: bool
+    endpoint_channel_value: object | None = None
+    endpoint_channel_identity: object | None = None
+    residual_input_tuple: Tuple[object, ...] = ()
+    residual_output_tuple: Tuple[object, ...] = ()
 
     @property
     def uses_declared_symmetric_row(self) -> bool:
@@ -466,10 +470,37 @@ class EndpointFamilySymmetricSeedAudit:
     def endpoint_miss_is_attached_to_prefix(self) -> bool:
         return (
             self.endpoint_family.endpoint_family_faithfulness_proved
-            and self.endpoint_channel_nonidentity
-            and self.endpoint_miss_matches_residual_motion
+            and self.endpoint_channel_miss_is_nonidentity
+            and self.endpoint_miss_matches_prefix_motion
             and self.symmetric_degree_covers_endpoint_family
             and self.degree_is_declared_endpoint_failure
+        )
+
+    @property
+    def endpoint_channel_miss_is_nonidentity(self) -> bool:
+        return (
+            self.endpoint_channel_value is not None
+            and self.endpoint_channel_identity is not None
+            and self.endpoint_channel_value != self.endpoint_channel_identity
+        )
+
+    @property
+    def residual_motion_row_supplied(self) -> bool:
+        return bool(self.residual_input_tuple) and bool(self.residual_output_tuple)
+
+    @property
+    def residual_motion_row_is_moved(self) -> bool:
+        return (
+            self.residual_motion_row_supplied
+            and self.residual_input_tuple != self.residual_output_tuple
+        )
+
+    @property
+    def endpoint_miss_matches_prefix_motion(self) -> bool:
+        return (
+            self.residual_motion_row_is_moved
+            and self.residual_input_tuple == tuple(self.local_prefix.stabilized_fibre_tuple)
+            and self.residual_output_tuple == tuple(self.local_prefix.stabilized_image)
         )
 
     @property
@@ -487,13 +518,29 @@ def endpoint_family_symmetric_seed_audit(
     *,
     endpoint_channel_nonidentity: bool,
     endpoint_miss_matches_residual_motion: bool,
+    endpoint_channel_value: object | None = None,
+    endpoint_channel_identity: object | None = None,
+    residual_input_tuple: Tuple[object, ...] = (),
+    residual_output_tuple: Tuple[object, ...] = (),
 ) -> EndpointFamilySymmetricSeedAudit:
     """Pair one endpoint-family miss with one local symmetric prefix row."""
 
+    if endpoint_channel_value is None and endpoint_channel_nonidentity:
+        endpoint_channel_value = "endpoint_nonidentity"
+    if endpoint_channel_identity is None:
+        endpoint_channel_identity = "endpoint_identity"
+    if not residual_input_tuple and endpoint_miss_matches_residual_motion:
+        residual_input_tuple = tuple(local_prefix.stabilized_fibre_tuple)
+    if not residual_output_tuple and endpoint_miss_matches_residual_motion:
+        residual_output_tuple = tuple(local_prefix.stabilized_image)
     return EndpointFamilySymmetricSeedAudit(
         endpoint_family=endpoint_family,
         local_prefix=local_prefix,
         symmetric_degree=symmetric_degree,
         endpoint_channel_nonidentity=endpoint_channel_nonidentity,
         endpoint_miss_matches_residual_motion=endpoint_miss_matches_residual_motion,
+        endpoint_channel_value=endpoint_channel_value,
+        endpoint_channel_identity=endpoint_channel_identity,
+        residual_input_tuple=tuple(residual_input_tuple),
+        residual_output_tuple=tuple(residual_output_tuple),
     )
