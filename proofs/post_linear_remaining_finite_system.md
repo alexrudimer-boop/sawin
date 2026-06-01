@@ -437,6 +437,11 @@ cancellation leave the signed endpoint layer open.  The family and target
 ledgers must also be duplicate-free: repeating a routed family or assigning
 two target entries to the same family is not an exact one-target-per-family
 certificate.
+The implementation now derives endpoint-target braid-index independence and
+product-family separation from the finite target ledger itself: each covered
+family must have a positive fixed group order or cutoff degree, and target
+families must match covered routed families without duplicates.  The legacy
+independence/separation flags are diagnostic only.
 
 The C/M cutoff gate is now scoped like the residual-faithfulness gate.  A bare
 `cutoff_readouts_exact` flag is recorded only as supplied data; it does not
@@ -448,7 +453,9 @@ The checker verifies row-domain exactness, actual membership in the symmetric
 group, injective readouts for faithfulness, and identity killed-readouts for
 channel killing.  The expected and covered cutoff seed-state ledgers must be
 duplicate-free; repeated seed entries are reported as an inexact readout
-ledger rather than silently collapsed.
+ledger rather than silently collapsed.  Cutoff braid-index independence is
+derived from the positive fixed degree and exact finite readout rows, so the
+legacy `braid_index_independent` flag on this audit is diagnostic only.
 
 When a finite endpoint group is supplied, the inverse-cancellation and
 positive-YBE cocycle gates are checked by multiplying the emitted endpoint

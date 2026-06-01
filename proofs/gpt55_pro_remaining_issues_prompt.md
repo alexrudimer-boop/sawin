@@ -888,6 +888,9 @@ routed family.  When two or more of U/C/M are active, product-family
 separation must be certified by an explicit target ledger; otherwise the
 certificate could hide cross-family cancellation in one undifferentiated
 group.
+Endpoint-target braid-index independence and product-family separation must
+be derived from the finite per-family target ledger and positive target
+sizes; they are not independent boolean gates.
 
 With those target data fixed, a signed endpoint generator table is a finite
 table
@@ -1257,6 +1260,8 @@ faithful, or killed by identity cutoff data is not a certificate.  The
 expected and covered cutoff seed-state ledgers must also be duplicate-free;
 silently deduplicating repeated C or M seed entries is not exact readout
 coverage.
+Cutoff braid-index independence must follow from the positive fixed degree
+and exact finite readout rows; it is not an independent boolean gate.
 
 The endpoint tables and readouts must also prove residual faithfulness:
 if all routed endpoint labels or cutoff readouts are killed, then the actual

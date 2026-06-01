@@ -2290,12 +2290,16 @@ class UniversalKCutoffReadoutAudit:
         )
 
     @property
+    def braid_index_independence_proved(self) -> bool:
+        return self.cutoff_degree_supplied and self.readout_rows_cover_expected_states
+
+    @property
     def proves_exact_cutoff_readouts(self) -> bool:
         return (
             self.cutoff_seed_coverage_exact
             and self.cutoff_seed_ledgers_have_no_duplicates
             and self.finite_readout_rows_verified
-            and self.braid_index_independent
+            and self.braid_index_independence_proved
         )
 
     @property
@@ -2329,7 +2333,7 @@ class UniversalKCutoffReadoutAudit:
             reasons.append("cutoff_identity_data_does_not_kill_channels")
         if self.unkilled_readout_rows:
             reasons.append("cutoff_readout_rows_not_killed_by_identity_data")
-        if not self.braid_index_independent:
+        if not self.braid_index_independence_proved:
             reasons.append("cutoff_readouts_not_braid_index_independent")
         return tuple(reasons)
 
@@ -2427,6 +2431,18 @@ class UniversalKEndpointTargetAudit:
         return not self.duplicate_target_endpoint_families
 
     @property
+    def braid_index_independence_proved(self) -> bool:
+        return (
+            self.target_families_exact
+            and self.target_orders_positive
+            and self.cutoff_degrees_positive
+        )
+
+    @property
+    def product_families_separated_proved(self) -> bool:
+        return self.target_families_exact and self.target_ledgers_have_no_duplicates
+
+    @property
     def proves_endpoint_targets(self) -> bool:
         return (
             self.family_coverage_exact
@@ -2435,8 +2451,8 @@ class UniversalKEndpointTargetAudit:
             and self.target_ledgers_have_no_duplicates
             and self.target_orders_positive
             and self.cutoff_degrees_positive
-            and self.braid_index_independent
-            and self.product_families_separated
+            and self.braid_index_independence_proved
+            and self.product_families_separated_proved
         )
 
     @property
@@ -2456,9 +2472,9 @@ class UniversalKEndpointTargetAudit:
             reasons.append("endpoint_target_nonpositive_group_order")
         if not self.cutoff_degrees_positive:
             reasons.append("endpoint_target_nonpositive_cutoff_degree")
-        if not self.braid_index_independent:
+        if not self.braid_index_independence_proved:
             reasons.append("endpoint_target_not_braid_index_independent")
-        if not self.product_families_separated:
+        if not self.product_families_separated_proved:
             reasons.append("endpoint_target_product_families_not_separated")
         return tuple(reasons)
 
