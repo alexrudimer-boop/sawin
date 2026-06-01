@@ -1270,6 +1270,100 @@ class UniversalKWordPotentialCertificate:
         )
 
 
+_UNIVERSAL_K_RESIDUAL_ALLOWED_DEPENDENCIES = frozenset(
+    (
+        "interval_data",
+        "endpoint_family",
+        "routed_seed_state",
+        "residual_input_tuple",
+        "endpoint_channel",
+        "local_fibre_coordinate",
+        "local_row_table",
+    )
+)
+_UNIVERSAL_K_RESIDUAL_FORBIDDEN_DEPENDENCIES = frozenset(
+    (
+        "braid_word",
+        "braid_prefix",
+        "braid_index",
+        "failed_detector",
+        "finite_search_result",
+        "normalized_law_sequence",
+        "timeout",
+    )
+)
+
+
+@dataclass(frozen=True)
+class UniversalKResidualFaithfulnessRow:
+    """One symbolic residual row controlled by killed endpoint channels."""
+
+    input_tuple: Tuple[object, ...]
+    output_tuple: Tuple[object, ...]
+    identity_endpoint_output_tuple: Tuple[object, ...]
+    endpoint_families: Tuple[str, ...]
+    endpoint_seed_states: Tuple[Tuple[str, UniversalKSeedState], ...]
+    endpoint_channel_keys: Tuple[object, ...] = ()
+    dependencies: Tuple[str, ...] = ()
+
+    @property
+    def duplicate_endpoint_families(self) -> Tuple[str, ...]:
+        return _duplicate_values(self.endpoint_families)
+
+    @property
+    def duplicate_endpoint_seed_states(
+        self,
+    ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
+        return _duplicate_values(self.endpoint_seed_states)
+
+    @property
+    def duplicate_dependencies(self) -> Tuple[str, ...]:
+        return _duplicate_values(self.dependencies)
+
+    @property
+    def invalid_endpoint_families(self) -> Tuple[str, ...]:
+        return tuple(
+            family
+            for family in self.endpoint_families
+            if family not in UNIVERSAL_K_ENDPOINT_FAMILIES
+        )
+
+    @property
+    def seed_state_families_match_row(self) -> bool:
+        return {
+            family for family, _seed_state in self.endpoint_seed_states
+        } <= set(self.endpoint_families)
+
+    @property
+    def forbidden_dependencies(self) -> Tuple[str, ...]:
+        forbidden = _UNIVERSAL_K_RESIDUAL_FORBIDDEN_DEPENDENCIES
+        return tuple(dependency for dependency in self.dependencies if dependency in forbidden)
+
+    @property
+    def unknown_dependencies(self) -> Tuple[str, ...]:
+        allowed = _UNIVERSAL_K_RESIDUAL_ALLOWED_DEPENDENCIES
+        return tuple(dependency for dependency in self.dependencies if dependency not in allowed)
+
+    @property
+    def identity_endpoint_data_fixes_row(self) -> bool:
+        return self.identity_endpoint_output_tuple == self.input_tuple
+
+    @property
+    def row_scope_valid(self) -> bool:
+        return (
+            bool(self.endpoint_families)
+            and bool(self.endpoint_seed_states)
+            and bool(self.endpoint_channel_keys)
+            and not self.duplicate_endpoint_families
+            and not self.duplicate_endpoint_seed_states
+            and not self.invalid_endpoint_families
+            and self.seed_state_families_match_row
+            and not self.duplicate_dependencies
+            and not self.forbidden_dependencies
+            and not self.unknown_dependencies
+        )
+
+
 @dataclass(frozen=True)
 class UniversalKResidualFaithfulnessAudit:
     """Scoped theorem audit connecting endpoint collapse to residual action."""
@@ -1288,6 +1382,7 @@ class UniversalKResidualFaithfulnessAudit:
     product_families_separated: bool = False
     expected_endpoint_seed_states: Tuple[Tuple[str, UniversalKSeedState], ...] = ()
     covered_endpoint_seed_states: Tuple[Tuple[str, UniversalKSeedState], ...] = ()
+    residual_rows: Tuple[UniversalKResidualFaithfulnessRow, ...] = ()
 
     @property
     def family_coverage_exact(self) -> bool:
@@ -1408,6 +1503,118 @@ class UniversalKResidualFaithfulnessAudit:
         )
 
     @property
+    def residual_row_input_tuples(self) -> Tuple[Tuple[object, ...], ...]:
+        return tuple(row.input_tuple for row in self.residual_rows)
+
+    @property
+    def duplicate_residual_row_input_tuples(self) -> Tuple[Tuple[object, ...], ...]:
+        return _duplicate_values(self.residual_row_input_tuples)
+
+    @property
+    def missing_residual_rows_for_input_tuples(
+        self,
+    ) -> Tuple[Tuple[object, ...], ...]:
+        row_inputs = set(self.residual_row_input_tuples)
+        return tuple(
+            input_tuple
+            for input_tuple in self.expected_residual_input_tuples
+            if input_tuple not in row_inputs
+        )
+
+    @property
+    def extra_residual_rows_for_input_tuples(
+        self,
+    ) -> Tuple[Tuple[object, ...], ...]:
+        expected = set(self.expected_residual_input_tuples)
+        return tuple(
+            input_tuple
+            for input_tuple in self.residual_row_input_tuples
+            if input_tuple not in expected
+        )
+
+    @property
+    def invalid_residual_rows(
+        self,
+    ) -> Tuple[UniversalKResidualFaithfulnessRow, ...]:
+        active = set(self.active_endpoint_families)
+        seeds = set(self.expected_endpoint_seed_states_exact)
+        return tuple(
+            row
+            for row in self.residual_rows
+            if (
+                not row.row_scope_valid
+                or not set(row.endpoint_families) <= active
+                or not set(row.endpoint_seed_states) <= seeds
+            )
+        )
+
+    @property
+    def residual_rows_cover_input_domain(self) -> bool:
+        return (
+            bool(self.residual_rows)
+            and not self.duplicate_residual_row_input_tuples
+            and not self.missing_residual_rows_for_input_tuples
+            and not self.extra_residual_rows_for_input_tuples
+        )
+
+    @property
+    def residual_rows_have_valid_scope(self) -> bool:
+        return not self.invalid_residual_rows
+
+    @property
+    def residual_rows_cover_endpoint_seed_states(self) -> bool:
+        row_seed_states = {
+            seed_state
+            for row in self.residual_rows
+            for seed_state in row.endpoint_seed_states
+        }
+        return row_seed_states == set(self.expected_endpoint_seed_states_exact)
+
+    @property
+    def residual_rows_cover_endpoint_families(self) -> bool:
+        row_families = {
+            family for row in self.residual_rows for family in row.endpoint_families
+        }
+        return row_families == set(self.active_endpoint_families)
+
+    @property
+    def residual_rows_identity_endpoint_data_fixes_all(self) -> bool:
+        return bool(self.residual_rows) and all(
+            row.identity_endpoint_data_fixes_row for row in self.residual_rows
+        )
+
+    @property
+    def endpoint_channels_exact_proved(self) -> bool:
+        return (
+            self.family_coverage_exact
+            and self.seed_state_coverage_exact
+            and self.residual_rows_cover_endpoint_families
+            and self.residual_rows_cover_endpoint_seed_states
+        )
+
+    @property
+    def identity_endpoint_data_forces_residual_identity_proved(self) -> bool:
+        return (
+            self.residual_rows_cover_input_domain
+            and self.residual_rows_have_valid_scope
+            and self.residual_rows_identity_endpoint_data_fixes_all
+        )
+
+    @property
+    def braid_index_independence_proved(self) -> bool:
+        return self.residual_rows_have_valid_scope
+
+    @property
+    def product_families_separated_proved(self) -> bool:
+        return (
+            self.residual_family_row_coverage_exact
+            and (
+                len(set(self.active_endpoint_families)) <= 1
+                or bool(self.expected_residual_rows_by_family)
+            )
+        )
+
+    @property
     def residual_family_row_counts_required(self) -> bool:
         return len(set(self.active_endpoint_families)) > 1
 
@@ -1504,11 +1711,13 @@ class UniversalKResidualFaithfulnessAudit:
             and self.seed_state_families_match_active
             and self.residual_row_coverage_exact
             and self.residual_input_tuple_domain_exact
+            and self.residual_rows_cover_input_domain
+            and self.residual_rows_have_valid_scope
             and self.residual_family_row_coverage_exact
-            and self.endpoint_channels_exact
-            and self.identity_endpoint_data_forces_residual_identity
-            and self.braid_index_independent
-            and self.product_families_separated
+            and self.endpoint_channels_exact_proved
+            and self.identity_endpoint_data_forces_residual_identity_proved
+            and self.braid_index_independence_proved
+            and self.product_families_separated_proved
         )
 
     @property
@@ -1532,6 +1741,22 @@ class UniversalKResidualFaithfulnessAudit:
             reasons.append("residual_faithfulness_input_tuple_domain_missing")
         elif not self.residual_input_tuple_domain_exact:
             reasons.append("residual_faithfulness_input_tuple_domain_not_exact")
+        if not self.residual_rows:
+            reasons.append("residual_faithfulness_rows_missing")
+        if not self.residual_rows_cover_input_domain:
+            reasons.append("residual_faithfulness_rows_do_not_cover_input_domain")
+        if self.duplicate_residual_row_input_tuples:
+            reasons.append("residual_faithfulness_duplicate_row_input_tuples")
+        if self.missing_residual_rows_for_input_tuples:
+            reasons.append("residual_faithfulness_missing_rows_for_input_tuples")
+        if self.extra_residual_rows_for_input_tuples:
+            reasons.append("residual_faithfulness_extra_rows_for_input_tuples")
+        if not self.residual_rows_have_valid_scope:
+            reasons.append("residual_faithfulness_invalid_rows")
+        if not self.residual_rows_cover_endpoint_families:
+            reasons.append("residual_faithfulness_rows_do_not_cover_families")
+        if not self.residual_rows_cover_endpoint_seed_states:
+            reasons.append("residual_faithfulness_rows_do_not_cover_seed_states")
         if (
             self.residual_family_row_counts_required
             and not self.expected_residual_rows_by_family
@@ -1547,13 +1772,13 @@ class UniversalKResidualFaithfulnessAudit:
             reasons.append("residual_faithfulness_family_row_counts_mismatch")
         if not self.residual_family_row_count_sums_match:
             reasons.append("residual_faithfulness_family_row_count_sum_mismatch")
-        if not self.endpoint_channels_exact:
+        if not self.endpoint_channels_exact_proved:
             reasons.append("residual_faithfulness_endpoint_channels_not_exact")
-        if not self.identity_endpoint_data_forces_residual_identity:
+        if not self.identity_endpoint_data_forces_residual_identity_proved:
             reasons.append("residual_faithfulness_implication_not_proved")
-        if not self.braid_index_independent:
+        if not self.braid_index_independence_proved:
             reasons.append("residual_faithfulness_not_braid_index_independent")
-        if not self.product_families_separated:
+        if not self.product_families_separated_proved:
             reasons.append("residual_faithfulness_product_families_not_separated")
         return tuple(reasons)
 
@@ -6117,6 +6342,20 @@ class PostLinearRemainingFiniteSystemAudit:
                     "signed_endpoint_generator_residual_theorem_input_tuple_domain_exact",
                     False,
                 ),
+                ("signed_endpoint_generator_residual_theorem_rows", ()),
+                ("signed_endpoint_generator_residual_theorem_invalid_rows", ()),
+                (
+                    "signed_endpoint_generator_residual_theorem_rows_cover_input_domain",
+                    False,
+                ),
+                (
+                    "signed_endpoint_generator_residual_theorem_rows_cover_families",
+                    False,
+                ),
+                (
+                    "signed_endpoint_generator_residual_theorem_rows_cover_seed_states",
+                    False,
+                ),
                 ("signed_endpoint_generator_residual_action_rows", 0),
                 ("signed_endpoint_generator_residual_action_rows_expected", None),
                 (
@@ -7037,6 +7276,57 @@ class PostLinearRemainingFiniteSystemAudit:
                 "signed_endpoint_generator_residual_theorem_input_tuple_domain_exact",
                 (
                     audit.residual_faithfulness_theorem.residual_input_tuple_domain_exact
+                    if audit.residual_faithfulness_theorem is not None
+                    else False
+                ),
+            ),
+            (
+                "signed_endpoint_generator_residual_theorem_rows",
+                (
+                    tuple(
+                        (
+                            row.input_tuple,
+                            row.output_tuple,
+                            row.identity_endpoint_output_tuple,
+                            row.endpoint_families,
+                            row.endpoint_seed_states,
+                            row.endpoint_channel_keys,
+                            row.dependencies,
+                        )
+                        for row in audit.residual_faithfulness_theorem.residual_rows
+                    )
+                    if audit.residual_faithfulness_theorem is not None
+                    else ()
+                ),
+            ),
+            (
+                "signed_endpoint_generator_residual_theorem_invalid_rows",
+                (
+                    tuple(row.input_tuple for row in audit.residual_faithfulness_theorem.invalid_residual_rows)
+                    if audit.residual_faithfulness_theorem is not None
+                    else ()
+                ),
+            ),
+            (
+                "signed_endpoint_generator_residual_theorem_rows_cover_input_domain",
+                (
+                    audit.residual_faithfulness_theorem.residual_rows_cover_input_domain
+                    if audit.residual_faithfulness_theorem is not None
+                    else False
+                ),
+            ),
+            (
+                "signed_endpoint_generator_residual_theorem_rows_cover_families",
+                (
+                    audit.residual_faithfulness_theorem.residual_rows_cover_endpoint_families
+                    if audit.residual_faithfulness_theorem is not None
+                    else False
+                ),
+            ),
+            (
+                "signed_endpoint_generator_residual_theorem_rows_cover_seed_states",
+                (
+                    audit.residual_faithfulness_theorem.residual_rows_cover_endpoint_seed_states
                     if audit.residual_faithfulness_theorem is not None
                     else False
                 ),

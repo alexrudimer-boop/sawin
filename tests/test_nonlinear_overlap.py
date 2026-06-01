@@ -42,6 +42,7 @@ from ybe_domination import (
     UniversalKEndpointTargetAudit,
     UniversalKResidualActionScopeAudit,
     UniversalKResidualFaithfulnessAudit,
+    UniversalKResidualFaithfulnessRow,
     UniversalKSignedEndpointGeneratorAudit,
     UniversalKSignedEndpointGeneratorRow,
     UniversalKTelescopingDetectorAudit,
@@ -333,6 +334,39 @@ def trivial_endpoint_residual_action_scope(
         product_families_separated=True,
         expected_endpoint_seed_states=tuple(seed_states),
         covered_endpoint_seed_states=tuple(seed_states),
+    )
+
+
+def trivial_residual_faithfulness_rows(
+    *families,
+    seed_states=None,
+    input_tuples=(("p",),),
+):
+    if seed_states is None:
+        seed_states = tuple(
+            (family, ("*", "*", "left_constant_map_universal_kernel"))
+            for family in families
+        )
+    seed_states = tuple(seed_states)
+    return tuple(
+        UniversalKResidualFaithfulnessRow(
+            input_tuple=tuple(input_tuple),
+            output_tuple=tuple(input_tuple),
+            identity_endpoint_output_tuple=tuple(input_tuple),
+            endpoint_families=tuple(families),
+            endpoint_seed_states=seed_states,
+            endpoint_channel_keys=tuple(
+                (family, seed_state, "endpoint_channel")
+                for family, seed_state in seed_states
+            ),
+            dependencies=(
+                "interval_data",
+                "routed_seed_state",
+                "residual_input_tuple",
+                "endpoint_channel",
+            ),
+        )
+        for input_tuple in input_tuples
     )
 
 
@@ -2841,6 +2875,11 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             covered_endpoint_seed_states=(("U", seed_state),),
             expected_residual_input_tuples=(("p",),),
             covered_residual_input_tuples=(("p",),),
+            residual_rows=trivial_residual_faithfulness_rows(
+                "U",
+                seed_states=(("U", seed_state),),
+                input_tuples=(("p",),),
+            ),
         )
         theorem_complete = UniversalKSignedEndpointGeneratorAudit(
             seed_classifier_entries=seed_entries,
@@ -2877,6 +2916,33 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertIn(
             "residual_faithfulness_input_tuple_domain_missing",
             theorem_without_input_domain.failure_reasons,
+        )
+
+        theorem_without_rows = replace(theorem, residual_rows=())
+        self.assertFalse(theorem_without_rows.proves_residual_faithfulness)
+        self.assertIn(
+            "residual_faithfulness_rows_missing",
+            theorem_without_rows.failure_reasons,
+        )
+        self.assertIn(
+            "residual_faithfulness_implication_not_proved",
+            theorem_without_rows.failure_reasons,
+        )
+
+        theorem_with_braid_index_row = replace(
+            theorem,
+            residual_rows=(
+                replace(theorem.residual_rows[0], dependencies=("braid_index",)),
+            ),
+        )
+        self.assertFalse(theorem_with_braid_index_row.proves_residual_faithfulness)
+        self.assertIn(
+            "residual_faithfulness_invalid_rows",
+            theorem_with_braid_index_row.failure_reasons,
+        )
+        self.assertIn(
+            "residual_faithfulness_not_braid_index_independent",
+            theorem_with_braid_index_row.failure_reasons,
         )
 
         rowwise_only = replace(theorem_complete, telescoping_detector_audit=None)
@@ -3054,6 +3120,15 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             ),
             expected_residual_input_tuples=(("p",),),
             covered_residual_input_tuples=(("p",),),
+            residual_rows=trivial_residual_faithfulness_rows(
+                "U",
+                "C",
+                seed_states=(
+                    ("U", seed_state),
+                    ("C", ("*", "*", "left")),
+                ),
+                input_tuples=(("p",),),
+            ),
         )
         multi_family_theorem = replace(
             multi_family_theorem_missing_rows,

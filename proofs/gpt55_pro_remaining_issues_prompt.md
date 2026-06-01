@@ -1291,14 +1291,34 @@ for a product endpoint row because it can hide that one family has no
 residual readout.
 
 Alternatively, a symbolic residual-faithfulness theorem may replace explicit
-row listing only if it states all of the following finite-scope data:
-the active endpoint families, the covered endpoint families, the exact
-expected routed endpoint seed states from `kappa`, the covered endpoint seed
-states, the expected residual row count, the covered residual row count,
-exactness of endpoint channels, the implication from identity endpoint data
-to identity residual motion, independence from braid index, and
-family-by-family product separation.  In the multi-family case, it must also
-include the same expected and covered residual row counts by family.  A bare assertion that residual
+action readout rows only if it supplies its own finite residual row table.
+For every residual input tuple the theorem table must list:
+
+```text
+input_tuple,
+actual output_tuple,
+identity_endpoint_output_tuple,
+endpoint_families,
+endpoint_seed_states,
+endpoint_channel_keys,
+dependencies.
+```
+
+The rows must cover exactly the expected residual input-tuple domain, with no
+missing, extra, or duplicate input rows.  Every row must use only active
+endpoint families and expected routed seed states, and the union of row
+families and row seed states must equal the active families and expected
+seed-state ledger.  `identity_endpoint_output_tuple` must equal `input_tuple`
+on every row; this is the finite implication from killed endpoint data to
+identity residual motion.  The row dependencies may use only interval data,
+routed seed states, residual input tuples, endpoint channels, local fibre
+coordinates, and the local row table.  Dependencies on `braid_word`,
+`braid_prefix`, `braid_index`, failed detector search, normalized-law
+sequences, or timeouts are forbidden.  Endpoint-channel exactness,
+braid-index independence, and product-family separation must be derived from
+these rows and the family/seed ledgers, not asserted as separate booleans.
+In the multi-family case, the theorem must also include the same expected and
+covered residual row counts by family.  A bare assertion that residual
 faithfulness holds, or a certificate scoped only by family names while
 omitting the routed seed states, is not a certificate.  The expected and
 covered family ledgers and the expected and covered seed-state ledgers must
@@ -1324,6 +1344,10 @@ residual_endpoint_seed_state_coverage_exact,
 residual_endpoint_seed_state_ledgers_duplicate_free,
 multi_family_residual_row_counts_by_family_exact,
 residual_action_input_tuple_domain_exact,
+residual_theorem_rows_cover_input_domain,
+residual_theorem_rows_cover_endpoint_families_and_seed_states,
+residual_theorem_rows_use_only_allowed_initial_and_interval_data,
+identity_endpoint_output_equals_input_on_every_residual_row,
 signed_entry_domain_derived_from_interval,
 signed_entry_domain_matches_current_interval,
 finite_signed_row_checks_derived_from_tables,

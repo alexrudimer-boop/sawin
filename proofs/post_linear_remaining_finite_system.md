@@ -598,15 +598,25 @@ counts whose sums equal the total expected and covered residual row counts.
 This keeps a complete-looking residual action proof from hiding that one
 active U/C/M family has no residual readout rows.
 
-When the bridge is supplied as a symbolic theorem rather than row data, the
-audit requires the theorem to specify exact active and covered endpoint
-families, exact residual row counts, exact residual input-tuple-domain
-coverage, exact endpoint-channel coverage, the
-identity-endpoint-to-identity-residual implication, braid-index independence,
-and product-family separation.  The same family-by-family residual row-count
-ledger is required for symbolic multi-family residual theorems.  A bare
-boolean, row count, or duplicate-collapsed input-domain claim is recorded only
-as supplied data; it is not accepted as proof.
+When the bridge is supplied as a symbolic theorem rather than explicit
+endpoint readout rows, the theorem now carries its own finite residual row
+table.  Each symbolic residual row records the residual input tuple, the
+actual output tuple, the output tuple after identity endpoint data, the
+endpoint families and routed seed states controlling the row, endpoint channel
+keys, and the finite dependencies used by the row.  The checker requires the
+row inputs to cover the expected residual input-tuple domain exactly, with no
+missing, extra, or duplicate rows.  It rejects rows that mention unrouted
+families, unrouted seed states, missing endpoint channels, duplicate row
+ledgers, or dependencies on `braid_word`, `braid_prefix`, `braid_index`,
+failed detector searches, normalized-law sequences, or timeouts.  It derives
+endpoint-channel exactness from the union of row families and row seed states,
+derives the residual identity implication from
+`identity_endpoint_output_tuple=input_tuple` on every row, and derives
+braid-index independence from the absence of forbidden dependencies.  The
+same family-by-family residual row-count ledger is required for symbolic
+multi-family residual theorems.  Bare booleans for endpoint-channel
+exactness, identity residual motion, braid-index independence, or product
+separation are recorded only as supplied data; they are not accepted as proof.
 
 together with the concrete rows:
 
@@ -758,6 +768,11 @@ signed_endpoint_generator_residual_theorem_missing_input_tuples
 signed_endpoint_generator_residual_theorem_extra_input_tuples
 signed_endpoint_generator_residual_theorem_duplicate_input_tuples
 signed_endpoint_generator_residual_theorem_input_tuple_domain_exact
+signed_endpoint_generator_residual_theorem_rows
+signed_endpoint_generator_residual_theorem_invalid_rows
+signed_endpoint_generator_residual_theorem_rows_cover_input_domain
+signed_endpoint_generator_residual_theorem_rows_cover_families
+signed_endpoint_generator_residual_theorem_rows_cover_seed_states
 signed_endpoint_generator_residual_action_rows
 signed_endpoint_generator_residual_action_rows_expected
 signed_endpoint_generator_residual_action_expected_input_tuples
