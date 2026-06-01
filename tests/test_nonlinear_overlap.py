@@ -41,6 +41,8 @@ from ybe_domination import (
     UniversalKSignedEndpointGeneratorAudit,
     UniversalKSignedEndpointGeneratorRow,
     UniversalKTelescopingDetectorAudit,
+    UniversalKWordPotentialCertificate,
+    UniversalKWordPotentialIdentityRow,
     TwoSidedUnitCollapseAudit,
     cyclic_group,
     endpoint_coordinate_readout_audit,
@@ -339,12 +341,34 @@ def trivial_endpoint_target_audit(*families):
     )
 
 
-def trivial_telescoping_detector_audit(keys):
+def trivial_telescoping_detector_audit(keys, *, rows=(), endpoint_group=None):
     keys = tuple(keys)
+    endpoint_group = endpoint_group or cyclic_group(2)
+    row_by_key = {row.entry_key: row for row in rows}
     seed_states = tuple(
         sorted({(family, state) for family, state, *_rest in keys}, key=repr)
     )
     families = tuple(sorted({family for family, _state in seed_states}, key=repr))
+    word_potential_certificate = UniversalKWordPotentialCertificate(
+        endpoint_group=endpoint_group,
+        templates=tuple((seed_state, ()) for seed_state in seed_states),
+        identity_rows=tuple(
+            UniversalKWordPotentialIdentityRow(
+                entry_key=key,
+                next_seed_state=(
+                    row_by_key[key].next_seed_state if key in row_by_key else key[1]
+                ),
+                endpoint_value=(
+                    row_by_key[key].endpoint_value
+                    if key in row_by_key
+                    else endpoint_group.identity
+                ),
+                artin_substitution=(),
+            )
+            for key in keys
+        ),
+        normalized_seed_states=seed_states,
+    )
     return UniversalKTelescopingDetectorAudit(
         expected_entry_keys=keys,
         covered_entry_keys=keys,
@@ -360,6 +384,7 @@ def trivial_telescoping_detector_audit(keys):
         word_potential_templates_use_only_current_longitudes=True,
         word_potential_artin_substitution_verified=True,
         word_potential_identity_verified=True,
+        word_potential_certificate=word_potential_certificate,
         telescoping_identity_verified=True,
         terminal_readout_longitudes_verified=True,
         initial_readout_normalized=True,
@@ -3142,6 +3167,129 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertTrue(complete.proves_signed_endpoint_generator_tables)
         self.assertEqual(complete.failure_reasons, ())
 
+    def test_word_potential_certificate_checks_finite_templates(self):
+        group = cyclic_group(2)
+        source_state = ("*", "*", "left_constant_map_universal_kernel")
+        next_state = ("*", "*", "left_constant_map_universal_kernel", "next")
+        source_key = ("U", source_state)
+        next_key = ("U", next_state)
+        u_left = ("U", 0, 0)
+        u_right = ("U", 0, 1)
+        entry_key = ("U", source_state, 1, "*", "*", 0, 0)
+        good_row = UniversalKWordPotentialIdentityRow(
+            entry_key=entry_key,
+            next_seed_state=next_state,
+            endpoint_value=group.identity,
+            artin_substitution=((u_right, ((u_left, 1),)),),
+        )
+        certificate = UniversalKWordPotentialCertificate(
+            endpoint_group=group,
+            templates=(
+                (source_key, ((u_left, 1),)),
+                (next_key, ((u_right, 1),)),
+            ),
+            identity_rows=(good_row,),
+            normalized_seed_states=(source_key,),
+        )
+
+        self.assertTrue(certificate.templates_use_only_current_longitudes)
+        self.assertTrue(certificate.artin_substitutions_verified)
+        self.assertTrue(certificate.identities_verified)
+        self.assertTrue(certificate.initial_readouts_normalized)
+
+        wrong_endpoint = replace(good_row, endpoint_value=1)
+        wrong_endpoint_certificate = replace(
+            certificate,
+            identity_rows=(wrong_endpoint,),
+        )
+        self.assertFalse(wrong_endpoint_certificate.identities_verified)
+        self.assertEqual(
+            tuple(failure[1] for failure in wrong_endpoint_certificate.identity_failures),
+            ("word_potential_identity_mismatch",),
+        )
+
+        wrong_substitution = replace(
+            good_row,
+            artin_substitution=((u_right, ((u_right, 1),)),),
+        )
+        wrong_substitution_certificate = replace(
+            certificate,
+            identity_rows=(wrong_substitution,),
+        )
+        self.assertFalse(wrong_substitution_certificate.artin_substitutions_verified)
+        self.assertIn(
+            "artin_substitution_image_mismatch",
+            tuple(
+                failure[1]
+                for failure in wrong_substitution_certificate.substitution_failures
+            ),
+        )
+
+        raw_assignment_template = replace(
+            certificate,
+            templates=((source_key, ((("A", 0, 0), 1),)),),
+        )
+        self.assertFalse(
+            raw_assignment_template.templates_use_only_current_longitudes
+        )
+        self.assertEqual(
+            raw_assignment_template.raw_assignment_template_variables,
+            (("A", 0, 0),),
+        )
+
+    def test_word_potential_certificate_must_match_signed_rows(self):
+        seed_state = ("*", "*", "left_constant_map_universal_kernel")
+        seed_entries = (
+            (
+                (
+                    "*",
+                    "*",
+                    "L",
+                    "constant_map_kernel",
+                    ("*", (0, 1), "universal", "universal"),
+                ),
+                ("U", seed_state),
+            ),
+        )
+        reachable = (("U", seed_state),)
+        interval = one_color_identity_interval()
+        keys = universal_k_signed_endpoint_required_entry_keys(interval, reachable)
+        rows = tuple(
+            replace(row, endpoint_value=1)
+            for row in identity_signed_endpoint_rows(keys)
+        )
+        audit = UniversalKSignedEndpointGeneratorAudit(
+            seed_classifier_entries=seed_entries,
+            reachable_seed_states=reachable,
+            required_entry_keys=keys,
+            entry_domain_derived_from_interval=True,
+            finite_row_checks_derived_from_tables=True,
+            rows=rows,
+            endpoint_targets_fixed=True,
+            endpoint_target_audit=trivial_endpoint_target_audit("U"),
+            coordinate_components_verified=True,
+            inverse_pairing_verified=True,
+            inverse_cancellation_verified=True,
+            positive_ybe_path_verified=True,
+            positive_ybe_cocycle_verified=True,
+            telescoping_detector_audit=trivial_telescoping_detector_audit(keys),
+            residual_action_scope=trivial_endpoint_residual_action_scope("U"),
+            residual_action_audit=trivial_endpoint_residual_action_audit(),
+        )
+
+        self.assertFalse(audit.telescoping_detector_proved)
+        self.assertEqual(
+            tuple(
+                failure[1]
+                for failure in audit.telescoping_detector_signed_row_mismatches
+            ),
+            ("word_potential_row_mismatch",) * len(keys),
+        )
+        self.assertIn(
+            "telescoping_detector_signed_row_mismatch",
+            audit.failure_reasons,
+        )
+
     def test_signed_endpoint_audit_requires_family_scoped_endpoint_targets(self):
         seed_state = ("*", "*", "left_constant_map_universal_kernel")
         seed_entries = (
@@ -3384,7 +3532,10 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             positive_ybe_cocycle_verified=True,
             signed_two_strand_base_verified=True,
             artin_homomorphism_update_verified=True,
-            telescoping_detector_audit=trivial_telescoping_detector_audit(keys),
+            telescoping_detector_audit=trivial_telescoping_detector_audit(
+                keys,
+                rows=rows,
+            ),
             residual_action_scope=trivial_endpoint_residual_action_scope("U"),
             residual_action_audit=trivial_endpoint_residual_action_audit(),
         )
@@ -3432,7 +3583,10 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             positive_ybe_cocycle_verified=True,
             signed_two_strand_base_verified=True,
             artin_homomorphism_update_verified=True,
-            telescoping_detector_audit=trivial_telescoping_detector_audit(keys),
+            telescoping_detector_audit=trivial_telescoping_detector_audit(
+                keys,
+                rows=rows,
+            ),
             residual_action_scope=trivial_endpoint_residual_action_scope("U"),
             residual_action_audit=trivial_endpoint_residual_action_audit(),
         )
@@ -4504,7 +4658,10 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             rows,
             endpoint_group=cyclic_group(1),
             witnesses={row.entry_key: () for row in rows},
-            telescoping_detector_audit=trivial_telescoping_detector_audit(keys),
+            telescoping_detector_audit=trivial_telescoping_detector_audit(
+                keys,
+                endpoint_group=cyclic_group(1),
+            ),
             residual_action_scope=trivial_endpoint_residual_action_scope("U"),
             residual_action_audit=trivial_endpoint_residual_action_audit(),
         )

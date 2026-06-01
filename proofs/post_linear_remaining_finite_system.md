@@ -414,6 +414,8 @@ positive local endpoint YBE path
 positive local endpoint YBE cocycle
 fixed-assignment detector-track initialization
 Artin detector recurrence on each track
+finite word-potential certificate table supplied
+word-potential identity rows match D_Gamma and Gamma labels
 word-potential template coverage for every reachable endpoint state
 word-potential templates use only current longitude variables
 word-potential Artin substitution from the detector recurrence
@@ -480,6 +482,18 @@ W_{s'}(A_gamma^epsilon(U,A)) = W_s(U) h
 for every signed table row.  With initial normalization, this word-potential
 identity is what converts the finite signed row table into the all-`n`
 conclusion `endpoint_E(beta) in V_beta(H_E)`.
+
+The word-potential certificate is concrete finite data.  It records the
+template table `(E,s) |-> W_s`, one identity row for each signed
+`D_Gamma` entry, the next state, the emitted endpoint label, and the Artin
+substitution for that row.  The checker verifies that the identity-row table
+has the same entry domain as the signed endpoint table, that the next state
+and emitted label match the signed row, that terminal templates contain only
+current longitude variables `U_{r,j}`, and that the local substitutions are
+the positive/negative Artin recurrences.  It then exhausts all assignments of
+the finitely many variables in the row to the fixed endpoint group and checks
+the word identity in the group table.  This removes the previous loophole
+where a bare boolean could stand in for a tautological accumulated potential.
 
 The implementation now exposes an interval-derived constructor for this
 audit layer.  Given the interval, `kappa` entries, reachable states, signed
@@ -642,6 +656,8 @@ signed_endpoint_generator_artin_update_verified
 signed_endpoint_generator_artin_update_failures
 signed_endpoint_generator_telescoping_detector_verified
 signed_endpoint_generator_telescoping_detector_scope_matches_required
+signed_endpoint_generator_telescoping_endpoint_group_matches
+signed_endpoint_generator_telescoping_signed_row_mismatches
 signed_endpoint_generator_telescoping_expected_entry_keys
 signed_endpoint_generator_telescoping_covered_entry_keys
 signed_endpoint_generator_telescoping_missing_entry_keys
@@ -665,6 +681,10 @@ signed_endpoint_generator_word_potential_seed_state_scope_matches_expected
 signed_endpoint_generator_word_potential_templates_use_only_current_longitudes
 signed_endpoint_generator_word_potential_artin_substitution_verified
 signed_endpoint_generator_word_potential_identity_verified
+signed_endpoint_generator_word_potential_certificate_template_states
+signed_endpoint_generator_word_potential_certificate_identity_rows
+signed_endpoint_generator_word_potential_artin_substitution_failures
+signed_endpoint_generator_word_potential_identity_failures
 signed_endpoint_generator_terminal_readout_longitudes_verified
 signed_endpoint_generator_word_potential_initial_normalized
 signed_endpoint_generator_telescoping_braid_index_independent

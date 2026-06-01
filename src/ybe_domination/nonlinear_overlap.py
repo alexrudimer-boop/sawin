@@ -130,6 +130,14 @@ UniversalKSignedEndpointLabelFailure = Tuple[
     str,
     object,
 ]
+UniversalKWordPotentialVariable = Tuple[str, int, int]
+UniversalKWordPotentialLetter = Tuple[UniversalKWordPotentialVariable, int]
+UniversalKWordPotentialWord = Tuple[UniversalKWordPotentialLetter, ...]
+UniversalKWordPotentialSubstitution = Tuple[
+    Tuple[UniversalKWordPotentialVariable, UniversalKWordPotentialWord],
+    ...,
+]
+UniversalKWordPotentialFailure = Tuple[object, str, object]
 
 
 def _is_permutation_transformation(transformation: Transformation) -> bool:
@@ -602,6 +610,386 @@ class UniversalKSignedEndpointGeneratorRow:
             self.endpoint_family_known
             and self.sign_known
             and self.endpoint_value_supplied
+        )
+
+
+@dataclass(frozen=True)
+class UniversalKWordPotentialIdentityRow:
+    """One finite word-potential identity attached to a signed endpoint row."""
+
+    entry_key: UniversalKSignedEndpointEntryKey
+    next_seed_state: UniversalKSeedState
+    endpoint_value: object
+    artin_substitution: UniversalKWordPotentialSubstitution = ()
+
+
+def _universal_k_word_potential_variables(
+    word: UniversalKWordPotentialWord,
+) -> Tuple[UniversalKWordPotentialVariable, ...]:
+    return tuple(sorted({variable for variable, _exponent in word}, key=repr))
+
+
+def _universal_k_word_potential_variable_valid(
+    variable: object,
+) -> bool:
+    return (
+        isinstance(variable, tuple)
+        and len(variable) == 3
+        and variable[0] in {"U", "A"}
+        and isinstance(variable[1], int)
+        and variable[1] >= 0
+        and isinstance(variable[2], int)
+        and variable[2] >= 0
+    )
+
+
+def _universal_k_word_potential_word_failures(
+    word: UniversalKWordPotentialWord,
+) -> Tuple[UniversalKWordPotentialFailure, ...]:
+    failures = []
+    for index, (variable, exponent) in enumerate(word):
+        if not _universal_k_word_potential_variable_valid(variable):
+            failures.append((index, "invalid_word_potential_variable", variable))
+        if exponent not in {-1, 1}:
+            failures.append((index, "invalid_word_potential_exponent", exponent))
+    return tuple(failures)
+
+
+def _universal_k_word_potential_invert(
+    word: UniversalKWordPotentialWord,
+) -> UniversalKWordPotentialWord:
+    return tuple((variable, -exponent) for variable, exponent in reversed(word))
+
+
+def _universal_k_word_potential_substitute(
+    word: UniversalKWordPotentialWord,
+    substitution: UniversalKWordPotentialSubstitution,
+) -> UniversalKWordPotentialWord:
+    substitution_map = dict(substitution)
+    expanded = []
+    for variable, exponent in word:
+        image = substitution_map.get(variable, ((variable, 1),))
+        if exponent < 0:
+            image = _universal_k_word_potential_invert(image)
+        expanded.extend(image)
+    return tuple(expanded)
+
+
+def universal_k_evaluate_word_potential(
+    endpoint_group: FiniteGroup,
+    assignment: Mapping[UniversalKWordPotentialVariable, GroupElement],
+    word: UniversalKWordPotentialWord,
+) -> GroupElement:
+    """Evaluate a finite word-potential template in an explicit endpoint group."""
+
+    out = endpoint_group.identity
+    group_elements = set(endpoint_group.elements)
+    for variable, exponent in word:
+        if variable not in assignment:
+            raise ValueError(f"missing word-potential assignment for {variable!r}")
+        value = assignment[variable]
+        if value not in group_elements:
+            raise ValueError("word-potential assignment contains value outside group")
+        out = endpoint_group.mul(out, endpoint_group.pow(value, exponent))
+    return out
+
+
+def _universal_k_expected_artin_substitution(
+    variable: UniversalKWordPotentialVariable,
+    sign: int,
+) -> UniversalKWordPotentialWord:
+    kind, track, position = variable
+    if kind != "U" or position not in {0, 1}:
+        return ((variable, 1),)
+    u_left = ("U", track, 0)
+    u_right = ("U", track, 1)
+    a_left = ("A", track, 0)
+    a_right = ("A", track, 1)
+    if sign == 1 and position == 0:
+        return ((u_left, 1), (a_left, 1), (u_left, -1), (u_right, 1))
+    if sign == 1 and position == 1:
+        return ((u_left, 1),)
+    if sign == -1 and position == 0:
+        return ((u_right, 1),)
+    if sign == -1 and position == 1:
+        return ((u_right, 1), (a_right, -1), (u_right, -1), (u_left, 1))
+    return ((variable, 1),)
+
+
+@dataclass(frozen=True)
+class UniversalKWordPotentialCertificate:
+    """Concrete finite word-potential detector-lift certificate.
+
+    Templates are indexed by endpoint family and reachable seed state.  Each
+    signed table row supplies the Artin substitution for the next-state
+    template and the emitted endpoint label.  The checker exhausts all
+    assignments of the finitely many formal variables to the finite endpoint
+    group, so the certificate is mathematical data rather than a boolean
+    assertion.
+    """
+
+    endpoint_group: FiniteGroup
+    templates: Tuple[
+        Tuple[Tuple[str, UniversalKSeedState], UniversalKWordPotentialWord],
+        ...,
+    ]
+    identity_rows: Tuple[UniversalKWordPotentialIdentityRow, ...]
+    normalized_seed_states: Tuple[Tuple[str, UniversalKSeedState], ...] = ()
+
+    @property
+    def template_seed_states_exact(
+        self,
+    ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
+        return tuple(sorted({state for state, _word in self.templates}, key=repr))
+
+    @property
+    def duplicate_template_seed_states(
+        self,
+    ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
+        return _duplicate_values(tuple(state for state, _word in self.templates))
+
+    @property
+    def identity_entry_keys_exact(
+        self,
+    ) -> Tuple[UniversalKSignedEndpointEntryKey, ...]:
+        return tuple(sorted({row.entry_key for row in self.identity_rows}, key=repr))
+
+    @property
+    def duplicate_identity_entry_keys(
+        self,
+    ) -> Tuple[UniversalKSignedEndpointEntryKey, ...]:
+        return _duplicate_values(tuple(row.entry_key for row in self.identity_rows))
+
+    @property
+    def normalized_seed_states_exact(
+        self,
+    ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
+        return tuple(sorted(set(self.normalized_seed_states), key=repr))
+
+    @property
+    def duplicate_normalized_seed_states(
+        self,
+    ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
+        return _duplicate_values(self.normalized_seed_states)
+
+    @property
+    def template_map(
+        self,
+    ) -> Mapping[Tuple[str, UniversalKSeedState], UniversalKWordPotentialWord]:
+        return dict(self.templates)
+
+    @property
+    def identity_row_map(
+        self,
+    ) -> Mapping[UniversalKSignedEndpointEntryKey, UniversalKWordPotentialIdentityRow]:
+        return {row.entry_key: row for row in self.identity_rows}
+
+    @property
+    def template_word_failures(self) -> Tuple[UniversalKWordPotentialFailure, ...]:
+        failures = []
+        for state, word in self.templates:
+            for failure in _universal_k_word_potential_word_failures(word):
+                failures.append((state, failure[1], failure[2]))
+        return tuple(failures)
+
+    @property
+    def substitution_failures(self) -> Tuple[UniversalKWordPotentialFailure, ...]:
+        failures = []
+        template_map = self.template_map
+        for row in self.identity_rows:
+            entry_family, _state, sign, *_rest = row.entry_key
+            if sign not in {-1, 1}:
+                failures.append((row.entry_key, "unknown_signed_row_sign", sign))
+                continue
+            next_key = (entry_family, row.next_seed_state)
+            next_template = template_map.get(next_key)
+            if next_template is None:
+                failures.append((row.entry_key, "missing_next_state_template", next_key))
+                continue
+            expected_variables = set(_universal_k_word_potential_variables(next_template))
+            substitution_variables = tuple(
+                variable for variable, _image in row.artin_substitution
+            )
+            duplicate_variables = _duplicate_values(substitution_variables)
+            for variable in duplicate_variables:
+                failures.append(
+                    (row.entry_key, "duplicate_artin_substitution_variable", variable)
+                )
+            supplied_variables = set(substitution_variables)
+            for variable in sorted(expected_variables - supplied_variables, key=repr):
+                failures.append(
+                    (row.entry_key, "missing_artin_substitution_variable", variable)
+                )
+            for variable in sorted(supplied_variables - expected_variables, key=repr):
+                failures.append(
+                    (row.entry_key, "extra_artin_substitution_variable", variable)
+                )
+            for variable, image in row.artin_substitution:
+                if not _universal_k_word_potential_variable_valid(variable):
+                    failures.append(
+                        (row.entry_key, "invalid_artin_substitution_variable", variable)
+                    )
+                    continue
+                for failure in _universal_k_word_potential_word_failures(image):
+                    failures.append((row.entry_key, failure[1], failure[2]))
+                expected_image = _universal_k_expected_artin_substitution(
+                    variable,
+                    sign,
+                )
+                if tuple(image) != expected_image:
+                    failures.append(
+                        (
+                            row.entry_key,
+                            "artin_substitution_image_mismatch",
+                            (variable, image, expected_image),
+                        )
+                    )
+        return tuple(failures)
+
+    @property
+    def templates_use_only_current_longitudes(self) -> bool:
+        return all(
+            variable[0] == "U"
+            for _state, word in self.templates
+            for variable, _exponent in word
+            if _universal_k_word_potential_variable_valid(variable)
+        )
+
+    @property
+    def invalid_template_variable_failures(
+        self,
+    ) -> Tuple[UniversalKWordPotentialFailure, ...]:
+        return tuple(
+            failure
+            for failure in self.template_word_failures
+            if failure[1] == "invalid_word_potential_variable"
+        )
+
+    @property
+    def raw_assignment_template_variables(
+        self,
+    ) -> Tuple[UniversalKWordPotentialVariable, ...]:
+        raw_variables = []
+        for _state, word in self.templates:
+            for variable, _exponent in word:
+                if (
+                    _universal_k_word_potential_variable_valid(variable)
+                    and variable[0] != "U"
+                ):
+                    raw_variables.append(variable)
+        return tuple(sorted(set(raw_variables), key=repr))
+
+    @property
+    def identity_failures(self) -> Tuple[UniversalKWordPotentialFailure, ...]:
+        failures = []
+        template_map = self.template_map
+        group_elements = set(self.endpoint_group.elements)
+        for row in self.identity_rows:
+            entry_family, source_state, _sign, *_rest = row.entry_key
+            source_key = (entry_family, source_state)
+            next_key = (entry_family, row.next_seed_state)
+            source_template = template_map.get(source_key)
+            next_template = template_map.get(next_key)
+            if source_template is None:
+                failures.append((row.entry_key, "missing_source_state_template", source_key))
+                continue
+            if next_template is None:
+                failures.append((row.entry_key, "missing_next_state_template", next_key))
+                continue
+            if row.endpoint_value not in group_elements:
+                failures.append(
+                    (
+                        row.entry_key,
+                        "endpoint_value_outside_group",
+                        row.endpoint_value,
+                    )
+                )
+                continue
+            substituted_next = _universal_k_word_potential_substitute(
+                next_template,
+                row.artin_substitution,
+            )
+            word_failures = (
+                _universal_k_word_potential_word_failures(source_template)
+                + _universal_k_word_potential_word_failures(substituted_next)
+            )
+            if word_failures:
+                for failure in word_failures:
+                    failures.append((row.entry_key, failure[1], failure[2]))
+                continue
+            variables = tuple(
+                sorted(
+                    set(_universal_k_word_potential_variables(source_template))
+                    | set(_universal_k_word_potential_variables(substituted_next)),
+                    key=repr,
+                )
+            )
+            for values in product(self.endpoint_group.elements, repeat=len(variables)):
+                assignment = dict(zip(variables, values))
+                left = universal_k_evaluate_word_potential(
+                    self.endpoint_group,
+                    assignment,
+                    substituted_next,
+                )
+                source_value = universal_k_evaluate_word_potential(
+                    self.endpoint_group,
+                    assignment,
+                    source_template,
+                )
+                right = self.endpoint_group.mul(source_value, row.endpoint_value)
+                if left != right:
+                    failures.append(
+                        (
+                            row.entry_key,
+                            "word_potential_identity_mismatch",
+                            (tuple(zip(variables, values)), left, right),
+                        )
+                    )
+                    break
+        return tuple(failures)
+
+    @property
+    def normalization_failures(self) -> Tuple[UniversalKWordPotentialFailure, ...]:
+        failures = []
+        template_map = self.template_map
+        for state in self.normalized_seed_states_exact:
+            template = template_map.get(state)
+            if template is None:
+                failures.append((state, "missing_normalized_state_template", None))
+                continue
+            variables = _universal_k_word_potential_variables(template)
+            assignment = {variable: self.endpoint_group.identity for variable in variables}
+            value = universal_k_evaluate_word_potential(
+                self.endpoint_group,
+                assignment,
+                template,
+            )
+            if value != self.endpoint_group.identity:
+                failures.append((state, "word_potential_initial_value_mismatch", value))
+        return tuple(failures)
+
+    @property
+    def word_potential_templates_verified(self) -> bool:
+        return (
+            not self.duplicate_template_seed_states
+            and not self.template_word_failures
+            and self.templates_use_only_current_longitudes
+        )
+
+    @property
+    def artin_substitutions_verified(self) -> bool:
+        return not self.duplicate_identity_entry_keys and not self.substitution_failures
+
+    @property
+    def identities_verified(self) -> bool:
+        return not self.duplicate_identity_entry_keys and not self.identity_failures
+
+    @property
+    def initial_readouts_normalized(self) -> bool:
+        return (
+            bool(self.normalized_seed_states_exact)
+            and not self.duplicate_normalized_seed_states
+            and not self.normalization_failures
         )
 
 
@@ -1364,6 +1752,7 @@ class UniversalKTelescopingDetectorAudit:
     word_potential_templates_use_only_current_longitudes: bool = False
     word_potential_artin_substitution_verified: bool = False
     word_potential_identity_verified: bool = False
+    word_potential_certificate: UniversalKWordPotentialCertificate | None = None
     telescoping_identity_verified: bool = False
     terminal_readout_longitudes_verified: bool = False
     initial_readout_normalized: bool = False
@@ -1581,18 +1970,74 @@ class UniversalKTelescopingDetectorAudit:
     @property
     def word_potential_templates_supplied(self) -> bool:
         return (
-            self.word_potential_seed_state_scope_matches_expected
+            self.word_potential_certificate is not None
+            and self.word_potential_seed_state_scope_matches_expected
             and self.word_potential_seed_state_coverage_exact
             and self.word_potential_seed_ledgers_have_no_duplicates
+            and self.word_potential_certificate_template_scope_exact
+            and self.word_potential_certificate_entry_scope_exact
+            and self.word_potential_certificate_ledgers_have_no_duplicates
+        )
+
+    @property
+    def word_potential_certificate_template_scope_exact(self) -> bool:
+        return (
+            self.word_potential_certificate is not None
+            and set(self.word_potential_certificate.template_seed_states_exact)
+            == set(self.expected_word_potential_seed_states_exact)
+        )
+
+    @property
+    def word_potential_certificate_entry_scope_exact(self) -> bool:
+        return (
+            self.word_potential_certificate is not None
+            and set(self.word_potential_certificate.identity_entry_keys_exact)
+            == set(self.expected_entry_keys_exact)
+        )
+
+    @property
+    def word_potential_certificate_ledgers_have_no_duplicates(self) -> bool:
+        return self.word_potential_certificate is not None and (
+            not self.word_potential_certificate.duplicate_template_seed_states
+            and not self.word_potential_certificate.duplicate_identity_entry_keys
+            and not self.word_potential_certificate.duplicate_normalized_seed_states
+        )
+
+    @property
+    def word_potential_templates_use_only_current_longitudes_verified(self) -> bool:
+        return (
+            self.word_potential_certificate is not None
+            and self.word_potential_certificate.templates_use_only_current_longitudes
+        )
+
+    @property
+    def word_potential_artin_substitution_proved(self) -> bool:
+        return (
+            self.word_potential_certificate is not None
+            and self.word_potential_certificate.artin_substitutions_verified
+        )
+
+    @property
+    def word_potential_identity_proved(self) -> bool:
+        return (
+            self.word_potential_certificate is not None
+            and self.word_potential_certificate.identities_verified
+        )
+
+    @property
+    def initial_readout_normalized_proved(self) -> bool:
+        return (
+            self.word_potential_certificate is not None
+            and self.word_potential_certificate.initial_readouts_normalized
         )
 
     @property
     def word_potential_templates_verified(self) -> bool:
         return (
             self.word_potential_templates_supplied
-            and self.word_potential_templates_use_only_current_longitudes
-            and self.word_potential_artin_substitution_verified
-            and self.word_potential_identity_verified
+            and self.word_potential_templates_use_only_current_longitudes_verified
+            and self.word_potential_artin_substitution_proved
+            and self.word_potential_identity_proved
         )
 
     @property
@@ -1620,7 +2065,7 @@ class UniversalKTelescopingDetectorAudit:
             and self.artin_detector_recurrence_verified
             and self.word_potential_templates_verified
             and self.terminal_readout_longitudes_verified
-            and self.initial_readout_normalized
+            and self.initial_readout_normalized_proved
             and self.braid_index_independent
         )
 
@@ -1659,21 +2104,38 @@ class UniversalKTelescopingDetectorAudit:
             reasons.append("artin_detector_recurrence_not_verified")
         if not self.word_potential_templates_supplied:
             reasons.append("word_potential_templates_not_supplied")
+        if self.word_potential_certificate is None:
+            reasons.append("word_potential_certificate_missing")
         if not self.word_potential_seed_state_scope_matches_expected:
             reasons.append("word_potential_seed_state_scope_mismatch")
         if not self.word_potential_seed_state_coverage_exact:
             reasons.append("word_potential_seed_state_coverage_not_exact")
         if not self.word_potential_seed_ledgers_have_no_duplicates:
             reasons.append("word_potential_duplicate_seed_states")
-        if not self.word_potential_templates_use_only_current_longitudes:
+        if not self.word_potential_certificate_template_scope_exact:
+            reasons.append("word_potential_certificate_template_scope_mismatch")
+        if not self.word_potential_certificate_entry_scope_exact:
+            reasons.append("word_potential_certificate_entry_scope_mismatch")
+        if not self.word_potential_certificate_ledgers_have_no_duplicates:
+            reasons.append("word_potential_certificate_duplicate_ledgers")
+        if not self.word_potential_templates_use_only_current_longitudes_verified:
             reasons.append("word_potential_uses_raw_assignment_variables")
-        if not self.word_potential_artin_substitution_verified:
+        if not self.word_potential_artin_substitution_proved:
             reasons.append("word_potential_artin_substitution_not_verified")
-        if not self.word_potential_identity_verified:
+        if not self.word_potential_identity_proved:
             reasons.append("word_potential_identity_not_verified")
+        if self.word_potential_certificate is not None:
+            if self.word_potential_certificate.raw_assignment_template_variables:
+                reasons.append("word_potential_template_contains_raw_assignments")
+            if self.word_potential_certificate.substitution_failures:
+                reasons.append("word_potential_artin_substitution_failures")
+            if self.word_potential_certificate.identity_failures:
+                reasons.append("word_potential_identity_failures")
+            if self.word_potential_certificate.normalization_failures:
+                reasons.append("word_potential_normalization_failures")
         if not self.terminal_readout_longitudes_verified:
             reasons.append("terminal_readout_longitudes_not_verified")
-        if not self.initial_readout_normalized:
+        if not self.initial_readout_normalized_proved:
             reasons.append("word_potential_initial_value_not_normalized")
         if not self.braid_index_independent:
             reasons.append("telescoping_detector_not_braid_index_independent")
@@ -1720,6 +2182,7 @@ class UniversalKSignedEndpointGeneratorAudit:
     residual_faithfulness_theorem: UniversalKResidualFaithfulnessAudit | None = None
     residual_action_audit: "EndpointResidualActionAudit | None" = None
     telescoping_detector_audit: UniversalKTelescopingDetectorAudit | None = None
+    endpoint_group: FiniteGroup | None = None
 
     @property
     def required_seed_states(self) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
@@ -2145,10 +2608,58 @@ class UniversalKSignedEndpointGeneratorAudit:
         )
 
     @property
+    def telescoping_detector_endpoint_group_matches(self) -> bool:
+        return (
+            self.endpoint_group is None
+            or self.telescoping_detector_audit is None
+            or self.telescoping_detector_audit.word_potential_certificate is None
+            or self.telescoping_detector_audit.word_potential_certificate.endpoint_group
+            == self.endpoint_group
+        )
+
+    @property
+    def telescoping_detector_signed_row_mismatches(
+        self,
+    ) -> Tuple[UniversalKSignedEndpointLabelFailure, ...]:
+        if (
+            self.telescoping_detector_audit is None
+            or self.telescoping_detector_audit.word_potential_certificate is None
+        ):
+            return ()
+        identity_rows = (
+            self.telescoping_detector_audit.word_potential_certificate.identity_row_map
+        )
+        failures = []
+        for row in self.rows:
+            identity_row = identity_rows.get(row.entry_key)
+            if identity_row is None:
+                continue
+            if (
+                identity_row.next_seed_state != row.next_seed_state
+                or identity_row.endpoint_value != row.endpoint_value
+            ):
+                failures.append(
+                    (
+                        row.entry_key,
+                        "word_potential_row_mismatch",
+                        (
+                            (row.next_seed_state, row.endpoint_value),
+                            (
+                                identity_row.next_seed_state,
+                                identity_row.endpoint_value,
+                            ),
+                        ),
+                    )
+                )
+        return tuple(failures)
+
+    @property
     def telescoping_detector_proved(self) -> bool:
         return (
             self.telescoping_detector_audit is not None
             and self.telescoping_detector_scope_matches_required
+            and self.telescoping_detector_endpoint_group_matches
+            and not self.telescoping_detector_signed_row_mismatches
             and self.telescoping_detector_audit.proves_telescoping_detector_lift
         )
 
@@ -2246,6 +2757,10 @@ class UniversalKSignedEndpointGeneratorAudit:
             if self.telescoping_detector_audit is not None:
                 if not self.telescoping_detector_scope_matches_required:
                     reasons.append("telescoping_detector_scope_mismatch")
+                if not self.telescoping_detector_endpoint_group_matches:
+                    reasons.append("telescoping_detector_endpoint_group_mismatch")
+                if self.telescoping_detector_signed_row_mismatches:
+                    reasons.append("telescoping_detector_signed_row_mismatch")
                 reasons.extend(self.telescoping_detector_audit.failure_reasons)
         if not self.exact_cutoff_readouts_proved:
             reasons.append("cutoff_readouts_not_exact")
@@ -3207,6 +3722,7 @@ def universal_k_signed_endpoint_generator_audit(
         residual_faithfulness_theorem=residual_faithfulness_theorem,
         residual_action_audit=residual_action_audit,
         telescoping_detector_audit=telescoping_detector_audit,
+        endpoint_group=endpoint_group,
     )
 
 
@@ -4781,6 +5297,14 @@ class PostLinearRemainingFiniteSystemAudit:
                     "signed_endpoint_generator_telescoping_detector_scope_matches_required",
                     False,
                 ),
+                (
+                    "signed_endpoint_generator_telescoping_endpoint_group_matches",
+                    False,
+                ),
+                (
+                    "signed_endpoint_generator_telescoping_signed_row_mismatches",
+                    (),
+                ),
                 ("signed_endpoint_generator_telescoping_expected_entry_keys", ()),
                 ("signed_endpoint_generator_telescoping_covered_entry_keys", ()),
                 ("signed_endpoint_generator_telescoping_missing_entry_keys", ()),
@@ -5179,6 +5703,14 @@ class PostLinearRemainingFiniteSystemAudit:
                 audit.telescoping_detector_scope_matches_required,
             ),
             (
+                "signed_endpoint_generator_telescoping_endpoint_group_matches",
+                audit.telescoping_detector_endpoint_group_matches,
+            ),
+            (
+                "signed_endpoint_generator_telescoping_signed_row_mismatches",
+                audit.telescoping_detector_signed_row_mismatches,
+            ),
+            (
                 "signed_endpoint_generator_telescoping_expected_entry_keys",
                 (
                     telescoping_audit.expected_entry_keys_exact
@@ -5344,7 +5876,7 @@ class PostLinearRemainingFiniteSystemAudit:
             (
                 "signed_endpoint_generator_word_potential_templates_use_only_current_longitudes",
                 (
-                    telescoping_audit.word_potential_templates_use_only_current_longitudes
+                    telescoping_audit.word_potential_templates_use_only_current_longitudes_verified
                     if telescoping_audit is not None
                     else False
                 ),
@@ -5352,7 +5884,7 @@ class PostLinearRemainingFiniteSystemAudit:
             (
                 "signed_endpoint_generator_word_potential_artin_substitution_verified",
                 (
-                    telescoping_audit.word_potential_artin_substitution_verified
+                    telescoping_audit.word_potential_artin_substitution_proved
                     if telescoping_audit is not None
                     else False
                 ),
@@ -5360,9 +5892,45 @@ class PostLinearRemainingFiniteSystemAudit:
             (
                 "signed_endpoint_generator_word_potential_identity_verified",
                 (
-                    telescoping_audit.word_potential_identity_verified
+                    telescoping_audit.word_potential_identity_proved
                     if telescoping_audit is not None
                     else False
+                ),
+            ),
+            (
+                "signed_endpoint_generator_word_potential_certificate_template_states",
+                (
+                    telescoping_audit.word_potential_certificate.template_seed_states_exact
+                    if telescoping_audit is not None
+                    and telescoping_audit.word_potential_certificate is not None
+                    else ()
+                ),
+            ),
+            (
+                "signed_endpoint_generator_word_potential_certificate_identity_rows",
+                (
+                    telescoping_audit.word_potential_certificate.identity_entry_keys_exact
+                    if telescoping_audit is not None
+                    and telescoping_audit.word_potential_certificate is not None
+                    else ()
+                ),
+            ),
+            (
+                "signed_endpoint_generator_word_potential_artin_substitution_failures",
+                (
+                    telescoping_audit.word_potential_certificate.substitution_failures
+                    if telescoping_audit is not None
+                    and telescoping_audit.word_potential_certificate is not None
+                    else ()
+                ),
+            ),
+            (
+                "signed_endpoint_generator_word_potential_identity_failures",
+                (
+                    telescoping_audit.word_potential_certificate.identity_failures
+                    if telescoping_audit is not None
+                    and telescoping_audit.word_potential_certificate is not None
+                    else ()
                 ),
             ),
             (
@@ -5376,7 +5944,7 @@ class PostLinearRemainingFiniteSystemAudit:
             (
                 "signed_endpoint_generator_word_potential_initial_normalized",
                 (
-                    telescoping_audit.initial_readout_normalized
+                    telescoping_audit.initial_readout_normalized_proved
                     if telescoping_audit is not None
                     else False
                 ),

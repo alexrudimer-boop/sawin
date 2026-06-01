@@ -411,6 +411,8 @@ from .nonlinear_overlap import (
     UniversalKSignedEndpointGeneratorAudit,
     UniversalKSignedEndpointGeneratorRow,
     UniversalKTelescopingDetectorAudit,
+    UniversalKWordPotentialCertificate,
+    UniversalKWordPotentialIdentityRow,
     nonlinear_overlap_obstruction_audit,
     nonlinear_overlap_refinement_audit,
     post_linear_remaining_finite_system_audit,
@@ -436,6 +438,7 @@ from .nonlinear_overlap import (
     universal_k_signed_endpoint_two_strand_base_failures,
     universal_k_signed_endpoint_two_strand_witness_domain_failures,
     universal_k_signed_endpoint_transition_closure,
+    universal_k_evaluate_word_potential,
 )
 from .bifree_corridor import (
     BiFreeCorridorDetectorTarget,
@@ -1011,6 +1014,9 @@ __all__ = [
     "UniversalKSignedEndpointGeneratorAudit",
     "UniversalKSignedEndpointGeneratorRow",
     "UniversalKTelescopingDetectorAudit",
+    "UniversalKWordPotentialCertificate",
+    "UniversalKWordPotentialIdentityRow",
+    "universal_k_evaluate_word_potential",
     "universal_k_signed_endpoint_artin_update_failures",
     "universal_k_signed_endpoint_coordinate_failures",
     "universal_k_signed_endpoint_generator_audit",

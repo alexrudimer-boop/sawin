@@ -1104,6 +1104,45 @@ inside `H_E`, for every assignment of the involved formal variables to
 elements of `H_E`.  This is finite because `H_E`, the reachable state set,
 the signed row table, and the formal variable support are finite.
 
+The certificate must be supplied as finite table data, not as a boolean.  It
+must include:
+
+```text
+template table:
+  (E,s) |-> W_s
+
+identity-row table:
+  (E,epsilon,s,a,b,x,y) |->
+  (next state s', emitted label h, Artin substitution A_gamma^epsilon)
+```
+
+The identity-row table must cover exactly the full `D_Gamma(E)` entries for
+the same signed endpoint table.  Its `s'` and `h` must agree with the signed
+row
+
+```text
+Gamma^{E,epsilon}_{a,b}(s,x,y)=(s',T^epsilon_{a,b}(x,y),h).
+```
+
+Each `W_s` is a word in variables `U_{r,j}` only.  The local substitution may
+use both `U_{r,j}` and raw assignment variables `A_{r,j}`, but the terminal
+template may not contain any `A` variable.  For the active two local strands,
+the substitution must be the Artin detector recurrence:
+
+```text
+epsilon=+1:
+  U_{r,0} -> U_{r,0} A_{r,0} U_{r,0}^{-1} U_{r,1}
+  U_{r,1} -> U_{r,0}
+
+epsilon=-1:
+  U_{r,0} -> U_{r,1}
+  U_{r,1} -> U_{r,1} A_{r,1}^{-1} U_{r,1}^{-1} U_{r,0}
+```
+
+Variables outside the active local pair are unchanged.  The finite checker
+must evaluate the displayed word-potential identity for every assignment of
+the variables in that row to elements of the fixed group `H_E`.
+
 The initial routed state must be normalized:
 
 ```text
@@ -1209,6 +1248,9 @@ positive_local_endpoint_ybe_path,
 positive_local_endpoint_ybe_cocycle,
 fixed_detector_track_initialization,
 artin_detector_recurrence,
+word_potential_certificate_table_supplied,
+word_potential_certificate_entry_domain_exact,
+word_potential_certificate_next_states_and_labels_match_Gamma,
 word_potential_templates_for_every_reachable_state,
 word_potential_templates_use_only_current_longitude_variables,
 word_potential_artin_substitution_from_detector_recurrence,
