@@ -459,6 +459,10 @@ outside `{U,C,M}`, nonpositive orders, nonpositive cutoff degrees,
 open.  The family and target ledgers must also be duplicate-free: repeating a
 routed family or assigning two target entries to the same family is not an
 exact one-target-per-family certificate.
+Every endpoint target-size row must have exactly two fields, `(family, size)`.
+Rows with missing fields, extra fields, or a non-tuple shape are malformed
+target rows; they are reported separately from nonpositive size values and
+cannot be used as finite detector factors.
 The implementation now derives endpoint-target braid-index independence and
 product-family separation from the finite target ledger itself: each covered
 family must have a positive fixed group order or cutoff degree, and target
@@ -864,6 +868,10 @@ counts.  The total expected and covered residual row counts are also finite
 nonnegative integer data; strings, booleans, negative values, and other
 non-count objects are malformed residual row-count ledgers rather than
 zero-row families.
+Each family row-count entry must have exactly two fields, `(family, count)`.
+Rows with missing fields, extra fields, or a non-tuple shape are malformed
+family-count rows, distinct from rows whose count field is present but not a
+nonnegative integer.
 Those ledgers must also match the actual residual rows: each row contributes
 one count to every endpoint family named by that row, and a family ledger
 cannot claim zero rows for a family that any supplied row uses.  This keeps a
@@ -970,6 +978,7 @@ signed_endpoint_generator_endpoint_target_covered_families
 signed_endpoint_generator_endpoint_target_families
 signed_endpoint_generator_endpoint_target_group_orders
 signed_endpoint_generator_endpoint_target_malformed_group_orders
+signed_endpoint_generator_endpoint_target_malformed_group_order_rows
 signed_endpoint_generator_endpoint_group_order
 signed_endpoint_generator_endpoint_group_order_matches_target
 signed_endpoint_generator_endpoint_group_target_families
@@ -977,6 +986,7 @@ signed_endpoint_generator_endpoint_group_family_support_verified
 signed_endpoint_generator_endpoint_group_family_support_failures
 signed_endpoint_generator_endpoint_target_cutoff_degrees
 signed_endpoint_generator_endpoint_target_malformed_cutoff_degrees
+signed_endpoint_generator_endpoint_target_malformed_cutoff_degree_rows
 signed_endpoint_generator_endpoint_target_duplicate_families
 signed_endpoint_generator_endpoint_target_unknown_families
 signed_endpoint_generator_endpoint_target_duplicate_target_families
@@ -1120,6 +1130,7 @@ signed_endpoint_generator_residual_action_scope_family_rows
 signed_endpoint_generator_residual_action_scope_family_rows_covered
 signed_endpoint_generator_residual_action_scope_duplicate_family_rows
 signed_endpoint_generator_residual_action_scope_malformed_family_rows
+signed_endpoint_generator_residual_action_scope_malformed_family_row_count_rows
 signed_endpoint_generator_residual_action_scope_family_rows_cover_active
 signed_endpoint_generator_residual_action_scope_dependencies
 signed_endpoint_generator_residual_action_scope_invalid_dependencies
@@ -1137,6 +1148,7 @@ signed_endpoint_generator_residual_theorem_family_rows
 signed_endpoint_generator_residual_theorem_family_rows_covered
 signed_endpoint_generator_residual_theorem_duplicate_family_rows
 signed_endpoint_generator_residual_theorem_malformed_family_rows
+signed_endpoint_generator_residual_theorem_malformed_family_row_count_rows
 signed_endpoint_generator_residual_theorem_actual_family_rows
 signed_endpoint_generator_residual_theorem_family_rows_match_actual
 signed_endpoint_generator_residual_theorem_expected_input_tuples

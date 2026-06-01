@@ -906,6 +906,10 @@ sizes; they are not independent boolean gates.
 Each target size row must be a positive integer attached to a known endpoint
 family.  Strings, booleans, missing values, zero, and negative values are
 malformed endpoint-target rows, not finite detector factors.
+Each endpoint target-size row must also have exactly two fields,
+`(family, size)`.  A row with an extra field, a missing field, or a non-tuple
+shape is a malformed endpoint-target row even if one can read a plausible
+family and size from it.
 For C or M routed through a symmetric cutoff, the target ledger's cutoff
 degree must equal the symmetric degree used by the cutoff-readout table for
 that same family.  A certificate that declares a degree-`m` cutoff target but
@@ -1680,7 +1684,11 @@ nonnegative integer counts, matching expected and covered family counts, and
 sums equal to the total expected and covered residual row counts.  The total
 expected and covered residual row counts are also nonnegative integer data;
 strings, booleans, negative values, and other non-count objects are malformed
-residual count ledgers, not finite row counts.  These family counts must also
+residual count ledgers, not finite row counts.  The family counts must also
+be supplied as exactly two-field rows `(family, count)`; rows with extra
+fields, missing fields, or non-tuple shape are malformed residual family
+row-count ledgers, distinct from rows whose count field exists but is not a
+nonnegative integer.  These family counts must also
 match the counts derived from the actual residual rows: a row that names an
 endpoint family contributes one row to that family, and no family ledger may
 claim zero rows for a family used by a supplied row.  On an explicit
@@ -1778,6 +1786,7 @@ fixed_endpoint_group_or_cutoff,
 family_scoped_endpoint_target_coverage,
 endpoint_target_families_in_U_C_M,
 endpoint_target_size_rows_have_positive_integer_values,
+endpoint_target_size_rows_have_two_field_shape,
 endpoint_target_braid_index_independence,
 endpoint_target_product_family_separation,
 endpoint_target_ledgers_duplicate_free,
@@ -1788,6 +1797,7 @@ residual_endpoint_seed_state_ledgers_well_formed,
 multi_family_residual_row_counts_by_family_exact,
 residual_row_counts_are_nonnegative_integers,
 residual_family_row_counts_are_nonnegative_integers,
+residual_family_row_count_rows_have_two_field_shape,
 residual_rows_have_nonempty_arity_consistent_tuples,
 residual_rows_have_duplicate_free_endpoint_channel_keys,
 residual_rows_have_well_formed_endpoint_channel_keys,

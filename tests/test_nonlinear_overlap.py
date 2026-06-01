@@ -3344,6 +3344,26 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             theorem_with_malformed_family_count.failure_reasons,
         )
 
+        theorem_with_malformed_family_count_row = replace(
+            theorem,
+            expected_residual_rows_by_family=(("U", 1, "extra"),),
+            covered_residual_rows_by_family=(("U", 1),),
+        )
+        self.assertFalse(
+            theorem_with_malformed_family_count_row.residual_family_row_count_rows_well_formed
+        )
+        self.assertFalse(
+            theorem_with_malformed_family_count_row.proves_residual_faithfulness
+        )
+        self.assertEqual(
+            theorem_with_malformed_family_count_row.malformed_residual_family_row_count_rows,
+            (("expected", ("U", 1, "extra")),),
+        )
+        self.assertIn(
+            "residual_faithfulness_family_row_count_malformed_rows",
+            theorem_with_malformed_family_count_row.failure_reasons,
+        )
+
         rowwise_only = replace(theorem_complete, telescoping_detector_audit=None)
         self.assertTrue(rowwise_only.signed_two_strand_base_verified)
         self.assertTrue(rowwise_only.artin_homomorphism_update_verified)
@@ -3968,6 +3988,26 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertIn(
             "residual_action_scope_family_row_count_malformed",
             malformed_action_scope_family_count.failure_reasons,
+        )
+
+        malformed_action_scope_family_count_row = replace(
+            malformed_action_scope_family_count,
+            expected_residual_rows_by_family=(("U", 1, "extra"),),
+            covered_residual_rows_by_family=(("U", 1),),
+        )
+        self.assertFalse(
+            malformed_action_scope_family_count_row.residual_family_row_count_rows_well_formed
+        )
+        self.assertFalse(
+            malformed_action_scope_family_count_row.proves_residual_action_scope
+        )
+        self.assertEqual(
+            malformed_action_scope_family_count_row.malformed_residual_family_row_count_rows,
+            (("expected", ("U", 1, "extra")),),
+        )
+        self.assertIn(
+            "residual_action_scope_family_row_count_malformed_rows",
+            malformed_action_scope_family_count_row.failure_reasons,
         )
 
         underived_domain = UniversalKSignedEndpointGeneratorAudit(
@@ -5801,6 +5841,24 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             malformed_group_order_target.failure_reasons,
         )
 
+        malformed_group_order_row_target = UniversalKEndpointTargetAudit(
+            expected_endpoint_families=("U",),
+            covered_endpoint_families=("U",),
+            endpoint_group_orders=(("U", 2, "extra"),),
+            braid_index_independent=True,
+            product_families_separated=True,
+        )
+        self.assertFalse(malformed_group_order_row_target.target_size_rows_well_formed)
+        self.assertFalse(malformed_group_order_row_target.proves_endpoint_targets)
+        self.assertEqual(
+            malformed_group_order_row_target.malformed_endpoint_group_order_rows,
+            (("U", 2, "extra"),),
+        )
+        self.assertIn(
+            "endpoint_target_malformed_group_order_rows",
+            malformed_group_order_row_target.failure_reasons,
+        )
+
         malformed_cutoff_degree_target = UniversalKEndpointTargetAudit(
             expected_endpoint_families=("M",),
             covered_endpoint_families=("M",),
@@ -5817,6 +5875,24 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertIn(
             "endpoint_target_malformed_cutoff_degree",
             malformed_cutoff_degree_target.failure_reasons,
+        )
+
+        malformed_cutoff_degree_row_target = UniversalKEndpointTargetAudit(
+            expected_endpoint_families=("M",),
+            covered_endpoint_families=("M",),
+            cutoff_degrees=(("M", 2, "extra"),),
+            braid_index_independent=True,
+            product_families_separated=True,
+        )
+        self.assertFalse(malformed_cutoff_degree_row_target.target_size_rows_well_formed)
+        self.assertFalse(malformed_cutoff_degree_row_target.proves_endpoint_targets)
+        self.assertEqual(
+            malformed_cutoff_degree_row_target.malformed_cutoff_degree_rows,
+            (("M", 2, "extra"),),
+        )
+        self.assertIn(
+            "endpoint_target_malformed_cutoff_degree_rows",
+            malformed_cutoff_degree_row_target.failure_reasons,
         )
 
     def test_cutoff_readout_rejects_malformed_cutoff_degree_without_crashing(self):
