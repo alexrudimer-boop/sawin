@@ -1186,12 +1186,15 @@ A concrete residual-faithfulness certificate must list the residual action
 rows it covers.  For each residual input tuple it must give the output tuple,
 decompose every moved coordinate into endpoint-controlled coordinates or
 cutoff readouts, and prove that identity endpoint data fixes each coordinate.
-It must also state the expected number of residual rows for the interval
-fibre action and prove that the listed rows cover that number.  A supplied
-row subset proves only a supplied-row implication, not domination of the
-whole residual action.  Omitting the expected row count is not acceptable for
-this endpoint lemma, even if every listed row is internally certified.  The
-explicit-row certificate must also state the active endpoint families, covered
+It must also state the exact expected residual input-tuple domain and the
+expected number of residual rows for the interval fibre action, then prove
+that the listed rows cover that domain without missing, extra, or duplicate
+input tuples.  A supplied row subset, or the same row repeated until the row
+count matches, proves only a supplied-row implication, not domination of the
+whole residual action.  Omitting the expected row count or the expected input
+tuple domain is not acceptable for this endpoint lemma, even if every listed
+row is internally certified.  The explicit-row certificate must also state
+the active endpoint families, covered
 endpoint families, exact endpoint-channel coverage, braid-index independence,
 and family-by-family product separation; otherwise the listed row implication
 is not a uniform residual-faithfulness theorem.  If two or more endpoint
@@ -1236,6 +1239,7 @@ endpoint_target_ledgers_duplicate_free,
 residual_endpoint_seed_state_coverage_exact,
 residual_endpoint_seed_state_ledgers_duplicate_free,
 multi_family_residual_row_counts_by_family_exact,
+residual_action_input_tuple_domain_exact,
 signed_entry_domain_derived_from_interval,
 signed_entry_domain_matches_current_interval,
 finite_signed_row_checks_derived_from_tables,

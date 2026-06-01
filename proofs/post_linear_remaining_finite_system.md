@@ -550,10 +550,12 @@ that bridge explicitly before endpoint witnesses or symmetric cutoffs can be
 promoted to an all-strand proof.
 
 When the bridge is supplied by residual action rows, the audit records the
-number of covered rows, the expected row count, and whether the endpoint
-readout rows prove the complete residual-action implication.  A supplied-row
-implication with missing residual rows is not enough, and omitting the
-expected row count does not prove residual faithfulness for this signed
+number of covered rows, the expected row count, the exact expected residual
+input-tuple domain, and whether the endpoint readout rows prove the complete
+residual-action implication.  A supplied-row implication with missing
+residual rows is not enough; nor is a duplicate copy of one row that merely
+makes the row count match.  Omitting the expected row count or the expected
+input-tuple domain does not prove residual faithfulness for this signed
 endpoint layer.  The row proof must now carry its own scope audit as well:
 active and covered endpoint families, exact expected and covered endpoint
 seed states from the current `kappa`, exact row-count agreement with the
@@ -721,6 +723,12 @@ signed_endpoint_generator_residual_theorem_family_rows_covered
 signed_endpoint_generator_residual_theorem_duplicate_family_rows
 signed_endpoint_generator_residual_action_rows
 signed_endpoint_generator_residual_action_rows_expected
+signed_endpoint_generator_residual_action_expected_input_tuples
+signed_endpoint_generator_residual_action_supplied_input_tuples
+signed_endpoint_generator_residual_action_missing_input_tuples
+signed_endpoint_generator_residual_action_extra_input_tuples
+signed_endpoint_generator_residual_action_duplicate_input_tuples
+signed_endpoint_generator_residual_action_input_tuple_domain_exact
 signed_endpoint_generator_residual_action_complete
 signed_endpoint_generator_tables_proved
 signed_endpoint_generator_failure_reasons

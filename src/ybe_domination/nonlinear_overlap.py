@@ -2547,6 +2547,14 @@ class UniversalKSignedEndpointGeneratorAudit:
         )
 
     @property
+    def residual_action_input_tuple_domain_exact(self) -> bool:
+        return (
+            self.residual_action_audit is not None
+            and self.residual_action_audit.expected_input_tuple_domain_supplied
+            and self.residual_action_audit.input_tuple_domain_exact
+        )
+
+    @property
     def residual_theorem_scope_matches_required(self) -> bool:
         return (
             self.residual_faithfulness_theorem is not None
@@ -2575,6 +2583,7 @@ class UniversalKSignedEndpointGeneratorAudit:
             and self.residual_action_scope_matches_seed_states
             and self.residual_action_scope_matches_action_rows
             and self.residual_action_scope.proves_residual_action_scope
+            and self.residual_action_input_tuple_domain_exact
         )
 
     @property
@@ -2785,6 +2794,8 @@ class UniversalKSignedEndpointGeneratorAudit:
                         reasons.append("residual_action_scope_seed_state_mismatch")
                     if not self.residual_action_scope_matches_action_rows:
                         reasons.append("residual_action_scope_row_count_mismatch")
+                    if not self.residual_action_input_tuple_domain_exact:
+                        reasons.append("residual_action_input_tuple_domain_not_exact")
                     reasons.extend(self.residual_action_scope.failure_reasons)
             if self.residual_faithfulness_theorem is not None:
                 if not self.residual_theorem_scope_matches_required:
@@ -5417,6 +5428,30 @@ class PostLinearRemainingFiniteSystemAudit:
                 ),
                 ("signed_endpoint_generator_residual_action_rows", 0),
                 ("signed_endpoint_generator_residual_action_rows_expected", None),
+                (
+                    "signed_endpoint_generator_residual_action_expected_input_tuples",
+                    (),
+                ),
+                (
+                    "signed_endpoint_generator_residual_action_supplied_input_tuples",
+                    (),
+                ),
+                (
+                    "signed_endpoint_generator_residual_action_missing_input_tuples",
+                    (),
+                ),
+                (
+                    "signed_endpoint_generator_residual_action_extra_input_tuples",
+                    (),
+                ),
+                (
+                    "signed_endpoint_generator_residual_action_duplicate_input_tuples",
+                    (),
+                ),
+                (
+                    "signed_endpoint_generator_residual_action_input_tuple_domain_exact",
+                    False,
+                ),
                 ("signed_endpoint_generator_residual_action_complete", False),
                 ("signed_endpoint_generator_tables_proved", False),
             )
@@ -6177,6 +6212,51 @@ class PostLinearRemainingFiniteSystemAudit:
                     if audit.residual_action_audit is not None
                     else None
                 ),
+            ),
+            (
+                "signed_endpoint_generator_residual_action_expected_input_tuples",
+                (
+                    audit.residual_action_audit.expected_input_tuples
+                    if audit.residual_action_audit is not None
+                    else ()
+                ),
+            ),
+            (
+                "signed_endpoint_generator_residual_action_supplied_input_tuples",
+                (
+                    audit.residual_action_audit.supplied_input_tuples
+                    if audit.residual_action_audit is not None
+                    else ()
+                ),
+            ),
+            (
+                "signed_endpoint_generator_residual_action_missing_input_tuples",
+                (
+                    audit.residual_action_audit.missing_input_tuples
+                    if audit.residual_action_audit is not None
+                    else ()
+                ),
+            ),
+            (
+                "signed_endpoint_generator_residual_action_extra_input_tuples",
+                (
+                    audit.residual_action_audit.extra_input_tuples
+                    if audit.residual_action_audit is not None
+                    else ()
+                ),
+            ),
+            (
+                "signed_endpoint_generator_residual_action_duplicate_input_tuples",
+                (
+                    audit.residual_action_audit.duplicate_expected_input_tuples
+                    + audit.residual_action_audit.duplicate_supplied_input_tuples
+                    if audit.residual_action_audit is not None
+                    else ()
+                ),
+            ),
+            (
+                "signed_endpoint_generator_residual_action_input_tuple_domain_exact",
+                audit.residual_action_input_tuple_domain_exact,
             ),
             (
                 "signed_endpoint_generator_residual_action_complete",

@@ -34,6 +34,17 @@ if TYPE_CHECKING:  # pragma: no cover - typing only
     from .repair_contract import EndpointFamilySymmetricForkAudit
 
 
+def _duplicate_values(values: Sequence[object]) -> Tuple[object, ...]:
+    seen = set()
+    duplicates = []
+    for value in values:
+        if value in seen:
+            duplicates.append(value)
+        else:
+            seen.add(value)
+    return tuple(sorted(set(duplicates), key=repr))
+
+
 @dataclass(frozen=True)
 class EndpointLongitudeExpressionAudit:
     """Expression certificate for one endpoint in a fixed finite group."""
@@ -508,6 +519,7 @@ class EndpointResidualActionAudit:
     braid_word: Tuple[int, ...]
     residual_readouts: Tuple[EndpointResidualReadoutAudit, ...]
     expected_row_count: int | None = None
+    expected_input_tuples: Tuple[Tuple[object, ...], ...] = ()
 
     @property
     def row_count(self) -> int:
@@ -516,6 +528,49 @@ class EndpointResidualActionAudit:
     @property
     def covers_expected_rows(self) -> bool:
         return self.expected_row_count is None or self.row_count == self.expected_row_count
+
+    @property
+    def supplied_input_tuples(self) -> Tuple[Tuple[object, ...], ...]:
+        return tuple(readout.input_tuple for readout in self.residual_readouts)
+
+    @property
+    def expected_input_tuple_domain_supplied(self) -> bool:
+        return bool(self.expected_input_tuples)
+
+    @property
+    def duplicate_expected_input_tuples(self) -> Tuple[Tuple[object, ...], ...]:
+        return _duplicate_values(self.expected_input_tuples)
+
+    @property
+    def duplicate_supplied_input_tuples(self) -> Tuple[Tuple[object, ...], ...]:
+        return _duplicate_values(self.supplied_input_tuples)
+
+    @property
+    def missing_input_tuples(self) -> Tuple[Tuple[object, ...], ...]:
+        supplied = set(self.supplied_input_tuples)
+        return tuple(
+            input_tuple
+            for input_tuple in self.expected_input_tuples
+            if input_tuple not in supplied
+        )
+
+    @property
+    def extra_input_tuples(self) -> Tuple[Tuple[object, ...], ...]:
+        expected = set(self.expected_input_tuples)
+        return tuple(
+            input_tuple
+            for input_tuple in self.supplied_input_tuples
+            if input_tuple not in expected
+        )
+
+    @property
+    def input_tuple_domain_exact(self) -> bool:
+        return not self.expected_input_tuple_domain_supplied or (
+            not self.duplicate_expected_input_tuples
+            and not self.duplicate_supplied_input_tuples
+            and not self.missing_input_tuples
+            and not self.extra_input_tuples
+        )
 
     @property
     def braid_data_consistent(self) -> bool:
@@ -553,7 +608,11 @@ class EndpointResidualActionAudit:
 
     @property
     def proves_complete_residual_action_implication(self) -> bool:
-        return self.proves_supplied_rows_detector_implication and self.covers_expected_rows
+        return (
+            self.proves_supplied_rows_detector_implication
+            and self.covers_expected_rows
+            and self.input_tuple_domain_exact
+        )
 
 
 @dataclass(frozen=True)
@@ -1492,6 +1551,7 @@ def endpoint_residual_action_audit(
     residual_readouts: Sequence[EndpointResidualReadoutAudit],
     *,
     expected_row_count: int | None = None,
+    expected_input_tuples: Sequence[Sequence[object]] = (),
 ) -> EndpointResidualActionAudit:
     """Bundle supplied residual rows for the endpoint detector implication."""
 
@@ -1502,4 +1562,5 @@ def endpoint_residual_action_audit(
         braid_word=tuple(braid_word),
         residual_readouts=tuple(residual_readouts),
         expected_row_count=expected_row_count,
+        expected_input_tuples=tuple(tuple(row) for row in expected_input_tuples),
     )

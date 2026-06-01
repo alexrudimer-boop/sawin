@@ -281,6 +281,7 @@ def trivial_endpoint_residual_action_audit():
         (1, -1),
         (readout,),
         expected_row_count=1,
+        expected_input_tuples=(("p",),),
     )
 
 

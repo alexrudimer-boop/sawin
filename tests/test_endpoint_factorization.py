@@ -969,6 +969,49 @@ class EndpointFactorizationTests(unittest.TestCase):
         self.assertTrue(action.proves_supplied_rows_detector_implication)
         self.assertTrue(action.proves_complete_residual_action_implication)
 
+    def test_residual_action_audit_can_check_exact_input_tuple_domain(self):
+        c2 = cyclic_group(2)
+        product_audit = endpoint_product_longitude_expression_audit(
+            (c2,),
+            n=2,
+            braid_word=(1,) * 4,
+            endpoints=(0,),
+            assignments=((1, 0),),
+            expressions=((),),
+        )
+        readout_a = endpoint_residual_readout_audit(
+            (endpoint_coordinate_readout_audit(product_audit, "a", "a"),)
+        )
+        readout_b = endpoint_residual_readout_audit(
+            (endpoint_coordinate_readout_audit(product_audit, "b", "b"),)
+        )
+
+        exact = endpoint_residual_action_audit(
+            2,
+            (1,) * 4,
+            (readout_a, readout_b),
+            expected_row_count=2,
+            expected_input_tuples=(("a",), ("b",)),
+        )
+        self.assertEqual(exact.supplied_input_tuples, (("a",), ("b",)))
+        self.assertTrue(exact.expected_input_tuple_domain_supplied)
+        self.assertTrue(exact.input_tuple_domain_exact)
+        self.assertTrue(exact.proves_complete_residual_action_implication)
+
+        duplicate_supplied = endpoint_residual_action_audit(
+            2,
+            (1,) * 4,
+            (readout_a, readout_a),
+            expected_row_count=2,
+            expected_input_tuples=(("a",), ("b",)),
+        )
+        self.assertFalse(duplicate_supplied.input_tuple_domain_exact)
+        self.assertEqual(duplicate_supplied.duplicate_supplied_input_tuples, (("a",),))
+        self.assertEqual(duplicate_supplied.missing_input_tuples, (("b",),))
+        self.assertFalse(
+            duplicate_supplied.proves_complete_residual_action_implication
+        )
+
     def test_descent_endpoint_repair_contract_accepts_supplied_certificates(self):
         interval = one_color_identity_interval()
         descent = readout_descent_separation_audit(
