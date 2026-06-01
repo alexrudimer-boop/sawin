@@ -2879,6 +2879,7 @@ class PostLinearRemainingFiniteSystemAudit:
     universal_k_signed_endpoint_generator: (
         UniversalKSignedEndpointGeneratorAudit | None
     ) = None
+    universal_k_signed_endpoint_interval: LocalInterval | None = None
 
     @property
     def closed_by_recorded_branch(self) -> bool:
@@ -3428,6 +3429,7 @@ class PostLinearRemainingFiniteSystemAudit:
         return (
             self.system_u_closed_by_endpoint_witness
             or self.system_u_closed_by_symmetric_endpoint_fork
+            or self.system_u_closed_by_signed_endpoint_generator
         )
 
     @property
@@ -3457,6 +3459,7 @@ class PostLinearRemainingFiniteSystemAudit:
         return (
             self.system_c_closed_by_endpoint_witness
             or self.system_c_closed_by_symmetric_endpoint_fork
+            or self.system_c_closed_by_signed_endpoint_generator
         )
 
     @property
@@ -3482,10 +3485,103 @@ class PostLinearRemainingFiniteSystemAudit:
         )
 
     @property
+    def signed_endpoint_generator_matches_current_kappa(self) -> bool:
+        audit = self.universal_k_signed_endpoint_generator
+        return (
+            audit is not None
+            and audit.seed_classifier_entries == self.universal_k_seed_classifier_entries
+        )
+
+    @property
+    def signed_endpoint_generator_interval_entry_keys(
+        self,
+    ) -> Tuple[UniversalKSignedEndpointEntryKey, ...]:
+        audit = self.universal_k_signed_endpoint_generator
+        if audit is None or self.universal_k_signed_endpoint_interval is None:
+            return ()
+        return universal_k_signed_endpoint_required_entry_keys(
+            self.universal_k_signed_endpoint_interval,
+            audit.reachable_seed_states_exact,
+        )
+
+    @property
+    def signed_endpoint_generator_missing_interval_entry_keys(
+        self,
+    ) -> Tuple[UniversalKSignedEndpointEntryKey, ...]:
+        audit = self.universal_k_signed_endpoint_generator
+        if audit is None:
+            return ()
+        interval_keys = set(self.signed_endpoint_generator_interval_entry_keys)
+        supplied = set(audit.required_entry_keys_exact)
+        return tuple(key for key in sorted(interval_keys - supplied, key=repr))
+
+    @property
+    def signed_endpoint_generator_extra_interval_entry_keys(
+        self,
+    ) -> Tuple[UniversalKSignedEndpointEntryKey, ...]:
+        audit = self.universal_k_signed_endpoint_generator
+        if audit is None:
+            return ()
+        interval_keys = set(self.signed_endpoint_generator_interval_entry_keys)
+        supplied = set(audit.required_entry_keys_exact)
+        return tuple(key for key in sorted(supplied - interval_keys, key=repr))
+
+    @property
+    def signed_endpoint_generator_entry_domain_matches_current_interval(self) -> bool:
+        return (
+            self.universal_k_signed_endpoint_generator is not None
+            and self.universal_k_signed_endpoint_interval is not None
+            and not self.signed_endpoint_generator_missing_interval_entry_keys
+            and not self.signed_endpoint_generator_extra_interval_entry_keys
+        )
+
+    @property
+    def signed_endpoint_generator_closes_current_kappa(self) -> bool:
+        audit = self.universal_k_signed_endpoint_generator
+        return (
+            audit is not None
+            and self.signed_endpoint_generator_matches_current_kappa
+            and self.signed_endpoint_generator_entry_domain_matches_current_interval
+            and audit.proves_signed_endpoint_generator_tables
+        )
+
+    @property
+    def signed_endpoint_generator_closed_families(self) -> Tuple[str, ...]:
+        audit = self.universal_k_signed_endpoint_generator
+        if not self.signed_endpoint_generator_closes_current_kappa or audit is None:
+            return ()
+        active = set(self.active_routed_endpoint_systems)
+        return tuple(
+            family for family in audit.required_endpoint_families if family in active
+        )
+
+    @property
+    def system_u_closed_by_signed_endpoint_generator(self) -> bool:
+        return (
+            self.system_u_active
+            and "U" in self.signed_endpoint_generator_closed_families
+        )
+
+    @property
     def system_m_closed_by_routed_certificate(self) -> bool:
         return (
             self.system_m_closed_by_endpoint_witness
             or self.system_m_closed_by_symmetric_endpoint_fork
+            or self.system_m_closed_by_signed_endpoint_generator
+        )
+
+    @property
+    def system_c_closed_by_signed_endpoint_generator(self) -> bool:
+        return (
+            self.system_c_active
+            and "C" in self.signed_endpoint_generator_closed_families
+        )
+
+    @property
+    def system_m_closed_by_signed_endpoint_generator(self) -> bool:
+        return (
+            self.system_m_active
+            and "M" in self.signed_endpoint_generator_closed_families
         )
 
     @property
@@ -4046,6 +4142,15 @@ class PostLinearRemainingFiniteSystemAudit:
                 ("signed_endpoint_generator_duplicate_seed_classifier_descriptors", ()),
                 ("signed_endpoint_generator_conflicting_seed_classifier_descriptors", ()),
                 ("signed_endpoint_generator_invalid_seed_classifier_targets", ()),
+                ("signed_endpoint_generator_matches_current_kappa", False),
+                (
+                    "signed_endpoint_generator_entry_domain_matches_current_interval",
+                    False,
+                ),
+                ("signed_endpoint_generator_missing_current_interval_entry_keys", ()),
+                ("signed_endpoint_generator_extra_current_interval_entry_keys", ()),
+                ("signed_endpoint_generator_closes_current_kappa", False),
+                ("signed_endpoint_generator_closed_families", ()),
                 ("signed_endpoint_generator_reachable_seed_states", ()),
                 ("signed_endpoint_generator_duplicate_reachable_seed_states", ()),
                 ("signed_endpoint_generator_invalid_reachable_seed_states", ()),
@@ -4129,10 +4234,37 @@ class PostLinearRemainingFiniteSystemAudit:
             audit.seed_classifier_entries == self.universal_k_seed_classifier_entries
         )
         endpoint_target_audit = audit.endpoint_target_audit
+        failure_reasons = audit.failure_reasons
+        if not matches_current_kappa:
+            failure_reasons = failure_reasons + ("seed_classifier_entries_mismatch",)
+        if not self.signed_endpoint_generator_entry_domain_matches_current_interval:
+            failure_reasons = failure_reasons + (
+                "signed_entry_domain_mismatch_current_interval",
+            )
         return (
             (
                 "signed_endpoint_generator_matches_current_kappa",
                 matches_current_kappa,
+            ),
+            (
+                "signed_endpoint_generator_entry_domain_matches_current_interval",
+                self.signed_endpoint_generator_entry_domain_matches_current_interval,
+            ),
+            (
+                "signed_endpoint_generator_missing_current_interval_entry_keys",
+                self.signed_endpoint_generator_missing_interval_entry_keys,
+            ),
+            (
+                "signed_endpoint_generator_extra_current_interval_entry_keys",
+                self.signed_endpoint_generator_extra_interval_entry_keys,
+            ),
+            (
+                "signed_endpoint_generator_closes_current_kappa",
+                self.signed_endpoint_generator_closes_current_kappa,
+            ),
+            (
+                "signed_endpoint_generator_closed_families",
+                self.signed_endpoint_generator_closed_families,
             ),
             (
                 "signed_endpoint_generator_required_seed_states",
@@ -4552,15 +4684,11 @@ class PostLinearRemainingFiniteSystemAudit:
             ),
             (
                 "signed_endpoint_generator_tables_proved",
-                matches_current_kappa and audit.proves_signed_endpoint_generator_tables,
+                self.signed_endpoint_generator_closes_current_kappa,
             ),
             (
                 "signed_endpoint_generator_failure_reasons",
-                (
-                    audit.failure_reasons
-                    if matches_current_kappa
-                    else audit.failure_reasons + ("seed_classifier_entries_mismatch",)
-                ),
+                failure_reasons,
             ),
         )
 
@@ -6414,6 +6542,7 @@ def post_linear_remaining_finite_system_audit(
             universal_continuation_symmetric_endpoint_fork=universal_continuation_symmetric_endpoint_fork,
             mixed_unit_context_endpoint_witness=mixed_unit_context_endpoint_witness,
             mixed_unit_context_symmetric_endpoint_fork=mixed_unit_context_symmetric_endpoint_fork,
+            universal_k_signed_endpoint_interval=interval,
         )
         reachable_states = universal_k_signed_endpoint_reachable_seed_states
         if reachable_states is None:
@@ -6455,4 +6584,5 @@ def post_linear_remaining_finite_system_audit(
         mixed_unit_context_endpoint_witness=mixed_unit_context_endpoint_witness,
         mixed_unit_context_symmetric_endpoint_fork=mixed_unit_context_symmetric_endpoint_fork,
         universal_k_signed_endpoint_generator=signed_endpoint_generator,
+        universal_k_signed_endpoint_interval=interval,
     )

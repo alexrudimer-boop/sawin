@@ -4101,6 +4101,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         )
 
     def test_post_linear_reports_signed_generator_table_audit(self):
+        interval = one_color_identity_interval()
         refinement = constant_map_kernel_only_system_k_refinement()
         closure = TriangularLatinDefectClosureAudit(
             rows=(
@@ -4153,7 +4154,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             next_seed_state=seed_state,
             endpoint_value=0,
         )
-        signed_generators = UniversalKSignedEndpointGeneratorAudit(
+        underspecified_signed_generators = UniversalKSignedEndpointGeneratorAudit(
             seed_classifier_entries=routed.universal_k_seed_classifier_entries,
             reachable_seed_states=(("U", seed_state),),
             required_entry_keys=(row.entry_key, replace(row, sign=-1).entry_key),
@@ -4172,11 +4173,55 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             residual_action_scope=trivial_endpoint_residual_action_scope("U"),
             residual_action_audit=trivial_endpoint_residual_action_audit(),
         )
+        underspecified = PostLinearRemainingFiniteSystemAudit(
+            refinement,
+            triangular_latin_defect_closure=closure,
+            triangular_constant_kernel_recovery_route=route,
+            universal_k_signed_endpoint_generator=underspecified_signed_generators,
+            universal_k_signed_endpoint_interval=interval,
+        )
+
+        self.assertTrue(
+            underspecified_signed_generators.proves_signed_endpoint_generator_tables
+        )
+        self.assertIn(
+            ("signed_endpoint_generator_entry_domain_matches_current_interval", False),
+            underspecified.finite_obstruction_data,
+        )
+        self.assertIn(
+            ("signed_endpoint_generator_tables_proved", False),
+            underspecified.finite_obstruction_data,
+        )
+        self.assertIn(
+            "signed_entry_domain_mismatch_current_interval",
+            dict(underspecified.finite_obstruction_data)[
+                "signed_endpoint_generator_failure_reasons"
+            ],
+        )
+        self.assertFalse(
+            underspecified.system_u_closed_by_signed_endpoint_generator
+        )
+        self.assertNotEqual(underspecified.remaining_obligations, ())
+
+        reachable = (("U", seed_state),)
+        keys = universal_k_signed_endpoint_required_entry_keys(interval, reachable)
+        rows = identity_signed_endpoint_rows(keys)
+        signed_generators = universal_k_signed_endpoint_generator_audit(
+            interval,
+            routed.universal_k_seed_classifier_entries,
+            reachable,
+            rows,
+            endpoint_group=cyclic_group(1),
+            witnesses={row.entry_key: () for row in rows},
+            residual_action_scope=trivial_endpoint_residual_action_scope("U"),
+            residual_action_audit=trivial_endpoint_residual_action_audit(),
+        )
         audit = PostLinearRemainingFiniteSystemAudit(
             refinement,
             triangular_latin_defect_closure=closure,
             triangular_constant_kernel_recovery_route=route,
             universal_k_signed_endpoint_generator=signed_generators,
+            universal_k_signed_endpoint_interval=interval,
         )
 
         self.assertIn(
@@ -4185,6 +4230,18 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         )
         self.assertIn(
             ("signed_endpoint_generator_matches_current_kappa", True),
+            audit.finite_obstruction_data,
+        )
+        self.assertIn(
+            ("signed_endpoint_generator_entry_domain_matches_current_interval", True),
+            audit.finite_obstruction_data,
+        )
+        self.assertIn(
+            ("signed_endpoint_generator_closes_current_kappa", True),
+            audit.finite_obstruction_data,
+        )
+        self.assertIn(
+            ("signed_endpoint_generator_closed_families", ("U",)),
             audit.finite_obstruction_data,
         )
         self.assertIn(
@@ -4218,6 +4275,9 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             ("signed_endpoint_generator_failure_reasons", ()),
             audit.finite_obstruction_data,
         )
+        self.assertTrue(audit.system_u_closed_by_signed_endpoint_generator)
+        self.assertTrue(audit.all_active_routed_endpoint_systems_closed)
+        self.assertEqual(audit.remaining_obligations, ())
 
     def test_triangular_recovery_endpoint_witness_covers_routed_k_defect(self):
         interval = one_color_latin_unit_triangular_interval()

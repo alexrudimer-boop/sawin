@@ -474,10 +474,15 @@ engineering which table entry broke.  The signed endpoint table proof now
 also requires that the entry domain be derived from the interval; a manual
 audit that supplies a smaller prover-selected entry-key set is recorded as
 `signed_entry_domain_not_derived_from_interval` and cannot close the
-endpoint layer.  Likewise, the finite row checks themselves must be derived
-from the supplied rows, actual interval table, endpoint group or cutoff
-multiplication, and literal longitude witnesses; unsupported success flags are
-recorded as `finite_signed_row_checks_not_derived_from_tables`.
+endpoint layer.  The post-linear wrapper also recomputes the full `D_Gamma`
+domain from the current interval and the audit's reachable seed states before
+allowing a signed-generator proof to close a routed endpoint family.  Thus a
+manually constructed audit with a too-small required-entry ledger is reported
+as `signed_entry_domain_mismatch_current_interval` even if its own boolean
+gates claim success.  Likewise, the finite row checks themselves must be
+derived from the supplied rows, actual interval table, endpoint group or
+cutoff multiplication, and literal longitude witnesses; unsupported success
+flags are recorded as `finite_signed_row_checks_not_derived_from_tables`.
 
 The post-linear wrapper can now derive this signed endpoint audit directly
 from supplied table rows and witnesses after computing the interval's current
@@ -552,6 +557,11 @@ signed_endpoint_generator_duplicate_seed_classifier_descriptors
 signed_endpoint_generator_conflicting_seed_classifier_descriptors
 signed_endpoint_generator_invalid_seed_classifier_targets
 signed_endpoint_generator_matches_current_kappa
+signed_endpoint_generator_entry_domain_matches_current_interval
+signed_endpoint_generator_missing_current_interval_entry_keys
+signed_endpoint_generator_extra_current_interval_entry_keys
+signed_endpoint_generator_closes_current_kappa
+signed_endpoint_generator_closed_families
 signed_endpoint_generator_reachable_seed_states
 signed_endpoint_generator_duplicate_reachable_seed_states
 signed_endpoint_generator_invalid_reachable_seed_states
