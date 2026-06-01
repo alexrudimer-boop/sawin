@@ -636,6 +636,14 @@ The checker then exhausts all
 assignments of the finitely many variables in the positive row to the fixed
 endpoint group, or to a certified sound detector-domain subset, and checks
 that the coboundary defect is constant with value equal to the row label.
+Subset detector domains are finite row data: each assignment row must contain
+exactly the variables in the row's coboundary-defect support, no missing
+variables, no extras, no repeated variable, and only values in the fixed
+endpoint group.  A subset domain also needs an explicit soundness proof that
+all reachable detector values lie in it, recorded as finite witness data such
+as an exhaustive reachable-value enumeration or a symbolic detector-domain
+invariant; otherwise the checker falls back to the full finite group power as
+the only accepted sound domain.
 This removes the previous loophole
 where a bare boolean could stand in for a tautological accumulated potential.
 The executable close criterion derives the Artin-recurrence and
@@ -935,6 +943,8 @@ signed_endpoint_generator_word_potential_raw_assignment_scope_verified
 signed_endpoint_generator_word_potential_raw_assignment_scope_failures
 signed_endpoint_generator_word_potential_artin_substitution_verified
 signed_endpoint_generator_word_potential_identity_verified
+signed_endpoint_generator_word_potential_detector_domains_sound
+signed_endpoint_generator_word_potential_detector_domain_failures
 signed_endpoint_generator_word_potential_coboundary_defects_constant
 signed_endpoint_generator_word_potential_coboundary_defect_failures
 signed_endpoint_generator_word_potential_malformed_identity_rows

@@ -1439,6 +1439,15 @@ that positive row to elements of the fixed group `H_E`, or to a smaller
 declared domain only after proving that domain contains all reachable detector
 values.  The defect must be constant, and the constant must be the emitted
 endpoint label.
+If a smaller detector domain is supplied, it must be finite row data: every
+assignment row must list exactly the variables in that row's coboundary
+defect support, no missing variables, no extra variables, no duplicate
+variables, and no value outside `H_E`.  The certificate must also contain a
+soundness witness proving that all reachable detector values for that local
+context and state lie in the listed subset, for example an exhaustive
+reachable-detector-value enumeration or a symbolic detector-domain invariant.
+Without such a witness, the only accepted domain is the full finite group
+power `H_E^V`.
 If negative substitutions are recorded, they are diagnostics only; closure
 comes from inverse-derived negative rows plus the positive telescope.
 Rows with any sign other than `+1` or `-1` are malformed certificate rows and

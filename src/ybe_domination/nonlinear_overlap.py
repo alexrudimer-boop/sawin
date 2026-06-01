@@ -176,6 +176,12 @@ _UNIVERSAL_K_DETECTOR_TRACK_FORBIDDEN_DEPENDENCIES = frozenset(
         "timeout",
     )
 )
+_UNIVERSAL_K_DETECTOR_DOMAIN_SOUNDNESS_WITNESSES = frozenset(
+    (
+        "reachable_detector_values_enumerated",
+        "symbolic_detector_domain_invariant",
+    )
+)
 
 
 @dataclass(frozen=True)
@@ -908,6 +914,12 @@ class UniversalKWordPotentialIdentityRow:
     next_seed_state: UniversalKSeedState
     endpoint_value: object
     artin_substitution: UniversalKWordPotentialSubstitution = ()
+    detector_domain_assignments: (
+        Tuple[Tuple[Tuple[UniversalKWordPotentialVariable, GroupElement], ...], ...]
+        | None
+    ) = None
+    detector_domain_sound: bool = False
+    detector_domain_soundness_witness: Tuple[str, ...] = ()
 
 
 def _universal_k_word_potential_variables(
@@ -1270,11 +1282,163 @@ class UniversalKWordPotentialCertificate:
                     raw_variables.append(variable)
         return tuple(sorted(set(raw_variables), key=repr))
 
+    def _identity_row_variable_support(
+        self,
+        row: UniversalKWordPotentialIdentityRow,
+    ) -> Tuple[UniversalKWordPotentialVariable, ...] | None:
+        if not _universal_k_signed_entry_key_well_formed(row.entry_key):
+            return None
+        entry_family, source_state, sign, *_rest = row.entry_key
+        if sign != 1:
+            return None
+        template_map = self.template_map
+        source_template = template_map.get((entry_family, source_state))
+        next_template = template_map.get((entry_family, row.next_seed_state))
+        if source_template is None or next_template is None:
+            return None
+        substituted_next = _universal_k_word_potential_substitute(
+            next_template,
+            row.artin_substitution,
+        )
+        word_failures = (
+            _universal_k_word_potential_word_failures(source_template)
+            + _universal_k_word_potential_word_failures(substituted_next)
+        )
+        if word_failures:
+            return None
+        return tuple(
+            sorted(
+                set(_universal_k_word_potential_variables(source_template))
+                | set(_universal_k_word_potential_variables(substituted_next)),
+                key=repr,
+            )
+        )
+
+    @property
+    def detector_domain_failures(self) -> Tuple[UniversalKWordPotentialFailure, ...]:
+        failures = []
+        group_elements = set(self.endpoint_group.elements)
+        for row in self.identity_rows:
+            if not _universal_k_signed_entry_key_well_formed(row.entry_key):
+                continue
+            if not _universal_k_is_positive_entry_key(row.entry_key):
+                continue
+            assignments = row.detector_domain_assignments
+            if assignments is None:
+                continue
+            variables = self._identity_row_variable_support(row)
+            if variables is None:
+                continue
+            variable_set = set(variables)
+            if not row.detector_domain_sound:
+                failures.append(
+                    (
+                        row.entry_key,
+                        "detector_domain_subset_not_proved_sound",
+                        None,
+                    )
+                )
+            if not row.detector_domain_soundness_witness:
+                failures.append(
+                    (
+                        row.entry_key,
+                        "detector_domain_soundness_witness_missing",
+                        None,
+                    )
+                )
+            duplicate_witnesses = _duplicate_values(
+                row.detector_domain_soundness_witness
+            )
+            for witness in duplicate_witnesses:
+                failures.append(
+                    (
+                        row.entry_key,
+                        "detector_domain_duplicate_soundness_witness",
+                        witness,
+                    )
+                )
+            for witness in row.detector_domain_soundness_witness:
+                if witness not in _UNIVERSAL_K_DETECTOR_DOMAIN_SOUNDNESS_WITNESSES:
+                    failures.append(
+                        (
+                            row.entry_key,
+                            "detector_domain_unknown_soundness_witness",
+                            witness,
+                        )
+                    )
+            if not assignments:
+                failures.append((row.entry_key, "detector_domain_subset_empty", None))
+                continue
+            duplicate_assignments = _duplicate_values(
+                tuple(tuple(sorted(assignment, key=repr)) for assignment in assignments)
+            )
+            for duplicate in duplicate_assignments:
+                failures.append(
+                    (row.entry_key, "duplicate_detector_domain_assignment", duplicate)
+                )
+            for index, assignment in enumerate(assignments):
+                assignment_variables = tuple(variable for variable, _value in assignment)
+                duplicate_variables = _duplicate_values(assignment_variables)
+                for variable in duplicate_variables:
+                    failures.append(
+                        (
+                            row.entry_key,
+                            "detector_domain_assignment_duplicate_variable",
+                            (index, variable),
+                        )
+                    )
+                assignment_variable_set = set(assignment_variables)
+                missing_variables = tuple(
+                    sorted(variable_set - assignment_variable_set, key=repr)
+                )
+                if missing_variables:
+                    failures.append(
+                        (
+                            row.entry_key,
+                            "detector_domain_assignment_missing_variables",
+                            (index, missing_variables),
+                        )
+                    )
+                extra_variables = tuple(
+                    sorted(assignment_variable_set - variable_set, key=repr)
+                )
+                if extra_variables:
+                    failures.append(
+                        (
+                            row.entry_key,
+                            "detector_domain_assignment_extra_variables",
+                            (index, extra_variables),
+                        )
+                    )
+                for variable, value in assignment:
+                    if not _universal_k_word_potential_variable_valid(variable):
+                        failures.append(
+                            (
+                                row.entry_key,
+                                "detector_domain_assignment_invalid_variable",
+                                (index, variable),
+                            )
+                        )
+                    if value not in group_elements:
+                        failures.append(
+                            (
+                                row.entry_key,
+                                "detector_domain_assignment_value_outside_group",
+                                (index, value),
+                            )
+                        )
+        return tuple(failures)
+
+    @property
+    def detector_domains_sound(self) -> bool:
+        return not self.detector_domain_failures
+
     @property
     def identity_failures(self) -> Tuple[UniversalKWordPotentialFailure, ...]:
         failures = []
         template_map = self.template_map
         group_elements = set(self.endpoint_group.elements)
+        domain_failure_keys = {failure[0] for failure in self.detector_domain_failures}
         for row in self.identity_rows:
             if not _universal_k_signed_entry_key_well_formed(row.entry_key):
                 continue
@@ -1319,8 +1483,20 @@ class UniversalKWordPotentialCertificate:
                     key=repr,
                 )
             )
-            for values in product(self.endpoint_group.elements, repeat=len(variables)):
-                assignment = dict(zip(variables, values))
+            if row.entry_key in domain_failure_keys:
+                continue
+            if row.detector_domain_assignments is None:
+                assignment_iter = (
+                    tuple(zip(variables, values))
+                    for values in product(
+                        self.endpoint_group.elements,
+                        repeat=len(variables),
+                    )
+                )
+            else:
+                assignment_iter = iter(row.detector_domain_assignments)
+            for assignment_row in assignment_iter:
+                assignment = dict(assignment_row)
                 left = universal_k_evaluate_word_potential(
                     self.endpoint_group,
                     assignment,
@@ -1337,7 +1513,7 @@ class UniversalKWordPotentialCertificate:
                         (
                             row.entry_key,
                             "word_potential_identity_mismatch",
-                            (tuple(zip(variables, values)), left, right),
+                            (tuple(assignment_row), left, right),
                         )
                     )
                     break
@@ -1345,7 +1521,7 @@ class UniversalKWordPotentialCertificate:
 
     @property
     def coboundary_defect_failures(self) -> Tuple[UniversalKWordPotentialFailure, ...]:
-        return self.identity_failures
+        return self.detector_domain_failures + self.identity_failures
 
     @property
     def coboundary_defects_constant(self) -> bool:
@@ -1393,6 +1569,7 @@ class UniversalKWordPotentialCertificate:
         return (
             not self.malformed_identity_entry_keys
             and not self.duplicate_positive_identity_entry_keys
+            and not self.detector_domain_failures
             and not self.identity_failures
         )
 
@@ -3647,6 +3824,8 @@ class UniversalKTelescopingDetectorAudit:
                 reasons.append("word_potential_template_contains_raw_assignments")
             if self.word_potential_certificate.substitution_failures:
                 reasons.append("word_potential_artin_substitution_failures")
+            if self.word_potential_certificate.detector_domain_failures:
+                reasons.append("word_potential_detector_domain_failures")
             if self.word_potential_certificate.identity_failures:
                 reasons.append("word_potential_identity_failures")
             if self.word_potential_certificate.coboundary_defect_failures:
@@ -7738,6 +7917,14 @@ class PostLinearRemainingFiniteSystemAudit:
                     False,
                 ),
                 (
+                    "signed_endpoint_generator_word_potential_detector_domains_sound",
+                    False,
+                ),
+                (
+                    "signed_endpoint_generator_word_potential_detector_domain_failures",
+                    (),
+                ),
+                (
                     "signed_endpoint_generator_word_potential_coboundary_defects_constant",
                     False,
                 ),
@@ -8664,6 +8851,24 @@ class PostLinearRemainingFiniteSystemAudit:
                     telescoping_audit.word_potential_identity_proved
                     if telescoping_audit is not None
                     else False
+                ),
+            ),
+            (
+                "signed_endpoint_generator_word_potential_detector_domains_sound",
+                (
+                    telescoping_audit.word_potential_certificate.detector_domains_sound
+                    if telescoping_audit is not None
+                    and telescoping_audit.word_potential_certificate is not None
+                    else False
+                ),
+            ),
+            (
+                "signed_endpoint_generator_word_potential_detector_domain_failures",
+                (
+                    telescoping_audit.word_potential_certificate.detector_domain_failures
+                    if telescoping_audit is not None
+                    and telescoping_audit.word_potential_certificate is not None
+                    else ()
                 ),
             ),
             (

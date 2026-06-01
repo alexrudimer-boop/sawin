@@ -3815,6 +3815,70 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertTrue(certificate.coboundary_defects_constant)
         self.assertTrue(certificate.initial_readouts_normalized)
 
+        sound_subset_certificate = replace(
+            certificate,
+            identity_rows=(
+                replace(
+                    good_row,
+                    detector_domain_assignments=(((u_left, group.identity),),),
+                    detector_domain_sound=True,
+                    detector_domain_soundness_witness=(
+                        "reachable_detector_values_enumerated",
+                    ),
+                ),
+            ),
+        )
+        self.assertTrue(sound_subset_certificate.detector_domains_sound)
+        self.assertTrue(sound_subset_certificate.identities_verified)
+        self.assertTrue(sound_subset_certificate.coboundary_defects_constant)
+
+        unsound_subset_certificate = replace(
+            certificate,
+            identity_rows=(
+                replace(
+                    good_row,
+                    detector_domain_assignments=(((u_left, group.identity),),),
+                ),
+            ),
+        )
+        self.assertFalse(unsound_subset_certificate.detector_domains_sound)
+        self.assertFalse(unsound_subset_certificate.identities_verified)
+        self.assertFalse(unsound_subset_certificate.coboundary_defects_constant)
+        self.assertEqual(
+            tuple(
+                failure[1]
+                for failure in unsound_subset_certificate.detector_domain_failures
+            ),
+            (
+                "detector_domain_subset_not_proved_sound",
+                "detector_domain_soundness_witness_missing",
+            ),
+        )
+
+        wrong_support_certificate = replace(
+            certificate,
+            identity_rows=(
+                replace(
+                    good_row,
+                    detector_domain_assignments=(
+                        ((u_left, group.identity), (u_right, group.identity)),
+                    ),
+                    detector_domain_sound=True,
+                    detector_domain_soundness_witness=(
+                        "reachable_detector_values_enumerated",
+                    ),
+                ),
+            ),
+        )
+        self.assertFalse(wrong_support_certificate.detector_domains_sound)
+        self.assertIn(
+            "detector_domain_assignment_extra_variables",
+            tuple(
+                failure[1]
+                for failure in wrong_support_certificate.detector_domain_failures
+            ),
+        )
+
         wrong_endpoint = replace(good_row, endpoint_value=1)
         wrong_endpoint_certificate = replace(
             certificate,
