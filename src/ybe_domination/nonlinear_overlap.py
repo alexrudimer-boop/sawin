@@ -3735,6 +3735,48 @@ class UniversalKSignedEndpointGeneratorAudit:
         )
 
     @property
+    def normalized_word_potential_seed_states_exact(
+        self,
+    ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
+        if (
+            self.telescoping_detector_audit is None
+            or self.telescoping_detector_audit.word_potential_certificate is None
+        ):
+            return ()
+        return (
+            self.telescoping_detector_audit.word_potential_certificate
+            .normalized_seed_states_exact
+        )
+
+    @property
+    def missing_initial_normalized_seed_states(
+        self,
+    ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
+        normalized = set(self.normalized_word_potential_seed_states_exact)
+        return tuple(
+            state for state in self.required_seed_states if state not in normalized
+        )
+
+    @property
+    def extra_initial_normalized_seed_states(
+        self,
+    ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
+        required = set(self.required_seed_states)
+        return tuple(
+            state
+            for state in self.normalized_word_potential_seed_states_exact
+            if state not in required
+        )
+
+    @property
+    def word_potential_initial_seed_state_scope_exact(self) -> bool:
+        return (
+            bool(self.required_seed_states)
+            and not self.missing_initial_normalized_seed_states
+            and not self.extra_initial_normalized_seed_states
+        )
+
+    @property
     def telescoping_detector_signed_row_mismatches(
         self,
     ) -> Tuple[UniversalKSignedEndpointLabelFailure, ...]:
@@ -3777,6 +3819,7 @@ class UniversalKSignedEndpointGeneratorAudit:
             and self.telescoping_detector_scope_matches_required
             and self.telescoping_detector_endpoint_group_matches
             and self.word_potential_initial_seed_states_normalized
+            and self.word_potential_initial_seed_state_scope_exact
             and not self.telescoping_detector_signed_row_mismatches
             and self.telescoping_detector_audit.proves_telescoping_detector_lift
         )
@@ -3888,6 +3931,12 @@ class UniversalKSignedEndpointGeneratorAudit:
                     reasons.append("telescoping_detector_endpoint_group_mismatch")
                 if not self.word_potential_initial_seed_states_normalized:
                     reasons.append("word_potential_initial_seed_states_not_normalized")
+                if not self.word_potential_initial_seed_state_scope_exact:
+                    reasons.append("word_potential_initial_seed_state_scope_not_exact")
+                if self.missing_initial_normalized_seed_states:
+                    reasons.append("word_potential_initial_seed_states_missing")
+                if self.extra_initial_normalized_seed_states:
+                    reasons.append("word_potential_initial_seed_states_extra")
                 if self.telescoping_detector_signed_row_mismatches:
                     reasons.append("telescoping_detector_signed_row_mismatch")
                 reasons.extend(self.telescoping_detector_audit.failure_reasons)
@@ -6449,6 +6498,11 @@ class PostLinearRemainingFiniteSystemAudit:
                 ("signed_endpoint_generator_endpoint_target_covered_families", ()),
                 ("signed_endpoint_generator_endpoint_target_families", ()),
                 ("signed_endpoint_generator_endpoint_target_group_orders", ()),
+                ("signed_endpoint_generator_endpoint_group_order", None),
+                (
+                    "signed_endpoint_generator_endpoint_group_order_matches_target",
+                    False,
+                ),
                 ("signed_endpoint_generator_endpoint_target_cutoff_degrees", ()),
                 ("signed_endpoint_generator_endpoint_target_duplicate_families", ()),
                 (
@@ -6553,6 +6607,26 @@ class PostLinearRemainingFiniteSystemAudit:
                     False,
                 ),
                 (
+                    "signed_endpoint_generator_word_potential_track_scope_verified",
+                    False,
+                ),
+                (
+                    "signed_endpoint_generator_word_potential_track_scope_failures",
+                    (),
+                ),
+                (
+                    "signed_endpoint_generator_initialized_raw_assignment_variables",
+                    {},
+                ),
+                (
+                    "signed_endpoint_generator_word_potential_raw_assignment_scope_verified",
+                    False,
+                ),
+                (
+                    "signed_endpoint_generator_word_potential_raw_assignment_scope_failures",
+                    (),
+                ),
+                (
                     "signed_endpoint_generator_word_potential_artin_substitution_verified",
                     False,
                 ),
@@ -6571,6 +6645,22 @@ class PostLinearRemainingFiniteSystemAudit:
                 (
                     "signed_endpoint_generator_word_potential_initial_seed_states_normalized",
                     False,
+                ),
+                (
+                    "signed_endpoint_generator_word_potential_normalized_seed_states",
+                    (),
+                ),
+                (
+                    "signed_endpoint_generator_word_potential_initial_seed_state_scope_exact",
+                    False,
+                ),
+                (
+                    "signed_endpoint_generator_word_potential_missing_initial_normalized_seed_states",
+                    (),
+                ),
+                (
+                    "signed_endpoint_generator_word_potential_extra_initial_normalized_seed_states",
+                    (),
                 ),
                 (
                     "signed_endpoint_generator_telescoping_braid_index_independent",
@@ -7359,6 +7449,22 @@ class PostLinearRemainingFiniteSystemAudit:
             (
                 "signed_endpoint_generator_word_potential_initial_seed_states_normalized",
                 audit.word_potential_initial_seed_states_normalized,
+            ),
+            (
+                "signed_endpoint_generator_word_potential_normalized_seed_states",
+                audit.normalized_word_potential_seed_states_exact,
+            ),
+            (
+                "signed_endpoint_generator_word_potential_initial_seed_state_scope_exact",
+                audit.word_potential_initial_seed_state_scope_exact,
+            ),
+            (
+                "signed_endpoint_generator_word_potential_missing_initial_normalized_seed_states",
+                audit.missing_initial_normalized_seed_states,
+            ),
+            (
+                "signed_endpoint_generator_word_potential_extra_initial_normalized_seed_states",
+                audit.extra_initial_normalized_seed_states,
             ),
             (
                 "signed_endpoint_generator_telescoping_braid_index_independent",

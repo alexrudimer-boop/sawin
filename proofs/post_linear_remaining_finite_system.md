@@ -529,7 +529,10 @@ identity is what converts the finite signed row table into the all-`n`
 conclusion `endpoint_E(beta) in V_beta(H_E)`.
 The initial-normalization ledger must include every actual initial seed state
 hit by `kappa`; normalizing only a later reachable state or an unrelated
-state does not start the telescope for the routed endpoint obligation.
+state does not start the telescope for the routed endpoint obligation.  This
+ledger is exact, not merely covering: the normalized seed-state set must equal
+the current `kappa` seed image.  A later transition-reachable state may have a
+template, but it is not an initial state and must not be listed as one.
 
 The word-potential certificate is concrete finite data.  It records the
 template table `(E,s) |-> W_s`, one identity row for each signed
@@ -807,6 +810,10 @@ signed_endpoint_generator_word_potential_identity_failures
 signed_endpoint_generator_terminal_readout_longitudes_verified
 signed_endpoint_generator_word_potential_initial_normalized
 signed_endpoint_generator_word_potential_initial_seed_states_normalized
+signed_endpoint_generator_word_potential_normalized_seed_states
+signed_endpoint_generator_word_potential_initial_seed_state_scope_exact
+signed_endpoint_generator_word_potential_missing_initial_normalized_seed_states
+signed_endpoint_generator_word_potential_extra_initial_normalized_seed_states
 signed_endpoint_generator_telescoping_braid_index_independent
 signed_endpoint_generator_cutoff_readouts_required
 signed_endpoint_generator_cutoff_readouts_exact

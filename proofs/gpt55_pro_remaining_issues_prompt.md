@@ -1280,7 +1280,11 @@ W_{s_0}(1,...,1)=1.
 For a family with several routed initial seeds, this normalization must hold
 for every seed in `S_E^0` hit by `kappa`.  Normalizing only a later reachable
 state, or a state outside the current `kappa` seed image, is not enough to
-start the braid-word telescope.
+start the braid-word telescope.  The normalization ledger must be exact:
+its states must be precisely the current `kappa` seed image
+`{(E,s): kappa(d)=(E,s)}`.  Extra normalized states, even if they are later
+reachable states with valid templates, are extra initial channels and do not
+constitute an exact telescope start certificate.
 
 Then along a braid word the values `W_{s_t}(u(t))` telescope by the local
 identity, so `W_{s_m}(u(m))` equals the accumulated endpoint.  Since every
@@ -1953,7 +1957,8 @@ Before returning a claimed resolution, explicitly answer:
    longitude variables whose track indices are declared and initialized, the
    induced Artin substitution, the identity
    `W_{s'}(A_gamma^epsilon(U,A))=W_s(U)h` for every signed row, initial
-   normalization, and exact `D_Gamma` coverage?
+   normalization on exactly the current `kappa` seed image, and exact
+   `D_Gamma` coverage?
 9. For cutoff families C and M, are the readouts faithful on exactly their
    routed ledgers with no extra channels and no duplicated seed-state entries?
 10. Is every detector group, endpoint group, cutoff group, and rack

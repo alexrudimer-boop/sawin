@@ -406,13 +406,23 @@ def trivial_cutoff_readout_audit(seed_states, *, degree=2):
     )
 
 
-def trivial_telescoping_detector_audit(keys, *, rows=(), endpoint_group=None):
+def trivial_telescoping_detector_audit(
+    keys,
+    *,
+    rows=(),
+    endpoint_group=None,
+    normalized_seed_states=None,
+):
     keys = tuple(keys)
     endpoint_group = endpoint_group or cyclic_group(2)
     row_by_key = {row.entry_key: row for row in rows}
     seed_states = tuple(
         sorted({(family, state) for family, state, *_rest in keys}, key=repr)
     )
+    if normalized_seed_states is None:
+        normalized_seed_states = seed_states
+    else:
+        normalized_seed_states = tuple(normalized_seed_states)
     families = tuple(sorted({family for family, _state in seed_states}, key=repr))
     word_potential_certificate = UniversalKWordPotentialCertificate(
         endpoint_group=endpoint_group,
@@ -432,7 +442,7 @@ def trivial_telescoping_detector_audit(keys, *, rows=(), endpoint_group=None):
             )
             for key in keys
         ),
-        normalized_seed_states=seed_states,
+        normalized_seed_states=normalized_seed_states,
     )
     return UniversalKTelescopingDetectorAudit(
         expected_entry_keys=keys,
@@ -3990,6 +4000,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             telescoping_detector_audit=trivial_telescoping_detector_audit(
                 keys,
                 rows=rows,
+                normalized_seed_states=(("U", seed_state),),
             ),
             residual_action_scope=trivial_endpoint_residual_action_scope("U"),
             residual_action_audit=trivial_endpoint_residual_action_audit(),
@@ -4042,6 +4053,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             telescoping_detector_audit=trivial_telescoping_detector_audit(
                 keys,
                 rows=rows,
+                normalized_seed_states=(("U", seed_state),),
             ),
             residual_action_scope=trivial_endpoint_residual_action_scope("U"),
             residual_action_audit=trivial_endpoint_residual_action_audit(),
@@ -4056,6 +4068,31 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertEqual(audit.extra_signed_seed_keys, ())
         self.assertTrue(audit.reachable_seed_state_closure_exact)
         self.assertTrue(audit.proves_signed_endpoint_generator_tables)
+
+        over_normalized = replace(
+            audit,
+            telescoping_detector_audit=trivial_telescoping_detector_audit(
+                keys,
+                rows=rows,
+            ),
+        )
+        self.assertFalse(
+            over_normalized.word_potential_initial_seed_state_scope_exact
+        )
+        self.assertFalse(over_normalized.telescoping_detector_proved)
+        self.assertFalse(over_normalized.proves_signed_endpoint_generator_tables)
+        self.assertEqual(
+            over_normalized.extra_initial_normalized_seed_states,
+            (("U", next_state),),
+        )
+        self.assertIn(
+            "word_potential_initial_seed_state_scope_not_exact",
+            over_normalized.failure_reasons,
+        )
+        self.assertIn(
+            "word_potential_initial_seed_states_extra",
+            over_normalized.failure_reasons,
+        )
 
     def test_signed_endpoint_transition_closure_is_derived_from_rows(self):
         seed_state = ("*", "*", "left_constant_map_universal_kernel")
