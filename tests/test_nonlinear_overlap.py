@@ -7994,6 +7994,52 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             malformed_cutoff.failure_reasons,
         )
 
+        unhashable_cutoff_state = ("C", (["not-hashable"],))
+        unhashable_cutoff = UniversalKCutoffReadoutAudit(
+            expected_cutoff_seed_states=(unhashable_cutoff_state,),
+            covered_cutoff_seed_states=(unhashable_cutoff_state,),
+            cutoff_degree=2,
+            readout_rows=(
+                UniversalKCutoffReadoutRow(
+                    cutoff_seed_state=unhashable_cutoff_state,
+                    readout_permutation=(0, 1),
+                    killed_readout_permutation=(0, 1),
+                ),
+            ),
+            braid_index_independent=True,
+        )
+
+        self.assertEqual(
+            unhashable_cutoff.expected_cutoff_seed_states_exact,
+            (unhashable_cutoff_state,),
+        )
+        self.assertEqual(unhashable_cutoff.missing_cutoff_seed_states, ())
+        self.assertEqual(unhashable_cutoff.extra_cutoff_seed_states, ())
+        self.assertEqual(unhashable_cutoff.missing_readout_row_seed_states, ())
+        self.assertEqual(unhashable_cutoff.extra_readout_row_seed_states, ())
+        self.assertFalse(unhashable_cutoff.cutoff_seed_ledgers_well_formed)
+        self.assertFalse(unhashable_cutoff.proves_exact_cutoff_readouts)
+        self.assertEqual(
+            unhashable_cutoff.malformed_expected_cutoff_seed_states,
+            (unhashable_cutoff_state,),
+        )
+        self.assertEqual(
+            unhashable_cutoff.malformed_covered_cutoff_seed_states,
+            (unhashable_cutoff_state,),
+        )
+        self.assertEqual(
+            unhashable_cutoff.malformed_row_cutoff_seed_states,
+            (unhashable_cutoff_state,),
+        )
+        self.assertIn(
+            "cutoff_readout_malformed_seed_states",
+            unhashable_cutoff.failure_reasons,
+        )
+        self.assertIn(
+            "cutoff_readout_malformed_row_states",
+            unhashable_cutoff.failure_reasons,
+        )
+
         u_cutoff_state = ("U", ("*", "*", "left_constant_map_universal_kernel"))
         u_cutoff = UniversalKCutoffReadoutAudit(
             expected_cutoff_seed_states=(u_cutoff_state,),

@@ -3454,13 +3454,13 @@ class UniversalKCutoffReadoutAudit:
     def expected_cutoff_seed_states_exact(
         self,
     ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
-        return tuple(sorted(set(self.expected_cutoff_seed_states), key=repr))
+        return _unique_values(self.expected_cutoff_seed_states)
 
     @property
     def covered_cutoff_seed_states_exact(
         self,
     ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
-        return tuple(sorted(set(self.covered_cutoff_seed_states), key=repr))
+        return _unique_values(self.covered_cutoff_seed_states)
 
     @property
     def duplicate_expected_cutoff_seed_states(
@@ -3478,14 +3478,11 @@ class UniversalKCutoffReadoutAudit:
     def malformed_expected_cutoff_seed_states(
         self,
     ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
-        return tuple(
-            sorted(
-                {
-                    state
-                    for state in self.expected_cutoff_seed_states
-                    if not _universal_k_cutoff_seed_state_well_formed(state)
-                },
-                key=repr,
+        return _unique_values(
+            tuple(
+                state
+                for state in self.expected_cutoff_seed_states
+                if not _universal_k_cutoff_seed_state_well_formed(state)
             )
         )
 
@@ -3493,14 +3490,11 @@ class UniversalKCutoffReadoutAudit:
     def malformed_covered_cutoff_seed_states(
         self,
     ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
-        return tuple(
-            sorted(
-                {
-                    state
-                    for state in self.covered_cutoff_seed_states
-                    if not _universal_k_cutoff_seed_state_well_formed(state)
-                },
-                key=repr,
+        return _unique_values(
+            tuple(
+                state
+                for state in self.covered_cutoff_seed_states
+                if not _universal_k_cutoff_seed_state_well_formed(state)
             )
         )
 
@@ -3522,22 +3516,22 @@ class UniversalKCutoffReadoutAudit:
     def missing_cutoff_seed_states(
         self,
     ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
-        covered = set(self.covered_cutoff_seed_states_exact)
+        covered = _value_marker_set(self.covered_cutoff_seed_states_exact)
         return tuple(
             state
             for state in self.expected_cutoff_seed_states_exact
-            if state not in covered
+            if _value_marker(state) not in covered
         )
 
     @property
     def extra_cutoff_seed_states(
         self,
     ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
-        expected = set(self.expected_cutoff_seed_states_exact)
+        expected = _value_marker_set(self.expected_cutoff_seed_states_exact)
         return tuple(
             state
             for state in self.covered_cutoff_seed_states_exact
-            if state not in expected
+            if _value_marker(state) not in expected
         )
 
     @property
@@ -3638,7 +3632,7 @@ class UniversalKCutoffReadoutAudit:
     def row_cutoff_seed_states_exact(
         self,
     ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
-        return tuple(sorted(set(self.row_cutoff_seed_states), key=repr))
+        return _unique_values(self.row_cutoff_seed_states)
 
     @property
     def duplicate_row_cutoff_seed_states(
@@ -3650,14 +3644,11 @@ class UniversalKCutoffReadoutAudit:
     def malformed_row_cutoff_seed_states(
         self,
     ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
-        return tuple(
-            sorted(
-                {
-                    state
-                    for state in self.row_cutoff_seed_states
-                    if not _universal_k_cutoff_seed_state_well_formed(state)
-                },
-                key=repr,
+        return _unique_values(
+            tuple(
+                state
+                for state in self.row_cutoff_seed_states
+                if not _universal_k_cutoff_seed_state_well_formed(state)
             )
         )
 
@@ -3665,20 +3656,22 @@ class UniversalKCutoffReadoutAudit:
     def missing_readout_row_seed_states(
         self,
     ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
-        row_states = set(self.row_cutoff_seed_states_exact)
+        row_states = _value_marker_set(self.row_cutoff_seed_states_exact)
         return tuple(
             state
             for state in self.expected_cutoff_seed_states_exact
-            if state not in row_states
+            if _value_marker(state) not in row_states
         )
 
     @property
     def extra_readout_row_seed_states(
         self,
     ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
-        expected = set(self.expected_cutoff_seed_states_exact)
+        expected = _value_marker_set(self.expected_cutoff_seed_states_exact)
         return tuple(
-            state for state in self.row_cutoff_seed_states_exact if state not in expected
+            state
+            for state in self.row_cutoff_seed_states_exact
+            if _value_marker(state) not in expected
         )
 
     @property

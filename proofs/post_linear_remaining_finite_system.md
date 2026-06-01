@@ -491,7 +491,11 @@ duplicate-free; repeated seed entries are reported as an inexact readout
 ledger rather than silently collapsed.  Expected, covered, and row cutoff
 state keys must also be well formed C/M endpoint states.  A U-family seed,
 an unknown family, or a non-tuple seed is malformed for this cutoff-readout
-gate even if the malformed sets agree.  The cutoff degree itself must be a
+gate even if the malformed sets agree.  These ledgers are compared with the
+same hashability-safe markers used by the endpoint state audits: an
+unhashable malformed cutoff seed key is reported as finite malformed data, not
+allowed to crash the checker or to disappear during set comparison.  The
+cutoff degree itself must be a
 positive integer; strings, booleans, zero, negative values, or missing
 degrees are not finite symmetric cutoff targets.  Cutoff braid-index
 independence is derived from the positive fixed degree and exact finite

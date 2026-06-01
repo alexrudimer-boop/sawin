@@ -1734,7 +1734,10 @@ Every expected, covered, and row cutoff seed-state key must also be a
 well-formed C/M endpoint state `(E,s)` with `E in {C,M}` and tuple-valued
 seed state `s`.  A U-family seed state cannot be closed by this C/M cutoff
 readout gate.  Malformed cutoff state keys are certificate errors, even if
-the malformed expected, covered, and row sets happen to agree.
+the malformed expected, covered, and row sets happen to agree.  The cutoff
+seed-state ledgers must use hashability-safe finite comparison: an unhashable
+malformed seed key is reported as malformed certificate data, not allowed to
+crash the checker and not silently removed by a raw set operation.
 The readout certificate must also expose the induced C/M family ledger:
 expected cutoff families, covered cutoff families, and readout-row cutoff
 families must agree exactly with the active routed C/M families.  This family
