@@ -1523,6 +1523,18 @@ covered, missing, extra, duplicate, malformed, scope-mismatched, and unproved
 family builds as finite data.  This ledger is separate from the combined
 signed-generator audit: it is evidence that the U/C/M observers were
 constructed family-by-family, not by an opaque product certificate.
+The retained family ledger must also be rechecked against the current
+`K_nabla` seed classifier and the current interval table.  The checker must
+compare the family ledger's seed classifier entries with the current
+`kappa` entries, recompute the full `D_Gamma` domain for each family build
+from the current interval and that build's reachable seed states, and compare
+that domain with the build's required-entry ledger.  It must also recompute
+coordinate compatibility, inverse pairing, inverse cancellation, positive
+state/coordinate YBE, and far state/coordinate commutativity against the
+current interval table and endpoint group.  A per-family observer built for
+a stale interval, stale reachable-state domain, or stale seed classifier may
+remain diagnostic data, but it does not close the current routed endpoint
+obligation.
 The per-family word-potential certificate input rows must also be audited as
 finite data.  A malformed two-field row, a non-certificate value, an unknown
 family, a duplicate family, a missing active-family certificate, or an extra
@@ -1852,6 +1864,7 @@ endpoint_observer_build_record_retained,
 endpoint_observer_family_build_ledger_exact,
 endpoint_observer_family_certificate_input_ledger_exact,
 endpoint_observer_each_active_family_single_scoped_and_proved,
+endpoint_observer_family_build_matches_current_kappa_and_interval,
 endpoint_observer_positive_rows_forced_from_typed_identity_rows,
 endpoint_observer_monodromy_contexts_exposed,
 coordinate_components_match_T_plus_and_T_inverse,

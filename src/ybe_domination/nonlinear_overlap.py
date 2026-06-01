@@ -9791,6 +9791,194 @@ class PostLinearRemainingFiniteSystemAudit:
         )
 
     @property
+    def endpoint_observer_family_build_matches_current_kappa(self) -> bool:
+        audit = self.universal_k_endpoint_observer_family_build
+        return (
+            audit is not None
+            and audit.seed_classifier_entries == self.universal_k_seed_classifier_entries
+        )
+
+    @property
+    def endpoint_observer_family_build_missing_interval_entry_keys(
+        self,
+    ) -> Tuple[Tuple[str, UniversalKSignedEndpointEntryKey], ...]:
+        audit = self.universal_k_endpoint_observer_family_build
+        interval = self.universal_k_signed_endpoint_interval
+        if audit is None or interval is None:
+            return ()
+        missing = []
+        for family, build in audit.build_rows_exact:
+            interval_keys = set(
+                universal_k_signed_endpoint_required_entry_keys(
+                    interval,
+                    build.audit.reachable_seed_states_exact,
+                )
+            )
+            supplied = set(build.audit.required_entry_keys_exact)
+            missing.extend((family, key) for key in interval_keys - supplied)
+        return tuple(sorted(missing, key=repr))
+
+    @property
+    def endpoint_observer_family_build_extra_interval_entry_keys(
+        self,
+    ) -> Tuple[Tuple[str, UniversalKSignedEndpointEntryKey], ...]:
+        audit = self.universal_k_endpoint_observer_family_build
+        interval = self.universal_k_signed_endpoint_interval
+        if audit is None or interval is None:
+            return ()
+        extra = []
+        for family, build in audit.build_rows_exact:
+            interval_keys = set(
+                universal_k_signed_endpoint_required_entry_keys(
+                    interval,
+                    build.audit.reachable_seed_states_exact,
+                )
+            )
+            supplied = set(build.audit.required_entry_keys_exact)
+            extra.extend((family, key) for key in supplied - interval_keys)
+        return tuple(sorted(extra, key=repr))
+
+    @property
+    def endpoint_observer_family_build_entry_domain_matches_current_interval(
+        self,
+    ) -> bool:
+        return (
+            self.universal_k_endpoint_observer_family_build is not None
+            and self.universal_k_signed_endpoint_interval is not None
+            and not self.endpoint_observer_family_build_missing_interval_entry_keys
+            and not self.endpoint_observer_family_build_extra_interval_entry_keys
+        )
+
+    @property
+    def endpoint_observer_family_build_current_coordinate_failures(
+        self,
+    ) -> Tuple[Tuple[str, UniversalKSignedEndpointCoordinateFailure], ...]:
+        audit = self.universal_k_endpoint_observer_family_build
+        interval = self.universal_k_signed_endpoint_interval
+        if audit is None or interval is None:
+            return ()
+        failures = []
+        for family, build in audit.build_rows_exact:
+            failures.extend(
+                (family, failure)
+                for failure in universal_k_signed_endpoint_coordinate_failures(
+                    interval,
+                    build.rows,
+                )
+            )
+        return tuple(sorted(failures, key=repr))
+
+    @property
+    def endpoint_observer_family_build_current_inverse_pairing_failures(
+        self,
+    ) -> Tuple[Tuple[str, UniversalKSignedEndpointInverseFailure], ...]:
+        audit = self.universal_k_endpoint_observer_family_build
+        interval = self.universal_k_signed_endpoint_interval
+        if audit is None or interval is None:
+            return ()
+        failures = []
+        for family, build in audit.build_rows_exact:
+            failures.extend(
+                (family, failure)
+                for failure in universal_k_signed_endpoint_inverse_failures(
+                    interval,
+                    build.rows,
+                )
+            )
+        return tuple(sorted(failures, key=repr))
+
+    @property
+    def endpoint_observer_family_build_current_inverse_cancellation_failures(
+        self,
+    ) -> Tuple[Tuple[str, UniversalKSignedEndpointLabelFailure], ...]:
+        audit = self.universal_k_endpoint_observer_family_build
+        interval = self.universal_k_signed_endpoint_interval
+        if audit is None or interval is None:
+            return ()
+        failures = []
+        for family, build in audit.build_rows_exact:
+            endpoint_group = build.audit.endpoint_group
+            if endpoint_group is None:
+                continue
+            failures.extend(
+                (family, failure)
+                for failure in universal_k_signed_endpoint_inverse_cancellation_failures(
+                    endpoint_group,
+                    interval,
+                    build.rows,
+                )
+            )
+        return tuple(sorted(failures, key=repr))
+
+    @property
+    def endpoint_observer_family_build_current_positive_ybe_path_failures(
+        self,
+    ) -> Tuple[Tuple[str, UniversalKSignedEndpointPositiveYBEFailure], ...]:
+        audit = self.universal_k_endpoint_observer_family_build
+        interval = self.universal_k_signed_endpoint_interval
+        if audit is None or interval is None:
+            return ()
+        failures = []
+        for family, build in audit.build_rows_exact:
+            failures.extend(
+                (family, failure)
+                for failure in universal_k_signed_endpoint_positive_ybe_failures(
+                    interval,
+                    build.audit.reachable_seed_states_exact,
+                    build.rows,
+                )
+            )
+        return tuple(sorted(failures, key=repr))
+
+    @property
+    def endpoint_observer_family_build_current_far_commutativity_path_failures(
+        self,
+    ) -> Tuple[Tuple[str, UniversalKSignedEndpointLabelFailure], ...]:
+        audit = self.universal_k_endpoint_observer_family_build
+        interval = self.universal_k_signed_endpoint_interval
+        if audit is None or interval is None:
+            return ()
+        failures = []
+        for family, build in audit.build_rows_exact:
+            endpoint_group = build.audit.endpoint_group
+            if endpoint_group is None:
+                continue
+            failures.extend(
+                (family, failure)
+                for failure in universal_k_signed_endpoint_far_commutativity_failures(
+                    endpoint_group,
+                    interval,
+                    build.audit.reachable_seed_states_exact,
+                    build.rows,
+                )
+                if failure[1] != "far_commutativity_label_mismatch"
+            )
+        return tuple(sorted(failures, key=repr))
+
+    @property
+    def endpoint_observer_family_build_rows_match_current_interval(self) -> bool:
+        return (
+            self.universal_k_endpoint_observer_family_build is not None
+            and self.universal_k_signed_endpoint_interval is not None
+            and not self.endpoint_observer_family_build_current_coordinate_failures
+            and not self.endpoint_observer_family_build_current_inverse_pairing_failures
+            and not self.endpoint_observer_family_build_current_inverse_cancellation_failures
+            and not self.endpoint_observer_family_build_current_positive_ybe_path_failures
+            and not self.endpoint_observer_family_build_current_far_commutativity_path_failures
+        )
+
+    @property
+    def endpoint_observer_family_build_closes_current_kappa(self) -> bool:
+        audit = self.universal_k_endpoint_observer_family_build
+        return (
+            audit is not None
+            and self.endpoint_observer_family_build_matches_current_kappa
+            and self.endpoint_observer_family_build_entry_domain_matches_current_interval
+            and self.endpoint_observer_family_build_rows_match_current_interval
+            and audit.proves_family_endpoint_observers
+        )
+
+    @property
     def system_u_closed_by_signed_endpoint_generator(self) -> bool:
         return (
             self.system_u_active
@@ -12660,6 +12848,32 @@ class PostLinearRemainingFiniteSystemAudit:
             return (
                 ("endpoint_observer_family_build_present", False),
                 ("endpoint_observer_family_build_proved", False),
+                ("endpoint_observer_family_build_matches_current_kappa", False),
+                (
+                    "endpoint_observer_family_build_entry_domain_matches_current_interval",
+                    False,
+                ),
+                ("endpoint_observer_family_build_missing_current_interval_entry_keys", ()),
+                ("endpoint_observer_family_build_extra_current_interval_entry_keys", ()),
+                ("endpoint_observer_family_build_rows_match_current_interval", False),
+                ("endpoint_observer_family_build_current_coordinate_failures", ()),
+                (
+                    "endpoint_observer_family_build_current_inverse_pairing_failures",
+                    (),
+                ),
+                (
+                    "endpoint_observer_family_build_current_inverse_cancellation_failures",
+                    (),
+                ),
+                (
+                    "endpoint_observer_family_build_current_positive_ybe_path_failures",
+                    (),
+                ),
+                (
+                    "endpoint_observer_family_build_current_far_commutativity_path_failures",
+                    (),
+                ),
+                ("endpoint_observer_family_build_closes_current_kappa", False),
                 ("endpoint_observer_family_build_expected_families", ()),
                 ("endpoint_observer_family_build_covered_families", ()),
                 ("endpoint_observer_family_build_missing_families", ()),
@@ -12683,6 +12897,50 @@ class PostLinearRemainingFiniteSystemAudit:
             (
                 "endpoint_observer_family_build_proved",
                 audit.proves_family_endpoint_observers,
+            ),
+            (
+                "endpoint_observer_family_build_matches_current_kappa",
+                self.endpoint_observer_family_build_matches_current_kappa,
+            ),
+            (
+                "endpoint_observer_family_build_entry_domain_matches_current_interval",
+                self.endpoint_observer_family_build_entry_domain_matches_current_interval,
+            ),
+            (
+                "endpoint_observer_family_build_missing_current_interval_entry_keys",
+                self.endpoint_observer_family_build_missing_interval_entry_keys,
+            ),
+            (
+                "endpoint_observer_family_build_extra_current_interval_entry_keys",
+                self.endpoint_observer_family_build_extra_interval_entry_keys,
+            ),
+            (
+                "endpoint_observer_family_build_rows_match_current_interval",
+                self.endpoint_observer_family_build_rows_match_current_interval,
+            ),
+            (
+                "endpoint_observer_family_build_current_coordinate_failures",
+                self.endpoint_observer_family_build_current_coordinate_failures,
+            ),
+            (
+                "endpoint_observer_family_build_current_inverse_pairing_failures",
+                self.endpoint_observer_family_build_current_inverse_pairing_failures,
+            ),
+            (
+                "endpoint_observer_family_build_current_inverse_cancellation_failures",
+                self.endpoint_observer_family_build_current_inverse_cancellation_failures,
+            ),
+            (
+                "endpoint_observer_family_build_current_positive_ybe_path_failures",
+                self.endpoint_observer_family_build_current_positive_ybe_path_failures,
+            ),
+            (
+                "endpoint_observer_family_build_current_far_commutativity_path_failures",
+                self.endpoint_observer_family_build_current_far_commutativity_path_failures,
+            ),
+            (
+                "endpoint_observer_family_build_closes_current_kappa",
+                self.endpoint_observer_family_build_closes_current_kappa,
             ),
             (
                 "endpoint_observer_family_build_expected_families",

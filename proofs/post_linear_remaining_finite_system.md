@@ -772,6 +772,16 @@ target audits, C/M cutoff readouts, and per-family residual-faithfulness
 theorems.  Its routed-endpoint obstruction data reports the expected,
 covered, missing, extra, duplicate, malformed, scope-mismatched, and unproved
 family builds separately from the older combined signed-generator audit.
+It also rechecks any retained family-build ledger against the current
+`K_nabla` seed classifier and the current endpoint interval table.  For each
+family build it recomputes the full `D_Gamma` domain from the current
+interval and that build's reachable seed states, compares it with the build's
+required-entry ledger, and recomputes coordinate compatibility, inverse
+pairing, inverse cancellation, positive state/coordinate YBE, and far
+state/coordinate commutativity against the current table and endpoint group.
+Thus a family observer built for a stale interval or stale `kappa` ledger can
+still be retained as diagnostic evidence, but it cannot be reported as closing
+the current routed `K_nabla` obligations.
 When the ledger is derived from per-family word-potential certificates, the
 input certificate rows are themselves audited: malformed two-field rows,
 non-certificate values, unknown endpoint families, duplicate certificate
@@ -1001,6 +1011,17 @@ signed_endpoint_generator_endpoint_observer_positive_entry_keys
 signed_endpoint_generator_endpoint_observer_monodromy_contexts
 endpoint_observer_family_build_present
 endpoint_observer_family_build_proved
+endpoint_observer_family_build_matches_current_kappa
+endpoint_observer_family_build_entry_domain_matches_current_interval
+endpoint_observer_family_build_missing_current_interval_entry_keys
+endpoint_observer_family_build_extra_current_interval_entry_keys
+endpoint_observer_family_build_rows_match_current_interval
+endpoint_observer_family_build_current_coordinate_failures
+endpoint_observer_family_build_current_inverse_pairing_failures
+endpoint_observer_family_build_current_inverse_cancellation_failures
+endpoint_observer_family_build_current_positive_ybe_path_failures
+endpoint_observer_family_build_current_far_commutativity_path_failures
+endpoint_observer_family_build_closes_current_kappa
 endpoint_observer_family_build_expected_families
 endpoint_observer_family_build_covered_families
 endpoint_observer_family_build_missing_families

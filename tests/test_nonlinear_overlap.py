@@ -4702,6 +4702,156 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             malformed_inputs.failure_reasons,
         )
 
+    def test_endpoint_observer_family_build_rechecks_current_kappa_and_interval(self):
+        interval = one_color_identity_interval()
+        refinement = constant_map_kernel_only_system_k_refinement()
+        closure = TriangularLatinDefectClosureAudit(
+            rows=(
+                TriangularLatinDefectClosureRow(
+                    side="left",
+                    defect="constant_map_kernel",
+                    left_color="*",
+                    right_color="*",
+                    domain_color="*",
+                    fixed_input=None,
+                    collapsed_inputs=(0, 1),
+                    generated=generated("universal"),
+                ),
+            ),
+        )
+        route = TriangularConstantKernelRecoveryRouteAudit(
+            rows=(
+                TriangularConstantKernelRecoveryRouteRow(
+                    side="left",
+                    left_color="*",
+                    right_color="*",
+                    domain_color="*",
+                    collapsed_inputs=(0, 1),
+                    closure_kind="universal",
+                    recovery_row_present=True,
+                    recovery_formula_bijective=True,
+                    witness_output_pairs=(
+                        (0, ((0, 0),)),
+                        (1, ((0, 1),)),
+                    ),
+                ),
+            ),
+        )
+        routed = PostLinearRemainingFiniteSystemAudit(
+            refinement,
+            triangular_latin_defect_closure=closure,
+            triangular_constant_kernel_recovery_route=route,
+        )
+        seed_state = ("*", "*", "left_constant_map_universal_kernel")
+        seed_states = (("U", seed_state),)
+        keys = universal_k_signed_endpoint_required_entry_keys(interval, seed_states)
+        positive_keys = tuple(key for key in keys if key[2] == 1)
+        group = cyclic_group(1)
+        certificate = UniversalKWordPotentialCertificate(
+            endpoint_group=group,
+            templates=((seed_states[0], ()),),
+            identity_rows=tuple(
+                UniversalKWordPotentialIdentityRow(
+                    entry_key=key,
+                    next_seed_state=seed_state,
+                    endpoint_value=group.identity,
+                    artin_substitution=(),
+                )
+                for key in positive_keys
+            ),
+            normalized_seed_states=seed_states,
+        )
+        detector_rows = (
+            UniversalKDetectorTrackInitializationRow(
+                endpoint_family="U",
+                track_index=0,
+                assignment_rule="constant_identity_from_interval_seed",
+                dependencies=("interval_data", "routed_seed_state", "strand_index"),
+                local_assignment_template=((("A", 0, 0), group.identity),),
+            ),
+        )
+        endpoint_target = UniversalKEndpointTargetAudit(
+            expected_endpoint_families=("U",),
+            covered_endpoint_families=("U",),
+            endpoint_group_orders=(("U", 1),),
+            braid_index_independent=True,
+            product_families_separated=True,
+        )
+        residual_faithfulness = UniversalKResidualFaithfulnessAudit(
+            active_endpoint_families=("U",),
+            covered_endpoint_families=("U",),
+            expected_residual_row_count=1,
+            covered_residual_row_count=1,
+            expected_residual_input_tuples=(("p",),),
+            covered_residual_input_tuples=(("p",),),
+            endpoint_channels_exact=True,
+            identity_endpoint_data_forces_residual_identity=True,
+            braid_index_independent=True,
+            product_families_separated=True,
+            expected_endpoint_seed_states=seed_states,
+            covered_endpoint_seed_states=seed_states,
+            residual_rows=trivial_residual_faithfulness_rows(
+                "U",
+                seed_states=seed_states,
+            ),
+        )
+        family_audit = universal_k_endpoint_observer_builds_by_family(
+            interval,
+            routed.universal_k_seed_classifier_entries,
+            (("U", certificate),),
+            detector_track_initialization_rows=detector_rows,
+            endpoint_target_audits_by_family=(("U", endpoint_target),),
+            residual_faithfulness_theorems_by_family=(("U", residual_faithfulness),),
+        )
+        wrapper = PostLinearRemainingFiniteSystemAudit(
+            refinement,
+            triangular_latin_defect_closure=closure,
+            triangular_constant_kernel_recovery_route=route,
+            universal_k_endpoint_observer_family_build=family_audit,
+            universal_k_signed_endpoint_interval=interval,
+        )
+        wrapper_data = dict(wrapper.finite_obstruction_data)
+
+        self.assertTrue(family_audit.proves_family_endpoint_observers)
+        self.assertTrue(wrapper.endpoint_observer_family_build_matches_current_kappa)
+        self.assertTrue(
+            wrapper.endpoint_observer_family_build_entry_domain_matches_current_interval
+        )
+        self.assertTrue(wrapper.endpoint_observer_family_build_rows_match_current_interval)
+        self.assertTrue(wrapper.endpoint_observer_family_build_closes_current_kappa)
+        self.assertEqual(
+            wrapper_data["endpoint_observer_family_build_closes_current_kappa"],
+            True,
+        )
+
+        stale_wrapper = PostLinearRemainingFiniteSystemAudit(
+            refinement,
+            triangular_latin_defect_closure=closure,
+            triangular_constant_kernel_recovery_route=route,
+            universal_k_endpoint_observer_family_build=family_audit,
+            universal_k_signed_endpoint_interval=one_color_flip_interval(),
+        )
+        stale_data = dict(stale_wrapper.finite_obstruction_data)
+
+        self.assertTrue(
+            stale_wrapper.endpoint_observer_family_build_matches_current_kappa
+        )
+        self.assertTrue(
+            stale_wrapper.endpoint_observer_family_build_entry_domain_matches_current_interval
+        )
+        self.assertFalse(
+            stale_wrapper.endpoint_observer_family_build_rows_match_current_interval
+        )
+        self.assertFalse(stale_wrapper.endpoint_observer_family_build_closes_current_kappa)
+        self.assertEqual(
+            stale_data["endpoint_observer_family_build_closes_current_kappa"],
+            False,
+        )
+        self.assertNotEqual(
+            stale_data["endpoint_observer_family_build_current_coordinate_failures"],
+            (),
+        )
+
     def test_endpoint_observer_builder_rejects_omitted_positive_context(self):
         interval = one_color_identity_interval()
         group = cyclic_group(2)
