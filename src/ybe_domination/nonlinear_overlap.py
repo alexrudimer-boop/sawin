@@ -1730,7 +1730,9 @@ class UniversalKResidualFaithfulnessAudit:
 
     @property
     def family_coverage_exact(self) -> bool:
-        return set(self.active_endpoint_families) == set(self.covered_endpoint_families)
+        return self.family_ledgers_known and set(
+            self.active_endpoint_families
+        ) == set(self.covered_endpoint_families)
 
     @property
     def duplicate_active_endpoint_families(self) -> Tuple[str, ...]:
@@ -1739,6 +1741,29 @@ class UniversalKResidualFaithfulnessAudit:
     @property
     def duplicate_covered_endpoint_families(self) -> Tuple[str, ...]:
         return _duplicate_values(self.covered_endpoint_families)
+
+    @property
+    def invalid_active_endpoint_families(self) -> Tuple[str, ...]:
+        return tuple(
+            family
+            for family in self.active_endpoint_families
+            if family not in UNIVERSAL_K_ENDPOINT_FAMILIES
+        )
+
+    @property
+    def invalid_covered_endpoint_families(self) -> Tuple[str, ...]:
+        return tuple(
+            family
+            for family in self.covered_endpoint_families
+            if family not in UNIVERSAL_K_ENDPOINT_FAMILIES
+        )
+
+    @property
+    def family_ledgers_known(self) -> bool:
+        return (
+            not self.invalid_active_endpoint_families
+            and not self.invalid_covered_endpoint_families
+        )
 
     @property
     def family_ledgers_have_no_duplicates(self) -> bool:
@@ -2122,6 +2147,7 @@ class UniversalKResidualFaithfulnessAudit:
     def proves_residual_faithfulness(self) -> bool:
         return (
             self.family_coverage_exact
+            and self.family_ledgers_known
             and self.family_ledgers_have_no_duplicates
             and self.seed_state_ledgers_well_formed
             and self.seed_state_coverage_exact
@@ -2143,6 +2169,8 @@ class UniversalKResidualFaithfulnessAudit:
         reasons = []
         if not self.family_coverage_exact:
             reasons.append("residual_faithfulness_family_coverage_not_exact")
+        if not self.family_ledgers_known:
+            reasons.append("residual_faithfulness_unknown_endpoint_families")
         if not self.family_ledgers_have_no_duplicates:
             reasons.append("residual_faithfulness_duplicate_families")
         if not self.seed_state_coverage_exact:
@@ -2226,7 +2254,9 @@ class UniversalKResidualActionScopeAudit:
 
     @property
     def family_coverage_exact(self) -> bool:
-        return set(self.active_endpoint_families) == set(self.covered_endpoint_families)
+        return self.family_ledgers_known and set(
+            self.active_endpoint_families
+        ) == set(self.covered_endpoint_families)
 
     @property
     def duplicate_active_endpoint_families(self) -> Tuple[str, ...]:
@@ -2235,6 +2265,29 @@ class UniversalKResidualActionScopeAudit:
     @property
     def duplicate_covered_endpoint_families(self) -> Tuple[str, ...]:
         return _duplicate_values(self.covered_endpoint_families)
+
+    @property
+    def invalid_active_endpoint_families(self) -> Tuple[str, ...]:
+        return tuple(
+            family
+            for family in self.active_endpoint_families
+            if family not in UNIVERSAL_K_ENDPOINT_FAMILIES
+        )
+
+    @property
+    def invalid_covered_endpoint_families(self) -> Tuple[str, ...]:
+        return tuple(
+            family
+            for family in self.covered_endpoint_families
+            if family not in UNIVERSAL_K_ENDPOINT_FAMILIES
+        )
+
+    @property
+    def family_ledgers_known(self) -> bool:
+        return (
+            not self.invalid_active_endpoint_families
+            and not self.invalid_covered_endpoint_families
+        )
 
     @property
     def family_ledgers_have_no_duplicates(self) -> bool:
@@ -2494,6 +2547,7 @@ class UniversalKResidualActionScopeAudit:
     def proves_residual_action_scope(self) -> bool:
         return (
             self.family_coverage_exact
+            and self.family_ledgers_known
             and self.family_ledgers_have_no_duplicates
             and self.seed_state_ledgers_well_formed
             and self.seed_state_coverage_exact
@@ -2511,6 +2565,8 @@ class UniversalKResidualActionScopeAudit:
         reasons = []
         if not self.family_coverage_exact:
             reasons.append("residual_action_scope_family_coverage_not_exact")
+        if not self.family_ledgers_known:
+            reasons.append("residual_action_scope_unknown_endpoint_families")
         if not self.family_ledgers_have_no_duplicates:
             reasons.append("residual_action_scope_duplicate_families")
         if not self.seed_state_coverage_exact:
@@ -8129,6 +8185,10 @@ class PostLinearRemainingFiniteSystemAudit:
                     "signed_endpoint_generator_residual_action_scope_malformed_seed_states",
                     (),
                 ),
+                (
+                    "signed_endpoint_generator_residual_action_scope_unknown_families",
+                    (),
+                ),
                 ("signed_endpoint_generator_residual_action_scope_family_rows", ()),
                 (
                     "signed_endpoint_generator_residual_action_scope_family_rows_covered",
@@ -8159,6 +8219,10 @@ class PostLinearRemainingFiniteSystemAudit:
                 ),
                 (
                     "signed_endpoint_generator_residual_theorem_malformed_seed_states",
+                    (),
+                ),
+                (
+                    "signed_endpoint_generator_residual_theorem_unknown_families",
                     (),
                 ),
                 ("signed_endpoint_generator_residual_theorem_family_rows", ()),
@@ -9313,6 +9377,15 @@ class PostLinearRemainingFiniteSystemAudit:
                 ),
             ),
             (
+                "signed_endpoint_generator_residual_action_scope_unknown_families",
+                (
+                    audit.residual_action_scope.invalid_active_endpoint_families
+                    + audit.residual_action_scope.invalid_covered_endpoint_families
+                    if audit.residual_action_scope is not None
+                    else ()
+                ),
+            ),
+            (
                 "signed_endpoint_generator_residual_action_scope_family_rows",
                 (
                     audit.residual_action_scope.expected_residual_rows_by_family
@@ -9413,6 +9486,15 @@ class PostLinearRemainingFiniteSystemAudit:
                 (
                     audit.residual_faithfulness_theorem.malformed_expected_endpoint_seed_states
                     + audit.residual_faithfulness_theorem.malformed_covered_endpoint_seed_states
+                    if audit.residual_faithfulness_theorem is not None
+                    else ()
+                ),
+            ),
+            (
+                "signed_endpoint_generator_residual_theorem_unknown_families",
+                (
+                    audit.residual_faithfulness_theorem.invalid_active_endpoint_families
+                    + audit.residual_faithfulness_theorem.invalid_covered_endpoint_families
                     if audit.residual_faithfulness_theorem is not None
                     else ()
                 ),

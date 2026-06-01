@@ -1587,6 +1587,10 @@ Every residual-action scope seed-state ledger entry must also be a
 well-formed endpoint state `(E,s)` with `E in {U,C,M}` and tuple-valued seed
 state `s`.  Malformed seed-state keys are not exact routed channels, even if
 the malformed expected and covered sets happen to agree.
+The active and covered endpoint-family ledgers themselves must also use only
+the known families `{U,C,M}`.  A residual scope over an unknown family label
+is not an exact endpoint-channel certificate, even if the active and covered
+family sets match.
 
 Alternatively, a symbolic residual-faithfulness theorem may replace explicit
 action readout rows only if it supplies its own finite residual row table.
@@ -1636,6 +1640,9 @@ seed-state entry must be well formed as `(E,s)` with `E in {U,C,M}` and
 tuple-valued `s`.  A malformed seed key makes both endpoint-channel
 coverage and row scope invalid; it cannot be repaired by matching malformed
 expected, covered, and row sets.
+The theorem's active and covered endpoint-family ledgers must likewise be
+subsets of `{U,C,M}`, and every row-local endpoint family must be one of
+those known families.  Unknown family labels make the theorem scope invalid.
 
 The signed-generator audit for a claimed A proof must therefore establish:
 
@@ -1653,6 +1660,7 @@ endpoint_target_braid_index_independence,
 endpoint_target_product_family_separation,
 endpoint_target_ledgers_duplicate_free,
 residual_endpoint_seed_state_coverage_exact,
+residual_endpoint_family_ledgers_in_U_C_M,
 residual_endpoint_seed_state_ledgers_duplicate_free,
 residual_endpoint_seed_state_ledgers_well_formed,
 multi_family_residual_row_counts_by_family_exact,

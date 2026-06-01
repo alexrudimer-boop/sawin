@@ -774,6 +774,9 @@ The residual action scope seed-state ledgers must also be well formed
 endpoint states `(E,s)` with known family and tuple-valued seed state.  A
 malformed seed key is an inexact endpoint channel even if the malformed
 expected and covered sets agree.
+The active and covered endpoint-family ledgers for the residual action scope
+must also be subsets of `{U,C,M}`; an unknown family label is rejected even if
+the active and covered ledgers match.
 For multi-family residual products, aggregate row counts are no longer enough:
 the residual scope must also list expected and covered residual row counts by
 endpoint family, without duplicate family entries, with nonnegative matching
@@ -814,6 +817,9 @@ The symbolic residual theorem applies the same well-formedness gate to its
 expected and covered seed-state ledgers and to the seed states named by each
 symbolic residual row.  Malformed row-local seed states make the row invalid;
 malformed theorem ledgers make endpoint-channel coverage inexact.
+The theorem's active and covered endpoint-family ledgers are checked the same
+way: every family must be one of `{U,C,M}`, and row-local endpoint family
+labels outside that set make the row invalid.
 
 together with the concrete rows:
 
@@ -1000,6 +1006,7 @@ signed_endpoint_generator_residual_action_scope_expected_states
 signed_endpoint_generator_residual_action_scope_covered_states
 signed_endpoint_generator_residual_action_scope_duplicate_seed_states
 signed_endpoint_generator_residual_action_scope_malformed_seed_states
+signed_endpoint_generator_residual_action_scope_unknown_families
 signed_endpoint_generator_residual_action_scope_family_rows
 signed_endpoint_generator_residual_action_scope_family_rows_covered
 signed_endpoint_generator_residual_action_scope_duplicate_family_rows
@@ -1014,6 +1021,7 @@ signed_endpoint_generator_residual_theorem_expected_states
 signed_endpoint_generator_residual_theorem_covered_states
 signed_endpoint_generator_residual_theorem_duplicate_seed_states
 signed_endpoint_generator_residual_theorem_malformed_seed_states
+signed_endpoint_generator_residual_theorem_unknown_families
 signed_endpoint_generator_residual_theorem_family_rows
 signed_endpoint_generator_residual_theorem_family_rows_covered
 signed_endpoint_generator_residual_theorem_duplicate_family_rows

@@ -2901,6 +2901,35 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             malformed_seed_residual.failure_reasons,
         )
 
+        unknown_family_residual = UniversalKSignedEndpointGeneratorAudit(
+            seed_classifier_entries=seed_entries,
+            reachable_seed_states=(("U", seed_state),),
+            required_entry_keys=required_entry_keys,
+            entry_domain_derived_from_interval=True,
+            finite_row_checks_derived_from_tables=True,
+            rows=(positive_row, negative_row),
+            endpoint_targets_fixed=True,
+            endpoint_target_audit=trivial_endpoint_target_audit("U"),
+            coordinate_components_verified=True,
+            inverse_pairing_verified=True,
+            inverse_cancellation_verified=True,
+            positive_ybe_path_verified=True,
+            positive_ybe_cocycle_verified=True,
+            signed_two_strand_base_verified=True,
+            artin_homomorphism_update_verified=True,
+            residual_action_scope=trivial_endpoint_residual_action_scope(
+                "Z",
+                seed_states=(("U", seed_state),),
+            ),
+            residual_action_audit=trivial_endpoint_residual_action_audit(),
+        )
+
+        self.assertFalse(unknown_family_residual.residual_faithfulness_proved)
+        self.assertIn(
+            "residual_action_scope_unknown_endpoint_families",
+            unknown_family_residual.failure_reasons,
+        )
+
         braid_index_scoped_residual = UniversalKSignedEndpointGeneratorAudit(
             seed_classifier_entries=seed_entries,
             reachable_seed_states=(("U", seed_state),),
@@ -3182,6 +3211,27 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertIn(
             "residual_faithfulness_invalid_rows",
             theorem_with_malformed_seed_state.failure_reasons,
+        )
+
+        theorem_with_unknown_family = replace(
+            theorem,
+            active_endpoint_families=("Z",),
+            covered_endpoint_families=("Z",),
+            residual_rows=(
+                replace(
+                    theorem.residual_rows[0],
+                    endpoint_families=("Z",),
+                ),
+            ),
+        )
+        self.assertFalse(theorem_with_unknown_family.proves_residual_faithfulness)
+        self.assertIn(
+            "residual_faithfulness_unknown_endpoint_families",
+            theorem_with_unknown_family.failure_reasons,
+        )
+        self.assertIn(
+            "residual_faithfulness_invalid_rows",
+            theorem_with_unknown_family.failure_reasons,
         )
 
         rowwise_only = replace(theorem_complete, telescoping_detector_audit=None)
