@@ -5196,6 +5196,86 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             True,
         )
 
+        wrong_group = cyclic_group(2)
+        wrong_certificate = UniversalKWordPotentialCertificate(
+            endpoint_group=wrong_group,
+            templates=((seed_states[0], ()),),
+            identity_rows=tuple(
+                UniversalKWordPotentialIdentityRow(
+                    entry_key=key,
+                    next_seed_state=seed_state,
+                    endpoint_value=wrong_group.identity,
+                    artin_substitution=(),
+                )
+                for key in positive_keys
+            ),
+            normalized_seed_states=seed_states,
+        )
+        wrong_detector_rows = (
+            UniversalKDetectorTrackInitializationRow(
+                endpoint_family="U",
+                track_index=0,
+                assignment_rule="constant_identity_from_interval_seed",
+                dependencies=("interval_data", "routed_seed_state", "strand_index"),
+                local_assignment_template=((("A", 0, 0), wrong_group.identity),),
+            ),
+        )
+        wrong_endpoint_target = UniversalKEndpointTargetAudit(
+            expected_endpoint_families=("U",),
+            covered_endpoint_families=("U",),
+            endpoint_group_orders=(("U", len(wrong_group.elements)),),
+            braid_index_independent=True,
+            product_families_separated=True,
+        )
+        wrong_target_family_audit = universal_k_endpoint_observer_builds_by_family(
+            interval,
+            routed.universal_k_seed_classifier_entries,
+            (("U", wrong_certificate),),
+            detector_track_initialization_rows=wrong_detector_rows,
+            endpoint_target_audits_by_family=(("U", wrong_endpoint_target),),
+            residual_faithfulness_theorems_by_family=(("U", residual_faithfulness),),
+        )
+        wrong_target_wrapper = PostLinearRemainingFiniteSystemAudit(
+            refinement,
+            triangular_latin_defect_closure=closure,
+            triangular_constant_kernel_recovery_route=route,
+            universal_k_endpoint_observer_family_build=wrong_target_family_audit,
+            universal_k_signed_endpoint_interval=interval,
+        )
+        wrong_target_data = dict(wrong_target_wrapper.finite_obstruction_data)
+
+        self.assertTrue(wrong_target_family_audit.proves_family_endpoint_observers)
+        self.assertEqual(wrong_target_wrapper.current_u_tri_endpoint_group_order, 1)
+        self.assertEqual(
+            wrong_target_wrapper.endpoint_observer_family_build_u_target_group_order,
+            2,
+        )
+        self.assertFalse(
+            wrong_target_wrapper.endpoint_observer_family_build_uses_current_u_tri_target
+        )
+        self.assertFalse(
+            wrong_target_wrapper.endpoint_observer_family_build_closes_current_kappa
+        )
+        self.assertFalse(
+            wrong_target_wrapper.system_u_closed_by_endpoint_observer_family_build
+        )
+        self.assertEqual(wrong_target_wrapper.unclosed_routed_endpoint_systems, ("U",))
+        self.assertEqual(
+            wrong_target_wrapper.system_name,
+            "system_u_triangular_recovery_unit_endpoint",
+        )
+        self.assertEqual(
+            wrong_target_data["endpoint_observer_family_build_current_u_tri_group_order"],
+            1,
+        )
+        self.assertEqual(
+            wrong_target_data["endpoint_observer_family_build_u_target_group_order"],
+            2,
+        )
+        self.assertFalse(
+            wrong_target_data["endpoint_observer_family_build_uses_current_u_tri_target"]
+        )
+
         stale_wrapper = PostLinearRemainingFiniteSystemAudit(
             refinement,
             triangular_latin_defect_closure=closure,
@@ -8834,6 +8914,65 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertTrue(audit.system_u_closed_by_signed_endpoint_generator)
         self.assertTrue(audit.all_active_routed_endpoint_systems_closed)
         self.assertEqual(audit.remaining_obligations, ())
+
+        wrong_target_group = cyclic_group(2)
+        wrong_target_signed_generators = universal_k_signed_endpoint_generator_audit(
+            interval,
+            routed.universal_k_seed_classifier_entries,
+            reachable,
+            rows,
+            endpoint_group=wrong_target_group,
+            witnesses={row.entry_key: () for row in rows},
+            telescoping_detector_audit=trivial_telescoping_detector_audit(
+                keys,
+                endpoint_group=wrong_target_group,
+            ),
+            residual_action_scope=trivial_endpoint_residual_action_scope("U"),
+            residual_action_audit=trivial_endpoint_residual_action_audit(),
+        )
+        wrong_target_audit = PostLinearRemainingFiniteSystemAudit(
+            refinement,
+            triangular_latin_defect_closure=closure,
+            triangular_constant_kernel_recovery_route=route,
+            universal_k_signed_endpoint_generator=wrong_target_signed_generators,
+            universal_k_signed_endpoint_interval=interval,
+        )
+        wrong_target_data = dict(wrong_target_audit.finite_obstruction_data)
+
+        self.assertTrue(
+            wrong_target_signed_generators.proves_signed_endpoint_generator_tables
+        )
+        self.assertEqual(
+            wrong_target_audit.current_u_tri_endpoint_group_order,
+            1,
+        )
+        self.assertEqual(
+            wrong_target_audit.signed_endpoint_generator_u_target_group_order,
+            2,
+        )
+        self.assertFalse(
+            wrong_target_audit.signed_endpoint_generator_uses_current_u_tri_target
+        )
+        self.assertFalse(
+            wrong_target_audit.signed_endpoint_generator_closes_current_kappa
+        )
+        self.assertFalse(wrong_target_audit.system_u_closed_by_signed_endpoint_generator)
+        self.assertEqual(wrong_target_audit.unclosed_routed_endpoint_systems, ("U",))
+        self.assertEqual(
+            wrong_target_audit.system_name,
+            "system_u_triangular_recovery_unit_endpoint",
+        )
+        self.assertEqual(
+            wrong_target_data["signed_endpoint_generator_current_u_tri_group_order"],
+            1,
+        )
+        self.assertEqual(
+            wrong_target_data["signed_endpoint_generator_u_target_group_order"],
+            2,
+        )
+        self.assertFalse(
+            wrong_target_data["signed_endpoint_generator_uses_current_u_tri_target"]
+        )
 
         forged_rows = tuple(
             replace(row, output_left=1)

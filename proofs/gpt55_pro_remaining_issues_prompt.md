@@ -1531,6 +1531,13 @@ current interval table and endpoint group.  A per-family observer built for
 a stale interval, stale reachable-state domain, or stale seed classifier may
 remain diagnostic data, but it does not close the current routed endpoint
 obligation.
+For a U-family observer build, the checker must also recompute the current
+triangular-recovery unit observer `U_tri` from the same endpoint interval.
+The U build closes System U only when its endpoint target is exactly the
+current `U_tri` target, recorded by the finite endpoint-group order.  A
+word-potential observer over a different finite group may still be retained
+as diagnostic data, but it cannot close a U obligation routed by the current
+`kappa` ledger.
 When more than one of `U`, `C`, and `M` is active, the retained family ledger
 must also include a product residual-faithfulness theorem scoped to the full
 active family set and the full set of endpoint seed states hit by `kappa`.

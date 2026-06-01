@@ -10464,6 +10464,35 @@ class PostLinearRemainingFiniteSystemAudit:
         )
 
     @property
+    def current_u_tri_endpoint_group_order(self) -> int | None:
+        interval = self.universal_k_signed_endpoint_interval
+        if interval is None:
+            return None
+        return triangular_recovery_unit_observer_audit(interval).unit_group_order
+
+    @property
+    def signed_endpoint_generator_u_target_group_order(self) -> int | None:
+        audit = self.universal_k_signed_endpoint_generator
+        if audit is None or audit.endpoint_group is None:
+            return None
+        if "U" not in audit.required_endpoint_families:
+            return None
+        return len(audit.endpoint_group.elements)
+
+    @property
+    def signed_endpoint_generator_uses_current_u_tri_target(self) -> bool:
+        if not self.system_u_active:
+            return True
+        audit = self.universal_k_signed_endpoint_generator
+        if audit is None or "U" not in audit.required_endpoint_families:
+            return False
+        expected = self.current_u_tri_endpoint_group_order
+        return (
+            expected is not None
+            and self.signed_endpoint_generator_u_target_group_order == expected
+        )
+
+    @property
     def signed_endpoint_generator_closes_current_kappa(self) -> bool:
         audit = self.universal_k_signed_endpoint_generator
         return (
@@ -10471,6 +10500,7 @@ class PostLinearRemainingFiniteSystemAudit:
             and self.signed_endpoint_generator_matches_current_kappa
             and self.signed_endpoint_generator_entry_domain_matches_current_interval
             and self.signed_endpoint_generator_rows_match_current_interval
+            and self.signed_endpoint_generator_uses_current_u_tri_target
             and audit.proves_signed_endpoint_generator_tables
         )
 
@@ -10662,6 +10692,36 @@ class PostLinearRemainingFiniteSystemAudit:
         )
 
     @property
+    def endpoint_observer_family_build_u_target_group_order(self) -> int | None:
+        audit = self.universal_k_endpoint_observer_family_build
+        if audit is None:
+            return None
+        u_builds = tuple(
+            build
+            for family, build in audit.build_rows_exact
+            if family == "U"
+        )
+        if len(u_builds) != 1:
+            return None
+        endpoint_group = u_builds[0].audit.endpoint_group
+        if endpoint_group is None:
+            return None
+        return len(endpoint_group.elements)
+
+    @property
+    def endpoint_observer_family_build_uses_current_u_tri_target(self) -> bool:
+        if not self.system_u_active:
+            return True
+        audit = self.universal_k_endpoint_observer_family_build
+        if audit is None or "U" not in audit.expected_endpoint_families_exact:
+            return False
+        expected = self.current_u_tri_endpoint_group_order
+        return (
+            expected is not None
+            and self.endpoint_observer_family_build_u_target_group_order == expected
+        )
+
+    @property
     def endpoint_observer_family_build_closes_current_kappa(self) -> bool:
         audit = self.universal_k_endpoint_observer_family_build
         return (
@@ -10669,6 +10729,7 @@ class PostLinearRemainingFiniteSystemAudit:
             and self.endpoint_observer_family_build_matches_current_kappa
             and self.endpoint_observer_family_build_entry_domain_matches_current_interval
             and self.endpoint_observer_family_build_rows_match_current_interval
+            and self.endpoint_observer_family_build_uses_current_u_tri_target
             and audit.proves_family_endpoint_product_closure
         )
 
@@ -10689,6 +10750,7 @@ class PostLinearRemainingFiniteSystemAudit:
         return (
             self.system_u_active
             and "U" in self.signed_endpoint_generator_closed_families
+            and self.signed_endpoint_generator_uses_current_u_tri_target
         )
 
     @property
@@ -10696,6 +10758,7 @@ class PostLinearRemainingFiniteSystemAudit:
         return (
             self.system_u_active
             and "U" in self.endpoint_observer_family_build_closed_families
+            and self.endpoint_observer_family_build_uses_current_u_tri_target
         )
 
     @property
@@ -11336,6 +11399,9 @@ class PostLinearRemainingFiniteSystemAudit:
                     "signed_endpoint_generator_current_far_commutativity_path_failures",
                     (),
                 ),
+                ("signed_endpoint_generator_current_u_tri_group_order", None),
+                ("signed_endpoint_generator_u_target_group_order", None),
+                ("signed_endpoint_generator_uses_current_u_tri_target", False),
                 ("signed_endpoint_generator_closes_current_kappa", False),
                 ("signed_endpoint_generator_closed_families", ()),
                 ("signed_endpoint_generator_endpoint_observer_build_present", False),
@@ -11939,6 +12005,18 @@ class PostLinearRemainingFiniteSystemAudit:
             (
                 "signed_endpoint_generator_current_far_commutativity_path_failures",
                 self.signed_endpoint_generator_current_far_commutativity_path_failures,
+            ),
+            (
+                "signed_endpoint_generator_current_u_tri_group_order",
+                self.current_u_tri_endpoint_group_order,
+            ),
+            (
+                "signed_endpoint_generator_u_target_group_order",
+                self.signed_endpoint_generator_u_target_group_order,
+            ),
+            (
+                "signed_endpoint_generator_uses_current_u_tri_target",
+                self.signed_endpoint_generator_uses_current_u_tri_target,
             ),
             (
                 "signed_endpoint_generator_closes_current_kappa",
@@ -13609,6 +13687,12 @@ class PostLinearRemainingFiniteSystemAudit:
                     "endpoint_observer_family_build_current_far_commutativity_path_failures",
                     (),
                 ),
+                ("endpoint_observer_family_build_current_u_tri_group_order", None),
+                ("endpoint_observer_family_build_u_target_group_order", None),
+                (
+                    "endpoint_observer_family_build_uses_current_u_tri_target",
+                    False,
+                ),
                 ("endpoint_observer_family_build_product_closure_proved", False),
                 (
                     "endpoint_observer_family_build_product_residual_faithfulness_required",
@@ -13736,6 +13820,18 @@ class PostLinearRemainingFiniteSystemAudit:
             (
                 "endpoint_observer_family_build_current_far_commutativity_path_failures",
                 self.endpoint_observer_family_build_current_far_commutativity_path_failures,
+            ),
+            (
+                "endpoint_observer_family_build_current_u_tri_group_order",
+                self.current_u_tri_endpoint_group_order,
+            ),
+            (
+                "endpoint_observer_family_build_u_target_group_order",
+                self.endpoint_observer_family_build_u_target_group_order,
+            ),
+            (
+                "endpoint_observer_family_build_uses_current_u_tri_target",
+                self.endpoint_observer_family_build_uses_current_u_tri_target,
             ),
             (
                 "endpoint_observer_family_build_product_closure_proved",

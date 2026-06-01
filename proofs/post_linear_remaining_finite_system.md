@@ -795,6 +795,12 @@ interval and that build's reachable seed states, compares it with the build's
 required-entry ledger, and recomputes coordinate compatibility, inverse
 pairing, inverse cancellation, positive state/coordinate YBE, and far
 state/coordinate commutativity against the current table and endpoint group.
+For a U-family build, the recheck also recomputes the current triangular
+recovery unit observer on the endpoint interval and requires the build's
+endpoint group to be exactly that current `U_tri` target by finite group
+order.  Thus a word-potential observer over some other finite group can remain
+diagnostic evidence, but it cannot close the System U obligation routed by
+the current `kappa` ledger.
 Thus a family observer built for a stale interval or stale `kappa` ledger can
 still be retained as diagnostic evidence, but it cannot be reported as closing
 the current routed `K_nabla` obligations.
