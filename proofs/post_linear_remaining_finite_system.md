@@ -438,6 +438,9 @@ rows, a fixed endpoint group, and literal row witnesses, it computes the full
 `D_Gamma` domain from the fibres and fills the coordinate, inverse, YBE,
 two-strand, and Artin-update gates by running the finite checkers.  This
 keeps the local certificate from being a list of unsupported boolean claims.
+The audit also records the concrete failure rows or local triples for each
+derived gate, so a failed certificate can be repaired without reverse
+engineering which table entry broke.
 
 The residual-faithfulness gate is separate from the endpoint table identities:
 even a trivial endpoint group satisfies all label subgroup inclusions
@@ -500,12 +503,19 @@ signed_endpoint_generator_extra_signed_seed_keys
 signed_endpoint_generator_duplicate_entries
 signed_endpoint_generator_endpoint_targets_fixed
 signed_endpoint_generator_coordinate_components_verified
+signed_endpoint_generator_coordinate_failures
 signed_endpoint_generator_inverse_pairing_verified
+signed_endpoint_generator_inverse_pairing_failures
 signed_endpoint_generator_inverse_cancellation_verified
+signed_endpoint_generator_inverse_cancellation_failures
 signed_endpoint_generator_positive_ybe_path_verified
+signed_endpoint_generator_positive_ybe_path_failures
 signed_endpoint_generator_positive_ybe_cocycle_verified
+signed_endpoint_generator_positive_ybe_cocycle_failures
 signed_endpoint_generator_two_strand_base_verified
+signed_endpoint_generator_two_strand_base_failures
 signed_endpoint_generator_artin_update_verified
+signed_endpoint_generator_artin_update_failures
 signed_endpoint_generator_cutoff_readouts_required
 signed_endpoint_generator_cutoff_readouts_exact
 signed_endpoint_generator_cutoff_readouts_flag_supplied

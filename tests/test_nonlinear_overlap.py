@@ -2996,6 +2996,9 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertTrue(audit.positive_ybe_cocycle_verified)
         self.assertTrue(audit.signed_two_strand_base_verified)
         self.assertTrue(audit.artin_homomorphism_update_verified)
+        self.assertEqual(audit.coordinate_component_failures, ())
+        self.assertEqual(audit.inverse_pairing_failures, ())
+        self.assertEqual(audit.two_strand_base_failures, ())
         self.assertTrue(audit.proves_signed_endpoint_generator_tables)
 
     def test_signed_endpoint_generator_factory_reports_coordinate_failure(self):
@@ -3032,6 +3035,10 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         )
 
         self.assertFalse(audit.coordinate_components_verified)
+        self.assertEqual(
+            tuple(failure[1] for failure in audit.coordinate_component_failures),
+            ("negative_coordinate_mismatch",),
+        )
         self.assertFalse(audit.proves_signed_endpoint_generator_tables)
         self.assertIn("coordinate_components_not_verified", audit.failure_reasons)
 

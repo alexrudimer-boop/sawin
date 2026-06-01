@@ -876,7 +876,8 @@ interval data, the reachable closure, the supplied rows, the endpoint group
 or cutoff target, and the row witnesses.  Unbacked boolean assertions such as
 "coordinate components verified" or "YBE cocycle verified" are not
 certificates unless accompanied by the finite table evaluation that proves
-the assertion.
+the assertion.  If a derived check fails, the certificate must report the
+actual failed rows or local triples, not only a failed boolean.
 
 Every supplied row must also pass the coordinate-component check against the
 actual interval table: positive rows must have `(x',y')=T_{a,b}(x,y)`, and

@@ -804,6 +804,17 @@ class UniversalKSignedEndpointGeneratorAudit:
     positive_ybe_cocycle_verified: bool = False
     signed_two_strand_base_verified: bool = False
     artin_homomorphism_update_verified: bool = False
+    coordinate_component_failures: Tuple[
+        UniversalKSignedEndpointCoordinateFailure, ...
+    ] = ()
+    inverse_pairing_failures: Tuple[UniversalKSignedEndpointInverseFailure, ...] = ()
+    inverse_cancellation_failures: Tuple[UniversalKSignedEndpointLabelFailure, ...] = ()
+    positive_ybe_path_failures: Tuple[
+        UniversalKSignedEndpointPositiveYBEFailure, ...
+    ] = ()
+    positive_ybe_cocycle_failures: Tuple[UniversalKSignedEndpointLabelFailure, ...] = ()
+    two_strand_base_failures: Tuple[UniversalKSignedEndpointLabelFailure, ...] = ()
+    artin_update_failures: Tuple[UniversalKSignedEndpointLabelFailure, ...] = ()
     cutoff_readouts_exact: bool = False
     residual_faithfulness_verified: bool = False
     cutoff_readout_audit: UniversalKCutoffReadoutAudit | None = None
@@ -2024,40 +2035,32 @@ def universal_k_signed_endpoint_generator_audit(
         row_tuple,
     )
     if endpoint_group is None:
-        inverse_cancellation_verified = False
-        positive_ybe_cocycle_verified = False
-        signed_two_strand_base_verified = False
-        artin_homomorphism_update_verified = False
+        inverse_cancellation_failures = ()
+        positive_ybe_cocycle_failures = ()
+        two_strand_base_failures = ()
+        artin_update_failures = ()
     else:
-        inverse_cancellation_verified = (
-            not universal_k_signed_endpoint_inverse_cancellation_failures(
-                endpoint_group,
-                interval,
-                row_tuple,
-            )
+        inverse_cancellation_failures = universal_k_signed_endpoint_inverse_cancellation_failures(
+            endpoint_group,
+            interval,
+            row_tuple,
         )
-        positive_ybe_cocycle_verified = (
-            not universal_k_signed_endpoint_positive_ybe_cocycle_failures(
-                endpoint_group,
-                interval,
-                reachable_tuple,
-                row_tuple,
-            )
+        positive_ybe_cocycle_failures = universal_k_signed_endpoint_positive_ybe_cocycle_failures(
+            endpoint_group,
+            interval,
+            reachable_tuple,
+            row_tuple,
         )
-        signed_two_strand_base_verified = (
-            not universal_k_signed_endpoint_two_strand_base_failures(
-                endpoint_group,
-                row_tuple,
-                witness_map,
-            )
+        two_strand_base_failures = universal_k_signed_endpoint_two_strand_base_failures(
+            endpoint_group,
+            row_tuple,
+            witness_map,
         )
-        artin_homomorphism_update_verified = (
-            not universal_k_signed_endpoint_artin_update_failures(
-                endpoint_group,
-                interval,
-                row_tuple,
-                witness_map,
-            )
+        artin_update_failures = universal_k_signed_endpoint_artin_update_failures(
+            endpoint_group,
+            interval,
+            row_tuple,
+            witness_map,
         )
 
     return UniversalKSignedEndpointGeneratorAudit(
@@ -2068,11 +2071,26 @@ def universal_k_signed_endpoint_generator_audit(
         endpoint_targets_fixed=endpoint_group is not None,
         coordinate_components_verified=not coordinate_failures,
         inverse_pairing_verified=not inverse_failures,
-        inverse_cancellation_verified=inverse_cancellation_verified,
+        inverse_cancellation_verified=(
+            endpoint_group is not None and not inverse_cancellation_failures
+        ),
         positive_ybe_path_verified=not positive_ybe_failures,
-        positive_ybe_cocycle_verified=positive_ybe_cocycle_verified,
-        signed_two_strand_base_verified=signed_two_strand_base_verified,
-        artin_homomorphism_update_verified=artin_homomorphism_update_verified,
+        positive_ybe_cocycle_verified=(
+            endpoint_group is not None and not positive_ybe_cocycle_failures
+        ),
+        signed_two_strand_base_verified=(
+            endpoint_group is not None and not two_strand_base_failures
+        ),
+        artin_homomorphism_update_verified=(
+            endpoint_group is not None and not artin_update_failures
+        ),
+        coordinate_component_failures=coordinate_failures,
+        inverse_pairing_failures=inverse_failures,
+        inverse_cancellation_failures=inverse_cancellation_failures,
+        positive_ybe_path_failures=positive_ybe_failures,
+        positive_ybe_cocycle_failures=positive_ybe_cocycle_failures,
+        two_strand_base_failures=two_strand_base_failures,
+        artin_update_failures=artin_update_failures,
         cutoff_readouts_exact=cutoff_readouts_exact,
         residual_faithfulness_verified=residual_faithfulness_verified,
         cutoff_readout_audit=cutoff_readout_audit,
@@ -3504,12 +3522,19 @@ class PostLinearRemainingFiniteSystemAudit:
                 ("signed_endpoint_generator_missing_entry_keys", ()),
                 ("signed_endpoint_generator_endpoint_targets_fixed", False),
                 ("signed_endpoint_generator_coordinate_components_verified", False),
+                ("signed_endpoint_generator_coordinate_failures", ()),
                 ("signed_endpoint_generator_inverse_pairing_verified", False),
+                ("signed_endpoint_generator_inverse_pairing_failures", ()),
                 ("signed_endpoint_generator_inverse_cancellation_verified", False),
+                ("signed_endpoint_generator_inverse_cancellation_failures", ()),
                 ("signed_endpoint_generator_positive_ybe_path_verified", False),
+                ("signed_endpoint_generator_positive_ybe_path_failures", ()),
                 ("signed_endpoint_generator_positive_ybe_cocycle_verified", False),
+                ("signed_endpoint_generator_positive_ybe_cocycle_failures", ()),
                 ("signed_endpoint_generator_two_strand_base_verified", False),
+                ("signed_endpoint_generator_two_strand_base_failures", ()),
                 ("signed_endpoint_generator_artin_update_verified", False),
+                ("signed_endpoint_generator_artin_update_failures", ()),
                 ("signed_endpoint_generator_cutoff_readouts_exact", False),
                 ("signed_endpoint_generator_cutoff_readouts_flag_supplied", False),
                 ("signed_endpoint_generator_cutoff_readout_scope_matches_required", False),
@@ -3611,28 +3636,56 @@ class PostLinearRemainingFiniteSystemAudit:
                 audit.coordinate_components_verified,
             ),
             (
+                "signed_endpoint_generator_coordinate_failures",
+                audit.coordinate_component_failures,
+            ),
+            (
                 "signed_endpoint_generator_inverse_pairing_verified",
                 audit.inverse_pairing_verified,
+            ),
+            (
+                "signed_endpoint_generator_inverse_pairing_failures",
+                audit.inverse_pairing_failures,
             ),
             (
                 "signed_endpoint_generator_inverse_cancellation_verified",
                 audit.inverse_cancellation_verified,
             ),
             (
+                "signed_endpoint_generator_inverse_cancellation_failures",
+                audit.inverse_cancellation_failures,
+            ),
+            (
                 "signed_endpoint_generator_positive_ybe_path_verified",
                 audit.positive_ybe_path_verified,
+            ),
+            (
+                "signed_endpoint_generator_positive_ybe_path_failures",
+                audit.positive_ybe_path_failures,
             ),
             (
                 "signed_endpoint_generator_positive_ybe_cocycle_verified",
                 audit.positive_ybe_cocycle_verified,
             ),
             (
+                "signed_endpoint_generator_positive_ybe_cocycle_failures",
+                audit.positive_ybe_cocycle_failures,
+            ),
+            (
                 "signed_endpoint_generator_two_strand_base_verified",
                 audit.signed_two_strand_base_verified,
             ),
             (
+                "signed_endpoint_generator_two_strand_base_failures",
+                audit.two_strand_base_failures,
+            ),
+            (
                 "signed_endpoint_generator_artin_update_verified",
                 audit.artin_homomorphism_update_verified,
+            ),
+            (
+                "signed_endpoint_generator_artin_update_failures",
+                audit.artin_update_failures,
             ),
             (
                 "signed_endpoint_generator_cutoff_readouts_required",
