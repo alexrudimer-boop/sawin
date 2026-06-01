@@ -458,7 +458,11 @@ two-strand, and Artin-update gates by running the finite checkers.  This
 keeps the local certificate from being a list of unsupported boolean claims.
 The audit also records the concrete failure rows or local triples for each
 derived gate, so a failed certificate can be repaired without reverse
-engineering which table entry broke.
+engineering which table entry broke.  The signed endpoint table proof now
+also requires that the entry domain be derived from the interval; a manual
+audit that supplies a smaller prover-selected entry-key set is recorded as
+`signed_entry_domain_not_derived_from_interval` and cannot close the
+endpoint layer.
 
 The post-linear wrapper can now derive this signed endpoint audit directly
 from supplied table rows and witnesses after computing the interval's current
@@ -537,6 +541,7 @@ signed_endpoint_generator_reachable_closure_exact
 signed_endpoint_generator_missing_initial_seed_states
 signed_endpoint_generator_required_signed_seed_keys
 signed_endpoint_generator_required_entry_keys
+signed_endpoint_generator_entry_domain_derived_from_interval
 signed_endpoint_generator_supplied_entry_keys
 signed_endpoint_generator_missing_entry_keys
 signed_endpoint_generator_extra_entry_keys

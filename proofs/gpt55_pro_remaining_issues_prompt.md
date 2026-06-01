@@ -903,8 +903,12 @@ interval data, the reachable closure, the supplied rows, the endpoint group
 or cutoff target, and the row witnesses.  Unbacked boolean assertions such as
 "coordinate components verified" or "YBE cocycle verified" are not
 certificates unless accompanied by the finite table evaluation that proves
-the assertion.  If a derived check fails, the certificate must report the
-actual failed rows or local triples, not only a failed boolean.
+the assertion.  The full entry domain itself must be marked as derived from
+the interval fibres and reachable states; a prover-selected `D_Gamma`
+subdomain is not a certificate even if all supplied rows satisfy the local
+identities on that smaller domain.  If a derived check fails, the certificate
+must report the actual failed rows or local triples, not only a failed
+boolean.
 
 Every supplied row must also pass the coordinate-component check against the
 actual interval table: positive rows must have `(x',y')=T_{a,b}(x,y)`, and
@@ -1095,6 +1099,7 @@ endpoint_target_product_family_separation,
 endpoint_target_ledgers_duplicate_free,
 residual_endpoint_seed_state_coverage_exact,
 residual_endpoint_seed_state_ledgers_duplicate_free,
+signed_entry_domain_derived_from_interval,
 signed_generator_domain_exact,
 coordinate_components_match_T_plus_and_T_inverse,
 all_signed_rows_defined,

@@ -1131,6 +1131,7 @@ class UniversalKSignedEndpointGeneratorAudit:
     reachable_seed_states: Tuple[Tuple[str, UniversalKSeedState], ...]
     required_entry_keys: Tuple[UniversalKSignedEndpointEntryKey, ...]
     rows: Tuple[UniversalKSignedEndpointGeneratorRow, ...]
+    entry_domain_derived_from_interval: bool = False
     endpoint_targets_fixed: bool = False
     coordinate_components_verified: bool = False
     inverse_pairing_verified: bool = False
@@ -1341,6 +1342,7 @@ class UniversalKSignedEndpointGeneratorAudit:
     def signed_generator_domain_exact(self) -> bool:
         return (
             bool(self.required_entry_keys_exact)
+            and self.entry_domain_derived_from_interval
             and bool(self.reachable_seed_states_exact)
             and not self.missing_initial_seed_states
             and self.reachable_seed_state_closure_exact
@@ -1524,6 +1526,8 @@ class UniversalKSignedEndpointGeneratorAudit:
             reasons.append("signed_generator_row_state_outside_reachable_set")
         if not self.required_entry_keys_exact:
             reasons.append("signed_entry_domain_not_supplied")
+        if self.required_entry_keys_exact and not self.entry_domain_derived_from_interval:
+            reasons.append("signed_entry_domain_not_derived_from_interval")
         if self.missing_required_entry_seed_keys:
             reasons.append("signed_entry_domain_missing_seed_keys")
         if self.extra_required_entry_seed_keys:
@@ -2457,6 +2461,7 @@ def universal_k_signed_endpoint_generator_audit(
         reachable_seed_states=reachable_tuple,
         required_entry_keys=required_entry_keys,
         rows=row_tuple,
+        entry_domain_derived_from_interval=True,
         endpoint_targets_fixed=endpoint_group is not None,
         coordinate_components_verified=not coordinate_failures,
         inverse_pairing_verified=not inverse_failures,
@@ -3909,6 +3914,7 @@ class PostLinearRemainingFiniteSystemAudit:
                 ("signed_endpoint_generator_missing_transition_reachable_seed_states", ()),
                 ("signed_endpoint_generator_reachable_closure_exact", False),
                 ("signed_endpoint_generator_required_entry_keys", ()),
+                ("signed_endpoint_generator_entry_domain_derived_from_interval", False),
                 ("signed_endpoint_generator_missing_entry_keys", ()),
                 ("signed_endpoint_generator_endpoint_targets_fixed", False),
                 ("signed_endpoint_generator_endpoint_targets_flag_supplied", False),
@@ -4020,6 +4026,10 @@ class PostLinearRemainingFiniteSystemAudit:
             (
                 "signed_endpoint_generator_required_entry_keys",
                 audit.required_entry_keys_exact,
+            ),
+            (
+                "signed_endpoint_generator_entry_domain_derived_from_interval",
+                audit.entry_domain_derived_from_interval,
             ),
             (
                 "signed_endpoint_generator_supplied_entry_keys",
