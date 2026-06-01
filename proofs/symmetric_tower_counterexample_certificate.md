@@ -107,6 +107,11 @@ local_symmetric_normalized_law_prefix_witness_audit(...)
 
 checks the corresponding quotient-kernel and residual-movement conditions for
 one local row.
+For the local helper, residual movement and base compatibility are derived
+from the actual source/stabilized fibre tuples and their images, and the row
+requires its finite base-detector and group-longitude checks to be derived
+from the supplied tables.  A row with only asserted movement booleans is not a
+certificate.
 
 These helpers are finite certificate checks for supplied data.  They do not
 construct the required all-`j` sequence.

@@ -1757,6 +1757,16 @@ Lambda_{G,q_j}(beta_j) = Lambda_{G,q_j}(1);
 - proof that the movement persists after the right-stabilization or
   Brunnian embedding used to hide from finite groups.
 
+Each local normalized-law prefix row used for this B route must be a finite
+table-derived row.  The row must display the source base tuple, source fibre
+tuple, source images, stabilized base tuple, stabilized fibre tuple, and
+stabilized images.  Quotient-base fixing, staying over the base, and
+source/target residual movement must be derived from these tuples.  The row
+must also state that the base-detector identity action and finite-group
+longitude identity signatures were computed from the supplied braid,
+detector, and finite group tables.  Boolean assertions that the residual tuple
+is moved or that the row is invisible to the detector are not certificates.
+
 One common way to prove finite-group invisibility is to choose group words
 `w_j` that are laws on every finite group of order at most `j`, embed them
 as pure or Brunnian braid words, and right-stabilize so that every fixed

@@ -694,6 +694,7 @@ class SemigroupHolonomyTests(unittest.TestCase):
             stabilized_image_base=tuple("*" for _ in range(source_n + symmetric_degree)),
             target_stays_over_base=True,
             target_residual_tuple_moved=True,
+            finite_checks_derived_from_tables=True,
         )
         perfect_miss = UnitPerfectResidualLongitudeAudit(
             artin_permutation=(0, 1),

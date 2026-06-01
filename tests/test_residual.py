@@ -1,5 +1,6 @@
 import sys
 import unittest
+from dataclasses import replace
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
@@ -240,6 +241,18 @@ class ResidualTests(unittest.TestCase):
         self.assertTrue(audit.product_invisibility_survives_stabilization)
         self.assertFalse(audit.residual_movement_survives_stabilization)
         self.assertFalse(audit.proves_one_local_prefix_normalized_law_witness)
+
+        forged = replace(
+            audit,
+            source_residual_tuple_moved=True,
+            target_residual_tuple_moved=True,
+        )
+        self.assertFalse(forged.tuple_checks_match_supplied_flags)
+        self.assertFalse(forged.residual_movement_survives_stabilization)
+        self.assertFalse(forged.proves_one_local_prefix_normalized_law_witness)
+
+        unproven = replace(audit, finite_checks_derived_from_tables=False)
+        self.assertFalse(unproven.proves_one_local_prefix_normalized_law_witness)
 
     def test_local_symmetric_normalized_law_prefix_witness_uses_symmetric_tower(self):
         total = rack_solution([0, 1], lambda _left, right: 1 - right)

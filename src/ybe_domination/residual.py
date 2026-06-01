@@ -210,21 +210,22 @@ class LocalNormalizedLawPrefixWitnessAudit:
     stabilized_image_base: BaseTuple
     target_stays_over_base: bool
     target_residual_tuple_moved: bool
+    finite_checks_derived_from_tables: bool = False
 
     @property
     def source_in_residual_kernel(self) -> bool:
         return (
             self.source_base_detector_identity_action
-            and self.source_quotient_base_fixed
-            and self.source_stays_over_base
+            and self.source_quotient_base_fixed_derived
+            and self.source_stays_over_base_derived
         )
 
     @property
     def target_in_residual_kernel(self) -> bool:
         return (
             self.target_base_detector_identity_action
-            and self.target_quotient_base_fixed
-            and self.target_stays_over_base
+            and self.target_quotient_base_fixed_derived
+            and self.target_stays_over_base_derived
         )
 
     @property
@@ -239,12 +240,54 @@ class LocalNormalizedLawPrefixWitnessAudit:
 
     @property
     def residual_movement_survives_stabilization(self) -> bool:
-        return self.source_residual_tuple_moved and self.target_residual_tuple_moved
+        return (
+            self.source_residual_tuple_moved_derived
+            and self.target_residual_tuple_moved_derived
+        )
+
+    @property
+    def source_quotient_base_fixed_derived(self) -> bool:
+        return self.source_base_image == self.base_tuple
+
+    @property
+    def source_stays_over_base_derived(self) -> bool:
+        return self.source_image_base == self.base_tuple
+
+    @property
+    def source_residual_tuple_moved_derived(self) -> bool:
+        return self.source_image != self.fibre_tuple
+
+    @property
+    def target_quotient_base_fixed_derived(self) -> bool:
+        return self.target_base_image == self.stabilized_base_tuple
+
+    @property
+    def target_stays_over_base_derived(self) -> bool:
+        return self.stabilized_image_base == self.stabilized_base_tuple
+
+    @property
+    def target_residual_tuple_moved_derived(self) -> bool:
+        return self.stabilized_image != self.stabilized_fibre_tuple
+
+    @property
+    def tuple_checks_match_supplied_flags(self) -> bool:
+        return (
+            self.source_quotient_base_fixed == self.source_quotient_base_fixed_derived
+            and self.source_stays_over_base == self.source_stays_over_base_derived
+            and self.source_residual_tuple_moved
+            == self.source_residual_tuple_moved_derived
+            and self.target_quotient_base_fixed == self.target_quotient_base_fixed_derived
+            and self.target_stays_over_base == self.target_stays_over_base_derived
+            and self.target_residual_tuple_moved
+            == self.target_residual_tuple_moved_derived
+        )
 
     @property
     def proves_one_local_prefix_normalized_law_witness(self) -> bool:
         return (
-            self.source_in_residual_kernel
+            self.finite_checks_derived_from_tables
+            and self.tuple_checks_match_supplied_flags
+            and self.source_in_residual_kernel
             and self.target_in_residual_kernel
             and self.product_invisibility_survives_stabilization
             and self.residual_movement_survives_stabilization
@@ -461,6 +504,7 @@ def local_normalized_law_prefix_witness_audit(
         stabilized_image_base=stabilized_image_base,
         target_stays_over_base=stabilized_image_base == stabilized_base,
         target_residual_tuple_moved=stabilized_image != stabilized_fibre,
+        finite_checks_derived_from_tables=True,
     )
 
 

@@ -133,6 +133,12 @@ proves_one_local_prefix_normalized_law_witness
 
 means that the supplied braid is one valid row of the local diagonal
 construction in `proofs/global_local_normalized_fork.md`.
+The executable row now derives quotient-base fixing, staying over the base,
+and source/target residual movement from the displayed base, fibre, image,
+stabilized fibre, and stabilized image tuples.  It also requires the finite
+base-detector and finite-group longitude checks to be marked as derived from
+the supplied tables.  Boolean movement flags alone are diagnostic and cannot
+turn a non-moving tuple into a local normalized-law row.
 
 After the symmetric detector reduction, a final B proof may use the simpler
 certificate in `proofs/symmetric_tower_counterexample_certificate.md`: give

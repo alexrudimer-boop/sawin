@@ -587,6 +587,12 @@ nonidentity, genuinely moved, and equal to the stabilized fibre tuple and
 stabilized image in the normalized-law prefix row.  The old
 `endpoint_channel_nonidentity` and `endpoint_miss_matches_residual_motion`
 flags are diagnostic only.
+The normalized-law prefix row itself now derives base fixing, staying over the
+base, and source/target residual movement from its recorded source and
+stabilized base/fibre/image tuples.  It also requires its finite
+base-detector and group-longitude checks to be marked as table-derived.  Thus
+a forged prefix with movement booleans but unchanged tuples cannot feed the
+B-side seed path.
 
 The residual-faithfulness gate is separate from the endpoint table identities:
 even a trivial endpoint group satisfies all label subgroup inclusions
