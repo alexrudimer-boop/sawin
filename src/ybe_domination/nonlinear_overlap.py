@@ -1048,6 +1048,23 @@ def _universal_k_endpoint_seed_state_well_formed(state: object) -> bool:
     )
 
 
+def _universal_k_residual_endpoint_channel_key_well_formed(key: object) -> bool:
+    if not isinstance(key, tuple) or len(key) < 3:
+        return False
+    family, seed_state, channel_name = key[:3]
+    try:
+        hash(key)
+    except TypeError:
+        return False
+    return (
+        family in UNIVERSAL_K_ENDPOINT_FAMILIES
+        and isinstance(seed_state, tuple)
+        and _universal_k_endpoint_seed_state_well_formed((family, seed_state))
+        and isinstance(channel_name, str)
+        and bool(channel_name)
+    )
+
+
 @dataclass(frozen=True)
 class UniversalKWordPotentialCertificate:
     """Concrete finite word-potential detector-lift certificate.
@@ -1646,7 +1663,51 @@ class UniversalKResidualFaithfulnessRow:
 
     @property
     def duplicate_endpoint_channel_keys(self) -> Tuple[object, ...]:
-        return _duplicate_values(self.endpoint_channel_keys)
+        hashable_keys = []
+        for key in self.endpoint_channel_keys:
+            try:
+                hash(key)
+            except TypeError:
+                continue
+            hashable_keys.append(key)
+        return _duplicate_values(tuple(hashable_keys))
+
+    @property
+    def malformed_endpoint_channel_keys(self) -> Tuple[object, ...]:
+        malformed = []
+        seen = set()
+        for key in self.endpoint_channel_keys:
+            if _universal_k_residual_endpoint_channel_key_well_formed(key):
+                continue
+            marker = repr(key)
+            if marker in seen:
+                continue
+            seen.add(marker)
+            malformed.append(key)
+        return tuple(sorted(malformed, key=repr))
+
+    @property
+    def endpoint_channel_key_seed_states(
+        self,
+    ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
+        return tuple(
+            sorted(
+                {
+                    (key[0], key[1])
+                    for key in self.endpoint_channel_keys
+                    if _universal_k_residual_endpoint_channel_key_well_formed(key)
+                },
+                key=repr,
+            )
+        )
+
+    @property
+    def endpoint_channel_keys_match_seed_states(self) -> bool:
+        return (
+            not self.malformed_endpoint_channel_keys
+            and set(self.endpoint_channel_key_seed_states)
+            == set(self.endpoint_seed_states)
+        )
 
     @property
     def duplicate_dependencies(self) -> Tuple[str, ...]:
@@ -1697,6 +1758,8 @@ class UniversalKResidualFaithfulnessRow:
             and bool(self.endpoint_seed_states)
             and bool(self.endpoint_channel_keys)
             and not self.duplicate_endpoint_channel_keys
+            and not self.malformed_endpoint_channel_keys
+            and self.endpoint_channel_keys_match_seed_states
             and not self.duplicate_endpoint_families
             and not self.duplicate_endpoint_seed_states
             and not self.malformed_endpoint_seed_states
@@ -1959,6 +2022,40 @@ class UniversalKResidualFaithfulnessAudit:
         )
 
     @property
+    def malformed_residual_row_endpoint_channel_keys(
+        self,
+    ) -> Tuple[Tuple[Tuple[object, ...], Tuple[object, ...]], ...]:
+        return tuple(
+            (row.input_tuple, row.malformed_endpoint_channel_keys)
+            for row in self.residual_rows
+            if row.malformed_endpoint_channel_keys
+        )
+
+    @property
+    def residual_row_endpoint_channel_seed_mismatches(
+        self,
+    ) -> Tuple[
+        Tuple[
+            Tuple[object, ...],
+            Tuple[Tuple[str, UniversalKSeedState], ...],
+            Tuple[Tuple[str, UniversalKSeedState], ...],
+        ],
+        ...,
+    ]:
+        return tuple(
+            (
+                row.input_tuple,
+                row.endpoint_channel_key_seed_states,
+                row.endpoint_seed_states,
+            )
+            for row in self.residual_rows
+            if (
+                not row.malformed_endpoint_channel_keys
+                and not row.endpoint_channel_keys_match_seed_states
+            )
+        )
+
+    @property
     def residual_rows_cover_input_domain(self) -> bool:
         return (
             bool(self.residual_rows)
@@ -2201,6 +2298,10 @@ class UniversalKResidualFaithfulnessAudit:
             reasons.append("residual_faithfulness_extra_rows_for_input_tuples")
         if not self.residual_rows_have_valid_scope:
             reasons.append("residual_faithfulness_invalid_rows")
+        if self.malformed_residual_row_endpoint_channel_keys:
+            reasons.append("residual_faithfulness_malformed_endpoint_channel_keys")
+        if self.residual_row_endpoint_channel_seed_mismatches:
+            reasons.append("residual_faithfulness_endpoint_channel_seed_mismatch")
         if not self.residual_rows_cover_endpoint_families:
             reasons.append("residual_faithfulness_rows_do_not_cover_families")
         if not self.residual_rows_cover_endpoint_seed_states:
@@ -8269,6 +8370,14 @@ class PostLinearRemainingFiniteSystemAudit:
                 ("signed_endpoint_generator_residual_theorem_rows", ()),
                 ("signed_endpoint_generator_residual_theorem_invalid_rows", ()),
                 (
+                    "signed_endpoint_generator_residual_theorem_malformed_channel_keys",
+                    (),
+                ),
+                (
+                    "signed_endpoint_generator_residual_theorem_channel_key_seed_mismatches",
+                    (),
+                ),
+                (
                     "signed_endpoint_generator_residual_theorem_rows_cover_input_domain",
                     False,
                 ),
@@ -9612,6 +9721,22 @@ class PostLinearRemainingFiniteSystemAudit:
                 "signed_endpoint_generator_residual_theorem_invalid_rows",
                 (
                     tuple(row.input_tuple for row in audit.residual_faithfulness_theorem.invalid_residual_rows)
+                    if audit.residual_faithfulness_theorem is not None
+                    else ()
+                ),
+            ),
+            (
+                "signed_endpoint_generator_residual_theorem_malformed_channel_keys",
+                (
+                    audit.residual_faithfulness_theorem.malformed_residual_row_endpoint_channel_keys
+                    if audit.residual_faithfulness_theorem is not None
+                    else ()
+                ),
+            ),
+            (
+                "signed_endpoint_generator_residual_theorem_channel_key_seed_mismatches",
+                (
+                    audit.residual_faithfulness_theorem.residual_row_endpoint_channel_seed_mismatches
                     if audit.residual_faithfulness_theorem is not None
                     else ()
                 ),

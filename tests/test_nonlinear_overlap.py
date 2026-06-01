@@ -3099,6 +3099,64 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             theorem_with_duplicate_channel_key.failure_reasons,
         )
 
+        theorem_with_malformed_channel_key = replace(
+            theorem,
+            residual_rows=(
+                replace(
+                    theorem.residual_rows[0],
+                    endpoint_channel_keys=("bad_channel",),
+                ),
+            ),
+        )
+        self.assertFalse(
+            theorem_with_malformed_channel_key.proves_residual_faithfulness
+        )
+        self.assertEqual(
+            theorem_with_malformed_channel_key.malformed_residual_row_endpoint_channel_keys,
+            ((("p",), ("bad_channel",)),),
+        )
+        self.assertIn(
+            "residual_faithfulness_malformed_endpoint_channel_keys",
+            theorem_with_malformed_channel_key.failure_reasons,
+        )
+        self.assertIn(
+            "residual_faithfulness_invalid_rows",
+            theorem_with_malformed_channel_key.failure_reasons,
+        )
+
+        theorem_with_wrong_channel_seed = replace(
+            theorem,
+            residual_rows=(
+                replace(
+                    theorem.residual_rows[0],
+                    endpoint_channel_keys=(
+                        ("U", ("wrong_seed_state",), "endpoint_channel"),
+                    ),
+                ),
+            ),
+        )
+        self.assertFalse(
+            theorem_with_wrong_channel_seed.proves_residual_faithfulness
+        )
+        self.assertEqual(
+            theorem_with_wrong_channel_seed.residual_row_endpoint_channel_seed_mismatches,
+            (
+                (
+                    ("p",),
+                    (("U", ("wrong_seed_state",)),),
+                    (("U", seed_state),),
+                ),
+            ),
+        )
+        self.assertIn(
+            "residual_faithfulness_endpoint_channel_seed_mismatch",
+            theorem_with_wrong_channel_seed.failure_reasons,
+        )
+        self.assertIn(
+            "residual_faithfulness_invalid_rows",
+            theorem_with_wrong_channel_seed.failure_reasons,
+        )
+
         theorem_with_bad_tuple_arity = replace(
             theorem,
             residual_rows=(

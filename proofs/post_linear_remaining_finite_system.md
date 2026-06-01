@@ -799,7 +799,9 @@ keys, and the finite dependencies used by the row.  The checker requires the
 row inputs to cover the expected residual input-tuple domain exactly, with no
 missing, extra, or duplicate rows.  It rejects rows that mention unrouted
 families, unrouted seed states, missing or duplicate endpoint channels,
-row-local family/seed mismatches, arity-inconsistent
+malformed endpoint-channel keys, endpoint-channel keys whose `(E,s)` pairs do
+not equal the row-local routed seed states, row-local family/seed mismatches,
+arity-inconsistent
 input/output/identity-output tuples, empty residual input tuples, duplicate
 row ledgers, or dependencies on `braid_word`,
 `braid_prefix`, `braid_index`, failed detector searches, normalized-law
@@ -1035,6 +1037,8 @@ signed_endpoint_generator_residual_theorem_duplicate_input_tuples
 signed_endpoint_generator_residual_theorem_input_tuple_domain_exact
 signed_endpoint_generator_residual_theorem_rows
 signed_endpoint_generator_residual_theorem_invalid_rows
+signed_endpoint_generator_residual_theorem_malformed_channel_keys
+signed_endpoint_generator_residual_theorem_channel_key_seed_mismatches
 signed_endpoint_generator_residual_theorem_rows_cover_input_domain
 signed_endpoint_generator_residual_theorem_rows_cover_families
 signed_endpoint_generator_residual_theorem_rows_cover_seed_states

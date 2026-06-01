@@ -1616,6 +1616,19 @@ a family whose seed appears only in another row.  Each row must have nonempty
 arity-consistent
 `input_tuple`, `actual output_tuple`, and `identity_endpoint_output_tuple`,
 and its `endpoint_channel_keys` ledger must be nonempty and duplicate-free.
+Every endpoint-channel key must be a well-formed tuple
+
+```text
+(E,s,channel_name,optional_local_data...)
+```
+
+where `E in {U,C,M}`, `s` is a tuple-valued seed state, and
+`channel_name` is a nonempty finite channel label.  Row-by-row, the set of
+pairs `(E,s)` extracted from `endpoint_channel_keys` must equal exactly that
+row's `endpoint_seed_states`; an extra channel key for another seed, a missing
+key for a listed seed, or an opaque placeholder channel is not an exact
+residual readout.  The key tuple must be finite and hashable so duplicate
+channel keys are well defined.
 `identity_endpoint_output_tuple` must equal `input_tuple` on every row; this
 is the finite implication from killed endpoint data to identity residual
 motion.  The row dependencies may use only interval data, routed seed states,
@@ -1666,6 +1679,8 @@ residual_endpoint_seed_state_ledgers_well_formed,
 multi_family_residual_row_counts_by_family_exact,
 residual_rows_have_nonempty_arity_consistent_tuples,
 residual_rows_have_duplicate_free_endpoint_channel_keys,
+residual_rows_have_well_formed_endpoint_channel_keys,
+residual_row_endpoint_channel_keys_match_row_seed_states,
 residual_action_input_tuple_domain_exact,
 residual_theorem_rows_cover_input_domain,
 residual_theorem_rows_cover_endpoint_families_and_seed_states,
