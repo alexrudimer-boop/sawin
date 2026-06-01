@@ -613,6 +613,8 @@ class UniversalKResidualFaithfulnessAudit:
     covered_endpoint_families: Tuple[str, ...]
     expected_residual_row_count: int | None
     covered_residual_row_count: int
+    expected_residual_rows_by_family: Tuple[Tuple[str, int], ...] = ()
+    covered_residual_rows_by_family: Tuple[Tuple[str, int], ...] = ()
     endpoint_channels_exact: bool = False
     identity_endpoint_data_forces_residual_identity: bool = False
     braid_index_independent: bool = False
@@ -695,6 +697,93 @@ class UniversalKResidualFaithfulnessAudit:
         )
 
     @property
+    def residual_family_row_counts_required(self) -> bool:
+        return len(set(self.active_endpoint_families)) > 1
+
+    @property
+    def duplicate_expected_residual_row_families(self) -> Tuple[str, ...]:
+        return _duplicate_values(
+            tuple(family for family, _count in self.expected_residual_rows_by_family)
+        )
+
+    @property
+    def duplicate_covered_residual_row_families(self) -> Tuple[str, ...]:
+        return _duplicate_values(
+            tuple(family for family, _count in self.covered_residual_rows_by_family)
+        )
+
+    @property
+    def residual_family_row_ledgers_have_no_duplicates(self) -> bool:
+        return (
+            not self.duplicate_expected_residual_row_families
+            and not self.duplicate_covered_residual_row_families
+        )
+
+    @property
+    def residual_family_row_families_exact(self) -> bool:
+        if (
+            not self.residual_family_row_counts_required
+            and not self.expected_residual_rows_by_family
+            and not self.covered_residual_rows_by_family
+        ):
+            return True
+        return (
+            {family for family, _count in self.expected_residual_rows_by_family}
+            == set(self.active_endpoint_families)
+            and {family for family, _count in self.covered_residual_rows_by_family}
+            == set(self.covered_endpoint_families)
+        )
+
+    @property
+    def residual_family_row_counts_nonnegative(self) -> bool:
+        return all(
+            count >= 0
+            for _family, count in (
+                self.expected_residual_rows_by_family
+                + self.covered_residual_rows_by_family
+            )
+        )
+
+    @property
+    def residual_family_row_counts_match(self) -> bool:
+        if (
+            not self.residual_family_row_counts_required
+            and not self.expected_residual_rows_by_family
+            and not self.covered_residual_rows_by_family
+        ):
+            return True
+        return dict(self.expected_residual_rows_by_family) == dict(
+            self.covered_residual_rows_by_family
+        )
+
+    @property
+    def residual_family_row_count_sums_match(self) -> bool:
+        if (
+            not self.residual_family_row_counts_required
+            and not self.expected_residual_rows_by_family
+            and not self.covered_residual_rows_by_family
+        ):
+            return True
+        if self.expected_residual_row_count is None:
+            return False
+        return (
+            sum(count for _family, count in self.expected_residual_rows_by_family)
+            == self.expected_residual_row_count
+            and sum(count for _family, count in self.covered_residual_rows_by_family)
+            == self.covered_residual_row_count
+        )
+
+    @property
+    def residual_family_row_coverage_exact(self) -> bool:
+        return (
+            self.residual_family_row_ledgers_have_no_duplicates
+            and self.residual_family_row_families_exact
+            and self.residual_family_row_counts_nonnegative
+            and self.residual_family_row_counts_match
+            and self.residual_family_row_count_sums_match
+        )
+
+    @property
     def proves_residual_faithfulness(self) -> bool:
         return (
             self.family_coverage_exact
@@ -703,6 +792,7 @@ class UniversalKResidualFaithfulnessAudit:
             and self.seed_state_ledgers_have_no_duplicates
             and self.seed_state_families_match_active
             and self.residual_row_coverage_exact
+            and self.residual_family_row_coverage_exact
             and self.endpoint_channels_exact
             and self.identity_endpoint_data_forces_residual_identity
             and self.braid_index_independent
@@ -726,6 +816,21 @@ class UniversalKResidualFaithfulnessAudit:
             reasons.append("residual_faithfulness_expected_row_count_missing")
         elif not self.residual_row_coverage_exact:
             reasons.append("residual_faithfulness_row_coverage_not_exact")
+        if (
+            self.residual_family_row_counts_required
+            and not self.expected_residual_rows_by_family
+        ):
+            reasons.append("residual_faithfulness_family_row_counts_missing")
+        if not self.residual_family_row_ledgers_have_no_duplicates:
+            reasons.append("residual_faithfulness_duplicate_family_row_counts")
+        if not self.residual_family_row_families_exact:
+            reasons.append("residual_faithfulness_family_row_count_scope_mismatch")
+        if not self.residual_family_row_counts_nonnegative:
+            reasons.append("residual_faithfulness_family_row_count_negative")
+        if not self.residual_family_row_counts_match:
+            reasons.append("residual_faithfulness_family_row_counts_mismatch")
+        if not self.residual_family_row_count_sums_match:
+            reasons.append("residual_faithfulness_family_row_count_sum_mismatch")
         if not self.endpoint_channels_exact:
             reasons.append("residual_faithfulness_endpoint_channels_not_exact")
         if not self.identity_endpoint_data_forces_residual_identity:
@@ -745,6 +850,8 @@ class UniversalKResidualActionScopeAudit:
     covered_endpoint_families: Tuple[str, ...]
     expected_residual_row_count: int | None
     covered_residual_row_count: int
+    expected_residual_rows_by_family: Tuple[Tuple[str, int], ...] = ()
+    covered_residual_rows_by_family: Tuple[Tuple[str, int], ...] = ()
     endpoint_channels_exact: bool = False
     braid_index_independent: bool = False
     product_families_separated: bool = False
@@ -826,6 +933,93 @@ class UniversalKResidualActionScopeAudit:
         )
 
     @property
+    def residual_family_row_counts_required(self) -> bool:
+        return len(set(self.active_endpoint_families)) > 1
+
+    @property
+    def duplicate_expected_residual_row_families(self) -> Tuple[str, ...]:
+        return _duplicate_values(
+            tuple(family for family, _count in self.expected_residual_rows_by_family)
+        )
+
+    @property
+    def duplicate_covered_residual_row_families(self) -> Tuple[str, ...]:
+        return _duplicate_values(
+            tuple(family for family, _count in self.covered_residual_rows_by_family)
+        )
+
+    @property
+    def residual_family_row_ledgers_have_no_duplicates(self) -> bool:
+        return (
+            not self.duplicate_expected_residual_row_families
+            and not self.duplicate_covered_residual_row_families
+        )
+
+    @property
+    def residual_family_row_families_exact(self) -> bool:
+        if (
+            not self.residual_family_row_counts_required
+            and not self.expected_residual_rows_by_family
+            and not self.covered_residual_rows_by_family
+        ):
+            return True
+        return (
+            {family for family, _count in self.expected_residual_rows_by_family}
+            == set(self.active_endpoint_families)
+            and {family for family, _count in self.covered_residual_rows_by_family}
+            == set(self.covered_endpoint_families)
+        )
+
+    @property
+    def residual_family_row_counts_nonnegative(self) -> bool:
+        return all(
+            count >= 0
+            for _family, count in (
+                self.expected_residual_rows_by_family
+                + self.covered_residual_rows_by_family
+            )
+        )
+
+    @property
+    def residual_family_row_counts_match(self) -> bool:
+        if (
+            not self.residual_family_row_counts_required
+            and not self.expected_residual_rows_by_family
+            and not self.covered_residual_rows_by_family
+        ):
+            return True
+        return dict(self.expected_residual_rows_by_family) == dict(
+            self.covered_residual_rows_by_family
+        )
+
+    @property
+    def residual_family_row_count_sums_match(self) -> bool:
+        if (
+            not self.residual_family_row_counts_required
+            and not self.expected_residual_rows_by_family
+            and not self.covered_residual_rows_by_family
+        ):
+            return True
+        if self.expected_residual_row_count is None:
+            return False
+        return (
+            sum(count for _family, count in self.expected_residual_rows_by_family)
+            == self.expected_residual_row_count
+            and sum(count for _family, count in self.covered_residual_rows_by_family)
+            == self.covered_residual_row_count
+        )
+
+    @property
+    def residual_family_row_coverage_exact(self) -> bool:
+        return (
+            self.residual_family_row_ledgers_have_no_duplicates
+            and self.residual_family_row_families_exact
+            and self.residual_family_row_counts_nonnegative
+            and self.residual_family_row_counts_match
+            and self.residual_family_row_count_sums_match
+        )
+
+    @property
     def proves_residual_action_scope(self) -> bool:
         return (
             self.family_coverage_exact
@@ -834,6 +1028,7 @@ class UniversalKResidualActionScopeAudit:
             and self.seed_state_ledgers_have_no_duplicates
             and self.seed_state_families_match_active
             and self.residual_row_coverage_exact
+            and self.residual_family_row_coverage_exact
             and self.endpoint_channels_exact
             and self.braid_index_independent
             and self.product_families_separated
@@ -856,6 +1051,21 @@ class UniversalKResidualActionScopeAudit:
             reasons.append("residual_action_scope_expected_row_count_missing")
         elif not self.residual_row_coverage_exact:
             reasons.append("residual_action_scope_row_coverage_not_exact")
+        if (
+            self.residual_family_row_counts_required
+            and not self.expected_residual_rows_by_family
+        ):
+            reasons.append("residual_action_scope_family_row_counts_missing")
+        if not self.residual_family_row_ledgers_have_no_duplicates:
+            reasons.append("residual_action_scope_duplicate_family_row_counts")
+        if not self.residual_family_row_families_exact:
+            reasons.append("residual_action_scope_family_row_count_scope_mismatch")
+        if not self.residual_family_row_counts_nonnegative:
+            reasons.append("residual_action_scope_family_row_count_negative")
+        if not self.residual_family_row_counts_match:
+            reasons.append("residual_action_scope_family_row_counts_mismatch")
+        if not self.residual_family_row_count_sums_match:
+            reasons.append("residual_action_scope_family_row_count_sum_mismatch")
         if not self.endpoint_channels_exact:
             reasons.append("residual_action_scope_endpoint_channels_not_exact")
         if not self.braid_index_independent:
@@ -4219,6 +4429,15 @@ class PostLinearRemainingFiniteSystemAudit:
                     "signed_endpoint_generator_residual_action_scope_duplicate_seed_states",
                     (),
                 ),
+                ("signed_endpoint_generator_residual_action_scope_family_rows", ()),
+                (
+                    "signed_endpoint_generator_residual_action_scope_family_rows_covered",
+                    (),
+                ),
+                (
+                    "signed_endpoint_generator_residual_action_scope_duplicate_family_rows",
+                    (),
+                ),
                 ("signed_endpoint_generator_residual_action_scope_proved", False),
                 ("signed_endpoint_generator_residual_theorem_proved", False),
                 ("signed_endpoint_generator_residual_theorem_scope_matches_required", False),
@@ -4227,6 +4446,15 @@ class PostLinearRemainingFiniteSystemAudit:
                 ("signed_endpoint_generator_residual_theorem_covered_states", ()),
                 (
                     "signed_endpoint_generator_residual_theorem_duplicate_seed_states",
+                    (),
+                ),
+                ("signed_endpoint_generator_residual_theorem_family_rows", ()),
+                (
+                    "signed_endpoint_generator_residual_theorem_family_rows_covered",
+                    (),
+                ),
+                (
+                    "signed_endpoint_generator_residual_theorem_duplicate_family_rows",
                     (),
                 ),
                 ("signed_endpoint_generator_residual_action_rows", 0),
@@ -4618,6 +4846,31 @@ class PostLinearRemainingFiniteSystemAudit:
                 ),
             ),
             (
+                "signed_endpoint_generator_residual_action_scope_family_rows",
+                (
+                    audit.residual_action_scope.expected_residual_rows_by_family
+                    if audit.residual_action_scope is not None
+                    else ()
+                ),
+            ),
+            (
+                "signed_endpoint_generator_residual_action_scope_family_rows_covered",
+                (
+                    audit.residual_action_scope.covered_residual_rows_by_family
+                    if audit.residual_action_scope is not None
+                    else ()
+                ),
+            ),
+            (
+                "signed_endpoint_generator_residual_action_scope_duplicate_family_rows",
+                (
+                    audit.residual_action_scope.duplicate_expected_residual_row_families
+                    + audit.residual_action_scope.duplicate_covered_residual_row_families
+                    if audit.residual_action_scope is not None
+                    else ()
+                ),
+            ),
+            (
                 "signed_endpoint_generator_residual_action_scope_proved",
                 (
                     audit.residual_action_scope.proves_residual_action_scope
@@ -4658,6 +4911,31 @@ class PostLinearRemainingFiniteSystemAudit:
                 (
                     audit.residual_faithfulness_theorem.duplicate_expected_endpoint_seed_states
                     + audit.residual_faithfulness_theorem.duplicate_covered_endpoint_seed_states
+                    if audit.residual_faithfulness_theorem is not None
+                    else ()
+                ),
+            ),
+            (
+                "signed_endpoint_generator_residual_theorem_family_rows",
+                (
+                    audit.residual_faithfulness_theorem.expected_residual_rows_by_family
+                    if audit.residual_faithfulness_theorem is not None
+                    else ()
+                ),
+            ),
+            (
+                "signed_endpoint_generator_residual_theorem_family_rows_covered",
+                (
+                    audit.residual_faithfulness_theorem.covered_residual_rows_by_family
+                    if audit.residual_faithfulness_theorem is not None
+                    else ()
+                ),
+            ),
+            (
+                "signed_endpoint_generator_residual_theorem_duplicate_family_rows",
+                (
+                    audit.residual_faithfulness_theorem.duplicate_expected_residual_row_families
+                    + audit.residual_faithfulness_theorem.duplicate_covered_residual_row_families
                     if audit.residual_faithfulness_theorem is not None
                     else ()
                 ),

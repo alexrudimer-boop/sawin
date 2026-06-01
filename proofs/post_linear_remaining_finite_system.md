@@ -531,13 +531,20 @@ because product endpoint rows can contain several routed seed channels within
 the same family.  These residual family and seed-state ledgers must be
 duplicate-free as well; exact coverage cannot rely on silently removing
 repeated entries.
+For multi-family residual products, aggregate row counts are no longer enough:
+the residual scope must also list expected and covered residual row counts by
+endpoint family, without duplicate family entries, with nonnegative matching
+counts whose sums equal the total expected and covered residual row counts.
+This keeps a complete-looking residual action proof from hiding that one
+active U/C/M family has no residual readout rows.
 
 When the bridge is supplied as a symbolic theorem rather than row data, the
 audit requires the theorem to specify exact active and covered endpoint
 families, exact residual row counts, exact endpoint-channel coverage, the
 identity-endpoint-to-identity-residual implication, braid-index independence,
-and product-family separation.  A bare boolean is recorded only as supplied
-data; it is not accepted as proof.
+and product-family separation.  The same family-by-family residual row-count
+ledger is required for symbolic multi-family residual theorems.  A bare
+boolean is recorded only as supplied data; it is not accepted as proof.
 
 together with the concrete rows:
 
@@ -631,6 +638,9 @@ signed_endpoint_generator_residual_action_scope_matches_rows
 signed_endpoint_generator_residual_action_scope_expected_states
 signed_endpoint_generator_residual_action_scope_covered_states
 signed_endpoint_generator_residual_action_scope_duplicate_seed_states
+signed_endpoint_generator_residual_action_scope_family_rows
+signed_endpoint_generator_residual_action_scope_family_rows_covered
+signed_endpoint_generator_residual_action_scope_duplicate_family_rows
 signed_endpoint_generator_residual_action_scope_proved
 signed_endpoint_generator_residual_theorem_proved
 signed_endpoint_generator_residual_theorem_scope_matches_required
@@ -638,6 +648,9 @@ signed_endpoint_generator_residual_theorem_scope_matches_seed_states
 signed_endpoint_generator_residual_theorem_expected_states
 signed_endpoint_generator_residual_theorem_covered_states
 signed_endpoint_generator_residual_theorem_duplicate_seed_states
+signed_endpoint_generator_residual_theorem_family_rows
+signed_endpoint_generator_residual_theorem_family_rows_covered
+signed_endpoint_generator_residual_theorem_duplicate_family_rows
 signed_endpoint_generator_residual_action_rows
 signed_endpoint_generator_residual_action_rows_expected
 signed_endpoint_generator_residual_action_complete

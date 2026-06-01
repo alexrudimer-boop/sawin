@@ -1096,7 +1096,14 @@ this endpoint lemma, even if every listed row is internally certified.  The
 explicit-row certificate must also state the active endpoint families, covered
 endpoint families, exact endpoint-channel coverage, braid-index independence,
 and family-by-family product separation; otherwise the listed row implication
-is not a uniform residual-faithfulness theorem.
+is not a uniform residual-faithfulness theorem.  If two or more endpoint
+families are active, the certificate must also split the residual-row ledger
+by family: it must list expected and covered residual row counts for each
+active family, with no duplicate family entries, nonnegative counts, matching
+expected and covered family counts, and sums equal to the total expected and
+covered residual row counts.  An aggregate row count alone is insufficient
+for a product endpoint row because it can hide that one family has no
+residual readout.
 
 Alternatively, a symbolic residual-faithfulness theorem may replace explicit
 row listing only if it states all of the following finite-scope data:
@@ -1105,7 +1112,8 @@ expected routed endpoint seed states from `kappa`, the covered endpoint seed
 states, the expected residual row count, the covered residual row count,
 exactness of endpoint channels, the implication from identity endpoint data
 to identity residual motion, independence from braid index, and
-family-by-family product separation.  A bare assertion that residual
+family-by-family product separation.  In the multi-family case, it must also
+include the same expected and covered residual row counts by family.  A bare assertion that residual
 faithfulness holds, or a certificate scoped only by family names while
 omitting the routed seed states, is not a certificate.  The expected and
 covered family ledgers and the expected and covered seed-state ledgers must
@@ -1129,6 +1137,7 @@ endpoint_target_product_family_separation,
 endpoint_target_ledgers_duplicate_free,
 residual_endpoint_seed_state_coverage_exact,
 residual_endpoint_seed_state_ledgers_duplicate_free,
+multi_family_residual_row_counts_by_family_exact,
 signed_entry_domain_derived_from_interval,
 signed_entry_domain_matches_current_interval,
 finite_signed_row_checks_derived_from_tables,

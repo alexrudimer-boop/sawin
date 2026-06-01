@@ -301,17 +301,25 @@ def uncounted_endpoint_residual_action_audit():
     )
 
 
-def trivial_endpoint_residual_action_scope(*families, seed_states=None):
+def trivial_endpoint_residual_action_scope(
+    *families,
+    seed_states=None,
+    family_row_counts=None,
+):
     if seed_states is None:
         seed_states = tuple(
             (family, ("*", "*", "left_constant_map_universal_kernel"))
             for family in families
         )
+    if family_row_counts is None:
+        family_row_counts = ()
     return UniversalKResidualActionScopeAudit(
         active_endpoint_families=tuple(families),
         covered_endpoint_families=tuple(families),
         expected_residual_row_count=1,
         covered_residual_row_count=1,
+        expected_residual_rows_by_family=tuple(family_row_counts),
+        covered_residual_rows_by_family=tuple(family_row_counts),
         endpoint_channels_exact=True,
         braid_index_independent=True,
         product_families_separated=True,
@@ -2811,6 +2819,39 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             theorem_missing_scope.failure_reasons,
         )
 
+        multi_family_theorem_missing_rows = UniversalKResidualFaithfulnessAudit(
+            active_endpoint_families=("U", "C"),
+            covered_endpoint_families=("U", "C"),
+            expected_residual_row_count=1,
+            covered_residual_row_count=1,
+            endpoint_channels_exact=True,
+            identity_endpoint_data_forces_residual_identity=True,
+            braid_index_independent=True,
+            product_families_separated=True,
+            expected_endpoint_seed_states=(
+                ("U", seed_state),
+                ("C", ("*", "*", "left")),
+            ),
+            covered_endpoint_seed_states=(
+                ("U", seed_state),
+                ("C", ("*", "*", "left")),
+            ),
+        )
+        multi_family_theorem = replace(
+            multi_family_theorem_missing_rows,
+            expected_residual_rows_by_family=(("U", 1), ("C", 0)),
+            covered_residual_rows_by_family=(("U", 1), ("C", 0)),
+        )
+
+        self.assertFalse(
+            multi_family_theorem_missing_rows.proves_residual_faithfulness
+        )
+        self.assertIn(
+            "residual_faithfulness_family_row_counts_missing",
+            multi_family_theorem_missing_rows.failure_reasons,
+        )
+        self.assertTrue(multi_family_theorem.proves_residual_faithfulness)
+
         underived_domain = UniversalKSignedEndpointGeneratorAudit(
             seed_classifier_entries=seed_entries,
             reachable_seed_states=(("U", seed_state),),
@@ -3490,8 +3531,13 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
 
         self.assertIsNone(implicit_target.endpoint_target_audit)
         self.assertFalse(implicit_target.endpoint_targets_proved)
+        self.assertFalse(implicit_target.residual_action_scope.proves_residual_action_scope)
         self.assertFalse(implicit_target.proves_signed_endpoint_generator_tables)
         self.assertIn("endpoint_target_audit_missing", implicit_target.failure_reasons)
+        self.assertIn(
+            "residual_action_scope_family_row_counts_missing",
+            implicit_target.failure_reasons,
+        )
 
         explicit_target = UniversalKEndpointTargetAudit(
             expected_endpoint_families=("M", "U"),
@@ -3500,7 +3546,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             braid_index_independent=True,
             product_families_separated=True,
         )
-        proved = universal_k_signed_endpoint_generator_audit(
+        explicit_target_missing_family_rows = universal_k_signed_endpoint_generator_audit(
             interval,
             seed_entries,
             reachable,
@@ -3513,7 +3559,38 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             residual_action_audit=trivial_endpoint_residual_action_audit(),
         )
 
-        self.assertTrue(proved.endpoint_targets_proved)
+        self.assertTrue(explicit_target_missing_family_rows.endpoint_targets_proved)
+        self.assertFalse(
+            explicit_target_missing_family_rows.residual_faithfulness_proved
+        )
+        self.assertFalse(
+            explicit_target_missing_family_rows.proves_signed_endpoint_generator_tables
+        )
+        self.assertIn(
+            "residual_action_scope_family_row_counts_missing",
+            explicit_target_missing_family_rows.failure_reasons,
+        )
+
+        scoped_residual = trivial_endpoint_residual_action_scope(
+            "U",
+            "M",
+            seed_states=reachable,
+            family_row_counts=(("U", 1), ("M", 0)),
+        )
+        proved = universal_k_signed_endpoint_generator_audit(
+            interval,
+            seed_entries,
+            reachable,
+            rows,
+            endpoint_group=cyclic_group(2),
+            witnesses=witnesses,
+            endpoint_target_audit=explicit_target,
+            cutoff_readout_audit=cutoff,
+            residual_action_scope=scoped_residual,
+            residual_action_audit=trivial_endpoint_residual_action_audit(),
+        )
+
+        self.assertTrue(proved.residual_action_scope.proves_residual_action_scope)
         self.assertTrue(proved.proves_signed_endpoint_generator_tables)
 
     def test_signed_endpoint_generator_factory_reports_inexact_witness_domain(self):
