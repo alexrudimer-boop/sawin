@@ -927,9 +927,10 @@ reachable closure and compare it with the audit's required-entry ledger; a
 bare flag saying "derived from interval" is not enough.  The finite row checks
 themselves must be marked as derived from the supplied signed rows, actual
 interval table, endpoint group or cutoff multiplication, and explicit
-longitude witnesses; manually asserted success flags for coordinate
-compatibility, inverse cancellation, YBE cocycle, two-strand base, or Artin
-update are not certificates.  If a derived check fails, the certificate must
+detector-lift data; manually asserted success flags for coordinate
+compatibility, inverse cancellation, YBE cocycle, rowwise longitude
+diagnostics, or telescoping detector data are not certificates.  If a
+derived check fails, the certificate must
 report the actual failed rows or local triples, not only a failed boolean.
 
 Every supplied row must also pass the coordinate-component check against the
@@ -1012,51 +1013,90 @@ agree.  Second, the positive-YBE cocycle check must prove that the ordered
 products of the three `H_E` labels agree in `H_E`.  Both checks range over
 all `s in S_E^reach` and all local triples `(x,y,z)`.
 
-The signed two-strand Artin-longitude base identity is a finite certificate
-for each signed table entry.  For every row
+The rowwise signed two-strand Artin-longitude identity is not a decisive
+closure condition.  Under the fixed Artin convention
 
 ```text
-Gamma^{E,epsilon}_{a,b}(s,x,y)=(s',x',y',h),
+sigma_1(x_1)=x_1 x_2 x_1^-1,
+sigma_1(x_2)=x_1,
 ```
 
-one must provide a finite expression
+the recursive longitudes satisfy
 
 ```text
-h =
-product_r phi_r(L_{j_r}(sigma_1^epsilon))^{delta_r}
+L_1(sigma_1)=x_1,
+L_2(sigma_1)=1,
+L_1(sigma_1^-1)=1,
+L_2(sigma_1^-1)=x_2^-1.
 ```
 
-inside `H_E`, where each `phi_r:F_2->H_E` is a homomorphism, each
-`delta_r` is `+1` or `-1`, and `L_1,L_2` are the recursive Artin longitudes
-for the two-strand generator `sigma_1^epsilon`.  The expression may depend
-on the finite row, but `H_E` may not depend on braid index.
-
-Equivalently, the certificate may list literal subgroup-witness letters
-`(assignment,j,delta)` with `assignment in H_E^2`, `j in {1,2}`, and
-`delta in {+1,-1}`.  Evaluating those letters against the recursive
-two-strand longitudes for `sigma_1^epsilon` must produce exactly the emitted
-label `h`, and no table row may be missing such a witness or use a witness
-outside the fixed group.  The witness ledger itself must have exactly one
-key for every signed table row key in `D_Gamma` and no key outside
-`D_Gamma`; a missing witness key or an extra witness key is an inexact
-two-strand certificate even if the listed witnesses that remain evaluate
-correctly.
-
-The Artin-homomorphism update must also be compatible with the state update:
+Thus for any finite group `H` and any emitted label `h in H`, the positive
+row identity is satisfied by the homomorphism `phi(x_1)=h, phi(x_2)=1`, and
+the negative row identity is satisfied by `phi(x_1)=1, phi(x_2)=h^-1`.  A
+certificate that only lists
 
 ```text
-phi^{E,epsilon}_{r,s',x',y'}
- =
-phi^{E,epsilon}_{r,s,x,y} o sigma_1^{-epsilon},
+h = product_r phi_r(L_{j_r}(sigma_1^epsilon))^{delta_r}
 ```
 
-using the same Artin convention as the recursive longitudes.  This is needed
-for braid-word induction; the two-strand base identity alone is not enough.
-For literal two-strand witnesses, this means that the witness for the next
-row is obtained by evaluating the Artin images of the free
-generators under the previous two-generator assignment, with
-`sigma_1^{-epsilon}` as the precomposition word.  The longitude index and
-exponent for each listed witness letter must be preserved under this update.
+for each local row is therefore only a row-shape diagnostic.  It does not
+prove that the accumulated endpoint over an arbitrary braid word lies in
+`V_beta(H_E)`.
+
+The decisive replacement is a fixed-assignment detector-lift telescoping
+certificate.  For a finite group `H`, braid index `n`, and a homomorphism
+`phi:F_n->H`, write `a_i=phi(x_i)`.  For a braid prefix `beta_t`, let
+
+```text
+p_t=p_{beta_t},
+u_i(t)=phi(L_i(beta_t)).
+```
+
+Initially `p_0=id` and `u_i(0)=1`.  If the next generator is `sigma_k`, then
+
+```text
+p_{t+1}=p_t o (k k+1),
+u_k(t+1)=u_k(t) a_{p_t(k)} u_k(t)^-1 u_{k+1}(t),
+u_{k+1}(t+1)=u_k(t),
+u_i(t+1)=u_i(t) for i not in {k,k+1}.
+```
+
+If the next generator is `sigma_k^-1`, then
+
+```text
+p_{t+1}=p_t o (k k+1),
+u_k(t+1)=u_{k+1}(t),
+u_{k+1}(t+1)=u_{k+1}(t) a_{p_t(k+1)}^-1 u_{k+1}(t)^-1 u_k(t),
+u_i(t+1)=u_i(t) for i not in {k,k+1}.
+```
+
+A valid endpoint certificate must choose finitely many detector tracks
+`phi_r:F_n->H_E` before reading the braid word.  The track assignments may
+depend on the interval, the active endpoint family, the initial colour/fibre
+tuple, and the routed seed state, but the finite endpoint group and detector
+family may not depend on `n` and may not be chosen by search after seeing a
+failed detector.  For each track, the certificate must define the initial
+values `a_{r,i}=phi_r(x_i)` from the initial interval data and update
+`u_{r,i}(t)` by the Artin detector recurrence above.
+
+The same certificate must define an endpoint potential `P_t in H_E` with
+`P_0=1` and prove, for every signed table row used at a braid-word step,
+
+```text
+P_{t+1}=P_t h_t,
+```
+
+where `h_t` is the endpoint label emitted by that signed row.  Finally it
+must prove the terminal readout identity
+
+```text
+P_m in < u_{r,i}(m) : all detector tracks r and strands i > <= H_E.
+```
+
+Then the accumulated endpoint is `P_m`, and each `u_{r,i}(m)` is
+`phi_r(L_i(beta))`; hence `endpoint_E(beta) in V_beta(H_E)`.  This
+fixed-assignment detector-lift, not the rowwise two-strand identity, is the
+all-`n` local-to-global bridge.
 
 For cutoff families, in particular C and M, the proof must define faithful
 readouts
@@ -1148,9 +1188,11 @@ signed_inverse_row_pairing,
 signed_inverse_cancellation,
 positive_local_endpoint_ybe_path,
 positive_local_endpoint_ybe_cocycle,
-signed_two_strand_witness_domain_exact,
-signed_two_strand_artin_longitude_base,
-compatible_artin_homomorphism_update,
+fixed_detector_track_initialization,
+artin_detector_recurrence,
+endpoint_potential_telescoping_identity,
+terminal_readout_in_generated_terminal_longitudes,
+fixed_detector_tracks_chosen_before_braid_word,
 exact_cutoff_readouts_for_C_and_M,
 cutoff_readout_seed_state_ledgers_duplicate_free,
 residual_faithfulness_for_actual_fibre_action.
@@ -1543,8 +1585,11 @@ If returning B, you must give:
 3. Close or refute System U.
 
    Define `S_U^reach` from the exact `S_U` values hit by `kappa`, define the
-   full signed endpoint table on `D_Gamma`, prove the Artin-homomorphism
-   update rule, then prove uniformly in `n` that every routed
+   full signed endpoint table on `D_Gamma`, construct fixed detector-track
+   initialization rules, prove the Artin detector recurrence, prove the
+   endpoint potential telescoping identity, and prove the terminal readout is
+   generated by the terminal evaluated longitudes.  Then prove uniformly in
+   `n` that every routed
    triangular-recovery endpoint lies in `V_beta(U_tri)`, or prove a faithful
    symmetric endpoint cutoff for the exact routed U family.  Otherwise,
    extract a normalized-law B sequence from a genuine U endpoint miss.
@@ -1552,21 +1597,25 @@ If returning B, you must give:
 4. Close or refute System C.
 
    Define `S_C^reach` from the exact `S_C` values hit by `kappa`, define the
-   full signed endpoint table on `D_Gamma`, prove the Artin-homomorphism
-   update rule, and construct exact faithful cutoff readouts for the routed
-   identity-continuation ledger.  Then construct fixed endpoint-longitude
-   witnesses or a faithful symmetric cutoff for every identity-routed
+   full signed endpoint table on `D_Gamma`, construct fixed detector-track
+   initialization rules, prove the Artin detector recurrence, prove endpoint
+   potential telescoping, prove the terminal readout, and construct exact
+   faithful cutoff readouts for the routed identity-continuation ledger.
+   Then construct fixed detector-lift endpoint witnesses or a faithful
+   symmetric cutoff for every identity-routed
    universal-continuation edge.  Otherwise, extract a normalized-law B
    sequence from a genuine C endpoint miss.
 
 5. Close or refute System M.
 
    Define `S_M^reach` from the exact `S_M` values hit by `kappa`, define the
-   full signed endpoint table on `D_Gamma`, prove the Artin-homomorphism
-   update rule, and construct exact faithful cutoff readouts for the routed
-   mixed-unit ledger.  Then construct fixed endpoint/readout witnesses or a
-   faithful symmetric cutoff for every mixed-unit context key.  Otherwise,
-   extract a normalized-law B sequence from a genuine M endpoint miss.
+   full signed endpoint table on `D_Gamma`, construct fixed detector-track
+   initialization rules, prove the Artin detector recurrence, prove endpoint
+   potential telescoping, prove the terminal readout, and construct exact
+   faithful cutoff readouts for the routed mixed-unit ledger.  Then construct
+   fixed detector-lift endpoint/readout witnesses or a faithful symmetric
+   cutoff for every mixed-unit context key.  Otherwise, extract a
+   normalized-law B sequence from a genuine M endpoint miss.
 
 6. Assemble outcome A if K/U/C/M all close.
 
@@ -1612,10 +1661,12 @@ Before returning a claimed resolution, explicitly answer:
    exact reachable state spaces and on every entry of `D_Gamma`, not merely
    one entry per seed and sign?
 8. Do the signed endpoint generator tables satisfy inverse cancellation, the
-   positive local endpoint YBE cocycle identity, and the signed two-strand
-   Artin-longitude base identity for both signs, with a witness ledger whose
-   keys are exactly `D_Gamma`, including the compatible Artin-homomorphism
-   update rule?
+   positive local endpoint YBE cocycle identity, and the fixed-assignment
+   detector-lift telescope: fixed detector tracks chosen before the braid,
+   track initialization from interval data, the Artin detector recurrence,
+   endpoint potential update `P_{t+1}=P_t h_t`, terminal readout in the
+   subgroup generated by final evaluated longitudes, and exact `D_Gamma`
+   coverage?
 9. For cutoff families C and M, are the readouts faithful on exactly their
    routed ledgers with no extra channels and no duplicated seed-state entries?
 10. Is every detector group, endpoint group, cutoff group, and rack

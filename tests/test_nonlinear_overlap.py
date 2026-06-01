@@ -40,6 +40,7 @@ from ybe_domination import (
     UniversalKResidualFaithfulnessAudit,
     UniversalKSignedEndpointGeneratorAudit,
     UniversalKSignedEndpointGeneratorRow,
+    UniversalKTelescopingDetectorAudit,
     TwoSidedUnitCollapseAudit,
     cyclic_group,
     endpoint_coordinate_readout_audit,
@@ -335,6 +336,22 @@ def trivial_endpoint_target_audit(*families):
         endpoint_group_orders=tuple((family, 1) for family in families),
         braid_index_independent=True,
         product_families_separated=True,
+    )
+
+
+def trivial_telescoping_detector_audit(keys):
+    keys = tuple(keys)
+    return UniversalKTelescopingDetectorAudit(
+        expected_entry_keys=keys,
+        covered_entry_keys=keys,
+        detector_track_count=1,
+        detector_tracks_fixed_before_braid=True,
+        detector_track_initialization_verified=True,
+        artin_detector_recurrence_verified=True,
+        telescoping_identity_verified=True,
+        terminal_readout_longitudes_verified=True,
+        initial_readout_normalized=True,
+        braid_index_independent=True,
     )
 
 
@@ -2767,12 +2784,51 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             positive_ybe_cocycle_verified=True,
             signed_two_strand_base_verified=True,
             artin_homomorphism_update_verified=True,
+            telescoping_detector_audit=trivial_telescoping_detector_audit(
+                required_entry_keys
+            ),
             residual_faithfulness_theorem=theorem,
         )
 
         self.assertTrue(theorem.proves_residual_faithfulness)
         self.assertTrue(theorem_complete.residual_faithfulness_proved)
         self.assertTrue(theorem_complete.proves_signed_endpoint_generator_tables)
+
+        rowwise_only = replace(theorem_complete, telescoping_detector_audit=None)
+        self.assertTrue(rowwise_only.signed_two_strand_base_verified)
+        self.assertTrue(rowwise_only.artin_homomorphism_update_verified)
+        self.assertFalse(rowwise_only.telescoping_detector_proved)
+        self.assertFalse(rowwise_only.proves_signed_endpoint_generator_tables)
+        self.assertIn(
+            "telescoping_detector_audit_missing",
+            rowwise_only.failure_reasons,
+        )
+
+        unfixed_tracks = replace(
+            theorem_complete,
+            telescoping_detector_audit=UniversalKTelescopingDetectorAudit(
+                expected_entry_keys=required_entry_keys,
+                covered_entry_keys=required_entry_keys,
+                telescoping_identity_verified=True,
+                terminal_readout_longitudes_verified=True,
+                initial_readout_normalized=True,
+                braid_index_independent=True,
+            ),
+        )
+        self.assertFalse(unfixed_tracks.telescoping_detector_proved)
+        self.assertFalse(unfixed_tracks.proves_signed_endpoint_generator_tables)
+        self.assertIn(
+            "fixed_detector_tracks_not_supplied",
+            unfixed_tracks.failure_reasons,
+        )
+        self.assertIn(
+            "detector_tracks_not_fixed_before_braid",
+            unfixed_tracks.failure_reasons,
+        )
+        self.assertIn(
+            "artin_detector_recurrence_not_verified",
+            unfixed_tracks.failure_reasons,
+        )
 
         incomplete_theorem = UniversalKResidualFaithfulnessAudit(
             active_endpoint_families=("U", "C"),
@@ -2866,6 +2922,9 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             positive_ybe_cocycle_verified=True,
             signed_two_strand_base_verified=True,
             artin_homomorphism_update_verified=True,
+            telescoping_detector_audit=trivial_telescoping_detector_audit(
+                required_entry_keys
+            ),
             residual_action_scope=trivial_endpoint_residual_action_scope("U"),
             residual_action_audit=trivial_endpoint_residual_action_audit(),
         )
@@ -2892,6 +2951,9 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             positive_ybe_cocycle_verified=True,
             signed_two_strand_base_verified=True,
             artin_homomorphism_update_verified=True,
+            telescoping_detector_audit=trivial_telescoping_detector_audit(
+                required_entry_keys
+            ),
             residual_action_scope=trivial_endpoint_residual_action_scope("U"),
             residual_action_audit=trivial_endpoint_residual_action_audit(),
         )
@@ -3015,6 +3077,9 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             positive_ybe_cocycle_verified=True,
             signed_two_strand_base_verified=True,
             artin_homomorphism_update_verified=True,
+            telescoping_detector_audit=trivial_telescoping_detector_audit(
+                required_entry_keys
+            ),
             residual_action_scope=trivial_endpoint_residual_action_scope("U"),
             residual_action_audit=trivial_endpoint_residual_action_audit(),
         )
@@ -3270,6 +3335,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             positive_ybe_cocycle_verified=True,
             signed_two_strand_base_verified=True,
             artin_homomorphism_update_verified=True,
+            telescoping_detector_audit=trivial_telescoping_detector_audit(keys),
             residual_action_scope=trivial_endpoint_residual_action_scope("U"),
             residual_action_audit=trivial_endpoint_residual_action_audit(),
         )
@@ -3317,6 +3383,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             positive_ybe_cocycle_verified=True,
             signed_two_strand_base_verified=True,
             artin_homomorphism_update_verified=True,
+            telescoping_detector_audit=trivial_telescoping_detector_audit(keys),
             residual_action_scope=trivial_endpoint_residual_action_scope("U"),
             residual_action_audit=trivial_endpoint_residual_action_audit(),
         )
@@ -3450,6 +3517,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             rows,
             endpoint_group=cyclic_group(2),
             witnesses=witnesses,
+            telescoping_detector_audit=trivial_telescoping_detector_audit(keys),
             residual_action_scope=trivial_endpoint_residual_action_scope("U"),
             residual_action_audit=trivial_endpoint_residual_action_audit(),
         )
@@ -3463,6 +3531,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertTrue(audit.two_strand_witness_domain_exact)
         self.assertTrue(audit.signed_two_strand_base_verified)
         self.assertTrue(audit.artin_homomorphism_update_verified)
+        self.assertTrue(audit.telescoping_detector_proved)
         self.assertTrue(audit.endpoint_target_scope_matches_required)
         self.assertTrue(audit.endpoint_targets_proved)
         self.assertEqual(
@@ -3524,6 +3593,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             rows,
             endpoint_group=cyclic_group(2),
             witnesses=witnesses,
+            telescoping_detector_audit=trivial_telescoping_detector_audit(keys),
             cutoff_readout_audit=cutoff,
             residual_action_scope=residual_scope,
             residual_action_audit=trivial_endpoint_residual_action_audit(),
@@ -3554,6 +3624,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             endpoint_group=cyclic_group(2),
             witnesses=witnesses,
             endpoint_target_audit=explicit_target,
+            telescoping_detector_audit=trivial_telescoping_detector_audit(keys),
             cutoff_readout_audit=cutoff,
             residual_action_scope=residual_scope,
             residual_action_audit=trivial_endpoint_residual_action_audit(),
@@ -3585,6 +3656,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             endpoint_group=cyclic_group(2),
             witnesses=witnesses,
             endpoint_target_audit=explicit_target,
+            telescoping_detector_audit=trivial_telescoping_detector_audit(keys),
             cutoff_readout_audit=cutoff,
             residual_action_scope=scoped_residual,
             residual_action_audit=trivial_endpoint_residual_action_audit(),
@@ -3620,6 +3692,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             rows,
             endpoint_group=cyclic_group(2),
             witnesses=witnesses,
+            telescoping_detector_audit=trivial_telescoping_detector_audit(keys),
             residual_action_scope=trivial_endpoint_residual_action_scope("U"),
             residual_action_audit=trivial_endpoint_residual_action_audit(),
         )
@@ -3632,8 +3705,10 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
                 "extra_two_strand_witness_domain_entry",
             ),
         )
-        self.assertFalse(audit.proves_signed_endpoint_generator_tables)
-        self.assertIn(
+        self.assertFalse(audit.signed_two_strand_base_verified)
+        self.assertTrue(audit.telescoping_detector_proved)
+        self.assertTrue(audit.proves_signed_endpoint_generator_tables)
+        self.assertNotIn(
             "signed_two_strand_witness_domain_not_exact",
             audit.failure_reasons,
         )
@@ -3667,6 +3742,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             bad_rows,
             endpoint_group=cyclic_group(2),
             witnesses=witnesses,
+            telescoping_detector_audit=trivial_telescoping_detector_audit(keys),
             residual_action_scope=trivial_endpoint_residual_action_scope("U"),
             residual_action_audit=trivial_endpoint_residual_action_audit(),
         )
@@ -3705,6 +3781,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             rows,
             endpoint_group=cyclic_group(2),
             witnesses=witnesses,
+            telescoping_detector_audit=trivial_telescoping_detector_audit(keys),
             cutoff_readouts_exact=True,
             residual_action_scope=trivial_endpoint_residual_action_scope(
                 "C",
@@ -3732,6 +3809,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             rows,
             endpoint_group=cyclic_group(2),
             witnesses=witnesses,
+            telescoping_detector_audit=trivial_telescoping_detector_audit(keys),
             cutoff_readout_audit=duplicate_cutoff,
             residual_action_scope=trivial_endpoint_residual_action_scope(
                 "C",
@@ -3761,6 +3839,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             rows,
             endpoint_group=cyclic_group(2),
             witnesses=witnesses,
+            telescoping_detector_audit=trivial_telescoping_detector_audit(keys),
             cutoff_readout_audit=scoped_cutoff,
             residual_action_scope=trivial_endpoint_residual_action_scope(
                 "C",
@@ -4313,10 +4392,11 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             next_seed_state=seed_state,
             endpoint_value=0,
         )
+        underspecified_entry_keys = (row.entry_key, replace(row, sign=-1).entry_key)
         underspecified_signed_generators = UniversalKSignedEndpointGeneratorAudit(
             seed_classifier_entries=routed.universal_k_seed_classifier_entries,
             reachable_seed_states=(("U", seed_state),),
-            required_entry_keys=(row.entry_key, replace(row, sign=-1).entry_key),
+            required_entry_keys=underspecified_entry_keys,
             entry_domain_derived_from_interval=True,
             finite_row_checks_derived_from_tables=True,
             rows=(row, replace(row, sign=-1)),
@@ -4329,6 +4409,9 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             positive_ybe_cocycle_verified=True,
             signed_two_strand_base_verified=True,
             artin_homomorphism_update_verified=True,
+            telescoping_detector_audit=trivial_telescoping_detector_audit(
+                underspecified_entry_keys
+            ),
             residual_action_scope=trivial_endpoint_residual_action_scope("U"),
             residual_action_audit=trivial_endpoint_residual_action_audit(),
         )
@@ -4372,6 +4455,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             rows,
             endpoint_group=cyclic_group(1),
             witnesses={row.entry_key: () for row in rows},
+            telescoping_detector_audit=trivial_telescoping_detector_audit(keys),
             residual_action_scope=trivial_endpoint_residual_action_scope("U"),
             residual_action_audit=trivial_endpoint_residual_action_audit(),
         )
