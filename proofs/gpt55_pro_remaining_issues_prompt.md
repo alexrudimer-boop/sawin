@@ -1,15 +1,14 @@
-# GPT-5.5 Pro remaining-issues prompt
+# Self-contained remaining-issues resolution prompt
 
 Date: 2026-05-31
 
-You are GPT-5.5 Pro.  I am attaching the current repository zip for a
-research workspace on the Sawin finite-rack domination problem for finite
-bijective set-theoretic Yang-Baxter solutions.  Treat the attached files as
-the source of record.  Do not use the internet.  Inspect the proof notes,
-code, tests, generated proof log, and spreadsheet audits before answering.
+This is a standalone prompt.  Everything needed to understand the current
+proof state and the remaining tasks is stated here.  Do not use the internet
+or rely on any prior conversation.
 
-Your task is to completely resolve the problem.  Return exactly one of these
-two outcomes if you can prove it:
+Your task is to completely resolve the finite-rack domination problem for
+finite bijective set-theoretic Yang-Baxter solutions.  Return exactly one of
+the following outcomes if you can prove it:
 
 A. A complete proof of finite-rack domination for every finite bijective
 set-theoretic Yang-Baxter solution.
@@ -18,255 +17,597 @@ B. An explicit finite bijective set-theoretic Yang-Baxter counterexample not
 dominated by any finite rack, together with a normalized-law obstruction
 sequence defeating every finite rack.
 
-Problem statement.  For every finite bijective set-theoretic Yang-Baxter
-solution `X`, prove or disprove the existence of one finite rack `Y`,
-independent of braid index `n`, such that for every `n`,
+Do not present a partial argument as a resolution.  If neither A nor B is
+complete, state the exact missing lemma or exact missing counterexample
+ingredient and the shortest route to settle it.
+
+## 1. Basic Definitions
+
+A finite bijective set-theoretic Yang-Baxter solution is a finite set `X`
+with a bijection
 
 ```text
-ker rho_{Y,n} <= ker rho_{X,n}.
+R_X : X x X -> X x X
 ```
 
-Hard constraints:
+satisfying the set-theoretic Yang-Baxter equation on `X^3`:
+
+```text
+R_X^{12} R_X^{23} R_X^{12}
+=
+R_X^{23} R_X^{12} R_X^{23}.
+```
+
+This gives a right action of the braid group `B_n` on `X^n`; the braid
+generator `sigma_i` acts by applying `R_X` to coordinates `i,i+1` and
+leaving all other coordinates unchanged.  Write this action as
+
+```text
+rho_{X,n} : B_n -> Sym(X^n).
+```
+
+A finite rack is a finite set `Y` with a binary operation `triangleright`
+whose left translations are bijective and which satisfies self-distributivity
+
+```text
+a triangleright (b triangleright c)
+=
+(a triangleright b) triangleright (a triangleright c).
+```
+
+The associated rack Yang-Baxter solution gives actions
+`rho_{Y,n}: B_n -> Sym(Y^n)`.
+
+The finite-rack domination problem is:
+
+```text
+For every finite bijective set-theoretic Yang-Baxter solution X,
+does there exist one finite rack Y, independent of n, such that
+
+ker rho_{Y,n} <= ker rho_{X,n}
+
+for every braid index n?
+```
+
+The rack `Y` is not allowed to depend on `n`.
+
+## 2. Hard Constraints
 
 - Do not give finite-search-only evidence.
 - Do not use timeout evidence.
 - Do not use a rack, detector group, quotient, or obstruction group that
-  depends on `n`.
-- Every computational audit in the repository is only a certificate checker,
-  reduction checker, example generator, or convention audit.  A decisive
-  step must be converted into a symbolic all-`n` proof.
-- Do not present an incomplete A proof or an incomplete B construction as a
-  resolution.
+  depends on braid index `n`.
+- A finite computation can be used only as a certificate checker, convention
+  audit, example, or counterexample-discovery aid.  Every decisive step must
+  become a symbolic all-`n` proof.
+- Do not rely on an implicit attachment, codebase, spreadsheet, proof note,
+  or external citation.  If a definition, lemma, or certificate is needed,
+  state it in the answer.
 
-## Start Here
+## 3. Artin-Longitude Detector Framework
 
-Read these files first, in this order:
-
-1. `proofs/progress_summary.md`
-2. `README.md`
-3. `proofs/sawin_status.md`
-4. `proofs/proof_critic_gap_audit.md`
-5. `proofs/descent_endpoint_repair_contract.md`
-6. `proofs/post_linear_remaining_finite_system.md`
-7. `proofs/post_linear_completion_audit.md`
-8. `proofs/nonlinear_overlap_reduction_after_linear_closure.md`
-9. `proofs/nonlinear_overlap_refined_obstruction.md`
-10. `proofs/triangular_k_left_defect_ledger.md`
-11. `proofs/triangular_k_left_kernel_closure.md`
-12. `proofs/triangular_k_left_recovery_routing.md`
-13. `proofs/triangular_k_left_coordinate_unit_routing.md`
-14. `proofs/universal_continuation_identity_routing.md`
-15. `proofs/universal_continuation_identity_endpoint_witness.md`
-16. `proofs/endpoint_family_symmetric_fork.md`
-17. `proofs/triangular_recovery_symmetric_endpoint_fork.md`
-18. `proofs/universal_continuation_symmetric_endpoint_fork.md`
-19. `proofs/mixed_unit_context_symmetric_endpoint_fork.md`
-20. `proofs/triangular_recovery_unit_observer.md`
-21. `proofs/triangular_recovery_longitude_expression_certificate.md`
-22. `proofs/triangular_recovery_derived_series_fork.md`
-23. `proofs/unit_continuation_abelian_kernel_lift.md`
-24. `proofs/unit_continuation_derived_series_reduction.md`
-25. `proofs/unit_perfect_residual_symmetric_dichotomy.md`
-26. `proofs/normalized_law_sequence_gate.md`
-27. `proofs/diagonal_normalized_obstruction.md`
-28. `proofs/normalized_law_counterexample_certificate.md`
-29. `proofs/symmetric_tower_counterexample_certificate.md`
-30. `proofs/master_local_residual_positive_closure.md`
-31. `proofs/gpt55_pro_resolution_prompt.md`
-
-Then inspect the relevant code and tests:
+Let `F_n` be the free group on generators `x_1,...,x_n`.  The standard Artin
+action of `B_n` on `F_n` gives, for every braid `beta`, a permutation
+`p_beta in S_n` and recursive Artin longitudes `L_i(beta) in F_n` such that
 
 ```text
-src/ybe_domination/nonlinear_overlap.py
-src/ybe_domination/endpoint_factorization.py
-src/ybe_domination/repair_contract.py
-src/ybe_domination/triangular.py
-src/ybe_domination/continuation.py
-tests/test_nonlinear_overlap.py
-tests/test_endpoint_factorization.py
-tools/build_proof_log_docx.py
+beta(x_i) = L_i(beta) x_{p_beta(i)} L_i(beta)^-1.
 ```
 
-## Current State
-
-The repository does not yet contain a final solution.  The old candidate
-positive closure is conditional; the proof critic found a real gap in uniform
-descent separation and endpoint longitudinalization.  The finite-linear
-overlap route has been closed, and the current remaining nonlinear target is
-packaged by
+For a finite group `G`, define the finite-`G` Artin-longitude data
+`Lambda_{G,n}(beta)` to be the complete finite datum of the Artin permutation
+`p_beta` together with all evaluations
 
 ```text
-post_linear_remaining_finite_system_audit(...)
+phi(L_i(beta))
 ```
 
-as an explicit finite post-linear system.  The active remaining families are:
+over all homomorphisms `phi:F_n->G` and all strands `i`.
 
-- System K: a live kink-completion deficit in the missing-Latin triangular
-  ledger.
-- System U: the triangular-recovery unit endpoint family, reached after a K
-  deficit is routed to the fixed `U_tri` endpoint observer.
-- System C: identity-routed universal-continuation endpoint edges.
-- System M: mixed-unit context endpoint keys.
+For a braid `beta` and finite group `G`, define the longitude-value subgroup
 
-Systems U, C, and M may appear together as a product of routed endpoint
-families.  A certificate for one endpoint family must remove only that
-family; it must not hide an unclosed family in the same product row.
+```text
+V_beta(G) <= G
+```
 
-The latest repository state added supplied-certificate symmetric fork
-interfaces:
+to be the subgroup generated by all elements `phi(L_i(beta))` as `phi` ranges
+over all homomorphisms `F_n->G` and `i` ranges over all strands.  An endpoint
+element `h in G` is killed by identity finite-`G` longitude data if one can
+prove
 
-- `triangular_recovery_symmetric_endpoint_fork_audit(...)` closes System U
-  only when it uses the fixed `U_tri` observer, covers exactly the routed
-  U endpoint keys, and proves a faithful symmetric endpoint cutoff.
-- `universal_continuation_identity_symmetric_endpoint_fork_audit(...)`
-  closes System C only when it matches the identity-routing ledger, covers
-  exactly the identity-routed lost edges, and proves a faithful symmetric
-  cutoff for that continuation endpoint family.
-- `mixed_unit_context_symmetric_endpoint_fork_audit(...)` closes System M
-  only when it matches the coordinate-unit routing ledger, covers exactly the
-  mixed-unit context keys, and proves a faithful symmetric cutoff for that
-  mixed endpoint family.
+```text
+h in V_beta(G).
+```
 
-These are not uniform theorems.  They are exact supplied-data interfaces.  To
-prove A, you must construct the witnesses or symmetric cutoffs uniformly for
-every remaining local-minimal interval.  To prove B, you must turn failure of
-all such finite endpoint certificates into a normalized-law sequence with
-actual residual movement.
+For finite abelian `A`, `V_beta(A)` is the subgroup generated by the
+abelianized longitude exponent matrix: if `L_i(beta)` has exponent vector
+`m_i=(m_{i1},...,m_{in})`, then `V_beta(A)` is generated by the values
+`a_1^{m_{i1}} ... a_n^{m_{in}}` over `a_j in A`.
 
-One additional K guardrail is already closed in the executable wrapper: a
-supplied triangular-Latin defect closure with any proper generated
-congruence row is a local-minimality contradiction.  It is classified as
-`closed_by_triangular_latin_proper_closure` and must not be routed to an
-endpoint family.  Only universal closure rows are candidates for the System U
-recovery endpoint route.
+Functoriality guardrails:
 
-## What Must Be Done To Resolve The Problem
+- A fixed finite group homomorphism `f:G->H` sends `V_beta(G)` into
+  `V_beta(H)`.
+- If `f:G->H` is surjective, then `f(V_beta(G))=V_beta(H)`.
+- Direct products behave exactly:
 
-1. Audit the post-linear reduction.
+```text
+V_beta(prod_s G_s) = prod_s V_beta(G_s).
+```
 
-   Verify that every unresolved local-minimal primitive overlap after finite
-   linear closure really lands in System K or in routed endpoint Systems U,
-   C, M as described by `post_linear_remaining_finite_system.md`.  If a
-   reduction note is conditional, either prove the missing condition
-   symbolically or keep that condition as an explicit unresolved obligation.
+Thus finitely many fixed detector factors may be multiplied into one fixed
+finite product group without introducing any `n`-dependence.
+
+## 4. Sharp Finite-Group Obstruction Theorem
+
+For a finite group `G`, there is a finite rack detector `A_G` with underlying
+finite set
+
+```text
+T_2 x (G x G)
+```
+
+and rack operation conventionally written
+
+```text
+(a,u) triangleright (b,v) = (a b a^-1, a v),
+```
+
+where `T_2` is the two-element transposition rack layer and the displayed
+formula encodes the standard finite Artin-longitude detector.  The only fact
+needed here is the sharp detector consequence:
+
+If, for a finite quotient interval, one constructs a finite group `G`
+independent of `n` such that identity finite-`G` Artin-longitude data forces
+the residual action to be trivial for every `n`, then multiplying the base
+rack by `A_G` gives a finite rack that dominates the interval.
+
+More explicitly, let `pi:X->Z` be a quotient of finite YBE solutions, and
+suppose `Z` is already dominated by a finite rack `Q`.  For each `n`, set
+
+```text
+N_n = ker rho_{Q,n}.
+```
+
+For a quotient-colour tuple `z=(z_1,...,z_n) in Z^n`, let
+
+```text
+X_z = prod_i pi^{-1}(z_i).
+```
+
+Since every `beta in N_n` fixes `z`, it acts fibrewise on `X_z`; write the
+fibre action as
+
+```text
+delta_{n,z}: N_n -> Sym(X_z).
+```
+
+Bundle all fibre actions into
+
+```text
+Delta_n(beta) = (delta_{n,z}(beta))_z.
+```
+
+The local finite-group target is:
+
+```text
+Find one finite group G=G(pi,Q), independent of n, such that
+for every n and beta in N_n,
+
+Lambda_{G,n}(beta) = Lambda_{G,n}(1)  =>  Delta_n(beta)=1.
+```
+
+Equivalently, equality of finite-`G` Artin-longitude data for two braids in
+`N_n` forces equality of their residual fibre actions.  If this target holds,
+then the sharp rack `Q x A_G` dominates the interval.
+
+For a maximal congruence chain
+
+```text
+Delta_X = kappa_0 < kappa_1 < ... < kappa_m = Nabla_X,
+```
+
+prove the local target for every interval
+`X/kappa_i -> X/kappa_{i+1}`.  Then iterating the sharp construction along
+the chain gives a final finite rack for `X`.  No factor in this chain may
+depend on `n`.
+
+## 5. Local Interval Setup
+
+A local interval over quotient colours `C` consists of finite fibres
+`A_c` for `c in C`, a quotient solution
+
+```text
+R_C(a,b) = (a dot b, a*b),
+```
+
+and local bijections
+
+```text
+T_{a,b}: A_a x A_b -> A_{a dot b} x A_{a*b}
+```
+
+satisfying the coloured Yang-Baxter equation
+
+```text
+T^{12}_{a dot b,(a*b) dot c}
+T^{23}_{a*b,c}
+T^{12}_{a,b}
+=
+T^{23}_{a*(b dot c),b*c}
+T^{12}_{a,b dot c}
+T^{23}_{b,c}.
+```
+
+The interval is local-minimal if every admissible fibre congruence family
+`theta_c` transported by all local maps is either all equality or all
+universal.  Semisplit local-minimality must also be handled: one must not
+ignore congruence families that mix equality and universal behaviour across
+colours when the local maps allow them.
+
+The current proof program has eliminated many standard branches:
+
+- nondegenerate and guitar branches;
+- rack-type, involutive, and permutation-form branches;
+- product and swapped-product branches once their fixed product detector
+  factors are included;
+- principal and transport-state gauge rows;
+- finite-linear overlap branches;
+- raw nonunit/reset semigroup branches that cannot carry residual
+  permutation motion;
+- proper intermediate congruence closures, which contradict local
+  minimality.
+
+The remaining target is the post-linear nonlinear bottleneck described below.
+
+## 6. Current Remaining Post-Linear Systems
+
+After the finite-linear overlap reductions, every unresolved primitive
+local-minimal bottleneck interval must be routed into one of the following
+finite systems.  The names are bookkeeping labels; a final proof must supply
+the actual all-`n` mathematics.
+
+### System K: Kink-Completion Missing-Latin Deficit
+
+System K is the direct remaining triangular row-completion problem.  It
+appears only after:
+
+- the interval is in the local-minimal bi-free universal corridor bottleneck;
+- triangular recovery is verified;
+- product collapse, structural inconsistency, nondegenerate/guitar,
+  side-dual Latin completion, and finite-linear routes have already been
+  removed;
+- the rack-kink all-pairs Latin hypotheses are still missing for at least
+  one colour pair.
+
+The live ledger is
+
+```text
+live_k_missing_latin_row_defects != empty.
+```
+
+Typical row reasons are:
+
+```text
+no_left_triangular_row
+no_right_triangular_row
+left_constant_map_proper_kernel
+right_constant_map_proper_kernel
+left_constant_map_universal_kernel
+right_constant_map_universal_kernel
+left_companion_sections_injective_non_surjective
+right_companion_sections_injective_non_surjective
+```
+
+with the companion injective-nonsurjective case live only when supported by
+a same-side constant-map kernel reason.  Unsupported companion block-image
+rows are structural inconsistencies, not live System K branches.
+
+For kernel defects, compute the generated admissible congruence closure of
+one collapsed pair.  If the closure is proper, this contradicts
+local-minimality and is terminal:
+
+```text
+closed_by_triangular_latin_proper_closure.
+```
+
+Such a row must not be routed into an endpoint family.  Only universal
+closure rows can remain and route onward.
+
+Constant-map kernel universal closure rows may be separated by the triangular
+recovery inverse table; if that route is supplied and no live K rows remain,
+they become System U endpoint obligations.  No-triangular rows may be
+profiled into proper-kernel visible, coordinate-unit, partial-constant, or
+cardinality/structural cases.  Coordinate-unit rows route to System M if
+the opposite coordinate side contains nonunit data; partial-constant rows
+route to System C if their universal continuation seed closure is supplied.
+
+To prove A through System K, prove that every live K row is impossible in a
+genuine local-minimal finite YBE interval, or route it through fixed detector
+data to Systems U, C, or M.  Do not use an endpoint certificate to close K
+until the K row itself has been eliminated or routed.
+
+To prove B from System K, construct an explicit finite local interval with a
+genuine live K defect, prove it survives all fixed finite detector groups,
+and upgrade it to the normalized-law obstruction sequence described below.
+
+### System U: Triangular-Recovery Unit Endpoint
+
+System U is reached when a K deficit has been routed through triangular
+recovery to a fixed finite unit group `U_tri`.  The group `U_tri` is the
+finite permutation/unit group generated by the triangular recovery inverse
+rows.  It is fixed by the interval and must not depend on `n`.
+
+The A-side target is:
+
+```text
+Every routed triangular-recovery endpoint lies in V_beta(U_tri)
+for every braid beta in the relevant kernel N_n.
+```
+
+Acceptable proof formats include:
+
+- active detector-lift rows proving the endpoint labels are evaluated
+  recursive Artin longitudes;
+- explicit endpoint-longitude expressions as products of evaluated
+  recursive longitudes;
+- derived-series reduction through `U_tri`, with abelian layers handled by
+  the abelian longitude matrix criterion and any stable perfect residual
+  handled separately;
+- direct symbolic subgroup membership in `V_beta(U_tri)`;
+- a faithful symmetric endpoint cutoff for the exact finite routed
+  `U_tri` endpoint family.
+
+A supplied symmetric endpoint cutoff for U is valid only when:
+
+- it uses exactly the fixed group `U_tri`;
+- it covers exactly the routed U endpoint keys;
+- it proves endpoint-family faithfulness;
+- identity symmetric-longitude data kills the whole finite U endpoint
+  family.
+
+This is a certificate format, not a uniform theorem.  To prove A, construct
+such certificates uniformly for every interval.  To prove B, exhibit a real
+U endpoint miss that survives all fixed finite detectors and becomes a
+normalized-law moving sequence.
+
+### System C: Identity-Routed Universal-Continuation Endpoint
+
+System C is reached when a partial-constant no-triangular row routes to the
+universal-continuation seed channel.  The identity-routing ledger lists exact
+lost fibre edges of the form
+
+```text
+(color, input_0, input_1).
+```
+
+The A-side target is:
+
+```text
+Every identity-routed continuation lost edge has a fixed product
+endpoint-longitude witness, or the exact continuation endpoint family has a
+faithful symmetric endpoint cutoff.
+```
+
+A valid System C symmetric fork must:
+
+- match the same identity-routing ledger;
+- cover exactly the identity-routed lost edges;
+- prove endpoint-family faithfulness;
+- prove that identity symmetric-longitude data kills those endpoint channels;
+- introduce no extra edges.
+
+To prove B from C, exhibit a genuine routed continuation endpoint miss,
+prove that no fixed finite endpoint detector kills it, and upgrade it to a
+normalized-law sequence with explicit moved residual tuples.
+
+### System M: Mixed-Unit Context Endpoint
+
+System M is reached when a coordinate-unit no-triangular row is routed to a
+mixed-unit context.  A mixed context endpoint key has the form
+
+```text
+(left_color, right_color, side),
+```
+
+where `side` records which coordinate side is the unit side in the mixed
+row.
+
+The A-side target is:
+
+```text
+Every routed mixed-unit context endpoint factors through fixed
+detector/readout data, or the exact mixed endpoint family has a faithful
+symmetric endpoint cutoff.
+```
+
+A valid System M symmetric fork must:
+
+- match the coordinate-unit routing ledger;
+- cover exactly the mixed-unit context keys;
+- prove endpoint-family faithfulness;
+- prove that identity symmetric-longitude data kills those endpoint channels;
+- introduce no extra keys.
+
+To prove B from M, find a genuine mixed-unit endpoint miss, prove it survives
+all fixed finite detector groups, and upgrade it to the normalized-law
+obstruction sequence.
+
+## 7. Product Endpoint Guardrail
+
+Systems U, C, and M may appear simultaneously in a product endpoint row.  The
+unclosed endpoint tuple is family-wise:
+
+```text
+unclosed_routed_endpoint_systems subset {U,C,M}.
+```
+
+A witness or symmetric fork for one family removes only that family.  For
+example, a U certificate cannot hide an unclosed C or M obligation.  A
+complete A proof must close every active endpoint family in the product.  A
+complete B proof may use one unclosed family only after proving it cannot be
+killed by any fixed finite detector group.
+
+## 8. Endpoint Certificate Formats
+
+An endpoint-longitude expression certificate for a finite endpoint group `H`
+is an explicit identity
+
+```text
+endpoint(beta) =
+product_m phi_m(L_{i_m}(beta))^{epsilon_m}
+```
+
+inside `H`, where each `phi_m:F_n->H` is a group homomorphism and each
+`epsilon_m` is `+1` or `-1`.  The homomorphisms may vary from factor to
+factor because `V_beta(H)` is generated by all evaluated longitude values.
+Such an expression proves `endpoint(beta) in V_beta(H)`.
+
+For several endpoint groups `H_s`, factorwise endpoint witnesses assemble
+into one witness in the fixed product group `prod_s H_s`, because
+`V_beta(prod_s H_s)=prod_s V_beta(H_s)`.
+
+An Artin-defect certificate is a display of an endpoint as a product of
+values of
+
+```text
+beta(w) p_beta(w)^-1
+```
+
+in fixed detector factors.  Such Artin permutation defects lie in the normal
+closure of the recursive Artin longitudes, hence their finite-group values
+lie in `V_beta(G)`.  This is a strong A-side format when the local algebra
+supplies it.
+
+A detector-lift certificate supplies finite local row identities in a fixed
+group `U` with live-strand labels `(m_i,u_i)`, proving by induction on braid
+words that the terminal `u_i` labels are evaluated recursive Artin
+longitudes.  This converts finite row checks into an all-`n` endpoint proof.
+
+A symmetric endpoint cutoff for a finite family of endpoint groups is a
+single symmetric degree `m` such that identity Artin-longitude data in
+`S_m` kills every endpoint channel in the family, together with a faithful
+readout showing that killed endpoints imply the residual endpoint motion is
+trivial.  It is valid only for the exact covered family.
+
+## 9. Normalized-Law Counterexample Route
+
+A B outcome cannot be a finite failed detector, a timeout, or a fixed-degree
+search result.  It must defeat every finite group, hence every finite rack
+through the sharp obstruction theorem.
+
+A normalized-law obstruction sequence consists of:
+
+- finite braid indices `q_j -> infinity`;
+- explicit braids `beta_j in B_{q_j}`;
+- an explicit finite YBE solution `X`;
+- explicit tuples in `X^{q_j}` moved by `rho_{X,q_j}(beta_j)`;
+- proof that for every finite group `G`, eventually
+
+```text
+Lambda_{G,q_j}(beta_j) = Lambda_{G,q_j}(1);
+```
+
+- proof that the movement persists after the right-stabilization or
+  Brunnian embedding used to hide from finite groups.
+
+One common way to prove finite-group invisibility is to choose group words
+`w_j` that are laws on every finite group of order at most `j`, embed them
+as pure or Brunnian braid words, and right-stabilize so that every fixed
+finite group is eventually below the threshold.  This is not enough by
+itself: the resulting braids must still move explicit residual tuples of one
+fixed finite YBE solution `X`.
+
+If returning B, you must give:
+
+- the finite set `X`;
+- the full bijection table for `R_X:X^2->X^2`;
+- a symbolic proof of the Yang-Baxter equation;
+- the explicit braid sequence `beta_j`;
+- explicit moved tuples;
+- proof of eventual finite-`G` Artin-longitude invisibility for every finite
+  group `G`;
+- proof that the sharp finite-group obstruction theorem converts this into
+  non-domination by every finite rack.
+
+## 10. What Must Be Done To Resolve The Problem
+
+1. Prove or repair the post-linear reduction.
+
+   Show symbolically that after the already closed branches listed above,
+   every remaining local-minimal primitive overlap is genuinely one of
+   System K, U, C, M, with product endpoint rows handled family-by-family.
+   If any reduction is only conditional, either prove its missing condition
+   or keep that condition as an explicit open obligation.
 
 2. Close or refute System K.
 
-   A direct System K survivor has nonempty
-   `live_k_missing_latin_row_defects`.  To prove A, show that every such
-   live missing-Latin triangular defect is impossible in a genuine
-   local-minimal finite YBE interval, or route it through fixed detector data
-   into Systems U, C, or M with an audited routing certificate.  Do not treat
-   a downstream endpoint certificate as closing System K until the K defect
-   itself has been routed or eliminated.
+   A direct System K survivor has nonempty `live_k_missing_latin_row_defects`.
+   To prove A, show that every such missing-Latin triangular defect is
+   impossible in a genuine local-minimal finite YBE interval, or route it
+   through fixed detector data into U, C, or M.  Proper generated closures
+   are already terminal contradictions; universal closures are the only
+   endpoint-routing candidates.
 
-   To prove B from K, construct one explicit finite local interval with a
-   live K defect and prove that no fixed finite detector can kill the
-   resulting residual motion.  Then upgrade that motion to the normalized-law
-   obstruction sequence described in `diagonal_normalized_obstruction.md`.
+   To prove B from K, construct a genuine live K interval, prove all fixed
+   finite detector groups fail, and upgrade the failure to a normalized-law
+   moving sequence.
 
 3. Close or refute System U.
 
-   System U is the triangular-recovery endpoint problem in the fixed unit
-   group `U_tri`.  To prove A, prove uniformly in `n` that every routed
-   triangular-recovery endpoint lies in `V_beta(U_tri)`.  Acceptable proof
-   formats include:
-
-   - active detector-lift rows for the endpoint observer;
-   - explicit endpoint-longitude expressions;
-   - derived-series reduction plus a stable perfect-residual witness;
-   - direct subgroup membership with a symbolic all-`n` argument;
-   - a fixed symmetric endpoint cutoff for the finite routed `U_tri` family.
-
-   The supplied checker
-   `triangular_recovery_symmetric_endpoint_fork_audit(...)` verifies only the
-   last format for a supplied finite family.  It does not construct the
-   uniform family for you.
+   Prove uniformly in `n` that every routed triangular-recovery endpoint lies
+   in `V_beta(U_tri)`, or prove a faithful symmetric endpoint cutoff for the
+   exact routed U family.  Otherwise, extract a normalized-law B sequence
+   from a genuine U endpoint miss.
 
 4. Close or refute System C.
 
-   System C consists of identity-routed universal-continuation lost edges.
-   To prove A, construct fixed product endpoint-longitude witnesses for every
-   identity-routed lost edge, or prove a fixed faithful symmetric endpoint
-   cutoff for the exact continuation endpoint family.  Use
-   `universal_continuation_identity_endpoint_witness_audit(...)` or
-   `universal_continuation_identity_symmetric_endpoint_fork_audit(...)` only
-   as supplied-certificate checkers.
-
-   To prove B from C, exhibit an explicit routed continuation endpoint miss,
-   prove that every fixed finite endpoint detector fails on it, and upgrade
-   the miss to a normalized-law sequence with moved residual tuples.
+   Construct fixed endpoint-longitude witnesses or a faithful symmetric
+   cutoff for every identity-routed universal-continuation edge.  Otherwise,
+   extract a normalized-law B sequence from a genuine C endpoint miss.
 
 5. Close or refute System M.
 
-   System M consists of mixed-unit context endpoint keys
-   `(left_color, right_color, side)`.  To prove A, prove that each routed
-   mixed-unit context endpoint factors through fixed detector/readout data,
-   or prove a fixed faithful symmetric endpoint cutoff for the exact mixed
-   endpoint family.  Use
-   `mixed_unit_context_endpoint_witness_audit(...)` or
-   `mixed_unit_context_symmetric_endpoint_fork_audit(...)` only as supplied
-   checkers.
+   Construct fixed endpoint/readout witnesses or a faithful symmetric cutoff
+   for every mixed-unit context key.  Otherwise, extract a normalized-law B
+   sequence from a genuine M endpoint miss.
 
-   To prove B from M, find a genuine mixed-unit endpoint miss that survives
-   all fixed finite detector groups and upgrade it to the required
-   normalized-law obstruction sequence.
+6. Assemble outcome A if K/U/C/M all close.
 
-6. Respect the product guardrail.
-
-   In product endpoint rows, Systems U, C, and M are independent obligations.
-   A witness or symmetric fork for U removes only U from
-   `unclosed_routed_endpoint_systems`; likewise for C and M.  A correct A
-   proof must close every active endpoint family in the product.  A correct B
-   proof may use one unclosed family only after proving it cannot be killed by
-   any fixed finite detector group.
-
-7. Finish outcome A if all systems close.
-
-   Once K and all routed endpoint systems close, construct the local detector
-   group `G(pi,Q)` as one fixed finite product of the Green,
-   Schutzenberger, atom, known-branch, endpoint/unit, transport-state, and
-   newly proved endpoint factors.  Prove the all-`n` implication
+   Construct the local detector group `G(pi,Q)` as one fixed finite product
+   of all required detector factors: Green, Schutzenberger, atom, known
+   branch, endpoint/unit, transport-state, and any new U/C/M endpoint
+   factors.  Prove for every `n`:
 
    ```text
-   Lambda_{G,n}(beta) = Lambda_{G,n}(1) => Delta_n(beta) = 1
+   Lambda_{G,n}(beta)=Lambda_{G,n}(1) => Delta_n(beta)=1.
    ```
 
-   for every braid index `n`.  Then use the sharp obstruction rack
-   `A_G = T_2 x (G x G)` and the congruence-chain induction to build the
-   final finite rack.  The final rack must not depend on `n`.
+   Then apply the sharp rack `Q x A_G` at each congruence-chain interval to
+   produce the final finite rack.  Verify that every factor is finite and
+   independent of `n`.
 
-8. Finish outcome B if any system cannot close.
+7. Assemble outcome B if any system cannot close.
 
-   A B solution must include:
+   Provide the explicit finite YBE solution, symbolic YBE proof, braid
+   sequence, finite-group invisibility proof, moved tuples, and sharp
+   obstruction argument described in Section 9.
 
-   - an explicit finite set `X`;
-   - an explicit bijective YBE map `R_X:X^2 -> X^2`;
-   - a symbolic proof of the Yang-Baxter equation;
-   - explicit braids `beta_j in B_{q_j}` with `q_j -> infinity`;
-   - proof that for every finite group `G`,
-     `Lambda_{G,q_j}(beta_j)=Lambda_{G,q_j}(1)` eventually;
-   - proof that `rho_{X,q_j}(beta_j)` moves explicit tuples;
-   - the normalized-law/Brunnian sequence required by
-     `normalized_law_sequence_gate.md` and
-     `diagonal_normalized_obstruction.md`;
-   - an explanation through the sharp obstruction theorem that this defeats
-     domination by every finite rack.
-
-## Mandatory Final Audit
+## 11. Mandatory Final Audit
 
 Before returning a claimed resolution, explicitly answer:
 
 1. Is any decisive step finite-search-only?
 2. Are semisplit local-minimal families fully handled?
 3. Is every detector group and every rack independent of braid index `n`?
-4. If returning A, where exactly is `G(pi,Q)` constructed and how does the
-   congruence-chain induction produce the final rack?
-5. If returning B, why does the obstruction defeat every finite group `G`,
-   hence every finite rack?
-6. Are product endpoint rows handled family-by-family without hiding any
+4. Are product endpoint rows handled family-by-family without hiding any
    unclosed U, C, or M obligation?
+5. If returning A, where exactly is `G(pi,Q)` constructed, why does it prove
+   the all-`n` residual implication, and how does the congruence-chain
+   induction produce the final finite rack?
+6. If returning B, why does the obstruction defeat every finite group `G`,
+   hence every finite rack through the sharp obstruction theorem?
 
 Return outcome A or outcome B only if the proof is genuinely complete.  If
-you cannot complete either outcome, state the exact missing lemma or exact
+neither outcome can be completed, state the exact missing lemma or exact
 missing counterexample ingredient and the shortest route to settle it.

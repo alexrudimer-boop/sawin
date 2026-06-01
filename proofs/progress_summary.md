@@ -1161,7 +1161,8 @@ one to exactly the System M mixed-context keys.  In a routed endpoint product,
 each fork removes only its own family from `unclosed_routed_endpoint_systems`.
 The living handoff prompt
 `proofs/gpt55_pro_remaining_issues_prompt.md` records the current K/U/C/M
-remaining obligations for a future GPT-5.5 Pro pass.
+remaining obligations as a model-independent, attachment-free prompt for a
+future proof pass.
 `proofs/symmetric_tower_counterexample_certificate.md` now records the
 corresponding simplified B certificate: for every `j`, produce a braid
 `alpha_j` with identity `S_j` longitude data and a moved global or residual
