@@ -3539,6 +3539,41 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             ),
         )
 
+        malformed_track_assignment = replace(
+            theorem_complete,
+            telescoping_detector_audit=replace(
+                theorem_complete.telescoping_detector_audit,
+                detector_track_initialization_rows=(
+                    UniversalKDetectorTrackInitializationRow(
+                        endpoint_family="U",
+                        track_index=0,
+                        assignment_rule="constant_identity_from_interval_seed",
+                        dependencies=(
+                            "interval_data",
+                            "routed_seed_state",
+                            "strand_index",
+                        ),
+                        local_assignment_template=("not_an_assignment_row",),
+                    ),
+                ),
+            ),
+        )
+        self.assertFalse(malformed_track_assignment.telescoping_detector_proved)
+        self.assertIn(
+            "detector_track_initialization_invalid_templates",
+            malformed_track_assignment.failure_reasons,
+        )
+        self.assertIn(
+            "malformed_detector_track_assignment",
+            tuple(
+                failure[1]
+                for failure in (
+                    malformed_track_assignment.telescoping_detector_audit
+                    .detector_track_initialization_template_failures
+                )
+            ),
+        )
+
         tautological_potential = replace(
             theorem_complete,
             telescoping_detector_audit=UniversalKTelescopingDetectorAudit(
@@ -4302,6 +4337,22 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             (("A", 0, 0),),
         )
 
+        malformed_letter_template = replace(
+            certificate,
+            templates=((source_key, ("not_a_letter",)),),
+        )
+        self.assertFalse(malformed_letter_template.word_potential_templates_verified)
+        self.assertEqual(
+            malformed_letter_template.template_word_failures,
+            (
+                (
+                    source_key,
+                    "invalid_word_potential_letter",
+                    "not_a_letter",
+                ),
+            ),
+        )
+
         boolean_track_template = replace(
             certificate,
             templates=((source_key, ((("U", True, 0), 1),)),),
@@ -4376,6 +4427,44 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             tuple(
                 failure[1]
                 for failure in unhashable_detector_domain.detector_domain_failures
+            ),
+        )
+
+        malformed_detector_domain_entry = replace(
+            certificate,
+            identity_rows=(
+                replace(
+                    good_row,
+                    detector_domain_assignments=((("not_a_pair",),),),
+                    detector_domain_sound=True,
+                    detector_domain_soundness_witness=(
+                        "reachable_detector_values_enumerated",
+                    ),
+                ),
+            ),
+        )
+        self.assertFalse(malformed_detector_domain_entry.detector_domains_sound)
+        self.assertIn(
+            "detector_domain_assignment_malformed_entry",
+            tuple(
+                failure[1]
+                for failure in (
+                    malformed_detector_domain_entry.detector_domain_failures
+                )
+            ),
+        )
+
+        malformed_substitution_row = replace(
+            certificate,
+            identity_rows=(
+                replace(good_row, artin_substitution=("not_a_substitution_row",)),
+            ),
+        )
+        self.assertFalse(malformed_substitution_row.artin_substitutions_verified)
+        self.assertIn(
+            "malformed_artin_substitution_row",
+            tuple(
+                failure[1] for failure in malformed_substitution_row.substitution_failures
             ),
         )
 

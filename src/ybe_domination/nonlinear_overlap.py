@@ -976,7 +976,30 @@ class UniversalKWordPotentialIdentityRow:
 def _universal_k_word_potential_variables(
     word: UniversalKWordPotentialWord,
 ) -> Tuple[UniversalKWordPotentialVariable, ...]:
-    return _unique_values(tuple(variable for variable, _exponent in word))
+    variables = []
+    for letter in word:
+        parts = _universal_k_word_potential_letter_parts(letter)
+        if parts is None:
+            continue
+        variable, _exponent = parts
+        variables.append(variable)
+    return _unique_values(tuple(variables))
+
+
+def _universal_k_word_potential_letter_parts(
+    letter: object,
+) -> Tuple[object, object] | None:
+    if not isinstance(letter, tuple) or len(letter) != 2:
+        return None
+    return letter[0], letter[1]
+
+
+def _universal_k_word_potential_substitution_parts(
+    substitution_row: object,
+) -> Tuple[object, object] | None:
+    if not isinstance(substitution_row, tuple) or len(substitution_row) != 2:
+        return None
+    return substitution_row[0], substitution_row[1]
 
 
 def _universal_k_word_potential_variable_valid(
@@ -995,7 +1018,12 @@ def _universal_k_word_potential_word_failures(
     word: UniversalKWordPotentialWord,
 ) -> Tuple[UniversalKWordPotentialFailure, ...]:
     failures = []
-    for index, (variable, exponent) in enumerate(word):
+    for index, letter in enumerate(word):
+        parts = _universal_k_word_potential_letter_parts(letter)
+        if parts is None:
+            failures.append((index, "invalid_word_potential_letter", letter))
+            continue
+        variable, exponent = parts
         if not _universal_k_word_potential_variable_valid(variable):
             failures.append((index, "invalid_word_potential_variable", variable))
         if exponent not in {-1, 1}:
@@ -1006,18 +1034,35 @@ def _universal_k_word_potential_word_failures(
 def _universal_k_word_potential_invert(
     word: UniversalKWordPotentialWord,
 ) -> UniversalKWordPotentialWord:
-    return tuple((variable, -exponent) for variable, exponent in reversed(word))
+    inverted = []
+    for letter in reversed(word):
+        parts = _universal_k_word_potential_letter_parts(letter)
+        if parts is None:
+            inverted.append(letter)
+            continue
+        variable, exponent = parts
+        inverted.append((variable, -exponent))
+    return tuple(inverted)
 
 
 def _universal_k_word_potential_substitute(
     word: UniversalKWordPotentialWord,
     substitution: UniversalKWordPotentialSubstitution,
 ) -> UniversalKWordPotentialWord:
-    substitution_map = {
-        _value_marker(variable): image for variable, image in substitution
-    }
+    substitution_map = {}
+    for substitution_row in substitution:
+        parts = _universal_k_word_potential_substitution_parts(substitution_row)
+        if parts is None:
+            continue
+        variable, image = parts
+        substitution_map[_value_marker(variable)] = image
     expanded = []
-    for variable, exponent in word:
+    for letter in word:
+        parts = _universal_k_word_potential_letter_parts(letter)
+        if parts is None:
+            expanded.append(letter)
+            continue
+        variable, exponent = parts
         image = substitution_map.get(_value_marker(variable), ((variable, 1),))
         if exponent < 0:
             image = _universal_k_word_potential_invert(image)
@@ -1034,9 +1079,15 @@ def universal_k_evaluate_word_potential(
 
     out = endpoint_group.identity
     group_elements = set(endpoint_group.elements)
-    for variable, exponent in word:
+    for letter in word:
+        parts = _universal_k_word_potential_letter_parts(letter)
+        if parts is None:
+            raise ValueError(f"invalid word-potential letter {letter!r}")
+        variable, exponent = parts
         if not _universal_k_word_potential_variable_valid(variable):
             raise ValueError(f"invalid word-potential variable {variable!r}")
+        if exponent not in {-1, 1}:
+            raise ValueError(f"invalid word-potential exponent {exponent!r}")
         if variable not in assignment:
             raise ValueError(f"missing word-potential assignment for {variable!r}")
         value = assignment[variable]
@@ -1286,10 +1337,34 @@ class UniversalKWordPotentialCertificate:
             if next_template is None:
                 failures.append((row.entry_key, "missing_next_state_template", next_key))
                 continue
-            expected_variables = set(_universal_k_word_potential_variables(next_template))
-            substitution_variables = tuple(
-                variable for variable, _image in row.artin_substitution
+            next_template_failures = _universal_k_word_potential_word_failures(
+                next_template
             )
+            if next_template_failures:
+                for failure in next_template_failures:
+                    failures.append((row.entry_key, failure[1], failure[2]))
+                continue
+            expected_variables = set(_universal_k_word_potential_variables(next_template))
+            substitution_variables = []
+            malformed_substitution_rows = []
+            for substitution_row in row.artin_substitution:
+                parts = _universal_k_word_potential_substitution_parts(
+                    substitution_row
+                )
+                if parts is None:
+                    malformed_substitution_rows.append(substitution_row)
+                    continue
+                variable, _image = parts
+                substitution_variables.append(variable)
+            for substitution_row in malformed_substitution_rows:
+                failures.append(
+                    (
+                        row.entry_key,
+                        "malformed_artin_substitution_row",
+                        substitution_row,
+                    )
+                )
+            substitution_variables = tuple(substitution_variables)
             duplicate_variables = _duplicate_values(substitution_variables)
             for variable in duplicate_variables:
                 failures.append(
@@ -1304,7 +1379,13 @@ class UniversalKWordPotentialCertificate:
                 failures.append(
                     (row.entry_key, "extra_artin_substitution_variable", variable)
                 )
-            for variable, image in row.artin_substitution:
+            for substitution_row in row.artin_substitution:
+                parts = _universal_k_word_potential_substitution_parts(
+                    substitution_row
+                )
+                if parts is None:
+                    continue
+                variable, image = parts
                 if not _universal_k_word_potential_variable_valid(variable):
                     failures.append(
                         (row.entry_key, "invalid_artin_substitution_variable", variable)
@@ -1328,12 +1409,18 @@ class UniversalKWordPotentialCertificate:
 
     @property
     def templates_use_only_current_longitudes(self) -> bool:
-        return all(
-            variable[0] == "U"
-            for _state, word in self.templates
-            for variable, _exponent in word
-            if _universal_k_word_potential_variable_valid(variable)
-        )
+        for _state, word in self.templates:
+            for letter in word:
+                parts = _universal_k_word_potential_letter_parts(letter)
+                if parts is None:
+                    continue
+                variable, _exponent = parts
+                if (
+                    _universal_k_word_potential_variable_valid(variable)
+                    and variable[0] != "U"
+                ):
+                    return False
+        return True
 
     @property
     def invalid_template_variable_failures(
@@ -1351,7 +1438,11 @@ class UniversalKWordPotentialCertificate:
     ) -> Tuple[UniversalKWordPotentialVariable, ...]:
         raw_variables = []
         for _state, word in self.templates:
-            for variable, _exponent in word:
+            for letter in word:
+                parts = _universal_k_word_potential_letter_parts(letter)
+                if parts is None:
+                    continue
+                variable, _exponent = parts
                 if (
                     _universal_k_word_potential_variable_valid(variable)
                     and variable[0] != "U"
@@ -1457,7 +1548,26 @@ class UniversalKWordPotentialCertificate:
                     (row.entry_key, "duplicate_detector_domain_assignment", duplicate)
                 )
             for index, assignment in enumerate(assignments):
-                assignment_variables = tuple(variable for variable, _value in assignment)
+                assignment_variables = []
+                malformed_assignment_entries = []
+                for assignment_entry in assignment:
+                    parts = _universal_k_word_potential_substitution_parts(
+                        assignment_entry
+                    )
+                    if parts is None:
+                        malformed_assignment_entries.append(assignment_entry)
+                        continue
+                    variable, _value = parts
+                    assignment_variables.append(variable)
+                for assignment_entry in malformed_assignment_entries:
+                    failures.append(
+                        (
+                            row.entry_key,
+                            "detector_domain_assignment_malformed_entry",
+                            (index, assignment_entry),
+                        )
+                    )
+                assignment_variables = tuple(assignment_variables)
                 duplicate_variables = _duplicate_values(assignment_variables)
                 for variable in duplicate_variables:
                     failures.append(
@@ -1510,7 +1620,13 @@ class UniversalKWordPotentialCertificate:
                             (index, extra_variables),
                         )
                     )
-                for variable, value in assignment:
+                for assignment_entry in assignment:
+                    parts = _universal_k_word_potential_substitution_parts(
+                        assignment_entry
+                    )
+                    if parts is None:
+                        continue
+                    variable, value = parts
                     if not _universal_k_word_potential_variable_valid(variable):
                         failures.append(
                             (
@@ -3974,7 +4090,20 @@ class UniversalKTelescopingDetectorAudit:
             group_elements = set(self.word_potential_certificate.endpoint_group.elements)
         for row in self.detector_track_initialization_rows:
             seen_variables = set()
-            for variable, value in row.local_assignment_template:
+            for assignment_entry in row.local_assignment_template:
+                parts = _universal_k_word_potential_substitution_parts(
+                    assignment_entry
+                )
+                if parts is None:
+                    failures.append(
+                        (
+                            row.key,
+                            "malformed_detector_track_assignment",
+                            assignment_entry,
+                        )
+                    )
+                    continue
+                variable, value = parts
                 variable_marker = _value_marker(variable)
                 if variable_marker in seen_variables:
                     failures.append(
@@ -4025,7 +4154,13 @@ class UniversalKTelescopingDetectorAudit:
         initialized: dict[str, set[UniversalKWordPotentialVariable]] = {}
         for row in self.detector_track_initialization_rows:
             family_initialized = initialized.setdefault(row.endpoint_family, set())
-            for variable, _value in row.local_assignment_template:
+            for assignment_entry in row.local_assignment_template:
+                parts = _universal_k_word_potential_substitution_parts(
+                    assignment_entry
+                )
+                if parts is None:
+                    continue
+                variable, _value = parts
                 if (
                     _universal_k_word_potential_variable_valid(variable)
                     and variable[0] == "A"
@@ -4184,7 +4319,11 @@ class UniversalKTelescopingDetectorAudit:
                     (state, "word_potential_family_has_no_track_count", family)
                 )
                 continue
-            for variable, _exponent in word:
+            for letter in word:
+                parts = _universal_k_word_potential_letter_parts(letter)
+                if parts is None:
+                    continue
+                variable, _exponent = parts
                 if (
                     _universal_k_word_potential_variable_valid(variable)
                     and variable[1] >= count
@@ -4209,11 +4348,22 @@ class UniversalKTelescopingDetectorAudit:
                 )
                 continue
             row_variables = []
-            for variable, image in row.artin_substitution:
-                row_variables.append(variable)
-                row_variables.extend(
-                    image_variable for image_variable, _exponent in image
+            for substitution_row in row.artin_substitution:
+                parts = _universal_k_word_potential_substitution_parts(
+                    substitution_row
                 )
+                if parts is None:
+                    continue
+                variable, image = parts
+                row_variables.append(variable)
+                for image_letter in image:
+                    image_parts = _universal_k_word_potential_letter_parts(
+                        image_letter
+                    )
+                    if image_parts is None:
+                        continue
+                    image_variable, _exponent = image_parts
+                    row_variables.append(image_variable)
             for variable in row_variables:
                 if (
                     _universal_k_word_potential_variable_valid(variable)
@@ -4248,11 +4398,22 @@ class UniversalKTelescopingDetectorAudit:
                 continue
             initialized = set(initialized_by_family.get(family, ()))
             row_raw_variables = []
-            for variable, image in row.artin_substitution:
-                row_raw_variables.append(variable)
-                row_raw_variables.extend(
-                    image_variable for image_variable, _exponent in image
+            for substitution_row in row.artin_substitution:
+                parts = _universal_k_word_potential_substitution_parts(
+                    substitution_row
                 )
+                if parts is None:
+                    continue
+                variable, image = parts
+                row_raw_variables.append(variable)
+                for image_letter in image:
+                    image_parts = _universal_k_word_potential_letter_parts(
+                        image_letter
+                    )
+                    if image_parts is None:
+                        continue
+                    image_variable, _exponent = image_parts
+                    row_raw_variables.append(image_variable)
             for variable in sorted(set(row_raw_variables), key=repr):
                 if (
                     _universal_k_word_potential_variable_valid(variable)

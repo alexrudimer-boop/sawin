@@ -635,7 +635,10 @@ positive Artin recurrences.  Boolean indices, strings, negative values, and
 other non-index objects are malformed word-potential variables rather than
 finite detector-track references; malformed or unhashable variable objects
 must be reported as certificate errors, not allowed to crash duplicate,
-domain, or normalization checks.  Negative
+domain, or normalization checks.  Each word-potential letter, Artin
+substitution row, detector-domain assignment entry, and detector-track
+assignment entry must have its declared two-field finite-row shape; malformed
+row shapes are certificate errors rather than implicit abbreviations.  Negative
 word-potential rows, if present, are diagnostic only once the signed endpoint
 audit has proved that negative endpoint rows are actual inverses.  Malformed
 identity rows with any sign other than `+1` or `-1` are rejected rather than

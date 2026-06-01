@@ -1440,7 +1440,11 @@ finite declared ranges for the endpoint family.  Boolean indices, strings,
 negative values, and other non-index objects are malformed formal variables,
 not detector tracks.  Malformed or unhashable formal-variable objects must be
 reported as certificate errors rather than crashing duplicate, detector-domain,
-or normalization checks.  For the active two local strands, the positive
+or normalization checks.  Each word-potential letter, Artin substitution row,
+detector-domain assignment entry, and detector-track assignment entry must
+have its declared two-field finite-row shape; malformed row shapes are
+certificate errors rather than implicit abbreviations.  For the active two
+local strands, the positive
 substitution must be the Artin detector
 recurrence:
 
