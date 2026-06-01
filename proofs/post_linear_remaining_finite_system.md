@@ -425,6 +425,13 @@ precomposing the source assignment with the Artin image of
 `sigma_1^{-epsilon}`, while the listed longitude index and exponent are
 preserved.
 
+The implementation now exposes an interval-derived constructor for this
+audit layer.  Given the interval, `kappa` entries, reachable states, signed
+rows, a fixed endpoint group, and literal row witnesses, it computes the full
+`D_Gamma` domain from the fibres and fills the coordinate, inverse, YBE,
+two-strand, and Artin-update gates by running the finite checkers.  This
+keeps the local certificate from being a list of unsupported boolean claims.
+
 The residual-faithfulness gate is separate from the endpoint table identities:
 even a trivial endpoint group satisfies all label subgroup inclusions
 formally, but it closes nothing unless killed endpoint channels force the

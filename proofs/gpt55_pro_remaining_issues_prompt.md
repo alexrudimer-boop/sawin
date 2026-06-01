@@ -871,6 +871,13 @@ prover-selected subdomain and not merely one entry per seed and sign.
 Covering both signs for a seed while omitting some local input `(a,b,x,y)` is
 still an incomplete signed table.
 
+The finite audit must derive these domain and identity checks from the
+interval data, the reachable closure, the supplied rows, the endpoint group
+or cutoff target, and the row witnesses.  Unbacked boolean assertions such as
+"coordinate components verified" or "YBE cocycle verified" are not
+certificates unless accompanied by the finite table evaluation that proves
+the assertion.
+
 Every supplied row must also pass the coordinate-component check against the
 actual interval table: positive rows must have `(x',y')=T_{a,b}(x,y)`, and
 negative rows over colours `(c,d)` must use the unique source colour pair

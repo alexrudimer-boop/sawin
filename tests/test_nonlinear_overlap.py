@@ -75,6 +75,7 @@ from ybe_domination import (
     triangular_recovery_unit_group,
     universal_k_signed_endpoint_artin_update_failures,
     universal_k_signed_endpoint_coordinate_failures,
+    universal_k_signed_endpoint_generator_audit,
     universal_k_signed_endpoint_inverse_cancellation_failures,
     universal_k_signed_endpoint_inverse_failures,
     universal_k_signed_endpoint_positive_ybe_cocycle_failures,
@@ -2915,6 +2916,80 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             "reachable_seed_states_have_unreachable_extras",
             audit.failure_reasons,
         )
+
+    def test_signed_endpoint_generator_factory_derives_finite_checks(self):
+        seed_state = ("*", "*", "left_constant_map_universal_kernel")
+        reachable = (("U", seed_state),)
+        interval = one_color_identity_interval()
+        keys = universal_k_signed_endpoint_required_entry_keys(interval, reachable)
+        rows = identity_signed_endpoint_rows(keys)
+        witnesses = {row.entry_key: () for row in rows}
+        audit = universal_k_signed_endpoint_generator_audit(
+            interval,
+            (
+                (
+                    (
+                        "*",
+                        "*",
+                        "L",
+                        "constant_map_kernel",
+                        ("*", (0, 1), "universal", "universal"),
+                    ),
+                    ("U", seed_state),
+                ),
+            ),
+            reachable,
+            rows,
+            endpoint_group=cyclic_group(2),
+            witnesses=witnesses,
+            residual_action_audit=trivial_endpoint_residual_action_audit(),
+        )
+
+        self.assertEqual(audit.required_entry_keys_exact, keys)
+        self.assertTrue(audit.coordinate_components_verified)
+        self.assertTrue(audit.inverse_pairing_verified)
+        self.assertTrue(audit.inverse_cancellation_verified)
+        self.assertTrue(audit.positive_ybe_path_verified)
+        self.assertTrue(audit.positive_ybe_cocycle_verified)
+        self.assertTrue(audit.signed_two_strand_base_verified)
+        self.assertTrue(audit.artin_homomorphism_update_verified)
+        self.assertTrue(audit.proves_signed_endpoint_generator_tables)
+
+    def test_signed_endpoint_generator_factory_reports_coordinate_failure(self):
+        seed_state = ("*", "*", "left_constant_map_universal_kernel")
+        reachable = (("U", seed_state),)
+        interval = one_color_identity_interval()
+        keys = universal_k_signed_endpoint_required_entry_keys(interval, reachable)
+        rows = identity_signed_endpoint_rows(keys)
+        bad_rows = (
+            replace(rows[0], output_left=1 if rows[0].output_left == 0 else 0),
+            *rows[1:],
+        )
+        witnesses = {row.entry_key: () for row in bad_rows}
+        audit = universal_k_signed_endpoint_generator_audit(
+            interval,
+            (
+                (
+                    (
+                        "*",
+                        "*",
+                        "L",
+                        "constant_map_kernel",
+                        ("*", (0, 1), "universal", "universal"),
+                    ),
+                    ("U", seed_state),
+                ),
+            ),
+            reachable,
+            bad_rows,
+            endpoint_group=cyclic_group(2),
+            witnesses=witnesses,
+            residual_action_audit=trivial_endpoint_residual_action_audit(),
+        )
+
+        self.assertFalse(audit.coordinate_components_verified)
+        self.assertFalse(audit.proves_signed_endpoint_generator_tables)
+        self.assertIn("coordinate_components_not_verified", audit.failure_reasons)
 
     def test_signed_endpoint_coordinate_failures_check_positive_and_inverse_rows(self):
         seed_state = ("*", "*", "left_constant_map_universal_kernel")

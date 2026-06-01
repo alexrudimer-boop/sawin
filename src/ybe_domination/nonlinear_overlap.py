@@ -1754,6 +1754,110 @@ def universal_k_signed_endpoint_artin_update_failures(
     return tuple(failures)
 
 
+def universal_k_signed_endpoint_generator_audit(
+    interval: LocalInterval,
+    seed_classifier_entries: Sequence[UniversalKSeedClassifierEntry],
+    reachable_seed_states: Sequence[Tuple[str, UniversalKSeedState]],
+    rows: Sequence[UniversalKSignedEndpointGeneratorRow],
+    *,
+    endpoint_group: FiniteGroup | None = None,
+    witnesses: (
+        Mapping[
+            UniversalKSignedEndpointEntryKey,
+            LongitudeSubgroupWitness,
+        ]
+        | None
+    ) = None,
+    cutoff_readouts_exact: bool = False,
+    residual_faithfulness_verified: bool = False,
+    residual_faithfulness_theorem: UniversalKResidualFaithfulnessAudit | None = None,
+    residual_action_audit: "EndpointResidualActionAudit | None" = None,
+) -> UniversalKSignedEndpointGeneratorAudit:
+    """Build a signed endpoint audit by deriving all finite row checks.
+
+    This keeps the certificate tied to the actual interval table: the required
+    entry domain is computed from the reachable states and fibres, while the
+    boolean gates are filled by the finite coordinate, inverse, YBE, longitude,
+    and Artin-update checkers.
+    """
+
+    reachable_tuple = tuple(reachable_seed_states)
+    row_tuple = tuple(rows)
+    witness_map = dict(witnesses or {})
+    required_entry_keys = universal_k_signed_endpoint_required_entry_keys(
+        interval,
+        reachable_tuple,
+    )
+    coordinate_failures = universal_k_signed_endpoint_coordinate_failures(
+        interval,
+        row_tuple,
+    )
+    inverse_failures = universal_k_signed_endpoint_inverse_failures(
+        interval,
+        row_tuple,
+    )
+    positive_ybe_failures = universal_k_signed_endpoint_positive_ybe_failures(
+        interval,
+        reachable_tuple,
+        row_tuple,
+    )
+    if endpoint_group is None:
+        inverse_cancellation_verified = False
+        positive_ybe_cocycle_verified = False
+        signed_two_strand_base_verified = False
+        artin_homomorphism_update_verified = False
+    else:
+        inverse_cancellation_verified = (
+            not universal_k_signed_endpoint_inverse_cancellation_failures(
+                endpoint_group,
+                interval,
+                row_tuple,
+            )
+        )
+        positive_ybe_cocycle_verified = (
+            not universal_k_signed_endpoint_positive_ybe_cocycle_failures(
+                endpoint_group,
+                interval,
+                reachable_tuple,
+                row_tuple,
+            )
+        )
+        signed_two_strand_base_verified = (
+            not universal_k_signed_endpoint_two_strand_base_failures(
+                endpoint_group,
+                row_tuple,
+                witness_map,
+            )
+        )
+        artin_homomorphism_update_verified = (
+            not universal_k_signed_endpoint_artin_update_failures(
+                endpoint_group,
+                interval,
+                row_tuple,
+                witness_map,
+            )
+        )
+
+    return UniversalKSignedEndpointGeneratorAudit(
+        seed_classifier_entries=tuple(seed_classifier_entries),
+        reachable_seed_states=reachable_tuple,
+        required_entry_keys=required_entry_keys,
+        rows=row_tuple,
+        endpoint_targets_fixed=endpoint_group is not None,
+        coordinate_components_verified=not coordinate_failures,
+        inverse_pairing_verified=not inverse_failures,
+        inverse_cancellation_verified=inverse_cancellation_verified,
+        positive_ybe_path_verified=not positive_ybe_failures,
+        positive_ybe_cocycle_verified=positive_ybe_cocycle_verified,
+        signed_two_strand_base_verified=signed_two_strand_base_verified,
+        artin_homomorphism_update_verified=artin_homomorphism_update_verified,
+        cutoff_readouts_exact=cutoff_readouts_exact,
+        residual_faithfulness_verified=residual_faithfulness_verified,
+        residual_faithfulness_theorem=residual_faithfulness_theorem,
+        residual_action_audit=residual_action_audit,
+    )
+
+
 @dataclass(frozen=True)
 class TriangularRecoveryEndpointWitnessAudit:
     """Endpoint witnesses for K rows routed to the triangular recovery unit."""
