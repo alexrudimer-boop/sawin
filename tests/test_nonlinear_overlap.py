@@ -86,6 +86,7 @@ from ybe_domination import (
     triangular_recovery_unit_group,
     universal_k_signed_endpoint_artin_update_failures,
     universal_k_signed_endpoint_coordinate_failures,
+    universal_k_signed_endpoint_far_commutativity_failures,
     universal_k_signed_endpoint_generator_audit,
     universal_k_signed_endpoint_inverse_cancellation_failures,
     universal_k_signed_endpoint_inverse_failures,
@@ -2672,6 +2673,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             inverse_cancellation_verified=True,
             positive_ybe_path_verified=True,
             positive_ybe_cocycle_verified=True,
+            far_commutativity_verified=True,
             signed_two_strand_base_verified=True,
             artin_homomorphism_update_verified=True,
         )
@@ -2696,6 +2698,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             inverse_cancellation_verified=True,
             positive_ybe_path_verified=True,
             positive_ybe_cocycle_verified=True,
+            far_commutativity_verified=True,
             signed_two_strand_base_verified=True,
             artin_homomorphism_update_verified=True,
         )
@@ -2737,6 +2740,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             inverse_cancellation_verified=True,
             positive_ybe_path_verified=True,
             positive_ybe_cocycle_verified=True,
+            far_commutativity_verified=True,
             signed_two_strand_base_verified=True,
             artin_homomorphism_update_verified=True,
         )
@@ -2761,6 +2765,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             inverse_cancellation_verified=True,
             positive_ybe_path_verified=True,
             positive_ybe_cocycle_verified=True,
+            far_commutativity_verified=True,
             signed_two_strand_base_verified=True,
             artin_homomorphism_update_verified=True,
             residual_action_audit=uncounted_endpoint_residual_action_audit(),
@@ -2880,6 +2885,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             inverse_cancellation_verified=True,
             positive_ybe_path_verified=True,
             positive_ybe_cocycle_verified=True,
+            far_commutativity_verified=True,
             signed_two_strand_base_verified=True,
             artin_homomorphism_update_verified=True,
             residual_action_scope=replace(
@@ -2955,6 +2961,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             inverse_cancellation_verified=True,
             positive_ybe_path_verified=True,
             positive_ybe_cocycle_verified=True,
+            far_commutativity_verified=True,
             signed_two_strand_base_verified=True,
             artin_homomorphism_update_verified=True,
             telescoping_detector_audit=trivial_telescoping_detector_audit(
@@ -3541,6 +3548,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             inverse_cancellation_verified=True,
             positive_ybe_path_verified=True,
             positive_ybe_cocycle_verified=True,
+            far_commutativity_verified=True,
             signed_two_strand_base_verified=True,
             artin_homomorphism_update_verified=True,
             telescoping_detector_audit=trivial_telescoping_detector_audit(
@@ -3668,6 +3676,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             inverse_cancellation_verified=True,
             positive_ybe_path_verified=True,
             positive_ybe_cocycle_verified=True,
+            far_commutativity_verified=True,
             signed_two_strand_base_verified=True,
             artin_homomorphism_update_verified=True,
             telescoping_detector_audit=trivial_telescoping_detector_audit(
@@ -3852,6 +3861,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             inverse_cancellation_verified=True,
             positive_ybe_path_verified=True,
             positive_ybe_cocycle_verified=True,
+            far_commutativity_verified=True,
             signed_two_strand_base_verified=True,
             artin_homomorphism_update_verified=True,
             residual_action_scope=trivial_endpoint_residual_action_scope("U"),
@@ -4103,6 +4113,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             inverse_cancellation_verified=True,
             positive_ybe_path_verified=True,
             positive_ybe_cocycle_verified=True,
+            far_commutativity_verified=True,
             signed_two_strand_base_verified=True,
             artin_homomorphism_update_verified=True,
             telescoping_detector_audit=trivial_telescoping_detector_audit(
@@ -4279,6 +4290,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertTrue(audit.inverse_cancellation_verified)
         self.assertTrue(audit.positive_ybe_path_verified)
         self.assertTrue(audit.positive_ybe_cocycle_verified)
+        self.assertTrue(audit.far_commutativity_verified)
         self.assertTrue(audit.two_strand_witness_domain_exact)
         self.assertTrue(audit.signed_two_strand_base_verified)
         self.assertTrue(audit.artin_homomorphism_update_verified)
@@ -4291,6 +4303,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         )
         self.assertEqual(audit.coordinate_component_failures, ())
         self.assertEqual(audit.inverse_pairing_failures, ())
+        self.assertEqual(audit.far_commutativity_failures, ())
         self.assertEqual(audit.two_strand_witness_domain_failures, ())
         self.assertEqual(audit.two_strand_base_failures, ())
         self.assertTrue(audit.proves_signed_endpoint_generator_tables)
@@ -5035,6 +5048,55 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             tuple(failure[1] for failure in failures),
         )
 
+    def test_signed_endpoint_far_commutativity_failures_check_disjoint_crossings(self):
+        seed_state = ("*", "*", "left_constant_map_universal_kernel")
+        left_state = ("*", "*", "left_constant_map_universal_kernel", "left")
+        right_state = ("*", "*", "left_constant_map_universal_kernel", "right")
+        interval = one_color_identity_interval()
+        group = cyclic_group(2)
+        reachable = (("U", seed_state),)
+        keys = universal_k_signed_endpoint_required_entry_keys(interval, reachable)
+
+        self.assertEqual(
+            universal_k_signed_endpoint_far_commutativity_failures(
+                group,
+                interval,
+                reachable,
+                identity_signed_endpoint_rows(keys),
+            ),
+            (),
+        )
+
+        noncommuting_reachable = (
+            ("U", seed_state),
+            ("U", left_state),
+            ("U", right_state),
+        )
+        noncommuting_keys = universal_k_signed_endpoint_required_entry_keys(
+            interval,
+            noncommuting_reachable,
+        )
+        noncommuting_rows = []
+        for row in identity_signed_endpoint_rows(noncommuting_keys):
+            if row.seed_state == seed_state and row.sign == 1:
+                if (row.input_left, row.input_right) == (0, 0):
+                    row = replace(row, next_seed_state=left_state)
+                if (row.input_left, row.input_right) == (1, 1):
+                    row = replace(row, next_seed_state=right_state)
+            noncommuting_rows.append(row)
+
+        failures = universal_k_signed_endpoint_far_commutativity_failures(
+            group,
+            interval,
+            noncommuting_reachable,
+            tuple(noncommuting_rows),
+        )
+
+        self.assertIn(
+            "far_commutativity_terminal_mismatch",
+            tuple(failure[1] for failure in failures),
+        )
+
     def test_signed_endpoint_two_strand_base_failures_check_longitude_witnesses(self):
         seed_state = ("*", "*", "left_constant_map_universal_kernel")
         group = cyclic_group(3)
@@ -5277,6 +5339,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             inverse_cancellation_verified=True,
             positive_ybe_path_verified=True,
             positive_ybe_cocycle_verified=True,
+            far_commutativity_verified=True,
             signed_two_strand_base_verified=True,
             artin_homomorphism_update_verified=True,
             telescoping_detector_audit=trivial_telescoping_detector_audit(

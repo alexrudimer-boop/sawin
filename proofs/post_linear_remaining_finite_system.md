@@ -7,6 +7,18 @@ explicit finite system.  It does not prove `[Resolution: A]` or construct
 `[Resolution: B]`.  It records what a nonlinear survivor must now satisfy if
 the finite-linear obstruction has already been ruled out.
 
+The global assembly is conditionally closed: once every surviving local
+U/C/M endpoint family has a full-braid fixed-assignment word-potential
+observer and residual-faithfulness proof, the finite direct product of the
+known branch detector groups and the U/C/M endpoint targets gives the local
+group `G(pi,Q)`.  Product functoriality
+`V_beta(prod_s G_s)=prod_s V_beta(G_s)` kills each known branch and endpoint
+family componentwise, residual faithfulness gives `Delta_n(beta)=1`, and the
+sharp rack detector replaces `Q` by `Q x A_{G(pi,Q)}`.  Iterating this along
+the finite congruence chain yields a rack independent of braid index.  Thus
+the remaining obstruction recorded here is local: construct those U/C/M
+endpoint observers, or construct a normalized-law counterexample.
+
 ## Input data
 
 The remaining finite datum is a local interval
@@ -400,7 +412,7 @@ transition closure of the reachable state set, required full entry domain
 derived from the interval fibres, missing or extra table entries, duplicate
 entries, positive/inverse coordinate-component
 checks against `T`, structural opposite-sign inverse pairing, and the finite
-positive-YBE state/fibre path check, and the finite proof gates:
+positive-YBE and far-commutativity path checks, and the finite proof gates:
 
 ```text
 fixed endpoint group or cutoff target
@@ -413,6 +425,7 @@ signed inverse row pairing
 signed inverse cancellation
 positive local endpoint YBE path
 positive local endpoint YBE cocycle
+signed far-commutativity for disjoint crossings
 fixed-assignment detector-track initialization
 Artin detector recurrence on each track
 finite word-potential certificate table supplied
@@ -465,16 +478,29 @@ ledger rather than silently collapsed.  Cutoff braid-index independence is
 derived from the positive fixed degree and exact finite readout rows, so the
 legacy `braid_index_independent` flag on this audit is diagnostic only.
 
-When a finite endpoint group is supplied, the inverse-cancellation and
-positive-YBE cocycle gates are checked by multiplying the emitted endpoint
-labels in that group.  Thus those gates require a concrete group table and
-cannot be discharged by naming a candidate label set alone.
+When a finite endpoint group is supplied, the inverse-cancellation,
+positive-YBE cocycle, and far-commutativity gates are checked by multiplying
+the emitted endpoint labels in that group.  Thus those gates require a
+concrete group table and cannot be discharged by naming a candidate label set
+alone.
 The concrete group table must also match the target ledger: its order must be
 the product of the endpoint-group orders listed for the active group-valued
 families.  Symmetric cutoff degrees are handled by the cutoff readout audit
 instead of being folded into this product.  A mismatch is reported as
 `endpoint_target_group_order_mismatch` and leaves the endpoint target gate
 open.
+
+The signed endpoint observer is now audited as a full braid-presentation
+observer.  Inverse cancellation handles `sigma_i sigma_i^-1`, the adjacent
+positive-YBE path and cocycle gates handle `sigma_i sigma_{i+1} sigma_i`,
+and the new far-commutativity gate handles disjoint crossings.  For every
+reachable state, every four-strand local colour/fibre tuple, and every sign
+pair, the checker compares the two paths
+`Gamma_i^epsilon Gamma_j^delta` and
+`Gamma_j^delta Gamma_i^epsilon` for `|i-j|>1`.  The paths must use defined
+rows and must return the same endpoint state, colour/fibre tuple, and ordered
+label product.  Without this finite row check, the endpoint accumulation can
+still be word-dependent even when inverse cancellation and adjacent YBE pass.
 
 The old rowwise two-strand witness gate is retained only as diagnostic data.
 It is not a decisive endpoint-closure condition: for the standard Artin
@@ -771,6 +797,8 @@ signed_endpoint_generator_positive_ybe_path_verified
 signed_endpoint_generator_positive_ybe_path_failures
 signed_endpoint_generator_positive_ybe_cocycle_verified
 signed_endpoint_generator_positive_ybe_cocycle_failures
+signed_endpoint_generator_far_commutativity_verified
+signed_endpoint_generator_far_commutativity_failures
 signed_endpoint_generator_two_strand_witness_domain_exact
 signed_endpoint_generator_two_strand_witness_domain_failures
 signed_endpoint_generator_two_strand_base_verified

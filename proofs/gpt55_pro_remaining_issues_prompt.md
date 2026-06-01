@@ -823,9 +823,9 @@ where `(x',y')=T_{a,b}^{+/-}(x,y)`.
 
 ### Signed Endpoint Generator Tables
 
-This is the uniform word-potential signed U/C/M endpoint-generator and
-residual-faithfulness lemma.  It is now the first decisive A-side missing
-object after the `K_nabla` and `kappa` layer.
+This is the uniform full-braid fixed-assignment word-potential
+endpoint-observer and residual-faithfulness lemma.  It is now the first
+decisive A-side missing object after the `K_nabla` and `kappa` layer.
 
 For every endpoint family `E in {U,C,M}`, define the initial routed seed set
 
@@ -1001,14 +1001,15 @@ bare flag saying "derived from interval" is not enough.  The finite row checks
 themselves must be marked as derived from the supplied signed rows, actual
 interval table, endpoint group or cutoff multiplication, and explicit
 detector-lift data; manually asserted success flags for coordinate
-compatibility, inverse cancellation, YBE cocycle, rowwise longitude
-diagnostics, or telescoping detector data are not certificates.  If a
-derived check fails, the certificate must
+compatibility, inverse cancellation, adjacent YBE cocycle,
+far-commutativity, rowwise longitude diagnostics, or telescoping detector
+data are not certificates.  If a derived check fails, the certificate must
 report the actual failed rows or local triples, not only a failed boolean.
-For group-valued signed rows, inverse cancellation and positive YBE cocycle
-checks require the actual finite endpoint group multiplication table.  A
-signed endpoint audit with success booleans but no concrete endpoint group is
-not a finite row-check certificate, even if an endpoint target order is listed.
+For group-valued signed rows, inverse cancellation, positive YBE cocycle, and
+far-commutativity checks require the actual finite endpoint group
+multiplication table.  A signed endpoint audit with success booleans but no
+concrete endpoint group is not a finite row-check certificate, even if an
+endpoint target order is listed.
 Moreover, the concrete endpoint group used for signed-row multiplication must
 match the group-valued target ledger: its order must equal the product of the
 listed endpoint-group orders for the active group-targeted families.  Symmetric
@@ -1096,6 +1097,28 @@ present and that the final endpoint state and final three fibre coordinates
 agree.  Second, the positive-YBE cocycle check must prove that the ordered
 products of the three `H_E` labels agree in `H_E`.  Both checks range over
 all `s in S_E^reach` and all local triples `(x,y,z)`.
+
+The signed endpoint observer must also satisfy far-commutativity for disjoint
+crossings.  For every pair of positions with `|i-j|>1`, every sign pair
+`epsilon,delta in {+1,-1}`, every compatible four-strand colour/fibre tuple,
+and every reachable endpoint state, the two path products
+
+```text
+Gamma_i^epsilon Gamma_j^delta
+and
+Gamma_j^delta Gamma_i^epsilon
+```
+
+must use defined rows and must have the same terminal endpoint state, the
+same terminal colour/fibre tuple, and the same ordered product of emitted
+labels in the endpoint group or cutoff target.  Equivalently, the endpoint
+observer must respect the braid presentation, not only one adjacent
+Yang-Baxter square.  If negative rows are proved to be genuine inverses, it is
+enough to derive the signed far-commutativity variants from positive
+far-commutativity and inverse cancellation, but the proof must still contain
+some explicit finite far-commutativity gate.  Without it, endpoint
+accumulation may depend on the chosen braid word even when inverse
+cancellation and adjacent positive YBE hold.
 
 The rowwise signed two-strand Artin-longitude identity is not a decisive
 closure condition.  Under the fixed Artin convention
@@ -1466,6 +1489,7 @@ signed_inverse_row_pairing,
 signed_inverse_cancellation,
 positive_local_endpoint_ybe_path,
 positive_local_endpoint_ybe_cocycle,
+signed_far_commutativity,
 fixed_detector_track_initialization,
 detector_track_initialization_rows_exact,
 detector_track_initialization_rules_use_only_allowed_initial_data,
@@ -1857,7 +1881,90 @@ If returning B, you must give:
 - proof that the sharp finite-group obstruction theorem converts this into
   non-domination by every finite rack.
 
-## 10. What Must Be Done To Resolve The Problem
+## 10. Conditional Global Assembly
+
+The global assembly is conditionally closed once the local U/C/M endpoint
+observer lemma is supplied.  The remaining obstruction is local, not a
+separate product or congruence-chain gap.
+
+Conditional theorem: assume that every finite local-minimal post-linear
+coloured YBE interval surviving the stated reductions has, for each active
+routed endpoint family `E in {U,C,M}`, a finite endpoint observer
+
+```text
+S_E^reach,  H_E or S_mE,  Gamma^{E,+/-},  W_s,
+```
+
+with exact cutoff readouts where needed, such that:
+
+```text
+S_E^reach is the exact signed-transition closure of kappa(K_nabla);
+Gamma^{E,+/-} is defined on the full D_Gamma(E);
+the observer satisfies inverse cancellation, adjacent endpoint YBE, and
+  far-commutativity, so endpoint accumulation is a braid invariant;
+the fixed-assignment word-potential detector lift proves
+  endpoint_E(beta) in V_beta(H_E) for every braid index n and every beta in N_n;
+product endpoint rows are separated family-by-family;
+killed active routed endpoint channels imply Delta_n(beta)=1.
+```
+
+Then finite-rack domination follows for every finite bijective
+set-theoretic Yang-Baxter solution.
+
+For one quotient interval `pi:X->Z`, suppose `Z` is already dominated by a
+finite rack `Q`, and set `N_n=ker rho_{Q,n}`.  Let
+`G_known,1,...,G_known,r` be the fixed detector groups for the branches that
+were already closed before U/C/M.  Let `F subset {U,C,M}` be the active
+routed endpoint family set, and write `H_E=S_mE` when `E` is handled by a
+symmetric cutoff.  Define the finite group
+
+```text
+G(pi,Q) =
+  (prod_{j=1}^r G_known,j) x (prod_{E in F} H_E).
+```
+
+This group depends only on the finite interval and the already chosen rack
+`Q`, not on the braid index.  If
+
+```text
+Lambda_{G(pi,Q),n}(beta)=Lambda_{G(pi,Q),n}(1),
+```
+
+then projection to every factor gives identity longitude data in each fixed
+factor.  The product identity
+
+```text
+V_beta(prod_s G_s)=prod_s V_beta(G_s)
+```
+
+kills every known residual channel and every active endpoint channel
+componentwise, with no cross-family cancellation.  The local
+residual-faithfulness theorem then gives `Delta_n(beta)=1` for every
+`beta in N_n`.  Hence the sharp finite-group obstruction theorem says that
+`Q x A_{G(pi,Q)}` dominates the interval.
+
+For a maximal congruence chain
+
+```text
+Delta_X=kappa_0 < kappa_1 < ... < kappa_m=Nabla_X,
+```
+
+start from the one-point quotient, dominated by the one-point rack, and move
+down the chain.  If `X/kappa_{i+1}` is dominated by a finite rack `Q_{i+1}`,
+apply the local construction to
+`X/kappa_i -> X/kappa_{i+1}` and set
+
+```text
+Q_i = Q_{i+1} x A_{G(pi_i,Q_{i+1})}.
+```
+
+The chain is finite, and every group factor is finite and independent of
+braid index, so the final rack `Q_0` is finite, independent of `n`, and
+dominates `X`.  Thus a complete A proof now only needs the local U/C/M
+endpoint-observer lemma, plus the unsupported-companion contradiction if that
+exclusion is not accepted as a standing reduction.
+
+## 11. What Must Be Done To Resolve The Problem
 
 1. Prove or repair the post-linear reduction.
 
@@ -1889,7 +1996,8 @@ If returning B, you must give:
 
    Define `S_U^reach` from the exact `S_U` values hit by `kappa`, define the
    full signed endpoint table on `D_Gamma`, construct fixed detector-track
-   initialization rules, prove the Artin detector recurrence, define word
+   initialization rules, prove inverse cancellation, adjacent endpoint YBE,
+   and far-commutativity, prove the Artin detector recurrence, define word
    templates `W_s` for all reachable states, verify the finite word-potential
    identity for every signed row, and prove the terminal word uses only final
    evaluated longitudes.  Then prove uniformly in
@@ -1902,7 +2010,8 @@ If returning B, you must give:
 
    Define `S_C^reach` from the exact `S_C` values hit by `kappa`, define the
    full signed endpoint table on `D_Gamma`, construct fixed detector-track
-   initialization rules, prove the Artin detector recurrence, define word
+   initialization rules, prove inverse cancellation, adjacent endpoint YBE,
+   and far-commutativity, prove the Artin detector recurrence, define word
    templates, verify the finite word-potential identity, and construct exact
    faithful cutoff readouts for the routed identity-continuation ledger.
    Then construct fixed detector-lift endpoint witnesses or a faithful
@@ -1914,7 +2023,8 @@ If returning B, you must give:
 
    Define `S_M^reach` from the exact `S_M` values hit by `kappa`, define the
    full signed endpoint table on `D_Gamma`, construct fixed detector-track
-   initialization rules, prove the Artin detector recurrence, define word
+   initialization rules, prove inverse cancellation, adjacent endpoint YBE,
+   and far-commutativity, prove the Artin detector recurrence, define word
    templates, verify the finite word-potential identity, and construct exact
    faithful cutoff readouts for the routed mixed-unit ledger.  Then construct
    fixed detector-lift endpoint/readout witnesses or a faithful symmetric
@@ -1942,7 +2052,7 @@ If returning B, you must give:
    sequence, finite-group invisibility proof, moved tuples, and sharp
    obstruction argument described in Section 9.
 
-## 11. Mandatory Final Audit
+## 12. Mandatory Final Audit
 
 Before returning a claimed resolution, explicitly answer:
 
@@ -1967,14 +2077,15 @@ Before returning a claimed resolution, explicitly answer:
    `Gamma^{U,+/-}`, `Gamma^{C,+/-}`, and `Gamma^{M,+/-}` defined on those
    exact reachable state spaces and on every entry of `D_Gamma`, not merely
    one entry per seed and sign?
-8. Do the signed endpoint generator tables satisfy inverse cancellation, the
-   positive local endpoint YBE cocycle identity, and the fixed-assignment
-   detector-lift telescope: fixed detector tracks chosen before the braid,
-   track initialization from interval data, every raw assignment variable used
-   by a substitution initialized by its track, the Artin detector recurrence,
-   word templates `W_s` for every reachable endpoint state using only current
-   longitude variables whose track indices are declared and initialized, the
-   induced Artin substitution, the identity
+8. Do the signed endpoint generator tables satisfy full braid-presentation
+   coherence: inverse cancellation, adjacent positive endpoint YBE path and
+   cocycle, and far-commutativity for disjoint signed crossings, together
+   with the fixed-assignment detector-lift telescope: fixed detector tracks
+   chosen before the braid, track initialization from interval data, every
+   raw assignment variable used by a substitution initialized by its track,
+   the Artin detector recurrence, word templates `W_s` for every reachable
+   endpoint state using only current longitude variables whose track indices
+   are declared and initialized, the induced Artin substitution, the identity
    `W_{s'}(A_gamma^epsilon(U,A))=W_s(U)h` for every signed row, initial
    normalization on exactly the current `kappa` seed image, and exact
    `D_Gamma` coverage?

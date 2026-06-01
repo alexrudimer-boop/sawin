@@ -3283,6 +3283,7 @@ class UniversalKSignedEndpointGeneratorAudit:
     inverse_cancellation_verified: bool = False
     positive_ybe_path_verified: bool = False
     positive_ybe_cocycle_verified: bool = False
+    far_commutativity_verified: bool = False
     signed_two_strand_base_verified: bool = False
     artin_homomorphism_update_verified: bool = False
     coordinate_component_failures: Tuple[
@@ -3294,6 +3295,7 @@ class UniversalKSignedEndpointGeneratorAudit:
         UniversalKSignedEndpointPositiveYBEFailure, ...
     ] = ()
     positive_ybe_cocycle_failures: Tuple[UniversalKSignedEndpointLabelFailure, ...] = ()
+    far_commutativity_failures: Tuple[UniversalKSignedEndpointLabelFailure, ...] = ()
     two_strand_witness_domain_failures: Tuple[
         UniversalKSignedEndpointLabelFailure, ...
     ] = ()
@@ -3599,6 +3601,8 @@ class UniversalKSignedEndpointGeneratorAudit:
             and self.positive_ybe_path_verified == (not self.positive_ybe_path_failures)
             and self.positive_ybe_cocycle_verified
             == (not self.positive_ybe_cocycle_failures)
+            and self.far_commutativity_verified
+            == (not self.far_commutativity_failures)
         )
 
     @property
@@ -3937,6 +3941,7 @@ class UniversalKSignedEndpointGeneratorAudit:
             and self.inverse_cancellation_verified
             and self.positive_ybe_path_verified
             and self.positive_ybe_cocycle_verified
+            and self.far_commutativity_verified
             and self.telescoping_detector_proved
             and self.exact_cutoff_readouts_proved
             and self.residual_faithfulness_proved
@@ -4021,6 +4026,8 @@ class UniversalKSignedEndpointGeneratorAudit:
             reasons.append("positive_ybe_path_not_verified")
         if not self.positive_ybe_cocycle_verified:
             reasons.append("positive_ybe_cocycle_not_verified")
+        if not self.far_commutativity_verified:
+            reasons.append("far_commutativity_not_verified")
         if not self.telescoping_detector_proved:
             reasons.append("detector_lift_telescoping_not_verified")
             if self.required_seed_states and self.telescoping_detector_audit is None:
@@ -4644,6 +4651,188 @@ def universal_k_signed_endpoint_positive_ybe_cocycle_failures(
     return tuple(failures)
 
 
+def universal_k_signed_endpoint_far_commutativity_failures(
+    endpoint_group: FiniteGroup,
+    interval: LocalInterval,
+    reachable_seed_states: Sequence[Tuple[str, UniversalKSeedState]],
+    rows: Sequence[UniversalKSignedEndpointGeneratorRow],
+) -> Tuple[UniversalKSignedEndpointLabelFailure, ...]:
+    """Return disjoint-crossing endpoint path or label mismatches."""
+
+    inverse_base = {target: source for source, target in interval.base_R.items()}
+    row_by_key = {}
+    duplicate_keys = set()
+    for row in rows:
+        if row.entry_key in row_by_key:
+            duplicate_keys.add(row.entry_key)
+            continue
+        row_by_key[row.entry_key] = row
+
+    failures: list[UniversalKSignedEndpointLabelFailure] = [
+        (key, "duplicate_far_commutativity_entry_key", None)
+        for key in sorted(duplicate_keys, key=repr)
+    ]
+    group_elements = set(endpoint_group.elements)
+
+    def run_step(
+        endpoint_family: str,
+        state: UniversalKSeedState,
+        colors: Tuple[Color, Color, Color, Color],
+        fibres: Tuple[FibrePoint, FibrePoint, FibrePoint, FibrePoint],
+        position: int,
+        sign: int,
+    ) -> Tuple[
+        Tuple[
+            UniversalKSeedState,
+            Tuple[Color, Color, Color, Color],
+            Tuple[FibrePoint, FibrePoint, FibrePoint, FibrePoint],
+            GroupElement,
+        ]
+        | None,
+        UniversalKSignedEndpointLabelFailure | None,
+    ]:
+        key = (
+            endpoint_family,
+            state,
+            sign,
+            colors[position],
+            colors[position + 1],
+            fibres[position],
+            fibres[position + 1],
+        )
+        row = row_by_key.get(key)
+        if row is None:
+            return None, (
+                key,
+                "missing_far_commutativity_row",
+                (position, colors, fibres),
+            )
+        if row.endpoint_value not in group_elements:
+            return None, (
+                key,
+                "endpoint_value_outside_group",
+                row.endpoint_value,
+            )
+        if sign == 1:
+            target_colors = interval.base_R.get((row.left_color, row.right_color))
+            if target_colors is None:
+                return None, (key, "positive_color_pair_outside_base", None)
+        elif sign == -1:
+            target_colors = inverse_base.get((row.left_color, row.right_color))
+            if target_colors is None:
+                return None, (key, "negative_color_pair_not_in_image", None)
+        else:
+            return None, (key, "unknown_sign", sign)
+
+        next_colors = list(colors)
+        next_fibres = list(fibres)
+        next_colors[position], next_colors[position + 1] = target_colors
+        next_fibres[position], next_fibres[position + 1] = (
+            row.output_left,
+            row.output_right,
+        )
+        next_color_tuple = tuple(next_colors)
+        next_fibre_tuple = tuple(next_fibres)
+        return (
+            row.next_seed_state,
+            next_color_tuple,
+            next_fibre_tuple,
+            row.endpoint_value,
+        ), None
+
+    def run_path(
+        endpoint_family: str,
+        seed_state: UniversalKSeedState,
+        start_colors: Tuple[Color, Color, Color, Color],
+        start_fibres: Tuple[FibrePoint, FibrePoint, FibrePoint, FibrePoint],
+        steps: Tuple[Tuple[int, int], Tuple[int, int]],
+    ) -> Tuple[
+        Tuple[
+            UniversalKSeedState,
+            Tuple[Color, Color, Color, Color],
+            Tuple[FibrePoint, FibrePoint, FibrePoint, FibrePoint],
+            GroupElement,
+        ]
+        | None,
+        UniversalKSignedEndpointLabelFailure | None,
+    ]:
+        state = seed_state
+        colors = start_colors
+        fibres = start_fibres
+        label_product = endpoint_group.identity
+        for position, sign in steps:
+            result, failure = run_step(
+                endpoint_family,
+                state,
+                colors,
+                fibres,
+                position,
+                sign,
+            )
+            if failure is not None:
+                return None, failure
+            assert result is not None
+            state, colors, fibres, label = result
+            label_product = endpoint_group.mul(label_product, label)
+        return (state, colors, fibres, label_product), None
+
+    for endpoint_family, seed_state in sorted(set(reachable_seed_states), key=repr):
+        for colors in product(interval.colors, repeat=4):
+            fibre_ranges = tuple(interval.fibres[color] for color in colors)
+            for fibres in product(*fibre_ranges):
+                start_colors = tuple(colors)
+                start_fibres = tuple(fibres)
+                for left_sign, right_sign in product((-1, 1), repeat=2):
+                    left_result, left_failure = run_path(
+                        endpoint_family,
+                        seed_state,
+                        start_colors,
+                        start_fibres,
+                        ((0, left_sign), (2, right_sign)),
+                    )
+                    right_result, right_failure = run_path(
+                        endpoint_family,
+                        seed_state,
+                        start_colors,
+                        start_fibres,
+                        ((2, right_sign), (0, left_sign)),
+                    )
+                    if left_failure is not None:
+                        failures.append(left_failure)
+                    if right_failure is not None:
+                        failures.append(right_failure)
+                    if left_failure is not None or right_failure is not None:
+                        continue
+                    assert left_result is not None
+                    assert right_result is not None
+                    context = (
+                        endpoint_family,
+                        seed_state,
+                        left_sign,
+                        right_sign,
+                        *start_colors,
+                        *start_fibres,
+                    )
+                    if left_result[:3] != right_result[:3]:
+                        failures.append(
+                            (
+                                context,
+                                "far_commutativity_terminal_mismatch",
+                                (left_result[:3], right_result[:3]),
+                            )
+                        )
+                        continue
+                    if left_result[3] != right_result[3]:
+                        failures.append(
+                            (
+                                context,
+                                "far_commutativity_label_mismatch",
+                                (left_result[3], right_result[3]),
+                            )
+                        )
+    return tuple(failures)
+
+
 def universal_k_signed_endpoint_two_strand_base_failures(
     endpoint_group: FiniteGroup,
     rows: Sequence[UniversalKSignedEndpointGeneratorRow],
@@ -4947,6 +5136,7 @@ def universal_k_signed_endpoint_generator_audit(
     if endpoint_group is None:
         inverse_cancellation_failures = ()
         positive_ybe_cocycle_failures = ()
+        far_commutativity_failures = ()
         two_strand_witness_domain_failures = ()
         two_strand_base_failures = ()
         artin_update_failures = ()
@@ -4957,6 +5147,12 @@ def universal_k_signed_endpoint_generator_audit(
             row_tuple,
         )
         positive_ybe_cocycle_failures = universal_k_signed_endpoint_positive_ybe_cocycle_failures(
+            endpoint_group,
+            interval,
+            reachable_tuple,
+            row_tuple,
+        )
+        far_commutativity_failures = universal_k_signed_endpoint_far_commutativity_failures(
             endpoint_group,
             interval,
             reachable_tuple,
@@ -4997,6 +5193,9 @@ def universal_k_signed_endpoint_generator_audit(
         positive_ybe_cocycle_verified=(
             endpoint_group is not None and not positive_ybe_cocycle_failures
         ),
+        far_commutativity_verified=(
+            endpoint_group is not None and not far_commutativity_failures
+        ),
         signed_two_strand_base_verified=(
             endpoint_group is not None and not two_strand_base_failures
         ),
@@ -5008,6 +5207,7 @@ def universal_k_signed_endpoint_generator_audit(
         inverse_cancellation_failures=inverse_cancellation_failures,
         positive_ybe_path_failures=positive_ybe_failures,
         positive_ybe_cocycle_failures=positive_ybe_cocycle_failures,
+        far_commutativity_failures=far_commutativity_failures,
         two_strand_witness_domain_failures=two_strand_witness_domain_failures,
         two_strand_base_failures=two_strand_base_failures,
         artin_update_failures=artin_update_failures,
@@ -6637,6 +6837,8 @@ class PostLinearRemainingFiniteSystemAudit:
                 ("signed_endpoint_generator_positive_ybe_path_failures", ()),
                 ("signed_endpoint_generator_positive_ybe_cocycle_verified", False),
                 ("signed_endpoint_generator_positive_ybe_cocycle_failures", ()),
+                ("signed_endpoint_generator_far_commutativity_verified", False),
+                ("signed_endpoint_generator_far_commutativity_failures", ()),
                 ("signed_endpoint_generator_two_strand_witness_domain_exact", False),
                 ("signed_endpoint_generator_two_strand_witness_domain_failures", ()),
                 ("signed_endpoint_generator_two_strand_base_verified", False),
@@ -7199,6 +7401,14 @@ class PostLinearRemainingFiniteSystemAudit:
             (
                 "signed_endpoint_generator_positive_ybe_cocycle_failures",
                 audit.positive_ybe_cocycle_failures,
+            ),
+            (
+                "signed_endpoint_generator_far_commutativity_verified",
+                audit.far_commutativity_verified,
+            ),
+            (
+                "signed_endpoint_generator_far_commutativity_failures",
+                audit.far_commutativity_failures,
             ),
             (
                 "signed_endpoint_generator_two_strand_witness_domain_exact",
