@@ -824,7 +824,9 @@ The classifier `kappa` used to seed the signed tables must also be a
 function on `K_nabla`: no row descriptor may appear twice, and no descriptor
 may be assigned to two different endpoint-family/state targets.  A
 conflicting or duplicate classifier ledger is not a usable seed map for the
-signed endpoint layer.
+signed endpoint layer.  Every classifier target and every reachable-state
+family must lie in the fixed set `{U,C,M}`; introducing a fourth bookkeeping
+family does not close a routed endpoint obligation.
 
 Let `H_E` be the fixed finite endpoint group for that family, or let `S_mE`
 be the fixed symmetric cutoff group in a cutoff proof.  The group must be
@@ -1101,6 +1103,8 @@ reachable_state_set_contains_initial_seeds,
 reachable_state_set_is_signed_transition_closure,
 reachable_state_ledger_duplicate_free,
 kappa_seed_classifier_functional,
+kappa_targets_in_U_C_M,
+reachable_state_families_in_U_C_M,
 all_signed_row_states_reachable,
 fixed_endpoint_group_or_cutoff,
 family_scoped_endpoint_target_coverage,
@@ -1568,13 +1572,13 @@ Before returning a claimed resolution, explicitly answer:
    unsupported companion row included?
 4. Is `kappa(d)` defined for every `d in K_nabla`, with values in exactly
    one of `S_U`, `S_C`, or `S_M`, and is the classifier ledger duplicate-free
-   and functional on row descriptors?
+   and functional on row descriptors, with no target outside `{U,C,M}`?
 5. Are unsupported companion block-image rows proved structural
    inconsistencies rather than endpoint seeds?
 6. Are `S_U`, `S_C`, and `S_M` the exact finite seed state spaces, and are
    the finite reachable sets `S_U^reach`, `S_C^reach`, and `S_M^reach`
    constructed as duplicate-free exact signed-transition closures of those
-   seeds?
+   seeds, with no reachable state family outside `{U,C,M}`?
 7. Are all signed endpoint generator tables
    `Gamma^{U,+/-}`, `Gamma^{C,+/-}`, and `Gamma^{M,+/-}` defined on those
    exact reachable state spaces and on every entry of `D_Gamma`, not merely

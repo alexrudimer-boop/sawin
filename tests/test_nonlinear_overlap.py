@@ -2881,6 +2881,40 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             conflicting_kappa.failure_reasons,
         )
 
+        invalid_kappa_target = UniversalKSignedEndpointGeneratorAudit(
+            seed_classifier_entries=((seed_entries[0][0], ("Z", seed_state)),),
+            reachable_seed_states=(("Z", seed_state),),
+            required_entry_keys=required_entry_keys,
+            entry_domain_derived_from_interval=True,
+            rows=(positive_row, negative_row),
+            endpoint_targets_fixed=True,
+            endpoint_target_audit=trivial_endpoint_target_audit("Z"),
+            coordinate_components_verified=True,
+            inverse_pairing_verified=True,
+            inverse_cancellation_verified=True,
+            positive_ybe_path_verified=True,
+            positive_ybe_cocycle_verified=True,
+            signed_two_strand_base_verified=True,
+            artin_homomorphism_update_verified=True,
+            residual_action_scope=trivial_endpoint_residual_action_scope(
+                "Z",
+                seed_states=(("Z", seed_state),),
+            ),
+            residual_action_audit=trivial_endpoint_residual_action_audit(),
+        )
+
+        self.assertFalse(invalid_kappa_target.seed_classifier_targets_known)
+        self.assertFalse(invalid_kappa_target.reachable_seed_families_known)
+        self.assertFalse(invalid_kappa_target.proves_signed_endpoint_generator_tables)
+        self.assertIn(
+            "seed_classifier_targets_unknown_endpoint_family",
+            invalid_kappa_target.failure_reasons,
+        )
+        self.assertIn(
+            "reachable_seed_states_unknown_endpoint_family",
+            invalid_kappa_target.failure_reasons,
+        )
+
         complete = UniversalKSignedEndpointGeneratorAudit(
             seed_classifier_entries=seed_entries,
             reachable_seed_states=(("U", seed_state),),

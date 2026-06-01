@@ -92,6 +92,7 @@ if TYPE_CHECKING:  # pragma: no cover - typing only
 
 
 NONLINEAR_OVERLAP_TARGET_VERDICT = "bi_free_universal_corridor_bottleneck"
+UNIVERSAL_K_ENDPOINT_FAMILIES = frozenset(("U", "C", "M"))
 TriangularRecoveryState = Tuple[Color, Color, FibrePoint, FibrePoint]
 TriangularRecoveryEndpointKey = Tuple[Color, Color, str]
 UniversalKRowDescriptor = Tuple[object, ...]
@@ -585,7 +586,7 @@ class UniversalKSignedEndpointGeneratorRow:
 
     @property
     def endpoint_family_known(self) -> bool:
-        return self.endpoint_family in {"U", "C", "M"}
+        return self.endpoint_family in UNIVERSAL_K_ENDPOINT_FAMILIES
 
     @property
     def sign_known(self) -> bool:
@@ -1202,6 +1203,20 @@ class UniversalKSignedEndpointGeneratorAudit:
         )
 
     @property
+    def invalid_seed_classifier_targets(
+        self,
+    ) -> Tuple[UniversalKSeedClassifierEntry, ...]:
+        return tuple(
+            entry
+            for entry in self.seed_classifier_entries
+            if entry[1][0] not in UNIVERSAL_K_ENDPOINT_FAMILIES
+        )
+
+    @property
+    def seed_classifier_targets_known(self) -> bool:
+        return not self.invalid_seed_classifier_targets
+
+    @property
     def reachable_seed_states_exact(
         self,
     ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
@@ -1212,6 +1227,20 @@ class UniversalKSignedEndpointGeneratorAudit:
         self,
     ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
         return _duplicate_values(self.reachable_seed_states)
+
+    @property
+    def invalid_reachable_seed_states(
+        self,
+    ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
+        return tuple(
+            state
+            for state in self.reachable_seed_states_exact
+            if state[0] not in UNIVERSAL_K_ENDPOINT_FAMILIES
+        )
+
+    @property
+    def reachable_seed_families_known(self) -> bool:
+        return not self.invalid_reachable_seed_states
 
     @property
     def missing_initial_seed_states(
@@ -1387,9 +1416,11 @@ class UniversalKSignedEndpointGeneratorAudit:
         return (
             bool(self.required_entry_keys_exact)
             and self.seed_classifier_is_functional
+            and self.seed_classifier_targets_known
             and self.entry_domain_derived_from_interval
             and bool(self.reachable_seed_states_exact)
             and not self.duplicate_reachable_seed_states
+            and self.reachable_seed_families_known
             and not self.missing_initial_seed_states
             and self.reachable_seed_state_closure_exact
             and not self.row_states_outside_reachable_set
@@ -1566,10 +1597,14 @@ class UniversalKSignedEndpointGeneratorAudit:
             reasons.append("seed_classifier_duplicate_descriptors")
         if self.conflicting_seed_classifier_descriptors:
             reasons.append("seed_classifier_conflicting_descriptors")
+        if self.invalid_seed_classifier_targets:
+            reasons.append("seed_classifier_targets_unknown_endpoint_family")
         if not self.reachable_seed_states_exact:
             reasons.append("reachable_seed_states_not_supplied")
         if self.duplicate_reachable_seed_states:
             reasons.append("reachable_seed_states_duplicate_entries")
+        if self.invalid_reachable_seed_states:
+            reasons.append("reachable_seed_states_unknown_endpoint_family")
         if self.missing_initial_seed_states:
             reasons.append("reachable_seed_states_missing_initial_seeds")
         if self.missing_transition_reachable_seed_states:
@@ -3965,8 +4000,10 @@ class PostLinearRemainingFiniteSystemAudit:
                 ("signed_endpoint_generator_duplicate_seed_classifier_entries", ()),
                 ("signed_endpoint_generator_duplicate_seed_classifier_descriptors", ()),
                 ("signed_endpoint_generator_conflicting_seed_classifier_descriptors", ()),
+                ("signed_endpoint_generator_invalid_seed_classifier_targets", ()),
                 ("signed_endpoint_generator_reachable_seed_states", ()),
                 ("signed_endpoint_generator_duplicate_reachable_seed_states", ()),
+                ("signed_endpoint_generator_invalid_reachable_seed_states", ()),
                 ("signed_endpoint_generator_transition_reachable_seed_states", ()),
                 ("signed_endpoint_generator_unreachable_declared_seed_states", ()),
                 ("signed_endpoint_generator_missing_transition_reachable_seed_states", ()),
@@ -4066,12 +4103,20 @@ class PostLinearRemainingFiniteSystemAudit:
                 audit.conflicting_seed_classifier_descriptors,
             ),
             (
+                "signed_endpoint_generator_invalid_seed_classifier_targets",
+                audit.invalid_seed_classifier_targets,
+            ),
+            (
                 "signed_endpoint_generator_reachable_seed_states",
                 audit.reachable_seed_states_exact,
             ),
             (
                 "signed_endpoint_generator_duplicate_reachable_seed_states",
                 audit.duplicate_reachable_seed_states,
+            ),
+            (
+                "signed_endpoint_generator_invalid_reachable_seed_states",
+                audit.invalid_reachable_seed_states,
             ),
             (
                 "signed_endpoint_generator_transition_reachable_seed_states",
