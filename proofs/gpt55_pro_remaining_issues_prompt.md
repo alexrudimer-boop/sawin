@@ -1220,6 +1220,11 @@ variable in the terminal word is one of the current longitude values
 `u_{r,i}(m)=phi_r(L_i(beta))`, the endpoint lies in `V_beta(H_E)`.  This
 word-potential detector-lift, not the rowwise two-strand identity and not a
 tautological accumulated potential, is the all-`n` local-to-global bridge.
+The Artin detector recurrence and terminal-readout-in-longitudes checks must
+therefore be derived from the finite substitution and template tables above.
+They are not separate boolean assertions: if the substitution is not the
+positive/negative Artin recurrence or if a terminal template contains a raw
+assignment variable, the detector lift is incomplete.
 
 For cutoff families, in particular C and M, the proof must define faithful
 readouts

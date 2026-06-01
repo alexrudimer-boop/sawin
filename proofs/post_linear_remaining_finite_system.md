@@ -511,6 +511,10 @@ the positive/negative Artin recurrences.  It then exhausts all assignments of
 the finitely many variables in the row to the fixed endpoint group and checks
 the word identity in the group table.  This removes the previous loophole
 where a bare boolean could stand in for a tautological accumulated potential.
+The executable close criterion derives the Artin-recurrence and
+terminal-readout-longitude gates from these same substitution and template
+checks; separate `artin_detector_recurrence_verified` or
+`terminal_readout_longitudes_verified` booleans are diagnostic only.
 
 The implementation now exposes an interval-derived constructor for this
 audit layer.  Given the interval, `kappa` entries, reachable states, signed

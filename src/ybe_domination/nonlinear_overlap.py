@@ -2597,6 +2597,17 @@ class UniversalKTelescopingDetectorAudit:
         )
 
     @property
+    def artin_detector_recurrence_proved(self) -> bool:
+        return self.word_potential_artin_substitution_proved
+
+    @property
+    def terminal_readout_longitudes_proved(self) -> bool:
+        return (
+            self.word_potential_templates_supplied
+            and self.word_potential_templates_use_only_current_longitudes_verified
+        )
+
+    @property
     def detector_tracks_supplied(self) -> bool:
         return (
             self.detector_track_count is not None
@@ -2617,9 +2628,9 @@ class UniversalKTelescopingDetectorAudit:
             and self.seed_state_ledgers_have_no_duplicates
             and self.detector_tracks_supplied
             and self.detector_track_initializations_verified
-            and self.artin_detector_recurrence_verified
+            and self.artin_detector_recurrence_proved
             and self.word_potential_templates_verified
-            and self.terminal_readout_longitudes_verified
+            and self.terminal_readout_longitudes_proved
             and self.initial_readout_normalized_proved
             and self.braid_index_independent
         )
@@ -2665,7 +2676,7 @@ class UniversalKTelescopingDetectorAudit:
             reasons.append("detector_tracks_not_fixed_before_braid")
         if not self.detector_track_initializations_verified:
             reasons.append("detector_track_initialization_not_verified")
-        if not self.artin_detector_recurrence_verified:
+        if not self.artin_detector_recurrence_proved:
             reasons.append("artin_detector_recurrence_not_verified")
         if not self.word_potential_templates_supplied:
             reasons.append("word_potential_templates_not_supplied")
@@ -2698,7 +2709,7 @@ class UniversalKTelescopingDetectorAudit:
                 reasons.append("word_potential_identity_failures")
             if self.word_potential_certificate.normalization_failures:
                 reasons.append("word_potential_normalization_failures")
-        if not self.terminal_readout_longitudes_verified:
+        if not self.terminal_readout_longitudes_proved:
             reasons.append("terminal_readout_longitudes_not_verified")
         if not self.initial_readout_normalized_proved:
             reasons.append("word_potential_initial_value_not_normalized")
@@ -6600,7 +6611,7 @@ class PostLinearRemainingFiniteSystemAudit:
             (
                 "signed_endpoint_generator_artin_detector_recurrence_verified",
                 (
-                    telescoping_audit.artin_detector_recurrence_verified
+                    telescoping_audit.artin_detector_recurrence_proved
                     if telescoping_audit is not None
                     else False
                 ),
@@ -6701,7 +6712,7 @@ class PostLinearRemainingFiniteSystemAudit:
             (
                 "signed_endpoint_generator_terminal_readout_longitudes_verified",
                 (
-                    telescoping_audit.terminal_readout_longitudes_verified
+                    telescoping_audit.terminal_readout_longitudes_proved
                     if telescoping_audit is not None
                     else False
                 ),
