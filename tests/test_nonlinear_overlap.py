@@ -69,6 +69,7 @@ from ybe_domination import (
     triangular_recovery_audit,
     triangular_recovery_unit_observer_audit,
     triangular_recovery_unit_group,
+    universal_k_signed_endpoint_required_entry_keys,
     universal_continuation_identity_endpoint_witness_audit,
     universal_continuation_identity_symmetric_endpoint_fork_audit,
     universal_continuation_identity_routing_audit,
@@ -2478,6 +2479,67 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertFalse(audit.signed_generator_domain_exact)
         self.assertFalse(audit.proves_signed_endpoint_generator_tables)
         self.assertIn("signed_generator_entries_missing", audit.failure_reasons)
+
+    def test_signed_endpoint_entry_domain_is_derived_from_interval_fibres(self):
+        seed_state = ("*", "*", "left_constant_map_universal_kernel")
+        reachable = (("U", seed_state),)
+        interval = one_color_identity_interval()
+
+        keys = universal_k_signed_endpoint_required_entry_keys(interval, reachable)
+
+        self.assertEqual(len(keys), 8)
+        self.assertIn(("U", seed_state, 1, "*", "*", 0, 0), keys)
+        self.assertIn(("U", seed_state, -1, "*", "*", 1, 1), keys)
+
+        rows = tuple(
+            UniversalKSignedEndpointGeneratorRow(
+                endpoint_family=endpoint_family,
+                seed_state=state,
+                sign=sign,
+                left_color=left_color,
+                right_color=right_color,
+                input_left=input_left,
+                input_right=input_right,
+                output_left=input_left,
+                output_right=input_right,
+                next_seed_state=state,
+                endpoint_value=0,
+            )
+            for (
+                endpoint_family,
+                state,
+                sign,
+                left_color,
+                right_color,
+                input_left,
+                input_right,
+            ) in keys
+        )
+        audit = UniversalKSignedEndpointGeneratorAudit(
+            seed_classifier_entries=(
+                (
+                    (
+                        "*",
+                        "*",
+                        "L",
+                        "constant_map_kernel",
+                        ("*", (0, 1), "universal", "universal"),
+                    ),
+                    ("U", seed_state),
+                ),
+            ),
+            reachable_seed_states=reachable,
+            required_entry_keys=keys,
+            rows=rows[:-1],
+            endpoint_targets_fixed=True,
+            inverse_cancellation_verified=True,
+            positive_ybe_cocycle_verified=True,
+            signed_two_strand_base_verified=True,
+            artin_homomorphism_update_verified=True,
+        )
+
+        self.assertEqual(audit.missing_entry_keys, (keys[-1],))
+        self.assertFalse(audit.proves_signed_endpoint_generator_tables)
 
     def test_post_linear_reports_signed_generator_table_audit(self):
         refinement = constant_map_kernel_only_system_k_refinement()

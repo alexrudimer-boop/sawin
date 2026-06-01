@@ -834,7 +834,8 @@ T_{a,b}(x',y')=(x,y),
 with the corresponding inverse colour routing.  Thus `Gamma^-` is indexed by
 the inverse local row data, not by an unrelated table.
 
-The exact signed-generator domain for the routed K layer is:
+The exact signed-generator domain for the routed K layer is the finite set
+derived from the interval fibres and reachable states:
 
 ```text
 D_Gamma =
@@ -851,9 +852,10 @@ Every entry of `D_Gamma` must have exactly one table value and no extra table
 value outside `D_Gamma` may be used to close a routed endpoint family.  The
 signed table must be checked against the actual `kappa` table for the
 interval; a table built for a different seed classifier is irrelevant.  A
-certificate must enumerate the full entry domain `D_Gamma`, not merely one
-entry per seed and sign.  Covering both signs for a seed while omitting some
-local input `(a,b,x,y)` is still an incomplete signed table.
+certificate must enumerate this derived full entry domain `D_Gamma`, not a
+prover-selected subdomain and not merely one entry per seed and sign.
+Covering both signs for a seed while omitting some local input `(a,b,x,y)` is
+still an incomplete signed table.
 
 The signed inverse-cancellation law is:
 

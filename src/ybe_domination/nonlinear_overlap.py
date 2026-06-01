@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from itertools import product
 from typing import TYPE_CHECKING, Sequence, Tuple
 
 from .artin_longitudes import (
@@ -810,6 +811,32 @@ class UniversalKSignedEndpointGeneratorAudit:
         if not self.exact_cutoff_readouts_proved:
             reasons.append("cutoff_readouts_not_exact")
         return tuple(reasons)
+
+
+def universal_k_signed_endpoint_required_entry_keys(
+    interval: LocalInterval,
+    reachable_seed_states: Sequence[Tuple[str, UniversalKSeedState]],
+) -> Tuple[UniversalKSignedEndpointEntryKey, ...]:
+    """Derive the full D_Gamma row domain from interval fibres and states."""
+
+    keys = []
+    for endpoint_family, seed_state in reachable_seed_states:
+        for sign in (-1, 1):
+            for left_color, right_color in product(interval.colors, repeat=2):
+                for input_left in interval.fibres[left_color]:
+                    for input_right in interval.fibres[right_color]:
+                        keys.append(
+                            (
+                                endpoint_family,
+                                seed_state,
+                                sign,
+                                left_color,
+                                right_color,
+                                input_left,
+                                input_right,
+                            )
+                        )
+    return tuple(sorted(set(keys), key=repr))
 
 
 @dataclass(frozen=True)

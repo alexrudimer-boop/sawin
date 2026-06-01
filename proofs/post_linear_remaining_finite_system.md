@@ -378,8 +378,8 @@ Gamma^{E,+/-}_{a,b}(s,x,y)=(s',x',y',h)
 with the coordinate pair equal to the positive or inverse local row and
 `h` in the fixed finite endpoint group or cutoff target for `E`.  The
 executable audit records the exact routed seed states, reachable state set,
-required full entry domain, missing or extra table entries, duplicate
-entries, and the finite proof gates:
+required full entry domain derived from the interval fibres, missing or extra
+table entries, duplicate entries, and the finite proof gates:
 
 ```text
 fixed endpoint group or cutoff target
