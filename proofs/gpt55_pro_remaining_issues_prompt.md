@@ -890,6 +890,16 @@ product-family
 separation must be certified by an explicit target ledger; otherwise the
 certificate could hide cross-family cancellation in one undifferentiated
 group.
+If a fixed endpoint group is declared as a product over more than one
+endpoint family, the certificate must also prove row-level family support:
+an emitted label from family `E` has identity components in every endpoint
+group factor belonging to a different active family.  Equivalently, the
+certificate may give explicit finite projection/homomorphism tables proving
+that each row lands in its own family factor and that
+`V_beta(prod_E H_E)=prod_E V_beta(H_E)` kills the factors separately.  A
+nonidentity off-family component is an unclosed product-family separation
+failure, even if the total product group order matches the listed factor
+orders.
 Endpoint-target braid-index independence and product-family separation must
 be derived from the finite per-family target ledger and positive target
 sizes; they are not independent boolean gates.

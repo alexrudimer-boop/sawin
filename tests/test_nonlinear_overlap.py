@@ -53,6 +53,7 @@ from ybe_domination import (
     UniversalKWordPotentialIdentityRow,
     TwoSidedUnitCollapseAudit,
     cyclic_group,
+    direct_product_group,
     endpoint_coordinate_readout_audit,
     endpoint_family_symmetric_fork_audit,
     endpoint_product_longitude_expression_audit,
@@ -6273,6 +6274,108 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertIn(
             "cutoff_readout_target_degree_mismatch",
             cutoff_degree_mismatch.failure_reasons,
+        )
+
+    def test_product_endpoint_targets_require_family_supported_labels(self):
+        u_state = ("*", "*", "left_constant_map_universal_kernel")
+        c_state = ("*", "*", "continuation")
+        reachable = (("U", u_state), ("C", c_state))
+        seed_entries = (
+            (("*", "*", "L", "constant_map_kernel", ("u",)), ("U", u_state)),
+            (
+                ("*", "*", "L", "partial_constant_hidden_rank_loss", ("c",)),
+                ("C", c_state),
+            ),
+        )
+        interval = one_color_identity_interval()
+        keys = universal_k_signed_endpoint_required_entry_keys(interval, reachable)
+        product_group = direct_product_group((cyclic_group(2), cyclic_group(3)))
+        rows = tuple(
+            replace(row, endpoint_value=product_group.identity)
+            for row in identity_signed_endpoint_rows(keys)
+        )
+        witnesses = {row.entry_key: () for row in rows}
+        endpoint_target = UniversalKEndpointTargetAudit(
+            expected_endpoint_families=("U", "C"),
+            covered_endpoint_families=("U", "C"),
+            endpoint_group_orders=(("U", 2), ("C", 3)),
+            braid_index_independent=True,
+            product_families_separated=True,
+        )
+        residual_scope = replace(
+            trivial_endpoint_residual_action_scope(
+                "U",
+                "C",
+                seed_states=reachable,
+                family_row_counts=(("U", 1), ("C", 1)),
+            ),
+            expected_residual_row_count=2,
+            covered_residual_row_count=2,
+        )
+
+        proved = universal_k_signed_endpoint_generator_audit(
+            interval,
+            seed_entries,
+            reachable,
+            rows,
+            endpoint_group=product_group,
+            witnesses=witnesses,
+            endpoint_target_audit=endpoint_target,
+            telescoping_detector_audit=trivial_telescoping_detector_audit(
+                keys,
+                rows=rows,
+                endpoint_group=product_group,
+            ),
+            residual_action_scope=residual_scope,
+            residual_action_audit=trivial_endpoint_residual_action_audit(
+                input_tuples=(("pU",), ("pC",)),
+            ),
+        )
+
+        self.assertTrue(proved.endpoint_group_order_matches_target_audit)
+        self.assertEqual(proved.endpoint_group_target_families, ("U", "C"))
+        self.assertTrue(proved.endpoint_group_family_support_proved)
+        self.assertTrue(proved.endpoint_targets_proved)
+        self.assertFalse(proved.proves_signed_endpoint_generator_tables)
+        self.assertIn("cutoff_readout_audit_missing", proved.failure_reasons)
+
+        bad_rows = tuple(
+            replace(row, endpoint_value=(1, 0))
+            if row.endpoint_family == "C"
+            else row
+            for row in rows
+        )
+        bad_support = universal_k_signed_endpoint_generator_audit(
+            interval,
+            seed_entries,
+            reachable,
+            bad_rows,
+            endpoint_group=product_group,
+            witnesses={row.entry_key: () for row in bad_rows},
+            endpoint_target_audit=endpoint_target,
+            telescoping_detector_audit=trivial_telescoping_detector_audit(
+                keys,
+                rows=bad_rows,
+                endpoint_group=product_group,
+            ),
+            residual_action_scope=residual_scope,
+            residual_action_audit=trivial_endpoint_residual_action_audit(
+                input_tuples=(("pU",), ("pC",)),
+            ),
+        )
+
+        self.assertFalse(bad_support.endpoint_group_family_support_proved)
+        self.assertFalse(bad_support.endpoint_targets_proved)
+        self.assertIn(
+            "endpoint_value_has_off_family_components",
+            tuple(
+                failure[1]
+                for failure in bad_support.endpoint_group_family_support_failures
+            ),
+        )
+        self.assertIn(
+            "endpoint_group_family_support_mismatch",
+            bad_support.failure_reasons,
         )
 
     def test_signed_endpoint_generator_factory_reports_inexact_witness_domain(self):

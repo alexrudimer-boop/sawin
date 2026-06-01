@@ -712,6 +712,13 @@ contexts, nonconstant coboundary defects, out-of-scope detector tracks,
 missing C/M readouts, or missing residual faithfulness remain visible audit
 failures rather than being filled by defaults.  This keeps the local
 certificate from being a list of unsupported boolean claims.
+When a fixed endpoint group is declared as a product over multiple endpoint
+families, the signed endpoint audit now also checks family support of each
+emitted label: a row in family `E` must have identity components in every
+other declared endpoint-group factor.  This finite check prevents a blended
+product-group label from closing a multi-family endpoint row by hidden
+cross-family cancellation.  Cutoff targets remain accounted for separately by
+the exact C/M cutoff readout audit.
 The post-linear function now accepts this builder-level input directly:
 supplying `universal_k_word_potential_certificate` plus detector-track
 initialization rows causes `post_linear_remaining_finite_system_audit(...)`
@@ -947,6 +954,9 @@ signed_endpoint_generator_endpoint_target_group_orders
 signed_endpoint_generator_endpoint_target_malformed_group_orders
 signed_endpoint_generator_endpoint_group_order
 signed_endpoint_generator_endpoint_group_order_matches_target
+signed_endpoint_generator_endpoint_group_target_families
+signed_endpoint_generator_endpoint_group_family_support_verified
+signed_endpoint_generator_endpoint_group_family_support_failures
 signed_endpoint_generator_endpoint_target_cutoff_degrees
 signed_endpoint_generator_endpoint_target_malformed_cutoff_degrees
 signed_endpoint_generator_endpoint_target_duplicate_families

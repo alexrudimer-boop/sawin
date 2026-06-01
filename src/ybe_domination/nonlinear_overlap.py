@@ -5931,6 +5931,7 @@ class UniversalKSignedEndpointGeneratorAudit:
             and self.endpoint_target_scope_matches_required
             and self.endpoint_target_audit.proves_endpoint_targets
             and self.endpoint_group_order_matches_target_audit
+            and self.endpoint_group_family_support_proved
         )
 
     @property
@@ -5944,6 +5945,75 @@ class UniversalKSignedEndpointGeneratorAudit:
         for _family, order in group_orders:
             target_order *= order
         return len(self.endpoint_group.elements) == target_order
+
+    @property
+    def endpoint_group_target_families(self) -> Tuple[str, ...]:
+        if self.endpoint_target_audit is None:
+            return ()
+        return tuple(
+            family
+            for family, order in self.endpoint_target_audit.endpoint_group_orders
+            if family in UNIVERSAL_K_ENDPOINT_FAMILIES
+            and _universal_k_positive_int(order)
+        )
+
+    @property
+    def endpoint_group_family_support_failures(
+        self,
+    ) -> Tuple[UniversalKSignedEndpointLabelFailure, ...]:
+        """Rows in a product endpoint group must emit only in their family factor."""
+
+        if self.endpoint_group is None or self.endpoint_target_audit is None:
+            return ()
+        group_families = self.endpoint_group_target_families
+        if len(group_families) <= 1:
+            return ()
+        identity = self.endpoint_group.identity
+        if not isinstance(identity, tuple) or len(identity) != len(group_families):
+            return tuple(
+                (
+                    row.entry_key,
+                    "endpoint_group_identity_not_product_tuple",
+                    identity,
+                )
+                for row in self.rows
+                if row.endpoint_family in set(group_families)
+            )
+        failures = []
+        family_position = {
+            family: position for position, family in enumerate(group_families)
+        }
+        for row in self.rows:
+            if row.endpoint_family not in family_position:
+                continue
+            value = row.endpoint_value
+            if not isinstance(value, tuple) or len(value) != len(group_families):
+                failures.append(
+                    (
+                        row.entry_key,
+                        "endpoint_value_not_product_tuple",
+                        value,
+                    )
+                )
+                continue
+            off_family_values = tuple(
+                (family, value[position])
+                for position, family in enumerate(group_families)
+                if family != row.endpoint_family and value[position] != identity[position]
+            )
+            if off_family_values:
+                failures.append(
+                    (
+                        row.entry_key,
+                        "endpoint_value_has_off_family_components",
+                        off_family_values,
+                    )
+                )
+        return tuple(sorted(failures, key=repr))
+
+    @property
+    def endpoint_group_family_support_proved(self) -> bool:
+        return not self.endpoint_group_family_support_failures
 
     @property
     def residual_action_scope_matches_required(self) -> bool:
@@ -6267,6 +6337,8 @@ class UniversalKSignedEndpointGeneratorAudit:
                 and not self.endpoint_group_order_matches_target_audit
             ):
                 reasons.append("endpoint_target_group_order_mismatch")
+            if not self.endpoint_group_family_support_proved:
+                reasons.append("endpoint_group_family_support_mismatch")
             if self.endpoint_target_audit is not None:
                 reasons.extend(self.endpoint_target_audit.failure_reasons)
         if not self.coordinate_components_verified:
@@ -9431,6 +9503,15 @@ class PostLinearRemainingFiniteSystemAudit:
                     "signed_endpoint_generator_endpoint_group_order_matches_target",
                     False,
                 ),
+                ("signed_endpoint_generator_endpoint_group_target_families", ()),
+                (
+                    "signed_endpoint_generator_endpoint_group_family_support_verified",
+                    False,
+                ),
+                (
+                    "signed_endpoint_generator_endpoint_group_family_support_failures",
+                    (),
+                ),
                 ("signed_endpoint_generator_endpoint_target_cutoff_degrees", ()),
                 (
                     "signed_endpoint_generator_endpoint_target_malformed_cutoff_degrees",
@@ -10101,6 +10182,18 @@ class PostLinearRemainingFiniteSystemAudit:
             (
                 "signed_endpoint_generator_endpoint_group_order_matches_target",
                 audit.endpoint_group_order_matches_target_audit,
+            ),
+            (
+                "signed_endpoint_generator_endpoint_group_target_families",
+                audit.endpoint_group_target_families,
+            ),
+            (
+                "signed_endpoint_generator_endpoint_group_family_support_verified",
+                audit.endpoint_group_family_support_proved,
+            ),
+            (
+                "signed_endpoint_generator_endpoint_group_family_support_failures",
+                audit.endpoint_group_family_support_failures,
             ),
             (
                 "signed_endpoint_generator_endpoint_target_cutoff_degrees",
