@@ -3073,6 +3073,38 @@ class UniversalKEndpointTargetAudit:
         return _duplicate_values(self.covered_endpoint_families)
 
     @property
+    def invalid_expected_endpoint_families(self) -> Tuple[str, ...]:
+        return tuple(
+            family
+            for family in self.expected_endpoint_families
+            if family not in UNIVERSAL_K_ENDPOINT_FAMILIES
+        )
+
+    @property
+    def invalid_covered_endpoint_families(self) -> Tuple[str, ...]:
+        return tuple(
+            family
+            for family in self.covered_endpoint_families
+            if family not in UNIVERSAL_K_ENDPOINT_FAMILIES
+        )
+
+    @property
+    def invalid_target_endpoint_families(self) -> Tuple[str, ...]:
+        return tuple(
+            family
+            for family in self.target_endpoint_families
+            if family not in UNIVERSAL_K_ENDPOINT_FAMILIES
+        )
+
+    @property
+    def family_ledgers_known(self) -> bool:
+        return (
+            not self.invalid_expected_endpoint_families
+            and not self.invalid_covered_endpoint_families
+            and not self.invalid_target_endpoint_families
+        )
+
+    @property
     def family_ledgers_have_no_duplicates(self) -> bool:
         return (
             not self.duplicate_expected_endpoint_families
@@ -3153,6 +3185,7 @@ class UniversalKEndpointTargetAudit:
     def proves_endpoint_targets(self) -> bool:
         return (
             self.family_coverage_exact
+            and self.family_ledgers_known
             and self.family_ledgers_have_no_duplicates
             and self.target_families_exact
             and self.target_ledgers_have_no_duplicates
@@ -3167,6 +3200,8 @@ class UniversalKEndpointTargetAudit:
         reasons = []
         if not self.family_coverage_exact:
             reasons.append("endpoint_target_family_coverage_not_exact")
+        if not self.family_ledgers_known:
+            reasons.append("endpoint_target_unknown_families")
         if not self.family_ledgers_have_no_duplicates:
             reasons.append("endpoint_target_duplicate_families")
         if self.missing_target_families:
@@ -8003,6 +8038,7 @@ class PostLinearRemainingFiniteSystemAudit:
                 ),
                 ("signed_endpoint_generator_endpoint_target_cutoff_degrees", ()),
                 ("signed_endpoint_generator_endpoint_target_duplicate_families", ()),
+                ("signed_endpoint_generator_endpoint_target_unknown_families", ()),
                 (
                     "signed_endpoint_generator_endpoint_target_duplicate_target_families",
                     (),
@@ -8648,6 +8684,16 @@ class PostLinearRemainingFiniteSystemAudit:
                 (
                     endpoint_target_audit.duplicate_expected_endpoint_families
                     + endpoint_target_audit.duplicate_covered_endpoint_families
+                    if endpoint_target_audit is not None
+                    else ()
+                ),
+            ),
+            (
+                "signed_endpoint_generator_endpoint_target_unknown_families",
+                (
+                    endpoint_target_audit.invalid_expected_endpoint_families
+                    + endpoint_target_audit.invalid_covered_endpoint_families
+                    + endpoint_target_audit.invalid_target_endpoint_families
                     if endpoint_target_audit is not None
                     else ()
                 ),

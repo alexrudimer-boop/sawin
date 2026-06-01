@@ -453,12 +453,12 @@ can be checked; it does not by itself prove that every routed U/C/M family
 has a fixed target.  The target certificate must list the expected routed
 families, the covered families, the finite endpoint group orders or cutoff
 degrees for those families, braid-index independence, and componentwise
-product-family separation.  Missing families, extra families, nonpositive
-orders, nonpositive cutoff degrees, `n`-dependence, or cross-family
-cancellation leave the signed endpoint layer open.  The family and target
-ledgers must also be duplicate-free: repeating a routed family or assigning
-two target entries to the same family is not an exact one-target-per-family
-certificate.
+product-family separation.  Missing families, extra families, family labels
+outside `{U,C,M}`, nonpositive orders, nonpositive cutoff degrees,
+`n`-dependence, or cross-family cancellation leave the signed endpoint layer
+open.  The family and target ledgers must also be duplicate-free: repeating a
+routed family or assigning two target entries to the same family is not an
+exact one-target-per-family certificate.
 The implementation now derives endpoint-target braid-index independence and
 product-family separation from the finite target ledger itself: each covered
 family must have a positive fixed group order or cutoff degree, and target
@@ -887,6 +887,7 @@ signed_endpoint_generator_endpoint_group_order
 signed_endpoint_generator_endpoint_group_order_matches_target
 signed_endpoint_generator_endpoint_target_cutoff_degrees
 signed_endpoint_generator_endpoint_target_duplicate_families
+signed_endpoint_generator_endpoint_target_unknown_families
 signed_endpoint_generator_endpoint_target_duplicate_target_families
 signed_endpoint_generator_endpoint_target_audit_proved
 signed_endpoint_generator_coordinate_components_verified

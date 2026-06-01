@@ -4904,6 +4904,20 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             duplicate_target.failure_reasons,
         )
 
+        unknown_family_target = UniversalKEndpointTargetAudit(
+            expected_endpoint_families=("Z",),
+            covered_endpoint_families=("Z",),
+            endpoint_group_orders=(("Z", 1),),
+            braid_index_independent=True,
+            product_families_separated=True,
+        )
+        self.assertFalse(unknown_family_target.family_ledgers_known)
+        self.assertFalse(unknown_family_target.proves_endpoint_targets)
+        self.assertIn(
+            "endpoint_target_unknown_families",
+            unknown_family_target.failure_reasons,
+        )
+
     def test_signed_endpoint_generator_audit_requires_full_entry_domain(self):
         seed_state = ("*", "*", "left_constant_map_universal_kernel")
         seed_entries = (

@@ -880,11 +880,12 @@ It must also prove that these targets are independent of braid index and that
 product endpoint families are separated componentwise.  A bare assertion
 that an endpoint target is fixed is not a certificate; if the target list
 omits a routed family, includes an unrouted family, has a nonpositive order
-or cutoff degree, repeats a family, assigns both a group target and cutoff
-target to the same family, depends on `n`, or allows cross-family
-cancellation, the signed endpoint layer remains open.  A single supplied
-endpoint group may be treated as an implicit target only for a single active
-routed family.  When two or more of U/C/M are active, product-family
+or cutoff degree, uses a family outside `{U,C,M}`, repeats a family, assigns
+both a group target and cutoff target to the same family, depends on `n`, or
+allows cross-family cancellation, the signed endpoint layer remains open.  A
+single supplied endpoint group may be treated as an implicit target only for
+a single active routed family.  When two or more of U/C/M are active,
+product-family
 separation must be certified by an explicit target ledger; otherwise the
 certificate could hide cross-family cancellation in one undifferentiated
 group.
@@ -1669,6 +1670,7 @@ reachable_state_families_in_U_C_M,
 all_signed_row_states_reachable,
 fixed_endpoint_group_or_cutoff,
 family_scoped_endpoint_target_coverage,
+endpoint_target_families_in_U_C_M,
 endpoint_target_braid_index_independence,
 endpoint_target_product_family_separation,
 endpoint_target_ledgers_duplicate_free,
