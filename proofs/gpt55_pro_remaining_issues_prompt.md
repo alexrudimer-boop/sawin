@@ -1583,6 +1583,10 @@ each active endpoint family must have a positive expected and covered row
 count; a zero-row active family is an unproved channel, not a harmless empty
 component.  An aggregate row count alone is insufficient for a product
 endpoint row because it can hide that one family has no residual readout.
+Every residual-action scope seed-state ledger entry must also be a
+well-formed endpoint state `(E,s)` with `E in {U,C,M}` and tuple-valued seed
+state `s`.  Malformed seed-state keys are not exact routed channels, even if
+the malformed expected and covered sets happen to agree.
 
 Alternatively, a symbolic residual-faithfulness theorem may replace explicit
 action readout rows only if it supplies its own finite residual row table.
@@ -1627,6 +1631,11 @@ ledger entry, not an exact coverage proof.  The family row-count ledgers must
 match the symbolic theorem rows themselves: after counting, for each active
 family, the rows whose `endpoint_families` contain that family, the expected
 and covered family counts must equal those derived counts.
+Every symbolic residual theorem seed-state ledger entry and every row-local
+seed-state entry must be well formed as `(E,s)` with `E in {U,C,M}` and
+tuple-valued `s`.  A malformed seed key makes both endpoint-channel
+coverage and row scope invalid; it cannot be repaired by matching malformed
+expected, covered, and row sets.
 
 The signed-generator audit for a claimed A proof must therefore establish:
 
@@ -1645,6 +1654,7 @@ endpoint_target_product_family_separation,
 endpoint_target_ledgers_duplicate_free,
 residual_endpoint_seed_state_coverage_exact,
 residual_endpoint_seed_state_ledgers_duplicate_free,
+residual_endpoint_seed_state_ledgers_well_formed,
 multi_family_residual_row_counts_by_family_exact,
 residual_rows_have_nonempty_arity_consistent_tuples,
 residual_rows_have_duplicate_free_endpoint_channel_keys,

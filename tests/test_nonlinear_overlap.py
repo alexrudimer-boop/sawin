@@ -2871,6 +2871,36 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             duplicate_seed_residual.failure_reasons,
         )
 
+        malformed_seed_residual = UniversalKSignedEndpointGeneratorAudit(
+            seed_classifier_entries=seed_entries,
+            reachable_seed_states=(("U", seed_state),),
+            required_entry_keys=required_entry_keys,
+            entry_domain_derived_from_interval=True,
+            finite_row_checks_derived_from_tables=True,
+            rows=(positive_row, negative_row),
+            endpoint_targets_fixed=True,
+            endpoint_target_audit=trivial_endpoint_target_audit("U"),
+            coordinate_components_verified=True,
+            inverse_pairing_verified=True,
+            inverse_cancellation_verified=True,
+            positive_ybe_path_verified=True,
+            positive_ybe_cocycle_verified=True,
+            signed_two_strand_base_verified=True,
+            artin_homomorphism_update_verified=True,
+            residual_action_scope=trivial_endpoint_residual_action_scope(
+                "U",
+                seed_states=(("U", "not_a_tuple_seed_state"),),
+            ),
+            residual_action_audit=trivial_endpoint_residual_action_audit(),
+        )
+
+        self.assertFalse(malformed_seed_residual.residual_faithfulness_proved)
+        self.assertFalse(malformed_seed_residual.proves_signed_endpoint_generator_tables)
+        self.assertIn(
+            "residual_action_scope_malformed_seed_states",
+            malformed_seed_residual.failure_reasons,
+        )
+
         braid_index_scoped_residual = UniversalKSignedEndpointGeneratorAudit(
             seed_classifier_entries=seed_entries,
             reachable_seed_states=(("U", seed_state),),
@@ -3129,6 +3159,29 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertIn(
             "residual_faithfulness_family_row_counts_do_not_match_rows",
             theorem_with_family_count_row_mismatch.failure_reasons,
+        )
+
+        theorem_with_malformed_seed_state = replace(
+            theorem,
+            expected_endpoint_seed_states=(("U", "not_a_tuple_seed_state"),),
+            covered_endpoint_seed_states=(("U", "not_a_tuple_seed_state"),),
+            residual_rows=(
+                replace(
+                    theorem.residual_rows[0],
+                    endpoint_seed_states=(("U", "not_a_tuple_seed_state"),),
+                ),
+            ),
+        )
+        self.assertFalse(
+            theorem_with_malformed_seed_state.proves_residual_faithfulness
+        )
+        self.assertIn(
+            "residual_faithfulness_malformed_seed_states",
+            theorem_with_malformed_seed_state.failure_reasons,
+        )
+        self.assertIn(
+            "residual_faithfulness_invalid_rows",
+            theorem_with_malformed_seed_state.failure_reasons,
         )
 
         rowwise_only = replace(theorem_complete, telescoping_detector_audit=None)

@@ -770,6 +770,10 @@ because product endpoint rows can contain several routed seed channels within
 the same family.  These residual family and seed-state ledgers must be
 duplicate-free as well; exact coverage cannot rely on silently removing
 repeated entries.
+The residual action scope seed-state ledgers must also be well formed
+endpoint states `(E,s)` with known family and tuple-valued seed state.  A
+malformed seed key is an inexact endpoint channel even if the malformed
+expected and covered sets agree.
 For multi-family residual products, aggregate row counts are no longer enough:
 the residual scope must also list expected and covered residual row counts by
 endpoint family, without duplicate family entries, with nonnegative matching
@@ -806,6 +810,10 @@ counts obtained by scanning the symbolic residual rows themselves.  Bare
 booleans for endpoint-channel
 exactness, identity residual motion, braid-index independence, or product
 separation are recorded only as supplied data; they are not accepted as proof.
+The symbolic residual theorem applies the same well-formedness gate to its
+expected and covered seed-state ledgers and to the seed states named by each
+symbolic residual row.  Malformed row-local seed states make the row invalid;
+malformed theorem ledgers make endpoint-channel coverage inexact.
 
 together with the concrete rows:
 
@@ -991,6 +999,7 @@ signed_endpoint_generator_residual_action_scope_matches_rows
 signed_endpoint_generator_residual_action_scope_expected_states
 signed_endpoint_generator_residual_action_scope_covered_states
 signed_endpoint_generator_residual_action_scope_duplicate_seed_states
+signed_endpoint_generator_residual_action_scope_malformed_seed_states
 signed_endpoint_generator_residual_action_scope_family_rows
 signed_endpoint_generator_residual_action_scope_family_rows_covered
 signed_endpoint_generator_residual_action_scope_duplicate_family_rows
@@ -1004,6 +1013,7 @@ signed_endpoint_generator_residual_theorem_scope_matches_seed_states
 signed_endpoint_generator_residual_theorem_expected_states
 signed_endpoint_generator_residual_theorem_covered_states
 signed_endpoint_generator_residual_theorem_duplicate_seed_states
+signed_endpoint_generator_residual_theorem_malformed_seed_states
 signed_endpoint_generator_residual_theorem_family_rows
 signed_endpoint_generator_residual_theorem_family_rows_covered
 signed_endpoint_generator_residual_theorem_duplicate_family_rows
