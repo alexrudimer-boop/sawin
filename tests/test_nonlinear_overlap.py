@@ -268,7 +268,7 @@ def exact_obstruction():
     )
 
 
-def trivial_endpoint_residual_action_audit():
+def trivial_endpoint_residual_action_audit(input_tuples=(("p",),)):
     group = cyclic_group(2)
     endpoint = endpoint_product_longitude_expression_audit(
         (group,),
@@ -278,15 +278,21 @@ def trivial_endpoint_residual_action_audit():
         assignments=((1, 0),),
         expressions=((),),
     )
-    readout = endpoint_residual_readout_audit(
-        (endpoint_coordinate_readout_audit(endpoint, "p", "p"),)
+    readouts = tuple(
+        endpoint_residual_readout_audit(
+            tuple(
+                endpoint_coordinate_readout_audit(endpoint, coordinate, coordinate)
+                for coordinate in input_tuple
+            )
+        )
+        for input_tuple in input_tuples
     )
     return endpoint_residual_action_audit(
         2,
         (1, -1),
-        (readout,),
-        expected_row_count=1,
-        expected_input_tuples=(("p",),),
+        readouts,
+        expected_row_count=len(input_tuples),
+        expected_input_tuples=tuple(input_tuples),
     )
 
 
@@ -4382,11 +4388,41 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             explicit_target_missing_family_rows.failure_reasons,
         )
 
-        scoped_residual = trivial_endpoint_residual_action_scope(
+        missing_m_family_rows_scope = trivial_endpoint_residual_action_scope(
             "U",
             "M",
             seed_states=reachable,
             family_row_counts=(("U", 1), ("M", 0)),
+        )
+        missing_m_family_rows = universal_k_signed_endpoint_generator_audit(
+            interval,
+            seed_entries,
+            reachable,
+            rows,
+            endpoint_group=cyclic_group(2),
+            witnesses=witnesses,
+            endpoint_target_audit=explicit_target,
+            telescoping_detector_audit=trivial_telescoping_detector_audit(keys),
+            cutoff_readout_audit=cutoff,
+            residual_action_scope=missing_m_family_rows_scope,
+            residual_action_audit=trivial_endpoint_residual_action_audit(),
+        )
+
+        self.assertFalse(
+            missing_m_family_rows.residual_action_scope.proves_residual_action_scope
+        )
+        self.assertFalse(missing_m_family_rows.proves_signed_endpoint_generator_tables)
+        self.assertIn(
+            "residual_action_scope_family_row_counts_do_not_cover_active_families",
+            missing_m_family_rows.failure_reasons,
+        )
+
+        scoped_residual = replace(
+            missing_m_family_rows_scope,
+            expected_residual_row_count=2,
+            covered_residual_row_count=2,
+            expected_residual_rows_by_family=(("U", 1), ("M", 1)),
+            covered_residual_rows_by_family=(("U", 1), ("M", 1)),
         )
         proved = universal_k_signed_endpoint_generator_audit(
             interval,
@@ -4399,7 +4435,9 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             telescoping_detector_audit=trivial_telescoping_detector_audit(keys),
             cutoff_readout_audit=cutoff,
             residual_action_scope=scoped_residual,
-            residual_action_audit=trivial_endpoint_residual_action_audit(),
+            residual_action_audit=trivial_endpoint_residual_action_audit(
+                input_tuples=(("pU",), ("pM",)),
+            ),
         )
 
         self.assertTrue(proved.residual_action_scope.proves_residual_action_scope)

@@ -1380,9 +1380,12 @@ counts, matching expected and covered family counts, and sums equal to the
 total expected and covered residual row counts.  These family counts must also
 match the counts derived from the actual residual rows: a row that names an
 endpoint family contributes one row to that family, and no family ledger may
-claim zero rows for a family used by a supplied row.  An aggregate row count
-alone is insufficient for a product endpoint row because it can hide that one
-family has no residual readout.
+claim zero rows for a family used by a supplied row.  On an explicit
+residual-action scope certificate that does not carry row-local family tags,
+each active endpoint family must have a positive expected and covered row
+count; a zero-row active family is an unproved channel, not a harmless empty
+component.  An aggregate row count alone is insufficient for a product
+endpoint row because it can hide that one family has no residual readout.
 
 Alternatively, a symbolic residual-faithfulness theorem may replace explicit
 action readout rows only if it supplies its own finite residual row table.

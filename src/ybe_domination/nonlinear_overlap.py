@@ -1979,6 +1979,24 @@ class UniversalKResidualActionScopeAudit:
         )
 
     @property
+    def residual_family_row_counts_cover_active_families(self) -> bool:
+        if (
+            not self.residual_family_row_counts_required
+            and not self.expected_residual_rows_by_family
+            and not self.covered_residual_rows_by_family
+        ):
+            return True
+        expected_counts = dict(self.expected_residual_rows_by_family)
+        covered_counts = dict(self.covered_residual_rows_by_family)
+        return all(
+            expected_counts.get(family, 0) > 0
+            for family in self.active_endpoint_families
+        ) and all(
+            covered_counts.get(family, 0) > 0
+            for family in self.covered_endpoint_families
+        )
+
+    @property
     def residual_family_row_counts_match(self) -> bool:
         if (
             not self.residual_family_row_counts_required
@@ -2013,6 +2031,7 @@ class UniversalKResidualActionScopeAudit:
             self.residual_family_row_ledgers_have_no_duplicates
             and self.residual_family_row_families_exact
             and self.residual_family_row_counts_nonnegative
+            and self.residual_family_row_counts_cover_active_families
             and self.residual_family_row_counts_match
             and self.residual_family_row_count_sums_match
         )
@@ -2105,6 +2124,10 @@ class UniversalKResidualActionScopeAudit:
             reasons.append("residual_action_scope_family_row_count_scope_mismatch")
         if not self.residual_family_row_counts_nonnegative:
             reasons.append("residual_action_scope_family_row_count_negative")
+        if not self.residual_family_row_counts_cover_active_families:
+            reasons.append(
+                "residual_action_scope_family_row_counts_do_not_cover_active_families"
+            )
         if not self.residual_family_row_counts_match:
             reasons.append("residual_action_scope_family_row_counts_mismatch")
         if not self.residual_family_row_count_sums_match:
@@ -6812,6 +6835,10 @@ class PostLinearRemainingFiniteSystemAudit:
                     "signed_endpoint_generator_residual_action_scope_duplicate_family_rows",
                     (),
                 ),
+                (
+                    "signed_endpoint_generator_residual_action_scope_family_rows_cover_active",
+                    False,
+                ),
                 ("signed_endpoint_generator_residual_action_scope_dependencies", ()),
                 (
                     "signed_endpoint_generator_residual_action_scope_invalid_dependencies",
@@ -7777,6 +7804,14 @@ class PostLinearRemainingFiniteSystemAudit:
                     + audit.residual_action_scope.duplicate_covered_residual_row_families
                     if audit.residual_action_scope is not None
                     else ()
+                ),
+            ),
+            (
+                "signed_endpoint_generator_residual_action_scope_family_rows_cover_active",
+                (
+                    audit.residual_action_scope.residual_family_row_counts_cover_active_families
+                    if audit.residual_action_scope is not None
+                    else False
                 ),
             ),
             (

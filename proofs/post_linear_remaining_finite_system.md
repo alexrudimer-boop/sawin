@@ -672,7 +672,10 @@ Those ledgers must also match the actual residual rows: each row contributes
 one count to every endpoint family named by that row, and a family ledger
 cannot claim zero rows for a family that any supplied row uses.  This keeps a
 complete-looking residual action proof from hiding that one active U/C/M
-family has no residual readout rows.
+family has no residual readout rows.  For the older explicit residual-action
+scope path, whose rows do not carry row-local family tags, every active family
+must have a positive expected and covered residual row count; zero active-family
+counts leave the product endpoint row open.
 
 When the bridge is supplied as a symbolic theorem rather than explicit
 endpoint readout rows, the theorem now carries its own finite residual row
@@ -854,6 +857,7 @@ signed_endpoint_generator_residual_action_scope_duplicate_seed_states
 signed_endpoint_generator_residual_action_scope_family_rows
 signed_endpoint_generator_residual_action_scope_family_rows_covered
 signed_endpoint_generator_residual_action_scope_duplicate_family_rows
+signed_endpoint_generator_residual_action_scope_family_rows_cover_active
 signed_endpoint_generator_residual_action_scope_dependencies
 signed_endpoint_generator_residual_action_scope_invalid_dependencies
 signed_endpoint_generator_residual_action_scope_proved
