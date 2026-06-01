@@ -8074,6 +8074,9 @@ class UniversalKEndpointObserverFamilyBuildAudit:
     seed_classifier_entries: Tuple[UniversalKSeedClassifierEntry, ...]
     builds: Tuple[Tuple[str, UniversalKEndpointObserverBuild], ...]
     word_potential_certificate_rows: Tuple[object, ...] = ()
+    endpoint_target_audit_rows: Tuple[object, ...] = ()
+    cutoff_readout_audit_rows: Tuple[object, ...] = ()
+    residual_faithfulness_theorem_rows: Tuple[object, ...] = ()
     product_residual_faithfulness_theorem: (
         UniversalKResidualFaithfulnessAudit | None
     ) = None
@@ -8251,6 +8254,272 @@ class UniversalKEndpointObserverFamilyBuildAudit:
             and not self.extra_certificate_families
         )
 
+    def _typed_auxiliary_row_parts(
+        self,
+        rows: Tuple[object, ...],
+        row_type: type,
+    ) -> Tuple[Tuple[object, object], ...]:
+        return tuple(
+            parts
+            for row in rows
+            for parts in (_universal_k_two_field_row_parts(row),)
+            if parts is not None and isinstance(parts[1], row_type)
+        )
+
+    def _malformed_auxiliary_rows(
+        self,
+        rows: Tuple[object, ...],
+        row_type: type,
+    ) -> Tuple[object, ...]:
+        return _unique_values(
+            tuple(
+                row
+                for row in rows
+                if (
+                    _universal_k_two_field_row_parts(row) is None
+                    or not isinstance(_universal_k_two_field_row_parts(row)[1], row_type)
+                )
+            )
+        )
+
+    @staticmethod
+    def _auxiliary_families_exact(
+        row_parts: Tuple[Tuple[object, object], ...],
+    ) -> Tuple[str, ...]:
+        return tuple(
+            sorted(
+                {
+                    family
+                    for family, _value in row_parts
+                    if _is_hashable(family)
+                    and family in UNIVERSAL_K_ENDPOINT_FAMILIES
+                },
+                key=repr,
+            )
+        )
+
+    @staticmethod
+    def _invalid_auxiliary_families(
+        row_parts: Tuple[Tuple[object, object], ...],
+    ) -> Tuple[object, ...]:
+        return _unique_values(
+            tuple(
+                family
+                for family, _value in row_parts
+                if (
+                    not _is_hashable(family)
+                    or family not in UNIVERSAL_K_ENDPOINT_FAMILIES
+                )
+            )
+        )
+
+    @staticmethod
+    def _duplicate_auxiliary_families(
+        row_parts: Tuple[Tuple[object, object], ...],
+    ) -> Tuple[str, ...]:
+        return _duplicate_values(
+            tuple(
+                family
+                for family, _value in row_parts
+                if _is_hashable(family)
+                and family in UNIVERSAL_K_ENDPOINT_FAMILIES
+            )
+        )
+
+    @property
+    def expected_cutoff_families_exact(self) -> Tuple[str, ...]:
+        return tuple(
+            family
+            for family in self.expected_endpoint_families_exact
+            if family in _UNIVERSAL_K_CUTOFF_READOUT_FAMILIES
+        )
+
+    @property
+    def endpoint_target_input_supplied(self) -> bool:
+        return bool(self.endpoint_target_audit_rows)
+
+    @property
+    def endpoint_target_row_parts(self) -> Tuple[Tuple[object, object], ...]:
+        return self._typed_auxiliary_row_parts(
+            self.endpoint_target_audit_rows,
+            UniversalKEndpointTargetAudit,
+        )
+
+    @property
+    def malformed_endpoint_target_rows(self) -> Tuple[object, ...]:
+        return self._malformed_auxiliary_rows(
+            self.endpoint_target_audit_rows,
+            UniversalKEndpointTargetAudit,
+        )
+
+    @property
+    def invalid_endpoint_target_families(self) -> Tuple[object, ...]:
+        return self._invalid_auxiliary_families(self.endpoint_target_row_parts)
+
+    @property
+    def endpoint_target_families_exact(self) -> Tuple[str, ...]:
+        return self._auxiliary_families_exact(self.endpoint_target_row_parts)
+
+    @property
+    def duplicate_endpoint_target_families(self) -> Tuple[str, ...]:
+        return self._duplicate_auxiliary_families(self.endpoint_target_row_parts)
+
+    @property
+    def missing_endpoint_target_families(self) -> Tuple[str, ...]:
+        if not self.endpoint_target_input_supplied:
+            return ()
+        covered = set(self.endpoint_target_families_exact)
+        return tuple(
+            family
+            for family in self.expected_endpoint_families_exact
+            if family not in covered
+        )
+
+    @property
+    def extra_endpoint_target_families(self) -> Tuple[str, ...]:
+        if not self.endpoint_target_input_supplied:
+            return ()
+        expected = set(self.expected_endpoint_families_exact)
+        return tuple(
+            family for family in self.endpoint_target_families_exact if family not in expected
+        )
+
+    @property
+    def endpoint_target_input_rows_exact(self) -> bool:
+        return not self.endpoint_target_input_supplied or (
+            not self.malformed_endpoint_target_rows
+            and not self.invalid_endpoint_target_families
+            and not self.duplicate_endpoint_target_families
+            and not self.missing_endpoint_target_families
+            and not self.extra_endpoint_target_families
+        )
+
+    @property
+    def cutoff_readout_input_supplied(self) -> bool:
+        return bool(self.cutoff_readout_audit_rows)
+
+    @property
+    def cutoff_readout_row_parts(self) -> Tuple[Tuple[object, object], ...]:
+        return self._typed_auxiliary_row_parts(
+            self.cutoff_readout_audit_rows,
+            UniversalKCutoffReadoutAudit,
+        )
+
+    @property
+    def malformed_cutoff_readout_rows(self) -> Tuple[object, ...]:
+        return self._malformed_auxiliary_rows(
+            self.cutoff_readout_audit_rows,
+            UniversalKCutoffReadoutAudit,
+        )
+
+    @property
+    def invalid_cutoff_readout_families(self) -> Tuple[object, ...]:
+        return self._invalid_auxiliary_families(self.cutoff_readout_row_parts)
+
+    @property
+    def cutoff_readout_families_exact(self) -> Tuple[str, ...]:
+        return self._auxiliary_families_exact(self.cutoff_readout_row_parts)
+
+    @property
+    def duplicate_cutoff_readout_families(self) -> Tuple[str, ...]:
+        return self._duplicate_auxiliary_families(self.cutoff_readout_row_parts)
+
+    @property
+    def missing_cutoff_readout_families(self) -> Tuple[str, ...]:
+        if not self.cutoff_readout_input_supplied:
+            return ()
+        covered = set(self.cutoff_readout_families_exact)
+        return tuple(
+            family for family in self.expected_cutoff_families_exact if family not in covered
+        )
+
+    @property
+    def extra_cutoff_readout_families(self) -> Tuple[str, ...]:
+        if not self.cutoff_readout_input_supplied:
+            return ()
+        expected = set(self.expected_cutoff_families_exact)
+        return tuple(
+            family for family in self.cutoff_readout_families_exact if family not in expected
+        )
+
+    @property
+    def cutoff_readout_input_rows_exact(self) -> bool:
+        return not self.cutoff_readout_input_supplied or (
+            not self.malformed_cutoff_readout_rows
+            and not self.invalid_cutoff_readout_families
+            and not self.duplicate_cutoff_readout_families
+            and not self.missing_cutoff_readout_families
+            and not self.extra_cutoff_readout_families
+        )
+
+    @property
+    def residual_theorem_input_supplied(self) -> bool:
+        return bool(self.residual_faithfulness_theorem_rows)
+
+    @property
+    def residual_theorem_row_parts(self) -> Tuple[Tuple[object, object], ...]:
+        return self._typed_auxiliary_row_parts(
+            self.residual_faithfulness_theorem_rows,
+            UniversalKResidualFaithfulnessAudit,
+        )
+
+    @property
+    def malformed_residual_theorem_rows(self) -> Tuple[object, ...]:
+        return self._malformed_auxiliary_rows(
+            self.residual_faithfulness_theorem_rows,
+            UniversalKResidualFaithfulnessAudit,
+        )
+
+    @property
+    def invalid_residual_theorem_families(self) -> Tuple[object, ...]:
+        return self._invalid_auxiliary_families(self.residual_theorem_row_parts)
+
+    @property
+    def residual_theorem_families_exact(self) -> Tuple[str, ...]:
+        return self._auxiliary_families_exact(self.residual_theorem_row_parts)
+
+    @property
+    def duplicate_residual_theorem_families(self) -> Tuple[str, ...]:
+        return self._duplicate_auxiliary_families(self.residual_theorem_row_parts)
+
+    @property
+    def missing_residual_theorem_families(self) -> Tuple[str, ...]:
+        if not self.residual_theorem_input_supplied:
+            return ()
+        covered = set(self.residual_theorem_families_exact)
+        return tuple(
+            family
+            for family in self.expected_endpoint_families_exact
+            if family not in covered
+        )
+
+    @property
+    def extra_residual_theorem_families(self) -> Tuple[str, ...]:
+        if not self.residual_theorem_input_supplied:
+            return ()
+        expected = set(self.expected_endpoint_families_exact)
+        return tuple(
+            family for family in self.residual_theorem_families_exact if family not in expected
+        )
+
+    @property
+    def residual_theorem_input_rows_exact(self) -> bool:
+        return not self.residual_theorem_input_supplied or (
+            not self.malformed_residual_theorem_rows
+            and not self.invalid_residual_theorem_families
+            and not self.duplicate_residual_theorem_families
+            and not self.missing_residual_theorem_families
+            and not self.extra_residual_theorem_families
+        )
+
+    @property
+    def auxiliary_input_rows_exact(self) -> bool:
+        return (
+            self.endpoint_target_input_rows_exact
+            and self.cutoff_readout_input_rows_exact
+            and self.residual_theorem_input_rows_exact
+        )
+
     @property
     def missing_build_families(self) -> Tuple[str, ...]:
         covered = set(self.covered_endpoint_families_exact)
@@ -8357,6 +8626,7 @@ class UniversalKEndpointObserverFamilyBuildAudit:
             and not self.invalid_build_families
             and not self.duplicate_build_families
             and self.certificate_input_rows_exact
+            and self.auxiliary_input_rows_exact
             and not self.build_scope_failures
             and not self.unproved_build_families
         )
@@ -8453,6 +8723,36 @@ class UniversalKEndpointObserverFamilyBuildAudit:
             reasons.append("endpoint_observer_family_certificates_missing_families")
         if self.extra_certificate_families:
             reasons.append("endpoint_observer_family_certificates_extra_families")
+        if self.malformed_endpoint_target_rows:
+            reasons.append("endpoint_observer_family_endpoint_targets_malformed_rows")
+        if self.invalid_endpoint_target_families:
+            reasons.append("endpoint_observer_family_endpoint_targets_unknown_families")
+        if self.duplicate_endpoint_target_families:
+            reasons.append("endpoint_observer_family_endpoint_targets_duplicate_families")
+        if self.missing_endpoint_target_families:
+            reasons.append("endpoint_observer_family_endpoint_targets_missing_families")
+        if self.extra_endpoint_target_families:
+            reasons.append("endpoint_observer_family_endpoint_targets_extra_families")
+        if self.malformed_cutoff_readout_rows:
+            reasons.append("endpoint_observer_family_cutoff_readouts_malformed_rows")
+        if self.invalid_cutoff_readout_families:
+            reasons.append("endpoint_observer_family_cutoff_readouts_unknown_families")
+        if self.duplicate_cutoff_readout_families:
+            reasons.append("endpoint_observer_family_cutoff_readouts_duplicate_families")
+        if self.missing_cutoff_readout_families:
+            reasons.append("endpoint_observer_family_cutoff_readouts_missing_families")
+        if self.extra_cutoff_readout_families:
+            reasons.append("endpoint_observer_family_cutoff_readouts_extra_families")
+        if self.malformed_residual_theorem_rows:
+            reasons.append("endpoint_observer_family_residual_theorems_malformed_rows")
+        if self.invalid_residual_theorem_families:
+            reasons.append("endpoint_observer_family_residual_theorems_unknown_families")
+        if self.duplicate_residual_theorem_families:
+            reasons.append("endpoint_observer_family_residual_theorems_duplicate_families")
+        if self.missing_residual_theorem_families:
+            reasons.append("endpoint_observer_family_residual_theorems_missing_families")
+        if self.extra_residual_theorem_families:
+            reasons.append("endpoint_observer_family_residual_theorems_extra_families")
         if self.missing_build_families:
             reasons.append("endpoint_observer_family_builds_missing_families")
         if self.extra_build_families:
@@ -8685,6 +8985,9 @@ def universal_k_endpoint_observer_family_build_audit(
     builds: Sequence[Tuple[str, UniversalKEndpointObserverBuild]],
     *,
     word_potential_certificate_rows: Sequence[object] = (),
+    endpoint_target_audit_rows: Sequence[object] = (),
+    cutoff_readout_audit_rows: Sequence[object] = (),
+    residual_faithfulness_theorem_rows: Sequence[object] = (),
     product_residual_faithfulness_theorem: (
         UniversalKResidualFaithfulnessAudit | None
     ) = None,
@@ -8695,6 +8998,9 @@ def universal_k_endpoint_observer_family_build_audit(
         seed_classifier_entries=tuple(seed_classifier_entries),
         builds=tuple(builds),
         word_potential_certificate_rows=tuple(word_potential_certificate_rows),
+        endpoint_target_audit_rows=tuple(endpoint_target_audit_rows),
+        cutoff_readout_audit_rows=tuple(cutoff_readout_audit_rows),
+        residual_faithfulness_theorem_rows=tuple(residual_faithfulness_theorem_rows),
         product_residual_faithfulness_theorem=product_residual_faithfulness_theorem,
     )
 
@@ -8708,7 +9014,11 @@ def _universal_k_family_object_map(
         if parts is None:
             continue
         family, value = parts
-        if family not in UNIVERSAL_K_ENDPOINT_FAMILIES or family in mapped:
+        if (
+            not _is_hashable(family)
+            or family not in UNIVERSAL_K_ENDPOINT_FAMILIES
+            or family in mapped
+        ):
             continue
         mapped[family] = value
     return mapped
@@ -8810,6 +9120,11 @@ def universal_k_endpoint_observer_builds_by_family(
         seed_classifier_entries,
         tuple(builds),
         word_potential_certificate_rows=tuple(word_potential_certificates_by_family),
+        endpoint_target_audit_rows=tuple(endpoint_target_audits_by_family),
+        cutoff_readout_audit_rows=tuple(cutoff_readout_audits_by_family),
+        residual_faithfulness_theorem_rows=tuple(
+            residual_faithfulness_theorems_by_family
+        ),
         product_residual_faithfulness_theorem=product_residual_faithfulness_theorem,
     )
 
@@ -13049,6 +13364,24 @@ class PostLinearRemainingFiniteSystemAudit:
                 ("endpoint_observer_family_certificate_duplicate_families", ()),
                 ("endpoint_observer_family_certificate_missing_families", ()),
                 ("endpoint_observer_family_certificate_extra_families", ()),
+                ("endpoint_observer_family_endpoint_target_rows", ()),
+                ("endpoint_observer_family_endpoint_target_malformed_rows", ()),
+                ("endpoint_observer_family_endpoint_target_unknown_families", ()),
+                ("endpoint_observer_family_endpoint_target_duplicate_families", ()),
+                ("endpoint_observer_family_endpoint_target_missing_families", ()),
+                ("endpoint_observer_family_endpoint_target_extra_families", ()),
+                ("endpoint_observer_family_cutoff_readout_rows", ()),
+                ("endpoint_observer_family_cutoff_readout_malformed_rows", ()),
+                ("endpoint_observer_family_cutoff_readout_unknown_families", ()),
+                ("endpoint_observer_family_cutoff_readout_duplicate_families", ()),
+                ("endpoint_observer_family_cutoff_readout_missing_families", ()),
+                ("endpoint_observer_family_cutoff_readout_extra_families", ()),
+                ("endpoint_observer_family_residual_theorem_rows", ()),
+                ("endpoint_observer_family_residual_theorem_malformed_rows", ()),
+                ("endpoint_observer_family_residual_theorem_unknown_families", ()),
+                ("endpoint_observer_family_residual_theorem_duplicate_families", ()),
+                ("endpoint_observer_family_residual_theorem_missing_families", ()),
+                ("endpoint_observer_family_residual_theorem_extra_families", ()),
                 ("endpoint_observer_family_build_malformed_rows", ()),
                 ("endpoint_observer_family_build_unknown_families", ()),
                 ("endpoint_observer_family_build_scope_failures", ()),
@@ -13193,6 +13526,78 @@ class PostLinearRemainingFiniteSystemAudit:
             (
                 "endpoint_observer_family_certificate_extra_families",
                 audit.extra_certificate_families,
+            ),
+            (
+                "endpoint_observer_family_endpoint_target_rows",
+                audit.endpoint_target_audit_rows,
+            ),
+            (
+                "endpoint_observer_family_endpoint_target_malformed_rows",
+                audit.malformed_endpoint_target_rows,
+            ),
+            (
+                "endpoint_observer_family_endpoint_target_unknown_families",
+                audit.invalid_endpoint_target_families,
+            ),
+            (
+                "endpoint_observer_family_endpoint_target_duplicate_families",
+                audit.duplicate_endpoint_target_families,
+            ),
+            (
+                "endpoint_observer_family_endpoint_target_missing_families",
+                audit.missing_endpoint_target_families,
+            ),
+            (
+                "endpoint_observer_family_endpoint_target_extra_families",
+                audit.extra_endpoint_target_families,
+            ),
+            (
+                "endpoint_observer_family_cutoff_readout_rows",
+                audit.cutoff_readout_audit_rows,
+            ),
+            (
+                "endpoint_observer_family_cutoff_readout_malformed_rows",
+                audit.malformed_cutoff_readout_rows,
+            ),
+            (
+                "endpoint_observer_family_cutoff_readout_unknown_families",
+                audit.invalid_cutoff_readout_families,
+            ),
+            (
+                "endpoint_observer_family_cutoff_readout_duplicate_families",
+                audit.duplicate_cutoff_readout_families,
+            ),
+            (
+                "endpoint_observer_family_cutoff_readout_missing_families",
+                audit.missing_cutoff_readout_families,
+            ),
+            (
+                "endpoint_observer_family_cutoff_readout_extra_families",
+                audit.extra_cutoff_readout_families,
+            ),
+            (
+                "endpoint_observer_family_residual_theorem_rows",
+                audit.residual_faithfulness_theorem_rows,
+            ),
+            (
+                "endpoint_observer_family_residual_theorem_malformed_rows",
+                audit.malformed_residual_theorem_rows,
+            ),
+            (
+                "endpoint_observer_family_residual_theorem_unknown_families",
+                audit.invalid_residual_theorem_families,
+            ),
+            (
+                "endpoint_observer_family_residual_theorem_duplicate_families",
+                audit.duplicate_residual_theorem_families,
+            ),
+            (
+                "endpoint_observer_family_residual_theorem_missing_families",
+                audit.missing_residual_theorem_families,
+            ),
+            (
+                "endpoint_observer_family_residual_theorem_extra_families",
+                audit.extra_residual_theorem_families,
             ),
             (
                 "endpoint_observer_family_build_malformed_rows",

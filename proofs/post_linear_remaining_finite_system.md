@@ -804,6 +804,15 @@ non-certificate values, unknown endpoint families, duplicate certificate
 families, missing active-family certificates, and extra certificate families
 are reported as finite data.  Such rows are not silently collapsed into a
 generic missing-build failure.
+The same exact-ledger rule now applies to the auxiliary rows used to build
+the per-family observers.  Endpoint-target audit rows and residual-faithfulness
+theorem rows must cover exactly the active families when supplied; C/M cutoff
+readout audit rows must cover exactly the active cutoff families.  Malformed
+rows, unknown families, duplicate families, missing active families, and extra
+auxiliary families are reported separately.  The builder still lets the
+individual observer audit explain a genuinely absent target, cutoff, or
+residual proof, but it no longer allows a duplicate or stale auxiliary row to
+be hidden by the first valid row selected for a family.
 When a fixed endpoint group is declared as a product over multiple endpoint
 families, the signed endpoint audit now also checks family support of each
 emitted label: a row in family `E` must have identity components in every
@@ -1060,6 +1069,24 @@ endpoint_observer_family_certificate_unknown_families
 endpoint_observer_family_certificate_duplicate_families
 endpoint_observer_family_certificate_missing_families
 endpoint_observer_family_certificate_extra_families
+endpoint_observer_family_endpoint_target_rows
+endpoint_observer_family_endpoint_target_malformed_rows
+endpoint_observer_family_endpoint_target_unknown_families
+endpoint_observer_family_endpoint_target_duplicate_families
+endpoint_observer_family_endpoint_target_missing_families
+endpoint_observer_family_endpoint_target_extra_families
+endpoint_observer_family_cutoff_readout_rows
+endpoint_observer_family_cutoff_readout_malformed_rows
+endpoint_observer_family_cutoff_readout_unknown_families
+endpoint_observer_family_cutoff_readout_duplicate_families
+endpoint_observer_family_cutoff_readout_missing_families
+endpoint_observer_family_cutoff_readout_extra_families
+endpoint_observer_family_residual_theorem_rows
+endpoint_observer_family_residual_theorem_malformed_rows
+endpoint_observer_family_residual_theorem_unknown_families
+endpoint_observer_family_residual_theorem_duplicate_families
+endpoint_observer_family_residual_theorem_missing_families
+endpoint_observer_family_residual_theorem_extra_families
 endpoint_observer_family_build_malformed_rows
 endpoint_observer_family_build_unknown_families
 endpoint_observer_family_build_scope_failures

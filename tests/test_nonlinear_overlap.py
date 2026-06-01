@@ -4772,6 +4772,82 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             malformed_inputs.failure_reasons,
         )
 
+        bad_auxiliary_ledgers = universal_k_endpoint_observer_builds_by_family(
+            interval,
+            seed_entries,
+            tuple(certificates),
+            detector_track_initialization_rows=tuple(detector_rows),
+            endpoint_target_audits_by_family=tuple(endpoint_targets)
+            + (
+                ("U", endpoint_targets[0][1]),
+                ("Z", endpoint_targets[0][1]),
+                ("short",),
+            ),
+            cutoff_readout_audits_by_family=tuple(cutoff_readouts)
+            + (
+                ("C", cutoff_readouts[0][1]),
+                ("U", cutoff_readouts[0][1]),
+                ("short",),
+            ),
+            residual_faithfulness_theorems_by_family=tuple(residual_theorems)
+            + (
+                ("M", residual_theorems[0][1]),
+                ("Z", residual_theorems[0][1]),
+                ("short",),
+            ),
+        )
+
+        self.assertFalse(bad_auxiliary_ledgers.proves_family_endpoint_observers)
+        self.assertEqual(bad_auxiliary_ledgers.unproved_build_families, ())
+        self.assertEqual(
+            bad_auxiliary_ledgers.duplicate_endpoint_target_families,
+            ("U",),
+        )
+        self.assertEqual(
+            bad_auxiliary_ledgers.invalid_endpoint_target_families,
+            ("Z",),
+        )
+        self.assertEqual(
+            bad_auxiliary_ledgers.malformed_endpoint_target_rows,
+            (("short",),),
+        )
+        self.assertEqual(
+            bad_auxiliary_ledgers.duplicate_cutoff_readout_families,
+            ("C",),
+        )
+        self.assertEqual(
+            bad_auxiliary_ledgers.extra_cutoff_readout_families,
+            ("U",),
+        )
+        self.assertEqual(
+            bad_auxiliary_ledgers.malformed_cutoff_readout_rows,
+            (("short",),),
+        )
+        self.assertEqual(
+            bad_auxiliary_ledgers.duplicate_residual_theorem_families,
+            ("M",),
+        )
+        self.assertEqual(
+            bad_auxiliary_ledgers.invalid_residual_theorem_families,
+            ("Z",),
+        )
+        self.assertEqual(
+            bad_auxiliary_ledgers.malformed_residual_theorem_rows,
+            (("short",),),
+        )
+        self.assertIn(
+            "endpoint_observer_family_endpoint_targets_duplicate_families",
+            bad_auxiliary_ledgers.failure_reasons,
+        )
+        self.assertIn(
+            "endpoint_observer_family_cutoff_readouts_extra_families",
+            bad_auxiliary_ledgers.failure_reasons,
+        )
+        self.assertIn(
+            "endpoint_observer_family_residual_theorems_unknown_families",
+            bad_auxiliary_ledgers.failure_reasons,
+        )
+
     def test_endpoint_observer_family_build_rechecks_current_kappa_and_interval(self):
         interval = one_color_identity_interval()
         refinement = constant_map_kernel_only_system_k_refinement()
