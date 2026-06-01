@@ -1513,6 +1513,13 @@ rows.  Each retained family build must be single-family scoped, must use
 exactly that family's seed classifier entries and reachable seed states, and
 must itself prove the endpoint observer.  A successful U observer cannot
 stand in for a missing C or M observer.
+The observer-build ledger must also validate the `kappa` input rows before
+using them to infer active families.  A classifier entry with the wrong row
+shape, an unhashable seed-state key, a non-tuple seed state, or a target
+family outside `{U,C,M}` is a finite certificate error.  Such data must be
+reported as a malformed or invalid seed-classifier ledger; it may not be
+converted into a generic missing-observer symptom and may not crash raw set
+comparisons.
 The main post-linear proof object must retain or derive this family ledger
 from per-family word-potential certificates and must expose expected,
 covered, missing, extra, duplicate, malformed, scope-mismatched, and unproved

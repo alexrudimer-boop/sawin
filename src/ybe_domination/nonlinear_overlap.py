@@ -4100,7 +4100,15 @@ def universal_k_signed_endpoint_seed_states(
 ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
     """Return the initial endpoint states hit by the current kappa table."""
 
-    return _unique_values(tuple(entry[1] for entry in seed_classifier_entries))
+    return _unique_values(
+        tuple(
+            target
+            for entry in seed_classifier_entries
+            for parts in (_universal_k_two_field_row_parts(entry),)
+            if parts is not None
+            for _descriptor, target in (parts,)
+        )
+    )
 
 
 def universal_k_signed_endpoint_transition_closure(
@@ -5900,6 +5908,27 @@ class UniversalKSignedEndpointGeneratorAudit:
         return universal_k_signed_endpoint_seed_states(self.seed_classifier_entries)
 
     @property
+    def seed_classifier_entry_parts(
+        self,
+    ) -> Tuple[Tuple[object, object], ...]:
+        return tuple(
+            parts
+            for entry in self.seed_classifier_entries
+            for parts in (_universal_k_two_field_row_parts(entry),)
+            if parts is not None
+        )
+
+    @property
+    def malformed_seed_classifier_entries(self) -> Tuple[object, ...]:
+        return _unique_values(
+            tuple(
+                entry
+                for entry in self.seed_classifier_entries
+                if _universal_k_two_field_row_parts(entry) is None
+            )
+        )
+
+    @property
     def duplicate_seed_classifier_entries(
         self,
     ) -> Tuple[UniversalKSeedClassifierEntry, ...]:
@@ -5909,20 +5938,27 @@ class UniversalKSignedEndpointGeneratorAudit:
     def duplicate_seed_classifier_descriptors(
         self,
     ) -> Tuple[UniversalKRowDescriptor, ...]:
-        return _duplicate_values(tuple(entry[0] for entry in self.seed_classifier_entries))
+        return _duplicate_values(
+            tuple(descriptor for descriptor, _target in self.seed_classifier_entry_parts)
+        )
 
     @property
     def conflicting_seed_classifier_descriptors(
         self,
     ) -> Tuple[UniversalKRowDescriptor, ...]:
-        targets_by_descriptor = {}
-        for descriptor, target in self.seed_classifier_entries:
-            targets_by_descriptor.setdefault(descriptor, set()).add(target)
+        targets_by_descriptor: dict[object, set[object]] = {}
+        descriptor_by_marker: dict[object, object] = {}
+        for descriptor, target in self.seed_classifier_entry_parts:
+            descriptor_marker = _value_marker(descriptor)
+            descriptor_by_marker.setdefault(descriptor_marker, descriptor)
+            targets_by_descriptor.setdefault(descriptor_marker, set()).add(
+                _value_marker(target)
+            )
         return tuple(
             sorted(
                 (
-                    descriptor
-                    for descriptor, targets in targets_by_descriptor.items()
+                    descriptor_by_marker[descriptor_marker]
+                    for descriptor_marker, targets in targets_by_descriptor.items()
                     if len(targets) > 1
                 ),
                 key=repr,
@@ -5932,7 +5968,8 @@ class UniversalKSignedEndpointGeneratorAudit:
     @property
     def seed_classifier_is_functional(self) -> bool:
         return (
-            not self.duplicate_seed_classifier_entries
+            not self.malformed_seed_classifier_entries
+            and not self.duplicate_seed_classifier_entries
             and not self.duplicate_seed_classifier_descriptors
             and not self.conflicting_seed_classifier_descriptors
         )
@@ -5942,14 +5979,17 @@ class UniversalKSignedEndpointGeneratorAudit:
         self,
     ) -> Tuple[UniversalKSeedClassifierEntry, ...]:
         return tuple(
-            entry
-            for entry in self.seed_classifier_entries
-            if not _universal_k_endpoint_seed_state_well_formed(entry[1])
+            (descriptor, target)
+            for descriptor, target in self.seed_classifier_entry_parts
+            if not _universal_k_endpoint_seed_state_well_formed(target)
         )
 
     @property
     def seed_classifier_targets_known(self) -> bool:
-        return not self.invalid_seed_classifier_targets
+        return (
+            not self.malformed_seed_classifier_entries
+            and not self.invalid_seed_classifier_targets
+        )
 
     @property
     def reachable_seed_states_exact(
@@ -6859,6 +6899,8 @@ class UniversalKSignedEndpointGeneratorAudit:
         reasons = []
         if not self.required_seed_states:
             reasons.append("no_routed_k_seed_states")
+        if self.malformed_seed_classifier_entries:
+            reasons.append("seed_classifier_malformed_entries")
         if self.duplicate_seed_classifier_entries:
             reasons.append("seed_classifier_duplicate_entries")
         if self.duplicate_seed_classifier_descriptors:
@@ -8216,13 +8258,51 @@ class UniversalKEndpointObserverFamilyBuildAudit:
         return universal_k_signed_endpoint_seed_states(self.seed_classifier_entries)
 
     @property
+    def seed_classifier_entry_parts(
+        self,
+    ) -> Tuple[Tuple[object, object], ...]:
+        return tuple(
+            parts
+            for entry in self.seed_classifier_entries
+            for parts in (_universal_k_two_field_row_parts(entry),)
+            if parts is not None
+        )
+
+    @property
+    def malformed_seed_classifier_entries(self) -> Tuple[object, ...]:
+        return _unique_values(
+            tuple(
+                entry
+                for entry in self.seed_classifier_entries
+                if _universal_k_two_field_row_parts(entry) is None
+            )
+        )
+
+    @property
+    def invalid_seed_classifier_targets(
+        self,
+    ) -> Tuple[UniversalKSeedClassifierEntry, ...]:
+        return tuple(
+            (descriptor, target)
+            for descriptor, target in self.seed_classifier_entry_parts
+            if not _universal_k_endpoint_seed_state_well_formed(target)
+        )
+
+    @property
+    def seed_classifier_ledger_well_formed(self) -> bool:
+        return (
+            not self.malformed_seed_classifier_entries
+            and not self.invalid_seed_classifier_targets
+        )
+
+    @property
     def expected_endpoint_families_exact(self) -> Tuple[str, ...]:
         return tuple(
             sorted(
                 {
-                    family
-                    for family, _seed_state in self.expected_seed_states
-                    if family in UNIVERSAL_K_ENDPOINT_FAMILIES
+                    state[0]
+                    for state in self.expected_seed_states
+                    if _universal_k_endpoint_seed_state_well_formed(state)
                 },
                 key=repr,
             )
@@ -8844,8 +8924,9 @@ class UniversalKEndpointObserverFamilyBuildAudit:
                         build.audit.required_endpoint_families,
                     )
                 )
-            if set(build.audit.required_seed_states) != set(
-                expected_states.get(family, ())
+            if (
+                _value_marker_set(build.audit.required_seed_states)
+                != _value_marker_set(expected_states.get(family, ()))
             ):
                 failures.append(
                     (
@@ -8875,7 +8956,8 @@ class UniversalKEndpointObserverFamilyBuildAudit:
     @property
     def proves_family_endpoint_observers(self) -> bool:
         return (
-            self.family_coverage_exact
+            self.seed_classifier_ledger_well_formed
+            and self.family_coverage_exact
             and not self.malformed_build_rows
             and not self.invalid_build_families
             and not self.duplicate_build_families
@@ -8909,10 +8991,11 @@ class UniversalKEndpointObserverFamilyBuildAudit:
         theorem = self.product_residual_faithfulness_theorem
         if theorem is None:
             return False
-        expected = set(self.expected_seed_states)
+        expected = _value_marker_set(self.expected_seed_states)
         return (
-            set(theorem.expected_endpoint_seed_states_exact) == expected
-            and set(theorem.covered_endpoint_seed_states_exact) == expected
+            _value_marker_set(theorem.expected_endpoint_seed_states_exact) == expected
+            and _value_marker_set(theorem.covered_endpoint_seed_states_exact)
+            == expected
         )
 
     @property
@@ -8959,6 +9042,10 @@ class UniversalKEndpointObserverFamilyBuildAudit:
     @property
     def failure_reasons(self) -> Tuple[str, ...]:
         reasons = []
+        if self.malformed_seed_classifier_entries:
+            reasons.append("endpoint_observer_family_seed_classifier_malformed_entries")
+        if self.invalid_seed_classifier_targets:
+            reasons.append("endpoint_observer_family_seed_classifier_invalid_targets")
         if not self.expected_endpoint_families_exact:
             reasons.append("endpoint_observer_family_builds_no_active_families")
         if self.malformed_build_rows:

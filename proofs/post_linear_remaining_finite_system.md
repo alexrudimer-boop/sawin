@@ -775,8 +775,13 @@ the resulting family ledger with
 coverage of the active families hit by `kappa`, rejects malformed or duplicate
 build rows, checks that each build is single-family scoped with exactly the
 family's seed classifier entries and seed states, and only closes when every
-family build proves its endpoint observer.  Thus a combined product endpoint
-row cannot hide the absence of a C or M observer behind a successful U build.
+family build proves its endpoint observer.  The family ledger now validates
+the `kappa` entries themselves before using them as active seed evidence:
+malformed classifier rows and classifier targets outside hashable U/C/M seed
+states are reported as finite ledger errors, not as vague missing observers
+and not as exceptions during seed-state set comparison.  Thus a combined
+product endpoint row cannot hide the absence of a C or M observer behind a
+successful U build.
 For a multi-family product endpoint row, the family ledger also requires a
 separate product residual-faithfulness theorem scoped to the full active
 family set and the full set of seed states hit by `kappa`.  Per-family

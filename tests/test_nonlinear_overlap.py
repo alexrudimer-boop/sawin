@@ -4288,6 +4288,46 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             invalid_kappa_target.failure_reasons,
         )
 
+        malformed_kappa_entry = ("malformed",)
+        unhashable_kappa_target = (
+            seed_entries[0][0],
+            ("U", (["not-hashable"],)),
+        )
+        non_tuple_kappa_target = (
+            seed_entries[0][0],
+            "not_a_seed_target",
+        )
+        malformed_kappa = UniversalKSignedEndpointGeneratorAudit(
+            seed_classifier_entries=(
+                malformed_kappa_entry,
+                unhashable_kappa_target,
+                non_tuple_kappa_target,
+            ),
+            reachable_seed_states=(),
+            required_entry_keys=(),
+            rows=(),
+        )
+
+        self.assertEqual(
+            malformed_kappa.malformed_seed_classifier_entries,
+            (malformed_kappa_entry,),
+        )
+        self.assertEqual(
+            malformed_kappa.invalid_seed_classifier_targets,
+            (unhashable_kappa_target, non_tuple_kappa_target),
+        )
+        self.assertFalse(malformed_kappa.seed_classifier_is_functional)
+        self.assertFalse(malformed_kappa.seed_classifier_targets_known)
+        self.assertFalse(malformed_kappa.proves_signed_endpoint_generator_tables)
+        self.assertIn(
+            "seed_classifier_malformed_entries",
+            malformed_kappa.failure_reasons,
+        )
+        self.assertIn(
+            "seed_classifier_targets_unknown_endpoint_family",
+            malformed_kappa.failure_reasons,
+        )
+
         complete = UniversalKSignedEndpointGeneratorAudit(
             seed_classifier_entries=seed_entries,
             reachable_seed_states=(("U", seed_state),),
@@ -4874,6 +4914,56 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertIn(
             "endpoint_observer_family_certificates_duplicate_families",
             malformed_inputs.failure_reasons,
+        )
+
+        malformed_seed_classifier_entry = ("bad-kappa-row",)
+        unhashable_seed_classifier_target = (
+            ("*", "*", "U", "constant_map_kernel", ("bad",)),
+            ("U", (["not-hashable"],)),
+        )
+        invalid_family_seed_classifier_target = (
+            ("*", "*", "Z", "constant_map_kernel", ("bad",)),
+            ("Z", ("bad",)),
+        )
+        non_tuple_seed_classifier_target = (
+            ("*", "*", "U", "constant_map_kernel", ("non-tuple-target",)),
+            "not_a_seed_target",
+        )
+        malformed_seed_classifier = universal_k_endpoint_observer_family_build_audit(
+            (
+                malformed_seed_classifier_entry,
+                unhashable_seed_classifier_target,
+                invalid_family_seed_classifier_target,
+                non_tuple_seed_classifier_target,
+            ),
+            (),
+        )
+
+        self.assertFalse(malformed_seed_classifier.seed_classifier_ledger_well_formed)
+        self.assertFalse(malformed_seed_classifier.proves_family_endpoint_observers)
+        self.assertEqual(
+            malformed_seed_classifier.malformed_seed_classifier_entries,
+            (malformed_seed_classifier_entry,),
+        )
+        self.assertEqual(
+            malformed_seed_classifier.invalid_seed_classifier_targets,
+            (
+                unhashable_seed_classifier_target,
+                invalid_family_seed_classifier_target,
+                non_tuple_seed_classifier_target,
+            ),
+        )
+        self.assertEqual(
+            malformed_seed_classifier.expected_endpoint_families_exact,
+            (),
+        )
+        self.assertIn(
+            "endpoint_observer_family_seed_classifier_malformed_entries",
+            malformed_seed_classifier.failure_reasons,
+        )
+        self.assertIn(
+            "endpoint_observer_family_seed_classifier_invalid_targets",
+            malformed_seed_classifier.failure_reasons,
         )
 
         bad_auxiliary_ledgers = universal_k_endpoint_observer_builds_by_family(
