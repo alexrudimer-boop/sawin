@@ -201,6 +201,19 @@ def _universal_k_detector_track_key_well_formed(key: object) -> bool:
     )
 
 
+def _universal_k_permutation_tuple(value: object, degree: object) -> bool:
+    return (
+        isinstance(value, tuple)
+        and _universal_k_positive_int(degree)
+        and len(value) == degree
+        and all(
+            _universal_k_nonnegative_int(entry) and entry < degree
+            for entry in value
+        )
+        and set(value) == set(range(degree))
+    )
+
+
 @dataclass(frozen=True)
 class UniversalKDetectorTrackInitializationRow:
     """Finite rule descriptor for one fixed endpoint detector track."""
@@ -2849,19 +2862,20 @@ class UniversalKCutoffReadoutRow:
     killed_readout_permutation: Tuple[int, ...]
 
     def readout_is_permutation(self, degree: int) -> bool:
-        return (
-            len(self.readout_permutation) == degree
-            and set(self.readout_permutation) == set(range(degree))
-        )
+        return _universal_k_permutation_tuple(self.readout_permutation, degree)
 
     def killed_readout_is_permutation(self, degree: int) -> bool:
         return (
-            len(self.killed_readout_permutation) == degree
-            and set(self.killed_readout_permutation) == set(range(degree))
+            _universal_k_permutation_tuple(
+                self.killed_readout_permutation,
+                degree,
+            )
         )
 
     def identity_data_kills_channel(self, degree: int) -> bool:
-        return self.killed_readout_permutation == tuple(range(degree))
+        return self.killed_readout_is_permutation(
+            degree
+        ) and self.killed_readout_permutation == tuple(range(degree))
 
 
 @dataclass(frozen=True)

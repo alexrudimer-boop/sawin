@@ -478,7 +478,10 @@ readout row for every routed C/M seed state.  A row records the seed state,
 the readout permutation, and the permutation left after identity cutoff data.
 The checker verifies row-domain exactness, actual membership in the symmetric
 group, injective readouts for faithfulness, and identity killed-readouts for
-channel killing.  The expected and covered cutoff seed-state ledgers must be
+channel killing.  A permutation row is an actual tuple of integers
+`0,...,m-1`; booleans, strings, duplicate images, out-of-range entries, or
+other malformed values are not elements of the symmetric group.  The expected
+and covered cutoff seed-state ledgers must be
 duplicate-free; repeated seed entries are reported as an inexact readout
 ledger rather than silently collapsed.  Expected, covered, and row cutoff
 state keys must also be well formed endpoint states; malformed keys are

@@ -1530,8 +1530,10 @@ readout row for every routed C/M seed state:
 
 The readout rows must cover exactly the expected seed states, with no
 missing, extra, or duplicate rows.  Each listed readout and killed-readout
-value must be an actual permutation of `{0,...,m-1}`.  Faithfulness is the
-finite injectivity check on the listed readout permutations.  Identity cutoff
+value must be an actual permutation tuple of the integers `{0,...,m-1}`.
+Boolean entries, strings, duplicate images, out-of-range entries, or other
+malformed values are not elements of the symmetric group.  Faithfulness is
+the finite injectivity check on the listed readout permutations.  Identity cutoff
 data kills the channel exactly when every killed-readout permutation is the
 identity permutation.  A bare assertion that the cutoff readouts are exact,
 faithful, or killed by identity cutoff data is not a certificate.  The
