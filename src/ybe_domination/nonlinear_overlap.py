@@ -785,7 +785,7 @@ class PostLinearRemainingFiniteSystemAudit:
 
     def _coordinate_unit_profile_routes(self, side: str, pair: Tuple[Color, Color]) -> bool:
         routing = self.missing_triangular_coordinate_unit_routing
-        if routing is None:
+        if routing is None or not routing.colored_ybe:
             return False
         for row in routing.rows:
             if (
@@ -802,7 +802,10 @@ class PostLinearRemainingFiniteSystemAudit:
     def _coordinate_unit_profile_routes_to_mixed_context(
         self, side: str, pair: Tuple[Color, Color]
     ) -> bool:
-        if self.missing_triangular_coordinate_unit_routing is None:
+        if (
+            self.missing_triangular_coordinate_unit_routing is None
+            or not self.missing_triangular_coordinate_unit_routing.colored_ybe
+        ):
             return False
         for row in self.missing_triangular_coordinate_unit_routing.rows:
             if (

@@ -98,6 +98,10 @@ new one-sided unit obstruction and it is not a closed K row.  The
 post-linear wrapper records such rows in
 `mixed_context_routed_k_missing_latin_row_defects` and reports
 `system_m_mixed_unit_context_endpoint` when no live K row remains.
+This route is certificate-gated: if the supplied coordinate-unit routing audit
+does not have the coloured-YBE premise, the post-linear wrapper does not
+remove the no-triangular row from active System K and does not create a
+System M endpoint obligation from that supplied data.
 
 Thus the no-triangular K-left ledger is narrowed again:
 

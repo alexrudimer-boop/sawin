@@ -505,9 +505,12 @@ coordinate-side unit rows are routed by
 `proofs/triangular_k_left_coordinate_unit_routing.md`: if every colour pair is
 two-sided unit then the locally nondegenerate/guitar branch applies; otherwise
 the one-sided unit row is mixed-unit context with the nonunit data on the
-opposite side.  A two-sided unit row is removed from live K only when the
-global locally-nondegenerate branch is actually proved; otherwise it remains
-live and is listed in
+opposite side.  The supplied coordinate-unit route is trusted only when its
+coloured-YBE premise is present; otherwise the no-triangular row remains live
+System K and no System M endpoint obligation is created from that data.  A
+two-sided unit row is removed from live K only when the global
+locally-nondegenerate branch is actually proved; otherwise it remains live and
+is listed in
 `missing_triangular_coordinate_unit_unclosed_two_sided_rows`.  Mixed-unit
 coordinate routes are recorded in
 `mixed_context_routed_k_missing_latin_row_defects`; if no live K row remains,

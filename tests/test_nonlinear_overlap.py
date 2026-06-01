@@ -1526,6 +1526,36 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             ),
         )
 
+    def test_coordinate_unit_route_requires_colored_ybe_certificate(self):
+        profile, routing = coordinate_unit_mixed_context_route_audits()
+        audit = PostLinearRemainingFiniteSystemAudit(
+            active_system_k_refinement(),
+            missing_triangular_row_profile=profile,
+            missing_triangular_coordinate_unit_routing=replace(
+                routing,
+                colored_ybe=False,
+            ),
+        )
+
+        self.assertEqual(audit.system_name, "system_k_kink_completion_deficit")
+        self.assertTrue(audit.system_k_active)
+        self.assertFalse(audit.system_m_active)
+        self.assertIn(
+            (
+                "live_k_missing_latin_row_defects",
+                ((("*", "*"), "no_left_triangular_row"),),
+            ),
+            audit.finite_obstruction_data,
+        )
+        self.assertIn(
+            ("mixed_context_routed_k_missing_latin_row_defects", ()),
+            audit.finite_obstruction_data,
+        )
+        self.assertIn(
+            ("missing_triangular_coordinate_unit_routing_proved", False),
+            audit.finite_obstruction_data,
+        )
+
     def test_coordinate_unit_two_sided_row_stays_live_without_global_branch(self):
         profile, routing = coordinate_unit_unclosed_two_sided_route_audits()
         audit = PostLinearRemainingFiniteSystemAudit(

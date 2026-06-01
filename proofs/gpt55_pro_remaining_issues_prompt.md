@@ -319,8 +319,9 @@ recovery inverse table; if that route is supplied and no live K rows remain,
 they become System U endpoint obligations.  No-triangular rows may be
 profiled into proper-kernel visible, coordinate-unit, partial-constant, or
 cardinality/structural cases.  Coordinate-unit rows route to System M if
-the opposite coordinate side contains nonunit data; partial-constant rows
-route to System C if their universal continuation seed closure is supplied.
+the coordinate-unit routing audit includes the coloured-YBE premise and the
+opposite coordinate side contains nonunit data; partial-constant rows route
+to System C if their universal continuation seed closure is supplied.
 If a partial-constant no-triangular row has a proper generated closure, that
 is also terminal:
 
