@@ -1225,6 +1225,9 @@ therefore be derived from the finite substitution and template tables above.
 They are not separate boolean assertions: if the substitution is not the
 positive/negative Artin recurrence or if a terminal template contains a raw
 assignment variable, the detector lift is incomplete.
+Likewise, telescoping braid-index independence must follow from the finite
+family track counts, exact initialization rows, and the absence of any
+`braid_index` dependency in those rows; it is not a separate flag.
 
 For cutoff families, in particular C and M, the proof must define faithful
 readouts

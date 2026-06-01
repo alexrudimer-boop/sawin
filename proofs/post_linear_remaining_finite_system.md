@@ -515,6 +515,9 @@ The executable close criterion derives the Artin-recurrence and
 terminal-readout-longitude gates from these same substitution and template
 checks; separate `artin_detector_recurrence_verified` or
 `terminal_readout_longitudes_verified` booleans are diagnostic only.
+It also derives telescoping braid-index independence from the finite track
+counts and exact initialization rows, because those rows explicitly forbid
+`braid_index` and braid-word dependencies.
 
 The implementation now exposes an interval-derived constructor for this
 audit layer.  Given the interval, `kappa` entries, reachable states, signed

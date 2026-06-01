@@ -2608,6 +2608,13 @@ class UniversalKTelescopingDetectorAudit:
         )
 
     @property
+    def braid_index_independence_proved(self) -> bool:
+        return (
+            self.detector_track_initializations_verified
+            and self.word_potential_templates_supplied
+        )
+
+    @property
     def detector_tracks_supplied(self) -> bool:
         return (
             self.detector_track_count is not None
@@ -2632,7 +2639,7 @@ class UniversalKTelescopingDetectorAudit:
             and self.word_potential_templates_verified
             and self.terminal_readout_longitudes_proved
             and self.initial_readout_normalized_proved
-            and self.braid_index_independent
+            and self.braid_index_independence_proved
         )
 
     @property
@@ -2713,7 +2720,7 @@ class UniversalKTelescopingDetectorAudit:
             reasons.append("terminal_readout_longitudes_not_verified")
         if not self.initial_readout_normalized_proved:
             reasons.append("word_potential_initial_value_not_normalized")
-        if not self.braid_index_independent:
+        if not self.braid_index_independence_proved:
             reasons.append("telescoping_detector_not_braid_index_independent")
         return tuple(reasons)
 
@@ -6728,7 +6735,7 @@ class PostLinearRemainingFiniteSystemAudit:
             (
                 "signed_endpoint_generator_telescoping_braid_index_independent",
                 (
-                    telescoping_audit.braid_index_independent
+                    telescoping_audit.braid_index_independence_proved
                     if telescoping_audit is not None
                     else False
                 ),
