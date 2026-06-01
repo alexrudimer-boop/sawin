@@ -595,6 +595,10 @@ that every identity-row and ledger key has the full `D_Gamma` shape
 state; a shortened positive key is malformed rather than an abbreviated row.
 Malformed rows are reported at that gate before downstream template,
 track-scope, raw-assignment, or identity diagnostics interpret row fields.
+Optional negative diagnostics are also scoped to the current signed
+`D_Gamma` domain: a negative identity row or telescoping ledger key outside
+the interval-derived signed entry domain is an extra diagnostic channel, not a
+harmless ignored row.
 The checker then exhausts all
 assignments of the finitely many variables in the positive row to the fixed
 endpoint group and checks the word identity in the group table.  This removes
@@ -835,6 +839,7 @@ signed_endpoint_generator_telescoping_detector_verified
 signed_endpoint_generator_telescoping_detector_scope_matches_required
 signed_endpoint_generator_telescoping_endpoint_group_matches
 signed_endpoint_generator_telescoping_signed_row_mismatches
+signed_endpoint_generator_telescoping_extra_diagnostic_entry_keys
 signed_endpoint_generator_telescoping_expected_entry_keys
 signed_endpoint_generator_telescoping_covered_entry_keys
 signed_endpoint_generator_telescoping_expected_positive_entry_keys

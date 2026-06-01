@@ -4026,6 +4026,28 @@ class UniversalKSignedEndpointGeneratorAudit:
         )
 
     @property
+    def telescoping_detector_extra_diagnostic_entry_keys(
+        self,
+    ) -> Tuple[UniversalKSignedEndpointEntryKey, ...]:
+        if self.telescoping_detector_audit is None:
+            return ()
+        required = set(self.required_entry_keys_exact)
+        candidate_keys = (
+            set(self.telescoping_detector_audit.expected_entry_keys_exact)
+            | set(self.telescoping_detector_audit.covered_entry_keys_exact)
+        )
+        if self.telescoping_detector_audit.word_potential_certificate is not None:
+            candidate_keys |= set(
+                self.telescoping_detector_audit
+                .word_potential_certificate.identity_entry_keys_exact
+            )
+        return tuple(sorted(candidate_keys - required, key=repr))
+
+    @property
+    def telescoping_detector_diagnostic_entries_in_signed_domain(self) -> bool:
+        return not self.telescoping_detector_extra_diagnostic_entry_keys
+
+    @property
     def word_potential_initial_seed_states_normalized(self) -> bool:
         if (
             self.telescoping_detector_audit is None
@@ -4125,6 +4147,7 @@ class UniversalKSignedEndpointGeneratorAudit:
             self.telescoping_detector_audit is not None
             and self.telescoping_detector_scope_matches_required
             and self.telescoping_detector_endpoint_group_matches
+            and self.telescoping_detector_diagnostic_entries_in_signed_domain
             and self.word_potential_initial_seed_states_normalized
             and self.word_potential_initial_seed_state_scope_exact
             and not self.telescoping_detector_signed_row_mismatches
@@ -4236,6 +4259,10 @@ class UniversalKSignedEndpointGeneratorAudit:
                     reasons.append("telescoping_detector_scope_mismatch")
                 if not self.telescoping_detector_endpoint_group_matches:
                     reasons.append("telescoping_detector_endpoint_group_mismatch")
+                if not self.telescoping_detector_diagnostic_entries_in_signed_domain:
+                    reasons.append(
+                        "telescoping_detector_diagnostic_rows_outside_signed_domain"
+                    )
                 if not self.word_potential_initial_seed_states_normalized:
                     reasons.append("word_potential_initial_seed_states_not_normalized")
                 if not self.word_potential_initial_seed_state_scope_exact:
@@ -7067,6 +7094,10 @@ class PostLinearRemainingFiniteSystemAudit:
                     "signed_endpoint_generator_telescoping_signed_row_mismatches",
                     (),
                 ),
+                (
+                    "signed_endpoint_generator_telescoping_extra_diagnostic_entry_keys",
+                    (),
+                ),
                 ("signed_endpoint_generator_telescoping_expected_entry_keys", ()),
                 ("signed_endpoint_generator_telescoping_covered_entry_keys", ()),
                 (
@@ -7686,6 +7717,10 @@ class PostLinearRemainingFiniteSystemAudit:
             (
                 "signed_endpoint_generator_telescoping_signed_row_mismatches",
                 audit.telescoping_detector_signed_row_mismatches,
+            ),
+            (
+                "signed_endpoint_generator_telescoping_extra_diagnostic_entry_keys",
+                audit.telescoping_detector_extra_diagnostic_entry_keys,
             ),
             (
                 "signed_endpoint_generator_telescoping_expected_entry_keys",

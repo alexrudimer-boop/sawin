@@ -3960,6 +3960,72 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertTrue(audit.telescoping_detector_proved)
         self.assertEqual(audit.telescoping_detector_signed_row_mismatches, ())
 
+    def test_negative_word_potential_diagnostics_must_stay_in_signed_domain(self):
+        seed_state = ("*", "*", "left_constant_map_universal_kernel")
+        seed_entries = (
+            (
+                (
+                    "*",
+                    "*",
+                    "L",
+                    "constant_map_kernel",
+                    ("*", (0, 1), "universal", "universal"),
+                ),
+                ("U", seed_state),
+            ),
+        )
+        reachable = (("U", seed_state),)
+        interval = one_color_identity_interval()
+        keys = universal_k_signed_endpoint_required_entry_keys(interval, reachable)
+        positive_keys = tuple(key for key in keys if key[2] == 1)
+        rows = identity_signed_endpoint_rows(keys)
+        group = cyclic_group(2)
+        telescoping = trivial_telescoping_detector_audit(
+            positive_keys,
+            rows=rows,
+            endpoint_group=group,
+        )
+        certificate = telescoping.word_potential_certificate
+        out_of_domain_negative_key = ("U", seed_state, -1, "*", "*", 99, 99)
+        out_of_domain_negative_identity = UniversalKWordPotentialIdentityRow(
+            entry_key=out_of_domain_negative_key,
+            next_seed_state=seed_state,
+            endpoint_value=group.identity,
+            artin_substitution=(),
+        )
+        telescoping = replace(
+            telescoping,
+            word_potential_certificate=replace(
+                certificate,
+                identity_rows=(
+                    certificate.identity_rows + (out_of_domain_negative_identity,)
+                ),
+            ),
+        )
+        audit = universal_k_signed_endpoint_generator_audit(
+            interval,
+            seed_entries,
+            reachable,
+            rows,
+            endpoint_group=group,
+            telescoping_detector_audit=telescoping,
+        )
+
+        self.assertTrue(telescoping.proves_telescoping_detector_lift)
+        self.assertTrue(audit.telescoping_detector_scope_matches_required)
+        self.assertFalse(
+            audit.telescoping_detector_diagnostic_entries_in_signed_domain
+        )
+        self.assertFalse(audit.telescoping_detector_proved)
+        self.assertEqual(
+            audit.telescoping_detector_extra_diagnostic_entry_keys,
+            (out_of_domain_negative_key,),
+        )
+        self.assertIn(
+            "telescoping_detector_diagnostic_rows_outside_signed_domain",
+            audit.failure_reasons,
+        )
+
     def test_malformed_word_potential_identity_rows_are_rejected(self):
         seed_state = ("*", "*", "left_constant_map_universal_kernel")
         seed_entries = (
