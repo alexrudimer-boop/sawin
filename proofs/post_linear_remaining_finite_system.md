@@ -393,6 +393,7 @@ positive local endpoint YBE cocycle
 signed two-strand Artin-longitude base identity
 compatible Artin-homomorphism update
 exact C/M cutoff readouts when cutoff families are present
+residual faithfulness for the actual interval fibre action
 ```
 
 When a finite endpoint group is supplied, the inverse-cancellation and
@@ -411,9 +412,12 @@ precomposing the source assignment with the Artin image of
 `sigma_1^{-epsilon}`, while the listed longitude index and exponent are
 preserved.
 
-This audit does not by itself close U, C, or M; it records the missing finite
-generator-table proof needed before the endpoint witnesses or symmetric
-cutoffs can be promoted to an all-strand proof.
+The residual-faithfulness gate is separate from the endpoint table identities:
+even a trivial endpoint group satisfies all label subgroup inclusions
+formally, but it closes nothing unless killed endpoint channels force the
+actual residual fibre action to be trivial.  This audit therefore records
+that bridge explicitly before endpoint witnesses or symmetric cutoffs can be
+promoted to an all-strand proof.
 
 together with the concrete rows:
 
@@ -455,6 +459,7 @@ signed_endpoint_generator_two_strand_base_verified
 signed_endpoint_generator_artin_update_verified
 signed_endpoint_generator_cutoff_readouts_required
 signed_endpoint_generator_cutoff_readouts_exact
+signed_endpoint_generator_residual_faithfulness_verified
 signed_endpoint_generator_tables_proved
 signed_endpoint_generator_failure_reasons
 active_companion_block_image_support_rows

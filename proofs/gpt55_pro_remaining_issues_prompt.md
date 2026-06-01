@@ -789,8 +789,9 @@ where `(x',y')=T_{a,b}^{+/-}(x,y)`.
 
 ### Signed Endpoint Generator Tables
 
-This is the reachable signed U/C/M endpoint-certificate lemma.  It is now the
-first decisive A-side missing object after the `K_nabla` and `kappa` layer.
+This is the uniform reachable signed U/C/M endpoint-generator and
+residual-faithfulness lemma.  It is now the first decisive A-side missing
+object after the `K_nabla` and `kappa` layer.
 
 For every endpoint family `E in {U,C,M}`, define the initial routed seed set
 
@@ -990,6 +991,14 @@ chi_M:S_M^reach -> S_mM,
 covering exactly the routed identity-continuation ledger for C and exactly
 the routed mixed-unit ledger for M, with no extra channels.
 
+The endpoint tables and readouts must also prove residual faithfulness:
+if all routed endpoint labels or cutoff readouts are killed, then the actual
+residual fibre action `Delta_n(beta)` is trivial on the corresponding
+interval fibre for every braid index.  This is an independent obligation.
+A trivial endpoint group makes every label formally lie in `V_beta(H_E)`,
+but it does not prove residual domination unless this residual-faithfulness
+map from endpoint channels to real fibre motion is supplied.
+
 The signed-generator audit for a claimed A proof must therefore establish:
 
 ```text
@@ -1005,14 +1014,16 @@ positive_local_endpoint_ybe_path,
 positive_local_endpoint_ybe_cocycle,
 signed_two_strand_artin_longitude_base,
 compatible_artin_homomorphism_update,
-exact_cutoff_readouts_for_C_and_M.
+exact_cutoff_readouts_for_C_and_M,
+residual_faithfulness_for_actual_fibre_action.
 ```
 
-Only after those finite checks are proved may one use braid-word
-induction to claim that all endpoint labels for family `E` lie in
-`V_beta(H_E)` for every braid index.  Without them, endpoint witnesses or
-symmetric cutoffs are merely candidate certificate shapes, not a completed
-uniform proof.
+Only after those finite checks and the residual-faithfulness theorem are
+proved may one use braid-word induction to claim that all endpoint labels
+for family `E` lie in `V_beta(H_E)` for every braid index and that this
+forces the true residual fibre action to be trivial.  Without them, endpoint
+witnesses or symmetric cutoffs are merely candidate certificate shapes, not
+a completed uniform proof.
 
 System activation is then exact:
 

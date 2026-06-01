@@ -609,6 +609,7 @@ class UniversalKSignedEndpointGeneratorAudit:
     signed_two_strand_base_verified: bool = False
     artin_homomorphism_update_verified: bool = False
     cutoff_readouts_exact: bool = False
+    residual_faithfulness_verified: bool = False
 
     @property
     def required_seed_states(self) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
@@ -796,6 +797,7 @@ class UniversalKSignedEndpointGeneratorAudit:
             and self.signed_two_strand_base_verified
             and self.artin_homomorphism_update_verified
             and self.exact_cutoff_readouts_proved
+            and self.residual_faithfulness_verified
         )
 
     @property
@@ -845,6 +847,8 @@ class UniversalKSignedEndpointGeneratorAudit:
             reasons.append("artin_homomorphism_update_not_verified")
         if not self.exact_cutoff_readouts_proved:
             reasons.append("cutoff_readouts_not_exact")
+        if not self.residual_faithfulness_verified:
+            reasons.append("residual_faithfulness_not_verified")
         return tuple(reasons)
 
 
@@ -3034,6 +3038,7 @@ class PostLinearRemainingFiniteSystemAudit:
                 ("signed_endpoint_generator_two_strand_base_verified", False),
                 ("signed_endpoint_generator_artin_update_verified", False),
                 ("signed_endpoint_generator_cutoff_readouts_exact", False),
+                ("signed_endpoint_generator_residual_faithfulness_verified", False),
                 ("signed_endpoint_generator_tables_proved", False),
             )
         matches_current_kappa = (
@@ -3131,6 +3136,10 @@ class PostLinearRemainingFiniteSystemAudit:
             (
                 "signed_endpoint_generator_cutoff_readouts_exact",
                 audit.cutoff_readouts_exact,
+            ),
+            (
+                "signed_endpoint_generator_residual_faithfulness_verified",
+                audit.residual_faithfulness_verified,
             ),
             (
                 "signed_endpoint_generator_tables_proved",
