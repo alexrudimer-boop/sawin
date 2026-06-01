@@ -39,6 +39,7 @@ from ybe_domination import (
     UniversalKCutoffReadoutAudit,
     UniversalKCutoffReadoutRow,
     UniversalKDetectorTrackInitializationRow,
+    UniversalKEndpointMonodromyPresentation,
     UniversalKEndpointObserverBuild,
     UniversalKEndpointTargetAudit,
     UniversalKResidualActionScopeAudit,
@@ -87,6 +88,7 @@ from ybe_domination import (
     triangular_recovery_unit_observer_audit,
     triangular_recovery_unit_group,
     universal_k_signed_endpoint_artin_update_failures,
+    universal_k_endpoint_monodromy_presentation,
     universal_k_endpoint_observer_build,
     universal_k_endpoint_observer_positive_rows_from_word_potential,
     universal_k_endpoint_observer_signed_rows_from_positive,
@@ -4125,6 +4127,22 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertTrue(complete.proves_signed_endpoint_generator_tables)
         self.assertEqual(complete.failure_reasons, ())
 
+    def test_endpoint_monodromy_presentation_enumerates_ucm_contexts(self):
+        interval = one_color_identity_interval()
+        presentation = universal_k_endpoint_monodromy_presentation(
+            interval,
+            ("U", "C", "M"),
+        )
+
+        self.assertIsInstance(presentation, UniversalKEndpointMonodromyPresentation)
+        self.assertTrue(presentation.presentation_is_finite)
+        self.assertEqual(presentation.expected_endpoint_families_exact, ("C", "M", "U"))
+        self.assertEqual(presentation.context_families, ("C", "M", "U"))
+        self.assertEqual(len(presentation.contexts_exact), 12)
+        self.assertEqual(len(presentation.adjacent_relations_exact), 24)
+        self.assertEqual(len(presentation.far_commutativity_relations_exact), 30)
+        self.assertEqual(presentation.failure_reasons, ())
+
     def test_endpoint_observer_builder_forces_signed_rows_from_word_potential(self):
         interval = one_color_identity_interval()
         group = cyclic_group(2)
@@ -4189,6 +4207,8 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
 
         self.assertIsInstance(build, UniversalKEndpointObserverBuild)
         self.assertEqual(build.reachable_seed_states, seed_states)
+        self.assertTrue(build.monodromy_presentation.presentation_is_finite)
+        self.assertEqual(build.monodromy_presentation.context_families, ("U",))
         self.assertEqual(
             tuple(row.entry_key for row in build.positive_rows),
             positive_keys,
@@ -4200,6 +4220,69 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertTrue(build.telescoping_detector_audit.proves_telescoping_detector_lift)
         self.assertTrue(build.audit.positive_monodromy_representation_verified)
         self.assertTrue(build.proves_endpoint_observer)
+
+    def test_endpoint_observer_builder_records_all_ucm_active_families(self):
+        interval = one_color_identity_interval()
+        group = cyclic_group(2)
+        seed_entries = tuple(
+            (
+                ("*", "*", family, "constant_map_kernel", (0, 1)),
+                (family, ("*", "*", f"{family}_seed")),
+            )
+            for family in ("U", "C", "M")
+        )
+        seed_states = universal_k_signed_endpoint_transition_closure(
+            seed_entries,
+            (),
+        )
+        required_keys = universal_k_signed_endpoint_required_entry_keys(
+            interval,
+            seed_states,
+        )
+        positive_keys = tuple(key for key in required_keys if key[2] == 1)
+        state_by_family = {family: state for family, state in seed_states}
+        certificate = UniversalKWordPotentialCertificate(
+            endpoint_group=group,
+            templates=tuple((seed_state, ()) for seed_state in seed_states),
+            identity_rows=tuple(
+                UniversalKWordPotentialIdentityRow(
+                    entry_key=key,
+                    next_seed_state=state_by_family[key[0]],
+                    endpoint_value=group.identity,
+                    artin_substitution=(),
+                )
+                for key in positive_keys
+            ),
+            normalized_seed_states=seed_states,
+        )
+        detector_rows = tuple(
+            UniversalKDetectorTrackInitializationRow(
+                endpoint_family=family,
+                track_index=0,
+                assignment_rule="constant_identity_from_interval_seed",
+                dependencies=("interval_data", "routed_seed_state", "strand_index"),
+                local_assignment_template=((("A", 0, 0), group.identity),),
+            )
+            for family in ("U", "C", "M")
+        )
+
+        build = universal_k_endpoint_observer_build(
+            interval,
+            seed_entries,
+            certificate,
+            detector_track_initialization_rows=detector_rows,
+        )
+
+        self.assertEqual(build.monodromy_presentation.context_families, ("C", "M", "U"))
+        self.assertEqual(len(build.monodromy_presentation.contexts_exact), 12)
+        self.assertTrue(build.monodromy_presentation.presentation_is_finite)
+        self.assertEqual(set(row.entry_key for row in build.rows), set(required_keys))
+        self.assertTrue(build.audit.signed_generator_domain_exact)
+        self.assertTrue(build.audit.positive_monodromy_representation_verified)
+        self.assertFalse(build.proves_endpoint_observer)
+        self.assertIn("endpoint_targets_not_fixed", build.audit.failure_reasons)
+        self.assertIn("cutoff_readouts_not_exact", build.audit.failure_reasons)
+        self.assertIn("residual_faithfulness_not_verified", build.audit.failure_reasons)
 
     def test_endpoint_observer_builder_rejects_omitted_positive_context(self):
         interval = one_color_identity_interval()

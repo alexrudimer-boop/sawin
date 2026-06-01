@@ -143,6 +143,18 @@ UniversalKEndpointMonodromyFailure = Tuple[
     str,
     object,
 ]
+UniversalKEndpointMonodromyContext = Tuple[
+    str,
+    Color,
+    Color,
+    FibrePoint,
+    FibrePoint,
+]
+UniversalKEndpointMonodromyWord = Tuple[UniversalKEndpointMonodromyContext, ...]
+UniversalKEndpointMonodromyRelation = Tuple[
+    UniversalKEndpointMonodromyWord,
+    UniversalKEndpointMonodromyWord,
+]
 UniversalKWordPotentialVariable = Tuple[str, int, int]
 UniversalKWordPotentialLetter = Tuple[UniversalKWordPotentialVariable, int]
 UniversalKWordPotentialWord = Tuple[UniversalKWordPotentialLetter, ...]
@@ -3635,6 +3647,324 @@ def universal_k_signed_endpoint_transition_closure(
 
 
 @dataclass(frozen=True)
+class UniversalKEndpointMonodromyPresentation:
+    """Finite positive local-context presentation for a U/C/M observer.
+
+    Contexts are the positive local crossings `(E,a,b,x,y)`.  Relations are
+    stored in application order: `((r1,r2,r3),(r1',r2',r3'))` records the two
+    positive adjacent paths, and `((r,r'),(r',r))` records a far-commuting
+    disjoint-context pair.  A finite permutation representation of this
+    presentation is exactly the endpoint-state part of a positive observer.
+    """
+
+    expected_endpoint_families: Tuple[str, ...]
+    contexts: Tuple[UniversalKEndpointMonodromyContext, ...]
+    adjacent_relations: Tuple[UniversalKEndpointMonodromyRelation, ...] = ()
+    far_commutativity_relations: Tuple[
+        UniversalKEndpointMonodromyRelation,
+        ...,
+    ] = ()
+
+    @property
+    def expected_endpoint_families_exact(self) -> Tuple[str, ...]:
+        return _unique_values(self.expected_endpoint_families)
+
+    @property
+    def duplicate_expected_endpoint_families(self) -> Tuple[str, ...]:
+        return _duplicate_values(self.expected_endpoint_families)
+
+    @property
+    def invalid_expected_endpoint_families(self) -> Tuple[str, ...]:
+        return tuple(
+            family
+            for family in self.expected_endpoint_families_exact
+            if family not in UNIVERSAL_K_ENDPOINT_FAMILIES
+        )
+
+    @property
+    def contexts_exact(self) -> Tuple[UniversalKEndpointMonodromyContext, ...]:
+        return _unique_values(self.contexts)
+
+    @property
+    def duplicate_contexts(self) -> Tuple[UniversalKEndpointMonodromyContext, ...]:
+        return _duplicate_values(self.contexts)
+
+    @property
+    def malformed_contexts(self) -> Tuple[UniversalKEndpointMonodromyContext, ...]:
+        return _unique_values(
+            tuple(context for context in self.contexts if not self._context_valid(context))
+        )
+
+    @staticmethod
+    def _context_valid(context: object) -> bool:
+        return (
+            isinstance(context, tuple)
+            and len(context) == 5
+            and context[0] in UNIVERSAL_K_ENDPOINT_FAMILIES
+        )
+
+    @classmethod
+    def _word_valid(cls, word: object, length: int) -> bool:
+        return (
+            isinstance(word, tuple)
+            and len(word) == length
+            and all(cls._context_valid(context) for context in word)
+        )
+
+    @property
+    def context_families(self) -> Tuple[str, ...]:
+        return tuple(
+            sorted(
+                {
+                    context[0]
+                    for context in self.contexts_exact
+                    if self._context_valid(context)
+                },
+                key=repr,
+            )
+        )
+
+    @property
+    def family_scope_exact(self) -> bool:
+        return set(self.context_families) == set(self.expected_endpoint_families_exact)
+
+    @property
+    def adjacent_relations_exact(
+        self,
+    ) -> Tuple[UniversalKEndpointMonodromyRelation, ...]:
+        return _unique_values(self.adjacent_relations)
+
+    @property
+    def far_commutativity_relations_exact(
+        self,
+    ) -> Tuple[UniversalKEndpointMonodromyRelation, ...]:
+        return _unique_values(self.far_commutativity_relations)
+
+    @property
+    def duplicate_adjacent_relations(
+        self,
+    ) -> Tuple[UniversalKEndpointMonodromyRelation, ...]:
+        return _duplicate_values(self.adjacent_relations)
+
+    @property
+    def duplicate_far_commutativity_relations(
+        self,
+    ) -> Tuple[UniversalKEndpointMonodromyRelation, ...]:
+        return _duplicate_values(self.far_commutativity_relations)
+
+    @staticmethod
+    def _relation_contexts(
+        relation: UniversalKEndpointMonodromyRelation,
+    ) -> Tuple[UniversalKEndpointMonodromyContext, ...]:
+        left_word, right_word = relation
+        return tuple(left_word) + tuple(right_word)
+
+    @property
+    def malformed_adjacent_relations(
+        self,
+    ) -> Tuple[UniversalKEndpointMonodromyRelation, ...]:
+        return _unique_values(
+            tuple(
+                relation
+                for relation in self.adjacent_relations
+                if (
+                    not isinstance(relation, tuple)
+                    or len(relation) != 2
+                    or not self._word_valid(relation[0], 3)
+                    or not self._word_valid(relation[1], 3)
+                )
+            )
+        )
+
+    @property
+    def malformed_far_commutativity_relations(
+        self,
+    ) -> Tuple[UniversalKEndpointMonodromyRelation, ...]:
+        return _unique_values(
+            tuple(
+                relation
+                for relation in self.far_commutativity_relations
+                if (
+                    not isinstance(relation, tuple)
+                    or len(relation) != 2
+                    or not self._word_valid(relation[0], 2)
+                    or not self._word_valid(relation[1], 2)
+                )
+            )
+        )
+
+    @property
+    def relation_contexts_outside_domain(
+        self,
+    ) -> Tuple[UniversalKEndpointMonodromyContext, ...]:
+        context_markers = {_value_marker(context) for context in self.contexts_exact}
+        outside = []
+        for relation in self.adjacent_relations + self.far_commutativity_relations:
+            if (
+                not isinstance(relation, tuple)
+                or len(relation) != 2
+                or not isinstance(relation[0], tuple)
+                or not isinstance(relation[1], tuple)
+            ):
+                continue
+            for context in tuple(relation[0]) + tuple(relation[1]):
+                if (
+                    self._context_valid(context)
+                    and _value_marker(context) not in context_markers
+                ):
+                    outside.append(context)
+        return _unique_values(tuple(outside))
+
+    @property
+    def relations_well_formed(self) -> bool:
+        return (
+            not self.malformed_adjacent_relations
+            and not self.malformed_far_commutativity_relations
+            and not self.relation_contexts_outside_domain
+        )
+
+    @property
+    def presentation_is_finite(self) -> bool:
+        return (
+            bool(self.contexts_exact)
+            and not self.duplicate_expected_endpoint_families
+            and not self.invalid_expected_endpoint_families
+            and not self.duplicate_contexts
+            and not self.malformed_contexts
+            and self.family_scope_exact
+            and not self.duplicate_adjacent_relations
+            and not self.duplicate_far_commutativity_relations
+            and self.relations_well_formed
+        )
+
+    @property
+    def failure_reasons(self) -> Tuple[str, ...]:
+        reasons = []
+        if not self.contexts_exact:
+            reasons.append("endpoint_monodromy_contexts_missing")
+        if self.duplicate_expected_endpoint_families:
+            reasons.append("endpoint_monodromy_duplicate_families")
+        if self.invalid_expected_endpoint_families:
+            reasons.append("endpoint_monodromy_unknown_families")
+        if self.duplicate_contexts:
+            reasons.append("endpoint_monodromy_duplicate_contexts")
+        if self.malformed_contexts:
+            reasons.append("endpoint_monodromy_malformed_contexts")
+        if not self.family_scope_exact:
+            reasons.append("endpoint_monodromy_family_scope_mismatch")
+        if self.duplicate_adjacent_relations:
+            reasons.append("endpoint_monodromy_duplicate_adjacent_relations")
+        if self.duplicate_far_commutativity_relations:
+            reasons.append("endpoint_monodromy_duplicate_far_relations")
+        if self.malformed_adjacent_relations:
+            reasons.append("endpoint_monodromy_malformed_adjacent_relations")
+        if self.malformed_far_commutativity_relations:
+            reasons.append("endpoint_monodromy_malformed_far_relations")
+        if self.relation_contexts_outside_domain:
+            reasons.append("endpoint_monodromy_relation_context_outside_domain")
+        return tuple(reasons)
+
+
+def _universal_k_positive_context_path(
+    interval: LocalInterval,
+    endpoint_family: str,
+    start_colors: Tuple[Color, ...],
+    start_fibres: Tuple[FibrePoint, ...],
+    indices: Tuple[int, ...],
+) -> UniversalKEndpointMonodromyWord | None:
+    contexts = []
+    colors = tuple(start_colors)
+    fibres = tuple(start_fibres)
+    for index in indices:
+        left_color = colors[index]
+        right_color = colors[index + 1]
+        input_left = fibres[index]
+        input_right = fibres[index + 1]
+        output = interval.T.get((left_color, right_color, input_left, input_right))
+        target_colors = interval.base_R.get((left_color, right_color))
+        if output is None or target_colors is None:
+            return None
+        contexts.append(
+            (endpoint_family, left_color, right_color, input_left, input_right)
+        )
+        next_colors = list(colors)
+        next_fibres = list(fibres)
+        next_colors[index], next_colors[index + 1] = target_colors
+        next_fibres[index], next_fibres[index + 1] = output
+        colors = tuple(next_colors)
+        fibres = tuple(next_fibres)
+    return tuple(contexts)
+
+
+def universal_k_endpoint_monodromy_presentation(
+    interval: LocalInterval,
+    endpoint_families: Sequence[str],
+) -> UniversalKEndpointMonodromyPresentation:
+    """Build the finite positive local-context presentation for U/C/M observers."""
+
+    families = _unique_values(tuple(endpoint_families))
+    valid_families = tuple(
+        family for family in families if family in UNIVERSAL_K_ENDPOINT_FAMILIES
+    )
+    contexts = tuple(
+        sorted(
+            (
+                (family, left_color, right_color, input_left, input_right)
+                for family in valid_families
+                for left_color, right_color in product(interval.colors, repeat=2)
+                for input_left in interval.fibres[left_color]
+                for input_right in interval.fibres[right_color]
+            ),
+            key=repr,
+        )
+    )
+    adjacent_relations = []
+    for family in valid_families:
+        for a, b, c in product(interval.colors, repeat=3):
+            for x, y, z in product(
+                interval.fibres[a],
+                interval.fibres[b],
+                interval.fibres[c],
+            ):
+                left_word = _universal_k_positive_context_path(
+                    interval,
+                    family,
+                    (a, b, c),
+                    (x, y, z),
+                    (0, 1, 0),
+                )
+                right_word = _universal_k_positive_context_path(
+                    interval,
+                    family,
+                    (a, b, c),
+                    (x, y, z),
+                    (1, 0, 1),
+                )
+                if left_word is not None and right_word is not None:
+                    adjacent_relations.append((left_word, right_word))
+
+    far_relations = []
+    contexts_by_family = {
+        family: tuple(context for context in contexts if context[0] == family)
+        for family in valid_families
+    }
+    for family in valid_families:
+        family_contexts = contexts_by_family.get(family, ())
+        for index, left_context in enumerate(family_contexts):
+            for right_context in family_contexts[index:]:
+                far_relations.append(
+                    ((left_context, right_context), (right_context, left_context))
+                )
+
+    return UniversalKEndpointMonodromyPresentation(
+        expected_endpoint_families=families,
+        contexts=contexts,
+        adjacent_relations=_unique_values(tuple(adjacent_relations)),
+        far_commutativity_relations=_unique_values(tuple(far_relations)),
+    )
+
+
+@dataclass(frozen=True)
 class UniversalKTelescopingDetectorAudit:
     """Fixed-assignment detector-lift proving endpoint labels telescope.
 
@@ -6829,6 +7159,7 @@ class UniversalKEndpointObserverBuild:
     """
 
     reachable_seed_states: Tuple[Tuple[str, UniversalKSeedState], ...]
+    monodromy_presentation: UniversalKEndpointMonodromyPresentation
     positive_rows: Tuple[UniversalKSignedEndpointGeneratorRow, ...]
     rows: Tuple[UniversalKSignedEndpointGeneratorRow, ...]
     telescoping_detector_audit: UniversalKTelescopingDetectorAudit
@@ -6968,6 +7299,19 @@ def universal_k_endpoint_observer_build(
         seed_classifier_entries,
         rows,
     )
+    monodromy_presentation = universal_k_endpoint_monodromy_presentation(
+        interval,
+        tuple(
+            sorted(
+                {
+                    family
+                    for family, _seed_state in reachable_seed_states
+                    if family in UNIVERSAL_K_ENDPOINT_FAMILIES
+                },
+                key=repr,
+            )
+        ),
+    )
     required_entry_keys = universal_k_signed_endpoint_required_entry_keys(
         interval,
         reachable_seed_states,
@@ -7025,6 +7369,7 @@ def universal_k_endpoint_observer_build(
     )
     return UniversalKEndpointObserverBuild(
         reachable_seed_states=reachable_seed_states,
+        monodromy_presentation=monodromy_presentation,
         positive_rows=positive_rows,
         rows=rows,
         telescoping_detector_audit=telescoping_detector_audit,

@@ -1437,6 +1437,11 @@ the monodromy-coboundary table, not by independently inventing signed
 emissions.  The finite construction is:
 
 ```text
+positive local-context monodromy presentation:
+  generators are all positive contexts r=(E,a,b,x,y);
+  adjacent relations are the 121/212 context paths computed from T;
+  far relations are disjoint context swaps within each active family;
+
 positive rows:
   Gamma^{E,+}_{a,b}(s,x,y)
   =
@@ -1455,12 +1460,15 @@ whenever R_C(a,b)=(c,d) and T_{a,b}(x,y)=(u,v).
 Then compute `S_E^reach` as the exact signed-transition closure of the
 current `kappa` seed image under these derived rows, recompute the full
 signed domain `D_Gamma(E)` from the interval fibres and reachable states, and
-audit the constructed observer against that domain.  If the positive
-identity-row table omits any reachable local context, if a next state leaves
-the reachable closure, if the negative table is not single-valued, if the
-coboundary defect is not constant on a sound detector domain, or if residual
-faithfulness is not supplied, the observer remains open.  No default endpoint
-emission is allowed.
+audit the constructed observer against that domain.  The finite monodromy
+presentation itself should be attached to the observer build so that the
+permutation representation is checked against explicit positive local
+contexts and explicit adjacent/far relations, not hidden as later boolean
+claims.  If the positive identity-row table omits any reachable local context,
+if a next state leaves the reachable closure, if the negative table is not
+single-valued, if the coboundary defect is not constant on a sound detector
+domain, or if residual faithfulness is not supplied, the observer remains
+open.  No default endpoint emission is allowed.
 The preferred handoff is therefore the finite monodromy-coboundary
 certificate itself: endpoint group or cutoff target, detector-track
 initialization rows, templates `W_s`, positive identity rows, C/M cutoff

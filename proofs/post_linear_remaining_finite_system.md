@@ -694,8 +694,16 @@ observer builder: it reads the positive rows from the word-potential identity
 table, sets the positive coordinate part to the actual interval map
 `T_{a,b}`, derives negative rows by inversion in the fixed endpoint group,
 computes the reachable seed-state closure from the current `kappa` entries,
-builds the fixed-assignment telescoping audit, and then calls the same signed
-endpoint audit.  Missing positive contexts, nonconstant coboundary defects,
+builds the finite positive local-context monodromy presentation, builds the
+fixed-assignment telescoping audit, and then calls the same signed endpoint
+audit.  The monodromy presentation is exposed as
+`UniversalKEndpointMonodromyPresentation`: its generators are exactly the
+positive local contexts `(E,a,b,x,y)`, its adjacent relations are the two
+positive 121/212 context paths computed from `T`, and its far-commutativity
+relations are the disjoint context swaps inside each active family.  Thus the
+endpoint-state representation is no longer implicit in later path checks; it
+is a finite object attached to the observer build for the exact U/C/M families
+hit by `kappa`.  Missing positive contexts, nonconstant coboundary defects,
 out-of-scope detector tracks, missing C/M readouts, or missing residual
 faithfulness remain visible audit failures rather than being filled by
 defaults.  This keeps the local certificate from being a list of unsupported
