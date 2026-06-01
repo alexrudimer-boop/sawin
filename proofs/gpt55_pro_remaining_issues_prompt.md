@@ -1337,6 +1337,9 @@ If negative substitutions are recorded, they are diagnostics only; closure
 comes from inverse-derived negative rows plus the positive telescope.
 Rows with any sign other than `+1` or `-1` are malformed certificate rows and
 must be rejected rather than silently ignored.
+The expected and covered telescoping entry ledgers must obey the same sign
+discipline: their closure comparison is positive-only, but any malformed sign
+in either ledger invalidates the certificate.
 
 The initial routed state must be normalized:
 

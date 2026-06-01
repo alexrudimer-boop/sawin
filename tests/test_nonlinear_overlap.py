@@ -4018,6 +4018,54 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             (malformed_identity.entry_key,),
         )
 
+    def test_malformed_telescoping_entry_ledgers_are_rejected(self):
+        seed_state = ("*", "*", "left_constant_map_universal_kernel")
+        seed_entries = (
+            (
+                (
+                    "*",
+                    "*",
+                    "L",
+                    "constant_map_kernel",
+                    ("*", (0, 1), "universal", "universal"),
+                ),
+                ("U", seed_state),
+            ),
+        )
+        reachable = (("U", seed_state),)
+        interval = one_color_identity_interval()
+        keys = universal_k_signed_endpoint_required_entry_keys(interval, reachable)
+        positive_keys = tuple(key for key in keys if key[2] == 1)
+        malformed_key = ("U", seed_state, 0, "*", "*", 0, 0)
+        rows = identity_signed_endpoint_rows(keys)
+        group = cyclic_group(2)
+        telescoping = trivial_telescoping_detector_audit(
+            positive_keys,
+            rows=rows,
+            endpoint_group=group,
+        )
+        telescoping = replace(
+            telescoping,
+            expected_entry_keys=positive_keys + (malformed_key,),
+            covered_entry_keys=positive_keys + (malformed_key,),
+        )
+        audit = universal_k_signed_endpoint_generator_audit(
+            interval,
+            seed_entries,
+            reachable,
+            rows,
+            endpoint_group=group,
+            telescoping_detector_audit=telescoping,
+        )
+
+        self.assertTrue(audit.telescoping_detector_scope_matches_required)
+        self.assertFalse(telescoping.entry_ledgers_well_formed)
+        self.assertFalse(audit.telescoping_detector_proved)
+        self.assertIn(
+            "telescoping_detector_malformed_entry_keys",
+            audit.failure_reasons,
+        )
+
     def test_signed_endpoint_audit_requires_family_scoped_endpoint_targets(self):
         seed_state = ("*", "*", "left_constant_map_universal_kernel")
         seed_entries = (

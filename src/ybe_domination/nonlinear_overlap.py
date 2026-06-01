@@ -2759,6 +2759,43 @@ class UniversalKTelescopingDetectorAudit:
         )
 
     @property
+    def malformed_expected_entry_keys(
+        self,
+    ) -> Tuple[UniversalKSignedEndpointEntryKey, ...]:
+        return tuple(
+            sorted(
+                {
+                    key
+                    for key in self.expected_entry_keys
+                    if not _universal_k_has_valid_signed_entry_key_sign(key)
+                },
+                key=repr,
+            )
+        )
+
+    @property
+    def malformed_covered_entry_keys(
+        self,
+    ) -> Tuple[UniversalKSignedEndpointEntryKey, ...]:
+        return tuple(
+            sorted(
+                {
+                    key
+                    for key in self.covered_entry_keys
+                    if not _universal_k_has_valid_signed_entry_key_sign(key)
+                },
+                key=repr,
+            )
+        )
+
+    @property
+    def entry_ledgers_well_formed(self) -> bool:
+        return (
+            not self.malformed_expected_entry_keys
+            and not self.malformed_covered_entry_keys
+        )
+
+    @property
     def entry_ledgers_have_no_duplicates(self) -> bool:
         return (
             not self.duplicate_expected_positive_entry_keys
@@ -3277,6 +3314,7 @@ class UniversalKTelescopingDetectorAudit:
     def proves_telescoping_detector_lift(self) -> bool:
         return (
             self.entry_coverage_exact
+            and self.entry_ledgers_well_formed
             and self.entry_ledgers_have_no_duplicates
             and self.seed_state_scope_matches_entries
             and self.seed_state_coverage_exact
@@ -3299,6 +3337,8 @@ class UniversalKTelescopingDetectorAudit:
             reasons.append("telescoping_detector_missing_entry_keys")
         if self.extra_entry_keys:
             reasons.append("telescoping_detector_extra_entry_keys")
+        if not self.entry_ledgers_well_formed:
+            reasons.append("telescoping_detector_malformed_entry_keys")
         if not self.entry_ledgers_have_no_duplicates:
             reasons.append("telescoping_detector_duplicate_entry_keys")
         if not self.seed_state_scope_matches_entries:
@@ -7026,6 +7066,10 @@ class PostLinearRemainingFiniteSystemAudit:
                     "signed_endpoint_generator_telescoping_duplicate_positive_entry_keys",
                     (),
                 ),
+                (
+                    "signed_endpoint_generator_telescoping_malformed_entry_keys",
+                    (),
+                ),
                 ("signed_endpoint_generator_telescoping_expected_seed_states", ()),
                 ("signed_endpoint_generator_telescoping_covered_seed_states", ()),
                 ("signed_endpoint_generator_telescoping_duplicate_seed_states", ()),
@@ -7687,6 +7731,15 @@ class PostLinearRemainingFiniteSystemAudit:
                 (
                     telescoping_audit.duplicate_expected_positive_entry_keys
                     + telescoping_audit.duplicate_covered_positive_entry_keys
+                    if telescoping_audit is not None
+                    else ()
+                ),
+            ),
+            (
+                "signed_endpoint_generator_telescoping_malformed_entry_keys",
+                (
+                    telescoping_audit.malformed_expected_entry_keys
+                    + telescoping_audit.malformed_covered_entry_keys
                     if telescoping_audit is not None
                     else ()
                 ),

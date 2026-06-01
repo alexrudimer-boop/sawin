@@ -587,7 +587,9 @@ local substitutions are the positive Artin recurrences.  Negative
 word-potential rows, if present, are diagnostic only once the signed endpoint
 audit has proved that negative endpoint rows are actual inverses.  Malformed
 identity rows with any sign other than `+1` or `-1` are rejected rather than
-being treated as harmless diagnostics.  The checker then exhausts all
+being treated as harmless diagnostics.  The expected and covered telescoping
+entry ledgers are positive-only for closure, but they also reject malformed
+signs instead of filtering them away.  The checker then exhausts all
 assignments of the finitely many variables in the positive row to the fixed
 endpoint group and checks the word identity in the group table.  This removes
 the previous loophole
@@ -835,6 +837,7 @@ signed_endpoint_generator_telescoping_missing_entry_keys
 signed_endpoint_generator_telescoping_extra_entry_keys
 signed_endpoint_generator_telescoping_duplicate_entry_keys
 signed_endpoint_generator_telescoping_duplicate_positive_entry_keys
+signed_endpoint_generator_telescoping_malformed_entry_keys
 signed_endpoint_generator_telescoping_expected_seed_states
 signed_endpoint_generator_telescoping_covered_seed_states
 signed_endpoint_generator_telescoping_duplicate_seed_states
