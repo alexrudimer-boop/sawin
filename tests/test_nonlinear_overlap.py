@@ -70,6 +70,7 @@ from ybe_domination import (
     triangular_recovery_unit_observer_audit,
     triangular_recovery_unit_group,
     universal_k_signed_endpoint_coordinate_failures,
+    universal_k_signed_endpoint_inverse_failures,
     universal_k_signed_endpoint_required_entry_keys,
     universal_continuation_identity_endpoint_witness_audit,
     universal_continuation_identity_symmetric_endpoint_fork_audit,
@@ -2393,6 +2394,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             rows=(positive_row,),
             endpoint_targets_fixed=True,
             coordinate_components_verified=True,
+            inverse_pairing_verified=True,
             inverse_cancellation_verified=True,
             positive_ybe_cocycle_verified=True,
             signed_two_strand_base_verified=True,
@@ -2405,6 +2407,22 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertIn("signed_seed_keys_missing", incomplete.failure_reasons)
         self.assertIn("signed_generator_entries_missing", incomplete.failure_reasons)
 
+        unpaired = UniversalKSignedEndpointGeneratorAudit(
+            seed_classifier_entries=seed_entries,
+            reachable_seed_states=(("U", seed_state),),
+            required_entry_keys=required_entry_keys,
+            rows=(positive_row, negative_row),
+            endpoint_targets_fixed=True,
+            coordinate_components_verified=True,
+            inverse_cancellation_verified=True,
+            positive_ybe_cocycle_verified=True,
+            signed_two_strand_base_verified=True,
+            artin_homomorphism_update_verified=True,
+        )
+
+        self.assertFalse(unpaired.proves_signed_endpoint_generator_tables)
+        self.assertIn("inverse_pairing_not_verified", unpaired.failure_reasons)
+
         complete = UniversalKSignedEndpointGeneratorAudit(
             seed_classifier_entries=seed_entries,
             reachable_seed_states=(("U", seed_state),),
@@ -2412,6 +2430,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             rows=(positive_row, negative_row),
             endpoint_targets_fixed=True,
             coordinate_components_verified=True,
+            inverse_pairing_verified=True,
             inverse_cancellation_verified=True,
             positive_ybe_cocycle_verified=True,
             signed_two_strand_base_verified=True,
@@ -2469,6 +2488,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             rows=(first_positive, first_negative),
             endpoint_targets_fixed=True,
             coordinate_components_verified=True,
+            inverse_pairing_verified=True,
             inverse_cancellation_verified=True,
             positive_ybe_cocycle_verified=True,
             signed_two_strand_base_verified=True,
@@ -2537,6 +2557,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             rows=rows[:-1],
             endpoint_targets_fixed=True,
             coordinate_components_verified=True,
+            inverse_pairing_verified=True,
             inverse_cancellation_verified=True,
             positive_ybe_cocycle_verified=True,
             signed_two_strand_base_verified=True,
@@ -2593,6 +2614,76 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertEqual(
             tuple(failure[1] for failure in failures),
             ("positive_coordinate_mismatch", "negative_coordinate_mismatch"),
+        )
+
+    def test_signed_endpoint_inverse_failures_check_bidirectional_pairing(self):
+        source_state = ("*", "*", "left_constant_map_universal_kernel")
+        target_state = ("*", "*", "left_constant_map_universal_kernel", "next")
+        interval = one_color_flip_interval()
+        positive = UniversalKSignedEndpointGeneratorRow(
+            endpoint_family="U",
+            seed_state=source_state,
+            sign=1,
+            left_color="*",
+            right_color="*",
+            input_left=0,
+            input_right=1,
+            output_left=1,
+            output_right=0,
+            next_seed_state=target_state,
+            endpoint_value=0,
+        )
+        negative = UniversalKSignedEndpointGeneratorRow(
+            endpoint_family="U",
+            seed_state=target_state,
+            sign=-1,
+            left_color="*",
+            right_color="*",
+            input_left=1,
+            input_right=0,
+            output_left=0,
+            output_right=1,
+            next_seed_state=source_state,
+            endpoint_value=0,
+        )
+
+        self.assertEqual(
+            universal_k_signed_endpoint_inverse_failures(
+                interval,
+                (positive, negative),
+            ),
+            (),
+        )
+
+        self.assertEqual(
+            tuple(
+                failure[1]
+                for failure in universal_k_signed_endpoint_inverse_failures(
+                    interval,
+                    (positive,),
+                )
+            ),
+            ("missing_negative_inverse_row",),
+        )
+
+        bad_negative = replace(
+            negative,
+            output_left=1,
+            output_right=1,
+            next_seed_state=("wrong",),
+        )
+        failures = universal_k_signed_endpoint_inverse_failures(
+            interval,
+            (positive, bad_negative),
+        )
+
+        self.assertIn(
+            "negative_inverse_does_not_return",
+            tuple(failure[1] for failure in failures),
+        )
+        self.assertIn(
+            "missing_positive_inverse_row",
+            tuple(failure[1] for failure in failures),
         )
 
     def test_post_linear_reports_signed_generator_table_audit(self):
@@ -2655,6 +2746,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             rows=(row, replace(row, sign=-1)),
             endpoint_targets_fixed=True,
             coordinate_components_verified=True,
+            inverse_pairing_verified=True,
             inverse_cancellation_verified=True,
             positive_ybe_cocycle_verified=True,
             signed_two_strand_base_verified=True,

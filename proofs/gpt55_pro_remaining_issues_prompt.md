@@ -862,6 +862,36 @@ actual interval table: positive rows must have `(x',y')=T_{a,b}(x,y)`, and
 negative rows over colours `(c,d)` must use the unique source colour pair
 `(a,b)` with `R_C(a,b)=(c,d)` and satisfy `T_{a,b}(x',y')=(x,y)`.
 
+Before the endpoint-group inverse equation is checked, the signed rows must
+also pass the structural inverse-pairing check.  Every positive entry
+
+```text
+Gamma^{E,+}_{a,b}(s,x,y)=(s1,u,v,h)
+```
+
+with `R_C(a,b)=(c,d)` must have the opposite-sign entry
+
+```text
+Gamma^{E,-}_{c,d}(s1,u,v)=(s,x,y,h2).
+```
+
+Dually, every negative entry
+
+```text
+Gamma^{E,-}_{c,d}(s,u,v)=(s1,x,y,k)
+```
+
+with source colours `(a,b)` satisfying `R_C(a,b)=(c,d)` must have
+
+```text
+Gamma^{E,+}_{a,b}(s1,x,y)=(s,u,v,k2).
+```
+
+This inverse-pairing check is finite and only concerns the existence of the
+opposite row and the return of the endpoint state and fibre inputs.  The
+separate cancellation check below then proves the label identities in the
+fixed endpoint group or cutoff group.
+
 The signed inverse-cancellation law is:
 
 ```text
@@ -950,6 +980,7 @@ fixed_endpoint_group_or_cutoff,
 signed_generator_domain_exact,
 coordinate_components_match_T_plus_and_T_inverse,
 all_signed_rows_defined,
+signed_inverse_row_pairing,
 signed_inverse_cancellation,
 positive_local_endpoint_ybe_cocycle,
 signed_two_strand_artin_longitude_base,

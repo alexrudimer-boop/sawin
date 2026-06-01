@@ -380,11 +380,13 @@ with the coordinate pair equal to the positive or inverse local row and
 executable audit records the exact routed seed states, reachable state set,
 required full entry domain derived from the interval fibres, missing or extra
 table entries, duplicate entries, positive/inverse coordinate-component
-checks against `T`, and the finite proof gates:
+checks against `T`, structural opposite-sign inverse pairing, and the finite
+proof gates:
 
 ```text
 fixed endpoint group or cutoff target
 coordinate components match T and T inverse
+signed inverse row pairing
 signed inverse cancellation
 positive local endpoint YBE cocycle
 signed two-strand Artin-longitude base identity
@@ -428,6 +430,7 @@ signed_endpoint_generator_extra_signed_seed_keys
 signed_endpoint_generator_duplicate_entries
 signed_endpoint_generator_endpoint_targets_fixed
 signed_endpoint_generator_coordinate_components_verified
+signed_endpoint_generator_inverse_pairing_verified
 signed_endpoint_generator_inverse_cancellation_verified
 signed_endpoint_generator_positive_ybe_cocycle_verified
 signed_endpoint_generator_two_strand_base_verified

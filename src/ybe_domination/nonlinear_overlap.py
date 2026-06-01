@@ -110,6 +110,11 @@ UniversalKSignedEndpointCoordinateFailure = Tuple[
     str,
     object,
 ]
+UniversalKSignedEndpointInverseFailure = Tuple[
+    UniversalKSignedEndpointEntryKey,
+    str,
+    object,
+]
 
 
 def _is_permutation_transformation(transformation: Transformation) -> bool:
@@ -584,6 +589,7 @@ class UniversalKSignedEndpointGeneratorAudit:
     rows: Tuple[UniversalKSignedEndpointGeneratorRow, ...]
     endpoint_targets_fixed: bool = False
     coordinate_components_verified: bool = False
+    inverse_pairing_verified: bool = False
     inverse_cancellation_verified: bool = False
     positive_ybe_cocycle_verified: bool = False
     signed_two_strand_base_verified: bool = False
@@ -769,6 +775,7 @@ class UniversalKSignedEndpointGeneratorAudit:
             and self.all_rows_defined
             and self.endpoint_targets_fixed
             and self.coordinate_components_verified
+            and self.inverse_pairing_verified
             and self.inverse_cancellation_verified
             and self.positive_ybe_cocycle_verified
             and self.signed_two_strand_base_verified
@@ -809,6 +816,8 @@ class UniversalKSignedEndpointGeneratorAudit:
             reasons.append("endpoint_targets_not_fixed")
         if not self.coordinate_components_verified:
             reasons.append("coordinate_components_not_verified")
+        if not self.inverse_pairing_verified:
+            reasons.append("inverse_pairing_not_verified")
         if not self.inverse_cancellation_verified:
             reasons.append("inverse_cancellation_not_verified")
         if not self.positive_ybe_cocycle_verified:
@@ -896,6 +905,103 @@ def universal_k_signed_endpoint_coordinate_failures(
             ]
             if forward != input_pair:
                 failures.append((row.entry_key, "negative_coordinate_mismatch", forward))
+            continue
+        failures.append((row.entry_key, "unknown_sign", row.sign))
+    return tuple(failures)
+
+
+def universal_k_signed_endpoint_inverse_failures(
+    interval: LocalInterval,
+    rows: Sequence[UniversalKSignedEndpointGeneratorRow],
+) -> Tuple[UniversalKSignedEndpointInverseFailure, ...]:
+    """Return signed rows whose opposite-sign inverse row is absent or wrong."""
+
+    inverse_base = {target: source for source, target in interval.base_R.items()}
+    row_by_key = {}
+    duplicate_keys = set()
+    for row in rows:
+        if row.entry_key in row_by_key:
+            duplicate_keys.add(row.entry_key)
+            continue
+        row_by_key[row.entry_key] = row
+
+    failures = [
+        (key, "duplicate_entry_key", None)
+        for key in sorted(duplicate_keys, key=repr)
+    ]
+    for row in rows:
+        input_pair = (row.input_left, row.input_right)
+        if row.sign == 1:
+            target_colors = interval.base_R.get((row.left_color, row.right_color))
+            if target_colors is None:
+                failures.append((row.entry_key, "positive_color_pair_outside_base", None))
+                continue
+            expected_key = (
+                row.endpoint_family,
+                row.next_seed_state,
+                -1,
+                target_colors[0],
+                target_colors[1],
+                row.output_left,
+                row.output_right,
+            )
+            inverse_row = row_by_key.get(expected_key)
+            if inverse_row is None:
+                failures.append(
+                    (row.entry_key, "missing_negative_inverse_row", expected_key)
+                )
+                continue
+            if (
+                inverse_row.next_seed_state != row.seed_state
+                or (inverse_row.output_left, inverse_row.output_right) != input_pair
+            ):
+                failures.append(
+                    (
+                        row.entry_key,
+                        "negative_inverse_does_not_return",
+                        (
+                            inverse_row.next_seed_state,
+                            inverse_row.output_left,
+                            inverse_row.output_right,
+                        ),
+                    )
+                )
+            continue
+        if row.sign == -1:
+            source_colors = inverse_base.get((row.left_color, row.right_color))
+            if source_colors is None:
+                failures.append((row.entry_key, "negative_color_pair_not_in_image", None))
+                continue
+            expected_key = (
+                row.endpoint_family,
+                row.next_seed_state,
+                1,
+                source_colors[0],
+                source_colors[1],
+                row.output_left,
+                row.output_right,
+            )
+            inverse_row = row_by_key.get(expected_key)
+            if inverse_row is None:
+                failures.append(
+                    (row.entry_key, "missing_positive_inverse_row", expected_key)
+                )
+                continue
+            if (
+                inverse_row.next_seed_state != row.seed_state
+                or (inverse_row.output_left, inverse_row.output_right) != input_pair
+            ):
+                failures.append(
+                    (
+                        row.entry_key,
+                        "positive_inverse_does_not_return",
+                        (
+                            inverse_row.next_seed_state,
+                            inverse_row.output_left,
+                            inverse_row.output_right,
+                        ),
+                    )
+                )
             continue
         failures.append((row.entry_key, "unknown_sign", row.sign))
     return tuple(failures)
@@ -2319,6 +2425,10 @@ class PostLinearRemainingFiniteSystemAudit:
                 ("signed_endpoint_generator_missing_entry_keys", ()),
                 ("signed_endpoint_generator_endpoint_targets_fixed", False),
                 ("signed_endpoint_generator_coordinate_components_verified", False),
+                ("signed_endpoint_generator_inverse_pairing_verified", False),
+                ("signed_endpoint_generator_inverse_cancellation_verified", False),
+                ("signed_endpoint_generator_positive_ybe_cocycle_verified", False),
+                ("signed_endpoint_generator_two_strand_base_verified", False),
                 ("signed_endpoint_generator_artin_update_verified", False),
                 ("signed_endpoint_generator_cutoff_readouts_exact", False),
                 ("signed_endpoint_generator_tables_proved", False),
@@ -2386,6 +2496,10 @@ class PostLinearRemainingFiniteSystemAudit:
             (
                 "signed_endpoint_generator_coordinate_components_verified",
                 audit.coordinate_components_verified,
+            ),
+            (
+                "signed_endpoint_generator_inverse_pairing_verified",
+                audit.inverse_pairing_verified,
             ),
             (
                 "signed_endpoint_generator_inverse_cancellation_verified",

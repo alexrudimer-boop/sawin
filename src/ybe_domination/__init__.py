@@ -420,6 +420,7 @@ from .nonlinear_overlap import (
     triangular_recovery_unit_observer_audit,
     triangular_recovery_unit_group,
     universal_k_signed_endpoint_coordinate_failures,
+    universal_k_signed_endpoint_inverse_failures,
     universal_k_signed_endpoint_required_entry_keys,
 )
 from .bifree_corridor import (
@@ -992,6 +993,7 @@ __all__ = [
     "UniversalKSignedEndpointGeneratorAudit",
     "UniversalKSignedEndpointGeneratorRow",
     "universal_k_signed_endpoint_coordinate_failures",
+    "universal_k_signed_endpoint_inverse_failures",
     "universal_k_signed_endpoint_required_entry_keys",
     "NormalQuotientLongitudeLiftAudit",
     "NormalizedLawPrefixWitnessAudit",
