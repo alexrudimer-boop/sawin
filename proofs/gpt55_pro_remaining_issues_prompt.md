@@ -857,6 +857,11 @@ prover-selected subdomain and not merely one entry per seed and sign.
 Covering both signs for a seed while omitting some local input `(a,b,x,y)` is
 still an incomplete signed table.
 
+Every supplied row must also pass the coordinate-component check against the
+actual interval table: positive rows must have `(x',y')=T_{a,b}(x,y)`, and
+negative rows over colours `(c,d)` must use the unique source colour pair
+`(a,b)` with `R_C(a,b)=(c,d)` and satisfy `T_{a,b}(x',y')=(x,y)`.
+
 The signed inverse-cancellation law is:
 
 ```text
@@ -943,6 +948,7 @@ reachable_state_set_contains_initial_seeds,
 all_signed_row_states_reachable,
 fixed_endpoint_group_or_cutoff,
 signed_generator_domain_exact,
+coordinate_components_match_T_plus_and_T_inverse,
 all_signed_rows_defined,
 signed_inverse_cancellation,
 positive_local_endpoint_ybe_cocycle,

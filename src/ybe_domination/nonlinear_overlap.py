@@ -105,6 +105,11 @@ UniversalKSignedEndpointEntryKey = Tuple[
     FibrePoint,
     FibrePoint,
 ]
+UniversalKSignedEndpointCoordinateFailure = Tuple[
+    UniversalKSignedEndpointEntryKey,
+    str,
+    object,
+]
 
 
 def _is_permutation_transformation(transformation: Transformation) -> bool:
@@ -578,6 +583,7 @@ class UniversalKSignedEndpointGeneratorAudit:
     required_entry_keys: Tuple[UniversalKSignedEndpointEntryKey, ...]
     rows: Tuple[UniversalKSignedEndpointGeneratorRow, ...]
     endpoint_targets_fixed: bool = False
+    coordinate_components_verified: bool = False
     inverse_cancellation_verified: bool = False
     positive_ybe_cocycle_verified: bool = False
     signed_two_strand_base_verified: bool = False
@@ -762,6 +768,7 @@ class UniversalKSignedEndpointGeneratorAudit:
             self.signed_generator_domain_exact
             and self.all_rows_defined
             and self.endpoint_targets_fixed
+            and self.coordinate_components_verified
             and self.inverse_cancellation_verified
             and self.positive_ybe_cocycle_verified
             and self.signed_two_strand_base_verified
@@ -800,6 +807,8 @@ class UniversalKSignedEndpointGeneratorAudit:
             reasons.append("undefined_signed_generator_rows")
         if not self.endpoint_targets_fixed:
             reasons.append("endpoint_targets_not_fixed")
+        if not self.coordinate_components_verified:
+            reasons.append("coordinate_components_not_verified")
         if not self.inverse_cancellation_verified:
             reasons.append("inverse_cancellation_not_verified")
         if not self.positive_ybe_cocycle_verified:
@@ -837,6 +846,59 @@ def universal_k_signed_endpoint_required_entry_keys(
                             )
                         )
     return tuple(sorted(set(keys), key=repr))
+
+
+def universal_k_signed_endpoint_coordinate_failures(
+    interval: LocalInterval,
+    rows: Sequence[UniversalKSignedEndpointGeneratorRow],
+) -> Tuple[UniversalKSignedEndpointCoordinateFailure, ...]:
+    """Return signed table rows whose fibre component is not T or T inverse."""
+
+    inverse_base = {target: source for source, target in interval.base_R.items()}
+    failures = []
+    for row in rows:
+        output_pair = (row.output_left, row.output_right)
+        input_pair = (row.input_left, row.input_right)
+        if row.sign == 1:
+            expected = interval.T.get(
+                (
+                    row.left_color,
+                    row.right_color,
+                    row.input_left,
+                    row.input_right,
+                )
+            )
+            if expected is None:
+                failures.append((row.entry_key, "positive_input_outside_domain", None))
+            elif output_pair != expected:
+                failures.append((row.entry_key, "positive_coordinate_mismatch", expected))
+            continue
+        if row.sign == -1:
+            source_colors = inverse_base.get((row.left_color, row.right_color))
+            if source_colors is None:
+                failures.append((row.entry_key, "negative_color_pair_not_in_image", None))
+                continue
+            source_left, source_right = source_colors
+            if (
+                row.output_left not in interval.fibres[source_left]
+                or row.output_right not in interval.fibres[source_right]
+            ):
+                failures.append(
+                    (
+                        row.entry_key,
+                        "negative_output_outside_inverse_domain",
+                        source_colors,
+                    )
+                )
+                continue
+            forward = interval.T[
+                (source_left, source_right, row.output_left, row.output_right)
+            ]
+            if forward != input_pair:
+                failures.append((row.entry_key, "negative_coordinate_mismatch", forward))
+            continue
+        failures.append((row.entry_key, "unknown_sign", row.sign))
+    return tuple(failures)
 
 
 @dataclass(frozen=True)
@@ -2256,6 +2318,7 @@ class PostLinearRemainingFiniteSystemAudit:
                 ("signed_endpoint_generator_required_entry_keys", ()),
                 ("signed_endpoint_generator_missing_entry_keys", ()),
                 ("signed_endpoint_generator_endpoint_targets_fixed", False),
+                ("signed_endpoint_generator_coordinate_components_verified", False),
                 ("signed_endpoint_generator_artin_update_verified", False),
                 ("signed_endpoint_generator_cutoff_readouts_exact", False),
                 ("signed_endpoint_generator_tables_proved", False),
@@ -2319,6 +2382,10 @@ class PostLinearRemainingFiniteSystemAudit:
             (
                 "signed_endpoint_generator_endpoint_targets_fixed",
                 audit.endpoint_targets_fixed,
+            ),
+            (
+                "signed_endpoint_generator_coordinate_components_verified",
+                audit.coordinate_components_verified,
             ),
             (
                 "signed_endpoint_generator_inverse_cancellation_verified",

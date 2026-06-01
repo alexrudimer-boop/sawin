@@ -69,6 +69,7 @@ from ybe_domination import (
     triangular_recovery_audit,
     triangular_recovery_unit_observer_audit,
     triangular_recovery_unit_group,
+    universal_k_signed_endpoint_coordinate_failures,
     universal_k_signed_endpoint_required_entry_keys,
     universal_continuation_identity_endpoint_witness_audit,
     universal_continuation_identity_symmetric_endpoint_fork_audit,
@@ -2391,6 +2392,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             required_entry_keys=required_entry_keys,
             rows=(positive_row,),
             endpoint_targets_fixed=True,
+            coordinate_components_verified=True,
             inverse_cancellation_verified=True,
             positive_ybe_cocycle_verified=True,
             signed_two_strand_base_verified=True,
@@ -2409,6 +2411,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             required_entry_keys=required_entry_keys,
             rows=(positive_row, negative_row),
             endpoint_targets_fixed=True,
+            coordinate_components_verified=True,
             inverse_cancellation_verified=True,
             positive_ybe_cocycle_verified=True,
             signed_two_strand_base_verified=True,
@@ -2465,6 +2468,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             required_entry_keys=required_entry_keys,
             rows=(first_positive, first_negative),
             endpoint_targets_fixed=True,
+            coordinate_components_verified=True,
             inverse_cancellation_verified=True,
             positive_ybe_cocycle_verified=True,
             signed_two_strand_base_verified=True,
@@ -2532,6 +2536,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             required_entry_keys=keys,
             rows=rows[:-1],
             endpoint_targets_fixed=True,
+            coordinate_components_verified=True,
             inverse_cancellation_verified=True,
             positive_ybe_cocycle_verified=True,
             signed_two_strand_base_verified=True,
@@ -2540,6 +2545,55 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
 
         self.assertEqual(audit.missing_entry_keys, (keys[-1],))
         self.assertFalse(audit.proves_signed_endpoint_generator_tables)
+
+    def test_signed_endpoint_coordinate_failures_check_positive_and_inverse_rows(self):
+        seed_state = ("*", "*", "left_constant_map_universal_kernel")
+        interval = one_color_flip_interval()
+        positive = UniversalKSignedEndpointGeneratorRow(
+            endpoint_family="U",
+            seed_state=seed_state,
+            sign=1,
+            left_color="*",
+            right_color="*",
+            input_left=0,
+            input_right=1,
+            output_left=1,
+            output_right=0,
+            next_seed_state=seed_state,
+            endpoint_value=0,
+        )
+        negative = UniversalKSignedEndpointGeneratorRow(
+            endpoint_family="U",
+            seed_state=seed_state,
+            sign=-1,
+            left_color="*",
+            right_color="*",
+            input_left=1,
+            input_right=0,
+            output_left=0,
+            output_right=1,
+            next_seed_state=seed_state,
+            endpoint_value=0,
+        )
+        bad_positive = replace(positive, output_left=0, output_right=1)
+        bad_negative = replace(negative, output_left=1, output_right=0)
+
+        self.assertEqual(
+            universal_k_signed_endpoint_coordinate_failures(
+                interval,
+                (positive, negative),
+            ),
+            (),
+        )
+        failures = universal_k_signed_endpoint_coordinate_failures(
+            interval,
+            (bad_positive, bad_negative),
+        )
+
+        self.assertEqual(
+            tuple(failure[1] for failure in failures),
+            ("positive_coordinate_mismatch", "negative_coordinate_mismatch"),
+        )
 
     def test_post_linear_reports_signed_generator_table_audit(self):
         refinement = constant_map_kernel_only_system_k_refinement()
@@ -2600,6 +2654,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             required_entry_keys=(row.entry_key, replace(row, sign=-1).entry_key),
             rows=(row, replace(row, sign=-1)),
             endpoint_targets_fixed=True,
+            coordinate_components_verified=True,
             inverse_cancellation_verified=True,
             positive_ybe_cocycle_verified=True,
             signed_two_strand_base_verified=True,
