@@ -5567,7 +5567,32 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             telescoping.malformed_expected_word_potential_seed_states,
             (bad_state,),
         )
+        self.assertFalse(telescoping.word_potential_seed_state_ledgers_well_formed)
         self.assertFalse(telescoping.proves_telescoping_detector_lift)
+
+        telescoping_with_bad_certificate = UniversalKTelescopingDetectorAudit(
+            expected_entry_keys=(bad_key,),
+            covered_entry_keys=(bad_key,),
+            expected_endpoint_seed_states=(bad_state,),
+            covered_endpoint_seed_states=(bad_state,),
+            detector_track_counts_by_family=(("U", 1),),
+            expected_word_potential_seed_states=(bad_state,),
+            covered_word_potential_seed_states=(bad_state,),
+            detector_track_count=1,
+            word_potential_certificate=certificate,
+        )
+        self.assertTrue(
+            telescoping_with_bad_certificate.word_potential_seed_state_scope_matches_expected
+        )
+        self.assertTrue(
+            telescoping_with_bad_certificate.word_potential_certificate_template_scope_exact
+        )
+        self.assertFalse(
+            telescoping_with_bad_certificate.word_potential_templates_supplied
+        )
+        self.assertFalse(
+            telescoping_with_bad_certificate.proves_telescoping_detector_lift
+        )
 
     def test_signed_endpoint_positive_rows_must_be_monodromy_permutations(self):
         seed_a = ("*", "*", "left_constant_map_universal_kernel", "a")
@@ -5929,6 +5954,53 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             tuple(
                 failure[1] for failure in malformed_substitution_row.substitution_failures
             ),
+        )
+
+        unhashable_substitution_variable = replace(
+            certificate,
+            identity_rows=(
+                replace(
+                    good_row,
+                    artin_substitution=((["A", 0, 0], ()),),
+                ),
+            ),
+        )
+        self.assertFalse(unhashable_substitution_variable.artin_substitutions_verified)
+        self.assertIn(
+            "invalid_artin_substitution_variable",
+            tuple(
+                failure[1]
+                for failure in unhashable_substitution_variable.substitution_failures
+            ),
+        )
+        telescoping_with_unhashable_substitution = UniversalKTelescopingDetectorAudit(
+            expected_entry_keys=(entry_key,),
+            covered_entry_keys=(entry_key,),
+            expected_endpoint_seed_states=(source_key,),
+            covered_endpoint_seed_states=(source_key,),
+            detector_track_counts_by_family=(("U", 1),),
+            detector_track_initialization_rows=(
+                UniversalKDetectorTrackInitializationRow(
+                    endpoint_family="U",
+                    track_index=0,
+                    assignment_rule="constant_identity_from_interval_seed",
+                    dependencies=("interval_data", "routed_seed_state", "strand_index"),
+                    local_assignment_template=((("A", 0, 0), group.identity),),
+                ),
+            ),
+            expected_word_potential_seed_states=(source_key,),
+            covered_word_potential_seed_states=(source_key,),
+            detector_track_count=1,
+            word_potential_certificate=unhashable_substitution_variable,
+        )
+        self.assertTrue(
+            telescoping_with_unhashable_substitution.word_potential_raw_assignment_scope_verified
+        )
+        self.assertFalse(
+            telescoping_with_unhashable_substitution.word_potential_artin_substitution_proved
+        )
+        self.assertFalse(
+            telescoping_with_unhashable_substitution.proves_telescoping_detector_lift
         )
 
         malformed_identity_row_object = replace(

@@ -1650,6 +1650,13 @@ Reachable seed-state ledgers, signed-entry ledgers, and telescoping ledgers
 must use duplicate-safe normalization before set comparison, so unhashable
 malformed keys are reported as malformed finite data rather than becoming
 runtime failures or silently filtered rows.
+The same hashability-safe comparison discipline applies to word-potential
+template scope, positive identity-entry scope, Artin-substitution variable
+support, and raw-assignment initialization support.  A malformed or
+unhashable formal variable appearing in a substitution row is therefore a
+finite certificate error; it cannot be used as an implicit detector track and
+must not make the checker crash while deciding whether a U/C/M endpoint
+observer has been built.
 If optional negative diagnostic identity rows or telescoping ledger keys are
 recorded, each such key must still belong to the actual signed `D_Gamma(E)`
 domain for the current interval and reachable states.  Positive closure is

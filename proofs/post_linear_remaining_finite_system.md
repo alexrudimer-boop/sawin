@@ -679,6 +679,12 @@ track-scope, raw-assignment, or identity diagnostics interpret row fields.
 The reachable seed-state and telescoping ledgers use duplicate-safe
 normalization before set comparison, so unhashable malformed keys are reported
 as malformed finite data instead of escaping as runtime failures.
+The same hashability-safe comparison is used for word-potential template
+scope, positive identity-entry scope, Artin-substitution variable support, and
+raw-assignment initialization support.  Thus a malformed or unhashable formal
+variable in a substitution row is rejected as finite certificate data, and it
+cannot crash the monodromy-coboundary observer builder while it is deciding
+whether the U/C/M endpoint observer has actually been constructed.
 Optional negative diagnostics are also scoped to the current signed
 `D_Gamma` domain: a negative identity row or telescoping ledger key outside
 the interval-derived signed entry domain is an extra diagnostic channel, not a

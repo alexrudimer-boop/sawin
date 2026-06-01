@@ -938,6 +938,10 @@ def _unique_values(values: Sequence[object]) -> Tuple[object, ...]:
     return tuple(sorted(unique.values(), key=repr))
 
 
+def _value_marker_set(values: Sequence[object]) -> set[object]:
+    return {_value_marker(value) for value in values}
+
+
 @dataclass(frozen=True)
 class UniversalKSignedEndpointGeneratorRow:
     """One finite signed endpoint-generator entry on a routed K seed state."""
@@ -1465,7 +1469,10 @@ class UniversalKWordPotentialCertificate:
                 for failure in next_template_failures:
                     failures.append((row.entry_key, failure[1], failure[2]))
                 continue
-            expected_variables = set(_universal_k_word_potential_variables(next_template))
+            expected_variables = _universal_k_word_potential_variables(next_template)
+            expected_variable_by_marker = {
+                _value_marker(variable): variable for variable in expected_variables
+            }
             substitution_variables = []
             malformed_substitution_rows = []
             for substitution_row in row.artin_substitution:
@@ -1491,12 +1498,28 @@ class UniversalKWordPotentialCertificate:
                 failures.append(
                     (row.entry_key, "duplicate_artin_substitution_variable", variable)
                 )
-            supplied_variables = set(substitution_variables)
-            for variable in sorted(expected_variables - supplied_variables, key=repr):
+            supplied_variable_by_marker = {
+                _value_marker(variable): variable for variable in substitution_variables
+            }
+            expected_variable_markers = set(expected_variable_by_marker)
+            supplied_variable_markers = set(supplied_variable_by_marker)
+            for variable in sorted(
+                (
+                    expected_variable_by_marker[marker]
+                    for marker in expected_variable_markers - supplied_variable_markers
+                ),
+                key=repr,
+            ):
                 failures.append(
                     (row.entry_key, "missing_artin_substitution_variable", variable)
                 )
-            for variable in sorted(supplied_variables - expected_variables, key=repr):
+            for variable in sorted(
+                (
+                    supplied_variable_by_marker[marker]
+                    for marker in supplied_variable_markers - expected_variable_markers
+                ),
+                key=repr,
+            ):
                 failures.append(
                     (row.entry_key, "extra_artin_substitution_variable", variable)
                 )
@@ -1599,12 +1622,9 @@ class UniversalKWordPotentialCertificate:
         )
         if word_failures:
             return None
-        return tuple(
-            sorted(
-                set(_universal_k_word_potential_variables(source_template))
-                | set(_universal_k_word_potential_variables(substituted_next)),
-                key=repr,
-            )
+        return _unique_values(
+            tuple(_universal_k_word_potential_variables(source_template))
+            + tuple(_universal_k_word_potential_variables(substituted_next))
         )
 
     @property
@@ -1828,12 +1848,9 @@ class UniversalKWordPotentialCertificate:
                 for failure in word_failures:
                     failures.append((row.entry_key, failure[1], failure[2]))
                 continue
-            variables = tuple(
-                sorted(
-                    set(_universal_k_word_potential_variables(source_template))
-                    | set(_universal_k_word_potential_variables(substituted_next)),
-                    key=repr,
-                )
+            variables = _unique_values(
+                tuple(_universal_k_word_potential_variables(source_template))
+                + tuple(_universal_k_word_potential_variables(substituted_next))
             )
             if row.entry_key in domain_failure_keys:
                 continue
@@ -5334,16 +5351,16 @@ class UniversalKTelescopingDetectorAudit:
 
     @property
     def word_potential_seed_state_scope_matches_expected(self) -> bool:
-        return set(self.expected_word_potential_seed_states_exact) == set(
-            self.expected_endpoint_seed_states_exact
-        )
+        return _value_marker_set(
+            self.expected_word_potential_seed_states_exact
+        ) == _value_marker_set(self.expected_endpoint_seed_states_exact)
 
     @property
     def word_potential_seed_state_coverage_exact(self) -> bool:
         return (
             bool(self.expected_word_potential_seed_states_exact)
-            and set(self.expected_word_potential_seed_states_exact)
-            == set(self.covered_word_potential_seed_states_exact)
+            and _value_marker_set(self.expected_word_potential_seed_states_exact)
+            == _value_marker_set(self.covered_word_potential_seed_states_exact)
         )
 
     @property
@@ -5363,16 +5380,20 @@ class UniversalKTelescopingDetectorAudit:
     def word_potential_certificate_template_scope_exact(self) -> bool:
         return (
             self.word_potential_certificate is not None
-            and set(self.word_potential_certificate.template_seed_states_exact)
-            == set(self.expected_word_potential_seed_states_exact)
+            and _value_marker_set(
+                self.word_potential_certificate.template_seed_states_exact
+            )
+            == _value_marker_set(self.expected_word_potential_seed_states_exact)
         )
 
     @property
     def word_potential_certificate_entry_scope_exact(self) -> bool:
         return (
             self.word_potential_certificate is not None
-            and set(self.word_potential_certificate.positive_identity_entry_keys_exact)
-            == set(self.expected_positive_entry_keys_exact)
+            and _value_marker_set(
+                self.word_potential_certificate.positive_identity_entry_keys_exact
+            )
+            == _value_marker_set(self.expected_positive_entry_keys_exact)
         )
 
     @property
@@ -5491,7 +5512,7 @@ class UniversalKTelescopingDetectorAudit:
             family = row.entry_key[0]
             if not _universal_k_is_positive_entry_key(row.entry_key):
                 continue
-            initialized = set(initialized_by_family.get(family, ()))
+            initialized = _value_marker_set(initialized_by_family.get(family, ()))
             row_raw_variables = []
             for substitution_row in row.artin_substitution:
                 parts = _universal_k_word_potential_substitution_parts(
@@ -5509,11 +5530,11 @@ class UniversalKTelescopingDetectorAudit:
                         continue
                     image_variable, _exponent = image_parts
                     row_raw_variables.append(image_variable)
-            for variable in sorted(set(row_raw_variables), key=repr):
+            for variable in _unique_values(tuple(row_raw_variables)):
                 if (
                     _universal_k_word_potential_variable_valid(variable)
                     and variable[0] == "A"
-                    and variable not in initialized
+                    and _value_marker(variable) not in initialized
                 ):
                     failures.append(
                         (
