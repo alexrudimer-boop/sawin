@@ -1022,6 +1022,15 @@ def _universal_k_entry_key_sign(key: object) -> object:
     return key[2]
 
 
+def _universal_k_endpoint_seed_state_well_formed(state: object) -> bool:
+    return (
+        isinstance(state, tuple)
+        and len(state) == 2
+        and state[0] in UNIVERSAL_K_ENDPOINT_FAMILIES
+        and isinstance(state[1], tuple)
+    )
+
+
 @dataclass(frozen=True)
 class UniversalKWordPotentialCertificate:
     """Concrete finite word-potential detector-lift certificate.
@@ -1054,6 +1063,21 @@ class UniversalKWordPotentialCertificate:
         self,
     ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
         return _duplicate_values(tuple(state for state, _word in self.templates))
+
+    @property
+    def malformed_template_seed_states(
+        self,
+    ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
+        return tuple(
+            sorted(
+                {
+                    state
+                    for state, _word in self.templates
+                    if not _universal_k_endpoint_seed_state_well_formed(state)
+                },
+                key=repr,
+            )
+        )
 
     @property
     def identity_entry_keys_exact(
@@ -1115,6 +1139,21 @@ class UniversalKWordPotentialCertificate:
         self,
     ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
         return _duplicate_values(self.normalized_seed_states)
+
+    @property
+    def malformed_normalized_seed_states(
+        self,
+    ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
+        return tuple(
+            sorted(
+                {
+                    state
+                    for state in self.normalized_seed_states
+                    if not _universal_k_endpoint_seed_state_well_formed(state)
+                },
+                key=repr,
+            )
+        )
 
     @property
     def template_map(
@@ -1323,6 +1362,7 @@ class UniversalKWordPotentialCertificate:
     def word_potential_templates_verified(self) -> bool:
         return (
             not self.duplicate_template_seed_states
+            and not self.malformed_template_seed_states
             and not self.template_word_failures
             and self.templates_use_only_current_longitudes
         )
@@ -1348,6 +1388,7 @@ class UniversalKWordPotentialCertificate:
         return (
             bool(self.normalized_seed_states_exact)
             and not self.duplicate_normalized_seed_states
+            and not self.malformed_normalized_seed_states
             and not self.normalization_failures
         )
 
@@ -2878,6 +2919,43 @@ class UniversalKTelescopingDetectorAudit:
         return _duplicate_values(self.covered_endpoint_seed_states)
 
     @property
+    def malformed_expected_endpoint_seed_states(
+        self,
+    ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
+        return tuple(
+            sorted(
+                {
+                    state
+                    for state in self.expected_endpoint_seed_states
+                    if not _universal_k_endpoint_seed_state_well_formed(state)
+                },
+                key=repr,
+            )
+        )
+
+    @property
+    def malformed_covered_endpoint_seed_states(
+        self,
+    ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
+        return tuple(
+            sorted(
+                {
+                    state
+                    for state in self.covered_endpoint_seed_states
+                    if not _universal_k_endpoint_seed_state_well_formed(state)
+                },
+                key=repr,
+            )
+        )
+
+    @property
+    def endpoint_seed_state_ledgers_well_formed(self) -> bool:
+        return (
+            not self.malformed_expected_endpoint_seed_states
+            and not self.malformed_covered_endpoint_seed_states
+        )
+
+    @property
     def seed_state_ledgers_have_no_duplicates(self) -> bool:
         return (
             not self.duplicate_expected_endpoint_seed_states
@@ -2903,8 +2981,9 @@ class UniversalKTelescopingDetectorAudit:
         return tuple(
             sorted(
                 {
-                    family
-                    for family, _seed_state in self.expected_endpoint_seed_states_exact
+                    state[0]
+                    for state in self.expected_endpoint_seed_states_exact
+                    if _universal_k_endpoint_seed_state_well_formed(state)
                 },
                 key=repr,
             )
@@ -3095,6 +3174,43 @@ class UniversalKTelescopingDetectorAudit:
         return _duplicate_values(self.covered_word_potential_seed_states)
 
     @property
+    def malformed_expected_word_potential_seed_states(
+        self,
+    ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
+        return tuple(
+            sorted(
+                {
+                    state
+                    for state in self.expected_word_potential_seed_states
+                    if not _universal_k_endpoint_seed_state_well_formed(state)
+                },
+                key=repr,
+            )
+        )
+
+    @property
+    def malformed_covered_word_potential_seed_states(
+        self,
+    ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
+        return tuple(
+            sorted(
+                {
+                    state
+                    for state in self.covered_word_potential_seed_states
+                    if not _universal_k_endpoint_seed_state_well_formed(state)
+                },
+                key=repr,
+            )
+        )
+
+    @property
+    def word_potential_seed_state_ledgers_well_formed(self) -> bool:
+        return (
+            not self.malformed_expected_word_potential_seed_states
+            and not self.malformed_covered_word_potential_seed_states
+        )
+
+    @property
     def word_potential_seed_ledgers_have_no_duplicates(self) -> bool:
         return (
             not self.duplicate_expected_word_potential_seed_states
@@ -3121,6 +3237,7 @@ class UniversalKTelescopingDetectorAudit:
             self.word_potential_certificate is not None
             and self.word_potential_seed_state_scope_matches_expected
             and self.word_potential_seed_state_coverage_exact
+            and self.word_potential_seed_state_ledgers_well_formed
             and self.word_potential_seed_ledgers_have_no_duplicates
             and self.word_potential_certificate_template_scope_exact
             and self.word_potential_certificate_entry_scope_exact
@@ -3147,8 +3264,10 @@ class UniversalKTelescopingDetectorAudit:
     def word_potential_certificate_ledgers_have_no_duplicates(self) -> bool:
         return self.word_potential_certificate is not None and (
             not self.word_potential_certificate.duplicate_template_seed_states
+            and not self.word_potential_certificate.malformed_template_seed_states
             and not self.word_potential_certificate.malformed_identity_entry_keys
             and not self.word_potential_certificate.duplicate_positive_identity_entry_keys
+            and not self.word_potential_certificate.malformed_normalized_seed_states
             and not self.word_potential_certificate.duplicate_normalized_seed_states
         )
 
@@ -3168,6 +3287,8 @@ class UniversalKTelescopingDetectorAudit:
         failures = []
         counts_by_family = self.detector_track_count_by_family
         for state, word in self.word_potential_certificate.templates:
+            if not _universal_k_endpoint_seed_state_well_formed(state):
+                continue
             family, _seed_state = state
             count = counts_by_family.get(family)
             if count is None:
@@ -3334,6 +3455,7 @@ class UniversalKTelescopingDetectorAudit:
             self.entry_coverage_exact
             and self.entry_ledgers_well_formed
             and self.entry_ledgers_have_no_duplicates
+            and self.endpoint_seed_state_ledgers_well_formed
             and self.seed_state_scope_matches_entries
             and self.seed_state_coverage_exact
             and self.seed_state_ledgers_have_no_duplicates
@@ -3363,6 +3485,8 @@ class UniversalKTelescopingDetectorAudit:
             reasons.append("telescoping_detector_seed_state_scope_mismatch")
         if not self.seed_state_coverage_exact:
             reasons.append("telescoping_detector_seed_state_coverage_not_exact")
+        if not self.endpoint_seed_state_ledgers_well_formed:
+            reasons.append("telescoping_detector_malformed_seed_states")
         if not self.seed_state_ledgers_have_no_duplicates:
             reasons.append("telescoping_detector_duplicate_seed_states")
         if not self.detector_tracks_supplied:
@@ -3401,6 +3525,8 @@ class UniversalKTelescopingDetectorAudit:
             reasons.append("word_potential_seed_state_scope_mismatch")
         if not self.word_potential_seed_state_coverage_exact:
             reasons.append("word_potential_seed_state_coverage_not_exact")
+        if not self.word_potential_seed_state_ledgers_well_formed:
+            reasons.append("word_potential_malformed_seed_states")
         if not self.word_potential_seed_ledgers_have_no_duplicates:
             reasons.append("word_potential_duplicate_seed_states")
         if not self.word_potential_certificate_template_scope_exact:
@@ -3420,8 +3546,12 @@ class UniversalKTelescopingDetectorAudit:
         if not self.word_potential_identity_proved:
             reasons.append("word_potential_identity_not_verified")
         if self.word_potential_certificate is not None:
+            if self.word_potential_certificate.malformed_template_seed_states:
+                reasons.append("word_potential_certificate_malformed_template_states")
             if self.word_potential_certificate.malformed_identity_entry_keys:
                 reasons.append("word_potential_certificate_malformed_identity_rows")
+            if self.word_potential_certificate.malformed_normalized_seed_states:
+                reasons.append("word_potential_certificate_malformed_normalized_states")
             if self.word_potential_certificate.raw_assignment_template_variables:
                 reasons.append("word_potential_template_contains_raw_assignments")
             if self.word_potential_certificate.substitution_failures:
@@ -3532,7 +3662,7 @@ class UniversalKSignedEndpointGeneratorAudit:
         return tuple(
             entry
             for entry in self.seed_classifier_entries
-            if entry[1][0] not in UNIVERSAL_K_ENDPOINT_FAMILIES
+            if not _universal_k_endpoint_seed_state_well_formed(entry[1])
         )
 
     @property
@@ -3558,7 +3688,7 @@ class UniversalKSignedEndpointGeneratorAudit:
         return tuple(
             state
             for state in self.reachable_seed_states_exact
-            if state[0] not in UNIVERSAL_K_ENDPOINT_FAMILIES
+            if not _universal_k_endpoint_seed_state_well_formed(state)
         )
 
     @property
@@ -3632,8 +3762,9 @@ class UniversalKSignedEndpointGeneratorAudit:
         return tuple(
             sorted(
                 (
-                    (endpoint_family, seed_state, sign)
-                    for endpoint_family, seed_state in self.reachable_seed_states_exact
+                    (state[0], state[1], sign)
+                    for state in self.reachable_seed_states_exact
+                    if _universal_k_endpoint_seed_state_well_formed(state)
                     for sign in (-1, 1)
                 ),
                 key=repr,
@@ -3808,8 +3939,9 @@ class UniversalKSignedEndpointGeneratorAudit:
     @property
     def cutoff_readouts_required(self) -> bool:
         return any(
-            endpoint_family in {"C", "M"}
-            for endpoint_family, _state in self.required_seed_states
+            state[0] in {"C", "M"}
+            for state in self.required_seed_states
+            if _universal_k_endpoint_seed_state_well_formed(state)
         )
 
     @property
@@ -3817,9 +3949,10 @@ class UniversalKSignedEndpointGeneratorAudit:
         self,
     ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
         return tuple(
-            (endpoint_family, seed_state)
-            for endpoint_family, seed_state in self.required_seed_states
-            if endpoint_family in {"C", "M"}
+            state
+            for state in self.required_seed_states
+            if _universal_k_endpoint_seed_state_well_formed(state)
+            if state[0] in {"C", "M"}
         )
 
     @property
@@ -3884,7 +4017,11 @@ class UniversalKSignedEndpointGeneratorAudit:
     def required_endpoint_families(self) -> Tuple[str, ...]:
         return tuple(
             sorted(
-                {endpoint_family for endpoint_family, _state in self.required_seed_states},
+                {
+                    state[0]
+                    for state in self.required_seed_states
+                    if _universal_k_endpoint_seed_state_well_formed(state)
+                },
                 key=repr,
             )
         )
@@ -7122,6 +7259,7 @@ class PostLinearRemainingFiniteSystemAudit:
                 ("signed_endpoint_generator_telescoping_expected_seed_states", ()),
                 ("signed_endpoint_generator_telescoping_covered_seed_states", ()),
                 ("signed_endpoint_generator_telescoping_duplicate_seed_states", ()),
+                ("signed_endpoint_generator_telescoping_malformed_seed_states", ()),
                 ("signed_endpoint_generator_detector_track_counts_by_family", ()),
                 ("signed_endpoint_generator_detector_track_count_duplicate_families", ()),
                 (
@@ -7173,6 +7311,7 @@ class PostLinearRemainingFiniteSystemAudit:
                 ("signed_endpoint_generator_word_potential_expected_seed_states", ()),
                 ("signed_endpoint_generator_word_potential_covered_seed_states", ()),
                 ("signed_endpoint_generator_word_potential_duplicate_seed_states", ()),
+                ("signed_endpoint_generator_word_potential_malformed_seed_states", ()),
                 (
                     "signed_endpoint_generator_word_potential_seed_state_scope_matches_expected",
                     False,
@@ -7211,6 +7350,14 @@ class PostLinearRemainingFiniteSystemAudit:
                 ),
                 (
                     "signed_endpoint_generator_word_potential_malformed_identity_rows",
+                    (),
+                ),
+                (
+                    "signed_endpoint_generator_word_potential_certificate_malformed_template_states",
+                    (),
+                ),
+                (
+                    "signed_endpoint_generator_word_potential_certificate_malformed_normalized_states",
                     (),
                 ),
                 (
@@ -7823,6 +7970,15 @@ class PostLinearRemainingFiniteSystemAudit:
                 ),
             ),
             (
+                "signed_endpoint_generator_telescoping_malformed_seed_states",
+                (
+                    telescoping_audit.malformed_expected_endpoint_seed_states
+                    + telescoping_audit.malformed_covered_endpoint_seed_states
+                    if telescoping_audit is not None
+                    else ()
+                ),
+            ),
+            (
                 "signed_endpoint_generator_detector_track_counts_by_family",
                 (
                     telescoping_audit.detector_track_counts_by_family
@@ -7977,6 +8133,15 @@ class PostLinearRemainingFiniteSystemAudit:
                 ),
             ),
             (
+                "signed_endpoint_generator_word_potential_malformed_seed_states",
+                (
+                    telescoping_audit.malformed_expected_word_potential_seed_states
+                    + telescoping_audit.malformed_covered_word_potential_seed_states
+                    if telescoping_audit is not None
+                    else ()
+                ),
+            ),
+            (
                 "signed_endpoint_generator_word_potential_seed_state_scope_matches_expected",
                 (
                     telescoping_audit.word_potential_seed_state_scope_matches_expected
@@ -8052,6 +8217,24 @@ class PostLinearRemainingFiniteSystemAudit:
                 "signed_endpoint_generator_word_potential_malformed_identity_rows",
                 (
                     telescoping_audit.word_potential_certificate.malformed_identity_entry_keys
+                    if telescoping_audit is not None
+                    and telescoping_audit.word_potential_certificate is not None
+                    else ()
+                ),
+            ),
+            (
+                "signed_endpoint_generator_word_potential_certificate_malformed_template_states",
+                (
+                    telescoping_audit.word_potential_certificate.malformed_template_seed_states
+                    if telescoping_audit is not None
+                    and telescoping_audit.word_potential_certificate is not None
+                    else ()
+                ),
+            ),
+            (
+                "signed_endpoint_generator_word_potential_certificate_malformed_normalized_states",
+                (
+                    telescoping_audit.word_potential_certificate.malformed_normalized_seed_states
                     if telescoping_audit is not None
                     and telescoping_audit.word_potential_certificate is not None
                     else ()

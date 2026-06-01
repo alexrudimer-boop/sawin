@@ -4176,6 +4176,219 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             (),
         )
 
+    def test_malformed_word_potential_template_states_are_rejected(self):
+        seed_state = ("*", "*", "left_constant_map_universal_kernel")
+        seed_entries = (
+            (
+                (
+                    "*",
+                    "*",
+                    "L",
+                    "constant_map_kernel",
+                    ("*", (0, 1), "universal", "universal"),
+                ),
+                ("U", seed_state),
+            ),
+        )
+        reachable = (("U", seed_state),)
+        interval = one_color_identity_interval()
+        keys = universal_k_signed_endpoint_required_entry_keys(interval, reachable)
+        positive_keys = tuple(key for key in keys if key[2] == 1)
+        rows = identity_signed_endpoint_rows(keys)
+        group = cyclic_group(2)
+        telescoping = trivial_telescoping_detector_audit(
+            positive_keys,
+            rows=rows,
+            endpoint_group=group,
+        )
+        certificate = telescoping.word_potential_certificate
+        malformed_state = ("Z", seed_state)
+        telescoping = replace(
+            telescoping,
+            word_potential_certificate=replace(
+                certificate,
+                templates=certificate.templates + ((malformed_state, ()),),
+            ),
+        )
+        audit = universal_k_signed_endpoint_generator_audit(
+            interval,
+            seed_entries,
+            reachable,
+            rows,
+            endpoint_group=group,
+            telescoping_detector_audit=telescoping,
+        )
+
+        self.assertFalse(
+            telescoping.word_potential_certificate.word_potential_templates_verified
+        )
+        self.assertFalse(audit.telescoping_detector_proved)
+        self.assertEqual(
+            telescoping.word_potential_certificate.malformed_template_seed_states,
+            (malformed_state,),
+        )
+        self.assertIn(
+            "word_potential_certificate_malformed_template_states",
+            audit.failure_reasons,
+        )
+
+    def test_malformed_word_potential_normalized_states_are_rejected(self):
+        seed_state = ("*", "*", "left_constant_map_universal_kernel")
+        seed_entries = (
+            (
+                (
+                    "*",
+                    "*",
+                    "L",
+                    "constant_map_kernel",
+                    ("*", (0, 1), "universal", "universal"),
+                ),
+                ("U", seed_state),
+            ),
+        )
+        reachable = (("U", seed_state),)
+        interval = one_color_identity_interval()
+        keys = universal_k_signed_endpoint_required_entry_keys(interval, reachable)
+        positive_keys = tuple(key for key in keys if key[2] == 1)
+        rows = identity_signed_endpoint_rows(keys)
+        group = cyclic_group(2)
+        telescoping = trivial_telescoping_detector_audit(
+            positive_keys,
+            rows=rows,
+            endpoint_group=group,
+        )
+        certificate = telescoping.word_potential_certificate
+        malformed_state = ("U", "not_a_tuple_seed_state")
+        telescoping = replace(
+            telescoping,
+            word_potential_certificate=replace(
+                certificate,
+                normalized_seed_states=(
+                    certificate.normalized_seed_states + (malformed_state,)
+                ),
+            ),
+        )
+        audit = universal_k_signed_endpoint_generator_audit(
+            interval,
+            seed_entries,
+            reachable,
+            rows,
+            endpoint_group=group,
+            telescoping_detector_audit=telescoping,
+        )
+
+        self.assertFalse(
+            telescoping.word_potential_certificate.initial_readouts_normalized
+        )
+        self.assertFalse(audit.telescoping_detector_proved)
+        self.assertEqual(
+            telescoping.word_potential_certificate.malformed_normalized_seed_states,
+            (malformed_state,),
+        )
+        self.assertIn(
+            "word_potential_certificate_malformed_normalized_states",
+            audit.failure_reasons,
+        )
+
+    def test_malformed_word_potential_seed_state_ledgers_are_rejected(self):
+        seed_state = ("*", "*", "left_constant_map_universal_kernel")
+        seed_entries = (
+            (
+                (
+                    "*",
+                    "*",
+                    "L",
+                    "constant_map_kernel",
+                    ("*", (0, 1), "universal", "universal"),
+                ),
+                ("U", seed_state),
+            ),
+        )
+        reachable = (("U", seed_state),)
+        interval = one_color_identity_interval()
+        keys = universal_k_signed_endpoint_required_entry_keys(interval, reachable)
+        positive_keys = tuple(key for key in keys if key[2] == 1)
+        rows = identity_signed_endpoint_rows(keys)
+        group = cyclic_group(2)
+        telescoping = trivial_telescoping_detector_audit(
+            positive_keys,
+            rows=rows,
+            endpoint_group=group,
+        )
+        malformed_state = ("M", "not_a_tuple_seed_state")
+        telescoping = replace(
+            telescoping,
+            expected_word_potential_seed_states=(
+                telescoping.expected_word_potential_seed_states + (malformed_state,)
+            ),
+            covered_word_potential_seed_states=(
+                telescoping.covered_word_potential_seed_states + (malformed_state,)
+            ),
+        )
+        audit = universal_k_signed_endpoint_generator_audit(
+            interval,
+            seed_entries,
+            reachable,
+            rows,
+            endpoint_group=group,
+            telescoping_detector_audit=telescoping,
+        )
+
+        self.assertFalse(telescoping.word_potential_seed_state_ledgers_well_formed)
+        self.assertFalse(audit.telescoping_detector_proved)
+        self.assertIn("word_potential_malformed_seed_states", audit.failure_reasons)
+
+    def test_malformed_telescoping_seed_state_ledgers_are_rejected(self):
+        seed_state = ("*", "*", "left_constant_map_universal_kernel")
+        seed_entries = (
+            (
+                (
+                    "*",
+                    "*",
+                    "L",
+                    "constant_map_kernel",
+                    ("*", (0, 1), "universal", "universal"),
+                ),
+                ("U", seed_state),
+            ),
+        )
+        reachable = (("U", seed_state),)
+        interval = one_color_identity_interval()
+        keys = universal_k_signed_endpoint_required_entry_keys(interval, reachable)
+        positive_keys = tuple(key for key in keys if key[2] == 1)
+        rows = identity_signed_endpoint_rows(keys)
+        group = cyclic_group(2)
+        telescoping = trivial_telescoping_detector_audit(
+            positive_keys,
+            rows=rows,
+            endpoint_group=group,
+        )
+        malformed_state = ("Z", seed_state)
+        telescoping = replace(
+            telescoping,
+            expected_endpoint_seed_states=(
+                telescoping.expected_endpoint_seed_states + (malformed_state,)
+            ),
+            covered_endpoint_seed_states=(
+                telescoping.covered_endpoint_seed_states + (malformed_state,)
+            ),
+        )
+        audit = universal_k_signed_endpoint_generator_audit(
+            interval,
+            seed_entries,
+            reachable,
+            rows,
+            endpoint_group=group,
+            telescoping_detector_audit=telescoping,
+        )
+
+        self.assertFalse(telescoping.endpoint_seed_state_ledgers_well_formed)
+        self.assertFalse(audit.telescoping_detector_proved)
+        self.assertIn(
+            "telescoping_detector_malformed_seed_states",
+            audit.failure_reasons,
+        )
+
     def test_malformed_telescoping_entry_ledgers_are_rejected(self):
         seed_state = ("*", "*", "left_constant_map_universal_kernel")
         seed_entries = (

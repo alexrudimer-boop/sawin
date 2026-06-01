@@ -1269,6 +1269,11 @@ word in current longitude variables `U_{r,j}` only.  It may not use raw
 generator-assignment variables `a_{r,j}` in the terminal readout word.  The
 raw assignments may appear only in the local Artin substitution that updates
 the formal variables.
+Every template-state key, word-potential seed-state ledger key, and
+initial-normalization key must be a well-formed endpoint state `(E,s)` with
+`E in {U,C,M}` and tuple-valued reachable seed state `s`.  Malformed state
+keys are not harmless extra metadata: they invalidate the certificate before
+template scope, track scope, or normalization checks can close.
 Every track index appearing in a terminal template or in a local substitution
 must be backed by the declared fixed track count for that endpoint family.
 For example, if the target family has `R_E` tracks, no variable `U_{r,j}` or
