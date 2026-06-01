@@ -1510,6 +1510,13 @@ build record, not only the derived signed-generator audit.  A complete
 certificate should expose whether the build is present, whether it proves the
 observer, the positive entry keys forced by the word-potential table, and the
 positive local-context monodromy presentation used by the build.
+For product endpoint rows, the proof should also provide a family-scoped
+observer-build ledger: one constructed observer for each active family in
+`{U,C,M}` hit by `kappa`, no duplicates, no extras, and no malformed build
+rows.  Each retained family build must be single-family scoped, must use
+exactly that family's seed classifier entries and reachable seed states, and
+must itself prove the endpoint observer.  A successful U observer cannot
+stand in for a missing C or M observer.
 Positive observer rows may be forced only from actual word-potential identity
 row objects.  A tuple-shaped identity-row stand-in is a malformed certificate
 entry: it must be reported at the word-potential gate, must not be interpreted
@@ -1831,6 +1838,8 @@ signed_entry_domain_matches_current_interval,
 finite_signed_row_checks_derived_from_tables,
 signed_generator_domain_exact,
 endpoint_observer_build_record_retained,
+endpoint_observer_family_build_ledger_exact,
+endpoint_observer_each_active_family_single_scoped_and_proved,
 endpoint_observer_positive_rows_forced_from_typed_identity_rows,
 endpoint_observer_monodromy_contexts_exposed,
 coordinate_components_match_T_plus_and_T_inverse,

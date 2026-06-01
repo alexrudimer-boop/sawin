@@ -42,6 +42,7 @@ from ybe_domination import (
     UniversalKEndpointMonodromyPresentation,
     UniversalKEndpointMonodromyRepresentationAudit,
     UniversalKEndpointObserverBuild,
+    UniversalKEndpointObserverFamilyBuildAudit,
     UniversalKEndpointTargetAudit,
     UniversalKResidualActionScopeAudit,
     UniversalKResidualFaithfulnessAudit,
@@ -93,6 +94,8 @@ from ybe_domination import (
     universal_k_endpoint_monodromy_presentation,
     universal_k_endpoint_monodromy_representation_audit,
     universal_k_endpoint_observer_build,
+    universal_k_endpoint_observer_builds_by_family,
+    universal_k_endpoint_observer_family_build_audit,
     universal_k_endpoint_observer_positive_rows_from_word_potential,
     universal_k_endpoint_observer_signed_rows_from_positive,
     universal_k_signed_endpoint_coordinate_failures,
@@ -4508,6 +4511,138 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertIn("endpoint_targets_not_fixed", build.audit.failure_reasons)
         self.assertIn("cutoff_readouts_not_exact", build.audit.failure_reasons)
         self.assertIn("residual_faithfulness_not_verified", build.audit.failure_reasons)
+
+    def test_endpoint_observer_builds_by_family_cover_exact_ucm_families(self):
+        interval = one_color_identity_interval()
+        group = cyclic_group(2)
+        seed_entries = tuple(
+            (
+                ("*", "*", family, "constant_map_kernel", (0, 1)),
+                (family, ("*", "*", f"{family}_seed")),
+            )
+            for family in ("U", "C", "M")
+        )
+        seed_state_by_family = {
+            family: seed_state for _descriptor, (family, seed_state) in seed_entries
+        }
+        certificates = []
+        endpoint_targets = []
+        cutoff_readouts = []
+        residual_theorems = []
+        detector_rows = []
+        for family in ("U", "C", "M"):
+            seed_states = ((family, seed_state_by_family[family]),)
+            keys = universal_k_signed_endpoint_required_entry_keys(interval, seed_states)
+            positive_keys = tuple(key for key in keys if key[2] == 1)
+            certificates.append(
+                (
+                    family,
+                    UniversalKWordPotentialCertificate(
+                        endpoint_group=group,
+                        templates=((seed_states[0], ()),),
+                        identity_rows=tuple(
+                            UniversalKWordPotentialIdentityRow(
+                                entry_key=key,
+                                next_seed_state=seed_state_by_family[family],
+                                endpoint_value=group.identity,
+                                artin_substitution=(),
+                            )
+                            for key in positive_keys
+                        ),
+                        normalized_seed_states=seed_states,
+                    ),
+                )
+            )
+            detector_rows.append(
+                UniversalKDetectorTrackInitializationRow(
+                    endpoint_family=family,
+                    track_index=0,
+                    assignment_rule="constant_identity_from_interval_seed",
+                    dependencies=("interval_data", "routed_seed_state", "strand_index"),
+                    local_assignment_template=((("A", 0, 0), group.identity),),
+                )
+            )
+            if family == "U":
+                endpoint_targets.append((family, trivial_endpoint_target_audit(family)))
+            else:
+                endpoint_targets.append(
+                    (
+                        family,
+                        UniversalKEndpointTargetAudit(
+                            expected_endpoint_families=(family,),
+                            covered_endpoint_families=(family,),
+                            cutoff_degrees=((family, 2),),
+                            braid_index_independent=True,
+                            product_families_separated=True,
+                        ),
+                    )
+                )
+                cutoff_readouts.append(
+                    (family, trivial_cutoff_readout_audit(seed_states, degree=2))
+                )
+            residual_theorems.append(
+                (
+                    family,
+                    UniversalKResidualFaithfulnessAudit(
+                        active_endpoint_families=(family,),
+                        covered_endpoint_families=(family,),
+                        expected_residual_row_count=1,
+                        covered_residual_row_count=1,
+                        expected_residual_input_tuples=(("p",),),
+                        covered_residual_input_tuples=(("p",),),
+                        endpoint_channels_exact=True,
+                        identity_endpoint_data_forces_residual_identity=True,
+                        braid_index_independent=True,
+                        product_families_separated=True,
+                        expected_endpoint_seed_states=seed_states,
+                        covered_endpoint_seed_states=seed_states,
+                        residual_rows=trivial_residual_faithfulness_rows(
+                            family,
+                            seed_states=seed_states,
+                        ),
+                    ),
+                )
+            )
+
+        family_audit = universal_k_endpoint_observer_builds_by_family(
+            interval,
+            seed_entries,
+            tuple(certificates),
+            detector_track_initialization_rows=tuple(detector_rows),
+            endpoint_target_audits_by_family=tuple(endpoint_targets),
+            cutoff_readout_audits_by_family=tuple(cutoff_readouts),
+            residual_faithfulness_theorems_by_family=tuple(residual_theorems),
+        )
+
+        self.assertIsInstance(
+            family_audit,
+            UniversalKEndpointObserverFamilyBuildAudit,
+        )
+        self.assertEqual(
+            family_audit.expected_endpoint_families_exact,
+            ("C", "M", "U"),
+        )
+        self.assertEqual(
+            family_audit.covered_endpoint_families_exact,
+            ("C", "M", "U"),
+        )
+        self.assertEqual(family_audit.failure_reasons, ())
+        self.assertTrue(family_audit.proves_family_endpoint_observers)
+        for family, build in family_audit.build_rows_exact:
+            self.assertEqual(build.audit.required_endpoint_families, (family,))
+            self.assertTrue(build.proves_endpoint_observer)
+
+        missing_m = universal_k_endpoint_observer_family_build_audit(
+            seed_entries,
+            tuple(row for row in family_audit.builds if row[0] != "M"),
+        )
+
+        self.assertFalse(missing_m.proves_family_endpoint_observers)
+        self.assertEqual(missing_m.missing_build_families, ("M",))
+        self.assertIn(
+            "endpoint_observer_family_builds_missing_families",
+            missing_m.failure_reasons,
+        )
 
     def test_endpoint_observer_builder_rejects_omitted_positive_context(self):
         interval = one_color_identity_interval()

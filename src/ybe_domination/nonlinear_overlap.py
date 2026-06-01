@@ -8067,6 +8067,220 @@ class UniversalKEndpointObserverBuild:
         )
 
 
+@dataclass(frozen=True)
+class UniversalKEndpointObserverFamilyBuildAudit:
+    """Exact active-family ledger of constructed U/C/M endpoint observers."""
+
+    seed_classifier_entries: Tuple[UniversalKSeedClassifierEntry, ...]
+    builds: Tuple[Tuple[str, UniversalKEndpointObserverBuild], ...]
+
+    @property
+    def expected_seed_states(
+        self,
+    ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
+        return universal_k_signed_endpoint_seed_states(self.seed_classifier_entries)
+
+    @property
+    def expected_endpoint_families_exact(self) -> Tuple[str, ...]:
+        return tuple(
+            sorted(
+                {
+                    family
+                    for family, _seed_state in self.expected_seed_states
+                    if family in UNIVERSAL_K_ENDPOINT_FAMILIES
+                },
+                key=repr,
+            )
+        )
+
+    @property
+    def build_row_parts(
+        self,
+    ) -> Tuple[Tuple[object, object], ...]:
+        return tuple(
+            parts
+            for row in self.builds
+            for parts in (_universal_k_two_field_row_parts(row),)
+            if parts is not None
+        )
+
+    @property
+    def malformed_build_rows(self) -> Tuple[object, ...]:
+        return _unique_values(
+            tuple(
+                row
+                for row in self.builds
+                if (
+                    _universal_k_two_field_row_parts(row) is None
+                    or not isinstance(
+                        _universal_k_two_field_row_parts(row)[1],
+                        UniversalKEndpointObserverBuild,
+                    )
+                )
+            )
+        )
+
+    @property
+    def invalid_build_families(self) -> Tuple[object, ...]:
+        return _unique_values(
+            tuple(
+                family
+                for family, build in self.build_row_parts
+                if isinstance(build, UniversalKEndpointObserverBuild)
+                and family not in UNIVERSAL_K_ENDPOINT_FAMILIES
+            )
+        )
+
+    @property
+    def build_rows_exact(
+        self,
+    ) -> Tuple[Tuple[str, UniversalKEndpointObserverBuild], ...]:
+        return tuple(
+            (family, build)
+            for family, build in self.build_row_parts
+            if family in UNIVERSAL_K_ENDPOINT_FAMILIES
+            and isinstance(build, UniversalKEndpointObserverBuild)
+        )
+
+    @property
+    def covered_endpoint_families_exact(self) -> Tuple[str, ...]:
+        return tuple(sorted({family for family, _build in self.build_rows_exact}, key=repr))
+
+    @property
+    def duplicate_build_families(self) -> Tuple[str, ...]:
+        return _duplicate_values(tuple(family for family, _build in self.build_rows_exact))
+
+    @property
+    def missing_build_families(self) -> Tuple[str, ...]:
+        covered = set(self.covered_endpoint_families_exact)
+        return tuple(
+            family
+            for family in self.expected_endpoint_families_exact
+            if family not in covered
+        )
+
+    @property
+    def extra_build_families(self) -> Tuple[str, ...]:
+        expected = set(self.expected_endpoint_families_exact)
+        return tuple(
+            family for family in self.covered_endpoint_families_exact if family not in expected
+        )
+
+    @property
+    def family_coverage_exact(self) -> bool:
+        return (
+            bool(self.expected_endpoint_families_exact)
+            and not self.missing_build_families
+            and not self.extra_build_families
+        )
+
+    @property
+    def expected_seed_states_by_family(
+        self,
+    ) -> Mapping[str, Tuple[Tuple[str, UniversalKSeedState], ...]]:
+        states: dict[str, list[Tuple[str, UniversalKSeedState]]] = {}
+        for state in self.expected_seed_states:
+            if not _universal_k_endpoint_seed_state_well_formed(state):
+                continue
+            family = state[0]
+            states.setdefault(family, []).append(state)
+        return {
+            family: tuple(_unique_values(tuple(family_states)))
+            for family, family_states in states.items()
+        }
+
+    @property
+    def expected_seed_classifier_entries_by_family(
+        self,
+    ) -> Mapping[str, Tuple[UniversalKSeedClassifierEntry, ...]]:
+        entries: dict[str, list[UniversalKSeedClassifierEntry]] = {}
+        for entry in self.seed_classifier_entries:
+            if (
+                not isinstance(entry, tuple)
+                or len(entry) != 2
+                or not _universal_k_endpoint_seed_state_well_formed(entry[1])
+            ):
+                continue
+            entries.setdefault(entry[1][0], []).append(entry)
+        return {family: tuple(rows) for family, rows in entries.items()}
+
+    @property
+    def build_scope_failures(
+        self,
+    ) -> Tuple[Tuple[str, str, object], ...]:
+        failures = []
+        expected_states = self.expected_seed_states_by_family
+        expected_entries = self.expected_seed_classifier_entries_by_family
+        for family, build in self.build_rows_exact:
+            if build.audit.required_endpoint_families != (family,):
+                failures.append(
+                    (
+                        family,
+                        "endpoint_observer_build_not_single_family_scoped",
+                        build.audit.required_endpoint_families,
+                    )
+                )
+            if set(build.audit.required_seed_states) != set(
+                expected_states.get(family, ())
+            ):
+                failures.append(
+                    (
+                        family,
+                        "endpoint_observer_build_seed_state_scope_mismatch",
+                        build.audit.required_seed_states,
+                    )
+                )
+            if tuple(build.audit.seed_classifier_entries) != tuple(
+                expected_entries.get(family, ())
+            ):
+                failures.append(
+                    (
+                        family,
+                        "endpoint_observer_build_seed_classifier_scope_mismatch",
+                        build.audit.seed_classifier_entries,
+                    )
+                )
+        return tuple(sorted(failures, key=repr))
+
+    @property
+    def unproved_build_families(self) -> Tuple[str, ...]:
+        return tuple(
+            family for family, build in self.build_rows_exact if not build.proves_endpoint_observer
+        )
+
+    @property
+    def proves_family_endpoint_observers(self) -> bool:
+        return (
+            self.family_coverage_exact
+            and not self.malformed_build_rows
+            and not self.invalid_build_families
+            and not self.duplicate_build_families
+            and not self.build_scope_failures
+            and not self.unproved_build_families
+        )
+
+    @property
+    def failure_reasons(self) -> Tuple[str, ...]:
+        reasons = []
+        if not self.expected_endpoint_families_exact:
+            reasons.append("endpoint_observer_family_builds_no_active_families")
+        if self.malformed_build_rows:
+            reasons.append("endpoint_observer_family_builds_malformed_rows")
+        if self.invalid_build_families:
+            reasons.append("endpoint_observer_family_builds_unknown_families")
+        if self.duplicate_build_families:
+            reasons.append("endpoint_observer_family_builds_duplicate_families")
+        if self.missing_build_families:
+            reasons.append("endpoint_observer_family_builds_missing_families")
+        if self.extra_build_families:
+            reasons.append("endpoint_observer_family_builds_extra_families")
+        if self.build_scope_failures:
+            reasons.append("endpoint_observer_family_builds_scope_mismatch")
+        if self.unproved_build_families:
+            reasons.append("endpoint_observer_family_builds_not_proved")
+        return tuple(reasons)
+
+
 def universal_k_endpoint_observer_positive_rows_from_word_potential(
     interval: LocalInterval,
     word_potential_certificate: UniversalKWordPotentialCertificate,
@@ -8280,6 +8494,128 @@ def universal_k_endpoint_observer_build(
         rows=rows,
         telescoping_detector_audit=telescoping_detector_audit,
         audit=audit,
+    )
+
+
+def universal_k_endpoint_observer_family_build_audit(
+    seed_classifier_entries: Sequence[UniversalKSeedClassifierEntry],
+    builds: Sequence[Tuple[str, UniversalKEndpointObserverBuild]],
+) -> UniversalKEndpointObserverFamilyBuildAudit:
+    """Audit one constructed endpoint observer for each active U/C/M family."""
+
+    return UniversalKEndpointObserverFamilyBuildAudit(
+        seed_classifier_entries=tuple(seed_classifier_entries),
+        builds=tuple(builds),
+    )
+
+
+def _universal_k_family_object_map(
+    rows: Sequence[Tuple[str, object]],
+) -> Mapping[str, object]:
+    mapped: dict[str, object] = {}
+    for row in rows:
+        parts = _universal_k_two_field_row_parts(row)
+        if parts is None:
+            continue
+        family, value = parts
+        if family not in UNIVERSAL_K_ENDPOINT_FAMILIES or family in mapped:
+            continue
+        mapped[family] = value
+    return mapped
+
+
+def _universal_k_seed_classifier_entries_for_family(
+    seed_classifier_entries: Sequence[UniversalKSeedClassifierEntry],
+    endpoint_family: str,
+) -> Tuple[UniversalKSeedClassifierEntry, ...]:
+    return tuple(
+        entry
+        for entry in seed_classifier_entries
+        if (
+            isinstance(entry, tuple)
+            and len(entry) == 2
+            and _universal_k_endpoint_seed_state_well_formed(entry[1])
+            and entry[1][0] == endpoint_family
+        )
+    )
+
+
+def universal_k_endpoint_observer_builds_by_family(
+    interval: LocalInterval,
+    seed_classifier_entries: Sequence[UniversalKSeedClassifierEntry],
+    word_potential_certificates_by_family: Sequence[
+        Tuple[str, UniversalKWordPotentialCertificate]
+    ],
+    *,
+    detector_track_initialization_rows: Tuple[
+        UniversalKDetectorTrackInitializationRow,
+        ...,
+    ] = (),
+    endpoint_target_audits_by_family: Sequence[
+        Tuple[str, UniversalKEndpointTargetAudit]
+    ] = (),
+    cutoff_readout_audits_by_family: Sequence[
+        Tuple[str, UniversalKCutoffReadoutAudit]
+    ] = (),
+    residual_faithfulness_theorems_by_family: Sequence[
+        Tuple[str, UniversalKResidualFaithfulnessAudit]
+    ] = (),
+) -> UniversalKEndpointObserverFamilyBuildAudit:
+    """Construct and audit separate endpoint observers for active U/C/M families."""
+
+    endpoint_target_audits = _universal_k_family_object_map(
+        endpoint_target_audits_by_family
+    )
+    cutoff_readout_audits = _universal_k_family_object_map(
+        cutoff_readout_audits_by_family
+    )
+    residual_faithfulness_theorems = _universal_k_family_object_map(
+        residual_faithfulness_theorems_by_family
+    )
+    builds = []
+    for row in word_potential_certificates_by_family:
+        parts = _universal_k_two_field_row_parts(row)
+        if parts is None:
+            continue
+        endpoint_family, certificate = parts
+        if (
+            endpoint_family not in UNIVERSAL_K_ENDPOINT_FAMILIES
+            or not isinstance(certificate, UniversalKWordPotentialCertificate)
+        ):
+            continue
+        family_seed_classifier_entries = (
+            _universal_k_seed_classifier_entries_for_family(
+                seed_classifier_entries,
+                endpoint_family,
+            )
+        )
+        family_detector_rows = tuple(
+            detector_row
+            for detector_row in detector_track_initialization_rows
+            if (
+                isinstance(detector_row, UniversalKDetectorTrackInitializationRow)
+                and detector_row.endpoint_family == endpoint_family
+            )
+        )
+        builds.append(
+            (
+                endpoint_family,
+                universal_k_endpoint_observer_build(
+                    interval,
+                    family_seed_classifier_entries,
+                    certificate,
+                    detector_track_initialization_rows=family_detector_rows,
+                    endpoint_target_audit=endpoint_target_audits.get(endpoint_family),
+                    cutoff_readout_audit=cutoff_readout_audits.get(endpoint_family),
+                    residual_faithfulness_theorem=(
+                        residual_faithfulness_theorems.get(endpoint_family)
+                    ),
+                ),
+            )
+        )
+    return universal_k_endpoint_observer_family_build_audit(
+        seed_classifier_entries,
+        tuple(builds),
     )
 
 

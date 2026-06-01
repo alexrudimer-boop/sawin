@@ -756,6 +756,16 @@ records whether that observer build is present, whether it proves the
 endpoint observer, which positive entry keys it forced, and which monodromy
 contexts it used.  This prevents the U/C/M observer construction from being
 hidden behind the signed-generator audit alone.
+The family-scoped constructor
+`universal_k_endpoint_observer_builds_by_family(...)` builds one observer per
+active U/C/M family from the family's word-potential certificate and audits
+the resulting family ledger with
+`UniversalKEndpointObserverFamilyBuildAudit`.  That audit requires exact
+coverage of the active families hit by `kappa`, rejects malformed or duplicate
+build rows, checks that each build is single-family scoped with exactly the
+family's seed classifier entries and seed states, and only closes when every
+family build proves its endpoint observer.  Thus a combined product endpoint
+row cannot hide the absence of a C or M observer behind a successful U build.
 When a fixed endpoint group is declared as a product over multiple endpoint
 families, the signed endpoint audit now also checks family support of each
 emitted label: a row in family `E` must have identity components in every
