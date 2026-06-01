@@ -3044,6 +3044,46 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             braid_word_dependent_track.failure_reasons,
         )
 
+        invalid_track_template = replace(
+            theorem_complete,
+            telescoping_detector_audit=replace(
+                theorem_complete.telescoping_detector_audit,
+                detector_track_initialization_rows=(
+                    UniversalKDetectorTrackInitializationRow(
+                        endpoint_family="U",
+                        track_index=0,
+                        assignment_rule="constant_identity_from_interval_seed",
+                        dependencies=(
+                            "interval_data",
+                            "routed_seed_state",
+                            "strand_index",
+                        ),
+                        local_assignment_template=(
+                            (("U", 0, 0), 0),
+                            (("A", 0, 1), 99),
+                        ),
+                    ),
+                ),
+            ),
+        )
+        self.assertFalse(invalid_track_template.telescoping_detector_proved)
+        self.assertIn(
+            "detector_track_initialization_invalid_templates",
+            invalid_track_template.failure_reasons,
+        )
+        invalid_template_audit = invalid_track_template.telescoping_detector_audit
+        invalid_template_failures = (
+            invalid_template_audit.detector_track_initialization_template_failures
+        )
+        self.assertIn(
+            "detector_track_assignment_not_raw_variable",
+            tuple(failure[1] for failure in invalid_template_failures),
+        )
+        self.assertIn(
+            "detector_track_assignment_value_outside_group",
+            tuple(failure[1] for failure in invalid_template_failures),
+        )
+
         tautological_potential = replace(
             theorem_complete,
             telescoping_detector_audit=UniversalKTelescopingDetectorAudit(

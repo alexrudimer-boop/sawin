@@ -1177,6 +1177,11 @@ are forbidden.  The initialization ledger must have no missing, extra, or
 duplicate `(E,r)` rows.  A claim that detector tracks are "fixed before the
 braid" or that initialization is "verified" is not a certificate unless this
 finite row table is present and exact.
+The local assignment template in each row must also be checked: it may assign
+only raw variables `A_{r,j}` for that same track `r`, may not repeat an
+assigned raw variable, and every assigned value must be an element of the
+fixed endpoint group `H_E`.  A dependency-valid row with an invalid template
+does not initialize a detector track.
 
 The same certificate must define finite word templates `W_s`, one for every
 reachable endpoint state `s in S_E^reach`.  Each word template is a fixed
@@ -1406,6 +1411,8 @@ positive_local_endpoint_ybe_cocycle,
 fixed_detector_track_initialization,
 detector_track_initialization_rows_exact,
 detector_track_initialization_rules_use_only_allowed_initial_data,
+detector_track_initialization_templates_use_same_track_raw_variables,
+detector_track_initialization_values_in_endpoint_group,
 artin_detector_recurrence,
 word_potential_certificate_table_supplied,
 word_potential_certificate_entry_domain_exact,

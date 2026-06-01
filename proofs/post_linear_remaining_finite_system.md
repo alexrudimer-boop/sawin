@@ -491,6 +491,10 @@ braid-prefix, braid-index, failed-detector, finite-search, normalized-law, or
 timeout dependencies make the row invalid.  The checker reports missing,
 extra, duplicate, and invalid initialization rows before the detector-lift
 gate can close.
+It also validates the local assignment template in every row: assignments
+must use raw variables `A_{r,j}` for the same track index, must not repeat a
+raw variable, and must assign endpoint-group elements.  A row with allowed
+dependencies but an invalid template is still not a fixed detector track.
 
 The endpoint potential itself may not be a tautological accumulated product.
 For every reachable endpoint state the certificate must supply a finite word
@@ -745,6 +749,13 @@ signed_endpoint_generator_detector_track_count_duplicate_families
 signed_endpoint_generator_detector_track_count_family_scope_exact
 signed_endpoint_generator_detector_track_count_matches_family_sum
 signed_endpoint_generator_fixed_detector_track_count
+signed_endpoint_generator_detector_track_initialization_rows
+signed_endpoint_generator_detector_track_initialization_missing_keys
+signed_endpoint_generator_detector_track_initialization_extra_keys
+signed_endpoint_generator_detector_track_initialization_duplicate_keys
+signed_endpoint_generator_detector_track_initialization_invalid_rows
+signed_endpoint_generator_detector_track_initialization_template_failures
+signed_endpoint_generator_detector_track_initialization_rows_exact
 signed_endpoint_generator_detector_tracks_fixed_before_braid
 signed_endpoint_generator_detector_track_initialization_verified
 signed_endpoint_generator_artin_detector_recurrence_verified

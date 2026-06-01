@@ -103,6 +103,11 @@ UniversalKSeedClassifierEntry = Tuple[
 ]
 UnsupportedCompanionBlockImageRowKey = Tuple[str, Color, Color]
 UniversalKDetectorTrackKey = Tuple[str, int]
+UniversalKDetectorTrackInitializationFailure = Tuple[
+    UniversalKDetectorTrackKey,
+    str,
+    object,
+]
 UniversalKSignedEndpointEntryKey = Tuple[
     str,
     UniversalKSeedState,
@@ -2758,6 +2763,42 @@ class UniversalKTelescopingDetectorAudit:
         )
 
     @property
+    def detector_track_initialization_template_failures(
+        self,
+    ) -> Tuple[UniversalKDetectorTrackInitializationFailure, ...]:
+        failures = []
+        group_elements = None
+        if self.word_potential_certificate is not None:
+            group_elements = set(self.word_potential_certificate.endpoint_group.elements)
+        for row in self.detector_track_initialization_rows:
+            seen_variables = set()
+            for variable, value in row.local_assignment_template:
+                if variable in seen_variables:
+                    failures.append(
+                        (row.key, "duplicate_detector_track_assignment", variable)
+                    )
+                seen_variables.add(variable)
+                if not _universal_k_word_potential_variable_valid(variable):
+                    failures.append(
+                        (row.key, "invalid_detector_track_assignment_variable", variable)
+                    )
+                    continue
+                kind, track_index, _position = variable
+                if kind != "A":
+                    failures.append(
+                        (row.key, "detector_track_assignment_not_raw_variable", variable)
+                    )
+                if track_index != row.track_index:
+                    failures.append(
+                        (row.key, "detector_track_assignment_track_mismatch", variable)
+                    )
+                if group_elements is not None and value not in group_elements:
+                    failures.append(
+                        (row.key, "detector_track_assignment_value_outside_group", value)
+                    )
+        return tuple(failures)
+
+    @property
     def detector_track_initialization_rows_exact(self) -> bool:
         return (
             bool(self.expected_detector_track_keys)
@@ -2771,6 +2812,7 @@ class UniversalKTelescopingDetectorAudit:
         return (
             self.detector_track_initialization_rows_exact
             and not self.invalid_detector_track_initialization_rows
+            and not self.detector_track_initialization_template_failures
         )
 
     @property
@@ -2974,6 +3016,8 @@ class UniversalKTelescopingDetectorAudit:
             reasons.append("detector_track_initialization_duplicate_keys")
         if self.invalid_detector_track_initialization_rows:
             reasons.append("detector_track_initialization_invalid_rows")
+        if self.detector_track_initialization_template_failures:
+            reasons.append("detector_track_initialization_invalid_templates")
         if not self.detector_track_initializations_verified:
             reasons.append("detector_tracks_not_fixed_before_braid")
         if not self.detector_track_initializations_verified:
@@ -6297,6 +6341,10 @@ class PostLinearRemainingFiniteSystemAudit:
                     (),
                 ),
                 (
+                    "signed_endpoint_generator_detector_track_initialization_template_failures",
+                    (),
+                ),
+                (
                     "signed_endpoint_generator_detector_track_initialization_rows_exact",
                     False,
                 ),
@@ -6922,6 +6970,14 @@ class PostLinearRemainingFiniteSystemAudit:
                 "signed_endpoint_generator_detector_track_initialization_invalid_rows",
                 (
                     tuple(row.key for row in telescoping_audit.invalid_detector_track_initialization_rows)
+                    if telescoping_audit is not None
+                    else ()
+                ),
+            ),
+            (
+                "signed_endpoint_generator_detector_track_initialization_template_failures",
+                (
+                    telescoping_audit.detector_track_initialization_template_failures
                     if telescoping_audit is not None
                     else ()
                 ),
