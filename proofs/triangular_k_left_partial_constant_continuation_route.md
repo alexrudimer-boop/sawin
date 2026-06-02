@@ -55,6 +55,7 @@ The post-linear finite-system wrapper reports the K-relevant part as:
 ```text
 missing_triangular_partial_constant_continuation_routes
 missing_triangular_partial_constant_unrouted_continuation_rows
+missing_triangular_partial_constant_duplicate_route_keys
 ```
 
 ## Lemma: partial-constant edges create continuation seeds
@@ -134,6 +135,20 @@ seed.  A nonuniversal continuation-seed closure containing the partial edge
 is useful diagnostic data, but it is not enough to create the System C
 universal-continuation endpoint obligation.
 
+[Proved, audit-side] The supplied continuation-route key ledger is
+duplicate-free.  The route key is:
+
+```text
+(side, left_color, right_color, fixed_input, domain_color,
+ collapsed_inputs, closure_kind).
+```
+
+If two route rows share this key, even with different companion-output or
+continuation-witness payloads, the post-linear wrapper refuses to remove the
+original no-triangular row from System K.  This prevents dict overwrites or
+set-style normalization from hiding conflicting partial-constant continuation
+routes before the C endpoint observer is constructed.
+
 ## Consequence for System K
 
 Partial-constant hidden missing triangular rows are now routed to the
@@ -160,7 +175,9 @@ reaches only `routed_to_continuation_seed_closure` and not
 `routed_to_universal_continuation_seed`, the wrapper leaves the original
 no-triangular row live in System K and lists the row in
 `missing_triangular_partial_constant_unrouted_continuation_rows` when the
-supplied route row itself is nonuniversal.
+supplied route row itself is nonuniversal.  A duplicate route key also leaves
+the no-triangular row live in System K and is reported in
+`missing_triangular_partial_constant_duplicate_route_keys`.
 
 ## Remaining burden
 

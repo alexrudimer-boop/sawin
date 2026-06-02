@@ -1857,6 +1857,43 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             ),
         )
 
+    def test_partial_constant_route_rejects_duplicate_route_keys(self):
+        profile, closure, route = partial_constant_missing_row_profile_route_audits()
+        duplicate_route = MissingTriangularPartialConstantContinuationRouteAudit(
+            rows=(route.rows[0], replace(route.rows[0], companion_outputs=(0, 2))),
+        )
+        audit = PostLinearRemainingFiniteSystemAudit(
+            active_system_k_refinement(),
+            missing_triangular_row_profile=profile,
+            missing_triangular_partial_constant_closure=closure,
+            missing_triangular_partial_constant_continuation_route=duplicate_route,
+        )
+
+        self.assertEqual(duplicate_route.duplicate_route_keys, (route.rows[0].route_key,))
+        self.assertFalse(duplicate_route.route_ledgers_duplicate_free)
+        self.assertFalse(duplicate_route.all_partial_constant_edges_route_to_continuation)
+        self.assertEqual(audit.system_name, "system_k_kink_completion_deficit")
+        self.assertTrue(audit.system_k_active)
+        self.assertFalse(audit.system_c_active)
+        self.assertIn(
+            (
+                "live_k_missing_latin_row_defects",
+                ((("*", "*"), "no_left_triangular_row"),),
+            ),
+            audit.finite_obstruction_data,
+        )
+        self.assertIn(
+            ("continuation_routed_k_missing_latin_row_defects", ()),
+            audit.finite_obstruction_data,
+        )
+        self.assertIn(
+            (
+                "missing_triangular_partial_constant_duplicate_route_keys",
+                (route.rows[0].route_key,),
+            ),
+            audit.finite_obstruction_data,
+        )
+
     def test_partial_constant_route_requires_universal_continuation_seed(self):
         profile, closure, route = partial_constant_missing_row_profile_route_audits()
         nonuniversal_route = MissingTriangularPartialConstantContinuationRouteAudit(
@@ -2437,6 +2474,67 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
                 (),
             ),
             routed.finite_obstruction_data,
+        )
+
+    def test_post_linear_recovery_route_rejects_duplicate_route_keys(self):
+        refinement = constant_map_kernel_system_k_refinement()
+        closure = TriangularLatinDefectClosureAudit(
+            rows=(
+                TriangularLatinDefectClosureRow(
+                    side="left",
+                    defect="constant_map_kernel",
+                    left_color="*",
+                    right_color="*",
+                    domain_color="*",
+                    fixed_input=None,
+                    collapsed_inputs=(0, 1),
+                    generated=generated("universal"),
+                ),
+            ),
+        )
+        row = TriangularConstantKernelRecoveryRouteRow(
+            side="left",
+            left_color="*",
+            right_color="*",
+            domain_color="*",
+            collapsed_inputs=(0, 1),
+            closure_kind="universal",
+            recovery_row_present=True,
+            recovery_formula_bijective=True,
+            witness_output_pairs=(
+                (0, ((0, 0),)),
+                (1, ((0, 1),)),
+            ),
+        )
+        route = TriangularConstantKernelRecoveryRouteAudit(
+            rows=(row, replace(row, witness_output_pairs=((0, ((0, 0),)),))),
+        )
+        audit = PostLinearRemainingFiniteSystemAudit(
+            refinement,
+            triangular_latin_defect_closure=closure,
+            triangular_constant_kernel_recovery_route=route,
+        )
+
+        self.assertEqual(route.duplicate_route_keys, (row.route_key,))
+        self.assertFalse(route.route_ledgers_duplicate_free)
+        self.assertFalse(route.all_universal_constant_kernel_edges_route_to_recovery)
+        self.assertEqual(audit.system_name, "system_k_kink_completion_deficit")
+        self.assertIn(
+            (
+                "live_k_missing_latin_row_defects",
+                (
+                    (("*", "*"), "left_constant_map_universal_kernel"),
+                    (("*", "*"), "no_right_triangular_row"),
+                ),
+            ),
+            audit.finite_obstruction_data,
+        )
+        self.assertIn(
+            (
+                "triangular_constant_kernel_duplicate_recovery_route_keys",
+                (row.route_key,),
+            ),
+            audit.finite_obstruction_data,
         )
 
     def test_post_linear_proper_latin_defect_closure_closes_system_k(self):

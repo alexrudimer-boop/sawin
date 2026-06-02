@@ -515,7 +515,10 @@ pair:
    triangular row;
 3. the recovery table separates the two collapsed inputs by output pairs,
    meaning the recovered left input (left case) or recovered right input
-   (right case) distinguishes the collapsed pair.
+   (right case) distinguishes the collapsed pair;
+4. the recovery-route key
+   (side, colour pair, domain colour, collapsed input pair, closure kind)
+   is duplicate-free in the supplied route ledger.
 
 If all universal constant-map kernel edges for that side and pair satisfy
 these checks, remove the corresponding constant-map reason from live K and
@@ -544,7 +547,8 @@ The row routes to System C only when every relevant partial-constant edge has:
 
 1. universal generated admissible closure for the collapsed input pair;
 2. a supplied continuation route keyed to the same side, colour pair, fixed
-   input, domain colour, collapsed input pair, and closure kind;
+   input, domain colour, collapsed input pair, and closure kind, with no
+   duplicate route key;
 3. distinct companion outputs;
 4. at least one continuation seed witness;
 5. a universal continuation-seed generated closure among those witnesses;
@@ -552,9 +556,10 @@ The row routes to System C only when every relevant partial-constant edge has:
    closure.
 
 If the partial-constant closure row is nonuniversal, if the supplied route
-does not match that closure row including closure kind, if the route reaches
-only a nonuniversal continuation-seed closure, or if any listed check fails,
-the original no-triangular row remains live in System K.
+does not match that closure row including closure kind, if a route key is
+duplicated, if the route reaches only a nonuniversal continuation-seed
+closure, or if any listed check fails, the original no-triangular row remains
+live in System K.
 ```
 
 K-to-M coordinate-unit law:

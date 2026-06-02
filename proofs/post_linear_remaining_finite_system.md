@@ -1600,6 +1600,7 @@ triangular_companion_nonbijective_without_constant_kernel_rows
 triangular_hidden_nonunit_opposite_without_product_rows
 triangular_constant_kernel_recovery_route_rows
 triangular_constant_kernel_unrouted_universal_rows
+triangular_constant_kernel_duplicate_recovery_route_keys
 missing_triangular_row_profiles
 missing_triangular_partial_constant_rows
 missing_triangular_partial_constant_mixed_unit_rows
@@ -1619,6 +1620,7 @@ missing_triangular_partial_constant_proper_closure_rows
 missing_triangular_partial_constant_universal_closure_rows
 missing_triangular_partial_constant_continuation_routes
 missing_triangular_partial_constant_unrouted_continuation_rows
+missing_triangular_partial_constant_duplicate_route_keys
 universal_continuation_identity_lost_edges
 universal_continuation_identity_unrouted_edges
 universal_continuation_identity_routing_proved
@@ -1804,10 +1806,11 @@ table:
 
 ```text
 triangular_constant_kernel_unrouted_universal_rows
+triangular_constant_kernel_duplicate_recovery_route_keys
 ```
 
-must be empty before those constant-map kernel seeds can be routed onward to
-System U.
+must both be empty before those constant-map kernel seeds can be routed onward
+to System U.
 
 For colour pairs with no triangular row on the missing side, the profile rows
 separate proper-kernel visibility, injective-nonsurjective size/codomain
@@ -1843,10 +1846,12 @@ universal generated closures are then routed by
 universal continuation seed channel.  The supplied continuation route must
 match the partial-constant closure row including its closure kind, the
 partial-constant closure row itself must be universal, and the route must
-reach a universal continuation seed closure.  A nonuniversal
-partial-constant closure or a merely nonuniversal continuation-seed
-containment leaves the row live in System K and does not create a System C
-endpoint obligation.
+reach a universal continuation seed closure.  Its keyed route ledger must also
+be duplicate-free, keyed by side, colour pair, fixed input, domain colour,
+collapsed inputs, and closure kind.  A nonuniversal partial-constant closure,
+a merely nonuniversal continuation-seed containment, or a duplicate route key
+leaves the row live in System K and does not create a System C endpoint
+obligation.
 The downstream identity-routing ledger is also non-vacuous: a forced
 universal-continuation route proves only when its lost-edge tuple is exactly
 the seed-saturation lost-edge tuple, its routed and unrouted tuples partition

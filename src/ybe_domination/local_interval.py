@@ -834,6 +834,26 @@ class TriangularConstantKernelRecoveryRouteRow:
     ]
 
     @property
+    def route_key(
+        self,
+    ) -> Tuple[
+        str,
+        Color,
+        Color,
+        Color,
+        Tuple[FibrePoint, FibrePoint],
+        str,
+    ]:
+        return (
+            self.side,
+            self.left_color,
+            self.right_color,
+            self.domain_color,
+            self.collapsed_inputs,
+            self.closure_kind,
+        )
+
+    @property
     def witnessed_inputs(self) -> Tuple[FibrePoint, ...]:
         return tuple(input_value for input_value, outputs in self.witness_output_pairs if outputs)
 
@@ -857,6 +877,26 @@ class TriangularConstantKernelRecoveryRouteAudit:
     rows: Tuple[TriangularConstantKernelRecoveryRouteRow, ...]
 
     @property
+    def duplicate_route_keys(
+        self,
+    ) -> Tuple[
+        Tuple[
+            str,
+            Color,
+            Color,
+            Color,
+            Tuple[FibrePoint, FibrePoint],
+            str,
+        ],
+        ...,
+    ]:
+        return _duplicate_values(tuple(row.route_key for row in self.rows))
+
+    @property
+    def route_ledgers_duplicate_free(self) -> bool:
+        return not self.duplicate_route_keys
+
+    @property
     def universal_rows(self) -> Tuple[TriangularConstantKernelRecoveryRouteRow, ...]:
         return tuple(row for row in self.rows if row.closure_kind == "universal")
 
@@ -872,7 +912,11 @@ class TriangularConstantKernelRecoveryRouteAudit:
 
     @property
     def all_universal_constant_kernel_edges_route_to_recovery(self) -> bool:
-        return bool(self.universal_rows) and not self.unrouted_universal_rows
+        return (
+            bool(self.universal_rows)
+            and self.route_ledgers_duplicate_free
+            and not self.unrouted_universal_rows
+        )
 
 
 @dataclass(frozen=True)
@@ -1290,6 +1334,28 @@ class MissingTriangularPartialConstantContinuationRouteRow:
     partial_edge_contained_in_seed_closure: bool
 
     @property
+    def route_key(
+        self,
+    ) -> Tuple[
+        str,
+        Color,
+        Color,
+        FibrePoint,
+        Color,
+        Tuple[FibrePoint, FibrePoint],
+        str,
+    ]:
+        return (
+            self.side,
+            self.left_color,
+            self.right_color,
+            self.fixed_input,
+            self.domain_color,
+            self.collapsed_inputs,
+            self.closure_kind,
+        )
+
+    @property
     def companion_outputs_distinct(self) -> bool:
         return self.companion_outputs[0] != self.companion_outputs[1]
 
@@ -1337,6 +1403,27 @@ class MissingTriangularPartialConstantContinuationRouteAudit:
     rows: Tuple[MissingTriangularPartialConstantContinuationRouteRow, ...]
 
     @property
+    def duplicate_route_keys(
+        self,
+    ) -> Tuple[
+        Tuple[
+            str,
+            Color,
+            Color,
+            FibrePoint,
+            Color,
+            Tuple[FibrePoint, FibrePoint],
+            str,
+        ],
+        ...,
+    ]:
+        return _duplicate_values(tuple(row.route_key for row in self.rows))
+
+    @property
+    def route_ledgers_duplicate_free(self) -> bool:
+        return not self.duplicate_route_keys
+
+    @property
     def routed_rows(
         self,
     ) -> Tuple[MissingTriangularPartialConstantContinuationRouteRow, ...]:
@@ -1358,7 +1445,11 @@ class MissingTriangularPartialConstantContinuationRouteAudit:
 
     @property
     def all_partial_constant_edges_route_to_continuation(self) -> bool:
-        return bool(self.rows) and not self.unrouted_rows
+        return (
+            bool(self.rows)
+            and self.route_ledgers_duplicate_free
+            and not self.unrouted_rows
+        )
 
 
 @dataclass(frozen=True)

@@ -12543,18 +12543,10 @@ class PostLinearRemainingFiniteSystemAudit:
             return False
         route_by_key = {}
         if self.missing_triangular_partial_constant_continuation_route is not None:
-            route_by_key = {
-                (
-                    row.side,
-                    row.left_color,
-                    row.right_color,
-                    row.fixed_input,
-                    row.domain_color,
-                    row.collapsed_inputs,
-                    row.closure_kind,
-                ): row
-                for row in self.missing_triangular_partial_constant_continuation_route.rows
-            }
+            route_audit = self.missing_triangular_partial_constant_continuation_route
+            if not route_audit.route_ledgers_duplicate_free:
+                return False
+            route_by_key = {row.route_key: row for row in route_audit.rows}
         for row in closure_rows:
             if row.closure_is_proper:
                 continue
@@ -12581,6 +12573,10 @@ class PostLinearRemainingFiniteSystemAudit:
         if (
             self.missing_triangular_partial_constant_closure is None
             or self.missing_triangular_partial_constant_continuation_route is None
+            or not (
+                self.missing_triangular_partial_constant_continuation_route
+                .route_ledgers_duplicate_free
+            )
         ):
             return False
         closure_rows = tuple(
@@ -12591,15 +12587,7 @@ class PostLinearRemainingFiniteSystemAudit:
         if not closure_rows:
             return False
         route_by_key = {
-            (
-                row.side,
-                row.left_color,
-                row.right_color,
-                row.fixed_input,
-                row.domain_color,
-                row.collapsed_inputs,
-                row.closure_kind,
-            ): row
+            row.route_key: row
             for row in self.missing_triangular_partial_constant_continuation_route.rows
         }
         for row in closure_rows:
@@ -12679,6 +12667,10 @@ class PostLinearRemainingFiniteSystemAudit:
         if (
             self.triangular_latin_defect_closure is None
             or self.triangular_constant_kernel_recovery_route is None
+            or not (
+                self.triangular_constant_kernel_recovery_route
+                .route_ledgers_duplicate_free
+            )
         ):
             return False
         closure_rows = tuple(
@@ -12691,14 +12683,7 @@ class PostLinearRemainingFiniteSystemAudit:
         if not closure_rows:
             return False
         route_by_key = {
-            (
-                row.side,
-                row.left_color,
-                row.right_color,
-                row.domain_color,
-                row.collapsed_inputs,
-                row.closure_kind,
-            ): row
+            row.route_key: row
             for row in self.triangular_constant_kernel_recovery_route.rows
         }
         for row in closure_rows:
@@ -17631,6 +17616,10 @@ class PostLinearRemainingFiniteSystemAudit:
                                 for row in route.unrouted_universal_rows
                             ),
                         ),
+                        (
+                            "triangular_constant_kernel_duplicate_recovery_route_keys",
+                            route.duplicate_route_keys,
+                        ),
                     )
                 )
             if self.missing_triangular_row_profile is not None:
@@ -17951,6 +17940,10 @@ class PostLinearRemainingFiniteSystemAudit:
                                 for row in relevant_route_rows
                                 if not row.routes_to_universal_continuation_seed
                             ),
+                        ),
+                        (
+                            "missing_triangular_partial_constant_duplicate_route_keys",
+                            route.duplicate_route_keys,
                         ),
                     )
                 )

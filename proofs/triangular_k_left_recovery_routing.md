@@ -63,6 +63,7 @@ records:
 ```text
 triangular_constant_kernel_recovery_route_rows
 triangular_constant_kernel_unrouted_universal_rows
+triangular_constant_kernel_duplicate_recovery_route_keys
 ```
 
 inside the post-linear finite-system payload.
@@ -71,6 +72,18 @@ For a routed row, the audit stores the concrete output pairs witnessing each
 recovered input.  In the left triangular case these are output pairs
 `(u,v)` whose recovery table has `recovered_left_input=x`; in the right
 triangular case they are output pairs with `recovered_right_input=y`.
+
+The recovery route ledger is keyed by:
+
+```text
+(side, left_color, right_color, domain_color, collapsed_inputs, closure_kind).
+```
+
+[Proved, audit-side] This keyed ledger must be duplicate-free.  If two route
+rows share the same key, even with different witness output pairs, the
+post-linear wrapper refuses to route the constant-map kernel reason to System
+U.  This prevents a duplicate or conflicting recovery row from overwriting
+the actual route data before the U endpoint observer is constructed.
 
 ## Consequence for K-left
 
@@ -126,9 +139,9 @@ right_constant_map_universal_kernel
 is removed from `live_k_missing_latin_row_defects` when the supplied
 `triangular_latin_defect_closure_audit` records all of its constant-map kernel
 edges as proper closures or as universal closures, and every universal edge is
-separated by `triangular_constant_kernel_recovery_route_audit`.  Other live
-defects for the same colour pair remain live; the route removes only the
-constant-map kernel reason it certifies.
+separated by a duplicate-free `triangular_constant_kernel_recovery_route_audit`.
+Other live defects for the same colour pair remain live; the route removes
+only the constant-map kernel reason it certifies.
 The removed reason is recorded in
 `recovery_routed_k_missing_latin_row_defects`.  If no other live K reason
 remains, the post-linear wrapper now reports the downstream
