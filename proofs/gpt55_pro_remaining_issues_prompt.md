@@ -1744,6 +1744,13 @@ the identity observer constructor may consume it only when
 `derive_singleton_fibre_residual_faithfulness=True`.  This closes only the
 singleton-fibre subcase and does not solve nontrivial U/C/M endpoint
 observers.
+All three automatic residual-faithfulness helpers must preserve the full
+supplied routed seed-state ledger in the theorem.  They may use only
+well-formed U/C/M seed states to emit schematic rows, but malformed,
+wrong-family, or unhashable seed-state entries must remain in the expected
+and covered theorem ledgers and must make the theorem fail.  No automatic
+helper may silently discard bad seed data and prove residual faithfulness for
+a smaller endpoint scope.
 The post-linear proof object should retain the resulting endpoint-observer
 build record, not only the derived signed-generator audit.  A complete
 certificate should expose whether the build is present, whether it proves the

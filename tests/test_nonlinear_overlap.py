@@ -5186,6 +5186,28 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             * 3,
         )
 
+        malformed_seed_residual = universal_k_strict_identity_residual_faithfulness_audit(
+            interval,
+            (
+                ("U", ("*", "*", "U_seed")),
+                ("U", ["not", "a", "tuple"]),
+                ("Z", ("*", "*", "unknown_family_seed")),
+            ),
+        )
+        self.assertFalse(malformed_seed_residual.proves_residual_faithfulness)
+        self.assertIn(
+            ("U", ["not", "a", "tuple"]),
+            malformed_seed_residual.malformed_expected_endpoint_seed_states,
+        )
+        self.assertIn(
+            ("Z", ("*", "*", "unknown_family_seed")),
+            malformed_seed_residual.malformed_expected_endpoint_seed_states,
+        )
+        self.assertIn(
+            "residual_faithfulness_malformed_seed_states",
+            malformed_seed_residual.failure_reasons,
+        )
+
         family_audit = universal_k_identity_endpoint_observer_builds_by_family(
             interval,
             seed_entries,

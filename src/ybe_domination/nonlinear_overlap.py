@@ -3055,15 +3055,14 @@ def _universal_k_trivial_residual_faithfulness_audit(
     row_reason: str,
     theorem_holds: bool,
 ) -> UniversalKResidualFaithfulnessAudit:
-    seed_states = _unique_values(
-        tuple(
-            state
-            for state in endpoint_seed_states
-            if _universal_k_endpoint_seed_state_well_formed(state)
-        )
+    seed_states = _unique_values(tuple(endpoint_seed_states))
+    valid_seed_states = tuple(
+        state
+        for state in seed_states
+        if _universal_k_endpoint_seed_state_well_formed(state)
     )
     active_families = tuple(
-        sorted({family for family, _seed_state in seed_states}, key=repr)
+        sorted({family for family, _seed_state in valid_seed_states}, key=repr)
     )
     expected_input_tuples = tuple(
         ("all_residual_fibre_tuples", family, row_reason)
@@ -3074,7 +3073,7 @@ def _universal_k_trivial_residual_faithfulness_audit(
         row_list = []
         for family in active_families:
             family_seed_states = tuple(
-                state for state in seed_states if state[0] == family
+                state for state in valid_seed_states if state[0] == family
             )
             input_tuple = ("all_residual_fibre_tuples", family, row_reason)
             row_list.append(
