@@ -863,6 +863,12 @@ They must not carry primitive endpoint emissions.  Any non-`None` endpoint
 value in such a raw monodromy row is stale emission data and is rejected
 before the observer is constructed; the actual endpoint labels must be the
 constant coboundary defects forced by `rho_E` and the templates `W_s`.
+The direct coboundary constructor applies the same admissible-row filter:
+malformed next states and stale primitive emissions do not seed the reachable
+monodromy closure and do not produce word-potential identity rows.  The
+family-level audit remains the diagnostic front door for reporting those bad
+raw rows, while the lower-level constructor cannot use them to derive hidden
+emissions.
 Restricted detector-domain maps are checked at the same entry-key granularity
 as the positive monodromy table.  Every assignment key must be a well-formed
 positive entry key for the same endpoint family and, when the interval is

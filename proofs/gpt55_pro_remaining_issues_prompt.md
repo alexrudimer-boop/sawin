@@ -1724,6 +1724,11 @@ must not carry primitive endpoint emissions.  A non-None endpoint value in a
 raw positive monodromy row is stale emission data and must be rejected before
 construction; the actual emitted labels must be exactly the constant
 coboundary defects forced by rho_E and W_s.
+The direct coboundary constructor must apply the same admissible-row filter:
+malformed next states and stale primitive emissions may not seed the
+reachable monodromy closure and may not produce word-potential identity rows.
+The family-level audit should report such bad raw rows, while the lower-level
+constructor must be unable to use them to derive hidden emissions.
 Restricted detector-domain assignments are also entry-key scoped.  Each
 assignment map key must be a well-formed positive signed endpoint entry for
 the same endpoint family as the family row, and, when the interval table is

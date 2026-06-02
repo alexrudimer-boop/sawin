@@ -1263,6 +1263,22 @@ def _universal_k_endpoint_seed_state_well_formed(state: object) -> bool:
     )
 
 
+def _universal_k_positive_monodromy_state_row_well_formed(
+    row: object,
+    endpoint_family: object | None = None,
+) -> bool:
+    return (
+        isinstance(row, UniversalKSignedEndpointGeneratorRow)
+        and (endpoint_family is None or row.endpoint_family == endpoint_family)
+        and row.sign == 1
+        and _universal_k_is_positive_entry_key(row.entry_key)
+        and row.endpoint_value is None
+        and _universal_k_endpoint_seed_state_well_formed(
+            (row.endpoint_family, row.next_seed_state)
+        )
+    )
+
+
 def _universal_k_cutoff_seed_state_well_formed(state: object) -> bool:
     return (
         _universal_k_endpoint_seed_state_well_formed(state)
@@ -9322,14 +9338,7 @@ def _universal_k_monodromy_positive_rows_package_valid(
     except TypeError:
         return False
     return all(
-        isinstance(row, UniversalKSignedEndpointGeneratorRow)
-        and row.endpoint_family == endpoint_family
-        and row.sign == 1
-        and _universal_k_is_positive_entry_key(row.entry_key)
-        and row.endpoint_value is None
-        and _universal_k_endpoint_seed_state_well_formed(
-            (endpoint_family, row.next_seed_state)
-        )
+        _universal_k_positive_monodromy_state_row_well_formed(row, endpoint_family)
         for row in row_tuple
     )
 
@@ -11593,9 +11602,7 @@ def _universal_k_positive_monodromy_state_closure(
     while changed:
         changed = False
         for row in positive_state_rows:
-            if not isinstance(row, UniversalKSignedEndpointGeneratorRow):
-                continue
-            if row.sign != 1 or row.endpoint_family not in UNIVERSAL_K_ENDPOINT_FAMILIES:
+            if not _universal_k_positive_monodromy_state_row_well_formed(row):
                 continue
             source = (row.endpoint_family, row.seed_state)
             target = (row.endpoint_family, row.next_seed_state)
@@ -11740,10 +11747,10 @@ def universal_k_word_potential_certificate_from_monodromy(
 
     identity_rows = []
     for row in positive_state_rows:
-        if not isinstance(row, UniversalKSignedEndpointGeneratorRow):
+        if not _universal_k_positive_monodromy_state_row_well_formed(row):
             continue
         key = row.entry_key
-        if row.sign != 1 or _value_marker(key) not in required_key_markers:
+        if _value_marker(key) not in required_key_markers:
             continue
         source_state = (row.endpoint_family, row.seed_state)
         next_state = (row.endpoint_family, row.next_seed_state)

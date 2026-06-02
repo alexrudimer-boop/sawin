@@ -8846,6 +8846,48 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             {None},
         )
 
+    def test_word_potential_certificate_from_monodromy_filters_invalid_raw_rows(self):
+        interval = one_color_identity_interval()
+        group = cyclic_group(2)
+        seed_state = ("*", "*", "left_constant_map_universal_kernel")
+        seed_key = ("U", seed_state)
+        seed_entries = ((("*", "*", "L", "constant_map_kernel", (0, 1)), seed_key),)
+        stale_emission_row = UniversalKSignedEndpointGeneratorRow(
+            endpoint_family="U",
+            seed_state=seed_state,
+            sign=1,
+            left_color="*",
+            right_color="*",
+            input_left=0,
+            input_right=0,
+            output_left=0,
+            output_right=0,
+            next_seed_state=seed_state,
+            endpoint_value=group.identity,
+        )
+        malformed_next_row = replace(
+            stale_emission_row,
+            endpoint_value=None,
+            next_seed_state=["not", "a", "tuple"],
+        )
+
+        certificate = universal_k_word_potential_certificate_from_monodromy(
+            interval,
+            seed_entries,
+            group,
+            ((seed_key, ()),),
+            (stale_emission_row, malformed_next_row),
+        )
+
+        self.assertEqual(certificate.identity_row_objects, ())
+        self.assertEqual(
+            universal_k_endpoint_observer_positive_rows_from_word_potential(
+                interval,
+                certificate,
+            ),
+            (),
+        )
+
     def test_monodromy_family_input_audit_reports_raw_package_scope(self):
         group = cyclic_group(2)
         seed_u = ("*", "*", "left_constant_map_universal_kernel")
