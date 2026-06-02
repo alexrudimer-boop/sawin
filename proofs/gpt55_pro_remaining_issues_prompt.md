@@ -1537,6 +1537,26 @@ family-build diagnostics.  Extra, stale, malformed, or unproved family data
 does not close anything; it remains diagnostic unless it matches the current
 routed endpoint families and passes target, cutoff, product, and
 residual-faithfulness checks.
+The raw monodromy-coboundary input package must itself be audited before it
+is used.  The finite input ledger must cover exactly the active routed
+families hit by `kappa`, with no duplicate family rows and no stale extra
+families.  For each active family it must supply:
+
+```text
+H_E or S_mE,
+state-indexed templates W_s,
+positive monodromy rows defining F^E_r,
+and, when a restricted detector domain is used, detector-domain assignments
+plus soundness witnesses.
+```
+
+Malformed endpoint-group rows, malformed template rows, positive monodromy
+rows from the wrong family or wrong sign, unknown family names, missing
+active families, extra stale families, and restricted detector-domain
+assignments without soundness witnesses are finite input-ledger failures.
+They must not be interpreted as an unproved observer with unspecified
+emissions.  A valid monodromy-derived observer begins only after this raw
+package ledger is exact.
 The executable audit also has a canonical identity-emission constructor
 `universal_k_identity_endpoint_observer_builds_by_family(...)`.  It builds
 the identity monodromy-coboundary candidate for every active family in the
@@ -2068,6 +2088,9 @@ word_potential_identity_rows_are_finite_row_objects,
 monodromy_coboundary_emissions_derived_from_rho_and_W,
 family_observers_derived_from_monodromy_coboundary_data,
 post_linear_audit_consumes_monodromy_coboundary_family_data,
+monodromy_family_raw_input_ledger_exact,
+monodromy_family_raw_input_reports_missing_extra_duplicate_and_malformed_rows,
+monodromy_family_raw_detector_domains_require_soundness_witnesses,
 restricted_detector_domains_have_soundness_witnesses,
 word_potential_templates_use_only_current_longitude_variables,
 word_potential_artin_substitution_from_detector_recurrence,

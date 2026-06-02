@@ -783,6 +783,18 @@ from those monodromy inputs, and retains the same family-build diagnostics in
 the post-linear proof object.  A stale or extra family still remains only
 diagnostic data unless it matches the current routed endpoint families and
 passes target, cutoff, product, and residual-faithfulness checks.
+The monodromy handoff now also has its own front-door ledger,
+`UniversalKMonodromyFamilyInputAudit`, exposed by
+`universal_k_monodromy_family_input_audit(...)`.  Before any observer is
+derived, it checks the raw finite package family-by-family: fixed endpoint
+groups, state-indexed word-potential templates, positive monodromy state
+rows, optional detector-domain assignments, and optional detector-domain
+soundness witnesses.  It reports malformed rows, unknown U/C/M family names,
+duplicates, missing active families, extra stale families, and detector-domain
+assignments without soundness witnesses.  The monodromy-derived family build
+attaches this audit and requires it to be exact, so a missing `rho_E`, `W_E`,
+`H_E`, or detector-domain witness is now a finite ledger failure rather than
+an opaque missing observer.
 The builder reads only actual word-potential identity row objects when forcing
 positive endpoint rows.  Malformed tuple-shaped identity entries remain in
 the word-potential certificate as certificate errors and cause the observer to

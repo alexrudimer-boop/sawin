@@ -44,6 +44,7 @@ from ybe_domination import (
     UniversalKEndpointObserverBuild,
     UniversalKEndpointObserverFamilyBuildAudit,
     UniversalKEndpointTargetAudit,
+    UniversalKMonodromyFamilyInputAudit,
     UniversalKResidualActionScopeAudit,
     UniversalKResidualFaithfulnessAudit,
     UniversalKResidualFaithfulnessRow,
@@ -100,6 +101,7 @@ from ybe_domination import (
     universal_k_endpoint_observer_positive_rows_from_word_potential,
     universal_k_endpoint_observer_signed_rows_from_positive,
     universal_k_word_potential_certificate_from_monodromy,
+    universal_k_monodromy_family_input_audit,
     universal_k_identity_cutoff_readout_audit,
     universal_k_identity_endpoint_observer_builds_by_family,
     universal_k_identity_word_potential_certificate,
@@ -6810,6 +6812,15 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
 
         self.assertEqual(family_audit.failure_reasons, ())
         self.assertTrue(family_audit.proves_family_endpoint_observers)
+        self.assertIsInstance(
+            family_audit.monodromy_family_input_audit,
+            UniversalKMonodromyFamilyInputAudit,
+        )
+        self.assertTrue(family_audit.monodromy_family_input_audit.input_rows_exact)
+        self.assertEqual(
+            family_audit.monodromy_family_input_audit.candidate_families_exact,
+            ("U",),
+        )
 
         full_domain_certificate = universal_k_word_potential_certificate_from_monodromy(
             interval,
@@ -6826,6 +6837,79 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
                 failure[1]
                 for failure in full_domain_certificate.coboundary_defect_failures
             ),
+        )
+
+    def test_monodromy_family_input_audit_reports_raw_package_scope(self):
+        group = cyclic_group(2)
+        seed_u = ("*", "*", "left_constant_map_universal_kernel")
+        seed_c = ("*", "*", "partial_constant_seed")
+        seed_entries = (
+            (("*", "*", "L", "constant_map_kernel", (0, 1)), ("U", seed_u)),
+            (("*", "*", "L", "partial_constant_hidden_rank_loss", (0, 1)), ("C", seed_c)),
+        )
+
+        audit = universal_k_monodromy_family_input_audit(
+            seed_entries,
+            endpoint_groups_by_family=(
+                ("U", group),
+                ("U", group),
+                ("C", "not-a-group"),
+                ("M", group),
+                ("unknown", group),
+                ("bad-row",),
+            ),
+            word_potential_templates_by_family=(
+                ("U", ((("U", seed_u), ()),)),
+                ("C", ((("U", seed_u), ()),)),
+            ),
+            positive_state_rows_by_family=(("U", ()),),
+            detector_domain_assignments_by_family=(("U", {}), ("M", {})),
+            detector_domain_soundness_witnesses_by_family=(("M", {}),),
+        )
+
+        self.assertFalse(audit.input_rows_exact)
+        self.assertEqual(audit.expected_endpoint_families_exact, ("C", "U"))
+        self.assertEqual(audit.candidate_families_exact, ("U",))
+        self.assertEqual(audit.missing_candidate_families, ("C",))
+        self.assertIn(
+            "endpoint_observer_monodromy_endpoint_groups_malformed_rows",
+            audit.failure_reasons,
+        )
+        self.assertIn(
+            "endpoint_observer_monodromy_endpoint_groups_unknown_families",
+            audit.failure_reasons,
+        )
+        self.assertIn(
+            "endpoint_observer_monodromy_endpoint_groups_duplicate_families",
+            audit.failure_reasons,
+        )
+        self.assertIn(
+            "endpoint_observer_monodromy_endpoint_groups_missing_families",
+            audit.failure_reasons,
+        )
+        self.assertIn(
+            "endpoint_observer_monodromy_endpoint_groups_extra_families",
+            audit.failure_reasons,
+        )
+        self.assertIn(
+            "endpoint_observer_monodromy_templates_malformed_rows",
+            audit.failure_reasons,
+        )
+        self.assertIn(
+            "endpoint_observer_monodromy_positive_rows_missing_families",
+            audit.failure_reasons,
+        )
+        self.assertIn(
+            "endpoint_observer_monodromy_detector_domains_extra_families",
+            audit.failure_reasons,
+        )
+        self.assertIn(
+            "endpoint_observer_monodromy_detector_witnesses_missing_for_domains",
+            audit.failure_reasons,
+        )
+        self.assertIn(
+            "endpoint_observer_monodromy_candidate_families_missing",
+            audit.failure_reasons,
         )
 
     def test_word_potential_certificate_must_match_signed_rows(self):
@@ -10637,6 +10721,20 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertIn(
             ("endpoint_observer_family_build_extra_families", ("U",)),
             audit.routed_endpoint_obstruction_data,
+        )
+        self.assertIn(
+            ("endpoint_observer_monodromy_input_present", True),
+            audit.routed_endpoint_obstruction_data,
+        )
+        self.assertIn(
+            ("endpoint_observer_monodromy_candidate_families", ("U",)),
+            audit.routed_endpoint_obstruction_data,
+        )
+        self.assertIn(
+            "endpoint_observer_monodromy_no_active_families",
+            dict(audit.routed_endpoint_obstruction_data)[
+                "endpoint_observer_monodromy_failure_reasons"
+            ],
         )
 
     def test_post_linear_function_derives_identity_endpoint_observer_candidates(self):

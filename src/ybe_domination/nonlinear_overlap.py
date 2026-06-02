@@ -8398,6 +8398,569 @@ class UniversalKEndpointObserverBuild:
         )
 
 
+def _universal_k_nonstring_sequence(value: object) -> bool:
+    return isinstance(value, Sequence) and not isinstance(
+        value,
+        (str, bytes, bytearray),
+    )
+
+
+def _universal_k_monodromy_template_package_valid(
+    endpoint_family: object,
+    templates: object,
+) -> bool:
+    if not _universal_k_nonstring_sequence(templates):
+        return False
+    try:
+        template_rows = tuple(templates)
+    except TypeError:
+        return False
+    for template_row in template_rows:
+        parts = _universal_k_word_potential_template_row_parts(template_row)
+        if parts is None:
+            return False
+        seed_state, word = parts
+        if (
+            not _universal_k_endpoint_seed_state_well_formed(seed_state)
+            or seed_state[0] != endpoint_family
+            or not _universal_k_nonstring_sequence(word)
+            or _universal_k_word_potential_word_failures(tuple(word))
+        ):
+            return False
+    return True
+
+
+def _universal_k_monodromy_positive_rows_package_valid(
+    endpoint_family: object,
+    rows: object,
+) -> bool:
+    if not _universal_k_nonstring_sequence(rows):
+        return False
+    try:
+        row_tuple = tuple(rows)
+    except TypeError:
+        return False
+    return all(
+        isinstance(row, UniversalKSignedEndpointGeneratorRow)
+        and row.endpoint_family == endpoint_family
+        and row.sign == 1
+        for row in row_tuple
+    )
+
+
+@dataclass(frozen=True)
+class UniversalKMonodromyFamilyInputAudit:
+    """Front-door ledger for finite monodromy-coboundary observer inputs.
+
+    The ordinary family-build audit checks the constructed observers.  This
+    audit checks the smaller raw package from which those observers are
+    derived: endpoint targets, word-potential templates, positive monodromy
+    rows, and optional sound detector-domain ledgers.  It is diagnostic only
+    unless it is attached to a family build.
+    """
+
+    seed_classifier_entries: Tuple[UniversalKSeedClassifierEntry, ...]
+    endpoint_group_rows: Tuple[object, ...] = ()
+    word_potential_template_rows: Tuple[object, ...] = ()
+    positive_state_rows: Tuple[object, ...] = ()
+    detector_domain_assignment_rows: Tuple[object, ...] = ()
+    detector_domain_soundness_witness_rows: Tuple[object, ...] = ()
+
+    @property
+    def expected_seed_states(
+        self,
+    ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
+        return universal_k_signed_endpoint_seed_states(self.seed_classifier_entries)
+
+    @property
+    def expected_endpoint_families_exact(self) -> Tuple[str, ...]:
+        return tuple(
+            sorted(
+                {
+                    state[0]
+                    for state in self.expected_seed_states
+                    if _universal_k_endpoint_seed_state_well_formed(state)
+                },
+                key=repr,
+            )
+        )
+
+    @staticmethod
+    def _parts(rows: Tuple[object, ...]) -> Tuple[Tuple[object, object], ...]:
+        return tuple(
+            parts
+            for row in rows
+            for parts in (_universal_k_two_field_row_parts(row),)
+            if parts is not None
+        )
+
+    @staticmethod
+    def _valid_parts(
+        rows: Tuple[object, ...],
+        value_predicate,
+    ) -> Tuple[Tuple[str, object], ...]:
+        return tuple(
+            (family, value)
+            for family, value in UniversalKMonodromyFamilyInputAudit._parts(rows)
+            if _is_hashable(family)
+            and family in UNIVERSAL_K_ENDPOINT_FAMILIES
+            and value_predicate(family, value)
+        )
+
+    @staticmethod
+    def _malformed_rows(
+        rows: Tuple[object, ...],
+        value_predicate,
+    ) -> Tuple[object, ...]:
+        malformed = []
+        for row in rows:
+            parts = _universal_k_two_field_row_parts(row)
+            if parts is None:
+                malformed.append(row)
+                continue
+            family, value = parts
+            if (
+                _is_hashable(family)
+                and family in UNIVERSAL_K_ENDPOINT_FAMILIES
+                and not value_predicate(family, value)
+            ):
+                malformed.append(row)
+        return _unique_values(tuple(malformed))
+
+    @staticmethod
+    def _invalid_families(rows: Tuple[object, ...]) -> Tuple[object, ...]:
+        return _unique_values(
+            tuple(
+                family
+                for family, _value in UniversalKMonodromyFamilyInputAudit._parts(rows)
+                if (
+                    not _is_hashable(family)
+                    or family not in UNIVERSAL_K_ENDPOINT_FAMILIES
+                )
+            )
+        )
+
+    @staticmethod
+    def _families_exact(
+        rows: Tuple[object, ...],
+        value_predicate,
+    ) -> Tuple[str, ...]:
+        return tuple(
+            sorted(
+                {
+                    family
+                    for family, _value in UniversalKMonodromyFamilyInputAudit._valid_parts(
+                        rows,
+                        value_predicate,
+                    )
+                },
+                key=repr,
+            )
+        )
+
+    @staticmethod
+    def _duplicate_families(
+        rows: Tuple[object, ...],
+        value_predicate,
+    ) -> Tuple[str, ...]:
+        return _duplicate_values(
+            tuple(
+                family
+                for family, _value in UniversalKMonodromyFamilyInputAudit._valid_parts(
+                    rows,
+                    value_predicate,
+                )
+            )
+        )
+
+    def _missing_families(
+        self,
+        rows: Tuple[object, ...],
+        value_predicate,
+    ) -> Tuple[str, ...]:
+        covered = set(self._families_exact(rows, value_predicate))
+        return tuple(
+            family
+            for family in self.expected_endpoint_families_exact
+            if family not in covered
+        )
+
+    def _extra_families(
+        self,
+        rows: Tuple[object, ...],
+        value_predicate,
+    ) -> Tuple[str, ...]:
+        expected = set(self.expected_endpoint_families_exact)
+        return tuple(
+            family
+            for family in self._families_exact(rows, value_predicate)
+            if family not in expected
+        )
+
+    @staticmethod
+    def _endpoint_group_predicate(_family: object, value: object) -> bool:
+        return isinstance(value, FiniteGroup)
+
+    @staticmethod
+    def _template_predicate(family: object, value: object) -> bool:
+        return _universal_k_monodromy_template_package_valid(family, value)
+
+    @staticmethod
+    def _positive_rows_predicate(family: object, value: object) -> bool:
+        return _universal_k_monodromy_positive_rows_package_valid(family, value)
+
+    @staticmethod
+    def _mapping_predicate(_family: object, value: object) -> bool:
+        return hasattr(value, "get") and hasattr(value, "items")
+
+    @property
+    def endpoint_group_families_exact(self) -> Tuple[str, ...]:
+        return self._families_exact(
+            self.endpoint_group_rows,
+            self._endpoint_group_predicate,
+        )
+
+    @property
+    def malformed_endpoint_group_rows(self) -> Tuple[object, ...]:
+        return self._malformed_rows(
+            self.endpoint_group_rows,
+            self._endpoint_group_predicate,
+        )
+
+    @property
+    def invalid_endpoint_group_families(self) -> Tuple[object, ...]:
+        return self._invalid_families(self.endpoint_group_rows)
+
+    @property
+    def duplicate_endpoint_group_families(self) -> Tuple[str, ...]:
+        return self._duplicate_families(
+            self.endpoint_group_rows,
+            self._endpoint_group_predicate,
+        )
+
+    @property
+    def missing_endpoint_group_families(self) -> Tuple[str, ...]:
+        return self._missing_families(
+            self.endpoint_group_rows,
+            self._endpoint_group_predicate,
+        )
+
+    @property
+    def extra_endpoint_group_families(self) -> Tuple[str, ...]:
+        return self._extra_families(
+            self.endpoint_group_rows,
+            self._endpoint_group_predicate,
+        )
+
+    @property
+    def template_families_exact(self) -> Tuple[str, ...]:
+        return self._families_exact(
+            self.word_potential_template_rows,
+            self._template_predicate,
+        )
+
+    @property
+    def malformed_template_rows(self) -> Tuple[object, ...]:
+        return self._malformed_rows(
+            self.word_potential_template_rows,
+            self._template_predicate,
+        )
+
+    @property
+    def invalid_template_families(self) -> Tuple[object, ...]:
+        return self._invalid_families(self.word_potential_template_rows)
+
+    @property
+    def duplicate_template_families(self) -> Tuple[str, ...]:
+        return self._duplicate_families(
+            self.word_potential_template_rows,
+            self._template_predicate,
+        )
+
+    @property
+    def missing_template_families(self) -> Tuple[str, ...]:
+        return self._missing_families(
+            self.word_potential_template_rows,
+            self._template_predicate,
+        )
+
+    @property
+    def extra_template_families(self) -> Tuple[str, ...]:
+        return self._extra_families(
+            self.word_potential_template_rows,
+            self._template_predicate,
+        )
+
+    @property
+    def positive_state_row_families_exact(self) -> Tuple[str, ...]:
+        return self._families_exact(
+            self.positive_state_rows,
+            self._positive_rows_predicate,
+        )
+
+    @property
+    def malformed_positive_state_rows(self) -> Tuple[object, ...]:
+        return self._malformed_rows(
+            self.positive_state_rows,
+            self._positive_rows_predicate,
+        )
+
+    @property
+    def invalid_positive_state_row_families(self) -> Tuple[object, ...]:
+        return self._invalid_families(self.positive_state_rows)
+
+    @property
+    def duplicate_positive_state_row_families(self) -> Tuple[str, ...]:
+        return self._duplicate_families(
+            self.positive_state_rows,
+            self._positive_rows_predicate,
+        )
+
+    @property
+    def missing_positive_state_row_families(self) -> Tuple[str, ...]:
+        return self._missing_families(
+            self.positive_state_rows,
+            self._positive_rows_predicate,
+        )
+
+    @property
+    def extra_positive_state_row_families(self) -> Tuple[str, ...]:
+        return self._extra_families(
+            self.positive_state_rows,
+            self._positive_rows_predicate,
+        )
+
+    @property
+    def detector_domain_assignment_families_exact(self) -> Tuple[str, ...]:
+        return self._families_exact(
+            self.detector_domain_assignment_rows,
+            self._mapping_predicate,
+        )
+
+    @property
+    def malformed_detector_domain_assignment_rows(self) -> Tuple[object, ...]:
+        return self._malformed_rows(
+            self.detector_domain_assignment_rows,
+            self._mapping_predicate,
+        )
+
+    @property
+    def invalid_detector_domain_assignment_families(self) -> Tuple[object, ...]:
+        return self._invalid_families(self.detector_domain_assignment_rows)
+
+    @property
+    def duplicate_detector_domain_assignment_families(self) -> Tuple[str, ...]:
+        return self._duplicate_families(
+            self.detector_domain_assignment_rows,
+            self._mapping_predicate,
+        )
+
+    @property
+    def extra_detector_domain_assignment_families(self) -> Tuple[str, ...]:
+        return self._extra_families(
+            self.detector_domain_assignment_rows,
+            self._mapping_predicate,
+        )
+
+    @property
+    def detector_domain_witness_families_exact(self) -> Tuple[str, ...]:
+        return self._families_exact(
+            self.detector_domain_soundness_witness_rows,
+            self._mapping_predicate,
+        )
+
+    @property
+    def malformed_detector_domain_witness_rows(self) -> Tuple[object, ...]:
+        return self._malformed_rows(
+            self.detector_domain_soundness_witness_rows,
+            self._mapping_predicate,
+        )
+
+    @property
+    def invalid_detector_domain_witness_families(self) -> Tuple[object, ...]:
+        return self._invalid_families(self.detector_domain_soundness_witness_rows)
+
+    @property
+    def duplicate_detector_domain_witness_families(self) -> Tuple[str, ...]:
+        return self._duplicate_families(
+            self.detector_domain_soundness_witness_rows,
+            self._mapping_predicate,
+        )
+
+    @property
+    def extra_detector_domain_witness_families(self) -> Tuple[str, ...]:
+        return self._extra_families(
+            self.detector_domain_soundness_witness_rows,
+            self._mapping_predicate,
+        )
+
+    @property
+    def missing_detector_domain_witness_families(self) -> Tuple[str, ...]:
+        witnesses = set(self.detector_domain_witness_families_exact)
+        return tuple(
+            family
+            for family in self.detector_domain_assignment_families_exact
+            if family not in witnesses
+        )
+
+    @property
+    def extra_detector_domain_witness_without_assignment_families(
+        self,
+    ) -> Tuple[str, ...]:
+        assignments = set(self.detector_domain_assignment_families_exact)
+        return tuple(
+            family
+            for family in self.detector_domain_witness_families_exact
+            if family not in assignments
+        )
+
+    @property
+    def candidate_families_exact(self) -> Tuple[str, ...]:
+        return tuple(
+            sorted(
+                set(self.endpoint_group_families_exact)
+                & set(self.template_families_exact)
+                & set(self.positive_state_row_families_exact),
+                key=repr,
+            )
+        )
+
+    @property
+    def missing_candidate_families(self) -> Tuple[str, ...]:
+        candidates = set(self.candidate_families_exact)
+        return tuple(
+            family
+            for family in self.expected_endpoint_families_exact
+            if family not in candidates
+        )
+
+    @property
+    def input_rows_exact(self) -> bool:
+        return (
+            bool(self.expected_endpoint_families_exact)
+            and not self.malformed_endpoint_group_rows
+            and not self.invalid_endpoint_group_families
+            and not self.duplicate_endpoint_group_families
+            and not self.missing_endpoint_group_families
+            and not self.extra_endpoint_group_families
+            and not self.malformed_template_rows
+            and not self.invalid_template_families
+            and not self.duplicate_template_families
+            and not self.missing_template_families
+            and not self.extra_template_families
+            and not self.malformed_positive_state_rows
+            and not self.invalid_positive_state_row_families
+            and not self.duplicate_positive_state_row_families
+            and not self.missing_positive_state_row_families
+            and not self.extra_positive_state_row_families
+            and not self.malformed_detector_domain_assignment_rows
+            and not self.invalid_detector_domain_assignment_families
+            and not self.duplicate_detector_domain_assignment_families
+            and not self.extra_detector_domain_assignment_families
+            and not self.malformed_detector_domain_witness_rows
+            and not self.invalid_detector_domain_witness_families
+            and not self.duplicate_detector_domain_witness_families
+            and not self.extra_detector_domain_witness_families
+            and not self.missing_detector_domain_witness_families
+            and not self.extra_detector_domain_witness_without_assignment_families
+            and not self.missing_candidate_families
+        )
+
+    @property
+    def failure_reasons(self) -> Tuple[str, ...]:
+        reasons = []
+        if not self.expected_endpoint_families_exact:
+            reasons.append("endpoint_observer_monodromy_no_active_families")
+        if self.malformed_endpoint_group_rows:
+            reasons.append("endpoint_observer_monodromy_endpoint_groups_malformed_rows")
+        if self.invalid_endpoint_group_families:
+            reasons.append("endpoint_observer_monodromy_endpoint_groups_unknown_families")
+        if self.duplicate_endpoint_group_families:
+            reasons.append("endpoint_observer_monodromy_endpoint_groups_duplicate_families")
+        if self.missing_endpoint_group_families:
+            reasons.append("endpoint_observer_monodromy_endpoint_groups_missing_families")
+        if self.extra_endpoint_group_families:
+            reasons.append("endpoint_observer_monodromy_endpoint_groups_extra_families")
+        if self.malformed_template_rows:
+            reasons.append("endpoint_observer_monodromy_templates_malformed_rows")
+        if self.invalid_template_families:
+            reasons.append("endpoint_observer_monodromy_templates_unknown_families")
+        if self.duplicate_template_families:
+            reasons.append("endpoint_observer_monodromy_templates_duplicate_families")
+        if self.missing_template_families:
+            reasons.append("endpoint_observer_monodromy_templates_missing_families")
+        if self.extra_template_families:
+            reasons.append("endpoint_observer_monodromy_templates_extra_families")
+        if self.malformed_positive_state_rows:
+            reasons.append("endpoint_observer_monodromy_positive_rows_malformed_rows")
+        if self.invalid_positive_state_row_families:
+            reasons.append("endpoint_observer_monodromy_positive_rows_unknown_families")
+        if self.duplicate_positive_state_row_families:
+            reasons.append("endpoint_observer_monodromy_positive_rows_duplicate_families")
+        if self.missing_positive_state_row_families:
+            reasons.append("endpoint_observer_monodromy_positive_rows_missing_families")
+        if self.extra_positive_state_row_families:
+            reasons.append("endpoint_observer_monodromy_positive_rows_extra_families")
+        if self.malformed_detector_domain_assignment_rows:
+            reasons.append("endpoint_observer_monodromy_detector_domains_malformed_rows")
+        if self.invalid_detector_domain_assignment_families:
+            reasons.append("endpoint_observer_monodromy_detector_domains_unknown_families")
+        if self.duplicate_detector_domain_assignment_families:
+            reasons.append(
+                "endpoint_observer_monodromy_detector_domains_duplicate_families"
+            )
+        if self.extra_detector_domain_assignment_families:
+            reasons.append("endpoint_observer_monodromy_detector_domains_extra_families")
+        if self.malformed_detector_domain_witness_rows:
+            reasons.append(
+                "endpoint_observer_monodromy_detector_witnesses_malformed_rows"
+            )
+        if self.invalid_detector_domain_witness_families:
+            reasons.append(
+                "endpoint_observer_monodromy_detector_witnesses_unknown_families"
+            )
+        if self.duplicate_detector_domain_witness_families:
+            reasons.append(
+                "endpoint_observer_monodromy_detector_witnesses_duplicate_families"
+            )
+        if self.extra_detector_domain_witness_families:
+            reasons.append("endpoint_observer_monodromy_detector_witnesses_extra_families")
+        if self.missing_detector_domain_witness_families:
+            reasons.append(
+                "endpoint_observer_monodromy_detector_witnesses_missing_for_domains"
+            )
+        if self.extra_detector_domain_witness_without_assignment_families:
+            reasons.append(
+                "endpoint_observer_monodromy_detector_witnesses_without_domains"
+            )
+        if self.missing_candidate_families:
+            reasons.append("endpoint_observer_monodromy_candidate_families_missing")
+        return tuple(reasons)
+
+
+def universal_k_monodromy_family_input_audit(
+    seed_classifier_entries: Sequence[UniversalKSeedClassifierEntry],
+    endpoint_groups_by_family: Sequence[object],
+    word_potential_templates_by_family: Sequence[object],
+    positive_state_rows_by_family: Sequence[object],
+    *,
+    detector_domain_assignments_by_family: Sequence[object] = (),
+    detector_domain_soundness_witnesses_by_family: Sequence[object] = (),
+) -> UniversalKMonodromyFamilyInputAudit:
+    """Audit the raw U/C/M monodromy-coboundary package before construction."""
+
+    return UniversalKMonodromyFamilyInputAudit(
+        seed_classifier_entries=tuple(seed_classifier_entries),
+        endpoint_group_rows=tuple(endpoint_groups_by_family),
+        word_potential_template_rows=tuple(word_potential_templates_by_family),
+        positive_state_rows=tuple(positive_state_rows_by_family),
+        detector_domain_assignment_rows=tuple(detector_domain_assignments_by_family),
+        detector_domain_soundness_witness_rows=tuple(
+            detector_domain_soundness_witnesses_by_family
+        ),
+    )
+
+
 @dataclass(frozen=True)
 class UniversalKEndpointObserverFamilyBuildAudit:
     """Exact active-family ledger of constructed U/C/M endpoint observers."""
@@ -8412,6 +8975,7 @@ class UniversalKEndpointObserverFamilyBuildAudit:
     product_residual_faithfulness_theorem: (
         UniversalKResidualFaithfulnessAudit | None
     ) = None
+    monodromy_family_input_audit: UniversalKMonodromyFamilyInputAudit | None = None
 
     @property
     def expected_seed_states(
@@ -9125,6 +9689,10 @@ class UniversalKEndpointObserverFamilyBuildAudit:
             and not self.duplicate_build_families
             and self.certificate_input_rows_exact
             and self.auxiliary_input_rows_exact
+            and (
+                self.monodromy_family_input_audit is None
+                or self.monodromy_family_input_audit.input_rows_exact
+            )
             and not self.build_scope_failures
             and not self.unproved_build_families
         )
@@ -9276,6 +9844,8 @@ class UniversalKEndpointObserverFamilyBuildAudit:
             reasons.append("endpoint_observer_family_builds_scope_mismatch")
         if self.unproved_build_families:
             reasons.append("endpoint_observer_family_builds_not_proved")
+        if self.monodromy_family_input_audit is not None:
+            reasons.extend(self.monodromy_family_input_audit.failure_reasons)
         return tuple(reasons)
 
 
@@ -9703,6 +10273,7 @@ def universal_k_endpoint_observer_family_build_audit(
     product_residual_faithfulness_theorem: (
         UniversalKResidualFaithfulnessAudit | None
     ) = None,
+    monodromy_family_input_audit: UniversalKMonodromyFamilyInputAudit | None = None,
 ) -> UniversalKEndpointObserverFamilyBuildAudit:
     """Audit one constructed endpoint observer for each active U/C/M family."""
 
@@ -9715,6 +10286,7 @@ def universal_k_endpoint_observer_family_build_audit(
         cutoff_readout_audit_rows=tuple(cutoff_readout_audit_rows),
         residual_faithfulness_theorem_rows=tuple(residual_faithfulness_theorem_rows),
         product_residual_faithfulness_theorem=product_residual_faithfulness_theorem,
+        monodromy_family_input_audit=monodromy_family_input_audit,
     )
 
 
@@ -9737,6 +10309,19 @@ def _universal_k_family_object_map(
         ):
             continue
         mapped[family] = value
+    return mapped
+
+
+def _universal_k_monodromy_valid_family_map(
+    rows: Tuple[object, ...],
+    value_predicate,
+) -> Mapping[str, object]:
+    mapped: dict[str, object] = {}
+    for family, value in UniversalKMonodromyFamilyInputAudit._valid_parts(
+        rows,
+        value_predicate,
+    ):
+        mapped.setdefault(family, value)
     return mapped
 
 
@@ -9779,6 +10364,7 @@ def universal_k_endpoint_observer_builds_by_family(
     product_residual_faithfulness_theorem: (
         UniversalKResidualFaithfulnessAudit | None
     ) = None,
+    monodromy_family_input_audit: UniversalKMonodromyFamilyInputAudit | None = None,
 ) -> UniversalKEndpointObserverFamilyBuildAudit:
     """Construct and audit separate endpoint observers for active U/C/M families."""
 
@@ -9846,6 +10432,7 @@ def universal_k_endpoint_observer_builds_by_family(
             residual_faithfulness_theorems_by_family
         ),
         product_residual_faithfulness_theorem=product_residual_faithfulness_theorem,
+        monodromy_family_input_audit=monodromy_family_input_audit,
     )
 
 
@@ -9910,17 +10497,37 @@ def universal_k_endpoint_observer_builds_from_monodromy_by_family(
     faithfulness gates stay unchanged.
     """
 
-    endpoint_group_map = _universal_k_family_object_map(
+    monodromy_input_audit = universal_k_monodromy_family_input_audit(
+        seed_classifier_entries,
         endpoint_groups_by_family,
-        FiniteGroup,
+        word_potential_templates_by_family,
+        positive_state_rows_by_family,
+        detector_domain_assignments_by_family=(
+            detector_domain_assignments_by_family
+        ),
+        detector_domain_soundness_witnesses_by_family=(
+            detector_domain_soundness_witnesses_by_family
+        ),
     )
-    template_map = _universal_k_family_object_map(word_potential_templates_by_family)
-    positive_row_map = _universal_k_family_object_map(positive_state_rows_by_family)
-    detector_domain_map = _universal_k_family_object_map(
-        detector_domain_assignments_by_family
+    endpoint_group_map = _universal_k_monodromy_valid_family_map(
+        monodromy_input_audit.endpoint_group_rows,
+        UniversalKMonodromyFamilyInputAudit._endpoint_group_predicate,
     )
-    detector_domain_witness_map = _universal_k_family_object_map(
-        detector_domain_soundness_witnesses_by_family
+    template_map = _universal_k_monodromy_valid_family_map(
+        monodromy_input_audit.word_potential_template_rows,
+        UniversalKMonodromyFamilyInputAudit._template_predicate,
+    )
+    positive_row_map = _universal_k_monodromy_valid_family_map(
+        monodromy_input_audit.positive_state_rows,
+        UniversalKMonodromyFamilyInputAudit._positive_rows_predicate,
+    )
+    detector_domain_map = _universal_k_monodromy_valid_family_map(
+        monodromy_input_audit.detector_domain_assignment_rows,
+        UniversalKMonodromyFamilyInputAudit._mapping_predicate,
+    )
+    detector_domain_witness_map = _universal_k_monodromy_valid_family_map(
+        monodromy_input_audit.detector_domain_soundness_witness_rows,
+        UniversalKMonodromyFamilyInputAudit._mapping_predicate,
     )
 
     certificate_rows = []
@@ -9967,6 +10574,7 @@ def universal_k_endpoint_observer_builds_from_monodromy_by_family(
             residual_faithfulness_theorems_by_family
         ),
         product_residual_faithfulness_theorem=product_residual_faithfulness_theorem,
+        monodromy_family_input_audit=monodromy_input_audit,
     )
 
 
@@ -14652,6 +15260,15 @@ class PostLinearRemainingFiniteSystemAudit:
                 ("endpoint_observer_family_residual_theorem_duplicate_families", ()),
                 ("endpoint_observer_family_residual_theorem_missing_families", ()),
                 ("endpoint_observer_family_residual_theorem_extra_families", ()),
+                ("endpoint_observer_monodromy_input_present", False),
+                ("endpoint_observer_monodromy_input_rows_exact", False),
+                ("endpoint_observer_monodromy_expected_families", ()),
+                ("endpoint_observer_monodromy_candidate_families", ()),
+                ("endpoint_observer_monodromy_endpoint_group_families", ()),
+                ("endpoint_observer_monodromy_template_families", ()),
+                ("endpoint_observer_monodromy_positive_row_families", ()),
+                ("endpoint_observer_monodromy_missing_candidate_families", ()),
+                ("endpoint_observer_monodromy_failure_reasons", ()),
                 ("endpoint_observer_family_build_malformed_rows", ()),
                 ("endpoint_observer_family_build_unknown_families", ()),
                 ("endpoint_observer_family_build_scope_failures", ()),
@@ -14929,6 +15546,58 @@ class PostLinearRemainingFiniteSystemAudit:
             (
                 "endpoint_observer_family_residual_theorem_extra_families",
                 audit.extra_residual_theorem_families,
+            ),
+            (
+                "endpoint_observer_monodromy_input_present",
+                audit.monodromy_family_input_audit is not None,
+            ),
+            (
+                "endpoint_observer_monodromy_input_rows_exact",
+                audit.monodromy_family_input_audit.input_rows_exact
+                if audit.monodromy_family_input_audit is not None
+                else False,
+            ),
+            (
+                "endpoint_observer_monodromy_expected_families",
+                audit.monodromy_family_input_audit.expected_endpoint_families_exact
+                if audit.monodromy_family_input_audit is not None
+                else (),
+            ),
+            (
+                "endpoint_observer_monodromy_candidate_families",
+                audit.monodromy_family_input_audit.candidate_families_exact
+                if audit.monodromy_family_input_audit is not None
+                else (),
+            ),
+            (
+                "endpoint_observer_monodromy_endpoint_group_families",
+                audit.monodromy_family_input_audit.endpoint_group_families_exact
+                if audit.monodromy_family_input_audit is not None
+                else (),
+            ),
+            (
+                "endpoint_observer_monodromy_template_families",
+                audit.monodromy_family_input_audit.template_families_exact
+                if audit.monodromy_family_input_audit is not None
+                else (),
+            ),
+            (
+                "endpoint_observer_monodromy_positive_row_families",
+                audit.monodromy_family_input_audit.positive_state_row_families_exact
+                if audit.monodromy_family_input_audit is not None
+                else (),
+            ),
+            (
+                "endpoint_observer_monodromy_missing_candidate_families",
+                audit.monodromy_family_input_audit.missing_candidate_families
+                if audit.monodromy_family_input_audit is not None
+                else (),
+            ),
+            (
+                "endpoint_observer_monodromy_failure_reasons",
+                audit.monodromy_family_input_audit.failure_reasons
+                if audit.monodromy_family_input_audit is not None
+                else (),
             ),
             (
                 "endpoint_observer_family_build_malformed_rows",
