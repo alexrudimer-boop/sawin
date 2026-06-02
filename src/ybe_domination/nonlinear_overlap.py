@@ -2247,9 +2247,17 @@ class UniversalKResidualFaithfulnessAudit:
 
     @property
     def family_coverage_exact(self) -> bool:
-        return self.family_ledgers_known and set(
-            self.active_endpoint_families
-        ) == set(self.covered_endpoint_families)
+        active = {
+            family
+            for family in self.active_endpoint_families
+            if _is_hashable(family) and family in UNIVERSAL_K_ENDPOINT_FAMILIES
+        }
+        covered = {
+            family
+            for family in self.covered_endpoint_families
+            if _is_hashable(family) and family in UNIVERSAL_K_ENDPOINT_FAMILIES
+        }
+        return self.family_ledgers_known and active == covered
 
     @property
     def duplicate_active_endpoint_families(self) -> Tuple[str, ...]:
@@ -2733,6 +2741,35 @@ class UniversalKResidualFaithfulnessAudit:
         )
 
     @property
+    def invalid_expected_residual_row_families(self) -> Tuple[object, ...]:
+        return tuple(
+            family
+            for family, _count in self.expected_residual_family_row_count_rows
+            if (
+                not _is_hashable(family)
+                or family not in UNIVERSAL_K_ENDPOINT_FAMILIES
+            )
+        )
+
+    @property
+    def invalid_covered_residual_row_families(self) -> Tuple[object, ...]:
+        return tuple(
+            family
+            for family, _count in self.covered_residual_family_row_count_rows
+            if (
+                not _is_hashable(family)
+                or family not in UNIVERSAL_K_ENDPOINT_FAMILIES
+            )
+        )
+
+    @property
+    def residual_family_row_families_valid(self) -> bool:
+        return (
+            not self.invalid_expected_residual_row_families
+            and not self.invalid_covered_residual_row_families
+        )
+
+    @property
     def residual_family_row_families_exact(self) -> bool:
         if (
             not self.residual_family_row_counts_required
@@ -2894,6 +2931,7 @@ class UniversalKResidualFaithfulnessAudit:
         return (
             self.residual_family_row_ledgers_have_no_duplicates
             and self.residual_family_row_count_rows_well_formed
+            and self.residual_family_row_families_valid
             and self.residual_family_row_families_exact
             and self.residual_family_row_counts_nonnegative
             and self.residual_family_row_counts_match
@@ -2980,6 +3018,10 @@ class UniversalKResidualFaithfulnessAudit:
             reasons.append("residual_faithfulness_family_row_count_malformed_rows")
         if not self.residual_family_row_ledgers_have_no_duplicates:
             reasons.append("residual_faithfulness_duplicate_family_row_counts")
+        if not self.residual_family_row_families_valid:
+            reasons.append(
+                "residual_faithfulness_family_row_count_invalid_families"
+            )
         if not self.residual_family_row_families_exact:
             reasons.append("residual_faithfulness_family_row_count_scope_mismatch")
         if not self.residual_family_row_counts_nonnegative:
@@ -3465,9 +3507,17 @@ class UniversalKResidualActionScopeAudit:
 
     @property
     def family_coverage_exact(self) -> bool:
-        return self.family_ledgers_known and set(
-            self.active_endpoint_families
-        ) == set(self.covered_endpoint_families)
+        active = {
+            family
+            for family in self.active_endpoint_families
+            if _is_hashable(family) and family in UNIVERSAL_K_ENDPOINT_FAMILIES
+        }
+        covered = {
+            family
+            for family in self.covered_endpoint_families
+            if _is_hashable(family) and family in UNIVERSAL_K_ENDPOINT_FAMILIES
+        }
+        return self.family_ledgers_known and active == covered
 
     @property
     def duplicate_active_endpoint_families(self) -> Tuple[str, ...]:
@@ -3482,7 +3532,10 @@ class UniversalKResidualActionScopeAudit:
         return tuple(
             family
             for family in self.active_endpoint_families
-            if family not in UNIVERSAL_K_ENDPOINT_FAMILIES
+            if (
+                not _is_hashable(family)
+                or family not in UNIVERSAL_K_ENDPOINT_FAMILIES
+            )
         )
 
     @property
@@ -3490,7 +3543,10 @@ class UniversalKResidualActionScopeAudit:
         return tuple(
             family
             for family in self.covered_endpoint_families
-            if family not in UNIVERSAL_K_ENDPOINT_FAMILIES
+            if (
+                not _is_hashable(family)
+                or family not in UNIVERSAL_K_ENDPOINT_FAMILIES
+            )
         )
 
     @property
@@ -3577,13 +3633,20 @@ class UniversalKResidualActionScopeAudit:
 
     @property
     def seed_state_families_match_active(self) -> bool:
-        return self.seed_state_ledgers_well_formed and set(
-            self.active_endpoint_families
-        ) == {
-            state[0]
-            for state in self.expected_endpoint_seed_states_exact
-            if _universal_k_endpoint_seed_state_well_formed(state)
-        }
+        return (
+            self.seed_state_ledgers_well_formed
+            and self.family_ledgers_known
+            and {
+                family
+                for family in self.active_endpoint_families
+                if _is_hashable(family) and family in UNIVERSAL_K_ENDPOINT_FAMILIES
+            }
+            == {
+                state[0]
+                for state in self.expected_endpoint_seed_states_exact
+                if _universal_k_endpoint_seed_state_well_formed(state)
+            }
+        )
 
     @property
     def residual_row_count_supplied(self) -> bool:
@@ -3621,7 +3684,7 @@ class UniversalKResidualActionScopeAudit:
 
     @property
     def residual_family_row_counts_required(self) -> bool:
-        return len(set(self.active_endpoint_families)) > 1
+        return len(_value_marker_set(self.active_endpoint_families)) > 1
 
     @property
     def expected_residual_family_row_count_rows(
@@ -3690,6 +3753,35 @@ class UniversalKResidualActionScopeAudit:
         )
 
     @property
+    def invalid_expected_residual_row_families(self) -> Tuple[object, ...]:
+        return tuple(
+            family
+            for family, _count in self.expected_residual_family_row_count_rows
+            if (
+                not _is_hashable(family)
+                or family not in UNIVERSAL_K_ENDPOINT_FAMILIES
+            )
+        )
+
+    @property
+    def invalid_covered_residual_row_families(self) -> Tuple[object, ...]:
+        return tuple(
+            family
+            for family, _count in self.covered_residual_family_row_count_rows
+            if (
+                not _is_hashable(family)
+                or family not in UNIVERSAL_K_ENDPOINT_FAMILIES
+            )
+        )
+
+    @property
+    def residual_family_row_families_valid(self) -> bool:
+        return (
+            not self.invalid_expected_residual_row_families
+            and not self.invalid_covered_residual_row_families
+        )
+
+    @property
     def residual_family_row_families_exact(self) -> bool:
         if (
             not self.residual_family_row_counts_required
@@ -3697,11 +3789,29 @@ class UniversalKResidualActionScopeAudit:
             and not self.covered_residual_rows_by_family
         ):
             return True
+        expected_families = {
+            family
+            for family, _count in self.expected_residual_family_row_count_rows
+            if _is_hashable(family) and family in UNIVERSAL_K_ENDPOINT_FAMILIES
+        }
+        covered_families = {
+            family
+            for family, _count in self.covered_residual_family_row_count_rows
+            if _is_hashable(family) and family in UNIVERSAL_K_ENDPOINT_FAMILIES
+        }
         return (
-            {family for family, _count in self.expected_residual_family_row_count_rows}
-            == set(self.active_endpoint_families)
-            and {family for family, _count in self.covered_residual_family_row_count_rows}
-            == set(self.covered_endpoint_families)
+            expected_families
+            == {
+                family
+                for family in self.active_endpoint_families
+                if _is_hashable(family) and family in UNIVERSAL_K_ENDPOINT_FAMILIES
+            }
+            and covered_families
+            == {
+                family
+                for family in self.covered_endpoint_families
+                if _is_hashable(family) and family in UNIVERSAL_K_ENDPOINT_FAMILIES
+            }
         )
 
     @property
@@ -3745,13 +3855,19 @@ class UniversalKResidualActionScopeAudit:
             return True
         if not self.residual_family_row_counts_nonnegative:
             return False
-        expected_counts = dict(self.expected_residual_family_row_count_rows)
-        covered_counts = dict(self.covered_residual_family_row_count_rows)
+        expected_counts = {
+            _value_marker(family): count
+            for family, count in self.expected_residual_family_row_count_rows
+        }
+        covered_counts = {
+            _value_marker(family): count
+            for family, count in self.covered_residual_family_row_count_rows
+        }
         return all(
-            expected_counts.get(family, 0) > 0
+            expected_counts.get(_value_marker(family), 0) > 0
             for family in self.active_endpoint_families
         ) and all(
-            covered_counts.get(family, 0) > 0
+            covered_counts.get(_value_marker(family), 0) > 0
             for family in self.covered_endpoint_families
         )
 
@@ -3763,9 +3879,15 @@ class UniversalKResidualActionScopeAudit:
             and not self.covered_residual_rows_by_family
         ):
             return True
-        return dict(self.expected_residual_family_row_count_rows) == dict(
-            self.covered_residual_family_row_count_rows
-        )
+        expected_counts = {
+            _value_marker(family): count
+            for family, count in self.expected_residual_family_row_count_rows
+        }
+        covered_counts = {
+            _value_marker(family): count
+            for family, count in self.covered_residual_family_row_count_rows
+        }
+        return expected_counts == covered_counts
 
     @property
     def residual_family_row_count_sums_match(self) -> bool:
@@ -3800,6 +3922,7 @@ class UniversalKResidualActionScopeAudit:
         return (
             self.residual_family_row_ledgers_have_no_duplicates
             and self.residual_family_row_count_rows_well_formed
+            and self.residual_family_row_families_valid
             and self.residual_family_row_families_exact
             and self.residual_family_row_counts_nonnegative
             and self.residual_family_row_counts_cover_active_families
@@ -3861,7 +3984,7 @@ class UniversalKResidualActionScopeAudit:
             and
             self.residual_family_row_coverage_exact
             and (
-                len(set(self.active_endpoint_families)) <= 1
+                len(_value_marker_set(self.active_endpoint_families)) <= 1
                 or bool(self.expected_residual_rows_by_family)
             )
         )
@@ -3915,6 +4038,10 @@ class UniversalKResidualActionScopeAudit:
             reasons.append("residual_action_scope_family_row_count_malformed_rows")
         if not self.residual_family_row_ledgers_have_no_duplicates:
             reasons.append("residual_action_scope_duplicate_family_row_counts")
+        if not self.residual_family_row_families_valid:
+            reasons.append(
+                "residual_action_scope_family_row_count_invalid_families"
+            )
         if not self.residual_family_row_families_exact:
             reasons.append("residual_action_scope_family_row_count_scope_mismatch")
         if not self.residual_family_row_counts_nonnegative:
@@ -4374,11 +4501,11 @@ class UniversalKEndpointTargetAudit:
 
     @property
     def expected_endpoint_families_exact(self) -> Tuple[str, ...]:
-        return tuple(sorted(set(self.expected_endpoint_families), key=repr))
+        return _unique_values(self.expected_endpoint_families)
 
     @property
     def covered_endpoint_families_exact(self) -> Tuple[str, ...]:
-        return tuple(sorted(set(self.covered_endpoint_families), key=repr))
+        return _unique_values(self.covered_endpoint_families)
 
     @property
     def duplicate_expected_endpoint_families(self) -> Tuple[str, ...]:
@@ -4393,7 +4520,10 @@ class UniversalKEndpointTargetAudit:
         return tuple(
             family
             for family in self.expected_endpoint_families
-            if family not in UNIVERSAL_K_ENDPOINT_FAMILIES
+            if (
+                not _is_hashable(family)
+                or family not in UNIVERSAL_K_ENDPOINT_FAMILIES
+            )
         )
 
     @property
@@ -4401,7 +4531,10 @@ class UniversalKEndpointTargetAudit:
         return tuple(
             family
             for family in self.covered_endpoint_families
-            if family not in UNIVERSAL_K_ENDPOINT_FAMILIES
+            if (
+                not _is_hashable(family)
+                or family not in UNIVERSAL_K_ENDPOINT_FAMILIES
+            )
         )
 
     @property
@@ -4409,7 +4542,10 @@ class UniversalKEndpointTargetAudit:
         return tuple(
             family
             for family in self.target_endpoint_families
-            if family not in UNIVERSAL_K_ENDPOINT_FAMILIES
+            if (
+                not _is_hashable(family)
+                or family not in UNIVERSAL_K_ENDPOINT_FAMILIES
+            )
         )
 
     @property
@@ -4482,17 +4618,16 @@ class UniversalKEndpointTargetAudit:
 
     @property
     def target_endpoint_families(self) -> Tuple[str, ...]:
-        return tuple(
-            sorted(
-                {family for family, _order in self.endpoint_group_order_rows}
-                | {family for family, _degree in self.cutoff_degree_rows},
-                key=repr,
-            )
+        return _unique_values(
+            tuple(family for family, _order in self.endpoint_group_order_rows)
+            + tuple(family for family, _degree in self.cutoff_degree_rows)
         )
 
     @property
     def family_coverage_exact(self) -> bool:
-        return set(self.expected_endpoint_families_exact) == set(
+        return _value_marker_set(
+            self.expected_endpoint_families_exact
+        ) == _value_marker_set(
             self.covered_endpoint_families_exact
         )
 
@@ -4505,20 +4640,20 @@ class UniversalKEndpointTargetAudit:
 
     @property
     def missing_target_families(self) -> Tuple[str, ...]:
-        targets = set(self.target_endpoint_families)
+        targets = _value_marker_set(self.target_endpoint_families)
         return tuple(
             family
             for family in self.covered_endpoint_families_exact
-            if family not in targets
+            if _value_marker(family) not in targets
         )
 
     @property
     def extra_target_families(self) -> Tuple[str, ...]:
-        covered = set(self.covered_endpoint_families_exact)
+        covered = _value_marker_set(self.covered_endpoint_families_exact)
         return tuple(
             family
             for family in self.target_endpoint_families
-            if family not in covered
+            if _value_marker(family) not in covered
         )
 
     @property

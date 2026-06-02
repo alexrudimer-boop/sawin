@@ -4803,6 +4803,54 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             malformed_action_scope_family_count_row.failure_reasons,
         )
 
+        invalid_action_scope_family_count_row = replace(
+            malformed_action_scope_family_count,
+            expected_residual_rows_by_family=(("U", 1), ("Z", 1)),
+            covered_residual_rows_by_family=(("U", 1), (["C"], 1)),
+        )
+        self.assertFalse(
+            invalid_action_scope_family_count_row.residual_family_row_families_valid
+        )
+        self.assertFalse(
+            invalid_action_scope_family_count_row.proves_residual_action_scope
+        )
+        self.assertEqual(
+            invalid_action_scope_family_count_row.invalid_expected_residual_row_families,
+            ("Z",),
+        )
+        self.assertEqual(
+            invalid_action_scope_family_count_row.invalid_covered_residual_row_families,
+            (["C"],),
+        )
+        self.assertIn(
+            "residual_action_scope_family_row_count_invalid_families",
+            invalid_action_scope_family_count_row.failure_reasons,
+        )
+
+        invalid_faithfulness_family_count_row = replace(
+            multi_family_theorem,
+            expected_residual_rows_by_family=(("U", 1), ("Z", 1)),
+            covered_residual_rows_by_family=(("U", 1), (["C"], 1)),
+        )
+        self.assertFalse(
+            invalid_faithfulness_family_count_row.residual_family_row_families_valid
+        )
+        self.assertFalse(
+            invalid_faithfulness_family_count_row.proves_residual_faithfulness
+        )
+        self.assertEqual(
+            invalid_faithfulness_family_count_row.invalid_expected_residual_row_families,
+            ("Z",),
+        )
+        self.assertEqual(
+            invalid_faithfulness_family_count_row.invalid_covered_residual_row_families,
+            (["C"],),
+        )
+        self.assertIn(
+            "residual_faithfulness_family_row_count_invalid_families",
+            invalid_faithfulness_family_count_row.failure_reasons,
+        )
+
         underived_domain = UniversalKSignedEndpointGeneratorAudit(
             seed_classifier_entries=seed_entries,
             reachable_seed_states=(("U", seed_state),),
@@ -9488,6 +9536,50 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertIn(
             "endpoint_target_unknown_families",
             unknown_family_target.failure_reasons,
+        )
+
+        unhashable_family_target = UniversalKEndpointTargetAudit(
+            expected_endpoint_families=(["U"],),
+            covered_endpoint_families=(["U"],),
+            endpoint_group_orders=((["U"], 1),),
+            braid_index_independent=True,
+            product_families_separated=True,
+        )
+        self.assertFalse(unhashable_family_target.family_ledgers_known)
+        self.assertFalse(unhashable_family_target.proves_endpoint_targets)
+        self.assertEqual(
+            unhashable_family_target.invalid_expected_endpoint_families,
+            (["U"],),
+        )
+        self.assertEqual(
+            unhashable_family_target.invalid_covered_endpoint_families,
+            (["U"],),
+        )
+        self.assertEqual(
+            unhashable_family_target.invalid_target_endpoint_families,
+            (["U"],),
+        )
+        self.assertIn(
+            "endpoint_target_unknown_families",
+            unhashable_family_target.failure_reasons,
+        )
+
+        extra_unknown_target_row = UniversalKEndpointTargetAudit(
+            expected_endpoint_families=("U",),
+            covered_endpoint_families=("U",),
+            endpoint_group_orders=(("U", 1), ("Z", 1)),
+            braid_index_independent=True,
+            product_families_separated=True,
+        )
+        self.assertFalse(extra_unknown_target_row.family_ledgers_known)
+        self.assertFalse(extra_unknown_target_row.proves_endpoint_targets)
+        self.assertEqual(
+            extra_unknown_target_row.invalid_target_endpoint_families,
+            ("Z",),
+        )
+        self.assertIn(
+            "endpoint_target_unknown_families",
+            extra_unknown_target_row.failure_reasons,
         )
 
         malformed_group_order_target = UniversalKEndpointTargetAudit(

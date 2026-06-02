@@ -1011,6 +1011,10 @@ Each endpoint target-size row must also have exactly two fields,
 `(family, size)`.  A row with an extra field, a missing field, or a non-tuple
 shape is a malformed endpoint-target row even if one can read a plausible
 family and size from it.
+The `family` field in every endpoint target-size row must be a hashable known
+endpoint family in `{U,C,M}`.  Unknown or unhashable family labels in either
+the expected/covered endpoint-target ledgers or the target-size rows are
+certificate failures, not implicit endpoint factors.
 For C or M routed through a symmetric cutoff, the target ledger's cutoff
 degree must equal the symmetric degree used by the cutoff-readout table for
 that same family.  A certificate that declares a degree-`m` cutoff target but
@@ -2255,7 +2259,10 @@ finite certificate errors.  The family-by-family residual row-count ledgers
 must use the same marker-safe comparison for count matching, while only known
 endpoint-family labels can contribute to exact family scope; malformed or
 unhashable family labels keep residual faithfulness open rather than causing
-a runtime failure.
+a runtime failure.  The family labels in the expected and covered
+family-count rows are themselves finite certificate data: each must be a
+hashable member of `{U,C,M}` before the row-count ledger can support either
+residual faithfulness or residual-action scope.
 
 The signed-generator audit for a claimed A proof must therefore establish:
 
@@ -2283,6 +2290,7 @@ multi_family_residual_row_counts_by_family_exact,
 residual_row_counts_are_nonnegative_integers,
 residual_family_row_counts_are_nonnegative_integers,
 residual_family_row_count_rows_have_two_field_shape,
+residual_family_row_count_families_in_U_C_M,
 residual_rows_have_nonempty_arity_consistent_tuples,
 residual_rows_have_duplicate_free_endpoint_channel_keys,
 residual_rows_have_well_formed_endpoint_channel_keys,

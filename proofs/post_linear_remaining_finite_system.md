@@ -472,6 +472,10 @@ Every endpoint target-size row must have exactly two fields, `(family, size)`.
 Rows with missing fields, extra fields, or a non-tuple shape are malformed
 target rows; they are reported separately from nonpositive size values and
 cannot be used as finite detector factors.
+The `family` field in each target-size row must itself be a hashable known
+endpoint family in `{U,C,M}`.  Unknown or unhashable family labels in either
+the expected/covered ledgers or the target-size rows are certificate failures,
+not implicit finite target factors.
 The implementation now requires endpoint-target braid-index independence and
 product-family separation as explicit finite target certificates, and also
 checks that the target ledger supports those claims: each covered family must
@@ -1266,7 +1270,10 @@ family-by-family residual row-count ledgers use the same marker-safe
 comparison for count matching, but only known endpoint-family labels can
 contribute to an exact family scope; malformed or unhashable family labels
 keep the residual-faithfulness theorem open instead of escaping as runtime
-failures.
+failures.  The row-count family labels themselves are now a separate finite
+well-formedness obligation: an expected or covered family-count row naming an
+unknown or unhashable family is rejected before the theorem can claim residual
+faithfulness or residual-action scope.
 
 together with the concrete rows:
 
