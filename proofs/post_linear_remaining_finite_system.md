@@ -1018,9 +1018,13 @@ already-proved automatic residual helpers: strict identity, coordinate
 identity, singleton fibres, supplied fibre-label identity when a label ledger
 is present, and finally canonical fibre-label identity.  It is a convenience
 constructor for these symbolic subcases, not a new existence theorem for
-nontrivial U/C/M endpoint observers.  At the top-level audit the corresponding
-flag is `universal_k_identity_automatic_residual_faithfulness=True`; setting
-it constructs the identity endpoint observer candidate path and lets these
+nontrivial U/C/M endpoint observers.  The reusable selector
+`universal_k_automatic_residual_faithfulness_audit(...)` returns the first
+proving residual-faithfulness audit among those subcases and otherwise
+returns the open canonical-label audit with the full expected seed ledger
+still present.  At the top-level audit the corresponding flag is
+`universal_k_identity_automatic_residual_faithfulness=True`; setting it
+constructs the identity endpoint observer candidate path and lets these
 helpers close exactly the subcases whose finite hypotheses are verified.
 All automatic residual-faithfulness helpers preserve the full supplied
 routed seed-state ledger in the theorem.  They may use only the well-formed

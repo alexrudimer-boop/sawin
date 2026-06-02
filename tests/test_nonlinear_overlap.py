@@ -106,6 +106,7 @@ from ybe_domination import (
     universal_k_identity_cutoff_readout_audit,
     universal_k_identity_endpoint_observer_builds_by_family,
     universal_k_identity_word_potential_certificate,
+    universal_k_automatic_residual_faithfulness_audit,
     universal_k_canonical_fibre_label_identity_audit,
     universal_k_canonical_fibre_label_identity_residual_faithfulness_audit,
     universal_k_canonical_fibre_label_identity_rows,
@@ -6373,6 +6374,69 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertEqual(
             automatic_family_audit.product_residual_theorem_channel_reasons,
             ("canonical_fibre_label_identity_residual_channel",),
+        )
+
+    def test_automatic_residual_faithfulness_selector_uses_proved_subcases_only(self):
+        seed_entries = tuple(
+            (
+                ("a", "b", family, "constant_map_kernel", (0, 1)),
+                (family, ("a", "b", f"{family}_seed")),
+            )
+            for family in ("U", "C", "M")
+        )
+        seed_states = tuple(target for _descriptor, target in seed_entries)
+
+        coordinate = universal_k_automatic_residual_faithfulness_audit(
+            two_color_coordinate_identity_swap_interval(),
+            seed_states,
+        )
+        self.assertTrue(coordinate.proves_residual_faithfulness)
+        self.assertEqual(
+            coordinate.residual_endpoint_channel_reasons,
+            ("coordinate_identity_residual_channel",),
+        )
+
+        label_rows = (
+            ("a", "a0", 0),
+            ("a", "a1", 1),
+            ("b", "b0", 0),
+            ("b", "b1", 1),
+        )
+        supplied_label = universal_k_automatic_residual_faithfulness_audit(
+            two_color_fibre_label_identity_swap_interval(),
+            seed_states,
+            fibre_label_identity_rows=label_rows,
+        )
+        self.assertTrue(supplied_label.proves_residual_faithfulness)
+        self.assertEqual(
+            supplied_label.residual_endpoint_channel_reasons,
+            ("fibre_label_identity_residual_channel",),
+        )
+
+        canonical = universal_k_automatic_residual_faithfulness_audit(
+            two_color_fibre_label_identity_swap_interval(),
+            seed_states,
+        )
+        self.assertTrue(canonical.proves_residual_faithfulness)
+        self.assertEqual(
+            canonical.residual_endpoint_channel_reasons,
+            ("canonical_fibre_label_identity_residual_channel",),
+        )
+
+        open_audit = universal_k_automatic_residual_faithfulness_audit(
+            one_color_flip_interval(),
+            (("U", ("*", "*", "U_seed")),),
+        )
+        self.assertFalse(open_audit.proves_residual_faithfulness)
+        self.assertEqual(
+            open_audit.expected_residual_input_tuples,
+            (
+                (
+                    "all_residual_fibre_tuples",
+                    "U",
+                    "canonical_fibre_label_identity_residual_channel",
+                ),
+            ),
         )
 
     def test_canonical_fibre_label_identity_refuses_noninjective_components(self):

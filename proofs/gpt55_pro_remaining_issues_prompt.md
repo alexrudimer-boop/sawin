@@ -1858,6 +1858,13 @@ is present, and canonical fibre-label identity.  It is a convenience route for
 closing those symbolic residual-triviality cases.  It is not an existence
 proof for the nontrivial U/C/M endpoint observers, and if none of the finite
 hypotheses holds the observer candidate must remain open.
+The reusable helper
+`universal_k_automatic_residual_faithfulness_audit(...)` is exactly this
+selector: it returns the first proving residual-faithfulness audit in that
+order, and if none proves it returns the open canonical fibre-label audit with
+the full expected routed seed-state ledger still present.  Thus the automatic
+path cannot silently discard bad seed data or manufacture residual
+faithfulness outside the listed symbolic subcases.
 All automatic residual-faithfulness helpers must preserve the full
 supplied routed seed-state ledger in the theorem.  They may use only
 well-formed U/C/M seed states to emit schematic rows, but malformed,
