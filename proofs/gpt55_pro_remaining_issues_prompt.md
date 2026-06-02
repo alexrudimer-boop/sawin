@@ -2108,7 +2108,10 @@ shape, an unhashable seed-state key, a non-tuple seed state, or a target
 family outside `{U,C,M}` is a finite certificate error.  Such data must be
 reported as a malformed or invalid seed-classifier ledger; it may not be
 converted into a generic missing-observer symptom and may not crash raw set
-comparisons.
+comparisons.  A non-sequence top-level `kappa` ledger, such as `None`, must
+also be retained as malformed seed-classifier data by the direct signed
+endpoint audit, raw monodromy input audit, and family observer audit.  It must
+not be treated as an empty active seed set.
 The main post-linear proof object must retain or derive this family ledger
 from per-family word-potential certificates and must expose expected,
 covered, missing, extra, duplicate, malformed, scope-mismatched, and unproved

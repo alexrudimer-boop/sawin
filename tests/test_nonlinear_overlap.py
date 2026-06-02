@@ -5320,6 +5320,22 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             malformed_kappa.failure_reasons,
         )
 
+        malformed_kappa_function = universal_k_signed_endpoint_generator_audit(
+            one_color_identity_interval(),
+            None,
+            (),
+            (),
+        )
+        self.assertFalse(malformed_kappa_function.proves_signed_endpoint_generator_tables)
+        self.assertEqual(
+            malformed_kappa_function.malformed_seed_classifier_entries,
+            (None,),
+        )
+        self.assertIn(
+            "seed_classifier_malformed_entries",
+            malformed_kappa_function.failure_reasons,
+        )
+
         complete = UniversalKSignedEndpointGeneratorAudit(
             seed_classifier_entries=seed_entries,
             reachable_seed_states=(("U", seed_state),),
@@ -6338,6 +6354,27 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertIn(
             "endpoint_observer_monodromy_seed_classifier_duplicate_descriptors",
             duplicate_seed_monodromy_input.failure_reasons,
+        )
+
+        malformed_seed_monodromy_input = universal_k_monodromy_family_input_audit(
+            interval,
+            None,
+            tuple(endpoint_groups.items()),
+            tuple(templates_by_family),
+            tuple(positive_rows_by_family),
+        )
+
+        self.assertFalse(malformed_seed_monodromy_input.input_rows_exact)
+        self.assertFalse(
+            malformed_seed_monodromy_input.seed_classifier_ledger_well_formed
+        )
+        self.assertEqual(
+            malformed_seed_monodromy_input.malformed_seed_classifier_entries,
+            (None,),
+        )
+        self.assertIn(
+            "endpoint_observer_monodromy_seed_classifier_malformed_entries",
+            malformed_seed_monodromy_input.failure_reasons,
         )
 
         stale_endpoint_groups = dict(endpoint_groups)
@@ -8109,6 +8146,20 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertIn(
             "endpoint_observer_family_seed_classifier_invalid_targets",
             malformed_seed_classifier.failure_reasons,
+        )
+        none_seed_classifier = universal_k_endpoint_observer_family_build_audit(
+            None,
+            (),
+        )
+        self.assertFalse(none_seed_classifier.seed_classifier_ledger_well_formed)
+        self.assertFalse(none_seed_classifier.proves_family_endpoint_observers)
+        self.assertEqual(
+            none_seed_classifier.malformed_seed_classifier_entries,
+            (None,),
+        )
+        self.assertIn(
+            "endpoint_observer_family_seed_classifier_malformed_entries",
+            none_seed_classifier.failure_reasons,
         )
         malformed_seed_classifier_wrapper = PostLinearRemainingFiniteSystemAudit(
             active_system_k_refinement(),

@@ -1471,6 +1471,11 @@ non-sequence family ledger or duplicate family entries for the presentation
 audit while deriving context rows only from valid unique families, so duplicate
 families and malformed family scope remain explicit monodromy-presentation
 failures.
+The direct signed endpoint audit, raw monodromy input audit, and family
+observer audit now normalize malformed top-level `kappa` ledgers through the
+common row-input gate.  Non-sequence seed-classifier input is retained as
+malformed seed-classifier data instead of crashing or being interpreted as an
+empty active endpoint seed set.
 This removes another false endpoint closure and leaves the same local
 nontrivial observer-existence gap: construct residual-faithful U/C/M
 monodromy-coboundary observers for all surviving intervals, or produce a

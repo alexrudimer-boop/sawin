@@ -410,7 +410,10 @@ seed classifier must be a functional map on row descriptors: duplicate or
 conflicting descriptor entries leave the signed endpoint layer open.  Every
 classifier target and reachable-state family must be one of `U`, `C`, or `M`;
 unknown endpoint families are reported explicitly rather than routed through a
-spurious extra system.
+spurious extra system.  The direct signed endpoint audit, raw monodromy input
+audit, and family observer audit preserve malformed non-sequence `kappa`
+ledgers as malformed seed-classifier entries instead of crashing or treating
+the active seed set as empty.
 For each reachable
 state, each sign, and each local row input, the table must supply one value
 

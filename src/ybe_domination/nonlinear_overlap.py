@@ -5162,7 +5162,7 @@ def universal_k_signed_endpoint_seed_states(
     return _unique_values(
         tuple(
             target
-            for entry in seed_classifier_entries
+            for entry in _universal_k_row_input_tuple(seed_classifier_entries)
             for parts in (_universal_k_two_field_row_parts(entry),)
             if parts is not None
             for _descriptor, target in (parts,)
@@ -9409,7 +9409,7 @@ def universal_k_signed_endpoint_generator_audit(
         )
 
     return UniversalKSignedEndpointGeneratorAudit(
-        seed_classifier_entries=tuple(seed_classifier_entries),
+        seed_classifier_entries=_universal_k_row_input_tuple(seed_classifier_entries),
         reachable_seed_states=reachable_tuple,
         required_entry_keys=required_entry_keys,
         rows=row_tuple,
@@ -10776,7 +10776,7 @@ def universal_k_monodromy_family_input_audit(
     """Audit the raw U/C/M monodromy-coboundary package before construction."""
 
     return UniversalKMonodromyFamilyInputAudit(
-        seed_classifier_entries=tuple(seed_classifier_entries),
+        seed_classifier_entries=_universal_k_row_input_tuple(seed_classifier_entries),
         interval=interval,
         endpoint_group_rows=_universal_k_row_input_tuple(endpoint_groups_by_family),
         word_potential_template_rows=_universal_k_row_input_tuple(
@@ -12928,7 +12928,7 @@ def universal_k_endpoint_observer_family_build_audit(
     """Audit one constructed endpoint observer for each active U/C/M family."""
 
     return UniversalKEndpointObserverFamilyBuildAudit(
-        seed_classifier_entries=tuple(seed_classifier_entries),
+        seed_classifier_entries=_universal_k_row_input_tuple(seed_classifier_entries),
         builds=_universal_k_row_input_tuple(builds),
         word_potential_certificate_rows=_universal_k_row_input_tuple(
             word_potential_certificate_rows
@@ -12994,7 +12994,7 @@ def _universal_k_seed_classifier_entries_for_family(
 ) -> Tuple[UniversalKSeedClassifierEntry, ...]:
     return tuple(
         entry
-        for entry in seed_classifier_entries
+        for entry in _universal_k_row_input_tuple(seed_classifier_entries)
         if (
             isinstance(entry, tuple)
             and len(entry) == 2
