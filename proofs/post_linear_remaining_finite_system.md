@@ -978,6 +978,16 @@ wrapper containing proving build objects but omitting these explicit ledgers
 remains diagnostic only and is reported with missing-family certificate,
 detector-track, endpoint-target, cutoff-readout, or residual-theorem
 failures.
+Those auxiliary ledgers must also match the retained build internals.  The
+supplied word-potential certificate for a family must equal the certificate
+inside that family's telescoping audit; the supplied detector-track rows must
+match the detector rows used by that audit; the supplied endpoint-target,
+C/M cutoff-readout, and residual-faithfulness theorem rows must equal the
+objects retained inside the corresponding observer build.  A stale auxiliary
+row is rejected even when the retained build object itself proves.  This
+prevents a family observer from closing with one hidden construction while the
+exported proof ledger advertises different certificate, detector, target,
+cutoff, or residual data.
 Those top-level family-observer input ledgers are normalized before any
 builder runs.  A non-sequence certificate, detector-track, endpoint-target,
 cutoff-readout, residual-theorem, or identity-cutoff-degree ledger is reported
@@ -1621,6 +1631,17 @@ endpoint_observer_family_residual_theorem_unknown_families
 endpoint_observer_family_residual_theorem_duplicate_families
 endpoint_observer_family_residual_theorem_missing_families
 endpoint_observer_family_residual_theorem_extra_families
+endpoint_observer_family_auxiliary_rows_match_builds
+endpoint_observer_family_certificate_rows_match_builds
+endpoint_observer_family_certificate_row_mismatches
+endpoint_observer_family_detector_track_rows_match_builds
+endpoint_observer_family_detector_track_row_mismatches
+endpoint_observer_family_endpoint_target_rows_match_builds
+endpoint_observer_family_endpoint_target_row_mismatches
+endpoint_observer_family_cutoff_readout_rows_match_builds
+endpoint_observer_family_cutoff_readout_row_mismatches
+endpoint_observer_family_residual_theorem_rows_match_builds
+endpoint_observer_family_residual_theorem_row_mismatches
 endpoint_observer_monodromy_input_present
 endpoint_observer_monodromy_input_rows_exact
 endpoint_observer_monodromy_expected_families

@@ -1404,7 +1404,15 @@ optional local channel data after the channel name.  A product theorem that
 keeps the same reason string but changes the concrete local channel key is
 rejected with
 `endpoint_observer_product_residual_faithfulness_channel_key_scope_mismatch`.
-This removes another false product closure and leaves the same local
+The retained family-observer build gate has also been made non-opaque.  A
+proving `UniversalKEndpointObserverBuild` can no longer close with stale
+top-level auxiliary rows: the advertised word-potential certificate,
+detector-track initialization rows, endpoint-target audit, C/M cutoff-readout
+audit, and residual-faithfulness theorem rows must match the actual objects
+inside the retained build.  Mismatches are exposed through the
+`endpoint_observer_family_*_rows_match_builds` diagnostics and keep the family
+observer open.
+This removes another false endpoint closure and leaves the same local
 nontrivial observer-existence gap: construct residual-faithful U/C/M
 monodromy-coboundary observers for all surviving intervals, or produce a
 normalized-law counterexample.
@@ -1413,7 +1421,7 @@ normalized-law counterexample.
 
 At the latest verified snapshot:
 
-- `python -m unittest discover -s tests` passed with 380 tests;
+- `python -m unittest discover -s tests` passed with 718 tests;
 - `python -m compileall -q src tests tools` passed;
 - `node --check tools/build_reduction_audit_workbook.mjs` passed;
 - the proof log DOCX and reduction audit workbook were regenerated, and the

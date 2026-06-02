@@ -7295,6 +7295,12 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertFalse(family_audit.product_residual_faithfulness_present)
         self.assertFalse(family_audit.product_residual_faithfulness_proved)
         self.assertFalse(family_audit.proves_family_endpoint_product_closure)
+        self.assertTrue(family_audit.auxiliary_rows_match_builds)
+        self.assertEqual(family_audit.certificate_rows_match_builds, ())
+        self.assertEqual(family_audit.detector_track_rows_match_builds, ())
+        self.assertEqual(family_audit.endpoint_target_rows_match_builds, ())
+        self.assertEqual(family_audit.cutoff_readout_rows_match_builds, ())
+        self.assertEqual(family_audit.residual_theorem_rows_match_builds, ())
         self.assertEqual(
             family_audit.product_residual_faithfulness_failure_reasons,
             ("endpoint_observer_product_residual_faithfulness_missing",),
@@ -7320,6 +7326,10 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         )
         self.assertIn(
             ("endpoint_observer_family_build_product_closure_proved", False),
+            wrapper.routed_endpoint_obstruction_data,
+        )
+        self.assertIn(
+            ("endpoint_observer_family_auxiliary_rows_match_builds", True),
             wrapper.routed_endpoint_obstruction_data,
         )
 
@@ -7419,6 +7429,40 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         )
         self.assertTrue(
             family_audit_with_product.proves_family_endpoint_product_closure
+        )
+        self.assertTrue(family_audit_with_product.auxiliary_rows_match_builds)
+
+        stale_residual_theorems = tuple(
+            (
+                family,
+                replace(theorem, braid_index_independent=False)
+                if family == "U"
+                else theorem,
+            )
+            for family, theorem in residual_theorems
+        )
+        stale_auxiliary_family_audit = universal_k_endpoint_observer_family_build_audit(
+            seed_entries,
+            family_audit_with_product.builds,
+            word_potential_certificate_rows=tuple(certificates),
+            detector_track_initialization_rows=tuple(detector_rows),
+            endpoint_target_audit_rows=tuple(endpoint_targets),
+            cutoff_readout_audit_rows=tuple(cutoff_readouts),
+            residual_faithfulness_theorem_rows=stale_residual_theorems,
+            product_residual_faithfulness_theorem=product_residual,
+        )
+
+        self.assertFalse(stale_auxiliary_family_audit.auxiliary_rows_match_builds)
+        self.assertFalse(
+            stale_auxiliary_family_audit.proves_family_endpoint_observers
+        )
+        self.assertEqual(
+            stale_auxiliary_family_audit.residual_theorem_rows_match_builds[0][0],
+            "U",
+        )
+        self.assertIn(
+            "endpoint_observer_family_residual_theorem_rows_do_not_match_builds",
+            stale_auxiliary_family_audit.failure_reasons,
         )
 
         fake_channel_product_residual = replace(

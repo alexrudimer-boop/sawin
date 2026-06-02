@@ -87,6 +87,13 @@ product residual theorem must expose the same endpoint-channel reason ledger
 and full endpoint-channel key ledger by family as the per-family residual
 theorems.  These closures cover only residually trivial non-strict local
 motion, not arbitrary nontrivial U/C/M endpoint dynamics.
+Any retained family observer build must also expose auxiliary construction
+rows that match the retained build internals.  The advertised word-potential
+certificate, detector-track initialization rows, endpoint-target audit,
+C/M cutoff-readout audit, and residual-faithfulness theorem for a family must
+be the same finite objects used inside that family build.  A proof may not
+close with a proving build object while displaying stale or different
+auxiliary rows as the construction ledger.
 
 The exact missing B-side ingredient is:
 
@@ -1256,6 +1263,16 @@ is proved: the potential-implies-cocycle argument below derives those label
 relations from the state/coordinate braid relations.  A signed endpoint audit
 with success booleans but no concrete endpoint group is not a finite row-check
 certificate, even if an endpoint target order is listed.
+For a retained family observer build, the top-level auxiliary ledgers are part
+of the certificate, not optional commentary.  The proof must verify that the
+supplied word-potential certificate row equals the build's internal
+word-potential certificate, that the supplied detector-track initialization
+rows equal the build's internal detector rows family-by-family, that the
+supplied endpoint-target row equals the build's endpoint-target audit, that
+any C/M cutoff-readout row equals the build's cutoff-readout audit, and that
+the supplied residual-faithfulness theorem row equals the build's retained
+residual theorem.  A stale auxiliary row leaves the observer family open even
+if the retained build object itself proves.
 Every supplied signed row must also have a well-formed full `D_Gamma` entry
 key `(E,epsilon,s,a,b,x,y)`: `E` must be one of U,C,M, the sign must be `+1`
 or `-1`, the seed state must be a hashable tuple state, and the local
@@ -2561,6 +2578,12 @@ endpoint_observer_build_record_retained,
 endpoint_observer_family_build_ledger_exact,
 endpoint_observer_family_seed_classifier_ledger_well_formed,
 endpoint_observer_family_build_row_failure_reasons_exposed,
+endpoint_observer_family_auxiliary_rows_match_builds,
+endpoint_observer_family_certificate_rows_match_builds,
+endpoint_observer_family_detector_track_rows_match_builds,
+endpoint_observer_family_endpoint_target_rows_match_builds,
+endpoint_observer_family_cutoff_readout_rows_match_builds,
+endpoint_observer_family_residual_theorem_rows_match_builds,
 identity_endpoint_observer_constructor_keeps_residual_faithfulness_required,
 identity_endpoint_observer_top_level_opt_in_is_nondecisive,
 identity_endpoint_observer_cutoff_degree_ledger_exact,

@@ -11475,6 +11475,155 @@ class UniversalKEndpointObserverFamilyBuildAudit:
         )
 
     @property
+    def certificate_rows_match_builds(
+        self,
+    ) -> Tuple[Tuple[str, str, object], ...]:
+        supplied = {
+            family: certificate
+            for family, certificate in self.certificate_row_parts
+            if _is_hashable(family)
+            and family in UNIVERSAL_K_ENDPOINT_FAMILIES
+            and isinstance(certificate, UniversalKWordPotentialCertificate)
+        }
+        failures = []
+        for family, build in self.build_rows_exact:
+            actual = build.telescoping_detector_audit.word_potential_certificate
+            if supplied.get(family) != actual:
+                failures.append(
+                    (
+                        family,
+                        "word_potential_certificate_row_mismatch",
+                        supplied.get(family),
+                    )
+                )
+        return tuple(sorted(failures, key=repr))
+
+    @property
+    def detector_track_rows_by_family(
+        self,
+    ) -> Mapping[str, Tuple[UniversalKDetectorTrackInitializationRow, ...]]:
+        rows: dict[str, list[UniversalKDetectorTrackInitializationRow]] = {}
+        for row in self.family_detector_track_initialization_row_objects:
+            if (
+                _is_hashable(row.endpoint_family)
+                and row.endpoint_family in UNIVERSAL_K_ENDPOINT_FAMILIES
+            ):
+                rows.setdefault(row.endpoint_family, []).append(row)
+        return {
+            family: tuple(family_rows)
+            for family, family_rows in rows.items()
+        }
+
+    @property
+    def detector_track_rows_match_builds(
+        self,
+    ) -> Tuple[Tuple[str, str, object], ...]:
+        supplied = self.detector_track_rows_by_family
+        failures = []
+        for family, build in self.build_rows_exact:
+            actual = build.telescoping_detector_audit.detector_track_initialization_rows
+            if _value_marker_set(supplied.get(family, ())) != _value_marker_set(actual):
+                failures.append(
+                    (
+                        family,
+                        "detector_track_initialization_rows_mismatch",
+                        supplied.get(family, ()),
+                    )
+                )
+        return tuple(sorted(failures, key=repr))
+
+    @property
+    def endpoint_target_rows_match_builds(
+        self,
+    ) -> Tuple[Tuple[str, str, object], ...]:
+        supplied = {
+            family: audit
+            for family, audit in self.endpoint_target_row_parts
+            if _is_hashable(family)
+            and family in UNIVERSAL_K_ENDPOINT_FAMILIES
+            and isinstance(audit, UniversalKEndpointTargetAudit)
+        }
+        failures = []
+        for family, build in self.build_rows_exact:
+            actual = build.audit.endpoint_target_audit
+            if supplied.get(family) != actual:
+                failures.append(
+                    (
+                        family,
+                        "endpoint_target_audit_row_mismatch",
+                        supplied.get(family),
+                    )
+                )
+        return tuple(sorted(failures, key=repr))
+
+    @property
+    def cutoff_readout_rows_match_builds(
+        self,
+    ) -> Tuple[Tuple[str, str, object], ...]:
+        supplied = {
+            family: audit
+            for family, audit in self.cutoff_readout_row_parts
+            if _is_hashable(family)
+            and family in UNIVERSAL_K_ENDPOINT_FAMILIES
+            and isinstance(audit, UniversalKCutoffReadoutAudit)
+        }
+        failures = []
+        for family, build in self.build_rows_exact:
+            actual = build.audit.cutoff_readout_audit
+            if family in _UNIVERSAL_K_CUTOFF_READOUT_FAMILIES:
+                if supplied.get(family) != actual:
+                    failures.append(
+                        (
+                            family,
+                            "cutoff_readout_audit_row_mismatch",
+                            supplied.get(family),
+                        )
+                    )
+            elif family in supplied:
+                failures.append(
+                    (
+                        family,
+                        "cutoff_readout_audit_row_unrouted_family",
+                        supplied.get(family),
+                    )
+                )
+        return tuple(sorted(failures, key=repr))
+
+    @property
+    def residual_theorem_rows_match_builds(
+        self,
+    ) -> Tuple[Tuple[str, str, object], ...]:
+        supplied = {
+            family: theorem
+            for family, theorem in self.residual_theorem_row_parts
+            if _is_hashable(family)
+            and family in UNIVERSAL_K_ENDPOINT_FAMILIES
+            and isinstance(theorem, UniversalKResidualFaithfulnessAudit)
+        }
+        failures = []
+        for family, build in self.build_rows_exact:
+            actual = build.audit.residual_faithfulness_theorem
+            if supplied.get(family) != actual:
+                failures.append(
+                    (
+                        family,
+                        "residual_faithfulness_theorem_row_mismatch",
+                        supplied.get(family),
+                    )
+                )
+        return tuple(sorted(failures, key=repr))
+
+    @property
+    def auxiliary_rows_match_builds(self) -> bool:
+        return (
+            not self.certificate_rows_match_builds
+            and not self.detector_track_rows_match_builds
+            and not self.endpoint_target_rows_match_builds
+            and not self.cutoff_readout_rows_match_builds
+            and not self.residual_theorem_rows_match_builds
+        )
+
+    @property
     def auxiliary_input_rows_exact(self) -> bool:
         return (
             self.detector_track_initialization_input_rows_exact
@@ -11482,6 +11631,7 @@ class UniversalKEndpointObserverFamilyBuildAudit:
             and self.cutoff_readout_input_rows_exact
             and self.residual_theorem_input_rows_exact
             and self.identity_cutoff_degree_input_rows_exact
+            and self.auxiliary_rows_match_builds
         )
 
     @property
@@ -11804,6 +11954,26 @@ class UniversalKEndpointObserverFamilyBuildAudit:
             reasons.append("endpoint_observer_family_residual_theorems_missing_families")
         if self.extra_residual_theorem_families:
             reasons.append("endpoint_observer_family_residual_theorems_extra_families")
+        if self.certificate_rows_match_builds:
+            reasons.append(
+                "endpoint_observer_family_certificate_rows_do_not_match_builds"
+            )
+        if self.detector_track_rows_match_builds:
+            reasons.append(
+                "endpoint_observer_family_detector_rows_do_not_match_builds"
+            )
+        if self.endpoint_target_rows_match_builds:
+            reasons.append(
+                "endpoint_observer_family_endpoint_target_rows_do_not_match_builds"
+            )
+        if self.cutoff_readout_rows_match_builds:
+            reasons.append(
+                "endpoint_observer_family_cutoff_readout_rows_do_not_match_builds"
+            )
+        if self.residual_theorem_rows_match_builds:
+            reasons.append(
+                "endpoint_observer_family_residual_theorem_rows_do_not_match_builds"
+            )
         if self.missing_build_families:
             reasons.append("endpoint_observer_family_builds_missing_families")
         if self.extra_build_families:
@@ -17707,6 +17877,23 @@ class PostLinearRemainingFiniteSystemAudit:
                 ("endpoint_observer_family_residual_theorem_duplicate_families", ()),
                 ("endpoint_observer_family_residual_theorem_missing_families", ()),
                 ("endpoint_observer_family_residual_theorem_extra_families", ()),
+                ("endpoint_observer_family_auxiliary_rows_match_builds", False),
+                ("endpoint_observer_family_certificate_rows_match_builds", False),
+                ("endpoint_observer_family_certificate_row_mismatches", ()),
+                (
+                    "endpoint_observer_family_detector_track_rows_match_builds",
+                    False,
+                ),
+                ("endpoint_observer_family_detector_track_row_mismatches", ()),
+                ("endpoint_observer_family_endpoint_target_rows_match_builds", False),
+                ("endpoint_observer_family_endpoint_target_row_mismatches", ()),
+                ("endpoint_observer_family_cutoff_readout_rows_match_builds", False),
+                ("endpoint_observer_family_cutoff_readout_row_mismatches", ()),
+                (
+                    "endpoint_observer_family_residual_theorem_rows_match_builds",
+                    False,
+                ),
+                ("endpoint_observer_family_residual_theorem_row_mismatches", ()),
                 ("endpoint_observer_monodromy_input_present", False),
                 ("endpoint_observer_monodromy_input_rows_exact", False),
                 ("endpoint_observer_monodromy_expected_families", ()),
@@ -18117,6 +18304,50 @@ class PostLinearRemainingFiniteSystemAudit:
             (
                 "endpoint_observer_family_residual_theorem_extra_families",
                 audit.extra_residual_theorem_families,
+            ),
+            (
+                "endpoint_observer_family_auxiliary_rows_match_builds",
+                audit.auxiliary_rows_match_builds,
+            ),
+            (
+                "endpoint_observer_family_certificate_rows_match_builds",
+                not audit.certificate_rows_match_builds,
+            ),
+            (
+                "endpoint_observer_family_certificate_row_mismatches",
+                audit.certificate_rows_match_builds,
+            ),
+            (
+                "endpoint_observer_family_detector_track_rows_match_builds",
+                not audit.detector_track_rows_match_builds,
+            ),
+            (
+                "endpoint_observer_family_detector_track_row_mismatches",
+                audit.detector_track_rows_match_builds,
+            ),
+            (
+                "endpoint_observer_family_endpoint_target_rows_match_builds",
+                not audit.endpoint_target_rows_match_builds,
+            ),
+            (
+                "endpoint_observer_family_endpoint_target_row_mismatches",
+                audit.endpoint_target_rows_match_builds,
+            ),
+            (
+                "endpoint_observer_family_cutoff_readout_rows_match_builds",
+                not audit.cutoff_readout_rows_match_builds,
+            ),
+            (
+                "endpoint_observer_family_cutoff_readout_row_mismatches",
+                audit.cutoff_readout_rows_match_builds,
+            ),
+            (
+                "endpoint_observer_family_residual_theorem_rows_match_builds",
+                not audit.residual_theorem_rows_match_builds,
+            ),
+            (
+                "endpoint_observer_family_residual_theorem_row_mismatches",
+                audit.residual_theorem_rows_match_builds,
             ),
             (
                 "endpoint_observer_monodromy_input_present",
