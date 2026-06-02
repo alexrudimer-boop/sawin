@@ -47,14 +47,17 @@ unrouted_coordinate_unit_row
 ```
 
 A row is route-field consistent only when the listed
-`coordinate_unit_sides` are nonempty, are drawn from `{left,right}`, have the
-matching `coordinate_side_unit_not_triangular` explanation, and are actually
-unit sides in the supplied section data.  A row whose listed side is not
-unit, or whose explanation does not match the listed coordinate-unit side, is
-treated as `unrouted_coordinate_unit_row`.
+`coordinate_unit_sides` are nonempty, are duplicate-free, are drawn from
+`{left,right}`, have the matching `coordinate_side_unit_not_triangular`
+explanation, and are actually unit sides in the supplied section data.  A row
+whose listed side is not unit, whose listed side is duplicated, or whose
+explanation does not match the listed coordinate-unit side, is treated as
+`unrouted_coordinate_unit_row`.
 The whole coordinate-unit routing ledger is also non-vacuous: with no
 coordinate-unit rows it does not prove `all_coordinate_unit_rows_routed` or
-`proves_coordinate_unit_routing_ledger`.
+`proves_coordinate_unit_routing_ledger`.  The row ledger itself must also be
+duplicate-free, so duplicated mixed-context rows cannot be normalized away
+before the endpoint observer consumes the M keys.
 
 The post-linear finite-system wrapper reports the K-relevant part as:
 
@@ -63,6 +66,7 @@ missing_triangular_coordinate_unit_routes
 missing_triangular_coordinate_unit_mixed_rows
 missing_triangular_coordinate_unit_unrouted_rows
 missing_triangular_coordinate_unit_unclosed_two_sided_rows
+missing_triangular_coordinate_unit_duplicate_route_rows
 missing_triangular_locally_nondegenerate_closed_branch
 missing_triangular_coordinate_unit_routing_proved
 ```
@@ -111,10 +115,11 @@ post-linear wrapper records such rows in
 `system_m_mixed_unit_context_endpoint` when no live K row remains.
 This route is certificate-gated: if the supplied coordinate-unit routing audit
 does not have the coloured-YBE premise, if the row does not list the actual
-unit side, or if the listed side's explanation is not
-`coordinate_side_unit_not_triangular`, the post-linear wrapper does not
-remove the no-triangular row from active System K and does not create a
-System M endpoint obligation from that supplied data.
+unit side, if a listed side is duplicated, if the route row itself is
+duplicated, or if the listed side's explanation is not
+`coordinate_side_unit_not_triangular`, the post-linear wrapper does not remove
+the no-triangular row from active System K and does not create a System M
+endpoint obligation from that supplied data.
 
 Thus the no-triangular K-left ledger is narrowed again:
 

@@ -12498,7 +12498,7 @@ class PostLinearRemainingFiniteSystemAudit:
 
     def _coordinate_unit_profile_routes(self, side: str, pair: Tuple[Color, Color]) -> bool:
         routing = self.missing_triangular_coordinate_unit_routing
-        if routing is None or not routing.colored_ybe:
+        if routing is None or not routing.proves_coordinate_unit_routing_ledger:
             return False
         for row in routing.rows:
             if (
@@ -12517,7 +12517,10 @@ class PostLinearRemainingFiniteSystemAudit:
     ) -> bool:
         if (
             self.missing_triangular_coordinate_unit_routing is None
-            or not self.missing_triangular_coordinate_unit_routing.colored_ybe
+            or not (
+                self.missing_triangular_coordinate_unit_routing
+                .proves_coordinate_unit_routing_ledger
+            )
         ):
             return False
         for row in self.missing_triangular_coordinate_unit_routing.rows:
@@ -14045,6 +14048,19 @@ class PostLinearRemainingFiniteSystemAudit:
                         row.right_explanation,
                     )
                     for row in routing.unclosed_two_sided_unit_pair_rows
+                ),
+            ),
+            (
+                "missing_triangular_coordinate_unit_duplicate_route_rows",
+                tuple(
+                    (
+                        row.left_color,
+                        row.right_color,
+                        row.coordinate_unit_sides,
+                        row.left_explanation,
+                        row.right_explanation,
+                    )
+                    for row in routing.duplicate_route_rows
                 ),
             ),
             (
@@ -17799,6 +17815,19 @@ class PostLinearRemainingFiniteSystemAudit:
                             ),
                         ),
                         (
+                            "missing_triangular_coordinate_unit_duplicate_route_rows",
+                            tuple(
+                                (
+                                    row.left_color,
+                                    row.right_color,
+                                    row.coordinate_unit_sides,
+                                    row.left_explanation,
+                                    row.right_explanation,
+                                )
+                                for row in routing.duplicate_route_rows
+                            ),
+                        ),
+                        (
                             "missing_triangular_locally_nondegenerate_closed_branch",
                             routing.locally_nondegenerate_closed_branch,
                         ),
@@ -18070,6 +18099,19 @@ class PostLinearRemainingFiniteSystemAudit:
                                     row.right_explanation,
                                 )
                                 for row in routing.unclosed_two_sided_unit_pair_rows
+                            ),
+                        ),
+                        (
+                            "missing_triangular_coordinate_unit_duplicate_route_rows",
+                            tuple(
+                                (
+                                    row.left_color,
+                                    row.right_color,
+                                    row.coordinate_unit_sides,
+                                    row.left_explanation,
+                                    row.right_explanation,
+                                )
+                                for row in routing.duplicate_route_rows
                             ),
                         ),
                         (

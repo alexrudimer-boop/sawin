@@ -1079,6 +1079,10 @@ class MissingTriangularCoordinateUnitRoute:
     right_nonunit_inputs: Tuple[FibrePoint, ...]
 
     @property
+    def duplicate_coordinate_unit_sides(self) -> Tuple[str, ...]:
+        return _duplicate_values(self.coordinate_unit_sides)
+
+    @property
     def all_left_sections_bijective(self) -> bool:
         return not self.left_nonunit_inputs
 
@@ -1110,9 +1114,11 @@ class MissingTriangularCoordinateUnitRoute:
 
     @property
     def coordinate_unit_sides_known(self) -> bool:
-        return bool(self.coordinate_unit_sides) and set(
-            self.coordinate_unit_sides
-        ).issubset({"left", "right"})
+        return (
+            bool(self.coordinate_unit_sides)
+            and not self.duplicate_coordinate_unit_sides
+            and set(self.coordinate_unit_sides).issubset({"left", "right"})
+        )
 
     @property
     def coordinate_unit_side_explanations_match(self) -> bool:
@@ -1165,6 +1171,16 @@ class MissingTriangularCoordinateUnitRoutingAudit:
     rows: Tuple[MissingTriangularCoordinateUnitRoute, ...]
 
     @property
+    def duplicate_route_rows(
+        self,
+    ) -> Tuple[MissingTriangularCoordinateUnitRoute, ...]:
+        return _duplicate_values(self.rows)
+
+    @property
+    def route_ledgers_duplicate_free(self) -> bool:
+        return not self.duplicate_route_rows
+
+    @property
     def two_sided_unit_pair_rows(
         self,
     ) -> Tuple[MissingTriangularCoordinateUnitRoute, ...]:
@@ -1194,6 +1210,7 @@ class MissingTriangularCoordinateUnitRoutingAudit:
     def all_coordinate_unit_rows_routed(self) -> bool:
         return (
             bool(self.rows)
+            and self.route_ledgers_duplicate_free
             and not self.unrouted_rows
             and not self.unclosed_two_sided_unit_pair_rows
         )

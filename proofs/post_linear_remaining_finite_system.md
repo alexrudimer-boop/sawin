@@ -282,9 +282,10 @@ and must be handled by the mixed-unit context endpoint/readout layer.
 The coordinate-unit route is certificate-gated by the actual listed side: the
 listed coordinate-unit side must have the `coordinate_side_unit_not_triangular`
 explanation and must be a unit side in the supplied section data.  A row whose
-listed side is nonunit or whose explanation does not match remains live in
-System K.  The coordinate-unit routing ledger is non-vacuous: an empty row
-tuple does not prove the route.
+listed side is nonunit, whose listed side is duplicated, whose route row is
+duplicated, or whose explanation does not match remains live in System K.  The
+coordinate-unit routing ledger is non-vacuous and duplicate-free: an empty row
+tuple or a duplicated row tuple does not prove the route.
 
 Constant-map kernel reasons are refined the same way.  Raw defects:
 
@@ -1611,6 +1612,7 @@ missing_triangular_coordinate_unit_routes
 missing_triangular_coordinate_unit_mixed_rows
 missing_triangular_coordinate_unit_unrouted_rows
 missing_triangular_coordinate_unit_unclosed_two_sided_rows
+missing_triangular_coordinate_unit_duplicate_route_rows
 missing_triangular_locally_nondegenerate_closed_branch
 missing_triangular_partial_constant_closure_rows
 missing_triangular_partial_constant_proper_closure_rows
@@ -1980,6 +1982,7 @@ The post-linear data records:
 ```text
 missing_triangular_coordinate_unit_mixed_rows
 missing_triangular_coordinate_unit_unrouted_rows
+missing_triangular_coordinate_unit_duplicate_route_rows
 missing_triangular_coordinate_unit_routing_proved
 mixed_unit_endpoint_witness_matches_routing
 mixed_unit_endpoint_witness_proved

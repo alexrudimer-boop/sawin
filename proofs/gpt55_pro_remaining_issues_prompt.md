@@ -563,9 +563,10 @@ K-to-M coordinate-unit law:
 A no-triangular row with profile coordinate_side_unit_not_triangular is
 grouped by colour pair.  The coordinate-unit routing certificate must include
 the coloured-YBE premise.  Its listed coordinate-unit sides must be nonempty,
-drawn from `{left,right}`, must have matching
+duplicate-free, drawn from `{left,right}`, must have matching
 `coordinate_side_unit_not_triangular` explanations, and must actually be unit
-sides in the supplied section data.
+sides in the supplied section data.  The route-row ledger itself must also be
+duplicate-free.
 
 For each grouped pair:
 
@@ -574,14 +575,15 @@ For each grouped pair:
    proved for the whole interval;
 2. if the opposite coordinate side has nonunit data, the row is a mixed-unit
    context row and routes to System M;
-3. if the listed side is not actually unit, if its explanation does not
-   match the coordinate-unit profile, or if neither row alternative is
-   certified, the row remains live in System K.
+3. if the listed side is not actually unit, if a listed side is duplicated,
+   if a route row is duplicated, if its explanation does not match the
+   coordinate-unit profile, or if neither row alternative is certified, the
+   row remains live in System K.
 
 The coordinate-unit routing ledger proves only when there are no unrouted
 coordinate-unit rows, no unclosed two-sided-unit rows, and at least one
-coordinate-unit row is present.  An empty coordinate-unit routing ledger is
-not a proof.
+coordinate-unit row is present.  An empty or duplicate coordinate-unit routing
+ledger is not a proof.
 ```
 
 ### Universal-K Row Normal Forms And Seed Classifier
@@ -2574,7 +2576,8 @@ A valid System M endpoint-witness certificate must:
 
 - use the same coordinate-unit routing ledger that created System M;
 - require that ledger to prove coloured-YBE and complete coordinate-unit
-  routing;
+  routing, including duplicate-free route rows and duplicate-free listed
+  coordinate-unit sides;
 - form keys `(left_color,right_color,side)` for every mixed-unit context row
   and every routed coordinate-unit side in that row;
 - cover exactly that nonempty key tuple with endpoint-longitude expression

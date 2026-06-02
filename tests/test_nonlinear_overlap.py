@@ -2032,6 +2032,38 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             ),
         )
 
+    def test_coordinate_unit_route_rejects_duplicate_route_rows(self):
+        profile, routing = coordinate_unit_mixed_context_route_audits()
+        duplicate_routing = replace(routing, rows=(routing.rows[0], routing.rows[0]))
+        audit = PostLinearRemainingFiniteSystemAudit(
+            active_system_k_refinement(),
+            missing_triangular_row_profile=profile,
+            missing_triangular_coordinate_unit_routing=duplicate_routing,
+        )
+
+        self.assertEqual(duplicate_routing.duplicate_route_rows, (routing.rows[0],))
+        self.assertFalse(duplicate_routing.route_ledgers_duplicate_free)
+        self.assertFalse(duplicate_routing.all_coordinate_unit_rows_routed)
+        self.assertFalse(duplicate_routing.proves_coordinate_unit_routing_ledger)
+        self.assertEqual(audit.system_name, "system_k_kink_completion_deficit")
+        self.assertTrue(audit.system_k_active)
+        self.assertFalse(audit.system_m_active)
+        self.assertIn(
+            (
+                "missing_triangular_coordinate_unit_duplicate_route_rows",
+                (
+                    (
+                        "*",
+                        "*",
+                        ("left",),
+                        "coordinate_side_unit_not_triangular",
+                        "proper_section_kernel_visible",
+                    ),
+                ),
+            ),
+            audit.finite_obstruction_data,
+        )
+
     def test_coordinate_unit_route_requires_colored_ybe_certificate(self):
         profile, routing = coordinate_unit_mixed_context_route_audits()
         audit = PostLinearRemainingFiniteSystemAudit(
@@ -2076,6 +2108,10 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
                 routing.rows[0],
                 left_explanation="proper_section_kernel_visible",
             ),
+            replace(
+                routing.rows[0],
+                coordinate_unit_sides=("left", "left"),
+            ),
         )
 
         for forged_row in forged_rows:
@@ -2090,6 +2126,11 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
                 self.assertFalse(forged_row.coordinate_unit_route_fields_consistent)
                 self.assertEqual(forged_row.status, "unrouted_coordinate_unit_row")
                 self.assertFalse(forged_routing.proves_coordinate_unit_routing_ledger)
+                if forged_row.coordinate_unit_sides == ("left", "left"):
+                    self.assertEqual(
+                        forged_row.duplicate_coordinate_unit_sides,
+                        ("left",),
+                    )
                 self.assertEqual(audit.system_name, "system_k_kink_completion_deficit")
                 self.assertTrue(audit.system_k_active)
                 self.assertFalse(audit.system_m_active)
@@ -11953,6 +11994,10 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         )
         self.assertIn(
             ("missing_triangular_coordinate_unit_unrouted_rows", ()),
+            audit.finite_obstruction_data,
+        )
+        self.assertIn(
+            ("missing_triangular_coordinate_unit_duplicate_route_rows", ()),
             audit.finite_obstruction_data,
         )
         self.assertIn(
