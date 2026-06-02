@@ -13859,6 +13859,7 @@ class PostLinearRemainingFiniteSystemAudit:
                 ("endpoint_observer_family_build_unknown_families", ()),
                 ("endpoint_observer_family_build_scope_failures", ()),
                 ("endpoint_observer_family_build_unproved_families", ()),
+                ("endpoint_observer_family_build_row_failure_reasons", ()),
                 ("endpoint_observer_family_build_rows", ()),
                 ("endpoint_observer_family_build_failure_reasons", ()),
             )
@@ -14147,6 +14148,13 @@ class PostLinearRemainingFiniteSystemAudit:
             (
                 "endpoint_observer_family_build_unproved_families",
                 audit.unproved_build_families,
+            ),
+            (
+                "endpoint_observer_family_build_row_failure_reasons",
+                tuple(
+                    (family, build.audit.failure_reasons)
+                    for family, build in audit.build_rows_exact
+                ),
             ),
             (
                 "endpoint_observer_family_build_rows",

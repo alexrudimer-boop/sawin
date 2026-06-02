@@ -5712,6 +5712,25 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             "word_potential_certificate_entry_scope_mismatch",
             build.telescoping_detector_audit.failure_reasons,
         )
+        family_audit = universal_k_endpoint_observer_family_build_audit(
+            seed_entries,
+            (("U", build),),
+        )
+        wrapper = PostLinearRemainingFiniteSystemAudit(
+            active_system_k_refinement(),
+            universal_k_endpoint_observer_family_build=family_audit,
+        )
+        wrapper_data = dict(wrapper.routed_endpoint_obstruction_data)
+
+        self.assertEqual(family_audit.unproved_build_families, ("U",))
+        self.assertEqual(
+            wrapper_data["endpoint_observer_family_build_row_failure_reasons"],
+            (("U", build.audit.failure_reasons),),
+        )
+        self.assertIn(
+            "signed_generator_entries_missing",
+            wrapper_data["endpoint_observer_family_build_row_failure_reasons"][0][1],
+        )
 
     def test_endpoint_observer_builder_rejects_malformed_identity_rows(self):
         interval = one_color_identity_interval()
