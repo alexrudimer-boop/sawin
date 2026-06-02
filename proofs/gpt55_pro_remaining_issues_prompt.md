@@ -1870,6 +1870,12 @@ identity and returns the open canonical audit when it does not prove.  Thus
 the automatic path cannot silently discard bad seed data or bad supplied
 label data, and it cannot manufacture residual faithfulness outside the listed
 symbolic subcases.
+The identity observer constructor must enforce the same rule when the
+explicit supplied-label and explicit canonical-label derivation flags are
+both set.  If the supplied fibre-label residual theorem is attempted and
+fails, that failed certificate data is sticky: the canonical fibre-label
+helper may not replace it in the same per-family observer candidate or in the
+same product-family residual theorem.
 All automatic residual-faithfulness helpers must preserve the full
 supplied routed seed-state ledger in the theorem.  They may use only
 well-formed U/C/M seed states to emit schematic rows, but malformed,

@@ -1031,6 +1031,12 @@ corresponding flag is
 `universal_k_identity_automatic_residual_faithfulness=True`; setting it
 constructs the identity endpoint observer candidate path and lets these
 helpers close exactly the subcases whose finite hypotheses are verified.
+The same exactness rule applies when the identity observer constructor is
+given both explicit supplied-label and explicit canonical-label flags.  If
+the supplied fibre-label residual theorem is attempted and fails, that failed
+certificate data remains the open obligation; the canonical-label helper is
+not allowed to replace it in the same per-family or product-family observer
+candidate.
 All automatic residual-faithfulness helpers preserve the full supplied
 routed seed-state ledger in the theorem.  They may use only the well-formed
 U/C/M seed states to emit schematic rows, but malformed, wrong-family, or

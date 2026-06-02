@@ -6420,6 +6420,51 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             ),
         )
 
+        bad_label_explicit_family_audit = (
+            universal_k_identity_endpoint_observer_builds_by_family(
+                interval,
+                seed_entries,
+                derive_fibre_label_identity_residual_faithfulness=True,
+                derive_canonical_fibre_label_identity_residual_faithfulness=True,
+                fibre_label_identity_rows=(
+                    ("a", "a0", 0),
+                    ("a", "a1", 1),
+                    ("b", "b0", 0),
+                ),
+            )
+        )
+        self.assertFalse(
+            bad_label_explicit_family_audit.proves_family_endpoint_observers
+        )
+        self.assertIn(
+            "endpoint_observer_family_builds_not_proved",
+            bad_label_explicit_family_audit.failure_reasons,
+        )
+        self.assertEqual(
+            bad_label_explicit_family_audit.product_residual_theorem_channel_reasons,
+            (),
+        )
+        self.assertEqual(
+            bad_label_explicit_family_audit.product_residual_faithfulness_theorem.expected_residual_input_tuples,
+            (
+                (
+                    "all_residual_fibre_tuples",
+                    "C",
+                    "fibre_label_identity_residual_channel",
+                ),
+                (
+                    "all_residual_fibre_tuples",
+                    "M",
+                    "fibre_label_identity_residual_channel",
+                ),
+                (
+                    "all_residual_fibre_tuples",
+                    "U",
+                    "fibre_label_identity_residual_channel",
+                ),
+            ),
+        )
+
     def test_automatic_residual_faithfulness_selector_uses_proved_subcases_only(self):
         seed_entries = tuple(
             (
