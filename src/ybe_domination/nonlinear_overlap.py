@@ -3096,6 +3096,8 @@ def universal_k_interval_has_strict_identity_fibre_action(
 ) -> bool:
     """Return whether every local row is strictly identity on colours and fibres."""
 
+    if not _universal_k_interval_table_complete_and_type_correct(interval):
+        return False
     for left_color in interval.colors:
         for right_color in interval.colors:
             if interval.base_R.get((left_color, right_color)) != (
@@ -3131,6 +3133,15 @@ def _universal_k_interval_table_complete_and_type_correct(
         if set(base_R.values()) != base_domain or len(set(base_R.values())) != len(
             base_domain
         ):
+            return False
+        table_domain = {
+            (left_color, right_color, input_left, input_right)
+            for left_color in colors
+            for right_color in colors
+            for input_left in fibres[left_color]
+            for input_right in fibres[right_color]
+        }
+        if set(table.keys()) != table_domain:
             return False
         for left_color in colors:
             for right_color in colors:
@@ -3180,6 +3191,8 @@ def universal_k_interval_has_coordinate_identity_fibre_action(
 ) -> bool:
     """Return whether every local row preserves the two fibre coordinates."""
 
+    if not _universal_k_interval_table_complete_and_type_correct(interval):
+        return False
     for left_color in interval.colors:
         for right_color in interval.colors:
             target_colors = interval.base_R.get((left_color, right_color))
@@ -3447,7 +3460,9 @@ def universal_k_interval_has_fibre_label_identity_action(
 ) -> bool:
     """Return whether fixed injective fibre labels are preserved coordinatewise."""
 
-    return universal_k_fibre_label_identity_audit(
+    return _universal_k_interval_table_complete_and_type_correct(
+        interval
+    ) and universal_k_fibre_label_identity_audit(
         interval,
         label_rows,
     ).proves_fibre_label_identity_action
@@ -3540,7 +3555,9 @@ def universal_k_interval_has_canonical_fibre_label_identity_action(
 ) -> bool:
     """Return whether the canonical preserved-label quotient is fibrewise injective."""
 
-    return universal_k_canonical_fibre_label_identity_audit(
+    return _universal_k_interval_table_complete_and_type_correct(
+        interval
+    ) and universal_k_canonical_fibre_label_identity_audit(
         interval
     ).proves_fibre_label_identity_action
 

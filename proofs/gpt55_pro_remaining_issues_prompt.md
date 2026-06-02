@@ -1797,6 +1797,13 @@ post-linear proof object.  It is nondecisive by design: with no active
 `kappa` endpoint family it reports an empty active-family ledger, and with
 active endpoint families but no residual-faithfulness theorem it reports an
 open observer candidate rather than closing any U, C, or M endpoint system.
+All automatic residual-faithfulness helpers require the supplied local
+interval table to be complete and type-correct: `R_C` must be a bijection on
+colour pairs, every local `T_{a,b}` row must be present exactly on its fibre
+domain, and every local output must land in the fibres prescribed by
+`R_C(a,b)`.  A malformed raw interval object is never an automatic residual
+closure proof, even if the rows inspected by a particular subcase look
+harmless.
 There is one narrow automatic residual-faithfulness subcase.  If every
 quotient row fixes its colour pair and every local fibre row is strictly
 `(x,y)->(x,y)`, then every braid word has trivial residual fibre action after
@@ -1831,12 +1838,7 @@ fibre action is trivial for every braid index, even if quotient colours move.
 The helper `universal_k_singleton_fibre_residual_faithfulness_audit(...)`
 may emit one schematic all-`n` residual row per active endpoint family, and
 the identity observer constructor may consume it only when
-`derive_singleton_fibre_residual_faithfulness=True`.  The singleton helper is
-valid only for a complete type-correct local interval table: the quotient row
-table must be a bijection on colour pairs, every local `T_{a,b}` row must be
-present, and every local output must lie in the fibres prescribed by
-`R_C(a,b)`.  Singleton fibre sizes in a malformed raw table are not a
-residual-faithfulness proof.  This closes only the
+`derive_singleton_fibre_residual_faithfulness=True`.  This closes only the
 singleton-fibre subcase and does not solve nontrivial U/C/M endpoint
 observers.
 There is also a fibre-label identity residual-faithfulness subcase.  A

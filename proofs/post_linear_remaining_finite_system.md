@@ -970,6 +970,13 @@ current `kappa` image has no active endpoint family, the derived ledger
 reports that no active family exists; if active families are present but the
 scoped residual-faithfulness rows are absent, the ledger remains an open
 observer candidate rather than a closure proof.
+All automatic residual-faithfulness helpers require the supplied local
+interval table to be complete and type-correct: `R_C` must be a bijection on
+colour pairs, every local `T_{a,b}` row must be present exactly on its fibre
+domain, and every local output must land in the fibres prescribed by
+`R_C(a,b)`.  A malformed raw interval object is never an automatic residual
+closure proof, even if the rows inspected by a particular subcase look
+harmless.
 There is one automatic residual-faithfulness subcase:
 `universal_k_strict_identity_residual_faithfulness_audit(...)` proves the
 residual gate when every quotient row fixes its colour pair and every local
@@ -998,12 +1005,7 @@ There is a second automatic residual-faithfulness subcase:
 residual gate when every fibre `A_c` has exactly one point.  Then each
 fibre product `X_z` is a singleton for every quotient-colour tuple `z`, so
 the bundled residual fibre action is trivial for every braid index.  The
-checker also requires the local interval table to be complete and
-type-correct: the quotient row table must be a bijection on colour pairs,
-every local `T_{a,b}` row must be present, and each output must land in the
-fibres prescribed by `R_C(a,b)`.  Singleton fibre sizes in a malformed raw
-table are not a residual-faithfulness proof.  The identity constructor
-consumes this proof only when
+identity constructor consumes this proof only when
 `derive_singleton_fibre_residual_faithfulness=True`.  This is independent of
 the strict identity-row condition: quotient colours may move, but there is no
 nontrivial fibre coordinate left to move.

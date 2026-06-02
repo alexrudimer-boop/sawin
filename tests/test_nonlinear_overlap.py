@@ -5933,12 +5933,30 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
                 nonidentity_interval
             )
         )
+        raw_extra_table = type("RawStrictIdentityExtraTableInterval", (), {})()
+        raw_extra_table.colors = ("*",)
+        raw_extra_table.fibres = {"*": (0,)}
+        raw_extra_table.base_R = {("*", "*"): ("*", "*")}
+        raw_extra_table.T = {
+            ("*", "*", 0, 0): (0, 0),
+            ("extra", "*", 0, 0): (0, 0),
+        }
+        self.assertFalse(
+            universal_k_interval_has_strict_identity_fibre_action(raw_extra_table)
+        )
 
         strict_residual = universal_k_strict_identity_residual_faithfulness_audit(
             interval,
             seed_states,
         )
+        malformed_strict_residual = (
+            universal_k_strict_identity_residual_faithfulness_audit(
+                raw_extra_table,
+                seed_states,
+            )
+        )
         self.assertTrue(strict_residual.proves_residual_faithfulness)
+        self.assertFalse(malformed_strict_residual.proves_residual_faithfulness)
         self.assertEqual(
             strict_residual.residual_endpoint_channel_reasons,
             ("strict_identity_residual_channel",),
@@ -6340,6 +6358,33 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             tuple(failure[1] for failure in missing_local_audit.label_preservation_failures),
         )
 
+        raw_extra_local = type("RawExtraLocalRows", (), {})()
+        raw_extra_local.colors = ("a",)
+        raw_extra_local.fibres = {"a": ("a0",)}
+        raw_extra_local.base_R = {("a", "a"): ("a", "a")}
+        raw_extra_local.T = {
+            ("a", "a", "a0", "a0"): ("a0", "a0"),
+            ("extra", "a", "a0", "a0"): ("a0", "a0"),
+        }
+        self.assertFalse(
+            universal_k_interval_has_fibre_label_identity_action(
+                raw_extra_local,
+                (("a", "a0", 0),),
+            )
+        )
+        malformed_label_residual = (
+            universal_k_fibre_label_identity_residual_faithfulness_audit(
+                raw_extra_local,
+                seed_states,
+                (("a", "a0", 0),),
+            )
+        )
+        self.assertFalse(malformed_label_residual.proves_residual_faithfulness)
+        self.assertIn(
+            "residual_faithfulness_implication_not_proved",
+            malformed_label_residual.failure_reasons,
+        )
+
         residual = universal_k_fibre_label_identity_residual_faithfulness_audit(
             interval,
             seed_states,
@@ -6404,6 +6449,19 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         )
         self.assertTrue(canonical_audit.proves_fibre_label_identity_action)
         self.assertEqual(canonical_audit.failure_reasons, ())
+        raw_extra_local = type("RawCanonicalExtraLocalRows", (), {})()
+        raw_extra_local.colors = ("a",)
+        raw_extra_local.fibres = {"a": ("a0",)}
+        raw_extra_local.base_R = {("a", "a"): ("a", "a")}
+        raw_extra_local.T = {
+            ("a", "a", "a0", "a0"): ("a0", "a0"),
+            ("extra", "a", "a0", "a0"): ("a0", "a0"),
+        }
+        self.assertFalse(
+            universal_k_interval_has_canonical_fibre_label_identity_action(
+                raw_extra_local
+            )
+        )
         self.assertFalse(
             universal_k_interval_has_coordinate_identity_fibre_action(interval)
         )
