@@ -7993,6 +7993,52 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             audit.failure_reasons,
         )
 
+    def test_monodromy_family_input_audit_reports_unhashable_seed_without_crashing(self):
+        interval = one_color_identity_interval()
+        group = cyclic_group(2)
+        bad_seed = (["not-hashable"],)
+        seed_key = ("U", bad_seed)
+        seed_entries = (
+            (("*", "*", "L", "constant_map_kernel", (0, 1)), seed_key),
+        )
+        positive_row = UniversalKSignedEndpointGeneratorRow(
+            endpoint_family="U",
+            seed_state=bad_seed,
+            sign=1,
+            left_color="*",
+            right_color="*",
+            input_left=0,
+            input_right=0,
+            output_left=0,
+            output_right=0,
+            next_seed_state=bad_seed,
+            endpoint_value=None,
+        )
+
+        audit = universal_k_monodromy_family_input_audit(
+            interval,
+            seed_entries,
+            endpoint_groups_by_family=(("U", group),),
+            word_potential_templates_by_family=(("U", ((seed_key, ()),)),),
+            positive_state_rows_by_family=(("U", (positive_row,)),),
+        )
+
+        self.assertFalse(audit.input_rows_exact)
+        self.assertEqual(audit.derived_reachable_seed_states, (seed_key,))
+        self.assertEqual(audit.expected_endpoint_families_exact, ())
+        self.assertIn(
+            "endpoint_observer_monodromy_no_active_families",
+            audit.failure_reasons,
+        )
+        self.assertIn(
+            "endpoint_observer_monodromy_templates_malformed_rows",
+            audit.failure_reasons,
+        )
+        self.assertIn(
+            "endpoint_observer_monodromy_positive_rows_malformed_rows",
+            audit.failure_reasons,
+        )
+
     def test_monodromy_family_input_audit_checks_positive_context_domain(self):
         interval = one_color_identity_interval()
         group = cyclic_group(2)

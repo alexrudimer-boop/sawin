@@ -821,6 +821,12 @@ assignments without soundness witnesses.  The monodromy-derived family build
 attaches this audit and requires it to be exact, so a missing `rho_E`, `W_E`,
 `H_E`, or detector-domain witness is now a finite ledger failure rather than
 an opaque missing observer.
+Every positive monodromy row must also have a well-formed positive signed
+entry key: the family must be one of U/C/M, the seed state must be a hashable
+tuple state for that family, the sign must be positive, and the local colour
+and fibre inputs must form a row in the current positive context domain.
+Malformed or unhashable seed states are carried as finite bad ledger data and
+cannot crash the monodromy closure while the observer package is being audited.
 Restricted detector-domain maps are checked at the same entry-key granularity
 as the positive monodromy table.  Every assignment key must be a well-formed
 positive entry key for the same endpoint family and, when the interval is

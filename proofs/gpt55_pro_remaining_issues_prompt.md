@@ -1682,6 +1682,12 @@ assignments without soundness witnesses are finite input-ledger failures.
 They must not be interpreted as an unproved observer with unspecified
 emissions.  A valid monodromy-derived observer begins only after this raw
 package ledger is exact.
+Every positive monodromy row must have a well-formed positive signed endpoint
+entry key: the family must be one of U,C,M, the seed state must be a hashable
+tuple state for that family, the sign must be positive, and the local colour
+and fibre inputs must lie in the current positive context domain.  Malformed
+or unhashable seed states are finite bad ledger data; they must not cause a
+runtime failure and must not be treated as valid hidden observer states.
 Restricted detector-domain assignments are also entry-key scoped.  Each
 assignment map key must be a well-formed positive signed endpoint entry for
 the same endpoint family as the family row, and, when the interval table is

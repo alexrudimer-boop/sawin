@@ -7747,7 +7747,7 @@ def universal_k_signed_endpoint_required_entry_keys(
                                 input_right,
                             )
                         )
-    return tuple(sorted(set(keys), key=repr))
+    return tuple(sorted(_unique_values(tuple(keys)), key=repr))
 
 
 def universal_k_signed_endpoint_coordinate_failures(
@@ -8928,6 +8928,7 @@ def _universal_k_monodromy_positive_rows_package_valid(
         isinstance(row, UniversalKSignedEndpointGeneratorRow)
         and row.endpoint_family == endpoint_family
         and row.sign == 1
+        and _universal_k_is_positive_entry_key(row.entry_key)
         for row in row_tuple
     )
 
@@ -11026,7 +11027,8 @@ def _universal_k_positive_monodromy_state_closure(
     seed_classifier_entries: Sequence[UniversalKSeedClassifierEntry],
     positive_state_rows: Sequence[UniversalKSignedEndpointGeneratorRow],
 ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
-    states = set(universal_k_signed_endpoint_seed_states(seed_classifier_entries))
+    states = list(universal_k_signed_endpoint_seed_states(seed_classifier_entries))
+    state_markers = {_value_marker(state) for state in states}
     changed = True
     while changed:
         changed = False
@@ -11037,10 +11039,15 @@ def _universal_k_positive_monodromy_state_closure(
                 continue
             source = (row.endpoint_family, row.seed_state)
             target = (row.endpoint_family, row.next_seed_state)
-            if source in states and target not in states:
-                states.add(target)
+            target_marker = _value_marker(target)
+            if (
+                _value_marker(source) in state_markers
+                and target_marker not in state_markers
+            ):
+                states.append(target)
+                state_markers.add(target_marker)
                 changed = True
-    return tuple(sorted(states, key=repr))
+    return tuple(sorted(_unique_values(tuple(states)), key=repr))
 
 
 def _universal_k_artin_substitution_for_template(
