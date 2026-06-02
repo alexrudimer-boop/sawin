@@ -12102,6 +12102,38 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             none_reachable_audit.failure_reasons,
         )
 
+        none_rows_audit = universal_k_signed_endpoint_generator_audit(
+            interval,
+            audit.seed_classifier_entries,
+            reachable,
+            None,
+            endpoint_group=cyclic_group(2),
+            endpoint_target_audit=trivial_endpoint_target_audit("U"),
+        )
+        self.assertEqual(none_rows_audit.rows, ())
+        self.assertEqual(none_rows_audit.malformed_rows, (None,))
+        self.assertFalse(none_rows_audit.proves_signed_endpoint_generator_tables)
+        self.assertIn(
+            "malformed_signed_generator_rows",
+            none_rows_audit.failure_reasons,
+        )
+
+        mixed_rows_audit = universal_k_signed_endpoint_generator_audit(
+            interval,
+            audit.seed_classifier_entries,
+            reachable,
+            (rows[0], ("not", "a_signed_row")),
+            endpoint_group=cyclic_group(2),
+            endpoint_target_audit=trivial_endpoint_target_audit("U"),
+        )
+        self.assertEqual(mixed_rows_audit.rows, (rows[0],))
+        self.assertEqual(mixed_rows_audit.malformed_rows, (("not", "a_signed_row"),))
+        self.assertFalse(mixed_rows_audit.proves_signed_endpoint_generator_tables)
+        self.assertIn(
+            "malformed_signed_generator_rows",
+            mixed_rows_audit.failure_reasons,
+        )
+
     def test_signed_endpoint_audit_accepts_transition_reachable_state(self):
         seed_state = ("*", "*", "left_constant_map_universal_kernel")
         next_state = ("*", "*", "left_constant_map_universal_kernel", "next")

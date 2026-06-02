@@ -6974,6 +6974,7 @@ class UniversalKSignedEndpointGeneratorAudit:
     reachable_seed_states: Tuple[Tuple[str, UniversalKSeedState], ...]
     required_entry_keys: Tuple[UniversalKSignedEndpointEntryKey, ...]
     rows: Tuple[UniversalKSignedEndpointGeneratorRow, ...]
+    malformed_rows: Tuple[object, ...] = ()
     entry_domain_derived_from_interval: bool = False
     finite_row_checks_derived_from_tables: bool = False
     endpoint_targets_fixed: bool = False
@@ -7527,7 +7528,7 @@ class UniversalKSignedEndpointGeneratorAudit:
 
     @property
     def all_rows_defined(self) -> bool:
-        return bool(self.rows) and not self.undefined_rows
+        return bool(self.rows) and not self.malformed_rows and not self.undefined_rows
 
     @property
     def signed_finite_row_checks_proved(self) -> bool:
@@ -8243,6 +8244,8 @@ class UniversalKSignedEndpointGeneratorAudit:
             reasons.append("extra_signed_generator_entries")
         if self.duplicate_entry_keys:
             reasons.append("duplicate_signed_generator_entries")
+        if self.malformed_rows:
+            reasons.append("malformed_signed_generator_rows")
         if self.undefined_rows:
             reasons.append("undefined_signed_generator_rows")
         if not self.finite_row_checks_derived_from_tables:
@@ -9363,7 +9366,13 @@ def universal_k_signed_endpoint_generator_audit(
     """
 
     reachable_tuple = _universal_k_row_input_tuple(reachable_seed_states)
-    row_tuple = tuple(rows)
+    raw_rows = _universal_k_row_input_tuple(rows)
+    malformed_rows = tuple(
+        row for row in raw_rows if not isinstance(row, UniversalKSignedEndpointGeneratorRow)
+    )
+    row_tuple = tuple(
+        row for row in raw_rows if isinstance(row, UniversalKSignedEndpointGeneratorRow)
+    )
     witness_map = dict(witnesses or {})
     required_entry_keys = universal_k_signed_endpoint_required_entry_keys(
         interval,
@@ -9448,6 +9457,7 @@ def universal_k_signed_endpoint_generator_audit(
         reachable_seed_states=reachable_tuple,
         required_entry_keys=required_entry_keys,
         rows=row_tuple,
+        malformed_rows=malformed_rows,
         entry_domain_derived_from_interval=True,
         finite_row_checks_derived_from_tables=True,
         endpoint_targets_fixed=endpoint_group is not None,

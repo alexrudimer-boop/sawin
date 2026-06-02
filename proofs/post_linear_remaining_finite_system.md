@@ -819,6 +819,15 @@ rejected as finite ledger data and cannot crash the permutation or relation
 checks.  Non-sequence reachable-state ledgers are likewise retained as
 malformed reachable-state data by the monodromy representation audit and by
 the direct signed endpoint audit, rather than being treated as empty domains.
+The direct signed endpoint audit also filters the supplied signed-row ledger
+through the same explicit row-input gate: only genuine
+`UniversalKSignedEndpointGeneratorRow` objects are fed to the finite
+coordinate, inverse, YBE, far-commutativity, telescoping, and monodromy
+checks, while `None`, non-sequence ledgers, tuple placeholders, or other
+non-row entries are retained in `malformed_rows` and force
+`malformed_signed_generator_rows`.  A malformed row ledger is therefore
+diagnostic proof data, not a runtime crash and not a silently empty signed
+table.
 The retained build itself is now an internal consistency certificate, not only
 a container for two successful subaudits.  A proving
 `UniversalKEndpointObserverBuild` must have positive rows exactly equal to

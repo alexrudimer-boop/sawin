@@ -1311,6 +1311,12 @@ duplicate, malformed, or unhashable signed rows are finite certificate
 failures.  They must not cause a runtime failure in seed-key, entry-domain,
 or monodromy-permutation checks, and they must not be treated as hidden valid
 observer states.
+The public signed-endpoint audit constructor must enforce this without
+normalizing the ledger away: non-row entries such as `None`, tuple
+placeholders, or any object that is not a signed endpoint generator row are
+retained as `malformed_signed_generator_rows`; only genuine signed rows are
+used for the derived finite coordinate, inverse, YBE, far-commutativity,
+telescoping, and monodromy checks.
 Moreover, the concrete endpoint group used for signed-row multiplication must
 match the group-valued target ledger: its order must equal the product of the
 listed endpoint-group orders for the active group-targeted families.  Symmetric

@@ -1480,6 +1480,11 @@ The direct signed endpoint audit and monodromy representation audit now apply
 the same guard to reachable endpoint-state ledgers.  Non-sequence reachable
 ledgers and unhashable reachable seed states remain malformed reachable-state
 data instead of crashing required-entry, YBE, or far-commutativity derivation.
+The direct signed endpoint audit now applies the same policy to the signed
+row ledger itself.  It filters valid signed endpoint generator rows into the
+finite checker pipeline and retains `None`, non-row placeholders, or other
+malformed entries as `malformed_signed_generator_rows`, so a malformed row
+ledger cannot masquerade as an empty or partial proof.
 This removes another false endpoint closure and leaves the same local
 nontrivial observer-existence gap: construct residual-faithful U/C/M
 monodromy-coboundary observers for all surviving intervals, or produce a
