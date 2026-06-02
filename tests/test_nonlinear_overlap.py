@@ -9969,6 +9969,53 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertTrue(proved.exact_cutoff_readouts_proved)
         self.assertTrue(proved.proves_signed_endpoint_generator_tables)
 
+        extra_channel_rows = identity_signed_endpoint_rows(keys, endpoint_value=1)
+        extra_channel = universal_k_signed_endpoint_generator_audit(
+            interval,
+            seed_entries,
+            reachable,
+            extra_channel_rows,
+            endpoint_group=cyclic_group(2),
+            witnesses={row.entry_key: () for row in extra_channel_rows},
+            endpoint_target_audit=UniversalKEndpointTargetAudit(
+                expected_endpoint_families=("C",),
+                covered_endpoint_families=("C",),
+                cutoff_degrees=(("C", 2),),
+                braid_index_independent=True,
+                product_families_separated=True,
+            ),
+            telescoping_detector_audit=trivial_telescoping_detector_audit(
+                keys,
+                rows=extra_channel_rows,
+                endpoint_group=cyclic_group(2),
+            ),
+            cutoff_readout_audit=scoped_cutoff,
+            residual_action_scope=trivial_endpoint_residual_action_scope(
+                "C",
+                seed_states=reachable,
+            ),
+            residual_action_audit=trivial_endpoint_residual_action_audit(),
+        )
+
+        self.assertFalse(extra_channel.cutoff_endpoint_values_have_no_extra_channels)
+        self.assertEqual(extra_channel.cutoff_endpoint_target_families, ("C",))
+        self.assertEqual(
+            len(extra_channel.cutoff_endpoint_value_failures),
+            len(extra_channel_rows),
+        )
+        self.assertEqual(
+            tuple(
+                failure[1]
+                for failure in extra_channel.cutoff_endpoint_value_failures
+            ),
+            ("cutoff_family_endpoint_value_not_identity",) * len(extra_channel_rows),
+        )
+        self.assertFalse(extra_channel.proves_signed_endpoint_generator_tables)
+        self.assertIn(
+            "cutoff_endpoint_values_have_extra_channels",
+            extra_channel.failure_reasons,
+        )
+
     def test_signed_endpoint_coordinate_failures_check_positive_and_inverse_rows(self):
         seed_state = ("*", "*", "left_constant_map_universal_kernel")
         interval = one_color_flip_interval()

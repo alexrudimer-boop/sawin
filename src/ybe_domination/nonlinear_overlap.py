@@ -6764,6 +6764,54 @@ class UniversalKSignedEndpointGeneratorAudit:
         )
 
     @property
+    def cutoff_endpoint_target_families(self) -> Tuple[str, ...]:
+        if self.endpoint_target_audit is None:
+            return ()
+        return tuple(
+            sorted(
+                {
+                    family
+                    for family, degree in self.endpoint_target_audit.cutoff_degree_rows
+                    if family in UNIVERSAL_K_ENDPOINT_FAMILIES
+                    and _universal_k_positive_int(degree)
+                },
+                key=repr,
+            )
+        )
+
+    @property
+    def cutoff_endpoint_value_failures(
+        self,
+    ) -> Tuple[UniversalKSignedEndpointLabelFailure, ...]:
+        """Cutoff-routed families must not emit an extra endpoint-group channel."""
+
+        if self.endpoint_group is None:
+            return ()
+        cutoff_families = set(self.cutoff_endpoint_target_families)
+        if not cutoff_families:
+            return ()
+        identity = self.endpoint_group.identity
+        return tuple(
+            sorted(
+                (
+                    (
+                        row.entry_key,
+                        "cutoff_family_endpoint_value_not_identity",
+                        row.endpoint_value,
+                    )
+                    for row in self.rows
+                    if row.endpoint_family in cutoff_families
+                    and row.endpoint_value != identity
+                ),
+                key=repr,
+            )
+        )
+
+    @property
+    def cutoff_endpoint_values_have_no_extra_channels(self) -> bool:
+        return not self.cutoff_endpoint_value_failures
+
+    @property
     def exact_cutoff_readouts_proved(self) -> bool:
         return not self.cutoff_readouts_required or (
             self.cutoff_readout_audit is not None
@@ -7152,6 +7200,7 @@ class UniversalKSignedEndpointGeneratorAudit:
             and self.far_commutativity_verified
             and self.telescoping_detector_proved
             and self.exact_cutoff_readouts_proved
+            and self.cutoff_endpoint_values_have_no_extra_channels
             and self.residual_faithfulness_proved
         )
 
@@ -7287,6 +7336,8 @@ class UniversalKSignedEndpointGeneratorAudit:
                 reasons.append("cutoff_readout_target_degree_mismatch")
             if self.cutoff_readout_audit is not None:
                 reasons.extend(self.cutoff_readout_audit.failure_reasons)
+        if not self.cutoff_endpoint_values_have_no_extra_channels:
+            reasons.append("cutoff_endpoint_values_have_extra_channels")
         if not self.residual_faithfulness_proved:
             reasons.append("residual_faithfulness_not_verified")
             if self.residual_action_audit is not None:
@@ -13700,6 +13751,15 @@ class PostLinearRemainingFiniteSystemAudit:
                     (),
                 ),
                 ("signed_endpoint_generator_endpoint_target_audit_proved", False),
+                ("signed_endpoint_generator_cutoff_endpoint_target_families", ()),
+                (
+                    "signed_endpoint_generator_cutoff_endpoint_value_failures",
+                    (),
+                ),
+                (
+                    "signed_endpoint_generator_cutoff_endpoint_values_no_extra_channels",
+                    False,
+                ),
                 ("signed_endpoint_generator_coordinate_components_verified", False),
                 ("signed_endpoint_generator_coordinate_failures", ()),
                 ("signed_endpoint_generator_inverse_pairing_verified", False),
@@ -14546,6 +14606,18 @@ class PostLinearRemainingFiniteSystemAudit:
                     if endpoint_target_audit is not None
                     else False
                 ),
+            ),
+            (
+                "signed_endpoint_generator_cutoff_endpoint_target_families",
+                audit.cutoff_endpoint_target_families,
+            ),
+            (
+                "signed_endpoint_generator_cutoff_endpoint_value_failures",
+                audit.cutoff_endpoint_value_failures,
+            ),
+            (
+                "signed_endpoint_generator_cutoff_endpoint_values_no_extra_channels",
+                audit.cutoff_endpoint_values_have_no_extra_channels,
             ),
             (
                 "signed_endpoint_generator_coordinate_components_verified",

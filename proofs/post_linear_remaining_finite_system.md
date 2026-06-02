@@ -476,6 +476,10 @@ cutoff-readout audit's symmetric degree.  A target ledger declaring an `S_m`
 cutoff and a readout audit over `S_k` with `k != m` is reported as
 `cutoff_readout_target_degree_mismatch`; the readout may be faithful for its
 own degree, but it does not certify the declared target.
+Cutoff-routed families must not emit nonidentity labels in the endpoint-group
+coordinate of the signed generator rows.  Any such label is an extra endpoint
+channel outside the symmetric cutoff readout and is reported as
+`cutoff_endpoint_values_have_extra_channels`.
 
 The C/M cutoff gate is now scoped like the residual-faithfulness gate.  A bare
 `cutoff_readouts_exact` flag is recorded only as supplied data; it does not
@@ -1356,6 +1360,9 @@ signed_endpoint_generator_endpoint_target_duplicate_families
 signed_endpoint_generator_endpoint_target_unknown_families
 signed_endpoint_generator_endpoint_target_duplicate_target_families
 signed_endpoint_generator_endpoint_target_audit_proved
+signed_endpoint_generator_cutoff_endpoint_target_families
+signed_endpoint_generator_cutoff_endpoint_value_failures
+signed_endpoint_generator_cutoff_endpoint_values_no_extra_channels
 signed_endpoint_generator_coordinate_components_verified
 signed_endpoint_generator_coordinate_failures
 signed_endpoint_generator_inverse_pairing_verified

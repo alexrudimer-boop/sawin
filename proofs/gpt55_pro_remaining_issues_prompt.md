@@ -978,6 +978,13 @@ degree must equal the symmetric degree used by the cutoff-readout table for
 that same family.  A certificate that declares a degree-`m` cutoff target but
 uses readout permutations in `S_k` with `k != m` has not connected the
 declared endpoint target to the residual readout that is supposed to kill it.
+In addition, a cutoff-routed family may not emit a nonidentity label in the
+endpoint-group coordinate of the signed generator row.  Such a label is an
+extra endpoint channel outside the symmetric cutoff readout, so the cutoff
+certificate has not covered exactly the routed ledger.  Every signed row
+whose family is listed by a cutoff-degree target must have identity
+endpoint-group emission; the only nontrivial cutoff motion may appear in the
+faithful readout into the declared `S_m`.
 
 If a symmetric endpoint-family fork is used as a cutoff route, it must also
 be finite-row backed.  For endpoint factor orders
