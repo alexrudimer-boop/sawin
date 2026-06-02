@@ -1,10 +1,74 @@
 # Self-contained remaining-issues resolution prompt
 
-Date: 2026-06-01
+Date: 2026-06-02
 
 This is a standalone prompt.  Everything needed to understand the current
 proof state and the remaining tasks is stated here.  Do not use the internet
 or rely on any prior conversation.
+
+## Current Reduced Status
+
+The problem is not resolved by the supplied data.  Outcome A is conditional
+on one remaining local existence theorem, and outcome B still lacks a
+concrete finite counterexample with a normalized-law obstruction sequence.
+
+The global assembly gap is closed conditionally: if every surviving
+post-linear local interval has the U/C/M endpoint observers described below,
+then the fixed product detector group `G(pi,Q)` and the sharp rack detector
+give finite-rack domination along any finite congruence chain.
+
+Unsupported companion block-image rows are no longer an endpoint seed
+obstruction.  In a left triangular row
+`T_{a,b}(x,y)=(alpha(x),beta_x(y))`, an unsupported injective-nonsurjective
+companion section forces `alpha` injective and `|A_b|<|A_d|`, hence
+`|A_a||A_b|<|A_c||A_d|`, contradicting bijectivity of
+`T_{a,b}:A_a x A_b -> A_c x A_d`.  The right triangular case is dual with
+`delta` and `gamma_y`.  Thus these rows close by the finite
+`finite_triangular_bijection_cardinality_contradiction` ledger.
+
+The exact remaining A-side lemma is:
+
+```text
+Uniform U/C/M endpoint-observer existence lemma.
+```
+
+For every finite local-minimal post-linear coloured YBE interval surviving
+the stated reductions, and for every active family `E in {U,C,M}` hit by the
+current `K_nabla` seed classifier `kappa`, construct finite,
+braid-index-independent observer data
+
+```text
+S_E^reach,
+H_E or S_mE,
+rho_E:Pi_E->Sym(S_E^reach),
+W_s,
+Gamma^{E,+/-},
+exact cutoff readouts where needed,
+and residual-faithfulness rows.
+```
+
+The data must have exact reachable-state closure, a finite monodromy
+representation of the positive local-context presentation, word-potential
+coboundary defects that are constant on sound detector domains, inverse
+negative rows, exact C/M cutoff readouts when used, family-by-family product
+separation, and residual faithfulness for the actual fibre action:
+
+```text
+all active routed endpoint channels killed => Delta_n(beta)=1.
+```
+
+The exact missing B-side ingredient is:
+
+```text
+One fixed finite YBE solution carrying a routed U/C/M endpoint action
+nontrivial on a normalized-law braid sequence invisible to every finite
+group.
+```
+
+That would require a full `R_X` table, a symbolic YBE proof, explicit
+braids `beta_j in B_{q_j}` with `q_j->infinity`, explicit moved tuples in
+`X^{q_j}`, and a proof that every finite group has eventually trivial
+Artin-longitude data on the sequence.  No such object is supplied here.
 
 Your task is to completely resolve the finite-rack domination problem for
 finite bijective set-theoretic Yang-Baxter solutions.  Return exactly one of
