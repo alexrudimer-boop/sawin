@@ -6376,6 +6376,50 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             ("canonical_fibre_label_identity_residual_channel",),
         )
 
+        bad_label_automatic_family_audit = (
+            universal_k_identity_endpoint_observer_builds_by_family(
+                interval,
+                seed_entries,
+                derive_automatic_residual_faithfulness=True,
+                fibre_label_identity_rows=(
+                    ("a", "a0", 0),
+                    ("a", "a1", 1),
+                    ("b", "b0", 0),
+                ),
+            )
+        )
+        self.assertFalse(
+            bad_label_automatic_family_audit.proves_family_endpoint_observers
+        )
+        self.assertIn(
+            "endpoint_observer_family_builds_not_proved",
+            bad_label_automatic_family_audit.failure_reasons,
+        )
+        self.assertEqual(
+            bad_label_automatic_family_audit.product_residual_theorem_channel_reasons,
+            (),
+        )
+        self.assertEqual(
+            bad_label_automatic_family_audit.product_residual_faithfulness_theorem.expected_residual_input_tuples,
+            (
+                (
+                    "all_residual_fibre_tuples",
+                    "C",
+                    "fibre_label_identity_residual_channel",
+                ),
+                (
+                    "all_residual_fibre_tuples",
+                    "M",
+                    "fibre_label_identity_residual_channel",
+                ),
+                (
+                    "all_residual_fibre_tuples",
+                    "U",
+                    "fibre_label_identity_residual_channel",
+                ),
+            ),
+        )
+
     def test_automatic_residual_faithfulness_selector_uses_proved_subcases_only(self):
         seed_entries = tuple(
             (
@@ -6411,6 +6455,33 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertEqual(
             supplied_label.residual_endpoint_channel_reasons,
             ("fibre_label_identity_residual_channel",),
+        )
+
+        bad_supplied_label = universal_k_automatic_residual_faithfulness_audit(
+            two_color_fibre_label_identity_swap_interval(),
+            seed_states,
+            fibre_label_identity_rows=label_rows[:-1],
+        )
+        self.assertFalse(bad_supplied_label.proves_residual_faithfulness)
+        self.assertEqual(
+            bad_supplied_label.expected_residual_input_tuples,
+            (
+                (
+                    "all_residual_fibre_tuples",
+                    "C",
+                    "fibre_label_identity_residual_channel",
+                ),
+                (
+                    "all_residual_fibre_tuples",
+                    "M",
+                    "fibre_label_identity_residual_channel",
+                ),
+                (
+                    "all_residual_fibre_tuples",
+                    "U",
+                    "fibre_label_identity_residual_channel",
+                ),
+            ),
         )
 
         canonical = universal_k_automatic_residual_faithfulness_audit(

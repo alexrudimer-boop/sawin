@@ -3619,8 +3619,11 @@ def universal_k_automatic_residual_faithfulness_audit(
     the first proving all-``n`` residual-faithfulness audit among the symbolic
     subcases already proved above: strict identity, coordinate identity,
     singleton fibres, supplied fibre-label identity when a ledger is present,
-    and canonical fibre-label identity.  If none proves, the final canonical
-    audit is returned as the open residual-faithfulness obligation.
+    and canonical fibre-label identity when no supplied label ledger is being
+    used.  If a supplied label ledger is present but fails, that failed audit
+    is returned so stale or malformed certificate data is not hidden by the
+    canonical fallback.  If no supplied label ledger is present and no subcase
+    proves, the final canonical audit is returned as the open obligation.
     """
 
     candidates = [
@@ -3637,24 +3640,21 @@ def universal_k_automatic_residual_faithfulness_audit(
             endpoint_seed_states,
         ),
     ]
-    if fibre_label_identity_rows:
-        candidates.append(
-            universal_k_fibre_label_identity_residual_faithfulness_audit(
-                interval,
-                endpoint_seed_states,
-                fibre_label_identity_rows,
-            )
-        )
-    candidates.append(
-        universal_k_canonical_fibre_label_identity_residual_faithfulness_audit(
-            interval,
-            endpoint_seed_states,
-        )
-    )
     for audit in candidates:
         if audit.proves_residual_faithfulness:
             return audit
-    return candidates[-1]
+    if fibre_label_identity_rows:
+        supplied_label = universal_k_fibre_label_identity_residual_faithfulness_audit(
+            interval,
+            endpoint_seed_states,
+            fibre_label_identity_rows,
+        )
+        return supplied_label
+    canonical = universal_k_canonical_fibre_label_identity_residual_faithfulness_audit(
+        interval,
+        endpoint_seed_states,
+    )
+    return canonical
 
 
 @dataclass(frozen=True)

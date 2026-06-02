@@ -1020,9 +1020,14 @@ is present, and finally canonical fibre-label identity.  It is a convenience
 constructor for these symbolic subcases, not a new existence theorem for
 nontrivial U/C/M endpoint observers.  The reusable selector
 `universal_k_automatic_residual_faithfulness_audit(...)` returns the first
-proving residual-faithfulness audit among those subcases and otherwise
-returns the open canonical-label audit with the full expected seed ledger
-still present.  At the top-level audit the corresponding flag is
+proving residual-faithfulness audit among those subcases.  If a supplied
+fibre-label ledger is present after the strict, coordinate-identity, and
+singleton helpers fail, that supplied label ledger is treated as certificate
+data: a failed supplied-label audit is returned as the open obligation rather
+than being hidden by the canonical-label fallback.  If no supplied label
+ledger is present, the selector falls back to the canonical-label audit and
+returns it open when it does not prove.  At the top-level audit the
+corresponding flag is
 `universal_k_identity_automatic_residual_faithfulness=True`; setting it
 constructs the identity endpoint observer candidate path and lets these
 helpers close exactly the subcases whose finite hypotheses are verified.

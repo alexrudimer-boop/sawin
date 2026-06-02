@@ -1861,10 +1861,15 @@ hypotheses holds the observer candidate must remain open.
 The reusable helper
 `universal_k_automatic_residual_faithfulness_audit(...)` is exactly this
 selector: it returns the first proving residual-faithfulness audit in that
-order, and if none proves it returns the open canonical fibre-label audit with
-the full expected routed seed-state ledger still present.  Thus the automatic
-path cannot silently discard bad seed data or manufacture residual
-faithfulness outside the listed symbolic subcases.
+order.  If a supplied fibre-label ledger is present after the strict,
+coordinate-identity, and singleton helpers fail, that ledger is treated as
+certificate data: a failed supplied-label audit must be returned open and may
+not be silently bypassed by the canonical-label fallback.  If no supplied
+label ledger is present, the helper may fall back to canonical fibre-label
+identity and returns the open canonical audit when it does not prove.  Thus
+the automatic path cannot silently discard bad seed data or bad supplied
+label data, and it cannot manufacture residual faithfulness outside the listed
+symbolic subcases.
 All automatic residual-faithfulness helpers must preserve the full
 supplied routed seed-state ledger in the theorem.  They may use only
 well-formed U/C/M seed states to emit schematic rows, but malformed,
