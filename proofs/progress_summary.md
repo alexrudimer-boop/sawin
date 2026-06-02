@@ -1485,6 +1485,9 @@ row ledger itself.  It filters valid signed endpoint generator rows into the
 finite checker pipeline and retains `None`, non-row placeholders, or other
 malformed entries as `malformed_signed_generator_rows`, so a malformed row
 ledger cannot masquerade as an empty or partial proof.
+The standalone monodromy representation audit now uses the same row filter:
+valid signed rows define the endpoint-state permutations, while malformed
+entries are retained as `endpoint_monodromy_representation_malformed_rows`.
 This removes another false endpoint closure and leaves the same local
 nontrivial observer-existence gap: construct residual-faithful U/C/M
 monodromy-coboundary observers for all surviving intervals, or produce a

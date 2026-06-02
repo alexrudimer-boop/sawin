@@ -5449,6 +5449,7 @@ class UniversalKEndpointMonodromyRepresentationAudit:
     presentation: UniversalKEndpointMonodromyPresentation
     reachable_seed_states: Tuple[Tuple[str, UniversalKSeedState], ...]
     rows: Tuple[UniversalKSignedEndpointGeneratorRow, ...]
+    malformed_rows: Tuple[object, ...] = ()
 
     @property
     def reachable_seed_states_exact(
@@ -5739,6 +5740,7 @@ class UniversalKEndpointMonodromyRepresentationAudit:
             and self.family_scope_exact
             and not self.malformed_reachable_seed_states
             and not self.duplicate_reachable_seed_states
+            and not self.malformed_rows
             and not self.context_map_failures
             and not self.relation_failures
         )
@@ -5755,6 +5757,8 @@ class UniversalKEndpointMonodromyRepresentationAudit:
             reasons.append("endpoint_monodromy_representation_malformed_seed_states")
         if self.duplicate_reachable_seed_states:
             reasons.append("endpoint_monodromy_representation_duplicate_seed_states")
+        if self.malformed_rows:
+            reasons.append("endpoint_monodromy_representation_malformed_rows")
         if self.context_map_failures:
             reasons.append("endpoint_monodromy_representation_context_map_failures")
         if self.relation_failures:
@@ -5769,10 +5773,18 @@ def universal_k_endpoint_monodromy_representation_audit(
 ) -> UniversalKEndpointMonodromyRepresentationAudit:
     """Audit the positive endpoint state maps as a representation of Pi_E."""
 
+    raw_rows = _universal_k_row_input_tuple(rows)
+    malformed_rows = tuple(
+        row for row in raw_rows if not isinstance(row, UniversalKSignedEndpointGeneratorRow)
+    )
+    row_tuple = tuple(
+        row for row in raw_rows if isinstance(row, UniversalKSignedEndpointGeneratorRow)
+    )
     return UniversalKEndpointMonodromyRepresentationAudit(
         presentation=presentation,
         reachable_seed_states=_universal_k_row_input_tuple(reachable_seed_states),
-        rows=tuple(rows),
+        rows=row_tuple,
+        malformed_rows=malformed_rows,
     )
 
 

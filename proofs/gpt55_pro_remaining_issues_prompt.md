@@ -1317,6 +1317,11 @@ placeholders, or any object that is not a signed endpoint generator row are
 retained as `malformed_signed_generator_rows`; only genuine signed rows are
 used for the derived finite coordinate, inverse, YBE, far-commutativity,
 telescoping, and monodromy checks.
+The standalone endpoint-state monodromy representation audit must enforce
+the same rule before constructing the finite permutation representation:
+malformed signed-row entries are retained as
+`endpoint_monodromy_representation_malformed_rows`, and only genuine signed
+rows may contribute context/state maps for adjacent and far relations.
 Moreover, the concrete endpoint group used for signed-row multiplication must
 match the group-valued target ledger: its order must equal the product of the
 listed endpoint-group orders for the active group-targeted families.  Symmetric

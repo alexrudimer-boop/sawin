@@ -5645,6 +5645,56 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             none_reachable_audit.failure_reasons,
         )
 
+    def test_endpoint_monodromy_representation_rejects_malformed_rows(self):
+        context = ("U", "*", "*", 0, 0)
+        presentation = UniversalKEndpointMonodromyPresentation(
+            expected_endpoint_families=("U",),
+            contexts=(context,),
+        )
+        seed_state = ("*", "*", "left_constant_map_universal_kernel")
+        row = UniversalKSignedEndpointGeneratorRow(
+            endpoint_family="U",
+            seed_state=seed_state,
+            sign=1,
+            left_color="*",
+            right_color="*",
+            input_left=0,
+            input_right=0,
+            output_left=0,
+            output_right=0,
+            next_seed_state=seed_state,
+            endpoint_value=0,
+        )
+
+        none_rows_audit = universal_k_endpoint_monodromy_representation_audit(
+            presentation,
+            (("U", seed_state),),
+            None,
+        )
+        self.assertEqual(none_rows_audit.rows, ())
+        self.assertEqual(none_rows_audit.malformed_rows, (None,))
+        self.assertFalse(none_rows_audit.proves_monodromy_representation)
+        self.assertIn(
+            "endpoint_monodromy_representation_malformed_rows",
+            none_rows_audit.failure_reasons,
+        )
+
+        mixed_rows_audit = universal_k_endpoint_monodromy_representation_audit(
+            presentation,
+            (("U", seed_state),),
+            (row, ("not", "a_signed_row")),
+        )
+        self.assertEqual(mixed_rows_audit.rows, (row,))
+        self.assertEqual(
+            mixed_rows_audit.malformed_rows,
+            (("not", "a_signed_row"),),
+        )
+        self.assertFalse(mixed_rows_audit.proves_monodromy_representation)
+        self.assertIn(
+            "endpoint_monodromy_representation_malformed_rows",
+            mixed_rows_audit.failure_reasons,
+        )
+
     def test_endpoint_monodromy_representation_reports_malformed_next_states(self):
         context = ("U", "*", "*", 0, 0)
         presentation = UniversalKEndpointMonodromyPresentation(

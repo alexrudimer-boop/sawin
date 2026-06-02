@@ -828,6 +828,11 @@ non-row entries are retained in `malformed_rows` and force
 `malformed_signed_generator_rows`.  A malformed row ledger is therefore
 diagnostic proof data, not a runtime crash and not a silently empty signed
 table.
+The standalone monodromy-representation audit now applies the same row guard
+before building endpoint-state maps: malformed signed-row ledger entries are
+retained as `endpoint_monodromy_representation_malformed_rows`, while the
+permutation, adjacent-relation, and far-relation checks consume only
+well-formed signed endpoint rows.
 The retained build itself is now an internal consistency certificate, not only
 a container for two successful subaudits.  A proving
 `UniversalKEndpointObserverBuild` must have positive rows exactly equal to
