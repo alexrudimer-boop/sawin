@@ -792,6 +792,15 @@ only the finite bookkeeping of the identity observer candidate.  It does not
 assert residual faithfulness and it does not prove that the true residual
 fibre action is trivial.  Without a scoped residual-faithfulness theorem, the
 constructed family builds remain open and report the missing residual gate.
+The top-level helper `post_linear_remaining_finite_system_audit(...)` can
+now derive this canonical candidate directly when
+`universal_k_identity_endpoint_observer_candidates=True`.  This is an
+explicit opt-in path for retaining the finite monodromy-coboundary ledger in
+the main post-linear audit.  It remains deliberately nondecisive: if the
+current `kappa` image has no active endpoint family, the derived ledger
+reports that no active family exists; if active families are present but the
+scoped residual-faithfulness rows are absent, the ledger remains an open
+observer candidate rather than a closure proof.
 For a multi-family product endpoint row, the family ledger also requires a
 separate product residual-faithfulness theorem scoped to the full active
 family set and the full set of seed states hit by `kappa`.  Per-family

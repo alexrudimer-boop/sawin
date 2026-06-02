@@ -16268,6 +16268,8 @@ def post_linear_remaining_finite_system_audit(
     universal_k_endpoint_observer_family_build: (
         UniversalKEndpointObserverFamilyBuildAudit | None
     ) = None,
+    universal_k_identity_endpoint_observer_candidates: bool = False,
+    universal_k_identity_cutoff_degrees_by_family: Sequence[Tuple[str, int]] = (),
     unsupported_companion_structural_contradiction: (
         UnsupportedCompanionStructuralContradictionAudit | None
     ) = None,
@@ -16323,7 +16325,10 @@ def post_linear_remaining_finite_system_audit(
     )
     derive_endpoint_observer_family_build = (
         endpoint_observer_family_build is None
-        and bool(universal_k_word_potential_certificates_by_family)
+        and (
+            bool(universal_k_word_potential_certificates_by_family)
+            or universal_k_identity_endpoint_observer_candidates
+        )
     )
     if derive_signed_endpoint_generator or derive_endpoint_observer_family_build:
         unsigned = PostLinearRemainingFiniteSystemAudit(
@@ -16346,7 +16351,10 @@ def post_linear_remaining_finite_system_audit(
             universal_k_signed_endpoint_interval=interval,
             unsupported_companion_structural_contradiction=unsupported_companion_structural_contradiction,
         )
-        if derive_endpoint_observer_family_build:
+        if (
+            derive_endpoint_observer_family_build
+            and bool(universal_k_word_potential_certificates_by_family)
+        ):
             endpoint_observer_family_build = (
                 universal_k_endpoint_observer_builds_by_family(
                     interval,
@@ -16360,6 +16368,25 @@ def post_linear_remaining_finite_system_audit(
                     ),
                     cutoff_readout_audits_by_family=(
                         universal_k_cutoff_readout_audits_by_family
+                    ),
+                    residual_faithfulness_theorems_by_family=(
+                        universal_k_residual_faithfulness_theorems_by_family
+                    ),
+                    product_residual_faithfulness_theorem=(
+                        universal_k_residual_faithfulness_theorem
+                    ),
+                )
+            )
+        elif (
+            derive_endpoint_observer_family_build
+            and universal_k_identity_endpoint_observer_candidates
+        ):
+            endpoint_observer_family_build = (
+                universal_k_identity_endpoint_observer_builds_by_family(
+                    interval,
+                    unsigned.universal_k_seed_classifier_entries,
+                    cutoff_degrees_by_family=(
+                        universal_k_identity_cutoff_degrees_by_family
                     ),
                     residual_faithfulness_theorems_by_family=(
                         universal_k_residual_faithfulness_theorems_by_family

@@ -10210,6 +10210,30 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             signed.failure_reasons,
         )
 
+    def test_post_linear_function_derives_identity_endpoint_observer_candidates(self):
+        audit = post_linear_remaining_finite_system_audit(
+            one_color_latin_unit_triangular_interval(),
+            universal_k_identity_endpoint_observer_candidates=True,
+        )
+
+        family_build = audit.universal_k_endpoint_observer_family_build
+        self.assertIsNotNone(family_build)
+        self.assertIsNone(audit.universal_k_signed_endpoint_generator)
+        self.assertEqual(family_build.expected_endpoint_families_exact, ())
+        self.assertFalse(family_build.proves_family_endpoint_observers)
+        self.assertIn(
+            "endpoint_observer_family_builds_no_active_families",
+            family_build.failure_reasons,
+        )
+        self.assertIn(
+            ("endpoint_observer_family_build_present", True),
+            audit.routed_endpoint_obstruction_data,
+        )
+        self.assertIn(
+            ("endpoint_observer_family_build_proved", False),
+            audit.routed_endpoint_obstruction_data,
+        )
+
     def test_triangular_recovery_unit_observer_extends_recovery_rows_to_units(self):
         observer = triangular_recovery_unit_observer_audit(
             one_color_latin_unit_triangular_interval()

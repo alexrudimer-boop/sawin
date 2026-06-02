@@ -1512,6 +1512,13 @@ per-family residual-faithfulness rows, and the product residual-faithfulness
 row for multi-family endpoint products, are supplied and pass the finite
 scope checks.  Otherwise it must remain an open observer candidate rather
 than a default endpoint-emission proof.
+The top-level post-linear audit may derive this canonical candidate by an
+explicit opt-in flag, `universal_k_identity_endpoint_observer_candidates`.
+This flag only retains the identity monodromy-coboundary ledger in the
+post-linear proof object.  It is nondecisive by design: with no active
+`kappa` endpoint family it reports an empty active-family ledger, and with
+active endpoint families but no residual-faithfulness theorem it reports an
+open observer candidate rather than closing any U, C, or M endpoint system.
 The post-linear proof object should retain the resulting endpoint-observer
 build record, not only the derived signed-generator audit.  A complete
 certificate should expose whether the build is present, whether it proves the
@@ -1954,6 +1961,7 @@ endpoint_observer_family_build_ledger_exact,
 endpoint_observer_family_seed_classifier_ledger_well_formed,
 endpoint_observer_family_build_row_failure_reasons_exposed,
 identity_endpoint_observer_constructor_keeps_residual_faithfulness_required,
+identity_endpoint_observer_top_level_opt_in_is_nondecisive,
 endpoint_observer_family_certificate_input_ledger_exact,
 endpoint_observer_family_auxiliary_input_ledgers_exact,
 endpoint_observer_each_active_family_single_scoped_and_proved,
