@@ -768,7 +768,11 @@ audit.  The monodromy presentation is exposed as
 positive local contexts `(E,a,b,x,y)`, its adjacent relations are the two
 positive 121/212 context paths computed from `T`, and its far-commutativity
 relations are the nontrivial disjoint context swaps inside each active family;
-tautological self-swaps are omitted.  Thus the endpoint-state representation
+tautological self-swaps are omitted.  The adjacent-relation ledger is a
+full-path ledger: for every active colour/fibre triple, both the 121 and 212
+positive paths must be readable from the current `R_C` and `T` tables.  A
+missing base row or local row is a finite monodromy-presentation failure, not
+an absent relation.  Thus the endpoint-state representation
 is no longer implicit in later path checks; it is a finite object attached to
 the observer build for the exact U/C/M families hit by `kappa`.  The build also records
 `UniversalKEndpointMonodromyRepresentationAudit`, which reads the positive
@@ -1301,6 +1305,7 @@ signed_endpoint_generator_endpoint_observer_build_present
 signed_endpoint_generator_endpoint_observer_build_proved
 signed_endpoint_generator_endpoint_observer_positive_entry_keys
 signed_endpoint_generator_endpoint_observer_monodromy_contexts
+signed_endpoint_generator_endpoint_observer_missing_adjacent_paths
 endpoint_observer_family_build_present
 endpoint_observer_family_build_proved
 endpoint_observer_family_build_matches_current_kappa

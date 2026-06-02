@@ -4695,6 +4695,7 @@ class UniversalKEndpointMonodromyPresentation:
         UniversalKEndpointMonodromyRelation,
         ...,
     ] = ()
+    missing_adjacent_path_failures: Tuple[UniversalKEndpointMonodromyFailure, ...] = ()
 
     @property
     def expected_endpoint_families_exact(self) -> Tuple[str, ...]:
@@ -4770,6 +4771,12 @@ class UniversalKEndpointMonodromyPresentation:
         self,
     ) -> Tuple[UniversalKEndpointMonodromyRelation, ...]:
         return _unique_values(self.far_commutativity_relations)
+
+    @property
+    def missing_adjacent_paths(
+        self,
+    ) -> Tuple[UniversalKEndpointMonodromyFailure, ...]:
+        return _unique_values(self.missing_adjacent_path_failures)
 
     @property
     def duplicate_adjacent_relations(
@@ -4863,6 +4870,7 @@ class UniversalKEndpointMonodromyPresentation:
             and not self.duplicate_contexts
             and not self.malformed_contexts
             and self.family_scope_exact
+            and not self.missing_adjacent_paths
             and not self.duplicate_adjacent_relations
             and not self.duplicate_far_commutativity_relations
             and self.relations_well_formed
@@ -4883,6 +4891,8 @@ class UniversalKEndpointMonodromyPresentation:
             reasons.append("endpoint_monodromy_malformed_contexts")
         if not self.family_scope_exact:
             reasons.append("endpoint_monodromy_family_scope_mismatch")
+        if self.missing_adjacent_paths:
+            reasons.append("endpoint_monodromy_missing_adjacent_ybe_paths")
         if self.duplicate_adjacent_relations:
             reasons.append("endpoint_monodromy_duplicate_adjacent_relations")
         if self.duplicate_far_commutativity_relations:
@@ -5286,6 +5296,7 @@ def universal_k_endpoint_monodromy_presentation(
         )
     )
     adjacent_relations = []
+    missing_adjacent_paths = []
     for family in valid_families:
         for a, b, c in product(interval.colors, repeat=3):
             for x, y, z in product(
@@ -5307,6 +5318,22 @@ def universal_k_endpoint_monodromy_presentation(
                     (x, y, z),
                     (1, 0, 1),
                 )
+                if left_word is None:
+                    missing_adjacent_paths.append(
+                        (
+                            (family, a, b, c, x, y, z),
+                            "endpoint_monodromy_missing_121_path",
+                            None,
+                        )
+                    )
+                if right_word is None:
+                    missing_adjacent_paths.append(
+                        (
+                            (family, a, b, c, x, y, z),
+                            "endpoint_monodromy_missing_212_path",
+                            None,
+                        )
+                    )
                 if left_word is not None and right_word is not None:
                     adjacent_relations.append((left_word, right_word))
 
@@ -5328,6 +5355,7 @@ def universal_k_endpoint_monodromy_presentation(
         contexts=contexts,
         adjacent_relations=_unique_values(tuple(adjacent_relations)),
         far_commutativity_relations=_unique_values(tuple(far_relations)),
+        missing_adjacent_path_failures=_unique_values(tuple(missing_adjacent_paths)),
     )
 
 
@@ -14264,6 +14292,10 @@ class PostLinearRemainingFiniteSystemAudit:
                 ("signed_endpoint_generator_endpoint_observer_build_proved", False),
                 ("signed_endpoint_generator_endpoint_observer_positive_entry_keys", ()),
                 ("signed_endpoint_generator_endpoint_observer_monodromy_contexts", ()),
+                (
+                    "signed_endpoint_generator_endpoint_observer_missing_adjacent_paths",
+                    (),
+                ),
                 ("signed_endpoint_generator_reachable_seed_states", ()),
                 ("signed_endpoint_generator_duplicate_reachable_seed_states", ()),
                 ("signed_endpoint_generator_invalid_reachable_seed_states", ()),
@@ -14944,6 +14976,14 @@ class PostLinearRemainingFiniteSystemAudit:
                 "signed_endpoint_generator_endpoint_observer_monodromy_contexts",
                 (
                     endpoint_observer.monodromy_presentation.contexts_exact
+                    if endpoint_observer is not None
+                    else ()
+                ),
+            ),
+            (
+                "signed_endpoint_generator_endpoint_observer_missing_adjacent_paths",
+                (
+                    endpoint_observer.monodromy_presentation.missing_adjacent_paths
                     if endpoint_observer is not None
                     else ()
                 ),

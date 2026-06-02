@@ -1587,6 +1587,9 @@ positive local-context monodromy presentation:
   adjacent relations are the 121/212 context paths computed from T;
   far relations are nontrivial disjoint context swaps within each active
     family, with tautological self-swaps omitted;
+  every active colour/fibre triple must have readable 121 and 212 paths in
+    the actual R_C and T tables; missing base rows or local rows are finite
+    presentation failures, not omitted relations;
 
 positive rows:
   Gamma^{E,+}_{a,b}(s,x,y)
@@ -2312,6 +2315,7 @@ endpoint_observer_product_residual_channel_reasons_exposed,
 endpoint_observer_family_build_closes_exact_active_families,
 endpoint_observer_positive_rows_forced_from_typed_identity_rows,
 endpoint_observer_monodromy_contexts_exposed,
+endpoint_observer_monodromy_missing_adjacent_paths_exposed,
 coordinate_components_match_T_plus_and_T_inverse,
 all_signed_rows_defined,
 signed_inverse_row_pairing,

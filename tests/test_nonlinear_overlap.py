@@ -5053,6 +5053,52 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         )
         self.assertEqual(presentation.failure_reasons, ())
 
+    def test_endpoint_monodromy_presentation_rejects_incomplete_ybe_paths(self):
+        raw_missing_base = type("RawMissingBaseRows", (), {})()
+        raw_missing_base.colors = ("a",)
+        raw_missing_base.fibres = {"a": (0, 1)}
+        raw_missing_base.base_R = {}
+        raw_missing_base.T = {}
+
+        missing_base_presentation = universal_k_endpoint_monodromy_presentation(
+            raw_missing_base,
+            ("U",),
+        )
+
+        self.assertFalse(missing_base_presentation.presentation_is_finite)
+        self.assertIn(
+            "endpoint_monodromy_missing_adjacent_ybe_paths",
+            missing_base_presentation.failure_reasons,
+        )
+        self.assertIn(
+            "endpoint_monodromy_missing_121_path",
+            tuple(failure[1] for failure in missing_base_presentation.missing_adjacent_paths),
+        )
+        self.assertIn(
+            "endpoint_monodromy_missing_212_path",
+            tuple(failure[1] for failure in missing_base_presentation.missing_adjacent_paths),
+        )
+
+        raw_missing_local = type("RawMissingLocalRows", (), {})()
+        raw_missing_local.colors = ("a",)
+        raw_missing_local.fibres = {"a": (0, 1)}
+        raw_missing_local.base_R = {("a", "a"): ("a", "a")}
+        raw_missing_local.T = {
+            ("a", "a", 0, 0): (0, 0),
+        }
+
+        missing_local_presentation = universal_k_endpoint_monodromy_presentation(
+            raw_missing_local,
+            ("U",),
+        )
+
+        self.assertFalse(missing_local_presentation.presentation_is_finite)
+        self.assertIn(
+            "endpoint_monodromy_missing_adjacent_ybe_paths",
+            missing_local_presentation.failure_reasons,
+        )
+        self.assertTrue(missing_local_presentation.missing_adjacent_paths)
+
     def test_endpoint_monodromy_representation_audit_checks_relations(self):
         context_a = ("U", "*", "*", 0, 0)
         context_b = ("U", "*", "*", 1, 1)
@@ -12660,6 +12706,10 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         )
         self.assertIn(
             ("signed_endpoint_generator_endpoint_observer_build_proved", False),
+            audit.routed_endpoint_obstruction_data,
+        )
+        self.assertIn(
+            ("signed_endpoint_generator_endpoint_observer_missing_adjacent_paths", ()),
             audit.routed_endpoint_obstruction_data,
         )
         self.assertIn(
