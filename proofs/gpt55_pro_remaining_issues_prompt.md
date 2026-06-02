@@ -941,13 +941,15 @@ omits a routed family, includes an unrouted family, has a nonpositive or
 noninteger order or cutoff degree, uses a boolean as a size, uses a family
 outside `{U,C,M}`, repeats a family, assigns both a group target and cutoff
 target to the same family, depends on `n`, or allows cross-family
-cancellation, the signed endpoint layer remains open.  A
-single supplied endpoint group may be treated as an implicit target only for
-a single active routed family.  When two or more of U/C/M are active,
-product-family
-separation must be certified by an explicit target ledger; otherwise the
-certificate could hide cross-family cancellation in one undifferentiated
-group.
+cancellation, the signed endpoint layer remains open.  A supplied endpoint
+group table is not an implicit endpoint-target certificate, even when only
+one routed family is active.  The group table is used to check finite
+multiplication and label identities; the target ledger is separate finite
+data proving exact family coverage, braid-index independence, and
+componentwise product separation.
+When two or more of U/C/M are active, product-family separation must still be
+certified by that explicit target ledger; otherwise the certificate could
+hide cross-family cancellation in one undifferentiated group.
 If a fixed endpoint group is declared as a product over more than one
 endpoint family, the certificate must also prove row-level family support:
 an emitted label from family `E` has identity components in every endpoint

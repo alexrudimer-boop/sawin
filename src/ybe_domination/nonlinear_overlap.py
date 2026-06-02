@@ -8295,34 +8295,6 @@ def universal_k_signed_endpoint_generator_audit(
     reachable_tuple = tuple(reachable_seed_states)
     row_tuple = tuple(rows)
     witness_map = dict(witnesses or {})
-    expected_endpoint_families = tuple(
-        sorted({entry[1][0] for entry in seed_classifier_entries}, key=repr)
-    )
-    if (
-        endpoint_target_audit is None
-        and len(expected_endpoint_families) == 1
-    ):
-        endpoint_family = expected_endpoint_families[0]
-        cutoff_target_degrees = ()
-        endpoint_group_orders = ()
-        if (
-            endpoint_family in {"C", "M"}
-            and cutoff_readout_audit is not None
-            and cutoff_readout_audit.cutoff_degree is not None
-        ):
-            cutoff_target_degrees = (
-                (endpoint_family, cutoff_readout_audit.cutoff_degree),
-            )
-        elif endpoint_group is not None:
-            endpoint_group_orders = ((endpoint_family, len(endpoint_group.elements)),)
-        endpoint_target_audit = UniversalKEndpointTargetAudit(
-            expected_endpoint_families=expected_endpoint_families,
-            covered_endpoint_families=expected_endpoint_families,
-            endpoint_group_orders=endpoint_group_orders,
-            cutoff_degrees=cutoff_target_degrees,
-            braid_index_independent=True,
-            product_families_separated=True,
-        )
     required_entry_keys = universal_k_signed_endpoint_required_entry_keys(
         interval,
         reachable_tuple,

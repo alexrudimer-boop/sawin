@@ -1033,12 +1033,13 @@ only whether an endpoint group was supplied.  Its finite obstruction data now
 separates the raw supplied-target flag from the scoped target audit: expected
 families, covered families, target families, endpoint group orders, cutoff
 degrees, scope agreement with the current `kappa`, and whether the target
-audit proves the fixed endpoint target obligation.  The convenience target
-audit built from a supplied endpoint group is now limited to the single-family
-case.  When more than one of U/C/M is routed, an explicit endpoint target
-audit is required to prove componentwise product separation; one generic
-group table is not enough to certify that no cross-family cancellation is
-being used.
+audit proves the fixed endpoint target obligation.  A supplied endpoint group
+table no longer creates an implicit endpoint-target audit, even in the
+single-family case.  The group table is used for finite row multiplication;
+the endpoint target ledger is separate finite data proving exact family
+coverage, braid-index independence, and componentwise product separation.  In
+multi-family rows, this explicit ledger prevents one generic group table from
+hiding cross-family cancellation.
 The residual bridge report likewise separates family coverage from exact
 seed-state coverage, so a residual theorem or row proof built for the wrong
 routed seeds is visible in the obstruction data.
