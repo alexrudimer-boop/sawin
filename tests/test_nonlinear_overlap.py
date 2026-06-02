@@ -9012,6 +9012,48 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             family_audit.failure_reasons,
         )
 
+    def test_monodromy_family_input_audit_rejects_stale_endpoint_emissions(self):
+        interval = one_color_identity_interval()
+        group = cyclic_group(2)
+        seed_state = ("*", "*", "left_constant_map_universal_kernel")
+        seed_key = ("U", seed_state)
+        seed_entries = ((("*", "*", "L", "constant_map_kernel", (0, 1)), seed_key),)
+        stale_emission_row = UniversalKSignedEndpointGeneratorRow(
+            endpoint_family="U",
+            seed_state=seed_state,
+            sign=1,
+            left_color="*",
+            right_color="*",
+            input_left=0,
+            input_right=0,
+            output_left=0,
+            output_right=0,
+            next_seed_state=seed_state,
+            endpoint_value=group.identity,
+        )
+
+        family_audit = universal_k_endpoint_observer_builds_from_monodromy_by_family(
+            interval,
+            seed_entries,
+            endpoint_groups_by_family=(("U", group),),
+            word_potential_templates_by_family=(("U", ((seed_key, ()),)),),
+            positive_state_rows_by_family=(("U", (stale_emission_row,)),),
+        )
+
+        self.assertFalse(family_audit.proves_family_endpoint_observers)
+        self.assertEqual(
+            family_audit.monodromy_family_input_audit.malformed_positive_state_rows,
+            (("U", (stale_emission_row,)),),
+        )
+        self.assertIn(
+            "endpoint_observer_monodromy_positive_rows_malformed_rows",
+            family_audit.failure_reasons,
+        )
+        self.assertIn(
+            "endpoint_observer_monodromy_candidate_families_missing",
+            family_audit.failure_reasons,
+        )
+
     def test_monodromy_family_input_audit_checks_positive_context_domain(self):
         interval = one_color_identity_interval()
         group = cyclic_group(2)

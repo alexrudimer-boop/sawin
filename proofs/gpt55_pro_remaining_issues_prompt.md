@@ -1719,6 +1719,11 @@ Malformed, unhashable, or non-tuple next states must be rejected as malformed
 positive monodromy package rows at the handoff, and a direct monodromy
 representation audit must report them as next-state-outside-family
 context-map failures rather than accepting them as hidden observer states.
+Raw positive monodromy rows define only the finite state map F^E_r.  They
+must not carry primitive endpoint emissions.  A non-None endpoint value in a
+raw positive monodromy row is stale emission data and must be rejected before
+construction; the actual emitted labels must be exactly the constant
+coboundary defects forced by rho_E and W_s.
 Restricted detector-domain assignments are also entry-key scoped.  Each
 assignment map key must be a well-formed positive signed endpoint entry for
 the same endpoint family as the family row, and, when the interval table is

@@ -858,6 +858,11 @@ non-tuple next state is a malformed positive-row package at the monodromy
 handoff, and a direct representation audit reports it as a
 next-state-outside-family context-map failure rather than accepting it as a
 hidden observer state.
+The raw positive monodromy rows define only the finite state map `F^E_r`.
+They must not carry primitive endpoint emissions.  Any non-`None` endpoint
+value in such a raw monodromy row is stale emission data and is rejected
+before the observer is constructed; the actual endpoint labels must be the
+constant coboundary defects forced by `rho_E` and the templates `W_s`.
 Restricted detector-domain maps are checked at the same entry-key granularity
 as the positive monodromy table.  Every assignment key must be a well-formed
 positive entry key for the same endpoint family and, when the interval is

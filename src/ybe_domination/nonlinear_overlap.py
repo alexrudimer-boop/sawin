@@ -9326,6 +9326,7 @@ def _universal_k_monodromy_positive_rows_package_valid(
         and row.endpoint_family == endpoint_family
         and row.sign == 1
         and _universal_k_is_positive_entry_key(row.entry_key)
+        and row.endpoint_value is None
         and _universal_k_endpoint_seed_state_well_formed(
             (endpoint_family, row.next_seed_state)
         )
