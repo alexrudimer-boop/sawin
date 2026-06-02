@@ -3466,7 +3466,197 @@ residual-faithfulness bridge is still an open local gap.
    sequence, finite-group invisibility proof, moved tuples, and sharp
    obstruction argument described in Section 9.
 
-## 12. Mandatory Final Audit
+## 12. Current Fixed-Carrier Endpoint-Observer Certificate
+
+The old local row condition
+
+```text
+h = product_r phi_r(L_{j_r}(sigma_1^epsilon))^{delta_r}
+```
+
+is not decisive, because for the standard two-strand Artin convention every
+single endpoint element can be represented by a two-strand longitude value.
+The full-domain raw-variable coboundary condition is also too weak for
+nontrivial endpoint motion when templates contain only longitude variables:
+evaluating at all longitude variables and all raw carrier variables equal to
+identity forces every constant defect to be identity.
+
+The corrected finite local certificate is a fixed-carrier word-potential
+certificate.
+
+For an active endpoint family `E`, choose:
+
+```text
+H_E = finite endpoint group or finite symmetric cutoff group,
+R_E = finite number of detector tracks,
+S_E^reach = exact reachable endpoint-state set,
+W_s = word template for each s in S_E^reach.
+```
+
+Each `W_s` is a word only in current longitude variables
+
+```text
+U_{t,0}, U_{t,1}
+```
+
+and contains no raw carrier variables and no endpoint constants.  Thus
+`W_s(1,...,1)=1`.
+
+For each positive row key
+
+```text
+e=(E,+,s,a,b,x,y),
+R_C(a,b)=(c,d),
+T_{a,b}(x,y)=(u,v),
+s'=F_{a,b,x,y}(s),
+```
+
+declare a finite carrier domain
+
+```text
+C_e subset (H_E x H_E)^{R_E}.
+```
+
+An element
+
+```text
+M=((m_{0,0},m_{0,1}),...,(m_{R_E-1,0},m_{R_E-1,1}))
+```
+
+records the active fixed carrier pair for every detector track at that row.
+The row must also carry a soundness witness proving that every carrier tuple
+actually seen by that row along any braid prefix lies in `C_e`.  Valid
+all-`n` soundness witnesses include:
+
+```text
+constant_carrier_track,
+explicit_singleton_carrier_domain,
+reachable_carrier_domain_invariant,
+strand_carrier_equations.
+```
+
+The strand-carrier witness is the finite local invariant:
+
+```text
+ell_c(u)=ell_b(y),
+ell_d(v)=ell_a(x)
+```
+
+for every local row
+
+```text
+R_C(a,b)=(c,d),
+T_{a,b}(x,y)=(u,v),
+```
+
+where `ell_c:A_c->L_E` assigns the carrier label to a fibre point.  These are
+swapped equations because Artin carriers travel with strands, and a crossing
+swaps the two active strands.  If every `ell_c` is fibrewise injective, then
+the strand-carrier invariant gives an automatic residual-faithfulness subcase:
+identity Artin permutation plus quotient-kernel membership implies the final
+fibre tuple equals the initial fibre tuple.
+
+For a carrier tuple `M in C_e`, the positive fixed-carrier Artin substitution
+is:
+
+```text
+U_{t,0} -> U_{t,0} m_{t,0} U_{t,0}^{-1} U_{t,1},
+U_{t,1} -> U_{t,0},
+```
+
+with inactive longitude variables unchanged.  The row must satisfy the finite
+constant-defect identity
+
+```text
+W_s(U)^{-1} W_{s'}(A^+_{e,M}(U)) = h_e
+```
+
+for every assignment of the involved longitude variables to elements of
+`H_E` and every carrier tuple `M in C_e`.  The value `h_e` must be independent
+of both `U` and `M`.  The positive endpoint row is then forced:
+
+```text
+Gamma^{E,+}_{a,b}(s,x,y)=(s',u,v,h_e).
+```
+
+Negative rows are not independent data.  They must be inverse-derived:
+
+```text
+Gamma^{E,-}_{c,d}(s',u,v)=(s,x,y,h_e^{-1}).
+```
+
+The finite checker for a proposed observer must reject:
+
+```text
+empty carrier domains,
+malformed carrier tuples,
+carrier values outside H_E,
+duplicate carrier-domain entries,
+missing or unknown carrier-soundness witnesses,
+templates using raw carrier variables,
+nonconstant defects,
+forged endpoint values not equal to the computed constant defect.
+```
+
+The all-`n` soundness proof is then:
+
+1. The fixed carriers are initialized before reading the braid word.
+2. The carrier-soundness witness proves that the row key always sees carrier
+   tuples in its declared finite `C_e`.
+3. The finite constant-defect identity telescopes over braid words.
+4. The terminal word uses only final evaluated Artin longitudes
+   `phi_t(L_i(beta))`.
+5. Hence the endpoint label lies in `V_beta(H_E)`.
+
+Example normal form showing nonidentity emissions are possible:
+take an abelian endpoint group `H`, one detector track, a constant fixed
+carrier `m in H`, and additive notation.  The positive Artin update is
+
+```text
+U_0 -> m + U_1,
+U_1 -> U_0.
+```
+
+With
+
+```text
+W_s  = U_1 - U_0,
+W_s' = U_0 - U_1,
+```
+
+the defect is the constant `m`.  Thus fixed-carrier certificates can express
+nonidentity endpoint emissions, unlike the full raw-variable no-constant
+domain.
+
+The exact remaining A-side lemma is therefore:
+
+```text
+Uniform fixed-carrier positive endpoint-observer existence lemma.
+```
+
+For every surviving post-linear local-minimal interval and every active
+routed family `E in {U,C,M}`, construct:
+
+```text
+S_E^reach,
+H_E or S_{m_E},
+finite carrier labels and sound row carrier domains C_e,
+positive monodromy permutations F_r on S_E^reach,
+word templates W_s,
+constant fixed-carrier coboundary rows,
+inverse-derived negative rows,
+exact C/M cutoff readouts if used,
+exact U_tri matching if U is active,
+residual faithfulness for the actual fibre action.
+```
+
+This certificate format is now precise and finite, but it is not an existence
+proof.  Outcome A still requires proving that every surviving U/C/M interval
+admits such data.  Outcome B still requires a concrete finite YBE solution
+with a routed endpoint miss and a normalized-law moving sequence invisible to
+every finite group.
+
+## 13. Mandatory Final Audit
 
 Before returning a claimed resolution, explicitly answer:
 

@@ -2607,6 +2607,56 @@ To turn System U into B, construct an explicit interval and a stable
 perfect-residual finite miss in `P_tri` that upgrades to the normalized-law
 residual sequence required by the local normalized-law fork.
 
+## Fixed-carrier word-potential certificate infrastructure
+
+The corrected nontrivial endpoint-observer route is now represented by a
+finite checker rather than an informal condition.  A positive fixed-carrier
+certificate consists of:
+
+```text
+UniversalKFixedCarrierWordPotentialCertificate(
+  endpoint_group,
+  templates,
+  identity_rows,
+  normalized_seed_states
+)
+```
+
+where each `UniversalKFixedCarrierCoboundaryRow` contains:
+
+```text
+entry_key = (E, s, +1, a, b, x, y),
+next_seed_state = s',
+endpoint_value = h,
+carrier_domain = finite tuple of active carrier-pair tuples,
+carrier_soundness_witness = recognized finite witness names.
+```
+
+The checker requires a nonempty carrier domain and a soundness witness such
+as `constant_carrier_track`, `explicit_singleton_carrier_domain`,
+`reachable_carrier_domain_invariant`, or `strand_carrier_equations`.  It then
+exhausts all current longitude-variable assignments in the finite endpoint
+group while holding the carrier tuple fixed, and verifies:
+
+```text
+W_s(U)^-1 W_{s'}(A^+_{r,M}(U)) = h
+```
+
+for every declared carrier tuple `M`.  The terminal word templates may use
+only current longitude variables; raw carrier variables are not terminal
+readout variables.  This bypasses the full-domain raw-variable obstruction:
+nonidentity emissions are possible because the all-identity raw carrier
+assignment is not part of the row domain unless the fixed carrier itself is
+identity.
+
+The public helper
+`universal_k_fixed_carrier_word_potential_certificate_from_monodromy(...)`
+derives these row constants from positive monodromy rows, and
+`universal_k_endpoint_observer_positive_rows_from_fixed_carrier_word_potential(...)`
+builds the corresponding positive endpoint generator rows.  This infrastructure
+does not prove that every surviving U/C/M interval admits such observers; it
+gives the exact finite local checker that any proposed observer must pass.
+
 ## Equivalence to the current remaining problem
 
 [Proved relative to the recorded branch reductions] After the finite-linear

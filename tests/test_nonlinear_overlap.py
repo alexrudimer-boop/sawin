@@ -45,6 +45,8 @@ from ybe_domination import (
     UniversalKEndpointObserverFamilyBuildAudit,
     UniversalKEndpointTargetAudit,
     UniversalKFibreLabelIdentityAudit,
+    UniversalKFixedCarrierCoboundaryRow,
+    UniversalKFixedCarrierWordPotentialCertificate,
     UniversalKMonodromyFamilyInputAudit,
     UniversalKResidualActionScopeAudit,
     UniversalKResidualFaithfulnessAudit,
@@ -100,9 +102,12 @@ from ybe_domination import (
     universal_k_endpoint_observer_builds_by_family,
     universal_k_endpoint_observer_builds_from_monodromy_by_family,
     universal_k_endpoint_observer_family_build_audit,
+    universal_k_endpoint_observer_positive_rows_from_fixed_carrier_word_potential,
     universal_k_endpoint_observer_positive_rows_from_word_potential,
     universal_k_endpoint_observer_signed_rows_from_positive,
     universal_k_evaluate_word_potential,
+    universal_k_fixed_carrier_coboundary_defect_value,
+    universal_k_fixed_carrier_word_potential_certificate_from_monodromy,
     universal_k_word_potential_certificate_from_monodromy,
     universal_k_monodromy_family_input_audit,
     universal_k_identity_cutoff_readout_audit,
@@ -10379,6 +10384,196 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertNotEqual(carrier, group.identity)
         self.assertNotIn(("A", 0, 0), {letter[0] for letter in source_template})
         self.assertNotIn(("A", 0, 0), {letter[0] for letter in next_template})
+
+    def test_fixed_carrier_certificate_derives_nonidentity_emission(self):
+        group = cyclic_group(2)
+        seed_state = ("*", "*", "left_constant_map_universal_kernel")
+        next_state = ("*", "*", "left_constant_map_universal_kernel", "next")
+        seed_key = ("U", seed_state)
+        next_key = ("U", next_state)
+        entry_key = ("U", seed_state, 1, "*", "*", 0, 0)
+        u0 = ("U", 0, 0)
+        u1 = ("U", 0, 1)
+        source_template = ((u1, 1), (u0, -1))
+        next_template = ((u0, 1), (u1, -1))
+        carrier_domain = (((1, 1),),)
+
+        defect_value = universal_k_fixed_carrier_coboundary_defect_value(
+            group,
+            source_template,
+            next_template,
+            carrier_domain,
+        )
+        self.assertEqual(defect_value, 1)
+        self.assertNotEqual(defect_value, group.identity)
+
+        certificate = UniversalKFixedCarrierWordPotentialCertificate(
+            endpoint_group=group,
+            templates=((seed_key, source_template), (next_key, next_template)),
+            identity_rows=(
+                UniversalKFixedCarrierCoboundaryRow(
+                    entry_key=entry_key,
+                    next_seed_state=next_state,
+                    endpoint_value=defect_value,
+                    carrier_domain=carrier_domain,
+                    carrier_soundness_witness=("constant_carrier_track",),
+                ),
+            ),
+            normalized_seed_states=(seed_key,),
+        )
+
+        self.assertTrue(certificate.word_potential_templates_verified)
+        self.assertTrue(certificate.carrier_domains_sound)
+        self.assertTrue(certificate.identities_verified)
+        self.assertTrue(certificate.coboundary_defects_constant)
+        self.assertTrue(certificate.initial_readouts_normalized)
+        self.assertTrue(certificate.proves_fixed_carrier_word_potential_lift)
+
+        forged = replace(
+            certificate,
+            identity_rows=(
+                replace(certificate.identity_row_objects[0], endpoint_value=0),
+            ),
+        )
+        self.assertFalse(forged.identities_verified)
+        self.assertFalse(forged.coboundary_defects_constant)
+        self.assertIn(
+            "fixed_carrier_endpoint_value_mismatch",
+            tuple(failure[1] for failure in forged.identity_failures),
+        )
+
+    def test_fixed_carrier_certificate_from_monodromy_builds_positive_rows(self):
+        interval = one_color_identity_interval()
+        group = cyclic_group(2)
+        seed_state = ("*", "*", "left_constant_map_universal_kernel")
+        next_state = ("*", "*", "left_constant_map_universal_kernel", "next")
+        seed_key = ("U", seed_state)
+        next_key = ("U", next_state)
+        seed_entries = (
+            (
+                (
+                    "*",
+                    "*",
+                    "L",
+                    "constant_map_kernel",
+                    ("*", (0, 1), "universal", "universal"),
+                ),
+                seed_key,
+            ),
+        )
+        reachable = (seed_key, next_key)
+        positive_keys = tuple(
+            key
+            for key in universal_k_signed_endpoint_required_entry_keys(
+                interval,
+                reachable,
+            )
+            if key[2] == 1
+        )
+        positive_state_rows = []
+        carrier_domains = {}
+        carrier_witnesses = {}
+        for key in positive_keys:
+            family, state, _sign, left_color, right_color, x, y = key
+            output_left, output_right = interval.T[(left_color, right_color, x, y)]
+            target_state = next_state if state == seed_state else seed_state
+            positive_state_rows.append(
+                UniversalKSignedEndpointGeneratorRow(
+                    endpoint_family=family,
+                    seed_state=state,
+                    sign=1,
+                    left_color=left_color,
+                    right_color=right_color,
+                    input_left=x,
+                    input_right=y,
+                    output_left=output_left,
+                    output_right=output_right,
+                    next_seed_state=target_state,
+                    endpoint_value=None,
+                )
+            )
+            carrier_domains[key] = (((1, 1),),)
+            carrier_witnesses[key] = ("constant_carrier_track",)
+
+        u0 = ("U", 0, 0)
+        u1 = ("U", 0, 1)
+        templates = (
+            (seed_key, ((u1, 1), (u0, -1))),
+            (next_key, ((u0, 1), (u1, -1))),
+        )
+        certificate = (
+            universal_k_fixed_carrier_word_potential_certificate_from_monodromy(
+                interval,
+                seed_entries,
+                group,
+                templates,
+                tuple(positive_state_rows),
+                carrier_domains_by_entry_key=carrier_domains,
+                carrier_soundness_witness_by_entry_key=carrier_witnesses,
+            )
+        )
+
+        self.assertTrue(certificate.proves_fixed_carrier_word_potential_lift)
+        self.assertEqual(
+            set(row.endpoint_value for row in certificate.identity_row_objects),
+            {1},
+        )
+        positive_rows = (
+            universal_k_endpoint_observer_positive_rows_from_fixed_carrier_word_potential(
+                interval,
+                certificate,
+            )
+        )
+        self.assertEqual(set(row.endpoint_value for row in positive_rows), {1})
+        self.assertEqual(
+            set(row.next_seed_state for row in positive_rows),
+            {seed_state, next_state},
+        )
+
+    def test_fixed_carrier_certificate_requires_sound_carrier_domain(self):
+        group = cyclic_group(2)
+        seed_state = ("*", "*", "left_constant_map_universal_kernel")
+        seed_key = ("U", seed_state)
+        entry_key = ("U", seed_state, 1, "*", "*", 0, 0)
+        empty_domain = UniversalKFixedCarrierWordPotentialCertificate(
+            endpoint_group=group,
+            templates=((seed_key, ()),),
+            identity_rows=(
+                UniversalKFixedCarrierCoboundaryRow(
+                    entry_key=entry_key,
+                    next_seed_state=seed_state,
+                    endpoint_value=group.identity,
+                    carrier_domain=(),
+                    carrier_soundness_witness=("constant_carrier_track",),
+                ),
+            ),
+            normalized_seed_states=(seed_key,),
+        )
+        self.assertFalse(empty_domain.carrier_domains_sound)
+        self.assertIn(
+            "fixed_carrier_domain_empty",
+            tuple(failure[1] for failure in empty_domain.carrier_domain_failures),
+        )
+
+        bad_domain = replace(
+            empty_domain,
+            identity_rows=(
+                replace(
+                    empty_domain.identity_row_objects[0],
+                    carrier_domain=(((2, 1),),),
+                    carrier_soundness_witness=("unknown_witness",),
+                ),
+            ),
+        )
+        self.assertFalse(bad_domain.carrier_domains_sound)
+        self.assertIn(
+            "left_fixed_carrier_value_outside_group",
+            tuple(failure[1] for failure in bad_domain.carrier_domain_failures),
+        )
+        self.assertIn(
+            "unknown_fixed_carrier_soundness_witness",
+            tuple(failure[1] for failure in bad_domain.carrier_domain_failures),
+        )
 
     def test_word_potential_certificate_from_monodromy_filters_invalid_raw_rows(self):
         interval = one_color_identity_interval()

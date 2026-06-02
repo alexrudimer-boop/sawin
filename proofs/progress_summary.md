@@ -1511,6 +1511,20 @@ row equations `ell_c(u)=ell_b(y)` and `ell_d(v)=ell_a(x)` for every local row.
 The new audit distinguishes this from coordinate-label identity, exports a
 residual-faithfulness helper when the carrier maps are fibrewise injective,
 and can be consumed by the identity/monodromy observer helper selectors.
+The fixed-carrier coboundary route is now implemented as concrete finite
+certificate infrastructure rather than just a hand calculation.  The new
+`UniversalKFixedCarrierWordPotentialCertificate` and
+`UniversalKFixedCarrierCoboundaryRow` check positive row keys with a finite
+carrier-domain ledger, recognized carrier-soundness witnesses, templates that
+use only current longitude variables, and constant coboundary defects over all
+longitude-variable assignments while carrier values remain fixed.  The helper
+`universal_k_fixed_carrier_word_potential_certificate_from_monodromy(...)`
+derives endpoint emissions from positive monodromy rows, and
+`universal_k_endpoint_observer_positive_rows_from_fixed_carrier_word_potential(...)`
+turns those constants into positive endpoint rows.  Regression tests now show
+that the `C2` fixed-carrier normal form emits a nonidentity element, that
+forged endpoint values fail, and that empty, malformed, or unwitnessed carrier
+domains are rejected.
 This removes another false endpoint closure and leaves the same local
 nontrivial observer-existence gap: construct residual-faithful U/C/M
 monodromy-coboundary observers for all surviving intervals, or produce a
@@ -1520,6 +1534,7 @@ normalized-law counterexample.
 
 At the latest verified snapshot:
 
+- `python -m unittest tests.test_nonlinear_overlap` passed with 186 tests;
 - `python -m unittest discover -s tests` passed with 722 tests;
 - `python -m compileall -q src tests tools` passed;
 - `node --check tools/build_reduction_audit_workbook.mjs` passed;

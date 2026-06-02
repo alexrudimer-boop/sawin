@@ -163,6 +163,7 @@ UniversalKWordPotentialSubstitution = Tuple[
     ...,
 ]
 UniversalKWordPotentialFailure = Tuple[object, str, object]
+UniversalKFixedCarrierTuple = Tuple[Tuple[GroupElement, GroupElement], ...]
 UniversalKFibreLabelRow = Tuple[Color, FibrePoint, object]
 UniversalKFibreLabelFailure = Tuple[object, str, object]
 UniversalKStrandCarrierRow = Tuple[Color, FibrePoint, object]
@@ -197,6 +198,14 @@ _UNIVERSAL_K_DETECTOR_DOMAIN_SOUNDNESS_WITNESSES = frozenset(
     (
         "reachable_detector_values_enumerated",
         "symbolic_detector_domain_invariant",
+    )
+)
+_UNIVERSAL_K_FIXED_CARRIER_SOUNDNESS_WITNESSES = frozenset(
+    (
+        "constant_carrier_track",
+        "explicit_singleton_carrier_domain",
+        "reachable_carrier_domain_invariant",
+        "strand_carrier_equations",
     )
 )
 
@@ -1083,6 +1092,24 @@ class UniversalKWordPotentialIdentityRow:
     ) = None
     detector_domain_sound: bool = False
     detector_domain_soundness_witness: Tuple[str, ...] = ()
+
+
+@dataclass(frozen=True)
+class UniversalKFixedCarrierCoboundaryRow:
+    """One positive fixed-carrier coboundary identity.
+
+    The carrier domain is a finite list of active carrier pairs, one pair per
+    detector track.  Unlike the raw-variable word-potential certificate, these
+    carrier values are fixed before the braid word and are not quantified over
+    as free ``A`` variables.  The checker exhausts the remaining current
+    longitude variables.
+    """
+
+    entry_key: UniversalKSignedEndpointEntryKey
+    next_seed_state: UniversalKSeedState
+    endpoint_value: object
+    carrier_domain: Tuple[UniversalKFixedCarrierTuple, ...] = ()
+    carrier_soundness_witness: Tuple[str, ...] = ()
 
 
 def _universal_k_word_potential_variables(
@@ -2099,6 +2126,639 @@ class UniversalKWordPotentialCertificate:
             and not self.duplicate_normalized_seed_states
             and not self.malformed_normalized_seed_states
             and not self.normalization_failures
+        )
+
+
+def _universal_k_fixed_carrier_tuple_parts(
+    carrier_tuple: object,
+) -> Tuple[Tuple[object, object], ...] | None:
+    if not isinstance(carrier_tuple, tuple):
+        return None
+    pairs = []
+    for pair in carrier_tuple:
+        if not isinstance(pair, tuple) or len(pair) != 2:
+            return None
+        pairs.append((pair[0], pair[1]))
+    return tuple(pairs)
+
+
+def _universal_k_fixed_carrier_artin_image_variables(
+    variable: UniversalKWordPotentialVariable,
+) -> Tuple[UniversalKWordPotentialVariable, ...]:
+    if not _universal_k_word_potential_variable_valid(variable):
+        return (variable,)
+    kind, track, position = variable
+    if kind == "U" and position in {0, 1}:
+        return (("U", track, 0), ("U", track, 1))
+    return (variable,)
+
+
+def _universal_k_fixed_carrier_assignment_variables(
+    source_template: UniversalKWordPotentialWord,
+    next_template: UniversalKWordPotentialWord,
+) -> Tuple[UniversalKWordPotentialVariable, ...]:
+    variables = list(_universal_k_word_potential_variables(source_template))
+    for variable in _universal_k_word_potential_variables(next_template):
+        variables.extend(_universal_k_fixed_carrier_artin_image_variables(variable))
+    return _unique_values(tuple(variables))
+
+
+def _universal_k_evaluate_fixed_carrier_artin_image_value(
+    endpoint_group: FiniteGroup,
+    assignment: Mapping[UniversalKWordPotentialVariable, GroupElement],
+    variable: UniversalKWordPotentialVariable,
+    sign: int,
+    carrier_tuple: UniversalKFixedCarrierTuple,
+) -> GroupElement:
+    if not _universal_k_word_potential_variable_valid(variable):
+        raise ValueError(f"invalid word-potential variable {variable!r}")
+    if sign not in {-1, 1}:
+        raise ValueError(f"invalid Artin sign {sign!r}")
+    group_elements = set(endpoint_group.elements)
+    kind, track, position = variable
+    if kind != "U" or position not in {0, 1}:
+        if variable not in assignment:
+            raise ValueError(f"missing word-potential assignment for {variable!r}")
+        value = assignment[variable]
+        if value not in group_elements:
+            raise ValueError("word-potential assignment contains value outside group")
+        return value
+    if track >= len(carrier_tuple):
+        raise ValueError(f"missing fixed carrier pair for track {track!r}")
+    parts = _universal_k_fixed_carrier_tuple_parts(carrier_tuple)
+    if parts is None:
+        raise ValueError(f"malformed fixed carrier tuple {carrier_tuple!r}")
+    left_carrier, right_carrier = parts[track]
+    if left_carrier not in group_elements or right_carrier not in group_elements:
+        raise ValueError("fixed carrier tuple contains value outside group")
+    u_left_variable = ("U", track, 0)
+    u_right_variable = ("U", track, 1)
+    if u_left_variable not in assignment or u_right_variable not in assignment:
+        raise ValueError(f"missing word-potential assignment for track {track!r}")
+    u_left = assignment[u_left_variable]
+    u_right = assignment[u_right_variable]
+    if u_left not in group_elements or u_right not in group_elements:
+        raise ValueError("word-potential assignment contains value outside group")
+    if sign == 1 and position == 0:
+        return endpoint_group.mul(
+            endpoint_group.mul(
+                endpoint_group.mul(u_left, left_carrier),
+                endpoint_group.inv(u_left),
+            ),
+            u_right,
+        )
+    if sign == 1 and position == 1:
+        return u_left
+    if sign == -1 and position == 0:
+        return u_right
+    return endpoint_group.mul(
+        endpoint_group.mul(
+            endpoint_group.mul(u_right, endpoint_group.inv(right_carrier)),
+            endpoint_group.inv(u_right),
+        ),
+        u_left,
+    )
+
+
+def _universal_k_evaluate_fixed_carrier_artin_image_word(
+    endpoint_group: FiniteGroup,
+    assignment: Mapping[UniversalKWordPotentialVariable, GroupElement],
+    word: UniversalKWordPotentialWord,
+    sign: int,
+    carrier_tuple: UniversalKFixedCarrierTuple,
+) -> GroupElement:
+    out = endpoint_group.identity
+    for letter in word:
+        parts = _universal_k_word_potential_letter_parts(letter)
+        if parts is None:
+            raise ValueError(f"invalid word-potential letter {letter!r}")
+        variable, exponent = parts
+        if exponent not in {-1, 1}:
+            raise ValueError(f"invalid word-potential exponent {exponent!r}")
+        value = _universal_k_evaluate_fixed_carrier_artin_image_value(
+            endpoint_group,
+            assignment,
+            variable,
+            sign,
+            carrier_tuple,
+        )
+        if exponent < 0:
+            value = endpoint_group.inv(value)
+        out = endpoint_group.mul(out, value)
+    return out
+
+
+def universal_k_fixed_carrier_coboundary_defect_value(
+    endpoint_group: FiniteGroup,
+    source_template: UniversalKWordPotentialWord,
+    next_template: UniversalKWordPotentialWord,
+    carrier_domain: Tuple[UniversalKFixedCarrierTuple, ...],
+    *,
+    sign: int = 1,
+) -> GroupElement | None:
+    """Return the constant fixed-carrier defect, if the finite check succeeds."""
+
+    if (
+        sign not in {-1, 1}
+        or not carrier_domain
+        or _universal_k_word_potential_word_failures(source_template)
+        or _universal_k_word_potential_word_failures(next_template)
+    ):
+        return None
+    variables = _universal_k_fixed_carrier_assignment_variables(
+        source_template,
+        next_template,
+    )
+    defect_value = None
+    for carrier_tuple in carrier_domain:
+        if _universal_k_fixed_carrier_tuple_parts(carrier_tuple) is None:
+            return None
+        for values in product(endpoint_group.elements, repeat=len(variables)):
+            assignment = dict(zip(variables, values))
+            try:
+                source = universal_k_evaluate_word_potential(
+                    endpoint_group,
+                    assignment,
+                    source_template,
+                )
+                left = _universal_k_evaluate_fixed_carrier_artin_image_word(
+                    endpoint_group,
+                    assignment,
+                    next_template,
+                    sign,
+                    carrier_tuple,
+                )
+            except (TypeError, ValueError):
+                return None
+            candidate = endpoint_group.mul(endpoint_group.inv(source), left)
+            if defect_value is None:
+                defect_value = candidate
+            elif defect_value != candidate:
+                return None
+    return endpoint_group.identity if defect_value is None else defect_value
+
+
+@dataclass(frozen=True)
+class UniversalKFixedCarrierWordPotentialCertificate:
+    """Finite fixed-carrier word-potential detector-lift certificate.
+
+    This is the corrected certificate path for nontrivial emissions.  It
+    does not quantify over raw carrier variables.  Each row supplies a finite
+    sound carrier domain, and the checker exhausts all current longitude
+    variables while holding those carrier values fixed.
+    """
+
+    endpoint_group: FiniteGroup
+    templates: Tuple[
+        Tuple[Tuple[str, UniversalKSeedState], UniversalKWordPotentialWord],
+        ...,
+    ]
+    identity_rows: Tuple[UniversalKFixedCarrierCoboundaryRow, ...]
+    normalized_seed_states: Tuple[Tuple[str, UniversalKSeedState], ...] = ()
+
+    @property
+    def template_rows(
+        self,
+    ) -> Tuple[Tuple[Tuple[str, UniversalKSeedState], UniversalKWordPotentialWord], ...]:
+        return tuple(
+            parts
+            for row in self.templates
+            for parts in (_universal_k_word_potential_template_row_parts(row),)
+            if parts is not None
+        )
+
+    @property
+    def malformed_template_rows(self) -> Tuple[object, ...]:
+        return _unique_values(
+            tuple(
+                row
+                for row in self.templates
+                if _universal_k_word_potential_template_row_parts(row) is None
+            )
+        )
+
+    @property
+    def identity_row_objects(
+        self,
+    ) -> Tuple[UniversalKFixedCarrierCoboundaryRow, ...]:
+        return tuple(
+            row
+            for row in self.identity_rows
+            if isinstance(row, UniversalKFixedCarrierCoboundaryRow)
+        )
+
+    @property
+    def malformed_identity_rows(self) -> Tuple[object, ...]:
+        return _unique_values(
+            tuple(
+                row
+                for row in self.identity_rows
+                if not isinstance(row, UniversalKFixedCarrierCoboundaryRow)
+            )
+        )
+
+    @property
+    def template_seed_states_exact(
+        self,
+    ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
+        return _unique_values(tuple(state for state, _word in self.template_rows))
+
+    @property
+    def duplicate_template_seed_states(
+        self,
+    ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
+        return _duplicate_values(tuple(state for state, _word in self.template_rows))
+
+    @property
+    def malformed_template_seed_states(
+        self,
+    ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
+        return _unique_values(
+            tuple(
+                state
+                for state, _word in self.template_rows
+                if not _universal_k_endpoint_seed_state_well_formed(state)
+            )
+        )
+
+    @property
+    def template_map(
+        self,
+    ) -> Mapping[Tuple[str, UniversalKSeedState], UniversalKWordPotentialWord]:
+        return {
+            state: word
+            for state, word in self.template_rows
+            if _universal_k_endpoint_seed_state_well_formed(state)
+        }
+
+    @property
+    def identity_entry_keys_exact(
+        self,
+    ) -> Tuple[UniversalKSignedEndpointEntryKey, ...]:
+        return _unique_values(tuple(row.entry_key for row in self.identity_row_objects))
+
+    @property
+    def positive_identity_entry_keys_exact(
+        self,
+    ) -> Tuple[UniversalKSignedEndpointEntryKey, ...]:
+        return tuple(
+            key
+            for key in self.identity_entry_keys_exact
+            if _universal_k_is_positive_entry_key(key)
+        )
+
+    @property
+    def duplicate_positive_identity_entry_keys(
+        self,
+    ) -> Tuple[UniversalKSignedEndpointEntryKey, ...]:
+        return _duplicate_values(
+            tuple(
+                row.entry_key
+                for row in self.identity_row_objects
+                if _universal_k_is_positive_entry_key(row.entry_key)
+            )
+        )
+
+    @property
+    def malformed_identity_entry_keys(
+        self,
+    ) -> Tuple[UniversalKSignedEndpointEntryKey, ...]:
+        return _unique_values(
+            tuple(
+                row.entry_key
+                for row in self.identity_row_objects
+                if not _universal_k_signed_entry_key_well_formed(row.entry_key)
+            )
+        )
+
+    @property
+    def malformed_identity_next_seed_states(
+        self,
+    ) -> Tuple[Tuple[UniversalKSignedEndpointEntryKey, object], ...]:
+        return _unique_values(
+            tuple(
+                (row.entry_key, row.next_seed_state)
+                for row in self.identity_row_objects
+                if _universal_k_signed_entry_key_well_formed(row.entry_key)
+                if _universal_k_is_positive_entry_key(row.entry_key)
+                if not _universal_k_endpoint_seed_state_well_formed(
+                    (row.entry_key[0], row.next_seed_state)
+                )
+            )
+        )
+
+    @property
+    def normalized_seed_states_exact(
+        self,
+    ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
+        return _unique_values(self.normalized_seed_states)
+
+    @property
+    def duplicate_normalized_seed_states(
+        self,
+    ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
+        return _duplicate_values(self.normalized_seed_states)
+
+    @property
+    def malformed_normalized_seed_states(
+        self,
+    ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
+        return _unique_values(
+            tuple(
+                state
+                for state in self.normalized_seed_states
+                if not _universal_k_endpoint_seed_state_well_formed(state)
+            )
+        )
+
+    @property
+    def template_word_failures(self) -> Tuple[UniversalKWordPotentialFailure, ...]:
+        failures = []
+        for state, word in self.template_rows:
+            for failure in _universal_k_word_potential_word_failures(word):
+                failures.append((state, failure[1], failure[2]))
+        return tuple(failures)
+
+    @property
+    def templates_use_only_current_longitudes(self) -> bool:
+        for _state, word in self.template_rows:
+            for letter in word:
+                parts = _universal_k_word_potential_letter_parts(letter)
+                if parts is None:
+                    continue
+                variable, _exponent = parts
+                if (
+                    _universal_k_word_potential_variable_valid(variable)
+                    and variable[0] != "U"
+                ):
+                    return False
+        return True
+
+    @property
+    def word_potential_templates_verified(self) -> bool:
+        return (
+            not self.duplicate_template_seed_states
+            and not self.malformed_template_rows
+            and not self.malformed_template_seed_states
+            and not self.template_word_failures
+            and self.templates_use_only_current_longitudes
+        )
+
+    @property
+    def carrier_domain_failures(self) -> Tuple[UniversalKWordPotentialFailure, ...]:
+        failures = []
+        group_elements = set(self.endpoint_group.elements)
+        for row in self.identity_row_objects:
+            if not _universal_k_signed_entry_key_well_formed(row.entry_key):
+                failures.append((row.entry_key, "malformed_signed_entry_key", None))
+                continue
+            if not _universal_k_is_positive_entry_key(row.entry_key):
+                failures.append((row.entry_key, "fixed_carrier_row_not_positive", None))
+                continue
+            if not row.carrier_domain:
+                failures.append((row.entry_key, "fixed_carrier_domain_empty", None))
+                continue
+            seen_markers = set()
+            track_count = None
+            for index, carrier_tuple in enumerate(row.carrier_domain):
+                marker = _value_marker(carrier_tuple)
+                if marker in seen_markers:
+                    failures.append(
+                        (
+                            row.entry_key,
+                            "duplicate_fixed_carrier_domain_entry",
+                            carrier_tuple,
+                        )
+                    )
+                seen_markers.add(marker)
+                parts = _universal_k_fixed_carrier_tuple_parts(carrier_tuple)
+                if parts is None:
+                    failures.append(
+                        (
+                            row.entry_key,
+                            "malformed_fixed_carrier_tuple",
+                            (index, carrier_tuple),
+                        )
+                    )
+                    continue
+                if track_count is None:
+                    track_count = len(parts)
+                elif len(parts) != track_count:
+                    failures.append(
+                        (
+                            row.entry_key,
+                            "fixed_carrier_track_count_mismatch",
+                            (index, len(parts), track_count),
+                        )
+                    )
+                for track_index, (left_value, right_value) in enumerate(parts):
+                    if left_value not in group_elements:
+                        failures.append(
+                            (
+                                row.entry_key,
+                                "left_fixed_carrier_value_outside_group",
+                                (index, track_index, left_value),
+                            )
+                        )
+                    if right_value not in group_elements:
+                        failures.append(
+                            (
+                                row.entry_key,
+                                "right_fixed_carrier_value_outside_group",
+                                (index, track_index, right_value),
+                            )
+                        )
+            if not row.carrier_soundness_witness:
+                failures.append(
+                    (row.entry_key, "fixed_carrier_soundness_witness_missing", None)
+                )
+            for witness in _duplicate_values(row.carrier_soundness_witness):
+                failures.append(
+                    (
+                        row.entry_key,
+                        "duplicate_fixed_carrier_soundness_witness",
+                        witness,
+                    )
+                )
+            for witness in row.carrier_soundness_witness:
+                if witness not in _UNIVERSAL_K_FIXED_CARRIER_SOUNDNESS_WITNESSES:
+                    failures.append(
+                        (
+                            row.entry_key,
+                            "unknown_fixed_carrier_soundness_witness",
+                            witness,
+                        )
+                    )
+        return tuple(failures)
+
+    @property
+    def carrier_domains_sound(self) -> bool:
+        return not self.carrier_domain_failures
+
+    @property
+    def identity_failures(self) -> Tuple[UniversalKWordPotentialFailure, ...]:
+        failures = []
+        template_map = self.template_map
+        group_elements = set(self.endpoint_group.elements)
+        carrier_domain_failure_keys = {
+            failure[0] for failure in self.carrier_domain_failures
+        }
+        for row in self.identity_row_objects:
+            if not _universal_k_signed_entry_key_well_formed(row.entry_key):
+                continue
+            entry_family, source_state, sign, *_rest = row.entry_key
+            if sign != 1:
+                continue
+            if not _universal_k_endpoint_seed_state_well_formed(
+                (entry_family, row.next_seed_state)
+            ):
+                failures.append(
+                    (
+                        row.entry_key,
+                        "malformed_next_seed_state",
+                        row.next_seed_state,
+                    )
+                )
+                continue
+            source_key = (entry_family, source_state)
+            next_key = (entry_family, row.next_seed_state)
+            source_template = template_map.get(source_key)
+            next_template = template_map.get(next_key)
+            if source_template is None:
+                failures.append(
+                    (row.entry_key, "missing_source_state_template", source_key)
+                )
+                continue
+            if next_template is None:
+                failures.append((row.entry_key, "missing_next_state_template", next_key))
+                continue
+            if row.endpoint_value not in group_elements:
+                failures.append(
+                    (
+                        row.entry_key,
+                        "endpoint_value_outside_group",
+                        row.endpoint_value,
+                    )
+                )
+                continue
+            if row.entry_key in carrier_domain_failure_keys:
+                continue
+            computed = universal_k_fixed_carrier_coboundary_defect_value(
+                self.endpoint_group,
+                source_template,
+                next_template,
+                row.carrier_domain,
+                sign=1,
+            )
+            if computed is None:
+                failures.append(
+                    (
+                        row.entry_key,
+                        "fixed_carrier_defect_not_constant",
+                        row.carrier_domain,
+                    )
+                )
+                continue
+            if computed != row.endpoint_value:
+                failures.append(
+                    (
+                        row.entry_key,
+                        "fixed_carrier_endpoint_value_mismatch",
+                        (computed, row.endpoint_value),
+                    )
+                )
+        return tuple(failures)
+
+    @property
+    def identities_verified(self) -> bool:
+        return (
+            not self.malformed_identity_entry_keys
+            and not self.malformed_identity_rows
+            and not self.malformed_identity_next_seed_states
+            and not self.duplicate_positive_identity_entry_keys
+            and not self.carrier_domain_failures
+            and not self.identity_failures
+        )
+
+    @property
+    def coboundary_defect_failures(self) -> Tuple[UniversalKWordPotentialFailure, ...]:
+        return (
+            tuple(
+                (row, "malformed_word_potential_template_row", row)
+                for row in self.malformed_template_rows
+            )
+            + tuple(
+                (row, "malformed_fixed_carrier_identity_row_object", row)
+                for row in self.malformed_identity_rows
+            )
+            + self.carrier_domain_failures
+            + self.identity_failures
+        )
+
+    @property
+    def coboundary_defects_constant(self) -> bool:
+        return not self.coboundary_defect_failures
+
+    @property
+    def normalization_failures(self) -> Tuple[UniversalKWordPotentialFailure, ...]:
+        failures = []
+        template_map = self.template_map
+        for state in self.normalized_seed_states_exact:
+            template = template_map.get(state)
+            if template is None:
+                failures.append((state, "missing_normalized_state_template", None))
+                continue
+            variables = _universal_k_word_potential_variables(template)
+            invalid_variables = tuple(
+                variable
+                for variable in variables
+                if not _universal_k_word_potential_variable_valid(variable)
+            )
+            if invalid_variables:
+                failures.append(
+                    (
+                        state,
+                        "word_potential_normalization_invalid_template",
+                        invalid_variables,
+                    )
+                )
+                continue
+            assignment = {variable: self.endpoint_group.identity for variable in variables}
+            try:
+                value = universal_k_evaluate_word_potential(
+                    self.endpoint_group,
+                    assignment,
+                    template,
+                )
+            except ValueError as error:
+                failures.append(
+                    (
+                        state,
+                        "word_potential_normalization_invalid_template",
+                        repr(error),
+                    )
+                )
+                continue
+            if value != self.endpoint_group.identity:
+                failures.append((state, "word_potential_initial_value_mismatch", value))
+        return tuple(failures)
+
+    @property
+    def initial_readouts_normalized(self) -> bool:
+        return (
+            bool(self.normalized_seed_states_exact)
+            and not self.duplicate_normalized_seed_states
+            and not self.malformed_normalized_seed_states
+            and not self.normalization_failures
+        )
+
+    @property
+    def proves_fixed_carrier_word_potential_lift(self) -> bool:
+        return (
+            self.word_potential_templates_verified
+            and self.carrier_domains_sound
+            and self.identities_verified
+            and self.initial_readouts_normalized
         )
 
 
@@ -13091,6 +13751,136 @@ def universal_k_word_potential_certificate_from_monodromy(
             seed_classifier_entries
         ),
     )
+
+
+def universal_k_fixed_carrier_word_potential_certificate_from_monodromy(
+    interval: LocalInterval,
+    seed_classifier_entries: Sequence[UniversalKSeedClassifierEntry],
+    endpoint_group: FiniteGroup,
+    templates: Sequence[
+        Tuple[Tuple[str, UniversalKSeedState], UniversalKWordPotentialWord]
+    ],
+    positive_state_rows: Sequence[UniversalKSignedEndpointGeneratorRow],
+    *,
+    carrier_domains_by_entry_key: Mapping[
+        UniversalKSignedEndpointEntryKey,
+        Tuple[UniversalKFixedCarrierTuple, ...],
+    ]
+    | None = None,
+    carrier_soundness_witness_by_entry_key: Mapping[
+        UniversalKSignedEndpointEntryKey,
+        Tuple[str, ...],
+    ]
+    | None = None,
+) -> UniversalKFixedCarrierWordPotentialCertificate:
+    """Derive endpoint emissions from fixed-carrier coboundary data.
+
+    Each positive monodromy row supplies only the state map ``F_r``.  The
+    carrier-domain ledger supplies the fixed carrier pairs that can occur for
+    that row.  The constructor computes the finite constant defect
+
+        W_s(U)^-1 W_{F_r(s)}(A^+_{r,M}(U))
+
+    over all current longitude-variable assignments and every declared
+    carrier tuple.  Nonconstant defects get endpoint value ``None`` and remain
+    ordinary certificate failures.
+    """
+
+    carrier_domains_by_entry_key = carrier_domains_by_entry_key or {}
+    carrier_soundness_witness_by_entry_key = (
+        carrier_soundness_witness_by_entry_key or {}
+    )
+    reachable_seed_states = _universal_k_positive_monodromy_state_closure(
+        seed_classifier_entries,
+        positive_state_rows,
+    )
+    required_positive_keys = tuple(
+        key
+        for key in universal_k_signed_endpoint_required_entry_keys(
+            interval,
+            reachable_seed_states,
+        )
+        if _universal_k_is_positive_entry_key(key)
+    )
+    required_key_markers = {_value_marker(key) for key in required_positive_keys}
+    template_map = {
+        state: word
+        for state, word in templates
+        if _universal_k_endpoint_seed_state_well_formed(state)
+    }
+
+    identity_rows = []
+    for row in positive_state_rows:
+        if not _universal_k_positive_monodromy_state_row_well_formed(row):
+            continue
+        key = row.entry_key
+        if _value_marker(key) not in required_key_markers:
+            continue
+        source_template = template_map.get((row.endpoint_family, row.seed_state))
+        next_template = template_map.get((row.endpoint_family, row.next_seed_state))
+        carrier_domain = carrier_domains_by_entry_key.get(key, ())
+        endpoint_value = None
+        if source_template is not None and next_template is not None:
+            endpoint_value = universal_k_fixed_carrier_coboundary_defect_value(
+                endpoint_group,
+                source_template,
+                next_template,
+                carrier_domain,
+                sign=1,
+            )
+        identity_rows.append(
+            UniversalKFixedCarrierCoboundaryRow(
+                entry_key=key,
+                next_seed_state=row.next_seed_state,
+                endpoint_value=endpoint_value,
+                carrier_domain=carrier_domain,
+                carrier_soundness_witness=(
+                    carrier_soundness_witness_by_entry_key.get(key, ())
+                ),
+            )
+        )
+
+    return UniversalKFixedCarrierWordPotentialCertificate(
+        endpoint_group=endpoint_group,
+        templates=tuple(templates),
+        identity_rows=tuple(identity_rows),
+        normalized_seed_states=universal_k_signed_endpoint_seed_states(
+            seed_classifier_entries
+        ),
+    )
+
+
+def universal_k_endpoint_observer_positive_rows_from_fixed_carrier_word_potential(
+    interval: LocalInterval,
+    word_potential_certificate: UniversalKFixedCarrierWordPotentialCertificate,
+) -> Tuple[UniversalKSignedEndpointGeneratorRow, ...]:
+    """Build positive endpoint rows from fixed-carrier coboundary data."""
+
+    rows = []
+    for identity_row in word_potential_certificate.identity_row_objects:
+        key = identity_row.entry_key
+        if not _universal_k_is_positive_entry_key(key):
+            continue
+        endpoint_family, seed_state, _sign, left_color, right_color, x, y = key
+        output = interval.T.get((left_color, right_color, x, y))
+        if output is None:
+            continue
+        rows.append(
+            UniversalKSignedEndpointGeneratorRow(
+                endpoint_family=endpoint_family,
+                seed_state=seed_state,
+                sign=1,
+                left_color=left_color,
+                right_color=right_color,
+                input_left=x,
+                input_right=y,
+                output_left=output[0],
+                output_right=output[1],
+                next_seed_state=identity_row.next_seed_state,
+                endpoint_value=identity_row.endpoint_value,
+            )
+        )
+    return tuple(rows)
 
 
 def universal_k_endpoint_observer_signed_rows_from_positive(
