@@ -1970,6 +1970,11 @@ singleton-fibre, strict identity, coordinate-identity, supplied fibre-label
 identity, and canonical fibre-label identity residual-trivial subcases are
 consumed for individual U, C, and M endpoint obligations.  This is not an
 existence proof for the remaining nontrivial U/C/M endpoint observers.
+The aggregate automatic selector is likewise checked at the one-family routed
+level: if an interval satisfies one of the selector hypotheses, for example
+coordinate-identity residual motion, the derived family ledger closes the
+single active U, C, or M endpoint obligation without requiring a product
+residual theorem.
 The identity observer constructor must enforce the same rule when the
 explicit supplied-label and explicit canonical-label derivation flags are
 both set.  If the supplied fibre-label residual theorem is attempted and

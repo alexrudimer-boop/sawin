@@ -1147,6 +1147,10 @@ This closes only the already-proved singleton-fibre, strict identity,
 coordinate-identity, supplied fibre-label identity, and canonical fibre-label
 identity residual-trivial subcases for individual U, C, and M obligations; it
 does not construct the missing nontrivial U/C/M observers.
+The aggregate automatic selector is also checked at this one-family routed
+level: when an interval satisfies one of the selector's hypotheses, such as
+coordinate-identity residual motion, the derived family ledger closes the
+single active U, C, or M endpoint system without requiring a product theorem.
 The same exactness rule applies when the identity observer constructor is
 given both explicit supplied-label and explicit canonical-label flags.  If
 the supplied fibre-label residual theorem is attempted and fails, that failed
