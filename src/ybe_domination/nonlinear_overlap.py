@@ -5801,10 +5801,10 @@ def universal_k_endpoint_monodromy_presentation(
 ) -> UniversalKEndpointMonodromyPresentation:
     """Build the finite positive local-context presentation for U/C/M observers."""
 
-    families = _unique_values(tuple(endpoint_families))
+    families = _universal_k_row_input_tuple(endpoint_families)
     valid_families = tuple(
         family
-        for family in families
+        for family in _unique_values(families)
         if _is_hashable(family) and family in UNIVERSAL_K_ENDPOINT_FAMILIES
     )
     contexts = tuple(

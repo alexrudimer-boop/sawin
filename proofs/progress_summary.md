@@ -1465,6 +1465,12 @@ trigger `residual_faithfulness_duplicate_seed_states`, and non-sequence or
 otherwise malformed ledgers trigger
 `residual_faithfulness_malformed_seed_states`; either case keeps the observer
 open.
+The positive local-context monodromy presentation constructor now has the
+same anti-normalization guard for endpoint-family ledgers.  It preserves a
+non-sequence family ledger or duplicate family entries for the presentation
+audit while deriving context rows only from valid unique families, so duplicate
+families and malformed family scope remain explicit monodromy-presentation
+failures.
 This removes another false endpoint closure and leaves the same local
 nontrivial observer-existence gap: construct residual-faithful U/C/M
 monodromy-coboundary observers for all surviving intervals, or produce a

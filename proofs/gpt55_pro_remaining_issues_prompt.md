@@ -1760,6 +1760,12 @@ the ordinary family observer audit.  Therefore the smallest constructive
 A-side input format is now the finite data
 `(H_E,rho_E,W_E,D_E,RF_E)` for each active routed family, with endpoint
 emissions and signed rows derived and rechecked against the current interval.
+The positive local-context monodromy presentation constructor must not
+normalize away malformed endpoint-family scope.  It preserves a non-sequence
+family ledger or duplicate family entries in the expected-family ledger while
+using only valid unique families to derive context rows.  Duplicate family
+entries must produce `endpoint_monodromy_duplicate_families`; malformed or
+unknown family entries must produce `endpoint_monodromy_unknown_families`.
 If no restricted detector-domain assignment map is supplied for a positive
 entry, the constructor checks the coboundary defect on the full finite
 detector domain.  A defect constant on that full domain needs no separate

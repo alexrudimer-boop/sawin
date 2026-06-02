@@ -793,6 +793,12 @@ an absent relation.  The endpoint-family labels in the presentation ledger
 and in every local context must be hashable members of `{U,C,M}`.  Unknown or
 unhashable families, including malformed context families, are finite
 monodromy-presentation failures and cannot be hidden as absent generators.
+The presentation constructor preserves a non-sequence endpoint-family ledger
+or duplicate family entries as expected-family ledger data; it only uses the
+valid unique families to derive context rows.  Thus duplicate families still
+trigger `endpoint_monodromy_duplicate_families`, and malformed family ledgers
+still trigger `endpoint_monodromy_unknown_families` rather than being silently
+normalized to a smaller presentation.
 Thus the endpoint-state representation
 is no longer implicit in later path checks; it is a finite object attached to
 the observer build for the exact U/C/M families hit by `kappa`.  The build also records

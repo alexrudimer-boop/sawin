@@ -5402,6 +5402,34 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             presentation.failure_reasons,
         )
 
+        duplicate_family_presentation = universal_k_endpoint_monodromy_presentation(
+            interval,
+            ("U", "U"),
+        )
+        self.assertFalse(duplicate_family_presentation.presentation_is_finite)
+        self.assertEqual(
+            duplicate_family_presentation.duplicate_expected_endpoint_families,
+            ("U",),
+        )
+        self.assertIn(
+            "endpoint_monodromy_duplicate_families",
+            duplicate_family_presentation.failure_reasons,
+        )
+
+        none_family_presentation = universal_k_endpoint_monodromy_presentation(
+            interval,
+            None,
+        )
+        self.assertFalse(none_family_presentation.presentation_is_finite)
+        self.assertEqual(
+            none_family_presentation.invalid_expected_endpoint_families,
+            (None,),
+        )
+        self.assertIn(
+            "endpoint_monodromy_unknown_families",
+            none_family_presentation.failure_reasons,
+        )
+
         malformed_context = (["U"], "*", "*", 0, 0)
         direct_presentation = UniversalKEndpointMonodromyPresentation(
             expected_endpoint_families=(["U"],),
