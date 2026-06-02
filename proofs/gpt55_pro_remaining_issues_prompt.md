@@ -2049,6 +2049,18 @@ without a word-potential certificate ledger, must still trigger the direct
 family-observer audit.  It remains an incomplete observer attempt until the
 word-potential and residual-faithfulness data are exact, but it is not
 silently absent.
+Direct signed-generator detector-lift auxiliaries obey the same finite-ledger
+discipline.  Supplying detector-track count rows or detector-track
+initialization rows directly to the post-linear audit without a
+word-potential certificate must create a diagnostic telescoping audit rather
+than silently dropping those rows.  A non-sequence count ledger such as
+`None` is one malformed count row; a non-sequence initialization ledger is one
+malformed initialization row.  Unknown families, duplicate track keys,
+nonpositive counts, malformed initialization templates, missing
+word-potential templates, and missing initial normalization must be exported
+as signed-generator detector-lift failures.  Such diagnostics do not close
+an endpoint family; they only make the incomplete direct detector-lift data
+visible.
 The same exact finite-ledger rule applies to the auxiliary rows used to build
 the family observers.  Detector-track initialization rows must cover exactly
 the active routed families with no malformed rows, unknown families, or

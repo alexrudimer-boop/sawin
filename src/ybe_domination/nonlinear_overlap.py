@@ -12062,7 +12062,10 @@ def universal_k_endpoint_observer_build(
         )
     detector_track_count = sum(
         count
-        for _family, count in detector_track_counts_by_family
+        for row in detector_track_counts_by_family
+        for parts in (_universal_k_detector_track_count_row_parts(row),)
+        if parts is not None
+        for _family, count in (parts,)
         if _universal_k_positive_int(count)
     )
     telescoping_detector_audit = UniversalKTelescopingDetectorAudit(
@@ -20232,6 +20235,12 @@ def post_linear_remaining_finite_system_audit(
     universal_continuation_identity_routing = (
         universal_continuation_identity_routing_audit(interval)
     )
+    universal_k_detector_track_count_rows = _universal_k_row_input_tuple(
+        universal_k_detector_track_counts_by_family
+    )
+    universal_k_detector_track_initialization_input_rows = (
+        _universal_k_row_input_tuple(universal_k_detector_track_initialization_rows)
+    )
     signed_endpoint_generator = universal_k_signed_endpoint_generator
     endpoint_observer_build = None
     endpoint_observer_family_build = universal_k_endpoint_observer_family_build
@@ -20243,8 +20252,8 @@ def post_linear_remaining_finite_system_audit(
             or universal_k_signed_endpoint_group is not None
             or universal_k_signed_endpoint_witnesses is not None
             or universal_k_word_potential_certificate is not None
-            or bool(universal_k_detector_track_counts_by_family)
-            or bool(universal_k_detector_track_initialization_rows)
+            or bool(universal_k_detector_track_count_rows)
+            or bool(universal_k_detector_track_initialization_input_rows)
             or universal_k_endpoint_target_audit is not None
             or universal_k_cutoff_readout_audit is not None
             or universal_k_residual_action_scope is not None
@@ -20301,9 +20310,7 @@ def post_linear_remaining_finite_system_audit(
             )
         )
         or bool(
-            _universal_k_row_input_tuple(
-                universal_k_detector_track_initialization_rows
-            )
+            universal_k_detector_track_initialization_input_rows
         )
         or bool(
             _universal_k_row_input_tuple(
@@ -20374,7 +20381,7 @@ def post_linear_remaining_finite_system_audit(
                         universal_k_monodromy_detector_domain_soundness_witnesses_by_family
                     ),
                     detector_track_initialization_rows=(
-                        universal_k_detector_track_initialization_rows
+                        universal_k_detector_track_initialization_input_rows
                     ),
                     endpoint_target_audits_by_family=(
                         universal_k_endpoint_target_audits_by_family
@@ -20400,7 +20407,7 @@ def post_linear_remaining_finite_system_audit(
                     unsigned.universal_k_seed_classifier_entries,
                     universal_k_word_potential_certificates_by_family,
                     detector_track_initialization_rows=(
-                        universal_k_detector_track_initialization_rows
+                        universal_k_detector_track_initialization_input_rows
                     ),
                     endpoint_target_audits_by_family=(
                         universal_k_endpoint_target_audits_by_family
@@ -20467,10 +20474,10 @@ def post_linear_remaining_finite_system_audit(
                     unsigned.universal_k_seed_classifier_entries,
                     universal_k_word_potential_certificate,
                     detector_track_counts_by_family=(
-                        universal_k_detector_track_counts_by_family
+                        universal_k_detector_track_count_rows
                     ),
                     detector_track_initialization_rows=(
-                        universal_k_detector_track_initialization_rows
+                        universal_k_detector_track_initialization_input_rows
                     ),
                     endpoint_target_audit=universal_k_endpoint_target_audit,
                     cutoff_readout_audit=universal_k_cutoff_readout_audit,
@@ -20481,6 +20488,47 @@ def post_linear_remaining_finite_system_audit(
                 )
                 signed_endpoint_generator = endpoint_observer_build.audit
             else:
+                required_entry_keys = universal_k_signed_endpoint_required_entry_keys(
+                    interval,
+                    reachable_states or (),
+                )
+                detector_track_count = sum(
+                    count
+                    for row in universal_k_detector_track_count_rows
+                    for parts in (_universal_k_detector_track_count_row_parts(row),)
+                    if parts is not None
+                    for _family, count in (parts,)
+                    if _universal_k_positive_int(count)
+                )
+                telescoping_detector_audit = universal_k_telescoping_detector_audit
+                if (
+                    telescoping_detector_audit is None
+                    and (
+                        universal_k_detector_track_count_rows
+                        or universal_k_detector_track_initialization_input_rows
+                    )
+                ):
+                    telescoping_detector_audit = UniversalKTelescopingDetectorAudit(
+                        expected_entry_keys=required_entry_keys,
+                        covered_entry_keys=tuple(
+                            row.entry_key
+                            for row in universal_k_signed_endpoint_rows or ()
+                            if isinstance(row, UniversalKSignedEndpointGeneratorRow)
+                        ),
+                        expected_endpoint_seed_states=tuple(reachable_states or ()),
+                        covered_endpoint_seed_states=tuple(reachable_states or ()),
+                        detector_track_counts_by_family=tuple(
+                            universal_k_detector_track_count_rows
+                        ),
+                        detector_track_initialization_rows=tuple(
+                            universal_k_detector_track_initialization_input_rows
+                        ),
+                        expected_word_potential_seed_states=tuple(
+                            reachable_states or ()
+                        ),
+                        covered_word_potential_seed_states=(),
+                        detector_track_count=detector_track_count or None,
+                    )
                 signed_endpoint_generator = universal_k_signed_endpoint_generator_audit(
                     interval,
                     unsigned.universal_k_seed_classifier_entries,
@@ -20495,7 +20543,7 @@ def post_linear_remaining_finite_system_audit(
                     residual_action_scope=universal_k_residual_action_scope,
                     residual_faithfulness_theorem=universal_k_residual_faithfulness_theorem,
                     residual_action_audit=universal_k_residual_action_audit,
-                    telescoping_detector_audit=universal_k_telescoping_detector_audit,
+                    telescoping_detector_audit=telescoping_detector_audit,
                 )
 
     return PostLinearRemainingFiniteSystemAudit(

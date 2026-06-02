@@ -959,6 +959,17 @@ Any nonempty direct family-observer subledger also triggers that handoff:
 detector-track, endpoint-target, cutoff-readout, or by-family residual
 theorem rows supplied without a word-potential certificate ledger are audited
 as incomplete observer attempts rather than ignored as absent data.
+The same visibility rule now applies to direct signed-generator detector-lift
+auxiliaries.  Supplying detector-track count rows or detector-track
+initialization rows directly to `post_linear_remaining_finite_system_audit(...)`
+without a word-potential certificate creates a diagnostic telescoping audit
+instead of silently dropping those ledgers.  Malformed count rows such as
+`None`, malformed initialization rows, unknown families, duplicate track
+keys, nonpositive counts, missing word-potential templates, and missing
+initial normalization are then exported in the signed-generator obstruction
+data.  This is not an observer existence theorem; it is the finite audit gate
+that prevents incomplete direct detector-lift data from masquerading as
+absent input.
 All family labels in these build, certificate, detector-track, endpoint-target,
 cutoff-readout, and residual-theorem rows must be hashable certificate atoms
 equal to `U`, `C`, or `M`.  An unhashable list-like label is not alternate

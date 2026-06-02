@@ -14357,6 +14357,47 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
                     data["endpoint_observer_family_build_failure_reasons"],
                 )
 
+    def test_post_linear_function_audits_direct_signed_detector_ledgers(self):
+        cases = (
+            (
+                "universal_k_detector_track_counts_by_family",
+                None,
+                "signed_endpoint_generator_detector_track_count_malformed_rows",
+                (None,),
+                "detector_track_count_malformed_rows",
+            ),
+            (
+                "universal_k_detector_track_initialization_rows",
+                "not-a-track-ledger",
+                "signed_endpoint_generator_detector_track_initialization_malformed_rows",
+                ("not-a-track-ledger",),
+                "detector_track_initialization_malformed_rows",
+            ),
+        )
+        for parameter, malformed_row, data_key, expected_rows, failure_reason in cases:
+            with self.subTest(parameter=parameter):
+                audit = post_linear_remaining_finite_system_audit(
+                    one_color_latin_unit_triangular_interval(),
+                    **{parameter: malformed_row},
+                )
+                data = dict(audit.routed_endpoint_obstruction_data)
+                signed = audit.universal_k_signed_endpoint_generator
+
+                self.assertIsNotNone(signed)
+                self.assertIsNotNone(signed.telescoping_detector_audit)
+                self.assertEqual(data[data_key], expected_rows)
+                self.assertFalse(
+                    data["signed_endpoint_generator_telescoping_detector_verified"]
+                )
+                self.assertIn(
+                    failure_reason,
+                    data["signed_endpoint_generator_failure_reasons"],
+                )
+                self.assertIn(
+                    "word_potential_certificate_missing",
+                    data["signed_endpoint_generator_failure_reasons"],
+                )
+
     def test_post_linear_function_audits_monodromy_auxiliary_ledgers(self):
         cases = (
             (
