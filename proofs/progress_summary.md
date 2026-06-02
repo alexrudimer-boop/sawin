@@ -1476,6 +1476,10 @@ observer audit now normalize malformed top-level `kappa` ledgers through the
 common row-input gate.  Non-sequence seed-classifier input is retained as
 malformed seed-classifier data instead of crashing or being interpreted as an
 empty active endpoint seed set.
+The direct signed endpoint audit and monodromy representation audit now apply
+the same guard to reachable endpoint-state ledgers.  Non-sequence reachable
+ledgers and unhashable reachable seed states remain malformed reachable-state
+data instead of crashing required-entry, YBE, or far-commutativity derivation.
 This removes another false endpoint closure and leaves the same local
 nontrivial observer-existence gap: construct residual-faithful U/C/M
 monodromy-coboundary observers for all surviving intervals, or produce a

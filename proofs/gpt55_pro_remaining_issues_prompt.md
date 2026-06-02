@@ -1766,6 +1766,10 @@ family ledger or duplicate family entries in the expected-family ledger while
 using only valid unique families to derive context rows.  Duplicate family
 entries must produce `endpoint_monodromy_duplicate_families`; malformed or
 unknown family entries must produce `endpoint_monodromy_unknown_families`.
+The same anti-crash rule applies to reachable endpoint-state ledgers.  A
+non-sequence reachable-state ledger, such as `None`, or an unhashable
+reachable seed state must be retained as malformed reachable-state data by
+the monodromy representation audit and the direct signed endpoint audit.
 If no restricted detector-domain assignment map is supplied for a positive
 entry, the constructor checks the coboundary defect on the full finite
 detector domain.  A defect constant on that full domain needs no separate

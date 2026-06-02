@@ -5630,6 +5630,21 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             audit.failure_reasons,
         )
 
+        none_reachable_audit = universal_k_endpoint_monodromy_representation_audit(
+            presentation,
+            None,
+            rows,
+        )
+        self.assertFalse(none_reachable_audit.proves_monodromy_representation)
+        self.assertEqual(
+            none_reachable_audit.malformed_reachable_seed_states,
+            (None,),
+        )
+        self.assertIn(
+            "endpoint_monodromy_representation_malformed_seed_states",
+            none_reachable_audit.failure_reasons,
+        )
+
     def test_endpoint_monodromy_representation_reports_malformed_next_states(self):
         context = ("U", "*", "*", 0, 0)
         presentation = UniversalKEndpointMonodromyPresentation(
@@ -12032,6 +12047,60 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
 
         self.assertEqual(audit.missing_entry_keys, (keys[-1],))
         self.assertFalse(audit.proves_signed_endpoint_generator_tables)
+
+        unhashable_reachable = (
+            ("U", seed_state),
+            ("U", (["not-hashable"],)),
+        )
+        malformed_required_keys = universal_k_signed_endpoint_required_entry_keys(
+            interval,
+            unhashable_reachable,
+        )
+        self.assertEqual(malformed_required_keys, keys)
+
+        malformed_reachable_audit = universal_k_signed_endpoint_generator_audit(
+            interval,
+            audit.seed_classifier_entries,
+            unhashable_reachable,
+            rows,
+            endpoint_group=cyclic_group(2),
+            endpoint_target_audit=trivial_endpoint_target_audit("U"),
+            telescoping_detector_audit=trivial_telescoping_detector_audit(
+                keys,
+                rows=rows,
+                normalized_seed_states=(("U", seed_state),),
+            ),
+            residual_action_scope=trivial_endpoint_residual_action_scope("U"),
+            residual_action_audit=trivial_endpoint_residual_action_audit(),
+            monodromy_representation_audit=explicit_monodromy_audit_for_rows(
+                reachable,
+                rows,
+            ),
+        )
+        self.assertFalse(malformed_reachable_audit.proves_signed_endpoint_generator_tables)
+        self.assertEqual(
+            malformed_reachable_audit.invalid_reachable_seed_states,
+            (("U", (["not-hashable"],)),),
+        )
+        self.assertIn(
+            "reachable_seed_states_unknown_endpoint_family",
+            malformed_reachable_audit.failure_reasons,
+        )
+
+        none_reachable_audit = universal_k_signed_endpoint_generator_audit(
+            interval,
+            audit.seed_classifier_entries,
+            None,
+            (),
+            endpoint_group=cyclic_group(2),
+            endpoint_target_audit=trivial_endpoint_target_audit("U"),
+        )
+        self.assertFalse(none_reachable_audit.proves_signed_endpoint_generator_tables)
+        self.assertEqual(none_reachable_audit.invalid_reachable_seed_states, (None,))
+        self.assertIn(
+            "reachable_seed_states_unknown_endpoint_family",
+            none_reachable_audit.failure_reasons,
+        )
 
     def test_signed_endpoint_audit_accepts_transition_reachable_state(self):
         seed_state = ("*", "*", "left_constant_map_universal_kernel")

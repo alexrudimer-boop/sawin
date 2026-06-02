@@ -5170,6 +5170,18 @@ def universal_k_signed_endpoint_seed_states(
     )
 
 
+def _universal_k_valid_endpoint_seed_states(
+    seed_states: object,
+) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
+    return _unique_values(
+        tuple(
+            state
+            for state in _universal_k_row_input_tuple(seed_states)
+            if _universal_k_endpoint_seed_state_well_formed(state)
+        )
+    )
+
+
 def universal_k_signed_endpoint_transition_closure(
     seed_classifier_entries: Sequence[UniversalKSeedClassifierEntry],
     rows: Sequence[UniversalKSignedEndpointGeneratorRow],
@@ -5759,7 +5771,7 @@ def universal_k_endpoint_monodromy_representation_audit(
 
     return UniversalKEndpointMonodromyRepresentationAudit(
         presentation=presentation,
-        reachable_seed_states=tuple(reachable_seed_states),
+        reachable_seed_states=_universal_k_row_input_tuple(reachable_seed_states),
         rows=tuple(rows),
     )
 
@@ -7999,10 +8011,14 @@ class UniversalKSignedEndpointGeneratorAudit:
     def telescoping_detector_scope_matches_required(self) -> bool:
         return (
             self.telescoping_detector_audit is not None
-            and set(self.telescoping_detector_audit.expected_positive_entry_keys_exact)
-            == set(self.required_positive_entry_keys_exact)
-            and set(self.telescoping_detector_audit.expected_endpoint_seed_states_exact)
-            == set(self.reachable_seed_states_exact)
+            and _value_marker_set(
+                self.telescoping_detector_audit.expected_positive_entry_keys_exact
+            )
+            == _value_marker_set(self.required_positive_entry_keys_exact)
+            and _value_marker_set(
+                self.telescoping_detector_audit.expected_endpoint_seed_states_exact
+            )
+            == _value_marker_set(self.reachable_seed_states_exact)
         )
 
     @property
@@ -8021,17 +8037,26 @@ class UniversalKSignedEndpointGeneratorAudit:
     ) -> Tuple[UniversalKSignedEndpointEntryKey, ...]:
         if self.telescoping_detector_audit is None:
             return ()
-        required = set(self.required_entry_keys_exact)
-        candidate_keys = (
-            set(self.telescoping_detector_audit.expected_entry_keys_exact)
-            | set(self.telescoping_detector_audit.covered_entry_keys_exact)
-        )
+        required = _value_marker_set(self.required_entry_keys_exact)
+        candidate_keys = list(self.telescoping_detector_audit.expected_entry_keys_exact)
+        candidate_keys.extend(self.telescoping_detector_audit.covered_entry_keys_exact)
         if self.telescoping_detector_audit.word_potential_certificate is not None:
-            candidate_keys |= set(
+            candidate_keys.extend(
                 self.telescoping_detector_audit
                 .word_potential_certificate.identity_entry_keys_exact
             )
-        return tuple(sorted(candidate_keys - required, key=repr))
+        return tuple(
+            sorted(
+                _unique_values(
+                    tuple(
+                        key
+                        for key in candidate_keys
+                        if _value_marker(key) not in required
+                    )
+                ),
+                key=repr,
+            )
+        )
 
     @property
     def telescoping_detector_diagnostic_entries_in_signed_domain(self) -> bool:
@@ -8337,7 +8362,9 @@ def universal_k_signed_endpoint_required_entry_keys(
     """Derive the full D_Gamma row domain from interval fibres and states."""
 
     keys = []
-    for endpoint_family, seed_state in reachable_seed_states:
+    for endpoint_family, seed_state in _universal_k_valid_endpoint_seed_states(
+        reachable_seed_states
+    ):
         for sign in (-1, 1):
             for left_color, right_color in product(interval.colors, repeat=2):
                 for input_left in interval.fibres[left_color]:
@@ -8680,7 +8707,9 @@ def universal_k_signed_endpoint_positive_ybe_failures(
             fibres = tuple(next_fibres)
         return (state, colors, fibres), None
 
-    for endpoint_family, seed_state in sorted(set(reachable_seed_states), key=repr):
+    for endpoint_family, seed_state in _universal_k_valid_endpoint_seed_states(
+        reachable_seed_states
+    ):
         for a, b, c in product(interval.colors, repeat=3):
             for x, y, z in product(
                 interval.fibres[a],
@@ -8823,7 +8852,9 @@ def universal_k_signed_endpoint_positive_ybe_cocycle_failures(
             fibres = tuple(next_fibres)
         return (state, colors, fibres, label_product), None
 
-    for endpoint_family, seed_state in sorted(set(reachable_seed_states), key=repr):
+    for endpoint_family, seed_state in _universal_k_valid_endpoint_seed_states(
+        reachable_seed_states
+    ):
         for a, b, c in product(interval.colors, repeat=3):
             for x, y, z in product(
                 interval.fibres[a],
@@ -9017,7 +9048,9 @@ def universal_k_signed_endpoint_far_commutativity_failures(
             label_product = endpoint_group.mul(label_product, label)
         return (state, colors, fibres, label_product), None
 
-    for endpoint_family, seed_state in sorted(set(reachable_seed_states), key=repr):
+    for endpoint_family, seed_state in _universal_k_valid_endpoint_seed_states(
+        reachable_seed_states
+    ):
         for colors in product(interval.colors, repeat=4):
             fibre_ranges = tuple(interval.fibres[color] for color in colors)
             for fibres in product(*fibre_ranges):
@@ -9329,7 +9362,7 @@ def universal_k_signed_endpoint_generator_audit(
     fixed-track telescoping gates remain visibly separated.
     """
 
-    reachable_tuple = tuple(reachable_seed_states)
+    reachable_tuple = _universal_k_row_input_tuple(reachable_seed_states)
     row_tuple = tuple(rows)
     witness_map = dict(witnesses or {})
     required_entry_keys = universal_k_signed_endpoint_required_entry_keys(
@@ -9341,7 +9374,9 @@ def universal_k_signed_endpoint_generator_audit(
             sorted(
                 {
                     family
-                    for family, _seed_state in reachable_tuple
+                    for family, _seed_state in _universal_k_valid_endpoint_seed_states(
+                        reachable_tuple
+                    )
                     if family in UNIVERSAL_K_ENDPOINT_FAMILIES
                 },
                 key=repr,

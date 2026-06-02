@@ -816,7 +816,9 @@ certificate from being a list of unsupported boolean claims.
 The monodromy representation audit uses the same well-formedness guard on
 reachable seed states: malformed or unhashable reachable-state entries are
 rejected as finite ledger data and cannot crash the permutation or relation
-checks.
+checks.  Non-sequence reachable-state ledgers are likewise retained as
+malformed reachable-state data by the monodromy representation audit and by
+the direct signed endpoint audit, rather than being treated as empty domains.
 The retained build itself is now an internal consistency certificate, not only
 a container for two successful subaudits.  A proving
 `UniversalKEndpointObserverBuild` must have positive rows exactly equal to
