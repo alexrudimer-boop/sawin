@@ -795,6 +795,13 @@ assignments without soundness witnesses.  The monodromy-derived family build
 attaches this audit and requires it to be exact, so a missing `rho_E`, `W_E`,
 `H_E`, or detector-domain witness is now a finite ledger failure rather than
 an opaque missing observer.
+When the interval is available, the same ledger derives the reachable
+monodromy seed-state closure from the supplied positive rows, recomputes the
+full positive local-context entry domain from the current fibres, and checks
+that the supplied positive monodromy rows are duplicate-free, have no missing
+or extra entry keys, and have coordinate outputs equal to the actual
+`T_{a,b}(x,y)`.  Thus a proposed `rho_E` table must already be total on the
+positive context domain before the coboundary defects are evaluated.
 The builder reads only actual word-potential identity row objects when forcing
 positive endpoint rows.  Malformed tuple-shaped identity entries remain in
 the word-potential certificate as certificate errors and cause the observer to

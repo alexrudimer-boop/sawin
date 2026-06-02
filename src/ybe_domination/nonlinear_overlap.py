@@ -8460,6 +8460,7 @@ class UniversalKMonodromyFamilyInputAudit:
     """
 
     seed_classifier_entries: Tuple[UniversalKSeedClassifierEntry, ...]
+    interval: LocalInterval | None = None
     endpoint_group_rows: Tuple[object, ...] = ()
     word_potential_template_rows: Tuple[object, ...] = ()
     positive_state_rows: Tuple[object, ...] = ()
@@ -8482,6 +8483,118 @@ class UniversalKMonodromyFamilyInputAudit:
                     if _universal_k_endpoint_seed_state_well_formed(state)
                 },
                 key=repr,
+            )
+        )
+
+    @property
+    def positive_state_row_objects(
+        self,
+    ) -> Tuple[UniversalKSignedEndpointGeneratorRow, ...]:
+        return tuple(
+            row
+            for _family, rows in self._valid_parts(
+                self.positive_state_rows,
+                self._positive_rows_predicate,
+            )
+            for row in tuple(rows)
+            if isinstance(row, UniversalKSignedEndpointGeneratorRow)
+        )
+
+    @property
+    def derived_reachable_seed_states(
+        self,
+    ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
+        return _universal_k_positive_monodromy_state_closure(
+            self.seed_classifier_entries,
+            self.positive_state_row_objects,
+        )
+
+    @property
+    def expected_positive_entry_keys(
+        self,
+    ) -> Tuple[UniversalKSignedEndpointEntryKey, ...]:
+        if self.interval is None:
+            return ()
+        return tuple(
+            key
+            for key in universal_k_signed_endpoint_required_entry_keys(
+                self.interval,
+                self.derived_reachable_seed_states,
+            )
+            if _universal_k_is_positive_entry_key(key)
+        )
+
+    @property
+    def covered_positive_entry_keys(
+        self,
+    ) -> Tuple[UniversalKSignedEndpointEntryKey, ...]:
+        return tuple(
+            row.entry_key
+            for row in self.positive_state_row_objects
+            if _universal_k_is_positive_entry_key(row.entry_key)
+        )
+
+    @property
+    def duplicate_positive_entry_keys(
+        self,
+    ) -> Tuple[UniversalKSignedEndpointEntryKey, ...]:
+        return _duplicate_values(self.covered_positive_entry_keys)
+
+    @property
+    def missing_positive_entry_keys(
+        self,
+    ) -> Tuple[UniversalKSignedEndpointEntryKey, ...]:
+        if self.interval is None:
+            return ()
+        covered = _value_marker_set(self.covered_positive_entry_keys)
+        return tuple(
+            key
+            for key in self.expected_positive_entry_keys
+            if _value_marker(key) not in covered
+        )
+
+    @property
+    def extra_positive_entry_keys(
+        self,
+    ) -> Tuple[UniversalKSignedEndpointEntryKey, ...]:
+        if self.interval is None:
+            return ()
+        expected = _value_marker_set(self.expected_positive_entry_keys)
+        return tuple(
+            key
+            for key in self.covered_positive_entry_keys
+            if _value_marker(key) not in expected
+        )
+
+    @property
+    def positive_coordinate_failures(
+        self,
+    ) -> Tuple[UniversalKSignedEndpointEntryKey, ...]:
+        if self.interval is None:
+            return ()
+        failures = []
+        for row in self.positive_state_row_objects:
+            output = self.interval.T.get(
+                (
+                    row.left_color,
+                    row.right_color,
+                    row.input_left,
+                    row.input_right,
+                )
+            )
+            if output != (row.output_left, row.output_right):
+                failures.append(row.entry_key)
+        return tuple(failures)
+
+    @property
+    def positive_entry_domain_exact(self) -> bool:
+        return (
+            self.interval is None
+            or (
+                not self.duplicate_positive_entry_keys
+                and not self.missing_positive_entry_keys
+                and not self.extra_positive_entry_keys
+                and not self.positive_coordinate_failures
             )
         )
 
@@ -8853,6 +8966,7 @@ class UniversalKMonodromyFamilyInputAudit:
             and not self.duplicate_positive_state_row_families
             and not self.missing_positive_state_row_families
             and not self.extra_positive_state_row_families
+            and self.positive_entry_domain_exact
             and not self.malformed_detector_domain_assignment_rows
             and not self.invalid_detector_domain_assignment_families
             and not self.duplicate_detector_domain_assignment_families
@@ -8901,6 +9015,16 @@ class UniversalKMonodromyFamilyInputAudit:
             reasons.append("endpoint_observer_monodromy_positive_rows_missing_families")
         if self.extra_positive_state_row_families:
             reasons.append("endpoint_observer_monodromy_positive_rows_extra_families")
+        if self.duplicate_positive_entry_keys:
+            reasons.append("endpoint_observer_monodromy_positive_rows_duplicate_entries")
+        if self.missing_positive_entry_keys:
+            reasons.append("endpoint_observer_monodromy_positive_rows_missing_entries")
+        if self.extra_positive_entry_keys:
+            reasons.append("endpoint_observer_monodromy_positive_rows_extra_entries")
+        if self.positive_coordinate_failures:
+            reasons.append(
+                "endpoint_observer_monodromy_positive_rows_coordinate_mismatch"
+            )
         if self.malformed_detector_domain_assignment_rows:
             reasons.append("endpoint_observer_monodromy_detector_domains_malformed_rows")
         if self.invalid_detector_domain_assignment_families:
@@ -8939,6 +9063,7 @@ class UniversalKMonodromyFamilyInputAudit:
 
 
 def universal_k_monodromy_family_input_audit(
+    interval: LocalInterval | None,
     seed_classifier_entries: Sequence[UniversalKSeedClassifierEntry],
     endpoint_groups_by_family: Sequence[object],
     word_potential_templates_by_family: Sequence[object],
@@ -8951,6 +9076,7 @@ def universal_k_monodromy_family_input_audit(
 
     return UniversalKMonodromyFamilyInputAudit(
         seed_classifier_entries=tuple(seed_classifier_entries),
+        interval=interval,
         endpoint_group_rows=tuple(endpoint_groups_by_family),
         word_potential_template_rows=tuple(word_potential_templates_by_family),
         positive_state_rows=tuple(positive_state_rows_by_family),
@@ -10498,6 +10624,7 @@ def universal_k_endpoint_observer_builds_from_monodromy_by_family(
     """
 
     monodromy_input_audit = universal_k_monodromy_family_input_audit(
+        interval,
         seed_classifier_entries,
         endpoint_groups_by_family,
         word_potential_templates_by_family,
@@ -15268,6 +15395,12 @@ class PostLinearRemainingFiniteSystemAudit:
                 ("endpoint_observer_monodromy_template_families", ()),
                 ("endpoint_observer_monodromy_positive_row_families", ()),
                 ("endpoint_observer_monodromy_missing_candidate_families", ()),
+                ("endpoint_observer_monodromy_expected_positive_entry_keys", ()),
+                ("endpoint_observer_monodromy_covered_positive_entry_keys", ()),
+                ("endpoint_observer_monodromy_missing_positive_entry_keys", ()),
+                ("endpoint_observer_monodromy_extra_positive_entry_keys", ()),
+                ("endpoint_observer_monodromy_duplicate_positive_entry_keys", ()),
+                ("endpoint_observer_monodromy_positive_coordinate_failures", ()),
                 ("endpoint_observer_monodromy_failure_reasons", ()),
                 ("endpoint_observer_family_build_malformed_rows", ()),
                 ("endpoint_observer_family_build_unknown_families", ()),
@@ -15590,6 +15723,42 @@ class PostLinearRemainingFiniteSystemAudit:
             (
                 "endpoint_observer_monodromy_missing_candidate_families",
                 audit.monodromy_family_input_audit.missing_candidate_families
+                if audit.monodromy_family_input_audit is not None
+                else (),
+            ),
+            (
+                "endpoint_observer_monodromy_expected_positive_entry_keys",
+                audit.monodromy_family_input_audit.expected_positive_entry_keys
+                if audit.monodromy_family_input_audit is not None
+                else (),
+            ),
+            (
+                "endpoint_observer_monodromy_covered_positive_entry_keys",
+                audit.monodromy_family_input_audit.covered_positive_entry_keys
+                if audit.monodromy_family_input_audit is not None
+                else (),
+            ),
+            (
+                "endpoint_observer_monodromy_missing_positive_entry_keys",
+                audit.monodromy_family_input_audit.missing_positive_entry_keys
+                if audit.monodromy_family_input_audit is not None
+                else (),
+            ),
+            (
+                "endpoint_observer_monodromy_extra_positive_entry_keys",
+                audit.monodromy_family_input_audit.extra_positive_entry_keys
+                if audit.monodromy_family_input_audit is not None
+                else (),
+            ),
+            (
+                "endpoint_observer_monodromy_duplicate_positive_entry_keys",
+                audit.monodromy_family_input_audit.duplicate_positive_entry_keys
+                if audit.monodromy_family_input_audit is not None
+                else (),
+            ),
+            (
+                "endpoint_observer_monodromy_positive_coordinate_failures",
+                audit.monodromy_family_input_audit.positive_coordinate_failures
                 if audit.monodromy_family_input_audit is not None
                 else (),
             ),

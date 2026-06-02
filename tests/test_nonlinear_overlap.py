@@ -6849,6 +6849,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         )
 
         audit = universal_k_monodromy_family_input_audit(
+            None,
             seed_entries,
             endpoint_groups_by_family=(
                 ("U", group),
@@ -6909,6 +6910,85 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         )
         self.assertIn(
             "endpoint_observer_monodromy_candidate_families_missing",
+            audit.failure_reasons,
+        )
+
+    def test_monodromy_family_input_audit_checks_positive_context_domain(self):
+        interval = one_color_identity_interval()
+        group = cyclic_group(2)
+        seed_state = ("*", "*", "left_constant_map_universal_kernel")
+        seed_key = ("U", seed_state)
+        seed_entries = ((("*", "*", "L", "constant_map_kernel", (0, 1)), seed_key),)
+        positive_keys = tuple(
+            key
+            for key in universal_k_signed_endpoint_required_entry_keys(
+                interval,
+                (seed_key,),
+            )
+            if key[2] == 1
+        )
+
+        def positive_row(key, output=None):
+            family, state, sign, left_color, right_color, x, y = key
+            if output is None:
+                output = interval.T.get((left_color, right_color, x, y), (x, y))
+            return UniversalKSignedEndpointGeneratorRow(
+                endpoint_family=family,
+                seed_state=state,
+                sign=sign,
+                left_color=left_color,
+                right_color=right_color,
+                input_left=x,
+                input_right=y,
+                output_left=output[0],
+                output_right=output[1],
+                next_seed_state=state,
+                endpoint_value=None,
+            )
+
+        extra_key = ("U", seed_state, 1, "*", "*", "outside", 0)
+        rows = (
+            positive_row(positive_keys[0]),
+            positive_row(positive_keys[0]),
+            positive_row(positive_keys[1], output=("bad-left", "bad-right")),
+            positive_row(extra_key),
+        )
+
+        audit = universal_k_monodromy_family_input_audit(
+            interval,
+            seed_entries,
+            endpoint_groups_by_family=(("U", group),),
+            word_potential_templates_by_family=(("U", ((seed_key, ()),)),),
+            positive_state_rows_by_family=(("U", rows),),
+        )
+
+        self.assertFalse(audit.input_rows_exact)
+        self.assertEqual(audit.expected_endpoint_families_exact, ("U",))
+        self.assertEqual(audit.candidate_families_exact, ("U",))
+        self.assertEqual(audit.duplicate_positive_entry_keys, (positive_keys[0],))
+        self.assertEqual(
+            audit.missing_positive_entry_keys,
+            tuple(positive_keys[2:]),
+        )
+        self.assertEqual(audit.extra_positive_entry_keys, (extra_key,))
+        self.assertEqual(
+            audit.positive_coordinate_failures,
+            (positive_keys[1], extra_key),
+        )
+        self.assertIn(
+            "endpoint_observer_monodromy_positive_rows_duplicate_entries",
+            audit.failure_reasons,
+        )
+        self.assertIn(
+            "endpoint_observer_monodromy_positive_rows_missing_entries",
+            audit.failure_reasons,
+        )
+        self.assertIn(
+            "endpoint_observer_monodromy_positive_rows_extra_entries",
+            audit.failure_reasons,
+        )
+        self.assertIn(
+            "endpoint_observer_monodromy_positive_rows_coordinate_mismatch",
             audit.failure_reasons,
         )
 

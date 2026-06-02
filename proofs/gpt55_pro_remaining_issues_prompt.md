@@ -1557,6 +1557,22 @@ assignments without soundness witnesses are finite input-ledger failures.
 They must not be interpreted as an unproved observer with unspecified
 emissions.  A valid monodromy-derived observer begins only after this raw
 package ledger is exact.
+With the interval in hand, this raw ledger must also derive the reachable
+monodromy seed-state closure from the positive rows, recompute the full
+positive local-context entry domain from the actual fibres, and check that
+the positive monodromy table has:
+
+```text
+no duplicate positive entry keys,
+no missing positive entry keys,
+no extra positive entry keys,
+and coordinate outputs exactly equal to T_{a,b}(x,y).
+```
+
+Only after this positive domain check passes may the coboundary defects be
+evaluated and used as endpoint emissions.  A partial `rho_E` table, a stale
+context row, or a row whose coordinate part does not match the interval is
+not a valid observer input.
 The executable audit also has a canonical identity-emission constructor
 `universal_k_identity_endpoint_observer_builds_by_family(...)`.  It builds
 the identity monodromy-coboundary candidate for every active family in the
@@ -2091,6 +2107,8 @@ post_linear_audit_consumes_monodromy_coboundary_family_data,
 monodromy_family_raw_input_ledger_exact,
 monodromy_family_raw_input_reports_missing_extra_duplicate_and_malformed_rows,
 monodromy_family_raw_detector_domains_require_soundness_witnesses,
+monodromy_family_positive_entry_domain_exact,
+monodromy_family_positive_rows_coordinate_match_interval,
 restricted_detector_domains_have_soundness_witnesses,
 word_potential_templates_use_only_current_longitude_variables,
 word_potential_artin_substitution_from_detector_recurrence,
