@@ -5411,6 +5411,46 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             audit.failure_reasons,
         )
 
+    def test_endpoint_monodromy_representation_reports_malformed_next_states(self):
+        context = ("U", "*", "*", 0, 0)
+        presentation = UniversalKEndpointMonodromyPresentation(
+            expected_endpoint_families=("U",),
+            contexts=(context,),
+        )
+        seed_state = ("*", "*", "left_constant_map_universal_kernel")
+        malformed_next_state = ["not", "a", "tuple"]
+        rows = (
+            UniversalKSignedEndpointGeneratorRow(
+                endpoint_family="U",
+                seed_state=seed_state,
+                sign=1,
+                left_color="*",
+                right_color="*",
+                input_left=0,
+                input_right=0,
+                output_left=0,
+                output_right=0,
+                next_seed_state=malformed_next_state,
+                endpoint_value=0,
+            ),
+        )
+
+        audit = universal_k_endpoint_monodromy_representation_audit(
+            presentation,
+            (("U", seed_state),),
+            rows,
+        )
+
+        self.assertFalse(audit.proves_monodromy_representation)
+        self.assertIn(
+            "monodromy_representation_next_state_outside_family",
+            tuple(failure[1] for failure in audit.context_map_failures),
+        )
+        self.assertIn(
+            "endpoint_monodromy_representation_context_map_failures",
+            audit.failure_reasons,
+        )
+
     def test_signed_endpoint_audit_uses_explicit_monodromy_representation(self):
         interval = one_color_identity_interval()
         seed_state = ("*", "*", "left_constant_map_universal_kernel")
@@ -8924,6 +8964,52 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertIn(
             "endpoint_observer_monodromy_positive_rows_malformed_rows",
             audit.failure_reasons,
+        )
+
+    def test_monodromy_family_input_audit_rejects_malformed_next_states(self):
+        interval = one_color_identity_interval()
+        group = cyclic_group(2)
+        seed_state = ("*", "*", "left_constant_map_universal_kernel")
+        seed_key = ("U", seed_state)
+        seed_entries = ((("*", "*", "L", "constant_map_kernel", (0, 1)), seed_key),)
+        bad_row = UniversalKSignedEndpointGeneratorRow(
+            endpoint_family="U",
+            seed_state=seed_state,
+            sign=1,
+            left_color="*",
+            right_color="*",
+            input_left=0,
+            input_right=0,
+            output_left=0,
+            output_right=0,
+            next_seed_state=["not", "a", "tuple"],
+            endpoint_value=None,
+        )
+
+        family_audit = universal_k_endpoint_observer_builds_from_monodromy_by_family(
+            interval,
+            seed_entries,
+            endpoint_groups_by_family=(("U", group),),
+            word_potential_templates_by_family=(("U", ((seed_key, ()),)),),
+            positive_state_rows_by_family=(("U", (bad_row,)),),
+        )
+
+        self.assertFalse(family_audit.proves_family_endpoint_observers)
+        self.assertIsInstance(
+            family_audit.monodromy_family_input_audit,
+            UniversalKMonodromyFamilyInputAudit,
+        )
+        self.assertEqual(
+            family_audit.monodromy_family_input_audit.malformed_positive_state_rows,
+            (("U", (bad_row,)),),
+        )
+        self.assertIn(
+            "endpoint_observer_monodromy_positive_rows_malformed_rows",
+            family_audit.failure_reasons,
+        )
+        self.assertIn(
+            "endpoint_observer_monodromy_candidate_families_missing",
+            family_audit.failure_reasons,
         )
 
     def test_monodromy_family_input_audit_checks_positive_context_domain(self):

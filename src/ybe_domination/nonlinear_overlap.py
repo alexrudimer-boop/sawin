@@ -5404,14 +5404,11 @@ class UniversalKEndpointMonodromyRepresentationAudit:
                 failures.append(
                     (context, "monodromy_representation_extra_state_rows", extra_states)
                 )
-            outside_next_states = tuple(
-                sorted(
-                    {
-                        next_state
-                        for next_state in state_map.values()
-                        if _value_marker(next_state) not in state_markers
-                    },
-                    key=repr,
+            outside_next_states = _unique_values(
+                tuple(
+                    next_state
+                    for next_state in state_map.values()
+                    if _value_marker(next_state) not in state_markers
                 )
             )
             if outside_next_states:
@@ -9329,6 +9326,9 @@ def _universal_k_monodromy_positive_rows_package_valid(
         and row.endpoint_family == endpoint_family
         and row.sign == 1
         and _universal_k_is_positive_entry_key(row.entry_key)
+        and _universal_k_endpoint_seed_state_well_formed(
+            (endpoint_family, row.next_seed_state)
+        )
         for row in row_tuple
     )
 

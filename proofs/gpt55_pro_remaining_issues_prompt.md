@@ -1713,6 +1713,12 @@ tuple state for that family, the sign must be positive, and the local colour
 and fibre inputs must lie in the current positive context domain.  Malformed
 or unhashable seed states are finite bad ledger data; they must not cause a
 runtime failure and must not be treated as valid hidden observer states.
+The next seed state of each positive monodromy row is also finite
+permutation data.  It must be a hashable tuple state for the same family.
+Malformed, unhashable, or non-tuple next states must be rejected as malformed
+positive monodromy package rows at the handoff, and a direct monodromy
+representation audit must report them as next-state-outside-family
+context-map failures rather than accepting them as hidden observer states.
 Restricted detector-domain assignments are also entry-key scoped.  Each
 assignment map key must be a well-formed positive signed endpoint entry for
 the same endpoint family as the family row, and, when the interval table is
