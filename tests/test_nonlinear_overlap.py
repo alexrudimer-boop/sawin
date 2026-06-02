@@ -3075,6 +3075,47 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             braid_index_scoped_residual.failure_reasons,
         )
 
+        incomplete_dependency_scope = UniversalKSignedEndpointGeneratorAudit(
+            seed_classifier_entries=seed_entries,
+            reachable_seed_states=(("U", seed_state),),
+            required_entry_keys=required_entry_keys,
+            entry_domain_derived_from_interval=True,
+            finite_row_checks_derived_from_tables=True,
+            rows=(positive_row, negative_row),
+            endpoint_group=cyclic_group(2),
+            endpoint_targets_fixed=True,
+            endpoint_target_audit=trivial_endpoint_target_audit("U"),
+            coordinate_components_verified=True,
+            inverse_pairing_verified=True,
+            inverse_cancellation_verified=True,
+            positive_ybe_path_verified=True,
+            positive_ybe_cocycle_verified=True,
+            far_commutativity_verified=True,
+            signed_two_strand_base_verified=True,
+            artin_homomorphism_update_verified=True,
+            residual_action_scope=replace(
+                trivial_endpoint_residual_action_scope(
+                    "U",
+                    seed_states=(("U", seed_state),),
+                ),
+                scope_dependencies=("interval_data", "routed_seed_state"),
+            ),
+            residual_action_audit=trivial_endpoint_residual_action_audit(),
+        )
+
+        self.assertFalse(
+            incomplete_dependency_scope.residual_faithfulness_proved
+        )
+        self.assertEqual(
+            incomplete_dependency_scope
+            .residual_action_scope.missing_required_scope_dependencies,
+            ("endpoint_channel", "residual_input_tuple"),
+        )
+        self.assertIn(
+            "residual_action_scope_missing_required_dependencies",
+            incomplete_dependency_scope.failure_reasons,
+        )
+
         bare_flag = UniversalKSignedEndpointGeneratorAudit(
             seed_classifier_entries=seed_entries,
             reachable_seed_states=(("U", seed_state),),
@@ -3191,6 +3232,37 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertIn(
             "residual_faithfulness_not_braid_index_independent",
             theorem_with_braid_index_row.failure_reasons,
+        )
+
+        theorem_with_incomplete_row_dependencies = replace(
+            theorem,
+            residual_rows=(
+                replace(
+                    theorem.residual_rows[0],
+                    dependencies=("interval_data", "routed_seed_state"),
+                ),
+            ),
+        )
+        self.assertFalse(
+            theorem_with_incomplete_row_dependencies.proves_residual_faithfulness
+        )
+        self.assertEqual(
+            theorem_with_incomplete_row_dependencies
+            .residual_row_missing_required_dependencies,
+            (
+                (
+                    ("p",),
+                    ("endpoint_channel", "residual_input_tuple"),
+                ),
+            ),
+        )
+        self.assertIn(
+            "residual_faithfulness_missing_required_dependencies",
+            theorem_with_incomplete_row_dependencies.failure_reasons,
+        )
+        self.assertIn(
+            "residual_faithfulness_invalid_rows",
+            theorem_with_incomplete_row_dependencies.failure_reasons,
         )
 
         theorem_with_duplicate_channel_key = replace(

@@ -1943,9 +1943,12 @@ dependencies.  The scope dependencies may use only interval data, routed seed
 states, residual input tuples, endpoint channels, local fibre coordinates,
 and the local row table; dependencies on `braid_word`, `braid_prefix`,
 `braid_index`, failed detector search, normalized-law sequences, or timeouts
-are forbidden.  Endpoint-channel exactness and braid-index independence must
-be derived from that scope audit, not asserted as separate booleans.  If two
-or more endpoint families are active, the certificate must also split the
+are forbidden.  The allowed list is not enough by itself: the scope must
+explicitly include both `residual_input_tuple` and `endpoint_channel`, because
+those are the finite dependencies that connect killed endpoint data to the
+actual residual fibre tuple being fixed.  Endpoint-channel exactness and
+braid-index independence must be derived from that scope audit, not asserted
+as separate booleans.  If two or more endpoint families are active, the certificate must also split the
 residual-row ledger by family: it must list expected and covered residual row
 counts for each active family, with no duplicate family entries,
 nonnegative integer counts, matching expected and covered family counts, and
@@ -2020,7 +2023,10 @@ motion.  The row dependencies may use only interval data, routed seed states,
 residual input tuples, endpoint channels, local fibre coordinates, and the
 local row table.  Dependencies on `braid_word`,
 `braid_prefix`, `braid_index`, failed detector search, normalized-law
-sequences, or timeouts are forbidden.  Endpoint-channel exactness,
+sequences, or timeouts are forbidden.  Each row must explicitly include both
+`residual_input_tuple` and `endpoint_channel`; a row using only interval data
+or routed seed labels is a finite row check, not a bridge from killed endpoint
+channels to the actual residual motion.  Endpoint-channel exactness,
 braid-index independence, and product-family separation must be derived from
 these rows and the family/seed ledgers, not asserted as separate booleans.
 In the multi-family case, the theorem must also include the same expected and
@@ -2084,6 +2090,7 @@ residual_rows_have_nonempty_arity_consistent_tuples,
 residual_rows_have_duplicate_free_endpoint_channel_keys,
 residual_rows_have_well_formed_endpoint_channel_keys,
 residual_row_endpoint_channel_keys_match_row_seed_states,
+residual_rows_include_required_input_and_channel_dependencies,
 residual_action_input_tuple_domain_exact,
 residual_theorem_rows_cover_input_domain,
 residual_theorem_rows_cover_endpoint_families_and_seed_states,

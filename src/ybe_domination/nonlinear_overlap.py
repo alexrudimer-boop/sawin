@@ -2030,6 +2030,9 @@ _UNIVERSAL_K_RESIDUAL_FORBIDDEN_DEPENDENCIES = frozenset(
         "timeout",
     )
 )
+_UNIVERSAL_K_RESIDUAL_REQUIRED_ROW_DEPENDENCIES = frozenset(
+    ("residual_input_tuple", "endpoint_channel")
+)
 
 
 @dataclass(frozen=True)
@@ -2151,6 +2154,17 @@ class UniversalKResidualFaithfulnessRow:
         return tuple(dependency for dependency in self.dependencies if dependency not in allowed)
 
     @property
+    def missing_required_dependencies(self) -> Tuple[str, ...]:
+        supplied = set(self.dependencies)
+        return tuple(
+            dependency
+            for dependency in sorted(
+                _UNIVERSAL_K_RESIDUAL_REQUIRED_ROW_DEPENDENCIES
+            )
+            if dependency not in supplied
+        )
+
+    @property
     def identity_endpoint_data_fixes_row(self) -> bool:
         return self.identity_endpoint_output_tuple == self.input_tuple
 
@@ -2181,6 +2195,7 @@ class UniversalKResidualFaithfulnessRow:
             and not self.duplicate_dependencies
             and not self.forbidden_dependencies
             and not self.unknown_dependencies
+            and not self.missing_required_dependencies
         )
 
 
@@ -2505,6 +2520,16 @@ class UniversalKResidualFaithfulnessAudit:
                 not row.malformed_endpoint_channel_keys
                 and not row.endpoint_channel_keys_match_seed_states
             )
+        )
+
+    @property
+    def residual_row_missing_required_dependencies(
+        self,
+    ) -> Tuple[Tuple[Tuple[object, ...], Tuple[str, ...]], ...]:
+        return tuple(
+            (row.input_tuple, row.missing_required_dependencies)
+            for row in self.residual_rows
+            if row.missing_required_dependencies
         )
 
     @property
@@ -2889,6 +2914,8 @@ class UniversalKResidualFaithfulnessAudit:
             reasons.append("residual_faithfulness_malformed_endpoint_channel_keys")
         if self.residual_row_endpoint_channel_seed_mismatches:
             reasons.append("residual_faithfulness_endpoint_channel_seed_mismatch")
+        if self.residual_row_missing_required_dependencies:
+            reasons.append("residual_faithfulness_missing_required_dependencies")
         if not self.residual_rows_cover_endpoint_families:
             reasons.append("residual_faithfulness_rows_do_not_cover_families")
         if not self.residual_rows_cover_endpoint_seed_states:
@@ -3475,12 +3502,24 @@ class UniversalKResidualActionScopeAudit:
         return tuple(dependency for dependency in self.scope_dependencies if dependency not in allowed)
 
     @property
+    def missing_required_scope_dependencies(self) -> Tuple[str, ...]:
+        supplied = set(self.scope_dependencies)
+        return tuple(
+            dependency
+            for dependency in sorted(
+                _UNIVERSAL_K_RESIDUAL_REQUIRED_ROW_DEPENDENCIES
+            )
+            if dependency not in supplied
+        )
+
+    @property
     def scope_dependencies_valid(self) -> bool:
         return (
             bool(self.scope_dependencies)
             and not self.duplicate_scope_dependencies
             and not self.forbidden_scope_dependencies
             and not self.unknown_scope_dependencies
+            and not self.missing_required_scope_dependencies
         )
 
     @property
@@ -3578,6 +3617,8 @@ class UniversalKResidualActionScopeAudit:
             reasons.append("residual_action_scope_forbidden_dependencies")
         if self.unknown_scope_dependencies:
             reasons.append("residual_action_scope_unknown_dependencies")
+        if self.missing_required_scope_dependencies:
+            reasons.append("residual_action_scope_missing_required_dependencies")
         if not self.braid_index_independence_proved:
             reasons.append("residual_action_scope_not_braid_index_independent")
         if not self.product_families_separated_proved:
@@ -13957,6 +13998,10 @@ class PostLinearRemainingFiniteSystemAudit:
                     "signed_endpoint_generator_residual_action_scope_invalid_dependencies",
                     (),
                 ),
+                (
+                    "signed_endpoint_generator_residual_action_scope_missing_required_dependencies",
+                    (),
+                ),
                 ("signed_endpoint_generator_residual_action_scope_proved", False),
                 ("signed_endpoint_generator_residual_theorem_proved", False),
                 ("signed_endpoint_generator_residual_theorem_scope_matches_required", False),
@@ -14036,6 +14081,10 @@ class PostLinearRemainingFiniteSystemAudit:
                 ),
                 (
                     "signed_endpoint_generator_residual_theorem_channel_key_seed_mismatches",
+                    (),
+                ),
+                (
+                    "signed_endpoint_generator_residual_theorem_missing_required_dependencies",
                     (),
                 ),
                 (
@@ -15461,6 +15510,15 @@ class PostLinearRemainingFiniteSystemAudit:
                     audit.residual_action_scope.duplicate_scope_dependencies
                     + audit.residual_action_scope.forbidden_scope_dependencies
                     + audit.residual_action_scope.unknown_scope_dependencies
+                    + audit.residual_action_scope.missing_required_scope_dependencies
+                    if audit.residual_action_scope is not None
+                    else ()
+                ),
+            ),
+            (
+                "signed_endpoint_generator_residual_action_scope_missing_required_dependencies",
+                (
+                    audit.residual_action_scope.missing_required_scope_dependencies
                     if audit.residual_action_scope is not None
                     else ()
                 ),
@@ -15681,6 +15739,14 @@ class PostLinearRemainingFiniteSystemAudit:
                 "signed_endpoint_generator_residual_theorem_channel_key_seed_mismatches",
                 (
                     audit.residual_faithfulness_theorem.residual_row_endpoint_channel_seed_mismatches
+                    if audit.residual_faithfulness_theorem is not None
+                    else ()
+                ),
+            ),
+            (
+                "signed_endpoint_generator_residual_theorem_missing_required_dependencies",
+                (
+                    audit.residual_faithfulness_theorem.residual_row_missing_required_dependencies
                     if audit.residual_faithfulness_theorem is not None
                     else ()
                 ),

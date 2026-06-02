@@ -1081,10 +1081,14 @@ explicit rows, and allowed dependency data.  Scope dependencies may use only
 interval data, routed seed states, residual input tuples, endpoint channels,
 local fibre coordinates, and the local row table; braid-word, braid-prefix,
 braid-index, failed-detector, finite-search, normalized-law, and timeout
-dependencies are rejected.  The audit derives exact endpoint-channel coverage
-and braid-index independence from this scope data, instead of accepting
-separate booleans.  Complete finite rows without this scope are only a
-fixed-row check, not an all-strand residual-faithfulness certificate.  A
+dependencies are rejected.  The allowed list is not enough by itself: the
+scope must explicitly include both `residual_input_tuple` and
+`endpoint_channel`, because those are the finite dependencies that connect
+killed endpoint data to the actual residual fibre tuple being fixed.  The
+audit derives exact endpoint-channel coverage and braid-index independence
+from this scope data, instead of accepting separate booleans.  Complete finite
+rows without this scope are only a fixed-row check, not an all-strand
+residual-faithfulness certificate.  A
 family-scoped proof that omits the exact seed states is also incomplete,
 because product endpoint rows can contain several routed seed channels within
 the same family.  These residual family and seed-state ledgers must be
@@ -1136,11 +1140,15 @@ arity-inconsistent
 input/output/identity-output tuples, empty residual input tuples, duplicate
 row ledgers, or dependencies on `braid_word`,
 `braid_prefix`, `braid_index`, failed detector searches, normalized-law
-sequences, or timeouts.  It derives endpoint-channel exactness from the union
-of row families and row seed states, derives the residual identity implication
-from `identity_endpoint_output_tuple=input_tuple` on every row, and derives
-braid-index independence from the absence of forbidden dependencies.  The
-same family-by-family residual row-count ledger is required for symbolic
+sequences, or timeouts.  Each symbolic row must also explicitly depend on
+both `residual_input_tuple` and `endpoint_channel`; a row using only
+`interval_data` or routed seed labels is a finite row check, not a bridge from
+killed endpoint channels to the actual residual motion.  It derives
+endpoint-channel exactness from the union of row families and row seed states,
+derives the residual identity implication from
+`identity_endpoint_output_tuple=input_tuple` on every row, and derives
+braid-index independence from the absence of forbidden or missing required
+dependencies.  The same family-by-family residual row-count ledger is required for symbolic
 multi-family residual theorems, and those family counts must agree with the
 counts obtained by scanning the symbolic residual rows themselves.  The
 symbolic theorem's total row counts and family row counts must be finite
@@ -1462,6 +1470,7 @@ signed_endpoint_generator_residual_action_scope_malformed_family_row_count_rows
 signed_endpoint_generator_residual_action_scope_family_rows_cover_active
 signed_endpoint_generator_residual_action_scope_dependencies
 signed_endpoint_generator_residual_action_scope_invalid_dependencies
+signed_endpoint_generator_residual_action_scope_missing_required_dependencies
 signed_endpoint_generator_residual_action_scope_proved
 signed_endpoint_generator_residual_theorem_proved
 signed_endpoint_generator_residual_theorem_scope_matches_required
@@ -1489,6 +1498,7 @@ signed_endpoint_generator_residual_theorem_rows
 signed_endpoint_generator_residual_theorem_invalid_rows
 signed_endpoint_generator_residual_theorem_malformed_channel_keys
 signed_endpoint_generator_residual_theorem_channel_key_seed_mismatches
+signed_endpoint_generator_residual_theorem_missing_required_dependencies
 signed_endpoint_generator_residual_theorem_rows_cover_input_domain
 signed_endpoint_generator_residual_theorem_rows_cover_families
 signed_endpoint_generator_residual_theorem_rows_cover_seed_states
