@@ -1713,6 +1713,13 @@ non-sequence endpoint-group, template, positive-row, detector-domain, or
 detector-witness ledgers are reported as malformed row objects rather than
 being iterated character-by-character, ignored as absent input, or allowed to
 crash the handoff.
+Any nonempty monodromy subledger is enough to trigger the monodromy input
+audit and family-observer build diagnostic, including detector-domain
+assignments or detector-domain soundness witnesses supplied without endpoint
+groups, templates, or positive rows.  Such auxiliary-only packages are not
+valid observers, but they must be reported as incomplete or malformed
+observer attempts rather than ignored as if no U/C/M endpoint-observer data
+were supplied.
 They must not be interpreted as an unproved observer with unspecified
 emissions.  A valid monodromy-derived observer begins only after this raw
 package ledger is exact.
@@ -2033,6 +2040,12 @@ ledgers.  A non-sequence certificate, detector-track, endpoint-target,
 cutoff-readout, residual-theorem, or identity-cutoff-degree ledger is one
 malformed row object.  It must not be iterated character-by-character,
 ignored as absent input, or allowed to crash the handoff.
+Likewise, any direct auxiliary family ledger, including detector-track,
+endpoint-target, cutoff-readout, or by-family residual-faithfulness rows
+without a word-potential certificate ledger, must still trigger the direct
+family-observer audit.  It remains an incomplete observer attempt until the
+word-potential and residual-faithfulness data are exact, but it is not
+silently absent.
 The same exact finite-ledger rule applies to the auxiliary rows used to build
 the family observers.  Detector-track initialization rows must cover exactly
 the active routed families with no malformed rows, unknown families, or

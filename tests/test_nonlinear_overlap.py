@@ -14267,6 +14267,92 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             malformed_ledger_data["endpoint_observer_monodromy_failure_reasons"],
         )
 
+    def test_post_linear_function_audits_direct_observer_auxiliary_ledgers(self):
+        cases = (
+            (
+                "universal_k_detector_track_initialization_rows",
+                "not-a-track-ledger",
+                "endpoint_observer_family_detector_track_malformed_rows",
+                "endpoint_observer_family_detector_tracks_malformed_rows",
+            ),
+            (
+                "universal_k_endpoint_target_audits_by_family",
+                "not-a-target-ledger",
+                "endpoint_observer_family_endpoint_target_malformed_rows",
+                "endpoint_observer_family_endpoint_targets_malformed_rows",
+            ),
+            (
+                "universal_k_cutoff_readout_audits_by_family",
+                "not-a-cutoff-ledger",
+                "endpoint_observer_family_cutoff_readout_malformed_rows",
+                "endpoint_observer_family_cutoff_readouts_malformed_rows",
+            ),
+            (
+                "universal_k_residual_faithfulness_theorems_by_family",
+                "not-a-residual-ledger",
+                "endpoint_observer_family_residual_theorem_malformed_rows",
+                "endpoint_observer_family_residual_theorems_malformed_rows",
+            ),
+        )
+        for parameter, malformed_row, data_key, failure_reason in cases:
+            with self.subTest(parameter=parameter):
+                audit = post_linear_remaining_finite_system_audit(
+                    one_color_latin_unit_triangular_interval(),
+                    **{parameter: malformed_row},
+                )
+                data = dict(audit.routed_endpoint_obstruction_data)
+
+                self.assertIsNotNone(audit.universal_k_endpoint_observer_family_build)
+                self.assertFalse(data["endpoint_observer_monodromy_input_present"])
+                self.assertEqual(data[data_key], (malformed_row,))
+                self.assertIn(
+                    "endpoint_observer_family_builds_no_active_families",
+                    data["endpoint_observer_family_build_failure_reasons"],
+                )
+                self.assertIn(
+                    failure_reason,
+                    data["endpoint_observer_family_build_failure_reasons"],
+                )
+
+    def test_post_linear_function_audits_monodromy_auxiliary_ledgers(self):
+        cases = (
+            (
+                "universal_k_monodromy_detector_domain_assignments_by_family",
+                "not-a-domain-ledger",
+                "endpoint_observer_monodromy_detector_domain_malformed_rows",
+                "endpoint_observer_monodromy_detector_domains_malformed_rows",
+            ),
+            (
+                "universal_k_monodromy_detector_domain_soundness_witnesses_by_family",
+                "not-a-witness-ledger",
+                "endpoint_observer_monodromy_detector_witness_malformed_rows",
+                "endpoint_observer_monodromy_detector_witnesses_malformed_rows",
+            ),
+        )
+        for parameter, malformed_row, data_key, failure_reason in cases:
+            with self.subTest(parameter=parameter):
+                audit = post_linear_remaining_finite_system_audit(
+                    one_color_latin_unit_triangular_interval(),
+                    **{parameter: malformed_row},
+                )
+                data = dict(audit.routed_endpoint_obstruction_data)
+
+                self.assertIsNotNone(audit.universal_k_endpoint_observer_family_build)
+                self.assertTrue(data["endpoint_observer_monodromy_input_present"])
+                self.assertEqual(data[data_key], (malformed_row,))
+                self.assertIn(
+                    "endpoint_observer_monodromy_no_active_families",
+                    data["endpoint_observer_monodromy_failure_reasons"],
+                )
+                self.assertIn(
+                    failure_reason,
+                    data["endpoint_observer_monodromy_failure_reasons"],
+                )
+                self.assertIn(
+                    failure_reason,
+                    data["endpoint_observer_family_build_failure_reasons"],
+                )
+
     def test_post_linear_function_derives_identity_endpoint_observer_candidates(self):
         audit = post_linear_remaining_finite_system_audit(
             one_color_latin_unit_triangular_interval(),

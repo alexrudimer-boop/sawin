@@ -849,10 +849,14 @@ assignments without soundness witnesses.  It
 normalizes every top-level by-family ledger first, so a non-sequence endpoint
 group, template, positive-row, detector-domain, or detector-witness ledger is
 reported as one malformed row object instead of being iterated, ignored, or
-allowed to crash the handoff.  The monodromy-derived family build
-attaches this audit and requires it to be exact, so a missing `rho_E`, `W_E`,
-`H_E`, or detector-domain witness is now a finite ledger failure rather than
-an opaque missing observer.
+allowed to crash the handoff.  Any nonempty monodromy subledger triggers this
+audit and the family-build diagnostic, including detector-domain assignments
+or soundness witnesses supplied without endpoint groups, templates, or
+positive rows.  Auxiliary-only observer attempts are therefore reported as
+incomplete or malformed rather than silently ignored.  The monodromy-derived
+family build attaches this audit and requires it to be exact, so a missing
+`rho_E`, `W_E`, `H_E`, or detector-domain witness is now a finite ledger
+failure rather than an opaque missing observer.
 Every positive monodromy row must also have a well-formed positive signed
 entry key: the family must be one of U/C/M, the seed state must be a hashable
 tuple state for that family, the sign must be positive, and the local colour
@@ -951,6 +955,10 @@ builder runs.  A non-sequence certificate, detector-track, endpoint-target,
 cutoff-readout, residual-theorem, or identity-cutoff-degree ledger is reported
 as one malformed row object.  It is not iterated character-by-character,
 ignored as absent input, or allowed to crash the direct family handoff.
+Any nonempty direct family-observer subledger also triggers that handoff:
+detector-track, endpoint-target, cutoff-readout, or by-family residual
+theorem rows supplied without a word-potential certificate ledger are audited
+as incomplete observer attempts rather than ignored as absent data.
 All family labels in these build, certificate, detector-track, endpoint-target,
 cutoff-readout, and residual-theorem rows must be hashable certificate atoms
 equal to `U`, `C`, or `M`.  An unhashable list-like label is not alternate
@@ -1522,11 +1530,13 @@ endpoint_observer_monodromy_extra_positive_entry_keys
 endpoint_observer_monodromy_duplicate_positive_entry_keys
 endpoint_observer_monodromy_positive_coordinate_failures
 endpoint_observer_monodromy_detector_domain_assignment_keys
+endpoint_observer_monodromy_detector_domain_malformed_rows
 endpoint_observer_monodromy_detector_domain_malformed_keys
 endpoint_observer_monodromy_detector_domain_mismatched_keys
 endpoint_observer_monodromy_detector_domain_duplicate_keys
 endpoint_observer_monodromy_detector_domain_extra_keys
 endpoint_observer_monodromy_detector_witness_keys
+endpoint_observer_monodromy_detector_witness_malformed_rows
 endpoint_observer_monodromy_detector_witness_malformed_keys
 endpoint_observer_monodromy_detector_witness_mismatched_keys
 endpoint_observer_monodromy_detector_witness_duplicate_keys

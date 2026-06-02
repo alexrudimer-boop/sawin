@@ -17559,11 +17559,13 @@ class PostLinearRemainingFiniteSystemAudit:
                 ("endpoint_observer_monodromy_duplicate_positive_entry_keys", ()),
                 ("endpoint_observer_monodromy_positive_coordinate_failures", ()),
                 ("endpoint_observer_monodromy_detector_domain_assignment_keys", ()),
+                ("endpoint_observer_monodromy_detector_domain_malformed_rows", ()),
                 ("endpoint_observer_monodromy_detector_domain_malformed_keys", ()),
                 ("endpoint_observer_monodromy_detector_domain_mismatched_keys", ()),
                 ("endpoint_observer_monodromy_detector_domain_duplicate_keys", ()),
                 ("endpoint_observer_monodromy_detector_domain_extra_keys", ()),
                 ("endpoint_observer_monodromy_detector_witness_keys", ()),
+                ("endpoint_observer_monodromy_detector_witness_malformed_rows", ()),
                 ("endpoint_observer_monodromy_detector_witness_malformed_keys", ()),
                 ("endpoint_observer_monodromy_detector_witness_mismatched_keys", ()),
                 ("endpoint_observer_monodromy_detector_witness_duplicate_keys", ()),
@@ -18062,6 +18064,12 @@ class PostLinearRemainingFiniteSystemAudit:
                 else (),
             ),
             (
+                "endpoint_observer_monodromy_detector_domain_malformed_rows",
+                audit.monodromy_family_input_audit.malformed_detector_domain_assignment_rows
+                if audit.monodromy_family_input_audit is not None
+                else (),
+            ),
+            (
                 "endpoint_observer_monodromy_detector_domain_malformed_keys",
                 audit.monodromy_family_input_audit.malformed_detector_domain_assignment_entry_keys
                 if audit.monodromy_family_input_audit is not None
@@ -18088,6 +18096,12 @@ class PostLinearRemainingFiniteSystemAudit:
             (
                 "endpoint_observer_monodromy_detector_witness_keys",
                 audit.monodromy_family_input_audit.detector_domain_witness_entry_keys
+                if audit.monodromy_family_input_audit is not None
+                else (),
+            ),
+            (
+                "endpoint_observer_monodromy_detector_witness_malformed_rows",
+                audit.monodromy_family_input_audit.malformed_detector_domain_witness_rows
                 if audit.monodromy_family_input_audit is not None
                 else (),
             ),
@@ -20147,38 +20161,11 @@ def post_linear_remaining_finite_system_audit(
         UniversalKWordPotentialCertificate | None
     ) = None,
     universal_k_word_potential_certificates_by_family: object = (),
-    universal_k_monodromy_endpoint_groups_by_family: Sequence[
-        Tuple[str, FiniteGroup]
-    ] = (),
-    universal_k_monodromy_word_potential_templates_by_family: Sequence[
-        Tuple[
-            str,
-            Sequence[
-                Tuple[Tuple[str, UniversalKSeedState], UniversalKWordPotentialWord]
-            ],
-        ]
-    ] = (),
-    universal_k_monodromy_positive_state_rows_by_family: Sequence[
-        Tuple[str, Sequence[UniversalKSignedEndpointGeneratorRow]]
-    ] = (),
-    universal_k_monodromy_detector_domain_assignments_by_family: Sequence[
-        Tuple[
-            str,
-            Mapping[
-                UniversalKSignedEndpointEntryKey,
-                Tuple[
-                    Tuple[Tuple[UniversalKWordPotentialVariable, GroupElement], ...],
-                    ...,
-                ],
-            ],
-        ]
-    ] = (),
-    universal_k_monodromy_detector_domain_soundness_witnesses_by_family: Sequence[
-        Tuple[
-            str,
-            Mapping[UniversalKSignedEndpointEntryKey, Tuple[str, ...]],
-        ]
-    ] = (),
+    universal_k_monodromy_endpoint_groups_by_family: object = (),
+    universal_k_monodromy_word_potential_templates_by_family: object = (),
+    universal_k_monodromy_positive_state_rows_by_family: object = (),
+    universal_k_monodromy_detector_domain_assignments_by_family: object = (),
+    universal_k_monodromy_detector_domain_soundness_witnesses_by_family: object = (),
     universal_k_detector_track_counts_by_family: Tuple[Tuple[str, int], ...] = (),
     universal_k_detector_track_initialization_rows: object = (),
     universal_k_endpoint_target_audit: UniversalKEndpointTargetAudit | None = None,
@@ -20280,29 +20267,65 @@ def post_linear_remaining_finite_system_audit(
             )
         )
     )
+    monodromy_family_input_present = (
+        bool(
+            _universal_k_row_input_tuple(
+                universal_k_monodromy_endpoint_groups_by_family
+            )
+        )
+        or bool(
+            _universal_k_row_input_tuple(
+                universal_k_monodromy_word_potential_templates_by_family
+            )
+        )
+        or bool(
+            _universal_k_row_input_tuple(
+                universal_k_monodromy_positive_state_rows_by_family
+            )
+        )
+        or bool(
+            _universal_k_row_input_tuple(
+                universal_k_monodromy_detector_domain_assignments_by_family
+            )
+        )
+        or bool(
+            _universal_k_row_input_tuple(
+                universal_k_monodromy_detector_domain_soundness_witnesses_by_family
+            )
+        )
+    )
+    direct_family_input_present = (
+        bool(
+            _universal_k_row_input_tuple(
+                universal_k_word_potential_certificates_by_family
+            )
+        )
+        or bool(
+            _universal_k_row_input_tuple(
+                universal_k_detector_track_initialization_rows
+            )
+        )
+        or bool(
+            _universal_k_row_input_tuple(
+                universal_k_endpoint_target_audits_by_family
+            )
+        )
+        or bool(
+            _universal_k_row_input_tuple(
+                universal_k_cutoff_readout_audits_by_family
+            )
+        )
+        or bool(
+            _universal_k_row_input_tuple(
+                universal_k_residual_faithfulness_theorems_by_family
+            )
+        )
+    )
     derive_endpoint_observer_family_build = (
         endpoint_observer_family_build is None
         and (
-            bool(
-                _universal_k_row_input_tuple(
-                    universal_k_monodromy_endpoint_groups_by_family
-                )
-            )
-            or bool(
-                _universal_k_row_input_tuple(
-                    universal_k_monodromy_word_potential_templates_by_family
-                )
-            )
-            or bool(
-                _universal_k_row_input_tuple(
-                    universal_k_monodromy_positive_state_rows_by_family
-                )
-            )
-            or bool(
-                _universal_k_row_input_tuple(
-                    universal_k_word_potential_certificates_by_family
-                )
-            )
+            monodromy_family_input_present
+            or direct_family_input_present
             or derive_identity_endpoint_observer_family_build
         )
     )
@@ -20329,23 +20352,7 @@ def post_linear_remaining_finite_system_audit(
         )
         if (
             derive_endpoint_observer_family_build
-            and (
-                bool(
-                    _universal_k_row_input_tuple(
-                        universal_k_monodromy_endpoint_groups_by_family
-                    )
-                )
-                or bool(
-                    _universal_k_row_input_tuple(
-                        universal_k_monodromy_word_potential_templates_by_family
-                    )
-                )
-                or bool(
-                    _universal_k_row_input_tuple(
-                        universal_k_monodromy_positive_state_rows_by_family
-                    )
-                )
-            )
+            and monodromy_family_input_present
         ):
             endpoint_observer_family_build = (
                 universal_k_endpoint_observer_builds_from_monodromy_by_family(
@@ -20385,11 +20392,7 @@ def post_linear_remaining_finite_system_audit(
             )
         elif (
             derive_endpoint_observer_family_build
-            and bool(
-                _universal_k_row_input_tuple(
-                    universal_k_word_potential_certificates_by_family
-                )
-            )
+            and direct_family_input_present
         ):
             endpoint_observer_family_build = (
                 universal_k_endpoint_observer_builds_by_family(
