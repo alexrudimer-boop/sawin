@@ -39,6 +39,8 @@ missing left/right Latin rows:
 ```text
 missing_triangular_row_profiles
 missing_triangular_duplicate_profile_keys
+missing_triangular_duplicate_section_profile_inputs
+missing_triangular_mismatched_section_profile_rows
 missing_triangular_partial_constant_rows
 missing_triangular_partial_constant_mixed_unit_rows
 missing_triangular_nonconstant_hidden_rows
@@ -50,7 +52,12 @@ profile audit is absent.  The profile ledger is keyed by
 `(side,left_color,right_color)` and must be duplicate-free.  If two profile
 rows share that key, even with different section-profile payloads or
 explanations, the wrapper treats the profile ledger as ambiguous and leaves
-the raw K row live.  When the duplicate-free profile audit and the relevant
+the raw K row live.  Each profile row's internal section-profile ledger must
+also be exact: every section row must match the parent side and colour pair,
+and fixed inputs may not be duplicated.  A duplicated fixed input or
+mismatched section row makes the profile explanation
+`unclassified_missing_triangular_profile`, so it cannot be used to close or
+route the K row.  When the duplicate-free profile audit and the relevant
 route audit are supplied, the row is removed from
 `live_k_missing_latin_row_defects` if it falls into one of the routed or
 closed cases listed below.
@@ -145,15 +152,15 @@ descent-endpoint repair theorem must handle.
 
 In the executable wrapper this means that a no-triangular-row defect is live
 only until its profile has been identified by a duplicate-free profile ledger
-and routed.  Proper-kernel visible profiles are removed immediately;
-coordinate-unit profiles are removed when
+with exact section rows and routed.  Proper-kernel visible profiles are
+removed immediately; coordinate-unit profiles are removed when
 `missing_triangular_coordinate_unit_routing_audit` has either routed the pair
 to mixed context or proved the global locally-nondegenerate branch for a
 two-sided unit pair; partial-constant profiles are removed when their proper
 closures or continuation routes have been verified; and the finite
 cardinality/profile closure removes injective-nonsurjective,
 nonconstant-hidden, and unclassified profile rows when its proof flag is true
-and the profile ledger is duplicate-free.
+and the profile ledger is duplicate-free with exact section rows.
 When a partial-constant row is removed by a continuation route, the wrapper
 keeps the downstream burden in
 `continuation_routed_k_missing_latin_row_defects` and reports

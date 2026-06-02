@@ -17659,6 +17659,14 @@ class PostLinearRemainingFiniteSystemAudit:
                             profile.duplicate_profile_keys,
                         ),
                         (
+                            "missing_triangular_duplicate_section_profile_inputs",
+                            profile.duplicate_section_profile_input_rows,
+                        ),
+                        (
+                            "missing_triangular_mismatched_section_profile_rows",
+                            profile.mismatched_section_profile_rows,
+                        ),
+                        (
                             "missing_triangular_partial_constant_rows",
                             tuple(
                                 (

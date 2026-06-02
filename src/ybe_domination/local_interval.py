@@ -986,6 +986,29 @@ class MissingTriangularRowProfile:
         return tuple((row.fixed_input, row.kernel_kind) for row in self.section_profiles)
 
     @property
+    def duplicate_section_profile_inputs(self) -> Tuple[FibrePoint, ...]:
+        return _duplicate_values(tuple(row.fixed_input for row in self.section_profiles))
+
+    @property
+    def section_profiles_match_profile_row(self) -> bool:
+        return all(
+            row.side == self.side
+            and row.left_color == self.left_color
+            and row.right_color == self.right_color
+            and row.output_left_color == self.output_left_color
+            and row.output_right_color == self.output_right_color
+            for row in self.section_profiles
+        )
+
+    @property
+    def section_profile_ledger_exact(self) -> bool:
+        return (
+            bool(self.section_profiles)
+            and not self.duplicate_section_profile_inputs
+            and self.section_profiles_match_profile_row
+        )
+
+    @property
     def all_sections_constant(self) -> bool:
         return all(row.is_constant for row in self.section_profiles)
 
@@ -1053,6 +1076,8 @@ class MissingTriangularRowProfile:
 
     @property
     def explanation(self) -> str:
+        if not self.section_profile_ledger_exact:
+            return "unclassified_missing_triangular_profile"
         if self.all_sections_constant:
             return "triangular_row_present"
         if self.has_proper_kernel_section:
@@ -1081,6 +1106,30 @@ class MissingTriangularRowProfileAudit:
     @property
     def profile_ledgers_duplicate_free(self) -> bool:
         return not self.duplicate_profile_keys
+
+    @property
+    def profile_section_ledgers_exact(self) -> bool:
+        return all(row.section_profile_ledger_exact for row in self.rows)
+
+    @property
+    def duplicate_section_profile_input_rows(
+        self,
+    ) -> Tuple[Tuple[Tuple[str, Color, Color], Tuple[FibrePoint, ...]], ...]:
+        return tuple(
+            (row.profile_key, row.duplicate_section_profile_inputs)
+            for row in self.rows
+            if row.duplicate_section_profile_inputs
+        )
+
+    @property
+    def mismatched_section_profile_rows(
+        self,
+    ) -> Tuple[Tuple[str, Color, Color], ...]:
+        return tuple(
+            row.profile_key
+            for row in self.rows
+            if not row.section_profiles_match_profile_row
+        )
 
     @property
     def proper_kernel_rows(self) -> Tuple[MissingTriangularRowProfile, ...]:
@@ -1122,6 +1171,7 @@ class MissingTriangularRowProfileAudit:
     def finite_map_classification_exhaustive(self) -> bool:
         return (
             self.profile_ledgers_duplicate_free
+            and self.profile_section_ledgers_exact
             and not self.nonconstant_hidden_rows
             and not self.unclassified_rows
         )

@@ -421,7 +421,12 @@ triangular row, `R_y` for a missing right triangular row).  The profile
 ledger is keyed by `(side,left_color,right_color)` and must be duplicate-free;
 if that key is duplicated, even with different section-profile payloads or
 explanations, the supplied profile ledger is ambiguous and the raw K row
-remains live.  A valid profile has exactly one of the following explanations:
+remains live.  Within each profile row, the section-profile rows must match
+the parent side and colour pair and must have duplicate-free fixed inputs; if
+a fixed input is duplicated or a section-profile row has the wrong side or
+colour pair, the profile is `unclassified_missing_triangular_profile` and the
+raw K row remains live.  A valid profile has exactly one of the following
+explanations:
 
 ```text
 proper_section_kernel_visible
