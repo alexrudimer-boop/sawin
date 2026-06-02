@@ -8598,6 +8598,62 @@ class UniversalKMonodromyFamilyInputAudit:
             )
         )
 
+    @property
+    def template_state_rows(
+        self,
+    ) -> Tuple[Tuple[Tuple[str, UniversalKSeedState], UniversalKWordPotentialWord], ...]:
+        return tuple(
+            (seed_state, tuple(word))
+            for _family, templates in self._valid_parts(
+                self.word_potential_template_rows,
+                self._template_predicate,
+            )
+            for seed_state, word in tuple(templates)
+            if _universal_k_endpoint_seed_state_well_formed(seed_state)
+        )
+
+    @property
+    def covered_template_seed_states(
+        self,
+    ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
+        return tuple(seed_state for seed_state, _word in self.template_state_rows)
+
+    @property
+    def duplicate_template_seed_states(
+        self,
+    ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
+        return _duplicate_values(self.covered_template_seed_states)
+
+    @property
+    def missing_template_seed_states(
+        self,
+    ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
+        covered = _value_marker_set(self.covered_template_seed_states)
+        return tuple(
+            state
+            for state in self.derived_reachable_seed_states
+            if _value_marker(state) not in covered
+        )
+
+    @property
+    def extra_template_seed_states(
+        self,
+    ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
+        expected = _value_marker_set(self.derived_reachable_seed_states)
+        return tuple(
+            state
+            for state in self.covered_template_seed_states
+            if _value_marker(state) not in expected
+        )
+
+    @property
+    def template_seed_state_domain_exact(self) -> bool:
+        return (
+            not self.duplicate_template_seed_states
+            and not self.missing_template_seed_states
+            and not self.extra_template_seed_states
+        )
+
     @staticmethod
     def _parts(rows: Tuple[object, ...]) -> Tuple[Tuple[object, object], ...]:
         return tuple(
@@ -8961,6 +9017,7 @@ class UniversalKMonodromyFamilyInputAudit:
             and not self.duplicate_template_families
             and not self.missing_template_families
             and not self.extra_template_families
+            and self.template_seed_state_domain_exact
             and not self.malformed_positive_state_rows
             and not self.invalid_positive_state_row_families
             and not self.duplicate_positive_state_row_families
@@ -9005,6 +9062,12 @@ class UniversalKMonodromyFamilyInputAudit:
             reasons.append("endpoint_observer_monodromy_templates_missing_families")
         if self.extra_template_families:
             reasons.append("endpoint_observer_monodromy_templates_extra_families")
+        if self.duplicate_template_seed_states:
+            reasons.append("endpoint_observer_monodromy_templates_duplicate_states")
+        if self.missing_template_seed_states:
+            reasons.append("endpoint_observer_monodromy_templates_missing_states")
+        if self.extra_template_seed_states:
+            reasons.append("endpoint_observer_monodromy_templates_extra_states")
         if self.malformed_positive_state_rows:
             reasons.append("endpoint_observer_monodromy_positive_rows_malformed_rows")
         if self.invalid_positive_state_row_families:
@@ -15393,6 +15456,11 @@ class PostLinearRemainingFiniteSystemAudit:
                 ("endpoint_observer_monodromy_candidate_families", ()),
                 ("endpoint_observer_monodromy_endpoint_group_families", ()),
                 ("endpoint_observer_monodromy_template_families", ()),
+                ("endpoint_observer_monodromy_derived_reachable_seed_states", ()),
+                ("endpoint_observer_monodromy_covered_template_seed_states", ()),
+                ("endpoint_observer_monodromy_missing_template_seed_states", ()),
+                ("endpoint_observer_monodromy_extra_template_seed_states", ()),
+                ("endpoint_observer_monodromy_duplicate_template_seed_states", ()),
                 ("endpoint_observer_monodromy_positive_row_families", ()),
                 ("endpoint_observer_monodromy_missing_candidate_families", ()),
                 ("endpoint_observer_monodromy_expected_positive_entry_keys", ()),
@@ -15711,6 +15779,36 @@ class PostLinearRemainingFiniteSystemAudit:
             (
                 "endpoint_observer_monodromy_template_families",
                 audit.monodromy_family_input_audit.template_families_exact
+                if audit.monodromy_family_input_audit is not None
+                else (),
+            ),
+            (
+                "endpoint_observer_monodromy_derived_reachable_seed_states",
+                audit.monodromy_family_input_audit.derived_reachable_seed_states
+                if audit.monodromy_family_input_audit is not None
+                else (),
+            ),
+            (
+                "endpoint_observer_monodromy_covered_template_seed_states",
+                audit.monodromy_family_input_audit.covered_template_seed_states
+                if audit.monodromy_family_input_audit is not None
+                else (),
+            ),
+            (
+                "endpoint_observer_monodromy_missing_template_seed_states",
+                audit.monodromy_family_input_audit.missing_template_seed_states
+                if audit.monodromy_family_input_audit is not None
+                else (),
+            ),
+            (
+                "endpoint_observer_monodromy_extra_template_seed_states",
+                audit.monodromy_family_input_audit.extra_template_seed_states
+                if audit.monodromy_family_input_audit is not None
+                else (),
+            ),
+            (
+                "endpoint_observer_monodromy_duplicate_template_seed_states",
+                audit.monodromy_family_input_audit.duplicate_template_seed_states
                 if audit.monodromy_family_input_audit is not None
                 else (),
             ),

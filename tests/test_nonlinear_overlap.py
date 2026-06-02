@@ -6992,6 +6992,89 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             audit.failure_reasons,
         )
 
+    def test_monodromy_family_input_audit_checks_template_state_domain(self):
+        interval = one_color_identity_interval()
+        group = cyclic_group(2)
+        seed_state = ("*", "*", "left_constant_map_universal_kernel")
+        next_state = ("*", "*", "left_constant_map_universal_kernel", "next")
+        stale_state = ("*", "*", "stale_template_state")
+        seed_key = ("U", seed_state)
+        next_key = ("U", next_state)
+        stale_key = ("U", stale_state)
+        seed_entries = ((("*", "*", "L", "constant_map_kernel", (0, 1)), seed_key),)
+        seed_positive_keys = tuple(
+            key
+            for key in universal_k_signed_endpoint_required_entry_keys(
+                interval,
+                (seed_key,),
+            )
+            if key[2] == 1
+        )
+        reachable_positive_keys = tuple(
+            key
+            for key in universal_k_signed_endpoint_required_entry_keys(
+                interval,
+                (seed_key, next_key),
+            )
+            if key[2] == 1
+        )
+        rows = []
+        for key in reachable_positive_keys:
+            family, state, sign, left_color, right_color, x, y = key
+            output_left, output_right = interval.T[(left_color, right_color, x, y)]
+            rows.append(
+                UniversalKSignedEndpointGeneratorRow(
+                    endpoint_family=family,
+                    seed_state=state,
+                    sign=sign,
+                    left_color=left_color,
+                    right_color=right_color,
+                    input_left=x,
+                    input_right=y,
+                    output_left=output_left,
+                    output_right=output_right,
+                    next_seed_state=(
+                        next_state if key in seed_positive_keys else next_state
+                    ),
+                    endpoint_value=None,
+                )
+            )
+
+        audit = universal_k_monodromy_family_input_audit(
+            interval,
+            seed_entries,
+            endpoint_groups_by_family=(("U", group),),
+            word_potential_templates_by_family=(
+                (
+                    "U",
+                    (
+                        (seed_key, ()),
+                        (seed_key, ()),
+                        (stale_key, ()),
+                    ),
+                ),
+            ),
+            positive_state_rows_by_family=(("U", tuple(rows)),),
+        )
+
+        self.assertFalse(audit.input_rows_exact)
+        self.assertEqual(audit.derived_reachable_seed_states, (seed_key, next_key))
+        self.assertEqual(audit.duplicate_template_seed_states, (seed_key,))
+        self.assertEqual(audit.missing_template_seed_states, (next_key,))
+        self.assertEqual(audit.extra_template_seed_states, (stale_key,))
+        self.assertIn(
+            "endpoint_observer_monodromy_templates_duplicate_states",
+            audit.failure_reasons,
+        )
+        self.assertIn(
+            "endpoint_observer_monodromy_templates_missing_states",
+            audit.failure_reasons,
+        )
+        self.assertIn(
+            "endpoint_observer_monodromy_templates_extra_states",
+            audit.failure_reasons,
+        )
+
     def test_word_potential_certificate_must_match_signed_rows(self):
         seed_state = ("*", "*", "left_constant_map_universal_kernel")
         seed_entries = (

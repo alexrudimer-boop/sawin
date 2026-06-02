@@ -1573,6 +1573,11 @@ Only after this positive domain check passes may the coboundary defects be
 evaluated and used as endpoint emissions.  A partial `rho_E` table, a stale
 context row, or a row whose coordinate part does not match the interval is
 not a valid observer input.
+The template ledger must also be exact for the same derived reachable
+closure.  There must be exactly one word-potential template `W_s` for each
+reachable endpoint seed state `(E,s)`, and there must be no extra stale
+template states.  Duplicate, missing, or extra template states are raw
+input-ledger failures before any coboundary defect is evaluated.
 The executable audit also has a canonical identity-emission constructor
 `universal_k_identity_endpoint_observer_builds_by_family(...)`.  It builds
 the identity monodromy-coboundary candidate for every active family in the
@@ -2109,6 +2114,7 @@ monodromy_family_raw_input_reports_missing_extra_duplicate_and_malformed_rows,
 monodromy_family_raw_detector_domains_require_soundness_witnesses,
 monodromy_family_positive_entry_domain_exact,
 monodromy_family_positive_rows_coordinate_match_interval,
+monodromy_family_word_potential_template_state_domain_exact,
 restricted_detector_domains_have_soundness_witnesses,
 word_potential_templates_use_only_current_longitude_variables,
 word_potential_artin_substitution_from_detector_recurrence,
