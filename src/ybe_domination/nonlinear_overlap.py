@@ -11623,6 +11623,169 @@ class UniversalKEndpointObserverFamilyBuildAudit:
             and not self.residual_theorem_rows_match_builds
         )
 
+    @staticmethod
+    def _monodromy_state_row_marker(
+        row: UniversalKSignedEndpointGeneratorRow,
+    ) -> Tuple[object, ...]:
+        return (
+            row.entry_key,
+            row.output_left,
+            row.output_right,
+            row.next_seed_state,
+        )
+
+    @staticmethod
+    def _mapping_item_markers(mapping: object) -> set[object]:
+        if not callable(getattr(mapping, "items", None)):
+            return set()
+        try:
+            items = tuple(mapping.items())
+        except Exception:
+            return {("unreadable_mapping", repr(mapping))}
+        return _value_marker_set(items)
+
+    @property
+    def monodromy_input_build_mismatches(
+        self,
+    ) -> Tuple[Tuple[str, str, object], ...]:
+        audit = self.monodromy_family_input_audit
+        if audit is None:
+            return ()
+        endpoint_groups = {
+            family: group
+            for family, group in UniversalKMonodromyFamilyInputAudit._valid_parts(
+                audit.endpoint_group_rows,
+                UniversalKMonodromyFamilyInputAudit._endpoint_group_predicate,
+            )
+        }
+        templates = {
+            family: tuple(rows)
+            for family, rows in UniversalKMonodromyFamilyInputAudit._valid_parts(
+                audit.word_potential_template_rows,
+                UniversalKMonodromyFamilyInputAudit._template_predicate,
+            )
+        }
+        positive_rows = {
+            family: tuple(rows)
+            for family, rows in UniversalKMonodromyFamilyInputAudit._valid_parts(
+                audit.positive_state_rows,
+                UniversalKMonodromyFamilyInputAudit._positive_rows_predicate,
+            )
+        }
+        detector_domain_assignments = {
+            family: mapping
+            for family, mapping in UniversalKMonodromyFamilyInputAudit._valid_parts(
+                audit.detector_domain_assignment_rows,
+                UniversalKMonodromyFamilyInputAudit._mapping_predicate,
+            )
+        }
+        detector_domain_witnesses = {
+            family: mapping
+            for family, mapping in UniversalKMonodromyFamilyInputAudit._valid_parts(
+                audit.detector_domain_soundness_witness_rows,
+                UniversalKMonodromyFamilyInputAudit._mapping_predicate,
+            )
+        }
+
+        failures = []
+        for family, build in self.build_rows_exact:
+            certificate = build.telescoping_detector_audit.word_potential_certificate
+            if certificate is None:
+                failures.append(
+                    (
+                        family,
+                        "monodromy_input_build_missing_word_potential_certificate",
+                        None,
+                    )
+                )
+                continue
+            supplied_group = endpoint_groups.get(family)
+            if _finite_group_table_fingerprint(
+                supplied_group,
+            ) != _finite_group_table_fingerprint(certificate.endpoint_group):
+                failures.append(
+                    (
+                        family,
+                        "monodromy_endpoint_group_mismatch",
+                        supplied_group,
+                    )
+                )
+
+            supplied_templates = templates.get(family, ())
+            if _value_marker_set(supplied_templates) != _value_marker_set(
+                certificate.templates
+            ):
+                failures.append(
+                    (
+                        family,
+                        "monodromy_word_potential_template_mismatch",
+                        supplied_templates,
+                    )
+                )
+
+            supplied_positive_markers = _value_marker_set(
+                tuple(
+                    self._monodromy_state_row_marker(row)
+                    for row in positive_rows.get(family, ())
+                    if isinstance(row, UniversalKSignedEndpointGeneratorRow)
+                )
+            )
+            build_positive_markers = _value_marker_set(
+                tuple(
+                    self._monodromy_state_row_marker(row)
+                    for row in build.positive_rows
+                    if isinstance(row, UniversalKSignedEndpointGeneratorRow)
+                    and row.sign == 1
+                )
+            )
+            if supplied_positive_markers != build_positive_markers:
+                failures.append(
+                    (
+                        family,
+                        "monodromy_positive_state_rows_mismatch",
+                        positive_rows.get(family, ()),
+                    )
+                )
+
+            actual_assignments = {
+                row.entry_key: row.detector_domain_assignments
+                for row in certificate.identity_row_objects
+                if _universal_k_is_positive_entry_key(row.entry_key)
+                and row.detector_domain_assignments is not None
+            }
+            if self._mapping_item_markers(
+                detector_domain_assignments.get(family, {}),
+            ) != self._mapping_item_markers(actual_assignments):
+                failures.append(
+                    (
+                        family,
+                        "monodromy_detector_domain_assignment_mismatch",
+                        detector_domain_assignments.get(family, {}),
+                    )
+                )
+
+            actual_witnesses = {
+                row.entry_key: row.detector_domain_soundness_witness
+                for row in certificate.identity_row_objects
+                if _universal_k_is_positive_entry_key(row.entry_key)
+                and row.detector_domain_soundness_witness
+            }
+            if self._mapping_item_markers(
+                detector_domain_witnesses.get(family, {}),
+            ) != self._mapping_item_markers(actual_witnesses):
+                failures.append(
+                    (
+                        family,
+                        "monodromy_detector_domain_witness_mismatch",
+                        detector_domain_witnesses.get(family, {}),
+                    )
+                )
+        return tuple(sorted(failures, key=repr))
+
+    @property
+    def monodromy_input_rows_match_builds(self) -> bool:
+        return not self.monodromy_input_build_mismatches
+
     @property
     def auxiliary_input_rows_exact(self) -> bool:
         return (
@@ -11747,6 +11910,7 @@ class UniversalKEndpointObserverFamilyBuildAudit:
                 self.monodromy_family_input_audit is None
                 or self.monodromy_family_input_audit.input_rows_exact
             )
+            and self.monodromy_input_rows_match_builds
             and not self.build_scope_failures
             and not self.unproved_build_families
         )
@@ -11982,6 +12146,8 @@ class UniversalKEndpointObserverFamilyBuildAudit:
             reasons.append("endpoint_observer_family_builds_scope_mismatch")
         if self.unproved_build_families:
             reasons.append("endpoint_observer_family_builds_not_proved")
+        if self.monodromy_input_build_mismatches:
+            reasons.append("endpoint_observer_monodromy_input_rows_do_not_match_builds")
         if self.monodromy_family_input_audit is not None:
             reasons.extend(self.monodromy_family_input_audit.failure_reasons)
         return tuple(reasons)
@@ -17896,6 +18062,8 @@ class PostLinearRemainingFiniteSystemAudit:
                 ("endpoint_observer_family_residual_theorem_row_mismatches", ()),
                 ("endpoint_observer_monodromy_input_present", False),
                 ("endpoint_observer_monodromy_input_rows_exact", False),
+                ("endpoint_observer_monodromy_input_rows_match_builds", False),
+                ("endpoint_observer_monodromy_input_build_mismatches", ()),
                 ("endpoint_observer_monodromy_expected_families", ()),
                 ("endpoint_observer_monodromy_candidate_families", ()),
                 ("endpoint_observer_monodromy_endpoint_group_families", ()),
@@ -18358,6 +18526,14 @@ class PostLinearRemainingFiniteSystemAudit:
                 audit.monodromy_family_input_audit.input_rows_exact
                 if audit.monodromy_family_input_audit is not None
                 else False,
+            ),
+            (
+                "endpoint_observer_monodromy_input_rows_match_builds",
+                audit.monodromy_input_rows_match_builds,
+            ),
+            (
+                "endpoint_observer_monodromy_input_build_mismatches",
+                audit.monodromy_input_build_mismatches,
             ),
             (
                 "endpoint_observer_monodromy_expected_families",

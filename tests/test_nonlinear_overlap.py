@@ -6181,6 +6181,8 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             family_audit.monodromy_family_input_audit.detector_domain_assignment_families_exact,
             (),
         )
+        self.assertTrue(family_audit.monodromy_input_rows_match_builds)
+        self.assertEqual(family_audit.monodromy_input_build_mismatches, ())
         for family, build in family_audit.build_rows_exact:
             self.assertTrue(build.proves_endpoint_observer)
             self.assertTrue(build.audit.signed_generator_domain_exact)
@@ -6194,6 +6196,49 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
                 set(row.endpoint_value for row in build.positive_rows),
                 {endpoint_groups[family].identity},
             )
+
+        stale_endpoint_groups = dict(endpoint_groups)
+        stale_endpoint_groups["U"] = cyclic_group(3)
+        stale_monodromy_input = universal_k_monodromy_family_input_audit(
+            interval,
+            seed_entries,
+            tuple(stale_endpoint_groups.items()),
+            tuple(templates_by_family),
+            tuple(positive_rows_by_family),
+        )
+        stale_monodromy_family_audit = universal_k_endpoint_observer_family_build_audit(
+            seed_entries,
+            family_audit.builds,
+            word_potential_certificate_rows=(
+                family_audit.word_potential_certificate_rows
+            ),
+            detector_track_initialization_rows=(
+                family_audit.detector_track_initialization_rows
+            ),
+            endpoint_target_audit_rows=family_audit.endpoint_target_audit_rows,
+            cutoff_readout_audit_rows=family_audit.cutoff_readout_audit_rows,
+            residual_faithfulness_theorem_rows=(
+                family_audit.residual_faithfulness_theorem_rows
+            ),
+            product_residual_faithfulness_theorem=product_residual,
+            monodromy_family_input_audit=stale_monodromy_input,
+        )
+
+        self.assertTrue(stale_monodromy_input.input_rows_exact)
+        self.assertFalse(
+            stale_monodromy_family_audit.monodromy_input_rows_match_builds
+        )
+        self.assertFalse(
+            stale_monodromy_family_audit.proves_family_endpoint_observers
+        )
+        self.assertEqual(
+            stale_monodromy_family_audit.monodromy_input_build_mismatches[0][:2],
+            ("U", "monodromy_endpoint_group_mismatch"),
+        )
+        self.assertIn(
+            "endpoint_observer_monodromy_input_rows_do_not_match_builds",
+            stale_monodromy_family_audit.failure_reasons,
+        )
 
         derived_residual_audit = (
             universal_k_endpoint_observer_builds_from_monodromy_by_family(

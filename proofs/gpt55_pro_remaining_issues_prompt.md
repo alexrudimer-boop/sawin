@@ -94,6 +94,13 @@ C/M cutoff-readout audit, and residual-faithfulness theorem for a family must
 be the same finite objects used inside that family build.  A proof may not
 close with a proving build object while displaying stale or different
 auxiliary rows as the construction ledger.
+If a raw monodromy-coboundary front-door audit is attached, it must also match
+the retained family builds: the raw endpoint group, word-potential templates,
+positive monodromy state rows, restricted detector-domain assignments, and
+detector-domain soundness witnesses must be the data that generated the
+retained build certificate.  An internally exact monodromy input package for a
+different observer is stale construction evidence and does not close the
+routed family.
 
 The exact missing B-side ingredient is:
 
@@ -1273,6 +1280,13 @@ any C/M cutoff-readout row equals the build's cutoff-readout audit, and that
 the supplied residual-faithfulness theorem row equals the build's retained
 residual theorem.  A stale auxiliary row leaves the observer family open even
 if the retained build object itself proves.
+If the proof uses a monodromy front-door package, its raw input rows must
+likewise match the retained build internals.  The raw endpoint group must have
+the same finite group table as the retained certificate group, the raw
+templates must match the retained templates, the raw positive monodromy rows
+must match the retained positive state/coordinate transitions after discarding
+emitted labels, and any restricted detector-domain assignment or witness maps
+must match the retained word-potential identity-row data.
 Every supplied signed row must also have a well-formed full `D_Gamma` entry
 key `(E,epsilon,s,a,b,x,y)`: `E` must be one of U,C,M, the sign must be `+1`
 or `-1`, the seed state must be a hashable tuple state, and the local
@@ -2641,6 +2655,7 @@ identity_and_monodromy_handoffs_share_residual_helper_selector,
 family_observer_auxiliary_family_labels_are_hashable_U_C_M_atoms,
 post_linear_audit_consumes_monodromy_coboundary_family_data,
 monodromy_family_raw_input_ledger_exact,
+monodromy_family_raw_input_rows_match_retained_builds,
 monodromy_family_raw_input_reports_missing_extra_duplicate_and_malformed_rows,
 monodromy_family_raw_detector_domains_require_soundness_witnesses,
 monodromy_family_detector_domain_entry_key_scope_exact,

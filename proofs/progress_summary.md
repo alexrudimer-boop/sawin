@@ -1412,6 +1412,12 @@ audit, and residual-faithfulness theorem rows must match the actual objects
 inside the retained build.  Mismatches are exposed through the
 `endpoint_observer_family_*_rows_match_builds` diagnostics and keep the family
 observer open.
+The same anti-staleness rule now applies to the raw monodromy front door when
+it is attached to a retained family build.  The raw endpoint group, templates,
+positive monodromy state rows, restricted detector-domain assignments, and
+soundness-witness maps must match the retained build internals; an internally
+exact monodromy input package for a different observer is rejected with
+`endpoint_observer_monodromy_input_rows_do_not_match_builds`.
 This removes another false endpoint closure and leaves the same local
 nontrivial observer-existence gap: construct residual-faithful U/C/M
 monodromy-coboundary observers for all surviving intervals, or produce a

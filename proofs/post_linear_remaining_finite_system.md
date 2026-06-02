@@ -885,6 +885,16 @@ incomplete or malformed rather than silently ignored.  The monodromy-derived
 family build attaches this audit and requires it to be exact, so a missing
 `rho_E`, `W_E`, `H_E`, or detector-domain witness is now a finite ledger
 failure rather than an opaque missing observer.
+When this raw monodromy input audit is attached to retained family builds, it
+must also match those builds.  The endpoint group row for each family must
+match the finite group in the retained word-potential certificate; the raw
+template rows must match the retained templates; the raw positive monodromy
+state rows must match the retained positive state/coordinate transitions after
+forgetting emitted endpoint labels; and any restricted detector-domain
+assignment or soundness-witness maps must match the corresponding identity-row
+data inside the retained certificate.  An internally exact raw monodromy
+ledger for a different observer is rejected as stale input rather than
+accepted as construction evidence for the retained build.
 Every positive monodromy row must also have a well-formed positive signed
 entry key: the family must be one of U/C/M, the seed state must be a hashable
 tuple state for that family, the sign must be positive, and the local colour
@@ -1644,6 +1654,8 @@ endpoint_observer_family_residual_theorem_rows_match_builds
 endpoint_observer_family_residual_theorem_row_mismatches
 endpoint_observer_monodromy_input_present
 endpoint_observer_monodromy_input_rows_exact
+endpoint_observer_monodromy_input_rows_match_builds
+endpoint_observer_monodromy_input_build_mismatches
 endpoint_observer_monodromy_expected_families
 endpoint_observer_monodromy_candidate_families
 endpoint_observer_monodromy_endpoint_group_families
