@@ -14279,10 +14279,30 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         )
         cases = (
             (
+                "singleton_fibre",
+                two_color_singleton_swap_interval(),
+                {"derive_singleton_fibre_residual_faithfulness": True},
+                "singleton_fibre_residual_channel",
+            ),
+            (
                 "coordinate_identity",
                 two_color_coordinate_identity_swap_interval(),
                 {"derive_coordinate_identity_residual_faithfulness": True},
                 "coordinate_identity_residual_channel",
+            ),
+            (
+                "supplied_fibre_label_identity",
+                two_color_fibre_label_identity_swap_interval(),
+                {
+                    "derive_fibre_label_identity_residual_faithfulness": True,
+                    "fibre_label_identity_rows": (
+                        ("a", "a0", 0),
+                        ("a", "a1", 1),
+                        ("b", "b0", 0),
+                        ("b", "b1", 1),
+                    ),
+                },
+                "fibre_label_identity_residual_channel",
             ),
             (
                 "canonical_fibre_label_identity",

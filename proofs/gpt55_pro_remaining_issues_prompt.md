@@ -80,14 +80,13 @@ C+M products close only when both cutoff families are covered exactly and
 `unclosed_routed_endpoint_systems` is empty.  These are family-by-family
 closures; no cross-family endpoint cancellation is used.
 Routed U+C products are also closed at the main classifier level for the
-coordinate-identity residual subcase and for the canonical fibre-label
-identity residual subcase.  In those non-strict closures, U still uses the
-current `U_tri` finite group table, C still uses exact cutoff/readout data,
-and the product residual theorem must expose the corresponding
-`coordinate_identity_residual_channel` or
-`canonical_fibre_label_identity_residual_channel`.  These closures cover only
-residually trivial non-strict local motion, not arbitrary nontrivial U/C
-endpoint dynamics.
+singleton-fibre, coordinate-identity, supplied fibre-label identity, and
+canonical fibre-label identity residual subcases.  In those non-strict
+closures, U still uses the current `U_tri` finite group table, C still uses
+exact cutoff/readout data, and the product residual theorem must expose the
+corresponding residual channel reason.  These closures cover only residually
+trivial non-strict local motion, not arbitrary nontrivial U/C endpoint
+dynamics.
 
 The exact missing B-side ingredient is:
 
