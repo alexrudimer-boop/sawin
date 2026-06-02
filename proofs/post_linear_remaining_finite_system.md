@@ -1208,6 +1208,13 @@ reasons, does not prove that the same routed endpoint channels are faithful to
 the actual residual motion.  Such a certificate is reported as
 `endpoint_observer_product_residual_faithfulness_channel_scope_mismatch` and
 cannot close a product endpoint row.
+The checker now also compares the full well-formed endpoint-channel key
+ledger by family, not only the third-field channel reason.  Since channel keys
+have shape `(E, s, channel_name, optional_local_data...)`, a product theorem
+that keeps the same reason string but changes or drops the optional local
+channel data proves faithfulness for a different concrete endpoint channel.
+That narrower mismatch is reported as
+`endpoint_observer_product_residual_faithfulness_channel_key_scope_mismatch`.
 The product residual theorem's active and covered family ledgers must also
 be finite well-formed `{U,C,M}` ledgers.  Unknown or unhashable family labels
 in the product theorem do not crash the family build and do not match the
@@ -1563,9 +1570,11 @@ endpoint_observer_family_build_product_residual_faithfulness_proved
 endpoint_observer_family_build_product_residual_faithfulness_family_scope_matches
 endpoint_observer_family_build_product_residual_faithfulness_seed_scope_matches
 endpoint_observer_family_build_product_residual_faithfulness_channel_scope_matches
+endpoint_observer_family_build_product_residual_faithfulness_channel_key_scope_matches
 endpoint_observer_family_build_product_residual_faithfulness_failure_reasons
 endpoint_observer_family_build_product_residual_faithfulness_channel_reasons
 endpoint_observer_family_build_product_residual_faithfulness_channel_reasons_by_family
+endpoint_observer_family_build_product_residual_faithfulness_channel_keys_by_family
 endpoint_observer_family_build_closes_current_kappa
 endpoint_observer_family_build_closed_families
 system_u_closed_by_endpoint_observer_family_build
@@ -1606,6 +1615,7 @@ endpoint_observer_family_cutoff_readout_missing_families
 endpoint_observer_family_cutoff_readout_extra_families
 endpoint_observer_family_residual_theorem_rows
 endpoint_observer_family_residual_theorem_channel_reasons
+endpoint_observer_family_residual_theorem_channel_keys_by_family
 endpoint_observer_family_residual_theorem_malformed_rows
 endpoint_observer_family_residual_theorem_unknown_families
 endpoint_observer_family_residual_theorem_duplicate_families

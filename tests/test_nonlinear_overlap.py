@@ -7410,6 +7410,14 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             family_audit_with_product.product_residual_faithfulness_proved
         )
         self.assertTrue(
+            family_audit_with_product
+            .product_residual_faithfulness_channel_reasons_match_families
+        )
+        self.assertTrue(
+            family_audit_with_product
+            .product_residual_faithfulness_channel_keys_match_families
+        )
+        self.assertTrue(
             family_audit_with_product.proves_family_endpoint_product_closure
         )
 
@@ -7459,6 +7467,86 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertIn(
             "endpoint_observer_product_residual_faithfulness_channel_scope_mismatch",
             fake_channel_family_audit.product_residual_faithfulness_failure_reasons,
+        )
+        self.assertIn(
+            "endpoint_observer_product_residual_faithfulness_channel_key_scope_mismatch",
+            fake_channel_family_audit.product_residual_faithfulness_failure_reasons,
+        )
+
+        fake_local_channel_product_residual = replace(
+            product_residual,
+            residual_rows=tuple(
+                replace(
+                    row,
+                    endpoint_channel_keys=tuple(
+                        (
+                            family,
+                            seed_state,
+                            "endpoint_channel",
+                            "fake_product_local_data",
+                        )
+                        for family, seed_state in row.endpoint_seed_states
+                    ),
+                )
+                for row in product_residual.residual_rows
+            ),
+        )
+        fake_local_channel_family_audit = (
+            universal_k_endpoint_observer_builds_by_family(
+                interval,
+                seed_entries,
+                tuple(certificates),
+                detector_track_initialization_rows=tuple(detector_rows),
+                endpoint_target_audits_by_family=tuple(endpoint_targets),
+                cutoff_readout_audits_by_family=tuple(cutoff_readouts),
+                residual_faithfulness_theorems_by_family=tuple(residual_theorems),
+                product_residual_faithfulness_theorem=(
+                    fake_local_channel_product_residual
+                ),
+            )
+        )
+
+        self.assertTrue(fake_local_channel_product_residual.proves_residual_faithfulness)
+        self.assertTrue(
+            fake_local_channel_family_audit
+            .product_residual_faithfulness_channel_reasons_match_families
+        )
+        self.assertFalse(
+            fake_local_channel_family_audit
+            .product_residual_faithfulness_channel_keys_match_families
+        )
+        self.assertFalse(
+            fake_local_channel_family_audit.product_residual_faithfulness_proved
+        )
+        self.assertFalse(
+            fake_local_channel_family_audit.proves_family_endpoint_product_closure
+        )
+        self.assertEqual(
+            fake_local_channel_family_audit.product_residual_theorem_channel_keys_by_family,
+            tuple(
+                sorted(
+                    (
+                        (
+                            family,
+                            (
+                                (
+                                    family,
+                                    seed_state_by_family[family],
+                                    "endpoint_channel",
+                                    "fake_product_local_data",
+                                ),
+                            ),
+                        )
+                        for family in ("C", "M", "U")
+                    ),
+                    key=repr,
+                )
+            ),
+        )
+        self.assertIn(
+            "endpoint_observer_product_residual_faithfulness_channel_key_scope_mismatch",
+            fake_local_channel_family_audit
+            .product_residual_faithfulness_failure_reasons,
         )
 
         missing_m = universal_k_endpoint_observer_family_build_audit(

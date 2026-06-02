@@ -2565,6 +2565,30 @@ class UniversalKResidualFaithfulnessAudit:
         )
 
     @property
+    def residual_endpoint_channel_keys_by_family(
+        self,
+    ) -> Tuple[Tuple[str, Tuple[Tuple[object, ...], ...]], ...]:
+        """Full endpoint-channel keys used by each routed endpoint family."""
+
+        keys_by_family: dict[str, list[Tuple[object, ...]]] = {}
+        for row in self.residual_rows:
+            for key in row.endpoint_channel_keys:
+                if not _universal_k_residual_endpoint_channel_key_well_formed(key):
+                    continue
+                family = key[0]
+                keys_by_family.setdefault(family, []).append(key)
+        return tuple(
+            sorted(
+                (
+                    (family, tuple(sorted(_unique_values(tuple(keys)), key=repr)))
+                    for family, keys in keys_by_family.items()
+                    if family in UNIVERSAL_K_ENDPOINT_FAMILIES
+                ),
+                key=repr,
+            )
+        )
+
+    @property
     def duplicate_residual_row_input_tuples(self) -> Tuple[Tuple[object, ...], ...]:
         return _duplicate_values(self.residual_row_input_tuples)
 
@@ -11357,6 +11381,23 @@ class UniversalKEndpointObserverFamilyBuildAudit:
         )
 
     @property
+    def residual_theorem_channel_keys_by_family(
+        self,
+    ) -> Tuple[Tuple[str, Tuple[Tuple[object, ...], ...]], ...]:
+        return tuple(
+            sorted(
+                (
+                    (family, keys)
+                    for _row_family, theorem in self.residual_theorem_row_parts
+                    for family, keys in theorem.residual_endpoint_channel_keys_by_family
+                    if _is_hashable(family)
+                    and family in UNIVERSAL_K_ENDPOINT_FAMILIES
+                ),
+                key=repr,
+            )
+        )
+
+    @property
     def product_residual_theorem_channel_reasons(self) -> Tuple[str, ...]:
         if self.product_residual_faithfulness_theorem is None:
             return ()
@@ -11371,6 +11412,17 @@ class UniversalKEndpointObserverFamilyBuildAudit:
         return (
             self.product_residual_faithfulness_theorem
             .residual_endpoint_channel_reasons_by_family
+        )
+
+    @property
+    def product_residual_theorem_channel_keys_by_family(
+        self,
+    ) -> Tuple[Tuple[str, Tuple[Tuple[object, ...], ...]], ...]:
+        if self.product_residual_faithfulness_theorem is None:
+            return ()
+        return (
+            self.product_residual_faithfulness_theorem
+            .residual_endpoint_channel_keys_by_family
         )
 
     @property
@@ -11602,6 +11654,15 @@ class UniversalKEndpointObserverFamilyBuildAudit:
         )
 
     @property
+    def product_residual_faithfulness_channel_keys_match_families(self) -> bool:
+        if self.product_residual_faithfulness_theorem is None:
+            return False
+        return (
+            self.product_residual_theorem_channel_keys_by_family
+            == self.residual_theorem_channel_keys_by_family
+        )
+
+    @property
     def product_residual_faithfulness_proved(self) -> bool:
         if not self.product_residual_faithfulness_required:
             return True
@@ -11611,6 +11672,7 @@ class UniversalKEndpointObserverFamilyBuildAudit:
             and self.product_residual_faithfulness_scope_matches_families
             and self.product_residual_faithfulness_scope_matches_seed_states
             and self.product_residual_faithfulness_channel_reasons_match_families
+            and self.product_residual_faithfulness_channel_keys_match_families
             and theorem.proves_residual_faithfulness
         )
 
@@ -11634,6 +11696,10 @@ class UniversalKEndpointObserverFamilyBuildAudit:
         if not self.product_residual_faithfulness_channel_reasons_match_families:
             reasons.append(
                 "endpoint_observer_product_residual_faithfulness_channel_scope_mismatch"
+            )
+        if not self.product_residual_faithfulness_channel_keys_match_families:
+            reasons.append(
+                "endpoint_observer_product_residual_faithfulness_channel_key_scope_mismatch"
             )
         if not theorem.proves_residual_faithfulness:
             reasons.append("endpoint_observer_product_residual_faithfulness_not_proved")
@@ -17545,6 +17611,10 @@ class PostLinearRemainingFiniteSystemAudit:
                     False,
                 ),
                 (
+                    "endpoint_observer_family_build_product_residual_faithfulness_channel_key_scope_matches",
+                    False,
+                ),
+                (
                     "endpoint_observer_family_build_product_residual_faithfulness_failure_reasons",
                     (),
                 ),
@@ -17554,6 +17624,10 @@ class PostLinearRemainingFiniteSystemAudit:
                 ),
                 (
                     "endpoint_observer_family_build_product_residual_faithfulness_channel_reasons_by_family",
+                    (),
+                ),
+                (
+                    "endpoint_observer_family_build_product_residual_faithfulness_channel_keys_by_family",
                     (),
                 ),
                 ("endpoint_observer_family_build_closes_current_kappa", False),
@@ -17800,6 +17874,10 @@ class PostLinearRemainingFiniteSystemAudit:
                 audit.product_residual_faithfulness_channel_reasons_match_families,
             ),
             (
+                "endpoint_observer_family_build_product_residual_faithfulness_channel_key_scope_matches",
+                audit.product_residual_faithfulness_channel_keys_match_families,
+            ),
+            (
                 "endpoint_observer_family_build_product_residual_faithfulness_failure_reasons",
                 audit.product_residual_faithfulness_failure_reasons,
             ),
@@ -17810,6 +17888,10 @@ class PostLinearRemainingFiniteSystemAudit:
             (
                 "endpoint_observer_family_build_product_residual_faithfulness_channel_reasons_by_family",
                 audit.product_residual_theorem_channel_reasons_by_family,
+            ),
+            (
+                "endpoint_observer_family_build_product_residual_faithfulness_channel_keys_by_family",
+                audit.product_residual_theorem_channel_keys_by_family,
             ),
             (
                 "endpoint_observer_family_build_closes_current_kappa",
@@ -18011,6 +18093,10 @@ class PostLinearRemainingFiniteSystemAudit:
             (
                 "endpoint_observer_family_residual_theorem_channel_reasons",
                 audit.residual_theorem_channel_reasons_by_family,
+            ),
+            (
+                "endpoint_observer_family_residual_theorem_channel_keys_by_family",
+                audit.residual_theorem_channel_keys_by_family,
             ),
             (
                 "endpoint_observer_family_residual_theorem_malformed_rows",

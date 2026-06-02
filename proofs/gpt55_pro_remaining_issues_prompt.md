@@ -84,9 +84,9 @@ fibre-label identity, and canonical fibre-label identity residual subcases.
 In those non-strict closures, U still uses the current `U_tri` finite group
 table when present, C and M still use exact cutoff/readout data, and the
 product residual theorem must expose the same endpoint-channel reason ledger
-by family as the per-family residual theorems.  These closures cover only
-residually trivial non-strict local motion, not arbitrary nontrivial U/C/M
-endpoint dynamics.
+and full endpoint-channel key ledger by family as the per-family residual
+theorems.  These closures cover only residually trivial non-strict local
+motion, not arbitrary nontrivial U/C/M endpoint dynamics.
 
 The exact missing B-side ingredient is:
 
@@ -2100,6 +2100,15 @@ reported as
 it cannot close the product endpoint family build.  This prevents a product
 residual theorem from proving faithfulness for a different set of endpoint
 channels than the observers actually kill.
+The product theorem must also match the full well-formed endpoint-channel key
+ledger by family.  Endpoint-channel keys have shape
+`(E,s,channel_name,optional_local_data...)`; the optional local data are part
+of the concrete channel.  Thus a product theorem that keeps the same
+`channel_name` but changes, drops, or invents optional local channel data is
+not proving faithfulness for the same endpoint channels as the per-family
+observers.  It must be reported as
+`endpoint_observer_product_residual_faithfulness_channel_key_scope_mismatch`,
+and it cannot close the product endpoint family build.
 The product theorem's active and covered family ledgers must themselves be
 finite well-formed `{U,C,M}` ledgers.  Unknown or unhashable family labels do
 not match the active product scope; they are product residual family-scope
@@ -2568,6 +2577,7 @@ endpoint_observer_family_build_matches_current_kappa_and_interval,
 endpoint_observer_product_residual_faithfulness_for_multifamily_rows,
 endpoint_observer_product_residual_family_scope_well_formed,
 endpoint_observer_product_residual_channel_scope_matches_per_family,
+endpoint_observer_product_residual_channel_key_scope_matches_per_family,
 endpoint_observer_product_residual_channel_reasons_exposed,
 endpoint_observer_family_build_closes_exact_active_families,
 endpoint_observer_positive_rows_forced_from_typed_identity_rows,

@@ -1398,6 +1398,12 @@ reason ledger by family.  A product theorem that proves residual faithfulness
 for placeholder channel names, while the observers actually kill different
 U/C/M channels, is rejected with
 `endpoint_observer_product_residual_faithfulness_channel_scope_mismatch`.
+This has been sharpened one step further: the product theorem must also match
+the full well-formed endpoint-channel key ledger by family, including any
+optional local channel data after the channel name.  A product theorem that
+keeps the same reason string but changes the concrete local channel key is
+rejected with
+`endpoint_observer_product_residual_faithfulness_channel_key_scope_mismatch`.
 This removes another false product closure and leaves the same local
 nontrivial observer-existence gap: construct residual-faithful U/C/M
 monodromy-coboundary observers for all surviving intervals, or produce a
