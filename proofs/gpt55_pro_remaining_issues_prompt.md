@@ -95,11 +95,13 @@ be the same finite objects used inside that family build.  A proof may not
 close with a proving build object while displaying stale or different
 auxiliary rows as the construction ledger.
 If a raw monodromy-coboundary front-door audit is attached, it must also match
-the retained family builds: the raw endpoint group, word-potential templates,
-positive monodromy state rows, restricted detector-domain assignments, and
-detector-domain soundness witnesses must be the data that generated the
-retained build certificate.  An internally exact monodromy input package for a
-different observer is stale construction evidence and does not close the
+the current `K_nabla`/`kappa` seed-classifier ledger and the retained family
+builds: the raw seed-classifier entries must be the current entries, the raw
+endpoint group, word-potential templates, positive monodromy state rows,
+restricted detector-domain assignments, and detector-domain soundness
+witnesses must be the data that generated the retained build certificate.
+An internally exact monodromy input package for a different observer or a
+stale classifier ledger is stale construction evidence and does not close the
 routed family.
 
 The exact missing B-side ingredient is:
@@ -1281,12 +1283,16 @@ the supplied residual-faithfulness theorem row equals the build's retained
 residual theorem.  A stale auxiliary row leaves the observer family open even
 if the retained build object itself proves.
 If the proof uses a monodromy front-door package, its raw input rows must
-likewise match the retained build internals.  The raw endpoint group must have
-the same finite group table as the retained certificate group, the raw
-templates must match the retained templates, the raw positive monodromy rows
-must match the retained positive state/coordinate transitions after discarding
-emitted labels, and any restricted detector-domain assignment or witness maps
-must match the retained word-potential identity-row data.
+likewise match the current `K_nabla`/`kappa` seed-classifier ledger and the
+retained build internals.  The raw seed-classifier entries must be exactly the
+current entries, with no missing current descriptor, no stale extra
+descriptor, no duplicate entry, no duplicate descriptor, and no conflicting
+descriptor target.  The raw endpoint group must have the same finite group
+table as the retained certificate group, the raw templates must match the
+retained templates, the raw positive monodromy rows must match the retained
+positive state/coordinate transitions after discarding emitted labels, and
+any restricted detector-domain assignment or witness maps must match the
+retained word-potential identity-row data.
 Every supplied signed row must also have a well-formed full `D_Gamma` entry
 key `(E,epsilon,s,a,b,x,y)`: `E` must be one of U,C,M, the sign must be `+1`
 or `-1`, the seed state must be a hashable tuple state, and the local
@@ -1806,6 +1812,12 @@ were supplied.
 They must not be interpreted as an unproved observer with unspecified
 emissions.  A valid monodromy-derived observer begins only after this raw
 package ledger is exact.
+If that raw package is attached to retained family builds, its
+seed-classifier ledger must also match the current family-build classifier
+ledger.  An internally exact raw package using the same endpoint-family seed
+states but different row descriptors is stale construction evidence, because
+the observer has not been scoped to the current `K_nabla` descriptors that
+created the routed endpoint obligation.
 Every positive monodromy row must have a well-formed positive signed endpoint
 entry key: the family must be one of U,C,M, the seed state must be a hashable
 tuple state for that family, the sign must be positive, and the local colour
@@ -2618,6 +2630,8 @@ endpoint_observer_product_residual_channel_key_scope_matches_per_family,
 endpoint_observer_product_residual_channel_reasons_exposed,
 endpoint_observer_family_build_closes_exact_active_families,
 endpoint_observer_positive_rows_forced_from_typed_identity_rows,
+endpoint_observer_monodromy_input_seed_classifier_matches_current,
+endpoint_observer_monodromy_input_rows_match_builds,
 endpoint_observer_monodromy_contexts_exposed,
 endpoint_observer_monodromy_missing_adjacent_paths_exposed,
 endpoint_observer_monodromy_family_labels_in_U_C_M,

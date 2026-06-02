@@ -1418,6 +1418,14 @@ positive monodromy state rows, restricted detector-domain assignments, and
 soundness-witness maps must match the retained build internals; an internally
 exact monodromy input package for a different observer is rejected with
 `endpoint_observer_monodromy_input_rows_do_not_match_builds`.
+This anti-staleness gate now also covers the raw monodromy package's
+seed-classifier ledger.  The attached raw package must use the current
+`K_nabla`/`kappa` entries, not merely the same routed endpoint seed states; a
+stale descriptor ledger is rejected with
+`endpoint_observer_monodromy_input_seed_classifier_scope_mismatch`.  The
+family observer layer also rejects duplicate classifier entries, duplicate row
+descriptors, and conflicting descriptor targets before using the ledger as
+active endpoint seed evidence.
 This removes another false endpoint closure and leaves the same local
 nontrivial observer-existence gap: construct residual-faithful U/C/M
 monodromy-coboundary observers for all surviving intervals, or produce a

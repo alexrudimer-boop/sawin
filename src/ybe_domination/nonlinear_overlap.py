@@ -10644,6 +10644,43 @@ class UniversalKEndpointObserverFamilyBuildAudit:
         )
 
     @property
+    def duplicate_seed_classifier_entries(
+        self,
+    ) -> Tuple[UniversalKSeedClassifierEntry, ...]:
+        return _duplicate_values(self.seed_classifier_entries)
+
+    @property
+    def duplicate_seed_classifier_descriptors(
+        self,
+    ) -> Tuple[UniversalKRowDescriptor, ...]:
+        return _duplicate_values(
+            tuple(descriptor for descriptor, _target in self.seed_classifier_entry_parts)
+        )
+
+    @property
+    def conflicting_seed_classifier_descriptors(
+        self,
+    ) -> Tuple[UniversalKRowDescriptor, ...]:
+        targets_by_descriptor: dict[object, set[object]] = {}
+        descriptor_by_marker: dict[object, object] = {}
+        for descriptor, target in self.seed_classifier_entry_parts:
+            descriptor_marker = _value_marker(descriptor)
+            descriptor_by_marker.setdefault(descriptor_marker, descriptor)
+            targets_by_descriptor.setdefault(descriptor_marker, set()).add(
+                _value_marker(target)
+            )
+        return tuple(
+            sorted(
+                (
+                    descriptor_by_marker[descriptor_marker]
+                    for descriptor_marker, targets in targets_by_descriptor.items()
+                    if len(targets) > 1
+                ),
+                key=repr,
+            )
+        )
+
+    @property
     def invalid_seed_classifier_targets(
         self,
     ) -> Tuple[UniversalKSeedClassifierEntry, ...]:
@@ -10657,6 +10694,9 @@ class UniversalKEndpointObserverFamilyBuildAudit:
     def seed_classifier_ledger_well_formed(self) -> bool:
         return (
             not self.malformed_seed_classifier_entries
+            and not self.duplicate_seed_classifier_entries
+            and not self.duplicate_seed_classifier_descriptors
+            and not self.conflicting_seed_classifier_descriptors
             and not self.invalid_seed_classifier_targets
         )
 
@@ -11645,6 +11685,92 @@ class UniversalKEndpointObserverFamilyBuildAudit:
         return _value_marker_set(items)
 
     @property
+    def monodromy_input_seed_classifier_mismatches(
+        self,
+    ) -> Tuple[Tuple[str, object], ...]:
+        audit = self.monodromy_family_input_audit
+        if audit is None:
+            return ()
+        current_entries = tuple(self.seed_classifier_entries)
+        supplied_entries = tuple(audit.seed_classifier_entries)
+        current_markers = _value_marker_set(current_entries)
+        supplied_markers = _value_marker_set(supplied_entries)
+        supplied_parts = tuple(
+            parts
+            for entry in supplied_entries
+            for parts in (_universal_k_two_field_row_parts(entry),)
+            if parts is not None
+        )
+        targets_by_descriptor: dict[object, set[object]] = {}
+        descriptor_by_marker: dict[object, object] = {}
+        for descriptor, target in supplied_parts:
+            descriptor_marker = _value_marker(descriptor)
+            descriptor_by_marker.setdefault(descriptor_marker, descriptor)
+            targets_by_descriptor.setdefault(descriptor_marker, set()).add(
+                _value_marker(target)
+            )
+
+        failures = []
+        missing_current = tuple(
+            entry
+            for entry in current_entries
+            if _value_marker(entry) not in supplied_markers
+        )
+        if missing_current:
+            failures.append(
+                (
+                    "monodromy_seed_classifier_missing_current_entries",
+                    missing_current,
+                )
+            )
+        extra_stale = tuple(
+            entry
+            for entry in supplied_entries
+            if _value_marker(entry) not in current_markers
+        )
+        if extra_stale:
+            failures.append(
+                ("monodromy_seed_classifier_extra_stale_entries", extra_stale)
+            )
+        duplicate_entries = _duplicate_values(supplied_entries)
+        if duplicate_entries:
+            failures.append(
+                ("monodromy_seed_classifier_duplicate_entries", duplicate_entries)
+            )
+        duplicate_descriptors = _duplicate_values(
+            tuple(descriptor for descriptor, _target in supplied_parts)
+        )
+        if duplicate_descriptors:
+            failures.append(
+                (
+                    "monodromy_seed_classifier_duplicate_descriptors",
+                    duplicate_descriptors,
+                )
+            )
+        conflicting_descriptors = tuple(
+            sorted(
+                (
+                    descriptor_by_marker[descriptor_marker]
+                    for descriptor_marker, targets in targets_by_descriptor.items()
+                    if len(targets) > 1
+                ),
+                key=repr,
+            )
+        )
+        if conflicting_descriptors:
+            failures.append(
+                (
+                    "monodromy_seed_classifier_conflicting_descriptors",
+                    conflicting_descriptors,
+                )
+            )
+        return tuple(failures)
+
+    @property
+    def monodromy_input_seed_classifier_matches_current(self) -> bool:
+        return not self.monodromy_input_seed_classifier_mismatches
+
+    @property
     def monodromy_input_build_mismatches(
         self,
     ) -> Tuple[Tuple[str, str, object], ...]:
@@ -11784,7 +11910,10 @@ class UniversalKEndpointObserverFamilyBuildAudit:
 
     @property
     def monodromy_input_rows_match_builds(self) -> bool:
-        return not self.monodromy_input_build_mismatches
+        return (
+            self.monodromy_input_seed_classifier_matches_current
+            and not self.monodromy_input_build_mismatches
+        )
 
     @property
     def auxiliary_input_rows_exact(self) -> bool:
@@ -12032,6 +12161,16 @@ class UniversalKEndpointObserverFamilyBuildAudit:
         reasons = []
         if self.malformed_seed_classifier_entries:
             reasons.append("endpoint_observer_family_seed_classifier_malformed_entries")
+        if self.duplicate_seed_classifier_entries:
+            reasons.append("endpoint_observer_family_seed_classifier_duplicate_entries")
+        if self.duplicate_seed_classifier_descriptors:
+            reasons.append(
+                "endpoint_observer_family_seed_classifier_duplicate_descriptors"
+            )
+        if self.conflicting_seed_classifier_descriptors:
+            reasons.append(
+                "endpoint_observer_family_seed_classifier_conflicting_descriptors"
+            )
         if self.invalid_seed_classifier_targets:
             reasons.append("endpoint_observer_family_seed_classifier_invalid_targets")
         if not self.expected_endpoint_families_exact:
@@ -12146,6 +12285,10 @@ class UniversalKEndpointObserverFamilyBuildAudit:
             reasons.append("endpoint_observer_family_builds_scope_mismatch")
         if self.unproved_build_families:
             reasons.append("endpoint_observer_family_builds_not_proved")
+        if self.monodromy_input_seed_classifier_mismatches:
+            reasons.append(
+                "endpoint_observer_monodromy_input_seed_classifier_scope_mismatch"
+            )
         if self.monodromy_input_build_mismatches:
             reasons.append("endpoint_observer_monodromy_input_rows_do_not_match_builds")
         if self.monodromy_family_input_audit is not None:
@@ -17987,6 +18130,15 @@ class PostLinearRemainingFiniteSystemAudit:
                 ("endpoint_observer_family_build_duplicate_families", ()),
                 ("endpoint_observer_family_seed_classifier_ledger_well_formed", False),
                 ("endpoint_observer_family_seed_classifier_malformed_entries", ()),
+                ("endpoint_observer_family_seed_classifier_duplicate_entries", ()),
+                (
+                    "endpoint_observer_family_seed_classifier_duplicate_descriptors",
+                    (),
+                ),
+                (
+                    "endpoint_observer_family_seed_classifier_conflicting_descriptors",
+                    (),
+                ),
                 ("endpoint_observer_family_seed_classifier_invalid_targets", ()),
                 ("endpoint_observer_family_certificate_rows", ()),
                 ("endpoint_observer_family_certificate_malformed_rows", ()),
@@ -18062,6 +18214,14 @@ class PostLinearRemainingFiniteSystemAudit:
                 ("endpoint_observer_family_residual_theorem_row_mismatches", ()),
                 ("endpoint_observer_monodromy_input_present", False),
                 ("endpoint_observer_monodromy_input_rows_exact", False),
+                (
+                    "endpoint_observer_monodromy_input_seed_classifier_matches_current",
+                    False,
+                ),
+                (
+                    "endpoint_observer_monodromy_input_seed_classifier_mismatches",
+                    (),
+                ),
                 ("endpoint_observer_monodromy_input_rows_match_builds", False),
                 ("endpoint_observer_monodromy_input_build_mismatches", ()),
                 ("endpoint_observer_monodromy_expected_families", ()),
@@ -18297,6 +18457,18 @@ class PostLinearRemainingFiniteSystemAudit:
                 audit.malformed_seed_classifier_entries,
             ),
             (
+                "endpoint_observer_family_seed_classifier_duplicate_entries",
+                audit.duplicate_seed_classifier_entries,
+            ),
+            (
+                "endpoint_observer_family_seed_classifier_duplicate_descriptors",
+                audit.duplicate_seed_classifier_descriptors,
+            ),
+            (
+                "endpoint_observer_family_seed_classifier_conflicting_descriptors",
+                audit.conflicting_seed_classifier_descriptors,
+            ),
+            (
                 "endpoint_observer_family_seed_classifier_invalid_targets",
                 audit.invalid_seed_classifier_targets,
             ),
@@ -18526,6 +18698,14 @@ class PostLinearRemainingFiniteSystemAudit:
                 audit.monodromy_family_input_audit.input_rows_exact
                 if audit.monodromy_family_input_audit is not None
                 else False,
+            ),
+            (
+                "endpoint_observer_monodromy_input_seed_classifier_matches_current",
+                audit.monodromy_input_seed_classifier_matches_current,
+            ),
+            (
+                "endpoint_observer_monodromy_input_seed_classifier_mismatches",
+                audit.monodromy_input_seed_classifier_mismatches,
             ),
             (
                 "endpoint_observer_monodromy_input_rows_match_builds",

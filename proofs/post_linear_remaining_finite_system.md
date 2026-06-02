@@ -886,15 +886,18 @@ family build attaches this audit and requires it to be exact, so a missing
 `rho_E`, `W_E`, `H_E`, or detector-domain witness is now a finite ledger
 failure rather than an opaque missing observer.
 When this raw monodromy input audit is attached to retained family builds, it
-must also match those builds.  The endpoint group row for each family must
-match the finite group in the retained word-potential certificate; the raw
-template rows must match the retained templates; the raw positive monodromy
-state rows must match the retained positive state/coordinate transitions after
-forgetting emitted endpoint labels; and any restricted detector-domain
-assignment or soundness-witness maps must match the corresponding identity-row
-data inside the retained certificate.  An internally exact raw monodromy
-ledger for a different observer is rejected as stale input rather than
-accepted as construction evidence for the retained build.
+must also match the current `K_nabla`/`kappa` ledger and those retained
+builds.  The raw seed-classifier entries must be the current entries, with no
+stale extra descriptor and no missing current descriptor.  The endpoint group
+row for each family must match the finite group in the retained
+word-potential certificate; the raw template rows must match the retained
+templates; the raw positive monodromy state rows must match the retained
+positive state/coordinate transitions after forgetting emitted endpoint
+labels; and any restricted detector-domain assignment or soundness-witness
+maps must match the corresponding identity-row data inside the retained
+certificate.  An internally exact raw monodromy ledger for a different
+observer or for a stale classifier ledger is rejected as stale input rather
+than accepted as construction evidence for the retained build.
 Every positive monodromy row must also have a well-formed positive signed
 entry key: the family must be one of U/C/M, the seed state must be a hashable
 tuple state for that family, the sign must be positive, and the local colour
@@ -975,10 +978,11 @@ family's seed classifier entries and seed states, and only closes when every
 family build proves its endpoint observer.  The family ledger now validates
 the `kappa` entries themselves before using them as active seed evidence:
 malformed classifier rows and classifier targets outside hashable U/C/M seed
-states are reported as finite ledger errors, not as vague missing observers
-and not as exceptions during seed-state set comparison.  Thus a combined
-product endpoint row cannot hide the absence of a C or M observer behind a
-successful U build.
+states, duplicate classifier entries, duplicate descriptors, and conflicting
+descriptor-to-target rows are reported as finite ledger errors, not as vague
+missing observers and not as exceptions during seed-state set comparison.
+Thus a combined product endpoint row cannot hide the absence of a C or M
+observer behind a successful U build.
 The family ledger is not allowed to be an opaque list of already-built
 observers.  It must also expose exact input rows for each active routed
 family: the word-potential certificate row, detector-track initialization
@@ -1607,6 +1611,9 @@ endpoint_observer_family_build_extra_families
 endpoint_observer_family_build_duplicate_families
 endpoint_observer_family_seed_classifier_ledger_well_formed
 endpoint_observer_family_seed_classifier_malformed_entries
+endpoint_observer_family_seed_classifier_duplicate_entries
+endpoint_observer_family_seed_classifier_duplicate_descriptors
+endpoint_observer_family_seed_classifier_conflicting_descriptors
 endpoint_observer_family_seed_classifier_invalid_targets
 endpoint_observer_family_certificate_rows
 endpoint_observer_family_certificate_malformed_rows
@@ -1654,6 +1661,8 @@ endpoint_observer_family_residual_theorem_rows_match_builds
 endpoint_observer_family_residual_theorem_row_mismatches
 endpoint_observer_monodromy_input_present
 endpoint_observer_monodromy_input_rows_exact
+endpoint_observer_monodromy_input_seed_classifier_matches_current
+endpoint_observer_monodromy_input_seed_classifier_mismatches
 endpoint_observer_monodromy_input_rows_match_builds
 endpoint_observer_monodromy_input_build_mismatches
 endpoint_observer_monodromy_expected_families

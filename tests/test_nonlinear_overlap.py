@@ -6240,6 +6240,95 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             stale_monodromy_family_audit.failure_reasons,
         )
 
+        stale_seed_entries = tuple(
+            (
+                ("*", "*", family, "stale_constant_map_kernel", (0, 1)),
+                (family, seed_state_by_family[family]),
+            )
+            for family in ("U", "C", "M")
+        )
+        stale_seed_monodromy_input = universal_k_monodromy_family_input_audit(
+            interval,
+            stale_seed_entries,
+            tuple(endpoint_groups.items()),
+            tuple(templates_by_family),
+            tuple(positive_rows_by_family),
+        )
+        stale_seed_family_audit = universal_k_endpoint_observer_family_build_audit(
+            seed_entries,
+            family_audit.builds,
+            word_potential_certificate_rows=(
+                family_audit.word_potential_certificate_rows
+            ),
+            detector_track_initialization_rows=(
+                family_audit.detector_track_initialization_rows
+            ),
+            endpoint_target_audit_rows=family_audit.endpoint_target_audit_rows,
+            cutoff_readout_audit_rows=family_audit.cutoff_readout_audit_rows,
+            residual_faithfulness_theorem_rows=(
+                family_audit.residual_faithfulness_theorem_rows
+            ),
+            product_residual_faithfulness_theorem=product_residual,
+            monodromy_family_input_audit=stale_seed_monodromy_input,
+        )
+
+        self.assertTrue(stale_seed_monodromy_input.input_rows_exact)
+        self.assertEqual(stale_seed_family_audit.monodromy_input_build_mismatches, ())
+        self.assertFalse(
+            stale_seed_family_audit.monodromy_input_seed_classifier_matches_current
+        )
+        self.assertFalse(stale_seed_family_audit.monodromy_input_rows_match_builds)
+        self.assertFalse(stale_seed_family_audit.proves_family_endpoint_observers)
+        self.assertEqual(
+            stale_seed_family_audit.monodromy_input_seed_classifier_mismatches[0][0],
+            "monodromy_seed_classifier_missing_current_entries",
+        )
+        self.assertEqual(
+            stale_seed_family_audit.monodromy_input_seed_classifier_mismatches[1][0],
+            "monodromy_seed_classifier_extra_stale_entries",
+        )
+        self.assertIn(
+            "endpoint_observer_monodromy_input_seed_classifier_scope_mismatch",
+            stale_seed_family_audit.failure_reasons,
+        )
+
+        duplicate_seed_family_audit = universal_k_endpoint_observer_family_build_audit(
+            seed_entries + (seed_entries[0],),
+            family_audit.builds,
+            word_potential_certificate_rows=(
+                family_audit.word_potential_certificate_rows
+            ),
+            detector_track_initialization_rows=(
+                family_audit.detector_track_initialization_rows
+            ),
+            endpoint_target_audit_rows=family_audit.endpoint_target_audit_rows,
+            cutoff_readout_audit_rows=family_audit.cutoff_readout_audit_rows,
+            residual_faithfulness_theorem_rows=(
+                family_audit.residual_faithfulness_theorem_rows
+            ),
+            product_residual_faithfulness_theorem=product_residual,
+            monodromy_family_input_audit=family_audit.monodromy_family_input_audit,
+        )
+
+        self.assertFalse(duplicate_seed_family_audit.seed_classifier_ledger_well_formed)
+        self.assertFalse(duplicate_seed_family_audit.proves_family_endpoint_observers)
+        self.assertEqual(
+            duplicate_seed_family_audit.duplicate_seed_classifier_entries,
+            (seed_entries[0],),
+        )
+        self.assertEqual(
+            duplicate_seed_family_audit.duplicate_seed_classifier_descriptors,
+            (seed_entries[0][0],),
+        )
+        self.assertIn(
+            "endpoint_observer_family_seed_classifier_duplicate_entries",
+            duplicate_seed_family_audit.failure_reasons,
+        )
+        self.assertIn(
+            "endpoint_observer_family_seed_classifier_duplicate_descriptors",
+            duplicate_seed_family_audit.failure_reasons,
+        )
+
         derived_residual_audit = (
             universal_k_endpoint_observer_builds_from_monodromy_by_family(
                 interval,
