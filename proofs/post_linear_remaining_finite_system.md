@@ -1012,6 +1012,16 @@ constructor consumes this proof only when
 `derive_canonical_fibre_label_identity_residual_faithfulness=True`.  This is
 not a general endpoint observer: it closes exactly the case where residual
 motion is already killed by the canonical preserved-label quotient.
+The identity observer constructor also exposes an aggregate opt-in,
+`derive_automatic_residual_faithfulness=True`.  This flag tries only the
+already-proved automatic residual helpers: strict identity, coordinate
+identity, singleton fibres, supplied fibre-label identity when a label ledger
+is present, and finally canonical fibre-label identity.  It is a convenience
+constructor for these symbolic subcases, not a new existence theorem for
+nontrivial U/C/M endpoint observers.  At the top-level audit the corresponding
+flag is `universal_k_identity_automatic_residual_faithfulness=True`; setting
+it constructs the identity endpoint observer candidate path and lets these
+helpers close exactly the subcases whose finite hypotheses are verified.
 All automatic residual-faithfulness helpers preserve the full supplied
 routed seed-state ledger in the theorem.  They may use only the well-formed
 U/C/M seed states to emit schematic rows, but malformed, wrong-family, or

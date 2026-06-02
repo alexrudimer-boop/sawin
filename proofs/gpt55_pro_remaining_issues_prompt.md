@@ -1849,6 +1849,15 @@ braids have trivial residual fibre action.  The identity observer constructor
 may consume this proof only with the explicit canonical-label residual flag;
 it is still only an automatic residual-faithfulness subcase, not a general
 U/C/M endpoint observer.
+There is also an aggregate identity-residual consumer flag,
+`derive_automatic_residual_faithfulness=True`, and at the top-level audit
+`universal_k_identity_automatic_residual_faithfulness=True`.  This flag tries
+only the already-proved automatic subcases: strict identity, coordinate
+identity, singleton fibres, supplied fibre-label identity when a label ledger
+is present, and canonical fibre-label identity.  It is a convenience route for
+closing those symbolic residual-triviality cases.  It is not an existence
+proof for the nontrivial U/C/M endpoint observers, and if none of the finite
+hypotheses holds the observer candidate must remain open.
 All automatic residual-faithfulness helpers must preserve the full
 supplied routed seed-state ledger in the theorem.  They may use only
 well-formed U/C/M seed states to emit schematic rows, but malformed,
@@ -2362,6 +2371,7 @@ coordinate_identity_fibre_action_residual_faithfulness_subcase,
 singleton_fibre_action_residual_faithfulness_subcase,
 fibre_label_identity_residual_faithfulness_subcase,
 canonical_fibre_label_identity_residual_faithfulness_subcase,
+automatic_identity_residual_faithfulness_consumer_subcases_only,
 endpoint_observer_family_certificate_input_ledger_exact,
 endpoint_observer_family_auxiliary_input_ledgers_exact,
 endpoint_observer_each_active_family_single_scoped_and_proved,

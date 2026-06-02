@@ -6362,6 +6362,19 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             ("canonical_fibre_label_identity_residual_channel",),
         )
 
+        automatic_family_audit = universal_k_identity_endpoint_observer_builds_by_family(
+            interval,
+            seed_entries,
+            derive_automatic_residual_faithfulness=True,
+        )
+        self.assertEqual(automatic_family_audit.failure_reasons, ())
+        self.assertTrue(automatic_family_audit.proves_family_endpoint_observers)
+        self.assertTrue(automatic_family_audit.proves_family_endpoint_product_closure)
+        self.assertEqual(
+            automatic_family_audit.product_residual_theorem_channel_reasons,
+            ("canonical_fibre_label_identity_residual_channel",),
+        )
+
     def test_canonical_fibre_label_identity_refuses_noninjective_components(self):
         interval = one_color_flip_interval()
         seed_entries = (
@@ -13450,6 +13463,25 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         )
         self.assertIn(
             ("endpoint_observer_family_build_proved", False),
+            audit.routed_endpoint_obstruction_data,
+        )
+
+    def test_post_linear_function_auto_identity_residual_flag_builds_candidates(self):
+        audit = post_linear_remaining_finite_system_audit(
+            one_color_latin_unit_triangular_interval(),
+            universal_k_identity_automatic_residual_faithfulness=True,
+        )
+
+        family_build = audit.universal_k_endpoint_observer_family_build
+        self.assertIsNotNone(family_build)
+        self.assertEqual(family_build.expected_endpoint_families_exact, ())
+        self.assertFalse(family_build.proves_family_endpoint_observers)
+        self.assertIn(
+            "endpoint_observer_family_builds_no_active_families",
+            family_build.failure_reasons,
+        )
+        self.assertIn(
+            ("endpoint_observer_family_build_present", True),
             audit.routed_endpoint_obstruction_data,
         )
 
