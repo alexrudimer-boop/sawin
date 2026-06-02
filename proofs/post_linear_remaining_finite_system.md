@@ -1012,6 +1012,14 @@ uses the current `U_tri` group-table fingerprint, covers the full interval
 `D_Gamma` domain, proves the strict-identity residual theorem, and leaves no
 remaining routed U obligation.  This is a genuine closed subcase, not a proof
 of the general U observer existence theorem.
+The same strict-identity family observer is now consumed by the main
+classifier for product endpoint rows.  Routed U+C products close only when the
+U observer uses the current `U_tri` table and the C observer has the exact
+cutoff/readout and residual theorem; routed C+M products close only when both
+cutoff families are covered and the product residual-faithfulness theorem is
+proved.  The exported closed-family tuple is checked family-by-family, and
+`unclosed_routed_endpoint_systems` must be empty.  Thus these strict-identity
+product closures do not use or permit cross-family endpoint cancellation.
 All automatic residual-faithfulness helpers require the supplied local
 interval table to be complete and type-correct: `R_C` must be a bijection on
 colour pairs, every local `T_{a,b}` row must be present exactly on its fibre

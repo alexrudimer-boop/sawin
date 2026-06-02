@@ -72,6 +72,13 @@ checks the full `D_Gamma` domain, the current `kappa` entries, the current
 `U_tri` finite group-table fingerprint, and leaves no routed U remaining
 obligation.  This is only a closed subcase; it is not a proof that arbitrary
 non-identity U endpoints admit observers.
+The same strict-identity observer also closes strict-identity product
+endpoint rows at the main classifier level.  Routed U+C products close only
+with the current `U_tri` target for U, exact C cutoff/readout data, exact
+family coverage, and a proved product residual-faithfulness theorem.  Routed
+C+M products close only when both cutoff families are covered exactly and
+`unclosed_routed_endpoint_systems` is empty.  These are family-by-family
+closures; no cross-family endpoint cancellation is used.
 
 The exact missing B-side ingredient is:
 
