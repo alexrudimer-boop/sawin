@@ -17667,6 +17667,10 @@ class PostLinearRemainingFiniteSystemAudit:
                             profile.mismatched_section_profile_rows,
                         ),
                         (
+                            "missing_triangular_inexact_section_profile_rows",
+                            profile.inexact_section_profile_rows,
+                        ),
+                        (
                             "missing_triangular_partial_constant_rows",
                             tuple(
                                 (

@@ -425,7 +425,14 @@ remains live.  Within each profile row, the section-profile rows must match
 the parent side and colour pair and must have duplicate-free fixed inputs; if
 a fixed input is duplicated or a section-profile row has the wrong side or
 colour pair, the profile is `unclassified_missing_triangular_profile` and the
-raw K row remains live.  A valid profile has exactly one of the following
+raw K row remains live.  Each section-profile row must also be an exact
+finite-map summary: its rank must equal the number of duplicate-free image
+values and the number of kernel blocks, the kernel blocks must be nonempty,
+pairwise disjoint, and cover the recorded domain size, and the rank must lie
+within the recorded domain and codomain sizes.  If a section-rank row is
+internally inexact, the profile is again
+`unclassified_missing_triangular_profile` and the raw K row remains live.  A
+valid profile has exactly one of the following
 explanations:
 
 ```text

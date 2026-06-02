@@ -1817,6 +1817,10 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             ("missing_triangular_mismatched_section_profile_rows", ()),
             audit.finite_obstruction_data,
         )
+        self.assertIn(
+            ("missing_triangular_inexact_section_profile_rows", ()),
+            audit.finite_obstruction_data,
+        )
 
     def test_post_linear_profile_routing_rejects_duplicate_profile_keys(self):
         interval = one_color_right_triangular_nonlatin_interval()
@@ -1897,6 +1901,63 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             (
                 "missing_triangular_duplicate_section_profile_inputs",
                 ((profile.rows[0].profile_key, (profile.rows[0].section_profiles[0].fixed_input,)),),
+            ),
+            audit.finite_obstruction_data,
+        )
+
+    def test_post_linear_profile_routing_rejects_inexact_section_rank_row(self):
+        interval = one_color_right_triangular_nonlatin_interval()
+        profile = missing_triangular_row_profile_audit(interval)
+        forged_section = replace(
+            profile.rows[0].section_profiles[0],
+            rank=profile.rows[0].section_profiles[0].rank + 1,
+        )
+        forged_profile = MissingTriangularRowProfileAudit(
+            rows=(
+                replace(
+                    profile.rows[0],
+                    section_profiles=(
+                        forged_section,
+                        *profile.rows[0].section_profiles[1:],
+                    ),
+                ),
+            ),
+        )
+        audit = PostLinearRemainingFiniteSystemAudit(
+            active_system_k_refinement(),
+            missing_triangular_row_profile=forged_profile,
+        )
+
+        self.assertFalse(forged_section.rank_profile_row_exact)
+        self.assertIn(
+            "rank_does_not_match_kernel_blocks",
+            forged_section.rank_profile_inexact_reasons,
+        )
+        self.assertFalse(forged_profile.rows[0].section_profile_ledger_exact)
+        self.assertEqual(
+            forged_profile.rows[0].explanation,
+            "unclassified_missing_triangular_profile",
+        )
+        self.assertFalse(forged_profile.finite_map_classification_exhaustive)
+        self.assertEqual(audit.system_name, "system_k_kink_completion_deficit")
+        self.assertTrue(audit.system_k_active)
+        self.assertIn(
+            (
+                "live_k_missing_latin_row_defects",
+                ((("*", "*"), "no_left_triangular_row"),),
+            ),
+            audit.finite_obstruction_data,
+        )
+        self.assertIn(
+            (
+                "missing_triangular_inexact_section_profile_rows",
+                (
+                    (
+                        profile.rows[0].profile_key,
+                        forged_section.fixed_input,
+                        forged_section.rank_profile_inexact_reasons,
+                    ),
+                ),
             ),
             audit.finite_obstruction_data,
         )

@@ -41,6 +41,7 @@ missing_triangular_row_profiles
 missing_triangular_duplicate_profile_keys
 missing_triangular_duplicate_section_profile_inputs
 missing_triangular_mismatched_section_profile_rows
+missing_triangular_inexact_section_profile_rows
 missing_triangular_partial_constant_rows
 missing_triangular_partial_constant_mixed_unit_rows
 missing_triangular_nonconstant_hidden_rows
@@ -54,8 +55,12 @@ rows share that key, even with different section-profile payloads or
 explanations, the wrapper treats the profile ledger as ambiguous and leaves
 the raw K row live.  Each profile row's internal section-profile ledger must
 also be exact: every section row must match the parent side and colour pair,
-and fixed inputs may not be duplicated.  A duplicated fixed input or
-mismatched section row makes the profile explanation
+fixed inputs may not be duplicated, and every section-rank row must be an
+exact finite-map summary.  Exactness means the rank agrees with the image
+size and the number of kernel blocks, the kernel blocks are disjoint and
+cover the recorded domain size, the image has no duplicates, and the rank
+lies within the recorded domain and codomain sizes.  A duplicated fixed input,
+mismatched section row, or inexact section-rank row makes the profile explanation
 `unclassified_missing_triangular_profile`, so it cannot be used to close or
 route the K row.  When the duplicate-free profile audit and the relevant
 route audit are supplied, the row is removed from

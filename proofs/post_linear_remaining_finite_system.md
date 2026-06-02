@@ -286,6 +286,13 @@ listed side is nonunit, whose listed side is duplicated, whose route row is
 duplicated, or whose explanation does not match remains live in System K.  The
 coordinate-unit routing ledger is non-vacuous and duplicate-free: an empty row
 tuple or a duplicated row tuple does not prove the route.
+The missing-row profile ledger is also certificate-gated internally: each
+section-profile row must be an exact rank/kernel/image summary of one finite
+coordinate section.  The rank must match both the duplicate-free image and the
+kernel-block count, the disjoint kernel blocks must cover the recorded domain
+size, and the rank must fit within the recorded domain and codomain sizes.  An
+inexact section-rank row makes the missing-row profile unclassified and leaves
+the raw K defect live.
 
 Constant-map kernel reasons are refined the same way.  Raw defects:
 
@@ -1606,6 +1613,7 @@ missing_triangular_row_profiles
 missing_triangular_duplicate_profile_keys
 missing_triangular_duplicate_section_profile_inputs
 missing_triangular_mismatched_section_profile_rows
+missing_triangular_inexact_section_profile_rows
 missing_triangular_partial_constant_rows
 missing_triangular_partial_constant_mixed_unit_rows
 missing_triangular_nonconstant_hidden_rows

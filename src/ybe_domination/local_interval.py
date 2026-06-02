@@ -314,6 +314,71 @@ class SectionRankProfileRow:
         return tuple(len(block) for block in self.kernel_blocks)
 
     @property
+    def duplicate_kernel_block_points(self) -> Tuple[FibrePoint, ...]:
+        points = tuple(point for block in self.kernel_blocks for point in block)
+        return _duplicate_values(points)
+
+    @property
+    def kernel_blocks_are_nonempty(self) -> bool:
+        return all(bool(block) for block in self.kernel_blocks)
+
+    @property
+    def kernel_blocks_cover_domain_size(self) -> bool:
+        return sum(self.kernel_block_sizes) == self.domain_size
+
+    @property
+    def image_duplicate_free(self) -> bool:
+        return not _duplicate_values(self.image)
+
+    @property
+    def rank_matches_kernel_blocks(self) -> bool:
+        return self.rank == len(self.kernel_blocks)
+
+    @property
+    def rank_matches_image(self) -> bool:
+        return self.rank == len(self.image)
+
+    @property
+    def rank_within_size_bounds(self) -> bool:
+        return (
+            self.domain_size >= 0
+            and self.codomain_size >= 0
+            and 0 <= self.rank <= self.domain_size
+            and self.rank <= self.codomain_size
+        )
+
+    @property
+    def rank_profile_row_exact(self) -> bool:
+        return (
+            self.rank_within_size_bounds
+            and self.kernel_blocks_are_nonempty
+            and not self.duplicate_kernel_block_points
+            and self.kernel_blocks_cover_domain_size
+            and self.image_duplicate_free
+            and self.rank_matches_kernel_blocks
+            and self.rank_matches_image
+        )
+
+    @property
+    def rank_profile_inexact_reasons(self) -> Tuple[str, ...]:
+        reasons: List[str] = []
+        if not self.rank_within_size_bounds:
+            reasons.append("rank_outside_size_bounds")
+        if not self.kernel_blocks_are_nonempty:
+            reasons.append("empty_kernel_block")
+        if self.duplicate_kernel_block_points:
+            reasons.append("duplicate_kernel_block_points")
+        if not self.kernel_blocks_cover_domain_size:
+            reasons.append("kernel_blocks_do_not_cover_domain_size")
+        if not self.image_duplicate_free:
+            reasons.append("duplicate_image_values")
+        if not self.rank_matches_kernel_blocks:
+            reasons.append("rank_does_not_match_kernel_blocks")
+        if not self.rank_matches_image:
+            reasons.append("rank_does_not_match_image")
+        return tuple(reasons)
+
+    @property
     def kernel_kind(self) -> str:
         if all(size == 1 for size in self.kernel_block_sizes):
             return "equality"
@@ -1001,11 +1066,16 @@ class MissingTriangularRowProfile:
         )
 
     @property
+    def section_rank_profiles_exact(self) -> bool:
+        return all(row.rank_profile_row_exact for row in self.section_profiles)
+
+    @property
     def section_profile_ledger_exact(self) -> bool:
         return (
             bool(self.section_profiles)
             and not self.duplicate_section_profile_inputs
             and self.section_profiles_match_profile_row
+            and self.section_rank_profiles_exact
         )
 
     @property
@@ -1129,6 +1199,17 @@ class MissingTriangularRowProfileAudit:
             row.profile_key
             for row in self.rows
             if not row.section_profiles_match_profile_row
+        )
+
+    @property
+    def inexact_section_profile_rows(
+        self,
+    ) -> Tuple[Tuple[Tuple[str, Color, Color], FibrePoint, Tuple[str, ...]], ...]:
+        return tuple(
+            (row.profile_key, section.fixed_input, section.rank_profile_inexact_reasons)
+            for row in self.rows
+            for section in row.section_profiles
+            if not section.rank_profile_row_exact
         )
 
     @property
