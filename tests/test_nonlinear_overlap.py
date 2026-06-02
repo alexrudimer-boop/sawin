@@ -7031,6 +7031,62 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             malformed_inputs.failure_reasons,
         )
 
+        malformed_certificate_ledger = universal_k_endpoint_observer_builds_by_family(
+            interval,
+            seed_entries,
+            "not-a-certificate-ledger",
+            detector_track_initialization_rows="not-a-detector-track-ledger",
+            endpoint_target_audits_by_family="not-an-endpoint-target-ledger",
+            cutoff_readout_audits_by_family="not-a-cutoff-readout-ledger",
+            residual_faithfulness_theorems_by_family=(
+                "not-a-residual-theorem-ledger"
+            ),
+        )
+
+        self.assertFalse(
+            malformed_certificate_ledger.proves_family_endpoint_observers
+        )
+        self.assertEqual(
+            malformed_certificate_ledger.malformed_certificate_rows,
+            ("not-a-certificate-ledger",),
+        )
+        self.assertEqual(
+            malformed_certificate_ledger.malformed_family_detector_track_initialization_rows,
+            ("not-a-detector-track-ledger",),
+        )
+        self.assertEqual(
+            malformed_certificate_ledger.malformed_endpoint_target_rows,
+            ("not-an-endpoint-target-ledger",),
+        )
+        self.assertEqual(
+            malformed_certificate_ledger.malformed_cutoff_readout_rows,
+            ("not-a-cutoff-readout-ledger",),
+        )
+        self.assertEqual(
+            malformed_certificate_ledger.malformed_residual_theorem_rows,
+            ("not-a-residual-theorem-ledger",),
+        )
+        self.assertIn(
+            "endpoint_observer_family_certificates_malformed_rows",
+            malformed_certificate_ledger.failure_reasons,
+        )
+        self.assertIn(
+            "endpoint_observer_family_detector_tracks_malformed_rows",
+            malformed_certificate_ledger.failure_reasons,
+        )
+        self.assertIn(
+            "endpoint_observer_family_endpoint_targets_malformed_rows",
+            malformed_certificate_ledger.failure_reasons,
+        )
+        self.assertIn(
+            "endpoint_observer_family_cutoff_readouts_malformed_rows",
+            malformed_certificate_ledger.failure_reasons,
+        )
+        self.assertIn(
+            "endpoint_observer_family_residual_theorems_malformed_rows",
+            malformed_certificate_ledger.failure_reasons,
+        )
+
         unhashable_certificate_family = universal_k_endpoint_observer_builds_by_family(
             interval,
             seed_entries,

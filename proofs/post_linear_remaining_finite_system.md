@@ -946,6 +946,11 @@ wrapper containing proving build objects but omitting these explicit ledgers
 remains diagnostic only and is reported with missing-family certificate,
 detector-track, endpoint-target, cutoff-readout, or residual-theorem
 failures.
+Those top-level family-observer input ledgers are normalized before any
+builder runs.  A non-sequence certificate, detector-track, endpoint-target,
+cutoff-readout, residual-theorem, or identity-cutoff-degree ledger is reported
+as one malformed row object.  It is not iterated character-by-character,
+ignored as absent input, or allowed to crash the direct family handoff.
 All family labels in these build, certificate, detector-track, endpoint-target,
 cutoff-readout, and residual-theorem rows must be hashable certificate atoms
 equal to `U`, `C`, or `M`.  An unhashable list-like label is not alternate

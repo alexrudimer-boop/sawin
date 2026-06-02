@@ -2028,6 +2028,11 @@ be a hashable certificate atom equal to `U`, `C`, or `M`; unhashable list-like
 labels or other structured objects are invalid family rows, not alternate
 syntax, and they must not instantiate per-family observers or initialized
 detector-track scope.
+The top-level direct family-observer ledgers themselves must be finite row
+ledgers.  A non-sequence certificate, detector-track, endpoint-target,
+cutoff-readout, residual-theorem, or identity-cutoff-degree ledger is one
+malformed row object.  It must not be iterated character-by-character,
+ignored as absent input, or allowed to crash the handoff.
 The same exact finite-ledger rule applies to the auxiliary rows used to build
 the family observers.  Detector-track initialization rows must cover exactly
 the active routed families with no malformed rows, unknown families, or

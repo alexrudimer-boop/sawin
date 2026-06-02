@@ -12119,14 +12119,14 @@ def universal_k_endpoint_observer_build(
 
 def universal_k_endpoint_observer_family_build_audit(
     seed_classifier_entries: Sequence[UniversalKSeedClassifierEntry],
-    builds: Sequence[Tuple[str, UniversalKEndpointObserverBuild]],
+    builds: object,
     *,
-    word_potential_certificate_rows: Sequence[object] = (),
-    detector_track_initialization_rows: Sequence[object] = (),
-    endpoint_target_audit_rows: Sequence[object] = (),
-    cutoff_readout_audit_rows: Sequence[object] = (),
-    residual_faithfulness_theorem_rows: Sequence[object] = (),
-    identity_cutoff_degree_rows: Sequence[object] = (),
+    word_potential_certificate_rows: object = (),
+    detector_track_initialization_rows: object = (),
+    endpoint_target_audit_rows: object = (),
+    cutoff_readout_audit_rows: object = (),
+    residual_faithfulness_theorem_rows: object = (),
+    identity_cutoff_degree_rows: object = (),
     product_residual_faithfulness_theorem: (
         UniversalKResidualFaithfulnessAudit | None
     ) = None,
@@ -12136,24 +12136,36 @@ def universal_k_endpoint_observer_family_build_audit(
 
     return UniversalKEndpointObserverFamilyBuildAudit(
         seed_classifier_entries=tuple(seed_classifier_entries),
-        builds=tuple(builds),
-        word_potential_certificate_rows=tuple(word_potential_certificate_rows),
-        detector_track_initialization_rows=tuple(detector_track_initialization_rows),
-        endpoint_target_audit_rows=tuple(endpoint_target_audit_rows),
-        cutoff_readout_audit_rows=tuple(cutoff_readout_audit_rows),
-        residual_faithfulness_theorem_rows=tuple(residual_faithfulness_theorem_rows),
-        identity_cutoff_degree_rows=tuple(identity_cutoff_degree_rows),
+        builds=_universal_k_row_input_tuple(builds),
+        word_potential_certificate_rows=_universal_k_row_input_tuple(
+            word_potential_certificate_rows
+        ),
+        detector_track_initialization_rows=_universal_k_row_input_tuple(
+            detector_track_initialization_rows
+        ),
+        endpoint_target_audit_rows=_universal_k_row_input_tuple(
+            endpoint_target_audit_rows
+        ),
+        cutoff_readout_audit_rows=_universal_k_row_input_tuple(
+            cutoff_readout_audit_rows
+        ),
+        residual_faithfulness_theorem_rows=_universal_k_row_input_tuple(
+            residual_faithfulness_theorem_rows
+        ),
+        identity_cutoff_degree_rows=_universal_k_row_input_tuple(
+            identity_cutoff_degree_rows
+        ),
         product_residual_faithfulness_theorem=product_residual_faithfulness_theorem,
         monodromy_family_input_audit=monodromy_family_input_audit,
     )
 
 
 def _universal_k_family_object_map(
-    rows: Sequence[object],
+    rows: object,
     row_type: type | None = None,
 ) -> Mapping[str, object]:
     mapped: dict[str, object] = {}
-    for row in rows:
+    for row in _universal_k_row_input_tuple(rows):
         parts = _universal_k_two_field_row_parts(row)
         if parts is None:
             continue
@@ -12202,24 +12214,13 @@ def _universal_k_seed_classifier_entries_for_family(
 def universal_k_endpoint_observer_builds_by_family(
     interval: LocalInterval,
     seed_classifier_entries: Sequence[UniversalKSeedClassifierEntry],
-    word_potential_certificates_by_family: Sequence[
-        Tuple[str, UniversalKWordPotentialCertificate]
-    ],
+    word_potential_certificates_by_family: object,
     *,
-    detector_track_initialization_rows: Tuple[
-        UniversalKDetectorTrackInitializationRow,
-        ...,
-    ] = (),
-    endpoint_target_audits_by_family: Sequence[
-        Tuple[str, UniversalKEndpointTargetAudit]
-    ] = (),
-    cutoff_readout_audits_by_family: Sequence[
-        Tuple[str, UniversalKCutoffReadoutAudit]
-    ] = (),
-    residual_faithfulness_theorems_by_family: Sequence[
-        Tuple[str, UniversalKResidualFaithfulnessAudit]
-    ] = (),
-    identity_cutoff_degree_rows: Sequence[object] = (),
+    detector_track_initialization_rows: object = (),
+    endpoint_target_audits_by_family: object = (),
+    cutoff_readout_audits_by_family: object = (),
+    residual_faithfulness_theorems_by_family: object = (),
+    identity_cutoff_degree_rows: object = (),
     product_residual_faithfulness_theorem: (
         UniversalKResidualFaithfulnessAudit | None
     ) = None,
@@ -12227,20 +12228,38 @@ def universal_k_endpoint_observer_builds_by_family(
 ) -> UniversalKEndpointObserverFamilyBuildAudit:
     """Construct and audit separate endpoint observers for active U/C/M families."""
 
+    certificate_rows = _universal_k_row_input_tuple(
+        word_potential_certificates_by_family
+    )
+    detector_rows = _universal_k_row_input_tuple(
+        detector_track_initialization_rows
+    )
+    endpoint_target_rows = _universal_k_row_input_tuple(
+        endpoint_target_audits_by_family
+    )
+    cutoff_readout_rows = _universal_k_row_input_tuple(
+        cutoff_readout_audits_by_family
+    )
+    residual_theorem_rows = _universal_k_row_input_tuple(
+        residual_faithfulness_theorems_by_family
+    )
+    identity_cutoff_rows = _universal_k_row_input_tuple(
+        identity_cutoff_degree_rows
+    )
     endpoint_target_audits = _universal_k_family_object_map(
-        endpoint_target_audits_by_family,
+        endpoint_target_rows,
         UniversalKEndpointTargetAudit,
     )
     cutoff_readout_audits = _universal_k_family_object_map(
-        cutoff_readout_audits_by_family,
+        cutoff_readout_rows,
         UniversalKCutoffReadoutAudit,
     )
     residual_faithfulness_theorems = _universal_k_family_object_map(
-        residual_faithfulness_theorems_by_family,
+        residual_theorem_rows,
         UniversalKResidualFaithfulnessAudit,
     )
     builds = []
-    for row in word_potential_certificates_by_family:
+    for row in certificate_rows:
         parts = _universal_k_two_field_row_parts(row)
         if parts is None:
             continue
@@ -12259,7 +12278,7 @@ def universal_k_endpoint_observer_builds_by_family(
         )
         family_detector_rows = tuple(
             detector_row
-            for detector_row in detector_track_initialization_rows
+            for detector_row in detector_rows
             if (
                 isinstance(detector_row, UniversalKDetectorTrackInitializationRow)
                 and detector_row.endpoint_family == endpoint_family
@@ -12284,14 +12303,12 @@ def universal_k_endpoint_observer_builds_by_family(
     return universal_k_endpoint_observer_family_build_audit(
         seed_classifier_entries,
         tuple(builds),
-        word_potential_certificate_rows=tuple(word_potential_certificates_by_family),
-        detector_track_initialization_rows=tuple(detector_track_initialization_rows),
-        endpoint_target_audit_rows=tuple(endpoint_target_audits_by_family),
-        cutoff_readout_audit_rows=tuple(cutoff_readout_audits_by_family),
-        residual_faithfulness_theorem_rows=tuple(
-            residual_faithfulness_theorems_by_family
-        ),
-        identity_cutoff_degree_rows=tuple(identity_cutoff_degree_rows),
+        word_potential_certificate_rows=certificate_rows,
+        detector_track_initialization_rows=detector_rows,
+        endpoint_target_audit_rows=endpoint_target_rows,
+        cutoff_readout_audit_rows=cutoff_readout_rows,
+        residual_faithfulness_theorem_rows=residual_theorem_rows,
+        identity_cutoff_degree_rows=identity_cutoff_rows,
         product_residual_faithfulness_theorem=product_residual_faithfulness_theorem,
         monodromy_family_input_audit=monodromy_family_input_audit,
     )
@@ -20129,9 +20146,7 @@ def post_linear_remaining_finite_system_audit(
     universal_k_word_potential_certificate: (
         UniversalKWordPotentialCertificate | None
     ) = None,
-    universal_k_word_potential_certificates_by_family: Sequence[
-        Tuple[str, UniversalKWordPotentialCertificate]
-    ] = (),
+    universal_k_word_potential_certificates_by_family: object = (),
     universal_k_monodromy_endpoint_groups_by_family: Sequence[
         Tuple[str, FiniteGroup]
     ] = (),
@@ -20165,19 +20180,12 @@ def post_linear_remaining_finite_system_audit(
         ]
     ] = (),
     universal_k_detector_track_counts_by_family: Tuple[Tuple[str, int], ...] = (),
-    universal_k_detector_track_initialization_rows: Tuple[
-        UniversalKDetectorTrackInitializationRow,
-        ...,
-    ] = (),
+    universal_k_detector_track_initialization_rows: object = (),
     universal_k_endpoint_target_audit: UniversalKEndpointTargetAudit | None = None,
-    universal_k_endpoint_target_audits_by_family: Sequence[
-        Tuple[str, UniversalKEndpointTargetAudit]
-    ] = (),
+    universal_k_endpoint_target_audits_by_family: object = (),
     universal_k_cutoff_readouts_exact: bool = False,
     universal_k_cutoff_readout_audit: UniversalKCutoffReadoutAudit | None = None,
-    universal_k_cutoff_readout_audits_by_family: Sequence[
-        Tuple[str, UniversalKCutoffReadoutAudit]
-    ] = (),
+    universal_k_cutoff_readout_audits_by_family: object = (),
     universal_k_residual_faithfulness_verified: bool = False,
     universal_k_residual_action_scope: (
         UniversalKResidualActionScopeAudit | None
@@ -20185,9 +20193,7 @@ def post_linear_remaining_finite_system_audit(
     universal_k_residual_faithfulness_theorem: (
         UniversalKResidualFaithfulnessAudit | None
     ) = None,
-    universal_k_residual_faithfulness_theorems_by_family: Sequence[
-        Tuple[str, UniversalKResidualFaithfulnessAudit]
-    ] = (),
+    universal_k_residual_faithfulness_theorems_by_family: object = (),
     universal_k_residual_action_audit: "EndpointResidualActionAudit | None" = None,
     universal_k_telescoping_detector_audit: (
         UniversalKTelescopingDetectorAudit | None
@@ -20292,7 +20298,11 @@ def post_linear_remaining_finite_system_audit(
                     universal_k_monodromy_positive_state_rows_by_family
                 )
             )
-            or bool(universal_k_word_potential_certificates_by_family)
+            or bool(
+                _universal_k_row_input_tuple(
+                    universal_k_word_potential_certificates_by_family
+                )
+            )
             or derive_identity_endpoint_observer_family_build
         )
     )
@@ -20375,7 +20385,11 @@ def post_linear_remaining_finite_system_audit(
             )
         elif (
             derive_endpoint_observer_family_build
-            and bool(universal_k_word_potential_certificates_by_family)
+            and bool(
+                _universal_k_row_input_tuple(
+                    universal_k_word_potential_certificates_by_family
+                )
+            )
         ):
             endpoint_observer_family_build = (
                 universal_k_endpoint_observer_builds_by_family(
