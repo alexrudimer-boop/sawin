@@ -7179,14 +7179,31 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             templates,
             tuple(positive_state_rows),
         )
+        self.assertEqual(
+            set(
+                row.endpoint_value
+                for row in full_domain_certificate.identity_row_objects
+            ),
+            {None},
+        )
         self.assertFalse(full_domain_certificate.identities_verified)
         self.assertFalse(full_domain_certificate.coboundary_defects_constant)
         self.assertIn(
-            "word_potential_identity_mismatch",
+            "endpoint_value_outside_group",
             tuple(
                 failure[1]
                 for failure in full_domain_certificate.coboundary_defect_failures
             ),
+        )
+        full_domain_positive_rows = (
+            universal_k_endpoint_observer_positive_rows_from_word_potential(
+                interval,
+                full_domain_certificate,
+            )
+        )
+        self.assertEqual(
+            set(row.endpoint_value for row in full_domain_positive_rows),
+            {None},
         )
 
     def test_monodromy_family_input_audit_reports_raw_package_scope(self):

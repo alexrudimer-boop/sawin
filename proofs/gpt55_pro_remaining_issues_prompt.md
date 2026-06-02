@@ -1581,7 +1581,11 @@ defect value.  On the full finite detector-variable domain this accepts only
 defects constant for all assignments.  A smaller detector-domain subset is
 accepted only with explicit soundness witness data, such as an exhaustive
 reachable-value enumeration or a symbolic detector-domain invariant.  The
-returned word-potential certificate is still audited normally, so missing
+derived constructor must not assign a placeholder endpoint label to a
+nonconstant defect; if the defect takes two values on the sound detector
+domain, the derived endpoint emission is absent/outside the endpoint group
+and the observer remains open.  The returned word-potential certificate is
+still audited normally, so missing
 positive monodromy rows, nonconstant defects, malformed templates,
 unsound detector-domain subsets, and missing residual-faithfulness rows keep
 the U/C/M observer open.  Thus endpoint emissions are no longer arbitrary

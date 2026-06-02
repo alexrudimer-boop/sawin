@@ -700,6 +700,11 @@ The checker then exhausts all
 assignments of the finitely many variables in the positive row to the fixed
 endpoint group, or to a certified sound detector-domain subset, and checks
 that the coboundary defect is constant with value equal to the row label.
+When the monodromy constructor derives a word-potential certificate, a
+nonconstant defect does not receive the first sampled value as a placeholder
+endpoint emission; the derived endpoint value is left outside the group, so
+the row remains open until a genuinely constant defect or a sound restricted
+domain is supplied.
 Subset detector domains are finite row data: each assignment row must contain
 exactly the variables in the row's coboundary-defect support, no missing
 variables, no extras, no repeated variable, and only values in the fixed

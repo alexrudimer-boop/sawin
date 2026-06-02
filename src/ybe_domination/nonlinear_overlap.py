@@ -10704,7 +10704,7 @@ def _universal_k_coboundary_defect_value(
         if defect_value is None:
             defect_value = candidate
         elif defect_value != candidate:
-            return defect_value
+            return None
     return endpoint_group.identity if defect_value is None else defect_value
 
 
