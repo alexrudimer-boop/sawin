@@ -1027,7 +1027,10 @@ class UniversalKSignedEndpointGeneratorRow:
 
     @property
     def endpoint_family_known(self) -> bool:
-        return self.endpoint_family in UNIVERSAL_K_ENDPOINT_FAMILIES
+        return (
+            _is_hashable(self.endpoint_family)
+            and self.endpoint_family in UNIVERSAL_K_ENDPOINT_FAMILIES
+        )
 
     @property
     def sign_known(self) -> bool:
@@ -4849,7 +4852,10 @@ class UniversalKEndpointMonodromyPresentation:
         return tuple(
             family
             for family in self.expected_endpoint_families_exact
-            if family not in UNIVERSAL_K_ENDPOINT_FAMILIES
+            if (
+                not _is_hashable(family)
+                or family not in UNIVERSAL_K_ENDPOINT_FAMILIES
+            )
         )
 
     @property
@@ -4871,6 +4877,7 @@ class UniversalKEndpointMonodromyPresentation:
         return (
             isinstance(context, tuple)
             and len(context) == 5
+            and _is_hashable(context[0])
             and context[0] in UNIVERSAL_K_ENDPOINT_FAMILIES
         )
 
@@ -4897,7 +4904,9 @@ class UniversalKEndpointMonodromyPresentation:
 
     @property
     def family_scope_exact(self) -> bool:
-        return set(self.context_families) == set(self.expected_endpoint_families_exact)
+        return _value_marker_set(self.context_families) == _value_marker_set(
+            self.expected_endpoint_families_exact
+        )
 
     @property
     def adjacent_relations_exact(
@@ -5082,9 +5091,9 @@ class UniversalKEndpointMonodromyRepresentationAudit:
         return tuple(
             sorted(
                 {
-                    family
-                    for family, _state in self.reachable_seed_states_exact
-                    if family in UNIVERSAL_K_ENDPOINT_FAMILIES
+                    state[0]
+                    for state in self.reachable_seed_states_exact
+                    if _universal_k_endpoint_seed_state_well_formed(state)
                 },
                 key=repr,
             )
@@ -5092,7 +5101,7 @@ class UniversalKEndpointMonodromyRepresentationAudit:
 
     @property
     def family_scope_exact(self) -> bool:
-        return set(self.reachable_families) == set(
+        return _value_marker_set(self.reachable_families) == _value_marker_set(
             self.presentation.expected_endpoint_families_exact
         )
 
@@ -5100,9 +5109,10 @@ class UniversalKEndpointMonodromyRepresentationAudit:
     def states_by_family(self) -> Mapping[str, Tuple[UniversalKSeedState, ...]]:
         states: dict[str, list[UniversalKSeedState]] = {}
         seen: dict[str, set[object]] = {}
-        for family, seed_state in self.reachable_seed_states_exact:
-            if family not in UNIVERSAL_K_ENDPOINT_FAMILIES:
+        for state in self.reachable_seed_states_exact:
+            if not _universal_k_endpoint_seed_state_well_formed(state):
                 continue
+            family, seed_state = state
             marker = _value_marker(seed_state)
             family_seen = seen.setdefault(family, set())
             if marker in family_seen:
@@ -5420,7 +5430,9 @@ def universal_k_endpoint_monodromy_presentation(
 
     families = _unique_values(tuple(endpoint_families))
     valid_families = tuple(
-        family for family in families if family in UNIVERSAL_K_ENDPOINT_FAMILIES
+        family
+        for family in families
+        if _is_hashable(family) and family in UNIVERSAL_K_ENDPOINT_FAMILIES
     )
     contexts = tuple(
         sorted(
@@ -11053,7 +11065,7 @@ class UniversalKEndpointObserverFamilyBuildAudit:
 
     @property
     def product_residual_faithfulness_required(self) -> bool:
-        return len(set(self.expected_endpoint_families_exact)) > 1
+        return len(_value_marker_set(self.expected_endpoint_families_exact)) > 1
 
     @property
     def product_residual_faithfulness_present(self) -> bool:
@@ -11064,10 +11076,22 @@ class UniversalKEndpointObserverFamilyBuildAudit:
         theorem = self.product_residual_faithfulness_theorem
         if theorem is None:
             return False
-        expected = set(self.expected_endpoint_families_exact)
+        expected = {
+            _value_marker(family) for family in self.expected_endpoint_families_exact
+        }
         return (
-            set(theorem.active_endpoint_families) == expected
-            and set(theorem.covered_endpoint_families) == expected
+            {
+                _value_marker(family)
+                for family in theorem.active_endpoint_families
+                if _is_hashable(family) and family in UNIVERSAL_K_ENDPOINT_FAMILIES
+            }
+            == expected
+            and {
+                _value_marker(family)
+                for family in theorem.covered_endpoint_families
+                if _is_hashable(family) and family in UNIVERSAL_K_ENDPOINT_FAMILIES
+            }
+            == expected
         )
 
     @property

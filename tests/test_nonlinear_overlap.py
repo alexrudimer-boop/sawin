@@ -5101,6 +5101,45 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         )
         self.assertEqual(presentation.failure_reasons, ())
 
+    def test_endpoint_monodromy_presentation_rejects_malformed_families(self):
+        interval = one_color_identity_interval()
+        presentation = universal_k_endpoint_monodromy_presentation(
+            interval,
+            ("U", ["C"], "Z"),
+        )
+
+        self.assertFalse(presentation.presentation_is_finite)
+        self.assertEqual(presentation.context_families, ("U",))
+        self.assertEqual(
+            presentation.invalid_expected_endpoint_families,
+            ("Z", ["C"]),
+        )
+        self.assertIn(
+            "endpoint_monodromy_unknown_families",
+            presentation.failure_reasons,
+        )
+        self.assertIn(
+            "endpoint_monodromy_family_scope_mismatch",
+            presentation.failure_reasons,
+        )
+
+        malformed_context = (["U"], "*", "*", 0, 0)
+        direct_presentation = UniversalKEndpointMonodromyPresentation(
+            expected_endpoint_families=(["U"],),
+            contexts=(malformed_context,),
+        )
+
+        self.assertFalse(direct_presentation.presentation_is_finite)
+        self.assertEqual(
+            direct_presentation.invalid_expected_endpoint_families,
+            (["U"],),
+        )
+        self.assertEqual(direct_presentation.malformed_contexts, (malformed_context,))
+        self.assertIn(
+            "endpoint_monodromy_malformed_contexts",
+            direct_presentation.failure_reasons,
+        )
+
     def test_endpoint_monodromy_presentation_rejects_incomplete_ybe_paths(self):
         raw_missing_base = type("RawMissingBaseRows", (), {})()
         raw_missing_base.colors = ("a",)
@@ -5228,6 +5267,43 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         )
         self.assertIn(
             "endpoint_monodromy_representation_relation_failures",
+            audit.failure_reasons,
+        )
+
+    def test_endpoint_monodromy_representation_rejects_malformed_reachable_states(self):
+        context = ("U", "*", "*", 0, 0)
+        presentation = UniversalKEndpointMonodromyPresentation(
+            expected_endpoint_families=("U",),
+            contexts=(context,),
+        )
+        seed_state = ("*", "*", "left_constant_map_universal_kernel")
+        malformed_state = (["U"], seed_state)
+        rows = (
+            UniversalKSignedEndpointGeneratorRow(
+                endpoint_family="U",
+                seed_state=seed_state,
+                sign=1,
+                left_color="*",
+                right_color="*",
+                input_left=0,
+                input_right=0,
+                output_left=0,
+                output_right=0,
+                next_seed_state=seed_state,
+                endpoint_value=0,
+            ),
+        )
+
+        audit = universal_k_endpoint_monodromy_representation_audit(
+            presentation,
+            (("U", seed_state), malformed_state),
+            rows,
+        )
+
+        self.assertFalse(audit.proves_monodromy_representation)
+        self.assertEqual(audit.malformed_reachable_seed_states, (malformed_state,))
+        self.assertIn(
+            "endpoint_monodromy_representation_malformed_seed_states",
             audit.failure_reasons,
         )
 
@@ -6201,6 +6277,38 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertIn(
             ("endpoint_observer_family_build_product_closure_proved", False),
             wrapper.routed_endpoint_obstruction_data,
+        )
+
+        malformed_product_residual = UniversalKResidualFaithfulnessAudit(
+            active_endpoint_families=(["U"], "C", "M"),
+            covered_endpoint_families=(["U"], "C", "M"),
+            expected_residual_row_count=0,
+            covered_residual_row_count=0,
+            expected_endpoint_seed_states=(),
+            covered_endpoint_seed_states=(),
+        )
+        malformed_product_family_audit = (
+            universal_k_endpoint_observer_builds_by_family(
+                interval,
+                seed_entries,
+                tuple(certificates),
+                detector_track_initialization_rows=tuple(detector_rows),
+                endpoint_target_audits_by_family=tuple(endpoint_targets),
+                cutoff_readout_audits_by_family=tuple(cutoff_readouts),
+                residual_faithfulness_theorems_by_family=tuple(residual_theorems),
+                product_residual_faithfulness_theorem=malformed_product_residual,
+            )
+        )
+        self.assertFalse(
+            malformed_product_family_audit
+            .product_residual_faithfulness_scope_matches_families
+        )
+        self.assertFalse(
+            malformed_product_family_audit.proves_family_endpoint_product_closure
+        )
+        self.assertIn(
+            "endpoint_observer_product_residual_faithfulness_family_scope_mismatch",
+            malformed_product_family_audit.product_residual_faithfulness_failure_reasons,
         )
 
         product_seed_states = tuple(

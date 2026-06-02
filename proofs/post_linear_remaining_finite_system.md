@@ -777,7 +777,11 @@ tautological self-swaps are omitted.  The adjacent-relation ledger is a
 full-path ledger: for every active colour/fibre triple, both the 121 and 212
 positive paths must be readable from the current `R_C` and `T` tables.  A
 missing base row or local row is a finite monodromy-presentation failure, not
-an absent relation.  Thus the endpoint-state representation
+an absent relation.  The endpoint-family labels in the presentation ledger
+and in every local context must be hashable members of `{U,C,M}`.  Unknown or
+unhashable families, including malformed context families, are finite
+monodromy-presentation failures and cannot be hidden as absent generators.
+Thus the endpoint-state representation
 is no longer implicit in later path checks; it is a finite object attached to
 the observer build for the exact U/C/M families hit by `kappa`.  The build also records
 `UniversalKEndpointMonodromyRepresentationAudit`, which reads the positive
@@ -788,6 +792,10 @@ contexts, nonconstant coboundary defects, out-of-scope detector tracks,
 missing C/M readouts, or missing residual faithfulness remain visible audit
 failures rather than being filled by defaults.  This keeps the local
 certificate from being a list of unsupported boolean claims.
+The monodromy representation audit uses the same well-formedness guard on
+reachable seed states: malformed or unhashable reachable-state entries are
+rejected as finite ledger data and cannot crash the permutation or relation
+checks.
 There is also a monodromy-to-word-potential handoff constructor,
 `universal_k_word_potential_certificate_from_monodromy(...)`.  It takes
 positive endpoint-state monodromy rows and state-indexed word templates,
@@ -988,6 +996,11 @@ themselves prove that killing all endpoint channels forces the bundled
 residual fibre action to be trivial.  The product theorem is not required in
 the one-family case, where the family build's own residual-faithfulness audit
 already has the full active-family scope.
+The product residual theorem's active and covered family ledgers must also
+be finite well-formed `{U,C,M}` ledgers.  Unknown or unhashable family labels
+in the product theorem do not crash the family build and do not match the
+active product scope; they produce a product residual family-scope mismatch
+and leave product closure open.
 The top-level post-linear audit can now retain this family-build ledger
 directly, or derive it from per-family word-potential certificates, endpoint
 target audits, C/M cutoff readouts, and per-family residual-faithfulness

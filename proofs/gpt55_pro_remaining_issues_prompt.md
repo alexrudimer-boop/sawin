@@ -1594,6 +1594,9 @@ positive local-context monodromy presentation:
   every active colour/fibre triple must have readable 121 and 212 paths in
     the actual R_C and T tables; missing base rows or local rows are finite
     presentation failures, not omitted relations;
+  every endpoint-family label in the presentation and in every context must
+    be a hashable member of {U,C,M}; unknown or unhashable family labels are
+    finite monodromy-presentation failures, not omitted generators;
 
 positive rows:
   Gamma^{E,+}_{a,b}(s,x,y)
@@ -1626,6 +1629,9 @@ closure, if the negative table is not single-valued, if the coboundary defect
 is not constant on a sound detector domain, or if residual faithfulness is
 not supplied, the observer remains open.  No default endpoint emission is
 allowed.
+Malformed or unhashable reachable-state rows in the monodromy representation
+are finite ledger failures; they must not crash the permutation check and
+must not be treated as hidden observer states.
 The signed endpoint proof gate itself must consume this explicit monodromy
 representation audit.  It is not enough to assert separate state/coordinate
 YBE and far-commutativity booleans: the finite representation audit must
@@ -1897,6 +1903,10 @@ all active endpoint channels killed => Delta_n(beta)=1
 for the actual product endpoint row.  In the one-family case this extra
 product theorem is not required because the individual observer's
 residual-faithfulness theorem already has the full active-family scope.
+The product theorem's active and covered family ledgers must themselves be
+finite well-formed `{U,C,M}` ledgers.  Unknown or unhashable family labels do
+not match the active product scope; they are product residual family-scope
+mismatches and leave product closure open.
 If the retained family ledger matches the current `kappa`, matches the
 current interval, proves every active family observer, and passes the product
 residual-faithfulness gate, then it should be treated as a routed endpoint
@@ -2321,11 +2331,14 @@ endpoint_observer_family_auxiliary_input_ledgers_exact,
 endpoint_observer_each_active_family_single_scoped_and_proved,
 endpoint_observer_family_build_matches_current_kappa_and_interval,
 endpoint_observer_product_residual_faithfulness_for_multifamily_rows,
+endpoint_observer_product_residual_family_scope_well_formed,
 endpoint_observer_product_residual_channel_reasons_exposed,
 endpoint_observer_family_build_closes_exact_active_families,
 endpoint_observer_positive_rows_forced_from_typed_identity_rows,
 endpoint_observer_monodromy_contexts_exposed,
 endpoint_observer_monodromy_missing_adjacent_paths_exposed,
+endpoint_observer_monodromy_family_labels_in_U_C_M,
+endpoint_observer_monodromy_reachable_states_well_formed,
 coordinate_components_match_T_plus_and_T_inverse,
 all_signed_rows_defined,
 signed_inverse_row_pairing,
