@@ -2954,6 +2954,22 @@ def universal_k_interval_has_singleton_fibres(interval: LocalInterval) -> bool:
     return all(len(tuple(interval.fibres[color])) == 1 for color in interval.colors)
 
 
+def universal_k_interval_has_coordinate_identity_fibre_action(
+    interval: LocalInterval,
+) -> bool:
+    """Return whether every local row preserves the two fibre coordinates."""
+
+    for left_color in interval.colors:
+        for right_color in interval.colors:
+            for input_left in interval.fibres[left_color]:
+                for input_right in interval.fibres[right_color]:
+                    if interval.T.get(
+                        (left_color, right_color, input_left, input_right)
+                    ) != (input_left, input_right):
+                        return False
+    return True
+
+
 def _universal_k_trivial_residual_faithfulness_audit(
     endpoint_seed_states: Sequence[Tuple[str, UniversalKSeedState]],
     *,
@@ -3055,6 +3071,21 @@ def universal_k_singleton_fibre_residual_faithfulness_audit(
         endpoint_seed_states,
         row_reason="singleton_fibre_residual_channel",
         theorem_holds=universal_k_interval_has_singleton_fibres(interval),
+    )
+
+
+def universal_k_coordinate_identity_residual_faithfulness_audit(
+    interval: LocalInterval,
+    endpoint_seed_states: Sequence[Tuple[str, UniversalKSeedState]],
+) -> UniversalKResidualFaithfulnessAudit:
+    """Prove residual faithfulness when local rows preserve fibre coordinates."""
+
+    return _universal_k_trivial_residual_faithfulness_audit(
+        endpoint_seed_states,
+        row_reason="coordinate_identity_residual_channel",
+        theorem_holds=universal_k_interval_has_coordinate_identity_fibre_action(
+            interval
+        ),
     )
 
 
@@ -9737,6 +9768,7 @@ def universal_k_identity_endpoint_observer_builds_by_family(
     *,
     cutoff_degrees_by_family: Sequence[Tuple[str, int]] = (),
     derive_strict_identity_residual_faithfulness: bool = False,
+    derive_coordinate_identity_residual_faithfulness: bool = False,
     derive_singleton_fibre_residual_faithfulness: bool = False,
     residual_faithfulness_theorems_by_family: Sequence[
         Tuple[str, UniversalKResidualFaithfulnessAudit]
@@ -9755,8 +9787,8 @@ def universal_k_identity_endpoint_observer_builds_by_family(
     routed endpoint channels.  The optional strict-identity residual helper is
     used only when explicitly requested and only proves rows when every local
     fibre row is the identity on colours and fibre coordinates.  The optional
-    singleton-fibre residual helper is likewise explicit and proves rows only
-    when every local fibre has exactly one point.
+    coordinate-identity and singleton-fibre residual helpers are likewise
+    explicit and prove rows only when their finite hypotheses hold.
     """
 
     seed_states = universal_k_signed_endpoint_seed_states(seed_classifier_entries)
@@ -9857,6 +9889,19 @@ def universal_k_identity_endpoint_observer_builds_by_family(
                     )
                 )
             if (
+                derive_coordinate_identity_residual_faithfulness
+                and (
+                    derived_residual is None
+                    or not derived_residual.proves_residual_faithfulness
+                )
+            ):
+                derived_residual = (
+                    universal_k_coordinate_identity_residual_faithfulness_audit(
+                        interval,
+                        family_seed_states,
+                    )
+                )
+            if (
                 derive_singleton_fibre_residual_faithfulness
                 and (
                     derived_residual is None
@@ -9874,6 +9919,7 @@ def universal_k_identity_endpoint_observer_builds_by_family(
     if (
         (
             derive_strict_identity_residual_faithfulness
+            or derive_coordinate_identity_residual_faithfulness
             or derive_singleton_fibre_residual_faithfulness
         )
         and product_residual_faithfulness_theorem is None
@@ -9883,6 +9929,19 @@ def universal_k_identity_endpoint_observer_builds_by_family(
         if derive_strict_identity_residual_faithfulness:
             product_residual_faithfulness_theorem = (
                 universal_k_strict_identity_residual_faithfulness_audit(
+                    interval,
+                    seed_states,
+                )
+            )
+        if (
+            derive_coordinate_identity_residual_faithfulness
+            and (
+                product_residual_faithfulness_theorem is None
+                or not product_residual_faithfulness_theorem.proves_residual_faithfulness
+            )
+        ):
+            product_residual_faithfulness_theorem = (
+                universal_k_coordinate_identity_residual_faithfulness_audit(
                     interval,
                     seed_states,
                 )
@@ -16466,6 +16525,7 @@ def post_linear_remaining_finite_system_audit(
     universal_k_identity_endpoint_observer_candidates: bool = False,
     universal_k_identity_cutoff_degrees_by_family: Sequence[Tuple[str, int]] = (),
     universal_k_identity_strict_residual_faithfulness: bool = False,
+    universal_k_identity_coordinate_residual_faithfulness: bool = False,
     universal_k_identity_singleton_residual_faithfulness: bool = False,
     unsupported_companion_structural_contradiction: (
         UnsupportedCompanionStructuralContradictionAudit | None
@@ -16587,6 +16647,9 @@ def post_linear_remaining_finite_system_audit(
                     ),
                     derive_strict_identity_residual_faithfulness=(
                         universal_k_identity_strict_residual_faithfulness
+                    ),
+                    derive_coordinate_identity_residual_faithfulness=(
+                        universal_k_identity_coordinate_residual_faithfulness
                     ),
                     derive_singleton_fibre_residual_faithfulness=(
                         universal_k_identity_singleton_residual_faithfulness

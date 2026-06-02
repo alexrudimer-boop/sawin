@@ -101,6 +101,8 @@ from ybe_domination import (
     universal_k_identity_cutoff_readout_audit,
     universal_k_identity_endpoint_observer_builds_by_family,
     universal_k_identity_word_potential_certificate,
+    universal_k_coordinate_identity_residual_faithfulness_audit,
+    universal_k_interval_has_coordinate_identity_fibre_action,
     universal_k_interval_has_singleton_fibres,
     universal_k_interval_has_strict_identity_fibre_action,
     universal_k_singleton_fibre_residual_faithfulness_audit,
@@ -146,6 +148,24 @@ def two_color_singleton_swap_interval():
         (left, right, 0, 0): (0, 0)
         for left in colors
         for right in colors
+    }
+    return LocalInterval(colors, fibres, base_R, T)
+
+
+def two_color_coordinate_identity_swap_interval():
+    colors = ("a", "b")
+    fibres = {color: (0, 1) for color in colors}
+    base_R = {
+        (left, right): (right, left)
+        for left in colors
+        for right in colors
+    }
+    T = {
+        (left, right, x, y): (x, y)
+        for left in colors
+        for right in colors
+        for x in fibres[left]
+        for y in fibres[right]
     }
     return LocalInterval(colors, fibres, base_R, T)
 
@@ -4950,6 +4970,62 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertTrue(family_audit.proves_family_endpoint_product_closure)
         for _family, build in family_audit.build_rows_exact:
             self.assertTrue(build.proves_endpoint_observer)
+
+    def test_coordinate_identity_residual_faithfulness_closes_coordinate_candidates(self):
+        interval = two_color_coordinate_identity_swap_interval()
+        seed_entries = tuple(
+            (
+                ("a", "b", family, "constant_map_kernel", (0, 1)),
+                (family, ("a", "b", f"{family}_seed")),
+            )
+            for family in ("U", "C", "M")
+        )
+        seed_states = tuple(target for _descriptor, target in seed_entries)
+
+        self.assertTrue(
+            universal_k_interval_has_coordinate_identity_fibre_action(interval)
+        )
+        self.assertFalse(universal_k_interval_has_strict_identity_fibre_action(interval))
+        self.assertFalse(universal_k_interval_has_singleton_fibres(interval))
+
+        coordinate_residual = (
+            universal_k_coordinate_identity_residual_faithfulness_audit(
+                interval,
+                seed_states,
+            )
+        )
+        self.assertTrue(coordinate_residual.proves_residual_faithfulness)
+        self.assertEqual(
+            coordinate_residual.expected_residual_input_tuples,
+            (
+                (
+                    "all_residual_fibre_tuples",
+                    "C",
+                    "coordinate_identity_residual_channel",
+                ),
+                (
+                    "all_residual_fibre_tuples",
+                    "M",
+                    "coordinate_identity_residual_channel",
+                ),
+                (
+                    "all_residual_fibre_tuples",
+                    "U",
+                    "coordinate_identity_residual_channel",
+                ),
+            ),
+        )
+
+        family_audit = universal_k_identity_endpoint_observer_builds_by_family(
+            interval,
+            seed_entries,
+            derive_strict_identity_residual_faithfulness=True,
+            derive_coordinate_identity_residual_faithfulness=True,
+            derive_singleton_fibre_residual_faithfulness=True,
+        )
+        self.assertEqual(family_audit.failure_reasons, ())
+        self.assertTrue(family_audit.proves_family_endpoint_observers)
+        self.assertTrue(family_audit.proves_family_endpoint_product_closure)
 
     def test_endpoint_observer_builds_by_family_cover_exact_ucm_families(self):
         interval = one_color_identity_interval()

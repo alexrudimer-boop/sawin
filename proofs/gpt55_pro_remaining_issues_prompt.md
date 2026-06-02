@@ -1531,6 +1531,15 @@ constructor may consume this theorem when
 `derive_strict_identity_residual_faithfulness=True`.  This closes only the
 strict identity-fibre subcase; any non-identity U, C, or M endpoint observer
 still requires its own residual-faithfulness theorem.
+There is also a coordinate-identity residual-faithfulness subcase.  If every
+local row preserves the raw fibre coordinate pair `(x,y)`, then along every
+braid word the fibre coordinate tuple is unchanged, even when the quotient
+colour tuple moves.  For a braid in the quotient kernel, the final quotient
+colours return, so the residual fibre action is identity.  The helper
+`universal_k_coordinate_identity_residual_faithfulness_audit(...)` may emit
+one schematic all-`n` residual row per active endpoint family, and the
+identity observer constructor may consume it only when
+`derive_coordinate_identity_residual_faithfulness=True`.
 There is also a singleton-fibre residual-faithfulness subcase.  If every
 fibre `A_c` has exactly one point, then every fibre product `X_z` is a
 singleton for every quotient-colour tuple `z`; hence the bundled residual
@@ -1985,6 +1994,7 @@ endpoint_observer_family_build_row_failure_reasons_exposed,
 identity_endpoint_observer_constructor_keeps_residual_faithfulness_required,
 identity_endpoint_observer_top_level_opt_in_is_nondecisive,
 strict_identity_fibre_action_residual_faithfulness_subcase,
+coordinate_identity_fibre_action_residual_faithfulness_subcase,
 singleton_fibre_action_residual_faithfulness_subcase,
 endpoint_observer_family_certificate_input_ledger_exact,
 endpoint_observer_family_auxiliary_input_ledgers_exact,
