@@ -6992,6 +6992,141 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             audit.failure_reasons,
         )
 
+    def test_monodromy_family_input_audit_checks_detector_domain_entry_keys(self):
+        interval = one_color_identity_interval()
+        group = cyclic_group(2)
+        seed_state = ("*", "*", "left_constant_map_universal_kernel")
+        seed_key = ("U", seed_state)
+        seed_entries = ((("*", "*", "L", "constant_map_kernel", (0, 1)), seed_key),)
+        positive_keys = tuple(
+            key
+            for key in universal_k_signed_endpoint_required_entry_keys(
+                interval,
+                (seed_key,),
+            )
+            if key[2] == 1
+        )
+
+        rows = []
+        for key in positive_keys:
+            family, state, sign, left_color, right_color, x, y = key
+            output_left, output_right = interval.T[(left_color, right_color, x, y)]
+            rows.append(
+                UniversalKSignedEndpointGeneratorRow(
+                    endpoint_family=family,
+                    seed_state=state,
+                    sign=sign,
+                    left_color=left_color,
+                    right_color=right_color,
+                    input_left=x,
+                    input_right=y,
+                    output_left=output_left,
+                    output_right=output_right,
+                    next_seed_state=state,
+                    endpoint_value=None,
+                )
+            )
+
+        extra_key = ("U", seed_state, 1, "*", "*", "outside", 0)
+        mismatched_key = ("C", seed_state, 1, "*", "*", 0, 0)
+        assignments = {
+            positive_keys[0]: (((("U", 0, 0), 1),),),
+            ("bad-domain-key",): (),
+            extra_key: (),
+            mismatched_key: (),
+        }
+        witnesses = {
+            extra_key: ("symbolic_detector_domain_invariant",),
+            positive_keys[1]: ("symbolic_detector_domain_invariant",),
+            ("bad-witness-key",): ("symbolic_detector_domain_invariant",),
+            mismatched_key: ("symbolic_detector_domain_invariant",),
+        }
+
+        audit = universal_k_monodromy_family_input_audit(
+            interval,
+            seed_entries,
+            endpoint_groups_by_family=(("U", group),),
+            word_potential_templates_by_family=(("U", ((seed_key, ()),)),),
+            positive_state_rows_by_family=(("U", tuple(rows)),),
+            detector_domain_assignments_by_family=(("U", assignments),),
+            detector_domain_soundness_witnesses_by_family=(("U", witnesses),),
+        )
+
+        self.assertFalse(audit.input_rows_exact)
+        self.assertFalse(audit.detector_domain_entry_key_scope_exact)
+        self.assertEqual(
+            audit.detector_domain_assignment_entry_keys,
+            (positive_keys[0], extra_key),
+        )
+        self.assertEqual(
+            audit.detector_domain_witness_entry_keys,
+            (extra_key, positive_keys[1]),
+        )
+        self.assertEqual(
+            audit.malformed_detector_domain_assignment_entry_keys,
+            (("bad-domain-key",),),
+        )
+        self.assertEqual(
+            audit.malformed_detector_domain_witness_entry_keys,
+            (("bad-witness-key",),),
+        )
+        self.assertEqual(
+            audit.mismatched_detector_domain_assignment_entry_keys,
+            (("U", mismatched_key),),
+        )
+        self.assertEqual(
+            audit.mismatched_detector_domain_witness_entry_keys,
+            (("U", mismatched_key),),
+        )
+        self.assertEqual(
+            audit.extra_detector_domain_assignment_entry_keys,
+            (extra_key,),
+        )
+        self.assertEqual(
+            audit.extra_detector_domain_witness_entry_keys,
+            (extra_key,),
+        )
+        self.assertEqual(
+            audit.missing_detector_domain_witness_entry_keys,
+            (positive_keys[0],),
+        )
+        self.assertEqual(
+            audit.extra_detector_domain_witness_without_assignment_entry_keys,
+            (positive_keys[1],),
+        )
+        self.assertIn(
+            "endpoint_observer_monodromy_detector_domains_malformed_keys",
+            audit.failure_reasons,
+        )
+        self.assertIn(
+            "endpoint_observer_monodromy_detector_domains_family_mismatch_keys",
+            audit.failure_reasons,
+        )
+        self.assertIn(
+            "endpoint_observer_monodromy_detector_domains_extra_keys",
+            audit.failure_reasons,
+        )
+        self.assertIn(
+            "endpoint_observer_monodromy_detector_witnesses_malformed_keys",
+            audit.failure_reasons,
+        )
+        self.assertIn(
+            "endpoint_observer_monodromy_detector_witnesses_family_mismatch_keys",
+            audit.failure_reasons,
+        )
+        self.assertIn(
+            "endpoint_observer_monodromy_detector_witnesses_extra_keys",
+            audit.failure_reasons,
+        )
+        self.assertIn(
+            "endpoint_observer_monodromy_detector_witnesses_missing_for_domain_keys",
+            audit.failure_reasons,
+        )
+        self.assertIn(
+            "endpoint_observer_monodromy_detector_witnesses_without_domain_keys",
+            audit.failure_reasons,
+        )
+
     def test_monodromy_family_input_audit_checks_template_state_domain(self):
         interval = one_color_identity_interval()
         group = cyclic_group(2)

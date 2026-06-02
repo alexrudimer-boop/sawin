@@ -1557,6 +1557,14 @@ assignments without soundness witnesses are finite input-ledger failures.
 They must not be interpreted as an unproved observer with unspecified
 emissions.  A valid monodromy-derived observer begins only after this raw
 package ledger is exact.
+Restricted detector-domain assignments are also entry-key scoped.  Each
+assignment map key must be a well-formed positive signed endpoint entry for
+the same endpoint family as the family row, and, when the interval table is
+available, must be one of the positive entry keys forced by the current
+reachable seed-state closure.  Every restricted-domain assignment key must
+have exactly a matching soundness-witness key, and a soundness-witness key
+without a restricted-domain assignment is an extra witness channel, not a
+proof of soundness.
 With the interval in hand, this raw ledger must also derive the reachable
 monodromy seed-state closure from the positive rows, recompute the full
 positive local-context entry domain from the actual fibres, and check that
@@ -2112,6 +2120,7 @@ post_linear_audit_consumes_monodromy_coboundary_family_data,
 monodromy_family_raw_input_ledger_exact,
 monodromy_family_raw_input_reports_missing_extra_duplicate_and_malformed_rows,
 monodromy_family_raw_detector_domains_require_soundness_witnesses,
+monodromy_family_detector_domain_entry_key_scope_exact,
 monodromy_family_positive_entry_domain_exact,
 monodromy_family_positive_rows_coordinate_match_interval,
 monodromy_family_word_potential_template_state_domain_exact,

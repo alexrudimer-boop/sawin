@@ -795,6 +795,12 @@ assignments without soundness witnesses.  The monodromy-derived family build
 attaches this audit and requires it to be exact, so a missing `rho_E`, `W_E`,
 `H_E`, or detector-domain witness is now a finite ledger failure rather than
 an opaque missing observer.
+Restricted detector-domain maps are checked at the same entry-key granularity
+as the positive monodromy table.  Every assignment key must be a well-formed
+positive entry key for the same endpoint family and, when the interval is
+available, must lie in the current positive context domain.  Every such
+assignment key must have a matching soundness-witness key, and a witness key
+without a corresponding restricted-domain assignment is also a ledger error.
 When the interval is available, the same ledger derives the reachable
 monodromy seed-state closure from the supplied positive rows, recomputes the
 full positive local-context entry domain from the current fibres, and checks

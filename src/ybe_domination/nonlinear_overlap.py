@@ -8780,7 +8780,74 @@ class UniversalKMonodromyFamilyInputAudit:
 
     @staticmethod
     def _mapping_predicate(_family: object, value: object) -> bool:
-        return hasattr(value, "get") and hasattr(value, "items")
+        if not (
+            callable(getattr(value, "get", None))
+            and callable(getattr(value, "items", None))
+        ):
+            return False
+        try:
+            tuple(value.items())
+        except Exception:
+            return False
+        return True
+
+    def _mapping_entry_pairs(
+        self,
+        rows: Tuple[object, ...],
+    ) -> Tuple[Tuple[str, object], ...]:
+        pairs = []
+        for family, mapping in self._valid_parts(rows, self._mapping_predicate):
+            try:
+                items = tuple(mapping.items())
+            except Exception:
+                continue
+            pairs.extend((family, key) for key, _value in items)
+        return tuple(pairs)
+
+    @staticmethod
+    def _matching_positive_entry_keys(
+        pairs: Tuple[Tuple[str, object], ...],
+    ) -> Tuple[UniversalKSignedEndpointEntryKey, ...]:
+        return tuple(
+            key
+            for family, key in pairs
+            if _universal_k_is_positive_entry_key(key) and key[0] == family
+        )
+
+    @staticmethod
+    def _malformed_positive_entry_keys(
+        pairs: Tuple[Tuple[str, object], ...],
+    ) -> Tuple[object, ...]:
+        return _unique_values(
+            tuple(
+                key
+                for _family, key in pairs
+                if not _universal_k_is_positive_entry_key(key)
+            )
+        )
+
+    @staticmethod
+    def _family_mismatch_positive_entry_keys(
+        pairs: Tuple[Tuple[str, object], ...],
+    ) -> Tuple[Tuple[str, UniversalKSignedEndpointEntryKey], ...]:
+        return _unique_values(
+            tuple(
+                (family, key)
+                for family, key in pairs
+                if _universal_k_is_positive_entry_key(key) and key[0] != family
+            )
+        )
+
+    def _extra_mapping_entry_keys(
+        self,
+        entry_keys: Tuple[UniversalKSignedEndpointEntryKey, ...],
+    ) -> Tuple[UniversalKSignedEndpointEntryKey, ...]:
+        if self.interval is None:
+            return ()
+        expected = _value_marker_set(self.expected_positive_entry_keys)
+        return tuple(
+            key for key in entry_keys if _value_marker(key) not in expected
+        )
 
     @property
     def endpoint_group_families_exact(self) -> Tuple[str, ...]:
@@ -8932,6 +8999,48 @@ class UniversalKMonodromyFamilyInputAudit:
         )
 
     @property
+    def detector_domain_assignment_entry_pairs(
+        self,
+    ) -> Tuple[Tuple[str, object], ...]:
+        return self._mapping_entry_pairs(self.detector_domain_assignment_rows)
+
+    @property
+    def detector_domain_assignment_entry_keys(
+        self,
+    ) -> Tuple[UniversalKSignedEndpointEntryKey, ...]:
+        return self._matching_positive_entry_keys(
+            self.detector_domain_assignment_entry_pairs
+        )
+
+    @property
+    def malformed_detector_domain_assignment_entry_keys(self) -> Tuple[object, ...]:
+        return self._malformed_positive_entry_keys(
+            self.detector_domain_assignment_entry_pairs
+        )
+
+    @property
+    def mismatched_detector_domain_assignment_entry_keys(
+        self,
+    ) -> Tuple[Tuple[str, UniversalKSignedEndpointEntryKey], ...]:
+        return self._family_mismatch_positive_entry_keys(
+            self.detector_domain_assignment_entry_pairs
+        )
+
+    @property
+    def duplicate_detector_domain_assignment_entry_keys(
+        self,
+    ) -> Tuple[UniversalKSignedEndpointEntryKey, ...]:
+        return _duplicate_values(self.detector_domain_assignment_entry_keys)
+
+    @property
+    def extra_detector_domain_assignment_entry_keys(
+        self,
+    ) -> Tuple[UniversalKSignedEndpointEntryKey, ...]:
+        return self._extra_mapping_entry_keys(
+            self.detector_domain_assignment_entry_keys
+        )
+
+    @property
     def detector_domain_witness_families_exact(self) -> Tuple[str, ...]:
         return self._families_exact(
             self.detector_domain_soundness_witness_rows,
@@ -8964,6 +9073,46 @@ class UniversalKMonodromyFamilyInputAudit:
         )
 
     @property
+    def detector_domain_witness_entry_pairs(
+        self,
+    ) -> Tuple[Tuple[str, object], ...]:
+        return self._mapping_entry_pairs(self.detector_domain_soundness_witness_rows)
+
+    @property
+    def detector_domain_witness_entry_keys(
+        self,
+    ) -> Tuple[UniversalKSignedEndpointEntryKey, ...]:
+        return self._matching_positive_entry_keys(
+            self.detector_domain_witness_entry_pairs
+        )
+
+    @property
+    def malformed_detector_domain_witness_entry_keys(self) -> Tuple[object, ...]:
+        return self._malformed_positive_entry_keys(
+            self.detector_domain_witness_entry_pairs
+        )
+
+    @property
+    def mismatched_detector_domain_witness_entry_keys(
+        self,
+    ) -> Tuple[Tuple[str, UniversalKSignedEndpointEntryKey], ...]:
+        return self._family_mismatch_positive_entry_keys(
+            self.detector_domain_witness_entry_pairs
+        )
+
+    @property
+    def duplicate_detector_domain_witness_entry_keys(
+        self,
+    ) -> Tuple[UniversalKSignedEndpointEntryKey, ...]:
+        return _duplicate_values(self.detector_domain_witness_entry_keys)
+
+    @property
+    def extra_detector_domain_witness_entry_keys(
+        self,
+    ) -> Tuple[UniversalKSignedEndpointEntryKey, ...]:
+        return self._extra_mapping_entry_keys(self.detector_domain_witness_entry_keys)
+
+    @property
     def missing_detector_domain_witness_families(self) -> Tuple[str, ...]:
         witnesses = set(self.detector_domain_witness_families_exact)
         return tuple(
@@ -8981,6 +9130,43 @@ class UniversalKMonodromyFamilyInputAudit:
             family
             for family in self.detector_domain_witness_families_exact
             if family not in assignments
+        )
+
+    @property
+    def missing_detector_domain_witness_entry_keys(
+        self,
+    ) -> Tuple[UniversalKSignedEndpointEntryKey, ...]:
+        witnesses = _value_marker_set(self.detector_domain_witness_entry_keys)
+        return tuple(
+            key
+            for key in self.detector_domain_assignment_entry_keys
+            if _value_marker(key) not in witnesses
+        )
+
+    @property
+    def extra_detector_domain_witness_without_assignment_entry_keys(
+        self,
+    ) -> Tuple[UniversalKSignedEndpointEntryKey, ...]:
+        assignments = _value_marker_set(self.detector_domain_assignment_entry_keys)
+        return tuple(
+            key
+            for key in self.detector_domain_witness_entry_keys
+            if _value_marker(key) not in assignments
+        )
+
+    @property
+    def detector_domain_entry_key_scope_exact(self) -> bool:
+        return (
+            not self.malformed_detector_domain_assignment_entry_keys
+            and not self.mismatched_detector_domain_assignment_entry_keys
+            and not self.duplicate_detector_domain_assignment_entry_keys
+            and not self.extra_detector_domain_assignment_entry_keys
+            and not self.malformed_detector_domain_witness_entry_keys
+            and not self.mismatched_detector_domain_witness_entry_keys
+            and not self.duplicate_detector_domain_witness_entry_keys
+            and not self.extra_detector_domain_witness_entry_keys
+            and not self.missing_detector_domain_witness_entry_keys
+            and not self.extra_detector_domain_witness_without_assignment_entry_keys
         )
 
     @property
@@ -9034,6 +9220,7 @@ class UniversalKMonodromyFamilyInputAudit:
             and not self.extra_detector_domain_witness_families
             and not self.missing_detector_domain_witness_families
             and not self.extra_detector_domain_witness_without_assignment_families
+            and self.detector_domain_entry_key_scope_exact
             and not self.missing_candidate_families
         )
 
@@ -9098,6 +9285,16 @@ class UniversalKMonodromyFamilyInputAudit:
             )
         if self.extra_detector_domain_assignment_families:
             reasons.append("endpoint_observer_monodromy_detector_domains_extra_families")
+        if self.malformed_detector_domain_assignment_entry_keys:
+            reasons.append("endpoint_observer_monodromy_detector_domains_malformed_keys")
+        if self.mismatched_detector_domain_assignment_entry_keys:
+            reasons.append(
+                "endpoint_observer_monodromy_detector_domains_family_mismatch_keys"
+            )
+        if self.duplicate_detector_domain_assignment_entry_keys:
+            reasons.append("endpoint_observer_monodromy_detector_domains_duplicate_keys")
+        if self.extra_detector_domain_assignment_entry_keys:
+            reasons.append("endpoint_observer_monodromy_detector_domains_extra_keys")
         if self.malformed_detector_domain_witness_rows:
             reasons.append(
                 "endpoint_observer_monodromy_detector_witnesses_malformed_rows"
@@ -9112,6 +9309,20 @@ class UniversalKMonodromyFamilyInputAudit:
             )
         if self.extra_detector_domain_witness_families:
             reasons.append("endpoint_observer_monodromy_detector_witnesses_extra_families")
+        if self.malformed_detector_domain_witness_entry_keys:
+            reasons.append(
+                "endpoint_observer_monodromy_detector_witnesses_malformed_keys"
+            )
+        if self.mismatched_detector_domain_witness_entry_keys:
+            reasons.append(
+                "endpoint_observer_monodromy_detector_witnesses_family_mismatch_keys"
+            )
+        if self.duplicate_detector_domain_witness_entry_keys:
+            reasons.append(
+                "endpoint_observer_monodromy_detector_witnesses_duplicate_keys"
+            )
+        if self.extra_detector_domain_witness_entry_keys:
+            reasons.append("endpoint_observer_monodromy_detector_witnesses_extra_keys")
         if self.missing_detector_domain_witness_families:
             reasons.append(
                 "endpoint_observer_monodromy_detector_witnesses_missing_for_domains"
@@ -9119,6 +9330,14 @@ class UniversalKMonodromyFamilyInputAudit:
         if self.extra_detector_domain_witness_without_assignment_families:
             reasons.append(
                 "endpoint_observer_monodromy_detector_witnesses_without_domains"
+            )
+        if self.missing_detector_domain_witness_entry_keys:
+            reasons.append(
+                "endpoint_observer_monodromy_detector_witnesses_missing_for_domain_keys"
+            )
+        if self.extra_detector_domain_witness_without_assignment_entry_keys:
+            reasons.append(
+                "endpoint_observer_monodromy_detector_witnesses_without_domain_keys"
             )
         if self.missing_candidate_families:
             reasons.append("endpoint_observer_monodromy_candidate_families_missing")
@@ -15469,6 +15688,28 @@ class PostLinearRemainingFiniteSystemAudit:
                 ("endpoint_observer_monodromy_extra_positive_entry_keys", ()),
                 ("endpoint_observer_monodromy_duplicate_positive_entry_keys", ()),
                 ("endpoint_observer_monodromy_positive_coordinate_failures", ()),
+                ("endpoint_observer_monodromy_detector_domain_assignment_keys", ()),
+                ("endpoint_observer_monodromy_detector_domain_malformed_keys", ()),
+                ("endpoint_observer_monodromy_detector_domain_mismatched_keys", ()),
+                ("endpoint_observer_monodromy_detector_domain_duplicate_keys", ()),
+                ("endpoint_observer_monodromy_detector_domain_extra_keys", ()),
+                ("endpoint_observer_monodromy_detector_witness_keys", ()),
+                ("endpoint_observer_monodromy_detector_witness_malformed_keys", ()),
+                ("endpoint_observer_monodromy_detector_witness_mismatched_keys", ()),
+                ("endpoint_observer_monodromy_detector_witness_duplicate_keys", ()),
+                ("endpoint_observer_monodromy_detector_witness_extra_keys", ()),
+                (
+                    "endpoint_observer_monodromy_detector_witness_missing_domain_keys",
+                    (),
+                ),
+                (
+                    "endpoint_observer_monodromy_detector_witness_without_domain_keys",
+                    (),
+                ),
+                (
+                    "endpoint_observer_monodromy_detector_domain_entry_key_scope_exact",
+                    False,
+                ),
                 ("endpoint_observer_monodromy_failure_reasons", ()),
                 ("endpoint_observer_family_build_malformed_rows", ()),
                 ("endpoint_observer_family_build_unknown_families", ()),
@@ -15859,6 +16100,84 @@ class PostLinearRemainingFiniteSystemAudit:
                 audit.monodromy_family_input_audit.positive_coordinate_failures
                 if audit.monodromy_family_input_audit is not None
                 else (),
+            ),
+            (
+                "endpoint_observer_monodromy_detector_domain_assignment_keys",
+                audit.monodromy_family_input_audit.detector_domain_assignment_entry_keys
+                if audit.monodromy_family_input_audit is not None
+                else (),
+            ),
+            (
+                "endpoint_observer_monodromy_detector_domain_malformed_keys",
+                audit.monodromy_family_input_audit.malformed_detector_domain_assignment_entry_keys
+                if audit.monodromy_family_input_audit is not None
+                else (),
+            ),
+            (
+                "endpoint_observer_monodromy_detector_domain_mismatched_keys",
+                audit.monodromy_family_input_audit.mismatched_detector_domain_assignment_entry_keys
+                if audit.monodromy_family_input_audit is not None
+                else (),
+            ),
+            (
+                "endpoint_observer_monodromy_detector_domain_duplicate_keys",
+                audit.monodromy_family_input_audit.duplicate_detector_domain_assignment_entry_keys
+                if audit.monodromy_family_input_audit is not None
+                else (),
+            ),
+            (
+                "endpoint_observer_monodromy_detector_domain_extra_keys",
+                audit.monodromy_family_input_audit.extra_detector_domain_assignment_entry_keys
+                if audit.monodromy_family_input_audit is not None
+                else (),
+            ),
+            (
+                "endpoint_observer_monodromy_detector_witness_keys",
+                audit.monodromy_family_input_audit.detector_domain_witness_entry_keys
+                if audit.monodromy_family_input_audit is not None
+                else (),
+            ),
+            (
+                "endpoint_observer_monodromy_detector_witness_malformed_keys",
+                audit.monodromy_family_input_audit.malformed_detector_domain_witness_entry_keys
+                if audit.monodromy_family_input_audit is not None
+                else (),
+            ),
+            (
+                "endpoint_observer_monodromy_detector_witness_mismatched_keys",
+                audit.monodromy_family_input_audit.mismatched_detector_domain_witness_entry_keys
+                if audit.monodromy_family_input_audit is not None
+                else (),
+            ),
+            (
+                "endpoint_observer_monodromy_detector_witness_duplicate_keys",
+                audit.monodromy_family_input_audit.duplicate_detector_domain_witness_entry_keys
+                if audit.monodromy_family_input_audit is not None
+                else (),
+            ),
+            (
+                "endpoint_observer_monodromy_detector_witness_extra_keys",
+                audit.monodromy_family_input_audit.extra_detector_domain_witness_entry_keys
+                if audit.monodromy_family_input_audit is not None
+                else (),
+            ),
+            (
+                "endpoint_observer_monodromy_detector_witness_missing_domain_keys",
+                audit.monodromy_family_input_audit.missing_detector_domain_witness_entry_keys
+                if audit.monodromy_family_input_audit is not None
+                else (),
+            ),
+            (
+                "endpoint_observer_monodromy_detector_witness_without_domain_keys",
+                audit.monodromy_family_input_audit.extra_detector_domain_witness_without_assignment_entry_keys
+                if audit.monodromy_family_input_audit is not None
+                else (),
+            ),
+            (
+                "endpoint_observer_monodromy_detector_domain_entry_key_scope_exact",
+                audit.monodromy_family_input_audit.detector_domain_entry_key_scope_exact
+                if audit.monodromy_family_input_audit is not None
+                else False,
             ),
             (
                 "endpoint_observer_monodromy_failure_reasons",
