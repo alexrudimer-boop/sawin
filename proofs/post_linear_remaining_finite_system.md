@@ -1393,6 +1393,11 @@ scope must explicitly include both `residual_input_tuple` and
 killed endpoint data to the actual residual fibre tuple being fixed.  The
 audit derives exact endpoint-channel coverage from this scope data and
 requires the explicit braid-index-independence certificate to be present.
+Every symbolic residual row must also have
+`identity_endpoint_output_tuple=input_tuple`.  If the identity endpoint output
+moves the tuple, the row is invalid at the row-scope level; a theorem-level
+`identity_endpoint_data_forces_residual_identity` flag cannot repair that
+row.
 Complete finite rows without this scope and all-`n` certificate are only a
 fixed-row check, not an all-strand
 residual-faithfulness certificate.  A

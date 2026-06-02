@@ -3948,6 +3948,32 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             theorem_with_bad_tuple_arity.failure_reasons,
         )
 
+        theorem_with_nonfixed_identity_endpoint_output = replace(
+            theorem,
+            residual_rows=(
+                replace(
+                    theorem.residual_rows[0],
+                    identity_endpoint_output_tuple=("moved_under_identity",),
+                ),
+            ),
+        )
+        self.assertFalse(
+            theorem_with_nonfixed_identity_endpoint_output
+            .residual_rows_have_valid_scope
+        )
+        self.assertFalse(
+            theorem_with_nonfixed_identity_endpoint_output
+            .proves_residual_faithfulness
+        )
+        self.assertIn(
+            "residual_faithfulness_invalid_rows",
+            theorem_with_nonfixed_identity_endpoint_output.failure_reasons,
+        )
+        self.assertIn(
+            "residual_faithfulness_implication_not_proved",
+            theorem_with_nonfixed_identity_endpoint_output.failure_reasons,
+        )
+
         theorem_with_family_seed_mismatch = replace(
             theorem,
             active_endpoint_families=("U", "C"),

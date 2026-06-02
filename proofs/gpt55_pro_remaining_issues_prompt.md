@@ -2436,7 +2436,9 @@ residual readout.  The key tuple must be finite and hashable so duplicate
 channel keys are well defined.
 `identity_endpoint_output_tuple` must equal `input_tuple` on every row; this
 is the finite row evidence for the implication from killed endpoint data to
-identity residual motion.  The theorem must also explicitly assert both
+identity residual motion.  If this equality fails, the row is invalid at the
+row-scope level; a theorem-level implication flag cannot repair it.  The
+theorem must also explicitly assert both
 theorem-level claims:
 
 ```text

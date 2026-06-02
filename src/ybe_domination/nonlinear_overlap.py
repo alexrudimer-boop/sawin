@@ -2275,6 +2275,7 @@ class UniversalKResidualFaithfulnessRow:
             and not self.forbidden_dependencies
             and not self.unknown_dependencies
             and not self.missing_required_dependencies
+            and self.identity_endpoint_data_fixes_row
         )
 
 
