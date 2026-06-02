@@ -782,6 +782,16 @@ states are reported as finite ledger errors, not as vague missing observers
 and not as exceptions during seed-state set comparison.  Thus a combined
 product endpoint row cannot hide the absence of a C or M observer behind a
 successful U build.
+There is also a canonical identity-emission constructor,
+`universal_k_identity_endpoint_observer_builds_by_family(...)`.  It builds
+the identity monodromy-coboundary candidate for every active family hit by
+the current `kappa`: U uses the actual triangular-recovery unit group
+`U_tri`, while C and M use symmetric cutoff groups with enough distinct
+readout permutations for their routed seed states.  This constructor removes
+only the finite bookkeeping of the identity observer candidate.  It does not
+assert residual faithfulness and it does not prove that the true residual
+fibre action is trivial.  Without a scoped residual-faithfulness theorem, the
+constructed family builds remain open and report the missing residual gate.
 For a multi-family product endpoint row, the family ledger also requires a
 separate product residual-faithfulness theorem scoped to the full active
 family set and the full set of seed states hit by `kappa`.  Per-family

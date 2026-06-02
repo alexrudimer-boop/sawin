@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from itertools import product
+from itertools import permutations, product
 from typing import TYPE_CHECKING, Mapping, Sequence, Tuple
 
 from .artin_longitudes import (
@@ -17,7 +17,7 @@ from .artin_longitudes import (
     evaluate_free_word,
     evaluate_longitude_subgroup_witness,
 )
-from .finite_group import FiniteGroup, GroupElement
+from .finite_group import FiniteGroup, GroupElement, symmetric_group
 from .green_branch import (
     Transformation,
     TransformationMonoid,
@@ -9485,6 +9485,232 @@ def universal_k_endpoint_observer_builds_by_family(
         endpoint_target_audit_rows=tuple(endpoint_target_audits_by_family),
         cutoff_readout_audit_rows=tuple(cutoff_readout_audits_by_family),
         residual_faithfulness_theorem_rows=tuple(
+            residual_faithfulness_theorems_by_family
+        ),
+        product_residual_faithfulness_theorem=product_residual_faithfulness_theorem,
+    )
+
+
+def _universal_k_min_symmetric_degree(row_count: int) -> int:
+    degree = 1
+    order = 1
+    while order < max(1, row_count):
+        degree += 1
+        order *= degree
+    return degree
+
+
+def universal_k_identity_word_potential_certificate(
+    interval: LocalInterval,
+    seed_classifier_entries: Sequence[UniversalKSeedClassifierEntry],
+    endpoint_group: FiniteGroup,
+) -> UniversalKWordPotentialCertificate:
+    """Return the canonical identity-emission word-potential certificate.
+
+    This is a constructor for the monodromy-coboundary part only.  It gives
+    every reachable seed the empty word potential, fixes every positive local
+    context to the same seed state, and emits the identity element of the
+    supplied endpoint group.  Residual faithfulness is deliberately not
+    manufactured here; the surrounding observer audit still requires it.
+    """
+
+    seed_states = universal_k_signed_endpoint_seed_states(seed_classifier_entries)
+    positive_keys = tuple(
+        key
+        for key in universal_k_signed_endpoint_required_entry_keys(
+            interval,
+            seed_states,
+        )
+        if _universal_k_is_positive_entry_key(key)
+    )
+    return UniversalKWordPotentialCertificate(
+        endpoint_group=endpoint_group,
+        templates=tuple((seed_state, ()) for seed_state in seed_states),
+        identity_rows=tuple(
+            UniversalKWordPotentialIdentityRow(
+                entry_key=key,
+                next_seed_state=key[1],
+                endpoint_value=endpoint_group.identity,
+                artin_substitution=(),
+            )
+            for key in positive_keys
+        ),
+        normalized_seed_states=seed_states,
+    )
+
+
+def universal_k_identity_detector_track_initialization_row(
+    endpoint_family: str,
+    endpoint_group: FiniteGroup,
+) -> UniversalKDetectorTrackInitializationRow:
+    """Return one fixed identity-valued detector track for an endpoint family."""
+
+    return UniversalKDetectorTrackInitializationRow(
+        endpoint_family=endpoint_family,
+        track_index=0,
+        assignment_rule="constant_identity_from_interval_seed",
+        dependencies=("interval_data", "routed_seed_state", "strand_index"),
+        local_assignment_template=((("A", 0, 0), endpoint_group.identity),),
+    )
+
+
+def universal_k_identity_cutoff_readout_audit(
+    seed_states: Sequence[Tuple[str, UniversalKSeedState]],
+    *,
+    cutoff_degree: int | None = None,
+) -> UniversalKCutoffReadoutAudit:
+    """Build an exact identity-killed symmetric readout for C/M seed states."""
+
+    state_tuple = tuple(seed_states)
+    degree = cutoff_degree or _universal_k_min_symmetric_degree(len(state_tuple))
+    permutations_for_degree = tuple(permutations(range(degree)))
+    readouts = tuple(
+        UniversalKCutoffReadoutRow(
+            cutoff_seed_state=seed_state,
+            readout_permutation=permutations_for_degree[index],
+            killed_readout_permutation=tuple(range(degree)),
+        )
+        for index, seed_state in enumerate(state_tuple)
+        if index < len(permutations_for_degree)
+    )
+    return UniversalKCutoffReadoutAudit(
+        expected_cutoff_seed_states=state_tuple,
+        covered_cutoff_seed_states=state_tuple,
+        cutoff_degree=degree,
+        readout_rows=readouts,
+        braid_index_independent=True,
+    )
+
+
+def _universal_k_family_int_map(
+    rows: Sequence[Tuple[str, int]],
+) -> Mapping[str, int]:
+    mapped: dict[str, int] = {}
+    for row in rows:
+        parts = _universal_k_two_field_row_parts(row)
+        if parts is None:
+            continue
+        family, value = parts
+        if (
+            family in UNIVERSAL_K_ENDPOINT_FAMILIES
+            and _universal_k_positive_int(value)
+            and family not in mapped
+        ):
+            mapped[family] = value
+    return mapped
+
+
+def universal_k_identity_endpoint_observer_builds_by_family(
+    interval: LocalInterval,
+    seed_classifier_entries: Sequence[UniversalKSeedClassifierEntry],
+    *,
+    cutoff_degrees_by_family: Sequence[Tuple[str, int]] = (),
+    residual_faithfulness_theorems_by_family: Sequence[
+        Tuple[str, UniversalKResidualFaithfulnessAudit]
+    ] = (),
+    product_residual_faithfulness_theorem: (
+        UniversalKResidualFaithfulnessAudit | None
+    ) = None,
+) -> UniversalKEndpointObserverFamilyBuildAudit:
+    """Construct the canonical identity observer candidate for active U/C/M families.
+
+    U uses the actual triangular-recovery unit group ``U_tri`` of the interval.
+    C and M use symmetric cutoff groups with enough distinct readout
+    permutations for the routed seed states.  The returned family audit is
+    still allowed, and expected, to remain open when residual faithfulness is
+    not supplied or does not prove the true fibre action is faithful to the
+    routed endpoint channels.
+    """
+
+    seed_states = universal_k_signed_endpoint_seed_states(seed_classifier_entries)
+    active_families = tuple(
+        sorted(
+            {
+                family
+                for family, _seed_state in seed_states
+                if family in UNIVERSAL_K_ENDPOINT_FAMILIES
+            },
+            key=repr,
+        )
+    )
+    cutoff_degree_map = _universal_k_family_int_map(cutoff_degrees_by_family)
+    certificates = []
+    detector_rows = []
+    endpoint_targets = []
+    cutoff_readouts = []
+    for family in active_families:
+        family_entries = _universal_k_seed_classifier_entries_for_family(
+            seed_classifier_entries,
+            family,
+        )
+        family_seed_states = universal_k_signed_endpoint_seed_states(family_entries)
+        if family == "U":
+            endpoint_group = triangular_recovery_unit_group(interval)
+            endpoint_targets.append(
+                (
+                    family,
+                    UniversalKEndpointTargetAudit(
+                        expected_endpoint_families=(family,),
+                        covered_endpoint_families=(family,),
+                        endpoint_group_orders=(
+                            (family, len(endpoint_group.elements)),
+                        ),
+                        braid_index_independent=True,
+                        product_families_separated=True,
+                    ),
+                )
+            )
+        else:
+            degree = cutoff_degree_map.get(
+                family,
+                _universal_k_min_symmetric_degree(len(family_seed_states)),
+            )
+            endpoint_group = symmetric_group(degree)
+            endpoint_targets.append(
+                (
+                    family,
+                    UniversalKEndpointTargetAudit(
+                        expected_endpoint_families=(family,),
+                        covered_endpoint_families=(family,),
+                        cutoff_degrees=((family, degree),),
+                        braid_index_independent=True,
+                        product_families_separated=True,
+                    ),
+                )
+            )
+            cutoff_readouts.append(
+                (
+                    family,
+                    universal_k_identity_cutoff_readout_audit(
+                        family_seed_states,
+                        cutoff_degree=degree,
+                    ),
+                )
+            )
+        certificates.append(
+            (
+                family,
+                universal_k_identity_word_potential_certificate(
+                    interval,
+                    family_entries,
+                    endpoint_group,
+                ),
+            )
+        )
+        detector_rows.append(
+            universal_k_identity_detector_track_initialization_row(
+                family,
+                endpoint_group,
+            )
+        )
+    return universal_k_endpoint_observer_builds_by_family(
+        interval,
+        seed_classifier_entries,
+        tuple(certificates),
+        detector_track_initialization_rows=tuple(detector_rows),
+        endpoint_target_audits_by_family=tuple(endpoint_targets),
+        cutoff_readout_audits_by_family=tuple(cutoff_readouts),
+        residual_faithfulness_theorems_by_family=tuple(
             residual_faithfulness_theorems_by_family
         ),
         product_residual_faithfulness_theorem=product_residual_faithfulness_theorem,

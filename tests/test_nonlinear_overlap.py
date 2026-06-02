@@ -98,6 +98,9 @@ from ybe_domination import (
     universal_k_endpoint_observer_family_build_audit,
     universal_k_endpoint_observer_positive_rows_from_word_potential,
     universal_k_endpoint_observer_signed_rows_from_positive,
+    universal_k_identity_cutoff_readout_audit,
+    universal_k_identity_endpoint_observer_builds_by_family,
+    universal_k_identity_word_potential_certificate,
     universal_k_signed_endpoint_coordinate_failures,
     universal_k_signed_endpoint_far_commutativity_failures,
     universal_k_signed_endpoint_generator_audit,
@@ -4655,6 +4658,146 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertIn("endpoint_targets_not_fixed", build.audit.failure_reasons)
         self.assertIn("cutoff_readouts_not_exact", build.audit.failure_reasons)
         self.assertIn("residual_faithfulness_not_verified", build.audit.failure_reasons)
+
+    def test_identity_endpoint_observer_constructor_builds_ucm_candidates(self):
+        interval = one_color_identity_interval()
+        seed_entries = tuple(
+            (
+                ("*", "*", family, "constant_map_kernel", (0, 1)),
+                (family, ("*", "*", f"{family}_seed")),
+            )
+            for family in ("U", "C", "M")
+        )
+
+        family_audit = universal_k_identity_endpoint_observer_builds_by_family(
+            interval,
+            seed_entries,
+        )
+
+        self.assertEqual(
+            family_audit.expected_endpoint_families_exact,
+            ("C", "M", "U"),
+        )
+        self.assertEqual(
+            family_audit.covered_endpoint_families_exact,
+            ("C", "M", "U"),
+        )
+        self.assertEqual(family_audit.unproved_build_families, ("C", "M", "U"))
+        self.assertFalse(family_audit.proves_family_endpoint_observers)
+        self.assertIn(
+            "endpoint_observer_family_builds_not_proved",
+            family_audit.failure_reasons,
+        )
+        by_family = dict(family_audit.build_rows_exact)
+        for family in ("C", "M", "U"):
+            build = by_family[family]
+            self.assertTrue(
+                build.monodromy_representation_audit.proves_monodromy_representation
+            )
+            self.assertTrue(
+                build.telescoping_detector_audit.proves_telescoping_detector_lift
+            )
+            self.assertTrue(build.audit.endpoint_targets_fixed)
+            self.assertFalse(build.proves_endpoint_observer)
+            self.assertIn(
+                "residual_faithfulness_not_verified",
+                build.audit.failure_reasons,
+            )
+        self.assertTrue(by_family["C"].audit.cutoff_readouts_exact)
+        self.assertTrue(by_family["M"].audit.cutoff_readouts_exact)
+        self.assertEqual(
+            by_family["U"].audit.endpoint_target_audit.endpoint_group_orders,
+            (("U", len(triangular_recovery_unit_group(interval).elements)),),
+        )
+
+    def test_identity_endpoint_observer_constructor_composes_with_residual_rows(self):
+        interval = one_color_identity_interval()
+        seed_entries = tuple(
+            (
+                ("*", "*", family, "constant_map_kernel", (0, 1)),
+                (family, ("*", "*", f"{family}_seed")),
+            )
+            for family in ("U", "C", "M")
+        )
+        seed_state_by_family = {
+            family: seed_state for _descriptor, (family, seed_state) in seed_entries
+        }
+        residual_theorems = []
+        for family in ("U", "C", "M"):
+            seed_states = ((family, seed_state_by_family[family]),)
+            residual_theorems.append(
+                (
+                    family,
+                    UniversalKResidualFaithfulnessAudit(
+                        active_endpoint_families=(family,),
+                        covered_endpoint_families=(family,),
+                        expected_residual_row_count=1,
+                        covered_residual_row_count=1,
+                        expected_residual_input_tuples=(("p", family),),
+                        covered_residual_input_tuples=(("p", family),),
+                        endpoint_channels_exact=True,
+                        identity_endpoint_data_forces_residual_identity=True,
+                        braid_index_independent=True,
+                        product_families_separated=True,
+                        expected_endpoint_seed_states=seed_states,
+                        covered_endpoint_seed_states=seed_states,
+                        residual_rows=trivial_residual_faithfulness_rows(
+                            family,
+                            seed_states=seed_states,
+                            input_tuples=(("p", family),),
+                        ),
+                    ),
+                )
+            )
+        product_seed_states = tuple(
+            (family, seed_state_by_family[family]) for family in ("C", "M", "U")
+        )
+        product_residual = UniversalKResidualFaithfulnessAudit(
+            active_endpoint_families=("C", "M", "U"),
+            covered_endpoint_families=("C", "M", "U"),
+            expected_residual_row_count=3,
+            covered_residual_row_count=3,
+            expected_residual_rows_by_family=(("C", 1), ("M", 1), ("U", 1)),
+            covered_residual_rows_by_family=(("C", 1), ("M", 1), ("U", 1)),
+            expected_residual_input_tuples=(("p", "C"), ("p", "M"), ("p", "U")),
+            covered_residual_input_tuples=(("p", "C"), ("p", "M"), ("p", "U")),
+            endpoint_channels_exact=True,
+            identity_endpoint_data_forces_residual_identity=True,
+            braid_index_independent=True,
+            product_families_separated=True,
+            expected_endpoint_seed_states=product_seed_states,
+            covered_endpoint_seed_states=product_seed_states,
+            residual_rows=(
+                trivial_residual_faithfulness_rows(
+                    "C",
+                    seed_states=(("C", seed_state_by_family["C"]),),
+                    input_tuples=(("p", "C"),),
+                )
+                + trivial_residual_faithfulness_rows(
+                    "M",
+                    seed_states=(("M", seed_state_by_family["M"]),),
+                    input_tuples=(("p", "M"),),
+                )
+                + trivial_residual_faithfulness_rows(
+                    "U",
+                    seed_states=(("U", seed_state_by_family["U"]),),
+                    input_tuples=(("p", "U"),),
+                )
+            ),
+        )
+
+        family_audit = universal_k_identity_endpoint_observer_builds_by_family(
+            interval,
+            seed_entries,
+            residual_faithfulness_theorems_by_family=tuple(residual_theorems),
+            product_residual_faithfulness_theorem=product_residual,
+        )
+
+        self.assertEqual(family_audit.failure_reasons, ())
+        self.assertTrue(family_audit.proves_family_endpoint_observers)
+        self.assertTrue(family_audit.proves_family_endpoint_product_closure)
+        for _family, build in family_audit.build_rows_exact:
+            self.assertTrue(build.proves_endpoint_observer)
 
     def test_endpoint_observer_builds_by_family_cover_exact_ucm_families(self):
         interval = one_color_identity_interval()

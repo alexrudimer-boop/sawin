@@ -1501,6 +1501,17 @@ initialization rows, templates `W_s`, positive identity rows, C/M cutoff
 readouts if needed, and residual-faithfulness rows.  The signed endpoint
 table should then be derived from that data and rechecked against the current
 `kappa` seed ledger and interval table.
+The executable audit also has a canonical identity-emission constructor
+`universal_k_identity_endpoint_observer_builds_by_family(...)`.  It builds
+the identity monodromy-coboundary candidate for every active family in the
+current `kappa` image: U uses the current triangular-recovery unit group
+`U_tri`; C and M use symmetric cutoff groups with enough distinct readout
+permutations for their routed seed states.  This constructor is useful
+bookkeeping, not a proof of A.  It may close only when the required
+per-family residual-faithfulness rows, and the product residual-faithfulness
+row for multi-family endpoint products, are supplied and pass the finite
+scope checks.  Otherwise it must remain an open observer candidate rather
+than a default endpoint-emission proof.
 The post-linear proof object should retain the resulting endpoint-observer
 build record, not only the derived signed-generator audit.  A complete
 certificate should expose whether the build is present, whether it proves the
@@ -1942,6 +1953,7 @@ endpoint_observer_build_record_retained,
 endpoint_observer_family_build_ledger_exact,
 endpoint_observer_family_seed_classifier_ledger_well_formed,
 endpoint_observer_family_build_row_failure_reasons_exposed,
+identity_endpoint_observer_constructor_keeps_residual_faithfulness_required,
 endpoint_observer_family_certificate_input_ledger_exact,
 endpoint_observer_family_auxiliary_input_ledgers_exact,
 endpoint_observer_each_active_family_single_scoped_and_proved,
