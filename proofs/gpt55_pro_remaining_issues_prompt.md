@@ -79,14 +79,14 @@ family coverage, and a proved product residual-faithfulness theorem.  Routed
 C+M products close only when both cutoff families are covered exactly and
 `unclosed_routed_endpoint_systems` is empty.  These are family-by-family
 closures; no cross-family endpoint cancellation is used.
-Routed U+C and C+M products are also closed at the main classifier level for the
-singleton-fibre, coordinate-identity, supplied fibre-label identity, and
-canonical fibre-label identity residual subcases.  In those non-strict
-closures, U still uses the current `U_tri` finite group table when present,
-C and M still use exact cutoff/readout data, and the product residual theorem
-must expose the corresponding residual channel reason.  These closures cover
-only residually trivial non-strict local motion, not arbitrary nontrivial
-U/C/M endpoint dynamics.
+Routed two-family products U+C, U+M, and C+M are also closed at the main
+classifier level for the singleton-fibre, coordinate-identity, supplied
+fibre-label identity, and canonical fibre-label identity residual subcases.
+In those non-strict closures, U still uses the current `U_tri` finite group
+table when present, C and M still use exact cutoff/readout data, and the
+product residual theorem must expose the corresponding residual channel
+reason.  These closures cover only residually trivial non-strict local
+motion, not arbitrary nontrivial U/C/M endpoint dynamics.
 
 The exact missing B-side ingredient is:
 
