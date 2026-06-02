@@ -7342,6 +7342,63 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             audit.failure_reasons,
         )
 
+    def test_signed_endpoint_audit_reports_unhashable_positive_row(self):
+        seed_state = ("*", "*", "left_constant_map_universal_kernel")
+        bad_seed_state = (["not-hashable"],)
+        seed_entries = (
+            (
+                ("*", "*", "L", "constant_map_kernel", ("a",)),
+                ("U", seed_state),
+            ),
+        )
+        required_row = UniversalKSignedEndpointGeneratorRow(
+            endpoint_family="U",
+            seed_state=seed_state,
+            sign=1,
+            left_color="*",
+            right_color="*",
+            input_left=0,
+            input_right=0,
+            output_left=0,
+            output_right=0,
+            next_seed_state=seed_state,
+            endpoint_value=0,
+        )
+        bad_row = replace(required_row, seed_state=bad_seed_state)
+        audit = UniversalKSignedEndpointGeneratorAudit(
+            seed_classifier_entries=seed_entries,
+            reachable_seed_states=(("U", seed_state),),
+            required_entry_keys=(required_row.entry_key,),
+            entry_domain_derived_from_interval=True,
+            finite_row_checks_derived_from_tables=True,
+            rows=(bad_row,),
+            endpoint_group=cyclic_group(2),
+            coordinate_components_verified=True,
+            inverse_pairing_verified=True,
+            inverse_cancellation_verified=True,
+            positive_ybe_path_verified=True,
+            far_commutativity_verified=True,
+        )
+
+        self.assertFalse(audit.signed_generator_domain_exact)
+        self.assertEqual(audit.extra_signed_seed_keys, (bad_row.seed_key,))
+        self.assertEqual(audit.missing_entry_keys, (required_row.entry_key,))
+        self.assertEqual(audit.extra_entry_keys, (bad_row.entry_key,))
+        self.assertIn(
+            "monodromy_malformed_positive_row",
+            tuple(
+                failure[1]
+                for failure in audit.positive_monodromy_permutation_failures
+            ),
+        )
+        self.assertIn("extra_signed_seed_keys", audit.failure_reasons)
+        self.assertIn("signed_generator_entries_missing", audit.failure_reasons)
+        self.assertIn("extra_signed_generator_entries", audit.failure_reasons)
+        self.assertIn(
+            "endpoint_monodromy_not_permutation_representation",
+            audit.failure_reasons,
+        )
+
     def test_word_potential_certificate_checks_finite_templates(self):
         group = cyclic_group(2)
         source_state = ("*", "*", "left_constant_map_universal_kernel")

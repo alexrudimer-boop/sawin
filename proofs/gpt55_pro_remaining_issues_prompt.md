@@ -1221,6 +1221,14 @@ is proved: the potential-implies-cocycle argument below derives those label
 relations from the state/coordinate braid relations.  A signed endpoint audit
 with success booleans but no concrete endpoint group is not a finite row-check
 certificate, even if an endpoint target order is listed.
+Every supplied signed row must also have a well-formed full `D_Gamma` entry
+key `(E,epsilon,s,a,b,x,y)`: `E` must be one of U,C,M, the sign must be `+1`
+or `-1`, the seed state must be a hashable tuple state, and the local
+colour/fibre inputs must be in the derived domain.  Missing, extra,
+duplicate, malformed, or unhashable signed rows are finite certificate
+failures.  They must not cause a runtime failure in seed-key, entry-domain,
+or monodromy-permutation checks, and they must not be treated as hidden valid
+observer states.
 Moreover, the concrete endpoint group used for signed-row multiplication must
 match the group-valued target ledger: its order must equal the product of the
 listed endpoint-group orders for the active group-targeted families.  Symmetric

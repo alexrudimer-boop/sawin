@@ -6646,7 +6646,12 @@ class UniversalKSignedEndpointGeneratorAudit:
     def required_entry_signed_seed_keys(
         self,
     ) -> Tuple[Tuple[str, UniversalKSeedState, int], ...]:
-        return tuple(sorted({key[:3] for key in self.required_entry_keys_exact}, key=repr))
+        return tuple(
+            sorted(
+                _unique_values(tuple(key[:3] for key in self.required_entry_keys_exact)),
+                key=repr,
+            )
+        )
 
     @property
     def supplied_entry_keys(
@@ -6658,53 +6663,65 @@ class UniversalKSignedEndpointGeneratorAudit:
     def missing_required_entry_seed_keys(
         self,
     ) -> Tuple[Tuple[str, UniversalKSeedState, int], ...]:
-        required_by_entries = set(self.required_entry_signed_seed_keys)
+        required_by_entries = _value_marker_set(self.required_entry_signed_seed_keys)
         return tuple(
             key
             for key in self.required_signed_seed_keys
-            if key not in required_by_entries
+            if _value_marker(key) not in required_by_entries
         )
 
     @property
     def extra_required_entry_seed_keys(
         self,
     ) -> Tuple[Tuple[str, UniversalKSeedState, int], ...]:
-        required_by_kappa = set(self.required_signed_seed_keys)
+        required_by_kappa = _value_marker_set(self.required_signed_seed_keys)
         return tuple(
             key
             for key in self.required_entry_signed_seed_keys
-            if key not in required_by_kappa
+            if _value_marker(key) not in required_by_kappa
         )
 
     @property
     def missing_signed_seed_keys(
         self,
     ) -> Tuple[Tuple[str, UniversalKSeedState, int], ...]:
-        supplied = set(self.supplied_signed_seed_keys)
-        return tuple(key for key in self.required_signed_seed_keys if key not in supplied)
+        supplied = _value_marker_set(self.supplied_signed_seed_keys)
+        return tuple(
+            key
+            for key in self.required_signed_seed_keys
+            if _value_marker(key) not in supplied
+        )
 
     @property
     def extra_signed_seed_keys(
         self,
     ) -> Tuple[Tuple[str, UniversalKSeedState, int], ...]:
-        required = set(self.required_signed_seed_keys)
-        return tuple(key for key in self.supplied_signed_seed_keys if key not in required)
+        required = _value_marker_set(self.required_signed_seed_keys)
+        return tuple(
+            key
+            for key in self.supplied_signed_seed_keys
+            if _value_marker(key) not in required
+        )
 
     @property
     def missing_entry_keys(
         self,
     ) -> Tuple[UniversalKSignedEndpointEntryKey, ...]:
-        supplied = set(self.supplied_entry_keys)
+        supplied = _value_marker_set(self.supplied_entry_keys)
         return tuple(
-            key for key in self.required_entry_keys_exact if key not in supplied
+            key
+            for key in self.required_entry_keys_exact
+            if _value_marker(key) not in supplied
         )
 
     @property
     def extra_entry_keys(
         self,
     ) -> Tuple[UniversalKSignedEndpointEntryKey, ...]:
-        required = set(self.required_entry_keys_exact)
-        return tuple(key for key in self.supplied_entry_keys if key not in required)
+        required = _value_marker_set(self.required_entry_keys_exact)
+        return tuple(
+            key for key in self.supplied_entry_keys if _value_marker(key) not in required
+        )
 
     @property
     def duplicate_entry_keys(
@@ -6720,14 +6737,17 @@ class UniversalKSignedEndpointGeneratorAudit:
     def reachable_states_by_family(
         self,
     ) -> Mapping[str, Tuple[UniversalKSeedState, ...]]:
-        states_by_family: dict[str, set[UniversalKSeedState]] = {}
+        states_by_family: dict[str, dict[object, UniversalKSeedState]] = {}
         for state in self.reachable_seed_states_exact:
             if not _universal_k_endpoint_seed_state_well_formed(state):
                 continue
             family, seed_state = state
-            states_by_family.setdefault(family, set()).add(seed_state)
+            states_by_family.setdefault(family, {}).setdefault(
+                _value_marker(seed_state),
+                seed_state,
+            )
         return {
-            family: tuple(sorted(states, key=repr))
+            family: tuple(sorted(states.values(), key=repr))
             for family, states in states_by_family.items()
         }
 
@@ -6737,11 +6757,13 @@ class UniversalKSignedEndpointGeneratorAudit:
     ) -> Tuple[Tuple[str, Color, Color, FibrePoint, FibrePoint], ...]:
         return tuple(
             sorted(
-                {
-                    (key[0], key[3], key[4], key[5], key[6])
-                    for key in self.required_positive_entry_keys_exact
-                    if _universal_k_signed_entry_key_well_formed(key)
-                },
+                _unique_values(
+                    tuple(
+                        (key[0], key[3], key[4], key[5], key[6])
+                        for key in self.required_positive_entry_keys_exact
+                        if _universal_k_signed_entry_key_well_formed(key)
+                    )
+                ),
                 key=repr,
             )
         )
@@ -6758,6 +6780,15 @@ class UniversalKSignedEndpointGeneratorAudit:
         duplicate_state_rows: list[UniversalKEndpointMonodromyFailure] = []
         for row in self.rows:
             if row.sign != 1:
+                continue
+            if not _universal_k_is_positive_entry_key(row.entry_key):
+                duplicate_state_rows.append(
+                    (
+                        ("positive_monodromy_contexts",),
+                        "monodromy_malformed_positive_row",
+                        row.entry_key,
+                    )
+                )
                 continue
             context = (
                 row.endpoint_family,

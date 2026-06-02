@@ -751,7 +751,11 @@ audit layer.  The lower-level constructor
 `universal_k_signed_endpoint_generator_audit(...)` takes already-supplied
 signed rows and recomputes the full `D_Gamma` domain from the fibres, then
 fills the coordinate, inverse, YBE, and fixed-track telescoping gates by
-running the finite checkers.  The higher-level constructor
+running the finite checkers.  Its signed entry-key comparisons are
+hashability-safe: a supplied row whose seed state makes the full
+`(E,epsilon,s,a,b,x,y)` key malformed or unhashable is reported as an extra
+or malformed signed row and cannot crash the domain, seed-key, or monodromy
+permutation checks.  The higher-level constructor
 `universal_k_endpoint_observer_build(...)` is the monodromy-coboundary
 observer builder: it reads the positive rows from the word-potential identity
 table, sets the positive coordinate part to the actual interval map
