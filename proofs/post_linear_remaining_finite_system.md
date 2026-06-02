@@ -801,6 +801,17 @@ current `kappa` image has no active endpoint family, the derived ledger
 reports that no active family exists; if active families are present but the
 scoped residual-faithfulness rows are absent, the ledger remains an open
 observer candidate rather than a closure proof.
+There is one automatic residual-faithfulness subcase:
+`universal_k_strict_identity_residual_faithfulness_audit(...)` proves the
+residual gate when every quotient row fixes its colour pair and every local
+fibre row is strictly `(x,y)->(x,y)`.  In that case every braid word has
+trivial residual fibre action, so the helper emits one schematic all-`n`
+residual row per active endpoint family with dependencies only on the
+interval, local row table, routed seed state, residual input tuple, and
+endpoint channel.  The identity constructor can consume this proof when
+`derive_strict_identity_residual_faithfulness=True`.  This closes only the
+strict identity-fibre subcase; non-identity U/C/M endpoint observers still
+need their own residual-faithfulness theorem.
 For a multi-family product endpoint row, the family ledger also requires a
 separate product residual-faithfulness theorem scoped to the full active
 family set and the full set of seed states hit by `kappa`.  Per-family

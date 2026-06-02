@@ -2927,6 +2927,109 @@ class UniversalKResidualFaithfulnessAudit:
         return tuple(reasons)
 
 
+def universal_k_interval_has_strict_identity_fibre_action(
+    interval: LocalInterval,
+) -> bool:
+    """Return whether every local row is strictly identity on colours and fibres."""
+
+    for left_color in interval.colors:
+        for right_color in interval.colors:
+            if interval.base_R.get((left_color, right_color)) != (
+                left_color,
+                right_color,
+            ):
+                return False
+            for input_left in interval.fibres[left_color]:
+                for input_right in interval.fibres[right_color]:
+                    if interval.T.get(
+                        (left_color, right_color, input_left, input_right)
+                    ) != (input_left, input_right):
+                        return False
+    return True
+
+
+def universal_k_strict_identity_residual_faithfulness_audit(
+    interval: LocalInterval,
+    endpoint_seed_states: Sequence[Tuple[str, UniversalKSeedState]],
+) -> UniversalKResidualFaithfulnessAudit:
+    """Prove residual faithfulness for the strict identity local fibre action.
+
+    This is intentionally narrow.  It emits a theorem only when every quotient
+    row fixes its colour pair and every local fibre row fixes its input pair,
+    so every braid word has trivial residual fibre action after quotient
+    stabilization.  The rows are schematic all-``n`` rows, one per active
+    endpoint family, and use only interval/local-row data.
+    """
+
+    seed_states = _unique_values(
+        tuple(
+            state
+            for state in endpoint_seed_states
+            if _universal_k_endpoint_seed_state_well_formed(state)
+        )
+    )
+    active_families = tuple(
+        sorted({family for family, _seed_state in seed_states}, key=repr)
+    )
+    strict_identity = universal_k_interval_has_strict_identity_fibre_action(interval)
+    expected_input_tuples = tuple(
+        ("all_residual_fibre_tuples", family) for family in active_families
+    )
+    rows = ()
+    if strict_identity:
+        row_list = []
+        for family in active_families:
+            family_seed_states = tuple(
+                state for state in seed_states if state[0] == family
+            )
+            input_tuple = ("all_residual_fibre_tuples", family)
+            row_list.append(
+                UniversalKResidualFaithfulnessRow(
+                    input_tuple=input_tuple,
+                    output_tuple=input_tuple,
+                    identity_endpoint_output_tuple=input_tuple,
+                    endpoint_families=(family,),
+                    endpoint_seed_states=family_seed_states,
+                    endpoint_channel_keys=tuple(
+                        (
+                            seed_family,
+                            seed_state,
+                            "strict_identity_residual_channel",
+                        )
+                        for seed_family, seed_state in family_seed_states
+                    ),
+                    dependencies=(
+                        "interval_data",
+                        "local_row_table",
+                        "routed_seed_state",
+                        "residual_input_tuple",
+                        "endpoint_channel",
+                    ),
+                )
+            )
+        rows = tuple(row_list)
+    family_row_counts = tuple((family, 1) for family in active_families)
+    return UniversalKResidualFaithfulnessAudit(
+        active_endpoint_families=active_families,
+        covered_endpoint_families=active_families,
+        expected_residual_row_count=len(active_families),
+        covered_residual_row_count=len(rows),
+        expected_residual_rows_by_family=family_row_counts,
+        covered_residual_rows_by_family=(family_row_counts if strict_identity else ()),
+        expected_residual_input_tuples=expected_input_tuples,
+        covered_residual_input_tuples=(
+            tuple(row.input_tuple for row in rows) if strict_identity else ()
+        ),
+        endpoint_channels_exact=strict_identity,
+        identity_endpoint_data_forces_residual_identity=strict_identity,
+        braid_index_independent=strict_identity,
+        product_families_separated=strict_identity,
+        expected_endpoint_seed_states=seed_states,
+        covered_endpoint_seed_states=(seed_states if strict_identity else ()),
+        residual_rows=rows,
+    )
+
+
 @dataclass(frozen=True)
 class UniversalKResidualActionScopeAudit:
     """Scope data for explicit residual-action row certificates."""
@@ -9605,6 +9708,7 @@ def universal_k_identity_endpoint_observer_builds_by_family(
     seed_classifier_entries: Sequence[UniversalKSeedClassifierEntry],
     *,
     cutoff_degrees_by_family: Sequence[Tuple[str, int]] = (),
+    derive_strict_identity_residual_faithfulness: bool = False,
     residual_faithfulness_theorems_by_family: Sequence[
         Tuple[str, UniversalKResidualFaithfulnessAudit]
     ] = (),
@@ -9619,7 +9723,9 @@ def universal_k_identity_endpoint_observer_builds_by_family(
     permutations for the routed seed states.  The returned family audit is
     still allowed, and expected, to remain open when residual faithfulness is
     not supplied or does not prove the true fibre action is faithful to the
-    routed endpoint channels.
+    routed endpoint channels.  The optional strict-identity residual helper is
+    used only when explicitly requested and only proves rows when every local
+    fibre row is the identity on colours and fibre coordinates.
     """
 
     seed_states = universal_k_signed_endpoint_seed_states(seed_classifier_entries)
@@ -9638,6 +9744,13 @@ def universal_k_identity_endpoint_observer_builds_by_family(
     detector_rows = []
     endpoint_targets = []
     cutoff_readouts = []
+    residual_rows = list(residual_faithfulness_theorems_by_family)
+    supplied_residual_families = set(
+        _universal_k_family_object_map(
+            residual_rows,
+            UniversalKResidualFaithfulnessAudit,
+        )
+    )
     for family in active_families:
         family_entries = _universal_k_seed_classifier_entries_for_family(
             seed_classifier_entries,
@@ -9703,6 +9816,30 @@ def universal_k_identity_endpoint_observer_builds_by_family(
                 endpoint_group,
             )
         )
+        if (
+            derive_strict_identity_residual_faithfulness
+            and family not in supplied_residual_families
+        ):
+            residual_rows.append(
+                (
+                    family,
+                    universal_k_strict_identity_residual_faithfulness_audit(
+                        interval,
+                        family_seed_states,
+                    ),
+                )
+            )
+    if (
+        derive_strict_identity_residual_faithfulness
+        and product_residual_faithfulness_theorem is None
+        and len(active_families) > 1
+    ):
+        product_residual_faithfulness_theorem = (
+            universal_k_strict_identity_residual_faithfulness_audit(
+                interval,
+                seed_states,
+            )
+        )
     return universal_k_endpoint_observer_builds_by_family(
         interval,
         seed_classifier_entries,
@@ -9710,9 +9847,7 @@ def universal_k_identity_endpoint_observer_builds_by_family(
         detector_track_initialization_rows=tuple(detector_rows),
         endpoint_target_audits_by_family=tuple(endpoint_targets),
         cutoff_readout_audits_by_family=tuple(cutoff_readouts),
-        residual_faithfulness_theorems_by_family=tuple(
-            residual_faithfulness_theorems_by_family
-        ),
+        residual_faithfulness_theorems_by_family=tuple(residual_rows),
         product_residual_faithfulness_theorem=product_residual_faithfulness_theorem,
     )
 
@@ -16270,6 +16405,7 @@ def post_linear_remaining_finite_system_audit(
     ) = None,
     universal_k_identity_endpoint_observer_candidates: bool = False,
     universal_k_identity_cutoff_degrees_by_family: Sequence[Tuple[str, int]] = (),
+    universal_k_identity_strict_residual_faithfulness: bool = False,
     unsupported_companion_structural_contradiction: (
         UnsupportedCompanionStructuralContradictionAudit | None
     ) = None,
@@ -16387,6 +16523,9 @@ def post_linear_remaining_finite_system_audit(
                     unsigned.universal_k_seed_classifier_entries,
                     cutoff_degrees_by_family=(
                         universal_k_identity_cutoff_degrees_by_family
+                    ),
+                    derive_strict_identity_residual_faithfulness=(
+                        universal_k_identity_strict_residual_faithfulness
                     ),
                     residual_faithfulness_theorems_by_family=(
                         universal_k_residual_faithfulness_theorems_by_family

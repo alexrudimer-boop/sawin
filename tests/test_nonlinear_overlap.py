@@ -101,6 +101,7 @@ from ybe_domination import (
     universal_k_identity_cutoff_readout_audit,
     universal_k_identity_endpoint_observer_builds_by_family,
     universal_k_identity_word_potential_certificate,
+    universal_k_interval_has_strict_identity_fibre_action,
     universal_k_signed_endpoint_coordinate_failures,
     universal_k_signed_endpoint_far_commutativity_failures,
     universal_k_signed_endpoint_generator_audit,
@@ -110,6 +111,7 @@ from ybe_domination import (
     universal_k_signed_endpoint_positive_ybe_failures,
     universal_k_signed_endpoint_required_entry_keys,
     universal_k_signed_endpoint_transition_closure,
+    universal_k_strict_identity_residual_faithfulness_audit,
     universal_k_signed_endpoint_two_strand_base_failures,
     universal_k_signed_endpoint_two_strand_witness_domain_failures,
     universal_continuation_identity_endpoint_witness_audit,
@@ -4798,6 +4800,69 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertTrue(family_audit.proves_family_endpoint_product_closure)
         for _family, build in family_audit.build_rows_exact:
             self.assertTrue(build.proves_endpoint_observer)
+
+    def test_strict_identity_residual_faithfulness_closes_identity_candidates(self):
+        interval = one_color_identity_interval()
+        nonidentity_interval = one_color_latin_unit_triangular_interval()
+        seed_entries = tuple(
+            (
+                ("*", "*", family, "constant_map_kernel", (0, 1)),
+                (family, ("*", "*", f"{family}_seed")),
+            )
+            for family in ("U", "C", "M")
+        )
+        seed_states = tuple(target for _descriptor, target in seed_entries)
+
+        self.assertTrue(universal_k_interval_has_strict_identity_fibre_action(interval))
+        self.assertFalse(
+            universal_k_interval_has_strict_identity_fibre_action(
+                nonidentity_interval
+            )
+        )
+
+        strict_residual = universal_k_strict_identity_residual_faithfulness_audit(
+            interval,
+            seed_states,
+        )
+        self.assertTrue(strict_residual.proves_residual_faithfulness)
+        self.assertEqual(
+            strict_residual.expected_residual_rows_by_family,
+            (("C", 1), ("M", 1), ("U", 1)),
+        )
+        self.assertEqual(
+            strict_residual.expected_residual_input_tuples,
+            (
+                ("all_residual_fibre_tuples", "C"),
+                ("all_residual_fibre_tuples", "M"),
+                ("all_residual_fibre_tuples", "U"),
+            ),
+        )
+
+        family_audit = universal_k_identity_endpoint_observer_builds_by_family(
+            interval,
+            seed_entries,
+            derive_strict_identity_residual_faithfulness=True,
+        )
+        self.assertEqual(family_audit.failure_reasons, ())
+        self.assertTrue(family_audit.proves_family_endpoint_observers)
+        self.assertTrue(family_audit.proves_family_endpoint_product_closure)
+
+        nonidentity_family_audit = (
+            universal_k_identity_endpoint_observer_builds_by_family(
+                nonidentity_interval,
+                seed_entries,
+                derive_strict_identity_residual_faithfulness=True,
+            )
+        )
+        self.assertFalse(nonidentity_family_audit.proves_family_endpoint_observers)
+        self.assertEqual(
+            nonidentity_family_audit.unproved_build_families,
+            ("C", "M", "U"),
+        )
+        self.assertIn(
+            "endpoint_observer_family_builds_not_proved",
+            nonidentity_family_audit.failure_reasons,
+        )
 
     def test_endpoint_observer_builds_by_family_cover_exact_ucm_families(self):
         interval = one_color_identity_interval()

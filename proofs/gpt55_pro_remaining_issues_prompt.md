@@ -1519,6 +1519,18 @@ post-linear proof object.  It is nondecisive by design: with no active
 `kappa` endpoint family it reports an empty active-family ledger, and with
 active endpoint families but no residual-faithfulness theorem it reports an
 open observer candidate rather than closing any U, C, or M endpoint system.
+There is one narrow automatic residual-faithfulness subcase.  If every
+quotient row fixes its colour pair and every local fibre row is strictly
+`(x,y)->(x,y)`, then every braid word has trivial residual fibre action after
+quotient stabilization.  The audit helper
+`universal_k_strict_identity_residual_faithfulness_audit(...)` may then emit
+one schematic all-`n` residual row per active endpoint family, with
+dependencies only on the interval, local row table, routed seed state,
+residual input tuple, and endpoint channel.  The identity observer
+constructor may consume this theorem when
+`derive_strict_identity_residual_faithfulness=True`.  This closes only the
+strict identity-fibre subcase; any non-identity U, C, or M endpoint observer
+still requires its own residual-faithfulness theorem.
 The post-linear proof object should retain the resulting endpoint-observer
 build record, not only the derived signed-generator audit.  A complete
 certificate should expose whether the build is present, whether it proves the
@@ -1962,6 +1974,7 @@ endpoint_observer_family_seed_classifier_ledger_well_formed,
 endpoint_observer_family_build_row_failure_reasons_exposed,
 identity_endpoint_observer_constructor_keeps_residual_faithfulness_required,
 identity_endpoint_observer_top_level_opt_in_is_nondecisive,
+strict_identity_fibre_action_residual_faithfulness_subcase,
 endpoint_observer_family_certificate_input_ledger_exact,
 endpoint_observer_family_auxiliary_input_ledgers_exact,
 endpoint_observer_each_active_family_single_scoped_and_proved,
