@@ -3112,10 +3112,67 @@ def universal_k_interval_has_strict_identity_fibre_action(
     return True
 
 
+def _universal_k_interval_table_complete_and_type_correct(
+    interval: LocalInterval,
+) -> bool:
+    """Return whether the supplied interval object has a complete typed table."""
+
+    try:
+        colors = tuple(interval.colors)
+        fibres = interval.fibres
+        base_R = interval.base_R
+        table = interval.T
+        for color in colors:
+            if color not in fibres:
+                return False
+        base_domain = {(left, right) for left in colors for right in colors}
+        if set(base_R.keys()) != base_domain:
+            return False
+        if set(base_R.values()) != base_domain or len(set(base_R.values())) != len(
+            base_domain
+        ):
+            return False
+        for left_color in colors:
+            for right_color in colors:
+                output_left_color, output_right_color = base_R[
+                    (left_color, right_color)
+                ]
+                row_domain = {
+                    (input_left, input_right)
+                    for input_left in fibres[left_color]
+                    for input_right in fibres[right_color]
+                }
+                row_keys = set()
+                for key in table:
+                    if len(key) != 4:
+                        return False
+                    row_left_color, row_right_color, input_left, input_right = key
+                    if row_left_color == left_color and row_right_color == right_color:
+                        row_keys.add((input_left, input_right))
+                if row_keys != row_domain:
+                    return False
+                row_image = {
+                    table[(left_color, right_color, input_left, input_right)]
+                    for input_left, input_right in row_domain
+                }
+                output_domain = {
+                    (output_left, output_right)
+                    for output_left in fibres[output_left_color]
+                    for output_right in fibres[output_right_color]
+                }
+                if row_image != output_domain or len(row_image) != len(output_domain):
+                    return False
+    except (AttributeError, KeyError, TypeError, ValueError):
+        return False
+    return True
+
+
 def universal_k_interval_has_singleton_fibres(interval: LocalInterval) -> bool:
     """Return whether every fibre of the local interval has exactly one point."""
 
-    return all(len(tuple(interval.fibres[color])) == 1 for color in interval.colors)
+    return _universal_k_interval_table_complete_and_type_correct(interval) and all(
+        len(tuple(interval.fibres[color])) == 1 for color in interval.colors
+    )
 
 
 def universal_k_interval_has_coordinate_identity_fibre_action(

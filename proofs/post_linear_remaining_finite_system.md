@@ -998,7 +998,12 @@ There is a second automatic residual-faithfulness subcase:
 residual gate when every fibre `A_c` has exactly one point.  Then each
 fibre product `X_z` is a singleton for every quotient-colour tuple `z`, so
 the bundled residual fibre action is trivial for every braid index.  The
-identity constructor consumes this proof only when
+checker also requires the local interval table to be complete and
+type-correct: the quotient row table must be a bijection on colour pairs,
+every local `T_{a,b}` row must be present, and each output must land in the
+fibres prescribed by `R_C(a,b)`.  Singleton fibre sizes in a malformed raw
+table are not a residual-faithfulness proof.  The identity constructor
+consumes this proof only when
 `derive_singleton_fibre_residual_faithfulness=True`.  This is independent of
 the strict identity-row condition: quotient colours may move, but there is no
 nontrivial fibre coordinate left to move.

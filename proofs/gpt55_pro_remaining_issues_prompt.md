@@ -1831,7 +1831,12 @@ fibre action is trivial for every braid index, even if quotient colours move.
 The helper `universal_k_singleton_fibre_residual_faithfulness_audit(...)`
 may emit one schematic all-`n` residual row per active endpoint family, and
 the identity observer constructor may consume it only when
-`derive_singleton_fibre_residual_faithfulness=True`.  This closes only the
+`derive_singleton_fibre_residual_faithfulness=True`.  The singleton helper is
+valid only for a complete type-correct local interval table: the quotient row
+table must be a bijection on colour pairs, every local `T_{a,b}` row must be
+present, and every local output must lie in the fibres prescribed by
+`R_C(a,b)`.  Singleton fibre sizes in a malformed raw table are not a
+residual-faithfulness proof.  This closes only the
 singleton-fibre subcase and does not solve nontrivial U/C/M endpoint
 observers.
 There is also a fibre-label identity residual-faithfulness subcase.  A

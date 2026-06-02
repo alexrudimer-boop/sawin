@@ -6055,6 +6055,29 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
 
         self.assertTrue(universal_k_interval_has_singleton_fibres(interval))
         self.assertFalse(universal_k_interval_has_strict_identity_fibre_action(interval))
+        raw_missing_table = type("RawSingletonMissingTableInterval", (), {})()
+        raw_missing_table.colors = ("a", "b")
+        raw_missing_table.fibres = {"a": (0,), "b": (1,)}
+        raw_missing_table.base_R = {}
+        raw_missing_table.T = {}
+        self.assertFalse(universal_k_interval_has_singleton_fibres(raw_missing_table))
+
+        raw_mistyped_table = type("RawSingletonMistypedTableInterval", (), {})()
+        raw_mistyped_table.colors = ("a", "b")
+        raw_mistyped_table.fibres = {"a": (0,), "b": (1,)}
+        raw_mistyped_table.base_R = {
+            (left, right): (right, left)
+            for left in raw_mistyped_table.colors
+            for right in raw_mistyped_table.colors
+        }
+        raw_mistyped_table.T = {
+            (left, right, x, y): (x, y)
+            for left in raw_mistyped_table.colors
+            for right in raw_mistyped_table.colors
+            for x in raw_mistyped_table.fibres[left]
+            for y in raw_mistyped_table.fibres[right]
+        }
+        self.assertFalse(universal_k_interval_has_singleton_fibres(raw_mistyped_table))
 
         strict_residual = universal_k_strict_identity_residual_faithfulness_audit(
             interval,
@@ -6064,8 +6087,19 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             interval,
             seed_states,
         )
+        malformed_singleton_residual = (
+            universal_k_singleton_fibre_residual_faithfulness_audit(
+                raw_missing_table,
+                seed_states,
+            )
+        )
         self.assertFalse(strict_residual.proves_residual_faithfulness)
         self.assertTrue(singleton_residual.proves_residual_faithfulness)
+        self.assertFalse(malformed_singleton_residual.proves_residual_faithfulness)
+        self.assertIn(
+            "residual_faithfulness_implication_not_proved",
+            malformed_singleton_residual.failure_reasons,
+        )
         self.assertEqual(
             singleton_residual.residual_endpoint_channel_reasons,
             ("singleton_fibre_residual_channel",),
