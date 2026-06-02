@@ -1822,7 +1822,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertEqual(
             audit.remaining_obligations,
             (
-                "construct fixed endpoint witnesses for the routed universal-continuation seed closures",
+                "construct the routed C word-potential endpoint observer or exact cutoff readout with residual faithfulness",
                 "or upgrade one routed universal-continuation endpoint miss to a normalized-law sequence",
             ),
         )
@@ -1997,7 +1997,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertEqual(
             audit.remaining_obligations,
             (
-                "prove each routed mixed-unit context endpoint factors through fixed detector/readout data",
+                "construct the routed M word-potential endpoint observer or exact cutoff readout with residual faithfulness",
                 "or upgrade one routed mixed-unit endpoint miss to a normalized-law sequence",
             ),
         )
@@ -2112,7 +2112,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             audit.finite_obstruction_data,
         )
 
-    def test_continuation_endpoint_witness_closes_system_c_when_matching(self):
+    def test_continuation_endpoint_witness_is_not_observer_closure(self):
         profile, closure, route = partial_constant_missing_row_profile_route_audits()
         identity_routing = universal_continuation_identity_routing_audit(
             one_color_identity_interval()
@@ -2141,11 +2141,18 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
 
         self.assertEqual(
             audit.system_name,
-            "closed_by_universal_continuation_endpoint_witness",
+            "system_c_universal_continuation_endpoint",
         )
         self.assertTrue(audit.system_c_closed_by_endpoint_witness)
-        self.assertFalse(audit.is_current_remaining_finite_system)
-        self.assertEqual(audit.remaining_obligations, ())
+        self.assertFalse(audit.system_c_closed_by_routed_certificate)
+        self.assertTrue(audit.is_current_remaining_finite_system)
+        self.assertEqual(
+            audit.remaining_obligations,
+            (
+                "construct the routed C word-potential endpoint observer or exact cutoff readout with residual faithfulness",
+                "or upgrade one routed universal-continuation endpoint miss to a normalized-law sequence",
+            ),
+        )
         self.assertIn(
             ("universal_continuation_endpoint_witness_proved", True),
             audit.finite_obstruction_data,
@@ -2155,7 +2162,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             audit.finite_obstruction_data,
         )
 
-    def test_continuation_symmetric_endpoint_fork_closes_system_c_when_matching(
+    def test_continuation_symmetric_endpoint_fork_is_not_observer_closure(
         self,
     ):
         profile, closure, route = partial_constant_missing_row_profile_route_audits()
@@ -2184,12 +2191,18 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
 
         self.assertEqual(
             audit.system_name,
-            "closed_by_universal_continuation_symmetric_endpoint_fork",
+            "system_c_universal_continuation_endpoint",
         )
         self.assertTrue(audit.system_c_closed_by_symmetric_endpoint_fork)
-        self.assertTrue(audit.system_c_closed_by_routed_certificate)
-        self.assertFalse(audit.is_current_remaining_finite_system)
-        self.assertEqual(audit.remaining_obligations, ())
+        self.assertFalse(audit.system_c_closed_by_routed_certificate)
+        self.assertTrue(audit.is_current_remaining_finite_system)
+        self.assertEqual(
+            audit.remaining_obligations,
+            (
+                "construct the routed C word-potential endpoint observer or exact cutoff readout with residual faithfulness",
+                "or upgrade one routed universal-continuation endpoint miss to a normalized-law sequence",
+            ),
+        )
         self.assertIn(
             ("universal_continuation_symmetric_fork_cutoff_proved", True),
             audit.finite_obstruction_data,
@@ -2199,7 +2212,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             audit.finite_obstruction_data,
         )
 
-    def test_mixed_unit_endpoint_witness_closes_system_m_when_matching(self):
+    def test_mixed_unit_endpoint_witness_is_not_observer_closure(self):
         profile, routing = coordinate_unit_mixed_context_route_audits()
         c2 = cyclic_group(2)
         endpoint = endpoint_product_longitude_expression_audit(
@@ -2223,11 +2236,18 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
 
         self.assertEqual(
             audit.system_name,
-            "closed_by_mixed_unit_context_endpoint_witness",
+            "system_m_mixed_unit_context_endpoint",
         )
         self.assertTrue(audit.system_m_closed_by_endpoint_witness)
-        self.assertFalse(audit.is_current_remaining_finite_system)
-        self.assertEqual(audit.remaining_obligations, ())
+        self.assertFalse(audit.system_m_closed_by_routed_certificate)
+        self.assertTrue(audit.is_current_remaining_finite_system)
+        self.assertEqual(
+            audit.remaining_obligations,
+            (
+                "construct the routed M word-potential endpoint observer or exact cutoff readout with residual faithfulness",
+                "or upgrade one routed mixed-unit endpoint miss to a normalized-law sequence",
+            ),
+        )
         self.assertIn(
             ("missing_triangular_coordinate_unit_routing_proved", True),
             audit.finite_obstruction_data,
@@ -2241,7 +2261,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             audit.finite_obstruction_data,
         )
 
-    def test_mixed_unit_symmetric_endpoint_fork_closes_system_m_when_matching(self):
+    def test_mixed_unit_symmetric_endpoint_fork_is_not_observer_closure(self):
         profile, routing = coordinate_unit_mixed_context_route_audits()
         endpoint_family = endpoint_family_symmetric_fork_audit(
             (2,),
@@ -2263,12 +2283,18 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
 
         self.assertEqual(
             audit.system_name,
-            "closed_by_mixed_unit_symmetric_endpoint_fork",
+            "system_m_mixed_unit_context_endpoint",
         )
         self.assertTrue(audit.system_m_closed_by_symmetric_endpoint_fork)
-        self.assertTrue(audit.system_m_closed_by_routed_certificate)
-        self.assertFalse(audit.is_current_remaining_finite_system)
-        self.assertEqual(audit.remaining_obligations, ())
+        self.assertFalse(audit.system_m_closed_by_routed_certificate)
+        self.assertTrue(audit.is_current_remaining_finite_system)
+        self.assertEqual(
+            audit.remaining_obligations,
+            (
+                "construct the routed M word-potential endpoint observer or exact cutoff readout with residual faithfulness",
+                "or upgrade one routed mixed-unit endpoint miss to a normalized-law sequence",
+            ),
+        )
         self.assertIn(
             ("mixed_unit_symmetric_fork_cutoff_proved", True),
             audit.finite_obstruction_data,
@@ -2465,14 +2491,14 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertEqual(
             audit.remaining_obligations,
             (
-                "prove each routed triangular recovery endpoint composite lies in V_beta(U_tri)",
+                "construct the routed U word-potential endpoint observer over U_tri with residual faithfulness",
                 "or upgrade one routed U_tri endpoint miss to a normalized-law sequence",
-                "construct fixed endpoint witnesses for the routed universal-continuation seed closures",
+                "construct the routed C word-potential endpoint observer or exact cutoff readout with residual faithfulness",
                 "or upgrade one routed universal-continuation endpoint miss to a normalized-law sequence",
             ),
         )
 
-    def test_closed_recovery_endpoint_does_not_hide_unclosed_continuation_endpoint(self):
+    def test_legacy_recovery_endpoint_does_not_close_product_with_continuation(self):
         interval = one_color_latin_unit_triangular_interval()
         refinement = constant_map_kernel_system_k_refinement()
         profile, partial_closure, partial_route = (
@@ -2536,21 +2562,23 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             triangular_recovery_endpoint_witness=witness,
         )
 
-        self.assertEqual(audit.system_name, "system_c_universal_continuation_endpoint")
+        self.assertEqual(audit.system_name, "system_uc_routed_endpoint_product")
         self.assertEqual(audit.active_routed_endpoint_systems, ("U", "C"))
-        self.assertEqual(audit.unclosed_routed_endpoint_systems, ("C",))
+        self.assertEqual(audit.unclosed_routed_endpoint_systems, ("U", "C"))
         self.assertTrue(audit.system_u_closed_by_endpoint_witness)
         self.assertFalse(audit.system_c_closed_by_endpoint_witness)
         self.assertTrue(audit.is_current_remaining_finite_system)
         self.assertEqual(
             audit.remaining_obligations,
             (
-                "construct fixed endpoint witnesses for the routed universal-continuation seed closures",
+                "construct the routed U word-potential endpoint observer over U_tri with residual faithfulness",
+                "or upgrade one routed U_tri endpoint miss to a normalized-law sequence",
+                "construct the routed C word-potential endpoint observer or exact cutoff readout with residual faithfulness",
                 "or upgrade one routed universal-continuation endpoint miss to a normalized-law sequence",
             ),
         )
 
-    def test_closed_continuation_and_mixed_product_reports_both_witnesses(self):
+    def test_legacy_continuation_and_mixed_product_witnesses_do_not_close(self):
         profile, closure, route, coordinate_routing = (
             continuation_and_mixed_context_route_audits()
         )
@@ -2585,11 +2613,19 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             mixed_unit_context_endpoint_witness=mixed_witness,
         )
 
-        self.assertEqual(audit.system_name, "closed_by_routed_endpoint_witnesses")
+        self.assertEqual(audit.system_name, "system_cm_routed_endpoint_product")
         self.assertEqual(audit.active_routed_endpoint_systems, ("C", "M"))
-        self.assertEqual(audit.unclosed_routed_endpoint_systems, ())
-        self.assertFalse(audit.is_current_remaining_finite_system)
-        self.assertEqual(audit.remaining_obligations, ())
+        self.assertEqual(audit.unclosed_routed_endpoint_systems, ("C", "M"))
+        self.assertTrue(audit.is_current_remaining_finite_system)
+        self.assertEqual(
+            audit.remaining_obligations,
+            (
+                "construct the routed C word-potential endpoint observer or exact cutoff readout with residual faithfulness",
+                "or upgrade one routed universal-continuation endpoint miss to a normalized-law sequence",
+                "construct the routed M word-potential endpoint observer or exact cutoff readout with residual faithfulness",
+                "or upgrade one routed mixed-unit endpoint miss to a normalized-law sequence",
+            ),
+        )
         self.assertIn(
             (
                 "continuation_routed_k_missing_latin_row_defects",
@@ -2703,7 +2739,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertEqual(
             routed.remaining_obligations,
             (
-                "prove each routed triangular recovery endpoint composite lies in V_beta(U_tri)",
+                "construct the routed U word-potential endpoint observer over U_tri with residual faithfulness",
                 "or upgrade one routed U_tri endpoint miss to a normalized-law sequence",
             ),
         )
@@ -10593,7 +10629,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             ("routed_recovery_keys_not_covered",),
         )
 
-    def test_recovery_endpoint_witness_closes_system_u_when_matching(self):
+    def test_recovery_endpoint_witness_is_not_observer_closure(self):
         interval = one_color_latin_unit_triangular_interval()
         refinement = constant_map_kernel_only_system_k_refinement()
         closure = TriangularLatinDefectClosureAudit(
@@ -10654,11 +10690,18 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
 
         self.assertEqual(
             audit.system_name,
-            "closed_by_triangular_recovery_endpoint_witness",
+            "system_u_triangular_recovery_unit_endpoint",
         )
         self.assertTrue(audit.system_u_closed_by_endpoint_witness)
-        self.assertFalse(audit.is_current_remaining_finite_system)
-        self.assertEqual(audit.remaining_obligations, ())
+        self.assertFalse(audit.system_u_closed_by_routed_certificate)
+        self.assertTrue(audit.is_current_remaining_finite_system)
+        self.assertEqual(
+            audit.remaining_obligations,
+            (
+                "construct the routed U word-potential endpoint observer over U_tri with residual faithfulness",
+                "or upgrade one routed U_tri endpoint miss to a normalized-law sequence",
+            ),
+        )
         self.assertIn(
             (
                 "system_u_endpoint_defects",
@@ -10675,7 +10718,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             audit.finite_obstruction_data,
         )
 
-    def test_recovery_symmetric_endpoint_fork_closes_system_u_when_matching(self):
+    def test_recovery_symmetric_endpoint_fork_is_not_observer_closure(self):
         refinement = constant_map_kernel_only_system_k_refinement()
         closure = TriangularLatinDefectClosureAudit(
             rows=(
@@ -10731,12 +10774,18 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
 
         self.assertEqual(
             audit.system_name,
-            "closed_by_triangular_recovery_symmetric_endpoint_fork",
+            "system_u_triangular_recovery_unit_endpoint",
         )
         self.assertTrue(audit.system_u_closed_by_symmetric_endpoint_fork)
-        self.assertTrue(audit.system_u_closed_by_routed_certificate)
-        self.assertFalse(audit.is_current_remaining_finite_system)
-        self.assertEqual(audit.remaining_obligations, ())
+        self.assertFalse(audit.system_u_closed_by_routed_certificate)
+        self.assertTrue(audit.is_current_remaining_finite_system)
+        self.assertEqual(
+            audit.remaining_obligations,
+            (
+                "construct the routed U word-potential endpoint observer over U_tri with residual faithfulness",
+                "or upgrade one routed U_tri endpoint miss to a normalized-law sequence",
+            ),
+        )
         self.assertIn(
             ("triangular_recovery_symmetric_fork_cutoff_proved", True),
             audit.finite_obstruction_data,
@@ -10808,16 +10857,18 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             triangular_recovery_symmetric_endpoint_fork=fork,
         )
 
-        self.assertEqual(audit.system_name, "system_c_universal_continuation_endpoint")
+        self.assertEqual(audit.system_name, "system_uc_routed_endpoint_product")
         self.assertEqual(audit.active_routed_endpoint_systems, ("U", "C"))
-        self.assertEqual(audit.unclosed_routed_endpoint_systems, ("C",))
+        self.assertEqual(audit.unclosed_routed_endpoint_systems, ("U", "C"))
         self.assertTrue(audit.system_u_closed_by_symmetric_endpoint_fork)
         self.assertFalse(audit.system_c_closed_by_endpoint_witness)
         self.assertTrue(audit.is_current_remaining_finite_system)
         self.assertEqual(
             audit.remaining_obligations,
             (
-                "construct fixed endpoint witnesses for the routed universal-continuation seed closures",
+                "construct the routed U word-potential endpoint observer over U_tri with residual faithfulness",
+                "or upgrade one routed U_tri endpoint miss to a normalized-law sequence",
+                "construct the routed C word-potential endpoint observer or exact cutoff readout with residual faithfulness",
                 "or upgrade one routed universal-continuation endpoint miss to a normalized-law sequence",
             ),
         )
@@ -11195,7 +11246,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertEqual(
             audit.remaining_obligations,
             (
-                "prove each routed triangular recovery endpoint composite lies in V_beta(U_tri)",
+                "construct the routed U word-potential endpoint observer over U_tri with residual faithfulness",
                 "or upgrade one routed U_tri endpoint miss to a normalized-law sequence",
             ),
         )

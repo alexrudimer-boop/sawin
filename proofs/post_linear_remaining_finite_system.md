@@ -1788,9 +1788,11 @@ checks exact coverage and exposes the resulting endpoint-visibility certificate
 to the repair-contract audit.  The post-linear wrapper now accepts that same
 certificate as `universal_continuation_endpoint_witness`; when it matches the
 supplied `universal_continuation_identity_routing` object and proves all
-identity-routed endpoint witnesses, System C is reported as
-`closed_by_universal_continuation_endpoint_witness` rather than as a current
-remaining finite system.
+identity-routed endpoint witnesses, the witness is recorded as a legacy
+candidate only.  It no longer closes System C by itself.  The current closure
+gate requires the full signed endpoint generator or the family endpoint
+observer build, including the word-potential detector lift and residual
+faithfulness.
 
 To close System K on the A side, prove that every such finite deficit either
 cannot occur in a genuine local-minimal bi-free universal-corridor interval or
@@ -1830,27 +1832,27 @@ universal_continuation_symmetric_fork_missing_edges
 universal_continuation_symmetric_fork_extra_edges
 ```
 
-The remaining A-route is to construct fixed endpoint witnesses for those
-routed universal-continuation seed closures.  The B-route would have to
+The remaining A-route is to construct the routed C word-potential endpoint
+observer, or an exact cutoff readout, together with residual faithfulness for
+those routed universal-continuation seed closures.  The B-route would have to
 upgrade one such endpoint miss to the normalized-law sequence required in the
 original problem.
 
-[Proved] If the supplied `universal_continuation_endpoint_witness` matches the
-same identity-routing ledger and proves all routed endpoint witnesses, then
-this row has no remaining System C obligation.  The executable classifier
-returns `closed_by_universal_continuation_endpoint_witness`, empties
-`remaining_obligations`, and no longer counts the row as a current remaining
-finite system.
+[Legacy diagnostic] If the supplied `universal_continuation_endpoint_witness`
+matches the same identity-routing ledger and proves all routed endpoint
+witnesses, the executable data records
+`universal_continuation_endpoint_witness_proved=True` and exact missing/extra
+edge ledgers.  This does not empty `remaining_obligations`; the current system
+name remains `system_c_universal_continuation_endpoint` unless the signed
+endpoint observer route also closes.
 
-[Proved] If the supplied
+[Legacy diagnostic] If the supplied
 `universal_continuation_symmetric_endpoint_fork` matches the same
 identity-routing ledger, covers exactly the identity-routed lost edges, and
 proves a faithful symmetric endpoint cutoff for the fixed continuation
-endpoint family, then this row also has no remaining System C obligation.  The
-executable classifier returns
-`closed_by_universal_continuation_symmetric_endpoint_fork` in the C-only case.
-In a product endpoint row, this certificate removes only C from
-`unclosed_routed_endpoint_systems`.
+endpoint family, the cutoff ledger is recorded as a candidate.  It does not
+remove C from `unclosed_routed_endpoint_systems` without the current endpoint
+observer/cutoff readout and residual-faithfulness bridge.
 
 ## System M: mixed-unit context endpoint
 
@@ -1907,21 +1909,19 @@ mixed_unit_symmetric_fork_missing_context_keys
 mixed_unit_symmetric_fork_extra_context_keys
 ```
 
-[Proved] If the supplied `mixed_unit_context_endpoint_witness` matches the
-same coordinate-unit routing ledger and proves all mixed context endpoint
-witnesses, the wrapper returns
-`closed_by_mixed_unit_context_endpoint_witness`, empties
-`remaining_obligations`, and removes the row from the current remaining
-finite-system list.  This is not a uniform endpoint theorem; it is the exact
-finite certificate interface that a positive proof must fill.
+[Legacy diagnostic] If the supplied `mixed_unit_context_endpoint_witness`
+matches the same coordinate-unit routing ledger and proves all mixed context
+endpoint witnesses, the wrapper records the witness coverage and missing/extra
+context-key ledgers.  It does not close System M by itself; the current closure
+gate requires the routed M word-potential endpoint observer or exact cutoff
+readout with residual faithfulness.
 
-[Proved] If the supplied `mixed_unit_context_symmetric_endpoint_fork` matches
+[Legacy diagnostic] If the supplied `mixed_unit_context_symmetric_endpoint_fork` matches
 the same coordinate-unit routing ledger, covers exactly the mixed context
 keys, and proves a faithful symmetric endpoint cutoff for the fixed mixed-unit
-endpoint family, then this row also has no remaining System M obligation.  The
-executable classifier returns `closed_by_mixed_unit_symmetric_endpoint_fork`
-in the M-only case.  In a product endpoint row, this certificate removes only
-M from `unclosed_routed_endpoint_systems`.
+endpoint family, it is retained as a candidate cutoff ledger.  It does not
+remove M from `unclosed_routed_endpoint_systems` without the current endpoint
+observer/cutoff readout and residual-faithfulness bridge.
 
 ## System U: triangular recovery unit endpoint
 
@@ -2011,24 +2011,22 @@ The endpoint keys are exactly:
 (left_color, right_color, routed_defect_reason).
 ```
 
-[Proved] If the supplied `triangular_recovery_endpoint_witness` uses the same
-fixed `U_tri` observer, covers exactly the current
+[Legacy diagnostic] If the supplied `triangular_recovery_endpoint_witness` uses
+the same fixed `U_tri` observer, covers exactly the current
 `system_u_endpoint_defects`, and each covered key carries a recovery endpoint
-certificate proving membership in `V_beta(U_tri)`, then System U is closed for
-that supplied data.  The executable classifier returns
-`closed_by_triangular_recovery_endpoint_witness`, empties
-`remaining_obligations`, and no longer counts the row as a current remaining
-finite system.
+certificate proving membership in `V_beta(U_tri)`, then the wrapper records
+`triangular_recovery_endpoint_witness_proved=True` and exact missing/extra key
+ledgers.  It does not close System U by itself.  The current closure gate
+requires the routed U word-potential endpoint observer over `U_tri`, or the
+full signed endpoint generator, with residual faithfulness.
 
-[Proved] If the supplied `triangular_recovery_symmetric_endpoint_fork` uses
+[Legacy diagnostic] If the supplied `triangular_recovery_symmetric_endpoint_fork` uses
 the same fixed `U_tri` observer, its endpoint-family group list is exactly
 `(|U_tri|,)`, it covers exactly the current `system_u_endpoint_defects`, and
-it proves a faithful symmetric endpoint cutoff, then System U is also closed.
-The executable classifier returns
-`closed_by_triangular_recovery_symmetric_endpoint_fork` for a U-only endpoint
-row.  In a product endpoint row, this certificate removes only U from
-`unclosed_routed_endpoint_systems`; any unclosed C or M endpoint family remains
-the reported current finite system.
+it proves a faithful symmetric endpoint cutoff, then the cutoff is retained as
+a candidate ledger.  It does not remove U from
+`unclosed_routed_endpoint_systems` without the current endpoint-observer and
+residual-faithfulness bridge.
 
 To turn System U into B, construct an explicit interval and a stable
 perfect-residual finite miss in `P_tri` that upgrades to the normalized-law

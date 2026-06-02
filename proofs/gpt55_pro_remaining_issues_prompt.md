@@ -2624,10 +2624,10 @@ the finite triangular bijection cardinality contradiction recorded above.
 At the executable handoff level, an endpoint-observer closure verdict may be
 fed into the congruence-chain rack assembly only together with the actual
 fixed detector product group for that interval.  A bare verdict such as
-`closed_by_routed_endpoint_certificates`, one of the one-family
-`closed_by_*_endpoint_observer_family_build` verdicts, or the product verdict
-`closed_by_endpoint_observer_family_build` without its group `G(pi,Q)` is
-still an open local gap.
+one of the one-family `closed_by_*_endpoint_observer_family_build` verdicts,
+the product verdict `closed_by_endpoint_observer_family_build`, or a legacy
+endpoint-witness/symmetric-fork candidate without its group `G(pi,Q)` and
+residual-faithfulness bridge is still an open local gap.
 
 ## 11. What Must Be Done To Resolve The Problem
 
@@ -2669,8 +2669,10 @@ still an open local gap.
    the observer by deriving positive rows from the identity-row table and
    negative rows as actual inverses, then prove residual faithfulness.  Then
    prove uniformly in `n` that every routed
-   triangular-recovery endpoint lies in `V_beta(U_tri)`, or prove a faithful
-   symmetric endpoint cutoff for the exact routed U family.  Otherwise,
+   triangular-recovery endpoint lies in `V_beta(U_tri)`.  Legacy
+   triangular-recovery endpoint-witness or symmetric-fork ledgers may be
+   recorded as diagnostics, but they do not close U unless they are lifted to
+   this exact `U_tri` observer and residual-faithfulness bridge.  Otherwise,
    extract a normalized-law B sequence from a genuine U endpoint miss.
 
 4. Close or refute System C.
@@ -2684,10 +2686,10 @@ still an open local gap.
    constants, build the observer with inverse-derived negative rows, and
    construct exact
    faithful cutoff readouts for the routed identity-continuation ledger.
-   Then construct fixed detector-lift endpoint witnesses or a faithful
-   symmetric cutoff for every identity-routed
-   universal-continuation edge.  Otherwise, extract a normalized-law B
-   sequence from a genuine C endpoint miss.
+   Legacy endpoint-witness or symmetric-fork ledgers may be recorded as
+   diagnostics, but they do not close C unless they are lifted to this exact
+   observer/cutoff-readout and residual-faithfulness bridge.  Otherwise,
+   extract a normalized-law B sequence from a genuine C endpoint miss.
 
 5. Close or refute System M.
 
@@ -2699,10 +2701,11 @@ still an open local gap.
    constant on a sound detector domain, derive endpoint emissions from those
    constants, build the observer with inverse-derived negative rows, and
    construct exact
-   faithful cutoff readouts for the routed mixed-unit ledger.  Then construct
-   fixed detector-lift endpoint/readout witnesses or a faithful symmetric
-   cutoff for every mixed-unit context key.  Otherwise, extract a
-   normalized-law B sequence from a genuine M endpoint miss.
+   faithful cutoff readouts for the routed mixed-unit ledger.  Legacy
+   endpoint-witness or symmetric-fork ledgers may be recorded as diagnostics,
+   but they do not close M unless they are lifted to this exact
+   observer/cutoff-readout and residual-faithfulness bridge.  Otherwise,
+   extract a normalized-law B sequence from a genuine M endpoint miss.
 
 6. Assemble outcome A if K/U/C/M all close.
 

@@ -12443,9 +12443,7 @@ class PostLinearRemainingFiniteSystemAudit:
     @property
     def system_u_closed_by_routed_certificate(self) -> bool:
         return (
-            self.system_u_closed_by_endpoint_witness
-            or self.system_u_closed_by_symmetric_endpoint_fork
-            or self.system_u_closed_by_signed_endpoint_generator
+            self.system_u_closed_by_signed_endpoint_generator
             or self.system_u_closed_by_endpoint_observer_family_build
         )
 
@@ -12474,9 +12472,7 @@ class PostLinearRemainingFiniteSystemAudit:
     @property
     def system_c_closed_by_routed_certificate(self) -> bool:
         return (
-            self.system_c_closed_by_endpoint_witness
-            or self.system_c_closed_by_symmetric_endpoint_fork
-            or self.system_c_closed_by_signed_endpoint_generator
+            self.system_c_closed_by_signed_endpoint_generator
             or self.system_c_closed_by_endpoint_observer_family_build
         )
 
@@ -12936,9 +12932,7 @@ class PostLinearRemainingFiniteSystemAudit:
     @property
     def system_m_closed_by_routed_certificate(self) -> bool:
         return (
-            self.system_m_closed_by_endpoint_witness
-            or self.system_m_closed_by_symmetric_endpoint_fork
-            or self.system_m_closed_by_signed_endpoint_generator
+            self.system_m_closed_by_signed_endpoint_generator
             or self.system_m_closed_by_endpoint_observer_family_build
         )
 
@@ -13138,30 +13132,18 @@ class PostLinearRemainingFiniteSystemAudit:
             if self.active_routed_endpoint_systems == ("U",):
                 if self.system_u_closed_by_endpoint_observer_family_build:
                     return "closed_by_triangular_recovery_endpoint_observer_family_build"
-                if self.system_u_closed_by_endpoint_witness:
-                    return "closed_by_triangular_recovery_endpoint_witness"
-                return "closed_by_triangular_recovery_symmetric_endpoint_fork"
+                return "closed_by_triangular_recovery_signed_endpoint_generator"
             if self.active_routed_endpoint_systems == ("C",):
                 if self.system_c_closed_by_endpoint_observer_family_build:
                     return "closed_by_universal_continuation_endpoint_observer_family_build"
-                if self.system_c_closed_by_endpoint_witness:
-                    return "closed_by_universal_continuation_endpoint_witness"
-                return "closed_by_universal_continuation_symmetric_endpoint_fork"
+                return "closed_by_universal_continuation_signed_endpoint_generator"
             if self.active_routed_endpoint_systems == ("M",):
                 if self.system_m_closed_by_endpoint_observer_family_build:
                     return "closed_by_mixed_unit_endpoint_observer_family_build"
-                if self.system_m_closed_by_endpoint_witness:
-                    return "closed_by_mixed_unit_context_endpoint_witness"
-                return "closed_by_mixed_unit_symmetric_endpoint_fork"
+                return "closed_by_mixed_unit_signed_endpoint_generator"
             if self.endpoint_observer_family_build_closes_current_kappa:
                 return "closed_by_endpoint_observer_family_build"
-            if (
-                self.triangular_recovery_symmetric_endpoint_fork is not None
-                or self.universal_continuation_symmetric_endpoint_fork is not None
-                or self.mixed_unit_context_symmetric_endpoint_fork is not None
-            ):
-                return "closed_by_routed_endpoint_certificates"
-            return "closed_by_routed_endpoint_witnesses"
+            return "closed_by_signed_endpoint_generator"
         if len(self.unclosed_routed_endpoint_systems) > 1:
             joined = "".join(system.lower() for system in self.unclosed_routed_endpoint_systems)
             return f"system_{joined}_routed_endpoint_product"
@@ -17395,21 +17377,21 @@ class PostLinearRemainingFiniteSystemAudit:
         ):
             endpoint_obligations.extend(
                 (
-                    "prove each routed triangular recovery endpoint composite lies in V_beta(U_tri)",
+                    "construct the routed U word-potential endpoint observer over U_tri with residual faithfulness",
                     "or upgrade one routed U_tri endpoint miss to a normalized-law sequence",
                 )
             )
         if self.system_c_active and not self.system_c_closed_by_routed_certificate:
             endpoint_obligations.extend(
                 (
-                    "construct fixed endpoint witnesses for the routed universal-continuation seed closures",
+                    "construct the routed C word-potential endpoint observer or exact cutoff readout with residual faithfulness",
                     "or upgrade one routed universal-continuation endpoint miss to a normalized-law sequence",
                 )
             )
         if self.system_m_active and not self.system_m_closed_by_routed_certificate:
             endpoint_obligations.extend(
                 (
-                    "prove each routed mixed-unit context endpoint factors through fixed detector/readout data",
+                    "construct the routed M word-potential endpoint observer or exact cutoff readout with residual faithfulness",
                     "or upgrade one routed mixed-unit endpoint miss to a normalized-law sequence",
                 )
             )
