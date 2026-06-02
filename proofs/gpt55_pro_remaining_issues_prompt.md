@@ -959,8 +959,11 @@ nonidentity off-family component is an unclosed product-family separation
 failure, even if the total product group order matches the listed factor
 orders.
 Endpoint-target braid-index independence and product-family separation must
-be derived from the finite per-family target ledger and positive target
-sizes; they are not independent boolean gates.
+be explicit finite target certificates, and the per-family target ledger must
+support them through positive fixed group orders or cutoff degrees, exact
+family coverage, and duplicate-free one-target-per-family rows.  A
+well-formed size ledger without those explicit assertions remains open, and
+the assertions alone remain nondecisive without the finite target rows.
 Each target size row must be a positive integer attached to a known endpoint
 family.  Strings, booleans, missing values, zero, and negative values are
 malformed endpoint-target rows, not finite detector factors.
@@ -2010,9 +2013,10 @@ and the local row table; dependencies on `braid_word`, `braid_prefix`,
 are forbidden.  The allowed list is not enough by itself: the scope must
 explicitly include both `residual_input_tuple` and `endpoint_channel`, because
 those are the finite dependencies that connect killed endpoint data to the
-actual residual fibre tuple being fixed.  Endpoint-channel exactness and
-braid-index independence must be derived from that scope audit, not asserted
-as separate booleans.  If two or more endpoint families are active, the certificate must also split the
+actual residual fibre tuple being fixed.  Endpoint-channel exactness must be
+derived from that scope audit.  Braid-index independence must also be
+explicitly certified and supported by the scope dependencies; the flag alone
+is not proof.  If two or more endpoint families are active, the certificate must also split the
 residual-row ledger by family: it must list expected and covered residual row
 counts for each active family, with no duplicate family entries,
 nonnegative integer counts, matching expected and covered family counts, and
@@ -2090,9 +2094,10 @@ local row table.  Dependencies on `braid_word`,
 sequences, or timeouts are forbidden.  Each row must explicitly include both
 `residual_input_tuple` and `endpoint_channel`; a row using only interval data
 or routed seed labels is a finite row check, not a bridge from killed endpoint
-channels to the actual residual motion.  Endpoint-channel exactness,
-braid-index independence, and product-family separation must be derived from
-these rows and the family/seed ledgers, not asserted as separate booleans.
+channels to the actual residual motion.  Endpoint-channel exactness must be
+derived from these rows and the family/seed ledgers.  Braid-index
+independence and product-family separation must also be explicitly certified
+and supported by those ledgers; the flags alone are not proof.
 In the multi-family case, the theorem must also include the same expected and
 covered residual row counts by family, again as nonnegative integer rows
 whose sums match the total nonnegative integer row counts.  A bare assertion

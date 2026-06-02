@@ -464,11 +464,13 @@ Every endpoint target-size row must have exactly two fields, `(family, size)`.
 Rows with missing fields, extra fields, or a non-tuple shape are malformed
 target rows; they are reported separately from nonpositive size values and
 cannot be used as finite detector factors.
-The implementation now derives endpoint-target braid-index independence and
-product-family separation from the finite target ledger itself: each covered
-family must have a positive fixed group order or cutoff degree, and target
-families must match covered routed families without duplicates.  The legacy
-independence/separation flags are diagnostic only.
+The implementation now requires endpoint-target braid-index independence and
+product-family separation as explicit finite target certificates, and also
+checks that the target ledger supports those claims: each covered family must
+have a positive fixed group order or cutoff degree, and target families must
+match covered routed families without duplicates.  A well-formed size ledger
+without the explicit independence/separation assertions remains open, and
+the assertions alone remain nondecisive without the finite target rows.
 For C/M cutoff families, the target cutoff degree must also match the
 cutoff-readout audit's symmetric degree.  A target ledger declaring an `S_m`
 cutoff and a readout audit over `S_k` with `k != m` is reported as
@@ -1085,9 +1087,10 @@ dependencies are rejected.  The allowed list is not enough by itself: the
 scope must explicitly include both `residual_input_tuple` and
 `endpoint_channel`, because those are the finite dependencies that connect
 killed endpoint data to the actual residual fibre tuple being fixed.  The
-audit derives exact endpoint-channel coverage and braid-index independence
-from this scope data, instead of accepting separate booleans.  Complete finite
-rows without this scope are only a fixed-row check, not an all-strand
+audit derives exact endpoint-channel coverage from this scope data and
+requires the explicit braid-index-independence certificate to be present.
+Complete finite rows without this scope and all-`n` certificate are only a
+fixed-row check, not an all-strand
 residual-faithfulness certificate.  A
 family-scoped proof that omits the exact seed states is also incomplete,
 because product endpoint rows can contain several routed seed channels within
@@ -1154,9 +1157,11 @@ counts obtained by scanning the symbolic residual rows themselves.  The
 symbolic theorem's total row counts and family row counts must be finite
 nonnegative integers; malformed counts are reported before the theorem can
 claim residual faithfulness.  Bare
-booleans for endpoint-channel
-exactness, identity residual motion, braid-index independence, or product
-separation are recorded only as supplied data; they are not accepted as proof.
+booleans for endpoint-channel exactness or identity residual motion are
+recorded only as supplied data; they are not accepted as proof.  The
+braid-index-independence and product-separation flags are required finite
+assertions, but they still prove nothing unless the row/domain ledgers above
+support them.
 The symbolic residual theorem applies the same well-formedness gate to its
 expected and covered seed-state ledgers and to the seed states named by each
 symbolic residual row.  Malformed row-local seed states make the row invalid;

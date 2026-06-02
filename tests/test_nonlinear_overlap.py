@@ -3222,6 +3222,30 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertTrue(theorem_complete.residual_faithfulness_proved)
         self.assertTrue(theorem_complete.proves_signed_endpoint_generator_tables)
 
+        theorem_without_independence_certificate = replace(
+            theorem,
+            braid_index_independent=False,
+        )
+        self.assertFalse(
+            theorem_without_independence_certificate.proves_residual_faithfulness
+        )
+        self.assertIn(
+            "residual_faithfulness_not_braid_index_independent",
+            theorem_without_independence_certificate.failure_reasons,
+        )
+
+        theorem_without_product_separation_certificate = replace(
+            theorem,
+            product_families_separated=False,
+        )
+        self.assertFalse(
+            theorem_without_product_separation_certificate.proves_residual_faithfulness
+        )
+        self.assertIn(
+            "residual_faithfulness_product_families_not_separated",
+            theorem_without_product_separation_certificate.failure_reasons,
+        )
+
         theorem_without_group_table = replace(theorem_complete, endpoint_group=None)
         self.assertFalse(theorem_without_group_table.signed_finite_row_checks_proved)
         self.assertFalse(
@@ -4173,6 +4197,37 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertIn(
             "residual_faithfulness_family_coverage_not_exact",
             theorem_missing_scope.failure_reasons,
+        )
+
+        action_scope_without_independence_certificate = replace(
+            trivial_endpoint_residual_action_scope(
+                "U",
+                seed_states=(("U", seed_state),),
+            ),
+            braid_index_independent=False,
+        )
+        self.assertFalse(
+            action_scope_without_independence_certificate.proves_residual_action_scope
+        )
+        self.assertIn(
+            "residual_action_scope_not_braid_index_independent",
+            action_scope_without_independence_certificate.failure_reasons,
+        )
+
+        action_scope_without_product_separation_certificate = replace(
+            trivial_endpoint_residual_action_scope(
+                "U",
+                seed_states=(("U", seed_state),),
+            ),
+            product_families_separated=False,
+        )
+        self.assertFalse(
+            action_scope_without_product_separation_certificate
+            .proves_residual_action_scope
+        )
+        self.assertIn(
+            "residual_action_scope_product_families_not_separated",
+            action_scope_without_product_separation_certificate.failure_reasons,
         )
 
         malformed_action_scope_row_count = UniversalKResidualActionScopeAudit(
@@ -8472,6 +8527,34 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertIn(
             "endpoint_target_duplicate_target_families",
             duplicate_target.failure_reasons,
+        )
+
+        unfixed_endpoint_target = UniversalKEndpointTargetAudit(
+            expected_endpoint_families=("U",),
+            covered_endpoint_families=("U",),
+            endpoint_group_orders=(("U", 1),),
+            braid_index_independent=False,
+            product_families_separated=True,
+        )
+        self.assertFalse(unfixed_endpoint_target.braid_index_independence_proved)
+        self.assertFalse(unfixed_endpoint_target.proves_endpoint_targets)
+        self.assertIn(
+            "endpoint_target_not_braid_index_independent",
+            unfixed_endpoint_target.failure_reasons,
+        )
+
+        unseparated_endpoint_target = UniversalKEndpointTargetAudit(
+            expected_endpoint_families=("U",),
+            covered_endpoint_families=("U",),
+            endpoint_group_orders=(("U", 1),),
+            braid_index_independent=True,
+            product_families_separated=False,
+        )
+        self.assertFalse(unseparated_endpoint_target.product_families_separated_proved)
+        self.assertFalse(unseparated_endpoint_target.proves_endpoint_targets)
+        self.assertIn(
+            "endpoint_target_product_families_not_separated",
+            unseparated_endpoint_target.failure_reasons,
         )
 
         unknown_family_target = UniversalKEndpointTargetAudit(

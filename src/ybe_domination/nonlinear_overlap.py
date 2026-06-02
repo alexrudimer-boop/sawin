@@ -2619,11 +2619,13 @@ class UniversalKResidualFaithfulnessAudit:
 
     @property
     def braid_index_independence_proved(self) -> bool:
-        return self.residual_rows_have_valid_scope
+        return self.braid_index_independent and self.residual_rows_have_valid_scope
 
     @property
     def product_families_separated_proved(self) -> bool:
         return (
+            self.product_families_separated
+            and
             self.residual_family_row_coverage_exact
             and (
                 len(_value_marker_set(self.active_endpoint_families)) <= 1
@@ -3552,11 +3554,13 @@ class UniversalKResidualActionScopeAudit:
 
     @property
     def braid_index_independence_proved(self) -> bool:
-        return self.scope_dependencies_valid
+        return self.braid_index_independent and self.scope_dependencies_valid
 
     @property
     def product_families_separated_proved(self) -> bool:
         return (
+            self.product_families_separated
+            and
             self.residual_family_row_coverage_exact
             and (
                 len(set(self.active_endpoint_families)) <= 1
@@ -4270,6 +4274,8 @@ class UniversalKEndpointTargetAudit:
     @property
     def braid_index_independence_proved(self) -> bool:
         return (
+            self.braid_index_independent
+            and
             self.target_families_exact
             and self.target_orders_positive
             and self.cutoff_degrees_positive
@@ -4277,7 +4283,11 @@ class UniversalKEndpointTargetAudit:
 
     @property
     def product_families_separated_proved(self) -> bool:
-        return self.target_families_exact and self.target_ledgers_have_no_duplicates
+        return (
+            self.product_families_separated
+            and self.target_families_exact
+            and self.target_ledgers_have_no_duplicates
+        )
 
     @property
     def proves_endpoint_targets(self) -> bool:
