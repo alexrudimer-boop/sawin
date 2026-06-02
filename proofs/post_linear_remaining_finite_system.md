@@ -1131,6 +1131,22 @@ when any individual helper flag is supplied:
 `universal_k_identity_canonical_fibre_label_residual_faithfulness`.  A
 helper flag is no longer ignored merely because the aggregate automatic flag
 was not set.
+At the top-level post-linear audit, the same residual-trivial identity
+observer path is now checked explicitly for each one-family routed endpoint
+system.  A U-only route may close as
+`closed_by_triangular_recovery_endpoint_observer_family_build`; a C-only
+route may close as
+`closed_by_universal_continuation_endpoint_observer_family_build`; and an
+M-only route may close as `closed_by_mixed_unit_endpoint_observer_family_build`.
+For these one-family cases the per-family residual theorem is the full
+active-family residual scope, so no separate product residual-faithfulness
+theorem is required.  The retained family ledger still records the residual
+channel reason by family and rechecks the current `kappa` seed ledger, current
+interval rows, and the current U triangular-recovery target when U is active.
+This closes only the already-proved singleton-fibre, strict identity,
+coordinate-identity, supplied fibre-label identity, and canonical fibre-label
+identity residual-trivial subcases for individual U, C, and M obligations; it
+does not construct the missing nontrivial U/C/M observers.
 The same exactness rule applies when the identity observer constructor is
 given both explicit supplied-label and explicit canonical-label flags.  If
 the supplied fibre-label residual theorem is attempted and fails, that failed

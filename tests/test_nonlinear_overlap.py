@@ -1207,6 +1207,51 @@ class TwoNoTriangularRawKRefinement:
     active_missing_right_latin_row_defects = ((("*", "*"), "no_right_triangular_row"),)
 
 
+class OneNoTriangularRawKRefinement:
+    status = "triangular_recovery_kink_completion_deficit"
+    active_missing_left_latin_row_defects = ((("*", "*"), "no_left_triangular_row"),)
+    active_missing_right_latin_row_defects = ()
+
+
+def residual_trivial_identity_observer_cases():
+    return (
+        (
+            "singleton_fibre",
+            two_color_singleton_swap_interval(),
+            {"derive_singleton_fibre_residual_faithfulness": True},
+            "singleton_fibre_residual_channel",
+        ),
+        (
+            "coordinate_identity",
+            two_color_coordinate_identity_swap_interval(),
+            {"derive_coordinate_identity_residual_faithfulness": True},
+            "coordinate_identity_residual_channel",
+        ),
+        (
+            "supplied_fibre_label_identity",
+            two_color_fibre_label_identity_swap_interval(),
+            {
+                "derive_fibre_label_identity_residual_faithfulness": True,
+                "fibre_label_identity_rows": (
+                    ("a", "a0", 0),
+                    ("a", "a1", 1),
+                    ("b", "b0", 0),
+                    ("b", "b1", 1),
+                ),
+            },
+            "fibre_label_identity_residual_channel",
+        ),
+        (
+            "canonical_fibre_label_identity",
+            two_color_fibre_label_identity_swap_interval(),
+            {
+                "derive_canonical_fibre_label_identity_residual_faithfulness": True,
+            },
+            "canonical_fibre_label_identity_residual_channel",
+        ),
+    )
+
+
 class RecoveryAndMixedRawKRefinement:
     """Fixture with one U-routed recovery row and one M-routed mixed row."""
 
@@ -14190,6 +14235,278 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             data["endpoint_observer_family_build_failure_reasons"],
             (),
         )
+
+    def test_routed_u_identity_observer_closes_non_strict_residual_systems(self):
+        refinement = constant_map_kernel_only_system_k_refinement()
+        closure = TriangularLatinDefectClosureAudit(
+            rows=(
+                TriangularLatinDefectClosureRow(
+                    side="left",
+                    defect="constant_map_kernel",
+                    left_color="*",
+                    right_color="*",
+                    domain_color="*",
+                    fixed_input=None,
+                    collapsed_inputs=(0, 1),
+                    generated=generated("universal"),
+                ),
+            ),
+        )
+        route = TriangularConstantKernelRecoveryRouteAudit(
+            rows=(
+                TriangularConstantKernelRecoveryRouteRow(
+                    side="left",
+                    left_color="*",
+                    right_color="*",
+                    domain_color="*",
+                    collapsed_inputs=(0, 1),
+                    closure_kind="universal",
+                    recovery_row_present=True,
+                    recovery_formula_bijective=True,
+                    witness_output_pairs=(
+                        (0, ((0, 0),)),
+                        (1, ((0, 1),)),
+                    ),
+                ),
+            ),
+        )
+        routed = PostLinearRemainingFiniteSystemAudit(
+            refinement,
+            triangular_latin_defect_closure=closure,
+            triangular_constant_kernel_recovery_route=route,
+        )
+
+        for case_name, interval, derive_kwargs, channel_reason in (
+            residual_trivial_identity_observer_cases()
+        ):
+            with self.subTest(case=case_name):
+                family_build = universal_k_identity_endpoint_observer_builds_by_family(
+                    interval,
+                    routed.universal_k_seed_classifier_entries,
+                    **derive_kwargs,
+                )
+                audit = PostLinearRemainingFiniteSystemAudit(
+                    refinement,
+                    triangular_latin_defect_closure=closure,
+                    triangular_constant_kernel_recovery_route=route,
+                    universal_k_endpoint_observer_family_build=family_build,
+                    universal_k_signed_endpoint_interval=interval,
+                )
+                data = dict(audit.finite_obstruction_data)
+
+                self.assertEqual(routed.active_routed_endpoint_systems, ("U",))
+                self.assertEqual(
+                    family_build.residual_theorem_channel_reasons_by_family,
+                    (("U", (channel_reason,)),),
+                )
+                self.assertEqual(family_build.product_residual_theorem_channel_reasons, ())
+                self.assertEqual(family_build.failure_reasons, ())
+                self.assertTrue(family_build.proves_family_endpoint_product_closure)
+                self.assertTrue(audit.system_u_closed_by_endpoint_observer_family_build)
+                self.assertTrue(audit.all_active_routed_endpoint_systems_closed)
+                self.assertEqual(
+                    audit.system_name,
+                    "closed_by_triangular_recovery_endpoint_observer_family_build",
+                )
+                self.assertEqual(audit.unclosed_routed_endpoint_systems, ())
+                self.assertEqual(audit.remaining_obligations, ())
+                self.assertTrue(
+                    data["endpoint_observer_family_build_closes_current_kappa"]
+                )
+                self.assertTrue(
+                    data["endpoint_observer_family_build_rows_match_current_interval"]
+                )
+                self.assertTrue(
+                    data["endpoint_observer_family_build_uses_current_u_tri_target"]
+                )
+
+    def test_routed_c_strict_identity_endpoint_observer_closes_system(self):
+        interval = one_color_identity_interval()
+        profile, closure, route = partial_constant_missing_row_profile_route_audits()
+        refinement = OneNoTriangularRawKRefinement()
+        routed = PostLinearRemainingFiniteSystemAudit(
+            refinement,
+            missing_triangular_row_profile=profile,
+            missing_triangular_partial_constant_closure=closure,
+            missing_triangular_partial_constant_continuation_route=route,
+        )
+        family_build = universal_k_identity_endpoint_observer_builds_by_family(
+            interval,
+            routed.universal_k_seed_classifier_entries,
+            derive_strict_identity_residual_faithfulness=True,
+        )
+        audit = PostLinearRemainingFiniteSystemAudit(
+            refinement,
+            missing_triangular_row_profile=profile,
+            missing_triangular_partial_constant_closure=closure,
+            missing_triangular_partial_constant_continuation_route=route,
+            universal_k_endpoint_observer_family_build=family_build,
+            universal_k_signed_endpoint_interval=interval,
+        )
+        data = dict(audit.finite_obstruction_data)
+
+        self.assertEqual(routed.active_routed_endpoint_systems, ("C",))
+        self.assertEqual(family_build.expected_endpoint_families_exact, ("C",))
+        self.assertEqual(family_build.failure_reasons, ())
+        self.assertTrue(family_build.proves_family_endpoint_product_closure)
+        self.assertTrue(audit.system_c_closed_by_endpoint_observer_family_build)
+        self.assertTrue(audit.all_active_routed_endpoint_systems_closed)
+        self.assertEqual(
+            audit.system_name,
+            "closed_by_universal_continuation_endpoint_observer_family_build",
+        )
+        self.assertEqual(audit.unclosed_routed_endpoint_systems, ())
+        self.assertEqual(audit.remaining_obligations, ())
+        self.assertEqual(
+            data["endpoint_observer_family_build_closed_families"],
+            ("C",),
+        )
+        self.assertTrue(data["endpoint_observer_family_build_closes_current_kappa"])
+        self.assertTrue(data["endpoint_observer_family_build_rows_match_current_interval"])
+
+    def test_routed_c_identity_observer_closes_non_strict_residual_systems(self):
+        profile, closure, route = partial_constant_missing_row_profile_route_audits()
+        refinement = OneNoTriangularRawKRefinement()
+        routed = PostLinearRemainingFiniteSystemAudit(
+            refinement,
+            missing_triangular_row_profile=profile,
+            missing_triangular_partial_constant_closure=closure,
+            missing_triangular_partial_constant_continuation_route=route,
+        )
+
+        for case_name, interval, derive_kwargs, channel_reason in (
+            residual_trivial_identity_observer_cases()
+        ):
+            with self.subTest(case=case_name):
+                family_build = universal_k_identity_endpoint_observer_builds_by_family(
+                    interval,
+                    routed.universal_k_seed_classifier_entries,
+                    **derive_kwargs,
+                )
+                audit = PostLinearRemainingFiniteSystemAudit(
+                    refinement,
+                    missing_triangular_row_profile=profile,
+                    missing_triangular_partial_constant_closure=closure,
+                    missing_triangular_partial_constant_continuation_route=route,
+                    universal_k_endpoint_observer_family_build=family_build,
+                    universal_k_signed_endpoint_interval=interval,
+                )
+                data = dict(audit.finite_obstruction_data)
+
+                self.assertEqual(routed.active_routed_endpoint_systems, ("C",))
+                self.assertEqual(
+                    family_build.residual_theorem_channel_reasons_by_family,
+                    (("C", (channel_reason,)),),
+                )
+                self.assertEqual(family_build.product_residual_theorem_channel_reasons, ())
+                self.assertEqual(family_build.failure_reasons, ())
+                self.assertTrue(family_build.proves_family_endpoint_product_closure)
+                self.assertTrue(audit.system_c_closed_by_endpoint_observer_family_build)
+                self.assertTrue(audit.all_active_routed_endpoint_systems_closed)
+                self.assertEqual(
+                    audit.system_name,
+                    "closed_by_universal_continuation_endpoint_observer_family_build",
+                )
+                self.assertEqual(audit.unclosed_routed_endpoint_systems, ())
+                self.assertEqual(audit.remaining_obligations, ())
+                self.assertTrue(
+                    data["endpoint_observer_family_build_closes_current_kappa"]
+                )
+                self.assertTrue(
+                    data["endpoint_observer_family_build_rows_match_current_interval"]
+                )
+
+    def test_routed_m_strict_identity_endpoint_observer_closes_system(self):
+        interval = one_color_identity_interval()
+        profile, coordinate_routing = coordinate_unit_mixed_context_route_audits()
+        refinement = OneNoTriangularRawKRefinement()
+        routed = PostLinearRemainingFiniteSystemAudit(
+            refinement,
+            missing_triangular_row_profile=profile,
+            missing_triangular_coordinate_unit_routing=coordinate_routing,
+        )
+        family_build = universal_k_identity_endpoint_observer_builds_by_family(
+            interval,
+            routed.universal_k_seed_classifier_entries,
+            derive_strict_identity_residual_faithfulness=True,
+        )
+        audit = PostLinearRemainingFiniteSystemAudit(
+            refinement,
+            missing_triangular_row_profile=profile,
+            missing_triangular_coordinate_unit_routing=coordinate_routing,
+            universal_k_endpoint_observer_family_build=family_build,
+            universal_k_signed_endpoint_interval=interval,
+        )
+        data = dict(audit.finite_obstruction_data)
+
+        self.assertEqual(routed.active_routed_endpoint_systems, ("M",))
+        self.assertEqual(family_build.expected_endpoint_families_exact, ("M",))
+        self.assertEqual(family_build.failure_reasons, ())
+        self.assertTrue(family_build.proves_family_endpoint_product_closure)
+        self.assertTrue(audit.system_m_closed_by_endpoint_observer_family_build)
+        self.assertTrue(audit.all_active_routed_endpoint_systems_closed)
+        self.assertEqual(
+            audit.system_name,
+            "closed_by_mixed_unit_endpoint_observer_family_build",
+        )
+        self.assertEqual(audit.unclosed_routed_endpoint_systems, ())
+        self.assertEqual(audit.remaining_obligations, ())
+        self.assertEqual(
+            data["endpoint_observer_family_build_closed_families"],
+            ("M",),
+        )
+        self.assertTrue(data["endpoint_observer_family_build_closes_current_kappa"])
+        self.assertTrue(data["endpoint_observer_family_build_rows_match_current_interval"])
+
+    def test_routed_m_identity_observer_closes_non_strict_residual_systems(self):
+        profile, coordinate_routing = coordinate_unit_mixed_context_route_audits()
+        refinement = OneNoTriangularRawKRefinement()
+        routed = PostLinearRemainingFiniteSystemAudit(
+            refinement,
+            missing_triangular_row_profile=profile,
+            missing_triangular_coordinate_unit_routing=coordinate_routing,
+        )
+
+        for case_name, interval, derive_kwargs, channel_reason in (
+            residual_trivial_identity_observer_cases()
+        ):
+            with self.subTest(case=case_name):
+                family_build = universal_k_identity_endpoint_observer_builds_by_family(
+                    interval,
+                    routed.universal_k_seed_classifier_entries,
+                    **derive_kwargs,
+                )
+                audit = PostLinearRemainingFiniteSystemAudit(
+                    refinement,
+                    missing_triangular_row_profile=profile,
+                    missing_triangular_coordinate_unit_routing=coordinate_routing,
+                    universal_k_endpoint_observer_family_build=family_build,
+                    universal_k_signed_endpoint_interval=interval,
+                )
+                data = dict(audit.finite_obstruction_data)
+
+                self.assertEqual(routed.active_routed_endpoint_systems, ("M",))
+                self.assertEqual(
+                    family_build.residual_theorem_channel_reasons_by_family,
+                    (("M", (channel_reason,)),),
+                )
+                self.assertEqual(family_build.product_residual_theorem_channel_reasons, ())
+                self.assertEqual(family_build.failure_reasons, ())
+                self.assertTrue(family_build.proves_family_endpoint_product_closure)
+                self.assertTrue(audit.system_m_closed_by_endpoint_observer_family_build)
+                self.assertTrue(audit.all_active_routed_endpoint_systems_closed)
+                self.assertEqual(
+                    audit.system_name,
+                    "closed_by_mixed_unit_endpoint_observer_family_build",
+                )
+                self.assertEqual(audit.unclosed_routed_endpoint_systems, ())
+                self.assertEqual(audit.remaining_obligations, ())
+                self.assertTrue(
+                    data["endpoint_observer_family_build_closes_current_kappa"]
+                )
+                self.assertTrue(
+                    data["endpoint_observer_family_build_rows_match_current_interval"]
+                )
 
     def test_routed_uc_strict_identity_endpoint_observer_closes_product_system(self):
         interval = one_color_identity_interval()

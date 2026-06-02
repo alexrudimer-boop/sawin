@@ -1953,6 +1953,23 @@ flag must also derive and retain the identity observer candidate ledger:
 `universal_k_identity_canonical_fibre_label_residual_faithfulness`.  These
 flags must not be ignored merely because the aggregate automatic flag is not
 set.
+At the top-level post-linear audit, the same residual-trivial identity
+observer path has been explicitly regression-tested for each one-family
+routed endpoint system.  A U-only route closes under the verdict
+`closed_by_triangular_recovery_endpoint_observer_family_build`; a C-only
+route closes under
+`closed_by_universal_continuation_endpoint_observer_family_build`; and an
+M-only route closes under `closed_by_mixed_unit_endpoint_observer_family_build`.
+For one-family cases the per-family residual-faithfulness theorem already
+has the full active-family scope, so a separate product residual theorem is
+not required.  The ledger still records the residual channel reason by
+family, requires the observer rows to match the current interval, requires
+the current `K_nabla`/`kappa` seed ledger to match, and in U requires the
+current triangular-recovery unit target.  Thus the already-proved
+singleton-fibre, strict identity, coordinate-identity, supplied fibre-label
+identity, and canonical fibre-label identity residual-trivial subcases are
+consumed for individual U, C, and M endpoint obligations.  This is not an
+existence proof for the remaining nontrivial U/C/M endpoint observers.
 The identity observer constructor must enforce the same rule when the
 explicit supplied-label and explicit canonical-label derivation flags are
 both set.  If the supplied fibre-label residual theorem is attempted and
