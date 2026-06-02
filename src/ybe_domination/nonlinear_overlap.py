@@ -1748,52 +1748,18 @@ class UniversalKWordPotentialCertificate:
                 _value_marker(variable): variable for variable in variables
             }
             variable_markers = set(variable_by_marker)
-            if not row.detector_domain_sound:
-                failures.append(
-                    (
-                        row.entry_key,
-                        "detector_domain_subset_not_proved_sound",
-                        None,
-                    )
-                )
-            if not row.detector_domain_soundness_witness:
-                failures.append(
-                    (
-                        row.entry_key,
-                        "detector_domain_soundness_witness_missing",
-                        None,
-                    )
-                )
-            duplicate_witnesses = _duplicate_values(
-                row.detector_domain_soundness_witness
-            )
-            for witness in duplicate_witnesses:
-                failures.append(
-                    (
-                        row.entry_key,
-                        "detector_domain_duplicate_soundness_witness",
-                        witness,
-                    )
-                )
-            for witness in row.detector_domain_soundness_witness:
-                if witness not in _UNIVERSAL_K_DETECTOR_DOMAIN_SOUNDNESS_WITNESSES:
-                    failures.append(
-                        (
-                            row.entry_key,
-                            "detector_domain_unknown_soundness_witness",
-                            witness,
-                        )
-                    )
             if not assignments:
                 failures.append((row.entry_key, "detector_domain_subset_empty", None))
                 continue
-            duplicate_assignments = _duplicate_values(
-                tuple(tuple(sorted(assignment, key=repr)) for assignment in assignments)
+            normalized_assignments = tuple(
+                tuple(sorted(assignment, key=repr)) for assignment in assignments
             )
+            duplicate_assignments = _duplicate_values(normalized_assignments)
             for duplicate in duplicate_assignments:
                 failures.append(
                     (row.entry_key, "duplicate_detector_domain_assignment", duplicate)
                 )
+            malformed_or_scoped_assignment = False
             for index, assignment in enumerate(assignments):
                 assignment_variables = []
                 malformed_assignment_entries = []
@@ -1814,6 +1780,7 @@ class UniversalKWordPotentialCertificate:
                             (index, assignment_entry),
                         )
                     )
+                    malformed_or_scoped_assignment = True
                 assignment_variables = tuple(assignment_variables)
                 duplicate_variables = _duplicate_values(assignment_variables)
                 for variable in duplicate_variables:
@@ -1824,6 +1791,7 @@ class UniversalKWordPotentialCertificate:
                             (index, variable),
                         )
                     )
+                    malformed_or_scoped_assignment = True
                 assignment_variable_by_marker = {
                     _value_marker(variable): variable
                     for variable in assignment_variables
@@ -1848,6 +1816,7 @@ class UniversalKWordPotentialCertificate:
                             (index, missing_variables),
                         )
                     )
+                    malformed_or_scoped_assignment = True
                 extra_variables = tuple(
                     sorted(
                         (
@@ -1867,6 +1836,7 @@ class UniversalKWordPotentialCertificate:
                             (index, extra_variables),
                         )
                     )
+                    malformed_or_scoped_assignment = True
                 for assignment_entry in assignment:
                     parts = _universal_k_word_potential_substitution_parts(
                         assignment_entry
@@ -1882,6 +1852,7 @@ class UniversalKWordPotentialCertificate:
                                 (index, variable),
                             )
                         )
+                        malformed_or_scoped_assignment = True
                     if value not in group_elements:
                         failures.append(
                             (
@@ -1890,6 +1861,48 @@ class UniversalKWordPotentialCertificate:
                                 (index, value),
                             )
                         )
+                        malformed_or_scoped_assignment = True
+            if not malformed_or_scoped_assignment:
+                full_domain = tuple(
+                    tuple(sorted(zip(variables, values), key=repr))
+                    for values in product(
+                        self.endpoint_group.elements,
+                        repeat=len(variables),
+                    )
+                )
+                if _value_marker_set(normalized_assignments) != _value_marker_set(
+                    full_domain
+                ):
+                    failures.append(
+                        (
+                            row.entry_key,
+                            "detector_domain_subset_not_full_finite_domain",
+                            (
+                                len(_value_marker_set(normalized_assignments)),
+                                len(full_domain),
+                            ),
+                        )
+                    )
+            duplicate_witnesses = _duplicate_values(
+                row.detector_domain_soundness_witness
+            )
+            for witness in duplicate_witnesses:
+                failures.append(
+                    (
+                        row.entry_key,
+                        "detector_domain_duplicate_soundness_witness",
+                        witness,
+                    )
+                )
+            for witness in row.detector_domain_soundness_witness:
+                if witness not in _UNIVERSAL_K_DETECTOR_DOMAIN_SOUNDNESS_WITNESSES:
+                    failures.append(
+                        (
+                            row.entry_key,
+                            "detector_domain_unknown_soundness_witness",
+                            witness,
+                        )
+                    )
         return tuple(failures)
 
     @property

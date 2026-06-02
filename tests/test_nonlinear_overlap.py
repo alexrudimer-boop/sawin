@@ -9341,22 +9341,21 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertTrue(certificate.coboundary_defects_constant)
         self.assertTrue(certificate.initial_readouts_normalized)
 
-        sound_subset_certificate = replace(
+        full_domain_certificate = replace(
             certificate,
             identity_rows=(
                 replace(
                     good_row,
-                    detector_domain_assignments=(((u_left, group.identity),),),
-                    detector_domain_sound=True,
-                    detector_domain_soundness_witness=(
-                        "reachable_detector_values_enumerated",
+                    detector_domain_assignments=tuple(
+                        ((u_left, value),)
+                        for value in group.elements
                     ),
                 ),
             ),
         )
-        self.assertTrue(sound_subset_certificate.detector_domains_sound)
-        self.assertTrue(sound_subset_certificate.identities_verified)
-        self.assertTrue(sound_subset_certificate.coboundary_defects_constant)
+        self.assertTrue(full_domain_certificate.detector_domains_sound)
+        self.assertTrue(full_domain_certificate.identities_verified)
+        self.assertTrue(full_domain_certificate.coboundary_defects_constant)
 
         unsound_subset_certificate = replace(
             certificate,
@@ -9370,14 +9369,11 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertFalse(unsound_subset_certificate.detector_domains_sound)
         self.assertFalse(unsound_subset_certificate.identities_verified)
         self.assertFalse(unsound_subset_certificate.coboundary_defects_constant)
-        self.assertEqual(
+        self.assertIn(
+            "detector_domain_subset_not_full_finite_domain",
             tuple(
                 failure[1]
                 for failure in unsound_subset_certificate.detector_domain_failures
-            ),
-            (
-                "detector_domain_subset_not_proved_sound",
-                "detector_domain_soundness_witness_missing",
             ),
         )
 
@@ -9760,9 +9756,32 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             restricted_domains[key] = (((variable, 1),),)
             soundness_witnesses[key] = ("symbolic_detector_domain_invariant",)
 
-        templates = (
+        subset_only_templates = (
             (("U", seed_state), ()),
             (("U", next_state), ((("U", 0, 1), 1),)),
+        )
+        subset_only_certificate = universal_k_word_potential_certificate_from_monodromy(
+            interval,
+            seed_entries,
+            group,
+            subset_only_templates,
+            tuple(positive_state_rows),
+            detector_domain_assignments_by_entry_key=restricted_domains,
+            detector_domain_soundness_witness_by_entry_key=soundness_witnesses,
+        )
+        self.assertFalse(subset_only_certificate.detector_domains_sound)
+        self.assertFalse(subset_only_certificate.coboundary_defects_constant)
+        self.assertIn(
+            "detector_domain_subset_not_full_finite_domain",
+            tuple(
+                failure[1]
+                for failure in subset_only_certificate.detector_domain_failures
+            ),
+        )
+
+        templates = (
+            (("U", seed_state), ()),
+            (("U", next_state), ()),
         )
         certificate = universal_k_word_potential_certificate_from_monodromy(
             interval,
@@ -9770,8 +9789,6 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             group,
             templates,
             tuple(positive_state_rows),
-            detector_domain_assignments_by_entry_key=restricted_domains,
-            detector_domain_soundness_witness_by_entry_key=soundness_witnesses,
         )
 
         self.assertEqual(certificate.normalized_seed_states_exact, (("U", seed_state),))
@@ -9781,14 +9798,17 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertTrue(certificate.coboundary_defects_constant)
         self.assertEqual(
             set(row.endpoint_value for row in certificate.identity_row_objects),
-            {1},
+            {group.identity},
         )
 
         positive_rows = universal_k_endpoint_observer_positive_rows_from_word_potential(
             interval,
             certificate,
         )
-        self.assertEqual(set(row.endpoint_value for row in positive_rows), {1})
+        self.assertEqual(
+            set(row.endpoint_value for row in positive_rows),
+            {group.identity},
+        )
 
         build = universal_k_endpoint_observer_build(
             interval,
@@ -9832,13 +9852,11 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             endpoint_groups_by_family=(("U", group),),
             word_potential_templates_by_family=(("U", templates),),
             positive_state_rows_by_family=(("U", tuple(positive_state_rows)),),
-            detector_domain_assignments_by_family=(("U", restricted_domains),),
-            detector_domain_soundness_witnesses_by_family=(("U", soundness_witnesses),),
             detector_track_initialization_rows=(
                 UniversalKDetectorTrackInitializationRow(
                     endpoint_family="U",
                     track_index=0,
-                    assignment_rule="symbolic_detector_domain_invariant",
+                    assignment_rule="constant_identity_from_interval_seed",
                     dependencies=("interval_data", "routed_seed_state", "strand_index"),
                     local_assignment_template=((("A", 0, 0), group.identity),),
                 ),
@@ -9882,7 +9900,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             interval,
             seed_entries,
             group,
-            templates,
+            subset_only_templates,
             tuple(positive_state_rows),
         )
         self.assertEqual(

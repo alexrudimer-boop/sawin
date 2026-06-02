@@ -585,8 +585,9 @@ state `s`, the checker forms the nonabelian coboundary defect
 finite detector-variable domain, with the full finite group power `H_E^V`
 as the default sound domain.  The positive endpoint emission is the constant
 defect value, and the negative row is then forced by inversion.  A smaller
-detector domain is accepted only with a proof that all reachable detector
-values lie in it.
+detector domain is not a decisive machine-checked certificate in the current
+audit layer; it is retained only as diagnostic row data unless the supplied
+assignment ledger is exactly the full finite variable domain.
 
 The old rowwise two-strand witness gate is retained only as diagnostic data.
 It is not a decisive endpoint-closure condition: for the standard Artin
@@ -729,21 +730,25 @@ the interval-derived signed entry domain is an extra diagnostic channel, not a
 harmless ignored row.
 The checker then exhausts all
 assignments of the finitely many variables in the positive row to the fixed
-endpoint group, or to a certified sound detector-domain subset, and checks
-that the coboundary defect is constant with value equal to the row label.
+endpoint group and checks that the coboundary defect is constant with value
+equal to the row label.  If an explicit detector-domain assignment ledger is
+supplied, it must enumerate exactly the same full finite group power for the
+row's variable support; a proper subset is reported as
+`detector_domain_subset_not_full_finite_domain` and does not prove the
+telescoping certificate.
 When the monodromy constructor derives a word-potential certificate, a
 nonconstant defect does not receive the first sampled value as a placeholder
 endpoint emission; the derived endpoint value is left outside the group, so
-the row remains open until a genuinely constant defect or a sound restricted
-domain is supplied.
+the row remains open until the defect is genuinely constant on the full
+finite detector domain.
 Subset detector domains are finite row data: each assignment row must contain
 exactly the variables in the row's coboundary-defect support, no missing
 variables, no extras, no repeated variable, and only values in the fixed
-endpoint group.  A subset domain also needs an explicit soundness proof that
-all reachable detector values lie in it, recorded as finite witness data such
-as an exhaustive reachable-value enumeration or a symbolic detector-domain
-invariant; otherwise the checker falls back to the full finite group power as
-the only accepted sound domain.
+endpoint group.  These checks are diagnostic for future proof certificates,
+but a named witness such as an exhaustive reachable-value enumeration or a
+symbolic detector-domain invariant is not, by itself, treated as a decisive
+all-`n` soundness proof.  The only currently accepted machine-checked domain
+for closure is the full finite group power.
 This removes the previous loophole
 where a bare boolean could stand in for a tautological accumulated potential.
 The executable close criterion derives the Artin-recurrence and
@@ -821,13 +826,13 @@ seeds, computes the positive entry domain, inserts the Artin substitutions
 forced by the target templates, and evaluates the nonabelian coboundary
 defect to obtain the emitted endpoint label.  With the full detector-variable
 domain this can only certify defects that are genuinely constant on all
-finite assignments; a smaller detector domain is used only when the row also
-contains explicit soundness witness data such as a reachable-value
-enumeration or symbolic detector-domain invariant.  The returned certificate
-is still passed through the same word-potential audit, so a nonconstant
-defect, missing monodromy row, unsound detector-domain subset, malformed
-template, or missing residual-faithfulness theorem keeps the endpoint
-observer open.  This removes another arbitrary choice from the U/C/M
+finite assignments.  A smaller detector-domain assignment map may be recorded
+as diagnostic data, but the returned certificate now proves only when that
+map is exactly the full finite variable domain for each row.  A proper subset
+with only a named soundness witness is rejected by the word-potential audit,
+so a nonconstant defect, missing monodromy row, restricted detector-domain
+subset, malformed template, or missing residual-faithfulness theorem keeps
+the endpoint observer open.  This removes another arbitrary choice from the U/C/M
 observer data: positive emissions are computed from the monodromy
 representation and potentials rather than supplied independently.
 The family-level handoff is
@@ -944,11 +949,11 @@ value must be a nonempty tuple of tuple assignment rows, every assignment
 entry must have a valid word-potential variable and an element of the fixed
 endpoint group, and every witness value must be a nonempty duplicate-free
 tuple of recognized detector-domain soundness witnesses.
-Detector-domain soundness flags and witnesses are legal only when an actual
-restricted detector-domain assignment subset is supplied for that positive
-row.  In the full finite-domain case, any soundness flag or soundness witness
-is stale certificate data and keeps the word-potential certificate open; it
-cannot be interpreted as an extra proof channel.
+Detector-domain soundness flags and witnesses are retained only as diagnostic
+metadata when an actual restricted detector-domain assignment subset is
+supplied for that positive row.  They do not turn a proper subset into a
+decisive certificate.  In the full finite-domain case, no soundness flag or
+soundness witness is needed.
 When the interval is available, the same ledger derives the reachable
 monodromy seed-state closure from the supplied positive rows, recomputes the
 full positive local-context entry domain from the current fibres, and checks

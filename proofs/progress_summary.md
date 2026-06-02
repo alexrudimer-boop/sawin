@@ -1448,6 +1448,14 @@ signed audit.  A stale but separately valid monodromy representation can no
 longer be spliced into an otherwise complete observer build; the wrapper now
 exposes per-family internal reasons through
 `endpoint_observer_family_build_internal_failure_reasons`.
+The word-potential detector-domain gate has also been made non-tautological.
+Restricted detector-domain assignments with allow-listed witness names are no
+longer decisive.  If a certificate supplies an explicit detector-domain
+assignment ledger for a positive row, that ledger must enumerate the full
+finite variable domain for the row's coboundary-defect support; otherwise the
+certificate fails with `detector_domain_subset_not_full_finite_domain`.
+Proper restricted subsets remain diagnostic row data only until a stronger
+machine-checkable all-`n` soundness certificate is implemented.
 This removes another false endpoint closure and leaves the same local
 nontrivial observer-existence gap: construct residual-faithful U/C/M
 monodromy-coboundary observers for all surviving intervals, or produce a

@@ -1739,16 +1739,16 @@ nonabelian coboundary defect
 `W_s(U)^-1 W_{F_r(s)}(A_r^+(U,A))`.  The emitted label `h` is the constant
 defect value.  On the full finite detector-variable domain this accepts only
 defects constant for all assignments.  A smaller detector-domain subset is
-accepted only with explicit soundness witness data, such as an exhaustive
-reachable-value enumeration or a symbolic detector-domain invariant.  The
+not currently a decisive machine-checked certificate; it may be retained as
+diagnostic finite row data, but closure requires that any explicit assignment
+ledger enumerate the full finite variable domain for that positive row.  The
 derived constructor must not assign a placeholder endpoint label to a
-nonconstant defect; if the defect takes two values on the sound detector
+nonconstant defect; if the defect takes two values on the full detector
 domain, the derived endpoint emission is absent/outside the endpoint group
 and the observer remains open.  The returned word-potential certificate is
-still audited normally, so missing
-positive monodromy rows, nonconstant defects, malformed templates,
-unsound detector-domain subsets, and missing residual-faithfulness rows keep
-the U/C/M observer open.  Thus endpoint emissions are no longer arbitrary
+still audited normally, so missing positive monodromy rows, nonconstant
+defects, malformed templates, restricted detector-domain subsets, and missing
+residual-faithfulness rows keep the U/C/M observer open.  Thus endpoint emissions are no longer arbitrary
 primitive data once `rho_E` and the potentials are supplied; they are forced
 by the finite coboundary computation.
 The family-level handoff is
@@ -2272,19 +2272,21 @@ U_{r,1} -> U_{r,0}
 
 Variables outside the active local pair are unchanged.  The finite checker
 must evaluate the coboundary defect for every assignment of the variables in
-that positive row to elements of the fixed group `H_E`, or to a smaller
-declared domain only after proving that domain contains all reachable detector
-values.  The defect must be constant, and the constant must be the emitted
-endpoint label.
+that positive row to elements of the fixed group `H_E`.  If an explicit
+assignment ledger is supplied instead of using the implicit full domain, the
+current executable checker requires that ledger to enumerate the same full
+finite group power.  The defect must be constant, and the constant must be
+the emitted endpoint label.
 If a smaller detector domain is supplied, it must be finite row data: every
 assignment row must list exactly the variables in that row's coboundary
 defect support, no missing variables, no extra variables, no duplicate
-variables, and no value outside `H_E`.  The certificate must also contain a
-soundness witness proving that all reachable detector values for that local
-context and state lie in the listed subset, for example an exhaustive
-reachable-detector-value enumeration or a symbolic detector-domain invariant.
-Without such a witness, the only accepted domain is the full finite group
-power `H_E^V`.
+variables, and no value outside `H_E`.  These checks are diagnostic only in
+the current executable proof layer.  A named witness such as an exhaustive
+reachable-detector-value enumeration or a symbolic detector-domain invariant
+does not by itself prove all-`n` soundness.  The only currently accepted
+machine-checked domain is the full finite group power `H_E^V`; a proper
+restricted subset must leave the observer open until a stronger formal
+soundness certificate is supplied.
 If negative substitutions are recorded, they are diagnostics only; closure
 comes from inverse-derived negative rows plus the positive telescope.
 Rows with any sign other than `+1` or `-1` are malformed certificate rows and
