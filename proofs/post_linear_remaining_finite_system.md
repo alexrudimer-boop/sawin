@@ -499,6 +499,8 @@ prove the gate.  The cutoff certificate must list the expected routed C/M seed
 states, the covered seed states, a positive symmetric degree, and one finite
 readout row for every routed C/M seed state.  A row records the seed state,
 the readout permutation, and the permutation left after identity cutoff data.
+Malformed readout row objects are finite certificate failures, not runtime
+exceptions and not rows that can be silently ignored.
 The checker verifies row-domain exactness, actual membership in the symmetric
 group, injective readouts for faithfulness, and identity killed-readouts for
 channel killing.  A permutation row is an actual tuple of integers
@@ -1651,6 +1653,7 @@ signed_endpoint_generator_cutoff_readout_duplicate_states
 signed_endpoint_generator_cutoff_readout_malformed_states
 signed_endpoint_generator_cutoff_readout_degree
 signed_endpoint_generator_cutoff_readout_rows
+signed_endpoint_generator_cutoff_readout_malformed_rows
 signed_endpoint_generator_cutoff_readout_malformed_row_states
 signed_endpoint_generator_cutoff_readout_invalid_permutation_rows
 signed_endpoint_generator_cutoff_readout_duplicate_permutations

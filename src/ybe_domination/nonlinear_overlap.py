@@ -4388,6 +4388,24 @@ class UniversalKCutoffReadoutAudit:
     braid_index_independent: bool = False
 
     @property
+    def readout_row_objects(self) -> Tuple[UniversalKCutoffReadoutRow, ...]:
+        return tuple(
+            row
+            for row in self.readout_rows
+            if isinstance(row, UniversalKCutoffReadoutRow)
+        )
+
+    @property
+    def malformed_readout_rows(self) -> Tuple[object, ...]:
+        return _unique_values(
+            tuple(
+                row
+                for row in self.readout_rows
+                if not isinstance(row, UniversalKCutoffReadoutRow)
+            )
+        )
+
+    @property
     def expected_cutoff_seed_states_exact(
         self,
     ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
@@ -4563,7 +4581,7 @@ class UniversalKCutoffReadoutAudit:
 
     @property
     def row_cutoff_seed_states(self) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
-        return tuple(row.cutoff_seed_state for row in self.readout_rows)
+        return tuple(row.cutoff_seed_state for row in self.readout_row_objects)
 
     @property
     def row_cutoff_seed_states_exact(
@@ -4614,7 +4632,8 @@ class UniversalKCutoffReadoutAudit:
     @property
     def readout_rows_cover_expected_states(self) -> bool:
         return (
-            bool(self.readout_rows)
+            bool(self.readout_row_objects)
+            and not self.malformed_readout_rows
             and not self.duplicate_row_cutoff_seed_states
             and not self.malformed_row_cutoff_seed_states
             and not self.missing_readout_row_seed_states
@@ -4632,10 +4651,10 @@ class UniversalKCutoffReadoutAudit:
                     "cutoff_degree_not_supplied",
                     self.cutoff_degree,
                 )
-                for row in self.readout_rows
+                for row in self.readout_row_objects
             )
         failures = []
-        for row in self.readout_rows:
+        for row in self.readout_row_objects:
             if not row.readout_is_permutation(self.cutoff_degree):
                 failures.append(
                     (
@@ -4663,7 +4682,7 @@ class UniversalKCutoffReadoutAudit:
         self,
     ) -> Tuple[Tuple[int, ...], ...]:
         return _duplicate_values(
-            tuple(row.readout_permutation for row in self.readout_rows)
+            tuple(row.readout_permutation for row in self.readout_row_objects)
         )
 
     @property
@@ -4675,10 +4694,10 @@ class UniversalKCutoffReadoutAudit:
         self,
     ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
         if not self.cutoff_degree_supplied:
-            return tuple(row.cutoff_seed_state for row in self.readout_rows)
+            return tuple(row.cutoff_seed_state for row in self.readout_row_objects)
         return tuple(
             row.cutoff_seed_state
-            for row in self.readout_rows
+            for row in self.readout_row_objects
             if not row.identity_data_kills_channel(self.cutoff_degree)
         )
 
@@ -4726,6 +4745,8 @@ class UniversalKCutoffReadoutAudit:
             reasons.append("cutoff_readout_malformed_seed_states")
         if not self.cutoff_seed_ledgers_have_no_duplicates:
             reasons.append("cutoff_readout_duplicate_seed_states")
+        if self.malformed_readout_rows:
+            reasons.append("cutoff_readout_malformed_rows")
         if not self.cutoff_family_scope_exact:
             reasons.append("cutoff_readout_family_scope_mismatch")
         if self.missing_cutoff_families:
@@ -15335,6 +15356,7 @@ class PostLinearRemainingFiniteSystemAudit:
                 ("signed_endpoint_generator_cutoff_readout_malformed_states", ()),
                 ("signed_endpoint_generator_cutoff_readout_degree", None),
                 ("signed_endpoint_generator_cutoff_readout_rows", ()),
+                ("signed_endpoint_generator_cutoff_readout_malformed_rows", ()),
                 ("signed_endpoint_generator_cutoff_readout_malformed_row_states", ()),
                 (
                     "signed_endpoint_generator_cutoff_readout_invalid_permutation_rows",
@@ -16767,8 +16789,16 @@ class PostLinearRemainingFiniteSystemAudit:
                             row.readout_permutation,
                             row.killed_readout_permutation,
                         )
-                        for row in audit.cutoff_readout_audit.readout_rows
+                        for row in audit.cutoff_readout_audit.readout_row_objects
                     )
+                    if audit.cutoff_readout_audit is not None
+                    else ()
+                ),
+            ),
+            (
+                "signed_endpoint_generator_cutoff_readout_malformed_rows",
+                (
+                    audit.cutoff_readout_audit.malformed_readout_rows
                     if audit.cutoff_readout_audit is not None
                     else ()
                 ),

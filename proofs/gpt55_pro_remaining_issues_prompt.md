@@ -2165,8 +2165,12 @@ readout row for every routed C/M seed state:
 ```
 
 The readout rows must cover exactly the expected seed states, with no
-missing, extra, or duplicate rows.  Each listed readout and killed-readout
-value must be an actual permutation tuple of the integers `{0,...,m-1}`.
+missing, extra, duplicate, or malformed row objects.  A malformed readout
+row object is reported in
+`signed_endpoint_generator_cutoff_readout_malformed_rows`; it is a finite
+certificate failure, not a runtime exception and not a row that can be
+silently ignored.  Each listed readout and killed-readout value must be an
+actual permutation tuple of the integers `{0,...,m-1}`.
 Boolean entries, strings, duplicate images, out-of-range entries, or other
 malformed values are not elements of the symmetric group.  Faithfulness is
 the finite injectivity check on the listed readout permutations.  Identity cutoff

@@ -10662,6 +10662,27 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             ((seed_state, "cutoff_degree_not_supplied", "2"),),
         )
 
+        malformed_rows = UniversalKCutoffReadoutAudit(
+            expected_cutoff_seed_states=(seed_state,),
+            covered_cutoff_seed_states=(seed_state,),
+            cutoff_degree=2,
+            readout_rows=(("not", "a_cutoff_row"), ["not-hashable-row"]),
+            braid_index_independent=True,
+        )
+        self.assertEqual(
+            malformed_rows.malformed_readout_rows,
+            (("not", "a_cutoff_row"), ["not-hashable-row"]),
+        )
+        self.assertEqual(malformed_rows.row_cutoff_seed_states, ())
+        self.assertEqual(malformed_rows.invalid_readout_permutation_rows, ())
+        self.assertFalse(malformed_rows.readout_rows_cover_expected_states)
+        self.assertFalse(malformed_rows.proves_exact_cutoff_readouts)
+        self.assertIn("cutoff_readout_malformed_rows", malformed_rows.failure_reasons)
+        self.assertIn(
+            "cutoff_readout_rows_do_not_cover_expected_states",
+            malformed_rows.failure_reasons,
+        )
+
         unindexed_rows_without_certificate = UniversalKCutoffReadoutAudit(
             expected_cutoff_seed_states=(seed_state,),
             covered_cutoff_seed_states=(seed_state,),
@@ -11620,6 +11641,36 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             duplicate_cutoff_audit.failure_reasons,
         )
 
+        malformed_row_cutoff = UniversalKCutoffReadoutAudit(
+            expected_cutoff_seed_states=reachable,
+            covered_cutoff_seed_states=reachable,
+            cutoff_degree=2,
+            readout_rows=(("not", "a_cutoff_row"), ["not-hashable-row"]),
+            braid_index_independent=True,
+        )
+        malformed_row_audit = universal_k_signed_endpoint_generator_audit(
+            interval,
+            seed_entries,
+            reachable,
+            rows,
+            endpoint_group=cyclic_group(2),
+            witnesses=witnesses,
+            telescoping_detector_audit=trivial_telescoping_detector_audit(keys),
+            cutoff_readout_audit=malformed_row_cutoff,
+            residual_action_scope=trivial_endpoint_residual_action_scope(
+                "C",
+                seed_states=reachable,
+            ),
+            residual_action_audit=trivial_endpoint_residual_action_audit(),
+        )
+
+        self.assertFalse(malformed_row_cutoff.proves_exact_cutoff_readouts)
+        self.assertFalse(malformed_row_audit.proves_signed_endpoint_generator_tables)
+        self.assertIn(
+            "cutoff_readout_malformed_rows",
+            malformed_row_audit.failure_reasons,
+        )
+
         malformed_cutoff_state = ("C", "not_a_tuple_seed_state")
         malformed_cutoff = UniversalKCutoffReadoutAudit(
             expected_cutoff_seed_states=(malformed_cutoff_state,),
@@ -11913,6 +11964,66 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertIn(
             "cutoff_endpoint_values_have_extra_channels",
             extra_channel.failure_reasons,
+        )
+
+    def test_post_linear_exports_malformed_cutoff_readout_rows(self):
+        profile, closure, route = partial_constant_missing_row_profile_route_audits()
+        interval = one_color_identity_interval()
+        routed = PostLinearRemainingFiniteSystemAudit(
+            active_system_k_refinement(),
+            missing_triangular_row_profile=profile,
+            missing_triangular_partial_constant_closure=closure,
+            missing_triangular_partial_constant_continuation_route=route,
+        )
+        reachable = tuple(
+            entry[1] for entry in routed.universal_k_seed_classifier_entries
+        )
+        keys = universal_k_signed_endpoint_required_entry_keys(interval, reachable)
+        rows = identity_signed_endpoint_rows(keys)
+        malformed_cutoff = UniversalKCutoffReadoutAudit(
+            expected_cutoff_seed_states=reachable,
+            covered_cutoff_seed_states=reachable,
+            cutoff_degree=2,
+            readout_rows=(("not", "a_cutoff_row"), ["not-hashable-row"]),
+            braid_index_independent=True,
+        )
+        signed_generators = universal_k_signed_endpoint_generator_audit(
+            interval,
+            routed.universal_k_seed_classifier_entries,
+            reachable,
+            rows,
+            endpoint_group=cyclic_group(2),
+            witnesses={row.entry_key: () for row in rows},
+            telescoping_detector_audit=trivial_telescoping_detector_audit(keys),
+            cutoff_readout_audit=malformed_cutoff,
+            residual_action_scope=trivial_endpoint_residual_action_scope(
+                "C",
+                seed_states=reachable,
+            ),
+            residual_action_audit=trivial_endpoint_residual_action_audit(),
+        )
+        audit = PostLinearRemainingFiniteSystemAudit(
+            active_system_k_refinement(),
+            missing_triangular_row_profile=profile,
+            missing_triangular_partial_constant_closure=closure,
+            missing_triangular_partial_constant_continuation_route=route,
+            universal_k_signed_endpoint_generator=signed_generators,
+            universal_k_signed_endpoint_interval=interval,
+        )
+        data = dict(audit.finite_obstruction_data)
+
+        self.assertFalse(malformed_cutoff.proves_exact_cutoff_readouts)
+        self.assertEqual(
+            data["signed_endpoint_generator_cutoff_readout_rows"],
+            (),
+        )
+        self.assertEqual(
+            data["signed_endpoint_generator_cutoff_readout_malformed_rows"],
+            (("not", "a_cutoff_row"), ["not-hashable-row"]),
+        )
+        self.assertIn(
+            "cutoff_readout_malformed_rows",
+            data["signed_endpoint_generator_failure_reasons"],
         )
 
     def test_signed_endpoint_coordinate_failures_check_positive_and_inverse_rows(self):
