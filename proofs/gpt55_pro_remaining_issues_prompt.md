@@ -1520,6 +1520,23 @@ unsound detector-domain subsets, and missing residual-faithfulness rows keep
 the U/C/M observer open.  Thus endpoint emissions are no longer arbitrary
 primitive data once `rho_E` and the potentials are supplied; they are forced
 by the finite coboundary computation.
+The family-level handoff is
+`universal_k_endpoint_observer_builds_from_monodromy_by_family(...)`.  It
+accepts one fixed endpoint group, positive monodromy row table, template
+ledger, and optional detector-domain soundness data for each active endpoint
+family; derives the per-family word-potential certificates; and then calls
+the ordinary family observer audit.  Therefore the smallest constructive
+A-side input format is now the finite data
+`(H_E,rho_E,W_E,D_E,RF_E)` for each active routed family, with endpoint
+emissions and signed rows derived and rechecked against the current interval.
+The top-level `post_linear_remaining_finite_system_audit(...)` can consume
+this package directly through its `universal_k_monodromy_*_by_family`
+inputs.  It derives the current `K_nabla`/`kappa` ledger first, builds the
+family observer from the monodromy-coboundary data, and retains the ordinary
+family-build diagnostics.  Extra, stale, malformed, or unproved family data
+does not close anything; it remains diagnostic unless it matches the current
+routed endpoint families and passes target, cutoff, product, and
+residual-faithfulness checks.
 The executable audit also has a canonical identity-emission constructor
 `universal_k_identity_endpoint_observer_builds_by_family(...)`.  It builds
 the identity monodromy-coboundary candidate for every active family in the
@@ -2049,6 +2066,8 @@ word_potential_templates_for_every_reachable_state,
 word_potential_template_rows_have_two_field_shape,
 word_potential_identity_rows_are_finite_row_objects,
 monodromy_coboundary_emissions_derived_from_rho_and_W,
+family_observers_derived_from_monodromy_coboundary_data,
+post_linear_audit_consumes_monodromy_coboundary_family_data,
 restricted_detector_domains_have_soundness_witnesses,
 word_potential_templates_use_only_current_longitude_variables,
 word_potential_artin_substitution_from_detector_recurrence,

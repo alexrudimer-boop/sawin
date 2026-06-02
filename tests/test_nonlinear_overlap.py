@@ -95,6 +95,7 @@ from ybe_domination import (
     universal_k_endpoint_monodromy_representation_audit,
     universal_k_endpoint_observer_build,
     universal_k_endpoint_observer_builds_by_family,
+    universal_k_endpoint_observer_builds_from_monodromy_by_family,
     universal_k_endpoint_observer_family_build_audit,
     universal_k_endpoint_observer_positive_rows_from_word_potential,
     universal_k_endpoint_observer_signed_rows_from_positive,
@@ -6767,6 +6768,49 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         )
         self.assertTrue(build.proves_endpoint_observer)
 
+        family_audit = universal_k_endpoint_observer_builds_from_monodromy_by_family(
+            interval,
+            seed_entries,
+            endpoint_groups_by_family=(("U", group),),
+            word_potential_templates_by_family=(("U", templates),),
+            positive_state_rows_by_family=(("U", tuple(positive_state_rows)),),
+            detector_domain_assignments_by_family=(("U", restricted_domains),),
+            detector_domain_soundness_witnesses_by_family=(("U", soundness_witnesses),),
+            detector_track_initialization_rows=(
+                UniversalKDetectorTrackInitializationRow(
+                    endpoint_family="U",
+                    track_index=0,
+                    assignment_rule="symbolic_detector_domain_invariant",
+                    dependencies=("interval_data", "routed_seed_state", "strand_index"),
+                    local_assignment_template=((("A", 0, 0), group.identity),),
+                ),
+            ),
+            endpoint_target_audits_by_family=(
+                (
+                    "U",
+                    UniversalKEndpointTargetAudit(
+                        expected_endpoint_families=("U",),
+                        covered_endpoint_families=("U",),
+                        endpoint_group_orders=(("U", len(group.elements)),),
+                        braid_index_independent=True,
+                        product_families_separated=True,
+                    ),
+                ),
+            ),
+            residual_faithfulness_theorems_by_family=(
+                (
+                    "U",
+                    universal_k_strict_identity_residual_faithfulness_audit(
+                        interval,
+                        (("U", seed_state),),
+                    ),
+                ),
+            ),
+        )
+
+        self.assertEqual(family_audit.failure_reasons, ())
+        self.assertTrue(family_audit.proves_family_endpoint_observers)
+
         full_domain_certificate = universal_k_word_potential_certificate_from_monodromy(
             interval,
             seed_entries,
@@ -10572,6 +10616,27 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertIn(
             "telescoping_detector_expected_positive_entry_keys_empty",
             signed.failure_reasons,
+        )
+
+    def test_post_linear_function_builds_endpoint_observer_from_monodromy(self):
+        audit = post_linear_remaining_finite_system_audit(
+            one_color_latin_unit_triangular_interval(),
+            universal_k_monodromy_endpoint_groups_by_family=(("U", cyclic_group(2)),),
+            universal_k_monodromy_word_potential_templates_by_family=(("U", ()),),
+            universal_k_monodromy_positive_state_rows_by_family=(("U", ()),),
+        )
+
+        family_build = audit.universal_k_endpoint_observer_family_build
+        self.assertIsNotNone(family_build)
+        self.assertEqual(family_build.covered_endpoint_families_exact, ("U",))
+        self.assertFalse(family_build.proves_family_endpoint_observers)
+        self.assertIn(
+            ("endpoint_observer_family_build_present", True),
+            audit.routed_endpoint_obstruction_data,
+        )
+        self.assertIn(
+            ("endpoint_observer_family_build_extra_families", ("U",)),
+            audit.routed_endpoint_obstruction_data,
         )
 
     def test_post_linear_function_derives_identity_endpoint_observer_candidates(self):

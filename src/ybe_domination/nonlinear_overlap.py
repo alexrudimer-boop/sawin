@@ -9849,6 +9849,127 @@ def universal_k_endpoint_observer_builds_by_family(
     )
 
 
+def universal_k_endpoint_observer_builds_from_monodromy_by_family(
+    interval: LocalInterval,
+    seed_classifier_entries: Sequence[UniversalKSeedClassifierEntry],
+    endpoint_groups_by_family: Sequence[Tuple[str, FiniteGroup]],
+    word_potential_templates_by_family: Sequence[
+        Tuple[
+            str,
+            Sequence[
+                Tuple[Tuple[str, UniversalKSeedState], UniversalKWordPotentialWord]
+            ],
+        ]
+    ],
+    positive_state_rows_by_family: Sequence[
+        Tuple[str, Sequence[UniversalKSignedEndpointGeneratorRow]]
+    ],
+    *,
+    detector_domain_assignments_by_family: Sequence[
+        Tuple[
+            str,
+            Mapping[
+                UniversalKSignedEndpointEntryKey,
+                Tuple[
+                    Tuple[Tuple[UniversalKWordPotentialVariable, GroupElement], ...],
+                    ...,
+                ],
+            ],
+        ]
+    ] = (),
+    detector_domain_soundness_witnesses_by_family: Sequence[
+        Tuple[
+            str,
+            Mapping[UniversalKSignedEndpointEntryKey, Tuple[str, ...]],
+        ]
+    ] = (),
+    detector_track_initialization_rows: Tuple[
+        UniversalKDetectorTrackInitializationRow,
+        ...,
+    ] = (),
+    endpoint_target_audits_by_family: Sequence[
+        Tuple[str, UniversalKEndpointTargetAudit]
+    ] = (),
+    cutoff_readout_audits_by_family: Sequence[
+        Tuple[str, UniversalKCutoffReadoutAudit]
+    ] = (),
+    residual_faithfulness_theorems_by_family: Sequence[
+        Tuple[str, UniversalKResidualFaithfulnessAudit]
+    ] = (),
+    product_residual_faithfulness_theorem: (
+        UniversalKResidualFaithfulnessAudit | None
+    ) = None,
+) -> UniversalKEndpointObserverFamilyBuildAudit:
+    """Build family observers from finite monodromy and potential data.
+
+    This is the family-level handoff for the remaining local U/C/M problem.
+    It does not assert observer existence.  It derives each family's
+    word-potential certificate by computing coboundary defects from the
+    supplied positive state monodromy rows and templates, then reuses the
+    ordinary family observer audit so target, cutoff, product, and residual
+    faithfulness gates stay unchanged.
+    """
+
+    endpoint_group_map = _universal_k_family_object_map(
+        endpoint_groups_by_family,
+        FiniteGroup,
+    )
+    template_map = _universal_k_family_object_map(word_potential_templates_by_family)
+    positive_row_map = _universal_k_family_object_map(positive_state_rows_by_family)
+    detector_domain_map = _universal_k_family_object_map(
+        detector_domain_assignments_by_family
+    )
+    detector_domain_witness_map = _universal_k_family_object_map(
+        detector_domain_soundness_witnesses_by_family
+    )
+
+    certificate_rows = []
+    candidate_families = tuple(
+        sorted(
+            set(endpoint_group_map) & set(template_map) & set(positive_row_map),
+            key=repr,
+        )
+    )
+    for family in candidate_families:
+        family_entries = _universal_k_seed_classifier_entries_for_family(
+            seed_classifier_entries,
+            family,
+        )
+        domain_assignments = detector_domain_map.get(family)
+        domain_witnesses = detector_domain_witness_map.get(family)
+        certificate_rows.append(
+            (
+                family,
+                universal_k_word_potential_certificate_from_monodromy(
+                    interval,
+                    family_entries,
+                    endpoint_group_map[family],
+                    tuple(template_map.get(family, ())),
+                    tuple(positive_row_map.get(family, ())),
+                    detector_domain_assignments_by_entry_key=(
+                        domain_assignments if hasattr(domain_assignments, "get") else None
+                    ),
+                    detector_domain_soundness_witness_by_entry_key=(
+                        domain_witnesses if hasattr(domain_witnesses, "get") else None
+                    ),
+                ),
+            )
+        )
+
+    return universal_k_endpoint_observer_builds_by_family(
+        interval,
+        seed_classifier_entries,
+        tuple(certificate_rows),
+        detector_track_initialization_rows=detector_track_initialization_rows,
+        endpoint_target_audits_by_family=endpoint_target_audits_by_family,
+        cutoff_readout_audits_by_family=cutoff_readout_audits_by_family,
+        residual_faithfulness_theorems_by_family=(
+            residual_faithfulness_theorems_by_family
+        ),
+        product_residual_faithfulness_theorem=product_residual_faithfulness_theorem,
+    )
+
+
 def _universal_k_min_symmetric_degree(row_count: int) -> int:
     degree = 1
     order = 1
@@ -16684,6 +16805,38 @@ def post_linear_remaining_finite_system_audit(
     universal_k_word_potential_certificates_by_family: Sequence[
         Tuple[str, UniversalKWordPotentialCertificate]
     ] = (),
+    universal_k_monodromy_endpoint_groups_by_family: Sequence[
+        Tuple[str, FiniteGroup]
+    ] = (),
+    universal_k_monodromy_word_potential_templates_by_family: Sequence[
+        Tuple[
+            str,
+            Sequence[
+                Tuple[Tuple[str, UniversalKSeedState], UniversalKWordPotentialWord]
+            ],
+        ]
+    ] = (),
+    universal_k_monodromy_positive_state_rows_by_family: Sequence[
+        Tuple[str, Sequence[UniversalKSignedEndpointGeneratorRow]]
+    ] = (),
+    universal_k_monodromy_detector_domain_assignments_by_family: Sequence[
+        Tuple[
+            str,
+            Mapping[
+                UniversalKSignedEndpointEntryKey,
+                Tuple[
+                    Tuple[Tuple[UniversalKWordPotentialVariable, GroupElement], ...],
+                    ...,
+                ],
+            ],
+        ]
+    ] = (),
+    universal_k_monodromy_detector_domain_soundness_witnesses_by_family: Sequence[
+        Tuple[
+            str,
+            Mapping[UniversalKSignedEndpointEntryKey, Tuple[str, ...]],
+        ]
+    ] = (),
     universal_k_detector_track_counts_by_family: Tuple[Tuple[str, int], ...] = (),
     universal_k_detector_track_initialization_rows: Tuple[
         UniversalKDetectorTrackInitializationRow,
@@ -16779,7 +16932,10 @@ def post_linear_remaining_finite_system_audit(
     derive_endpoint_observer_family_build = (
         endpoint_observer_family_build is None
         and (
-            bool(universal_k_word_potential_certificates_by_family)
+            bool(universal_k_monodromy_endpoint_groups_by_family)
+            or bool(universal_k_monodromy_word_potential_templates_by_family)
+            or bool(universal_k_monodromy_positive_state_rows_by_family)
+            or bool(universal_k_word_potential_certificates_by_family)
             or universal_k_identity_endpoint_observer_candidates
         )
     )
@@ -16805,6 +16961,50 @@ def post_linear_remaining_finite_system_audit(
             unsupported_companion_structural_contradiction=unsupported_companion_structural_contradiction,
         )
         if (
+            derive_endpoint_observer_family_build
+            and (
+                bool(universal_k_monodromy_endpoint_groups_by_family)
+                or bool(universal_k_monodromy_word_potential_templates_by_family)
+                or bool(universal_k_monodromy_positive_state_rows_by_family)
+            )
+        ):
+            endpoint_observer_family_build = (
+                universal_k_endpoint_observer_builds_from_monodromy_by_family(
+                    interval,
+                    unsigned.universal_k_seed_classifier_entries,
+                    endpoint_groups_by_family=(
+                        universal_k_monodromy_endpoint_groups_by_family
+                    ),
+                    word_potential_templates_by_family=(
+                        universal_k_monodromy_word_potential_templates_by_family
+                    ),
+                    positive_state_rows_by_family=(
+                        universal_k_monodromy_positive_state_rows_by_family
+                    ),
+                    detector_domain_assignments_by_family=(
+                        universal_k_monodromy_detector_domain_assignments_by_family
+                    ),
+                    detector_domain_soundness_witnesses_by_family=(
+                        universal_k_monodromy_detector_domain_soundness_witnesses_by_family
+                    ),
+                    detector_track_initialization_rows=(
+                        universal_k_detector_track_initialization_rows
+                    ),
+                    endpoint_target_audits_by_family=(
+                        universal_k_endpoint_target_audits_by_family
+                    ),
+                    cutoff_readout_audits_by_family=(
+                        universal_k_cutoff_readout_audits_by_family
+                    ),
+                    residual_faithfulness_theorems_by_family=(
+                        universal_k_residual_faithfulness_theorems_by_family
+                    ),
+                    product_residual_faithfulness_theorem=(
+                        universal_k_residual_faithfulness_theorem
+                    ),
+                )
+            )
+        elif (
             derive_endpoint_observer_family_build
             and bool(universal_k_word_potential_certificates_by_family)
         ):

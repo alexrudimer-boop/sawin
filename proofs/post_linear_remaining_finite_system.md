@@ -766,6 +766,23 @@ template, or missing residual-faithfulness theorem keeps the endpoint
 observer open.  This removes another arbitrary choice from the U/C/M
 observer data: positive emissions are computed from the monodromy
 representation and potentials rather than supplied independently.
+The family-level handoff is
+`universal_k_endpoint_observer_builds_from_monodromy_by_family(...)`.  It
+accepts one fixed endpoint group, positive monodromy row table, template
+ledger, and optional detector-domain soundness data for each endpoint family;
+derives the per-family word-potential certificates by the constructor above;
+and then calls the ordinary family observer audit.  Thus the preferred
+remaining certificate input is exactly the finite local data
+`(H_E,rho_E,W_E,D_E,RF_E)` for each active family, with emissions and signed
+rows derived and rechecked rather than supplied as an independent table.
+The top-level `post_linear_remaining_finite_system_audit(...)` can now take
+that smaller monodromy-coboundary package directly through its
+`universal_k_monodromy_*_by_family` inputs.  It first computes the current
+`K_nabla`/`kappa` ledger for the interval, derives the family observer build
+from those monodromy inputs, and retains the same family-build diagnostics in
+the post-linear proof object.  A stale or extra family still remains only
+diagnostic data unless it matches the current routed endpoint families and
+passes target, cutoff, product, and residual-faithfulness checks.
 The builder reads only actual word-potential identity row objects when forcing
 positive endpoint rows.  Malformed tuple-shaped identity entries remain in
 the word-potential certificate as certificate errors and cause the observer to
