@@ -1627,8 +1627,13 @@ still requires its own residual-faithfulness theorem.
 There is also a coordinate-identity residual-faithfulness subcase.  If every
 local row preserves the raw fibre coordinate pair `(x,y)`, then along every
 braid word the fibre coordinate tuple is unchanged, even when the quotient
-colour tuple moves.  For a braid in the quotient kernel, the final quotient
-colours return, so the residual fibre action is identity.  The helper
+colour tuple moves.  This subcase is valid only when the raw coordinates are
+type-correct in the output fibres: if `R_C(a,b)=(c,d)` and
+`T_{a,b}(x,y)=(x,y)`, then `x` must be an element of `A_c` and `y` must be
+an element of `A_d`.  A raw-equality table whose output fibres do not contain
+those values is not a coordinate-identity residual proof.  For a braid in the
+quotient kernel, the final quotient colours return, so the residual fibre
+action is identity.  The helper
 `universal_k_coordinate_identity_residual_faithfulness_audit(...)` may emit
 one schematic all-`n` residual row per active endpoint family, and the
 identity observer constructor may consume it only when

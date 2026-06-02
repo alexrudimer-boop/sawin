@@ -885,10 +885,13 @@ need their own residual-faithfulness theorem.
 There is also a coordinate-identity residual-faithfulness subcase:
 `universal_k_coordinate_identity_residual_faithfulness_audit(...)` proves
 the residual gate when every local row preserves the raw fibre coordinate
-pair `(x,y)`, even if the quotient colour pair changes.  Along any braid
-word the fibre coordinate tuple is unchanged; for a braid in the quotient
-kernel the final quotient colours return, so the residual fibre action is
-identity.  The identity constructor consumes this proof only when
+pair `(x,y)`, even if the quotient colour pair changes, and those same raw
+coordinate values are members of the output fibres dictated by the quotient
+row.  A table that merely writes `(x,y)` while moving to colours whose fibres
+do not contain `x` or `y` is not type-correct and is rejected.  Along any
+braid word the fibre coordinate tuple is unchanged; for a braid in the
+quotient kernel the final quotient colours return, so the residual fibre
+action is identity.  The identity constructor consumes this proof only when
 `derive_coordinate_identity_residual_faithfulness=True`.
 There is a second automatic residual-faithfulness subcase:
 `universal_k_singleton_fibre_residual_faithfulness_audit(...)` proves the

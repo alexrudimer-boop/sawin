@@ -2961,11 +2961,20 @@ def universal_k_interval_has_coordinate_identity_fibre_action(
 
     for left_color in interval.colors:
         for right_color in interval.colors:
+            target_colors = interval.base_R.get((left_color, right_color))
+            if target_colors is None:
+                return False
+            output_left_color, output_right_color = target_colors
             for input_left in interval.fibres[left_color]:
                 for input_right in interval.fibres[right_color]:
                     if interval.T.get(
                         (left_color, right_color, input_left, input_right)
                     ) != (input_left, input_right):
+                        return False
+                    if (
+                        input_left not in interval.fibres[output_left_color]
+                        or input_right not in interval.fibres[output_right_color]
+                    ):
                         return False
     return True
 

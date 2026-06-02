@@ -174,6 +174,24 @@ def two_color_coordinate_identity_swap_interval():
     return LocalInterval(colors, fibres, base_R, T)
 
 
+def two_color_mistyped_coordinate_identity_swap_interval():
+    colors = ("a", "b")
+    fibres = {"a": (0, 1), "b": (2, 3)}
+    base_R = {
+        (left, right): (right, left)
+        for left in colors
+        for right in colors
+    }
+    T = {
+        (left, right, x, y): (x, y)
+        for left in colors
+        for right in colors
+        for x in fibres[left]
+        for y in fibres[right]
+    }
+    return LocalInterval(colors, fibres, base_R, T)
+
+
 def one_color_flip_interval():
     colors = ("*",)
     fibres = {"*": (0, 1)}
@@ -5008,6 +5026,28 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
 
         self.assertTrue(
             universal_k_interval_has_coordinate_identity_fibre_action(interval)
+        )
+        with self.assertRaises(ValueError):
+            two_color_mistyped_coordinate_identity_swap_interval()
+        raw_mistyped_interval = type("RawMistypedInterval", (), {})()
+        raw_mistyped_interval.colors = ("a", "b")
+        raw_mistyped_interval.fibres = {"a": (0, 1), "b": (2, 3)}
+        raw_mistyped_interval.base_R = {
+            (left, right): (right, left)
+            for left in raw_mistyped_interval.colors
+            for right in raw_mistyped_interval.colors
+        }
+        raw_mistyped_interval.T = {
+            (left, right, x, y): (x, y)
+            for left in raw_mistyped_interval.colors
+            for right in raw_mistyped_interval.colors
+            for x in raw_mistyped_interval.fibres[left]
+            for y in raw_mistyped_interval.fibres[right]
+        }
+        self.assertFalse(
+            universal_k_interval_has_coordinate_identity_fibre_action(
+                raw_mistyped_interval
+            )
         )
         self.assertFalse(universal_k_interval_has_strict_identity_fibre_action(interval))
         self.assertFalse(universal_k_interval_has_singleton_fibres(interval))
