@@ -3015,6 +3015,7 @@ def _universal_k_trivial_residual_faithfulness_audit(
                         "routed_seed_state",
                         "residual_input_tuple",
                         "endpoint_channel",
+                        "local_fibre_coordinate",
                     ),
                 )
             )
@@ -8850,6 +8851,130 @@ class UniversalKMonodromyFamilyInputAudit:
         )
 
     @property
+    def endpoint_group_map(self) -> Mapping[str, FiniteGroup]:
+        return {
+            family: group
+            for family, group in self._valid_parts(
+                self.endpoint_group_rows,
+                self._endpoint_group_predicate,
+            )
+        }
+
+    def _detector_domain_assignment_value_failures(
+        self,
+    ) -> Tuple[Tuple[UniversalKSignedEndpointEntryKey, str, object], ...]:
+        failures = []
+        endpoint_groups = self.endpoint_group_map
+        for family, mapping in self._valid_parts(
+            self.detector_domain_assignment_rows,
+            self._mapping_predicate,
+        ):
+            group = endpoint_groups.get(family)
+            group_elements = tuple(group.elements) if group is not None else None
+            for key, assignments in tuple(mapping.items()):
+                if (
+                    not _universal_k_is_positive_entry_key(key)
+                    or key[0] != family
+                ):
+                    continue
+                if not isinstance(assignments, tuple):
+                    failures.append(
+                        (key, "detector_domain_assignment_value_not_tuple", assignments)
+                    )
+                    continue
+                if not assignments:
+                    failures.append(
+                        (key, "detector_domain_assignment_subset_empty", None)
+                    )
+                    continue
+                for index, assignment in enumerate(assignments):
+                    if not isinstance(assignment, tuple):
+                        failures.append(
+                            (
+                                key,
+                                "detector_domain_assignment_row_not_tuple",
+                                (index, assignment),
+                            )
+                        )
+                        continue
+                    for assignment_entry in assignment:
+                        parts = _universal_k_word_potential_substitution_parts(
+                            assignment_entry
+                        )
+                        if parts is None:
+                            failures.append(
+                                (
+                                    key,
+                                    "detector_domain_assignment_malformed_entry",
+                                    (index, assignment_entry),
+                                )
+                            )
+                            continue
+                        variable, value = parts
+                        if not _universal_k_word_potential_variable_valid(variable):
+                            failures.append(
+                                (
+                                    key,
+                                    "detector_domain_assignment_invalid_variable",
+                                    (index, variable),
+                                )
+                            )
+                        if group_elements is not None and value not in group_elements:
+                            failures.append(
+                                (
+                                    key,
+                                    "detector_domain_assignment_value_outside_group",
+                                    (index, value),
+                                )
+                            )
+        return _unique_values(tuple(failures))
+
+    def _detector_domain_witness_value_failures(
+        self,
+    ) -> Tuple[Tuple[UniversalKSignedEndpointEntryKey, str, object], ...]:
+        failures = []
+        for family, mapping in self._valid_parts(
+            self.detector_domain_soundness_witness_rows,
+            self._mapping_predicate,
+        ):
+            for key, witnesses in tuple(mapping.items()):
+                if (
+                    not _universal_k_is_positive_entry_key(key)
+                    or key[0] != family
+                ):
+                    continue
+                if not isinstance(witnesses, tuple):
+                    failures.append(
+                        (key, "detector_domain_witness_value_not_tuple", witnesses)
+                    )
+                    continue
+                if not witnesses:
+                    failures.append((key, "detector_domain_witness_empty", None))
+                    continue
+                for duplicate in _duplicate_values(witnesses):
+                    failures.append(
+                        (
+                            key,
+                            "detector_domain_witness_duplicate",
+                            duplicate,
+                        )
+                    )
+                for witness in witnesses:
+                    if (
+                        not isinstance(witness, str)
+                        or witness
+                        not in _UNIVERSAL_K_DETECTOR_DOMAIN_SOUNDNESS_WITNESSES
+                    ):
+                        failures.append(
+                            (
+                                key,
+                                "detector_domain_witness_unknown",
+                                witness,
+                            )
+                        )
+        return _unique_values(tuple(failures))
+
+    @property
     def endpoint_group_families_exact(self) -> Tuple[str, ...]:
         return self._families_exact(
             self.endpoint_group_rows,
@@ -9170,6 +9295,25 @@ class UniversalKMonodromyFamilyInputAudit:
         )
 
     @property
+    def detector_domain_assignment_value_failures(
+        self,
+    ) -> Tuple[Tuple[UniversalKSignedEndpointEntryKey, str, object], ...]:
+        return self._detector_domain_assignment_value_failures()
+
+    @property
+    def detector_domain_witness_value_failures(
+        self,
+    ) -> Tuple[Tuple[UniversalKSignedEndpointEntryKey, str, object], ...]:
+        return self._detector_domain_witness_value_failures()
+
+    @property
+    def detector_domain_values_well_formed(self) -> bool:
+        return (
+            not self.detector_domain_assignment_value_failures
+            and not self.detector_domain_witness_value_failures
+        )
+
+    @property
     def candidate_families_exact(self) -> Tuple[str, ...]:
         return tuple(
             sorted(
@@ -9221,6 +9365,7 @@ class UniversalKMonodromyFamilyInputAudit:
             and not self.missing_detector_domain_witness_families
             and not self.extra_detector_domain_witness_without_assignment_families
             and self.detector_domain_entry_key_scope_exact
+            and self.detector_domain_values_well_formed
             and not self.missing_candidate_families
         )
 
@@ -9295,6 +9440,8 @@ class UniversalKMonodromyFamilyInputAudit:
             reasons.append("endpoint_observer_monodromy_detector_domains_duplicate_keys")
         if self.extra_detector_domain_assignment_entry_keys:
             reasons.append("endpoint_observer_monodromy_detector_domains_extra_keys")
+        if self.detector_domain_assignment_value_failures:
+            reasons.append("endpoint_observer_monodromy_detector_domains_bad_values")
         if self.malformed_detector_domain_witness_rows:
             reasons.append(
                 "endpoint_observer_monodromy_detector_witnesses_malformed_rows"
@@ -9323,6 +9470,8 @@ class UniversalKMonodromyFamilyInputAudit:
             )
         if self.extra_detector_domain_witness_entry_keys:
             reasons.append("endpoint_observer_monodromy_detector_witnesses_extra_keys")
+        if self.detector_domain_witness_value_failures:
+            reasons.append("endpoint_observer_monodromy_detector_witnesses_bad_values")
         if self.missing_detector_domain_witness_families:
             reasons.append(
                 "endpoint_observer_monodromy_detector_witnesses_missing_for_domains"
@@ -15710,6 +15859,18 @@ class PostLinearRemainingFiniteSystemAudit:
                     "endpoint_observer_monodromy_detector_domain_entry_key_scope_exact",
                     False,
                 ),
+                (
+                    "endpoint_observer_monodromy_detector_domain_assignment_value_failures",
+                    (),
+                ),
+                (
+                    "endpoint_observer_monodromy_detector_witness_value_failures",
+                    (),
+                ),
+                (
+                    "endpoint_observer_monodromy_detector_domain_values_well_formed",
+                    False,
+                ),
                 ("endpoint_observer_monodromy_failure_reasons", ()),
                 ("endpoint_observer_family_build_malformed_rows", ()),
                 ("endpoint_observer_family_build_unknown_families", ()),
@@ -16176,6 +16337,24 @@ class PostLinearRemainingFiniteSystemAudit:
             (
                 "endpoint_observer_monodromy_detector_domain_entry_key_scope_exact",
                 audit.monodromy_family_input_audit.detector_domain_entry_key_scope_exact
+                if audit.monodromy_family_input_audit is not None
+                else False,
+            ),
+            (
+                "endpoint_observer_monodromy_detector_domain_assignment_value_failures",
+                audit.monodromy_family_input_audit.detector_domain_assignment_value_failures
+                if audit.monodromy_family_input_audit is not None
+                else (),
+            ),
+            (
+                "endpoint_observer_monodromy_detector_witness_value_failures",
+                audit.monodromy_family_input_audit.detector_domain_witness_value_failures
+                if audit.monodromy_family_input_audit is not None
+                else (),
+            ),
+            (
+                "endpoint_observer_monodromy_detector_domain_values_well_formed",
+                audit.monodromy_family_input_audit.detector_domain_values_well_formed
                 if audit.monodromy_family_input_audit is not None
                 else False,
             ),

@@ -1565,6 +1565,13 @@ reachable seed-state closure.  Every restricted-domain assignment key must
 have exactly a matching soundness-witness key, and a soundness-witness key
 without a restricted-domain assignment is an extra witness channel, not a
 proof of soundness.
+The restricted-domain map values must also be finite row data.  Each
+assignment value must be a nonempty tuple of finite tuple assignment rows;
+each assignment entry must contain a valid word-potential variable and an
+element of the fixed endpoint group.  Each soundness-witness value must be a
+nonempty duplicate-free tuple of recognized detector-domain soundness
+witness labels.  A correctly keyed row with malformed assignment values or
+malformed witness values is still an invalid observer handoff.
 With the interval in hand, this raw ledger must also derive the reachable
 monodromy seed-state closure from the positive rows, recompute the full
 positive local-context entry domain from the actual fibres, and check that
@@ -1611,7 +1618,8 @@ quotient stabilization.  The audit helper
 `universal_k_strict_identity_residual_faithfulness_audit(...)` may then emit
 one schematic all-`n` residual row per active endpoint family, with
 dependencies only on the interval, local row table, routed seed state,
-residual input tuple, and endpoint channel.  The identity observer
+residual input tuple, endpoint channel, and local fibre coordinate.  The
+identity observer
 constructor may consume this theorem when
 `derive_strict_identity_residual_faithfulness=True`.  This closes only the
 strict identity-fibre subcase; any non-identity U, C, or M endpoint observer
@@ -2121,6 +2129,7 @@ monodromy_family_raw_input_ledger_exact,
 monodromy_family_raw_input_reports_missing_extra_duplicate_and_malformed_rows,
 monodromy_family_raw_detector_domains_require_soundness_witnesses,
 monodromy_family_detector_domain_entry_key_scope_exact,
+monodromy_family_detector_domain_value_rows_well_formed,
 monodromy_family_positive_entry_domain_exact,
 monodromy_family_positive_rows_coordinate_match_interval,
 monodromy_family_word_potential_template_state_domain_exact,

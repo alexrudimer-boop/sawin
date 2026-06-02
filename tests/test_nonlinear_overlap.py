@@ -4891,6 +4891,20 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
                 ),
             ),
         )
+        self.assertEqual(
+            tuple(row.dependencies for row in strict_residual.residual_rows),
+            (
+                (
+                    "interval_data",
+                    "local_row_table",
+                    "routed_seed_state",
+                    "residual_input_tuple",
+                    "endpoint_channel",
+                    "local_fibre_coordinate",
+                ),
+            )
+            * 3,
+        )
 
         family_audit = universal_k_identity_endpoint_observer_builds_by_family(
             interval,
@@ -4962,6 +4976,12 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
                 ),
             ),
         )
+        self.assertTrue(
+            all(
+                "local_fibre_coordinate" in row.dependencies
+                for row in singleton_residual.residual_rows
+            )
+        )
 
         family_audit = universal_k_identity_endpoint_observer_builds_by_family(
             interval,
@@ -5018,6 +5038,12 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
                     "coordinate_identity_residual_channel",
                 ),
             ),
+        )
+        self.assertTrue(
+            all(
+                "local_fibre_coordinate" in row.dependencies
+                for row in coordinate_residual.residual_rows
+            )
         )
 
         family_audit = universal_k_identity_endpoint_observer_builds_by_family(
@@ -7124,6 +7150,102 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         )
         self.assertIn(
             "endpoint_observer_monodromy_detector_witnesses_without_domain_keys",
+            audit.failure_reasons,
+        )
+
+    def test_monodromy_family_input_audit_checks_detector_domain_values(self):
+        interval = one_color_identity_interval()
+        group = cyclic_group(2)
+        seed_state = ("*", "*", "left_constant_map_universal_kernel")
+        seed_key = ("U", seed_state)
+        seed_entries = ((("*", "*", "L", "constant_map_kernel", (0, 1)), seed_key),)
+        positive_keys = tuple(
+            key
+            for key in universal_k_signed_endpoint_required_entry_keys(
+                interval,
+                (seed_key,),
+            )
+            if key[2] == 1
+        )
+
+        rows = []
+        for key in positive_keys:
+            family, state, sign, left_color, right_color, x, y = key
+            output_left, output_right = interval.T[(left_color, right_color, x, y)]
+            rows.append(
+                UniversalKSignedEndpointGeneratorRow(
+                    endpoint_family=family,
+                    seed_state=state,
+                    sign=sign,
+                    left_color=left_color,
+                    right_color=right_color,
+                    input_left=x,
+                    input_right=y,
+                    output_left=output_left,
+                    output_right=output_right,
+                    next_seed_state=state,
+                    endpoint_value=None,
+                )
+            )
+
+        assignments = {
+            positive_keys[0]: "not-a-tuple",
+            positive_keys[1]: (),
+            positive_keys[2]: ((("not-a-substitution-row",),),),
+            positive_keys[3]: (((("U", 0, 0), "outside-group"),),),
+        }
+        witnesses = {
+            positive_keys[0]: "not-a-tuple",
+            positive_keys[1]: (),
+            positive_keys[2]: (
+                "reachable_detector_values_enumerated",
+                "reachable_detector_values_enumerated",
+            ),
+            positive_keys[3]: ("unknown_detector_domain_witness",),
+        }
+
+        audit = universal_k_monodromy_family_input_audit(
+            interval,
+            seed_entries,
+            endpoint_groups_by_family=(("U", group),),
+            word_potential_templates_by_family=(("U", ((seed_key, ()),)),),
+            positive_state_rows_by_family=(("U", tuple(rows)),),
+            detector_domain_assignments_by_family=(("U", assignments),),
+            detector_domain_soundness_witnesses_by_family=(("U", witnesses),),
+        )
+
+        self.assertFalse(audit.input_rows_exact)
+        self.assertTrue(audit.detector_domain_entry_key_scope_exact)
+        self.assertFalse(audit.detector_domain_values_well_formed)
+        self.assertEqual(
+            tuple(
+                failure[1]
+                for failure in audit.detector_domain_assignment_value_failures
+            ),
+            (
+                "detector_domain_assignment_value_not_tuple",
+                "detector_domain_assignment_subset_empty",
+                "detector_domain_assignment_malformed_entry",
+                "detector_domain_assignment_value_outside_group",
+            ),
+        )
+        self.assertEqual(
+            tuple(
+                failure[1] for failure in audit.detector_domain_witness_value_failures
+            ),
+            (
+                "detector_domain_witness_value_not_tuple",
+                "detector_domain_witness_empty",
+                "detector_domain_witness_duplicate",
+                "detector_domain_witness_unknown",
+            ),
+        )
+        self.assertIn(
+            "endpoint_observer_monodromy_detector_domains_bad_values",
+            audit.failure_reasons,
+        )
+        self.assertIn(
+            "endpoint_observer_monodromy_detector_witnesses_bad_values",
             audit.failure_reasons,
         )
 
@@ -11060,6 +11182,15 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertFalse(
             data["endpoint_observer_monodromy_detector_domain_entry_key_scope_exact"]
         )
+        self.assertEqual(
+            data[
+                "endpoint_observer_monodromy_detector_domain_assignment_value_failures"
+            ],
+            ((stale_key, "detector_domain_assignment_subset_empty", None),),
+        )
+        self.assertFalse(
+            data["endpoint_observer_monodromy_detector_domain_values_well_formed"]
+        )
         self.assertIn(
             "endpoint_observer_monodromy_no_active_families",
             data["endpoint_observer_monodromy_failure_reasons"],
@@ -11070,6 +11201,10 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         )
         self.assertIn(
             "endpoint_observer_monodromy_detector_witnesses_missing_for_domain_keys",
+            data["endpoint_observer_monodromy_failure_reasons"],
+        )
+        self.assertIn(
+            "endpoint_observer_monodromy_detector_domains_bad_values",
             data["endpoint_observer_monodromy_failure_reasons"],
         )
 

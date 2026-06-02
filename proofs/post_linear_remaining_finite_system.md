@@ -801,6 +801,11 @@ positive entry key for the same endpoint family and, when the interval is
 available, must lie in the current positive context domain.  Every such
 assignment key must have a matching soundness-witness key, and a witness key
 without a corresponding restricted-domain assignment is also a ledger error.
+The restricted-domain values themselves are finite row data: each assignment
+value must be a nonempty tuple of tuple assignment rows, every assignment
+entry must have a valid word-potential variable and an element of the fixed
+endpoint group, and every witness value must be a nonempty duplicate-free
+tuple of recognized detector-domain soundness witnesses.
 When the interval is available, the same ledger derives the reachable
 monodromy seed-state closure from the supplied positive rows, recomputes the
 full positive local-context entry domain from the current fibres, and checks
@@ -872,7 +877,8 @@ fibre row is strictly `(x,y)->(x,y)`.  In that case every braid word has
 trivial residual fibre action, so the helper emits one schematic all-`n`
 residual row per active endpoint family with dependencies only on the
 interval, local row table, routed seed state, residual input tuple, and
-endpoint channel.  The identity constructor can consume this proof when
+endpoint channel, and local fibre coordinate.  The identity constructor can
+consume this proof when
 `derive_strict_identity_residual_faithfulness=True`.  This closes only the
 strict identity-fibre subcase; non-identity U/C/M endpoint observers still
 need their own residual-faithfulness theorem.
