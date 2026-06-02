@@ -1709,6 +1709,16 @@ the ordinary family observer audit.  Therefore the smallest constructive
 A-side input format is now the finite data
 `(H_E,rho_E,W_E,D_E,RF_E)` for each active routed family, with endpoint
 emissions and signed rows derived and rechecked against the current interval.
+If no restricted detector-domain assignment map is supplied for a positive
+entry, the constructor checks the coboundary defect on the full finite
+detector domain.  A defect constant on that full domain needs no separate
+soundness witness.  The raw monodromy front door has been checked to build a
+complete U/C/M family observer package from identity monodromy rows, empty
+word potentials, full-domain constant defects, fixed endpoint targets, exact
+C/M cutoff readouts, per-family residual rows, and a product
+residual-faithfulness theorem.  This validates the constructive handoff for
+future nontrivial observers; it does not supply nontrivial `rho_E` and `W_E`
+data for every surviving interval.
 The top-level `post_linear_remaining_finite_system_audit(...)` can consume
 this package directly through its `universal_k_monodromy_*_by_family`
 inputs.  It derives the current `K_nabla`/`kappa` ledger first, builds the

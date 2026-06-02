@@ -829,6 +829,16 @@ and then calls the ordinary family observer audit.  Thus the preferred
 remaining certificate input is exactly the finite local data
 `(H_E,rho_E,W_E,D_E,RF_E)` for each active family, with emissions and signed
 rows derived and rechecked rather than supplied as an independent table.
+When no restricted detector-domain assignment map is supplied for a positive
+entry, the constructor checks the coboundary defect on the full finite
+detector domain.  This is the safest valid path: a defect constant on the full
+domain needs no separate soundness witness.  The raw monodromy front door is
+now checked to build a complete U/C/M family observer package from identity
+monodromy rows, empty word potentials, full-domain constant defects, fixed
+endpoint targets, exact C/M cutoff readouts, per-family residual rows, and a
+product residual-faithfulness theorem.  This confirms the constructor path
+future nontrivial observers must use; it does not assert that nontrivial
+`rho_E` and `W_E` data exist in every surviving interval.
 The top-level `post_linear_remaining_finite_system_audit(...)` can now take
 that smaller monodromy-coboundary package directly through its
 `universal_k_monodromy_*_by_family` inputs.  It first computes the current
