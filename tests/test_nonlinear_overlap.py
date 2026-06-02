@@ -14121,6 +14121,45 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             audit.routed_endpoint_obstruction_data,
         )
 
+    def test_post_linear_function_individual_identity_residual_flags_build_candidates(
+        self,
+    ):
+        flag_cases = (
+            {"universal_k_identity_strict_residual_faithfulness": True},
+            {"universal_k_identity_coordinate_residual_faithfulness": True},
+            {"universal_k_identity_singleton_residual_faithfulness": True},
+            {
+                "universal_k_identity_fibre_label_residual_faithfulness": True,
+                "universal_k_identity_fibre_label_rows": (),
+            },
+            {
+                "universal_k_identity_canonical_fibre_label_residual_faithfulness": (
+                    True
+                ),
+            },
+            {"universal_k_identity_cutoff_degrees_by_family": (("C", 2),)},
+        )
+
+        for kwargs in flag_cases:
+            with self.subTest(kwargs=kwargs):
+                audit = post_linear_remaining_finite_system_audit(
+                    one_color_latin_unit_triangular_interval(),
+                    **kwargs,
+                )
+                family_build = audit.universal_k_endpoint_observer_family_build
+
+                self.assertIsNotNone(family_build)
+                self.assertEqual(family_build.expected_endpoint_families_exact, ())
+                self.assertFalse(family_build.proves_family_endpoint_observers)
+                self.assertIn(
+                    "endpoint_observer_family_builds_no_active_families",
+                    family_build.failure_reasons,
+                )
+                self.assertIn(
+                    ("endpoint_observer_family_build_present", True),
+                    audit.routed_endpoint_obstruction_data,
+                )
+
     def test_triangular_recovery_unit_observer_extends_recovery_rows_to_units(self):
         observer = triangular_recovery_unit_observer_audit(
             one_color_latin_unit_triangular_interval()

@@ -1898,6 +1898,15 @@ identity and returns the open canonical audit when it does not prove.  Thus
 the automatic path cannot silently discard bad seed data or bad supplied
 label data, and it cannot manufacture residual faithfulness outside the listed
 symbolic subcases.
+At the top-level post-linear audit, any individual identity residual-helper
+flag must also derive and retain the identity observer candidate ledger:
+`universal_k_identity_strict_residual_faithfulness`,
+`universal_k_identity_coordinate_residual_faithfulness`,
+`universal_k_identity_singleton_residual_faithfulness`,
+`universal_k_identity_fibre_label_residual_faithfulness`, or
+`universal_k_identity_canonical_fibre_label_residual_faithfulness`.  These
+flags must not be ignored merely because the aggregate automatic flag is not
+set.
 The identity observer constructor must enforce the same rule when the
 explicit supplied-label and explicit canonical-label derivation flags are
 both set.  If the supplied fibre-label residual theorem is attempted and

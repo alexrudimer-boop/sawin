@@ -20215,6 +20215,16 @@ def post_linear_remaining_finite_system_audit(
             or universal_k_telescoping_detector_audit is not None
         )
     )
+    derive_identity_endpoint_observer_family_build = (
+        universal_k_identity_endpoint_observer_candidates
+        or universal_k_identity_automatic_residual_faithfulness
+        or universal_k_identity_strict_residual_faithfulness
+        or universal_k_identity_coordinate_residual_faithfulness
+        or universal_k_identity_singleton_residual_faithfulness
+        or universal_k_identity_fibre_label_residual_faithfulness
+        or universal_k_identity_canonical_fibre_label_residual_faithfulness
+        or bool(universal_k_identity_cutoff_degrees_by_family)
+    )
     derive_endpoint_observer_family_build = (
         endpoint_observer_family_build is None
         and (
@@ -20222,8 +20232,7 @@ def post_linear_remaining_finite_system_audit(
             or bool(universal_k_monodromy_word_potential_templates_by_family)
             or bool(universal_k_monodromy_positive_state_rows_by_family)
             or bool(universal_k_word_potential_certificates_by_family)
-            or universal_k_identity_endpoint_observer_candidates
-            or universal_k_identity_automatic_residual_faithfulness
+            or derive_identity_endpoint_observer_family_build
         )
     )
     if derive_signed_endpoint_generator or derive_endpoint_observer_family_build:
@@ -20319,10 +20328,7 @@ def post_linear_remaining_finite_system_audit(
             )
         elif (
             derive_endpoint_observer_family_build
-            and (
-                universal_k_identity_endpoint_observer_candidates
-                or universal_k_identity_automatic_residual_faithfulness
-            )
+            and derive_identity_endpoint_observer_family_build
         ):
             endpoint_observer_family_build = (
                 universal_k_identity_endpoint_observer_builds_by_family(

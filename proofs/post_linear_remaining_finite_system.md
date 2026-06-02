@@ -1063,6 +1063,15 @@ corresponding flag is
 `universal_k_identity_automatic_residual_faithfulness=True`; setting it
 constructs the identity endpoint observer candidate path and lets these
 helpers close exactly the subcases whose finite hypotheses are verified.
+The top-level audit also derives the same identity observer candidate path
+when any individual helper flag is supplied:
+`universal_k_identity_strict_residual_faithfulness`,
+`universal_k_identity_coordinate_residual_faithfulness`,
+`universal_k_identity_singleton_residual_faithfulness`,
+`universal_k_identity_fibre_label_residual_faithfulness`, or
+`universal_k_identity_canonical_fibre_label_residual_faithfulness`.  A
+helper flag is no longer ignored merely because the aggregate automatic flag
+was not set.
 The same exactness rule applies when the identity observer constructor is
 given both explicit supplied-label and explicit canonical-label flags.  If
 the supplied fibre-label residual theorem is attempted and fails, that failed
