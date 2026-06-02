@@ -33,7 +33,8 @@ even when the cardinality certificate closes the branch automatically.
 The exact remaining A-side lemma is:
 
 ```text
-Uniform U/C/M endpoint-observer existence lemma.
+Uniform U/C/M endpoint-observer existence lemma, in a form capable of
+nontrivial endpoint emissions.
 ```
 
 For every finite local-minimal post-linear coloured YBE interval surviving
@@ -103,6 +104,164 @@ witnesses must be the data that generated the retained build certificate.
 An internally exact monodromy input package for a different observer or a
 stale classifier ledger is stale construction evidence and does not close the
 routed family.
+
+There is a sharper obstruction inside the current monodromy-coboundary
+certificate format.  If every word-potential template `W_s` is a word only in
+current longitude variables `U_{r,j}`, contains no fixed endpoint constants,
+and contains no raw assignment variables `A_{r,j}`, then a defect checked on
+the full finite detector-variable domain cannot have a nonidentity constant
+value.  Indeed all `U` variables and all raw `A` variables may be assigned
+the identity element of `H_E`.  At that assignment every template evaluates
+to `1`, the positive Artin substitution also evaluates every substituted
+longitude variable to `1`, and therefore
+
+```text
+W_s(U)^-1 W_{F_r(s)}(A_r^+(U,A)) = 1.
+```
+
+If the defect is constant on the full domain, its constant value is therefore
+`1`.  Thus the current full-domain no-constant word-potential checker can
+certify only identity endpoint emissions.  This is enough for the already
+closed residual-trivial observer subcases, but it cannot close arbitrary
+nontrivial U/C/M endpoint dynamics.
+
+Consequently the remaining A-side lemma must use one of the following
+stronger routes:
+
+1. fixed-carrier detector lifts, where nonidentity carrier labels
+   `M_{r,s,x,y} in H_E` are chosen before braid reading from interval and
+   seed data and substituted as fixed finite data rather than quantified raw
+   variables;
+2. a restricted-domain soundness theorem, proving an all-`n` reachable
+   detector-value invariant `Reach_{r,s} subset H_E^V` on which the defect is
+   constant and which need not contain the all-identity raw-assignment point;
+3. a structural theorem that every surviving U/C/M endpoint obligation is
+   residual-trivial, so identity emissions suffice.
+
+Without one of these strengthening steps, the full-domain monodromy-
+coboundary route is intrinsically an identity-emission route.
+
+The fixed-carrier route has the following exact target.  For each active
+family `E`, choose finitely many detector tracks `t=0,...,R_E-1`.  For braid
+index `n`, each track is initialized before reading the braid word by fixed
+values
+
+```text
+a_{t,i} in H_E,  i=1,...,n.
+```
+
+These assignments may depend on interval data, endpoint family, routed seed
+state, initial colour/fibre tuple, and strand-local data.  They may not
+depend on the braid word, braid prefix, braid index as a search parameter,
+failed detectors, timeouts, or normalized-law sequences.
+
+For a positive row key
+
+```text
+e=(E,+,s,a,b,x,y),
+```
+
+define a finite carrier domain
+
+```text
+C_e subset H_E^{2R_E}.
+```
+
+An element of `C_e` is the active carrier tuple
+
+```text
+((m_{0,0},m_{0,1}),..., (m_{R_E-1,0},m_{R_E-1,1})).
+```
+
+The carrier-soundness ledger must prove that whenever a braid prefix reaches
+row key `e` at crossing positions `k,k+1`, the actual tuple
+
+```text
+((a_{0,p(k)},a_{0,p(k+1)}),..., (a_{R_E-1,p(k)},a_{R_E-1,p(k+1)}))
+```
+
+lies in `C_e`.  The simplest sound case is a constant-carrier track
+`a_{t,i}=m_t` for every strand, where each `C_e` is the singleton
+`{((m_0,m_0),...,(m_{R_E-1},m_{R_E-1}))}`.
+
+For every `M in C_e`, the positive substitution is
+
+```text
+U_{t,0} -> U_{t,0} m_{t,0} U_{t,0}^{-1} U_{t,1},
+U_{t,1} -> U_{t,0}.
+```
+
+The finite row identity must be
+
+```text
+W_s(U)^-1 W_{F_r(s)}(A_{r,M}^+(U)) = h_e
+```
+
+for every full longitude-variable assignment `U` and every `M in C_e`, with
+`h_e` independent of both `U` and `M`.  Then
+
+```text
+Gamma^{E,+}_{a,b}(s,x,y)=(F_r(s),T_{a,b}(x,y),h_e),
+```
+
+and negative rows are forced by inversion.  Carrier soundness is what makes
+`h_e` a finite row-table value keyed only by `(E,+,s,a,b,x,y)`, rather than
+by hidden Artin-permutation history.  The all-`n` telescope is unchanged:
+terminal templates still use only final evaluated longitude variables, so
+the endpoint product lies in `V_beta(H_E)`.
+
+In an abelian target with one constant carrier `m`, the positive update is
+`U_0 -> m+U_1`, `U_1 -> U_0`.  If
+`W_s=U_1-U_0` and `W_{s'}=U_0-U_1`, then the fixed-carrier defect is the
+constant `m`, showing explicitly how nonidentity emissions become possible
+without raw carrier variables in the terminal word.
+
+The carrier-soundness ledger can itself be replaced by a purely local finite
+invariant.  Let `L_E` be a finite carrier alphabet, usually `H_E^{R_E}`, and
+choose maps
+
+```text
+ell_c:A_c -> L_E
+```
+
+for every quotient colour `c`.  Initialize the carrier on a strand over
+`(c,x)` as `ell_c(x)`.  Since Artin generators swap the two active strands,
+the carrier attached to the left output follows the right input strand and
+the carrier attached to the right output follows the left input strand.
+Thus for every local row
+
+```text
+R_C(a,b)=(c,d),
+T_{a,b}(x,y)=(u,v),
+```
+
+the exact strand-carrier equations are
+
+```text
+ell_c(u)=ell_b(y),
+ell_d(v)=ell_a(x).
+```
+
+These equations are necessary and sufficient for all-`n` carrier soundness:
+they preserve the invariant that the carrier at each current position is
+`ell_current_colour(current_fibre)`, while the Artin strand permutation swaps
+the active carriers at each crossing.  Negative crossings follow by
+bijectivity of the local row.
+
+When the equations hold, every positive row key has the singleton carrier
+domain
+
+```text
+C_e={ (ell_a(x),ell_b(y)) }
+```
+
+or, for `R_E` tracks, the tuple of trackwise carrier pairs.  If each
+`ell_c` is injective on `A_c`, then identity Artin permutation data plus the
+quotient-kernel condition forces the final fibre tuple to equal the initial
+tuple.  This gives an automatic residual-faithfulness subcase distinct from
+coordinate-label identity: coordinate labels preserve left-to-left and
+right-to-right labels, while strand carriers preserve labels with the Artin
+swap.
 
 The exact missing B-side ingredient is:
 

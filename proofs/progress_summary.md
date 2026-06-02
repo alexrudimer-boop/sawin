@@ -1488,6 +1488,29 @@ ledger cannot masquerade as an empty or partial proof.
 The standalone monodromy representation audit now uses the same row filter:
 valid signed rows define the endpoint-state permutations, while malformed
 entries are retained as `endpoint_monodromy_representation_malformed_rows`.
+The positive monodromy-coboundary route has also been audited for internal
+viability.  With the current full-domain checker and templates that contain
+only current longitude variables, every constant coboundary defect is forced
+to be the identity because the all-identity `U`/`A` assignment lies in the
+full domain.  A regression test now records that derived full-domain
+no-constant emissions are either nonconstant failures or identity labels, and
+that a forged nonidentity label fails the word-potential identity.  Thus
+nontrivial endpoint observers require a fixed-carrier lift, an all-`n`
+restricted reachable-domain soundness theorem, or a structural proof that the
+remaining U/C/M endpoint systems are residual-trivial.
+The repaired fixed-carrier target is now explicit: each positive row key must
+carry a finite sound carrier domain for the initialized detector-track pairs,
+and the word-potential defect must be constant over the full longitude
+variable domain and that carrier domain.  A constant carrier track gives a
+singleton sound domain and can produce nonidentity emissions; the test suite
+records the abelian `C2` normal form where `W_s=U_1U_0^{-1}`,
+`W_{s'}=U_0U_1^{-1}`, and a fixed carrier emits the nonidentity element.
+The carrier-domain soundness condition is now reduced to a finite local
+strand-carrier audit.  Carrier maps `ell_c:A_c->L_E` must satisfy the swapped
+row equations `ell_c(u)=ell_b(y)` and `ell_d(v)=ell_a(x)` for every local row.
+The new audit distinguishes this from coordinate-label identity, exports a
+residual-faithfulness helper when the carrier maps are fibrewise injective,
+and can be consumed by the identity/monodromy observer helper selectors.
 This removes another false endpoint closure and leaves the same local
 nontrivial observer-existence gap: construct residual-faithful U/C/M
 monodromy-coboundary observers for all surviving intervals, or produce a
@@ -1497,7 +1520,7 @@ normalized-law counterexample.
 
 At the latest verified snapshot:
 
-- `python -m unittest discover -s tests` passed with 718 tests;
+- `python -m unittest discover -s tests` passed with 722 tests;
 - `python -m compileall -q src tests tools` passed;
 - `node --check tools/build_reduction_audit_workbook.mjs` passed;
 - the proof log DOCX and reduction audit workbook were regenerated, and the

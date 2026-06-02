@@ -51,6 +51,7 @@ from ybe_domination import (
     UniversalKResidualFaithfulnessRow,
     UniversalKSignedEndpointGeneratorAudit,
     UniversalKSignedEndpointGeneratorRow,
+    UniversalKStrandCarrierSoundnessAudit,
     UniversalKTelescopingDetectorAudit,
     UniversalKWordPotentialCertificate,
     UniversalKWordPotentialIdentityRow,
@@ -101,6 +102,7 @@ from ybe_domination import (
     universal_k_endpoint_observer_family_build_audit,
     universal_k_endpoint_observer_positive_rows_from_word_potential,
     universal_k_endpoint_observer_signed_rows_from_positive,
+    universal_k_evaluate_word_potential,
     universal_k_word_potential_certificate_from_monodromy,
     universal_k_monodromy_family_input_audit,
     universal_k_identity_cutoff_readout_audit,
@@ -116,9 +118,13 @@ from ybe_domination import (
     universal_k_interval_has_canonical_fibre_label_identity_action,
     universal_k_interval_has_coordinate_identity_fibre_action,
     universal_k_interval_has_fibre_label_identity_action,
+    universal_k_interval_has_injective_strand_carrier_action,
     universal_k_interval_has_singleton_fibres,
+    universal_k_interval_has_strand_carrier_soundness,
     universal_k_interval_has_strict_identity_fibre_action,
     universal_k_singleton_fibre_residual_faithfulness_audit,
+    universal_k_strand_carrier_residual_faithfulness_audit,
+    universal_k_strand_carrier_soundness_audit,
     universal_k_signed_endpoint_coordinate_failures,
     universal_k_signed_endpoint_far_commutativity_failures,
     universal_k_signed_endpoint_generator_audit,
@@ -205,6 +211,32 @@ def two_color_fibre_label_identity_swap_interval():
                     T[(left, right, x, y)] = (
                         point_by_label[output_left_color][labels[x]],
                         point_by_label[output_right_color][labels[y]],
+                    )
+    return LocalInterval(colors, fibres, base_R, T)
+
+
+def two_color_strand_carrier_swap_interval():
+    colors = ("a", "b")
+    fibres = {"a": ("a0", "a1"), "b": ("b0", "b1")}
+    labels = {"a0": 0, "a1": 1, "b0": 0, "b1": 1}
+    point_by_label = {
+        "a": {0: "a0", 1: "a1"},
+        "b": {0: "b0", 1: "b1"},
+    }
+    base_R = {
+        (left, right): (right, left)
+        for left in colors
+        for right in colors
+    }
+    T = {}
+    for left in colors:
+        for right in colors:
+            output_left_color, output_right_color = base_R[(left, right)]
+            for x in fibres[left]:
+                for y in fibres[right]:
+                    T[(left, right, x, y)] = (
+                        point_by_label[output_left_color][labels[y]],
+                        point_by_label[output_right_color][labels[x]],
                     )
     return LocalInterval(colors, fibres, base_R, T)
 
@@ -7287,6 +7319,127 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             none_label_family_audit.failure_reasons,
         )
 
+    def test_strand_carrier_soundness_closes_injective_carrier_candidates(self):
+        interval = two_color_strand_carrier_swap_interval()
+        carrier_rows = (
+            ("a", "a0", 0),
+            ("a", "a1", 1),
+            ("b", "b0", 0),
+            ("b", "b1", 1),
+        )
+        seed_entries = tuple(
+            (
+                ("a", "b", family, "constant_map_kernel", (0, 1)),
+                (family, ("a", "b", f"{family}_seed")),
+            )
+            for family in ("U", "C", "M")
+        )
+        seed_states = tuple(target for _descriptor, target in seed_entries)
+
+        self.assertFalse(
+            universal_k_interval_has_coordinate_identity_fibre_action(interval)
+        )
+        self.assertFalse(
+            universal_k_interval_has_fibre_label_identity_action(
+                interval,
+                carrier_rows,
+            )
+        )
+        self.assertTrue(
+            universal_k_interval_has_strand_carrier_soundness(
+                interval,
+                carrier_rows,
+            )
+        )
+        self.assertTrue(
+            universal_k_interval_has_injective_strand_carrier_action(
+                interval,
+                carrier_rows,
+            )
+        )
+
+        carrier_audit = universal_k_strand_carrier_soundness_audit(
+            interval,
+            carrier_rows,
+        )
+        self.assertIsInstance(carrier_audit, UniversalKStrandCarrierSoundnessAudit)
+        self.assertTrue(carrier_audit.proves_strand_carrier_soundness)
+        self.assertTrue(carrier_audit.proves_injective_strand_carrier_soundness)
+        self.assertEqual(carrier_audit.failure_reasons, ())
+
+        noninjective_carrier_audit = universal_k_strand_carrier_soundness_audit(
+            interval,
+            (
+                ("a", "a0", 0),
+                ("a", "a1", 0),
+                ("b", "b0", 0),
+                ("b", "b1", 1),
+            ),
+        )
+        self.assertFalse(
+            noninjective_carrier_audit.proves_injective_strand_carrier_soundness
+        )
+        self.assertIn(
+            "strand_carrier_not_injective",
+            noninjective_carrier_audit.failure_reasons,
+        )
+
+        coordinate_label_audit = universal_k_fibre_label_identity_audit(
+            interval,
+            carrier_rows,
+        )
+        self.assertFalse(coordinate_label_audit.proves_fibre_label_identity_action)
+        self.assertIn(
+            "fibre_label_identity_not_preserved",
+            coordinate_label_audit.failure_reasons,
+        )
+
+        residual = universal_k_strand_carrier_residual_faithfulness_audit(
+            interval,
+            seed_states,
+            carrier_rows,
+        )
+        self.assertTrue(residual.proves_residual_faithfulness)
+        self.assertEqual(
+            residual.residual_endpoint_channel_reasons,
+            ("strand_carrier_identity_residual_channel",),
+        )
+
+        automatic = universal_k_automatic_residual_faithfulness_audit(
+            interval,
+            seed_states,
+            strand_carrier_rows=carrier_rows,
+        )
+        self.assertTrue(automatic.proves_residual_faithfulness)
+        self.assertEqual(
+            automatic.residual_endpoint_channel_reasons,
+            ("strand_carrier_identity_residual_channel",),
+        )
+
+        family_audit = universal_k_identity_endpoint_observer_builds_by_family(
+            interval,
+            seed_entries,
+            derive_strand_carrier_residual_faithfulness=True,
+            strand_carrier_rows=carrier_rows,
+        )
+        self.assertEqual(family_audit.failure_reasons, ())
+        self.assertTrue(family_audit.proves_family_endpoint_observers)
+        self.assertEqual(
+            family_audit.product_residual_theorem_channel_reasons,
+            ("strand_carrier_identity_residual_channel",),
+        )
+
+        malformed_carrier_audit = universal_k_strand_carrier_soundness_audit(
+            interval,
+            None,
+        )
+        self.assertFalse(malformed_carrier_audit.proves_strand_carrier_soundness)
+        self.assertEqual(malformed_carrier_audit.malformed_carrier_rows, (None,))
+        self.assertIn(
+            "strand_carrier_malformed_rows",
+            malformed_carrier_audit.failure_reasons,
+        )
+
     def test_canonical_fibre_label_identity_residual_faithfulness_derives_rows(self):
         interval = two_color_fibre_label_identity_swap_interval()
         seed_entries = tuple(
@@ -10099,6 +10252,133 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             set(row.endpoint_value for row in full_domain_positive_rows),
             {None},
         )
+
+    def test_full_domain_no_constant_word_potentials_force_identity_emissions(self):
+        interval = one_color_identity_interval()
+        group = cyclic_group(2)
+        seed_state = ("*", "*", "left_constant_map_universal_kernel")
+        seed_key = ("U", seed_state)
+        seed_entries = (
+            (
+                (
+                    "*",
+                    "*",
+                    "L",
+                    "constant_map_kernel",
+                    ("*", (0, 1), "universal", "universal"),
+                ),
+                seed_key,
+            ),
+        )
+        positive_keys = tuple(
+            key
+            for key in universal_k_signed_endpoint_required_entry_keys(
+                interval,
+                (seed_key,),
+            )
+            if key[2] == 1
+        )
+        positive_state_rows = tuple(
+            UniversalKSignedEndpointGeneratorRow(
+                endpoint_family=family,
+                seed_state=state,
+                sign=1,
+                left_color=left_color,
+                right_color=right_color,
+                input_left=x,
+                input_right=y,
+                output_left=interval.T[(left_color, right_color, x, y)][0],
+                output_right=interval.T[(left_color, right_color, x, y)][1],
+                next_seed_state=state,
+                endpoint_value=None,
+            )
+            for family, state, _sign, left_color, right_color, x, y in positive_keys
+        )
+
+        no_constant_templates = (
+            (),
+            ((("U", 0, 0), 1),),
+            ((("U", 0, 1), 1),),
+            ((("U", 0, 0), 1), (("U", 0, 1), -1)),
+        )
+        for template in no_constant_templates:
+            certificate = universal_k_word_potential_certificate_from_monodromy(
+                interval,
+                seed_entries,
+                group,
+                ((seed_key, template),),
+                positive_state_rows,
+            )
+            self.assertTrue(certificate.templates_use_only_current_longitudes)
+            self.assertTrue(certificate.detector_domains_sound)
+            endpoint_values = tuple(
+                row.endpoint_value for row in certificate.identity_row_objects
+            )
+            self.assertTrue(
+                all(value in {None, group.identity} for value in endpoint_values)
+            )
+            if certificate.coboundary_defects_constant:
+                self.assertEqual(set(endpoint_values), {group.identity})
+            else:
+                self.assertIn(None, endpoint_values)
+
+        identity_certificate = universal_k_word_potential_certificate_from_monodromy(
+            interval,
+            seed_entries,
+            group,
+            ((seed_key, ()),),
+            positive_state_rows,
+        )
+        self.assertTrue(identity_certificate.coboundary_defects_constant)
+        forged_nonidentity = replace(
+            identity_certificate,
+            identity_rows=tuple(
+                replace(row, endpoint_value=1)
+                for row in identity_certificate.identity_row_objects
+            ),
+        )
+        self.assertFalse(forged_nonidentity.identities_verified)
+        self.assertFalse(forged_nonidentity.coboundary_defects_constant)
+        self.assertIn(
+            "word_potential_identity_mismatch",
+            tuple(failure[1] for failure in forged_nonidentity.identity_failures),
+        )
+
+    def test_fixed_carrier_word_potential_can_emit_nonidentity(self):
+        group = cyclic_group(2)
+        carrier = 1
+        u0 = ("U", 0, 0)
+        u1 = ("U", 0, 1)
+        source_template = ((u1, 1), (u0, -1))
+        next_template = ((u0, 1), (u1, -1))
+
+        defects = set()
+        for left_longitude in group.elements:
+            for right_longitude in group.elements:
+                assignment = {
+                    u0: left_longitude,
+                    u1: right_longitude,
+                }
+                source = universal_k_evaluate_word_potential(
+                    group,
+                    assignment,
+                    source_template,
+                )
+                image_u0 = group.mul(
+                    group.mul(
+                        group.mul(left_longitude, carrier),
+                        group.inv(left_longitude),
+                    ),
+                    right_longitude,
+                )
+                image_u1 = left_longitude
+                substituted_next = group.mul(image_u0, group.inv(image_u1))
+                defects.add(group.mul(group.inv(source), substituted_next))
+
+        self.assertEqual(defects, {carrier})
+        self.assertNotEqual(carrier, group.identity)
+        self.assertNotIn(("A", 0, 0), {letter[0] for letter in source_template})
+        self.assertNotIn(("A", 0, 0), {letter[0] for letter in next_template})
 
     def test_word_potential_certificate_from_monodromy_filters_invalid_raw_rows(self):
         interval = one_color_identity_interval()

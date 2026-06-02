@@ -165,6 +165,8 @@ UniversalKWordPotentialSubstitution = Tuple[
 UniversalKWordPotentialFailure = Tuple[object, str, object]
 UniversalKFibreLabelRow = Tuple[Color, FibrePoint, object]
 UniversalKFibreLabelFailure = Tuple[object, str, object]
+UniversalKStrandCarrierRow = Tuple[Color, FibrePoint, object]
+UniversalKStrandCarrierFailure = Tuple[object, str, object]
 
 
 _UNIVERSAL_K_DETECTOR_TRACK_ALLOWED_DEPENDENCIES = frozenset(
@@ -3539,6 +3541,286 @@ def universal_k_interval_has_fibre_label_identity_action(
     ).proves_fibre_label_identity_action
 
 
+@dataclass(frozen=True)
+class UniversalKStrandCarrierSoundnessAudit:
+    """Finite certificate that local rows preserve Artin strand carriers.
+
+    The carrier label attached to the left output follows the right input
+    strand, and the carrier label attached to the right output follows the
+    left input strand.  This is distinct from coordinatewise fibre-label
+    preservation.
+    """
+
+    interval: LocalInterval
+    carrier_rows: Tuple[object, ...]
+
+    @property
+    def expected_carrier_keys(self) -> Tuple[Tuple[Color, FibrePoint], ...]:
+        return tuple(
+            sorted(
+                (
+                    (color, point)
+                    for color in self.interval.colors
+                    for point in self.interval.fibres[color]
+                ),
+                key=repr,
+            )
+        )
+
+    @property
+    def carrier_row_parts(self) -> Tuple[Tuple[object, object, object], ...]:
+        return tuple(
+            parts
+            for row in self.carrier_rows
+            for parts in (_universal_k_fibre_label_row_parts(row),)
+            if parts is not None
+        )
+
+    @property
+    def malformed_carrier_rows(self) -> Tuple[object, ...]:
+        return _unique_values(
+            tuple(
+                row
+                for row in self.carrier_rows
+                if _universal_k_fibre_label_row_parts(row) is None
+            )
+        )
+
+    @property
+    def invalid_carrier_rows(self) -> Tuple[UniversalKStrandCarrierFailure, ...]:
+        failures = []
+        for color, point, carrier in self.carrier_row_parts:
+            if color not in self.interval.colors:
+                failures.append(((color, point), "strand_carrier_unknown_color", color))
+                continue
+            if point not in self.interval.fibres[color]:
+                failures.append(
+                    ((color, point), "strand_carrier_point_outside_fibre", point)
+                )
+            if not _is_hashable(carrier):
+                failures.append(((color, point), "strand_carrier_unhashable", carrier))
+        return tuple(sorted(_unique_values(tuple(failures)), key=repr))
+
+    @property
+    def valid_carrier_rows(self) -> Tuple[UniversalKStrandCarrierRow, ...]:
+        invalid_keys = {
+            _value_marker(failure[0]) for failure in self.invalid_carrier_rows
+        }
+        return tuple(
+            (color, point, carrier)
+            for color, point, carrier in self.carrier_row_parts
+            if _value_marker((color, point)) not in invalid_keys
+            and color in self.interval.colors
+            and point in self.interval.fibres[color]
+            and _is_hashable(carrier)
+        )
+
+    @property
+    def covered_carrier_keys(self) -> Tuple[Tuple[Color, FibrePoint], ...]:
+        return tuple((color, point) for color, point, _carrier in self.valid_carrier_rows)
+
+    @property
+    def duplicate_carrier_keys(self) -> Tuple[Tuple[Color, FibrePoint], ...]:
+        return _duplicate_values(self.covered_carrier_keys)
+
+    @property
+    def missing_carrier_keys(self) -> Tuple[Tuple[Color, FibrePoint], ...]:
+        covered = _value_marker_set(self.covered_carrier_keys)
+        return tuple(
+            key for key in self.expected_carrier_keys if _value_marker(key) not in covered
+        )
+
+    @property
+    def extra_carrier_keys(self) -> Tuple[Tuple[Color, FibrePoint], ...]:
+        expected = _value_marker_set(self.expected_carrier_keys)
+        return tuple(
+            key
+            for key in self.covered_carrier_keys
+            if _value_marker(key) not in expected
+        )
+
+    @property
+    def carrier_map(self) -> Mapping[Tuple[Color, FibrePoint], object]:
+        mapped: dict[Tuple[Color, FibrePoint], object] = {}
+        for color, point, carrier in self.valid_carrier_rows:
+            mapped.setdefault((color, point), carrier)
+        return mapped
+
+    @property
+    def carrier_domain_exact(self) -> bool:
+        return (
+            not self.malformed_carrier_rows
+            and not self.invalid_carrier_rows
+            and not self.duplicate_carrier_keys
+            and not self.missing_carrier_keys
+            and not self.extra_carrier_keys
+        )
+
+    @property
+    def carrier_injectivity_failures(
+        self,
+    ) -> Tuple[UniversalKStrandCarrierFailure, ...]:
+        failures = []
+        for color in self.interval.colors:
+            seen: dict[object, FibrePoint] = {}
+            for point in self.interval.fibres[color]:
+                key = (color, point)
+                if key not in self.carrier_map:
+                    continue
+                carrier = self.carrier_map[key]
+                marker = _value_marker(carrier)
+                previous = seen.setdefault(marker, point)
+                if previous != point:
+                    failures.append(
+                        (
+                            color,
+                            "strand_carrier_not_injective",
+                            (carrier, previous, point),
+                        )
+                    )
+        return tuple(sorted(_unique_values(tuple(failures)), key=repr))
+
+    @property
+    def strand_carrier_failures(self) -> Tuple[UniversalKStrandCarrierFailure, ...]:
+        if not self.carrier_domain_exact:
+            return ()
+        failures = []
+        carriers = self.carrier_map
+        for left_color, right_color in product(self.interval.colors, repeat=2):
+            output_colors = self.interval.base_R.get((left_color, right_color))
+            if output_colors is None:
+                failures.append(
+                    (
+                        (left_color, right_color),
+                        "strand_carrier_missing_base_row",
+                        None,
+                    )
+                )
+                continue
+            output_left_color, output_right_color = output_colors
+            for input_left in self.interval.fibres[left_color]:
+                for input_right in self.interval.fibres[right_color]:
+                    output = self.interval.T.get(
+                        (left_color, right_color, input_left, input_right)
+                    )
+                    if output is None:
+                        failures.append(
+                            (
+                                (
+                                    left_color,
+                                    right_color,
+                                    input_left,
+                                    input_right,
+                                ),
+                                "strand_carrier_missing_local_row",
+                                None,
+                            )
+                        )
+                        continue
+                    output_left, output_right = output
+                    if carriers[(output_left_color, output_left)] != carriers[
+                        (right_color, input_right)
+                    ]:
+                        failures.append(
+                            (
+                                (
+                                    left_color,
+                                    right_color,
+                                    input_left,
+                                    input_right,
+                                ),
+                                "left_strand_carrier_not_swapped",
+                                (output_left_color, output_left),
+                            )
+                        )
+                    if carriers[(output_right_color, output_right)] != carriers[
+                        (left_color, input_left)
+                    ]:
+                        failures.append(
+                            (
+                                (
+                                    left_color,
+                                    right_color,
+                                    input_left,
+                                    input_right,
+                                ),
+                                "right_strand_carrier_not_swapped",
+                                (output_right_color, output_right),
+                            )
+                        )
+        return tuple(sorted(_unique_values(tuple(failures)), key=repr))
+
+    @property
+    def proves_strand_carrier_soundness(self) -> bool:
+        return self.carrier_domain_exact and not self.strand_carrier_failures
+
+    @property
+    def proves_injective_strand_carrier_soundness(self) -> bool:
+        return (
+            self.proves_strand_carrier_soundness
+            and not self.carrier_injectivity_failures
+        )
+
+    @property
+    def failure_reasons(self) -> Tuple[str, ...]:
+        reasons = []
+        if self.malformed_carrier_rows:
+            reasons.append("strand_carrier_malformed_rows")
+        if self.invalid_carrier_rows:
+            reasons.append("strand_carrier_invalid_rows")
+        if self.duplicate_carrier_keys:
+            reasons.append("strand_carrier_duplicate_keys")
+        if self.missing_carrier_keys:
+            reasons.append("strand_carrier_missing_keys")
+        if self.extra_carrier_keys:
+            reasons.append("strand_carrier_extra_keys")
+        if self.carrier_injectivity_failures:
+            reasons.append("strand_carrier_not_injective")
+        if self.strand_carrier_failures:
+            reasons.append("strand_carrier_not_swapped")
+        return tuple(reasons)
+
+
+def universal_k_strand_carrier_soundness_audit(
+    interval: LocalInterval,
+    carrier_rows: object,
+) -> UniversalKStrandCarrierSoundnessAudit:
+    """Audit a finite strand-carrier soundness certificate."""
+
+    return UniversalKStrandCarrierSoundnessAudit(
+        interval=interval,
+        carrier_rows=_universal_k_row_input_tuple(carrier_rows),
+    )
+
+
+def universal_k_interval_has_strand_carrier_soundness(
+    interval: LocalInterval,
+    carrier_rows: object,
+) -> bool:
+    """Return whether fixed carrier labels follow Artin strands locally."""
+
+    return _universal_k_interval_table_complete_and_type_correct(
+        interval
+    ) and universal_k_strand_carrier_soundness_audit(
+        interval,
+        carrier_rows,
+    ).proves_strand_carrier_soundness
+
+
+def universal_k_interval_has_injective_strand_carrier_action(
+    interval: LocalInterval,
+    carrier_rows: object,
+) -> bool:
+    """Return whether strand-carrier labels are sound and fibrewise injective."""
+
+    return _universal_k_interval_table_complete_and_type_correct(
+        interval
+    ) and universal_k_strand_carrier_soundness_audit(
+        interval,
+        carrier_rows,
+    ).proves_injective_strand_carrier_soundness
+
+
 def universal_k_canonical_fibre_label_identity_rows(
     interval: LocalInterval,
 ) -> Tuple[UniversalKFibreLabelRow, ...]:
@@ -3769,6 +4051,23 @@ def universal_k_fibre_label_identity_residual_faithfulness_audit(
     )
 
 
+def universal_k_strand_carrier_residual_faithfulness_audit(
+    interval: LocalInterval,
+    endpoint_seed_states: Sequence[Tuple[str, UniversalKSeedState]],
+    carrier_rows: object,
+) -> UniversalKResidualFaithfulnessAudit:
+    """Prove residual faithfulness from injective strand-carrier labels."""
+
+    return _universal_k_trivial_residual_faithfulness_audit(
+        endpoint_seed_states,
+        row_reason="strand_carrier_identity_residual_channel",
+        theorem_holds=universal_k_interval_has_injective_strand_carrier_action(
+            interval,
+            carrier_rows,
+        ),
+    )
+
+
 def universal_k_canonical_fibre_label_identity_residual_faithfulness_audit(
     interval: LocalInterval,
     endpoint_seed_states: Sequence[Tuple[str, UniversalKSeedState]],
@@ -3788,6 +4087,7 @@ def universal_k_automatic_residual_faithfulness_audit(
     interval: LocalInterval,
     endpoint_seed_states: Sequence[Tuple[str, UniversalKSeedState]],
     *,
+    strand_carrier_rows: object = (),
     fibre_label_identity_rows: object = (),
 ) -> UniversalKResidualFaithfulnessAudit:
     """Try the proved residual-triviality helpers in a fixed certificate order.
@@ -3795,12 +4095,14 @@ def universal_k_automatic_residual_faithfulness_audit(
     This is a convenience certificate selector, not a new theorem.  It returns
     the first proving all-``n`` residual-faithfulness audit among the symbolic
     subcases already proved above: strict identity, coordinate identity,
-    singleton fibres, supplied fibre-label identity when a ledger is present,
-    and canonical fibre-label identity when no supplied label ledger is being
-    used.  If a supplied label ledger is present but fails, that failed audit
-    is returned so stale or malformed certificate data is not hidden by the
-    canonical fallback.  If no supplied label ledger is present and no subcase
-    proves, the final canonical audit is returned as the open obligation.
+    singleton fibres, supplied strand-carrier identity when a ledger is
+    present, supplied fibre-label identity when a ledger is present, and
+    canonical fibre-label identity when no supplied label or carrier ledger is
+    being used.  If a supplied carrier or label ledger is present but fails,
+    that failed audit is returned so stale or malformed certificate data is
+    not hidden by the canonical fallback.  If no supplied carrier/label ledger
+    is present and no subcase proves, the final canonical audit is returned as
+    the open obligation.
     """
 
     candidates = [
@@ -3820,6 +4122,13 @@ def universal_k_automatic_residual_faithfulness_audit(
     for audit in candidates:
         if audit.proves_residual_faithfulness:
             return audit
+    if strand_carrier_rows:
+        supplied_carrier = universal_k_strand_carrier_residual_faithfulness_audit(
+            interval,
+            endpoint_seed_states,
+            strand_carrier_rows,
+        )
+        return supplied_carrier
     if fibre_label_identity_rows:
         supplied_label = universal_k_fibre_label_identity_residual_faithfulness_audit(
             interval,
@@ -12706,7 +13015,10 @@ def universal_k_word_potential_certificate_from_monodromy(
     and uses that constant value as the endpoint emission.  The returned
     certificate is still checked by ``UniversalKWordPotentialCertificate``:
     nonconstant defects, unsound domains, duplicate rows, and missing entries
-    remain ordinary audit failures.
+    remain ordinary audit failures.  With the current no-constant template
+    rules, a defect that is constant on the full finite domain can only emit
+    the identity element; nontrivial endpoint emissions require either a
+    sound restricted-domain theorem or a future fixed-carrier extension.
     """
 
     reachable_seed_states = _universal_k_positive_monodromy_state_closure(
@@ -13067,7 +13379,11 @@ def _universal_k_supplied_label_residual_failed(
     if audit is None or audit.proves_residual_faithfulness:
         return False
     return any(
-        tuple(row)[-1:] == ("fibre_label_identity_residual_channel",)
+        tuple(row)[-1:]
+        in {
+            ("fibre_label_identity_residual_channel",),
+            ("strand_carrier_identity_residual_channel",),
+        }
         for row in audit.expected_residual_input_tuples
     )
 
@@ -13086,8 +13402,10 @@ def _universal_k_residual_rows_with_identity_helpers(
     derive_strict_identity_residual_faithfulness: bool = False,
     derive_coordinate_identity_residual_faithfulness: bool = False,
     derive_singleton_fibre_residual_faithfulness: bool = False,
+    derive_strand_carrier_residual_faithfulness: bool = False,
     derive_fibre_label_identity_residual_faithfulness: bool = False,
     derive_canonical_fibre_label_identity_residual_faithfulness: bool = False,
+    strand_carrier_rows: object = (),
     fibre_label_identity_rows: object = (),
 ) -> Tuple[
     Tuple[Tuple[str, UniversalKResidualFaithfulnessAudit], ...],
@@ -13121,6 +13439,7 @@ def _universal_k_residual_rows_with_identity_helpers(
             derived_residual = universal_k_automatic_residual_faithfulness_audit(
                 interval,
                 family_seed_states,
+                strand_carrier_rows=strand_carrier_rows,
                 fibre_label_identity_rows=fibre_label_identity_rows,
             )
             supplied_label_residual_failed = _universal_k_supplied_label_residual_failed(
@@ -13161,6 +13480,23 @@ def _universal_k_residual_rows_with_identity_helpers(
                     interval,
                     family_seed_states,
                 )
+            )
+        if (
+            derive_strand_carrier_residual_faithfulness
+            and (
+                derived_residual is None
+                or not derived_residual.proves_residual_faithfulness
+            )
+        ):
+            derived_residual = (
+                universal_k_strand_carrier_residual_faithfulness_audit(
+                    interval,
+                    family_seed_states,
+                    strand_carrier_rows,
+                )
+            )
+            supplied_label_residual_failed = _universal_k_supplied_label_residual_failed(
+                derived_residual
             )
         if (
             derive_fibre_label_identity_residual_faithfulness
@@ -13212,6 +13548,7 @@ def _universal_k_residual_rows_with_identity_helpers(
         or derive_strict_identity_residual_faithfulness
         or derive_coordinate_identity_residual_faithfulness
         or derive_singleton_fibre_residual_faithfulness
+        or derive_strand_carrier_residual_faithfulness
         or derive_fibre_label_identity_residual_faithfulness
         or derive_canonical_fibre_label_identity_residual_faithfulness
     )
@@ -13382,8 +13719,10 @@ def universal_k_endpoint_observer_builds_from_monodromy_by_family(
     derive_strict_identity_residual_faithfulness: bool = False,
     derive_coordinate_identity_residual_faithfulness: bool = False,
     derive_singleton_fibre_residual_faithfulness: bool = False,
+    derive_strand_carrier_residual_faithfulness: bool = False,
     derive_fibre_label_identity_residual_faithfulness: bool = False,
     derive_canonical_fibre_label_identity_residual_faithfulness: bool = False,
+    strand_carrier_rows: object = (),
     fibre_label_identity_rows: object = (),
 ) -> UniversalKEndpointObserverFamilyBuildAudit:
     """Build family observers from finite monodromy and potential data.
@@ -13414,12 +13753,16 @@ def universal_k_endpoint_observer_builds_from_monodromy_by_family(
             derive_singleton_fibre_residual_faithfulness=(
                 derive_singleton_fibre_residual_faithfulness
             ),
+            derive_strand_carrier_residual_faithfulness=(
+                derive_strand_carrier_residual_faithfulness
+            ),
             derive_fibre_label_identity_residual_faithfulness=(
                 derive_fibre_label_identity_residual_faithfulness
             ),
             derive_canonical_fibre_label_identity_residual_faithfulness=(
                 derive_canonical_fibre_label_identity_residual_faithfulness
             ),
+            strand_carrier_rows=strand_carrier_rows,
             fibre_label_identity_rows=fibre_label_identity_rows,
         )
     )
@@ -13625,8 +13968,10 @@ def universal_k_identity_endpoint_observer_builds_by_family(
     derive_strict_identity_residual_faithfulness: bool = False,
     derive_coordinate_identity_residual_faithfulness: bool = False,
     derive_singleton_fibre_residual_faithfulness: bool = False,
+    derive_strand_carrier_residual_faithfulness: bool = False,
     derive_fibre_label_identity_residual_faithfulness: bool = False,
     derive_canonical_fibre_label_identity_residual_faithfulness: bool = False,
+    strand_carrier_rows: object = (),
     fibre_label_identity_rows: object = (),
     residual_faithfulness_theorems_by_family: Sequence[
         Tuple[str, UniversalKResidualFaithfulnessAudit]
@@ -13754,12 +14099,16 @@ def universal_k_identity_endpoint_observer_builds_by_family(
             derive_singleton_fibre_residual_faithfulness=(
                 derive_singleton_fibre_residual_faithfulness
             ),
+            derive_strand_carrier_residual_faithfulness=(
+                derive_strand_carrier_residual_faithfulness
+            ),
             derive_fibre_label_identity_residual_faithfulness=(
                 derive_fibre_label_identity_residual_faithfulness
             ),
             derive_canonical_fibre_label_identity_residual_faithfulness=(
                 derive_canonical_fibre_label_identity_residual_faithfulness
             ),
+            strand_carrier_rows=strand_carrier_rows,
             fibre_label_identity_rows=fibre_label_identity_rows,
         )
     )
@@ -21290,8 +21639,10 @@ def post_linear_remaining_finite_system_audit(
     universal_k_identity_strict_residual_faithfulness: bool = False,
     universal_k_identity_coordinate_residual_faithfulness: bool = False,
     universal_k_identity_singleton_residual_faithfulness: bool = False,
+    universal_k_identity_strand_carrier_residual_faithfulness: bool = False,
     universal_k_identity_fibre_label_residual_faithfulness: bool = False,
     universal_k_identity_canonical_fibre_label_residual_faithfulness: bool = False,
+    universal_k_identity_strand_carrier_rows: object = (),
     universal_k_identity_fibre_label_rows: object = (),
     unsupported_companion_structural_contradiction: (
         UnsupportedCompanionStructuralContradictionAudit | None
@@ -21358,6 +21709,7 @@ def post_linear_remaining_finite_system_audit(
         or universal_k_identity_strict_residual_faithfulness
         or universal_k_identity_coordinate_residual_faithfulness
         or universal_k_identity_singleton_residual_faithfulness
+        or universal_k_identity_strand_carrier_residual_faithfulness
         or universal_k_identity_fibre_label_residual_faithfulness
         or universal_k_identity_canonical_fibre_label_residual_faithfulness
         or bool(
@@ -21497,12 +21849,16 @@ def post_linear_remaining_finite_system_audit(
                     derive_singleton_fibre_residual_faithfulness=(
                         universal_k_identity_singleton_residual_faithfulness
                     ),
+                    derive_strand_carrier_residual_faithfulness=(
+                        universal_k_identity_strand_carrier_residual_faithfulness
+                    ),
                     derive_fibre_label_identity_residual_faithfulness=(
                         universal_k_identity_fibre_label_residual_faithfulness
                     ),
                     derive_canonical_fibre_label_identity_residual_faithfulness=(
                         universal_k_identity_canonical_fibre_label_residual_faithfulness
                     ),
+                    strand_carrier_rows=universal_k_identity_strand_carrier_rows,
                     fibre_label_identity_rows=universal_k_identity_fibre_label_rows,
                 )
             )
@@ -21555,12 +21911,16 @@ def post_linear_remaining_finite_system_audit(
                     derive_singleton_fibre_residual_faithfulness=(
                         universal_k_identity_singleton_residual_faithfulness
                     ),
+                    derive_strand_carrier_residual_faithfulness=(
+                        universal_k_identity_strand_carrier_residual_faithfulness
+                    ),
                     derive_fibre_label_identity_residual_faithfulness=(
                         universal_k_identity_fibre_label_residual_faithfulness
                     ),
                     derive_canonical_fibre_label_identity_residual_faithfulness=(
                         universal_k_identity_canonical_fibre_label_residual_faithfulness
                     ),
+                    strand_carrier_rows=universal_k_identity_strand_carrier_rows,
                     fibre_label_identity_rows=universal_k_identity_fibre_label_rows,
                     residual_faithfulness_theorems_by_family=(
                         universal_k_residual_faithfulness_theorems_by_family

@@ -591,6 +591,47 @@ defect value, and the negative row is then forced by inversion.  A smaller
 detector domain is not a decisive machine-checked certificate in the current
 audit layer; it is retained only as diagnostic row data unless the supplied
 assignment ledger is exactly the full finite variable domain.
+This full-domain route has an important built-in limitation.  Under the
+current template rules, `W_s` is a word only in current longitude variables
+and contains no fixed endpoint constants or raw assignment variables.  On the
+full detector domain, the all-identity assignment for every `U_{r,j}` and
+`A_{r,j}` is available.  At that assignment every template and every positive
+Artin substitution evaluates to the identity of `H_E`, so any constant
+coboundary defect must have constant value `1`.  Therefore full-domain
+no-constant word-potential certificates can produce only identity endpoint
+emissions.  They close residual-trivial observer subcases, but nontrivial
+U/C/M endpoint motion still requires a stronger certificate: fixed carrier
+labels chosen before braid reading, a symbolic restricted reachable-domain
+soundness theorem excluding the irrelevant all-identity raw-assignment point,
+or a structural proof that all remaining endpoint obligations are
+residual-trivial.
+The fixed-carrier repair replaces the quantified raw `A` variables by a
+finite carrier-soundness ledger.  For each positive row key
+`e=(E,+,s,a,b,x,y)`, the certificate declares a finite carrier domain
+`C_e subset H_E^{2R_E}`.  Whenever a braid prefix reaches that row at
+positions `k,k+1`, the initialized detector-track carriers
+`(a_{t,p(k)},a_{t,p(k+1)})` must be proved to lie in `C_e`.  A constant
+carrier assignment `a_{t,i}=m_t` gives an immediate singleton domain
+`C_e={((m_0,m_0),...,(m_{R_E-1},m_{R_E-1}))}`.  The row identity is then
+checked for every longitude-variable assignment and every carrier tuple in
+`C_e`:
+`W_s(U)^-1 W_{F_r(s)}(A_{r,M}^+(U))=h_e`, with `h_e` independent of `U` and
+`M`.  This avoids the old all-identity raw-assignment obstruction while
+preserving the all-`n` telescope, because terminal templates still use only
+current longitude variables.
+The sound carrier domains can be certified locally by strand-carrier maps.
+For a finite carrier alphabet `L_E`, choose maps `ell_c:A_c->L_E`.  The
+finite row check is the swapped preservation law
+`ell_c(u)=ell_b(y)` and `ell_d(v)=ell_a(x)` for every
+`R_C(a,b)=(c,d)` and `T_{a,b}(x,y)=(u,v)`.  These equations are necessary
+and sufficient for the carriers initialized as `ell_c(x)` to travel with
+Artin strands for every braid index and braid word.  Consequently each row
+key has a singleton sound carrier domain determined by its input fibres.  If
+the maps `ell_c` are fibrewise injective, the same invariant gives an
+automatic residual-faithfulness theorem for braids with identity Artin
+permutation in the quotient kernel.  This is separate from the earlier
+coordinate-label identity helper, whose labels follow coordinate positions
+rather than swapped Artin strands.
 
 The old rowwise two-strand witness gate is retained only as diagnostic data.
 It is not a decisive endpoint-closure condition: for the standard Artin
