@@ -2069,11 +2069,12 @@ helper may not replace it in the same per-family observer candidate or in the
 same product-family residual theorem.
 All automatic residual-faithfulness helpers must preserve the full
 supplied routed seed-state ledger in the theorem.  They may use only
-well-formed U/C/M seed states to emit schematic rows, but malformed,
-wrong-family, or unhashable seed-state entries must remain in the expected
-and covered theorem ledgers and must make the theorem fail.  No automatic
-helper may silently discard bad seed data and prove residual faithfulness for
-a smaller endpoint scope.
+well-formed U/C/M seed states to emit schematic rows, but a non-sequence
+ledger, duplicate entries, malformed entries, wrong-family entries, or
+unhashable seed-state entries must remain in the expected and covered theorem
+ledgers and must make the theorem fail.  No automatic helper may silently
+discard bad seed data and prove residual faithfulness for a smaller endpoint
+scope.
 The post-linear proof object should retain the resulting endpoint-observer
 build record, not only the derived signed-generator audit.  A complete
 certificate should expose whether the build is present, whether it proves the

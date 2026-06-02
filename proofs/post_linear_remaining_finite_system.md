@@ -1232,11 +1232,11 @@ not allowed to replace it in the same per-family or product-family observer
 candidate.
 All automatic residual-faithfulness helpers preserve the full supplied
 routed seed-state ledger in the theorem.  They may use only the well-formed
-U/C/M seed states to emit schematic rows, but malformed, wrong-family, or
-unhashable seed-state entries remain in the expected and covered theorem
-ledgers and therefore keep the residual theorem open.  An automatic helper
-cannot silently drop bad seed data and prove residual faithfulness for a
-smaller endpoint scope.
+U/C/M seed states to emit schematic rows, but a non-sequence ledger, duplicate
+entries, malformed entries, wrong-family entries, or unhashable seed-state
+entries remain in the expected and covered theorem ledgers and therefore keep
+the residual theorem open.  An automatic helper cannot silently drop bad seed
+data and prove residual faithfulness for a smaller endpoint scope.
 For a multi-family product endpoint row, the family ledger also requires a
 separate product residual-faithfulness theorem scoped to the full active
 family set and the full set of seed states hit by `kappa`.  Per-family

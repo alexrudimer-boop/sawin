@@ -1456,6 +1456,15 @@ finite variable domain for the row's coboundary-defect support; otherwise the
 certificate fails with `detector_domain_subset_not_full_finite_domain`.
 Proper restricted subsets remain diagnostic row data only until a stronger
 machine-checkable all-`n` soundness certificate is implemented.
+The automatic residual-faithfulness helpers now preserve malformed and
+duplicate routed seed-state ledgers as theorem data instead of deduplicating
+or crashing before audit construction.  A strict-identity, singleton-fibre,
+coordinate-identity, or fibre-label residual helper can use only well-formed
+seed states to emit schematic rows, but duplicate seed-state entries still
+trigger `residual_faithfulness_duplicate_seed_states`, and non-sequence or
+otherwise malformed ledgers trigger
+`residual_faithfulness_malformed_seed_states`; either case keeps the observer
+open.
 This removes another false endpoint closure and leaves the same local
 nontrivial observer-existence gap: construct residual-faithful U/C/M
 monodromy-coboundary observers for all surviving intervals, or produce a

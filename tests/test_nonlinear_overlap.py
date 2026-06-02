@@ -6683,6 +6683,32 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             "residual_faithfulness_malformed_seed_states",
             malformed_seed_residual.failure_reasons,
         )
+        duplicate_seed_residual = universal_k_strict_identity_residual_faithfulness_audit(
+            interval,
+            seed_states + (seed_states[0],),
+        )
+        self.assertFalse(duplicate_seed_residual.proves_residual_faithfulness)
+        self.assertEqual(
+            duplicate_seed_residual.duplicate_expected_endpoint_seed_states,
+            (seed_states[0],),
+        )
+        self.assertIn(
+            "residual_faithfulness_duplicate_seed_states",
+            duplicate_seed_residual.failure_reasons,
+        )
+        none_seed_residual = universal_k_strict_identity_residual_faithfulness_audit(
+            interval,
+            None,
+        )
+        self.assertFalse(none_seed_residual.proves_residual_faithfulness)
+        self.assertEqual(
+            none_seed_residual.malformed_expected_endpoint_seed_states,
+            (None,),
+        )
+        self.assertIn(
+            "residual_faithfulness_malformed_seed_states",
+            none_seed_residual.failure_reasons,
+        )
 
         family_audit = universal_k_identity_endpoint_observer_builds_by_family(
             interval,

@@ -3639,7 +3639,7 @@ def _universal_k_trivial_residual_faithfulness_audit(
     row_reason: str,
     theorem_holds: bool,
 ) -> UniversalKResidualFaithfulnessAudit:
-    seed_states = _unique_values(tuple(endpoint_seed_states))
+    seed_states = _universal_k_row_input_tuple(endpoint_seed_states)
     valid_seed_states = tuple(
         state
         for state in seed_states
