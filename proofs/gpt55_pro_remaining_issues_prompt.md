@@ -1760,6 +1760,15 @@ per-family residual-faithfulness rows, and the product residual-faithfulness
 row for multi-family endpoint products, are supplied and pass the finite
 scope checks.  Otherwise it must remain an open observer candidate rather
 than a default endpoint-emission proof.
+If the identity constructor is supplied explicit cutoff degrees, that
+cutoff-degree table is finite certificate data.  Each row must have exact
+two-field shape `(family, positive_degree)`, the family must be a hashable
+active cutoff family `C` or `M`, and the degree must be a positive integer
+that is not a boolean.  Duplicate families, unknown family labels, U-family
+degree rows, unhashable family labels, nonpositive degrees, and malformed row
+shapes must be reported as identity cutoff-degree ledger failures.  They may
+not be silently ignored while the constructor falls back to a default
+symmetric degree.
 The top-level post-linear audit may derive this canonical candidate by an
 explicit opt-in flag, `universal_k_identity_endpoint_observer_candidates`.
 This flag only retains the identity monodromy-coboundary ledger in the
@@ -2331,6 +2340,7 @@ endpoint_observer_family_seed_classifier_ledger_well_formed,
 endpoint_observer_family_build_row_failure_reasons_exposed,
 identity_endpoint_observer_constructor_keeps_residual_faithfulness_required,
 identity_endpoint_observer_top_level_opt_in_is_nondecisive,
+identity_endpoint_observer_cutoff_degree_ledger_exact,
 strict_identity_fibre_action_residual_faithfulness_subcase,
 coordinate_identity_fibre_action_residual_faithfulness_subcase,
 singleton_fibre_action_residual_faithfulness_subcase,

@@ -933,6 +933,12 @@ only the finite bookkeeping of the identity observer candidate.  It does not
 assert residual faithfulness and it does not prove that the true residual
 fibre action is trivial.  Without a scoped residual-faithfulness theorem, the
 constructed family builds remain open and report the missing residual gate.
+If the constructor is given explicit identity cutoff degrees, those rows are
+also finite ledger data: each row must have shape `(family, positive_degree)`,
+the family must be a hashable active cutoff family `C` or `M`, duplicate
+families are rejected, and nonpositive, boolean, unknown, unhashable, extra,
+or malformed rows keep the identity observer ledger open rather than being
+silently replaced by the default symmetric degree.
 The top-level helper `post_linear_remaining_finite_system_audit(...)` can
 now derive this canonical candidate directly when
 `universal_k_identity_endpoint_observer_candidates=True`.  This is an

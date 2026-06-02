@@ -10256,6 +10256,7 @@ class UniversalKEndpointObserverFamilyBuildAudit:
     endpoint_target_audit_rows: Tuple[object, ...] = ()
     cutoff_readout_audit_rows: Tuple[object, ...] = ()
     residual_faithfulness_theorem_rows: Tuple[object, ...] = ()
+    identity_cutoff_degree_rows: Tuple[object, ...] = ()
     product_residual_faithfulness_theorem: (
         UniversalKResidualFaithfulnessAudit | None
     ) = None
@@ -10886,6 +10887,115 @@ class UniversalKEndpointObserverFamilyBuildAudit:
         )
 
     @property
+    def identity_cutoff_degree_input_supplied(self) -> bool:
+        return bool(self.identity_cutoff_degree_rows)
+
+    @property
+    def identity_cutoff_degree_row_parts(
+        self,
+    ) -> Tuple[Tuple[object, object], ...]:
+        return tuple(
+            parts
+            for row in self.identity_cutoff_degree_rows
+            for parts in (_universal_k_two_field_row_parts(row),)
+            if parts is not None
+        )
+
+    @property
+    def malformed_identity_cutoff_degree_rows(self) -> Tuple[object, ...]:
+        return _unique_values(
+            tuple(
+                row
+                for row in self.identity_cutoff_degree_rows
+                if _universal_k_two_field_row_parts(row) is None
+            )
+        )
+
+    @property
+    def invalid_identity_cutoff_degree_families(self) -> Tuple[object, ...]:
+        return _unique_values(
+            tuple(
+                family
+                for family, _degree in self.identity_cutoff_degree_row_parts
+                if (
+                    not _is_hashable(family)
+                    or family not in _UNIVERSAL_K_CUTOFF_READOUT_FAMILIES
+                )
+            )
+        )
+
+    @property
+    def identity_cutoff_degree_families_exact(self) -> Tuple[str, ...]:
+        return tuple(
+            sorted(
+                {
+                    family
+                    for family, degree in self.identity_cutoff_degree_row_parts
+                    if _is_hashable(family)
+                    and family in _UNIVERSAL_K_CUTOFF_READOUT_FAMILIES
+                    and _universal_k_positive_int(degree)
+                },
+                key=repr,
+            )
+        )
+
+    @property
+    def duplicate_identity_cutoff_degree_families(self) -> Tuple[str, ...]:
+        return _duplicate_values(
+            tuple(
+                family
+                for family, _degree in self.identity_cutoff_degree_row_parts
+                if _is_hashable(family)
+                and family in _UNIVERSAL_K_CUTOFF_READOUT_FAMILIES
+            )
+        )
+
+    @property
+    def malformed_identity_cutoff_degrees(
+        self,
+    ) -> Tuple[Tuple[object, object], ...]:
+        malformed = []
+        seen = set()
+        for family, degree in self.identity_cutoff_degree_row_parts:
+            if (
+                not _is_hashable(family)
+                or family not in _UNIVERSAL_K_CUTOFF_READOUT_FAMILIES
+                or _universal_k_positive_int(degree)
+            ):
+                continue
+            value = (family, degree)
+            marker = _value_marker(value)
+            if marker in seen:
+                continue
+            seen.add(marker)
+            malformed.append(value)
+        return tuple(sorted(malformed, key=repr))
+
+    @property
+    def extra_identity_cutoff_degree_families(self) -> Tuple[str, ...]:
+        if not self.identity_cutoff_degree_input_supplied:
+            return ()
+        expected = set(self.expected_cutoff_families_exact)
+        return tuple(
+            family
+            for family in self.identity_cutoff_degree_families_exact
+            if family not in expected
+        )
+
+    @property
+    def identity_cutoff_degree_input_rows_exact(self) -> bool:
+        return (
+            not self.identity_cutoff_degree_input_supplied
+            or (
+                not self.malformed_identity_cutoff_degree_rows
+                and not self.invalid_identity_cutoff_degree_families
+                and not self.duplicate_identity_cutoff_degree_families
+                and not self.malformed_identity_cutoff_degrees
+                and not self.extra_identity_cutoff_degree_families
+            )
+        )
+
+    @property
     def residual_theorem_input_supplied(self) -> bool:
         return bool(self.residual_faithfulness_theorem_rows)
 
@@ -10974,6 +11084,7 @@ class UniversalKEndpointObserverFamilyBuildAudit:
             and self.endpoint_target_input_rows_exact
             and self.cutoff_readout_input_rows_exact
             and self.residual_theorem_input_rows_exact
+            and self.identity_cutoff_degree_input_rows_exact
         )
 
     @property
@@ -11238,6 +11349,26 @@ class UniversalKEndpointObserverFamilyBuildAudit:
             reasons.append("endpoint_observer_family_cutoff_readouts_missing_families")
         if self.extra_cutoff_readout_families:
             reasons.append("endpoint_observer_family_cutoff_readouts_extra_families")
+        if self.malformed_identity_cutoff_degree_rows:
+            reasons.append(
+                "endpoint_observer_family_identity_cutoff_degrees_malformed_rows"
+            )
+        if self.invalid_identity_cutoff_degree_families:
+            reasons.append(
+                "endpoint_observer_family_identity_cutoff_degrees_unknown_families"
+            )
+        if self.duplicate_identity_cutoff_degree_families:
+            reasons.append(
+                "endpoint_observer_family_identity_cutoff_degrees_duplicate_families"
+            )
+        if self.malformed_identity_cutoff_degrees:
+            reasons.append(
+                "endpoint_observer_family_identity_cutoff_degrees_malformed_values"
+            )
+        if self.extra_identity_cutoff_degree_families:
+            reasons.append(
+                "endpoint_observer_family_identity_cutoff_degrees_extra_families"
+            )
         if self.malformed_residual_theorem_rows:
             reasons.append("endpoint_observer_family_residual_theorems_malformed_rows")
         if self.invalid_residual_theorem_families:
@@ -11688,6 +11819,7 @@ def universal_k_endpoint_observer_family_build_audit(
     endpoint_target_audit_rows: Sequence[object] = (),
     cutoff_readout_audit_rows: Sequence[object] = (),
     residual_faithfulness_theorem_rows: Sequence[object] = (),
+    identity_cutoff_degree_rows: Sequence[object] = (),
     product_residual_faithfulness_theorem: (
         UniversalKResidualFaithfulnessAudit | None
     ) = None,
@@ -11703,6 +11835,7 @@ def universal_k_endpoint_observer_family_build_audit(
         endpoint_target_audit_rows=tuple(endpoint_target_audit_rows),
         cutoff_readout_audit_rows=tuple(cutoff_readout_audit_rows),
         residual_faithfulness_theorem_rows=tuple(residual_faithfulness_theorem_rows),
+        identity_cutoff_degree_rows=tuple(identity_cutoff_degree_rows),
         product_residual_faithfulness_theorem=product_residual_faithfulness_theorem,
         monodromy_family_input_audit=monodromy_family_input_audit,
     )
@@ -11779,6 +11912,7 @@ def universal_k_endpoint_observer_builds_by_family(
     residual_faithfulness_theorems_by_family: Sequence[
         Tuple[str, UniversalKResidualFaithfulnessAudit]
     ] = (),
+    identity_cutoff_degree_rows: Sequence[object] = (),
     product_residual_faithfulness_theorem: (
         UniversalKResidualFaithfulnessAudit | None
     ) = None,
@@ -11850,6 +11984,7 @@ def universal_k_endpoint_observer_builds_by_family(
         residual_faithfulness_theorem_rows=tuple(
             residual_faithfulness_theorems_by_family
         ),
+        identity_cutoff_degree_rows=tuple(identity_cutoff_degree_rows),
         product_residual_faithfulness_theorem=product_residual_faithfulness_theorem,
         monodromy_family_input_audit=monodromy_family_input_audit,
     )
@@ -12099,7 +12234,8 @@ def _universal_k_family_int_map(
             continue
         family, value = parts
         if (
-            family in UNIVERSAL_K_ENDPOINT_FAMILIES
+            _is_hashable(family)
+            and family in _UNIVERSAL_K_CUTOFF_READOUT_FAMILIES
             and _universal_k_positive_int(value)
             and family not in mapped
         ):
@@ -12344,6 +12480,7 @@ def universal_k_identity_endpoint_observer_builds_by_family(
         endpoint_target_audits_by_family=tuple(endpoint_targets),
         cutoff_readout_audits_by_family=tuple(cutoff_readouts),
         residual_faithfulness_theorems_by_family=tuple(residual_rows),
+        identity_cutoff_degree_rows=tuple(cutoff_degrees_by_family),
         product_residual_faithfulness_theorem=product_residual_faithfulness_theorem,
     )
 
@@ -16949,6 +17086,27 @@ class PostLinearRemainingFiniteSystemAudit:
                 ("endpoint_observer_family_cutoff_readout_duplicate_families", ()),
                 ("endpoint_observer_family_cutoff_readout_missing_families", ()),
                 ("endpoint_observer_family_cutoff_readout_extra_families", ()),
+                ("endpoint_observer_family_identity_cutoff_degree_rows", ()),
+                (
+                    "endpoint_observer_family_identity_cutoff_degree_malformed_rows",
+                    (),
+                ),
+                (
+                    "endpoint_observer_family_identity_cutoff_degree_unknown_families",
+                    (),
+                ),
+                (
+                    "endpoint_observer_family_identity_cutoff_degree_duplicate_families",
+                    (),
+                ),
+                (
+                    "endpoint_observer_family_identity_cutoff_degree_malformed_values",
+                    (),
+                ),
+                (
+                    "endpoint_observer_family_identity_cutoff_degree_extra_families",
+                    (),
+                ),
                 ("endpoint_observer_family_residual_theorem_rows", ()),
                 ("endpoint_observer_family_residual_theorem_channel_reasons", ()),
                 ("endpoint_observer_family_residual_theorem_malformed_rows", ()),
@@ -17289,6 +17447,30 @@ class PostLinearRemainingFiniteSystemAudit:
             (
                 "endpoint_observer_family_cutoff_readout_extra_families",
                 audit.extra_cutoff_readout_families,
+            ),
+            (
+                "endpoint_observer_family_identity_cutoff_degree_rows",
+                audit.identity_cutoff_degree_rows,
+            ),
+            (
+                "endpoint_observer_family_identity_cutoff_degree_malformed_rows",
+                audit.malformed_identity_cutoff_degree_rows,
+            ),
+            (
+                "endpoint_observer_family_identity_cutoff_degree_unknown_families",
+                audit.invalid_identity_cutoff_degree_families,
+            ),
+            (
+                "endpoint_observer_family_identity_cutoff_degree_duplicate_families",
+                audit.duplicate_identity_cutoff_degree_families,
+            ),
+            (
+                "endpoint_observer_family_identity_cutoff_degree_malformed_values",
+                audit.malformed_identity_cutoff_degrees,
+            ),
+            (
+                "endpoint_observer_family_identity_cutoff_degree_extra_families",
+                audit.extra_identity_cutoff_degree_families,
             ),
             (
                 "endpoint_observer_family_residual_theorem_rows",

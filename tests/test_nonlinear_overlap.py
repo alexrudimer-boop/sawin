@@ -5652,6 +5652,78 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             (("U", len(triangular_recovery_unit_group(interval).elements)),),
         )
 
+        degree_override = universal_k_identity_endpoint_observer_builds_by_family(
+            interval,
+            seed_entries,
+            cutoff_degrees_by_family=(("C", 3), ("M", 4)),
+        )
+        degree_override_by_family = dict(degree_override.build_rows_exact)
+        self.assertEqual(degree_override.identity_cutoff_degree_families_exact, ("C", "M"))
+        self.assertEqual(degree_override.malformed_identity_cutoff_degree_rows, ())
+        self.assertEqual(degree_override.invalid_identity_cutoff_degree_families, ())
+        self.assertEqual(degree_override.malformed_identity_cutoff_degrees, ())
+        self.assertEqual(
+            degree_override_by_family["C"].audit.cutoff_readout_audit.cutoff_degree,
+            3,
+        )
+        self.assertEqual(
+            degree_override_by_family["M"].audit.cutoff_readout_audit.cutoff_degree,
+            4,
+        )
+
+        malformed_degree_rows = universal_k_identity_endpoint_observer_builds_by_family(
+            interval,
+            seed_entries,
+            cutoff_degrees_by_family=(
+                ("C", 3),
+                ("C", 4),
+                ("M", 0),
+                ("U", 2),
+                (["M"], 2),
+                ("short",),
+            ),
+        )
+
+        self.assertFalse(malformed_degree_rows.identity_cutoff_degree_input_rows_exact)
+        self.assertFalse(malformed_degree_rows.proves_family_endpoint_observers)
+        self.assertEqual(
+            malformed_degree_rows.duplicate_identity_cutoff_degree_families,
+            ("C",),
+        )
+        self.assertEqual(
+            malformed_degree_rows.malformed_identity_cutoff_degree_rows,
+            (("short",),),
+        )
+        self.assertEqual(
+            malformed_degree_rows.malformed_identity_cutoff_degrees,
+            (("M", 0),),
+        )
+        self.assertEqual(
+            tuple(
+                repr(family)
+                for family in (
+                    malformed_degree_rows.invalid_identity_cutoff_degree_families
+                )
+            ),
+            ("'U'", "['M']"),
+        )
+        self.assertIn(
+            "endpoint_observer_family_identity_cutoff_degrees_malformed_rows",
+            malformed_degree_rows.failure_reasons,
+        )
+        self.assertIn(
+            "endpoint_observer_family_identity_cutoff_degrees_unknown_families",
+            malformed_degree_rows.failure_reasons,
+        )
+        self.assertIn(
+            "endpoint_observer_family_identity_cutoff_degrees_duplicate_families",
+            malformed_degree_rows.failure_reasons,
+        )
+        self.assertIn(
+            "endpoint_observer_family_identity_cutoff_degrees_malformed_values",
+            malformed_degree_rows.failure_reasons,
+        )
+
     def test_identity_endpoint_observer_constructor_composes_with_residual_rows(self):
         interval = one_color_identity_interval()
         seed_entries = tuple(
