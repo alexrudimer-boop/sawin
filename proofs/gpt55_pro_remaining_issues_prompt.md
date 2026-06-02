@@ -1719,6 +1719,15 @@ C/M cutoff readouts, per-family residual rows, and a product
 residual-faithfulness theorem.  This validates the constructive handoff for
 future nontrivial observers; it does not supply nontrivial `rho_E` and `W_E`
 data for every surviving interval.
+The monodromy handoff also composes with the same explicit residual-trivial
+helper flags used by the identity observer constructor.  When one of those
+flags is supplied, for example the coordinate-identity residual helper, the
+handoff may derive the per-family residual-faithfulness rows and the
+multi-family product residual theorem from the current interval instead of
+requiring those rows to be hand-supplied.  This is still limited to the
+already-proved residual-trivial subcases; it only removes duplicated
+certificate data from otherwise explicit monodromy-coboundary observer
+packages.
 The top-level `post_linear_remaining_finite_system_audit(...)` can consume
 this package directly through its `universal_k_monodromy_*_by_family`
 inputs.  It derives the current `K_nabla`/`kappa` ledger first, builds the
@@ -2574,6 +2583,7 @@ word_potential_template_rows_have_two_field_shape,
 word_potential_identity_rows_are_finite_row_objects,
 monodromy_coboundary_emissions_derived_from_rho_and_W,
 family_observers_derived_from_monodromy_coboundary_data,
+monodromy_handoff_derives_explicit_residual_trivial_helpers,
 family_observer_auxiliary_family_labels_are_hashable_U_C_M_atoms,
 post_linear_audit_consumes_monodromy_coboundary_family_data,
 monodromy_family_raw_input_ledger_exact,

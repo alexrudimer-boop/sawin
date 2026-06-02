@@ -839,6 +839,15 @@ endpoint targets, exact C/M cutoff readouts, per-family residual rows, and a
 product residual-faithfulness theorem.  This confirms the constructor path
 future nontrivial observers must use; it does not assert that nontrivial
 `rho_E` and `W_E` data exist in every surviving interval.
+The monodromy handoff also composes with the same explicit residual-trivial
+helper flags used by the identity observer constructor.  When one of those
+flags is supplied, for example the coordinate-identity residual helper, the
+handoff may derive the per-family residual-faithfulness rows and the
+multi-family product residual theorem from the current interval instead of
+requiring those rows to be hand-supplied.  This is still limited to the
+already-proved residual-trivial subcases; it only removes duplicated
+certificate data from otherwise explicit monodromy-coboundary observer
+packages.
 The top-level `post_linear_remaining_finite_system_audit(...)` can now take
 that smaller monodromy-coboundary package directly through its
 `universal_k_monodromy_*_by_family` inputs.  It first computes the current

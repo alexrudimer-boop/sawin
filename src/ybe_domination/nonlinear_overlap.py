@@ -12214,6 +12214,170 @@ def _universal_k_seed_classifier_entries_for_family(
     )
 
 
+def _universal_k_supplied_label_residual_failed(
+    audit: UniversalKResidualFaithfulnessAudit | None,
+) -> bool:
+    if audit is None or audit.proves_residual_faithfulness:
+        return False
+    return any(
+        tuple(row)[-1:] == ("fibre_label_identity_residual_channel",)
+        for row in audit.expected_residual_input_tuples
+    )
+
+
+def _universal_k_residual_rows_with_identity_helpers(
+    interval: LocalInterval,
+    seed_classifier_entries: Sequence[UniversalKSeedClassifierEntry],
+    residual_faithfulness_theorems_by_family: Sequence[
+        Tuple[str, UniversalKResidualFaithfulnessAudit]
+    ],
+    product_residual_faithfulness_theorem: (
+        UniversalKResidualFaithfulnessAudit | None
+    ),
+    *,
+    derive_automatic_residual_faithfulness: bool = False,
+    derive_strict_identity_residual_faithfulness: bool = False,
+    derive_coordinate_identity_residual_faithfulness: bool = False,
+    derive_singleton_fibre_residual_faithfulness: bool = False,
+    derive_fibre_label_identity_residual_faithfulness: bool = False,
+    derive_canonical_fibre_label_identity_residual_faithfulness: bool = False,
+    fibre_label_identity_rows: object = (),
+) -> Tuple[
+    Tuple[Tuple[str, UniversalKResidualFaithfulnessAudit], ...],
+    UniversalKResidualFaithfulnessAudit | None,
+]:
+    seed_states = universal_k_signed_endpoint_seed_states(seed_classifier_entries)
+    active_families = tuple(
+        sorted(
+            {
+                family
+                for family, _seed_state in seed_states
+                if family in UNIVERSAL_K_ENDPOINT_FAMILIES
+            },
+            key=repr,
+        )
+    )
+    residual_rows = list(residual_faithfulness_theorems_by_family)
+    supplied_residual_families = set(
+        _universal_k_family_object_map(
+            residual_rows,
+            UniversalKResidualFaithfulnessAudit,
+        )
+    )
+
+    def derive_for_seed_states(
+        family_seed_states: Tuple[Tuple[str, UniversalKSeedState], ...],
+    ) -> UniversalKResidualFaithfulnessAudit | None:
+        derived_residual = None
+        supplied_label_residual_failed = False
+        if derive_automatic_residual_faithfulness:
+            derived_residual = universal_k_automatic_residual_faithfulness_audit(
+                interval,
+                family_seed_states,
+                fibre_label_identity_rows=fibre_label_identity_rows,
+            )
+            supplied_label_residual_failed = _universal_k_supplied_label_residual_failed(
+                derived_residual
+            )
+        if derive_strict_identity_residual_faithfulness and (
+            derived_residual is None
+            or not derived_residual.proves_residual_faithfulness
+        ):
+            derived_residual = (
+                universal_k_strict_identity_residual_faithfulness_audit(
+                    interval,
+                    family_seed_states,
+                )
+            )
+        if (
+            derive_coordinate_identity_residual_faithfulness
+            and (
+                derived_residual is None
+                or not derived_residual.proves_residual_faithfulness
+            )
+        ):
+            derived_residual = (
+                universal_k_coordinate_identity_residual_faithfulness_audit(
+                    interval,
+                    family_seed_states,
+                )
+            )
+        if (
+            derive_singleton_fibre_residual_faithfulness
+            and (
+                derived_residual is None
+                or not derived_residual.proves_residual_faithfulness
+            )
+        ):
+            derived_residual = (
+                universal_k_singleton_fibre_residual_faithfulness_audit(
+                    interval,
+                    family_seed_states,
+                )
+            )
+        if (
+            derive_fibre_label_identity_residual_faithfulness
+            and (
+                derived_residual is None
+                or not derived_residual.proves_residual_faithfulness
+            )
+        ):
+            derived_residual = (
+                universal_k_fibre_label_identity_residual_faithfulness_audit(
+                    interval,
+                    family_seed_states,
+                    fibre_label_identity_rows,
+                )
+            )
+            supplied_label_residual_failed = _universal_k_supplied_label_residual_failed(
+                derived_residual
+            )
+        if (
+            derive_canonical_fibre_label_identity_residual_faithfulness
+            and not supplied_label_residual_failed
+            and (
+                derived_residual is None
+                or not derived_residual.proves_residual_faithfulness
+            )
+        ):
+            derived_residual = (
+                universal_k_canonical_fibre_label_identity_residual_faithfulness_audit(
+                    interval,
+                    family_seed_states,
+                )
+            )
+        return derived_residual
+
+    for family in active_families:
+        if family in supplied_residual_families:
+            continue
+        family_entries = _universal_k_seed_classifier_entries_for_family(
+            seed_classifier_entries,
+            family,
+        )
+        family_seed_states = universal_k_signed_endpoint_seed_states(family_entries)
+        derived_residual = derive_for_seed_states(family_seed_states)
+        if derived_residual is not None:
+            residual_rows.append((family, derived_residual))
+
+    helpers_requested = (
+        derive_automatic_residual_faithfulness
+        or derive_strict_identity_residual_faithfulness
+        or derive_coordinate_identity_residual_faithfulness
+        or derive_singleton_fibre_residual_faithfulness
+        or derive_fibre_label_identity_residual_faithfulness
+        or derive_canonical_fibre_label_identity_residual_faithfulness
+    )
+    if (
+        helpers_requested
+        and product_residual_faithfulness_theorem is None
+        and len(active_families) > 1
+    ):
+        product_residual_faithfulness_theorem = derive_for_seed_states(seed_states)
+
+    return tuple(residual_rows), product_residual_faithfulness_theorem
+
+
 def universal_k_endpoint_observer_builds_by_family(
     interval: LocalInterval,
     seed_classifier_entries: Sequence[UniversalKSeedClassifierEntry],
@@ -12367,6 +12531,13 @@ def universal_k_endpoint_observer_builds_from_monodromy_by_family(
     product_residual_faithfulness_theorem: (
         UniversalKResidualFaithfulnessAudit | None
     ) = None,
+    derive_automatic_residual_faithfulness: bool = False,
+    derive_strict_identity_residual_faithfulness: bool = False,
+    derive_coordinate_identity_residual_faithfulness: bool = False,
+    derive_singleton_fibre_residual_faithfulness: bool = False,
+    derive_fibre_label_identity_residual_faithfulness: bool = False,
+    derive_canonical_fibre_label_identity_residual_faithfulness: bool = False,
+    fibre_label_identity_rows: object = (),
 ) -> UniversalKEndpointObserverFamilyBuildAudit:
     """Build family observers from finite monodromy and potential data.
 
@@ -12377,6 +12548,34 @@ def universal_k_endpoint_observer_builds_from_monodromy_by_family(
     ordinary family observer audit so target, cutoff, product, and residual
     faithfulness gates stay unchanged.
     """
+
+    residual_faithfulness_theorems_by_family, product_residual_faithfulness_theorem = (
+        _universal_k_residual_rows_with_identity_helpers(
+            interval,
+            seed_classifier_entries,
+            residual_faithfulness_theorems_by_family,
+            product_residual_faithfulness_theorem,
+            derive_automatic_residual_faithfulness=(
+                derive_automatic_residual_faithfulness
+            ),
+            derive_strict_identity_residual_faithfulness=(
+                derive_strict_identity_residual_faithfulness
+            ),
+            derive_coordinate_identity_residual_faithfulness=(
+                derive_coordinate_identity_residual_faithfulness
+            ),
+            derive_singleton_fibre_residual_faithfulness=(
+                derive_singleton_fibre_residual_faithfulness
+            ),
+            derive_fibre_label_identity_residual_faithfulness=(
+                derive_fibre_label_identity_residual_faithfulness
+            ),
+            derive_canonical_fibre_label_identity_residual_faithfulness=(
+                derive_canonical_fibre_label_identity_residual_faithfulness
+            ),
+            fibre_label_identity_rows=fibre_label_identity_rows,
+        )
+    )
 
     monodromy_input_audit = universal_k_monodromy_family_input_audit(
         interval,
@@ -20395,6 +20594,25 @@ def post_linear_remaining_finite_system_audit(
                     product_residual_faithfulness_theorem=(
                         universal_k_residual_faithfulness_theorem
                     ),
+                    derive_automatic_residual_faithfulness=(
+                        universal_k_identity_automatic_residual_faithfulness
+                    ),
+                    derive_strict_identity_residual_faithfulness=(
+                        universal_k_identity_strict_residual_faithfulness
+                    ),
+                    derive_coordinate_identity_residual_faithfulness=(
+                        universal_k_identity_coordinate_residual_faithfulness
+                    ),
+                    derive_singleton_fibre_residual_faithfulness=(
+                        universal_k_identity_singleton_residual_faithfulness
+                    ),
+                    derive_fibre_label_identity_residual_faithfulness=(
+                        universal_k_identity_fibre_label_residual_faithfulness
+                    ),
+                    derive_canonical_fibre_label_identity_residual_faithfulness=(
+                        universal_k_identity_canonical_fibre_label_residual_faithfulness
+                    ),
+                    fibre_label_identity_rows=universal_k_identity_fibre_label_rows,
                 )
             )
         elif (
