@@ -1704,6 +1704,11 @@ Malformed endpoint-group rows, malformed template rows, positive monodromy
 rows from the wrong family or wrong sign, unknown family names, missing
 active families, extra stale families, and restricted detector-domain
 assignments without soundness witnesses are finite input-ledger failures.
+The top-level by-family ledgers themselves must be finite row ledgers:
+non-sequence endpoint-group, template, positive-row, detector-domain, or
+detector-witness ledgers are reported as malformed row objects rather than
+being iterated character-by-character, ignored as absent input, or allowed to
+crash the handoff.
 They must not be interpreted as an unproved observer with unspecified
 emissions.  A valid monodromy-derived observer begins only after this raw
 package ledger is exact.

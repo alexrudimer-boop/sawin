@@ -9099,6 +9099,57 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             audit.failure_reasons,
         )
 
+        malformed_ledgers = universal_k_monodromy_family_input_audit(
+            None,
+            seed_entries,
+            endpoint_groups_by_family="not-an-endpoint-group-ledger",
+            word_potential_templates_by_family=None,
+            positive_state_rows_by_family="not-a-positive-row-ledger",
+            detector_domain_assignments_by_family="not-a-domain-ledger",
+            detector_domain_soundness_witnesses_by_family=None,
+        )
+        self.assertFalse(malformed_ledgers.input_rows_exact)
+        self.assertEqual(
+            malformed_ledgers.malformed_endpoint_group_rows,
+            ("not-an-endpoint-group-ledger",),
+        )
+        self.assertEqual(
+            malformed_ledgers.malformed_template_rows,
+            (None,),
+        )
+        self.assertEqual(
+            malformed_ledgers.malformed_positive_state_rows,
+            ("not-a-positive-row-ledger",),
+        )
+        self.assertEqual(
+            malformed_ledgers.malformed_detector_domain_assignment_rows,
+            ("not-a-domain-ledger",),
+        )
+        self.assertEqual(
+            malformed_ledgers.malformed_detector_domain_witness_rows,
+            (None,),
+        )
+        self.assertIn(
+            "endpoint_observer_monodromy_endpoint_groups_malformed_rows",
+            malformed_ledgers.failure_reasons,
+        )
+        self.assertIn(
+            "endpoint_observer_monodromy_templates_malformed_rows",
+            malformed_ledgers.failure_reasons,
+        )
+        self.assertIn(
+            "endpoint_observer_monodromy_positive_rows_malformed_rows",
+            malformed_ledgers.failure_reasons,
+        )
+        self.assertIn(
+            "endpoint_observer_monodromy_detector_domains_malformed_rows",
+            malformed_ledgers.failure_reasons,
+        )
+        self.assertIn(
+            "endpoint_observer_monodromy_detector_witnesses_malformed_rows",
+            malformed_ledgers.failure_reasons,
+        )
+
     def test_monodromy_family_input_audit_reports_unhashable_seed_without_crashing(self):
         interval = one_color_identity_interval()
         group = cyclic_group(2)
@@ -14096,6 +14147,32 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertIn(
             "endpoint_observer_monodromy_detector_domains_bad_values",
             data["endpoint_observer_monodromy_failure_reasons"],
+        )
+
+        malformed_ledger_audit = post_linear_remaining_finite_system_audit(
+            one_color_latin_unit_triangular_interval(),
+            universal_k_monodromy_endpoint_groups_by_family=None,
+        )
+        malformed_ledger_data = dict(
+            malformed_ledger_audit.routed_endpoint_obstruction_data
+        )
+
+        self.assertIsNotNone(
+            malformed_ledger_audit.universal_k_endpoint_observer_family_build
+        )
+        self.assertIn(
+            ("endpoint_observer_monodromy_input_present", True),
+            malformed_ledger_audit.routed_endpoint_obstruction_data,
+        )
+        self.assertEqual(
+            malformed_ledger_data[
+                "endpoint_observer_monodromy_endpoint_group_malformed_rows"
+            ],
+            (None,),
+        )
+        self.assertIn(
+            "endpoint_observer_monodromy_endpoint_groups_malformed_rows",
+            malformed_ledger_data["endpoint_observer_monodromy_failure_reasons"],
         )
 
     def test_post_linear_function_derives_identity_endpoint_observer_candidates(self):
