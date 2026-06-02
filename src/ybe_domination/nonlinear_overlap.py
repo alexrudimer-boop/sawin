@@ -9468,11 +9468,101 @@ class UniversalKEndpointObserverBuild:
     audit: UniversalKSignedEndpointGeneratorAudit
 
     @property
+    def positive_rows_match_signed_rows(self) -> bool:
+        return tuple(self.positive_rows) == tuple(
+            row for row in self.rows if row.sign == 1
+        )
+
+    @property
+    def monodromy_presentation_matches_build(self) -> bool:
+        return (
+            self.monodromy_representation_audit.presentation
+            == self.monodromy_presentation
+        )
+
+    @property
+    def monodromy_reachable_states_match_build(self) -> bool:
+        return (
+            tuple(self.monodromy_representation_audit.reachable_seed_states)
+            == tuple(self.reachable_seed_states)
+        )
+
+    @property
+    def monodromy_rows_match_build(self) -> bool:
+        return tuple(self.monodromy_representation_audit.rows) == tuple(self.rows)
+
+    @property
+    def audit_reachable_states_match_build(self) -> bool:
+        return tuple(self.audit.reachable_seed_states) == tuple(
+            self.reachable_seed_states
+        )
+
+    @property
+    def audit_rows_match_build(self) -> bool:
+        return tuple(self.audit.rows) == tuple(self.rows)
+
+    @property
+    def audit_telescoping_detector_matches_build(self) -> bool:
+        return self.audit.telescoping_detector_audit == self.telescoping_detector_audit
+
+    @property
+    def audit_monodromy_representation_matches_build(self) -> bool:
+        return (
+            self.audit.monodromy_representation_audit
+            == self.monodromy_representation_audit
+        )
+
+    @property
+    def ledgers_match(self) -> bool:
+        return (
+            self.positive_rows_match_signed_rows
+            and self.monodromy_presentation_matches_build
+            and self.monodromy_reachable_states_match_build
+            and self.monodromy_rows_match_build
+            and self.audit_reachable_states_match_build
+            and self.audit_rows_match_build
+            and self.audit_telescoping_detector_matches_build
+            and self.audit_monodromy_representation_matches_build
+        )
+
+    @property
     def proves_endpoint_observer(self) -> bool:
         return (
-            self.monodromy_representation_audit.proves_monodromy_representation
+            self.ledgers_match
+            and self.monodromy_representation_audit.proves_monodromy_representation
             and self.audit.proves_signed_endpoint_generator_tables
         )
+
+    @property
+    def failure_reasons(self) -> Tuple[str, ...]:
+        reasons = []
+        if not self.positive_rows_match_signed_rows:
+            reasons.append(
+                "endpoint_observer_build_positive_rows_do_not_match_signed_rows"
+            )
+        if not self.monodromy_presentation_matches_build:
+            reasons.append("endpoint_observer_build_monodromy_presentation_mismatch")
+        if not self.monodromy_reachable_states_match_build:
+            reasons.append("endpoint_observer_build_monodromy_reachable_state_mismatch")
+        if not self.monodromy_rows_match_build:
+            reasons.append("endpoint_observer_build_monodromy_row_mismatch")
+        if not self.audit_reachable_states_match_build:
+            reasons.append(
+                "endpoint_observer_build_signed_audit_reachable_state_mismatch"
+            )
+        if not self.audit_rows_match_build:
+            reasons.append("endpoint_observer_build_signed_audit_row_mismatch")
+        if not self.audit_telescoping_detector_matches_build:
+            reasons.append("endpoint_observer_build_telescoping_detector_mismatch")
+        if not self.audit_monodromy_representation_matches_build:
+            reasons.append("endpoint_observer_build_signed_audit_monodromy_mismatch")
+        if not self.monodromy_representation_audit.proves_monodromy_representation:
+            reasons.append("endpoint_observer_build_monodromy_not_proved")
+            reasons.extend(self.monodromy_representation_audit.failure_reasons)
+        if not self.audit.proves_signed_endpoint_generator_tables:
+            reasons.append("endpoint_observer_build_signed_audit_not_proved")
+            reasons.extend(self.audit.failure_reasons)
+        return tuple(_unique_values(tuple(reasons)))
 
 
 def _universal_k_nonstring_sequence(value: object) -> bool:
@@ -18396,6 +18486,7 @@ class PostLinearRemainingFiniteSystemAudit:
                 ("endpoint_observer_family_build_unknown_families", ()),
                 ("endpoint_observer_family_build_scope_failures", ()),
                 ("endpoint_observer_family_build_unproved_families", ()),
+                ("endpoint_observer_family_build_internal_failure_reasons", ()),
                 ("endpoint_observer_family_build_row_failure_reasons", ()),
                 ("endpoint_observer_family_build_rows", ()),
                 ("endpoint_observer_family_build_failure_reasons", ()),
@@ -19111,6 +19202,13 @@ class PostLinearRemainingFiniteSystemAudit:
             (
                 "endpoint_observer_family_build_unproved_families",
                 audit.unproved_build_families,
+            ),
+            (
+                "endpoint_observer_family_build_internal_failure_reasons",
+                tuple(
+                    (family, build.failure_reasons)
+                    for family, build in audit.build_rows_exact
+                ),
             ),
             (
                 "endpoint_observer_family_build_row_failure_reasons",

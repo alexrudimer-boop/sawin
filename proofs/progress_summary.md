@@ -1438,6 +1438,16 @@ factory path still derives the representation audit automatically from the
 current interval, reachable seed states, and signed rows.  This prevents the
 old signed-table path from bypassing the reduced monodromy-coboundary
 observer certificate.
+The constructed endpoint-observer build now also checks internal ledger
+identity.  A proving `UniversalKEndpointObserverBuild` requires its advertised
+positive rows to be exactly the positive subset of its signed rows, its stored
+monodromy presentation to be the one used by the monodromy representation
+audit, its reachable-state and row ledgers to match both the monodromy audit
+and the signed endpoint audit, and its telescoping detector audit to match the
+signed audit.  A stale but separately valid monodromy representation can no
+longer be spliced into an otherwise complete observer build; the wrapper now
+exposes per-family internal reasons through
+`endpoint_observer_family_build_internal_failure_reasons`.
 This removes another false endpoint closure and leaves the same local
 nontrivial observer-existence gap: construct residual-faithful U/C/M
 monodromy-coboundary observers for all surviving intervals, or produce a

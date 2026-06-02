@@ -803,6 +803,16 @@ The monodromy representation audit uses the same well-formedness guard on
 reachable seed states: malformed or unhashable reachable-state entries are
 rejected as finite ledger data and cannot crash the permutation or relation
 checks.
+The retained build itself is now an internal consistency certificate, not only
+a container for two successful subaudits.  A proving
+`UniversalKEndpointObserverBuild` must have positive rows exactly equal to
+the positive subset of its signed rows; the monodromy representation audit
+must use the build's own monodromy presentation, reachable-state ledger, and
+row ledger; and the signed endpoint audit must use the same reachable states,
+signed rows, telescoping detector audit, and monodromy representation audit
+stored on the build.  A stale but independently proving monodromy audit, or a
+stale signed-row/telescoping ledger, is therefore rejected before the family
+observer can close.
 There is also a monodromy-to-word-potential handoff constructor,
 `universal_k_word_potential_certificate_from_monodromy(...)`.  It takes
 positive endpoint-state monodromy rows and state-indexed word templates,
@@ -1720,6 +1730,7 @@ endpoint_observer_family_build_malformed_rows
 endpoint_observer_family_build_unknown_families
 endpoint_observer_family_build_scope_failures
 endpoint_observer_family_build_unproved_families
+endpoint_observer_family_build_internal_failure_reasons
 endpoint_observer_family_build_row_failure_reasons
 endpoint_observer_family_build_rows
 endpoint_observer_family_build_failure_reasons

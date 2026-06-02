@@ -1293,6 +1293,16 @@ retained templates, the raw positive monodromy rows must match the retained
 positive state/coordinate transitions after discarding emitted labels, and
 any restricted detector-domain assignment or witness maps must match the
 retained word-potential identity-row data.
+A retained observer build also has to be internally self-consistent.  The
+positive-row ledger must be exactly the positive subset of the signed-row
+ledger.  The stored monodromy representation audit must use the build's own
+monodromy presentation, reachable-state ledger, and signed-row ledger.  The
+stored signed endpoint audit must use the same reachable-state ledger,
+signed-row ledger, telescoping detector audit, and monodromy representation
+audit as the build.  A proof may not splice a stale but independently proving
+monodromy representation into an otherwise complete endpoint observer.  Such
+failures must be exposed as per-family internal build failures, separate from
+the signed-row audit's own failure reasons.
 Every supplied signed row must also have a well-formed full `D_Gamma` entry
 key `(E,epsilon,s,a,b,x,y)`: `E` must be one of U,C,M, the sign must be `+1`
 or `-1`, the seed state must be a hashable tuple state, and the local
@@ -2610,6 +2620,7 @@ signed_generator_domain_exact,
 endpoint_observer_build_record_retained,
 endpoint_observer_family_build_ledger_exact,
 endpoint_observer_family_seed_classifier_ledger_well_formed,
+endpoint_observer_family_build_internal_failure_reasons_exposed,
 endpoint_observer_family_build_row_failure_reasons_exposed,
 endpoint_observer_family_auxiliary_rows_match_builds,
 endpoint_observer_family_certificate_rows_match_builds,

@@ -5755,6 +5755,30 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertTrue(build.audit.positive_monodromy_representation_verified)
         self.assertTrue(build.proves_endpoint_observer)
 
+        stale_presentation = UniversalKEndpointMonodromyPresentation(
+            expected_endpoint_families=("U",),
+            contexts=build.monodromy_presentation.contexts_exact,
+        )
+        stale_monodromy = universal_k_endpoint_monodromy_representation_audit(
+            stale_presentation,
+            build.reachable_seed_states,
+            build.rows,
+        )
+        self.assertTrue(stale_monodromy.proves_monodromy_representation)
+        stale_build = replace(
+            build,
+            monodromy_representation_audit=stale_monodromy,
+        )
+        self.assertFalse(stale_build.proves_endpoint_observer)
+        self.assertIn(
+            "endpoint_observer_build_monodromy_presentation_mismatch",
+            stale_build.failure_reasons,
+        )
+        self.assertIn(
+            "endpoint_observer_build_signed_audit_monodromy_mismatch",
+            stale_build.failure_reasons,
+        )
+
     def test_endpoint_observer_builder_records_all_ucm_active_families(self):
         interval = one_color_identity_interval()
         group = cyclic_group(2)
@@ -9044,9 +9068,17 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             wrapper_data["endpoint_observer_family_build_row_failure_reasons"],
             (("U", build.audit.failure_reasons),),
         )
+        self.assertEqual(
+            wrapper_data["endpoint_observer_family_build_internal_failure_reasons"],
+            (("U", build.failure_reasons),),
+        )
         self.assertIn(
             "signed_generator_entries_missing",
             wrapper_data["endpoint_observer_family_build_row_failure_reasons"][0][1],
+        )
+        self.assertIn(
+            "endpoint_observer_build_signed_audit_not_proved",
+            wrapper_data["endpoint_observer_family_build_internal_failure_reasons"][0][1],
         )
 
     def test_endpoint_observer_builder_rejects_malformed_identity_rows(self):
