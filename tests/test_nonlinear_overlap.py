@@ -14071,6 +14071,84 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             ),
         )
 
+    def test_routed_u_strict_identity_endpoint_observer_closes_system(self):
+        interval = one_color_identity_interval()
+        refinement = constant_map_kernel_only_system_k_refinement()
+        closure = TriangularLatinDefectClosureAudit(
+            rows=(
+                TriangularLatinDefectClosureRow(
+                    side="left",
+                    defect="constant_map_kernel",
+                    left_color="*",
+                    right_color="*",
+                    domain_color="*",
+                    fixed_input=None,
+                    collapsed_inputs=(0, 1),
+                    generated=generated("universal"),
+                ),
+            ),
+        )
+        route = TriangularConstantKernelRecoveryRouteAudit(
+            rows=(
+                TriangularConstantKernelRecoveryRouteRow(
+                    side="left",
+                    left_color="*",
+                    right_color="*",
+                    domain_color="*",
+                    collapsed_inputs=(0, 1),
+                    closure_kind="universal",
+                    recovery_row_present=True,
+                    recovery_formula_bijective=True,
+                    witness_output_pairs=(
+                        (0, ((0, 0),)),
+                        (1, ((0, 1),)),
+                    ),
+                ),
+            ),
+        )
+        routed = PostLinearRemainingFiniteSystemAudit(
+            refinement,
+            triangular_latin_defect_closure=closure,
+            triangular_constant_kernel_recovery_route=route,
+        )
+        family_build = universal_k_identity_endpoint_observer_builds_by_family(
+            interval,
+            routed.universal_k_seed_classifier_entries,
+            derive_strict_identity_residual_faithfulness=True,
+        )
+        audit = PostLinearRemainingFiniteSystemAudit(
+            refinement,
+            triangular_latin_defect_closure=closure,
+            triangular_constant_kernel_recovery_route=route,
+            universal_k_endpoint_observer_family_build=family_build,
+            universal_k_signed_endpoint_interval=interval,
+        )
+        data = dict(audit.finite_obstruction_data)
+
+        self.assertEqual(routed.active_routed_endpoint_systems, ("U",))
+        self.assertEqual(family_build.failure_reasons, ())
+        self.assertTrue(family_build.proves_family_endpoint_observers)
+        self.assertTrue(family_build.proves_family_endpoint_product_closure)
+        self.assertTrue(audit.system_u_closed_by_endpoint_observer_family_build)
+        self.assertTrue(audit.all_active_routed_endpoint_systems_closed)
+        self.assertEqual(
+            audit.system_name,
+            "closed_by_triangular_recovery_endpoint_observer_family_build",
+        )
+        self.assertEqual(audit.remaining_obligations, ())
+        self.assertEqual(
+            data["endpoint_observer_family_build_closed_families"],
+            ("U",),
+        )
+        self.assertTrue(data["endpoint_observer_family_build_closes_current_kappa"])
+        self.assertTrue(
+            data["endpoint_observer_family_build_uses_current_u_tri_target"]
+        )
+        self.assertEqual(
+            data["endpoint_observer_family_build_failure_reasons"],
+            (),
+        )
+
     def test_direct_unit_longitude_status_is_preempted_by_kink_dichotomy(self):
         interval = one_color_latin_unit_triangular_interval()
         audit = NonlinearOverlapRefinementAudit(

@@ -61,6 +61,18 @@ separation, and residual faithfulness for the actual fibre action:
 all active routed endpoint channels killed => Delta_n(beta)=1.
 ```
 
+One routed identity subcase is already closed at the finite-system classifier
+level and must not be counted as part of the remaining obstruction.  If the
+current `kappa` ledger has a routed System U seed and the local interval is a
+strict identity fibre interval, the canonical identity endpoint observer over
+the actual current triangular-recovery unit group `U_tri`, together with the
+strict-identity residual-faithfulness theorem, closes the system as
+`closed_by_triangular_recovery_endpoint_observer_family_build`.  The closure
+checks the full `D_Gamma` domain, the current `kappa` entries, the current
+`U_tri` finite group-table fingerprint, and leaves no routed U remaining
+obligation.  This is only a closed subcase; it is not a proof that arbitrary
+non-identity U endpoints admit observers.
+
 The exact missing B-side ingredient is:
 
 ```text

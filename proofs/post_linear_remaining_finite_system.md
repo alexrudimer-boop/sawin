@@ -1002,6 +1002,16 @@ current `kappa` image has no active endpoint family, the derived ledger
 reports that no active family exists; if active families are present but the
 scoped residual-faithfulness rows are absent, the ledger remains an open
 observer candidate rather than a closure proof.
+When a current routed endpoint system does have an exact active `kappa`
+ledger and the canonical identity observer is paired with a proved residual
+faithfulness subcase, the main finite-system classifier consumes the family
+observer as a closure certificate.  In particular, a routed System U row over
+a strict identity local interval now closes as
+`closed_by_triangular_recovery_endpoint_observer_family_build`: the observer
+uses the current `U_tri` group-table fingerprint, covers the full interval
+`D_Gamma` domain, proves the strict-identity residual theorem, and leaves no
+remaining routed U obligation.  This is a genuine closed subcase, not a proof
+of the general U observer existence theorem.
 All automatic residual-faithfulness helpers require the supplied local
 interval table to be complete and type-correct: `R_C` must be a bijection on
 colour pairs, every local `T_{a,b}` row must be present exactly on its fibre
