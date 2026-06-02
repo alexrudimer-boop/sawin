@@ -529,6 +529,13 @@ open.  Every endpoint-group order and cutoff degree in the target ledger must
 be a positive integer attached to a known routed family; noninteger,
 boolean, zero, or negative sizes are malformed target rows rather than finite
 target factors.
+For a multi-family group-valued target, the concrete endpoint group must also
+be the declared coordinate product, not merely a group with the same total
+order.  The checker verifies that each product coordinate has the listed
+family-factor order, that the element set is the full Cartesian product of
+the coordinate supports, and that multiplication in each coordinate is
+well-defined from the two coordinate inputs.  A swapped or entangled product
+coordinate table is reported as `endpoint_group_product_factor_mismatch`.
 
 The signed endpoint observer is now audited as a reduced full-braid
 presentation observer.  Inverse-derived negative rows handle
@@ -1353,6 +1360,8 @@ signed_endpoint_generator_endpoint_group_order_matches_target
 signed_endpoint_generator_endpoint_group_target_families
 signed_endpoint_generator_endpoint_group_family_support_verified
 signed_endpoint_generator_endpoint_group_family_support_failures
+signed_endpoint_generator_endpoint_group_product_factor_failures
+signed_endpoint_generator_endpoint_group_product_factors_match_target
 signed_endpoint_generator_endpoint_target_cutoff_degrees
 signed_endpoint_generator_endpoint_target_malformed_cutoff_degrees
 signed_endpoint_generator_endpoint_target_malformed_cutoff_degree_rows

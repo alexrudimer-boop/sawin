@@ -9511,9 +9511,57 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertTrue(proved.endpoint_group_order_matches_target_audit)
         self.assertEqual(proved.endpoint_group_target_families, ("U", "C"))
         self.assertTrue(proved.endpoint_group_family_support_proved)
+        self.assertTrue(proved.endpoint_group_product_factors_match_target)
         self.assertTrue(proved.endpoint_targets_proved)
         self.assertFalse(proved.proves_signed_endpoint_generator_tables)
         self.assertIn("cutoff_readout_audit_missing", proved.failure_reasons)
+
+        swapped_product_group = direct_product_group((cyclic_group(3), cyclic_group(2)))
+        swapped_rows = tuple(
+            replace(row, endpoint_value=swapped_product_group.identity)
+            for row in identity_signed_endpoint_rows(keys)
+        )
+        swapped_factor_target = universal_k_signed_endpoint_generator_audit(
+            interval,
+            seed_entries,
+            reachable,
+            swapped_rows,
+            endpoint_group=swapped_product_group,
+            witnesses={row.entry_key: () for row in swapped_rows},
+            endpoint_target_audit=endpoint_target,
+            telescoping_detector_audit=trivial_telescoping_detector_audit(
+                keys,
+                rows=swapped_rows,
+                endpoint_group=swapped_product_group,
+            ),
+            residual_action_scope=residual_scope,
+            residual_action_audit=trivial_endpoint_residual_action_audit(
+                input_tuples=(("pU",), ("pC",)),
+            ),
+        )
+
+        self.assertTrue(swapped_factor_target.endpoint_group_order_matches_target_audit)
+        self.assertTrue(swapped_factor_target.endpoint_group_family_support_proved)
+        self.assertFalse(
+            swapped_factor_target.endpoint_group_product_factors_match_target
+        )
+        self.assertEqual(
+            tuple(
+                failure[1]
+                for failure in (
+                    swapped_factor_target.endpoint_group_product_factor_failures
+                )
+            ),
+            (
+                "endpoint_group_factor_order_mismatch",
+                "endpoint_group_factor_order_mismatch",
+            ),
+        )
+        self.assertFalse(swapped_factor_target.endpoint_targets_proved)
+        self.assertIn(
+            "endpoint_group_product_factor_mismatch",
+            swapped_factor_target.failure_reasons,
+        )
 
         bad_rows = tuple(
             replace(row, endpoint_value=(1, 0))

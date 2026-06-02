@@ -6849,6 +6849,7 @@ class UniversalKSignedEndpointGeneratorAudit:
             and self.endpoint_target_audit.proves_endpoint_targets
             and self.endpoint_group_order_matches_target_audit
             and self.endpoint_group_family_support_proved
+            and self.endpoint_group_product_factors_match_target
         )
 
     @property
@@ -6933,6 +6934,104 @@ class UniversalKSignedEndpointGeneratorAudit:
     @property
     def endpoint_group_family_support_proved(self) -> bool:
         return not self.endpoint_group_family_support_failures
+
+    @property
+    def endpoint_group_product_factor_failures(
+        self,
+    ) -> Tuple[Tuple[object, str, object], ...]:
+        """The concrete endpoint group must be the declared family product."""
+
+        if self.endpoint_group is None or self.endpoint_target_audit is None:
+            return ()
+        group_families = self.endpoint_group_target_families
+        if len(group_families) <= 1:
+            return ()
+        target_orders = dict(self.endpoint_target_audit.endpoint_group_order_rows)
+        arity = len(group_families)
+        identity = self.endpoint_group.identity
+        failures = []
+        if not isinstance(identity, tuple) or len(identity) != arity:
+            return (
+                (
+                    "endpoint_group_identity",
+                    "endpoint_group_identity_not_product_tuple",
+                    identity,
+                ),
+            )
+        elements = tuple(self.endpoint_group.elements)
+        malformed_elements = tuple(
+            element
+            for element in elements
+            if not isinstance(element, tuple) or len(element) != arity
+        )
+        if malformed_elements:
+            return (
+                (
+                    "endpoint_group_elements",
+                    "endpoint_group_element_not_product_tuple",
+                    malformed_elements,
+                ),
+            )
+        coordinate_supports = tuple(
+            tuple(sorted({element[position] for element in elements}, key=repr))
+            for position in range(arity)
+        )
+        for position, family in enumerate(group_families):
+            order = target_orders.get(family)
+            if not _universal_k_positive_int(order):
+                failures.append(
+                    (
+                        family,
+                        "endpoint_group_factor_target_order_malformed",
+                        order,
+                    )
+                )
+                continue
+            support_order = len(coordinate_supports[position])
+            if support_order != order:
+                failures.append(
+                    (
+                        family,
+                        "endpoint_group_factor_order_mismatch",
+                        (support_order, order),
+                    )
+                )
+        expected_elements = set(product(*coordinate_supports))
+        actual_elements = set(elements)
+        if actual_elements != expected_elements:
+            failures.append(
+                (
+                    "endpoint_group_elements",
+                    "endpoint_group_elements_not_cartesian_product",
+                    (len(actual_elements), len(expected_elements)),
+                )
+            )
+        for position, family in enumerate(group_families):
+            coordinate_multiplication = {}
+            for left in elements:
+                for right in elements:
+                    coordinate_pair = (left[position], right[position])
+                    result = self.endpoint_group.mul(left, right)[position]
+                    previous = coordinate_multiplication.setdefault(
+                        coordinate_pair,
+                        result,
+                    )
+                    if previous != result:
+                        failures.append(
+                            (
+                                family,
+                                "endpoint_group_coordinate_multiplication_not_well_defined",
+                                (coordinate_pair, previous, result),
+                            )
+                        )
+                        break
+                if failures and failures[-1][0] == family:
+                    break
+        return tuple(sorted(_unique_values(tuple(failures)), key=repr))
+
+    @property
+    def endpoint_group_product_factors_match_target(self) -> bool:
+        return not self.endpoint_group_product_factor_failures
 
     @property
     def residual_action_scope_matches_required(self) -> bool:
@@ -7283,6 +7382,8 @@ class UniversalKSignedEndpointGeneratorAudit:
                 reasons.append("endpoint_target_group_order_mismatch")
             if not self.endpoint_group_family_support_proved:
                 reasons.append("endpoint_group_family_support_mismatch")
+            if not self.endpoint_group_product_factors_match_target:
+                reasons.append("endpoint_group_product_factor_mismatch")
             if self.endpoint_target_audit is not None:
                 reasons.extend(self.endpoint_target_audit.failure_reasons)
         if not self.coordinate_components_verified:
@@ -13735,6 +13836,14 @@ class PostLinearRemainingFiniteSystemAudit:
                     "signed_endpoint_generator_endpoint_group_family_support_failures",
                     (),
                 ),
+                (
+                    "signed_endpoint_generator_endpoint_group_product_factor_failures",
+                    (),
+                ),
+                (
+                    "signed_endpoint_generator_endpoint_group_product_factors_match_target",
+                    False,
+                ),
                 ("signed_endpoint_generator_endpoint_target_cutoff_degrees", ()),
                 (
                     "signed_endpoint_generator_endpoint_target_malformed_cutoff_degrees",
@@ -14547,6 +14656,14 @@ class PostLinearRemainingFiniteSystemAudit:
             (
                 "signed_endpoint_generator_endpoint_group_family_support_failures",
                 audit.endpoint_group_family_support_failures,
+            ),
+            (
+                "signed_endpoint_generator_endpoint_group_product_factor_failures",
+                audit.endpoint_group_product_factor_failures,
+            ),
+            (
+                "signed_endpoint_generator_endpoint_group_product_factors_match_target",
+                audit.endpoint_group_product_factors_match_target,
             ),
             (
                 "signed_endpoint_generator_endpoint_target_cutoff_degrees",

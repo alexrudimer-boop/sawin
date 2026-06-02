@@ -960,6 +960,15 @@ that each row lands in its own family factor and that
 nonidentity off-family component is an unclosed product-family separation
 failure, even if the total product group order matches the listed factor
 orders.
+The concrete product group must also have the declared coordinate factors.
+For target rows `(E_1,m_1),...,(E_t,m_t)`, every group element must be a
+tuple of length `t`; coordinate `j` must have exactly `m_j` distinct values;
+the element set must be the full Cartesian product of the coordinate
+supports; and multiplication in coordinate `j` must be determined only by the
+two coordinate-`j` inputs.  A product with swapped factor coordinates, a
+diagonal subgroup, or an entangled tuple multiplication is not a
+family-separated endpoint target even if its total order is
+`m_1...m_t` and every emitted label has identity off-family coordinates.
 Endpoint-target braid-index independence and product-family separation must
 be explicit finite target certificates, and the per-family target ledger must
 support them through positive fixed group orders or cutoff degrees, exact
