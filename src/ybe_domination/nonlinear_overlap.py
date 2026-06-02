@@ -12087,6 +12087,25 @@ class TriangularRecoveryEndpointWitnessAudit:
         )
 
     @property
+    def raw_routed_keys(self) -> Tuple[TriangularRecoveryEndpointKey, ...]:
+        return tuple(
+            _triangular_recovery_endpoint_key(defect)
+            for defect in self.routed_defects
+        )
+
+    @property
+    def raw_witness_keys(self) -> Tuple[TriangularRecoveryEndpointKey, ...]:
+        return tuple(key for key, _audit in self.endpoint_audits)
+
+    @property
+    def duplicate_routed_keys(self) -> Tuple[TriangularRecoveryEndpointKey, ...]:
+        return _duplicate_values(self.raw_routed_keys)
+
+    @property
+    def duplicate_witness_keys(self) -> Tuple[TriangularRecoveryEndpointKey, ...]:
+        return _duplicate_values(self.raw_witness_keys)
+
+    @property
     def witnessed_keys(self) -> Tuple[TriangularRecoveryEndpointKey, ...]:
         return _sorted_triangular_recovery_endpoint_keys(
             tuple(
@@ -12135,6 +12154,8 @@ class TriangularRecoveryEndpointWitnessAudit:
             and self.all_endpoint_witnesses_match_observer
             and self.all_endpoint_witnesses_visible
             and self.all_routed_keys_have_endpoint_witnesses
+            and not self.duplicate_routed_keys
+            and not self.duplicate_witness_keys
             and not self.extra_witness_keys
         )
 
@@ -12149,6 +12170,10 @@ class TriangularRecoveryEndpointWitnessAudit:
             reasons.append("endpoint_witnesses_not_proved")
         if not self.all_routed_keys_have_endpoint_witnesses:
             reasons.append("routed_recovery_keys_not_covered")
+        if self.duplicate_routed_keys:
+            reasons.append("duplicate_recovery_routed_keys")
+        if self.duplicate_witness_keys:
+            reasons.append("duplicate_recovery_witness_keys")
         if self.extra_witness_keys:
             reasons.append("extra_recovery_witness_keys")
         return tuple(reasons)
@@ -12193,6 +12218,25 @@ class TriangularRecoverySymmetricEndpointForkAudit:
         )
 
     @property
+    def raw_routed_keys(self) -> Tuple[TriangularRecoveryEndpointKey, ...]:
+        return tuple(
+            _triangular_recovery_endpoint_key(defect)
+            for defect in self.routed_defects
+        )
+
+    @property
+    def raw_covered_keys(self) -> Tuple[TriangularRecoveryEndpointKey, ...]:
+        return tuple(self.covered_keys)
+
+    @property
+    def duplicate_routed_keys(self) -> Tuple[TriangularRecoveryEndpointKey, ...]:
+        return _duplicate_values(self.raw_routed_keys)
+
+    @property
+    def duplicate_covered_keys(self) -> Tuple[TriangularRecoveryEndpointKey, ...]:
+        return _duplicate_values(self.raw_covered_keys)
+
+    @property
     def supplied_covered_keys(self) -> Tuple[TriangularRecoveryEndpointKey, ...]:
         return _sorted_triangular_recovery_endpoint_keys(self.covered_keys)
 
@@ -12226,6 +12270,8 @@ class TriangularRecoverySymmetricEndpointForkAudit:
             self.observer.proves_fixed_unit_observer
             and self.endpoint_family_uses_recovery_unit_group
             and self.all_routed_keys_covered
+            and not self.duplicate_routed_keys
+            and not self.duplicate_covered_keys
             and not self.extra_covered_keys
             and self.endpoint_family.faithful_endpoint_cutoff_proved
         )
@@ -12237,6 +12283,8 @@ class TriangularRecoverySymmetricEndpointForkAudit:
             and self.endpoint_family_uses_recovery_unit_group
             and self.endpoint_family.proves_supplied_symmetric_tail_endpoint_seed_prefix
             and bool(set(self.supplied_covered_keys).intersection(self.routed_keys))
+            and not self.duplicate_routed_keys
+            and not self.duplicate_covered_keys
             and not self.extra_covered_keys
         )
 
@@ -12249,6 +12297,10 @@ class TriangularRecoverySymmetricEndpointForkAudit:
             reasons.append("endpoint_family_group_mismatch")
         if not self.all_routed_keys_covered:
             reasons.append("routed_recovery_keys_not_covered")
+        if self.duplicate_routed_keys:
+            reasons.append("duplicate_recovery_routed_keys")
+        if self.duplicate_covered_keys:
+            reasons.append("duplicate_recovery_symmetric_keys")
         if self.extra_covered_keys:
             reasons.append("extra_recovery_symmetric_keys")
         if not self.endpoint_family.faithful_endpoint_cutoff_proved:
@@ -13763,7 +13815,9 @@ class PostLinearRemainingFiniteSystemAudit:
                         _triangular_recovery_endpoint_key(defect)
                         for defect in self.system_u_endpoint_defects
                     )
-                ),
+                )
+                and not witness.duplicate_routed_keys
+                and not witness.duplicate_witness_keys,
             ),
             (
                 "triangular_recovery_endpoint_witness_proved",
@@ -13776,6 +13830,14 @@ class PostLinearRemainingFiniteSystemAudit:
             (
                 "triangular_recovery_endpoint_extra_keys",
                 witness.extra_witness_keys,
+            ),
+            (
+                "triangular_recovery_endpoint_duplicate_routed_keys",
+                witness.duplicate_routed_keys,
+            ),
+            (
+                "triangular_recovery_endpoint_duplicate_witness_keys",
+                witness.duplicate_witness_keys,
             ),
         )
 
@@ -13796,7 +13858,9 @@ class PostLinearRemainingFiniteSystemAudit:
                         _triangular_recovery_endpoint_key(defect)
                         for defect in self.system_u_endpoint_defects
                     )
-                ),
+                )
+                and not fork.duplicate_routed_keys
+                and not fork.duplicate_covered_keys,
             ),
             (
                 "triangular_recovery_symmetric_fork_group_orders",
@@ -13825,6 +13889,14 @@ class PostLinearRemainingFiniteSystemAudit:
             (
                 "triangular_recovery_symmetric_fork_extra_keys",
                 fork.extra_covered_keys,
+            ),
+            (
+                "triangular_recovery_symmetric_fork_duplicate_routed_keys",
+                fork.duplicate_routed_keys,
+            ),
+            (
+                "triangular_recovery_symmetric_fork_duplicate_covered_keys",
+                fork.duplicate_covered_keys,
             ),
         )
 
@@ -17833,7 +17905,9 @@ class PostLinearRemainingFiniteSystemAudit:
                                     _triangular_recovery_endpoint_key(defect)
                                     for defect in self.system_u_endpoint_defects
                                 )
-                            ),
+                            )
+                            and not witness.duplicate_routed_keys
+                            and not witness.duplicate_witness_keys,
                         ),
                         (
                             "triangular_recovery_endpoint_witness_proved",
@@ -17846,6 +17920,14 @@ class PostLinearRemainingFiniteSystemAudit:
                         (
                             "triangular_recovery_endpoint_extra_keys",
                             witness.extra_witness_keys,
+                        ),
+                        (
+                            "triangular_recovery_endpoint_duplicate_routed_keys",
+                            witness.duplicate_routed_keys,
+                        ),
+                        (
+                            "triangular_recovery_endpoint_duplicate_witness_keys",
+                            witness.duplicate_witness_keys,
                         ),
                     )
                 )

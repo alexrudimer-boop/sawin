@@ -2466,7 +2466,7 @@ A supplied symmetric endpoint cutoff for U is valid only when:
 
 - it uses exactly the fixed group `U_tri`;
 - it covers exactly the nonempty routed U endpoint keys for the K-routed
-  family;
+  family, with no duplicate routed keys and no duplicate covered keys;
 - it proves endpoint-family faithfulness;
 - identity symmetric-longitude data kills the whole finite U endpoint
   family.
@@ -2474,7 +2474,8 @@ A supplied symmetric endpoint cutoff for U is valid only when:
 A supplied U endpoint-witness certificate is valid only when:
 
 - it uses the same fixed triangular recovery observer that defines `U_tri`;
-- its keys are exactly the routed U endpoint keys and there are no extra keys;
+- its keys are exactly the routed U endpoint keys, with no extra keys, no
+  duplicate routed keys, and no duplicate witness keys;
 - every supplied key has an endpoint-longitude expression certificate proving
   membership in `V_beta(U_tri)`;
 - the routed key tuple is nonempty for K-routed U rows.

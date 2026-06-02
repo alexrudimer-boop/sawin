@@ -11268,6 +11268,40 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             ("routed_recovery_keys_not_covered",),
         )
 
+    def test_triangular_recovery_endpoint_witness_rejects_duplicate_key_ledgers(self):
+        interval = one_color_latin_unit_triangular_interval()
+        observer = triangular_recovery_unit_observer_audit(interval)
+        generator = observer.generator_transformations[0]
+        identity = observer.monoid.identity
+        endpoint = triangular_recovery_longitude_expression_audit(
+            interval,
+            n=2,
+            braid_word=(1, 1),
+            factor_row_indices=(0,),
+            assignment=(generator, identity),
+            expression=((1, 1),),
+        )
+        routed_defect = (("*", "*"), "left_constant_map_universal_kernel")
+        key = ("*", "*", "left_constant_map_universal_kernel")
+
+        audit = triangular_recovery_endpoint_witness_audit(
+            observer,
+            (routed_defect, routed_defect),
+            ((key, endpoint), (key, endpoint)),
+        )
+
+        self.assertEqual(audit.duplicate_routed_keys, (key,))
+        self.assertEqual(audit.duplicate_witness_keys, (key,))
+        self.assertFalse(audit.proves_triangular_recovery_endpoint_witnesses)
+        self.assertIn(
+            "duplicate_recovery_routed_keys",
+            audit.failure_reasons,
+        )
+        self.assertIn(
+            "duplicate_recovery_witness_keys",
+            audit.failure_reasons,
+        )
+
     def test_triangular_recovery_symmetric_endpoint_fork_covers_routed_key(self):
         observer = triangular_recovery_unit_observer_audit(
             one_color_latin_unit_triangular_interval()
@@ -11324,6 +11358,38 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertEqual(
             audit.failure_reasons,
             ("routed_recovery_keys_not_covered",),
+        )
+
+    def test_triangular_recovery_symmetric_endpoint_fork_rejects_duplicate_keys(self):
+        observer = triangular_recovery_unit_observer_audit(
+            one_color_latin_unit_triangular_interval()
+        )
+        endpoint_family = endpoint_family_symmetric_fork_audit(
+            (observer.unit_group_order,),
+            all_endpoint_witnesses_supplied=True,
+            endpoint_family_faithful=True,
+        )
+        routed_defect = (("*", "*"), "left_constant_map_universal_kernel")
+        key = ("*", "*", "left_constant_map_universal_kernel")
+
+        audit = triangular_recovery_symmetric_endpoint_fork_audit(
+            observer,
+            (routed_defect, routed_defect),
+            endpoint_family,
+            (key, key),
+        )
+
+        self.assertEqual(audit.duplicate_routed_keys, (key,))
+        self.assertEqual(audit.duplicate_covered_keys, (key,))
+        self.assertFalse(audit.proves_triangular_recovery_symmetric_endpoint_cutoff)
+        self.assertFalse(audit.proves_triangular_recovery_symmetric_tail_seed_prefix)
+        self.assertIn(
+            "duplicate_recovery_routed_keys",
+            audit.failure_reasons,
+        )
+        self.assertIn(
+            "duplicate_recovery_symmetric_keys",
+            audit.failure_reasons,
         )
 
     def test_recovery_endpoint_witness_is_not_observer_closure(self):

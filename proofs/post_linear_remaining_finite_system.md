@@ -2069,6 +2069,8 @@ triangular_recovery_endpoint_witness_matches_system
 triangular_recovery_endpoint_witness_proved
 triangular_recovery_endpoint_missing_keys
 triangular_recovery_endpoint_extra_keys
+triangular_recovery_endpoint_duplicate_routed_keys
+triangular_recovery_endpoint_duplicate_witness_keys
 triangular_recovery_symmetric_fork_matches_system
 triangular_recovery_symmetric_fork_group_orders
 triangular_recovery_symmetric_fork_minimum_degree
@@ -2077,6 +2079,8 @@ triangular_recovery_symmetric_fork_cutoff_proved
 triangular_recovery_symmetric_fork_tail_seed_prefix_proved
 triangular_recovery_symmetric_fork_missing_keys
 triangular_recovery_symmetric_fork_extra_keys
+triangular_recovery_symmetric_fork_duplicate_routed_keys
+triangular_recovery_symmetric_fork_duplicate_covered_keys
 ```
 
 The endpoint keys are exactly:
@@ -2089,8 +2093,10 @@ The endpoint keys are exactly:
 the same fixed `U_tri` observer, covers exactly the current
 `system_u_endpoint_defects`, and each covered key carries a recovery endpoint
 certificate proving membership in `V_beta(U_tri)`, then the wrapper records
-`triangular_recovery_endpoint_witness_proved=True` and exact missing/extra key
-ledgers.  It does not close System U by itself.  The current closure gate
+`triangular_recovery_endpoint_witness_proved=True` and exact missing, extra,
+and duplicate key ledgers.  Duplicate routed keys or duplicate witness keys
+are certificate failures, not harmless repetitions hidden by set
+normalization.  It does not close System U by itself.  The current closure gate
 requires the routed U word-potential endpoint observer over `U_tri`, or the
 full signed endpoint generator, with residual faithfulness.
 
@@ -2098,7 +2104,8 @@ full signed endpoint generator, with residual faithfulness.
 the same fixed `U_tri` observer, its endpoint-family group list is exactly
 `(|U_tri|,)`, it covers exactly the current `system_u_endpoint_defects`, and
 it proves a faithful symmetric endpoint cutoff, then the cutoff is retained as
-a candidate ledger.  It does not remove U from
+a candidate ledger.  Duplicate routed keys or duplicate covered keys are
+reported and keep the fork unproved.  It does not remove U from
 `unclosed_routed_endpoint_systems` without the current endpoint-observer and
 residual-faithfulness bridge.
 
