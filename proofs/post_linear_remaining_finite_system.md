@@ -1023,11 +1023,12 @@ product closures do not use or permit cross-family endpoint cancellation.
 The product closure is not limited to strict identity rows.  The main
 classifier also consumes the singleton-fibre, coordinate-identity, supplied
 fibre-label identity, and canonical fibre-label identity residual subcases
-for routed U+C products: the U observer still has to use the current `U_tri`
-table, C still has to carry the exact cutoff/readout ledger, and the product
-residual theorem must report the corresponding residual channel reason.
-These closures cover residually trivial non-strict local motion; they still
-do not construct the general nontrivial U/C endpoint observer.
+for routed U+C and C+M products: the U observer, when present, still has to
+use the current `U_tri` table, C and M still have to carry the exact
+cutoff/readout ledgers, and the product residual theorem must report the
+corresponding residual channel reason.  These closures cover residually
+trivial non-strict local motion; they still do not construct the general
+nontrivial U/C/M endpoint observer.
 All automatic residual-faithfulness helpers require the supplied local
 interval table to be complete and type-correct: `R_C` must be a bijection on
 colour pairs, every local `T_{a,b}` row must be present exactly on its fibre

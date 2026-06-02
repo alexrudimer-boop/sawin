@@ -14407,6 +14407,96 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             (),
         )
 
+    def test_routed_cm_identity_observer_closes_non_strict_residual_product_systems(self):
+        profile, closure, route, coordinate_routing = (
+            continuation_and_mixed_context_route_audits()
+        )
+        refinement = TwoNoTriangularRawKRefinement()
+        routed = PostLinearRemainingFiniteSystemAudit(
+            refinement,
+            missing_triangular_row_profile=profile,
+            missing_triangular_partial_constant_closure=closure,
+            missing_triangular_partial_constant_continuation_route=route,
+            missing_triangular_coordinate_unit_routing=coordinate_routing,
+        )
+        cases = (
+            (
+                "singleton_fibre",
+                two_color_singleton_swap_interval(),
+                {"derive_singleton_fibre_residual_faithfulness": True},
+                "singleton_fibre_residual_channel",
+            ),
+            (
+                "coordinate_identity",
+                two_color_coordinate_identity_swap_interval(),
+                {"derive_coordinate_identity_residual_faithfulness": True},
+                "coordinate_identity_residual_channel",
+            ),
+            (
+                "supplied_fibre_label_identity",
+                two_color_fibre_label_identity_swap_interval(),
+                {
+                    "derive_fibre_label_identity_residual_faithfulness": True,
+                    "fibre_label_identity_rows": (
+                        ("a", "a0", 0),
+                        ("a", "a1", 1),
+                        ("b", "b0", 0),
+                        ("b", "b1", 1),
+                    ),
+                },
+                "fibre_label_identity_residual_channel",
+            ),
+            (
+                "canonical_fibre_label_identity",
+                two_color_fibre_label_identity_swap_interval(),
+                {
+                    "derive_canonical_fibre_label_identity_residual_faithfulness": (
+                        True
+                    ),
+                },
+                "canonical_fibre_label_identity_residual_channel",
+            ),
+        )
+
+        for case_name, interval, derive_kwargs, channel_reason in cases:
+            with self.subTest(case=case_name):
+                family_build = universal_k_identity_endpoint_observer_builds_by_family(
+                    interval,
+                    routed.universal_k_seed_classifier_entries,
+                    **derive_kwargs,
+                )
+                audit = PostLinearRemainingFiniteSystemAudit(
+                    refinement,
+                    missing_triangular_row_profile=profile,
+                    missing_triangular_partial_constant_closure=closure,
+                    missing_triangular_partial_constant_continuation_route=route,
+                    missing_triangular_coordinate_unit_routing=coordinate_routing,
+                    universal_k_endpoint_observer_family_build=family_build,
+                    universal_k_signed_endpoint_interval=interval,
+                )
+                data = dict(audit.finite_obstruction_data)
+
+                self.assertEqual(routed.active_routed_endpoint_systems, ("C", "M"))
+                self.assertEqual(
+                    family_build.product_residual_theorem_channel_reasons,
+                    (channel_reason,),
+                )
+                self.assertEqual(family_build.failure_reasons, ())
+                self.assertTrue(family_build.proves_family_endpoint_product_closure)
+                self.assertTrue(audit.system_c_closed_by_endpoint_observer_family_build)
+                self.assertTrue(audit.system_m_closed_by_endpoint_observer_family_build)
+                self.assertTrue(audit.all_active_routed_endpoint_systems_closed)
+                self.assertEqual(
+                    audit.system_name,
+                    "closed_by_endpoint_observer_family_build",
+                )
+                self.assertEqual(audit.unclosed_routed_endpoint_systems, ())
+                self.assertEqual(audit.remaining_obligations, ())
+                self.assertTrue(data["endpoint_observer_family_build_closes_current_kappa"])
+                self.assertTrue(
+                    data["endpoint_observer_family_build_rows_match_current_interval"]
+                )
+
     def test_direct_unit_longitude_status_is_preempted_by_kink_dichotomy(self):
         interval = one_color_latin_unit_triangular_interval()
         audit = NonlinearOverlapRefinementAudit(
