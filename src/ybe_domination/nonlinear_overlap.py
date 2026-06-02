@@ -4382,16 +4382,25 @@ class UniversalKCutoffReadoutAudit:
     expected_cutoff_seed_states: Tuple[Tuple[str, UniversalKSeedState], ...]
     covered_cutoff_seed_states: Tuple[Tuple[str, UniversalKSeedState], ...]
     cutoff_degree: int | None = None
-    readout_rows: Tuple[UniversalKCutoffReadoutRow, ...] = ()
+    readout_rows: object = ()
     readouts_faithful: bool = False
     identity_cutoff_data_kills_channels: bool = False
     braid_index_independent: bool = False
 
     @property
+    def readout_row_inputs(self) -> Tuple[object, ...]:
+        if not _universal_k_nonstring_sequence(self.readout_rows):
+            return () if self.readout_rows == () else (self.readout_rows,)
+        try:
+            return tuple(self.readout_rows)
+        except TypeError:
+            return (self.readout_rows,)
+
+    @property
     def readout_row_objects(self) -> Tuple[UniversalKCutoffReadoutRow, ...]:
         return tuple(
             row
-            for row in self.readout_rows
+            for row in self.readout_row_inputs
             if isinstance(row, UniversalKCutoffReadoutRow)
         )
 
@@ -4400,7 +4409,7 @@ class UniversalKCutoffReadoutAudit:
         return _unique_values(
             tuple(
                 row
-                for row in self.readout_rows
+                for row in self.readout_row_inputs
                 if not isinstance(row, UniversalKCutoffReadoutRow)
             )
         )
@@ -4790,8 +4799,8 @@ class UniversalKEndpointTargetAudit:
 
     expected_endpoint_families: Tuple[str, ...]
     covered_endpoint_families: Tuple[str, ...]
-    endpoint_group_orders: Tuple[Tuple[str, int], ...] = ()
-    cutoff_degrees: Tuple[Tuple[str, int], ...] = ()
+    endpoint_group_orders: object = ()
+    cutoff_degrees: object = ()
     braid_index_independent: bool = False
     product_families_separated: bool = False
 
@@ -4860,10 +4869,32 @@ class UniversalKEndpointTargetAudit:
         )
 
     @property
+    def endpoint_group_order_inputs(self) -> Tuple[object, ...]:
+        if not _universal_k_nonstring_sequence(self.endpoint_group_orders):
+            return (
+                ()
+                if self.endpoint_group_orders == ()
+                else (self.endpoint_group_orders,)
+            )
+        try:
+            return tuple(self.endpoint_group_orders)
+        except TypeError:
+            return (self.endpoint_group_orders,)
+
+    @property
+    def cutoff_degree_inputs(self) -> Tuple[object, ...]:
+        if not _universal_k_nonstring_sequence(self.cutoff_degrees):
+            return () if self.cutoff_degrees == () else (self.cutoff_degrees,)
+        try:
+            return tuple(self.cutoff_degrees)
+        except TypeError:
+            return (self.cutoff_degrees,)
+
+    @property
     def endpoint_group_order_rows(self) -> Tuple[Tuple[object, object], ...]:
         return tuple(
             parts
-            for row in self.endpoint_group_orders
+            for row in self.endpoint_group_order_inputs
             for parts in (_universal_k_two_field_row_parts(row),)
             if parts is not None
         )
@@ -4872,7 +4903,7 @@ class UniversalKEndpointTargetAudit:
     def cutoff_degree_rows(self) -> Tuple[Tuple[object, object], ...]:
         return tuple(
             parts
-            for row in self.cutoff_degrees
+            for row in self.cutoff_degree_inputs
             for parts in (_universal_k_two_field_row_parts(row),)
             if parts is not None
         )
@@ -4882,7 +4913,7 @@ class UniversalKEndpointTargetAudit:
         return _unique_values(
             tuple(
                 row
-                for row in self.endpoint_group_orders
+                for row in self.endpoint_group_order_inputs
                 if _universal_k_two_field_row_parts(row) is None
             )
         )
@@ -4892,7 +4923,7 @@ class UniversalKEndpointTargetAudit:
         return _unique_values(
             tuple(
                 row
-                for row in self.cutoff_degrees
+                for row in self.cutoff_degree_inputs
                 if _universal_k_two_field_row_parts(row) is None
             )
         )

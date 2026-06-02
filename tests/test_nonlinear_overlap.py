@@ -10601,6 +10601,26 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             malformed_group_order_row_target.failure_reasons,
         )
 
+        malformed_group_order_ledger_target = UniversalKEndpointTargetAudit(
+            expected_endpoint_families=("U",),
+            covered_endpoint_families=("U",),
+            endpoint_group_orders="not-a-group-order-ledger",
+            braid_index_independent=True,
+            product_families_separated=True,
+        )
+        self.assertFalse(
+            malformed_group_order_ledger_target.target_size_rows_well_formed
+        )
+        self.assertFalse(malformed_group_order_ledger_target.proves_endpoint_targets)
+        self.assertEqual(
+            malformed_group_order_ledger_target.malformed_endpoint_group_order_rows,
+            ("not-a-group-order-ledger",),
+        )
+        self.assertIn(
+            "endpoint_target_malformed_group_order_rows",
+            malformed_group_order_ledger_target.failure_reasons,
+        )
+
         malformed_cutoff_degree_target = UniversalKEndpointTargetAudit(
             expected_endpoint_families=("M",),
             covered_endpoint_families=("M",),
@@ -10635,6 +10655,26 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertIn(
             "endpoint_target_malformed_cutoff_degree_rows",
             malformed_cutoff_degree_row_target.failure_reasons,
+        )
+
+        malformed_cutoff_degree_ledger_target = UniversalKEndpointTargetAudit(
+            expected_endpoint_families=("M",),
+            covered_endpoint_families=("M",),
+            cutoff_degrees=None,
+            braid_index_independent=True,
+            product_families_separated=True,
+        )
+        self.assertFalse(
+            malformed_cutoff_degree_ledger_target.target_size_rows_well_formed
+        )
+        self.assertFalse(malformed_cutoff_degree_ledger_target.proves_endpoint_targets)
+        self.assertEqual(
+            malformed_cutoff_degree_ledger_target.malformed_cutoff_degree_rows,
+            (None,),
+        )
+        self.assertIn(
+            "endpoint_target_malformed_cutoff_degree_rows",
+            malformed_cutoff_degree_ledger_target.failure_reasons,
         )
 
     def test_cutoff_readout_rejects_malformed_cutoff_degree_without_crashing(self):
@@ -10681,6 +10721,24 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertIn(
             "cutoff_readout_rows_do_not_cover_expected_states",
             malformed_rows.failure_reasons,
+        )
+
+        malformed_row_ledger = UniversalKCutoffReadoutAudit(
+            expected_cutoff_seed_states=(seed_state,),
+            covered_cutoff_seed_states=(seed_state,),
+            cutoff_degree=2,
+            readout_rows="not-a-row-ledger",
+            braid_index_independent=True,
+        )
+        self.assertEqual(
+            malformed_row_ledger.malformed_readout_rows,
+            ("not-a-row-ledger",),
+        )
+        self.assertEqual(malformed_row_ledger.row_cutoff_seed_states, ())
+        self.assertFalse(malformed_row_ledger.proves_exact_cutoff_readouts)
+        self.assertIn(
+            "cutoff_readout_malformed_rows",
+            malformed_row_ledger.failure_reasons,
         )
 
         unindexed_rows_without_certificate = UniversalKCutoffReadoutAudit(

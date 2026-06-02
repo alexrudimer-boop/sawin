@@ -1008,9 +1008,9 @@ Each target size row must be a positive integer attached to a known endpoint
 family.  Strings, booleans, missing values, zero, and negative values are
 malformed endpoint-target rows, not finite detector factors.
 Each endpoint target-size row must also have exactly two fields,
-`(family, size)`.  A row with an extra field, a missing field, or a non-tuple
-shape is a malformed endpoint-target row even if one can read a plausible
-family and size from it.
+`(family, size)`.  A non-sequence target-size ledger, or a row with an extra
+field, a missing field, or a non-tuple shape, is a malformed endpoint-target
+row even if one can read a plausible family and size from it.
 The `family` field in every endpoint target-size row must be a hashable known
 endpoint family in `{U,C,M}`.  Unknown or unhashable family labels in either
 the expected/covered endpoint-target ledgers or the target-size rows are
@@ -2165,7 +2165,8 @@ readout row for every routed C/M seed state:
 ```
 
 The readout rows must cover exactly the expected seed states, with no
-missing, extra, duplicate, or malformed row objects.  A malformed readout
+missing, extra, duplicate, or malformed row objects.  A non-sequence
+readout-row ledger is treated as malformed finite data.  A malformed readout
 row object is reported in
 `signed_endpoint_generator_cutoff_readout_malformed_rows`; it is a finite
 certificate failure, not a runtime exception and not a row that can be

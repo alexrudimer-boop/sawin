@@ -469,9 +469,9 @@ open.  The family and target ledgers must also be duplicate-free: repeating a
 routed family or assigning two target entries to the same family is not an
 exact one-target-per-family certificate.
 Every endpoint target-size row must have exactly two fields, `(family, size)`.
-Rows with missing fields, extra fields, or a non-tuple shape are malformed
-target rows; they are reported separately from nonpositive size values and
-cannot be used as finite detector factors.
+A non-sequence target-size ledger, or a row with missing fields, extra fields,
+or a non-tuple shape, is a malformed target row; these are reported separately
+from nonpositive size values and cannot be used as finite detector factors.
 The `family` field in each target-size row must itself be a hashable known
 endpoint family in `{U,C,M}`.  Unknown or unhashable family labels in either
 the expected/covered ledgers or the target-size rows are certificate failures,
@@ -499,8 +499,9 @@ prove the gate.  The cutoff certificate must list the expected routed C/M seed
 states, the covered seed states, a positive symmetric degree, and one finite
 readout row for every routed C/M seed state.  A row records the seed state,
 the readout permutation, and the permutation left after identity cutoff data.
-Malformed readout row objects are finite certificate failures, not runtime
-exceptions and not rows that can be silently ignored.
+Malformed readout row objects, including a non-sequence readout-row ledger,
+are finite certificate failures, not runtime exceptions and not rows that can
+be silently ignored.
 The checker verifies row-domain exactness, actual membership in the symmetric
 group, injective readouts for faithfulness, and identity killed-readouts for
 channel killing.  A permutation row is an actual tuple of integers
