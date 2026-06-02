@@ -211,6 +211,7 @@ def _universal_k_detector_track_key_well_formed(key: object) -> bool:
     return (
         isinstance(key, tuple)
         and len(key) == 2
+        and _is_hashable(key[0])
         and key[0] in UNIVERSAL_K_ENDPOINT_FAMILIES
         and _universal_k_nonnegative_int(key[1])
     )
@@ -280,12 +281,20 @@ class UniversalKDetectorTrackInitializationRow:
     @property
     def forbidden_dependencies(self) -> Tuple[str, ...]:
         forbidden = _UNIVERSAL_K_DETECTOR_TRACK_FORBIDDEN_DEPENDENCIES
-        return tuple(dependency for dependency in self.dependencies if dependency in forbidden)
+        return tuple(
+            dependency
+            for dependency in self.dependencies
+            if _is_hashable(dependency) and dependency in forbidden
+        )
 
     @property
     def unknown_dependencies(self) -> Tuple[str, ...]:
         allowed = _UNIVERSAL_K_DETECTOR_TRACK_ALLOWED_DEPENDENCIES
-        return tuple(dependency for dependency in self.dependencies if dependency not in allowed)
+        return tuple(
+            dependency
+            for dependency in self.dependencies
+            if not _is_hashable(dependency) or dependency not in allowed
+        )
 
     @property
     def fixed_before_braid(self) -> bool:
@@ -5807,7 +5816,8 @@ class UniversalKTelescopingDetectorAudit:
                     family
                     for family, count in self.detector_track_count_rows
                     if (
-                        family in UNIVERSAL_K_ENDPOINT_FAMILIES
+                        _is_hashable(family)
+                        and family in UNIVERSAL_K_ENDPOINT_FAMILIES
                         and _universal_k_positive_int(count)
                     )
                 },
@@ -5821,7 +5831,8 @@ class UniversalKTelescopingDetectorAudit:
             family: count
             for family, count in self.detector_track_count_rows
             if (
-                family in UNIVERSAL_K_ENDPOINT_FAMILIES
+                _is_hashable(family)
+                and family in UNIVERSAL_K_ENDPOINT_FAMILIES
                 and _universal_k_positive_int(count)
             )
         }
@@ -5837,15 +5848,15 @@ class UniversalKTelescopingDetectorAudit:
         )
 
     @property
-    def invalid_detector_track_count_families(self) -> Tuple[str, ...]:
-        return tuple(
-            sorted(
-                {
-                    family
-                    for family, _count in self.detector_track_count_rows
-                    if family not in UNIVERSAL_K_ENDPOINT_FAMILIES
-                },
-                key=repr,
+    def invalid_detector_track_count_families(self) -> Tuple[object, ...]:
+        return _unique_values(
+            tuple(
+                family
+                for family, _count in self.detector_track_count_rows
+                if (
+                    not _is_hashable(family)
+                    or family not in UNIVERSAL_K_ENDPOINT_FAMILIES
+                )
             )
         )
 
@@ -5875,7 +5886,7 @@ class UniversalKTelescopingDetectorAudit:
         )
 
     @property
-    def duplicate_detector_track_count_families(self) -> Tuple[str, ...]:
+    def duplicate_detector_track_count_families(self) -> Tuple[object, ...]:
         return _duplicate_values(
             tuple(
                 family
@@ -5917,7 +5928,8 @@ class UniversalKTelescopingDetectorAudit:
         keys = []
         for family, count in self.detector_track_count_rows:
             if (
-                family not in UNIVERSAL_K_ENDPOINT_FAMILIES
+                not _is_hashable(family)
+                or family not in UNIVERSAL_K_ENDPOINT_FAMILIES
                 or not _universal_k_positive_int(count)
             ):
                 continue
@@ -6085,6 +6097,8 @@ class UniversalKTelescopingDetectorAudit:
     ) -> Mapping[str, Tuple[UniversalKWordPotentialVariable, ...]]:
         initialized: dict[str, set[UniversalKWordPotentialVariable]] = {}
         for row in self.detector_track_initialization_row_objects:
+            if not row.key_valid:
+                continue
             family_initialized = initialized.setdefault(row.endpoint_family, set())
             for assignment_entry in row.local_assignment_template:
                 parts = _universal_k_word_potential_substitution_parts(

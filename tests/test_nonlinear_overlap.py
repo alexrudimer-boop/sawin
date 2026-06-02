@@ -4195,6 +4195,48 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             malformed_track_count_row.failure_reasons,
         )
 
+        malformed_track_count_family = replace(
+            theorem_complete,
+            telescoping_detector_audit=replace(
+                theorem_complete.telescoping_detector_audit,
+                detector_track_counts_by_family=((["U"], 1), ("Z", 1)),
+                detector_track_count=2,
+            ),
+        )
+        malformed_track_count_family_audit = (
+            malformed_track_count_family.telescoping_detector_audit
+        )
+        self.assertEqual(
+            tuple(
+                repr(family)
+                for family in (
+                    malformed_track_count_family_audit
+                    .invalid_detector_track_count_families
+                )
+            ),
+            ("'Z'", "['U']"),
+        )
+        self.assertEqual(
+            malformed_track_count_family_audit.detector_track_count_by_family,
+            {},
+        )
+        self.assertEqual(
+            malformed_track_count_family_audit.expected_detector_track_keys,
+            (),
+        )
+        self.assertFalse(
+            malformed_track_count_family_audit.detector_track_count_rows_well_formed
+        )
+        self.assertFalse(malformed_track_count_family.telescoping_detector_proved)
+        self.assertIn(
+            "detector_track_count_unknown_families",
+            malformed_track_count_family.failure_reasons,
+        )
+        self.assertIn(
+            "detector_track_count_rows_malformed",
+            malformed_track_count_family.failure_reasons,
+        )
+
         malformed_track_index = replace(
             theorem_complete,
             telescoping_detector_audit=replace(
@@ -4222,6 +4264,63 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertIn(
             "detector_track_initialization_invalid_rows",
             malformed_track_index.failure_reasons,
+        )
+
+        malformed_track_family = replace(
+            theorem_complete,
+            telescoping_detector_audit=replace(
+                theorem_complete.telescoping_detector_audit,
+                detector_track_initialization_rows=(
+                    UniversalKDetectorTrackInitializationRow(
+                        endpoint_family=["U"],
+                        track_index=0,
+                        assignment_rule="constant_identity_from_interval_seed",
+                        dependencies=(
+                            "interval_data",
+                            "routed_seed_state",
+                            "strand_index",
+                        ),
+                        local_assignment_template=((("A", 0, 0), 0),),
+                    ),
+                ),
+            ),
+        )
+        malformed_track_family_audit = (
+            malformed_track_family.telescoping_detector_audit
+        )
+        self.assertFalse(malformed_track_family.telescoping_detector_proved)
+        self.assertEqual(
+            malformed_track_family_audit.initialized_raw_assignment_variables_by_family,
+            {},
+        )
+        self.assertIn(
+            "detector_track_initialization_rows_not_exact",
+            malformed_track_family.failure_reasons,
+        )
+        self.assertIn(
+            "detector_track_initialization_invalid_rows",
+            malformed_track_family.failure_reasons,
+        )
+
+        malformed_track_dependency = replace(
+            theorem_complete,
+            telescoping_detector_audit=replace(
+                theorem_complete.telescoping_detector_audit,
+                detector_track_initialization_rows=(
+                    UniversalKDetectorTrackInitializationRow(
+                        endpoint_family="U",
+                        track_index=0,
+                        assignment_rule="constant_identity_from_interval_seed",
+                        dependencies=(["interval_data"],),
+                        local_assignment_template=((("A", 0, 0), 0),),
+                    ),
+                ),
+            ),
+        )
+        self.assertFalse(malformed_track_dependency.telescoping_detector_proved)
+        self.assertIn(
+            "detector_track_initialization_invalid_rows",
+            malformed_track_dependency.failure_reasons,
         )
 
         malformed_track_initialization_row = replace(

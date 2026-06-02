@@ -607,7 +607,11 @@ each family count `R_E`, the audit derives expected keys `(E,r)` for
 family count must be a positive integer attached to one of the known endpoint
 families `U`, `C`, or `M`; nonintegers, booleans, zero or negative counts, and
 unknown family names are malformed track-count rows, not empty detector-track
-families.  Each family-count row must have the two-field finite shape
+families.  The family label itself must be a hashable certificate atom, not a
+list or other structured object that merely prints like a family name; an
+unhashable or non-`U/C/M` label is an invalid family row and cannot contribute
+detector-track keys, initialized raw variables, or word-potential track scope.
+Each family-count row must have the two-field finite shape
 `(endpoint_family, positive_track_count)`; shortened rows or rows with extra
 fields are malformed detector-track data, not alternate syntax.  An
 initialization row records the family, nonnegative integer track index,

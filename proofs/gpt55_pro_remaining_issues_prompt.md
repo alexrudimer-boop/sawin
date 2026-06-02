@@ -1461,7 +1461,11 @@ Each family track-count row must use one of the known endpoint families
 `U`, `C`, or `M`, and its count must be a positive integer.  Booleans,
 strings, zero, negative values, missing counts, and unknown family names are
 malformed detector-track ledgers; they do not define empty or harmless
-families.  Each family track-count row must also have the exact two-field
+families.  The family label must be a hashable certificate atom equal to
+`U`, `C`, or `M`; an unhashable list-like label or any other structured object
+is an invalid family row, not alternate syntax, and it must not create
+detector-track keys or initialized raw-variable scope.  Each family
+track-count row must also have the exact two-field
 finite shape `(endpoint_family, positive_track_count)`; shortened rows and
 rows with extra fields are malformed detector-track data.  Each
 initialization row must name a known endpoint family, a
@@ -2348,6 +2352,7 @@ state_coordinate_far_commutativity_path,
 label_cocycles_derived_from_word_potential_not_independent,
 fixed_detector_track_initialization,
 detector_track_count_rows_use_only_U_C_M_families,
+detector_track_count_family_labels_are_hashable_atoms,
 detector_track_count_rows_have_positive_integer_counts,
 detector_track_count_rows_have_two_field_shape,
 detector_track_initialization_rows_exact,
