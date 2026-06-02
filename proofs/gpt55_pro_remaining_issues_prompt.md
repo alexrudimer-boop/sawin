@@ -73,14 +73,13 @@ checks the full `D_Gamma` domain, the current `kappa` entries, the current
 obligation.  This is only a closed subcase; it is not a proof that arbitrary
 non-identity U endpoints admit observers.
 The same strict-identity observer also closes strict-identity product
-endpoint rows at the main classifier level.  Routed U+C products close only
-with the current `U_tri` target for U, exact C cutoff/readout data, exact
-family coverage, and a proved product residual-faithfulness theorem.  Routed
-C+M products close only when both cutoff families are covered exactly and
-`unclosed_routed_endpoint_systems` is empty.  These are family-by-family
-closures; no cross-family endpoint cancellation is used.
-Routed two-family products U+C, U+M, and C+M are also closed at the main
-classifier level for the singleton-fibre, coordinate-identity, supplied
+endpoint rows at the main classifier level.  Routed U+C, U+M, C+M, and
+U+C+M products close only with the current `U_tri` target for U when U is
+present, exact C/M cutoff-readout data when C or M is present, exact family
+coverage, and a proved product residual-faithfulness theorem.  These are
+family-by-family closures; no cross-family endpoint cancellation is used.
+Routed multi-family products U+C, U+M, C+M, and U+C+M are also closed at the
+main classifier level for the singleton-fibre, coordinate-identity, supplied
 fibre-label identity, and canonical fibre-label identity residual subcases.
 In those non-strict closures, U still uses the current `U_tri` finite group
 table when present, C and M still use exact cutoff/readout data, and the

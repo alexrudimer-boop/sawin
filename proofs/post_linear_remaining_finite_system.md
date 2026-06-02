@@ -1013,22 +1013,22 @@ uses the current `U_tri` group-table fingerprint, covers the full interval
 remaining routed U obligation.  This is a genuine closed subcase, not a proof
 of the general U observer existence theorem.
 The same strict-identity family observer is now consumed by the main
-classifier for product endpoint rows.  Routed U+C products close only when the
-U observer uses the current `U_tri` table and the C observer has the exact
-cutoff/readout and residual theorem; routed C+M products close only when both
-cutoff families are covered and the product residual-faithfulness theorem is
+classifier for product endpoint rows.  Routed U+C, U+M, C+M, and U+C+M
+products close only when the U observer, if present, uses the current `U_tri`
+table; the C and M observers, if present, have exact cutoff/readout and
+residual theorem data; and the product residual-faithfulness theorem is
 proved.  The exported closed-family tuple is checked family-by-family, and
 `unclosed_routed_endpoint_systems` must be empty.  Thus these strict-identity
 product closures do not use or permit cross-family endpoint cancellation.
 The product closure is not limited to strict identity rows.  The main
 classifier also consumes the singleton-fibre, coordinate-identity, supplied
 fibre-label identity, and canonical fibre-label identity residual subcases
-for every two-family routed product U+C, U+M, and C+M: the U observer, when
-present, still has to use the current `U_tri` table, C and M still have to
-carry the exact cutoff/readout ledgers, and the product residual theorem must
-report the corresponding residual channel reason.  These closures cover
-residually trivial non-strict local motion; they still do not construct the
-general nontrivial U/C/M endpoint observer.
+for every multi-family routed product U+C, U+M, C+M, and U+C+M: the U
+observer, when present, still has to use the current `U_tri` table, C and M
+still have to carry the exact cutoff/readout ledgers, and the product
+residual theorem must report the corresponding residual channel reason.
+These closures cover residually trivial non-strict local motion; they still
+do not construct the general nontrivial U/C/M endpoint observer.
 All automatic residual-faithfulness helpers require the supplied local
 interval table to be complete and type-correct: `R_C` must be a bijection on
 colour pairs, every local `T_{a,b}` row must be present exactly on its fibre
