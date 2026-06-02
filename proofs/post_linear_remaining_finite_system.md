@@ -868,12 +868,14 @@ passes target, cutoff, product, and residual-faithfulness checks.
 The monodromy handoff now also has its own front-door ledger,
 `UniversalKMonodromyFamilyInputAudit`, exposed by
 `universal_k_monodromy_family_input_audit(...)`.  Before any observer is
-derived, it checks the raw finite package family-by-family: fixed endpoint
-groups, state-indexed word-potential templates, positive monodromy state
-rows, optional detector-domain assignments, and optional detector-domain
-soundness witnesses.  It reports malformed rows, unknown U/C/M family names,
-duplicates, missing active families, extra stale families, and detector-domain
-assignments without soundness witnesses.  It
+derived, it checks that the raw seed-classifier ledger is internally
+well-formed and functional, then checks the raw finite package family-by-family:
+fixed endpoint groups, state-indexed word-potential templates, positive
+monodromy state rows, optional detector-domain assignments, and optional
+detector-domain soundness witnesses.  It reports malformed, duplicate, or
+conflicting seed-classifier rows; malformed family rows; unknown U/C/M family
+names; duplicates; missing active families; extra stale families; and
+detector-domain assignments without soundness witnesses.  It
 normalizes every top-level by-family ledger first, so a non-sequence endpoint
 group, template, positive-row, detector-domain, or detector-witness ledger is
 reported as one malformed row object instead of being iterated, ignored, or
@@ -1665,6 +1667,12 @@ endpoint_observer_monodromy_input_seed_classifier_matches_current
 endpoint_observer_monodromy_input_seed_classifier_mismatches
 endpoint_observer_monodromy_input_rows_match_builds
 endpoint_observer_monodromy_input_build_mismatches
+endpoint_observer_monodromy_seed_classifier_ledger_well_formed
+endpoint_observer_monodromy_seed_classifier_malformed_entries
+endpoint_observer_monodromy_seed_classifier_duplicate_entries
+endpoint_observer_monodromy_seed_classifier_duplicate_descriptors
+endpoint_observer_monodromy_seed_classifier_conflicting_descriptors
+endpoint_observer_monodromy_seed_classifier_invalid_targets
 endpoint_observer_monodromy_expected_families
 endpoint_observer_monodromy_candidate_families
 endpoint_observer_monodromy_endpoint_group_families

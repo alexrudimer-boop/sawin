@@ -6197,6 +6197,35 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
                 {endpoint_groups[family].identity},
             )
 
+        duplicate_seed_monodromy_input = universal_k_monodromy_family_input_audit(
+            interval,
+            seed_entries + (seed_entries[0],),
+            tuple(endpoint_groups.items()),
+            tuple(templates_by_family),
+            tuple(positive_rows_by_family),
+        )
+
+        self.assertFalse(duplicate_seed_monodromy_input.input_rows_exact)
+        self.assertFalse(
+            duplicate_seed_monodromy_input.seed_classifier_ledger_well_formed
+        )
+        self.assertEqual(
+            duplicate_seed_monodromy_input.duplicate_seed_classifier_entries,
+            (seed_entries[0],),
+        )
+        self.assertEqual(
+            duplicate_seed_monodromy_input.duplicate_seed_classifier_descriptors,
+            (seed_entries[0][0],),
+        )
+        self.assertIn(
+            "endpoint_observer_monodromy_seed_classifier_duplicate_entries",
+            duplicate_seed_monodromy_input.failure_reasons,
+        )
+        self.assertIn(
+            "endpoint_observer_monodromy_seed_classifier_duplicate_descriptors",
+            duplicate_seed_monodromy_input.failure_reasons,
+        )
+
         stale_endpoint_groups = dict(endpoint_groups)
         stale_endpoint_groups["U"] = cyclic_group(3)
         stale_monodromy_input = universal_k_monodromy_family_input_audit(

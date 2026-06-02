@@ -1781,9 +1781,12 @@ does not close anything; it remains diagnostic unless it matches the current
 routed endpoint families and passes target, cutoff, product, and
 residual-faithfulness checks.
 The raw monodromy-coboundary input package must itself be audited before it
-is used.  The finite input ledger must cover exactly the active routed
-families hit by `kappa`, with no duplicate family rows and no stale extra
-families.  For each active family it must supply:
+is used.  Its seed-classifier ledger must be internally well formed and
+functional: no malformed classifier row, no duplicate classifier entry, no
+duplicate row descriptor, no descriptor assigned to two targets, and no target
+outside `{U,C,M}`.  The finite input ledger must then cover exactly the active
+routed families hit by `kappa`, with no duplicate family rows and no stale
+extra families.  For each active family it must supply:
 
 ```text
 H_E or S_mE,
@@ -1795,8 +1798,9 @@ plus soundness witnesses.
 
 Malformed endpoint-group rows, malformed template rows, positive monodromy
 rows from the wrong family or wrong sign, unknown family names, missing
-active families, extra stale families, and restricted detector-domain
-assignments without soundness witnesses are finite input-ledger failures.
+active families, extra stale families, malformed or ambiguous
+seed-classifier rows, and restricted detector-domain assignments without
+soundness witnesses are finite input-ledger failures.
 The top-level by-family ledgers themselves must be finite row ledgers:
 non-sequence endpoint-group, template, positive-row, detector-domain, or
 detector-witness ledgers are reported as malformed row objects rather than
@@ -2630,6 +2634,7 @@ endpoint_observer_product_residual_channel_key_scope_matches_per_family,
 endpoint_observer_product_residual_channel_reasons_exposed,
 endpoint_observer_family_build_closes_exact_active_families,
 endpoint_observer_positive_rows_forced_from_typed_identity_rows,
+endpoint_observer_monodromy_seed_classifier_ledger_well_formed,
 endpoint_observer_monodromy_input_seed_classifier_matches_current,
 endpoint_observer_monodromy_input_rows_match_builds,
 endpoint_observer_monodromy_contexts_exposed,

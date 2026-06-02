@@ -1426,6 +1426,10 @@ stale descriptor ledger is rejected with
 family observer layer also rejects duplicate classifier entries, duplicate row
 descriptors, and conflicting descriptor targets before using the ledger as
 active endpoint seed evidence.
+The raw monodromy input audit now rejects the same duplicate and conflicting
+seed-classifier ledgers before declaring `input_rows_exact`, so an ambiguous
+front-door package cannot appear internally exact while the family wrapper is
+the only layer that notices the classifier defect.
 This removes another false endpoint closure and leaves the same local
 nontrivial observer-existence gap: construct residual-faithful U/C/M
 monodromy-coboundary observers for all surviving intervals, or produce a
