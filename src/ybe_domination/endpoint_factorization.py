@@ -699,6 +699,18 @@ class RoutedLostEdgeEndpointWitnessAudit:
         return self.routing_audit.routed_edges
 
     @property
+    def raw_witness_edges(self) -> Tuple[LostEdgeKey, ...]:
+        return tuple(edge for edge, _audit in self.edge_endpoint_audits)
+
+    @property
+    def duplicate_routed_edges(self) -> Tuple[LostEdgeKey, ...]:
+        return _duplicate_values(self.routed_edges)
+
+    @property
+    def duplicate_witness_edges(self) -> Tuple[LostEdgeKey, ...]:
+        return _duplicate_values(self.raw_witness_edges)
+
+    @property
     def witnessed_edges(self) -> Tuple[LostEdgeKey, ...]:
         return _sorted_edges(
             edge
@@ -733,6 +745,8 @@ class RoutedLostEdgeEndpointWitnessAudit:
             self.routing_audit.proves_external_routing_ledger
             and self.all_endpoint_witnesses_visible
             and self.all_routed_edges_have_endpoint_witnesses
+            and not self.duplicate_routed_edges
+            and not self.duplicate_witness_edges
             and not self.extra_witness_edges
         )
 
@@ -799,6 +813,14 @@ class UniversalContinuationIdentityEndpointWitnessAudit:
         return self.routed_edge_witness.extra_witness_edges
 
     @property
+    def duplicate_identity_routed_edges(self) -> Tuple[LostEdgeKey, ...]:
+        return self.routed_edge_witness.duplicate_routed_edges
+
+    @property
+    def duplicate_witness_edges(self) -> Tuple[LostEdgeKey, ...]:
+        return self.routed_edge_witness.duplicate_witness_edges
+
+    @property
     def proves_routed_lost_edge_endpoint_visibility(self) -> bool:
         return self.proves_universal_continuation_identity_endpoint_witnesses
 
@@ -817,6 +839,10 @@ class UniversalContinuationIdentityEndpointWitnessAudit:
             reasons.append("identity_routing_not_proved")
         if not self.endpoint_witnesses_proved:
             reasons.append("endpoint_witnesses_not_proved")
+        if self.duplicate_identity_routed_edges:
+            reasons.append("duplicate_identity_routed_edges")
+        if self.duplicate_witness_edges:
+            reasons.append("duplicate_identity_witness_edges")
         if not self.routed_witness_uses_identity_routing:
             reasons.append("routed_witness_identity_routing_mismatch")
         return tuple(reasons)
@@ -854,6 +880,14 @@ class UniversalContinuationIdentitySymmetricEndpointForkAudit:
         return self.identity_routing.routing.routed_edges
 
     @property
+    def duplicate_identity_routed_edges(self) -> Tuple[LostEdgeKey, ...]:
+        return _duplicate_values(self.routed_edges)
+
+    @property
+    def duplicate_covered_edges(self) -> Tuple[LostEdgeKey, ...]:
+        return _duplicate_values(self.covered_edges)
+
+    @property
     def supplied_covered_edges(self) -> Tuple[LostEdgeKey, ...]:
         return _sorted_edges(self.covered_edges)
 
@@ -876,6 +910,8 @@ class UniversalContinuationIdentitySymmetricEndpointForkAudit:
         return (
             self.identity_routing_proved
             and self.all_identity_routed_edges_covered
+            and not self.duplicate_identity_routed_edges
+            and not self.duplicate_covered_edges
             and not self.extra_covered_edges
             and self.endpoint_family.faithful_endpoint_cutoff_proved
         )
@@ -886,6 +922,8 @@ class UniversalContinuationIdentitySymmetricEndpointForkAudit:
             self.identity_routing_proved
             and self.endpoint_family.proves_supplied_symmetric_tail_endpoint_seed_prefix
             and bool(set(self.supplied_covered_edges).intersection(self.routed_edges))
+            and not self.duplicate_identity_routed_edges
+            and not self.duplicate_covered_edges
             and not self.extra_covered_edges
         )
 
@@ -896,6 +934,10 @@ class UniversalContinuationIdentitySymmetricEndpointForkAudit:
             reasons.append("identity_routing_not_proved")
         if not self.all_identity_routed_edges_covered:
             reasons.append("identity_routed_edges_not_covered")
+        if self.duplicate_identity_routed_edges:
+            reasons.append("duplicate_identity_routed_edges")
+        if self.duplicate_covered_edges:
+            reasons.append("duplicate_identity_symmetric_edges")
         if self.extra_covered_edges:
             reasons.append("extra_identity_symmetric_edges")
         if not self.endpoint_family.faithful_endpoint_cutoff_proved:
@@ -940,6 +982,26 @@ class MixedUnitContextEndpointWitnessAudit:
         )
 
     @property
+    def raw_mixed_context_keys(self) -> Tuple[MixedUnitContextKey, ...]:
+        return tuple(
+            (row.left_color, row.right_color, side)
+            for row in self.coordinate_routing.mixed_unit_context_rows
+            for side in row.coordinate_unit_sides
+        )
+
+    @property
+    def raw_witness_keys(self) -> Tuple[MixedUnitContextKey, ...]:
+        return tuple(key for key, _audit in self.context_endpoint_audits)
+
+    @property
+    def duplicate_mixed_context_keys(self) -> Tuple[MixedUnitContextKey, ...]:
+        return _duplicate_values(self.raw_mixed_context_keys)
+
+    @property
+    def duplicate_witness_keys(self) -> Tuple[MixedUnitContextKey, ...]:
+        return _duplicate_values(self.raw_witness_keys)
+
+    @property
     def witnessed_mixed_context_keys(self) -> Tuple[MixedUnitContextKey, ...]:
         return _sorted_mixed_context_keys(
             key
@@ -982,6 +1044,8 @@ class MixedUnitContextEndpointWitnessAudit:
             self.coordinate_unit_routing_proved
             and self.all_endpoint_witnesses_visible
             and self.all_mixed_context_keys_have_endpoint_witnesses
+            and not self.duplicate_mixed_context_keys
+            and not self.duplicate_witness_keys
             and not self.extra_witness_keys
         )
 
@@ -994,6 +1058,10 @@ class MixedUnitContextEndpointWitnessAudit:
             reasons.append("endpoint_witnesses_not_proved")
         if not self.all_mixed_context_keys_have_endpoint_witnesses:
             reasons.append("mixed_context_keys_not_covered")
+        if self.duplicate_mixed_context_keys:
+            reasons.append("duplicate_mixed_context_keys")
+        if self.duplicate_witness_keys:
+            reasons.append("duplicate_mixed_context_witness_keys")
         if self.extra_witness_keys:
             reasons.append("extra_mixed_context_witness_keys")
         return tuple(reasons)
@@ -1020,6 +1088,22 @@ class MixedUnitContextSymmetricEndpointForkAudit:
             for row in self.coordinate_routing.mixed_unit_context_rows
             for side in row.coordinate_unit_sides
         )
+
+    @property
+    def raw_mixed_context_keys(self) -> Tuple[MixedUnitContextKey, ...]:
+        return tuple(
+            (row.left_color, row.right_color, side)
+            for row in self.coordinate_routing.mixed_unit_context_rows
+            for side in row.coordinate_unit_sides
+        )
+
+    @property
+    def duplicate_mixed_context_keys(self) -> Tuple[MixedUnitContextKey, ...]:
+        return _duplicate_values(self.raw_mixed_context_keys)
+
+    @property
+    def duplicate_covered_keys(self) -> Tuple[MixedUnitContextKey, ...]:
+        return _duplicate_values(self.covered_keys)
 
     @property
     def supplied_covered_keys(self) -> Tuple[MixedUnitContextKey, ...]:
@@ -1052,6 +1136,8 @@ class MixedUnitContextSymmetricEndpointForkAudit:
         return (
             self.coordinate_unit_routing_proved
             and self.all_mixed_context_keys_covered
+            and not self.duplicate_mixed_context_keys
+            and not self.duplicate_covered_keys
             and not self.extra_covered_keys
             and self.endpoint_family.faithful_endpoint_cutoff_proved
         )
@@ -1062,6 +1148,8 @@ class MixedUnitContextSymmetricEndpointForkAudit:
             self.coordinate_unit_routing_proved
             and self.endpoint_family.proves_supplied_symmetric_tail_endpoint_seed_prefix
             and bool(set(self.supplied_covered_keys).intersection(self.mixed_context_keys))
+            and not self.duplicate_mixed_context_keys
+            and not self.duplicate_covered_keys
             and not self.extra_covered_keys
         )
 
@@ -1072,6 +1160,10 @@ class MixedUnitContextSymmetricEndpointForkAudit:
             reasons.append("coordinate_unit_routing_not_proved")
         if not self.all_mixed_context_keys_covered:
             reasons.append("mixed_context_keys_not_covered")
+        if self.duplicate_mixed_context_keys:
+            reasons.append("duplicate_mixed_context_keys")
+        if self.duplicate_covered_keys:
+            reasons.append("duplicate_mixed_context_symmetric_keys")
         if self.extra_covered_keys:
             reasons.append("extra_mixed_context_symmetric_keys")
         if not self.endpoint_family.faithful_endpoint_cutoff_proved:

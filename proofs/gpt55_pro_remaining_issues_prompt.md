@@ -2517,7 +2517,8 @@ faithful symmetric endpoint cutoff.
 A valid System C symmetric fork must:
 
 - match the same identity-routing ledger;
-- cover exactly the nonempty identity-routed lost edges;
+- cover exactly the nonempty identity-routed lost edges, with no duplicate
+  routed edges and no duplicate covered edges;
 - prove endpoint-family faithfulness;
 - prove that identity symmetric-longitude data kills those endpoint channels;
 - introduce no extra edges.
@@ -2531,7 +2532,8 @@ The C endpoint-witness certificate is valid only when:
   universal-continuation route;
 - the endpoint witness uses that same routing ledger;
 - every routed lost edge has an endpoint-longitude expression certificate;
-- no witness is supplied for an edge outside the routed lost-edge tuple.
+- no witness is supplied for an edge outside the routed lost-edge tuple;
+- the routed-edge ledger and witness-edge ledger are duplicate-free.
 
 To prove B from C, exhibit a genuine routed continuation endpoint miss,
 prove that no fixed finite endpoint detector kills it, and upgrade it to a
@@ -2560,7 +2562,8 @@ symmetric endpoint cutoff.
 A valid System M symmetric fork must:
 
 - match the coordinate-unit routing ledger;
-- cover exactly the nonempty mixed-unit context keys;
+- cover exactly the nonempty mixed-unit context keys, with no duplicate
+  routed context keys and no duplicate covered keys;
 - prove endpoint-family faithfulness;
 - prove that identity symmetric-longitude data kills those endpoint channels;
 - introduce no extra keys.
@@ -2574,7 +2577,9 @@ A valid System M endpoint-witness certificate must:
   and every routed coordinate-unit side in that row;
 - cover exactly that nonempty key tuple with endpoint-longitude expression
   certificates;
-- introduce no extra keys.
+- introduce no extra keys;
+- the routed mixed-context key ledger and witness-key ledger are
+  duplicate-free.
 
 To prove B from M, find a genuine mixed-unit endpoint miss, prove it survives
 all fixed finite detector groups, and upgrade it to the normalized-law

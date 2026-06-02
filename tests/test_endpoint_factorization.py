@@ -477,6 +477,41 @@ class EndpointFactorizationTests(unittest.TestCase):
         self.assertFalse(audit.all_routed_edges_have_endpoint_witnesses)
         self.assertFalse(audit.proves_routed_lost_edge_endpoint_visibility)
 
+    def test_routed_lost_edge_endpoint_witness_rejects_duplicate_ledgers(self):
+        interval = one_color_identity_interval()
+        routing = lost_edge_external_routing_audit(
+            interval,
+            {"*": {0: "zero", 1: "one"}},
+            {"*": {0: "left", 1: "right"}},
+        )
+        duplicated_routing = type(routing)(
+            dichotomy=routing.dichotomy,
+            routing_labels=routing.routing_labels,
+            routing_kernel=routing.routing_kernel,
+            lost_edges=routing.lost_edges,
+            routed_edges=routing.routed_edges + routing.routed_edges,
+            unrouted_edges=routing.unrouted_edges,
+        )
+        edge = routing.routed_edges[0]
+        c2 = cyclic_group(2)
+        endpoint = endpoint_product_longitude_expression_audit(
+            (c2,),
+            n=2,
+            braid_word=(1, 1),
+            endpoints=(1,),
+            assignments=((1, 0),),
+            expressions=(((1, 1),),),
+        )
+
+        audit = routed_lost_edge_endpoint_witness_audit(
+            duplicated_routing,
+            ((edge, endpoint), (edge, endpoint)),
+        )
+
+        self.assertEqual(audit.duplicate_routed_edges, (edge,))
+        self.assertEqual(audit.duplicate_witness_edges, (edge,))
+        self.assertFalse(audit.proves_routed_lost_edge_endpoint_visibility)
+
     def test_routed_lost_edge_endpoint_witness_rejects_bad_endpoint_display(self):
         interval = one_color_identity_interval()
         routing = lost_edge_external_routing_audit(
@@ -592,6 +627,48 @@ class EndpointFactorizationTests(unittest.TestCase):
             audit.proves_universal_continuation_identity_endpoint_witnesses
         )
 
+    def test_universal_continuation_identity_endpoint_witness_rejects_duplicates(
+        self,
+    ):
+        interval = one_color_identity_interval()
+        real = universal_continuation_identity_routing_audit(interval)
+        edge = real.routing.routed_edges[0]
+        duplicated_routing = type(real.routing)(
+            dichotomy=real.routing.dichotomy,
+            routing_labels=real.routing.routing_labels,
+            routing_kernel=real.routing.routing_kernel,
+            lost_edges=real.routing.lost_edges,
+            routed_edges=real.routing.routed_edges + real.routing.routed_edges,
+            unrouted_edges=real.routing.unrouted_edges,
+        )
+        identity_routing = type(real)(
+            descent_labels=real.descent_labels,
+            routing=duplicated_routing,
+        )
+        c2 = cyclic_group(2)
+        endpoint = endpoint_product_longitude_expression_audit(
+            (c2,),
+            n=2,
+            braid_word=(1, 1),
+            endpoints=(1,),
+            assignments=((1, 0),),
+            expressions=(((1, 1),),),
+        )
+
+        audit = universal_continuation_identity_endpoint_witness_audit(
+            identity_routing,
+            ((edge, endpoint), (edge, endpoint)),
+        )
+
+        self.assertEqual(audit.duplicate_identity_routed_edges, (edge,))
+        self.assertEqual(audit.duplicate_witness_edges, (edge,))
+        self.assertFalse(audit.endpoint_witnesses_proved)
+        self.assertFalse(
+            audit.proves_universal_continuation_identity_endpoint_witnesses
+        )
+        self.assertIn("duplicate_identity_routed_edges", audit.failure_reasons)
+        self.assertIn("duplicate_identity_witness_edges", audit.failure_reasons)
+
     def test_universal_continuation_symmetric_endpoint_fork_covers_edges(self):
         interval = one_color_identity_interval()
         identity_routing = universal_continuation_identity_routing_audit(interval)
@@ -688,6 +765,47 @@ class EndpointFactorizationTests(unittest.TestCase):
             ("identity_routing_not_proved", "identity_routed_edges_not_covered"),
         )
 
+    def test_universal_continuation_symmetric_endpoint_fork_rejects_duplicates(
+        self,
+    ):
+        interval = one_color_identity_interval()
+        real = universal_continuation_identity_routing_audit(interval)
+        edge = real.routing.routed_edges[0]
+        duplicated_routing = type(real.routing)(
+            dichotomy=real.routing.dichotomy,
+            routing_labels=real.routing.routing_labels,
+            routing_kernel=real.routing.routing_kernel,
+            lost_edges=real.routing.lost_edges,
+            routed_edges=real.routing.routed_edges + real.routing.routed_edges,
+            unrouted_edges=real.routing.unrouted_edges,
+        )
+        identity_routing = type(real)(
+            descent_labels=real.descent_labels,
+            routing=duplicated_routing,
+        )
+        endpoint_family = endpoint_family_symmetric_fork_audit(
+            (2,),
+            all_endpoint_witnesses_supplied=True,
+            endpoint_family_faithful=True,
+        )
+
+        audit = universal_continuation_identity_symmetric_endpoint_fork_audit(
+            identity_routing,
+            endpoint_family,
+            (edge, edge),
+        )
+
+        self.assertEqual(audit.duplicate_identity_routed_edges, (edge,))
+        self.assertEqual(audit.duplicate_covered_edges, (edge,))
+        self.assertFalse(
+            audit.proves_universal_continuation_identity_symmetric_endpoint_cutoff
+        )
+        self.assertFalse(
+            audit.proves_universal_continuation_identity_symmetric_tail_seed_prefix
+        )
+        self.assertIn("duplicate_identity_routed_edges", audit.failure_reasons)
+        self.assertIn("duplicate_identity_symmetric_edges", audit.failure_reasons)
+
     def test_mixed_unit_context_endpoint_witness_covers_routed_contexts(self):
         routing = MissingTriangularCoordinateUnitRoutingAudit(
             colored_ybe=True,
@@ -758,6 +876,49 @@ class EndpointFactorizationTests(unittest.TestCase):
         self.assertEqual(audit.missing_mixed_context_keys, (("*", "*", "left"),))
         self.assertFalse(audit.proves_mixed_unit_context_endpoint_witnesses)
         self.assertEqual(audit.failure_reasons, ("mixed_context_keys_not_covered",))
+
+    def test_mixed_unit_context_endpoint_witness_rejects_duplicate_witness_key(self):
+        routing = MissingTriangularCoordinateUnitRoutingAudit(
+            colored_ybe=True,
+            locally_nondegenerate_closed_branch=False,
+            rows=(
+                MissingTriangularCoordinateUnitRoute(
+                    left_color="*",
+                    right_color="*",
+                    output_left_color="*",
+                    output_right_color="*",
+                    coordinate_unit_sides=("left",),
+                    left_explanation="coordinate_side_unit_not_triangular",
+                    right_explanation="partial_constant_hidden_rank_loss",
+                    left_unit_inputs=(0, 1),
+                    left_nonunit_inputs=(),
+                    right_unit_inputs=(0,),
+                    right_nonunit_inputs=(1,),
+                ),
+            ),
+        )
+        key = ("*", "*", "left")
+        c2 = cyclic_group(2)
+        endpoint = endpoint_product_longitude_expression_audit(
+            (c2,),
+            n=2,
+            braid_word=(1, 1),
+            endpoints=(1,),
+            assignments=((1, 0),),
+            expressions=(((1, 1),),),
+        )
+
+        audit = mixed_unit_context_endpoint_witness_audit(
+            routing,
+            ((key, endpoint), (key, endpoint)),
+        )
+
+        self.assertEqual(audit.duplicate_witness_keys, (key,))
+        self.assertFalse(audit.proves_mixed_unit_context_endpoint_witnesses)
+        self.assertIn(
+            "duplicate_mixed_context_witness_keys",
+            audit.failure_reasons,
+        )
 
     def test_mixed_unit_symmetric_endpoint_fork_covers_routed_contexts(self):
         routing = MissingTriangularCoordinateUnitRoutingAudit(
@@ -834,6 +995,47 @@ class EndpointFactorizationTests(unittest.TestCase):
         self.assertEqual(audit.missing_mixed_context_keys, (("*", "*", "left"),))
         self.assertFalse(audit.proves_mixed_unit_context_symmetric_endpoint_cutoff)
         self.assertEqual(audit.failure_reasons, ("mixed_context_keys_not_covered",))
+
+    def test_mixed_unit_symmetric_endpoint_fork_rejects_duplicate_covered_key(self):
+        routing = MissingTriangularCoordinateUnitRoutingAudit(
+            colored_ybe=True,
+            locally_nondegenerate_closed_branch=False,
+            rows=(
+                MissingTriangularCoordinateUnitRoute(
+                    left_color="*",
+                    right_color="*",
+                    output_left_color="*",
+                    output_right_color="*",
+                    coordinate_unit_sides=("left",),
+                    left_explanation="coordinate_side_unit_not_triangular",
+                    right_explanation="partial_constant_hidden_rank_loss",
+                    left_unit_inputs=(0, 1),
+                    left_nonunit_inputs=(),
+                    right_unit_inputs=(0,),
+                    right_nonunit_inputs=(1,),
+                ),
+            ),
+        )
+        key = ("*", "*", "left")
+        endpoint_family = endpoint_family_symmetric_fork_audit(
+            (2,),
+            all_endpoint_witnesses_supplied=True,
+            endpoint_family_faithful=True,
+        )
+
+        audit = mixed_unit_context_symmetric_endpoint_fork_audit(
+            routing,
+            endpoint_family,
+            (key, key),
+        )
+
+        self.assertEqual(audit.duplicate_covered_keys, (key,))
+        self.assertFalse(audit.proves_mixed_unit_context_symmetric_endpoint_cutoff)
+        self.assertFalse(audit.proves_mixed_unit_context_symmetric_tail_seed_prefix)
+        self.assertIn(
+            "duplicate_mixed_context_symmetric_keys",
+            audit.failure_reasons,
+        )
 
     def test_repair_contract_accepts_identity_endpoint_witness_wrapper(self):
         interval = one_color_identity_interval()

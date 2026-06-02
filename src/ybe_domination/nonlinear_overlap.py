@@ -13911,7 +13911,9 @@ class PostLinearRemainingFiniteSystemAudit:
             (
                 "universal_continuation_endpoint_witness_matches_routing",
                 self.universal_continuation_identity_routing is not None
-                and witness.identity_routing == self.universal_continuation_identity_routing,
+                and witness.identity_routing == self.universal_continuation_identity_routing
+                and not witness.duplicate_identity_routed_edges
+                and not witness.duplicate_witness_edges,
             ),
             (
                 "universal_continuation_endpoint_witness_proved",
@@ -13924,6 +13926,14 @@ class PostLinearRemainingFiniteSystemAudit:
             (
                 "universal_continuation_endpoint_extra_edges",
                 witness.extra_witness_edges,
+            ),
+            (
+                "universal_continuation_endpoint_duplicate_routed_edges",
+                witness.duplicate_identity_routed_edges,
+            ),
+            (
+                "universal_continuation_endpoint_duplicate_witness_edges",
+                witness.duplicate_witness_edges,
             ),
         )
 
@@ -13938,7 +13948,9 @@ class PostLinearRemainingFiniteSystemAudit:
             (
                 "universal_continuation_symmetric_fork_matches_routing",
                 self.universal_continuation_identity_routing is not None
-                and fork.identity_routing == self.universal_continuation_identity_routing,
+                and fork.identity_routing == self.universal_continuation_identity_routing
+                and not fork.duplicate_identity_routed_edges
+                and not fork.duplicate_covered_edges,
             ),
             (
                 "universal_continuation_symmetric_fork_group_orders",
@@ -13967,6 +13979,14 @@ class PostLinearRemainingFiniteSystemAudit:
             (
                 "universal_continuation_symmetric_fork_extra_edges",
                 fork.extra_covered_edges,
+            ),
+            (
+                "universal_continuation_symmetric_fork_duplicate_routed_edges",
+                fork.duplicate_identity_routed_edges,
+            ),
+            (
+                "universal_continuation_symmetric_fork_duplicate_covered_edges",
+                fork.duplicate_covered_edges,
             ),
         )
 
@@ -14031,7 +14051,9 @@ class PostLinearRemainingFiniteSystemAudit:
                 "mixed_unit_endpoint_witness_matches_routing",
                 self.missing_triangular_coordinate_unit_routing is not None
                 and witness.coordinate_routing
-                == self.missing_triangular_coordinate_unit_routing,
+                == self.missing_triangular_coordinate_unit_routing
+                and not witness.duplicate_mixed_context_keys
+                and not witness.duplicate_witness_keys,
             ),
             (
                 "mixed_unit_endpoint_witness_proved",
@@ -14044,6 +14066,14 @@ class PostLinearRemainingFiniteSystemAudit:
             (
                 "mixed_unit_endpoint_extra_context_keys",
                 witness.extra_witness_keys,
+            ),
+            (
+                "mixed_unit_endpoint_duplicate_context_keys",
+                witness.duplicate_mixed_context_keys,
+            ),
+            (
+                "mixed_unit_endpoint_duplicate_witness_keys",
+                witness.duplicate_witness_keys,
             ),
         )
 
@@ -14059,7 +14089,9 @@ class PostLinearRemainingFiniteSystemAudit:
                 "mixed_unit_symmetric_fork_matches_routing",
                 self.missing_triangular_coordinate_unit_routing is not None
                 and fork.coordinate_routing
-                == self.missing_triangular_coordinate_unit_routing,
+                == self.missing_triangular_coordinate_unit_routing
+                and not fork.duplicate_mixed_context_keys
+                and not fork.duplicate_covered_keys,
             ),
             (
                 "mixed_unit_symmetric_fork_group_orders",
@@ -14088,6 +14120,14 @@ class PostLinearRemainingFiniteSystemAudit:
             (
                 "mixed_unit_symmetric_fork_extra_context_keys",
                 fork.extra_covered_keys,
+            ),
+            (
+                "mixed_unit_symmetric_fork_duplicate_context_keys",
+                fork.duplicate_mixed_context_keys,
+            ),
+            (
+                "mixed_unit_symmetric_fork_duplicate_covered_keys",
+                fork.duplicate_covered_keys,
             ),
         )
 
@@ -17939,7 +17979,9 @@ class PostLinearRemainingFiniteSystemAudit:
                             "universal_continuation_endpoint_witness_matches_routing",
                             self.universal_continuation_identity_routing is not None
                             and witness.identity_routing
-                            == self.universal_continuation_identity_routing,
+                            == self.universal_continuation_identity_routing
+                            and not witness.duplicate_identity_routed_edges
+                            and not witness.duplicate_witness_edges,
                         ),
                         (
                             "universal_continuation_endpoint_witness_proved",
@@ -17952,6 +17994,14 @@ class PostLinearRemainingFiniteSystemAudit:
                         (
                             "universal_continuation_endpoint_extra_edges",
                             witness.extra_witness_edges,
+                        ),
+                        (
+                            "universal_continuation_endpoint_duplicate_routed_edges",
+                            witness.duplicate_identity_routed_edges,
+                        ),
+                        (
+                            "universal_continuation_endpoint_duplicate_witness_edges",
+                            witness.duplicate_witness_edges,
                         ),
                     )
                 )
@@ -18012,7 +18062,9 @@ class PostLinearRemainingFiniteSystemAudit:
                             "mixed_unit_endpoint_witness_matches_routing",
                             self.missing_triangular_coordinate_unit_routing is not None
                             and witness.coordinate_routing
-                            == self.missing_triangular_coordinate_unit_routing,
+                            == self.missing_triangular_coordinate_unit_routing
+                            and not witness.duplicate_mixed_context_keys
+                            and not witness.duplicate_witness_keys,
                         ),
                         (
                             "mixed_unit_endpoint_witness_proved",
@@ -18025,6 +18077,14 @@ class PostLinearRemainingFiniteSystemAudit:
                         (
                             "mixed_unit_endpoint_extra_context_keys",
                             witness.extra_witness_keys,
+                        ),
+                        (
+                            "mixed_unit_endpoint_duplicate_context_keys",
+                            witness.duplicate_mixed_context_keys,
+                        ),
+                        (
+                            "mixed_unit_endpoint_duplicate_witness_keys",
+                            witness.duplicate_witness_keys,
                         ),
                     )
                 )

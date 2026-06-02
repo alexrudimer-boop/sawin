@@ -1896,6 +1896,8 @@ universal_continuation_endpoint_witness_matches_routing
 universal_continuation_endpoint_witness_proved
 universal_continuation_endpoint_missing_edges
 universal_continuation_endpoint_extra_edges
+universal_continuation_endpoint_duplicate_routed_edges
+universal_continuation_endpoint_duplicate_witness_edges
 universal_continuation_symmetric_fork_matches_routing
 universal_continuation_symmetric_fork_group_orders
 universal_continuation_symmetric_fork_minimum_degree
@@ -1904,6 +1906,8 @@ universal_continuation_symmetric_fork_cutoff_proved
 universal_continuation_symmetric_fork_tail_seed_prefix_proved
 universal_continuation_symmetric_fork_missing_edges
 universal_continuation_symmetric_fork_extra_edges
+universal_continuation_symmetric_fork_duplicate_routed_edges
+universal_continuation_symmetric_fork_duplicate_covered_edges
 ```
 
 The remaining A-route is to construct the routed C word-potential endpoint
@@ -1915,8 +1919,10 @@ original problem.
 [Legacy diagnostic] If the supplied `universal_continuation_endpoint_witness`
 matches the same identity-routing ledger and proves all routed endpoint
 witnesses, the executable data records
-`universal_continuation_endpoint_witness_proved=True` and exact missing/extra
-edge ledgers.  This does not empty `remaining_obligations`; the current system
+`universal_continuation_endpoint_witness_proved=True` and exact missing,
+extra, and duplicate edge ledgers.  Duplicate identity-routed edges or
+duplicate witness edges are certificate failures.  This does not empty
+`remaining_obligations`; the current system
 name remains `system_c_universal_continuation_endpoint` unless the signed
 endpoint observer route also closes.
 
@@ -1924,7 +1930,8 @@ endpoint observer route also closes.
 `universal_continuation_symmetric_endpoint_fork` matches the same
 identity-routing ledger, covers exactly the identity-routed lost edges, and
 proves a faithful symmetric endpoint cutoff for the fixed continuation
-endpoint family, the cutoff ledger is recorded as a candidate.  It does not
+endpoint family, and has no duplicate routed or covered edge entries, the
+cutoff ledger is recorded as a candidate.  It does not
 remove C from `unclosed_routed_endpoint_systems` without the current endpoint
 observer/cutoff readout and residual-faithfulness bridge.
 
@@ -1973,6 +1980,8 @@ mixed_unit_endpoint_witness_matches_routing
 mixed_unit_endpoint_witness_proved
 mixed_unit_endpoint_missing_context_keys
 mixed_unit_endpoint_extra_context_keys
+mixed_unit_endpoint_duplicate_context_keys
+mixed_unit_endpoint_duplicate_witness_keys
 mixed_unit_symmetric_fork_matches_routing
 mixed_unit_symmetric_fork_group_orders
 mixed_unit_symmetric_fork_minimum_degree
@@ -1981,19 +1990,24 @@ mixed_unit_symmetric_fork_cutoff_proved
 mixed_unit_symmetric_fork_tail_seed_prefix_proved
 mixed_unit_symmetric_fork_missing_context_keys
 mixed_unit_symmetric_fork_extra_context_keys
+mixed_unit_symmetric_fork_duplicate_context_keys
+mixed_unit_symmetric_fork_duplicate_covered_keys
 ```
 
 [Legacy diagnostic] If the supplied `mixed_unit_context_endpoint_witness`
 matches the same coordinate-unit routing ledger and proves all mixed context
-endpoint witnesses, the wrapper records the witness coverage and missing/extra
-context-key ledgers.  It does not close System M by itself; the current closure
+endpoint witnesses, the wrapper records the witness coverage and missing,
+extra, and duplicate context-key ledgers.  Duplicate routed context keys or
+duplicate witness keys are certificate failures.  It does not close System M
+by itself; the current closure
 gate requires the routed M word-potential endpoint observer or exact cutoff
 readout with residual faithfulness.
 
 [Legacy diagnostic] If the supplied `mixed_unit_context_symmetric_endpoint_fork` matches
 the same coordinate-unit routing ledger, covers exactly the mixed context
 keys, and proves a faithful symmetric endpoint cutoff for the fixed mixed-unit
-endpoint family, it is retained as a candidate cutoff ledger.  It does not
+endpoint family, with no duplicate context or covered keys, it is retained as
+a candidate cutoff ledger.  It does not
 remove M from `unclosed_routed_endpoint_systems` without the current endpoint
 observer/cutoff readout and residual-faithfulness bridge.
 
