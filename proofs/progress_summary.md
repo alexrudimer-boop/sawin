@@ -1532,7 +1532,11 @@ therefore generate positive rows, derive inverse signed rows, pass the
 telescoping detector audit, and close a family observer when the endpoint
 target and residual-faithfulness theorem are supplied.  This is an integration
 step only: it does not construct the required U/C/M observers for arbitrary
-surviving intervals.
+surviving intervals.  The top-level
+`post_linear_remaining_finite_system_audit(...)` can also consume a
+fixed-carrier certificate through its existing word-potential certificate
+parameters, so a proposed fixed-carrier observer now reaches the same
+post-linear audit surface as the raw-variable certificate path.
 This removes another false endpoint closure and leaves the same local
 nontrivial observer-existence gap: construct residual-faithful U/C/M
 monodromy-coboundary observers for all surviving intervals, or produce a

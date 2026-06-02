@@ -2659,6 +2659,10 @@ alongside the original raw-variable certificate type.  Therefore a valid
 fixed-carrier certificate can now build positive rows, force inverse signed
 rows, pass the telescoping detector audit, and close an active family when
 the fixed endpoint target and residual-faithfulness theorem are supplied.
+The top-level `post_linear_remaining_finite_system_audit(...)` also accepts
+the fixed-carrier certificate through the existing word-potential certificate
+parameters, so no separate final assembly path is required for this certificate
+type.
 This does not prove that every surviving U/C/M interval admits such
 observers; it gives the exact finite local checker and integration path that
 any proposed observer must pass.

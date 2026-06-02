@@ -17130,6 +17130,35 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             signed.failure_reasons,
         )
 
+    def test_post_linear_function_accepts_fixed_carrier_endpoint_observer(self):
+        certificate = UniversalKFixedCarrierWordPotentialCertificate(
+            endpoint_group=cyclic_group(2),
+            templates=(),
+            identity_rows=(),
+            normalized_seed_states=(),
+        )
+        audit = post_linear_remaining_finite_system_audit(
+            one_color_latin_unit_triangular_interval(),
+            universal_k_word_potential_certificate=certificate,
+            universal_k_word_potential_certificates_by_family=(("U", certificate),),
+        )
+
+        signed = audit.universal_k_signed_endpoint_generator
+        self.assertIsNotNone(signed)
+        self.assertIsNotNone(audit.universal_k_endpoint_observer)
+        self.assertIsNotNone(audit.universal_k_endpoint_observer_family_build)
+        self.assertIs(audit.universal_k_endpoint_observer.audit, signed)
+        self.assertIs(
+            signed.telescoping_detector_audit.word_potential_certificate,
+            certificate,
+        )
+        self.assertEqual(signed.endpoint_group, certificate.endpoint_group)
+        self.assertIn(
+            ("endpoint_observer_family_build_extra_families", ("U",)),
+            audit.routed_endpoint_obstruction_data,
+        )
+        self.assertIn("no_routed_k_seed_states", signed.failure_reasons)
+
     def test_post_linear_function_builds_endpoint_observer_from_monodromy(self):
         stale_state = ("*", "*", "left_constant_map_universal_kernel")
         stale_key = ("U", stale_state, 1, "*", "*", 0, 0)

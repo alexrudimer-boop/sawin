@@ -22465,7 +22465,9 @@ def post_linear_remaining_finite_system_audit(
         Mapping[UniversalKSignedEndpointEntryKey, LongitudeSubgroupWitness] | None
     ) = None,
     universal_k_word_potential_certificate: (
-        UniversalKWordPotentialCertificate | None
+        UniversalKWordPotentialCertificate
+        | UniversalKFixedCarrierWordPotentialCertificate
+        | None
     ) = None,
     universal_k_word_potential_certificates_by_family: object = (),
     universal_k_monodromy_endpoint_groups_by_family: object = (),
