@@ -562,7 +562,7 @@ def trivial_telescoping_detector_audit(
     )
 
 
-def identity_signed_endpoint_rows(keys, next_state_by_current=None):
+def identity_signed_endpoint_rows(keys, next_state_by_current=None, *, endpoint_value=0):
     next_state_by_current = dict(next_state_by_current or {})
     rows = []
     for (
@@ -589,7 +589,7 @@ def identity_signed_endpoint_rows(keys, next_state_by_current=None):
                     (endpoint_family, state),
                     state,
                 ),
-                endpoint_value=0,
+                endpoint_value=endpoint_value,
             )
         )
     return tuple(rows)
@@ -6012,7 +6012,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         seed_states = (("U", seed_state),)
         keys = universal_k_signed_endpoint_required_entry_keys(interval, seed_states)
         positive_keys = tuple(key for key in keys if key[2] == 1)
-        group = cyclic_group(1)
+        group = triangular_recovery_unit_group(interval)
         certificate = UniversalKWordPotentialCertificate(
             endpoint_group=group,
             templates=((seed_states[0], ()),),
@@ -6039,7 +6039,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         endpoint_target = UniversalKEndpointTargetAudit(
             expected_endpoint_families=("U",),
             covered_endpoint_families=("U",),
-            endpoint_group_orders=(("U", 1),),
+            endpoint_group_orders=(("U", len(group.elements)),),
             braid_index_independent=True,
             product_families_separated=True,
         )
@@ -6101,6 +6101,85 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertEqual(
             wrapper_data["endpoint_observer_family_build_closes_current_kappa"],
             True,
+        )
+
+        same_order_wrong_group = cyclic_group(len(group.elements))
+        same_order_wrong_certificate = UniversalKWordPotentialCertificate(
+            endpoint_group=same_order_wrong_group,
+            templates=((seed_states[0], ()),),
+            identity_rows=tuple(
+                UniversalKWordPotentialIdentityRow(
+                    entry_key=key,
+                    next_seed_state=seed_state,
+                    endpoint_value=same_order_wrong_group.identity,
+                    artin_substitution=(),
+                )
+                for key in positive_keys
+            ),
+            normalized_seed_states=seed_states,
+        )
+        same_order_wrong_detector_rows = (
+            UniversalKDetectorTrackInitializationRow(
+                endpoint_family="U",
+                track_index=0,
+                assignment_rule="constant_identity_from_interval_seed",
+                dependencies=("interval_data", "routed_seed_state", "strand_index"),
+                local_assignment_template=(
+                    (("A", 0, 0), same_order_wrong_group.identity),
+                ),
+            ),
+        )
+        same_order_wrong_endpoint_target = UniversalKEndpointTargetAudit(
+            expected_endpoint_families=("U",),
+            covered_endpoint_families=("U",),
+            endpoint_group_orders=(("U", len(same_order_wrong_group.elements)),),
+            braid_index_independent=True,
+            product_families_separated=True,
+        )
+        same_order_wrong_family_audit = universal_k_endpoint_observer_builds_by_family(
+            interval,
+            routed.universal_k_seed_classifier_entries,
+            (("U", same_order_wrong_certificate),),
+            detector_track_initialization_rows=same_order_wrong_detector_rows,
+            endpoint_target_audits_by_family=(
+                ("U", same_order_wrong_endpoint_target),
+            ),
+            residual_faithfulness_theorems_by_family=(("U", residual_faithfulness),),
+        )
+        same_order_wrong_wrapper = PostLinearRemainingFiniteSystemAudit(
+            refinement,
+            triangular_latin_defect_closure=closure,
+            triangular_constant_kernel_recovery_route=route,
+            universal_k_endpoint_observer_family_build=same_order_wrong_family_audit,
+            universal_k_signed_endpoint_interval=interval,
+        )
+        same_order_wrong_data = dict(
+            same_order_wrong_wrapper.finite_obstruction_data
+        )
+
+        self.assertTrue(same_order_wrong_family_audit.proves_family_endpoint_observers)
+        self.assertEqual(
+            same_order_wrong_wrapper.current_u_tri_endpoint_group_order,
+            same_order_wrong_wrapper.endpoint_observer_family_build_u_target_group_order,
+        )
+        self.assertNotEqual(
+            same_order_wrong_wrapper.current_u_tri_endpoint_group_fingerprint,
+            same_order_wrong_wrapper.endpoint_observer_family_build_u_target_group_fingerprint,
+        )
+        self.assertFalse(
+            same_order_wrong_wrapper.endpoint_observer_family_build_uses_current_u_tri_target
+        )
+        self.assertFalse(
+            same_order_wrong_wrapper.system_u_closed_by_endpoint_observer_family_build
+        )
+        self.assertFalse(
+            same_order_wrong_data[
+                "endpoint_observer_family_build_uses_current_u_tri_target"
+            ]
+        )
+        self.assertIn(
+            "endpoint_observer_family_build_current_u_tri_target_mismatch",
+            same_order_wrong_data["endpoint_observer_family_build_failure_reasons"],
         )
 
         wrong_group = cyclic_group(2)
@@ -6266,13 +6345,18 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             family: seed_state for _descriptor, (family, seed_state) in seed_entries
         }
         families = tuple(sorted(seed_state_by_family, key=repr))
-        group = cyclic_group(1)
+        fallback_group = cyclic_group(1)
         certificates = []
         endpoint_targets = []
         cutoff_readouts = []
         residual_theorems = []
         detector_rows = []
         for family in families:
+            group = (
+                triangular_recovery_unit_group(interval)
+                if family == "U"
+                else fallback_group
+            )
             seed_states = ((family, seed_state_by_family[family]),)
             keys = universal_k_signed_endpoint_required_entry_keys(interval, seed_states)
             positive_keys = tuple(key for key in keys if key[2] == 1)
@@ -6311,7 +6395,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
                         UniversalKEndpointTargetAudit(
                             expected_endpoint_families=(family,),
                             covered_endpoint_families=(family,),
-                            endpoint_group_orders=((family, 1),),
+                            endpoint_group_orders=((family, len(group.elements)),),
                             braid_index_independent=True,
                             product_families_separated=True,
                         ),
@@ -10561,26 +10645,30 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         )
         self.assertNotEqual(underspecified.remaining_obligations, ())
 
+        current_u_tri_group = triangular_recovery_unit_group(interval)
         reachable = (("U", seed_state),)
         keys = universal_k_signed_endpoint_required_entry_keys(interval, reachable)
-        rows = identity_signed_endpoint_rows(keys)
+        rows = identity_signed_endpoint_rows(
+            keys,
+            endpoint_value=current_u_tri_group.identity,
+        )
         signed_generators = universal_k_signed_endpoint_generator_audit(
             interval,
             routed.universal_k_seed_classifier_entries,
             reachable,
             rows,
-            endpoint_group=cyclic_group(1),
+            endpoint_group=current_u_tri_group,
             witnesses={row.entry_key: () for row in rows},
             endpoint_target_audit=UniversalKEndpointTargetAudit(
                 expected_endpoint_families=("U",),
                 covered_endpoint_families=("U",),
-                endpoint_group_orders=(("U", 1),),
+                endpoint_group_orders=(("U", len(current_u_tri_group.elements)),),
                 braid_index_independent=True,
                 product_families_separated=True,
             ),
             telescoping_detector_audit=trivial_telescoping_detector_audit(
                 keys,
-                endpoint_group=cyclic_group(1),
+                endpoint_group=current_u_tri_group,
             ),
             residual_action_scope=trivial_endpoint_residual_action_scope("U"),
             residual_action_audit=trivial_endpoint_residual_action_audit(),
@@ -10648,14 +10736,78 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertTrue(audit.all_active_routed_endpoint_systems_closed)
         self.assertEqual(audit.remaining_obligations, ())
 
+        same_order_wrong_group = cyclic_group(len(current_u_tri_group.elements))
+        same_order_rows = identity_signed_endpoint_rows(
+            keys,
+            endpoint_value=same_order_wrong_group.identity,
+        )
+        same_order_wrong_signed_generators = universal_k_signed_endpoint_generator_audit(
+            interval,
+            routed.universal_k_seed_classifier_entries,
+            reachable,
+            same_order_rows,
+            endpoint_group=same_order_wrong_group,
+            witnesses={row.entry_key: () for row in same_order_rows},
+            endpoint_target_audit=UniversalKEndpointTargetAudit(
+                expected_endpoint_families=("U",),
+                covered_endpoint_families=("U",),
+                endpoint_group_orders=(("U", len(same_order_wrong_group.elements)),),
+                braid_index_independent=True,
+                product_families_separated=True,
+            ),
+            telescoping_detector_audit=trivial_telescoping_detector_audit(
+                keys,
+                endpoint_group=same_order_wrong_group,
+            ),
+            residual_action_scope=trivial_endpoint_residual_action_scope("U"),
+            residual_action_audit=trivial_endpoint_residual_action_audit(),
+        )
+        same_order_wrong_audit = PostLinearRemainingFiniteSystemAudit(
+            refinement,
+            triangular_latin_defect_closure=closure,
+            triangular_constant_kernel_recovery_route=route,
+            universal_k_signed_endpoint_generator=same_order_wrong_signed_generators,
+            universal_k_signed_endpoint_interval=interval,
+        )
+        same_order_wrong_data = dict(same_order_wrong_audit.finite_obstruction_data)
+
+        self.assertTrue(
+            same_order_wrong_signed_generators.proves_signed_endpoint_generator_tables
+        )
+        self.assertEqual(
+            same_order_wrong_audit.current_u_tri_endpoint_group_order,
+            same_order_wrong_audit.signed_endpoint_generator_u_target_group_order,
+        )
+        self.assertNotEqual(
+            same_order_wrong_audit.current_u_tri_endpoint_group_fingerprint,
+            same_order_wrong_audit.signed_endpoint_generator_u_target_group_fingerprint,
+        )
+        self.assertFalse(
+            same_order_wrong_audit.signed_endpoint_generator_uses_current_u_tri_target
+        )
+        self.assertFalse(
+            same_order_wrong_audit.system_u_closed_by_signed_endpoint_generator
+        )
+        self.assertFalse(
+            same_order_wrong_data["signed_endpoint_generator_uses_current_u_tri_target"]
+        )
+        self.assertIn(
+            "signed_endpoint_generator_current_u_tri_target_mismatch",
+            same_order_wrong_data["signed_endpoint_generator_failure_reasons"],
+        )
+
         wrong_target_group = cyclic_group(2)
+        wrong_target_rows = identity_signed_endpoint_rows(
+            keys,
+            endpoint_value=wrong_target_group.identity,
+        )
         wrong_target_signed_generators = universal_k_signed_endpoint_generator_audit(
             interval,
             routed.universal_k_seed_classifier_entries,
             reachable,
-            rows,
+            wrong_target_rows,
             endpoint_group=wrong_target_group,
-            witnesses={row.entry_key: () for row in rows},
+            witnesses={row.entry_key: () for row in wrong_target_rows},
             endpoint_target_audit=UniversalKEndpointTargetAudit(
                 expected_endpoint_families=("U",),
                 covered_endpoint_families=("U",),
@@ -10718,13 +10870,17 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             wrong_target_data["signed_endpoint_generator_failure_reasons"],
         )
 
+        forged_group = cyclic_group(2)
         forged_rows = tuple(
             replace(row, output_left=1)
             if row.sign == 1
             and row.input_left == 0
             and row.input_right == 0
             else row
-            for row in rows
+            for row in identity_signed_endpoint_rows(
+                keys,
+                endpoint_value=forged_group.identity,
+            )
         )
         forged_signed_generators = UniversalKSignedEndpointGeneratorAudit(
             seed_classifier_entries=routed.universal_k_seed_classifier_entries,
@@ -10733,7 +10889,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             entry_domain_derived_from_interval=True,
             finite_row_checks_derived_from_tables=True,
             rows=forged_rows,
-            endpoint_group=cyclic_group(2),
+            endpoint_group=forged_group,
             endpoint_targets_fixed=True,
             endpoint_target_audit=trivial_endpoint_target_audit("U"),
             coordinate_components_verified=True,
@@ -10747,7 +10903,7 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             telescoping_detector_audit=trivial_telescoping_detector_audit(
                 keys,
                 rows=forged_rows,
-                endpoint_group=cyclic_group(2),
+                endpoint_group=forged_group,
             ),
             residual_action_scope=trivial_endpoint_residual_action_scope("U"),
             residual_action_audit=trivial_endpoint_residual_action_audit(),

@@ -942,10 +942,11 @@ pairing, inverse cancellation, positive state/coordinate YBE, and far
 state/coordinate commutativity against the current table and endpoint group.
 For a U-family build, the recheck also recomputes the current triangular
 recovery unit observer on the endpoint interval and requires the build's
-endpoint group to be exactly that current `U_tri` target by finite group
-order.  Thus a word-potential observer over some other finite group can remain
-diagnostic evidence, but it cannot close the System U obligation routed by
-the current `kappa` ledger.  The retained obstruction ledger reports this as
+endpoint group to be exactly that current `U_tri` target by finite group-table
+fingerprint, not just by finite group order.  Thus a word-potential observer
+over some other same-order finite group can remain diagnostic evidence, but
+it cannot close the System U obligation routed by the current `kappa` ledger.
+The retained obstruction ledger reports this as
 `signed_endpoint_generator_current_u_tri_target_mismatch` for combined signed
 tables and as `endpoint_observer_family_build_current_u_tri_target_mismatch`
 for per-family observer builds.
@@ -1029,6 +1030,13 @@ to evaluate inverse-cancellation and positive-YBE label products.  A row
 audit that names only an endpoint target order, or supplies success booleans
 without the group table, is reported as missing the endpoint group for finite
 signed row checks.
+For a routed U family, current-target matching is stronger than matching the
+finite order.  The wrapper recomputes the current triangular-recovery unit
+group `U_tri` and compares a finite group-table fingerprint containing the
+concrete element set, identity, inverse table, and multiplication table.  A
+same-order placeholder group can still prove an internally coherent signed
+table, but it does not close System U unless its fingerprint is the current
+`U_tri` fingerprint.
 
 The post-linear wrapper can now derive this signed endpoint audit directly
 from supplied table rows and witnesses after computing the interval's current

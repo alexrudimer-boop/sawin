@@ -965,6 +965,24 @@ def _value_marker_set(values: Sequence[object]) -> set[object]:
     return {_value_marker(value) for value in values}
 
 
+def _finite_group_table_fingerprint(
+    group: FiniteGroup | None,
+) -> Tuple[object, ...] | None:
+    if group is None:
+        return None
+    elements = tuple(sorted(group.elements, key=repr))
+    return (
+        elements,
+        group.identity,
+        tuple((element, group.inv(element)) for element in elements),
+        tuple(
+            (left, right, group.mul(left, right))
+            for left in elements
+            for right in elements
+        ),
+    )
+
+
 @dataclass(frozen=True)
 class UniversalKSignedEndpointGeneratorRow:
     """One finite signed endpoint-generator entry on a routed K seed state."""
@@ -12662,6 +12680,13 @@ class PostLinearRemainingFiniteSystemAudit:
         return triangular_recovery_unit_observer_audit(interval).unit_group_order
 
     @property
+    def current_u_tri_endpoint_group_fingerprint(self) -> Tuple[object, ...] | None:
+        interval = self.universal_k_signed_endpoint_interval
+        if interval is None:
+            return None
+        return _finite_group_table_fingerprint(triangular_recovery_unit_group(interval))
+
+    @property
     def signed_endpoint_generator_u_target_group_order(self) -> int | None:
         audit = self.universal_k_signed_endpoint_generator
         if audit is None or audit.endpoint_group is None:
@@ -12671,16 +12696,27 @@ class PostLinearRemainingFiniteSystemAudit:
         return len(audit.endpoint_group.elements)
 
     @property
+    def signed_endpoint_generator_u_target_group_fingerprint(
+        self,
+    ) -> Tuple[object, ...] | None:
+        audit = self.universal_k_signed_endpoint_generator
+        if audit is None or audit.endpoint_group is None:
+            return None
+        if "U" not in audit.required_endpoint_families:
+            return None
+        return _finite_group_table_fingerprint(audit.endpoint_group)
+
+    @property
     def signed_endpoint_generator_uses_current_u_tri_target(self) -> bool:
         if not self.system_u_active:
             return True
         audit = self.universal_k_signed_endpoint_generator
         if audit is None or "U" not in audit.required_endpoint_families:
             return False
-        expected = self.current_u_tri_endpoint_group_order
+        expected = self.current_u_tri_endpoint_group_fingerprint
         return (
             expected is not None
-            and self.signed_endpoint_generator_u_target_group_order == expected
+            and self.signed_endpoint_generator_u_target_group_fingerprint == expected
         )
 
     @property
@@ -12900,16 +12936,34 @@ class PostLinearRemainingFiniteSystemAudit:
         return len(endpoint_group.elements)
 
     @property
+    def endpoint_observer_family_build_u_target_group_fingerprint(
+        self,
+    ) -> Tuple[object, ...] | None:
+        audit = self.universal_k_endpoint_observer_family_build
+        if audit is None:
+            return None
+        u_builds = tuple(
+            build
+            for family, build in audit.build_rows_exact
+            if family == "U"
+        )
+        if len(u_builds) != 1:
+            return None
+        endpoint_group = u_builds[0].audit.endpoint_group
+        return _finite_group_table_fingerprint(endpoint_group)
+
+    @property
     def endpoint_observer_family_build_uses_current_u_tri_target(self) -> bool:
         if not self.system_u_active:
             return True
         audit = self.universal_k_endpoint_observer_family_build
         if audit is None or "U" not in audit.expected_endpoint_families_exact:
             return False
-        expected = self.current_u_tri_endpoint_group_order
+        expected = self.current_u_tri_endpoint_group_fingerprint
         return (
             expected is not None
-            and self.endpoint_observer_family_build_u_target_group_order == expected
+            and self.endpoint_observer_family_build_u_target_group_fingerprint
+            == expected
         )
 
     @property
@@ -13577,7 +13631,9 @@ class PostLinearRemainingFiniteSystemAudit:
                     (),
                 ),
                 ("signed_endpoint_generator_current_u_tri_group_order", None),
+                ("signed_endpoint_generator_current_u_tri_group_fingerprint", None),
                 ("signed_endpoint_generator_u_target_group_order", None),
+                ("signed_endpoint_generator_u_target_group_fingerprint", None),
                 ("signed_endpoint_generator_uses_current_u_tri_target", False),
                 ("signed_endpoint_generator_closes_current_kappa", False),
                 ("signed_endpoint_generator_closed_families", ()),
@@ -14201,8 +14257,16 @@ class PostLinearRemainingFiniteSystemAudit:
                 self.current_u_tri_endpoint_group_order,
             ),
             (
+                "signed_endpoint_generator_current_u_tri_group_fingerprint",
+                self.current_u_tri_endpoint_group_fingerprint,
+            ),
+            (
                 "signed_endpoint_generator_u_target_group_order",
                 self.signed_endpoint_generator_u_target_group_order,
+            ),
+            (
+                "signed_endpoint_generator_u_target_group_fingerprint",
+                self.signed_endpoint_generator_u_target_group_fingerprint,
             ),
             (
                 "signed_endpoint_generator_uses_current_u_tri_target",
@@ -15903,7 +15967,12 @@ class PostLinearRemainingFiniteSystemAudit:
                     (),
                 ),
                 ("endpoint_observer_family_build_current_u_tri_group_order", None),
+                (
+                    "endpoint_observer_family_build_current_u_tri_group_fingerprint",
+                    None,
+                ),
                 ("endpoint_observer_family_build_u_target_group_order", None),
+                ("endpoint_observer_family_build_u_target_group_fingerprint", None),
                 (
                     "endpoint_observer_family_build_uses_current_u_tri_target",
                     False,
@@ -16111,8 +16180,16 @@ class PostLinearRemainingFiniteSystemAudit:
                 self.current_u_tri_endpoint_group_order,
             ),
             (
+                "endpoint_observer_family_build_current_u_tri_group_fingerprint",
+                self.current_u_tri_endpoint_group_fingerprint,
+            ),
+            (
                 "endpoint_observer_family_build_u_target_group_order",
                 self.endpoint_observer_family_build_u_target_group_order,
+            ),
+            (
+                "endpoint_observer_family_build_u_target_group_fingerprint",
+                self.endpoint_observer_family_build_u_target_group_fingerprint,
             ),
             (
                 "endpoint_observer_family_build_uses_current_u_tri_target",

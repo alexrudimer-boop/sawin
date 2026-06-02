@@ -1183,6 +1183,13 @@ cutoff degrees are checked by the cutoff-readout certificate and are not
 silently folded into this group order.  If the group table has a different
 order from the group-valued target product, the certificate has not connected
 its endpoint labels to the declared fixed target.
+For a routed U family, the post-linear wrapper must do the stronger current
+target check: it recomputes the triangular-recovery unit group `U_tri` from
+the current endpoint interval and compares the full finite group-table
+fingerprint, including elements, identity, inverses, and multiplication.  A
+same-order finite group with a different concrete table is diagnostic only;
+it may prove an internally coherent signed table but it does not close the
+current U obligation.
 
 Every supplied row must also pass the coordinate-component check against the
 actual interval table: positive rows must have `(x',y')=T_{a,b}(x,y)`, and
@@ -1770,10 +1777,12 @@ obligation.
 For a U-family observer build, the checker must also recompute the current
 triangular-recovery unit observer `U_tri` from the same endpoint interval.
 The U build closes System U only when its endpoint target is exactly the
-current `U_tri` target, recorded by the finite endpoint-group order.  A
-word-potential observer over a different finite group may still be retained
-as diagnostic data, but it cannot close a U obligation routed by the current
-`kappa` ledger.  The checker should report this exact obstruction as
+current `U_tri` target, recorded by the exact finite group-table fingerprint,
+not merely by endpoint-group order.  The fingerprint includes the concrete
+element set, identity, inverse table, and multiplication table.  A
+word-potential observer over a different same-order finite group may still be
+retained as diagnostic data, but it cannot close a U obligation routed by the
+current `kappa` ledger.  The checker should report this exact obstruction as
 `signed_endpoint_generator_current_u_tri_target_mismatch` for a combined
 signed-generator table and as
 `endpoint_observer_family_build_current_u_tri_target_mismatch` for a
