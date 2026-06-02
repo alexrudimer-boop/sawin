@@ -3453,19 +3453,19 @@ class UniversalKFibreLabelIdentityAudit:
 
 def universal_k_fibre_label_identity_audit(
     interval: LocalInterval,
-    label_rows: Sequence[object],
+    label_rows: object,
 ) -> UniversalKFibreLabelIdentityAudit:
     """Audit a finite fibre-label identity certificate."""
 
     return UniversalKFibreLabelIdentityAudit(
         interval=interval,
-        label_rows=tuple(label_rows),
+        label_rows=_universal_k_row_input_tuple(label_rows),
     )
 
 
 def universal_k_interval_has_fibre_label_identity_action(
     interval: LocalInterval,
-    label_rows: Sequence[object],
+    label_rows: object,
 ) -> bool:
     """Return whether fixed injective fibre labels are preserved coordinatewise."""
 
@@ -3693,7 +3693,7 @@ def universal_k_coordinate_identity_residual_faithfulness_audit(
 def universal_k_fibre_label_identity_residual_faithfulness_audit(
     interval: LocalInterval,
     endpoint_seed_states: Sequence[Tuple[str, UniversalKSeedState]],
-    label_rows: Sequence[object],
+    label_rows: object,
 ) -> UniversalKResidualFaithfulnessAudit:
     """Prove residual faithfulness from injective coordinate-preserved labels."""
 
@@ -3726,7 +3726,7 @@ def universal_k_automatic_residual_faithfulness_audit(
     interval: LocalInterval,
     endpoint_seed_states: Sequence[Tuple[str, UniversalKSeedState]],
     *,
-    fibre_label_identity_rows: Sequence[object] = (),
+    fibre_label_identity_rows: object = (),
 ) -> UniversalKResidualFaithfulnessAudit:
     """Try the proved residual-triviality helpers in a fixed certificate order.
 
@@ -12578,7 +12578,7 @@ def universal_k_identity_endpoint_observer_builds_by_family(
     derive_singleton_fibre_residual_faithfulness: bool = False,
     derive_fibre_label_identity_residual_faithfulness: bool = False,
     derive_canonical_fibre_label_identity_residual_faithfulness: bool = False,
-    fibre_label_identity_rows: Sequence[object] = (),
+    fibre_label_identity_rows: object = (),
     residual_faithfulness_theorems_by_family: Sequence[
         Tuple[str, UniversalKResidualFaithfulnessAudit]
     ] = (),
@@ -20199,7 +20199,7 @@ def post_linear_remaining_finite_system_audit(
     universal_k_identity_singleton_residual_faithfulness: bool = False,
     universal_k_identity_fibre_label_residual_faithfulness: bool = False,
     universal_k_identity_canonical_fibre_label_residual_faithfulness: bool = False,
-    universal_k_identity_fibre_label_rows: Sequence[object] = (),
+    universal_k_identity_fibre_label_rows: object = (),
     unsupported_companion_structural_contradiction: (
         UnsupportedCompanionStructuralContradictionAudit | None
     ) = None,

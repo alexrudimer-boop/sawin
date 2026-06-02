@@ -1875,7 +1875,10 @@ labels forces the final fibre tuple to equal the initial tuple.  The helper
 one schematic all-`n` residual row per active endpoint family, and the
 identity observer constructor may consume it only when
 `derive_fibre_label_identity_residual_faithfulness=True` with the supplied
-`fibre_label_identity_rows` ledger.  This closes only the fibre-label
+`fibre_label_identity_rows` ledger.  That label ledger must be audited as
+finite row data: a non-sequence object such as `None` or a string is one
+malformed label row, not a character-by-character ledger and not a runtime
+exception.  This closes only the fibre-label
 identity subcase and does not solve general nontrivial U/C/M endpoint
 observers.
 There is also a canonical fibre-label identity subcase that does not require

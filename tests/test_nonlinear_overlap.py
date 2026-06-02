@@ -6338,6 +6338,31 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             missing_label_audit.failure_reasons,
         )
 
+        malformed_none_label_audit = universal_k_fibre_label_identity_audit(
+            interval,
+            None,
+        )
+        self.assertFalse(
+            malformed_none_label_audit.proves_fibre_label_identity_action
+        )
+        self.assertEqual(malformed_none_label_audit.malformed_label_rows, (None,))
+        self.assertIn(
+            "fibre_label_identity_malformed_rows",
+            malformed_none_label_audit.failure_reasons,
+        )
+        malformed_string_label_audit = universal_k_fibre_label_identity_audit(
+            interval,
+            "not-a-label-ledger",
+        )
+        self.assertFalse(
+            malformed_string_label_audit.proves_fibre_label_identity_action
+        )
+        self.assertEqual(
+            malformed_string_label_audit.malformed_label_rows,
+            ("not-a-label-ledger",),
+        )
+        self.assertNotIn("n", malformed_string_label_audit.malformed_label_rows)
+
         raw_missing_base = type("RawMissingBaseRows", (), {})()
         raw_missing_base.colors = ("a", "b")
         raw_missing_base.fibres = {"a": ("a0",), "b": ("b0",)}
@@ -6444,6 +6469,24 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertIn(
             "endpoint_observer_family_builds_not_proved",
             bad_family_audit.failure_reasons,
+        )
+
+        none_label_family_audit = (
+            universal_k_identity_endpoint_observer_builds_by_family(
+                interval,
+                seed_entries,
+                derive_fibre_label_identity_residual_faithfulness=True,
+                fibre_label_identity_rows=None,
+            )
+        )
+        self.assertFalse(none_label_family_audit.proves_family_endpoint_observers)
+        self.assertEqual(
+            none_label_family_audit.residual_theorem_channel_reasons_by_family,
+            (("C", ()), ("M", ()), ("U", ())),
+        )
+        self.assertIn(
+            "endpoint_observer_family_builds_not_proved",
+            none_label_family_audit.failure_reasons,
         )
 
     def test_canonical_fibre_label_identity_residual_faithfulness_derives_rows(self):

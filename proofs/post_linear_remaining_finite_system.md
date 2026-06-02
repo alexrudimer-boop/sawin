@@ -1046,7 +1046,10 @@ final quotient colours return, and injectivity on each returned fibre forces
 the final fibre tuple to equal the initial one.  The identity constructor
 consumes this proof only when
 `derive_fibre_label_identity_residual_faithfulness=True` and the finite
-`fibre_label_identity_rows` ledger is supplied.
+`fibre_label_identity_rows` ledger is supplied.  That label ledger is
+normalized as finite row data before the audit: a non-sequence object such as
+`None` or a string is one malformed label row, not a character-by-character
+ledger and not an exception.
 There is now a canonical fibre-label identity residual-faithfulness subcase:
 `universal_k_canonical_fibre_label_identity_rows(...)` constructs the least
 finite label ledger forced by local coordinate-label preservation.  It starts
