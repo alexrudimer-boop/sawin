@@ -749,6 +749,23 @@ contexts, nonconstant coboundary defects, out-of-scope detector tracks,
 missing C/M readouts, or missing residual faithfulness remain visible audit
 failures rather than being filled by defaults.  This keeps the local
 certificate from being a list of unsupported boolean claims.
+There is also a monodromy-to-word-potential handoff constructor,
+`universal_k_word_potential_certificate_from_monodromy(...)`.  It takes
+positive endpoint-state monodromy rows and state-indexed word templates,
+derives the exact reachable seed-state closure from the current `kappa`
+seeds, computes the positive entry domain, inserts the Artin substitutions
+forced by the target templates, and evaluates the nonabelian coboundary
+defect to obtain the emitted endpoint label.  With the full detector-variable
+domain this can only certify defects that are genuinely constant on all
+finite assignments; a smaller detector domain is used only when the row also
+contains explicit soundness witness data such as a reachable-value
+enumeration or symbolic detector-domain invariant.  The returned certificate
+is still passed through the same word-potential audit, so a nonconstant
+defect, missing monodromy row, unsound detector-domain subset, malformed
+template, or missing residual-faithfulness theorem keeps the endpoint
+observer open.  This removes another arbitrary choice from the U/C/M
+observer data: positive emissions are computed from the monodromy
+representation and potentials rather than supplied independently.
 The builder reads only actual word-potential identity row objects when forcing
 positive endpoint rows.  Malformed tuple-shaped identity entries remain in
 the word-potential certificate as certificate errors and cause the observer to

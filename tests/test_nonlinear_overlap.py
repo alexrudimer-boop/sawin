@@ -98,6 +98,7 @@ from ybe_domination import (
     universal_k_endpoint_observer_family_build_audit,
     universal_k_endpoint_observer_positive_rows_from_word_potential,
     universal_k_endpoint_observer_signed_rows_from_positive,
+    universal_k_word_potential_certificate_from_monodromy,
     universal_k_identity_cutoff_readout_audit,
     universal_k_identity_endpoint_observer_builds_by_family,
     universal_k_identity_word_potential_certificate,
@@ -6645,6 +6646,141 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             tuple(
                 failure[1]
                 for failure in malformed_identity_row_object.coboundary_defect_failures
+            ),
+        )
+
+    def test_word_potential_certificate_from_monodromy_derives_constant_defects(self):
+        interval = one_color_identity_interval()
+        group = cyclic_group(2)
+        seed_state = ("*", "*", "left_constant_map_universal_kernel")
+        next_state = ("*", "*", "left_constant_map_universal_kernel", "next")
+        seed_entries = (
+            (
+                (
+                    "*",
+                    "*",
+                    "L",
+                    "constant_map_kernel",
+                    ("*", (0, 1), "universal", "universal"),
+                ),
+                ("U", seed_state),
+            ),
+        )
+        reachable = (("U", seed_state), ("U", next_state))
+        positive_keys = tuple(
+            key
+            for key in universal_k_signed_endpoint_required_entry_keys(
+                interval,
+                reachable,
+            )
+            if key[2] == 1
+        )
+        positive_state_rows = []
+        restricted_domains = {}
+        soundness_witnesses = {}
+        for key in positive_keys:
+            family, state, _sign, left_color, right_color, x, y = key
+            output_left, output_right = interval.T[(left_color, right_color, x, y)]
+            target_state = next_state if state == seed_state else seed_state
+            positive_state_rows.append(
+                UniversalKSignedEndpointGeneratorRow(
+                    endpoint_family=family,
+                    seed_state=state,
+                    sign=1,
+                    left_color=left_color,
+                    right_color=right_color,
+                    input_left=x,
+                    input_right=y,
+                    output_left=output_left,
+                    output_right=output_right,
+                    next_seed_state=target_state,
+                    endpoint_value=None,
+                )
+            )
+            variable = ("U", 0, 0) if state == seed_state else ("U", 0, 1)
+            restricted_domains[key] = (((variable, 1),),)
+            soundness_witnesses[key] = ("symbolic_detector_domain_invariant",)
+
+        templates = (
+            (("U", seed_state), ()),
+            (("U", next_state), ((("U", 0, 1), 1),)),
+        )
+        certificate = universal_k_word_potential_certificate_from_monodromy(
+            interval,
+            seed_entries,
+            group,
+            templates,
+            tuple(positive_state_rows),
+            detector_domain_assignments_by_entry_key=restricted_domains,
+            detector_domain_soundness_witness_by_entry_key=soundness_witnesses,
+        )
+
+        self.assertEqual(certificate.normalized_seed_states_exact, (("U", seed_state),))
+        self.assertTrue(certificate.artin_substitutions_verified)
+        self.assertTrue(certificate.detector_domains_sound)
+        self.assertTrue(certificate.identities_verified)
+        self.assertTrue(certificate.coboundary_defects_constant)
+        self.assertEqual(
+            set(row.endpoint_value for row in certificate.identity_row_objects),
+            {1},
+        )
+
+        positive_rows = universal_k_endpoint_observer_positive_rows_from_word_potential(
+            interval,
+            certificate,
+        )
+        self.assertEqual(set(row.endpoint_value for row in positive_rows), {1})
+
+        build = universal_k_endpoint_observer_build(
+            interval,
+            seed_entries,
+            certificate,
+            detector_track_initialization_rows=(
+                UniversalKDetectorTrackInitializationRow(
+                    endpoint_family="U",
+                    track_index=0,
+                    assignment_rule="symbolic_detector_domain_invariant",
+                    dependencies=("interval_data", "routed_seed_state", "strand_index"),
+                    local_assignment_template=((("A", 0, 0), group.identity),),
+                ),
+            ),
+            endpoint_target_audit=UniversalKEndpointTargetAudit(
+                expected_endpoint_families=("U",),
+                covered_endpoint_families=("U",),
+                endpoint_group_orders=(("U", len(group.elements)),),
+                braid_index_independent=True,
+                product_families_separated=True,
+            ),
+            residual_faithfulness_theorem=(
+                universal_k_strict_identity_residual_faithfulness_audit(
+                    interval,
+                    (("U", seed_state),),
+                )
+            ),
+        )
+
+        self.assertTrue(
+            build.monodromy_representation_audit.proves_monodromy_representation
+        )
+        self.assertTrue(
+            build.telescoping_detector_audit.proves_telescoping_detector_lift
+        )
+        self.assertTrue(build.proves_endpoint_observer)
+
+        full_domain_certificate = universal_k_word_potential_certificate_from_monodromy(
+            interval,
+            seed_entries,
+            group,
+            templates,
+            tuple(positive_state_rows),
+        )
+        self.assertFalse(full_domain_certificate.identities_verified)
+        self.assertFalse(full_domain_certificate.coboundary_defects_constant)
+        self.assertIn(
+            "word_potential_identity_mismatch",
+            tuple(
+                failure[1]
+                for failure in full_domain_certificate.coboundary_defect_failures
             ),
         )
 

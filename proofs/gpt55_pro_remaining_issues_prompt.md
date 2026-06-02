@@ -1501,6 +1501,25 @@ initialization rows, templates `W_s`, positive identity rows, C/M cutoff
 readouts if needed, and residual-faithfulness rows.  The signed endpoint
 table should then be derived from that data and rechecked against the current
 `kappa` seed ledger and interval table.
+The implementation also includes the constructor
+`universal_k_word_potential_certificate_from_monodromy(...)`.  This is not an
+existence theorem.  It is a finite certificate builder: given positive
+endpoint-state monodromy rows, state-indexed templates `W_s`, and a fixed
+endpoint group, it derives the reachable seed-state closure from the current
+`kappa` seeds, computes the positive entry domain, inserts the Artin
+substitution forced by each next-state template, and evaluates the
+nonabelian coboundary defect
+`W_s(U)^-1 W_{F_r(s)}(A_r^+(U,A))`.  The emitted label `h` is the constant
+defect value.  On the full finite detector-variable domain this accepts only
+defects constant for all assignments.  A smaller detector-domain subset is
+accepted only with explicit soundness witness data, such as an exhaustive
+reachable-value enumeration or a symbolic detector-domain invariant.  The
+returned word-potential certificate is still audited normally, so missing
+positive monodromy rows, nonconstant defects, malformed templates,
+unsound detector-domain subsets, and missing residual-faithfulness rows keep
+the U/C/M observer open.  Thus endpoint emissions are no longer arbitrary
+primitive data once `rho_E` and the potentials are supplied; they are forced
+by the finite coboundary computation.
 The executable audit also has a canonical identity-emission constructor
 `universal_k_identity_endpoint_observer_builds_by_family(...)`.  It builds
 the identity monodromy-coboundary candidate for every active family in the
@@ -2029,6 +2048,8 @@ word_potential_identity_next_states_are_well_formed,
 word_potential_templates_for_every_reachable_state,
 word_potential_template_rows_have_two_field_shape,
 word_potential_identity_rows_are_finite_row_objects,
+monodromy_coboundary_emissions_derived_from_rho_and_W,
+restricted_detector_domains_have_soundness_witnesses,
 word_potential_templates_use_only_current_longitude_variables,
 word_potential_artin_substitution_from_detector_recurrence,
 word_potential_identity_for_every_positive_row,

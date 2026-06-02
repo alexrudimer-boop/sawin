@@ -9312,6 +9312,202 @@ def universal_k_endpoint_observer_positive_rows_from_word_potential(
     return tuple(rows)
 
 
+def _universal_k_positive_monodromy_state_closure(
+    seed_classifier_entries: Sequence[UniversalKSeedClassifierEntry],
+    positive_state_rows: Sequence[UniversalKSignedEndpointGeneratorRow],
+) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
+    states = set(universal_k_signed_endpoint_seed_states(seed_classifier_entries))
+    changed = True
+    while changed:
+        changed = False
+        for row in positive_state_rows:
+            if not isinstance(row, UniversalKSignedEndpointGeneratorRow):
+                continue
+            if row.sign != 1 or row.endpoint_family not in UNIVERSAL_K_ENDPOINT_FAMILIES:
+                continue
+            source = (row.endpoint_family, row.seed_state)
+            target = (row.endpoint_family, row.next_seed_state)
+            if source in states and target not in states:
+                states.add(target)
+                changed = True
+    return tuple(sorted(states, key=repr))
+
+
+def _universal_k_artin_substitution_for_template(
+    template: UniversalKWordPotentialWord,
+    sign: int,
+) -> UniversalKWordPotentialSubstitution:
+    return tuple(
+        (
+            variable,
+            _universal_k_expected_artin_substitution(variable, sign),
+        )
+        for variable in _universal_k_word_potential_variables(template)
+    )
+
+
+def _universal_k_coboundary_defect_value(
+    endpoint_group: FiniteGroup,
+    source_template: UniversalKWordPotentialWord,
+    next_template: UniversalKWordPotentialWord,
+    artin_substitution: UniversalKWordPotentialSubstitution,
+    detector_domain_assignments: (
+        Tuple[Tuple[Tuple[UniversalKWordPotentialVariable, GroupElement], ...], ...]
+        | None
+    ) = None,
+) -> GroupElement | None:
+    substituted_next = _universal_k_word_potential_substitute(
+        next_template,
+        artin_substitution,
+    )
+    if (
+        _universal_k_word_potential_word_failures(source_template)
+        or _universal_k_word_potential_word_failures(substituted_next)
+    ):
+        return None
+    variables = _unique_values(
+        tuple(_universal_k_word_potential_variables(source_template))
+        + tuple(_universal_k_word_potential_variables(substituted_next))
+    )
+    if detector_domain_assignments is None:
+        assignment_iter = (
+            tuple(zip(variables, values))
+            for values in product(endpoint_group.elements, repeat=len(variables))
+        )
+    else:
+        assignment_iter = iter(detector_domain_assignments)
+
+    defect_value = None
+    for assignment_row in assignment_iter:
+        try:
+            assignment = dict(assignment_row)
+            left = universal_k_evaluate_word_potential(
+                endpoint_group,
+                assignment,
+                substituted_next,
+            )
+            source = universal_k_evaluate_word_potential(
+                endpoint_group,
+                assignment,
+                source_template,
+            )
+        except (TypeError, ValueError):
+            return None
+        candidate = endpoint_group.mul(endpoint_group.inv(source), left)
+        if defect_value is None:
+            defect_value = candidate
+        elif defect_value != candidate:
+            return defect_value
+    return endpoint_group.identity if defect_value is None else defect_value
+
+
+def universal_k_word_potential_certificate_from_monodromy(
+    interval: LocalInterval,
+    seed_classifier_entries: Sequence[UniversalKSeedClassifierEntry],
+    endpoint_group: FiniteGroup,
+    templates: Sequence[
+        Tuple[Tuple[str, UniversalKSeedState], UniversalKWordPotentialWord]
+    ],
+    positive_state_rows: Sequence[UniversalKSignedEndpointGeneratorRow],
+    *,
+    detector_domain_assignments_by_entry_key: Mapping[
+        UniversalKSignedEndpointEntryKey,
+        Tuple[Tuple[Tuple[UniversalKWordPotentialVariable, GroupElement], ...], ...],
+    ]
+    | None = None,
+    detector_domain_soundness_witness_by_entry_key: Mapping[
+        UniversalKSignedEndpointEntryKey,
+        Tuple[str, ...],
+    ]
+    | None = None,
+) -> UniversalKWordPotentialCertificate:
+    """Derive endpoint emissions from monodromy rows and word potentials.
+
+    The positive state rows supply only the monodromy map ``F_r(s)``.  For
+    every reachable positive entry this constructor computes the nonabelian
+    coboundary defect
+
+        W_s(U)^-1 W_{F_r(s)}(A_r^+(U,A))
+
+    on either the full finite detector domain or a supplied sound subdomain,
+    and uses that constant value as the endpoint emission.  The returned
+    certificate is still checked by ``UniversalKWordPotentialCertificate``:
+    nonconstant defects, unsound domains, duplicate rows, and missing entries
+    remain ordinary audit failures.
+    """
+
+    reachable_seed_states = _universal_k_positive_monodromy_state_closure(
+        seed_classifier_entries,
+        positive_state_rows,
+    )
+    required_positive_keys = tuple(
+        key
+        for key in universal_k_signed_endpoint_required_entry_keys(
+            interval,
+            reachable_seed_states,
+        )
+        if _universal_k_is_positive_entry_key(key)
+    )
+    required_key_markers = {_value_marker(key) for key in required_positive_keys}
+    template_map = {
+        state: word
+        for state, word in templates
+        if _universal_k_endpoint_seed_state_well_formed(state)
+    }
+    detector_domain_assignments_by_entry_key = (
+        detector_domain_assignments_by_entry_key or {}
+    )
+    detector_domain_soundness_witness_by_entry_key = (
+        detector_domain_soundness_witness_by_entry_key or {}
+    )
+
+    identity_rows = []
+    for row in positive_state_rows:
+        if not isinstance(row, UniversalKSignedEndpointGeneratorRow):
+            continue
+        key = row.entry_key
+        if row.sign != 1 or _value_marker(key) not in required_key_markers:
+            continue
+        source_state = (row.endpoint_family, row.seed_state)
+        next_state = (row.endpoint_family, row.next_seed_state)
+        source_template = template_map.get(source_state, ())
+        next_template = template_map.get(next_state, ())
+        artin_substitution = _universal_k_artin_substitution_for_template(
+            next_template,
+            1,
+        )
+        detector_domain_assignments = detector_domain_assignments_by_entry_key.get(key)
+        endpoint_value = _universal_k_coboundary_defect_value(
+            endpoint_group,
+            source_template,
+            next_template,
+            artin_substitution,
+            detector_domain_assignments,
+        )
+        identity_rows.append(
+            UniversalKWordPotentialIdentityRow(
+                entry_key=key,
+                next_seed_state=row.next_seed_state,
+                endpoint_value=endpoint_value,
+                artin_substitution=artin_substitution,
+                detector_domain_assignments=detector_domain_assignments,
+                detector_domain_sound=detector_domain_assignments is not None,
+                detector_domain_soundness_witness=(
+                    detector_domain_soundness_witness_by_entry_key.get(key, ())
+                ),
+            )
+        )
+
+    return UniversalKWordPotentialCertificate(
+        endpoint_group=endpoint_group,
+        templates=tuple(templates),
+        identity_rows=tuple(identity_rows),
+        normalized_seed_states=universal_k_signed_endpoint_seed_states(
+            seed_classifier_entries
+        ),
+    )
+
+
 def universal_k_endpoint_observer_signed_rows_from_positive(
     interval: LocalInterval,
     endpoint_group: FiniteGroup,
