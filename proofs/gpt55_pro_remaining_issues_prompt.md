@@ -1923,7 +1923,12 @@ The per-family word-potential certificate input rows must also be audited as
 finite data.  A malformed two-field row, a non-certificate value, an unknown
 family, a duplicate family, a missing active-family certificate, or an extra
 certificate family must be reported explicitly rather than silently turning
-into a missing observer build.
+into a missing observer build.  The family label in every build, certificate,
+detector-track, endpoint-target, cutoff-readout, and residual-theorem row must
+be a hashable certificate atom equal to `U`, `C`, or `M`; unhashable list-like
+labels or other structured objects are invalid family rows, not alternate
+syntax, and they must not instantiate per-family observers or initialized
+detector-track scope.
 The same exact finite-ledger rule applies to the auxiliary rows used to build
 the family observers.  Detector-track initialization rows must cover exactly
 the active routed families with no malformed rows, unknown families, or
@@ -2371,6 +2376,7 @@ word_potential_template_rows_have_two_field_shape,
 word_potential_identity_rows_are_finite_row_objects,
 monodromy_coboundary_emissions_derived_from_rho_and_W,
 family_observers_derived_from_monodromy_coboundary_data,
+family_observer_auxiliary_family_labels_are_hashable_U_C_M_atoms,
 post_linear_audit_consumes_monodromy_coboundary_family_data,
 monodromy_family_raw_input_ledger_exact,
 monodromy_family_raw_input_reports_missing_extra_duplicate_and_malformed_rows,

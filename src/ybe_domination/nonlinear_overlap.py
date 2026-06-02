@@ -10352,7 +10352,10 @@ class UniversalKEndpointObserverFamilyBuildAudit:
                 family
                 for family, build in self.build_row_parts
                 if isinstance(build, UniversalKEndpointObserverBuild)
-                and family not in UNIVERSAL_K_ENDPOINT_FAMILIES
+                and (
+                    not _is_hashable(family)
+                    or family not in UNIVERSAL_K_ENDPOINT_FAMILIES
+                )
             )
         )
 
@@ -10363,7 +10366,8 @@ class UniversalKEndpointObserverFamilyBuildAudit:
         return tuple(
             (family, build)
             for family, build in self.build_row_parts
-            if family in UNIVERSAL_K_ENDPOINT_FAMILIES
+            if _is_hashable(family)
+            and family in UNIVERSAL_K_ENDPOINT_FAMILIES
             and isinstance(build, UniversalKEndpointObserverBuild)
         )
 
@@ -10413,7 +10417,10 @@ class UniversalKEndpointObserverFamilyBuildAudit:
                 family
                 for family, certificate in self.certificate_row_parts
                 if isinstance(certificate, UniversalKWordPotentialCertificate)
-                and family not in UNIVERSAL_K_ENDPOINT_FAMILIES
+                and (
+                    not _is_hashable(family)
+                    or family not in UNIVERSAL_K_ENDPOINT_FAMILIES
+                )
             )
         )
 
@@ -10424,7 +10431,8 @@ class UniversalKEndpointObserverFamilyBuildAudit:
                 {
                     family
                     for family, certificate in self.certificate_row_parts
-                    if family in UNIVERSAL_K_ENDPOINT_FAMILIES
+                    if _is_hashable(family)
+                    and family in UNIVERSAL_K_ENDPOINT_FAMILIES
                     and isinstance(certificate, UniversalKWordPotentialCertificate)
                 },
                 key=repr,
@@ -10437,7 +10445,8 @@ class UniversalKEndpointObserverFamilyBuildAudit:
             tuple(
                 family
                 for family, certificate in self.certificate_row_parts
-                if family in UNIVERSAL_K_ENDPOINT_FAMILIES
+                if _is_hashable(family)
+                and family in UNIVERSAL_K_ENDPOINT_FAMILIES
                 and isinstance(certificate, UniversalKWordPotentialCertificate)
             )
         )
@@ -10448,7 +10457,8 @@ class UniversalKEndpointObserverFamilyBuildAudit:
         duplicate_families = set(self.duplicate_certificate_families)
         for family, certificate in self.certificate_row_parts:
             if (
-                family in UNIVERSAL_K_ENDPOINT_FAMILIES
+                _is_hashable(family)
+                and family in UNIVERSAL_K_ENDPOINT_FAMILIES
                 and family not in duplicate_families
                 and isinstance(certificate, UniversalKWordPotentialCertificate)
             ):
@@ -10542,7 +10552,11 @@ class UniversalKEndpointObserverFamilyBuildAudit:
         failures = []
         groups_by_family = self.endpoint_groups_by_certificate_family
         for row in self.family_detector_track_initialization_row_objects:
-            group = groups_by_family.get(row.endpoint_family)
+            group = (
+                groups_by_family.get(row.endpoint_family)
+                if _is_hashable(row.endpoint_family)
+                else None
+            )
             group_elements = set(group.elements) if group is not None else None
             seen_variables = set()
             for assignment_entry in row.local_assignment_template:
@@ -10621,6 +10635,7 @@ class UniversalKEndpointObserverFamilyBuildAudit:
                 {
                     row.endpoint_family
                     for row in self.valid_family_detector_track_initialization_rows
+                    if _is_hashable(row.endpoint_family)
                 },
                 key=repr,
             )
@@ -10890,7 +10905,8 @@ class UniversalKEndpointObserverFamilyBuildAudit:
                 (
                     (family, theorem.residual_endpoint_channel_reasons)
                     for family, theorem in self.residual_theorem_row_parts
-                    if family in UNIVERSAL_K_ENDPOINT_FAMILIES
+                    if _is_hashable(family)
+                    and family in UNIVERSAL_K_ENDPOINT_FAMILIES
                 ),
                 key=repr,
             )
@@ -11789,7 +11805,8 @@ def universal_k_endpoint_observer_builds_by_family(
             continue
         endpoint_family, certificate = parts
         if (
-            endpoint_family not in UNIVERSAL_K_ENDPOINT_FAMILIES
+            not _is_hashable(endpoint_family)
+            or endpoint_family not in UNIVERSAL_K_ENDPOINT_FAMILIES
             or not isinstance(certificate, UniversalKWordPotentialCertificate)
         ):
             continue

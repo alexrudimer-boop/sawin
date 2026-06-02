@@ -917,6 +917,12 @@ wrapper containing proving build objects but omitting these explicit ledgers
 remains diagnostic only and is reported with missing-family certificate,
 detector-track, endpoint-target, cutoff-readout, or residual-theorem
 failures.
+All family labels in these build, certificate, detector-track, endpoint-target,
+cutoff-readout, and residual-theorem rows must be hashable certificate atoms
+equal to `U`, `C`, or `M`.  An unhashable list-like label is not alternate
+family syntax, cannot instantiate a per-family observer, cannot contribute
+initialized detector-track scope, and is reported as an unknown-family ledger
+error at the family aggregation gate.
 There is also a canonical identity-emission constructor,
 `universal_k_identity_endpoint_observer_builds_by_family(...)`.  It builds
 the identity monodromy-coboundary candidate for every active family hit by

@@ -6522,6 +6522,61 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             malformed_inputs.failure_reasons,
         )
 
+        unhashable_certificate_family = universal_k_endpoint_observer_builds_by_family(
+            interval,
+            seed_entries,
+            tuple(certificates) + ((["U"], certificates[0][1]),),
+            detector_track_initialization_rows=tuple(detector_rows),
+            endpoint_target_audits_by_family=tuple(endpoint_targets),
+            cutoff_readout_audits_by_family=tuple(cutoff_readouts),
+            residual_faithfulness_theorems_by_family=tuple(residual_theorems),
+        )
+
+        self.assertFalse(
+            unhashable_certificate_family.proves_family_endpoint_observers
+        )
+        self.assertEqual(
+            tuple(
+                repr(family)
+                for family in (
+                    unhashable_certificate_family.invalid_certificate_families
+                )
+            ),
+            ("['U']",),
+        )
+        self.assertEqual(
+            unhashable_certificate_family.covered_endpoint_families_exact,
+            ("C", "M", "U"),
+        )
+        self.assertIn(
+            "endpoint_observer_family_certificates_unknown_families",
+            unhashable_certificate_family.failure_reasons,
+        )
+
+        unhashable_build_family = universal_k_endpoint_observer_family_build_audit(
+            seed_entries,
+            ((["U"], family_audit.build_rows_exact[0][1]),)
+            + tuple(family_audit.build_rows_exact[1:]),
+            word_potential_certificate_rows=tuple(certificates),
+            detector_track_initialization_rows=tuple(detector_rows),
+            endpoint_target_audit_rows=tuple(endpoint_targets),
+            cutoff_readout_audit_rows=tuple(cutoff_readouts),
+            residual_faithfulness_theorem_rows=tuple(residual_theorems),
+        )
+
+        self.assertFalse(unhashable_build_family.proves_family_endpoint_observers)
+        self.assertEqual(
+            tuple(
+                repr(family)
+                for family in unhashable_build_family.invalid_build_families
+            ),
+            ("['U']",),
+        )
+        self.assertIn(
+            "endpoint_observer_family_builds_unknown_families",
+            unhashable_build_family.failure_reasons,
+        )
+
         malformed_seed_classifier_entry = ("bad-kappa-row",)
         unhashable_seed_classifier_target = (
             ("*", "*", "U", "constant_map_kernel", ("bad",)),
@@ -6674,6 +6729,83 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertIn(
             "endpoint_observer_family_residual_theorems_unknown_families",
             bad_auxiliary_ledgers.failure_reasons,
+        )
+
+        unhashable_auxiliary_ledgers = universal_k_endpoint_observer_builds_by_family(
+            interval,
+            seed_entries,
+            tuple(certificates),
+            detector_track_initialization_rows=tuple(detector_rows)
+            + (
+                UniversalKDetectorTrackInitializationRow(
+                    endpoint_family=["U"],
+                    track_index=0,
+                    assignment_rule="constant_identity_from_interval_seed",
+                    dependencies=("interval_data", "routed_seed_state"),
+                    local_assignment_template=((("A", 0, 0), group.identity),),
+                ),
+            ),
+            endpoint_target_audits_by_family=tuple(endpoint_targets)
+            + ((["U"], endpoint_targets[0][1]),),
+            cutoff_readout_audits_by_family=tuple(cutoff_readouts)
+            + ((["C"], cutoff_readouts[0][1]),),
+            residual_faithfulness_theorems_by_family=tuple(residual_theorems)
+            + ((["M"], residual_theorems[0][1]),),
+        )
+
+        self.assertFalse(unhashable_auxiliary_ledgers.proves_family_endpoint_observers)
+        self.assertEqual(
+            tuple(
+                repr(family)
+                for family in (
+                    unhashable_auxiliary_ledgers
+                    .invalid_family_detector_track_initialization_families
+                )
+            ),
+            ("['U']",),
+        )
+        self.assertEqual(
+            tuple(
+                repr(family)
+                for family in (
+                    unhashable_auxiliary_ledgers.invalid_endpoint_target_families
+                )
+            ),
+            ("['U']",),
+        )
+        self.assertEqual(
+            tuple(
+                repr(family)
+                for family in (
+                    unhashable_auxiliary_ledgers.invalid_cutoff_readout_families
+                )
+            ),
+            ("['C']",),
+        )
+        self.assertEqual(
+            tuple(
+                repr(family)
+                for family in (
+                    unhashable_auxiliary_ledgers.invalid_residual_theorem_families
+                )
+            ),
+            ("['M']",),
+        )
+        self.assertIn(
+            "endpoint_observer_family_detector_tracks_unknown_families",
+            unhashable_auxiliary_ledgers.failure_reasons,
+        )
+        self.assertIn(
+            "endpoint_observer_family_endpoint_targets_unknown_families",
+            unhashable_auxiliary_ledgers.failure_reasons,
+        )
+        self.assertIn(
+            "endpoint_observer_family_cutoff_readouts_unknown_families",
+            unhashable_auxiliary_ledgers.failure_reasons,
+        )
+        self.assertIn(
+            "endpoint_observer_family_residual_theorems_unknown_families",
+            unhashable_auxiliary_ledgers.failure_reasons,
         )
 
         wrong_typed_auxiliary_ledgers = universal_k_endpoint_observer_builds_by_family(
