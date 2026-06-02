@@ -929,7 +929,21 @@ identity constructor consumes this proof only when
 `derive_singleton_fibre_residual_faithfulness=True`.  This is independent of
 the strict identity-row condition: quotient colours may move, but there is no
 nontrivial fibre coordinate left to move.
-All three automatic residual-faithfulness helpers preserve the full supplied
+There is also a fibre-label identity residual-faithfulness subcase:
+`universal_k_fibre_label_identity_residual_faithfulness_audit(...)` proves
+the residual gate from finite label rows `(color, fibre_point, label)`.
+The rows must cover every fibre point exactly once, labels must be finite
+hashable certificate data, the label map must be injective on each fibre,
+and every local row must preserve the two labels coordinatewise: if
+`R_C(a,b)=(c,d)` and `T_{a,b}(x,y)=(u,v)`, then
+`ell_c(u)=ell_a(x)` and `ell_d(v)=ell_b(y)`.  Along any braid word the
+ordered label tuple is unchanged; for a braid in the quotient kernel the
+final quotient colours return, and injectivity on each returned fibre forces
+the final fibre tuple to equal the initial one.  The identity constructor
+consumes this proof only when
+`derive_fibre_label_identity_residual_faithfulness=True` and the finite
+`fibre_label_identity_rows` ledger is supplied.
+All automatic residual-faithfulness helpers preserve the full supplied
 routed seed-state ledger in the theorem.  They may use only the well-formed
 U/C/M seed states to emit schematic rows, but malformed, wrong-family, or
 unhashable seed-state entries remain in the expected and covered theorem

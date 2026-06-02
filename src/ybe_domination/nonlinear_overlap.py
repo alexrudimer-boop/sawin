@@ -163,6 +163,8 @@ UniversalKWordPotentialSubstitution = Tuple[
     ...,
 ]
 UniversalKWordPotentialFailure = Tuple[object, str, object]
+UniversalKFibreLabelRow = Tuple[Color, FibrePoint, object]
+UniversalKFibreLabelFailure = Tuple[object, str, object]
 
 
 _UNIVERSAL_K_DETECTOR_TRACK_ALLOWED_DEPENDENCIES = frozenset(
@@ -220,6 +222,12 @@ def _universal_k_detector_track_count_row_parts(
     if not isinstance(row, tuple) or len(row) != 2:
         return None
     return row[0], row[1]
+
+
+def _universal_k_fibre_label_row_parts(row: object) -> Tuple[object, object, object] | None:
+    if not isinstance(row, tuple) or len(row) != 3:
+        return None
+    return row[0], row[1], row[2]
 
 
 def _universal_k_two_field_row_parts(
@@ -3049,6 +3057,240 @@ def universal_k_interval_has_coordinate_identity_fibre_action(
     return True
 
 
+@dataclass(frozen=True)
+class UniversalKFibreLabelIdentityAudit:
+    """Finite certificate that local rows preserve injective fibre labels."""
+
+    interval: LocalInterval
+    label_rows: Tuple[object, ...]
+
+    @property
+    def expected_fibre_label_keys(self) -> Tuple[Tuple[Color, FibrePoint], ...]:
+        return tuple(
+            sorted(
+                (
+                    (color, point)
+                    for color in self.interval.colors
+                    for point in self.interval.fibres[color]
+                ),
+                key=repr,
+            )
+        )
+
+    @property
+    def label_row_parts(self) -> Tuple[Tuple[object, object, object], ...]:
+        return tuple(
+            parts
+            for row in self.label_rows
+            for parts in (_universal_k_fibre_label_row_parts(row),)
+            if parts is not None
+        )
+
+    @property
+    def malformed_label_rows(self) -> Tuple[object, ...]:
+        return _unique_values(
+            tuple(
+                row
+                for row in self.label_rows
+                if _universal_k_fibre_label_row_parts(row) is None
+            )
+        )
+
+    @property
+    def invalid_label_rows(self) -> Tuple[UniversalKFibreLabelFailure, ...]:
+        failures = []
+        for color, point, label in self.label_row_parts:
+            if color not in self.interval.colors:
+                failures.append(((color, point), "fibre_label_unknown_color", color))
+                continue
+            if point not in self.interval.fibres[color]:
+                failures.append(
+                    ((color, point), "fibre_label_point_outside_fibre", point)
+                )
+            if not _is_hashable(label):
+                failures.append(((color, point), "fibre_label_unhashable", label))
+        return tuple(sorted(_unique_values(tuple(failures)), key=repr))
+
+    @property
+    def valid_label_rows(self) -> Tuple[UniversalKFibreLabelRow, ...]:
+        invalid_keys = {
+            _value_marker(failure[0]) for failure in self.invalid_label_rows
+        }
+        return tuple(
+            (color, point, label)
+            for color, point, label in self.label_row_parts
+            if _value_marker((color, point)) not in invalid_keys
+            and color in self.interval.colors
+            and point in self.interval.fibres[color]
+            and _is_hashable(label)
+        )
+
+    @property
+    def covered_fibre_label_keys(self) -> Tuple[Tuple[Color, FibrePoint], ...]:
+        return tuple((color, point) for color, point, _label in self.valid_label_rows)
+
+    @property
+    def duplicate_fibre_label_keys(self) -> Tuple[Tuple[Color, FibrePoint], ...]:
+        return _duplicate_values(self.covered_fibre_label_keys)
+
+    @property
+    def missing_fibre_label_keys(self) -> Tuple[Tuple[Color, FibrePoint], ...]:
+        covered = _value_marker_set(self.covered_fibre_label_keys)
+        return tuple(
+            key for key in self.expected_fibre_label_keys if _value_marker(key) not in covered
+        )
+
+    @property
+    def extra_fibre_label_keys(self) -> Tuple[Tuple[Color, FibrePoint], ...]:
+        expected = _value_marker_set(self.expected_fibre_label_keys)
+        return tuple(
+            key
+            for key in self.covered_fibre_label_keys
+            if _value_marker(key) not in expected
+        )
+
+    @property
+    def label_map(self) -> Mapping[Tuple[Color, FibrePoint], object]:
+        mapped: dict[Tuple[Color, FibrePoint], object] = {}
+        for color, point, label in self.valid_label_rows:
+            mapped.setdefault((color, point), label)
+        return mapped
+
+    @property
+    def label_domain_exact(self) -> bool:
+        return (
+            not self.malformed_label_rows
+            and not self.invalid_label_rows
+            and not self.duplicate_fibre_label_keys
+            and not self.missing_fibre_label_keys
+            and not self.extra_fibre_label_keys
+        )
+
+    @property
+    def label_injectivity_failures(self) -> Tuple[UniversalKFibreLabelFailure, ...]:
+        failures = []
+        for color in self.interval.colors:
+            seen: dict[object, FibrePoint] = {}
+            for point in self.interval.fibres[color]:
+                key = (color, point)
+                if key not in self.label_map:
+                    continue
+                label = self.label_map[key]
+                marker = _value_marker(label)
+                previous = seen.setdefault(marker, point)
+                if previous != point:
+                    failures.append(
+                        (
+                            color,
+                            "fibre_label_not_injective",
+                            (label, previous, point),
+                        )
+                    )
+        return tuple(sorted(_unique_values(tuple(failures)), key=repr))
+
+    @property
+    def label_preservation_failures(self) -> Tuple[UniversalKFibreLabelFailure, ...]:
+        if not self.label_domain_exact:
+            return ()
+        failures = []
+        labels = self.label_map
+        for left_color, right_color in product(self.interval.colors, repeat=2):
+            output_colors = self.interval.base_R.get((left_color, right_color))
+            if output_colors is None:
+                continue
+            output_left_color, output_right_color = output_colors
+            for input_left in self.interval.fibres[left_color]:
+                for input_right in self.interval.fibres[right_color]:
+                    output = self.interval.T.get(
+                        (left_color, right_color, input_left, input_right)
+                    )
+                    if output is None:
+                        continue
+                    output_left, output_right = output
+                    if labels[(output_left_color, output_left)] != labels[
+                        (left_color, input_left)
+                    ]:
+                        failures.append(
+                            (
+                                (
+                                    left_color,
+                                    right_color,
+                                    input_left,
+                                    input_right,
+                                ),
+                                "left_fibre_label_not_preserved",
+                                (output_left_color, output_left),
+                            )
+                        )
+                    if labels[(output_right_color, output_right)] != labels[
+                        (right_color, input_right)
+                    ]:
+                        failures.append(
+                            (
+                                (
+                                    left_color,
+                                    right_color,
+                                    input_left,
+                                    input_right,
+                                ),
+                                "right_fibre_label_not_preserved",
+                                (output_right_color, output_right),
+                            )
+                        )
+        return tuple(sorted(_unique_values(tuple(failures)), key=repr))
+
+    @property
+    def proves_fibre_label_identity_action(self) -> bool:
+        return (
+            self.label_domain_exact
+            and not self.label_injectivity_failures
+            and not self.label_preservation_failures
+        )
+
+    @property
+    def failure_reasons(self) -> Tuple[str, ...]:
+        reasons = []
+        if self.malformed_label_rows:
+            reasons.append("fibre_label_identity_malformed_rows")
+        if self.invalid_label_rows:
+            reasons.append("fibre_label_identity_invalid_rows")
+        if self.duplicate_fibre_label_keys:
+            reasons.append("fibre_label_identity_duplicate_keys")
+        if self.missing_fibre_label_keys:
+            reasons.append("fibre_label_identity_missing_keys")
+        if self.extra_fibre_label_keys:
+            reasons.append("fibre_label_identity_extra_keys")
+        if self.label_injectivity_failures:
+            reasons.append("fibre_label_identity_not_injective")
+        if self.label_preservation_failures:
+            reasons.append("fibre_label_identity_not_preserved")
+        return tuple(reasons)
+
+
+def universal_k_fibre_label_identity_audit(
+    interval: LocalInterval,
+    label_rows: Sequence[object],
+) -> UniversalKFibreLabelIdentityAudit:
+    """Audit a finite fibre-label identity certificate."""
+
+    return UniversalKFibreLabelIdentityAudit(
+        interval=interval,
+        label_rows=tuple(label_rows),
+    )
+
+
+def universal_k_interval_has_fibre_label_identity_action(
+    interval: LocalInterval,
+    label_rows: Sequence[object],
+) -> bool:
+    """Return whether fixed injective fibre labels are preserved coordinatewise."""
+
+    return universal_k_fibre_label_identity_audit(
+        interval,
+        label_rows,
+    ).proves_fibre_label_identity_action
+
+
 def _universal_k_trivial_residual_faithfulness_audit(
     endpoint_seed_states: Sequence[Tuple[str, UniversalKSeedState]],
     *,
@@ -3164,6 +3406,23 @@ def universal_k_coordinate_identity_residual_faithfulness_audit(
         row_reason="coordinate_identity_residual_channel",
         theorem_holds=universal_k_interval_has_coordinate_identity_fibre_action(
             interval
+        ),
+    )
+
+
+def universal_k_fibre_label_identity_residual_faithfulness_audit(
+    interval: LocalInterval,
+    endpoint_seed_states: Sequence[Tuple[str, UniversalKSeedState]],
+    label_rows: Sequence[object],
+) -> UniversalKResidualFaithfulnessAudit:
+    """Prove residual faithfulness from injective coordinate-preserved labels."""
+
+    return _universal_k_trivial_residual_faithfulness_audit(
+        endpoint_seed_states,
+        row_reason="fibre_label_identity_residual_channel",
+        theorem_holds=universal_k_interval_has_fibre_label_identity_action(
+            interval,
+            label_rows,
         ),
     )
 
@@ -11577,6 +11836,8 @@ def universal_k_identity_endpoint_observer_builds_by_family(
     derive_strict_identity_residual_faithfulness: bool = False,
     derive_coordinate_identity_residual_faithfulness: bool = False,
     derive_singleton_fibre_residual_faithfulness: bool = False,
+    derive_fibre_label_identity_residual_faithfulness: bool = False,
+    fibre_label_identity_rows: Sequence[object] = (),
     residual_faithfulness_theorems_by_family: Sequence[
         Tuple[str, UniversalKResidualFaithfulnessAudit]
     ] = (),
@@ -11594,8 +11855,9 @@ def universal_k_identity_endpoint_observer_builds_by_family(
     routed endpoint channels.  The optional strict-identity residual helper is
     used only when explicitly requested and only proves rows when every local
     fibre row is the identity on colours and fibre coordinates.  The optional
-    coordinate-identity and singleton-fibre residual helpers are likewise
-    explicit and prove rows only when their finite hypotheses hold.
+    coordinate-identity, singleton-fibre, and fibre-label identity residual
+    helpers are likewise explicit and prove rows only when their finite
+    hypotheses hold.
     """
 
     seed_states = universal_k_signed_endpoint_seed_states(seed_classifier_entries)
@@ -11721,6 +11983,20 @@ def universal_k_identity_endpoint_observer_builds_by_family(
                         family_seed_states,
                     )
                 )
+            if (
+                derive_fibre_label_identity_residual_faithfulness
+                and (
+                    derived_residual is None
+                    or not derived_residual.proves_residual_faithfulness
+                )
+            ):
+                derived_residual = (
+                    universal_k_fibre_label_identity_residual_faithfulness_audit(
+                        interval,
+                        family_seed_states,
+                        fibre_label_identity_rows,
+                    )
+                )
             if derived_residual is not None:
                 residual_rows.append((family, derived_residual))
     if (
@@ -11728,6 +12004,7 @@ def universal_k_identity_endpoint_observer_builds_by_family(
             derive_strict_identity_residual_faithfulness
             or derive_coordinate_identity_residual_faithfulness
             or derive_singleton_fibre_residual_faithfulness
+            or derive_fibre_label_identity_residual_faithfulness
         )
         and product_residual_faithfulness_theorem is None
         and len(active_families) > 1
@@ -11764,6 +12041,20 @@ def universal_k_identity_endpoint_observer_builds_by_family(
                 universal_k_singleton_fibre_residual_faithfulness_audit(
                     interval,
                     seed_states,
+                )
+            )
+        if (
+            derive_fibre_label_identity_residual_faithfulness
+            and (
+                product_residual_faithfulness_theorem is None
+                or not product_residual_faithfulness_theorem.proves_residual_faithfulness
+            )
+        ):
+            product_residual_faithfulness_theorem = (
+                universal_k_fibre_label_identity_residual_faithfulness_audit(
+                    interval,
+                    seed_states,
+                    fibre_label_identity_rows,
                 )
             )
     return universal_k_endpoint_observer_builds_by_family(
@@ -18775,6 +19066,8 @@ def post_linear_remaining_finite_system_audit(
     universal_k_identity_strict_residual_faithfulness: bool = False,
     universal_k_identity_coordinate_residual_faithfulness: bool = False,
     universal_k_identity_singleton_residual_faithfulness: bool = False,
+    universal_k_identity_fibre_label_residual_faithfulness: bool = False,
+    universal_k_identity_fibre_label_rows: Sequence[object] = (),
     unsupported_companion_structural_contradiction: (
         UnsupportedCompanionStructuralContradictionAudit | None
     ) = None,
@@ -18949,6 +19242,10 @@ def post_linear_remaining_finite_system_audit(
                     derive_singleton_fibre_residual_faithfulness=(
                         universal_k_identity_singleton_residual_faithfulness
                     ),
+                    derive_fibre_label_identity_residual_faithfulness=(
+                        universal_k_identity_fibre_label_residual_faithfulness
+                    ),
+                    fibre_label_identity_rows=universal_k_identity_fibre_label_rows,
                     residual_faithfulness_theorems_by_family=(
                         universal_k_residual_faithfulness_theorems_by_family
                     ),

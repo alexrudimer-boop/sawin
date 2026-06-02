@@ -1744,7 +1744,24 @@ the identity observer constructor may consume it only when
 `derive_singleton_fibre_residual_faithfulness=True`.  This closes only the
 singleton-fibre subcase and does not solve nontrivial U/C/M endpoint
 observers.
-All three automatic residual-faithfulness helpers must preserve the full
+There is also a fibre-label identity residual-faithfulness subcase.  A
+finite ledger of rows `(color, fibre_point, label)` defines maps
+`ell_c:A_c->L` only when the rows cover every fibre point exactly once, each
+label is finite hashable certificate data, and each `ell_c` is injective.
+The local row table must preserve labels coordinatewise: whenever
+`R_C(a,b)=(c,d)` and `T_{a,b}(x,y)=(u,v)`, one must have
+`ell_c(u)=ell_a(x)` and `ell_d(v)=ell_b(y)`.  Then every braid word preserves
+the ordered label tuple.  For `beta` in the quotient kernel, quotient colours
+return to the original tuple, and fibrewise injectivity of the returned
+labels forces the final fibre tuple to equal the initial tuple.  The helper
+`universal_k_fibre_label_identity_residual_faithfulness_audit(...)` may emit
+one schematic all-`n` residual row per active endpoint family, and the
+identity observer constructor may consume it only when
+`derive_fibre_label_identity_residual_faithfulness=True` with the supplied
+`fibre_label_identity_rows` ledger.  This closes only the fibre-label
+identity subcase and does not solve general nontrivial U/C/M endpoint
+observers.
+All automatic residual-faithfulness helpers must preserve the full
 supplied routed seed-state ledger in the theorem.  They may use only
 well-formed U/C/M seed states to emit schematic rows, but malformed,
 wrong-family, or unhashable seed-state entries must remain in the expected
@@ -2239,6 +2256,7 @@ identity_endpoint_observer_top_level_opt_in_is_nondecisive,
 strict_identity_fibre_action_residual_faithfulness_subcase,
 coordinate_identity_fibre_action_residual_faithfulness_subcase,
 singleton_fibre_action_residual_faithfulness_subcase,
+fibre_label_identity_residual_faithfulness_subcase,
 endpoint_observer_family_certificate_input_ledger_exact,
 endpoint_observer_family_auxiliary_input_ledgers_exact,
 endpoint_observer_each_active_family_single_scoped_and_proved,
