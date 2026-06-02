@@ -13583,6 +13583,34 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             tuple(row.closed_branch for row in derived.contradiction_rows),
             ("finite_triangular_bijection_cardinality_contradiction",),
         )
+        finite_data = dict(audit.finite_obstruction_data)
+        self.assertEqual(
+            finite_data["unsupported_companion_block_image_rows"],
+            (("left", "*", "*"),),
+        )
+        self.assertTrue(
+            finite_data["unsupported_companion_structural_contradiction_proved"]
+        )
+        self.assertEqual(
+            finite_data["unsupported_companion_contradiction_rows"],
+            (
+                (
+                    "left",
+                    "*",
+                    "*",
+                    "already_closed_branch",
+                    (),
+                    "",
+                    None,
+                    None,
+                    "finite_triangular_bijection_cardinality_contradiction",
+                ),
+            ),
+        )
+        self.assertEqual(
+            finite_data["unsupported_companion_contradiction_failures"],
+            (),
+        )
         self.assertEqual(
             audit.system_name,
             "closed_by_recorded_branch",
@@ -13611,6 +13639,14 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             incomplete.failure_reasons,
         )
         self.assertTrue(audit.unsupported_companion_structural_obligation_active)
+        active_data = dict(audit.finite_obstruction_data)
+        self.assertFalse(
+            active_data["unsupported_companion_structural_contradiction_proved"]
+        )
+        self.assertEqual(
+            active_data["unsupported_companion_contradiction_failures"],
+            ("unsupported_companion_missing_contradiction_rows",),
+        )
 
         contradiction = UnsupportedCompanionStructuralContradictionAudit(
             expected_rows=(("left", "*", "*"),),

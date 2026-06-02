@@ -13190,11 +13190,17 @@ class PostLinearRemainingFiniteSystemAudit:
     def unsupported_companion_block_image_rows(
         self,
     ) -> Tuple[UnsupportedCompanionBlockImageRowKey, ...]:
+        triangular_column = getattr(self.refinement, "triangular_column", None)
+        companion_rows = getattr(
+            triangular_column,
+            "companion_nonbijective_without_constant_kernel_rows",
+            (),
+        )
         return tuple(
             sorted(
                 {
                     (row.side, row.left_color, row.right_color)
-                    for row in self.refinement.triangular_column.companion_nonbijective_without_constant_kernel_rows
+                    for row in companion_rows
                 },
                 key=repr,
             )
@@ -18241,54 +18247,70 @@ class PostLinearRemainingFiniteSystemAudit:
         return tuple(data)
 
     @property
-    def finite_obstruction_data(self) -> Tuple[Tuple[str, object], ...]:
-        if self.unsupported_companion_structural_obligation_active:
-            data = [
+    def _unsupported_companion_structural_contradiction_data(
+        self,
+    ) -> Tuple[Tuple[str, object], ...]:
+        if not self.unsupported_companion_block_image_rows:
+            return ()
+        data = [
+            (
+                "unsupported_companion_block_image_rows",
+                self.unsupported_companion_block_image_rows,
+            ),
+            (
+                "unsupported_companion_structural_contradiction_proved",
+                self.unsupported_companion_structural_contradiction_proved,
+            ),
+        ]
+        audit = self.effective_unsupported_companion_structural_contradiction
+        if audit is not None:
+            data.extend(
                 (
-                    "unsupported_companion_block_image_rows",
-                    self.unsupported_companion_block_image_rows,
-                ),
-                (
-                    "unsupported_companion_structural_contradiction_proved",
-                    self.unsupported_companion_structural_contradiction_proved,
-                ),
-            ]
-            audit = self.unsupported_companion_structural_contradiction
-            if audit is not None:
-                data.extend(
                     (
-                        (
-                            "unsupported_companion_expected_rows",
-                            audit.expected_rows_exact,
+                        "unsupported_companion_expected_rows",
+                        audit.expected_rows_exact,
+                    ),
+                    (
+                        "unsupported_companion_covered_rows",
+                        audit.covered_rows_exact,
+                    ),
+                    (
+                        "unsupported_companion_contradiction_rows",
+                        tuple(
+                            (
+                                row.side,
+                                row.left_color,
+                                row.right_color,
+                                row.witness_kind,
+                                row.ybe_triple,
+                                row.coordinate,
+                                row.left_value,
+                                row.right_value,
+                                row.closed_branch,
+                            )
+                            for row in audit.contradiction_rows
                         ),
-                        (
-                            "unsupported_companion_covered_rows",
-                            audit.covered_rows_exact,
-                        ),
-                        (
-                            "unsupported_companion_contradiction_rows",
-                            tuple(
-                                (
-                                    row.side,
-                                    row.left_color,
-                                    row.right_color,
-                                    row.witness_kind,
-                                    row.ybe_triple,
-                                    row.coordinate,
-                                    row.left_value,
-                                    row.right_value,
-                                    row.closed_branch,
-                                )
-                                for row in audit.contradiction_rows
-                            ),
-                        ),
-                        (
-                            "unsupported_companion_contradiction_failures",
-                            audit.failure_reasons,
-                        ),
-                    )
+                    ),
+                    (
+                        "unsupported_companion_contradiction_failures",
+                        audit.failure_reasons,
+                    ),
                 )
-            return tuple(data)
+            )
+        return tuple(data)
+
+    @property
+    def finite_obstruction_data(self) -> Tuple[Tuple[str, object], ...]:
+        unsupported_companion_data = (
+            self._unsupported_companion_structural_contradiction_data
+        )
+        if self.unsupported_companion_structural_obligation_active:
+            return unsupported_companion_data
+        if (
+            unsupported_companion_data
+            and self.refinement.status == "triangular_structural_inconsistency"
+        ):
+            return unsupported_companion_data
         if (
             self.raw_system_k
             and not self.kink_completion_deficits_routed

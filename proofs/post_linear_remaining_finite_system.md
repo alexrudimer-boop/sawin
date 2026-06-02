@@ -1942,6 +1942,14 @@ is the non-circular closed branch
  closed_branch=finite_triangular_bijection_cardinality_contradiction)
 ```
 
+The same effective contradiction audit is exported through
+`finite_obstruction_data` even when it closes the branch automatically.  Thus
+the closed branch still carries the concrete unsupported row keys, the proved
+flag, the expected and covered ledgers, the contradiction rows, and the empty
+or nonempty contradiction failure list.  A closed unsupported-companion row is
+therefore visible as finite proof data rather than disappearing as an
+unexplained recorded branch.
+
 The left triangular cardinality proof is:
 `T_{a,b}(x,y)=(alpha(x),beta_x(y))`, no same-side constant-map kernel support
 forces `alpha` injective, and an injective nonsurjective companion section

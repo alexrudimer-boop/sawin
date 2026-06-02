@@ -24,7 +24,11 @@ companion section forces `alpha` injective and `|A_b|<|A_d|`, hence
 `|A_a||A_b|<|A_c||A_d|`, contradicting bijectivity of
 `T_{a,b}:A_a x A_b -> A_c x A_d`.  The right triangular case is dual with
 `delta` and `gamma_y`.  Thus these rows close by the finite
-`finite_triangular_bijection_cardinality_contradiction` ledger.
+`finite_triangular_bijection_cardinality_contradiction` ledger.  The
+post-linear finite-obstruction data must still expose that effective
+certificate: the unsupported row keys, proved flag, exact expected and covered
+row ledgers, contradiction rows, and contradiction-failure list are present
+even when the cardinality certificate closes the branch automatically.
 
 The exact remaining A-side lemma is:
 
