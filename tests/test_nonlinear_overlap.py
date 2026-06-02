@@ -3246,6 +3246,37 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             theorem_without_product_separation_certificate.failure_reasons,
         )
 
+        theorem_without_endpoint_exact_claim = replace(
+            theorem,
+            endpoint_channels_exact=False,
+        )
+        self.assertFalse(
+            theorem_without_endpoint_exact_claim.endpoint_channels_exact_proved
+        )
+        self.assertFalse(
+            theorem_without_endpoint_exact_claim.proves_residual_faithfulness
+        )
+        self.assertIn(
+            "residual_faithfulness_endpoint_channels_not_exact",
+            theorem_without_endpoint_exact_claim.failure_reasons,
+        )
+
+        theorem_without_identity_implication_claim = replace(
+            theorem,
+            identity_endpoint_data_forces_residual_identity=False,
+        )
+        self.assertFalse(
+            theorem_without_identity_implication_claim
+            .identity_endpoint_data_forces_residual_identity_proved
+        )
+        self.assertFalse(
+            theorem_without_identity_implication_claim.proves_residual_faithfulness
+        )
+        self.assertIn(
+            "residual_faithfulness_implication_not_proved",
+            theorem_without_identity_implication_claim.failure_reasons,
+        )
+
         theorem_without_group_table = replace(theorem_complete, endpoint_group=None)
         self.assertFalse(theorem_without_group_table.signed_finite_row_checks_proved)
         self.assertFalse(

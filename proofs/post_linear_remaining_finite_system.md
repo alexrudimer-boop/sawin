@@ -1192,12 +1192,16 @@ multi-family residual theorems, and those family counts must agree with the
 counts obtained by scanning the symbolic residual rows themselves.  The
 symbolic theorem's total row counts and family row counts must be finite
 nonnegative integers; malformed counts are reported before the theorem can
-claim residual faithfulness.  Bare
-booleans for endpoint-channel exactness or identity residual motion are
-recorded only as supplied data; they are not accepted as proof.  The
-braid-index-independence and product-separation flags are required finite
-assertions, but they still prove nothing unless the row/domain ledgers above
-support them.
+claim residual faithfulness.  The theorem-level assertions
+`endpoint_channels_exact=True` and
+`identity_endpoint_data_forces_residual_identity=True` are now required:
+if either assertion is absent or false, the residual-faithfulness theorem is
+still open even when the supplied rows line up syntactically.  Conversely,
+bare booleans for endpoint-channel exactness or identity residual motion are
+not accepted as proof; the row/domain ledgers above must support them.  The
+braid-index-independence and product-separation flags are likewise required
+finite assertions, but they still prove nothing unless the row/domain ledgers
+above support them.
 The symbolic residual theorem applies the same well-formedness gate to its
 expected and covered seed-state ledgers and to the seed states named by each
 symbolic residual row.  Malformed row-local seed states make the row invalid;

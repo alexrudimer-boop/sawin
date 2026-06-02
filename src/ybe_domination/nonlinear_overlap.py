@@ -2621,6 +2621,8 @@ class UniversalKResidualFaithfulnessAudit:
     @property
     def endpoint_channels_exact_proved(self) -> bool:
         return (
+            self.endpoint_channels_exact
+            and
             self.family_coverage_exact
             and self.seed_state_coverage_exact
             and self.residual_rows_cover_endpoint_families
@@ -2630,7 +2632,8 @@ class UniversalKResidualFaithfulnessAudit:
     @property
     def identity_endpoint_data_forces_residual_identity_proved(self) -> bool:
         return (
-            self.residual_rows_cover_input_domain
+            self.identity_endpoint_data_forces_residual_identity
+            and self.residual_rows_cover_input_domain
             and self.residual_rows_have_valid_scope
             and self.residual_rows_identity_endpoint_data_fixes_all
         )

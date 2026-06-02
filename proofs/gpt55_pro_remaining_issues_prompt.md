@@ -2127,10 +2127,22 @@ key for a listed seed, or an opaque placeholder channel is not an exact
 residual readout.  The key tuple must be finite and hashable so duplicate
 channel keys are well defined.
 `identity_endpoint_output_tuple` must equal `input_tuple` on every row; this
-is the finite implication from killed endpoint data to identity residual
-motion.  The row dependencies may use only interval data, routed seed states,
-residual input tuples, endpoint channels, local fibre coordinates, and the
-local row table.  Dependencies on `braid_word`,
+is the finite row evidence for the implication from killed endpoint data to
+identity residual motion.  The theorem must also explicitly assert both
+theorem-level claims:
+
+```text
+endpoint_channels_exact=True,
+identity_endpoint_data_forces_residual_identity=True.
+```
+
+If either assertion is missing or false, the residual-faithfulness theorem is
+still open even when the row table itself is syntactically complete.  The
+converse is also required: the two booleans alone are not proof unless the
+finite row/domain ledgers derive endpoint-channel exactness and identity
+residual motion.  The row dependencies may use only interval data, routed
+seed states, residual input tuples, endpoint channels, local fibre
+coordinates, and the local row table.  Dependencies on `braid_word`,
 `braid_prefix`, `braid_index`, failed detector search, normalized-law
 sequences, or timeouts are forbidden.  Each row must explicitly include both
 `residual_input_tuple` and `endpoint_channel`; a row using only interval data
