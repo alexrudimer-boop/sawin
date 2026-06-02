@@ -6199,6 +6199,52 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             ("coordinate_identity_residual_channel",),
         )
 
+        bad_label_audit = (
+            universal_k_endpoint_observer_builds_from_monodromy_by_family(
+                interval,
+                seed_entries,
+                endpoint_groups_by_family=tuple(endpoint_groups.items()),
+                word_potential_templates_by_family=tuple(templates_by_family),
+                positive_state_rows_by_family=tuple(positive_rows_by_family),
+                detector_track_initialization_rows=tuple(detector_rows),
+                endpoint_target_audits_by_family=tuple(endpoint_target_rows),
+                cutoff_readout_audits_by_family=tuple(cutoff_rows),
+                derive_fibre_label_identity_residual_faithfulness=True,
+                derive_canonical_fibre_label_identity_residual_faithfulness=True,
+                fibre_label_identity_rows=(("*", 0, "only_one_label"),),
+            )
+        )
+
+        self.assertFalse(bad_label_audit.proves_family_endpoint_observers)
+        self.assertIn(
+            "endpoint_observer_family_builds_not_proved",
+            bad_label_audit.failure_reasons,
+        )
+        self.assertEqual(
+            bad_label_audit.product_residual_theorem_channel_reasons,
+            (),
+        )
+        self.assertEqual(
+            bad_label_audit.product_residual_faithfulness_theorem.expected_residual_input_tuples,
+            (
+                (
+                    "all_residual_fibre_tuples",
+                    "C",
+                    "fibre_label_identity_residual_channel",
+                ),
+                (
+                    "all_residual_fibre_tuples",
+                    "M",
+                    "fibre_label_identity_residual_channel",
+                ),
+                (
+                    "all_residual_fibre_tuples",
+                    "U",
+                    "fibre_label_identity_residual_channel",
+                ),
+            ),
+        )
+
     def test_family_endpoint_observer_requires_explicit_input_ledgers(self):
         interval = one_color_identity_interval()
         seed_entries = tuple(

@@ -853,7 +853,10 @@ selector for these subcases.  Thus strict identity, coordinate identity,
 singleton-fibre, supplied fibre-label identity, and canonical fibre-label
 identity rows are derived in one fixed order for both handoff paths, with
 failed supplied fibre-label ledgers remaining sticky rather than being hidden
-by the canonical fallback.
+by the canonical fallback.  The monodromy handoff has an explicit regression
+row for this sticky supplied-label case, so canonical fibre labels cannot close
+an observer package after a stale or malformed supplied label ledger has been
+selected.
 The top-level `post_linear_remaining_finite_system_audit(...)` can now take
 that smaller monodromy-coboundary package directly through its
 `universal_k_monodromy_*_by_family` inputs.  It first computes the current
