@@ -1744,6 +1744,11 @@ element of the fixed endpoint group.  Each soundness-witness value must be a
 nonempty duplicate-free tuple of recognized detector-domain soundness
 witness labels.  A correctly keyed row with malformed assignment values or
 malformed witness values is still an invalid observer handoff.
+Detector-domain soundness flags and witnesses are meaningful only when an
+actual restricted detector-domain assignment subset is supplied for that
+positive row.  In the full finite-domain case, any soundness flag or witness
+is stale certificate data and must keep the word-potential certificate open;
+it is not an extra proof channel.
 With the interval in hand, this raw ledger must also derive the reachable
 monodromy seed-state closure from the positive rows, recompute the full
 positive local-context entry domain from the actual fibres, and check that

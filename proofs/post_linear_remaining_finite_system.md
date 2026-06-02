@@ -880,6 +880,11 @@ value must be a nonempty tuple of tuple assignment rows, every assignment
 entry must have a valid word-potential variable and an element of the fixed
 endpoint group, and every witness value must be a nonempty duplicate-free
 tuple of recognized detector-domain soundness witnesses.
+Detector-domain soundness flags and witnesses are legal only when an actual
+restricted detector-domain assignment subset is supplied for that positive
+row.  In the full finite-domain case, any soundness flag or soundness witness
+is stale certificate data and keeps the word-potential certificate open; it
+cannot be interpreted as an extra proof channel.
 When the interval is available, the same ledger derives the reachable
 monodromy seed-state closure from the supplied positive rows, recomputes the
 full positive local-context entry domain from the current fibres, and checks

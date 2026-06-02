@@ -8340,6 +8340,31 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             ),
         )
 
+        orphan_witness_certificate = replace(
+            certificate,
+            identity_rows=(
+                replace(
+                    good_row,
+                    detector_domain_sound=True,
+                    detector_domain_soundness_witness=(
+                        "reachable_detector_values_enumerated",
+                    ),
+                ),
+            ),
+        )
+        self.assertFalse(orphan_witness_certificate.detector_domains_sound)
+        self.assertFalse(orphan_witness_certificate.identities_verified)
+        self.assertEqual(
+            tuple(
+                failure[1]
+                for failure in orphan_witness_certificate.detector_domain_failures
+            ),
+            (
+                "detector_domain_soundness_without_subset",
+                "detector_domain_witness_without_subset",
+            ),
+        )
+
         wrong_support_certificate = replace(
             certificate,
             identity_rows=(

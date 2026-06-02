@@ -1715,6 +1715,22 @@ class UniversalKWordPotentialCertificate:
                 continue
             assignments = row.detector_domain_assignments
             if assignments is None:
+                if row.detector_domain_sound:
+                    failures.append(
+                        (
+                            row.entry_key,
+                            "detector_domain_soundness_without_subset",
+                            None,
+                        )
+                    )
+                if row.detector_domain_soundness_witness:
+                    failures.append(
+                        (
+                            row.entry_key,
+                            "detector_domain_witness_without_subset",
+                            row.detector_domain_soundness_witness,
+                        )
+                    )
                 continue
             variables = self._identity_row_variable_support(row)
             if variables is None:
