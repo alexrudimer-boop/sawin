@@ -11001,14 +11001,23 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         )
 
     def test_post_linear_function_builds_endpoint_observer_from_monodromy(self):
+        stale_state = ("*", "*", "left_constant_map_universal_kernel")
+        stale_key = ("U", stale_state, 1, "*", "*", 0, 0)
         audit = post_linear_remaining_finite_system_audit(
             one_color_latin_unit_triangular_interval(),
             universal_k_monodromy_endpoint_groups_by_family=(("U", cyclic_group(2)),),
             universal_k_monodromy_word_potential_templates_by_family=(("U", ()),),
             universal_k_monodromy_positive_state_rows_by_family=(("U", ()),),
+            universal_k_monodromy_detector_domain_assignments_by_family=(
+                ("U", {stale_key: (), ("bad-domain-key",): ()}),
+            ),
+            universal_k_monodromy_detector_domain_soundness_witnesses_by_family=(
+                ("U", {("bad-witness-key",): ("symbolic_detector_domain_invariant",)}),
+            ),
         )
 
         family_build = audit.universal_k_endpoint_observer_family_build
+        data = dict(audit.routed_endpoint_obstruction_data)
         self.assertIsNotNone(family_build)
         self.assertEqual(family_build.covered_endpoint_families_exact, ("U",))
         self.assertFalse(family_build.proves_family_endpoint_observers)
@@ -11028,11 +11037,40 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             ("endpoint_observer_monodromy_candidate_families", ("U",)),
             audit.routed_endpoint_obstruction_data,
         )
+        self.assertEqual(
+            data["endpoint_observer_monodromy_detector_domain_assignment_keys"],
+            (stale_key,),
+        )
+        self.assertEqual(
+            data["endpoint_observer_monodromy_detector_domain_malformed_keys"],
+            (("bad-domain-key",),),
+        )
+        self.assertEqual(
+            data["endpoint_observer_monodromy_detector_domain_extra_keys"],
+            (stale_key,),
+        )
+        self.assertEqual(
+            data["endpoint_observer_monodromy_detector_witness_malformed_keys"],
+            (("bad-witness-key",),),
+        )
+        self.assertEqual(
+            data["endpoint_observer_monodromy_detector_witness_missing_domain_keys"],
+            (stale_key,),
+        )
+        self.assertFalse(
+            data["endpoint_observer_monodromy_detector_domain_entry_key_scope_exact"]
+        )
         self.assertIn(
             "endpoint_observer_monodromy_no_active_families",
-            dict(audit.routed_endpoint_obstruction_data)[
-                "endpoint_observer_monodromy_failure_reasons"
-            ],
+            data["endpoint_observer_monodromy_failure_reasons"],
+        )
+        self.assertIn(
+            "endpoint_observer_monodromy_detector_domains_malformed_keys",
+            data["endpoint_observer_monodromy_failure_reasons"],
+        )
+        self.assertIn(
+            "endpoint_observer_monodromy_detector_witnesses_missing_for_domain_keys",
+            data["endpoint_observer_monodromy_failure_reasons"],
         )
 
     def test_post_linear_function_derives_identity_endpoint_observer_candidates(self):
