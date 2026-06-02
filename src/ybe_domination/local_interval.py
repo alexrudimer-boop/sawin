@@ -978,6 +978,10 @@ class MissingTriangularRowProfile:
     section_profiles: Tuple[SectionRankProfileRow, ...]
 
     @property
+    def profile_key(self) -> Tuple[str, Color, Color]:
+        return (self.side, self.left_color, self.right_color)
+
+    @property
     def section_kinds(self) -> Tuple[Tuple[FibrePoint, str], ...]:
         return tuple((row.fixed_input, row.kernel_kind) for row in self.section_profiles)
 
@@ -1071,6 +1075,14 @@ class MissingTriangularRowProfileAudit:
     rows: Tuple[MissingTriangularRowProfile, ...]
 
     @property
+    def duplicate_profile_keys(self) -> Tuple[Tuple[str, Color, Color], ...]:
+        return _duplicate_values(tuple(row.profile_key for row in self.rows))
+
+    @property
+    def profile_ledgers_duplicate_free(self) -> bool:
+        return not self.duplicate_profile_keys
+
+    @property
     def proper_kernel_rows(self) -> Tuple[MissingTriangularRowProfile, ...]:
         return tuple(row for row in self.rows if row.explanation == "proper_section_kernel_visible")
 
@@ -1108,7 +1120,11 @@ class MissingTriangularRowProfileAudit:
 
     @property
     def finite_map_classification_exhaustive(self) -> bool:
-        return not self.nonconstant_hidden_rows and not self.unclassified_rows
+        return (
+            self.profile_ledgers_duplicate_free
+            and not self.nonconstant_hidden_rows
+            and not self.unclassified_rows
+        )
 
 
 @dataclass(frozen=True)

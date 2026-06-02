@@ -12495,6 +12495,8 @@ class PostLinearRemainingFiniteSystemAudit:
     ):
         if self.missing_triangular_row_profile is None:
             return None
+        if not self.missing_triangular_row_profile.profile_ledgers_duplicate_free:
+            return None
         for row in self.missing_triangular_row_profile.rows:
             if row.side == side and (row.left_color, row.right_color) == pair:
                 return row
@@ -17651,6 +17653,10 @@ class PostLinearRemainingFiniteSystemAudit:
                                 )
                                 for row in relevant_rows
                             ),
+                        ),
+                        (
+                            "missing_triangular_duplicate_profile_keys",
+                            profile.duplicate_profile_keys,
                         ),
                         (
                             "missing_triangular_partial_constant_rows",

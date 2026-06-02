@@ -1805,6 +1805,47 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             ),
             audit.finite_obstruction_data,
         )
+        self.assertIn(
+            ("missing_triangular_duplicate_profile_keys", ()),
+            audit.finite_obstruction_data,
+        )
+
+    def test_post_linear_profile_routing_rejects_duplicate_profile_keys(self):
+        interval = one_color_right_triangular_nonlatin_interval()
+        profile = missing_triangular_row_profile_audit(interval)
+        duplicate_profile = MissingTriangularRowProfileAudit(
+            rows=(
+                profile.rows[0],
+                replace(profile.rows[0], section_profiles=()),
+            ),
+        )
+        audit = PostLinearRemainingFiniteSystemAudit(
+            active_system_k_refinement(),
+            missing_triangular_row_profile=duplicate_profile,
+        )
+
+        self.assertEqual(
+            duplicate_profile.duplicate_profile_keys,
+            (profile.rows[0].profile_key,),
+        )
+        self.assertFalse(duplicate_profile.profile_ledgers_duplicate_free)
+        self.assertFalse(duplicate_profile.finite_map_classification_exhaustive)
+        self.assertEqual(audit.system_name, "system_k_kink_completion_deficit")
+        self.assertTrue(audit.system_k_active)
+        self.assertIn(
+            (
+                "live_k_missing_latin_row_defects",
+                ((("*", "*"), "no_left_triangular_row"),),
+            ),
+            audit.finite_obstruction_data,
+        )
+        self.assertIn(
+            (
+                "missing_triangular_duplicate_profile_keys",
+                (profile.rows[0].profile_key,),
+            ),
+            audit.finite_obstruction_data,
+        )
 
     def test_partial_constant_no_triangular_route_becomes_continuation_endpoint(self):
         profile, closure, route = partial_constant_missing_row_profile_route_audits()

@@ -417,8 +417,11 @@ Latin condition has not yet been supplied.
 
 When a side is not triangular, its missing-triangular profile is obtained by
 inspecting the corresponding coordinate sections (`L_x` for a missing left
-triangular row, `R_y` for a missing right triangular row).  The profile has
-exactly one of the following explanations:
+triangular row, `R_y` for a missing right triangular row).  The profile
+ledger is keyed by `(side,left_color,right_color)` and must be duplicate-free;
+if that key is duplicated, even with different section-profile payloads or
+explanations, the supplied profile ledger is ambiguous and the raw K row
+remains live.  A valid profile has exactly one of the following explanations:
 
 ```text
 proper_section_kernel_visible
@@ -487,7 +490,7 @@ row.
 
 Define `live_k_missing_latin_row_defects` from the raw K tuple by applying
 the following transition laws, and leaving a row live whenever the matching
-certificate is absent or fails.
+certificate is absent, duplicate-key ambiguous, or fails.
 
 K terminal proper-closure law:
 
