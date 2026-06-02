@@ -1787,9 +1787,10 @@ two-field shape `(family, positive_degree)`, the family must be a hashable
 active cutoff family `C` or `M`, and the degree must be a positive integer
 that is not a boolean.  Duplicate families, unknown family labels, U-family
 degree rows, unhashable family labels, nonpositive degrees, and malformed row
-shapes must be reported as identity cutoff-degree ledger failures.  They may
-not be silently ignored while the constructor falls back to a default
-symmetric degree.
+shapes must be reported as identity cutoff-degree ledger failures.  A
+non-sequence degree ledger is also malformed finite data.  They may not be
+silently ignored while the constructor falls back to a default symmetric
+degree.
 The top-level post-linear audit may derive this canonical candidate by an
 explicit opt-in flag, `universal_k_identity_endpoint_observer_candidates`.
 This flag only retains the identity monodromy-coboundary ledger in the

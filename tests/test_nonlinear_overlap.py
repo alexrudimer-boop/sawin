@@ -5769,6 +5769,26 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             malformed_degree_rows.failure_reasons,
         )
 
+        malformed_degree_ledger = (
+            universal_k_identity_endpoint_observer_builds_by_family(
+                interval,
+                seed_entries,
+                cutoff_degrees_by_family="not-a-cutoff-degree-ledger",
+            )
+        )
+        self.assertFalse(
+            malformed_degree_ledger.identity_cutoff_degree_input_rows_exact
+        )
+        self.assertFalse(malformed_degree_ledger.proves_family_endpoint_observers)
+        self.assertEqual(
+            malformed_degree_ledger.malformed_identity_cutoff_degree_rows,
+            ("not-a-cutoff-degree-ledger",),
+        )
+        self.assertIn(
+            "endpoint_observer_family_identity_cutoff_degrees_malformed_rows",
+            malformed_degree_ledger.failure_reasons,
+        )
+
     def test_identity_endpoint_observer_constructor_composes_with_residual_rows(self):
         interval = one_color_identity_interval()
         seed_entries = tuple(
@@ -14159,6 +14179,28 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
                     ("endpoint_observer_family_build_present", True),
                     audit.routed_endpoint_obstruction_data,
                 )
+
+        malformed_degree_audit = post_linear_remaining_finite_system_audit(
+            one_color_latin_unit_triangular_interval(),
+            universal_k_identity_cutoff_degrees_by_family=None,
+        )
+        malformed_degree_data = dict(
+            malformed_degree_audit.routed_endpoint_obstruction_data
+        )
+
+        self.assertIsNotNone(
+            malformed_degree_audit.universal_k_endpoint_observer_family_build
+        )
+        self.assertEqual(
+            malformed_degree_data[
+                "endpoint_observer_family_identity_cutoff_degree_malformed_rows"
+            ],
+            (None,),
+        )
+        self.assertIn(
+            "endpoint_observer_family_identity_cutoff_degrees_malformed_rows",
+            malformed_degree_data["endpoint_observer_family_build_failure_reasons"],
+        )
 
     def test_triangular_recovery_unit_observer_extends_recovery_rows_to_units(self):
         observer = triangular_recovery_unit_observer_audit(

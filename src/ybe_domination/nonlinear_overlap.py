@@ -978,6 +978,15 @@ def _unique_values(values: Sequence[object]) -> Tuple[object, ...]:
     return tuple(sorted(unique.values(), key=repr))
 
 
+def _universal_k_row_input_tuple(rows: object) -> Tuple[object, ...]:
+    if not _universal_k_nonstring_sequence(rows):
+        return () if rows == () else (rows,)
+    try:
+        return tuple(rows)
+    except TypeError:
+        return (rows,)
+
+
 def _value_marker_set(values: Sequence[object]) -> set[object]:
     return {_value_marker(value) for value in values}
 
@@ -4389,12 +4398,7 @@ class UniversalKCutoffReadoutAudit:
 
     @property
     def readout_row_inputs(self) -> Tuple[object, ...]:
-        if not _universal_k_nonstring_sequence(self.readout_rows):
-            return () if self.readout_rows == () else (self.readout_rows,)
-        try:
-            return tuple(self.readout_rows)
-        except TypeError:
-            return (self.readout_rows,)
+        return _universal_k_row_input_tuple(self.readout_rows)
 
     @property
     def readout_row_objects(self) -> Tuple[UniversalKCutoffReadoutRow, ...]:
@@ -4870,25 +4874,11 @@ class UniversalKEndpointTargetAudit:
 
     @property
     def endpoint_group_order_inputs(self) -> Tuple[object, ...]:
-        if not _universal_k_nonstring_sequence(self.endpoint_group_orders):
-            return (
-                ()
-                if self.endpoint_group_orders == ()
-                else (self.endpoint_group_orders,)
-            )
-        try:
-            return tuple(self.endpoint_group_orders)
-        except TypeError:
-            return (self.endpoint_group_orders,)
+        return _universal_k_row_input_tuple(self.endpoint_group_orders)
 
     @property
     def cutoff_degree_inputs(self) -> Tuple[object, ...]:
-        if not _universal_k_nonstring_sequence(self.cutoff_degrees):
-            return () if self.cutoff_degrees == () else (self.cutoff_degrees,)
-        try:
-            return tuple(self.cutoff_degrees)
-        except TypeError:
-            return (self.cutoff_degrees,)
+        return _universal_k_row_input_tuple(self.cutoff_degrees)
 
     @property
     def endpoint_group_order_rows(self) -> Tuple[Tuple[object, object], ...]:
@@ -10565,7 +10555,7 @@ class UniversalKEndpointObserverFamilyBuildAudit:
     endpoint_target_audit_rows: Tuple[object, ...] = ()
     cutoff_readout_audit_rows: Tuple[object, ...] = ()
     residual_faithfulness_theorem_rows: Tuple[object, ...] = ()
-    identity_cutoff_degree_rows: Tuple[object, ...] = ()
+    identity_cutoff_degree_rows: object = ()
     product_residual_faithfulness_theorem: (
         UniversalKResidualFaithfulnessAudit | None
     ) = None
@@ -11197,7 +11187,11 @@ class UniversalKEndpointObserverFamilyBuildAudit:
 
     @property
     def identity_cutoff_degree_input_supplied(self) -> bool:
-        return bool(self.identity_cutoff_degree_rows)
+        return bool(self.identity_cutoff_degree_row_inputs)
+
+    @property
+    def identity_cutoff_degree_row_inputs(self) -> Tuple[object, ...]:
+        return _universal_k_row_input_tuple(self.identity_cutoff_degree_rows)
 
     @property
     def identity_cutoff_degree_row_parts(
@@ -11205,7 +11199,7 @@ class UniversalKEndpointObserverFamilyBuildAudit:
     ) -> Tuple[Tuple[object, object], ...]:
         return tuple(
             parts
-            for row in self.identity_cutoff_degree_rows
+            for row in self.identity_cutoff_degree_row_inputs
             for parts in (_universal_k_two_field_row_parts(row),)
             if parts is not None
         )
@@ -11215,7 +11209,7 @@ class UniversalKEndpointObserverFamilyBuildAudit:
         return _unique_values(
             tuple(
                 row
-                for row in self.identity_cutoff_degree_rows
+                for row in self.identity_cutoff_degree_row_inputs
                 if _universal_k_two_field_row_parts(row) is None
             )
         )
@@ -12532,10 +12526,10 @@ def universal_k_identity_cutoff_readout_audit(
 
 
 def _universal_k_family_int_map(
-    rows: Sequence[Tuple[str, int]],
+    rows: object,
 ) -> Mapping[str, int]:
     mapped: dict[str, int] = {}
-    for row in rows:
+    for row in _universal_k_row_input_tuple(rows):
         parts = _universal_k_two_field_row_parts(row)
         if parts is None:
             continue
@@ -12868,7 +12862,9 @@ def universal_k_identity_endpoint_observer_builds_by_family(
         endpoint_target_audits_by_family=tuple(endpoint_targets),
         cutoff_readout_audits_by_family=tuple(cutoff_readouts),
         residual_faithfulness_theorems_by_family=tuple(residual_rows),
-        identity_cutoff_degree_rows=tuple(cutoff_degrees_by_family),
+        identity_cutoff_degree_rows=_universal_k_row_input_tuple(
+            cutoff_degrees_by_family
+        ),
         product_residual_faithfulness_theorem=product_residual_faithfulness_theorem,
     )
 
@@ -20223,7 +20219,11 @@ def post_linear_remaining_finite_system_audit(
         or universal_k_identity_singleton_residual_faithfulness
         or universal_k_identity_fibre_label_residual_faithfulness
         or universal_k_identity_canonical_fibre_label_residual_faithfulness
-        or bool(universal_k_identity_cutoff_degrees_by_family)
+        or bool(
+            _universal_k_row_input_tuple(
+                universal_k_identity_cutoff_degrees_by_family
+            )
+        )
     )
     derive_endpoint_observer_family_build = (
         endpoint_observer_family_build is None
