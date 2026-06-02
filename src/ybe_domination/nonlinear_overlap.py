@@ -2761,6 +2761,48 @@ class UniversalKFixedCarrierWordPotentialCertificate:
             and self.initial_readouts_normalized
         )
 
+    @property
+    def identity_row_map(
+        self,
+    ) -> Mapping[UniversalKSignedEndpointEntryKey, UniversalKFixedCarrierCoboundaryRow]:
+        return {
+            row.entry_key: row
+            for row in self.identity_row_objects
+            if _universal_k_signed_entry_key_well_formed(row.entry_key)
+        }
+
+    @property
+    def raw_assignment_template_variables(
+        self,
+    ) -> Tuple[UniversalKWordPotentialVariable, ...]:
+        return ()
+
+    @property
+    def substitution_failures(self) -> Tuple[UniversalKWordPotentialFailure, ...]:
+        return self.carrier_domain_failures
+
+    @property
+    def detector_domain_failures(self) -> Tuple[UniversalKWordPotentialFailure, ...]:
+        return self.carrier_domain_failures
+
+    @property
+    def detector_domains_sound(self) -> bool:
+        return self.carrier_domains_sound
+
+    @property
+    def artin_substitutions_verified(self) -> bool:
+        return self.carrier_domains_sound
+
+
+def _universal_k_word_potential_certificate_like(value: object) -> bool:
+    return isinstance(
+        value,
+        (
+            UniversalKWordPotentialCertificate,
+            UniversalKFixedCarrierWordPotentialCertificate,
+        ),
+    )
+
 
 _UNIVERSAL_K_RESIDUAL_ALLOWED_DEPENDENCIES = frozenset(
     (
@@ -6910,7 +6952,11 @@ class UniversalKTelescopingDetectorAudit:
     word_potential_templates_use_only_current_longitudes: bool = False
     word_potential_artin_substitution_verified: bool = False
     word_potential_identity_verified: bool = False
-    word_potential_certificate: UniversalKWordPotentialCertificate | None = None
+    word_potential_certificate: (
+        UniversalKWordPotentialCertificate
+        | UniversalKFixedCarrierWordPotentialCertificate
+        | None
+    ) = None
     telescoping_identity_verified: bool = False
     terminal_readout_longitudes_verified: bool = False
     initial_readout_normalized: bool = False
@@ -7651,6 +7697,20 @@ class UniversalKTelescopingDetectorAudit:
                     )
                 )
                 continue
+            if isinstance(row, UniversalKFixedCarrierCoboundaryRow):
+                for carrier_tuple in row.carrier_domain:
+                    parts = _universal_k_fixed_carrier_tuple_parts(carrier_tuple)
+                    if parts is None:
+                        continue
+                    if len(parts) != count:
+                        failures.append(
+                            (
+                                row.entry_key,
+                                "fixed_carrier_domain_track_count_mismatch",
+                                (len(parts), count),
+                            )
+                        )
+                continue
             row_variables = []
             for substitution_row in row.artin_substitution:
                 parts = _universal_k_word_potential_substitution_parts(
@@ -7696,6 +7756,8 @@ class UniversalKTelescopingDetectorAudit:
         initialized_by_family = self.initialized_raw_assignment_variables_by_family
         for row in self.word_potential_certificate.identity_row_objects:
             if not _universal_k_signed_entry_key_well_formed(row.entry_key):
+                continue
+            if isinstance(row, UniversalKFixedCarrierCoboundaryRow):
                 continue
             family = row.entry_key[0]
             if not _universal_k_is_positive_entry_key(row.entry_key):
@@ -12018,9 +12080,8 @@ class UniversalKEndpointObserverFamilyBuildAudit:
                 for row in self.word_potential_certificate_rows
                 if (
                     _universal_k_two_field_row_parts(row) is None
-                    or not isinstance(
-                        _universal_k_two_field_row_parts(row)[1],
-                        UniversalKWordPotentialCertificate,
+                    or not _universal_k_word_potential_certificate_like(
+                        _universal_k_two_field_row_parts(row)[1]
                     )
                 )
             )
@@ -12032,7 +12093,7 @@ class UniversalKEndpointObserverFamilyBuildAudit:
             tuple(
                 family
                 for family, certificate in self.certificate_row_parts
-                if isinstance(certificate, UniversalKWordPotentialCertificate)
+                if _universal_k_word_potential_certificate_like(certificate)
                 and (
                     not _is_hashable(family)
                     or family not in UNIVERSAL_K_ENDPOINT_FAMILIES
@@ -12049,7 +12110,7 @@ class UniversalKEndpointObserverFamilyBuildAudit:
                     for family, certificate in self.certificate_row_parts
                     if _is_hashable(family)
                     and family in UNIVERSAL_K_ENDPOINT_FAMILIES
-                    and isinstance(certificate, UniversalKWordPotentialCertificate)
+                    and _universal_k_word_potential_certificate_like(certificate)
                 },
                 key=repr,
             )
@@ -12063,7 +12124,7 @@ class UniversalKEndpointObserverFamilyBuildAudit:
                 for family, certificate in self.certificate_row_parts
                 if _is_hashable(family)
                 and family in UNIVERSAL_K_ENDPOINT_FAMILIES
-                and isinstance(certificate, UniversalKWordPotentialCertificate)
+                and _universal_k_word_potential_certificate_like(certificate)
             )
         )
 
@@ -12076,7 +12137,7 @@ class UniversalKEndpointObserverFamilyBuildAudit:
                 _is_hashable(family)
                 and family in UNIVERSAL_K_ENDPOINT_FAMILIES
                 and family not in duplicate_families
-                and isinstance(certificate, UniversalKWordPotentialCertificate)
+                and _universal_k_word_potential_certificate_like(certificate)
             ):
                 groups[family] = certificate.endpoint_group
         return groups
@@ -12744,7 +12805,7 @@ class UniversalKEndpointObserverFamilyBuildAudit:
             for family, certificate in self.certificate_row_parts
             if _is_hashable(family)
             and family in UNIVERSAL_K_ENDPOINT_FAMILIES
-            and isinstance(certificate, UniversalKWordPotentialCertificate)
+            and _universal_k_word_potential_certificate_like(certificate)
         }
         failures = []
         for family, build in self.build_rows_exact:
@@ -13938,7 +13999,10 @@ def _universal_k_detector_track_counts_from_initialization_rows(
 def universal_k_endpoint_observer_build(
     interval: LocalInterval,
     seed_classifier_entries: Sequence[UniversalKSeedClassifierEntry],
-    word_potential_certificate: UniversalKWordPotentialCertificate,
+    word_potential_certificate: (
+        UniversalKWordPotentialCertificate
+        | UniversalKFixedCarrierWordPotentialCertificate
+    ),
     *,
     detector_track_counts_by_family: Tuple[Tuple[str, int], ...] = (),
     detector_track_initialization_rows: Tuple[
@@ -13968,10 +14032,21 @@ def universal_k_endpoint_observer_build(
     """
 
     endpoint_group = word_potential_certificate.endpoint_group
-    positive_rows = universal_k_endpoint_observer_positive_rows_from_word_potential(
-        interval,
+    if isinstance(
         word_potential_certificate,
-    )
+        UniversalKFixedCarrierWordPotentialCertificate,
+    ):
+        positive_rows = (
+            universal_k_endpoint_observer_positive_rows_from_fixed_carrier_word_potential(
+                interval,
+                word_potential_certificate,
+            )
+        )
+    else:
+        positive_rows = universal_k_endpoint_observer_positive_rows_from_word_potential(
+            interval,
+            word_potential_certificate,
+        )
     rows = universal_k_endpoint_observer_signed_rows_from_positive(
         interval,
         endpoint_group,
@@ -14408,7 +14483,7 @@ def universal_k_endpoint_observer_builds_by_family(
         if (
             not _is_hashable(endpoint_family)
             or endpoint_family not in UNIVERSAL_K_ENDPOINT_FAMILIES
-            or not isinstance(certificate, UniversalKWordPotentialCertificate)
+            or not _universal_k_word_potential_certificate_like(certificate)
         ):
             continue
         family_seed_classifier_entries = (

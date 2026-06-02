@@ -3598,6 +3598,22 @@ nonconstant defects,
 forged endpoint values not equal to the computed constant defect.
 ```
 
+Implementation status in the current proof code:
+
+```text
+UniversalKFixedCarrierWordPotentialCertificate
+UniversalKFixedCarrierCoboundaryRow
+universal_k_fixed_carrier_word_potential_certificate_from_monodromy(...)
+universal_k_endpoint_observer_positive_rows_from_fixed_carrier_word_potential(...)
+```
+
+The endpoint-observer builder and the family endpoint-observer audit accept
+this fixed-carrier certificate class alongside the original raw-variable
+word-potential certificate.  Thus a proposed fixed-carrier observer can now
+be checked all the way through positive rows, inverse-derived signed rows,
+telescoping detector audit, endpoint target audit, and residual-faithfulness
+audit.  This is infrastructure, not a universal existence proof.
+
 The all-`n` soundness proof is then:
 
 1. The fixed carriers are initialized before reading the braid word.

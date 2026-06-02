@@ -2654,8 +2654,14 @@ The public helper
 derives these row constants from positive monodromy rows, and
 `universal_k_endpoint_observer_positive_rows_from_fixed_carrier_word_potential(...)`
 builds the corresponding positive endpoint generator rows.  This infrastructure
-does not prove that every surviving U/C/M interval admits such observers; it
-gives the exact finite local checker that any proposed observer must pass.
+is accepted by the endpoint-observer builder and by the family observer audit
+alongside the original raw-variable certificate type.  Therefore a valid
+fixed-carrier certificate can now build positive rows, force inverse signed
+rows, pass the telescoping detector audit, and close an active family when
+the fixed endpoint target and residual-faithfulness theorem are supplied.
+This does not prove that every surviving U/C/M interval admits such
+observers; it gives the exact finite local checker and integration path that
+any proposed observer must pass.
 
 ## Equivalence to the current remaining problem
 

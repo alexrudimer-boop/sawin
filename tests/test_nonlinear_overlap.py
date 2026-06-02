@@ -5925,6 +5925,122 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             stale_build.failure_reasons,
         )
 
+    def test_endpoint_observer_builder_accepts_fixed_carrier_word_potential(self):
+        interval = one_color_identity_interval()
+        group = cyclic_group(2)
+        seed_state = ("*", "*", "left_constant_map_universal_kernel")
+        next_state = ("*", "*", "left_constant_map_universal_kernel", "next")
+        seed_key = ("U", seed_state)
+        next_key = ("U", next_state)
+        seed_entries = (
+            (
+                (
+                    "*",
+                    "*",
+                    "L",
+                    "constant_map_kernel",
+                    ("*", (0, 1), "universal", "universal"),
+                ),
+                seed_key,
+            ),
+        )
+        reachable = (seed_key, next_key)
+        positive_keys = tuple(
+            key
+            for key in universal_k_signed_endpoint_required_entry_keys(
+                interval,
+                reachable,
+            )
+            if key[2] == 1
+        )
+        positive_state_rows = []
+        carrier_domains = {}
+        carrier_witnesses = {}
+        for key in positive_keys:
+            family, state, _sign, left_color, right_color, x, y = key
+            output_left, output_right = interval.T[(left_color, right_color, x, y)]
+            target_state = next_state if state == seed_state else seed_state
+            positive_state_rows.append(
+                UniversalKSignedEndpointGeneratorRow(
+                    endpoint_family=family,
+                    seed_state=state,
+                    sign=1,
+                    left_color=left_color,
+                    right_color=right_color,
+                    input_left=x,
+                    input_right=y,
+                    output_left=output_left,
+                    output_right=output_right,
+                    next_seed_state=target_state,
+                    endpoint_value=None,
+                )
+            )
+            carrier_domains[key] = (((1, 1),),)
+            carrier_witnesses[key] = ("constant_carrier_track",)
+
+        u0 = ("U", 0, 0)
+        u1 = ("U", 0, 1)
+        certificate = (
+            universal_k_fixed_carrier_word_potential_certificate_from_monodromy(
+                interval,
+                seed_entries,
+                group,
+                (
+                    (seed_key, ((u1, 1), (u0, -1))),
+                    (next_key, ((u0, 1), (u1, -1))),
+                ),
+                tuple(positive_state_rows),
+                carrier_domains_by_entry_key=carrier_domains,
+                carrier_soundness_witness_by_entry_key=carrier_witnesses,
+            )
+        )
+        detector_rows = (
+            UniversalKDetectorTrackInitializationRow(
+                endpoint_family="U",
+                track_index=0,
+                assignment_rule="constant_nonidentity_fixed_carrier",
+                dependencies=("interval_data", "routed_seed_state", "strand_index"),
+                local_assignment_template=((("A", 0, 0), 1),),
+            ),
+        )
+        residual_theorem = universal_k_strict_identity_residual_faithfulness_audit(
+            interval,
+            (seed_key,),
+        )
+        endpoint_target = UniversalKEndpointTargetAudit(
+            expected_endpoint_families=("U",),
+            covered_endpoint_families=("U",),
+            endpoint_group_orders=(("U", len(group.elements)),),
+            braid_index_independent=True,
+            product_families_separated=True,
+        )
+
+        build = universal_k_endpoint_observer_build(
+            interval,
+            seed_entries,
+            certificate,
+            detector_track_initialization_rows=detector_rows,
+            endpoint_target_audit=endpoint_target,
+            residual_faithfulness_theorem=residual_theorem,
+        )
+
+        self.assertTrue(certificate.proves_fixed_carrier_word_potential_lift)
+        self.assertEqual(set(row.endpoint_value for row in build.positive_rows), {1})
+        self.assertTrue(build.telescoping_detector_audit.proves_telescoping_detector_lift)
+        self.assertTrue(build.audit.telescoping_detector_proved)
+        self.assertTrue(build.proves_endpoint_observer)
+
+        family_audit = universal_k_endpoint_observer_builds_by_family(
+            interval,
+            seed_entries,
+            (("U", certificate),),
+            detector_track_initialization_rows=detector_rows,
+            endpoint_target_audits_by_family=(("U", endpoint_target),),
+            residual_faithfulness_theorems_by_family=(("U", residual_theorem),),
+        )
+        self.assertEqual(family_audit.failure_reasons, ())
+        self.assertTrue(family_audit.proves_family_endpoint_observers)
+
     def test_endpoint_observer_builder_records_all_ucm_active_families(self):
         interval = one_color_identity_interval()
         group = cyclic_group(2)

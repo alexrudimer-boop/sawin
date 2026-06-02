@@ -1525,6 +1525,14 @@ turns those constants into positive endpoint rows.  Regression tests now show
 that the `C2` fixed-carrier normal form emits a nonidentity element, that
 forged endpoint values fail, and that empty, malformed, or unwitnessed carrier
 domains are rejected.
+The endpoint-observer builder and family observer audit now accept this
+fixed-carrier certificate class alongside the original raw-variable
+word-potential certificate.  A nonidentity `C2` fixed-carrier certificate can
+therefore generate positive rows, derive inverse signed rows, pass the
+telescoping detector audit, and close a family observer when the endpoint
+target and residual-faithfulness theorem are supplied.  This is an integration
+step only: it does not construct the required U/C/M observers for arbitrary
+surviving intervals.
 This removes another false endpoint closure and leaves the same local
 nontrivial observer-existence gap: construct residual-faithful U/C/M
 monodromy-coboundary observers for all surviving intervals, or produce a
