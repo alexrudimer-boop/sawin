@@ -13,6 +13,18 @@ PairFamily = Mapping[Color, Iterable[Tuple[FibrePoint, FibrePoint]]]
 ReadoutLabels = Mapping[Color, Mapping[FibrePoint, ReadoutLabel]]
 
 
+def _duplicate_values(values: Sequence[object]) -> Tuple[object, ...]:
+    """Return duplicate values once, in stable audit order."""
+
+    seen = set()
+    duplicates = []
+    for value in values:
+        if value in seen and value not in duplicates:
+            duplicates.append(value)
+        seen.add(value)
+    return tuple(duplicates)
+
+
 @dataclass(frozen=True)
 class TransportFailure:
     a: Color
@@ -1866,9 +1878,31 @@ class LostEdgeExternalRoutingAudit:
         return self.dichotomy.needs_external_routing_after_collapse
 
     @property
+    def duplicate_lost_edges(self) -> Tuple[Tuple[Color, FibrePoint, FibrePoint], ...]:
+        return _duplicate_values(self.lost_edges)
+
+    @property
+    def duplicate_routed_edges(self) -> Tuple[Tuple[Color, FibrePoint, FibrePoint], ...]:
+        return _duplicate_values(self.routed_edges)
+
+    @property
+    def duplicate_unrouted_edges(self) -> Tuple[Tuple[Color, FibrePoint, FibrePoint], ...]:
+        return _duplicate_values(self.unrouted_edges)
+
+    @property
+    def edge_ledgers_duplicate_free(self) -> bool:
+        return (
+            not self.duplicate_lost_edges
+            and not self.duplicate_routed_edges
+            and not self.duplicate_unrouted_edges
+        )
+
+    @property
     def lost_edges_match_saturation(self) -> bool:
-        return set(self.lost_edges) == set(
-            self.dichotomy.seed_saturation.new_saturation_edges
+        return (
+            not self.duplicate_lost_edges
+            and set(self.lost_edges)
+            == set(self.dichotomy.seed_saturation.new_saturation_edges)
         )
 
     @property
@@ -1879,8 +1913,11 @@ class LostEdgeExternalRoutingAudit:
     def routed_unrouted_edges_partition_lost_edges(self) -> bool:
         routed = set(self.routed_edges)
         unrouted = set(self.unrouted_edges)
-        return not routed.intersection(unrouted) and routed.union(unrouted) == set(
-            self.lost_edges
+        return (
+            not self.duplicate_routed_edges
+            and not self.duplicate_unrouted_edges
+            and not routed.intersection(unrouted)
+            and routed.union(unrouted) == set(self.lost_edges)
         )
 
     @property
@@ -1901,6 +1938,7 @@ class LostEdgeExternalRoutingAudit:
     def all_lost_edges_routed(self) -> bool:
         return (
             self.has_required_lost_edges
+            and self.edge_ledgers_duplicate_free
             and self.lost_edges_match_saturation
             and self.routed_unrouted_edges_partition_lost_edges
             and self.routed_edges_are_distinguished
@@ -1913,6 +1951,7 @@ class LostEdgeExternalRoutingAudit:
         return (
             self.dichotomy.proves_local_minimal_seed_saturation_dichotomy
             and self.has_required_lost_edges
+            and self.edge_ledgers_duplicate_free
             and self.lost_edges_match_saturation
             and self.routed_unrouted_edges_partition_lost_edges
             and self.routed_edges_are_distinguished

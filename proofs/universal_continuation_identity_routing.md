@@ -38,6 +38,10 @@ identity_routing_is_admissible
 routes_all_saturation_lost_edges
 lost_edges_match_saturation
 has_required_lost_edges
+edge_ledgers_duplicate_free
+duplicate_lost_edges
+duplicate_routed_edges
+duplicate_unrouted_edges
 routed_unrouted_edges_partition_lost_edges
 routed_edges_are_distinguished
 unrouted_edges_are_not_distinguished
@@ -74,6 +78,7 @@ vacuously.  The ledger must satisfy all of the following finite checks:
 lost_edges = seed_saturation.new_saturation_edges
 routed_edges union unrouted_edges = lost_edges
 routed_edges cap unrouted_edges = empty
+lost_edges, routed_edges, and unrouted_edges are each duplicate-free
 each routed edge is distinguished by the routing labels
 each unrouted edge is not distinguished by the routing labels
 ```
@@ -81,6 +86,13 @@ each unrouted edge is not distinguished by the routing labels
 When the local-minimal dichotomy forces universal collapse, the lost-edge
 ledger must also be nonempty.  Thus an empty supplied ledger cannot prove a
 forced universal-continuation route and cannot close System C.
+
+[Proved, audit-side] The match and partition checks reject duplicate rows.
+This matters because set equality alone would silently normalize duplicated
+lost, routed, or unrouted edge ledgers before the endpoint witness layer sees
+them.  The audit now exposes the duplicate ledgers explicitly and requires
+`edge_ledgers_duplicate_free` before `all_lost_edges_routed` or
+`proves_external_routing_ledger` can hold.
 
 ## Consequence for the repair contract
 

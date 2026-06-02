@@ -1265,6 +1265,66 @@ class LocalIntervalTests(unittest.TestCase):
         self.assertFalse(forged.all_lost_edges_routed)
         self.assertFalse(forged.proves_external_routing_ledger)
 
+    def test_lost_edge_external_routing_rejects_duplicate_ledgers(self):
+        interval = one_color_identity_interval()
+        real = lost_edge_external_routing_audit(
+            interval,
+            {"*": {0: "zero", 1: "one"}},
+            {"*": {0: "left", 1: "right"}},
+        )
+        edge = real.lost_edges[0]
+
+        duplicate_lost = LostEdgeExternalRoutingAudit(
+            dichotomy=real.dichotomy,
+            routing_labels=real.routing_labels,
+            routing_kernel=real.routing_kernel,
+            lost_edges=(edge, edge),
+            routed_edges=real.routed_edges,
+            unrouted_edges=real.unrouted_edges,
+        )
+        self.assertEqual(duplicate_lost.duplicate_lost_edges, (edge,))
+        self.assertFalse(duplicate_lost.edge_ledgers_duplicate_free)
+        self.assertFalse(duplicate_lost.lost_edges_match_saturation)
+        self.assertFalse(duplicate_lost.all_lost_edges_routed)
+        self.assertFalse(duplicate_lost.proves_external_routing_ledger)
+
+        duplicate_routed = LostEdgeExternalRoutingAudit(
+            dichotomy=real.dichotomy,
+            routing_labels=real.routing_labels,
+            routing_kernel=real.routing_kernel,
+            lost_edges=real.lost_edges,
+            routed_edges=(edge, edge),
+            unrouted_edges=real.unrouted_edges,
+        )
+        self.assertEqual(duplicate_routed.duplicate_routed_edges, (edge,))
+        self.assertFalse(duplicate_routed.edge_ledgers_duplicate_free)
+        self.assertTrue(duplicate_routed.lost_edges_match_saturation)
+        self.assertFalse(
+            duplicate_routed.routed_unrouted_edges_partition_lost_edges
+        )
+        self.assertFalse(duplicate_routed.proves_external_routing_ledger)
+
+        unrouted_real = lost_edge_external_routing_audit(
+            interval,
+            {"*": {0: "zero", 1: "one"}},
+            {"*": {0: "same", 1: "same"}},
+        )
+        duplicate_unrouted = LostEdgeExternalRoutingAudit(
+            dichotomy=unrouted_real.dichotomy,
+            routing_labels=unrouted_real.routing_labels,
+            routing_kernel=unrouted_real.routing_kernel,
+            lost_edges=unrouted_real.lost_edges,
+            routed_edges=unrouted_real.routed_edges,
+            unrouted_edges=(edge, edge),
+        )
+        self.assertEqual(duplicate_unrouted.duplicate_unrouted_edges, (edge,))
+        self.assertFalse(duplicate_unrouted.edge_ledgers_duplicate_free)
+        self.assertTrue(duplicate_unrouted.lost_edges_match_saturation)
+        self.assertFalse(
+            duplicate_unrouted.routed_unrouted_edges_partition_lost_edges
+        )
+        self.assertFalse(duplicate_unrouted.proves_external_routing_ledger)
+
     def test_lost_edge_external_routing_reports_unrouted_collapse_edges(self):
         interval = one_color_identity_interval()
         descent_labels = {"*": {0: "zero", 1: "one"}}

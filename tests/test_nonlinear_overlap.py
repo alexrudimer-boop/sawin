@@ -11990,6 +11990,18 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             audit.finite_obstruction_data,
         )
         self.assertIn(
+            ("universal_continuation_identity_duplicate_lost_edges", ()),
+            audit.finite_obstruction_data,
+        )
+        self.assertIn(
+            ("universal_continuation_identity_duplicate_routed_edges", ()),
+            audit.finite_obstruction_data,
+        )
+        self.assertIn(
+            ("universal_continuation_identity_duplicate_unrouted_edges", ()),
+            audit.finite_obstruction_data,
+        )
+        self.assertIn(
             ("universal_continuation_identity_routing_proved", True),
             audit.finite_obstruction_data,
         )

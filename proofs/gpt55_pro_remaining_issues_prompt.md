@@ -2500,6 +2500,7 @@ It must satisfy all of the following:
 
 ```text
 lost_edges = seed_saturation_lost_edges,
+routed_edges, unrouted_edges, and lost_edges are duplicate-free,
 routed_edges union unrouted_edges = lost_edges,
 routed_edges cap unrouted_edges = empty,
 the routing labels distinguish exactly the routed_edges,
@@ -2529,7 +2530,8 @@ of a C obligation, but it cannot close an active System C row.
 The C endpoint-witness certificate is valid only when:
 
 - the identity routing ledger itself proves the exact non-vacuous
-  universal-continuation route;
+  universal-continuation route, including duplicate-free lost, routed, and
+  unrouted edge ledgers before endpoint witnesses are checked;
 - the endpoint witness uses that same routing ledger;
 - every routed lost edge has an endpoint-longitude expression certificate;
 - no witness is supplied for an edge outside the routed lost-edge tuple;

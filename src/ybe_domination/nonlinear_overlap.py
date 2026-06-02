@@ -13795,6 +13795,18 @@ class PostLinearRemainingFiniteSystemAudit:
                 routing.routing.unrouted_edges,
             ),
             (
+                "universal_continuation_identity_duplicate_lost_edges",
+                routing.routing.duplicate_lost_edges,
+            ),
+            (
+                "universal_continuation_identity_duplicate_routed_edges",
+                routing.routing.duplicate_routed_edges,
+            ),
+            (
+                "universal_continuation_identity_duplicate_unrouted_edges",
+                routing.routing.duplicate_unrouted_edges,
+            ),
+            (
                 "universal_continuation_identity_routing_proved",
                 routing.proves_identity_routed_universal_continuation,
             ),
@@ -17924,6 +17936,18 @@ class PostLinearRemainingFiniteSystemAudit:
                         (
                             "universal_continuation_identity_unrouted_edges",
                             routing.routing.unrouted_edges,
+                        ),
+                        (
+                            "universal_continuation_identity_duplicate_lost_edges",
+                            routing.routing.duplicate_lost_edges,
+                        ),
+                        (
+                            "universal_continuation_identity_duplicate_routed_edges",
+                            routing.routing.duplicate_routed_edges,
+                        ),
+                        (
+                            "universal_continuation_identity_duplicate_unrouted_edges",
+                            routing.routing.duplicate_unrouted_edges,
                         ),
                         (
                             "universal_continuation_identity_routing_proved",

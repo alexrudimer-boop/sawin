@@ -1848,8 +1848,10 @@ endpoint obligation.
 The downstream identity-routing ledger is also non-vacuous: a forced
 universal-continuation route proves only when its lost-edge tuple is exactly
 the seed-saturation lost-edge tuple, its routed and unrouted tuples partition
-that lost tuple, its routing labels distinguish exactly the routed edges, and
-the forced lost-edge tuple is nonempty.
+that lost tuple, the lost/routed/unrouted ledgers are all duplicate-free, its
+routing labels distinguish exactly the routed edges, and the forced lost-edge
+tuple is nonempty.  This prevents set-normalization from hiding duplicated
+identity-routing rows before the endpoint observer layer sees them.
 Rows moved this way are recorded in
 `continuation_routed_k_missing_latin_row_defects`.  If no live K row remains,
 the wrapper reports `system_c_universal_continuation_endpoint` rather than a
@@ -1891,6 +1893,9 @@ endpoint channel recorded by:
 ```text
 universal_continuation_identity_lost_edges
 universal_continuation_identity_unrouted_edges
+universal_continuation_identity_duplicate_lost_edges
+universal_continuation_identity_duplicate_routed_edges
+universal_continuation_identity_duplicate_unrouted_edges
 universal_continuation_identity_routing_proved.
 universal_continuation_endpoint_witness_matches_routing
 universal_continuation_endpoint_witness_proved
