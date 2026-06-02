@@ -4294,7 +4294,11 @@ class UniversalKCutoffReadoutAudit:
 
     @property
     def braid_index_independence_proved(self) -> bool:
-        return self.cutoff_degree_supplied and self.readout_rows_cover_expected_states
+        return (
+            self.braid_index_independent
+            and self.cutoff_degree_supplied
+            and self.readout_rows_cover_expected_states
+        )
 
     @property
     def proves_exact_cutoff_readouts(self) -> bool:

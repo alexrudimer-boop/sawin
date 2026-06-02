@@ -2087,8 +2087,10 @@ families must agree exactly with the active routed C/M families.  This family
 scope check is deliberately separate from seed-state coverage so that a C
 cutoff row cannot be used to certify an M channel, or vice versa, through a
 single undifferentiated symmetric readout.
-Cutoff braid-index independence must follow from the positive fixed degree
-and exact finite readout rows; it is not an independent boolean gate.
+Cutoff braid-index independence requires an explicit certificate flag in
+addition to the positive fixed degree and exact finite readout rows.  A
+readout table whose finite rows are otherwise valid but whose independence
+flag is false is still open.
 For each active C/M cutoff family, this positive fixed degree must also match
 the cutoff degree listed in the endpoint-target ledger.  If multiple C/M
 families are handled by one readout audit, every listed cutoff target degree

@@ -9587,6 +9587,28 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             ((seed_state, "cutoff_degree_not_supplied", "2"),),
         )
 
+        unindexed_rows_without_certificate = UniversalKCutoffReadoutAudit(
+            expected_cutoff_seed_states=(seed_state,),
+            covered_cutoff_seed_states=(seed_state,),
+            cutoff_degree=2,
+            readout_rows=(
+                UniversalKCutoffReadoutRow(
+                    cutoff_seed_state=seed_state,
+                    readout_permutation=(1, 0),
+                    killed_readout_permutation=(0, 1),
+                ),
+            ),
+            braid_index_independent=False,
+        )
+        self.assertFalse(
+            unindexed_rows_without_certificate.braid_index_independence_proved
+        )
+        self.assertFalse(unindexed_rows_without_certificate.proves_exact_cutoff_readouts)
+        self.assertIn(
+            "cutoff_readouts_not_braid_index_independent",
+            unindexed_rows_without_certificate.failure_reasons,
+        )
+
     def test_signed_endpoint_generator_audit_requires_full_entry_domain(self):
         seed_state = ("*", "*", "left_constant_map_universal_kernel")
         seed_entries = (

@@ -512,9 +512,10 @@ allowed to crash the checker or to disappear during set comparison.  The
 cutoff degree itself must be a
 positive integer; strings, booleans, zero, negative values, or missing
 degrees are not finite symmetric cutoff targets.  Cutoff braid-index
-independence is derived from the positive fixed degree and exact finite
-readout rows, so the legacy `braid_index_independent` flag on this audit is
-diagnostic only.
+independence requires the explicit `braid_index_independent` certificate flag
+in addition to the positive fixed degree and exact finite readout rows.  A
+readout table whose finite rows are otherwise valid but whose independence
+flag is false remains an open cutoff certificate.
 The cutoff audit now exposes a separate C/M family-scope ledger as well:
 expected families, covered families, and row families must agree exactly with
 the routed C/M families.  This is intentionally redundant with seed-state
