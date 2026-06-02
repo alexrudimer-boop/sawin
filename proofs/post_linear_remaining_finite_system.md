@@ -812,6 +812,15 @@ endpoint channel.  The identity constructor can consume this proof when
 `derive_strict_identity_residual_faithfulness=True`.  This closes only the
 strict identity-fibre subcase; non-identity U/C/M endpoint observers still
 need their own residual-faithfulness theorem.
+There is a second automatic residual-faithfulness subcase:
+`universal_k_singleton_fibre_residual_faithfulness_audit(...)` proves the
+residual gate when every fibre `A_c` has exactly one point.  Then each
+fibre product `X_z` is a singleton for every quotient-colour tuple `z`, so
+the bundled residual fibre action is trivial for every braid index.  The
+identity constructor consumes this proof only when
+`derive_singleton_fibre_residual_faithfulness=True`.  This is independent of
+the strict identity-row condition: quotient colours may move, but there is no
+nontrivial fibre coordinate left to move.
 For a multi-family product endpoint row, the family ledger also requires a
 separate product residual-faithfulness theorem scoped to the full active
 family set and the full set of seed states hit by `kappa`.  Per-family

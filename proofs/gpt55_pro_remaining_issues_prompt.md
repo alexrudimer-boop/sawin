@@ -1531,6 +1531,16 @@ constructor may consume this theorem when
 `derive_strict_identity_residual_faithfulness=True`.  This closes only the
 strict identity-fibre subcase; any non-identity U, C, or M endpoint observer
 still requires its own residual-faithfulness theorem.
+There is also a singleton-fibre residual-faithfulness subcase.  If every
+fibre `A_c` has exactly one point, then every fibre product `X_z` is a
+singleton for every quotient-colour tuple `z`; hence the bundled residual
+fibre action is trivial for every braid index, even if quotient colours move.
+The helper `universal_k_singleton_fibre_residual_faithfulness_audit(...)`
+may emit one schematic all-`n` residual row per active endpoint family, and
+the identity observer constructor may consume it only when
+`derive_singleton_fibre_residual_faithfulness=True`.  This closes only the
+singleton-fibre subcase and does not solve nontrivial U/C/M endpoint
+observers.
 The post-linear proof object should retain the resulting endpoint-observer
 build record, not only the derived signed-generator audit.  A complete
 certificate should expose whether the build is present, whether it proves the
@@ -1975,6 +1985,7 @@ endpoint_observer_family_build_row_failure_reasons_exposed,
 identity_endpoint_observer_constructor_keeps_residual_faithfulness_required,
 identity_endpoint_observer_top_level_opt_in_is_nondecisive,
 strict_identity_fibre_action_residual_faithfulness_subcase,
+singleton_fibre_action_residual_faithfulness_subcase,
 endpoint_observer_family_certificate_input_ledger_exact,
 endpoint_observer_family_auxiliary_input_ledgers_exact,
 endpoint_observer_each_active_family_single_scoped_and_proved,
