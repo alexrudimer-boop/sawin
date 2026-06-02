@@ -42,7 +42,21 @@ The post-linear finite-system wrapper reports the K-relevant part as:
 missing_triangular_partial_constant_closure_rows
 missing_triangular_partial_constant_proper_closure_rows
 missing_triangular_partial_constant_universal_closure_rows
+missing_triangular_partial_constant_duplicate_closure_keys
 ```
+
+[Proved, audit-side] The closure ledger is keyed by:
+
+```text
+(side, left_color, right_color, fixed_input, domain_color,
+ collapsed_inputs).
+```
+
+This keyed ledger must be duplicate-free.  If two supplied closure rows share
+the same key, even with different generated-congruence kinds, the post-linear
+wrapper refuses to use that ledger either as a proper-closure terminal or as a
+universal-continuation route.  This prevents conflicting closure rows from
+closing System K or creating downstream C endpoint obligations.
 
 ## Lemma: partial-constant rows contain explicit kernel seeds
 
@@ -103,7 +117,7 @@ universal closure:
 
 The post-linear wrapper now treats the proper-closure case as terminal.  If a
 supplied partial-constant closure ledger contains any proper generated
-congruence row, it reports
+congruence row and the closure-key ledger is duplicate-free, it reports
 `closed_by_missing_triangular_partial_constant_proper_closure`, empties the
 live K ledger, and creates no continuation endpoint obligation.  Only
 universal partial-constant closure rows can route onward to System C.

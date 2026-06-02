@@ -46,9 +46,23 @@ The post-linear finite-system wrapper includes the summaries:
 triangular_latin_defect_closure_rows
 triangular_latin_defect_proper_closure_rows
 triangular_latin_defect_universal_closure_rows
+triangular_latin_defect_duplicate_closure_keys
 ```
 
 whenever the wrapper is built from an actual interval.
+
+[Proved, audit-side] The closure ledger is keyed by:
+
+```text
+(side, defect, left_color, right_color, domain_color, fixed_input,
+ collapsed_inputs).
+```
+
+This keyed ledger must be duplicate-free.  If two supplied closure rows share
+the same key, even with different generated-congruence kinds, the post-linear
+wrapper refuses to use that ledger either as a proper-closure terminal or as a
+universal-closure route.  This prevents conflicting closure rows from closing
+System K or creating downstream U endpoint obligations.
 
 ## Local-minimal consequence
 
@@ -86,7 +100,7 @@ data or construct a normalized-law sequence from them.
 
 The post-linear wrapper now makes the proper-closure alternative terminal:
 if a supplied triangular-Latin defect closure contains a proper generated
-congruence row, it reports
+congruence row and the closure-key ledger is duplicate-free, it reports
 `closed_by_triangular_latin_proper_closure`, empties the live K ledger, and
 does not create any routed endpoint obligation.  This keeps the
 local-minimality contradiction separate from the universal-closure endpoint

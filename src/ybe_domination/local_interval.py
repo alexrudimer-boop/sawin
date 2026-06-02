@@ -781,6 +781,28 @@ class TriangularLatinDefectClosureRow:
     generated: GeneratedCongruenceAudit
 
     @property
+    def closure_key(
+        self,
+    ) -> Tuple[
+        str,
+        str,
+        Color,
+        Color,
+        Color,
+        FibrePoint | None,
+        Tuple[FibrePoint, FibrePoint],
+    ]:
+        return (
+            self.side,
+            self.defect,
+            self.left_color,
+            self.right_color,
+            self.domain_color,
+            self.fixed_input,
+            self.collapsed_inputs,
+        )
+
+    @property
     def closure_kind(self) -> str:
         return self.generated.kind
 
@@ -800,6 +822,27 @@ class TriangularLatinDefectClosureAudit:
     rows: Tuple[TriangularLatinDefectClosureRow, ...]
 
     @property
+    def duplicate_closure_keys(
+        self,
+    ) -> Tuple[
+        Tuple[
+            str,
+            str,
+            Color,
+            Color,
+            Color,
+            FibrePoint | None,
+            Tuple[FibrePoint, FibrePoint],
+        ],
+        ...,
+    ]:
+        return _duplicate_values(tuple(row.closure_key for row in self.rows))
+
+    @property
+    def closure_ledgers_duplicate_free(self) -> bool:
+        return not self.duplicate_closure_keys
+
+    @property
     def proper_closure_rows(self) -> Tuple[TriangularLatinDefectClosureRow, ...]:
         return tuple(row for row in self.rows if row.closure_is_proper)
 
@@ -809,11 +852,15 @@ class TriangularLatinDefectClosureAudit:
 
     @property
     def has_proper_closure(self) -> bool:
-        return bool(self.proper_closure_rows)
+        return self.closure_ledgers_duplicate_free and bool(self.proper_closure_rows)
 
     @property
     def all_kernel_edges_force_universal_closure(self) -> bool:
-        return bool(self.rows) and len(self.universal_closure_rows) == len(self.rows)
+        return (
+            bool(self.rows)
+            and self.closure_ledgers_duplicate_free
+            and len(self.universal_closure_rows) == len(self.rows)
+        )
 
 
 @dataclass(frozen=True)
@@ -1279,6 +1326,26 @@ class MissingTriangularPartialConstantClosureRow:
     generated: GeneratedCongruenceAudit
 
     @property
+    def closure_key(
+        self,
+    ) -> Tuple[
+        str,
+        Color,
+        Color,
+        FibrePoint,
+        Color,
+        Tuple[FibrePoint, FibrePoint],
+    ]:
+        return (
+            self.side,
+            self.left_color,
+            self.right_color,
+            self.fixed_input,
+            self.domain_color,
+            self.collapsed_inputs,
+        )
+
+    @property
     def closure_kind(self) -> str:
         return self.generated.kind
 
@@ -1298,6 +1365,26 @@ class MissingTriangularPartialConstantClosureAudit:
     rows: Tuple[MissingTriangularPartialConstantClosureRow, ...]
 
     @property
+    def duplicate_closure_keys(
+        self,
+    ) -> Tuple[
+        Tuple[
+            str,
+            Color,
+            Color,
+            FibrePoint,
+            Color,
+            Tuple[FibrePoint, FibrePoint],
+        ],
+        ...,
+    ]:
+        return _duplicate_values(tuple(row.closure_key for row in self.rows))
+
+    @property
+    def closure_ledgers_duplicate_free(self) -> bool:
+        return not self.duplicate_closure_keys
+
+    @property
     def proper_closure_rows(
         self,
     ) -> Tuple[MissingTriangularPartialConstantClosureRow, ...]:
@@ -1311,7 +1398,11 @@ class MissingTriangularPartialConstantClosureAudit:
 
     @property
     def all_partial_constant_edges_force_universal_closure(self) -> bool:
-        return bool(self.rows) and len(self.universal_closure_rows) == len(self.rows)
+        return (
+            bool(self.rows)
+            and self.closure_ledgers_duplicate_free
+            and len(self.universal_closure_rows) == len(self.rows)
+        )
 
 
 @dataclass(frozen=True)

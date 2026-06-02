@@ -1894,6 +1894,48 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             audit.finite_obstruction_data,
         )
 
+    def test_partial_constant_closure_rejects_duplicate_closure_keys(self):
+        profile, closure, route = partial_constant_missing_row_profile_route_audits()
+        duplicate_closure = MissingTriangularPartialConstantClosureAudit(
+            rows=(
+                closure.rows[0],
+                replace(closure.rows[0], generated=generated("proper")),
+            ),
+        )
+        audit = PostLinearRemainingFiniteSystemAudit(
+            active_system_k_refinement(),
+            missing_triangular_row_profile=profile,
+            missing_triangular_partial_constant_closure=duplicate_closure,
+            missing_triangular_partial_constant_continuation_route=route,
+        )
+
+        self.assertEqual(
+            duplicate_closure.duplicate_closure_keys,
+            (closure.rows[0].closure_key,),
+        )
+        self.assertFalse(duplicate_closure.closure_ledgers_duplicate_free)
+        self.assertFalse(
+            duplicate_closure.all_partial_constant_edges_force_universal_closure
+        )
+        self.assertEqual(audit.system_name, "system_k_kink_completion_deficit")
+        self.assertTrue(audit.system_k_active)
+        self.assertFalse(audit.system_c_active)
+        self.assertFalse(audit.system_k_closed_by_partial_constant_proper_closure)
+        self.assertIn(
+            (
+                "live_k_missing_latin_row_defects",
+                ((("*", "*"), "no_left_triangular_row"),),
+            ),
+            audit.finite_obstruction_data,
+        )
+        self.assertIn(
+            (
+                "missing_triangular_partial_constant_duplicate_closure_keys",
+                (closure.rows[0].closure_key,),
+            ),
+            audit.finite_obstruction_data,
+        )
+
     def test_partial_constant_route_requires_universal_continuation_seed(self):
         profile, closure, route = partial_constant_missing_row_profile_route_audits()
         nonuniversal_route = MissingTriangularPartialConstantContinuationRouteAudit(
@@ -2583,6 +2625,49 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
                         "proper",
                     ),
                 ),
+            ),
+            audit.finite_obstruction_data,
+        )
+
+    def test_post_linear_latin_defect_closure_rejects_duplicate_closure_keys(self):
+        refinement = constant_map_kernel_only_system_k_refinement()
+        row = TriangularLatinDefectClosureRow(
+            side="left",
+            defect="constant_map_kernel",
+            left_color="*",
+            right_color="*",
+            domain_color="*",
+            fixed_input=None,
+            collapsed_inputs=(0, 1),
+            generated=generated("proper"),
+        )
+        closure = TriangularLatinDefectClosureAudit(
+            rows=(row, replace(row, generated=generated("universal"))),
+        )
+
+        audit = PostLinearRemainingFiniteSystemAudit(
+            refinement,
+            triangular_latin_defect_closure=closure,
+        )
+
+        self.assertEqual(closure.duplicate_closure_keys, (row.closure_key,))
+        self.assertFalse(closure.closure_ledgers_duplicate_free)
+        self.assertFalse(closure.has_proper_closure)
+        self.assertFalse(closure.all_kernel_edges_force_universal_closure)
+        self.assertEqual(audit.system_name, "system_k_kink_completion_deficit")
+        self.assertTrue(audit.system_k_active)
+        self.assertFalse(audit.system_k_closed_by_proper_defect_closure)
+        self.assertIn(
+            (
+                "live_k_missing_latin_row_defects",
+                ((("*", "*"), "left_constant_map_universal_kernel"),),
+            ),
+            audit.finite_obstruction_data,
+        )
+        self.assertIn(
+            (
+                "triangular_latin_defect_duplicate_closure_keys",
+                (row.closure_key,),
             ),
             audit.finite_obstruction_data,
         )

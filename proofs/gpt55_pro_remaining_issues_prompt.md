@@ -493,14 +493,19 @@ K terminal proper-closure law:
 
 ```text
 If any triangular constant-map kernel edge or partial-constant missing-row
-edge generates a proper admissible congruence closure, then local-minimality
-is contradicted.  The branch is terminal:
+edge generates a proper admissible congruence closure, and the corresponding
+closure-key ledger is duplicate-free, then local-minimality is contradicted.
+The branch is terminal:
 
 closed_by_triangular_latin_proper_closure
 or
 closed_by_missing_triangular_partial_constant_proper_closure.
 
 No U/C/M endpoint obligation is created by a proper closure.
+
+If a closure key is duplicated, even with different generated-congruence
+kinds, the supplied closure ledger is ambiguous and cannot close System K or
+route the row to U/C/M.
 ```
 
 K-to-U recovery law:
@@ -510,7 +515,8 @@ A constant-map kernel reason routes to System U only for the universal
 closure rows.  For each constant-map kernel edge on that side and colour
 pair:
 
-1. the generated admissible closure of the collapsed input pair is universal;
+1. the generated admissible closure of the collapsed input pair is universal,
+   with a duplicate-free triangular closure key ledger;
 2. the triangular recovery inverse table is bijective on the relevant
    triangular row;
 3. the recovery table separates the two collapsed inputs by output pairs,
@@ -545,7 +551,8 @@ case is dual.
 
 The row routes to System C only when every relevant partial-constant edge has:
 
-1. universal generated admissible closure for the collapsed input pair;
+1. universal generated admissible closure for the collapsed input pair, with a
+   duplicate-free partial-constant closure key ledger;
 2. a supplied continuation route keyed to the same side, colour pair, fixed
    input, domain colour, collapsed input pair, and closure kind, with no
    duplicate route key;
@@ -555,11 +562,11 @@ The row routes to System C only when every relevant partial-constant edge has:
 6. the original partial-constant collapsed edge contained in that seed
    closure.
 
-If the partial-constant closure row is nonuniversal, if the supplied route
-does not match that closure row including closure kind, if a route key is
-duplicated, if the route reaches only a nonuniversal continuation-seed
-closure, or if any listed check fails, the original no-triangular row remains
-live in System K.
+If the partial-constant closure row is nonuniversal, if a closure key is
+duplicated, if the supplied route does not match that closure row including
+closure kind, if a route key is duplicated, if the route reaches only a
+nonuniversal continuation-seed closure, or if any listed check fails, the
+original no-triangular row remains live in System K.
 ```
 
 K-to-M coordinate-unit law:

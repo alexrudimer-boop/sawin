@@ -12472,6 +12472,10 @@ class PostLinearRemainingFiniteSystemAudit:
         return (
             self.raw_system_k
             and self.missing_triangular_partial_constant_closure is not None
+            and (
+                self.missing_triangular_partial_constant_closure
+                .closure_ledgers_duplicate_free
+            )
             and bool(
                 self.missing_triangular_partial_constant_closure.proper_closure_rows
             )
@@ -12534,6 +12538,11 @@ class PostLinearRemainingFiniteSystemAudit:
     def _partial_constant_profile_routes(self, side: str, pair: Tuple[Color, Color]) -> bool:
         if self.missing_triangular_partial_constant_closure is None:
             return False
+        if not (
+            self.missing_triangular_partial_constant_closure
+            .closure_ledgers_duplicate_free
+        ):
+            return False
         closure_rows = tuple(
             row
             for row in self.missing_triangular_partial_constant_closure.rows
@@ -12552,17 +12561,7 @@ class PostLinearRemainingFiniteSystemAudit:
                 continue
             if not row.closure_is_universal:
                 return False
-            route = route_by_key.get(
-                (
-                    row.side,
-                    row.left_color,
-                    row.right_color,
-                    row.fixed_input,
-                    row.domain_color,
-                    row.collapsed_inputs,
-                    row.closure_kind,
-                )
-            )
+            route = route_by_key.get((*row.closure_key, row.closure_kind))
             if route is None or not route.routes_to_universal_continuation_seed:
                 return False
         return True
@@ -12573,6 +12572,10 @@ class PostLinearRemainingFiniteSystemAudit:
         if (
             self.missing_triangular_partial_constant_closure is None
             or self.missing_triangular_partial_constant_continuation_route is None
+            or not (
+                self.missing_triangular_partial_constant_closure
+                .closure_ledgers_duplicate_free
+            )
             or not (
                 self.missing_triangular_partial_constant_continuation_route
                 .route_ledgers_duplicate_free
@@ -12595,17 +12598,7 @@ class PostLinearRemainingFiniteSystemAudit:
                 continue
             if not row.closure_is_universal:
                 return False
-            route = route_by_key.get(
-                (
-                    row.side,
-                    row.left_color,
-                    row.right_color,
-                    row.fixed_input,
-                    row.domain_color,
-                    row.collapsed_inputs,
-                    row.closure_kind,
-                )
-            )
+            route = route_by_key.get((*row.closure_key, row.closure_kind))
             if route is not None and route.routes_to_universal_continuation_seed:
                 return True
         return False
@@ -12667,6 +12660,7 @@ class PostLinearRemainingFiniteSystemAudit:
         if (
             self.triangular_latin_defect_closure is None
             or self.triangular_constant_kernel_recovery_route is None
+            or not self.triangular_latin_defect_closure.closure_ledgers_duplicate_free
             or not (
                 self.triangular_constant_kernel_recovery_route
                 .route_ledgers_duplicate_free
@@ -17581,6 +17575,10 @@ class PostLinearRemainingFiniteSystemAudit:
                                 for row in closure.universal_closure_rows
                             ),
                         ),
+                        (
+                            "triangular_latin_defect_duplicate_closure_keys",
+                            closure.duplicate_closure_keys,
+                        ),
                     )
                 )
             if self.triangular_constant_kernel_recovery_route is not None:
@@ -17886,6 +17884,11 @@ class PostLinearRemainingFiniteSystemAudit:
                                 for row in relevant_closure_rows
                                 if row.closure_is_universal
                             ),
+                        ),
+                        (
+                            "missing_triangular_partial_constant_duplicate_closure_keys",
+                            self.missing_triangular_partial_constant_closure
+                            .duplicate_closure_keys,
                         ),
                     )
                 )
