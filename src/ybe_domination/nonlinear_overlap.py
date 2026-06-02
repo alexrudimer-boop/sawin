@@ -2433,6 +2433,26 @@ class UniversalKResidualFaithfulnessAudit:
         return tuple(row.input_tuple for row in self.residual_rows)
 
     @property
+    def residual_endpoint_channel_reasons(self) -> Tuple[str, ...]:
+        """Endpoint-channel names used by the residual-faithfulness rows."""
+
+        return tuple(
+            sorted(
+                _unique_values(
+                    tuple(
+                        key[2]
+                        for row in self.residual_rows
+                        for key in row.endpoint_channel_keys
+                        if _universal_k_residual_endpoint_channel_key_well_formed(
+                            key
+                        )
+                    )
+                ),
+                key=repr,
+            )
+        )
+
+    @property
     def duplicate_residual_row_input_tuples(self) -> Tuple[Tuple[object, ...], ...]:
         return _duplicate_values(self.residual_row_input_tuples)
 
@@ -10205,6 +10225,27 @@ class UniversalKEndpointObserverFamilyBuildAudit:
         )
 
     @property
+    def residual_theorem_channel_reasons_by_family(
+        self,
+    ) -> Tuple[Tuple[str, Tuple[str, ...]], ...]:
+        return tuple(
+            sorted(
+                (
+                    (family, theorem.residual_endpoint_channel_reasons)
+                    for family, theorem in self.residual_theorem_row_parts
+                    if family in UNIVERSAL_K_ENDPOINT_FAMILIES
+                ),
+                key=repr,
+            )
+        )
+
+    @property
+    def product_residual_theorem_channel_reasons(self) -> Tuple[str, ...]:
+        if self.product_residual_faithfulness_theorem is None:
+            return ()
+        return self.product_residual_faithfulness_theorem.residual_endpoint_channel_reasons
+
+    @property
     def malformed_residual_theorem_rows(self) -> Tuple[object, ...]:
         return self._malformed_auxiliary_rows(
             self.residual_faithfulness_theorem_rows,
@@ -14056,6 +14097,7 @@ class PostLinearRemainingFiniteSystemAudit:
                     False,
                 ),
                 ("signed_endpoint_generator_residual_theorem_rows", ()),
+                ("signed_endpoint_generator_residual_theorem_channel_reasons", ()),
                 ("signed_endpoint_generator_residual_theorem_invalid_rows", ()),
                 (
                     "signed_endpoint_generator_residual_theorem_malformed_channel_keys",
@@ -15702,6 +15744,14 @@ class PostLinearRemainingFiniteSystemAudit:
                 ),
             ),
             (
+                "signed_endpoint_generator_residual_theorem_channel_reasons",
+                (
+                    audit.residual_faithfulness_theorem.residual_endpoint_channel_reasons
+                    if audit.residual_faithfulness_theorem is not None
+                    else ()
+                ),
+            ),
+            (
                 "signed_endpoint_generator_residual_theorem_invalid_rows",
                 (
                     tuple(row.input_tuple for row in audit.residual_faithfulness_theorem.invalid_residual_rows)
@@ -15901,6 +15951,10 @@ class PostLinearRemainingFiniteSystemAudit:
                     "endpoint_observer_family_build_product_residual_faithfulness_failure_reasons",
                     (),
                 ),
+                (
+                    "endpoint_observer_family_build_product_residual_faithfulness_channel_reasons",
+                    (),
+                ),
                 ("endpoint_observer_family_build_closes_current_kappa", False),
                 ("endpoint_observer_family_build_closed_families", ()),
                 (
@@ -15951,6 +16005,7 @@ class PostLinearRemainingFiniteSystemAudit:
                 ("endpoint_observer_family_cutoff_readout_missing_families", ()),
                 ("endpoint_observer_family_cutoff_readout_extra_families", ()),
                 ("endpoint_observer_family_residual_theorem_rows", ()),
+                ("endpoint_observer_family_residual_theorem_channel_reasons", ()),
                 ("endpoint_observer_family_residual_theorem_malformed_rows", ()),
                 ("endpoint_observer_family_residual_theorem_unknown_families", ()),
                 ("endpoint_observer_family_residual_theorem_duplicate_families", ()),
@@ -16108,6 +16163,10 @@ class PostLinearRemainingFiniteSystemAudit:
             (
                 "endpoint_observer_family_build_product_residual_faithfulness_failure_reasons",
                 audit.product_residual_faithfulness_failure_reasons,
+            ),
+            (
+                "endpoint_observer_family_build_product_residual_faithfulness_channel_reasons",
+                audit.product_residual_theorem_channel_reasons,
             ),
             (
                 "endpoint_observer_family_build_closes_current_kappa",
@@ -16281,6 +16340,10 @@ class PostLinearRemainingFiniteSystemAudit:
             (
                 "endpoint_observer_family_residual_theorem_rows",
                 audit.residual_faithfulness_theorem_rows,
+            ),
+            (
+                "endpoint_observer_family_residual_theorem_channel_reasons",
+                audit.residual_theorem_channel_reasons_by_family,
             ),
             (
                 "endpoint_observer_family_residual_theorem_malformed_rows",

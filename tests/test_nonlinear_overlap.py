@@ -4994,6 +4994,10 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         )
         self.assertTrue(strict_residual.proves_residual_faithfulness)
         self.assertEqual(
+            strict_residual.residual_endpoint_channel_reasons,
+            ("strict_identity_residual_channel",),
+        )
+        self.assertEqual(
             strict_residual.expected_residual_rows_by_family,
             (("C", 1), ("M", 1), ("U", 1)),
         )
@@ -5040,6 +5044,18 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertEqual(family_audit.failure_reasons, ())
         self.assertTrue(family_audit.proves_family_endpoint_observers)
         self.assertTrue(family_audit.proves_family_endpoint_product_closure)
+        self.assertEqual(
+            family_audit.product_residual_theorem_channel_reasons,
+            ("strict_identity_residual_channel",),
+        )
+        self.assertEqual(
+            family_audit.residual_theorem_channel_reasons_by_family,
+            (
+                ("C", ("strict_identity_residual_channel",)),
+                ("M", ("strict_identity_residual_channel",)),
+                ("U", ("strict_identity_residual_channel",)),
+            ),
+        )
 
         nonidentity_family_audit = (
             universal_k_identity_endpoint_observer_builds_by_family(
@@ -5083,6 +5099,10 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertFalse(strict_residual.proves_residual_faithfulness)
         self.assertTrue(singleton_residual.proves_residual_faithfulness)
         self.assertEqual(
+            singleton_residual.residual_endpoint_channel_reasons,
+            ("singleton_fibre_residual_channel",),
+        )
+        self.assertEqual(
             singleton_residual.expected_residual_input_tuples,
             (
                 (
@@ -5118,6 +5138,10 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertEqual(family_audit.failure_reasons, ())
         self.assertTrue(family_audit.proves_family_endpoint_observers)
         self.assertTrue(family_audit.proves_family_endpoint_product_closure)
+        self.assertEqual(
+            family_audit.product_residual_theorem_channel_reasons,
+            ("singleton_fibre_residual_channel",),
+        )
         for _family, build in family_audit.build_rows_exact:
             self.assertTrue(build.proves_endpoint_observer)
 
@@ -5168,6 +5192,10 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         )
         self.assertTrue(coordinate_residual.proves_residual_faithfulness)
         self.assertEqual(
+            coordinate_residual.residual_endpoint_channel_reasons,
+            ("coordinate_identity_residual_channel",),
+        )
+        self.assertEqual(
             coordinate_residual.expected_residual_input_tuples,
             (
                 (
@@ -5204,6 +5232,10 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertEqual(family_audit.failure_reasons, ())
         self.assertTrue(family_audit.proves_family_endpoint_observers)
         self.assertTrue(family_audit.proves_family_endpoint_product_closure)
+        self.assertEqual(
+            family_audit.product_residual_theorem_channel_reasons,
+            ("coordinate_identity_residual_channel",),
+        )
 
     def test_endpoint_observer_builds_by_family_cover_exact_ucm_families(self):
         interval = one_color_identity_interval()
