@@ -3197,6 +3197,13 @@ class UniversalKFibreLabelIdentityAudit:
         for left_color, right_color in product(self.interval.colors, repeat=2):
             output_colors = self.interval.base_R.get((left_color, right_color))
             if output_colors is None:
+                failures.append(
+                    (
+                        (left_color, right_color),
+                        "fibre_label_missing_base_row",
+                        None,
+                    )
+                )
                 continue
             output_left_color, output_right_color = output_colors
             for input_left in self.interval.fibres[left_color]:
@@ -3205,6 +3212,18 @@ class UniversalKFibreLabelIdentityAudit:
                         (left_color, right_color, input_left, input_right)
                     )
                     if output is None:
+                        failures.append(
+                            (
+                                (
+                                    left_color,
+                                    right_color,
+                                    input_left,
+                                    input_right,
+                                ),
+                                "fibre_label_missing_local_row",
+                                None,
+                            )
+                        )
                         continue
                     output_left, output_right = output
                     if labels[(output_left_color, output_left)] != labels[

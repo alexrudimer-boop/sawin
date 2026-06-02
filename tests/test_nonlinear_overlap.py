@@ -5880,6 +5880,46 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             missing_label_audit.failure_reasons,
         )
 
+        raw_missing_base = type("RawMissingBaseRows", (), {})()
+        raw_missing_base.colors = ("a", "b")
+        raw_missing_base.fibres = {"a": ("a0",), "b": ("b0",)}
+        raw_missing_base.base_R = {}
+        raw_missing_base.T = {}
+        missing_base_audit = universal_k_fibre_label_identity_audit(
+            raw_missing_base,
+            (("a", "a0", 0), ("b", "b0", 1)),
+        )
+        self.assertFalse(missing_base_audit.proves_fibre_label_identity_action)
+        self.assertIn(
+            "fibre_label_identity_not_preserved",
+            missing_base_audit.failure_reasons,
+        )
+        self.assertIn(
+            "fibre_label_missing_base_row",
+            tuple(failure[1] for failure in missing_base_audit.label_preservation_failures),
+        )
+
+        raw_missing_local = type("RawMissingLocalRows", (), {})()
+        raw_missing_local.colors = ("a",)
+        raw_missing_local.fibres = {"a": ("a0", "a1")}
+        raw_missing_local.base_R = {("a", "a"): ("a", "a")}
+        raw_missing_local.T = {
+            ("a", "a", "a0", "a0"): ("a0", "a0"),
+        }
+        missing_local_audit = universal_k_fibre_label_identity_audit(
+            raw_missing_local,
+            (("a", "a0", 0), ("a", "a1", 1)),
+        )
+        self.assertFalse(missing_local_audit.proves_fibre_label_identity_action)
+        self.assertIn(
+            "fibre_label_identity_not_preserved",
+            missing_local_audit.failure_reasons,
+        )
+        self.assertIn(
+            "fibre_label_missing_local_row",
+            tuple(failure[1] for failure in missing_local_audit.label_preservation_failures),
+        )
+
         residual = universal_k_fibre_label_identity_residual_faithfulness_audit(
             interval,
             seed_states,

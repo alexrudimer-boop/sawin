@@ -1793,7 +1793,10 @@ finite ledger of rows `(color, fibre_point, label)` defines maps
 label is finite hashable certificate data, and each `ell_c` is injective.
 The local row table must preserve labels coordinatewise: whenever
 `R_C(a,b)=(c,d)` and `T_{a,b}(x,y)=(u,v)`, one must have
-`ell_c(u)=ell_a(x)` and `ell_d(v)=ell_b(y)`.  Then every braid word preserves
+`ell_c(u)=ell_a(x)` and `ell_d(v)=ell_b(y)`.  This check must range over
+every colour pair and every fibre input; a missing quotient row or a missing
+local `T` row is a finite preservation failure, not a vacuous pass.  Then
+every braid word preserves
 the ordered label tuple.  For `beta` in the quotient kernel, quotient colours
 return to the original tuple, and fibrewise injectivity of the returned
 labels forces the final fibre tuple to equal the initial tuple.  The helper

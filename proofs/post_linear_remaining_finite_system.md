@@ -954,7 +954,10 @@ The rows must cover every fibre point exactly once, labels must be finite
 hashable certificate data, the label map must be injective on each fibre,
 and every local row must preserve the two labels coordinatewise: if
 `R_C(a,b)=(c,d)` and `T_{a,b}(x,y)=(u,v)`, then
-`ell_c(u)=ell_a(x)` and `ell_d(v)=ell_b(y)`.  Along any braid word the
+`ell_c(u)=ell_a(x)` and `ell_d(v)=ell_b(y)`.  The preservation check ranges
+over every colour pair and every fibre input; a missing quotient row or a
+missing local `T` row is a finite preservation failure, not a vacuous pass.
+Along any braid word the
 ordered label tuple is unchanged; for a braid in the quotient kernel the
 final quotient colours return, and injectivity on each returned fibre forces
 the final fibre tuple to equal the initial one.  The identity constructor
