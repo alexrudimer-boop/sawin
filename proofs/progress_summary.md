@@ -1390,6 +1390,18 @@ action `Omega`; the row succeeds modulo `S^r`, and failure is exactly a
 detector-orbit relation whose lift has a nontrivial `S`-coordinate.  The
 helper `point_pushing_nonabelian_wreath_coordinate_audit(...)` records the
 finite row shape.
+The U/C/M endpoint-observer product residual gate has been tightened again.
+For a multi-family product endpoint row, the product residual-faithfulness
+theorem must now match the per-family residual theorem not only on active
+families and routed seed states, but also on the exact endpoint-channel
+reason ledger by family.  A product theorem that proves residual faithfulness
+for placeholder channel names, while the observers actually kill different
+U/C/M channels, is rejected with
+`endpoint_observer_product_residual_faithfulness_channel_scope_mismatch`.
+This removes another false product closure and leaves the same local
+nontrivial observer-existence gap: construct residual-faithful U/C/M
+monodromy-coboundary observers for all surviving intervals, or produce a
+normalized-law counterexample.
 
 ## Verification snapshot
 

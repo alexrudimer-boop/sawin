@@ -2541,6 +2541,30 @@ class UniversalKResidualFaithfulnessAudit:
         )
 
     @property
+    def residual_endpoint_channel_reasons_by_family(
+        self,
+    ) -> Tuple[Tuple[str, Tuple[str, ...]], ...]:
+        """Endpoint-channel names used by each routed endpoint family."""
+
+        reasons_by_family: dict[str, list[str]] = {}
+        for row in self.residual_rows:
+            for key in row.endpoint_channel_keys:
+                if not _universal_k_residual_endpoint_channel_key_well_formed(key):
+                    continue
+                family = key[0]
+                reasons_by_family.setdefault(family, []).append(key[2])
+        return tuple(
+            sorted(
+                (
+                    (family, tuple(sorted(_unique_values(tuple(reasons)), key=repr)))
+                    for family, reasons in reasons_by_family.items()
+                    if family in UNIVERSAL_K_ENDPOINT_FAMILIES
+                ),
+                key=repr,
+            )
+        )
+
+    @property
     def duplicate_residual_row_input_tuples(self) -> Tuple[Tuple[object, ...], ...]:
         return _duplicate_values(self.residual_row_input_tuples)
 
@@ -11339,6 +11363,17 @@ class UniversalKEndpointObserverFamilyBuildAudit:
         return self.product_residual_faithfulness_theorem.residual_endpoint_channel_reasons
 
     @property
+    def product_residual_theorem_channel_reasons_by_family(
+        self,
+    ) -> Tuple[Tuple[str, Tuple[str, ...]], ...]:
+        if self.product_residual_faithfulness_theorem is None:
+            return ()
+        return (
+            self.product_residual_faithfulness_theorem
+            .residual_endpoint_channel_reasons_by_family
+        )
+
+    @property
     def malformed_residual_theorem_rows(self) -> Tuple[object, ...]:
         return self._malformed_auxiliary_rows(
             self.residual_faithfulness_theorem_rows,
@@ -11558,6 +11593,15 @@ class UniversalKEndpointObserverFamilyBuildAudit:
         )
 
     @property
+    def product_residual_faithfulness_channel_reasons_match_families(self) -> bool:
+        if self.product_residual_faithfulness_theorem is None:
+            return False
+        return (
+            self.product_residual_theorem_channel_reasons_by_family
+            == self.residual_theorem_channel_reasons_by_family
+        )
+
+    @property
     def product_residual_faithfulness_proved(self) -> bool:
         if not self.product_residual_faithfulness_required:
             return True
@@ -11566,6 +11610,7 @@ class UniversalKEndpointObserverFamilyBuildAudit:
             theorem is not None
             and self.product_residual_faithfulness_scope_matches_families
             and self.product_residual_faithfulness_scope_matches_seed_states
+            and self.product_residual_faithfulness_channel_reasons_match_families
             and theorem.proves_residual_faithfulness
         )
 
@@ -11585,6 +11630,10 @@ class UniversalKEndpointObserverFamilyBuildAudit:
         if not self.product_residual_faithfulness_scope_matches_seed_states:
             reasons.append(
                 "endpoint_observer_product_residual_faithfulness_seed_scope_mismatch"
+            )
+        if not self.product_residual_faithfulness_channel_reasons_match_families:
+            reasons.append(
+                "endpoint_observer_product_residual_faithfulness_channel_scope_mismatch"
             )
         if not theorem.proves_residual_faithfulness:
             reasons.append("endpoint_observer_product_residual_faithfulness_not_proved")
@@ -17492,11 +17541,19 @@ class PostLinearRemainingFiniteSystemAudit:
                     False,
                 ),
                 (
+                    "endpoint_observer_family_build_product_residual_faithfulness_channel_scope_matches",
+                    False,
+                ),
+                (
                     "endpoint_observer_family_build_product_residual_faithfulness_failure_reasons",
                     (),
                 ),
                 (
                     "endpoint_observer_family_build_product_residual_faithfulness_channel_reasons",
+                    (),
+                ),
+                (
+                    "endpoint_observer_family_build_product_residual_faithfulness_channel_reasons_by_family",
                     (),
                 ),
                 ("endpoint_observer_family_build_closes_current_kappa", False),
@@ -17739,12 +17796,20 @@ class PostLinearRemainingFiniteSystemAudit:
                 audit.product_residual_faithfulness_scope_matches_seed_states,
             ),
             (
+                "endpoint_observer_family_build_product_residual_faithfulness_channel_scope_matches",
+                audit.product_residual_faithfulness_channel_reasons_match_families,
+            ),
+            (
                 "endpoint_observer_family_build_product_residual_faithfulness_failure_reasons",
                 audit.product_residual_faithfulness_failure_reasons,
             ),
             (
                 "endpoint_observer_family_build_product_residual_faithfulness_channel_reasons",
                 audit.product_residual_theorem_channel_reasons,
+            ),
+            (
+                "endpoint_observer_family_build_product_residual_faithfulness_channel_reasons_by_family",
+                audit.product_residual_theorem_channel_reasons_by_family,
             ),
             (
                 "endpoint_observer_family_build_closes_current_kappa",

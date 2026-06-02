@@ -1200,6 +1200,14 @@ themselves prove that killing all endpoint channels forces the bundled
 residual fibre action to be trivial.  The product theorem is not required in
 the one-family case, where the family build's own residual-faithfulness audit
 already has the full active-family scope.
+The product theorem must also preserve the exact endpoint-channel reason
+ledger by family.  Matching the active families and the seed states is not
+enough: a product theorem whose rows use placeholder or different channel
+names, such as a generic product channel replacing the per-family U/C/M
+reasons, does not prove that the same routed endpoint channels are faithful to
+the actual residual motion.  Such a certificate is reported as
+`endpoint_observer_product_residual_faithfulness_channel_scope_mismatch` and
+cannot close a product endpoint row.
 The product residual theorem's active and covered family ledgers must also
 be finite well-formed `{U,C,M}` ledgers.  Unknown or unhashable family labels
 in the product theorem do not crash the family build and do not match the
@@ -1554,8 +1562,10 @@ endpoint_observer_family_build_product_residual_faithfulness_present
 endpoint_observer_family_build_product_residual_faithfulness_proved
 endpoint_observer_family_build_product_residual_faithfulness_family_scope_matches
 endpoint_observer_family_build_product_residual_faithfulness_seed_scope_matches
+endpoint_observer_family_build_product_residual_faithfulness_channel_scope_matches
 endpoint_observer_family_build_product_residual_faithfulness_failure_reasons
 endpoint_observer_family_build_product_residual_faithfulness_channel_reasons
+endpoint_observer_family_build_product_residual_faithfulness_channel_reasons_by_family
 endpoint_observer_family_build_closes_current_kappa
 endpoint_observer_family_build_closed_families
 system_u_closed_by_endpoint_observer_family_build
