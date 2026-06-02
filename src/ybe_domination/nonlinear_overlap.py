@@ -3364,6 +3364,98 @@ def universal_k_interval_has_fibre_label_identity_action(
     ).proves_fibre_label_identity_action
 
 
+def universal_k_canonical_fibre_label_identity_rows(
+    interval: LocalInterval,
+) -> Tuple[UniversalKFibreLabelRow, ...]:
+    """Derive the least fibre-label ledger forced by coordinate preservation.
+
+    The generated labels are components of the finite relation saying that a
+    positive local row preserves the left coordinate label and the right
+    coordinate label.  The usual fibre-label audit still has to prove that the
+    resulting component labels are injective on every fibre and are preserved
+    by every actual row.
+    """
+
+    parent: dict[Tuple[Color, FibrePoint], Tuple[Color, FibrePoint]] = {}
+
+    def add(node: Tuple[Color, FibrePoint]) -> None:
+        parent.setdefault(node, node)
+
+    def find(node: Tuple[Color, FibrePoint]) -> Tuple[Color, FibrePoint]:
+        add(node)
+        root = node
+        while parent[root] != root:
+            root = parent[root]
+        while parent[node] != node:
+            next_node = parent[node]
+            parent[node] = root
+            node = next_node
+        return root
+
+    def union(left: Tuple[Color, FibrePoint], right: Tuple[Color, FibrePoint]) -> None:
+        left_root = find(left)
+        right_root = find(right)
+        if left_root == right_root:
+            return
+        if repr(right_root) < repr(left_root):
+            left_root, right_root = right_root, left_root
+        parent[right_root] = left_root
+
+    for color in interval.colors:
+        for point in interval.fibres[color]:
+            add((color, point))
+
+    for left_color, right_color in product(interval.colors, repeat=2):
+        output_colors = interval.base_R.get((left_color, right_color))
+        if output_colors is None:
+            continue
+        output_left_color, output_right_color = output_colors
+        for input_left in interval.fibres[left_color]:
+            for input_right in interval.fibres[right_color]:
+                output = interval.T.get(
+                    (left_color, right_color, input_left, input_right)
+                )
+                if output is None:
+                    continue
+                output_left, output_right = output
+                union((left_color, input_left), (output_left_color, output_left))
+                union((right_color, input_right), (output_right_color, output_right))
+
+    roots = tuple(
+        sorted({find(node) for node in parent}, key=repr)
+    )
+    label_by_root = {
+        root: ("canonical_fibre_label_component", index)
+        for index, root in enumerate(roots)
+    }
+    return tuple(
+        (color, point, label_by_root[find((color, point))])
+        for color in interval.colors
+        for point in interval.fibres[color]
+    )
+
+
+def universal_k_canonical_fibre_label_identity_audit(
+    interval: LocalInterval,
+) -> UniversalKFibreLabelIdentityAudit:
+    """Audit the canonical least fibre-label preservation ledger."""
+
+    return universal_k_fibre_label_identity_audit(
+        interval,
+        universal_k_canonical_fibre_label_identity_rows(interval),
+    )
+
+
+def universal_k_interval_has_canonical_fibre_label_identity_action(
+    interval: LocalInterval,
+) -> bool:
+    """Return whether the canonical preserved-label quotient is fibrewise injective."""
+
+    return universal_k_canonical_fibre_label_identity_audit(
+        interval
+    ).proves_fibre_label_identity_action
+
+
 def _universal_k_trivial_residual_faithfulness_audit(
     endpoint_seed_states: Sequence[Tuple[str, UniversalKSeedState]],
     *,
@@ -3496,6 +3588,21 @@ def universal_k_fibre_label_identity_residual_faithfulness_audit(
         theorem_holds=universal_k_interval_has_fibre_label_identity_action(
             interval,
             label_rows,
+        ),
+    )
+
+
+def universal_k_canonical_fibre_label_identity_residual_faithfulness_audit(
+    interval: LocalInterval,
+    endpoint_seed_states: Sequence[Tuple[str, UniversalKSeedState]],
+) -> UniversalKResidualFaithfulnessAudit:
+    """Prove residual faithfulness from the canonical preserved-label quotient."""
+
+    return _universal_k_trivial_residual_faithfulness_audit(
+        endpoint_seed_states,
+        row_reason="canonical_fibre_label_identity_residual_channel",
+        theorem_holds=universal_k_interval_has_canonical_fibre_label_identity_action(
+            interval
         ),
     )
 
@@ -12252,6 +12359,7 @@ def universal_k_identity_endpoint_observer_builds_by_family(
     derive_coordinate_identity_residual_faithfulness: bool = False,
     derive_singleton_fibre_residual_faithfulness: bool = False,
     derive_fibre_label_identity_residual_faithfulness: bool = False,
+    derive_canonical_fibre_label_identity_residual_faithfulness: bool = False,
     fibre_label_identity_rows: Sequence[object] = (),
     residual_faithfulness_theorems_by_family: Sequence[
         Tuple[str, UniversalKResidualFaithfulnessAudit]
@@ -12272,7 +12380,9 @@ def universal_k_identity_endpoint_observer_builds_by_family(
     fibre row is the identity on colours and fibre coordinates.  The optional
     coordinate-identity, singleton-fibre, and fibre-label identity residual
     helpers are likewise explicit and prove rows only when their finite
-    hypotheses hold.
+    hypotheses hold.  The canonical fibre-label helper constructs its label
+    ledger from the least local row-preservation relation before applying the
+    same fibre-label residual theorem.
     """
 
     seed_states = universal_k_signed_endpoint_seed_states(seed_classifier_entries)
@@ -12412,6 +12522,19 @@ def universal_k_identity_endpoint_observer_builds_by_family(
                         fibre_label_identity_rows,
                     )
                 )
+            if (
+                derive_canonical_fibre_label_identity_residual_faithfulness
+                and (
+                    derived_residual is None
+                    or not derived_residual.proves_residual_faithfulness
+                )
+            ):
+                derived_residual = (
+                    universal_k_canonical_fibre_label_identity_residual_faithfulness_audit(
+                        interval,
+                        family_seed_states,
+                    )
+                )
             if derived_residual is not None:
                 residual_rows.append((family, derived_residual))
     if (
@@ -12420,6 +12543,7 @@ def universal_k_identity_endpoint_observer_builds_by_family(
             or derive_coordinate_identity_residual_faithfulness
             or derive_singleton_fibre_residual_faithfulness
             or derive_fibre_label_identity_residual_faithfulness
+            or derive_canonical_fibre_label_identity_residual_faithfulness
         )
         and product_residual_faithfulness_theorem is None
         and len(active_families) > 1
@@ -12470,6 +12594,19 @@ def universal_k_identity_endpoint_observer_builds_by_family(
                     interval,
                     seed_states,
                     fibre_label_identity_rows,
+                )
+            )
+        if (
+            derive_canonical_fibre_label_identity_residual_faithfulness
+            and (
+                product_residual_faithfulness_theorem is None
+                or not product_residual_faithfulness_theorem.proves_residual_faithfulness
+            )
+        ):
+            product_residual_faithfulness_theorem = (
+                universal_k_canonical_fibre_label_identity_residual_faithfulness_audit(
+                    interval,
+                    seed_states,
                 )
             )
     return universal_k_endpoint_observer_builds_by_family(
@@ -19762,6 +19899,7 @@ def post_linear_remaining_finite_system_audit(
     universal_k_identity_coordinate_residual_faithfulness: bool = False,
     universal_k_identity_singleton_residual_faithfulness: bool = False,
     universal_k_identity_fibre_label_residual_faithfulness: bool = False,
+    universal_k_identity_canonical_fibre_label_residual_faithfulness: bool = False,
     universal_k_identity_fibre_label_rows: Sequence[object] = (),
     unsupported_companion_structural_contradiction: (
         UnsupportedCompanionStructuralContradictionAudit | None
@@ -19939,6 +20077,9 @@ def post_linear_remaining_finite_system_audit(
                     ),
                     derive_fibre_label_identity_residual_faithfulness=(
                         universal_k_identity_fibre_label_residual_faithfulness
+                    ),
+                    derive_canonical_fibre_label_identity_residual_faithfulness=(
+                        universal_k_identity_canonical_fibre_label_residual_faithfulness
                     ),
                     fibre_label_identity_rows=universal_k_identity_fibre_label_rows,
                     residual_faithfulness_theorems_by_family=(

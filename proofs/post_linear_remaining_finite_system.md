@@ -997,6 +997,21 @@ the final fibre tuple to equal the initial one.  The identity constructor
 consumes this proof only when
 `derive_fibre_label_identity_residual_faithfulness=True` and the finite
 `fibre_label_identity_rows` ledger is supplied.
+There is now a canonical fibre-label identity residual-faithfulness subcase:
+`universal_k_canonical_fibre_label_identity_rows(...)` constructs the least
+finite label ledger forced by local coordinate-label preservation.  It starts
+with one node `(color, fibre_point)` for every fibre point and identifies
+`(a,x)` with `(c,u)` and `(b,y)` with `(d,v)` for every local row
+`R_C(a,b)=(c,d)` and `T_{a,b}(x,y)=(u,v)`.  The derived component labels are
+then audited by the same fibre-label checker.  The subcase closes only if
+those component labels are injective on every fibre and every local row
+preserves them coordinatewise; if the generated relation identifies two
+distinct points in one fibre, the audit fails with a finite
+`fibre_label_identity_not_injective` reason.  The identity observer
+constructor consumes this proof only when
+`derive_canonical_fibre_label_identity_residual_faithfulness=True`.  This is
+not a general endpoint observer: it closes exactly the case where residual
+motion is already killed by the canonical preserved-label quotient.
 All automatic residual-faithfulness helpers preserve the full supplied
 routed seed-state ledger in the theorem.  They may use only the well-formed
 U/C/M seed states to emit schematic rows, but malformed, wrong-family, or

@@ -106,9 +106,13 @@ from ybe_domination import (
     universal_k_identity_cutoff_readout_audit,
     universal_k_identity_endpoint_observer_builds_by_family,
     universal_k_identity_word_potential_certificate,
+    universal_k_canonical_fibre_label_identity_audit,
+    universal_k_canonical_fibre_label_identity_residual_faithfulness_audit,
+    universal_k_canonical_fibre_label_identity_rows,
     universal_k_coordinate_identity_residual_faithfulness_audit,
     universal_k_fibre_label_identity_audit,
     universal_k_fibre_label_identity_residual_faithfulness_audit,
+    universal_k_interval_has_canonical_fibre_label_identity_action,
     universal_k_interval_has_coordinate_identity_fibre_action,
     universal_k_interval_has_fibre_label_identity_action,
     universal_k_interval_has_singleton_fibres,
@@ -6300,6 +6304,94 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertIn(
             "endpoint_observer_family_builds_not_proved",
             bad_family_audit.failure_reasons,
+        )
+
+    def test_canonical_fibre_label_identity_residual_faithfulness_derives_rows(self):
+        interval = two_color_fibre_label_identity_swap_interval()
+        seed_entries = tuple(
+            (
+                ("a", "b", family, "constant_map_kernel", (0, 1)),
+                (family, ("a", "b", f"{family}_seed")),
+            )
+            for family in ("U", "C", "M")
+        )
+        seed_states = tuple(target for _descriptor, target in seed_entries)
+
+        canonical_rows = universal_k_canonical_fibre_label_identity_rows(interval)
+        canonical_audit = universal_k_canonical_fibre_label_identity_audit(interval)
+
+        self.assertEqual(
+            tuple((color, point) for color, point, _label in canonical_rows),
+            canonical_audit.expected_fibre_label_keys,
+        )
+        self.assertTrue(
+            universal_k_interval_has_canonical_fibre_label_identity_action(interval)
+        )
+        self.assertTrue(canonical_audit.proves_fibre_label_identity_action)
+        self.assertEqual(canonical_audit.failure_reasons, ())
+        self.assertFalse(
+            universal_k_interval_has_coordinate_identity_fibre_action(interval)
+        )
+
+        residual = (
+            universal_k_canonical_fibre_label_identity_residual_faithfulness_audit(
+                interval,
+                seed_states,
+            )
+        )
+        self.assertTrue(residual.proves_residual_faithfulness)
+        self.assertEqual(
+            residual.residual_endpoint_channel_reasons,
+            ("canonical_fibre_label_identity_residual_channel",),
+        )
+        self.assertEqual(
+            residual.expected_residual_rows_by_family,
+            (("C", 1), ("M", 1), ("U", 1)),
+        )
+
+        family_audit = universal_k_identity_endpoint_observer_builds_by_family(
+            interval,
+            seed_entries,
+            derive_canonical_fibre_label_identity_residual_faithfulness=True,
+        )
+        self.assertEqual(family_audit.failure_reasons, ())
+        self.assertTrue(family_audit.proves_family_endpoint_observers)
+        self.assertTrue(family_audit.proves_family_endpoint_product_closure)
+        self.assertEqual(
+            family_audit.product_residual_theorem_channel_reasons,
+            ("canonical_fibre_label_identity_residual_channel",),
+        )
+
+    def test_canonical_fibre_label_identity_refuses_noninjective_components(self):
+        interval = one_color_flip_interval()
+        seed_entries = (
+            (
+                ("*", "*", "U", "constant_map_kernel", (0, 1)),
+                ("U", ("*", "*", "U_seed")),
+            ),
+        )
+
+        canonical_audit = universal_k_canonical_fibre_label_identity_audit(interval)
+
+        self.assertFalse(canonical_audit.proves_fibre_label_identity_action)
+        self.assertIn(
+            "fibre_label_identity_not_injective",
+            canonical_audit.failure_reasons,
+        )
+        self.assertFalse(
+            universal_k_interval_has_canonical_fibre_label_identity_action(interval)
+        )
+
+        family_audit = universal_k_identity_endpoint_observer_builds_by_family(
+            interval,
+            seed_entries,
+            derive_canonical_fibre_label_identity_residual_faithfulness=True,
+        )
+        self.assertFalse(family_audit.proves_family_endpoint_observers)
+        self.assertEqual(family_audit.unproved_build_families, ("U",))
+        self.assertIn(
+            "endpoint_observer_family_builds_not_proved",
+            family_audit.failure_reasons,
         )
 
     def test_endpoint_observer_builds_by_family_cover_exact_ucm_families(self):
