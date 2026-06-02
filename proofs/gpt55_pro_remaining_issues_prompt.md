@@ -1706,9 +1706,12 @@ are finite ledger failures; they must not crash the permutation check and
 must not be treated as hidden observer states.
 The signed endpoint proof gate itself must consume this explicit monodromy
 representation audit.  It is not enough to assert separate state/coordinate
-YBE and far-commutativity booleans: the finite representation audit must
-show that the supplied positive state maps define a representation of the
-declared positive local-context presentation on the exact reachable states.
+YBE and far-commutativity booleans: the finite representation audit must be
+present and must show that the supplied positive state maps define a
+representation of the declared positive local-context presentation on the
+exact reachable states.  A missing explicit monodromy representation audit is
+a hard failure, not a vacuous success; in the current certificate machinery it
+is reported as `explicit_endpoint_monodromy_representation_missing`.
 The preferred handoff is therefore the finite monodromy-coboundary
 certificate itself: endpoint group or cutoff target, detector-track
 initialization rows, templates `W_s`, positive identity rows, C/M cutoff

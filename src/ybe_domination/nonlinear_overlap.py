@@ -7474,8 +7474,8 @@ class UniversalKSignedEndpointGeneratorAudit:
     @property
     def explicit_monodromy_representation_verified(self) -> bool:
         return (
-            self.monodromy_representation_audit is None
-            or self.monodromy_representation_audit.proves_monodromy_representation
+            self.monodromy_representation_audit is not None
+            and self.monodromy_representation_audit.proves_monodromy_representation
         )
 
     @property
@@ -8213,10 +8213,9 @@ class UniversalKSignedEndpointGeneratorAudit:
             reasons.append("finite_signed_row_checks_missing_endpoint_group")
         if self.finite_row_checks_derived_from_tables and not self.signed_finite_row_checks_proved:
             reasons.append("finite_signed_row_checks_inconsistent")
-        if (
-            self.monodromy_representation_audit is not None
-            and not self.monodromy_representation_audit.proves_monodromy_representation
-        ):
+        if self.monodromy_representation_audit is None:
+            reasons.append("explicit_endpoint_monodromy_representation_missing")
+        elif not self.monodromy_representation_audit.proves_monodromy_representation:
             reasons.append("explicit_endpoint_monodromy_representation_not_verified")
             reasons.extend(self.monodromy_representation_audit.failure_reasons)
         if self.positive_monodromy_permutation_failures:
@@ -16778,6 +16777,10 @@ class PostLinearRemainingFiniteSystemAudit:
             (
                 "signed_endpoint_generator_far_commutativity_label_diagnostics",
                 audit.far_commutativity_label_diagnostic_failures,
+            ),
+            (
+                "signed_endpoint_generator_explicit_monodromy_representation_present",
+                audit.monodromy_representation_audit is not None,
             ),
             (
                 "signed_endpoint_generator_explicit_monodromy_representation_verified",

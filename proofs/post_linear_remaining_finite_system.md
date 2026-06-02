@@ -958,10 +958,14 @@ stay open; they are not interpreted as positive rows and are not silently
 discarded as harmless omissions.
 The signed endpoint audit itself now carries this explicit representation
 gate.  A supplied signed table cannot close merely by setting the older
-state/coordinate booleans: if an explicit monodromy representation audit is
-present, it must prove every context map and every presentation relation, and
-the derived constructor supplies that audit automatically from the current
-interval, reachable seed states, and rows.
+state/coordinate booleans: an explicit monodromy representation audit must be
+present and must prove every context map and every presentation relation.
+Missing explicit monodromy data is reported as
+`explicit_endpoint_monodromy_representation_missing`, and the routed
+obstruction data exports
+`signed_endpoint_generator_explicit_monodromy_representation_present` together
+with the verification result.  The derived constructor supplies that audit
+automatically from the current interval, reachable seed states, and rows.
 The top-level post-linear audit retains the constructed
 `UniversalKEndpointObserverBuild` whenever it derives the signed endpoint
 generator from a word-potential certificate.  The exported obstruction data

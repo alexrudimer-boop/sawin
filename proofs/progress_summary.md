@@ -1430,6 +1430,14 @@ The raw monodromy input audit now rejects the same duplicate and conflicting
 seed-classifier ledgers before declaring `input_rows_exact`, so an ambiguous
 front-door package cannot appear internally exact while the family wrapper is
 the only layer that notices the classifier defect.
+The direct signed-endpoint proof gate has also been tightened to require an
+explicit finite monodromy representation audit.  A signed table with manually
+asserted state/coordinate braid booleans but no attached representation audit
+now fails with `explicit_endpoint_monodromy_representation_missing`; the
+factory path still derives the representation audit automatically from the
+current interval, reachable seed states, and signed rows.  This prevents the
+old signed-table path from bypassing the reduced monodromy-coboundary
+observer certificate.
 This removes another false endpoint closure and leaves the same local
 nontrivial observer-existence gap: construct residual-faithful U/C/M
 monodromy-coboundary observers for all surviving intervals, or produce a

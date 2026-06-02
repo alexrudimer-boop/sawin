@@ -630,6 +630,37 @@ def identity_signed_endpoint_rows(keys, next_state_by_current=None, *, endpoint_
     return tuple(rows)
 
 
+def explicit_monodromy_audit_for_rows(reachable_seed_states, rows):
+    families = tuple(
+        sorted({family for family, _state in reachable_seed_states}, key=repr)
+    )
+    contexts = tuple(
+        sorted(
+            {
+                (
+                    row.endpoint_family,
+                    row.left_color,
+                    row.right_color,
+                    row.input_left,
+                    row.input_right,
+                )
+                for row in rows
+                if row.sign == 1
+            },
+            key=repr,
+        )
+    )
+    presentation = UniversalKEndpointMonodromyPresentation(
+        expected_endpoint_families=families,
+        contexts=contexts,
+    )
+    return universal_k_endpoint_monodromy_representation_audit(
+        presentation,
+        reachable_seed_states,
+        rows,
+    )
+
+
 def refinement_for(interval, *, colored_ybe=True):
     return NonlinearOverlapRefinementAudit(
         obstruction=exact_obstruction(),
@@ -3718,11 +3749,30 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
                 required_entry_keys
             ),
             residual_faithfulness_theorem=theorem,
+            monodromy_representation_audit=explicit_monodromy_audit_for_rows(
+                (("U", seed_state),),
+                (positive_row, negative_row),
+            ),
         )
 
         self.assertTrue(theorem.proves_residual_faithfulness)
         self.assertTrue(theorem_complete.residual_faithfulness_proved)
         self.assertTrue(theorem_complete.proves_signed_endpoint_generator_tables)
+
+        missing_explicit_monodromy = replace(
+            theorem_complete,
+            monodromy_representation_audit=None,
+        )
+        self.assertFalse(
+            missing_explicit_monodromy.explicit_monodromy_representation_verified
+        )
+        self.assertFalse(
+            missing_explicit_monodromy.proves_signed_endpoint_generator_tables
+        )
+        self.assertIn(
+            "explicit_endpoint_monodromy_representation_missing",
+            missing_explicit_monodromy.failure_reasons,
+        )
 
         theorem_without_independence_certificate = replace(
             theorem,
@@ -5087,6 +5137,10 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             ),
             residual_action_scope=trivial_endpoint_residual_action_scope("U"),
             residual_action_audit=trivial_endpoint_residual_action_audit(),
+            monodromy_representation_audit=explicit_monodromy_audit_for_rows(
+                (("U", seed_state),),
+                (positive_row, negative_row),
+            ),
         )
 
         self.assertFalse(underived_domain.signed_generator_domain_exact)
@@ -5117,6 +5171,10 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             ),
             residual_action_scope=trivial_endpoint_residual_action_scope("U"),
             residual_action_audit=trivial_endpoint_residual_action_audit(),
+            monodromy_representation_audit=explicit_monodromy_audit_for_rows(
+                (("U", seed_state),),
+                (positive_row, negative_row),
+            ),
         )
 
         self.assertTrue(unverified_finite_checks.signed_generator_domain_exact)
@@ -5285,6 +5343,10 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             ),
             residual_action_scope=trivial_endpoint_residual_action_scope("U"),
             residual_action_audit=trivial_endpoint_residual_action_audit(),
+            monodromy_representation_audit=explicit_monodromy_audit_for_rows(
+                (("U", seed_state),),
+                (positive_row, negative_row),
+            ),
         )
 
         self.assertEqual(complete.missing_signed_seed_keys, ())
@@ -10551,6 +10613,10 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             telescoping_detector_audit=trivial_telescoping_detector_audit(keys),
             residual_action_scope=trivial_endpoint_residual_action_scope("U"),
             residual_action_audit=trivial_endpoint_residual_action_audit(),
+            monodromy_representation_audit=explicit_monodromy_audit_for_rows(
+                reachable,
+                rows,
+            ),
         )
 
         self.assertFalse(audit.telescoping_detector_proved)
@@ -11803,6 +11869,10 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             ),
             residual_action_scope=trivial_endpoint_residual_action_scope("U"),
             residual_action_audit=trivial_endpoint_residual_action_audit(),
+            monodromy_representation_audit=explicit_monodromy_audit_for_rows(
+                reachable,
+                rows,
+            ),
         )
 
         self.assertEqual(audit.missing_entry_keys, (keys[-1],))
@@ -11857,6 +11927,10 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             ),
             residual_action_scope=trivial_endpoint_residual_action_scope("U"),
             residual_action_audit=trivial_endpoint_residual_action_audit(),
+            monodromy_representation_audit=explicit_monodromy_audit_for_rows(
+                reachable,
+                rows,
+            ),
         )
 
         self.assertEqual(
@@ -13635,6 +13709,10 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             ),
             residual_action_scope=trivial_endpoint_residual_action_scope("U"),
             residual_action_audit=trivial_endpoint_residual_action_audit(),
+            monodromy_representation_audit=explicit_monodromy_audit_for_rows(
+                (("U", seed_state),),
+                (row, replace(row, sign=-1)),
+            ),
         )
         underspecified = PostLinearRemainingFiniteSystemAudit(
             refinement,
@@ -13928,6 +14006,10 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             ),
             residual_action_scope=trivial_endpoint_residual_action_scope("U"),
             residual_action_audit=trivial_endpoint_residual_action_audit(),
+            monodromy_representation_audit=explicit_monodromy_audit_for_rows(
+                reachable,
+                forged_rows,
+            ),
         )
         forged_wrapper = PostLinearRemainingFiniteSystemAudit(
             refinement,
