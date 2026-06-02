@@ -858,6 +858,15 @@ states are reported as finite ledger errors, not as vague missing observers
 and not as exceptions during seed-state set comparison.  Thus a combined
 product endpoint row cannot hide the absence of a C or M observer behind a
 successful U build.
+The family ledger is not allowed to be an opaque list of already-built
+observers.  It must also expose exact input rows for each active routed
+family: the word-potential certificate row, detector-track initialization
+row family, endpoint-target audit row, and residual-faithfulness theorem row.
+Active C/M cutoff families must also expose exact cutoff-readout rows.  A
+wrapper containing proving build objects but omitting these explicit ledgers
+remains diagnostic only and is reported with missing-family certificate,
+detector-track, endpoint-target, cutoff-readout, or residual-theorem
+failures.
 There is also a canonical identity-emission constructor,
 `universal_k_identity_endpoint_observer_builds_by_family(...)`.  It builds
 the identity monodromy-coboundary candidate for every active family hit by
@@ -967,17 +976,19 @@ Their assignment templates are checked as finite row data against the
 family's word-potential endpoint group: each entry must assign a raw
 `A_{r,j}` variable for the same detector track, may not duplicate a variable,
 and must use a value in the fixed endpoint group.  Endpoint-target audit rows
-and residual-faithfulness theorem rows must cover exactly the active families
-when supplied; C/M cutoff readout audit rows must cover exactly the active
-cutoff families.  Malformed
+and residual-faithfulness theorem rows must cover exactly the active families;
+missing such rows is a missing-family certificate failure, not an optional
+omission.  C/M cutoff readout audit rows must cover exactly the active cutoff
+families whenever C or M is active.  Malformed
 rows include wrong-typed auxiliary values, not merely wrong tuple shapes; the
 builder may select only endpoint target audits for the endpoint target ledger,
 cutoff readout audits for the cutoff ledger, and residual-faithfulness audits
-for the residual ledger.  Unknown families, duplicate families or keys, missing active families,
-and extra auxiliary families are reported separately.  The builder still lets
-the individual observer audit explain a genuinely absent target, cutoff,
-detector track, or residual proof, but it no longer allows a duplicate or
-stale auxiliary row to be hidden by the first valid row selected for a family.
+for the residual ledger.  Unknown families, duplicate families or keys,
+missing active families, and extra auxiliary families are reported separately.
+The builder still lets the individual observer audit explain a malformed
+target, cutoff, detector track, or residual proof, but it no longer allows a
+missing, duplicate, or stale auxiliary row to be hidden by the first valid row
+selected for a family.
 When a fixed endpoint group is declared as a product over multiple endpoint
 families, the signed endpoint audit now also checks family support of each
 emitted label: a row in family `E` must have identity components in every

@@ -5031,6 +5031,63 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         for _family, build in family_audit.build_rows_exact:
             self.assertTrue(build.proves_endpoint_observer)
 
+    def test_family_endpoint_observer_requires_explicit_input_ledgers(self):
+        interval = one_color_identity_interval()
+        seed_entries = tuple(
+            (
+                ("*", "*", family, "constant_map_kernel", (0, 1)),
+                (family, ("*", "*", f"{family}_seed")),
+            )
+            for family in ("U", "C", "M")
+        )
+        complete = universal_k_identity_endpoint_observer_builds_by_family(
+            interval,
+            seed_entries,
+            derive_strict_identity_residual_faithfulness=True,
+        )
+
+        self.assertTrue(complete.proves_family_endpoint_product_closure)
+        self.assertEqual(complete.unproved_build_families, ())
+
+        opaque = universal_k_endpoint_observer_family_build_audit(
+            seed_entries,
+            complete.builds,
+            product_residual_faithfulness_theorem=(
+                complete.product_residual_faithfulness_theorem
+            ),
+        )
+
+        self.assertFalse(opaque.proves_family_endpoint_observers)
+        self.assertEqual(opaque.unproved_build_families, ())
+        self.assertEqual(opaque.missing_certificate_families, ("C", "M", "U"))
+        self.assertEqual(
+            opaque.missing_family_detector_track_initialization_families,
+            ("C", "M", "U"),
+        )
+        self.assertEqual(opaque.missing_endpoint_target_families, ("C", "M", "U"))
+        self.assertEqual(opaque.missing_cutoff_readout_families, ("C", "M"))
+        self.assertEqual(opaque.missing_residual_theorem_families, ("C", "M", "U"))
+        self.assertIn(
+            "endpoint_observer_family_certificates_missing_families",
+            opaque.failure_reasons,
+        )
+        self.assertIn(
+            "endpoint_observer_family_detector_tracks_missing_families",
+            opaque.failure_reasons,
+        )
+        self.assertIn(
+            "endpoint_observer_family_endpoint_targets_missing_families",
+            opaque.failure_reasons,
+        )
+        self.assertIn(
+            "endpoint_observer_family_cutoff_readouts_missing_families",
+            opaque.failure_reasons,
+        )
+        self.assertIn(
+            "endpoint_observer_family_residual_theorems_missing_families",
+            opaque.failure_reasons,
+        )
+
     def test_strict_identity_residual_faithfulness_closes_identity_candidates(self):
         interval = one_color_identity_interval()
         nonidentity_interval = one_color_latin_unit_triangular_interval()

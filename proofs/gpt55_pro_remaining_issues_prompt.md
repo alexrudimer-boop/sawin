@@ -1733,6 +1733,15 @@ rows.  Each retained family build must be single-family scoped, must use
 exactly that family's seed classifier entries and reachable seed states, and
 must itself prove the endpoint observer.  A successful U observer cannot
 stand in for a missing C or M observer.
+The retained family-build ledger may not be opaque.  Even if a prebuilt
+observer object internally proves its signed tables, the family-level closure
+certificate must expose the exact input ledgers used to construct it: one
+word-potential certificate row, one detector-track initialization family
+ledger, one endpoint-target audit row, and one residual-faithfulness theorem
+row for every active routed family.  C and M additionally require exact
+cutoff-readout audit rows when they are active cutoff families.  A family
+observer wrapper with proving build objects but missing these explicit input
+rows is diagnostic evidence only; it is not a U/C/M closure proof.
 The observer-build ledger must also validate the `kappa` input rows before
 using them to infer active families.  A classifier entry with the wrong row
 shape, an unhashable seed-state key, a non-tuple seed state, or a target
@@ -1811,17 +1820,18 @@ word-potential endpoint group: each entry must assign a raw `A_{r,j}`
 variable for the same detector track, may not duplicate a variable, and must
 use a value in the fixed endpoint group.  Endpoint-target audit rows and
 residual-faithfulness theorem rows must cover exactly the active routed
-families when they are supplied; C/M cutoff-readout audit rows must cover
-exactly the active cutoff families.  Malformed rows, unknown families,
-duplicate families or keys,
+families; absence of such rows is a missing-family certificate failure, not
+an optional diagnostic omission.  C/M cutoff-readout audit rows must cover
+exactly the active cutoff families, and are likewise mandatory when C or M
+is active.  Malformed rows, unknown families, duplicate families or keys,
 missing active families, and extra auxiliary families must be reported
 separately.  A wrong-typed auxiliary value is malformed finite data: an
 endpoint-target ledger may select only endpoint target audits, a cutoff
 ledger may select only cutoff readout audits, and a residual ledger may
-select only residual-faithfulness audits.  Selecting the first valid auxiliary row for a family is not
-enough: an extra, duplicate, malformed, or stale detector-track,
-endpoint-target, cutoff-readout, or residual theorem row must keep the
-family-build ledger from proving exact observer coverage.
+select only residual-faithfulness audits.  Selecting the first valid auxiliary
+row for a family is not enough: an extra, duplicate, malformed, missing, or
+stale detector-track, endpoint-target, cutoff-readout, or residual theorem
+row must keep the family-build ledger from proving exact observer coverage.
 Positive observer rows may be forced only from actual word-potential identity
 row objects.  A tuple-shaped identity-row stand-in is a malformed certificate
 entry: it must be reported at the word-potential gate, must not be interpreted

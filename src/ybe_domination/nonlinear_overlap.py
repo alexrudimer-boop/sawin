@@ -9783,7 +9783,7 @@ class UniversalKEndpointObserverFamilyBuildAudit:
     @property
     def missing_certificate_families(self) -> Tuple[str, ...]:
         if not self.certificate_input_supplied:
-            return ()
+            return self.expected_endpoint_families_exact
         covered = set(self.certificate_families_exact)
         return tuple(
             family
@@ -9802,7 +9802,7 @@ class UniversalKEndpointObserverFamilyBuildAudit:
 
     @property
     def certificate_input_rows_exact(self) -> bool:
-        return not self.certificate_input_supplied or (
+        return not self.expected_endpoint_families_exact or (
             not self.malformed_certificate_rows
             and not self.invalid_certificate_families
             and not self.duplicate_certificate_families
@@ -9964,7 +9964,7 @@ class UniversalKEndpointObserverFamilyBuildAudit:
         self,
     ) -> Tuple[str, ...]:
         if not self.detector_track_initialization_input_supplied:
-            return ()
+            return self.expected_endpoint_families_exact
         covered = set(self.family_detector_track_initialization_families_exact)
         return tuple(
             family
@@ -9987,7 +9987,7 @@ class UniversalKEndpointObserverFamilyBuildAudit:
 
     @property
     def detector_track_initialization_input_rows_exact(self) -> bool:
-        return not self.detector_track_initialization_input_supplied or (
+        return not self.expected_endpoint_families_exact or (
             not self.malformed_family_detector_track_initialization_rows
             and not self.invalid_family_detector_track_initialization_rows
             and not self.family_detector_track_initialization_rows_not_fixed_before_braid
@@ -10110,7 +10110,7 @@ class UniversalKEndpointObserverFamilyBuildAudit:
     @property
     def missing_endpoint_target_families(self) -> Tuple[str, ...]:
         if not self.endpoint_target_input_supplied:
-            return ()
+            return self.expected_endpoint_families_exact
         covered = set(self.endpoint_target_families_exact)
         return tuple(
             family
@@ -10129,7 +10129,7 @@ class UniversalKEndpointObserverFamilyBuildAudit:
 
     @property
     def endpoint_target_input_rows_exact(self) -> bool:
-        return not self.endpoint_target_input_supplied or (
+        return not self.expected_endpoint_families_exact or (
             not self.malformed_endpoint_target_rows
             and not self.invalid_endpoint_target_families
             and not self.duplicate_endpoint_target_families
@@ -10170,7 +10170,7 @@ class UniversalKEndpointObserverFamilyBuildAudit:
     @property
     def missing_cutoff_readout_families(self) -> Tuple[str, ...]:
         if not self.cutoff_readout_input_supplied:
-            return ()
+            return self.expected_cutoff_families_exact
         covered = set(self.cutoff_readout_families_exact)
         return tuple(
             family for family in self.expected_cutoff_families_exact if family not in covered
@@ -10187,7 +10187,7 @@ class UniversalKEndpointObserverFamilyBuildAudit:
 
     @property
     def cutoff_readout_input_rows_exact(self) -> bool:
-        return not self.cutoff_readout_input_supplied or (
+        return not self.expected_cutoff_families_exact or (
             not self.malformed_cutoff_readout_rows
             and not self.invalid_cutoff_readout_families
             and not self.duplicate_cutoff_readout_families
@@ -10249,7 +10249,7 @@ class UniversalKEndpointObserverFamilyBuildAudit:
     @property
     def missing_residual_theorem_families(self) -> Tuple[str, ...]:
         if not self.residual_theorem_input_supplied:
-            return ()
+            return self.expected_endpoint_families_exact
         covered = set(self.residual_theorem_families_exact)
         return tuple(
             family
@@ -10268,7 +10268,7 @@ class UniversalKEndpointObserverFamilyBuildAudit:
 
     @property
     def residual_theorem_input_rows_exact(self) -> bool:
-        return not self.residual_theorem_input_supplied or (
+        return not self.expected_endpoint_families_exact or (
             not self.malformed_residual_theorem_rows
             and not self.invalid_residual_theorem_families
             and not self.duplicate_residual_theorem_families
