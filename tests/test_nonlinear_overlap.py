@@ -5598,6 +5598,95 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             bad_detector_track_ledger.failure_reasons,
         )
 
+        nonfixed_detector_track = UniversalKDetectorTrackInitializationRow(
+            endpoint_family="U",
+            track_index=0,
+            assignment_rule="chosen_after_braid_word",
+            dependencies=("interval_data", "braid_word"),
+            local_assignment_template=((("U", 0, 0), "outside_group"),),
+        )
+        bad_detector_track_template_ledger = (
+            universal_k_endpoint_observer_builds_by_family(
+                interval,
+                seed_entries,
+                tuple(certificates),
+                detector_track_initialization_rows=tuple(detector_rows[1:])
+                + (nonfixed_detector_track,),
+                endpoint_target_audits_by_family=tuple(endpoint_targets),
+                cutoff_readout_audits_by_family=tuple(cutoff_readouts),
+                residual_faithfulness_theorems_by_family=tuple(residual_theorems),
+            )
+        )
+
+        self.assertFalse(
+            bad_detector_track_template_ledger.proves_family_endpoint_observers
+        )
+        self.assertEqual(
+            tuple(
+                row.key
+                for row in (
+                    bad_detector_track_template_ledger
+                    .family_detector_track_initialization_rows_not_fixed_before_braid
+                )
+            ),
+            (("U", 0),),
+        )
+        self.assertEqual(
+            bad_detector_track_template_ledger
+            .family_detector_track_initialization_template_failures,
+            (
+                (
+                    ("U", 0),
+                    "detector_track_assignment_not_raw_variable",
+                    ("U", 0, 0),
+                ),
+                (
+                    ("U", 0),
+                    "detector_track_assignment_value_outside_group",
+                    "outside_group",
+                ),
+            ),
+        )
+        self.assertIn(
+            "endpoint_observer_family_detector_tracks_unfixed_rows",
+            bad_detector_track_template_ledger.failure_reasons,
+        )
+        self.assertIn(
+            "endpoint_observer_family_detector_tracks_invalid_templates",
+            bad_detector_track_template_ledger.failure_reasons,
+        )
+        bad_detector_track_template_data = dict(
+            PostLinearRemainingFiniteSystemAudit(
+                active_system_k_refinement(),
+                universal_k_endpoint_observer_family_build=(
+                    bad_detector_track_template_ledger
+                ),
+            ).routed_endpoint_obstruction_data
+        )
+        self.assertEqual(
+            bad_detector_track_template_data[
+                "endpoint_observer_family_detector_track_unfixed_rows"
+            ],
+            (("U", 0),),
+        )
+        self.assertEqual(
+            bad_detector_track_template_data[
+                "endpoint_observer_family_detector_track_template_failures"
+            ],
+            (
+                (
+                    ("U", 0),
+                    "detector_track_assignment_not_raw_variable",
+                    ("U", 0, 0),
+                ),
+                (
+                    ("U", 0),
+                    "detector_track_assignment_value_outside_group",
+                    "outside_group",
+                ),
+            ),
+        )
+
         duplicate_detector_track_ledger = universal_k_endpoint_observer_builds_by_family(
             interval,
             seed_entries,

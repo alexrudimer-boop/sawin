@@ -9725,6 +9725,19 @@ class UniversalKEndpointObserverFamilyBuildAudit:
         )
 
     @property
+    def endpoint_groups_by_certificate_family(self) -> Mapping[str, FiniteGroup]:
+        groups: dict[str, FiniteGroup] = {}
+        duplicate_families = set(self.duplicate_certificate_families)
+        for family, certificate in self.certificate_row_parts:
+            if (
+                family in UNIVERSAL_K_ENDPOINT_FAMILIES
+                and family not in duplicate_families
+                and isinstance(certificate, UniversalKWordPotentialCertificate)
+            ):
+                groups[family] = certificate.endpoint_group
+        return groups
+
+    @property
     def missing_certificate_families(self) -> Tuple[str, ...]:
         if not self.certificate_input_supplied:
             return ()
@@ -9793,6 +9806,66 @@ class UniversalKEndpointObserverFamilyBuildAudit:
                 or not _universal_k_nonnegative_int(row.track_index)
             )
         )
+
+    @property
+    def family_detector_track_initialization_rows_not_fixed_before_braid(
+        self,
+    ) -> Tuple[UniversalKDetectorTrackInitializationRow, ...]:
+        return tuple(
+            row
+            for row in self.family_detector_track_initialization_row_objects
+            if not row.fixed_before_braid
+        )
+
+    @property
+    def family_detector_track_initialization_template_failures(
+        self,
+    ) -> Tuple[UniversalKDetectorTrackInitializationFailure, ...]:
+        failures = []
+        groups_by_family = self.endpoint_groups_by_certificate_family
+        for row in self.family_detector_track_initialization_row_objects:
+            group = groups_by_family.get(row.endpoint_family)
+            group_elements = set(group.elements) if group is not None else None
+            seen_variables = set()
+            for assignment_entry in row.local_assignment_template:
+                parts = _universal_k_word_potential_substitution_parts(
+                    assignment_entry
+                )
+                if parts is None:
+                    failures.append(
+                        (
+                            row.key,
+                            "malformed_detector_track_assignment",
+                            assignment_entry,
+                        )
+                    )
+                    continue
+                variable, value = parts
+                variable_marker = _value_marker(variable)
+                if variable_marker in seen_variables:
+                    failures.append(
+                        (row.key, "duplicate_detector_track_assignment", variable)
+                    )
+                seen_variables.add(variable_marker)
+                if not _universal_k_word_potential_variable_valid(variable):
+                    failures.append(
+                        (row.key, "invalid_detector_track_assignment_variable", variable)
+                    )
+                    continue
+                kind, track_index, _position = variable
+                if kind != "A":
+                    failures.append(
+                        (row.key, "detector_track_assignment_not_raw_variable", variable)
+                    )
+                if track_index != row.track_index:
+                    failures.append(
+                        (row.key, "detector_track_assignment_track_mismatch", variable)
+                    )
+                if group_elements is not None and value not in group_elements:
+                    failures.append(
+                        (row.key, "detector_track_assignment_value_outside_group", value)
+                    )
+        return tuple(failures)
 
     @property
     def invalid_family_detector_track_initialization_families(
@@ -9874,6 +9947,8 @@ class UniversalKEndpointObserverFamilyBuildAudit:
         return not self.detector_track_initialization_input_supplied or (
             not self.malformed_family_detector_track_initialization_rows
             and not self.invalid_family_detector_track_initialization_rows
+            and not self.family_detector_track_initialization_rows_not_fixed_before_braid
+            and not self.family_detector_track_initialization_template_failures
             and not self.duplicate_family_detector_track_initialization_keys
             and not self.missing_family_detector_track_initialization_families
             and not self.extra_family_detector_track_initialization_families
@@ -10366,6 +10441,10 @@ class UniversalKEndpointObserverFamilyBuildAudit:
             reasons.append("endpoint_observer_family_detector_tracks_invalid_rows")
         if self.invalid_family_detector_track_initialization_families:
             reasons.append("endpoint_observer_family_detector_tracks_unknown_families")
+        if self.family_detector_track_initialization_rows_not_fixed_before_braid:
+            reasons.append("endpoint_observer_family_detector_tracks_unfixed_rows")
+        if self.family_detector_track_initialization_template_failures:
+            reasons.append("endpoint_observer_family_detector_tracks_invalid_templates")
         if self.duplicate_family_detector_track_initialization_keys:
             reasons.append("endpoint_observer_family_detector_tracks_duplicate_keys")
         if self.missing_family_detector_track_initialization_families:
@@ -15806,6 +15885,8 @@ class PostLinearRemainingFiniteSystemAudit:
                 ("endpoint_observer_family_detector_track_malformed_rows", ()),
                 ("endpoint_observer_family_detector_track_invalid_rows", ()),
                 ("endpoint_observer_family_detector_track_unknown_families", ()),
+                ("endpoint_observer_family_detector_track_unfixed_rows", ()),
+                ("endpoint_observer_family_detector_track_template_failures", ()),
                 ("endpoint_observer_family_detector_track_duplicate_keys", ()),
                 ("endpoint_observer_family_detector_track_missing_families", ()),
                 ("endpoint_observer_family_detector_track_extra_families", ()),
@@ -16074,6 +16155,20 @@ class PostLinearRemainingFiniteSystemAudit:
             (
                 "endpoint_observer_family_detector_track_unknown_families",
                 audit.invalid_family_detector_track_initialization_families,
+            ),
+            (
+                "endpoint_observer_family_detector_track_unfixed_rows",
+                tuple(
+                    row.key
+                    for row in (
+                        audit
+                        .family_detector_track_initialization_rows_not_fixed_before_braid
+                    )
+                ),
+            ),
+            (
+                "endpoint_observer_family_detector_track_template_failures",
+                audit.family_detector_track_initialization_template_failures,
             ),
             (
                 "endpoint_observer_family_detector_track_duplicate_keys",

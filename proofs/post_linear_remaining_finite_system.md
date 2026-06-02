@@ -952,9 +952,17 @@ generic missing-build failure.
 The same exact-ledger rule now applies to the auxiliary rows used to build
 the per-family observers.  Detector-track initialization rows must cover
 exactly the active families with no malformed rows, unknown families, or
-duplicate track keys.  Endpoint-target audit rows and residual-faithfulness
-theorem rows must cover exactly the active families when supplied; C/M cutoff
-readout audit rows must cover exactly the active cutoff families.  Malformed
+duplicate track keys.  They must also be fixed before braid reading at the
+family aggregation gate itself: forbidden dependencies such as braid words,
+braid prefixes, failed detector searches, timeout data, finite-search
+results, or normalized-law sequences are reported as unfixed detector rows.
+Their assignment templates are checked as finite row data against the
+family's word-potential endpoint group: each entry must assign a raw
+`A_{r,j}` variable for the same detector track, may not duplicate a variable,
+and must use a value in the fixed endpoint group.  Endpoint-target audit rows
+and residual-faithfulness theorem rows must cover exactly the active families
+when supplied; C/M cutoff readout audit rows must cover exactly the active
+cutoff families.  Malformed
 rows include wrong-typed auxiliary values, not merely wrong tuple shapes; the
 builder may select only endpoint target audits for the endpoint target ledger,
 cutoff readout audits for the cutoff ledger, and residual-faithfulness audits
