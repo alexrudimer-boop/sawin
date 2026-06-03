@@ -13,11 +13,13 @@ from ybe_domination import (
     FiniteAugmentedArtinEnvelopeRouteAudit,
     FiniteBraidedSet,
     PointPushingGeneratorRow,
+    PrefixEdgeTransducerAudit,
     degenerate_preimage_memory_audit,
     derived_hurwitz_envelope_audit,
     edge_memory_tower_audit,
     finite_augmented_artin_envelope_pressure_audit,
     finite_augmented_artin_envelope_route_audit,
+    prefix_edge_transducer_audit,
     rack_point_pushing_operator_label_audit,
     rack_solution,
 )
@@ -292,6 +294,65 @@ class RackPointPushingOperatorLabelTests(unittest.TestCase):
         self.assertTrue(audit.all_generator_updates_well_defined)
         self.assertTrue(audit.all_point_forgetting_maps_well_defined)
         self.assertTrue(audit.verifies_edge_memory_triple_quadruple_prefix)
+
+    def test_prefix_edge_transducer_audit_checks_left_prefix_tower(self):
+        solution = FiniteBraidedSet(
+            (0, 1),
+            {
+                (0, 0): (1, 0),
+                (0, 1): (0, 0),
+                (1, 0): (1, 1),
+                (1, 1): (0, 1),
+            },
+        )
+
+        audit = prefix_edge_transducer_audit(solution)
+
+        self.assertIsInstance(audit, PrefixEdgeTransducerAudit)
+        self.assertEqual(audit.element_count, 2)
+        self.assertEqual(audit.left_prefix_monoid_size, 2)
+        self.assertEqual(audit.arity3_path_count, 8)
+        self.assertEqual(audit.arity4_path_count, 16)
+        self.assertTrue(audit.left_prefix_identity_holds)
+        self.assertEqual(
+            audit.generator_updates_bijective,
+            ((0, True), (1, True), (2, True)),
+        )
+        self.assertTrue(audit.braid_relation_on_prefix_paths)
+        self.assertEqual(
+            audit.point_forgetting_well_defined,
+            ((0, True), (1, True), (2, True), (3, True)),
+        )
+        self.assertTrue(
+            all(
+                size <= audit.element_count
+                for _index, size in audit.point_forgetting_max_fibre_sizes
+            )
+        )
+        self.assertTrue(audit.verifies_prefix_edge_transducer_prefix)
+
+    def test_prefix_edge_transducer_audit_handles_left_degenerate_row(self):
+        solution = FiniteBraidedSet(
+            (0, 1),
+            {
+                (0, 0): (0, 0),
+                (0, 1): (0, 1),
+                (1, 0): (1, 0),
+                (1, 1): (1, 1),
+            },
+        )
+
+        audit = prefix_edge_transducer_audit(solution)
+
+        self.assertEqual(audit.left_prefix_monoid_size, 3)
+        self.assertGreaterEqual(audit.edge_state_count, 4)
+        self.assertTrue(audit.arity3_encoding_injective)
+        self.assertTrue(audit.arity4_encoding_injective)
+        self.assertTrue(audit.left_prefix_identity_holds)
+        self.assertTrue(audit.all_generator_updates_bijective)
+        self.assertTrue(audit.all_point_forgetting_maps_well_defined)
+        self.assertTrue(audit.forgetting_fibres_bounded_by_element_count)
+        self.assertTrue(audit.verifies_prefix_edge_transducer_prefix)
 
 
 if __name__ == "__main__":

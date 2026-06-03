@@ -1755,6 +1755,19 @@ the real point-pushing layer: compress this memory to one fixed finite
 operator/Hurwitz base with uniformly bounded-exponent vertical kernels, or
 find a degenerate table where that vertical compression fails compatibly in
 the `Q_X(3),Q_X(4),...` tower.
+The next refinement, `proofs/prefix_edge_transducer_tower.md` with generated
+audit `proofs/prefix_edge_transducer_audit.md`, replaces raw adjacent pair
+memory by the finite left-prefix path transducer over the transformation
+monoid `M_lambda=<lambda_x>`.  A tuple is encoded by edges
+`(P,x,P lambda_x)`, the local move is endpoint-preserving because
+`lambda_x lambda_y=lambda_u lambda_v` for `r(x,y)=(u,v)`, and interior
+point-forgetting is handled by a finite prefix rescan.  The arity-four audit
+records that forgetting fibres have size at most `|X|`.  This gives a
+canonical finite transducer tower for degenerate memory, but it still is not
+the finite augmented Artin-envelope lemma: a transformation-monoid transducer
+must still be group-completed to a fixed finite group-Hurwitz base with
+bounded-exponent vertical noise, or a compatible `Q_X(3),Q_X(4),...`
+obstruction to that group-completion must be found.
 
 The semigroup/Green route has also been narrowed to a precise Rees rectangle
 flatness target.  Ordinary Green/Rees theory leaves a sandwich-matrix

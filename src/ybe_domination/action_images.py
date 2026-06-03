@@ -13,6 +13,13 @@ from .finite_group import (
     is_abelian_group,
     subgroup_generated_elements,
 )
+from .green_branch import (
+    Transformation,
+    TransformationMonoid,
+    compose_transformations,
+    coordinate_action_maps,
+    identity_transformation,
+)
 from .residual import action_permutation, permutation_order
 
 Permutation = Tuple[int, ...]
@@ -314,6 +321,47 @@ class EdgeMemoryTowerAudit:
             and self.all_generator_updates_well_defined
             and self.all_point_forgetting_maps_well_defined
             and self.records_finite_edge_memory_tower_prefix
+        )
+
+
+@dataclass(frozen=True)
+class PrefixEdgeTransducerAudit:
+    """Audit the finite left-prefix edge transducer for degenerate rows."""
+
+    element_count: int
+    left_prefix_monoid_size: int
+    edge_state_count: int
+    arity3_path_count: int
+    arity4_path_count: int
+    arity3_encoding_injective: bool
+    arity4_encoding_injective: bool
+    left_prefix_identity_holds: bool
+    generator_updates_bijective: Tuple[Tuple[int, bool], ...]
+    braid_relation_on_prefix_paths: bool
+    point_forgetting_well_defined: Tuple[Tuple[int, bool], ...]
+    point_forgetting_max_fibre_sizes: Tuple[Tuple[int, int], ...]
+    forgetting_fibres_bounded_by_element_count: bool
+    records_prefix_edge_transducer_tower: bool
+
+    @property
+    def all_generator_updates_bijective(self) -> bool:
+        return all(value for _index, value in self.generator_updates_bijective)
+
+    @property
+    def all_point_forgetting_maps_well_defined(self) -> bool:
+        return all(value for _index, value in self.point_forgetting_well_defined)
+
+    @property
+    def verifies_prefix_edge_transducer_prefix(self) -> bool:
+        return (
+            self.arity3_encoding_injective
+            and self.arity4_encoding_injective
+            and self.left_prefix_identity_holds
+            and self.all_generator_updates_bijective
+            and self.braid_relation_on_prefix_paths
+            and self.all_point_forgetting_maps_well_defined
+            and self.forgetting_fibres_bounded_by_element_count
+            and self.records_prefix_edge_transducer_tower
         )
 
 
@@ -2283,6 +2331,181 @@ def edge_memory_tower_audit(solution: FiniteBraidedSet) -> EdgeMemoryTowerAudit:
         generator_updates_well_defined=generator_updates,
         point_forgetting_well_defined=forgetting,
         records_finite_edge_memory_tower_prefix=True,
+    )
+
+
+def _left_prefix_translations(
+    solution: FiniteBraidedSet,
+) -> Mapping[object, Transformation]:
+    return coordinate_action_maps(solution)
+
+
+def _left_prefix_path_tuple(
+    solution: FiniteBraidedSet,
+    tuple_value: Sequence[object],
+    left_translations: Mapping[object, Transformation] | None = None,
+) -> Tuple[Tuple[Transformation, object, Transformation], ...]:
+    """Encode a tuple by the finite path of left-prefix transformations."""
+
+    if left_translations is None:
+        left_translations = _left_prefix_translations(solution)
+    prefix = identity_transformation(len(solution.elements))
+    edges = []
+    for value in tuple_value:
+        next_prefix = compose_transformations(left_translations[value], prefix)
+        edges.append((prefix, value, next_prefix))
+        prefix = next_prefix
+    return tuple(edges)
+
+
+def _prefix_path_forgetting_well_defined_and_max_fibre(
+    solution: FiniteBraidedSet,
+    arity: int,
+    forget_index: int,
+    left_translations: Mapping[object, Transformation],
+) -> Tuple[bool, int]:
+    seen = {}
+    fibres: dict[Tuple[Tuple[Transformation, object, Transformation], ...], int] = {}
+    for tuple_value in product(solution.elements, repeat=arity):
+        source = _left_prefix_path_tuple(solution, tuple_value, left_translations)
+        forgotten = tuple(
+            value
+            for index, value in enumerate(tuple_value)
+            if index != forget_index
+        )
+        target = _left_prefix_path_tuple(solution, forgotten, left_translations)
+        previous = seen.get(source)
+        if previous is None:
+            seen[source] = target
+        elif previous != target:
+            return False, 0
+        fibres[target] = fibres.get(target, 0) + 1
+    return True, max(fibres.values(), default=0)
+
+
+def _prefix_path_generator_update_bijective(
+    solution: FiniteBraidedSet,
+    arity: int,
+    generator_index: int,
+    left_translations: Mapping[object, Transformation],
+) -> bool:
+    source_paths = set()
+    target_paths = set()
+    for tuple_value in product(solution.elements, repeat=arity):
+        source_paths.add(_left_prefix_path_tuple(solution, tuple_value, left_translations))
+        target_paths.add(
+            _left_prefix_path_tuple(
+                solution,
+                solution.apply_R_at(tuple_value, generator_index),
+                left_translations,
+            )
+        )
+    return len(source_paths) == len(target_paths) == len(solution.elements) ** arity
+
+
+def _left_prefix_identity_holds(
+    solution: FiniteBraidedSet,
+    left_translations: Mapping[object, Transformation],
+) -> bool:
+    for left, right in product(solution.elements, repeat=2):
+        out_left, out_right = solution.R[(left, right)]
+        before = compose_transformations(
+            left_translations[left],
+            left_translations[right],
+        )
+        after = compose_transformations(
+            left_translations[out_left],
+            left_translations[out_right],
+        )
+        if before != after:
+            return False
+    return True
+
+
+def prefix_edge_transducer_audit(
+    solution: FiniteBraidedSet,
+) -> PrefixEdgeTransducerAudit:
+    """Check the finite left-prefix path transducer through first tower gates."""
+
+    elements = tuple(solution.elements)
+    left_translations = _left_prefix_translations(solution)
+    monoid = TransformationMonoid.generated(left_translations.values())
+    edge_states = {
+        (prefix, value, compose_transformations(left_translations[value], prefix))
+        for prefix, value in product(monoid.elements, elements)
+    }
+    arity3_paths = {
+        _left_prefix_path_tuple(solution, tuple_value, left_translations)
+        for tuple_value in product(elements, repeat=3)
+    }
+    arity4_paths = {
+        _left_prefix_path_tuple(solution, tuple_value, left_translations)
+        for tuple_value in product(elements, repeat=4)
+    }
+    braid_relation = True
+    for tuple_value in product(elements, repeat=3):
+        left = solution.apply_R_at(
+            solution.apply_R_at(solution.apply_R_at(tuple_value, 0), 1),
+            0,
+        )
+        right = solution.apply_R_at(
+            solution.apply_R_at(solution.apply_R_at(tuple_value, 1), 0),
+            1,
+        )
+        if (
+            _left_prefix_path_tuple(solution, left, left_translations)
+            != _left_prefix_path_tuple(solution, right, left_translations)
+        ):
+            braid_relation = False
+            break
+    generator_updates = tuple(
+        (
+            index,
+            _prefix_path_generator_update_bijective(
+                solution,
+                4,
+                index,
+                left_translations,
+            ),
+        )
+        for index in range(3)
+    )
+    forgetting_rows = tuple(
+        (
+            index,
+            _prefix_path_forgetting_well_defined_and_max_fibre(
+                solution,
+                4,
+                index,
+                left_translations,
+            ),
+        )
+        for index in range(4)
+    )
+    point_forgetting = tuple((index, row[0]) for index, row in forgetting_rows)
+    max_fibres = tuple((index, row[1]) for index, row in forgetting_rows)
+    tuple3_count = len(elements) ** 3
+    tuple4_count = len(elements) ** 4
+    return PrefixEdgeTransducerAudit(
+        element_count=len(elements),
+        left_prefix_monoid_size=len(monoid.elements),
+        edge_state_count=len(edge_states),
+        arity3_path_count=tuple3_count,
+        arity4_path_count=tuple4_count,
+        arity3_encoding_injective=len(arity3_paths) == tuple3_count,
+        arity4_encoding_injective=len(arity4_paths) == tuple4_count,
+        left_prefix_identity_holds=_left_prefix_identity_holds(
+            solution,
+            left_translations,
+        ),
+        generator_updates_bijective=generator_updates,
+        braid_relation_on_prefix_paths=braid_relation,
+        point_forgetting_well_defined=point_forgetting,
+        point_forgetting_max_fibre_sizes=max_fibres,
+        forgetting_fibres_bounded_by_element_count=all(
+            size <= len(elements) for _index, size in max_fibres
+        ),
+        records_prefix_edge_transducer_tower=True,
     )
 
 

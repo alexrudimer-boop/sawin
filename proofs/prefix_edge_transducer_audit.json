@@ -1,0 +1,175 @@
+{
+  "description": "Finite left-prefix path-transducer audit for degenerate memory.",
+  "rows": [
+    {
+      "all_generator_updates_bijective": true,
+      "all_point_forgetting_maps_well_defined": true,
+      "arity3_encoding_injective": true,
+      "arity3_path_count": 8,
+      "arity4_encoding_injective": true,
+      "arity4_path_count": 16,
+      "braid_relation_on_prefix_paths": true,
+      "edge_state_count": 4,
+      "element_count": 2,
+      "forgetting_fibres_bounded_by_element_count": true,
+      "generator_updates_bijective": [
+        [
+          0,
+          true
+        ],
+        [
+          1,
+          true
+        ],
+        [
+          2,
+          true
+        ]
+      ],
+      "left_prefix_identity_holds": true,
+      "left_prefix_monoid_size": 2,
+      "name": "nondegenerate_prefix_witness",
+      "point_forgetting_max_fibre_sizes": [
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          2
+        ]
+      ],
+      "point_forgetting_well_defined": [
+        [
+          0,
+          true
+        ],
+        [
+          1,
+          true
+        ],
+        [
+          2,
+          true
+        ],
+        [
+          3,
+          true
+        ]
+      ],
+      "records_prefix_edge_transducer_tower": true,
+      "table": {
+        "(0, 0)": [
+          1,
+          0
+        ],
+        "(0, 1)": [
+          0,
+          0
+        ],
+        "(1, 0)": [
+          1,
+          1
+        ],
+        "(1, 1)": [
+          0,
+          1
+        ]
+      },
+      "verifies_prefix_edge_transducer_prefix": true
+    },
+    {
+      "all_generator_updates_bijective": true,
+      "all_point_forgetting_maps_well_defined": true,
+      "arity3_encoding_injective": true,
+      "arity3_path_count": 8,
+      "arity4_encoding_injective": true,
+      "arity4_path_count": 16,
+      "braid_relation_on_prefix_paths": true,
+      "edge_state_count": 6,
+      "element_count": 2,
+      "forgetting_fibres_bounded_by_element_count": true,
+      "generator_updates_bijective": [
+        [
+          0,
+          true
+        ],
+        [
+          1,
+          true
+        ],
+        [
+          2,
+          true
+        ]
+      ],
+      "left_prefix_identity_holds": true,
+      "left_prefix_monoid_size": 3,
+      "name": "degenerate_identity_prefix_transducer",
+      "point_forgetting_max_fibre_sizes": [
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          2
+        ]
+      ],
+      "point_forgetting_well_defined": [
+        [
+          0,
+          true
+        ],
+        [
+          1,
+          true
+        ],
+        [
+          2,
+          true
+        ],
+        [
+          3,
+          true
+        ]
+      ],
+      "records_prefix_edge_transducer_tower": true,
+      "table": {
+        "(0, 0)": [
+          0,
+          0
+        ],
+        "(0, 1)": [
+          0,
+          1
+        ],
+        "(1, 0)": [
+          1,
+          0
+        ],
+        "(1, 1)": [
+          1,
+          1
+        ]
+      },
+      "verifies_prefix_edge_transducer_prefix": true
+    }
+  ]
+}
