@@ -1935,3 +1935,38 @@ windows sandbox failed: spawn setup refresh
 
 so the repository records an internal completion audit rather than an external
 model review.
+
+## Point-Forgetting Square Cocycle Ledger
+
+After the single point-forgetting surface
+`proofs/prefix_point_forgetting_restriction.md`, the crossed-module pressure
+test from the continuing GPT-5.5 Pro thread identified the next finite datum:
+deletion-square compatibility before any genuine deletion-cube/Postnikov
+class can be tested.  The new note
+`proofs/prefix_deletion_square_restriction.md` and generated audit
+`proofs/prefix_deletion_square_restriction_audit.md` compute this first
+two-face surface:
+
+```text
+Q_X(5) <= G_X(6)   --->   Q_X(3) <= G_X(4).
+```
+
+For source generator `alpha_{i,6}` and deleted stationary strands `j<k`, the
+marked target is identity exactly when `i` is one of the deleted strands, and
+otherwise is the reindexed generator `alpha_{i-c,4}`.  The audit checks all
+ten deleted pairs and five source generators, for `50` rows, and also checks
+that the two coordinate-deletion orders commute on the source action.
+
+For the nondegenerate two-point prefix witness, all `30`
+surviving-generator rows match exactly.  The `20` rows where the source
+generator is deleted each have `64` mismatches, for total mismatch `1280`.
+The two deletion orders nevertheless commute in every row.  Thus the
+two-face layer is ordinary face-compatible but carries vertical monodromy on
+deleted-generator rows.  For the degenerate identity row all `50` rows match.
+
+This is still not a counterexample to finite rack domination.  It records the
+first square ledger that a positive finite operator-label Artin-envelope
+lemma must absorb with bounded vertical exponent.  The next possible
+obstruction is a genuine deletion-cube/Peiffer coherence class, where the
+two-face defects must themselves be compatible under three stationary
+deletions.
