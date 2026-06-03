@@ -2404,6 +2404,76 @@ it cannot be proved by a naive coordinatewise rack cover; the finite labels
 must provide context that coherently reinterprets copied rack strands after
 crossings.
 
+## YBE Equivariant Reconstruction Closure
+
+The note `proofs/ybe_equivariant_reconstruction_closure.md` and generated
+audit `proofs/ybe_equivariant_reconstruction_closure_audit.md` record the
+safe gluing principle for known quotient, block, and subquotient detector
+towers.
+
+Let `T^alpha_bullet` be finitely many marked braid towers, with equivariant
+maps
+
+```text
+f^alpha_n:X^n -> T^alpha_n,
+```
+
+and suppose each `T^alpha_bullet` is dominated by a finite rack `Y_alpha`.
+If the product reconstruction map
+
+```text
+F_n:X^n -> prod_alpha T^alpha_n
+```
+
+is injective for every `n`, then the product rack
+
+```text
+Y=prod_alpha Y_alpha
+```
+
+dominates `X`.  The proof is the kernel argument: a braid trivial on the
+product rack is trivial on every visible factor, so by equivariance it fixes
+`F_n(x)` for every `x`, and injectivity of `F_n` forces it to fix `x`.
+
+For genuine total YBE quotients `pi_j:X -> Z_j`, point separation is enough:
+if `pi=(pi_j)_j` is injective on `X`, then `pi^n` is injective on `X^n` for
+every `n`.  Thus rack domination of all `Z_j` implies rack domination of `X`.
+
+Partial subquotients and crossing-closed blocks are subtler.  They are usable
+only after they are promoted to total marked braid factors; equivalently,
+their equality relation must be a `B_n`-congruence in every arity.  Mixed
+block crossings require the block incidence system, transition maps,
+subquotient congruence data, and extension fibre cocycle.  Over a quotient
+`pi:X -> Z`, the fibre maps
+
+```text
+phi_{z,z'}:F_z x F_{z'} -> F_u x F_v
+```
+
+must satisfy the arity-3 fibre cocycle equation
+
+```text
+Phi_1(r_2 r_1 z) Phi_2(r_1 z) Phi_1(z)
+=
+Phi_2(r_1 r_2 z) Phi_1(r_2 z) Phi_2(z).
+```
+
+For any visible product `F_n`, the exact criterion is that
+
+```text
+K_vis,n = intersection_alpha ker(rho^alpha_n)
+```
+
+acts trivially on every hidden reconstruction fibre
+
+```text
+H_t=F_n^{-1}(t).
+```
+
+Injective reconstruction is the simple sufficient case.  Without it,
+separately dominated pieces do not automatically glue; the visible-kernel
+hidden-fibre action must be killed or included in the detector product.
+
 ## YBE Guitar Decoder Boundary
 
 The note `proofs/ybe_guitar_decoder_boundary.md` and generated audit

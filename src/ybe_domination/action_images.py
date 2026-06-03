@@ -943,6 +943,75 @@ class YBEFiniteStateRackCoverAudit:
 
 
 @dataclass(frozen=True)
+class YBEEquivariantReconstructionClosureCase:
+    """One row in the quotient/block detector gluing criterion."""
+
+    key: str
+    role: str
+    statement: str
+    consequence: str
+
+
+@dataclass(frozen=True)
+class YBEEquivariantReconstructionClosureAudit:
+    """Closure gate for gluing known detectors by equivariant reconstruction."""
+
+    marked_tower_reconstruction_recorded: bool
+    product_kernel_implication_recorded: bool
+    total_quotient_corollary_recorded: bool
+    partial_domain_totalization_required: bool
+    point_separation_insufficient_recorded: bool
+    off_diagonal_transition_data_required: bool
+    arity3_extension_cocycle_obstruction_recorded: bool
+    hidden_fibre_kernel_criterion_recorded: bool
+    reconstruction_formula: str
+    product_kernel_formula: str
+    total_quotient_formula: str
+    visible_kernel_formula: str
+    hidden_fibre_formula: str
+    partial_domain_formula: str
+    extension_cocycle_formula: str
+    arity3_stress_formula: str
+    cases: Tuple[YBEEquivariantReconstructionClosureCase, ...]
+
+    @property
+    def case_keys(self) -> Tuple[str, ...]:
+        return tuple(case.key for case in self.cases)
+
+    @property
+    def records_equivariant_reconstruction_closure_gate(self) -> bool:
+        return (
+            self.marked_tower_reconstruction_recorded
+            and self.product_kernel_implication_recorded
+            and self.total_quotient_corollary_recorded
+            and self.partial_domain_totalization_required
+            and self.point_separation_insufficient_recorded
+            and self.off_diagonal_transition_data_required
+            and self.arity3_extension_cocycle_obstruction_recorded
+            and self.hidden_fibre_kernel_criterion_recorded
+            and "R_n:X^n" in self.reconstruction_formula
+            and "ker rho_product,n" in self.product_kernel_formula
+            and "pi^n" in self.total_quotient_formula
+            and "K_vis,n" in self.visible_kernel_formula
+            and "H_t=F_n^-1(t)" in self.hidden_fibre_formula
+            and "partial" in self.partial_domain_formula
+            and "omega_{z,z'}" in self.extension_cocycle_formula
+            and "arity 3" in self.arity3_stress_formula
+            and self.case_keys
+            == (
+                "marked_tower_reconstruction",
+                "product_kernel_implication",
+                "total_quotient_corollary",
+                "partial_subquotient_domain_totalization",
+                "point_separation_not_enough",
+                "off_diagonal_transition_data",
+                "arity3_extension_cocycle_obstruction",
+                "hidden_fibre_visible_kernel_criterion",
+            )
+        )
+
+
+@dataclass(frozen=True)
 class YBEGuitarDecoderBoundaryCase:
     """One row in the guitar-map finite-state decoder boundary."""
 
@@ -5164,6 +5233,172 @@ def ybe_finite_state_rack_cover_audit() -> YBEFiniteStateRackCoverAudit:
         ),
         right_update_defect_formula=(
             "Delta(x,y)=lambda_{rho_y(x)} lambda_x^-1"
+        ),
+        cases=cases,
+    )
+
+
+def ybe_equivariant_reconstruction_closure_audit(
+) -> YBEEquivariantReconstructionClosureAudit:
+    """Record the safe gluing theorem for quotient/block detector products.
+
+    Known quotient, subsolution, and subquotient branches can be multiplied
+    only after their marked action towers reconstruct the whole X-tower
+    equivariantly and injectively in every arity.  Point separation at arity 1
+    or separately dominated components can miss off-diagonal transition and
+    extension-fibre data.
+    """
+
+    cases = (
+        YBEEquivariantReconstructionClosureCase(
+            key="marked_tower_reconstruction",
+            role="sufficient_data",
+            statement=(
+                "for every n, the chosen quotient, block, and subquotient "
+                "readouts assemble to a B_n-equivariant map "
+                "R_n:X^n -> product_j T_{j,n}"
+            ),
+            consequence=(
+                "the product factors describe the same marked braid-action "
+                "tower only when R_n is injective on the actual X^n states"
+            ),
+        ),
+        YBEEquivariantReconstructionClosureCase(
+            key="product_kernel_implication",
+            role="positive_theorem",
+            statement=(
+                "if each factor T_j is dominated by a finite rack detector "
+                "Y_j and R_n is B_n-equivariant and injective for all n, then "
+                "the product rack detector prod_j Y_j dominates X"
+            ),
+            consequence=(
+                "a braid acting trivially on every rack factor fixes every "
+                "T_{j,n}-coordinate, hence fixes R_n(x), hence fixes x by "
+                "injectivity"
+            ),
+        ),
+        YBEEquivariantReconstructionClosureCase(
+            key="total_quotient_corollary",
+            role="quotient_corollary",
+            statement=(
+                "if pi_j:X -> Z_j are genuine YBE quotient maps and the "
+                "combined map pi=(pi_j)_j is injective on X, then pi^n is "
+                "B_n-equivariant and injective on X^n for every n"
+            ),
+            consequence=(
+                "point-separating total quotient maps are enough when they "
+                "are genuine YBE quotients and each Z_j is already dominated"
+            ),
+        ),
+        YBEEquivariantReconstructionClosureCase(
+            key="partial_subquotient_domain_totalization",
+            role="domain_guardrail",
+            statement=(
+                "partial subquotients and crossing-closed blocks must be "
+                "encoded as total marked factors, including their defined "
+                "domain, incidence, and exit data"
+            ),
+            consequence=(
+                "a partial map that is injective only on its own domain cannot "
+                "be used in a product proof until the product records which "
+                "tuples lie in that domain after every braid move"
+            ),
+        ),
+        YBEEquivariantReconstructionClosureCase(
+            key="point_separation_not_enough",
+            role="negative_warning",
+            statement=(
+                "coordinatewise point-separating quotients, or separately "
+                "dominated crossing-closed components, need not reconstruct "
+                "the all-arity marked action tower"
+            ),
+            consequence=(
+                "two tuples can agree in every visible component while a "
+                "braid in the visible kernel permutes hidden extension fibres"
+            ),
+        ),
+        YBEEquivariantReconstructionClosureCase(
+            key="off_diagonal_transition_data",
+            role="missing_data",
+            statement=(
+                "mixed-block crossings require explicit block incidence "
+                "maps, transition groupoids, and fibre actions over the "
+                "visible quotient states"
+            ),
+            consequence=(
+                "the gluing theorem needs the off-diagonal transition data, "
+                "not just detectors for the diagonal components"
+            ),
+        ),
+        YBEEquivariantReconstructionClosureCase(
+            key="arity3_extension_cocycle_obstruction",
+            role="arity3_stress",
+            statement=(
+                "at arity 3, the two YBE paths can agree in all visible "
+                "quotients while differing by a coherent extension-fibre "
+                "cocycle omega_{z,z'}"
+            ),
+            consequence=(
+                "the YBE equation makes this hidden fibre action coherent, "
+                "but it does not force it to be visible to the chosen product "
+                "detectors"
+            ),
+        ),
+        YBEEquivariantReconstructionClosureCase(
+            key="hidden_fibre_visible_kernel_criterion",
+            role="exact_criterion",
+            statement=(
+                "for any finite family of visible marked factors, the visible "
+                "kernel K_vis,n must act trivially on every hidden fibre "
+                "H_t=F_n^-1(t)"
+            ),
+            consequence=(
+                "visible product detectors dominate X if and only if this "
+                "hidden-fibre action is trivial; injective reconstruction is "
+                "the simple sufficient case where all H_t are singletons"
+            ),
+        ),
+    )
+    return YBEEquivariantReconstructionClosureAudit(
+        marked_tower_reconstruction_recorded=True,
+        product_kernel_implication_recorded=True,
+        total_quotient_corollary_recorded=True,
+        partial_domain_totalization_required=True,
+        point_separation_insufficient_recorded=True,
+        off_diagonal_transition_data_required=True,
+        arity3_extension_cocycle_obstruction_recorded=True,
+        hidden_fibre_kernel_criterion_recorded=True,
+        reconstruction_formula=(
+            "R_n:X^n -> product_j T_{j,n} is B_n-equivariant and injective "
+            "for every n"
+        ),
+        product_kernel_formula=(
+            "ker rho_product,n <= ker rho_X,n follows from equivariant "
+            "injective reconstruction"
+        ),
+        total_quotient_formula=(
+            "for genuine YBE quotients pi_j, injective pi:X->product_j Z_j "
+            "implies injective pi^n:X^n->product_j Z_j^n"
+        ),
+        visible_kernel_formula=(
+            "K_vis,n = intersection_j ker(B_n action on T_{j,n}) may still "
+            "act on hidden fibres if R_n is not injective"
+        ),
+        hidden_fibre_formula=(
+            "visible detectors dominate iff K_vis,n acts trivially on every "
+            "H_t=F_n^-1(t)"
+        ),
+        partial_domain_formula=(
+            "partial subquotient data must be totalized by recording domain, "
+            "incidence, exits, and braid transport of definedness"
+        ),
+        extension_cocycle_formula=(
+            "mixed-block extension fibres can carry a coherent "
+            "omega_{z,z'} action invisible to diagonal detectors"
+        ),
+        arity3_stress_formula=(
+            "arity 3 tests whether the two YBE paths agree visibly but differ "
+            "by hidden fibre transport"
         ),
         cases=cases,
     )

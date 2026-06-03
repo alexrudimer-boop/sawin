@@ -24,6 +24,7 @@ from ybe_domination import (
     PullbackCoskeletalCriterionAudit,
     YBEBrunnianDerivativeGateAudit,
     YBECrossedSquareResidualAudit,
+    YBEEquivariantReconstructionClosureAudit,
     YBEFiniteStateRackCoverAudit,
     YBEGuitarDecoderBoundaryAudit,
     YBEInverseBranchDeterminizationAudit,
@@ -52,6 +53,7 @@ from ybe_domination import (
     pullback_coskeletal_criterion_audit,
     ybe_brunnian_derivative_gate_audit,
     ybe_crossed_square_residual_audit,
+    ybe_equivariant_reconstruction_closure_audit,
     ybe_finite_state_rack_cover_audit,
     ybe_guitar_decoder_boundary_audit,
     ybe_inverse_branch_determinization_audit,
@@ -871,6 +873,44 @@ class RackPointPushingOperatorLabelTests(unittest.TestCase):
         )
         self.assertEqual(audit.cases[0].role, "negative_coordinatewise")
         self.assertEqual(audit.cases[-1].role, "group_rack_warning")
+
+    def test_ybe_equivariant_reconstruction_closure_records_gluing_gate(self):
+        audit = ybe_equivariant_reconstruction_closure_audit()
+
+        self.assertIsInstance(audit, YBEEquivariantReconstructionClosureAudit)
+        self.assertTrue(audit.records_equivariant_reconstruction_closure_gate)
+        self.assertTrue(audit.marked_tower_reconstruction_recorded)
+        self.assertTrue(audit.product_kernel_implication_recorded)
+        self.assertTrue(audit.total_quotient_corollary_recorded)
+        self.assertTrue(audit.partial_domain_totalization_required)
+        self.assertTrue(audit.point_separation_insufficient_recorded)
+        self.assertTrue(audit.off_diagonal_transition_data_required)
+        self.assertTrue(audit.arity3_extension_cocycle_obstruction_recorded)
+        self.assertTrue(audit.hidden_fibre_kernel_criterion_recorded)
+        self.assertIn("R_n:X^n", audit.reconstruction_formula)
+        self.assertIn("ker rho_product,n", audit.product_kernel_formula)
+        self.assertIn("pi^n", audit.total_quotient_formula)
+        self.assertIn("K_vis,n", audit.visible_kernel_formula)
+        self.assertIn("H_t=F_n^-1(t)", audit.hidden_fibre_formula)
+        self.assertIn("partial", audit.partial_domain_formula)
+        self.assertIn("omega_{z,z'}", audit.extension_cocycle_formula)
+        self.assertIn("arity 3", audit.arity3_stress_formula)
+        self.assertEqual(
+            audit.case_keys,
+            (
+                "marked_tower_reconstruction",
+                "product_kernel_implication",
+                "total_quotient_corollary",
+                "partial_subquotient_domain_totalization",
+                "point_separation_not_enough",
+                "off_diagonal_transition_data",
+                "arity3_extension_cocycle_obstruction",
+                "hidden_fibre_visible_kernel_criterion",
+            ),
+        )
+        self.assertEqual(audit.cases[0].role, "sufficient_data")
+        self.assertEqual(audit.cases[2].role, "quotient_corollary")
+        self.assertEqual(audit.cases[-1].role, "exact_criterion")
 
     def test_ybe_guitar_decoder_boundary_records_nondegenerate_closure(self):
         audit = ybe_guitar_decoder_boundary_audit()
