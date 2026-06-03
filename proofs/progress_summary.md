@@ -1566,6 +1566,11 @@ tries this canonical strand-carrier theorem before falling back to the
 canonical coordinate-label theorem.  The top-level post-linear audit also
 exposes the explicit
 `universal_k_identity_canonical_strand_carrier_residual_faithfulness` flag.
+The canonical carrier relation is now also classified as an admissible kernel
+by `universal_k_canonical_strand_carrier_congruence_audit(...)`.  Its finite
+trichotomy is: equality, which is the residual-faithful subcase above;
+proper, which is a local-minimal contradiction; or universal, which is the
+only canonical-carrier branch left for nontrivial U/C/M endpoint observers.
 This removes another false endpoint closure and leaves the same local
 nontrivial observer-existence gap: construct residual-faithful U/C/M
 monodromy-coboundary observers for all surviving intervals, or produce a

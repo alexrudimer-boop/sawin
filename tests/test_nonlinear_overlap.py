@@ -39,6 +39,7 @@ from ybe_domination import (
     UniversalKCutoffReadoutAudit,
     UniversalKCutoffReadoutRow,
     UniversalKDetectorTrackInitializationRow,
+    UniversalKCanonicalStrandCarrierCongruenceAudit,
     UniversalKEndpointMonodromyPresentation,
     UniversalKEndpointMonodromyRepresentationAudit,
     UniversalKEndpointObserverBuild,
@@ -117,6 +118,7 @@ from ybe_domination import (
     universal_k_identity_endpoint_observer_builds_by_family,
     universal_k_identity_word_potential_certificate,
     universal_k_automatic_residual_faithfulness_audit,
+    universal_k_canonical_strand_carrier_congruence_audit,
     universal_k_canonical_fibre_label_identity_audit,
     universal_k_canonical_fibre_label_identity_residual_faithfulness_audit,
     universal_k_canonical_fibre_label_identity_rows,
@@ -277,6 +279,19 @@ def one_color_flip_interval():
     base_R = {("*", "*"): ("*", "*")}
     T = {
         ("*", "*", x, y): (y, x)
+        for x in fibres["*"]
+        for y in fibres["*"]
+    }
+    return LocalInterval(colors, fibres, base_R, T)
+
+
+def one_color_proper_strand_carrier_interval():
+    colors = ("*",)
+    fibres = {"*": (0, 1, 2)}
+    base_R = {("*", "*"): ("*", "*")}
+    swap = {0: 1, 1: 0, 2: 2}
+    T = {
+        ("*", "*", x, y): (swap[y], swap[x])
         for x in fibres["*"]
         for y in fibres["*"]
     }
@@ -7685,6 +7700,20 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertTrue(universal_k_interval_has_canonical_strand_carrier_action(interval))
         self.assertTrue(canonical_audit.proves_injective_strand_carrier_soundness)
         self.assertEqual(canonical_audit.failure_reasons, ())
+        canonical_congruence = universal_k_canonical_strand_carrier_congruence_audit(
+            interval
+        )
+        self.assertIsInstance(
+            canonical_congruence,
+            UniversalKCanonicalStrandCarrierCongruenceAudit,
+        )
+        self.assertEqual(canonical_congruence.canonical_carrier_kind, "equality")
+        self.assertTrue(
+            canonical_congruence.proves_equality_carrier_residual_subcase
+        )
+        self.assertFalse(
+            canonical_congruence.proves_local_minimal_proper_carrier_contradiction
+        )
 
         canonical_residual = (
             universal_k_canonical_strand_carrier_residual_faithfulness_audit(
@@ -7710,6 +7739,28 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertEqual(
             automatic_without_supplied_rows.residual_endpoint_channel_reasons,
             ("canonical_strand_carrier_residual_channel",),
+        )
+
+        universal_congruence = universal_k_canonical_strand_carrier_congruence_audit(
+            one_color_proper_rank_loss_interval()
+        )
+        self.assertEqual(universal_congruence.canonical_carrier_kind, "universal")
+        self.assertTrue(universal_congruence.leaves_universal_carrier_endpoint_branch)
+        self.assertFalse(
+            universal_congruence.proves_local_minimal_proper_carrier_contradiction
+        )
+
+        proper_congruence = universal_k_canonical_strand_carrier_congruence_audit(
+            one_color_proper_strand_carrier_interval()
+        )
+        self.assertEqual(proper_congruence.canonical_carrier_kind, "proper")
+        self.assertTrue(proper_congruence.canonical_carrier_is_admissible)
+        self.assertTrue(
+            proper_congruence.proves_local_minimal_proper_carrier_contradiction
+        )
+        self.assertIn(
+            "canonical_strand_carrier_kernel_proper",
+            proper_congruence.failure_reasons,
         )
 
         noninjective_carrier_audit = universal_k_strand_carrier_soundness_audit(

@@ -36,6 +36,7 @@ from .local_interval import (
     MissingTriangularPartialConstantContinuationRouteAudit,
     MissingTriangularRowProfileAudit,
     RackKinkLatinTriangularCollapseAudit,
+    ReadoutKernelAudit,
     RightRackKinkLatinTriangularCollapseAudit,
     SectionRankProfileCollapseAudit,
     TriangularBundleAudit,
@@ -53,6 +54,7 @@ from .local_interval import (
     missing_triangular_partial_constant_continuation_route_audit,
     missing_triangular_row_profile_audit,
     rack_kink_latin_triangular_collapse_audit,
+    readout_kernel_audit,
     right_rack_kink_latin_triangular_collapse_audit,
     section_rank_profile_collapse_audit,
     side_opposite_local_interval,
@@ -4834,6 +4836,94 @@ def universal_k_canonical_strand_carrier_rows(
         (color, point, carrier_by_root[find((color, point))])
         for color in interval.colors
         for point in interval.fibres[color]
+    )
+
+
+def universal_k_canonical_strand_carrier_labels(
+    interval: LocalInterval,
+) -> Mapping[Color, Mapping[FibrePoint, object]]:
+    """Return canonical strand-carrier labels as a readout-label mapping."""
+
+    labels: dict[Color, dict[FibrePoint, object]] = {
+        color: {} for color in interval.colors
+    }
+    for color, point, carrier in universal_k_canonical_strand_carrier_rows(interval):
+        labels[color][point] = carrier
+    return labels
+
+
+@dataclass(frozen=True)
+class UniversalKCanonicalStrandCarrierCongruenceAudit:
+    """Classify the canonical strand-carrier kernel as equality/proper/universal."""
+
+    interval: LocalInterval
+    readout_kernel: ReadoutKernelAudit
+
+    @property
+    def canonical_carrier_kind(self) -> str:
+        if self.readout_kernel.kind == "equality":
+            return "equality"
+        if self.readout_kernel.kind == "universal":
+            return "universal"
+        return "proper"
+
+    @property
+    def canonical_carrier_is_equality(self) -> bool:
+        return self.canonical_carrier_kind == "equality"
+
+    @property
+    def canonical_carrier_is_universal(self) -> bool:
+        return self.canonical_carrier_kind == "universal"
+
+    @property
+    def canonical_carrier_is_proper(self) -> bool:
+        return self.canonical_carrier_kind == "proper"
+
+    @property
+    def canonical_carrier_is_admissible(self) -> bool:
+        return self.readout_kernel.admissible
+
+    @property
+    def proves_local_minimal_proper_carrier_contradiction(self) -> bool:
+        return self.canonical_carrier_is_admissible and self.canonical_carrier_is_proper
+
+    @property
+    def leaves_universal_carrier_endpoint_branch(self) -> bool:
+        return (
+            self.canonical_carrier_is_admissible
+            and self.canonical_carrier_is_universal
+        )
+
+    @property
+    def proves_equality_carrier_residual_subcase(self) -> bool:
+        return (
+            self.canonical_carrier_is_admissible
+            and self.canonical_carrier_is_equality
+        )
+
+    @property
+    def failure_reasons(self) -> Tuple[str, ...]:
+        reasons = []
+        if not self.readout_kernel.admissible:
+            reasons.append("canonical_strand_carrier_kernel_not_admissible")
+        if self.canonical_carrier_is_proper:
+            reasons.append("canonical_strand_carrier_kernel_proper")
+        if self.canonical_carrier_is_universal:
+            reasons.append("canonical_strand_carrier_kernel_universal")
+        return tuple(reasons)
+
+
+def universal_k_canonical_strand_carrier_congruence_audit(
+    interval: LocalInterval,
+) -> UniversalKCanonicalStrandCarrierCongruenceAudit:
+    """Audit the kernel of the canonical strand-carrier readout."""
+
+    return UniversalKCanonicalStrandCarrierCongruenceAudit(
+        interval=interval,
+        readout_kernel=readout_kernel_audit(
+            interval,
+            universal_k_canonical_strand_carrier_labels(interval),
+        ),
     )
 
 

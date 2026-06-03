@@ -3604,6 +3604,7 @@ Implementation status in the current proof code:
 UniversalKFixedCarrierWordPotentialCertificate
 UniversalKFixedCarrierCoboundaryRow
 universal_k_canonical_strand_carrier_rows(...)
+universal_k_canonical_strand_carrier_congruence_audit(...)
 universal_k_canonical_strand_carrier_soundness_audit(...)
 universal_k_canonical_strand_carrier_residual_faithfulness_audit(...)
 universal_k_fixed_carrier_domain_ledger_from_strand_carriers(...)
@@ -3656,6 +3657,13 @@ residual selector tries this canonical strand-carrier theorem before the
 canonical coordinate-label theorem, and the top-level post-linear audit also
 exposes the explicit flag
 `universal_k_identity_canonical_strand_carrier_residual_faithfulness`.
+The congruence audit classifies the canonical strand-carrier kernel as:
+
+```text
+equality   -> residual-faithful canonical carrier subcase;
+proper     -> local-minimality contradiction;
+universal  -> remaining canonical-carrier endpoint-observer branch.
+```
 
 The all-`n` soundness proof is then:
 

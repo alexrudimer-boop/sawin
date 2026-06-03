@@ -2739,6 +2739,23 @@ universal_k_identity_canonical_strand_carrier_residual_faithfulness
 ```
 
 for callers that want this subcase directly.
+The same canonical relation is also audited as a finite admissible kernel by
+
+```text
+universal_k_canonical_strand_carrier_congruence_audit(...)
+```
+
+with the following trichotomy:
+
+```text
+equality   -> residual-faithful canonical carrier subcase;
+proper     -> local-minimality contradiction;
+universal  -> canonical carriers contain no fibre information, so the U/C/M
+              endpoint-observer problem remains.
+```
+
+Thus a non-injective canonical strand-carrier relation is not automatically a
+survivor.  Only the universal branch survives local-minimality.
 This does not prove that every surviving U/C/M interval admits such
 observers; it gives the exact finite local checker and integration path that
 any proposed observer must pass.
