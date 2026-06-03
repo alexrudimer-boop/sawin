@@ -9,6 +9,7 @@ from ybe_domination import (
     FiniteBraidedSet,
     BranchRow,
     GreenBranchAudit,
+    GreenSectionTransportRigidityGateAudit,
     all_bijection_solutions,
     atom_action_summary,
     atom_descent_closure_summary,
@@ -29,6 +30,7 @@ from ybe_domination import (
     context_words_by_target,
     depth_observer_summary,
     green_branch_audits,
+    green_section_transport_rigidity_gate_audit,
     kernel_block_defect_abelianization_split_audits,
     kernel_block_defect_artin_abelianization_barrier_audits,
     kernel_block_defect_kernel_potential_audits,
@@ -155,6 +157,37 @@ class GreenBranchTests(unittest.TestCase):
         ]
         self.assertEqual({summary.group_order for summary in summaries}, {1})
         self.assertEqual({summary.nonidentity_loop_count for summary in summaries}, {0})
+
+    def test_green_section_transport_rigidity_gate_records_actual_transport_obligation(self):
+        audit = green_section_transport_rigidity_gate_audit()
+
+        self.assertIsInstance(audit, GreenSectionTransportRigidityGateAudit)
+        self.assertTrue(audit.records_green_section_transport_rigidity_gate)
+        self.assertTrue(audit.actual_supported_transport_required)
+        self.assertTrue(audit.raw_rees_normalization_rejected)
+        self.assertTrue(audit.recurrent_hidden_component_required)
+        self.assertTrue(audit.cyclic_p_primary_fibre_required)
+        self.assertTrue(audit.positive_rigidity_condition_recorded)
+        self.assertTrue(audit.negative_countercertificate_recorded)
+        self.assertTrue(audit.finite_depth_group_gate_connected)
+        self.assertIn("supported completed rows", audit.actual_transport_formula)
+        self.assertIn("theta_{e,e'}", audit.positive_rigidity_formula)
+        self.assertIn("Aut(C_{p^m})", audit.countercertificate_formula)
+        self.assertEqual(
+            audit.case_keys,
+            (
+                "actual_completed_context_transport",
+                "raw_rees_schutzenberger_shortcut_rejected",
+                "recurrent_hidden_component_filter",
+                "cyclic_p_primary_section_fibre",
+                "positive_rigidity_target",
+                "negative_countercertificate_target",
+                "finite_depth_group_loop_guardrail",
+            ),
+        )
+        self.assertEqual(audit.cases[0].role, "model_requirement")
+        self.assertEqual(audit.cases[1].role, "guardrail")
+        self.assertEqual(audit.cases[-1].role, "finite_prefix_guardrail")
 
     def test_schutzenberger_summary_for_affine_candidate_is_global_group(self):
         summary = schutzenberger_summaries(size_three_affine_candidate())[0]
