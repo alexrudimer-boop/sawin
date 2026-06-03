@@ -2141,3 +2141,22 @@ image.  Emptiness of that finite system at some arity is a real obstruction
 to that fixed base.  A uniform bounded-arity replacement for the all-arity
 condition would require an additional pullback-coskeletal lemma, which remains
 open.
+
+## Pullback-Coskeletal Criterion Boundary
+
+The note `proofs/pullback_coskeletal_criterion.md` and generated audit
+`proofs/pullback_coskeletal_criterion_audit.md` separate fixed-base
+compactness from a bounded-arity cutoff.  For one fixed proposed finite base
+`B`, the finite gauge/pullback solution sets `S_N(B)` form an inverse system
+when the restriction maps are included.  If every `S_N(B)` is nonempty, then
+compactness gives an all-arity branch for that fixed base.  If some `S_N(B)`
+is empty, that is a genuine finite obstruction to `B`.
+
+This does not imply a universal arity bound.  A bounded cutoff requires a
+new finite-type theorem: the YBE point-pushing deletion tower must be
+`d`-pullback-coskeletal, so all higher deletion cocycles, coefficient
+transports, and section-gauge relations are forced by the `d`-skeleton.
+Without such a lemma, independent pullback constraints can first appear in
+arbitrarily high arity.  The next all-arity route is therefore either to
+prove this coskeletality lemma or to find a high-arity countermechanism, not
+merely to add another bounded prefix check.

@@ -21,6 +21,7 @@ from ybe_domination import (
     PrefixGroupHurwitzCompressionPressureAudit,
     PrefixPointForgettingRestrictionAudit,
     PrefixPointPushingSurfaceAudit,
+    PullbackCoskeletalCriterionAudit,
     PrefixVerticalPeifferCubeTransportAudit,
     PrefixVerticalPeifferSquareAudit,
     PrefixVerticalDefectTransportAudit,
@@ -42,6 +43,7 @@ from ybe_domination import (
     prefix_vertical_peiffer_square_audit,
     prefix_vertical_defect_transport_audit,
     prefix_vertical_defect_transform_audit,
+    pullback_coskeletal_criterion_audit,
     rack_point_pushing_operator_label_audit,
     rack_solution,
 )
@@ -678,6 +680,37 @@ class RackPointPushingOperatorLabelTests(unittest.TestCase):
                 (3, 16, 1, 1, 1, 1, 1, 0),
                 (4, 32, 1, 1, 1, 1, 1, 0),
                 (5, 64, 1, 1, 1, 1, 1, 0),
+            ],
+        )
+
+    def test_pullback_coskeletal_criterion_separates_compactness_from_cutoff(self):
+        audit = pullback_coskeletal_criterion_audit()
+
+        self.assertIsInstance(audit, PullbackCoskeletalCriterionAudit)
+        self.assertTrue(audit.records_pullback_coskeletal_route_boundary)
+        self.assertTrue(audit.fixed_base_inverse_limit_compactness_recorded)
+        self.assertTrue(
+            audit.uniform_bounded_arity_cutoff_rejected_without_extra_hypothesis
+        )
+        self.assertTrue(audit.pullback_coskeletal_hypothesis_identified)
+        self.assertTrue(audit.finite_obstruction_certificate_identified)
+        self.assertEqual(
+            audit.case_keys,
+            (
+                "fixed_base_inverse_limit",
+                "bounded_cutoff_requires_coskeletality",
+                "finite_obstruction_certificate",
+                "general_uniform_cutoff_failure",
+            ),
+        )
+        self.assertIn("d-pullback-coskeletal", audit.missing_pullback_coskeletal_lemma)
+        self.assertEqual(
+            [case.role for case in audit.cases],
+            [
+                "valid_compactness_principle",
+                "missing_positive_hypothesis",
+                "valid_negative_certificate_for_fixed_base",
+                "warning_countermechanism",
             ],
         )
 

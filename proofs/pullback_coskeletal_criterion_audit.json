@@ -1,0 +1,48 @@
+{
+  "case_keys": [
+    "fixed_base_inverse_limit",
+    "bounded_cutoff_requires_coskeletality",
+    "finite_obstruction_certificate",
+    "general_uniform_cutoff_failure"
+  ],
+  "cases": [
+    {
+      "consequence": "K\u00f6nig/compactness gives one compatible all-arity solution for that fixed base",
+      "criterion": "every S_N(B) is nonempty and the restrictions make these sets an inverse system",
+      "failure_mode": "some finite S_N(B) is empty; this is a real obstruction to that fixed base",
+      "finite_data": "for one fixed base B, finite sets S_N(B) of gauge/pullback solutions through arity N and restriction maps S_{N+1}(B)->S_N(B)",
+      "key": "fixed_base_inverse_limit",
+      "role": "valid_compactness_principle"
+    },
+    {
+      "consequence": "checking the finite gauge/pullback system through arity d is enough for the fixed base",
+      "criterion": "the tower is d-pullback-coskeletal and section-gauge relations are generated in arity at most d",
+      "failure_mode": "new independent obstruction coordinates can first appear in arbitrarily high arity",
+      "finite_data": "a comparison tower whose cocycles, coefficient transports, and gauge cochains above arity d are forced by their d-skeleton",
+      "key": "bounded_cutoff_requires_coskeletality",
+      "role": "missing_positive_hypothesis"
+    },
+    {
+      "consequence": "no all-arity pullback to that fixed base exists, because any all-arity solution restricts to S_N(B)",
+      "criterion": "S_N(B) is empty for a specified finite arity N",
+      "failure_mode": "nonemptiness of S_N(B) for small N alone does not certify an all-arity solution unless the inverse-system or coskeletal hypotheses are supplied",
+      "finite_data": "the finite system S_N(B) of base comparison maps, vertical coefficient labels, and section-change cochains",
+      "key": "finite_obstruction_certificate",
+      "role": "valid_negative_certificate_for_fixed_base"
+    },
+    {
+      "consequence": "there is no universal bounded-arity pullback test without extra finite-type or coskeletal structure",
+      "criterion": "for every d there is a tower whose first failed constraint appears above d",
+      "failure_mode": "a proof that uses only bounded prefix checks silently assumes the missing pullback-coskeletal lemma",
+      "finite_data": "a finite-state-looking tower with an independent new gauge/pullback constraint introduced at each higher arity",
+      "key": "general_uniform_cutoff_failure",
+      "role": "warning_countermechanism"
+    }
+  ],
+  "finite_obstruction_certificate_identified": true,
+  "fixed_base_inverse_limit_compactness_recorded": true,
+  "missing_pullback_coskeletal_lemma": "finite YBE point-pushing deletion towers are d-pullback-coskeletal over one fixed finite operator-label Hurwitz base, for some d depending only on the finite solution or on the proposed base",
+  "pullback_coskeletal_hypothesis_identified": true,
+  "records_pullback_coskeletal_route_boundary": true,
+  "uniform_bounded_arity_cutoff_rejected_without_extra_hypothesis": true
+}

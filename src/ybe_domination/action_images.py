@@ -630,6 +630,50 @@ class PrefixFiniteBasePullbackGaugeAudit:
 
 
 @dataclass(frozen=True)
+class PullbackCoskeletalCriterionCase:
+    """One logical branch of the fixed-base pullback/coskeletal route."""
+
+    key: str
+    role: str
+    finite_data: str
+    criterion: str
+    consequence: str
+    failure_mode: str
+
+
+@dataclass(frozen=True)
+class PullbackCoskeletalCriterionAudit:
+    """Theorem-route ledger for finite pullback compactness versus cutoff."""
+
+    fixed_base_inverse_limit_compactness_recorded: bool
+    uniform_bounded_arity_cutoff_rejected_without_extra_hypothesis: bool
+    pullback_coskeletal_hypothesis_identified: bool
+    finite_obstruction_certificate_identified: bool
+    missing_pullback_coskeletal_lemma: str
+    cases: Tuple[PullbackCoskeletalCriterionCase, ...]
+
+    @property
+    def case_keys(self) -> Tuple[str, ...]:
+        return tuple(case.key for case in self.cases)
+
+    @property
+    def records_pullback_coskeletal_route_boundary(self) -> bool:
+        return (
+            self.fixed_base_inverse_limit_compactness_recorded
+            and self.uniform_bounded_arity_cutoff_rejected_without_extra_hypothesis
+            and self.pullback_coskeletal_hypothesis_identified
+            and self.finite_obstruction_certificate_identified
+            and self.case_keys
+            == (
+                "fixed_base_inverse_limit",
+                "bounded_cutoff_requires_coskeletality",
+                "finite_obstruction_certificate",
+                "general_uniform_cutoff_failure",
+            )
+        )
+
+
+@dataclass(frozen=True)
 class PrefixPointForgettingRestrictionRow:
     """One marked generator comparison under stationary-strand deletion."""
 
@@ -4087,6 +4131,112 @@ def prefix_finite_base_pullback_gauge_audit(
         observed_deletion_two_cocycle_gauge_trivial=observed_trivial,
         fixed_translation_pair_base_only=True,
         group_hurwitz_realization_still_required=True,
+    )
+
+
+def pullback_coskeletal_criterion_audit() -> PullbackCoskeletalCriterionAudit:
+    """Record the exact boundary of finite pullback/coskeletal reasoning.
+
+    For one fixed proposed finite base, compatible finite truncation solution
+    sets form an inverse system of finite sets.  A nonempty solution at every
+    finite arity gives an all-arity branch by compactness.  This does not give
+    a uniform bounded-arity cutoff; such a cutoff is an additional
+    coskeletality/noetherian hypothesis.
+    """
+
+    cases = (
+        PullbackCoskeletalCriterionCase(
+            key="fixed_base_inverse_limit",
+            role="valid_compactness_principle",
+            finite_data=(
+                "for one fixed base B, finite sets S_N(B) of gauge/pullback "
+                "solutions through arity N and restriction maps "
+                "S_{N+1}(B)->S_N(B)"
+            ),
+            criterion=(
+                "every S_N(B) is nonempty and the restrictions make these "
+                "sets an inverse system"
+            ),
+            consequence=(
+                "König/compactness gives one compatible all-arity solution "
+                "for that fixed base"
+            ),
+            failure_mode=(
+                "some finite S_N(B) is empty; this is a real obstruction to "
+                "that fixed base"
+            ),
+        ),
+        PullbackCoskeletalCriterionCase(
+            key="bounded_cutoff_requires_coskeletality",
+            role="missing_positive_hypothesis",
+            finite_data=(
+                "a comparison tower whose cocycles, coefficient transports, "
+                "and gauge cochains above arity d are forced by their "
+                "d-skeleton"
+            ),
+            criterion=(
+                "the tower is d-pullback-coskeletal and section-gauge "
+                "relations are generated in arity at most d"
+            ),
+            consequence=(
+                "checking the finite gauge/pullback system through arity d "
+                "is enough for the fixed base"
+            ),
+            failure_mode=(
+                "new independent obstruction coordinates can first appear in "
+                "arbitrarily high arity"
+            ),
+        ),
+        PullbackCoskeletalCriterionCase(
+            key="finite_obstruction_certificate",
+            role="valid_negative_certificate_for_fixed_base",
+            finite_data=(
+                "the finite system S_N(B) of base comparison maps, vertical "
+                "coefficient labels, and section-change cochains"
+            ),
+            criterion="S_N(B) is empty for a specified finite arity N",
+            consequence=(
+                "no all-arity pullback to that fixed base exists, because "
+                "any all-arity solution restricts to S_N(B)"
+            ),
+            failure_mode=(
+                "nonemptiness of S_N(B) for small N alone does not certify "
+                "an all-arity solution unless the inverse-system or "
+                "coskeletal hypotheses are supplied"
+            ),
+        ),
+        PullbackCoskeletalCriterionCase(
+            key="general_uniform_cutoff_failure",
+            role="warning_countermechanism",
+            finite_data=(
+                "a finite-state-looking tower with an independent new "
+                "gauge/pullback constraint introduced at each higher arity"
+            ),
+            criterion=(
+                "for every d there is a tower whose first failed constraint "
+                "appears above d"
+            ),
+            consequence=(
+                "there is no universal bounded-arity pullback test without "
+                "extra finite-type or coskeletal structure"
+            ),
+            failure_mode=(
+                "a proof that uses only bounded prefix checks silently assumes "
+                "the missing pullback-coskeletal lemma"
+            ),
+        ),
+    )
+    return PullbackCoskeletalCriterionAudit(
+        fixed_base_inverse_limit_compactness_recorded=True,
+        uniform_bounded_arity_cutoff_rejected_without_extra_hypothesis=True,
+        pullback_coskeletal_hypothesis_identified=True,
+        finite_obstruction_certificate_identified=True,
+        missing_pullback_coskeletal_lemma=(
+            "finite YBE point-pushing deletion towers are d-pullback-coskeletal "
+            "over one fixed finite operator-label Hurwitz base, for some d "
+            "depending only on the finite solution or on the proposed base"
+        ),
+        cases=cases,
     )
 
 
