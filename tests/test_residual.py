@@ -11,6 +11,7 @@ from ybe_domination import (
     braid_action_order,
     bounded_words,
     cyclic_group,
+    full_twist_braid_word,
     identity_solution,
     is_identity_action,
     local_normalized_law_prefix_witness_audit,
@@ -19,6 +20,7 @@ from ybe_domination import (
     is_nondegenerate,
     product_solution,
     quotient_image_kernel_summary,
+    rack_full_twist_order_bound_audit,
     rack_solution,
     residual_coordinate_dependency_summary,
     pure_braid_generator,
@@ -133,6 +135,50 @@ class ResidualTests(unittest.TestCase):
         flip = {elems[0]: elems[1], elems[1]: elems[0]}
         total = rack_solution(elems, lambda a, b: flip[b])
         self.assertEqual(braid_action_order(total, 2, [1, 1]), 2)
+
+    def test_full_twist_braid_word_uses_central_positive_convention(self):
+        self.assertEqual(full_twist_braid_word(1), tuple())
+        self.assertEqual(full_twist_braid_word(2), (1, 1))
+        self.assertEqual(full_twist_braid_word(4), (1, 2, 3) * 4)
+        with self.assertRaises(ValueError):
+            full_twist_braid_word(0)
+
+    def test_rack_full_twist_order_bound_audit_for_dihedral_rack(self):
+        rack = rack_solution([0, 1, 2], lambda left, right: (2 * left - right) % 3)
+
+        orders = []
+        for n in range(1, 6):
+            audit = rack_full_twist_order_bound_audit(rack, n)
+            orders.append(audit.action_order)
+            self.assertEqual(audit.inner_group_order, 6)
+            self.assertEqual(audit.inner_group_exponent, 6)
+            self.assertEqual(audit.checked_tuple_count, 3**n)
+            self.assertTrue(audit.total_translation_product_preserved)
+            self.assertTrue(audit.coordinate_translations_conjugated_by_total)
+            self.assertTrue(audit.action_order_divides_inner_exponent)
+            self.assertTrue(audit.proves_fixed_n_rack_full_twist_bound)
+
+        self.assertEqual(orders, [1, 3, 2, 3, 2])
+
+    def test_rack_full_twist_order_bound_audit_for_constant_action_rack(self):
+        rack = rack_solution([0, 1], lambda _left, right: 1 - right)
+
+        orders = [
+            rack_full_twist_order_bound_audit(rack, n).action_order
+            for n in range(1, 7)
+        ]
+
+        self.assertEqual(orders, [1, 2, 1, 2, 1, 2])
+        self.assertTrue(
+            all(
+                rack_full_twist_order_bound_audit(rack, n).inner_group_exponent == 2
+                for n in range(1, 7)
+            )
+        )
+
+    def test_rack_full_twist_order_bound_audit_rejects_nonrack_solution(self):
+        with self.assertRaises(ValueError):
+            rack_full_twist_order_bound_audit(identity_solution([0, 1]), 2)
 
     def test_quotient_image_kernel_summary_for_trivial_quotient(self):
         elems = ((0, "a"), (0, "b"))

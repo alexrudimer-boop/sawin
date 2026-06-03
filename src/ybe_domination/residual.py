@@ -9,9 +9,10 @@ from .artin_longitudes import (
     BraidWord,
     RightStabilizationLongitudeAudit,
     has_identity_longitude_signature,
+    rack_inner_group,
     right_stabilization_longitude_audit,
 )
-from .finite_braided_set import Element, FiniteBraidedSet, product_solution
+from .finite_braided_set import Element, FiniteBraidedSet, is_rack_solution, product_solution
 from .finite_group import FiniteGroup, direct_product_group, symmetric_group
 
 BaseTuple = Tuple[Hashable, ...]
@@ -29,10 +30,34 @@ def action_permutation(solution: FiniteBraidedSet, n: int, braid_word: BraidWord
     return tuple(index[solution.braid_action(braid_word, tup)] for tup in tuples)
 
 
+def full_twist_braid_word(n: int) -> Tuple[int, ...]:
+    """Return the central full twist ``Delta_n^2=(sigma_1 ... sigma_{n-1})^n``."""
+
+    if n < 1:
+        raise ValueError("braid degree must be positive")
+    return tuple(generator for _ in range(n) for generator in range(1, n))
+
+
 def _lcm(a: int, b: int) -> int:
     if a == 0 or b == 0:
         return 0
     return abs(a * b) // gcd(a, b)
+
+
+def _finite_group_element_order(group: FiniteGroup, element: object) -> int:
+    current = group.identity
+    for order in range(1, len(group.elements) + 1):
+        current = group.mul(current, element)
+        if current == group.identity:
+            return order
+    raise ValueError("element did not have finite order inside the supplied group")
+
+
+def _finite_group_exponent(group: FiniteGroup) -> int:
+    exponent = 1
+    for element in group.elements:
+        exponent = _lcm(exponent, _finite_group_element_order(group, element))
+    return exponent
 
 
 def permutation_order(permutation: Sequence[int]) -> int:
@@ -61,6 +86,110 @@ def is_identity_action(solution: FiniteBraidedSet, n: int, braid_word: BraidWord
         if solution.braid_action(braid_word, tup) != tuple(tup):
             return False
     return True
+
+
+@dataclass(frozen=True)
+class RackFullTwistOrderBoundAudit:
+    """Fixed-degree certificate for the rack full-twist order bound."""
+
+    rack_size: int
+    n: int
+    braid_word: Tuple[int, ...]
+    inner_group_order: int
+    inner_group_exponent: int
+    action_order: int
+    checked_tuple_count: int
+    total_translation_product_preserved: bool
+    coordinate_translations_conjugated_by_total: bool
+    action_order_divides_inner_exponent: bool
+
+    @property
+    def proves_fixed_n_rack_full_twist_bound(self) -> bool:
+        return (
+            self.total_translation_product_preserved
+            and self.coordinate_translations_conjugated_by_total
+            and self.action_order_divides_inner_exponent
+        )
+
+
+def _rack_left_translations(rack: FiniteBraidedSet) -> Dict[Element, Tuple[int, ...]]:
+    index = {element: position for position, element in enumerate(rack.elements)}
+    translations = {}
+    for left in rack.elements:
+        images = []
+        for right in rack.elements:
+            first, second = rack.R[(left, right)]
+            if second != left:
+                raise ValueError("solution is not in rack form R(a,b)=(a*b,a)")
+            images.append(index[first])
+        translation = tuple(images)
+        if set(translation) != set(range(len(rack.elements))):
+            raise ValueError("left rack translation is not bijective")
+        translations[left] = translation
+    return translations
+
+
+def _group_product(group: FiniteGroup, elements: Iterable[object]) -> object:
+    out = group.identity
+    for element in elements:
+        out = group.mul(out, element)
+    return out
+
+
+def rack_full_twist_order_bound_audit(
+    rack: FiniteBraidedSet,
+    n: int,
+) -> RackFullTwistOrderBoundAudit:
+    """Audit the fixed-degree rack bound ``ord(Delta_n^2) | exp Inn(Y)``.
+
+    For a rack tuple ``(y_1,...,y_n)``, let ``L_i`` be its left translations
+    and ``P=L_1...L_n``.  The full twist preserves ``P`` and conjugates each
+    output left translation by ``P``.  This finite audit checks those exact
+    identities on ``Y^n`` and records the resulting action-order bound.
+    """
+
+    if not is_rack_solution(rack):
+        raise ValueError("solution is not a rack in left convention")
+    braid_word = full_twist_braid_word(n)
+    group = rack_inner_group(rack)
+    exponent = _finite_group_exponent(group)
+    translations = _rack_left_translations(rack)
+    action_order = braid_action_order(rack, n, braid_word)
+    total_translation_product_preserved = True
+    coordinate_translations_conjugated_by_total = True
+    checked_tuple_count = 0
+    for tup in product(rack.elements, repeat=n):
+        checked_tuple_count += 1
+        image = rack.braid_action(braid_word, tup)
+        total_translation = _group_product(
+            group,
+            (translations[element] for element in tup),
+        )
+        image_total_translation = _group_product(
+            group,
+            (translations[element] for element in image),
+        )
+        if image_total_translation != total_translation:
+            total_translation_product_preserved = False
+        for before, after in zip(tup, image):
+            expected = group.mul(
+                group.mul(total_translation, translations[before]),
+                group.inv(total_translation),
+            )
+            if translations[after] != expected:
+                coordinate_translations_conjugated_by_total = False
+    return RackFullTwistOrderBoundAudit(
+        rack_size=len(rack.elements),
+        n=n,
+        braid_word=braid_word,
+        inner_group_order=len(group.elements),
+        inner_group_exponent=exponent,
+        action_order=action_order,
+        checked_tuple_count=checked_tuple_count,
+        total_translation_product_preserved=total_translation_product_preserved,
+        coordinate_translations_conjugated_by_total=coordinate_translations_conjugated_by_total,
+        action_order_divides_inner_exponent=(exponent % action_order == 0),
+    )
 
 
 @dataclass(frozen=True)

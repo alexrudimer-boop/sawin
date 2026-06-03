@@ -1610,6 +1610,22 @@ nontrivial observer-existence gap: construct residual-faithful U/C/M
 monodromy-coboundary observers for all surviving intervals, or produce a
 normalized-law counterexample.
 
+The rack side now has a separate central full-twist obstruction recorded in
+`proofs/rack_full_twist_order_bound.md`.  For a finite rack `Y`, the action of
+`Delta_n^2=(sigma_1 ... sigma_{n-1})^n` on `Y^n` has order dividing
+`exp Inn(Y)`, uniformly in `n`.  The proof uses the Artin-longitude formula:
+if `P=L_{y_1}...L_{y_n}`, then the full twist sends each coordinate by
+`P L_{y_i}^{-1}`; the total product `P` is preserved and the coordinate left
+translations are conjugated by `P`.  Thus the `exp Inn(Y)`-th power is
+trivial on every arity.  Consequently any finite bijective YBE solution
+dominated by a finite rack must also have uniformly bounded central
+full-twist orders.  The executable helper
+`rack_full_twist_order_bound_audit(Y,n)` verifies the fixed-degree identities
+and divisibility.  This does not yet solve the MO problem: the remaining
+obstruction route is to find a finite degenerate bijective YBE solution whose
+`rho_X,n(Delta_n^2)` orders grow with `n`, or else prove that such growth is
+impossible for all finite bijective YBE solutions.
+
 ## Verification snapshot
 
 At the latest verified snapshot:
