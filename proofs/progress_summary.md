@@ -1546,6 +1546,16 @@ matching `universal_k_monodromy_fixed_carrier_domains_by_family` and
 `universal_k_monodromy_fixed_carrier_soundness_witnesses_by_family`
 parameters; when these are present, the monodromy path derives fixed-carrier
 certificates instead of raw-variable certificates.
+The strand-carrier local invariant is now connected to this constructor.  The
+helper
+`universal_k_fixed_carrier_domain_ledger_from_strand_carriers(...)` derives
+the exact singleton fixed-carrier domains and the `strand_carrier_equations`
+witness ledger from a sound finite `ell_c(x)` table.  The family constructor
+and top-level audit can consume `universal_k_monodromy_strand_carrier_rows_by_family`
+and optional `universal_k_monodromy_strand_carrier_track_counts_by_family`
+inputs, so a proposed observer no longer has to hand-materialize the
+per-positive-row carrier-domain table when the strand-carrier equations prove
+it.
 This removes another false endpoint closure and leaves the same local
 nontrivial observer-existence gap: construct residual-faithful U/C/M
 monodromy-coboundary observers for all surviving intervals, or produce a
@@ -1555,8 +1565,8 @@ normalized-law counterexample.
 
 At the latest verified snapshot:
 
-- `python -m unittest tests.test_nonlinear_overlap` passed with 186 tests;
-- `python -m unittest discover -s tests` passed with 722 tests;
+- `python -m unittest tests.test_nonlinear_overlap` passed with 191 tests;
+- `python -m unittest discover -s tests` passed with 730 tests;
 - `python -m compileall -q src tests tools` passed;
 - `node --check tools/build_reduction_audit_workbook.mjs` passed;
 - the proof log DOCX and reduction audit workbook were regenerated, and the

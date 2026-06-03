@@ -45,6 +45,7 @@ from ybe_domination import (
     UniversalKEndpointObserverFamilyBuildAudit,
     UniversalKEndpointTargetAudit,
     UniversalKFibreLabelIdentityAudit,
+    UniversalKFixedCarrierDomainLedgerFromStrandCarriersAudit,
     UniversalKFixedCarrierCoboundaryRow,
     UniversalKFixedCarrierWordPotentialCertificate,
     UniversalKMonodromyFamilyInputAudit,
@@ -107,6 +108,7 @@ from ybe_domination import (
     universal_k_endpoint_observer_positive_rows_from_word_potential,
     universal_k_endpoint_observer_signed_rows_from_positive,
     universal_k_evaluate_word_potential,
+    universal_k_fixed_carrier_domain_ledger_from_strand_carriers,
     universal_k_fixed_carrier_coboundary_defect_value,
     universal_k_fixed_carrier_word_potential_certificate_from_monodromy,
     universal_k_word_potential_certificate_from_monodromy,
@@ -6149,6 +6151,56 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         )
         self.assertEqual(set(row.endpoint_value for row in build.positive_rows), {1})
 
+        strand_carrier_family_audit = (
+            universal_k_endpoint_observer_builds_from_fixed_carrier_monodromy_by_family(
+                interval,
+                seed_entries,
+                endpoint_groups_by_family=(("U", group),),
+                word_potential_templates_by_family=(
+                    (
+                        "U",
+                        (
+                            (seed_key, ((u1, 1), (u0, -1))),
+                            (next_key, ((u0, 1), (u1, -1))),
+                        ),
+                    ),
+                ),
+                positive_state_rows_by_family=(("U", tuple(positive_state_rows)),),
+                strand_carrier_rows_by_family=(
+                    ("U", (("*", 0, 1), ("*", 1, 1))),
+                ),
+                detector_track_initialization_rows=detector_rows,
+                endpoint_target_audits_by_family=(("U", endpoint_target),),
+                residual_faithfulness_theorems_by_family=(("U", residual_theorem),),
+            )
+        )
+
+        self.assertEqual(strand_carrier_family_audit.failure_reasons, ())
+        strand_build = dict(strand_carrier_family_audit.build_rows_exact)["U"]
+        self.assertEqual(
+            set(row.endpoint_value for row in strand_build.positive_rows),
+            {1},
+        )
+        strand_certificate = (
+            strand_build.telescoping_detector_audit.word_potential_certificate
+        )
+        self.assertIsInstance(
+            strand_certificate,
+            UniversalKFixedCarrierWordPotentialCertificate,
+        )
+        self.assertEqual(
+            tuple(
+                sorted(
+                    {
+                        row.carrier_soundness_witness
+                        for row in strand_certificate.identity_row_objects
+                    },
+                    key=repr,
+                )
+            ),
+            (("strand_carrier_equations",),),
+        )
+
     def test_endpoint_observer_builder_records_all_ucm_active_families(self):
         interval = one_color_identity_interval()
         group = cyclic_group(2)
@@ -7595,6 +7647,30 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertTrue(carrier_audit.proves_strand_carrier_soundness)
         self.assertTrue(carrier_audit.proves_injective_strand_carrier_soundness)
         self.assertEqual(carrier_audit.failure_reasons, ())
+
+        fixed_carrier_ledger = (
+            universal_k_fixed_carrier_domain_ledger_from_strand_carriers(
+                interval,
+                (("U", ("strand", "carrier", "seed")),),
+                carrier_rows,
+            )
+        )
+        self.assertIsInstance(
+            fixed_carrier_ledger,
+            UniversalKFixedCarrierDomainLedgerFromStrandCarriersAudit,
+        )
+        self.assertTrue(fixed_carrier_ledger.proves_strand_carrier_singleton_domains)
+        self.assertEqual(fixed_carrier_ledger.failure_reasons, ())
+        self.assertEqual(len(fixed_carrier_ledger.carrier_domains_by_entry_key), 16)
+        sample_key = ("U", ("strand", "carrier", "seed"), 1, "a", "b", "a0", "b1")
+        self.assertEqual(
+            fixed_carrier_ledger.carrier_domains_by_entry_key[sample_key],
+            (((0, 1),),),
+        )
+        self.assertEqual(
+            fixed_carrier_ledger.carrier_soundness_witnesses_by_entry_key[sample_key],
+            ("strand_carrier_equations",),
+        )
 
         noninjective_carrier_audit = universal_k_strand_carrier_soundness_audit(
             interval,

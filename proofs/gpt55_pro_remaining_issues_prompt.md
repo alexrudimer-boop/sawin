@@ -3603,6 +3603,7 @@ Implementation status in the current proof code:
 ```text
 UniversalKFixedCarrierWordPotentialCertificate
 UniversalKFixedCarrierCoboundaryRow
+universal_k_fixed_carrier_domain_ledger_from_strand_carriers(...)
 universal_k_fixed_carrier_word_potential_certificate_from_monodromy(...)
 universal_k_endpoint_observer_positive_rows_from_fixed_carrier_word_potential(...)
 universal_k_endpoint_observer_builds_from_fixed_carrier_monodromy_by_family(...)
@@ -3621,19 +3622,29 @@ endpoint_groups_by_family,
 word_potential_templates_by_family,
 positive_state_rows_by_family,
 carrier_domains_by_family,
-carrier_soundness_witnesses_by_family.
+carrier_soundness_witnesses_by_family,
+strand_carrier_rows_by_family,
+strand_carrier_track_counts_by_family.
 ```
 
 The top-level post-linear audit exposes the carrier ledgers as:
 
 ```text
 universal_k_monodromy_fixed_carrier_domains_by_family,
-universal_k_monodromy_fixed_carrier_soundness_witnesses_by_family.
+universal_k_monodromy_fixed_carrier_soundness_witnesses_by_family,
+universal_k_monodromy_strand_carrier_rows_by_family,
+universal_k_monodromy_strand_carrier_track_counts_by_family.
 ```
 
 When these are present, the monodromy construction path uses fixed-carrier
 certificates rather than full-domain raw-variable certificates.  This is
 infrastructure, not a universal existence proof.
+The strand-carrier rows are accepted as a finite local way to derive the
+singleton carrier-domain ledger: if the audit proves
+`ell_c(u)=ell_b(y)` and `ell_d(v)=ell_a(x)` on every local row, each positive
+endpoint row key receives exactly the carrier tuple
+`((ell_a(x),ell_b(y)),...)` and the witness
+`strand_carrier_equations`.
 
 The all-`n` soundness proof is then:
 

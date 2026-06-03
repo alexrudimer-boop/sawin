@@ -2681,6 +2681,34 @@ universal_k_monodromy_fixed_carrier_soundness_witnesses_by_family.
 
 When either of these ledgers is present, the top-level monodromy path uses
 the fixed-carrier constructor rather than the raw-variable constructor.
+The carrier-domain ledgers may now also be derived from the finite
+strand-carrier equations.  The helper
+
+```text
+universal_k_fixed_carrier_domain_ledger_from_strand_carriers(...)
+```
+
+takes a reachable endpoint seed set, a finite carrier table `ell_c(x)`, and a
+detector-track count.  When the strand-carrier audit proves
+`ell_c(u)=ell_b(y)` and `ell_d(v)=ell_a(x)` on every local row, it produces
+the exact singleton carrier-domain map and the exact
+`strand_carrier_equations` witness map for every positive endpoint row key.
+The family constructor accepts these rows through
+
+```text
+strand_carrier_rows_by_family,
+strand_carrier_track_counts_by_family.
+```
+
+The top-level audit exposes the same route as
+
+```text
+universal_k_monodromy_strand_carrier_rows_by_family,
+universal_k_monodromy_strand_carrier_track_counts_by_family.
+```
+
+Thus a proposed fixed-carrier observer may supply the local strand-carrier
+ledger instead of hand-listing every positive-row carrier domain.
 This does not prove that every surviving U/C/M interval admits such
 observers; it gives the exact finite local checker and integration path that
 any proposed observer must pass.

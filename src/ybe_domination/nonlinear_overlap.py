@@ -164,6 +164,7 @@ UniversalKWordPotentialSubstitution = Tuple[
 ]
 UniversalKWordPotentialFailure = Tuple[object, str, object]
 UniversalKFixedCarrierTuple = Tuple[Tuple[GroupElement, GroupElement], ...]
+UniversalKFixedCarrierDomainLedgerFailure = Tuple[object, str, object]
 UniversalKFibreLabelRow = Tuple[Color, FibrePoint, object]
 UniversalKFibreLabelFailure = Tuple[object, str, object]
 UniversalKStrandCarrierRow = Tuple[Color, FibrePoint, object]
@@ -4569,6 +4570,209 @@ def universal_k_interval_has_injective_strand_carrier_action(
         interval,
         carrier_rows,
     ).proves_injective_strand_carrier_soundness
+
+
+def _universal_k_strand_carrier_track_values(
+    carrier: object,
+    track_count: int,
+) -> Tuple[object, ...] | None:
+    if not _universal_k_positive_int(track_count):
+        return None
+    if track_count == 1:
+        return (carrier,)
+    if not isinstance(carrier, tuple) or len(carrier) != track_count:
+        return None
+    return carrier
+
+
+@dataclass(frozen=True)
+class UniversalKFixedCarrierDomainLedgerFromStrandCarriersAudit:
+    """Derive singleton fixed-carrier row domains from strand-carrier labels."""
+
+    interval: LocalInterval
+    reachable_seed_states: Tuple[object, ...]
+    strand_carrier_rows: Tuple[object, ...]
+    track_count: int = 1
+
+    @property
+    def strand_carrier_audit(self) -> UniversalKStrandCarrierSoundnessAudit:
+        return universal_k_strand_carrier_soundness_audit(
+            self.interval,
+            self.strand_carrier_rows,
+        )
+
+    @property
+    def valid_reachable_seed_states(
+        self,
+    ) -> Tuple[Tuple[str, UniversalKSeedState], ...]:
+        return _universal_k_valid_endpoint_seed_states(self.reachable_seed_states)
+
+    @property
+    def malformed_reachable_seed_states(self) -> Tuple[object, ...]:
+        return tuple(
+            state
+            for state in self.reachable_seed_states
+            if not _universal_k_endpoint_seed_state_well_formed(state)
+        )
+
+    @property
+    def duplicate_reachable_seed_states(self) -> Tuple[object, ...]:
+        return _duplicate_values(self.reachable_seed_states)
+
+    @property
+    def required_positive_entry_keys(
+        self,
+    ) -> Tuple[UniversalKSignedEndpointEntryKey, ...]:
+        return tuple(
+            key
+            for key in universal_k_signed_endpoint_required_entry_keys(
+                self.interval,
+                self.valid_reachable_seed_states,
+            )
+            if _universal_k_is_positive_entry_key(key)
+        )
+
+    @property
+    def carrier_track_value_failures(
+        self,
+    ) -> Tuple[UniversalKFixedCarrierDomainLedgerFailure, ...]:
+        failures = []
+        if not _universal_k_positive_int(self.track_count):
+            failures.append(
+                (
+                    "fixed_carrier_track_count",
+                    "fixed_carrier_track_count_nonpositive_or_noninteger",
+                    self.track_count,
+                )
+            )
+            return tuple(failures)
+        if not self.strand_carrier_audit.proves_strand_carrier_soundness:
+            return ()
+        carrier_map = self.strand_carrier_audit.carrier_map
+        for key in self.required_positive_entry_keys:
+            _family, _state, _sign, left_color, right_color, input_left, input_right = (
+                key
+            )
+            left_carrier = carrier_map[(left_color, input_left)]
+            right_carrier = carrier_map[(right_color, input_right)]
+            if _universal_k_strand_carrier_track_values(
+                left_carrier,
+                self.track_count,
+            ) is None:
+                failures.append(
+                    (
+                        key,
+                        "left_strand_carrier_track_count_mismatch",
+                        left_carrier,
+                    )
+                )
+            if _universal_k_strand_carrier_track_values(
+                right_carrier,
+                self.track_count,
+            ) is None:
+                failures.append(
+                    (
+                        key,
+                        "right_strand_carrier_track_count_mismatch",
+                        right_carrier,
+                    )
+                )
+        return tuple(sorted(_unique_values(tuple(failures)), key=repr))
+
+    @property
+    def carrier_domains_by_entry_key(
+        self,
+    ) -> Mapping[
+        UniversalKSignedEndpointEntryKey,
+        Tuple[UniversalKFixedCarrierTuple, ...],
+    ]:
+        if (
+            not self.proves_strand_carrier_singleton_domains
+            or not self.required_positive_entry_keys
+        ):
+            return {}
+        carrier_map = self.strand_carrier_audit.carrier_map
+        domains: dict[
+            UniversalKSignedEndpointEntryKey,
+            Tuple[UniversalKFixedCarrierTuple, ...],
+        ] = {}
+        for key in self.required_positive_entry_keys:
+            _family, _state, _sign, left_color, right_color, input_left, input_right = (
+                key
+            )
+            left_values = _universal_k_strand_carrier_track_values(
+                carrier_map[(left_color, input_left)],
+                self.track_count,
+            )
+            right_values = _universal_k_strand_carrier_track_values(
+                carrier_map[(right_color, input_right)],
+                self.track_count,
+            )
+            if left_values is None or right_values is None:
+                continue
+            carrier_tuple = tuple(
+                (left_values[index], right_values[index])
+                for index in range(self.track_count)
+            )
+            domains[key] = (carrier_tuple,)
+        return domains
+
+    @property
+    def carrier_soundness_witnesses_by_entry_key(
+        self,
+    ) -> Mapping[UniversalKSignedEndpointEntryKey, Tuple[str, ...]]:
+        if not self.proves_strand_carrier_singleton_domains:
+            return {}
+        return {
+            key: ("strand_carrier_equations",)
+            for key in self.required_positive_entry_keys
+        }
+
+    @property
+    def proves_strand_carrier_singleton_domains(self) -> bool:
+        return (
+            bool(self.valid_reachable_seed_states)
+            and _universal_k_positive_int(self.track_count)
+            and not self.malformed_reachable_seed_states
+            and not self.duplicate_reachable_seed_states
+            and self.strand_carrier_audit.proves_strand_carrier_soundness
+            and not self.carrier_track_value_failures
+        )
+
+    @property
+    def failure_reasons(self) -> Tuple[str, ...]:
+        reasons = []
+        if not self.valid_reachable_seed_states:
+            reasons.append("fixed_carrier_domain_no_reachable_seed_states")
+        if self.malformed_reachable_seed_states:
+            reasons.append("fixed_carrier_domain_malformed_reachable_seed_states")
+        if self.duplicate_reachable_seed_states:
+            reasons.append("fixed_carrier_domain_duplicate_reachable_seed_states")
+        if not _universal_k_positive_int(self.track_count):
+            reasons.append("fixed_carrier_domain_track_count_invalid")
+        if not self.strand_carrier_audit.proves_strand_carrier_soundness:
+            reasons.append("fixed_carrier_domain_strand_carrier_not_sound")
+            reasons.extend(self.strand_carrier_audit.failure_reasons)
+        if self.carrier_track_value_failures:
+            reasons.append("fixed_carrier_domain_track_value_failures")
+        return tuple(_unique_values(tuple(reasons)))
+
+
+def universal_k_fixed_carrier_domain_ledger_from_strand_carriers(
+    interval: LocalInterval,
+    reachable_seed_states: object,
+    strand_carrier_rows: object,
+    *,
+    track_count: int = 1,
+) -> UniversalKFixedCarrierDomainLedgerFromStrandCarriersAudit:
+    """Audit singleton fixed-carrier domains induced by strand-carrier labels."""
+
+    return UniversalKFixedCarrierDomainLedgerFromStrandCarriersAudit(
+        interval=interval,
+        reachable_seed_states=_universal_k_row_input_tuple(reachable_seed_states),
+        strand_carrier_rows=_universal_k_row_input_tuple(strand_carrier_rows),
+        track_count=track_count,
+    )
 
 
 def universal_k_canonical_fibre_label_identity_rows(
@@ -14799,6 +15003,8 @@ def universal_k_endpoint_observer_builds_from_fixed_carrier_monodromy_by_family(
             Mapping[UniversalKSignedEndpointEntryKey, Tuple[str, ...]],
         ]
     ] = (),
+    strand_carrier_rows_by_family: Sequence[Tuple[str, object]] = (),
+    strand_carrier_track_counts_by_family: Sequence[Tuple[str, int]] = (),
     detector_track_initialization_rows: Tuple[
         UniversalKDetectorTrackInitializationRow,
         ...,
@@ -14882,6 +15088,10 @@ def universal_k_endpoint_observer_builds_from_fixed_carrier_monodromy_by_family(
     carrier_witness_map = _universal_k_family_object_map(
         carrier_soundness_witnesses_by_family
     )
+    strand_carrier_map = _universal_k_family_object_map(strand_carrier_rows_by_family)
+    strand_carrier_track_count_map = _universal_k_family_object_map(
+        strand_carrier_track_counts_by_family
+    )
 
     certificate_rows = []
     candidate_families = tuple(
@@ -14897,6 +15107,26 @@ def universal_k_endpoint_observer_builds_from_fixed_carrier_monodromy_by_family(
         )
         domain_map = carrier_domain_map.get(family)
         witness_map = carrier_witness_map.get(family)
+        if family in strand_carrier_map and (
+            not callable(getattr(domain_map, "get", None))
+            or not callable(getattr(witness_map, "get", None))
+        ):
+            reachable_seed_states = _universal_k_positive_monodromy_state_closure(
+                family_entries,
+                tuple(positive_row_map.get(family, ())),
+            )
+            carrier_ledger = (
+                universal_k_fixed_carrier_domain_ledger_from_strand_carriers(
+                    interval,
+                    reachable_seed_states,
+                    strand_carrier_map[family],
+                    track_count=strand_carrier_track_count_map.get(family, 1),
+                )
+            )
+            if not callable(getattr(domain_map, "get", None)):
+                domain_map = carrier_ledger.carrier_domains_by_entry_key
+            if not callable(getattr(witness_map, "get", None)):
+                witness_map = carrier_ledger.carrier_soundness_witnesses_by_entry_key
         certificate_rows.append(
             (
                 family,
@@ -22694,6 +22924,8 @@ def post_linear_remaining_finite_system_audit(
     universal_k_monodromy_detector_domain_soundness_witnesses_by_family: object = (),
     universal_k_monodromy_fixed_carrier_domains_by_family: object = (),
     universal_k_monodromy_fixed_carrier_soundness_witnesses_by_family: object = (),
+    universal_k_monodromy_strand_carrier_rows_by_family: object = (),
+    universal_k_monodromy_strand_carrier_track_counts_by_family: object = (),
     universal_k_detector_track_counts_by_family: Tuple[Tuple[str, int], ...] = (),
     universal_k_detector_track_initialization_rows: object = (),
     universal_k_endpoint_target_audit: UniversalKEndpointTargetAudit | None = None,
@@ -22840,6 +23072,16 @@ def post_linear_remaining_finite_system_audit(
                 universal_k_monodromy_fixed_carrier_soundness_witnesses_by_family
             )
         )
+        or bool(
+            _universal_k_row_input_tuple(
+                universal_k_monodromy_strand_carrier_rows_by_family
+            )
+        )
+        or bool(
+            _universal_k_row_input_tuple(
+                universal_k_monodromy_strand_carrier_track_counts_by_family
+            )
+        )
     )
     fixed_carrier_monodromy_input_present = (
         bool(
@@ -22850,6 +23092,16 @@ def post_linear_remaining_finite_system_audit(
         or bool(
             _universal_k_row_input_tuple(
                 universal_k_monodromy_fixed_carrier_soundness_witnesses_by_family
+            )
+        )
+        or bool(
+            _universal_k_row_input_tuple(
+                universal_k_monodromy_strand_carrier_rows_by_family
+            )
+        )
+        or bool(
+            _universal_k_row_input_tuple(
+                universal_k_monodromy_strand_carrier_track_counts_by_family
             )
         )
     )
@@ -22930,6 +23182,12 @@ def post_linear_remaining_finite_system_audit(
                         ),
                         carrier_soundness_witnesses_by_family=(
                             universal_k_monodromy_fixed_carrier_soundness_witnesses_by_family
+                        ),
+                        strand_carrier_rows_by_family=(
+                            universal_k_monodromy_strand_carrier_rows_by_family
+                        ),
+                        strand_carrier_track_counts_by_family=(
+                            universal_k_monodromy_strand_carrier_track_counts_by_family
                         ),
                         detector_track_initialization_rows=(
                             universal_k_detector_track_initialization_input_rows
