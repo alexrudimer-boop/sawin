@@ -1,0 +1,204 @@
+{
+  "all_nonidentity_group_loops_known_through_prefix": true,
+  "date": "2026-06-03",
+  "meaning": "Through size 3 at depth 2, every actual group-like atom-trivial completed-context loop is routed to an existing known branch; reset-like atom-trivial loops are not counted as residual motion.",
+  "scans": {
+    "size_2_depth_2": {
+      "depth": 2,
+      "first_nonidentity_group_loop_examples": [],
+      "green_audit_count": 7,
+      "hidden_atom_trivial_loop_solution_count": 1,
+      "hidden_bijective_loop_solution_count": 0,
+      "morphism_limit": 10000,
+      "nonidentity_group_loop_involutive_solution_count": 0,
+      "nonidentity_group_loop_known_branch_solution_count": 0,
+      "nonidentity_group_loop_solution_count": 0,
+      "size": 2,
+      "unresolved_nonidentity_group_loop_solution_count": 0,
+      "ybe_count": 5
+    },
+    "size_3_depth_2": {
+      "depth": 2,
+      "first_nonidentity_group_loop_examples": [
+        {
+          "branch_tags": [
+            "involutive"
+          ],
+          "is_involutive_solution": true,
+          "nonidentity_loop_groups": [
+            {
+              "group_order": 2,
+              "nonidentity_loop_count": 1,
+              "word_count": 13
+            },
+            {
+              "group_order": 2,
+              "nonidentity_loop_count": 1,
+              "word_count": 13
+            }
+          ],
+          "table_values": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              2,
+              0
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              2,
+              2
+            ]
+          ]
+        },
+        {
+          "branch_tags": [
+            "involutive"
+          ],
+          "is_involutive_solution": true,
+          "nonidentity_loop_groups": [
+            {
+              "group_order": 2,
+              "nonidentity_loop_count": 1,
+              "word_count": 13
+            },
+            {
+              "group_order": 2,
+              "nonidentity_loop_count": 1,
+              "word_count": 13
+            }
+          ],
+          "table_values": [
+            [
+              0,
+              0
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              2,
+              0
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              2,
+              2
+            ]
+          ]
+        },
+        {
+          "branch_tags": [
+            "involutive"
+          ],
+          "is_involutive_solution": true,
+          "nonidentity_loop_groups": [
+            {
+              "group_order": 2,
+              "nonidentity_loop_count": 1,
+              "word_count": 13
+            },
+            {
+              "group_order": 2,
+              "nonidentity_loop_count": 1,
+              "word_count": 13
+            }
+          ],
+          "table_values": [
+            [
+              0,
+              0
+            ],
+            [
+              2,
+              0
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              2,
+              2
+            ]
+          ]
+        }
+      ],
+      "green_audit_count": 88,
+      "hidden_atom_trivial_loop_solution_count": 7,
+      "hidden_bijective_loop_solution_count": 3,
+      "morphism_limit": 10000,
+      "nonidentity_group_loop_involutive_solution_count": 3,
+      "nonidentity_group_loop_known_branch_solution_count": 3,
+      "nonidentity_group_loop_solution_count": 3,
+      "size": 3,
+      "unresolved_nonidentity_group_loop_solution_count": 0,
+      "ybe_count": 73
+    }
+  }
+}

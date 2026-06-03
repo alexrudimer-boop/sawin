@@ -2549,3 +2549,27 @@ phi_e != phi_{e'} in Aut(C_{p^m}).
 This is the exact local pressure test queued for the next ChatGPT Pro probe:
 either actual YBE cube transport forces rigidity, or a genuine objectwise
 transported section-holonomy counterexample must be built.
+
+## Green Section Transport Prefix Audit
+
+The note `proofs/green_section_transport_prefix.md` and generated audit
+`proofs/green_section_transport_prefix_audit.md` add a finite-prefix check for
+the rigidity gate.  The scan uses actual completed-context morphisms through
+depth `2` and counts only total bijective atom-trivial loops; reset-like
+atom-trivial collapses are discarded because residual braid actions are
+permutations.
+
+The exhaustive size-`2` prefix has `5` YBE solutions.  It has one hidden
+atom-trivial loop solution, but no hidden bijective loop and no nonidentity
+group-like atom-trivial loop.
+
+The exhaustive size-`3` prefix has `73` YBE solutions.  It has `7` hidden
+atom-trivial loop solutions, `3` hidden bijective loop solutions, and `3`
+nonidentity group-like atom-trivial loop solutions.  All `3` are involutive,
+so they route to an already known finite-G branch.  The unresolved
+nonidentity group-like loop count is `0`.
+
+Thus the finite prefix produces no new Green section-holonomy
+counterexample.  A genuine B-route example must occur outside this prefix or
+outside the known branches, and must still provide actual transported unequal
+units in `Aut(C_{p^m})`.

@@ -31,6 +31,8 @@ from ybe_domination import (
     depth_observer_summary,
     green_branch_audits,
     green_section_transport_rigidity_gate_audit,
+    branch_tags,
+    is_involutive_solution,
     kernel_block_defect_abelianization_split_audits,
     kernel_block_defect_artin_abelianization_barrier_audits,
     kernel_block_defect_kernel_potential_audits,
@@ -188,6 +190,77 @@ class GreenBranchTests(unittest.TestCase):
         self.assertEqual(audit.cases[0].role, "model_requirement")
         self.assertEqual(audit.cases[1].role, "guardrail")
         self.assertEqual(audit.cases[-1].role, "finite_prefix_guardrail")
+
+    def test_small_green_section_transport_prefix_routes_group_loops_to_known_branches(self):
+        def scan(size):
+            counts = {
+                "ybe": 0,
+                "hidden_atom": 0,
+                "hidden_bijective": 0,
+                "nonidentity_group": 0,
+                "nonidentity_group_involutive": 0,
+                "unresolved_nonidentity_group": 0,
+            }
+            for solution in all_bijection_solutions(size):
+                counts["ybe"] += 1
+                audits = green_branch_audits(solution)
+                categories = [
+                    bounded_category_summary(audit, 2)
+                    for audit in audits
+                ]
+                groups = [
+                    group
+                    for audit in audits
+                    for group in bounded_atom_trivial_loop_group_summaries(
+                        audit,
+                        2,
+                    )
+                ]
+                if any(
+                    category.hidden_atom_trivial_loop_count
+                    for category in categories
+                ):
+                    counts["hidden_atom"] += 1
+                if any(
+                    category.hidden_bijective_loop_count
+                    for category in categories
+                ):
+                    counts["hidden_bijective"] += 1
+                has_nonidentity_group = any(
+                    group.nonidentity_loop_count or group.group_order > 1
+                    for group in groups
+                )
+                if not has_nonidentity_group:
+                    continue
+                counts["nonidentity_group"] += 1
+                if is_involutive_solution(solution):
+                    counts["nonidentity_group_involutive"] += 1
+                if not branch_tags(solution):
+                    counts["unresolved_nonidentity_group"] += 1
+            return counts
+
+        self.assertEqual(
+            scan(2),
+            {
+                "ybe": 5,
+                "hidden_atom": 1,
+                "hidden_bijective": 0,
+                "nonidentity_group": 0,
+                "nonidentity_group_involutive": 0,
+                "unresolved_nonidentity_group": 0,
+            },
+        )
+        self.assertEqual(
+            scan(3),
+            {
+                "ybe": 73,
+                "hidden_atom": 7,
+                "hidden_bijective": 3,
+                "nonidentity_group": 3,
+                "nonidentity_group_involutive": 3,
+                "unresolved_nonidentity_group": 0,
+            },
+        )
 
     def test_schutzenberger_summary_for_affine_candidate_is_global_group(self):
         summary = schutzenberger_summaries(size_three_affine_candidate())[0]
