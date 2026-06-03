@@ -2300,6 +2300,35 @@ Before claiming B, verify:
 - the sharp obstruction theorem really converts this into failure against
   every finite rack.
 
+## Latest endpoint-unit refinement
+
+The final semigroup/unit obstruction is now phrased as an actual
+completed-context Artin row-defect gate in
+`proofs/completed_context_artin_row_defect_gate.md`.  For one fixed endpoint
+transition monoid `M`, a moving residual endpoint is a unit in `U(M)`, and the
+endpoint-unit longitude theorem would follow formally if every actual
+completed-context unit row factors through the active Artin detector rack
+
+```text
+A_{U(M)} = T_2 x (U(M) x U(M)).
+```
+
+Equivalently, for a supported row
+`e=(s,x), f=(s tau_x,y) -> e'=(s,u), f'=(s tau_u,v)`, the two defects
+
+```text
+delta_a(e,f)=a_{f'}^-1 a_e,
+delta_l(e,f)=l_{e'}^-1 a_e l_f
+```
+
+must vanish.  YBE cube coherence can make these defects flat around actual
+completed-context cubes, but flatness is not the same as vanishing.  Thus the
+endpoint A-route is now exactly to prove this actual `A_{U(M)}` row
+factorization in every remaining local-minimal corridor.  A B-route still
+needs more than a finite row miss: it must upgrade nonvanishing row defect to
+a normalized-law sequence invisible to every finite group detector while
+moving an explicit residual tuple.
+
 ## Current conclusion
 
 As of this log entry, neither A nor B is proved.  The next decisive work is to
