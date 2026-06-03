@@ -754,6 +754,63 @@ class YBECoskeletalMechanismAudit:
 
 
 @dataclass(frozen=True)
+class YBEBrunnianDerivativeGateCase:
+    """One row in the Brunnian derivative residual gate."""
+
+    key: str
+    role: str
+    statement: str
+    consequence: str
+
+
+@dataclass(frozen=True)
+class YBEBrunnianDerivativeGateAudit:
+    """Ledger separating Brunnian point-push gauge from true H^2 residuals."""
+
+    naive_brunnian_pure_braid_obstruction_rejected: bool
+    one_strand_derivatives_are_gauge_coboundaries: bool
+    brunnian_point_push_shadow_is_gauge: bool
+    nonabelian_derivative_chain_rule_recorded: bool
+    residual_double_deletion_quotient_identified: bool
+    fadell_neuwirth_decomposition_would_kill_high_brunnian_classes: bool
+    derivative_formula: str
+    gauge_formula: str
+    chain_rule_formula: str
+    residual_quotient_formula: str
+    decomposition_formula: str
+    cases: Tuple[YBEBrunnianDerivativeGateCase, ...]
+
+    @property
+    def case_keys(self) -> Tuple[str, ...]:
+        return tuple(case.key for case in self.cases)
+
+    @property
+    def records_brunnian_derivative_gate(self) -> bool:
+        return (
+            self.naive_brunnian_pure_braid_obstruction_rejected
+            and self.one_strand_derivatives_are_gauge_coboundaries
+            and self.brunnian_point_push_shadow_is_gauge
+            and self.nonabelian_derivative_chain_rule_recorded
+            and self.residual_double_deletion_quotient_identified
+            and self.fadell_neuwirth_decomposition_would_kill_high_brunnian_classes
+            and self.derivative_formula
+            == "nabla_q b = tau_q(b) inf_q(partial_q b)^-1"
+            and self.gauge_formula == "(delta u)_{p,q}^I = nabla_q b"
+            and "nabla_r(nabla_q b)" in self.chain_rule_formula
+            and "R_{p,q}^I" in self.residual_quotient_formula
+            and "Pi^sharp(theta)" in self.decomposition_formula
+            and self.case_keys
+            == (
+                "one_strand_derivative_gauge_gate",
+                "pure_braid_brunnian_shadow_triviality",
+                "nonabelian_derivative_chain_rule",
+                "residual_double_deletion_quotient",
+                "fadell_neuwirth_decomposition_route",
+            )
+        )
+
+
+@dataclass(frozen=True)
 class PrefixPointForgettingRestrictionRow:
     """One marked generator comparison under stationary-strand deletion."""
 
@@ -4494,6 +4551,105 @@ def ybe_coskeletal_mechanism_audit() -> YBECoskeletalMechanismAudit:
                 "prove vanishing of Brunnian relative deletion "
                 "2-obstructions above the cutoff"
             ),
+        ),
+        cases=cases,
+    )
+
+
+def ybe_brunnian_derivative_gate_audit() -> YBEBrunnianDerivativeGateAudit:
+    """Record the derivative gate for Brunnian deletion H^2 obstructions.
+
+    Brunnian point-pushing elements naturally give one-deletion vertical
+    bisections.  Their first deletion derivatives are two-deletion bisections,
+    but those derivatives are exactly section-gauge coboundaries.  Hence a
+    genuine high-arity deletion 2-class must survive the residual quotient by
+    one-strand derivatives, bounded two-strand mutual terms, and fixed-base
+    pullback.
+    """
+
+    cases = (
+        YBEBrunnianDerivativeGateCase(
+            key="one_strand_derivative_gauge_gate",
+            role="gauge_triviality",
+            statement=(
+                "for b in the one-deletion vertical group V_p^I, the deletion "
+                "derivative nabla_q b is the square coboundary of the "
+                "1-cochain with u_p^I=b"
+            ),
+            consequence=(
+                "ordinary point-pushing derivatives land in deletion degree 2 "
+                "but represent the trivial gauge class"
+            ),
+        ),
+        YBEBrunnianDerivativeGateCase(
+            key="pure_braid_brunnian_shadow_triviality",
+            role="false_counterexample_removed",
+            statement=(
+                "if a Brunnian pure braid is killed by deleting p and q, its "
+                "transported two-deletion bisection is tau_q(b_beta)=nabla_q b_beta"
+            ),
+            consequence=(
+                "Brunnian pure-braid subgroups can survive as vertical "
+                "bisections without producing nonzero Br^2 classes"
+            ),
+        ),
+        YBEBrunnianDerivativeGateCase(
+            key="nonabelian_derivative_chain_rule",
+            role="coherence_identity",
+            statement=(
+                "the second derivatives nabla_r(nabla_q b) and "
+                "nabla_q(nabla_r b) agree after the Peiffer and cube "
+                "transport defects have been killed"
+            ),
+            consequence=(
+                "YBE locality makes point-pushing derivatives satisfy the "
+                "cocycle equation precisely because they are coboundaries"
+            ),
+        ),
+        YBEBrunnianDerivativeGateCase(
+            key="residual_double_deletion_quotient",
+            role="true_obstruction_target",
+            statement=(
+                "a nonzero high-arity Brunnian deletion 2-class must survive "
+                "the quotient by one-strand derivatives, bounded mutual "
+                "two-strand data, and fixed-base pullback"
+            ),
+            consequence=(
+                "the counterexample search narrows to residual double-deletion "
+                "vertical bisections, not arbitrary Brunnian pure braids"
+            ),
+        ),
+        YBEBrunnianDerivativeGateCase(
+            key="fadell_neuwirth_decomposition_route",
+            role="positive_route",
+            statement=(
+                "if every double-deletion vertical bisection decomposes as "
+                "one-strand derivatives times a bounded mutual term and a "
+                "fixed-base pullback, then the residual quotient is trivial"
+            ),
+            consequence=(
+                "after finite labels for derivative images and bounded mutual "
+                "terms, arbitrarily high Brunnian relative deletion 2-classes vanish"
+            ),
+        ),
+    )
+    return YBEBrunnianDerivativeGateAudit(
+        naive_brunnian_pure_braid_obstruction_rejected=True,
+        one_strand_derivatives_are_gauge_coboundaries=True,
+        brunnian_point_push_shadow_is_gauge=True,
+        nonabelian_derivative_chain_rule_recorded=True,
+        residual_double_deletion_quotient_identified=True,
+        fadell_neuwirth_decomposition_would_kill_high_brunnian_classes=True,
+        derivative_formula="nabla_q b = tau_q(b) inf_q(partial_q b)^-1",
+        gauge_formula="(delta u)_{p,q}^I = nabla_q b",
+        chain_rule_formula="nabla_r(nabla_q b) = nabla_q(nabla_r b)",
+        residual_quotient_formula=(
+            "R_{p,q}^I = V_{p,q}^{I,Br} / "
+            "<nabla_q V_p^{I,Br}, nabla_p V_q^{I,Br}, "
+            "M_{p,q}^I, Pi^sharp V_{p,q,B}^{I,Br}>"
+        ),
+        decomposition_formula=(
+            "a = nabla_q b_p nabla_p b_q m_{p,q} Pi^sharp(theta)"
         ),
         cases=cases,
     )

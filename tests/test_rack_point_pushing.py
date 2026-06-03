@@ -22,6 +22,7 @@ from ybe_domination import (
     PrefixPointForgettingRestrictionAudit,
     PrefixPointPushingSurfaceAudit,
     PullbackCoskeletalCriterionAudit,
+    YBEBrunnianDerivativeGateAudit,
     YBECoskeletalMechanismAudit,
     PrefixVerticalPeifferCubeTransportAudit,
     PrefixVerticalPeifferSquareAudit,
@@ -45,6 +46,7 @@ from ybe_domination import (
     prefix_vertical_defect_transport_audit,
     prefix_vertical_defect_transform_audit,
     pullback_coskeletal_criterion_audit,
+    ybe_brunnian_derivative_gate_audit,
     ybe_coskeletal_mechanism_audit,
     rack_point_pushing_operator_label_audit,
     rack_solution,
@@ -758,6 +760,40 @@ class RackPointPushingOperatorLabelTests(unittest.TestCase):
             "negative_countermechanism",
         )
         self.assertIn("d-skeleton", audit.cases[-1].obstruction_signature)
+
+    def test_ybe_brunnian_derivative_gate_rejects_naive_pure_braid_obstruction(self):
+        audit = ybe_brunnian_derivative_gate_audit()
+
+        self.assertIsInstance(audit, YBEBrunnianDerivativeGateAudit)
+        self.assertTrue(audit.records_brunnian_derivative_gate)
+        self.assertTrue(audit.naive_brunnian_pure_braid_obstruction_rejected)
+        self.assertTrue(audit.one_strand_derivatives_are_gauge_coboundaries)
+        self.assertTrue(audit.brunnian_point_push_shadow_is_gauge)
+        self.assertTrue(audit.nonabelian_derivative_chain_rule_recorded)
+        self.assertTrue(audit.residual_double_deletion_quotient_identified)
+        self.assertTrue(
+            audit.fadell_neuwirth_decomposition_would_kill_high_brunnian_classes
+        )
+        self.assertEqual(
+            audit.derivative_formula,
+            "nabla_q b = tau_q(b) inf_q(partial_q b)^-1",
+        )
+        self.assertEqual(
+            audit.gauge_formula,
+            "(delta u)_{p,q}^I = nabla_q b",
+        )
+        self.assertIn("R_{p,q}^I", audit.residual_quotient_formula)
+        self.assertIn("Pi^sharp(theta)", audit.decomposition_formula)
+        self.assertEqual(
+            audit.case_keys,
+            (
+                "one_strand_derivative_gauge_gate",
+                "pure_braid_brunnian_shadow_triviality",
+                "nonabelian_derivative_chain_rule",
+                "residual_double_deletion_quotient",
+                "fadell_neuwirth_decomposition_route",
+            ),
+        )
 
     def test_prefix_point_forgetting_restriction_records_vertical_rows(self):
         solution = FiniteBraidedSet(

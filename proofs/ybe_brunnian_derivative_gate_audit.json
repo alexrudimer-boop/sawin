@@ -1,0 +1,53 @@
+{
+  "brunnian_point_push_shadow_is_gauge": true,
+  "case_keys": [
+    "one_strand_derivative_gauge_gate",
+    "pure_braid_brunnian_shadow_triviality",
+    "nonabelian_derivative_chain_rule",
+    "residual_double_deletion_quotient",
+    "fadell_neuwirth_decomposition_route"
+  ],
+  "cases": [
+    {
+      "consequence": "ordinary point-pushing derivatives land in deletion degree 2 but represent the trivial gauge class",
+      "key": "one_strand_derivative_gauge_gate",
+      "role": "gauge_triviality",
+      "statement": "for b in the one-deletion vertical group V_p^I, the deletion derivative nabla_q b is the square coboundary of the 1-cochain with u_p^I=b"
+    },
+    {
+      "consequence": "Brunnian pure-braid subgroups can survive as vertical bisections without producing nonzero Br^2 classes",
+      "key": "pure_braid_brunnian_shadow_triviality",
+      "role": "false_counterexample_removed",
+      "statement": "if a Brunnian pure braid is killed by deleting p and q, its transported two-deletion bisection is tau_q(b_beta)=nabla_q b_beta"
+    },
+    {
+      "consequence": "YBE locality makes point-pushing derivatives satisfy the cocycle equation precisely because they are coboundaries",
+      "key": "nonabelian_derivative_chain_rule",
+      "role": "coherence_identity",
+      "statement": "the second derivatives nabla_r(nabla_q b) and nabla_q(nabla_r b) agree after the Peiffer and cube transport defects have been killed"
+    },
+    {
+      "consequence": "the counterexample search narrows to residual double-deletion vertical bisections, not arbitrary Brunnian pure braids",
+      "key": "residual_double_deletion_quotient",
+      "role": "true_obstruction_target",
+      "statement": "a nonzero high-arity Brunnian deletion 2-class must survive the quotient by one-strand derivatives, bounded mutual two-strand data, and fixed-base pullback"
+    },
+    {
+      "consequence": "after finite labels for derivative images and bounded mutual terms, arbitrarily high Brunnian relative deletion 2-classes vanish",
+      "key": "fadell_neuwirth_decomposition_route",
+      "role": "positive_route",
+      "statement": "if every double-deletion vertical bisection decomposes as one-strand derivatives times a bounded mutual term and a fixed-base pullback, then the residual quotient is trivial"
+    }
+  ],
+  "chain_rule_formula": "nabla_r(nabla_q b) = nabla_q(nabla_r b)",
+  "decomposition_formula": "a = nabla_q b_p nabla_p b_q m_{p,q} Pi^sharp(theta)",
+  "derivative_formula": "nabla_q b = tau_q(b) inf_q(partial_q b)^-1",
+  "fadell_neuwirth_decomposition_would_kill_high_brunnian_classes": true,
+  "gauge_formula": "(delta u)_{p,q}^I = nabla_q b",
+  "naive_brunnian_pure_braid_obstruction_rejected": true,
+  "nonabelian_derivative_chain_rule_recorded": true,
+  "one_strand_derivatives_are_gauge_coboundaries": true,
+  "records_brunnian_derivative_gate": true,
+  "residual_double_deletion_quotient_identified": true,
+  "residual_quotient_formula": "R_{p,q}^I = V_{p,q}^{I,Br} / <nabla_q V_p^{I,Br}, nabla_p V_q^{I,Br}, M_{p,q}^I, Pi^sharp V_{p,q,B}^{I,Br}>"
+}

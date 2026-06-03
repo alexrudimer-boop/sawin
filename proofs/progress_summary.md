@@ -2208,3 +2208,51 @@ arbitrarily large `|I|`, no bounded pullback-coskeletal theorem can hold for
 that labelled tower.  Thus the real missing theorem is eventual Brunnian
 vanishing plus effective bounded-width coefficient descent, not finite
 bijectivity alone.
+
+## YBE Brunnian Derivative Gate
+
+The note `proofs/ybe_brunnian_derivative_gate.md` and generated audit
+`proofs/ybe_brunnian_derivative_gate_audit.md` sharpen the Brunnian pressure
+test.  A Brunnian pure braid or ordinary point-pushing element can produce a
+nontrivial vertical bisection, but if it enters through one-strand
+point-pushing then its two-deletion shadow is the section-gauge coboundary
+
+```text
+(delta u)_{p,q}^I = nabla_q b,
+and
+nabla_q b = tau_q(b) inf_q(partial_q b)^-1.
+```
+
+If `b` is Brunnian after deleting `q`, then `partial_q b=1` and
+`tau_q(b)=nabla_q b`; the transported bisection may be nontrivial but its
+deletion `2`-class is gauge.  The nonabelian derivative chain rule
+
+```text
+nabla_r(nabla_q b) = nabla_q(nabla_r b)
+```
+
+is the strict cube identity for these coboundaries after the Peiffer and cube
+transport defects have been killed.
+
+Therefore the negative route is narrower than "find Brunnian pure braid
+survivors."  The real residual obstruction is a nontrivial element of
+
+```text
+R_{p,q}^I =
+V_{p,q}^{I,Br} /
+< nabla_q V_p^{I,Br},
+  nabla_p V_q^{I,Br},
+  M_{p,q}^I,
+  Pi^sharp V_{p,q,B}^{I,Br} >.
+```
+
+Equivalently, one must find a double-deletion vertical bisection
+`a in V_{p,q}^{I,Br}` that cannot be decomposed as
+
+```text
+a = nabla_q b_p nabla_p b_q m_{p,q} Pi^sharp(theta).
+```
+
+Conversely, a positive Fadell-Neuwirth theorem can target exactly this
+decomposition after finite operator-label enrichment.  If it holds uniformly,
+all arbitrarily high Brunnian relative deletion `2`-classes vanish.
