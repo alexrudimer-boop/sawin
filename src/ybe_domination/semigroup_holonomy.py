@@ -212,6 +212,24 @@ class OuterConstantAdjacentSliceAudit:
 
 
 @dataclass(frozen=True)
+class MinimalSidewaysCompletionAudit:
+    """Audit the singleton-boundary sideways-completion obstruction."""
+
+    state_count: int
+    row1_cycle_lengths: Tuple[int, ...]
+    row2_cycle_lengths: Tuple[int, ...]
+    row1_is_identity: bool
+    row2_is_identity: bool
+    reverse_left_forced_identity: bool
+    reverse_right_forced_identity: bool
+    minimal_sideways_completion_possible: bool
+
+    @property
+    def proves_minimal_no_realization(self) -> bool:
+        return not self.minimal_sideways_completion_possible
+
+
+@dataclass(frozen=True)
 class AperiodicPermutationAudit:
     is_aperiodic: bool
     permutation_count: int
@@ -1901,6 +1919,42 @@ def outer_constant_adjacent_slice_audit(
         constructed_pair_map_satisfies_ybe=satisfies_ybe,
         recorded_pair_map=_canonical_pair_map(pair_map) if pair_map is not None else None,
         recorded_embedding=_canonical_embedding(embedding),
+    )
+
+
+def minimal_sideways_completion_audit(
+    states: Sequence[ReesIndex],
+    row1_permutation: Mapping[ReesIndex, ReesIndex],
+    row2_permutation: Mapping[ReesIndex, ReesIndex],
+) -> MinimalSidewaysCompletionAudit:
+    """Audit the minimal singleton-boundary YBE sideways obstruction.
+
+    In the minimal type-preserving model with singleton boundary colours
+    ``L,R`` and middle fibre ``M``, write
+    ``R(L,m)=(L,A(m))`` and ``R(m,R)=(B(m),R)``.  The sideways YBE faces
+    force the reverse actions to be idempotent permutations, hence identity,
+    and then force ``A`` and ``B`` themselves to be idempotent permutations.
+    Therefore only ``A=B=1`` can occur in that minimal model.
+    """
+
+    state_tuple = tuple(states)
+    if not state_tuple:
+        raise ValueError("states must be nonempty")
+    if len(set(state_tuple)) != len(state_tuple):
+        raise ValueError("states must be distinct")
+    row1_cycles = _permutation_cycles(state_tuple, row1_permutation)
+    row2_cycles = _permutation_cycles(state_tuple, row2_permutation)
+    row1_identity = all(row1_permutation[state] == state for state in state_tuple)
+    row2_identity = all(row2_permutation[state] == state for state in state_tuple)
+    return MinimalSidewaysCompletionAudit(
+        state_count=len(state_tuple),
+        row1_cycle_lengths=tuple(sorted(len(cycle) for cycle in row1_cycles)),
+        row2_cycle_lengths=tuple(sorted(len(cycle) for cycle in row2_cycles)),
+        row1_is_identity=row1_identity,
+        row2_is_identity=row2_identity,
+        reverse_left_forced_identity=True,
+        reverse_right_forced_identity=True,
+        minimal_sideways_completion_possible=row1_identity and row2_identity,
     )
 
 

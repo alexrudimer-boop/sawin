@@ -127,6 +127,38 @@ constructs such a raw extension for `|A|=5`, but the displayed completion does
 not satisfy YBE on all of `A^3`.  The remaining realization problem is
 therefore a global YBE-completion problem for this partial adjacent slice.
 
+## Minimal sideways completion
+
+The completed theoretical query identifies a sharper no-realization theorem
+for the most economical quotient model.  Suppose the four states are a middle
+fibre `M` between two singleton boundary colours `L,R`, the quotient type is
+preserved, and
+
+```text
+R(L,m) = (L,A(m)),
+R(m,R) = (B(m),R),
+R(L,R) = (L,R).
+```
+
+Let the reverse-side maps be
+
+```text
+R(m,L) = (C(m),L),
+R(R,m) = (R,D(m)).
+```
+
+The YBE equation on `(L,R,m)` forces `D=D^2`, hence `D=1` because `D` is a
+permutation.  The YBE equation on `(m,L,R)` similarly forces `C=1`.  Then the
+YBE equation on `(R,m,R)` gives `B=B^2`, so `B=1`; and the equation on
+`(L,m,L)` gives `A=A^2`, so `A=1`.
+
+Thus, in the singleton-boundary type-preserving quotient model, no nontrivial
+visible corridor action can occur at all.  The four-cycle pair `A=s1`,
+`B=s2` is forbidden before the `C2` label is tested.  A genuine realization
+would have to leave this minimal model by adding nontrivial boundary fibres,
+allowing non-preserved reverse-side types, or adding nontrivial
+boundary-boundary holonomy.
+
 ## Closed commutator holonomy
 
 Let

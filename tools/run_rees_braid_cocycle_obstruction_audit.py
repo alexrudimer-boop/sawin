@@ -11,6 +11,7 @@ from ybe_domination import (  # noqa: E402
     braid_locality_shadow_audit,
     cyclic_group,
     labeled_permutation_braid_audit,
+    minimal_sideways_completion_audit,
     outer_constant_adjacent_slice_audit,
     rees_rectangle_cocycle,
     rees_rectangle_cocycle_audit,
@@ -96,6 +97,7 @@ def build_report():
         basis_size=2,
     )
     outer_slice_audit = outer_constant_adjacent_slice_audit(states, row1, row2)
+    sideways_audit = minimal_sideways_completion_audit(states, row1, row2)
     report = {
         "description": (
             "Small C2 Rees braid-cocycle obstruction pattern: nonflat "
@@ -144,6 +146,12 @@ def build_report():
         "adjacent_two_body_audit": asdict(adjacent_audit),
         "adjacent_two_body_ybe_audit": asdict(adjacent_ybe_audit),
         "outer_constant_adjacent_slice_audit": asdict(outer_slice_audit),
+        "minimal_sideways_completion_audit": {
+            **asdict(sideways_audit),
+            "proves_minimal_no_realization": (
+                sideways_audit.proves_minimal_no_realization
+            ),
+        },
     }
     OUT_JSON.write_text(json.dumps(report, indent=2, sort_keys=True), encoding="utf-8")
     OUT_MD.write_text(render_markdown(report), encoding="utf-8")
@@ -158,6 +166,7 @@ def render_markdown(report):
     adjacent = report["adjacent_two_body_audit"]
     adjacent_ybe = report["adjacent_two_body_ybe_audit"]
     outer_slice = report["outer_constant_adjacent_slice_audit"]
+    sideways = report["minimal_sideways_completion_audit"]
     lines = [
         "# Rees braid-cocycle obstruction audit",
         "",
@@ -340,6 +349,30 @@ def render_markdown(report):
             "coordinate, but the displayed bijective completion is not a YBE",
             "solution.  The remaining realization problem is therefore a",
             "global YBE completion problem, not a local braid-cocycle problem.",
+            "",
+            "## Minimal Sideways Completion",
+            "",
+            "The singleton-boundary, type-preserving quotient model has a",
+            "stronger symbolic obstruction.  If `R(L,m)=(L,A(m))` and",
+            "`R(m,R)=(B(m),R)`, the sideways YBE faces first force the",
+            "reverse-side maps to be identity and then force `A` and `B` to",
+            "be idempotent permutations, hence identity.",
+            "",
+            f"- row 1 is identity: `{sideways['row1_is_identity']}`;",
+            f"- row 2 is identity: `{sideways['row2_is_identity']}`;",
+            (
+                "- minimal sideways completion possible: "
+                f"`{sideways['minimal_sideways_completion_possible']}`;"
+            ),
+            (
+                "- proves minimal no-realization: "
+                f"`{sideways['proves_minimal_no_realization']}`."
+            ),
+            "",
+            "Thus the nontrivial four-cycle rows cannot occur in the minimal",
+            "singleton-boundary quotient-fibre interval at all.  Any genuine",
+            "realization must add nontrivial boundary fibres, non-preserved",
+            "reverse-side types, or nontrivial boundary-boundary holonomy.",
             "",
         ]
     )

@@ -13,6 +13,7 @@ from ybe_domination import (
     LocalNormalizedLawPrefixWitnessAudit,
     BraidLocalityShadowAudit,
     LabeledPermutationBraidAudit,
+    MinimalSidewaysCompletionAudit,
     OuterConstantAdjacentSliceAudit,
     ReesRectangleCocycleAudit,
     UnitPerfectResidualLongitudeAudit,
@@ -28,6 +29,7 @@ from ybe_domination import (
     labeled_permutation_braid_audit,
     local_normalized_law_prefix_witness_audit,
     local_symmetric_normalized_law_prefix_witness_audit,
+    minimal_sideways_completion_audit,
     monoid_permutation_group,
     outer_constant_adjacent_slice_audit,
     permutation_elements,
@@ -312,6 +314,46 @@ class SemigroupHolonomyTests(unittest.TestCase):
         self.assertFalse(audit.uses_extra_outer_symbol)
         self.assertTrue(audit.partial_is_consistent)
         self.assertTrue(audit.constructed_pair_map_satisfies_ybe)
+
+    def test_minimal_sideways_completion_audit_rejects_c2_obstruction_rows(self):
+        states = ("q00", "q01", "q10", "q11")
+        row1 = {
+            "q00": "q10",
+            "q01": "q11",
+            "q10": "q01",
+            "q11": "q00",
+        }
+        row2 = {
+            "q00": "q01",
+            "q01": "q10",
+            "q10": "q11",
+            "q11": "q00",
+        }
+
+        audit = minimal_sideways_completion_audit(states, row1, row2)
+
+        self.assertIsInstance(audit, MinimalSidewaysCompletionAudit)
+        self.assertEqual(audit.row1_cycle_lengths, (4,))
+        self.assertEqual(audit.row2_cycle_lengths, (4,))
+        self.assertTrue(audit.reverse_left_forced_identity)
+        self.assertTrue(audit.reverse_right_forced_identity)
+        self.assertFalse(audit.row1_is_identity)
+        self.assertFalse(audit.row2_is_identity)
+        self.assertFalse(audit.minimal_sideways_completion_possible)
+        self.assertTrue(audit.proves_minimal_no_realization)
+
+    def test_minimal_sideways_completion_audit_accepts_identity_rows(self):
+        states = ("q0", "q1")
+        identity = {state: state for state in states}
+
+        audit = minimal_sideways_completion_audit(states, identity, identity)
+
+        self.assertEqual(audit.row1_cycle_lengths, (1, 1))
+        self.assertEqual(audit.row2_cycle_lengths, (1, 1))
+        self.assertTrue(audit.row1_is_identity)
+        self.assertTrue(audit.row2_is_identity)
+        self.assertTrue(audit.minimal_sideways_completion_possible)
+        self.assertFalse(audit.proves_minimal_no_realization)
 
     def test_reset_element_is_aperiodic(self):
         reset = (0, 0, 2)

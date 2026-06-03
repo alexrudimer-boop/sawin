@@ -140,3 +140,21 @@ realization once a fifth basis symbol hides one outside
 coordinate, but the displayed bijective completion is not a YBE
 solution.  The remaining realization problem is therefore a
 global YBE completion problem, not a local braid-cocycle problem.
+
+## Minimal Sideways Completion
+
+The singleton-boundary, type-preserving quotient model has a
+stronger symbolic obstruction.  If `R(L,m)=(L,A(m))` and
+`R(m,R)=(B(m),R)`, the sideways YBE faces first force the
+reverse-side maps to be identity and then force `A` and `B` to
+be idempotent permutations, hence identity.
+
+- row 1 is identity: `False`;
+- row 2 is identity: `False`;
+- minimal sideways completion possible: `False`;
+- proves minimal no-realization: `True`.
+
+Thus the nontrivial four-cycle rows cannot occur in the minimal
+singleton-boundary quotient-fibre interval at all.  Any genuine
+realization must add nontrivial boundary fibres, non-preserved
+reverse-side types, or nontrivial boundary-boundary holonomy.

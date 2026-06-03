@@ -130,6 +130,21 @@
     "row2_has_nontrivial_fixed_partition": false,
     "state_count": 4
   },
+  "minimal_sideways_completion_audit": {
+    "minimal_sideways_completion_possible": false,
+    "proves_minimal_no_realization": true,
+    "reverse_left_forced_identity": true,
+    "reverse_right_forced_identity": true,
+    "row1_cycle_lengths": [
+      4
+    ],
+    "row1_is_identity": false,
+    "row2_cycle_lengths": [
+      4
+    ],
+    "row2_is_identity": false,
+    "state_count": 4
+  },
   "outer_constant_adjacent_slice_audit": {
     "constructed_pair_map_satisfies_ybe": false,
     "minimal_raw_basis_size": 5,

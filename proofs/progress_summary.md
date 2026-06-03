@@ -1744,7 +1744,15 @@ the next forced shape: with embedded states `(a0,m_q,c0)`, the four-cycle rows
 need one extra outer symbol, so a raw adjacent-binary partial slice exists
 for `|A|=5` and extends to a bijection of `A^2`; the displayed completion
 does not satisfy YBE.  The realization problem has therefore been sharpened
-to a global YBE-completion problem for that partial adjacent slice.
+to a global YBE-completion problem for that partial adjacent slice.  The
+completed theoretical realization query further isolates a minimal
+sideways-completion obstruction: in a singleton-boundary, type-preserving
+quotient model with `R(L,m)=(L,A(m))`, `R(m,R)=(B(m),R)`, and
+`R(L,R)=(L,R)`, the sideways YBE faces force the reverse maps to be identity
+and then force `A=B=1`.  Therefore the four-cycle pair cannot occur in this
+minimal quotient-fibre model; any realization must use nontrivial boundary
+fibres, non-preserved reverse-side types, or nontrivial boundary-boundary
+holonomy.
 
 ## Verification snapshot
 
