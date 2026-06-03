@@ -7,6 +7,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
 from ybe_domination import (  # noqa: E402
+    adjacent_two_body_realization_audit,
     braid_locality_shadow_audit,
     cyclic_group,
     labeled_permutation_braid_audit,
@@ -80,6 +81,19 @@ def build_report():
         direct_row1,
         direct_row2,
     )
+    adjacent_audit = adjacent_two_body_realization_audit(
+        states,
+        row1,
+        row2,
+        basis_size=2,
+        require_ybe=False,
+    )
+    adjacent_ybe_audit = adjacent_two_body_realization_audit(
+        states,
+        row1,
+        row2,
+        basis_size=2,
+    )
     report = {
         "description": (
             "Small C2 Rees braid-cocycle obstruction pattern: nonflat "
@@ -125,6 +139,8 @@ def build_report():
                 direct_locality_audit.direct_coordinate_shadow_possible
             ),
         },
+        "adjacent_two_body_audit": asdict(adjacent_audit),
+        "adjacent_two_body_ybe_audit": asdict(adjacent_ybe_audit),
     }
     OUT_JSON.write_text(json.dumps(report, indent=2, sort_keys=True), encoding="utf-8")
     OUT_MD.write_text(render_markdown(report), encoding="utf-8")
@@ -136,6 +152,8 @@ def render_markdown(report):
     braid = report["braid_audit"]
     locality = report["locality_shadow_audit"]
     direct_locality = report["direct_coordinate_control_audit"]
+    adjacent = report["adjacent_two_body_audit"]
+    adjacent_ybe = report["adjacent_two_body_ybe_audit"]
     lines = [
         "# Rees braid-cocycle obstruction audit",
         "",
@@ -257,6 +275,38 @@ def render_markdown(report):
             "A genuine realization would have to occur deeper inside a",
             "quotient-fibre interval where the outside-coordinate partitions",
             "have already been collapsed or transported.",
+            "",
+            "## Adjacent Two-Body Search",
+            "",
+            "A still stronger direct-realization check asks whether there is a",
+            "single bijection `R: A^2 -> A^2`, with `|A|=2`, and an embedding",
+            "of the four quotient states into `A^3`, such that `R` on adjacent",
+            "coordinates induces both rows.  This search is exhaustive for",
+            "two-element `A`.",
+            "",
+            (
+                "- without requiring global YBE for `R`, realization found: "
+                f"`{adjacent['realization_found']}`;"
+            ),
+            (
+                "- pair bijections checked: "
+                f"`{adjacent['checked_pair_bijection_count']}` of "
+                f"`{adjacent['pair_bijection_count']}`;"
+            ),
+            (
+                "- embeddings checked: "
+                f"`{adjacent['checked_embedding_count']}` total "
+                f"(`{adjacent['candidate_embedding_count']}` candidates per pair map);"
+            ),
+            (
+                "- requiring `R` to satisfy YBE on all of `A^3`, realization found: "
+                f"`{adjacent_ybe['realization_found']}`."
+            ),
+            "",
+            "Thus the four-state pattern is not directly induced by any",
+            "two-element adjacent binary bijection, even before imposing YBE",
+            "on that binary map.  This again pushes any possible realization",
+            "into a more hidden quotient-fibre interval.",
             "",
         ]
     )

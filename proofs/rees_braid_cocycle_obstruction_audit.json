@@ -1,4 +1,28 @@
 {
+  "adjacent_two_body_audit": {
+    "basis_size": 2,
+    "candidate_embedding_count": 1680,
+    "checked_embedding_count": 40320,
+    "checked_pair_bijection_count": 24,
+    "pair_bijection_count": 24,
+    "realization_found": false,
+    "recorded_embedding": null,
+    "recorded_pair_map": null,
+    "require_ybe": false,
+    "state_count": 4
+  },
+  "adjacent_two_body_ybe_audit": {
+    "basis_size": 2,
+    "candidate_embedding_count": 1680,
+    "checked_embedding_count": 8400,
+    "checked_pair_bijection_count": 24,
+    "pair_bijection_count": 24,
+    "realization_found": false,
+    "recorded_embedding": null,
+    "recorded_pair_map": null,
+    "require_ybe": true,
+    "state_count": 4
+  },
   "braid_audit": {
     "beta_constant_label": 1,
     "beta_constant_label_is_nontrivial": true,

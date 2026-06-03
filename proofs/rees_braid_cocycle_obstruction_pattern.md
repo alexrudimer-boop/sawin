@@ -95,6 +95,15 @@ It narrows the realization problem: the pattern would have to appear deeper
 in a quotient-fibre interval after the outside-coordinate partitions have
 already been collapsed, transported, or hidden by the residual construction.
 
+The generated audit also performs a direct adjacent two-body search for
+`|A|=2`: it asks whether there is a single bijection `R: A^2 -> A^2` and an
+embedding of the four quotient states into `A^3` such that `R` on coordinates
+`(1,2)` induces `s1` and the same `R` on coordinates `(2,3)` induces `s2`.
+No such realization exists, even before requiring `R` to satisfy YBE on all
+of `A^3`.  Hence the obstruction pattern is not a direct two-element
+three-strand set-theoretic action; any actual YBE realization must be less
+literal.
+
 ## Closed commutator holonomy
 
 Let

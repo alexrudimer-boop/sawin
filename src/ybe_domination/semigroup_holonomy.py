@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from itertools import product
+from itertools import permutations, product
 from math import factorial
 from typing import TYPE_CHECKING, Hashable, Iterable, Mapping, Sequence, Tuple
 
@@ -153,6 +153,8 @@ class LabeledPermutationBraidAudit:
 
 
 StatePartition = Tuple[Tuple[ReesIndex, ...], ...]
+BinaryPairMap = Tuple[Tuple[Tuple[int, int], Tuple[int, int]], ...]
+StateTripleEmbedding = Tuple[Tuple[ReesIndex, Tuple[int, int, int]], ...]
 
 
 @dataclass(frozen=True)
@@ -174,6 +176,22 @@ class BraidLocalityShadowAudit:
     @property
     def direct_coordinate_shadow_possible(self) -> bool:
         return self.jointly_separating_fixed_pair_count > 0
+
+
+@dataclass(frozen=True)
+class AdjacentTwoBodyRealizationAudit:
+    """Audit direct realization by one binary bijection on adjacent pairs."""
+
+    basis_size: int
+    state_count: int
+    require_ybe: bool
+    pair_bijection_count: int
+    candidate_embedding_count: int
+    checked_pair_bijection_count: int
+    checked_embedding_count: int
+    realization_found: bool
+    recorded_pair_map: BinaryPairMap | None
+    recorded_embedding: StateTripleEmbedding | None
 
 
 @dataclass(frozen=True)
@@ -1621,6 +1639,167 @@ def braid_locality_shadow_audit(
         row2_has_nontrivial_fixed_partition=bool(row2_nontrivial),
         jointly_separating_fixed_pair_count=separating_count,
         recorded_jointly_separating_fixed_pairs=tuple(separating_pairs),
+    )
+
+
+def _basis_pairs(basis_size: int) -> Tuple[Tuple[int, int], ...]:
+    if basis_size <= 0:
+        raise ValueError("basis_size must be positive")
+    return tuple(product(range(basis_size), repeat=2))
+
+
+def _basis_triples(basis_size: int) -> Tuple[Tuple[int, int, int], ...]:
+    if basis_size <= 0:
+        raise ValueError("basis_size must be positive")
+    return tuple(product(range(basis_size), repeat=3))
+
+
+def _canonical_pair_map(
+    pair_map: Mapping[Tuple[int, int], Tuple[int, int]],
+) -> BinaryPairMap:
+    return tuple(sorted(pair_map.items(), key=repr))
+
+
+def _canonical_embedding(
+    embedding: Mapping[ReesIndex, Tuple[int, int, int]],
+) -> StateTripleEmbedding:
+    return tuple(sorted(embedding.items(), key=repr))
+
+
+def _apply_adjacent_pair_map(
+    pair_map: Mapping[Tuple[int, int], Tuple[int, int]],
+    triple: Tuple[int, int, int],
+    generator: int,
+) -> Tuple[int, int, int]:
+    if generator == 1:
+        left, middle = pair_map[(triple[0], triple[1])]
+        return (left, middle, triple[2])
+    if generator == 2:
+        middle, right = pair_map[(triple[1], triple[2])]
+        return (triple[0], middle, right)
+    raise ValueError("generator must be 1 or 2")
+
+
+def _pair_map_satisfies_ybe(
+    pair_map: Mapping[Tuple[int, int], Tuple[int, int]],
+    basis_size: int,
+) -> bool:
+    for triple in _basis_triples(basis_size):
+        left = _apply_adjacent_pair_map(
+            pair_map,
+            _apply_adjacent_pair_map(
+                pair_map,
+                _apply_adjacent_pair_map(pair_map, triple, 1),
+                2,
+            ),
+            1,
+        )
+        right = _apply_adjacent_pair_map(
+            pair_map,
+            _apply_adjacent_pair_map(
+                pair_map,
+                _apply_adjacent_pair_map(pair_map, triple, 2),
+                1,
+            ),
+            2,
+        )
+        if left != right:
+            return False
+    return True
+
+
+def adjacent_two_body_realization_audit(
+    states: Sequence[ReesIndex],
+    row1_permutation: Mapping[ReesIndex, ReesIndex],
+    row2_permutation: Mapping[ReesIndex, ReesIndex],
+    basis_size: int,
+    *,
+    require_ybe: bool = True,
+    candidate_pair_maps: Sequence[Mapping[Tuple[int, int], Tuple[int, int]]] | None = None,
+    candidate_embeddings: Sequence[Mapping[ReesIndex, Tuple[int, int, int]]] | None = None,
+) -> AdjacentTwoBodyRealizationAudit:
+    """Search for direct realization by one adjacent binary bijection.
+
+    The search asks whether states can embed into ``A^3`` so that one
+    bijection ``R: A^2 -> A^2`` induces ``row1`` on coordinates ``(1,2)`` and
+    ``row2`` on coordinates ``(2,3)``.  When ``require_ybe`` is true, ``R``
+    must satisfy the set-theoretic YBE on all of ``A^3``.
+    """
+
+    state_tuple = tuple(states)
+    if not state_tuple:
+        raise ValueError("states must be nonempty")
+    if len(set(state_tuple)) != len(state_tuple):
+        raise ValueError("states must be distinct")
+    _permutation_cycles(state_tuple, row1_permutation)
+    _permutation_cycles(state_tuple, row2_permutation)
+    pairs = _basis_pairs(basis_size)
+    triples = _basis_triples(basis_size)
+    if len(state_tuple) > len(triples):
+        raise ValueError("too many states to embed in A^3")
+
+    if candidate_pair_maps is None:
+        pair_maps = tuple(dict(zip(pairs, image_pairs)) for image_pairs in permutations(pairs))
+    else:
+        pair_maps = tuple(dict(pair_map) for pair_map in candidate_pair_maps)
+        for pair_map in pair_maps:
+            if set(pair_map.keys()) != set(pairs) or set(pair_map.values()) != set(pairs):
+                raise ValueError("candidate pair map must be a bijection of A^2")
+
+    if candidate_embeddings is None:
+        embeddings = tuple(
+            dict(zip(state_tuple, image_triples))
+            for image_triples in permutations(triples, len(state_tuple))
+        )
+    else:
+        embeddings = tuple(dict(embedding) for embedding in candidate_embeddings)
+        triple_set = set(triples)
+        for embedding in embeddings:
+            if set(embedding.keys()) != set(state_tuple):
+                raise ValueError("candidate embedding must be defined exactly on states")
+            if any(value not in triple_set for value in embedding.values()):
+                raise ValueError("candidate embedding value outside A^3")
+            if len(set(embedding.values())) != len(state_tuple):
+                raise ValueError("candidate embedding must be injective")
+
+    checked_pair_maps = 0
+    checked_embeddings = 0
+    for pair_map in pair_maps:
+        checked_pair_maps += 1
+        if require_ybe and not _pair_map_satisfies_ybe(pair_map, basis_size):
+            continue
+        for embedding in embeddings:
+            checked_embeddings += 1
+            if all(
+                _apply_adjacent_pair_map(pair_map, embedding[state], 1)
+                == embedding[row1_permutation[state]]
+                and _apply_adjacent_pair_map(pair_map, embedding[state], 2)
+                == embedding[row2_permutation[state]]
+                for state in state_tuple
+            ):
+                return AdjacentTwoBodyRealizationAudit(
+                    basis_size=basis_size,
+                    state_count=len(state_tuple),
+                    require_ybe=require_ybe,
+                    pair_bijection_count=len(pair_maps),
+                    candidate_embedding_count=len(embeddings),
+                    checked_pair_bijection_count=checked_pair_maps,
+                    checked_embedding_count=checked_embeddings,
+                    realization_found=True,
+                    recorded_pair_map=_canonical_pair_map(pair_map),
+                    recorded_embedding=_canonical_embedding(embedding),
+                )
+    return AdjacentTwoBodyRealizationAudit(
+        basis_size=basis_size,
+        state_count=len(state_tuple),
+        require_ybe=require_ybe,
+        pair_bijection_count=len(pair_maps),
+        candidate_embedding_count=len(embeddings),
+        checked_pair_bijection_count=checked_pair_maps,
+        checked_embedding_count=checked_embeddings,
+        realization_found=False,
+        recorded_pair_map=None,
+        recorded_embedding=None,
     )
 
 

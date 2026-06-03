@@ -771,6 +771,7 @@ from .green_branch import (
     transformation_kernel,
 )
 from .semigroup_holonomy import (
+    AdjacentTwoBodyRealizationAudit,
     AperiodicPermutationAudit,
     BraidLocalityShadowAudit,
     LabeledPermutationBraidAudit,
@@ -795,6 +796,7 @@ from .semigroup_holonomy import (
     UnitSectionDetectionAudit,
     UnitSectionProductDetectionAudit,
     aperiodic_permutation_audit,
+    adjacent_two_body_realization_audit,
     braid_locality_shadow_audit,
     compose_transformation_word,
     is_aperiodic_element,
@@ -955,6 +957,7 @@ __all__ = [
     "ArtinDetectorLiftLabel",
     "ArtinDetectorLiftTransitionAudit",
     "ArtinLongitudeData",
+    "AdjacentTwoBodyRealizationAudit",
     "AbelianLongitudeImageAudit",
     "AbelianLongitudeMatrixWitness",
     "AbelianLongitudeMatrixWitnessAudit",
@@ -1334,6 +1337,7 @@ __all__ = [
     "abelian_longitude_value_generators",
     "abelian_longitude_value_subgroup_elements",
     "admits_rack_quotient_cover",
+    "adjacent_two_body_realization_audit",
     "adjacent_rewrites",
     "apply_completed_profile",
     "apply_permutation_to_free_word",

@@ -1734,7 +1734,12 @@ the `sigma1` and `sigma2` rows, jointly separating the four states.  The
 obstruction rows are both four-cycles and fail this direct coordinate-local
 condition, so any realization must occur deeper inside a quotient-fibre
 interval after the outside-coordinate partitions have been hidden or
-collapsed.
+collapsed.  The same generated audit now exhaustively checks the literal
+two-element adjacent-binary realization problem: no bijection `R:A^2->A^2`
+and embedding of the four states into `A^3` induces these two rows, even
+before requiring `R` to satisfy YBE globally.  Thus the current obstruction
+pattern is a residual quotient-fibre search target, not a direct small
+set-theoretic construction.
 
 ## Verification snapshot
 

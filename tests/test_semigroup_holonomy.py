@@ -6,6 +6,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from ybe_domination import (
+    AdjacentTwoBodyRealizationAudit,
     QuotientMap,
     RightStabilizationLongitudeAudit,
     TransformationMonoid,
@@ -15,6 +16,7 @@ from ybe_domination import (
     ReesRectangleCocycleAudit,
     UnitPerfectResidualLongitudeAudit,
     aperiodic_permutation_audit,
+    adjacent_two_body_realization_audit,
     braid_locality_shadow_audit,
     compose_transformation_word,
     cyclic_group,
@@ -197,6 +199,67 @@ class SemigroupHolonomyTests(unittest.TestCase):
         self.assertFalse(audit.row2_has_nontrivial_fixed_partition)
         self.assertEqual(audit.jointly_separating_fixed_pair_count, 0)
         self.assertFalse(audit.direct_coordinate_shadow_possible)
+
+    def test_adjacent_two_body_realization_audit_accepts_swap_control(self):
+        states = tuple((a, b, c) for a in (0, 1) for b in (0, 1) for c in (0, 1))
+        swap = {(a, b): (b, a) for a in (0, 1) for b in (0, 1)}
+        row1 = {state: (state[1], state[0], state[2]) for state in states}
+        row2 = {state: (state[0], state[2], state[1]) for state in states}
+        embedding = {state: state for state in states}
+
+        audit = adjacent_two_body_realization_audit(
+            states,
+            row1,
+            row2,
+            basis_size=2,
+            candidate_pair_maps=(swap,),
+            candidate_embeddings=(embedding,),
+        )
+
+        self.assertIsInstance(audit, AdjacentTwoBodyRealizationAudit)
+        self.assertTrue(audit.require_ybe)
+        self.assertTrue(audit.realization_found)
+        self.assertEqual(audit.pair_bijection_count, 1)
+        self.assertEqual(audit.candidate_embedding_count, 1)
+        self.assertIsNotNone(audit.recorded_pair_map)
+        self.assertIsNotNone(audit.recorded_embedding)
+
+    def test_adjacent_two_body_realization_audit_rejects_c2_obstruction_rows(self):
+        states = ("q00", "q01", "q10", "q11")
+        row1 = {
+            "q00": "q10",
+            "q01": "q11",
+            "q10": "q01",
+            "q11": "q00",
+        }
+        row2 = {
+            "q00": "q01",
+            "q01": "q10",
+            "q10": "q11",
+            "q11": "q00",
+        }
+
+        audit = adjacent_two_body_realization_audit(
+            states,
+            row1,
+            row2,
+            basis_size=2,
+            require_ybe=False,
+        )
+        ybe_audit = adjacent_two_body_realization_audit(
+            states,
+            row1,
+            row2,
+            basis_size=2,
+        )
+
+        self.assertEqual(audit.pair_bijection_count, 24)
+        self.assertEqual(audit.candidate_embedding_count, 1680)
+        self.assertFalse(audit.require_ybe)
+        self.assertFalse(audit.realization_found)
+        self.assertIsNone(audit.recorded_pair_map)
+        self.assertFalse(ybe_audit.realization_found)
+        self.assertLessEqual(ybe_audit.checked_embedding_count, audit.checked_embedding_count)
 
     def test_reset_element_is_aperiodic(self):
         reset = (0, 0, 2)

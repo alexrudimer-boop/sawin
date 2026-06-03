@@ -99,3 +99,21 @@ visible coordinate-local quotient for a three-strand YBE action.
 A genuine realization would have to occur deeper inside a
 quotient-fibre interval where the outside-coordinate partitions
 have already been collapsed or transported.
+
+## Adjacent Two-Body Search
+
+A still stronger direct-realization check asks whether there is a
+single bijection `R: A^2 -> A^2`, with `|A|=2`, and an embedding
+of the four quotient states into `A^3`, such that `R` on adjacent
+coordinates induces both rows.  This search is exhaustive for
+two-element `A`.
+
+- without requiring global YBE for `R`, realization found: `False`;
+- pair bijections checked: `24` of `24`;
+- embeddings checked: `40320` total (`1680` candidates per pair map);
+- requiring `R` to satisfy YBE on all of `A^3`, realization found: `False`.
+
+Thus the four-state pattern is not directly induced by any
+two-element adjacent binary bijection, even before imposing YBE
+on that binary map.  This again pushes any possible realization
+into a more hidden quotient-fibre interval.
