@@ -1719,6 +1719,20 @@ table: non-conjugation-stable labels, ordered-neighbor memory inside the
 label kernel, point-forgetting incompatibility of vertical kernels, or a
 genuinely unbounded vertical kernel.  The ledger explicitly excludes
 whole-image exponent growth as a valid obstruction.
+The completed external route question then sharpened the positive
+nondegenerate object: use the guitar-conjugated derived Hurwitz envelope,
+not raw `lambda/rho` operator groups.  The new note
+`proofs/finite_derived_hurwitz_envelope.md` and generated audit
+`proofs/derived_hurwitz_envelope_audit.md` record the repository convention
+`J_2(x,y)=(lambda_x(y),x)`, the derived operation
+`a*b=lambda_a(rho_y(b))` for the unique `y` with `lambda_b(y)=a`, and a
+three-strand conjugacy check.  They also record the prefix-group issue for
+interior point-forgetting: deleting an interior guitar label need not match
+guitarizing the forgotten tuple, so the finite prefix group
+`L_X=<lambda_x>` is the necessary tower bookkeeping.  For left-degenerate
+rows, the audit records the first failure gate: the preimage `y` may be
+missing or nonunique, so the derived Hurwitz operation is not a total
+well-defined binary operation without extra memory.
 
 The semigroup/Green route has also been narrowed to a precise Rees rectangle
 flatness target.  Ordinary Green/Rees theory leaves a sandwich-matrix

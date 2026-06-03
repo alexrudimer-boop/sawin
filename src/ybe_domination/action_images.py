@@ -6,7 +6,7 @@ from itertools import combinations, product
 from typing import Iterable, Mapping, Sequence, Tuple
 
 from .artin_longitudes import BraidWord, FreeWord, NormalizedLawPrefixWitnessAudit
-from .finite_braided_set import FiniteBraidedSet
+from .finite_braided_set import FiniteBraidedSet, rack_solution
 from .finite_group import (
     FiniteGroup,
     commutator_subgroup_elements,
@@ -180,6 +180,53 @@ class FiniteAugmentedArtinEnvelopePressureAudit:
             and self.failure_mechanism_count >= 3
             and "whole_exponent_growth" not in self.case_keys
         )
+
+
+@dataclass(frozen=True)
+class DerivedEnvelopePreimageFailure:
+    """One obstruction to the derived Hurwitz operation being total."""
+
+    derived_left_label: object
+    original_left_label: object
+    kind: str
+    preimages: Tuple[object, ...]
+    candidate_outputs: Tuple[Tuple[object, object], ...]
+
+
+@dataclass(frozen=True)
+class DerivedHurwitzEnvelopeAudit:
+    """Audit the guitar-derived Hurwitz envelope for one finite solution."""
+
+    element_count: int
+    left_nondegenerate: bool
+    right_nondegenerate: bool
+    nondegenerate: bool
+    derived_operation_total: bool
+    derived_rack_ybe: bool
+    two_strand_guitar_conjugacy: bool
+    three_strand_guitar_conjugacy: bool
+    interior_forgetting_unaugmented_matches: bool | None
+    prefix_left_group_order: int | None
+    recorded_preimage_failures: Tuple[DerivedEnvelopePreimageFailure, ...]
+
+    @property
+    def preimage_failure_count(self) -> int:
+        return len(self.recorded_preimage_failures)
+
+    @property
+    def proves_nondegenerate_derived_hurwitz_envelope_prefix(self) -> bool:
+        return (
+            self.nondegenerate
+            and self.derived_operation_total
+            and self.derived_rack_ybe
+            and self.two_strand_guitar_conjugacy
+            and self.three_strand_guitar_conjugacy
+            and self.prefix_left_group_order is not None
+        )
+
+    @property
+    def detects_degenerate_derived_operation_failure(self) -> bool:
+        return not self.derived_operation_total and self.preimage_failure_count > 0
 
 
 @dataclass(frozen=True)
@@ -1786,6 +1833,184 @@ def finite_augmented_artin_envelope_pressure_audit(
         ),
     )
     return FiniteAugmentedArtinEnvelopePressureAudit(route=route, cases=cases)
+
+
+def _left_translation_permutations(
+    solution: FiniteBraidedSet,
+) -> Mapping[object, Permutation] | None:
+    index = {element: position for position, element in enumerate(solution.elements)}
+    elements = set(solution.elements)
+    translations = {}
+    for left in solution.elements:
+        images = tuple(solution.R[(left, right)][0] for right in solution.elements)
+        if set(images) != elements:
+            return None
+        translations[left] = tuple(index[image] for image in images)
+    return translations
+
+
+def _is_right_nondegenerate(solution: FiniteBraidedSet) -> bool:
+    elements = set(solution.elements)
+    return all(
+        {solution.R[(left, right)][1] for left in solution.elements} == elements
+        for right in solution.elements
+    )
+
+
+def _left_translate(solution: FiniteBraidedSet, left: object, value: object) -> object:
+    return solution.R[(left, value)][0]
+
+
+def _guitar_label_tuple(
+    solution: FiniteBraidedSet,
+    tuple_value: Sequence[object],
+) -> Tuple[object, ...]:
+    prefix_labels = []
+    for index, value in enumerate(tuple_value):
+        label = value
+        for left in tuple_value[:index]:
+            label = _left_translate(solution, left, label)
+        prefix_labels.append(label)
+    return tuple(reversed(prefix_labels))
+
+
+def derived_hurwitz_envelope_audit(
+    solution: FiniteBraidedSet,
+    *,
+    max_left_group_size: int | None = None,
+    max_recorded_failures: int = 8,
+) -> DerivedHurwitzEnvelopeAudit:
+    """Audit the guitar-derived Hurwitz envelope suggested by route (1).
+
+    In the repository convention, the two-strand guitar map is
+    ``J_2(x,y)=(lambda_x(y),x)``.  The derived rack operation is therefore
+    defined by
+    ``a*b=lambda_a(rho_y(b))`` where ``lambda_b(y)=a``.  The operation is
+    total exactly when each such left preimage is unique.
+    """
+
+    elements = tuple(solution.elements)
+    left_translations = _left_translation_permutations(solution)
+    left_nondegenerate = left_translations is not None
+    right_nondegenerate = _is_right_nondegenerate(solution)
+    failures = []
+    operation = {}
+    for derived_left, original_left in product(elements, repeat=2):
+        preimages = tuple(
+            value
+            for value in elements
+            if solution.R[(original_left, value)][0] == derived_left
+        )
+        candidates = tuple(
+            (
+                preimage,
+                _left_translate(
+                    solution,
+                    derived_left,
+                    solution.R[(original_left, preimage)][1],
+                ),
+            )
+            for preimage in preimages
+        )
+        if len(preimages) == 1:
+            operation[(derived_left, original_left)] = candidates[0][1]
+            continue
+        if not preimages:
+            kind = "missing_preimage"
+        elif len({candidate for _preimage, candidate in candidates}) == 1:
+            kind = "multiple_preimages_same_candidate"
+        else:
+            kind = "ambiguous_preimage_candidates"
+        if len(failures) < max_recorded_failures:
+            failures.append(
+                DerivedEnvelopePreimageFailure(
+                    derived_left_label=derived_left,
+                    original_left_label=original_left,
+                    kind=kind,
+                    preimages=preimages,
+                    candidate_outputs=candidates,
+                )
+            )
+
+    derived = None
+    derived_rack_ybe = False
+    two_strand = False
+    three_strand = False
+    interior_forgetting = None
+    prefix_group_order = None
+    if not failures:
+        try:
+            derived = rack_solution(
+                elements,
+                lambda left, right: operation[(left, right)],
+            )
+        except ValueError:
+            derived = None
+        if derived is not None:
+            derived_rack_ybe = derived.is_ybe()
+            guitar_2 = {
+                (left, right): _guitar_label_tuple(solution, (left, right))
+                for left, right in product(elements, repeat=2)
+            }
+            two_strand = (
+                set(guitar_2.values()) == set(guitar_2.keys())
+                and all(
+                    guitar_2[solution.R[(left, right)]]
+                    == derived.R[guitar_2[(left, right)]]
+                    for left, right in product(elements, repeat=2)
+                )
+            )
+            if derived_rack_ybe:
+                three_strand = True
+                for tuple_value in product(elements, repeat=3):
+                    for index in (0, 1):
+                        derived_index = 1 - index
+                        if (
+                            _guitar_label_tuple(
+                                solution,
+                                solution.apply_R_at(tuple_value, index),
+                            )
+                            != derived.apply_R_at(
+                                _guitar_label_tuple(solution, tuple_value),
+                                derived_index,
+                            )
+                        ):
+                            three_strand = False
+                            break
+                    if not three_strand:
+                        break
+                interior_forgetting = all(
+                    (
+                        _guitar_label_tuple(solution, (left, right))[0],
+                        _guitar_label_tuple(solution, (left, right))[1],
+                    )
+                    == (
+                        _guitar_label_tuple(solution, (left, middle, right))[0],
+                        _guitar_label_tuple(solution, (left, middle, right))[2],
+                    )
+                    for left, middle, right in product(elements, repeat=3)
+                )
+            if left_translations is not None:
+                prefix_group_order = len(
+                    generated_permutation_subgroup(
+                        left_translations.values(),
+                        max_size=max_left_group_size,
+                    )
+                )
+
+    return DerivedHurwitzEnvelopeAudit(
+        element_count=len(elements),
+        left_nondegenerate=left_nondegenerate,
+        right_nondegenerate=right_nondegenerate,
+        nondegenerate=left_nondegenerate and right_nondegenerate,
+        derived_operation_total=not failures,
+        derived_rack_ybe=derived_rack_ybe,
+        two_strand_guitar_conjugacy=two_strand,
+        three_strand_guitar_conjugacy=three_strand,
+        interior_forgetting_unaugmented_matches=interior_forgetting,
+        prefix_left_group_order=prefix_group_order,
+        recorded_preimage_failures=tuple(failures),
+    )
 
 
 def evaluate_free_word_on_permutations(

@@ -1,0 +1,128 @@
+{
+  "description": "Finite convention audit for the guitar-derived Hurwitz envelope and its degenerate preimage failure gate.",
+  "rows": [
+    {
+      "derived_operation_total": true,
+      "derived_rack_ybe": true,
+      "detects_degenerate_derived_operation_failure": false,
+      "element_count": 2,
+      "interior_forgetting_unaugmented_matches": false,
+      "left_nondegenerate": true,
+      "name": "nondegenerate_prefix_witness",
+      "nondegenerate": true,
+      "prefix_left_group_order": 2,
+      "preimage_failure_count": 0,
+      "proves_nondegenerate_derived_hurwitz_envelope_prefix": true,
+      "recorded_preimage_failures": [],
+      "right_nondegenerate": true,
+      "table": {
+        "(0, 0)": [
+          1,
+          0
+        ],
+        "(0, 1)": [
+          0,
+          0
+        ],
+        "(1, 0)": [
+          1,
+          1
+        ],
+        "(1, 1)": [
+          0,
+          1
+        ]
+      },
+      "three_strand_guitar_conjugacy": true,
+      "two_strand_guitar_conjugacy": true
+    },
+    {
+      "derived_operation_total": false,
+      "derived_rack_ybe": false,
+      "detects_degenerate_derived_operation_failure": true,
+      "element_count": 2,
+      "interior_forgetting_unaugmented_matches": null,
+      "left_nondegenerate": false,
+      "name": "degenerate_identity_failure",
+      "nondegenerate": false,
+      "prefix_left_group_order": null,
+      "preimage_failure_count": 4,
+      "proves_nondegenerate_derived_hurwitz_envelope_prefix": false,
+      "recorded_preimage_failures": [
+        {
+          "candidate_outputs": [
+            [
+              0,
+              0
+            ],
+            [
+              1,
+              0
+            ]
+          ],
+          "derived_left_label": 0,
+          "kind": "multiple_preimages_same_candidate",
+          "original_left_label": 0,
+          "preimages": [
+            0,
+            1
+          ]
+        },
+        {
+          "candidate_outputs": [],
+          "derived_left_label": 0,
+          "kind": "missing_preimage",
+          "original_left_label": 1,
+          "preimages": []
+        },
+        {
+          "candidate_outputs": [],
+          "derived_left_label": 1,
+          "kind": "missing_preimage",
+          "original_left_label": 0,
+          "preimages": []
+        },
+        {
+          "candidate_outputs": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "derived_left_label": 1,
+          "kind": "multiple_preimages_same_candidate",
+          "original_left_label": 1,
+          "preimages": [
+            0,
+            1
+          ]
+        }
+      ],
+      "right_nondegenerate": false,
+      "table": {
+        "(0, 0)": [
+          0,
+          0
+        ],
+        "(0, 1)": [
+          0,
+          1
+        ],
+        "(1, 0)": [
+          1,
+          0
+        ],
+        "(1, 1)": [
+          1,
+          1
+        ]
+      },
+      "three_strand_guitar_conjugacy": false,
+      "two_strand_guitar_conjugacy": false
+    }
+  ]
+}

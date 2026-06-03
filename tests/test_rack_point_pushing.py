@@ -5,10 +5,13 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from ybe_domination import (
+    DerivedHurwitzEnvelopeAudit,
     FiniteAugmentedArtinEnvelopePressureAudit,
     FiniteAugmentedArtinEnvelopePressureCase,
     FiniteAugmentedArtinEnvelopeRouteAudit,
+    FiniteBraidedSet,
     PointPushingGeneratorRow,
+    derived_hurwitz_envelope_audit,
     finite_augmented_artin_envelope_pressure_audit,
     finite_augmented_artin_envelope_route_audit,
     rack_point_pushing_operator_label_audit,
@@ -136,6 +139,54 @@ class RackPointPushingOperatorLabelTests(unittest.TestCase):
                 "point_forgetting_incompatibility",
                 "unbounded_vertical_kernel_failure",
             },
+        )
+
+    def test_derived_hurwitz_envelope_audit_accepts_nondegenerate_row(self):
+        solution = FiniteBraidedSet(
+            (0, 1),
+            {
+                (0, 0): (1, 0),
+                (0, 1): (0, 0),
+                (1, 0): (1, 1),
+                (1, 1): (0, 1),
+            },
+        )
+
+        audit = derived_hurwitz_envelope_audit(solution)
+
+        self.assertIsInstance(audit, DerivedHurwitzEnvelopeAudit)
+        self.assertTrue(audit.nondegenerate)
+        self.assertTrue(audit.derived_operation_total)
+        self.assertTrue(audit.derived_rack_ybe)
+        self.assertTrue(audit.two_strand_guitar_conjugacy)
+        self.assertTrue(audit.three_strand_guitar_conjugacy)
+        self.assertFalse(audit.interior_forgetting_unaugmented_matches)
+        self.assertEqual(audit.prefix_left_group_order, 2)
+        self.assertEqual(audit.preimage_failure_count, 0)
+        self.assertTrue(audit.proves_nondegenerate_derived_hurwitz_envelope_prefix)
+
+    def test_derived_hurwitz_envelope_audit_rejects_left_degenerate_row(self):
+        solution = FiniteBraidedSet(
+            (0, 1),
+            {
+                (0, 0): (0, 0),
+                (0, 1): (0, 1),
+                (1, 0): (1, 0),
+                (1, 1): (1, 1),
+            },
+        )
+
+        audit = derived_hurwitz_envelope_audit(solution)
+
+        self.assertFalse(audit.left_nondegenerate)
+        self.assertFalse(audit.nondegenerate)
+        self.assertFalse(audit.derived_operation_total)
+        self.assertFalse(audit.derived_rack_ybe)
+        self.assertGreater(audit.preimage_failure_count, 0)
+        self.assertTrue(audit.detects_degenerate_derived_operation_failure)
+        self.assertIn(
+            audit.recorded_preimage_failures[0].kind,
+            {"missing_preimage", "multiple_preimages_same_candidate"},
         )
 
 
