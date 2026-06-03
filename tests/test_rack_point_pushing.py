@@ -22,6 +22,7 @@ from ybe_domination import (
     PrefixPointForgettingRestrictionAudit,
     PrefixPointPushingSurfaceAudit,
     PullbackCoskeletalCriterionAudit,
+    YBECoskeletalMechanismAudit,
     PrefixVerticalPeifferCubeTransportAudit,
     PrefixVerticalPeifferSquareAudit,
     PrefixVerticalDefectTransportAudit,
@@ -44,6 +45,7 @@ from ybe_domination import (
     prefix_vertical_defect_transport_audit,
     prefix_vertical_defect_transform_audit,
     pullback_coskeletal_criterion_audit,
+    ybe_coskeletal_mechanism_audit,
     rack_point_pushing_operator_label_audit,
     rack_solution,
 )
@@ -713,6 +715,49 @@ class RackPointPushingOperatorLabelTests(unittest.TestCase):
                 "warning_countermechanism",
             ],
         )
+
+    def test_ybe_coskeletal_mechanism_records_live_high_arity_obstruction(self):
+        audit = ybe_coskeletal_mechanism_audit()
+
+        self.assertIsInstance(audit, YBECoskeletalMechanismAudit)
+        self.assertTrue(audit.records_ybe_coskeletal_mechanism_boundary)
+        self.assertTrue(audit.finite_bijectivity_gives_local_generation)
+        self.assertTrue(
+            audit.finite_bijectivity_does_not_give_local_cohomology_detection
+        )
+        self.assertTrue(audit.bounded_state_recursion_would_imply_coskeletality)
+        self.assertTrue(audit.high_cross_effect_bisections_are_live_obstruction)
+        self.assertTrue(audit.w_local_operator_label_descent_is_extra_hypothesis)
+        self.assertTrue(audit.coefficient_inverse_limit_condition_recorded)
+        self.assertTrue(audit.comparison_commutes_with_inverse_limits_recorded)
+        self.assertTrue(audit.bounded_relation_arity_cutoff_recorded)
+        self.assertTrue(audit.brunnian_cross_effect_criterion_recorded)
+        self.assertEqual(audit.cutoff_formula, "N0 = max(r, w + 3)")
+        self.assertIn("Omega", audit.conditional_pullback_coskeletal_theorem)
+        self.assertIn("Pi^sharp", audit.conditional_pullback_coskeletal_theorem)
+        self.assertIn("cr_ij^I", audit.brunnian_cross_effect_formula)
+        self.assertIn("Br^2_I", audit.brunnian_obstruction_criterion)
+        self.assertEqual(len(audit.positive_ybe_theorem_obligations), 4)
+        self.assertEqual(
+            audit.case_keys,
+            (
+                "formal_w_local_descent_theorem",
+                "fadell_neuwirth_recursion",
+                "finite_operator_state_recursion",
+                "garside_or_automaton_normal_forms",
+                "fi_fb_finite_generation",
+                "brunnian_cross_effect_obstruction",
+            ),
+        )
+        self.assertEqual(
+            audit.cases[0].role,
+            "conditional_positive_theorem",
+        )
+        self.assertEqual(
+            audit.cases[-1].role,
+            "negative_countermechanism",
+        )
+        self.assertIn("d-skeleton", audit.cases[-1].obstruction_signature)
 
     def test_prefix_point_forgetting_restriction_records_vertical_rows(self):
         solution = FiniteBraidedSet(

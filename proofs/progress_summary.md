@@ -2160,3 +2160,51 @@ Without such a lemma, independent pullback constraints can first appear in
 arbitrarily high arity.  The next all-arity route is therefore either to
 prove this coskeletality lemma or to find a high-arity countermechanism, not
 merely to add another bounded prefix check.
+
+## YBE Coskeletal Mechanism Boundary
+
+The note `proofs/ybe_coskeletal_mechanism.md` and generated audit
+`proofs/ybe_coskeletal_mechanism_audit.md` record the YBE-specific version of
+the coskeletality gap.  Finite bijective YBE data gives finite local
+transition rules and Fadell-Neuwirth recursion for point-pushing generators,
+but local generation of moves is weaker than local detection of the
+nonabelian deletion-cohomology class.  There is no intrinsic bounded
+pullback-coskeletal theorem forced merely by finite bijective YBE locality.
+
+The clean positive theorem is conditional.  After adding finite operator
+labels, one must prove `w`-local inverse-limit reconstruction of the labelled
+point-pushing groupoids, together with the analogous condition for the
+one-, two-, and three-deletion coefficient bands:
+
+```text
+A_D^I ~= lim_{D subset J subset I, |J| <= |D| + w} A_D^J
+```
+
+for `|D| <= 3`, with the base coefficients and comparison maps commuting
+with these reconstructions.  If transport, cocycle, and gauge equations are
+generated in relation arity `r`, the formal cutoff is
+
+```text
+N0 = max(r, w + 3).
+```
+
+Then `[Omega]` is pulled back from the fixed finite base after gauge if and
+only if the same is true through arity `N0`.  The proof is right-Kan descent:
+the relevant nonabelian cochain, cocycle, gauge, and pullback solution
+groupoids are built from finite products, finite fibre products, and finite
+equalizers of the bounded coefficient bands.
+
+The negative mechanism is the possible nonvanishing of Brunnian relative
+deletion `2`-obstruction sets.  For two-deletion coefficients,
+
+```text
+cr_ij^I(A) =
+intersection_{k in I \ {i,j}} ker(A_ij^I -> A_ij^{I \ {k}})
+```
+
+records vertical bisections invisible after deleting any further surviving
+strand.  If the Brunnian quotient `Br^2_I(C,A;B)` is nontrivial for
+arbitrarily large `|I|`, no bounded pullback-coskeletal theorem can hold for
+that labelled tower.  Thus the real missing theorem is eventual Brunnian
+vanishing plus effective bounded-width coefficient descent, not finite
+bijectivity alone.

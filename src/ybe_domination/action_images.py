@@ -674,6 +674,86 @@ class PullbackCoskeletalCriterionAudit:
 
 
 @dataclass(frozen=True)
+class YBECoskeletalMechanismCase:
+    """One YBE-specific source or failure of pullback coskeletality."""
+
+    key: str
+    role: str
+    mechanism: str
+    finite_ybe_status: str
+    theorem_obligation: str
+    obstruction_signature: str
+
+
+@dataclass(frozen=True)
+class YBECoskeletalMechanismAudit:
+    """YBE-specific ledger for possible bounded-state coskeletality."""
+
+    finite_bijectivity_gives_local_generation: bool
+    finite_bijectivity_does_not_give_local_cohomology_detection: bool
+    bounded_state_recursion_would_imply_coskeletality: bool
+    high_cross_effect_bisections_are_live_obstruction: bool
+    w_local_operator_label_descent_is_extra_hypothesis: bool
+    coefficient_inverse_limit_condition_recorded: bool
+    comparison_commutes_with_inverse_limits_recorded: bool
+    bounded_relation_arity_cutoff_recorded: bool
+    brunnian_cross_effect_criterion_recorded: bool
+    cutoff_formula: str
+    conditional_pullback_coskeletal_theorem: str
+    brunnian_cross_effect_formula: str
+    brunnian_obstruction_criterion: str
+    positive_ybe_theorem_obligations: Tuple[str, ...]
+    cases: Tuple[YBECoskeletalMechanismCase, ...]
+
+    @property
+    def case_keys(self) -> Tuple[str, ...]:
+        return tuple(case.key for case in self.cases)
+
+    @property
+    def records_ybe_coskeletal_mechanism_boundary(self) -> bool:
+        return (
+            self.finite_bijectivity_gives_local_generation
+            and self.finite_bijectivity_does_not_give_local_cohomology_detection
+            and self.bounded_state_recursion_would_imply_coskeletality
+            and self.high_cross_effect_bisections_are_live_obstruction
+            and self.w_local_operator_label_descent_is_extra_hypothesis
+            and self.coefficient_inverse_limit_condition_recorded
+            and self.comparison_commutes_with_inverse_limits_recorded
+            and self.bounded_relation_arity_cutoff_recorded
+            and self.brunnian_cross_effect_criterion_recorded
+            and self.cutoff_formula == "N0 = max(r, w + 3)"
+            and "Omega" in self.conditional_pullback_coskeletal_theorem
+            and "cr_ij^I" in self.brunnian_cross_effect_formula
+            and "Br^2_I" in self.brunnian_obstruction_criterion
+            and self.positive_ybe_theorem_obligations
+            == (
+                "prove w-local inverse-limit reconstruction for operator labels",
+                (
+                    "prove coefficient inverse-limit reconstruction for "
+                    "one-, two-, and three-deletion bands"
+                ),
+                (
+                    "prove bounded relation arity for transport, cocycle, "
+                    "and gauge equations"
+                ),
+                (
+                    "prove vanishing of Brunnian relative deletion "
+                    "2-obstructions above the cutoff"
+                ),
+            )
+            and self.case_keys
+            == (
+                "formal_w_local_descent_theorem",
+                "fadell_neuwirth_recursion",
+                "finite_operator_state_recursion",
+                "garside_or_automaton_normal_forms",
+                "fi_fb_finite_generation",
+                "brunnian_cross_effect_obstruction",
+            )
+        )
+
+
+@dataclass(frozen=True)
 class PrefixPointForgettingRestrictionRow:
     """One marked generator comparison under stationary-strand deletion."""
 
@@ -4235,6 +4315,185 @@ def pullback_coskeletal_criterion_audit() -> PullbackCoskeletalCriterionAudit:
             "finite YBE point-pushing deletion towers are d-pullback-coskeletal "
             "over one fixed finite operator-label Hurwitz base, for some d "
             "depending only on the finite solution or on the proposed base"
+        ),
+        cases=cases,
+    )
+
+
+def ybe_coskeletal_mechanism_audit() -> YBECoskeletalMechanismAudit:
+    """Record YBE-specific routes toward or against pullback coskeletality.
+
+    Finite bijective YBE data gives finite local transition rules, but local
+    generation of braid/deletion moves is weaker than local detection of the
+    nonabelian deletion-cohomology class.  A positive theorem needs a
+    finite operator-label enrichment with genuine bounded-width descent for
+    the groupoid and the one-, two-, and three-deletion coefficient bands.
+    A negative route should build high-arity cross-effects invisible on every
+    bounded skeleton.
+    """
+
+    cases = (
+        YBECoskeletalMechanismCase(
+            key="formal_w_local_descent_theorem",
+            role="conditional_positive_theorem",
+            mechanism=(
+                "right Kan descent from arity at most w for the labelled "
+                "point-pushing groupoid and from arity at most |D|+w for "
+                "the deletion coefficient bands"
+            ),
+            finite_ybe_status=(
+                "finite bijectivity alone does not provide this descent; it "
+                "must be proved after adding suitable finite operator labels"
+            ),
+            theorem_obligation=(
+                "prove w-local inverse-limit reconstruction and bounded "
+                "relation arity r, then use N0=max(r,w+3)"
+            ),
+            obstruction_signature=(
+                "compatible low-arity gauge/base solutions fail to extend "
+                "because a high-arity Brunnian deletion 2-class survives"
+            ),
+        ),
+        YBECoskeletalMechanismCase(
+            key="fadell_neuwirth_recursion",
+            role="necessary_but_insufficient_structure",
+            mechanism=(
+                "point-pushing generators and point-forgetting maps are "
+                "recursive under the Fadell-Neuwirth tower"
+            ),
+            finite_ybe_status=(
+                "finite YBE tables make each local transition finite and "
+                "computable"
+            ),
+            theorem_obligation=(
+                "prove that recursive generator descriptions also generate "
+                "all deletion 2-cocycle relations in bounded arity"
+            ),
+            obstruction_signature=(
+                "Brunnian vertical classes restrict trivially to all bounded "
+                "faces while remaining nontrivial in higher arity"
+            ),
+        ),
+        YBECoskeletalMechanismCase(
+            key="finite_operator_state_recursion",
+            role="positive_candidate",
+            mechanism=(
+                "augment tuples by finite operator labels so every Artin "
+                "conjugacy update is read by a fixed finite transducer"
+            ),
+            finite_ybe_status=(
+                "finite labels can make local moves deterministic on a chosen "
+                "finite state space"
+            ),
+            theorem_obligation=(
+                "show the transducer state is complete for vertical "
+                "fibre-bisection cohomology, not merely for tuple motion"
+            ),
+            obstruction_signature=(
+                "two towers with identical finite operator-state histories "
+                "but different high-arity vertical 2-cocycles"
+            ),
+        ),
+        YBECoskeletalMechanismCase(
+            key="garside_or_automaton_normal_forms",
+            role="possible_finite_type_tool",
+            mechanism=(
+                "use braid or pure-braid normal forms to recognize Artin "
+                "conjugacy words by finite or noetherian rewriting"
+            ),
+            finite_ybe_status=(
+                "normal forms control braid words but not automatically the "
+                "deletion-gauge cohomology quotient"
+            ),
+            theorem_obligation=(
+                "prove that normal-form rewriting induces a finite complete "
+                "rewriting system on vertical cocycle representatives"
+            ),
+            obstruction_signature=(
+                "normal-form length grows while all bounded deletion shadows "
+                "stay gauge-trivial"
+            ),
+        ),
+        YBECoskeletalMechanismCase(
+            key="fi_fb_finite_generation",
+            role="strong_positive_hypothesis",
+            mechanism=(
+                "view vertical bisection groups, deletion cochains, and "
+                "2-cocycles as an FI/FB-type module or nonabelian analogue"
+            ),
+            finite_ybe_status=(
+                "finite sets supply finite fibres in each arity but not "
+                "finite generation as a tower"
+            ),
+            theorem_obligation=(
+                "establish finite generation/noetherianity for the relevant "
+                "coefficient and obstruction functors"
+            ),
+            obstruction_signature=(
+                "new orbit types or coefficient generators appear in "
+                "unbounded arity"
+            ),
+        ),
+        YBECoskeletalMechanismCase(
+            key="brunnian_cross_effect_obstruction",
+            role="negative_countermechanism",
+            mechanism=(
+                "construct vertical bisections supported only on genuinely "
+                "multi-point interactions"
+            ),
+            finite_ybe_status=(
+                "finite bijectivity does not by itself forbid high-order "
+                "cross-effects"
+            ),
+            theorem_obligation=(
+                "rule out or bound Brunnian cross-effects using YBE-specific "
+                "identities"
+            ),
+            obstruction_signature=(
+                "for every bound d, a nontrivial deletion 2-cocycle appears "
+                "whose restriction to every d-skeleton is gauge-trivial"
+            ),
+        ),
+    )
+    return YBECoskeletalMechanismAudit(
+        finite_bijectivity_gives_local_generation=True,
+        finite_bijectivity_does_not_give_local_cohomology_detection=True,
+        bounded_state_recursion_would_imply_coskeletality=True,
+        high_cross_effect_bisections_are_live_obstruction=True,
+        w_local_operator_label_descent_is_extra_hypothesis=True,
+        coefficient_inverse_limit_condition_recorded=True,
+        comparison_commutes_with_inverse_limits_recorded=True,
+        bounded_relation_arity_cutoff_recorded=True,
+        brunnian_cross_effect_criterion_recorded=True,
+        cutoff_formula="N0 = max(r, w + 3)",
+        conditional_pullback_coskeletal_theorem=(
+            "[Omega] is in im Pi^sharp iff the truncation "
+            "[Omega_<=N0] is in im Pi^sharp_<=N0, equivalently all-arity "
+            "base cocycle and gauge data exist iff they exist through arity N0"
+        ),
+        brunnian_cross_effect_formula=(
+            "cr_ij^I(A) = intersection over k in I\\{i,j} of "
+            "ker(A_ij^I -> A_ij^{I\\{k}})"
+        ),
+        brunnian_obstruction_criterion=(
+            "bounded pullback-coskeletality for a fixed labelled tower "
+            "requires Br^2_I(C,A;B)=1 for all sufficiently large I, together "
+            "with effective low-arity coefficient descent"
+        ),
+        positive_ybe_theorem_obligations=(
+            "prove w-local inverse-limit reconstruction for operator labels",
+            (
+                "prove coefficient inverse-limit reconstruction for "
+                "one-, two-, and three-deletion bands"
+            ),
+            (
+                "prove bounded relation arity for transport, cocycle, "
+                "and gauge equations"
+            ),
+            (
+                "prove vanishing of Brunnian relative deletion "
+                "2-obstructions above the cutoff"
+            ),
         ),
         cases=cases,
     )
