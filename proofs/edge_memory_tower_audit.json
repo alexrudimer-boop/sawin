@@ -1,0 +1,133 @@
+{
+  "description": "Finite triple/quadruple prefix audit for adjacent edge memory.",
+  "rows": [
+    {
+      "all_generator_updates_well_defined": true,
+      "all_point_forgetting_maps_well_defined": true,
+      "arity3_encoding_injective": true,
+      "arity3_tuple_count": 8,
+      "arity4_encoding_injective": true,
+      "arity4_tuple_count": 16,
+      "braid_relation_on_edge_memory": true,
+      "edge_label_count": 4,
+      "element_count": 2,
+      "generator_updates_well_defined": [
+        [
+          0,
+          true
+        ],
+        [
+          1,
+          true
+        ],
+        [
+          2,
+          true
+        ]
+      ],
+      "name": "nondegenerate_prefix_witness",
+      "point_forgetting_well_defined": [
+        [
+          0,
+          true
+        ],
+        [
+          1,
+          true
+        ],
+        [
+          2,
+          true
+        ],
+        [
+          3,
+          true
+        ]
+      ],
+      "records_finite_edge_memory_tower_prefix": true,
+      "table": {
+        "(0, 0)": [
+          1,
+          0
+        ],
+        "(0, 1)": [
+          0,
+          0
+        ],
+        "(1, 0)": [
+          1,
+          1
+        ],
+        "(1, 1)": [
+          0,
+          1
+        ]
+      },
+      "verifies_edge_memory_triple_quadruple_prefix": true
+    },
+    {
+      "all_generator_updates_well_defined": true,
+      "all_point_forgetting_maps_well_defined": true,
+      "arity3_encoding_injective": true,
+      "arity3_tuple_count": 8,
+      "arity4_encoding_injective": true,
+      "arity4_tuple_count": 16,
+      "braid_relation_on_edge_memory": true,
+      "edge_label_count": 4,
+      "element_count": 2,
+      "generator_updates_well_defined": [
+        [
+          0,
+          true
+        ],
+        [
+          1,
+          true
+        ],
+        [
+          2,
+          true
+        ]
+      ],
+      "name": "degenerate_identity_edge_memory",
+      "point_forgetting_well_defined": [
+        [
+          0,
+          true
+        ],
+        [
+          1,
+          true
+        ],
+        [
+          2,
+          true
+        ],
+        [
+          3,
+          true
+        ]
+      ],
+      "records_finite_edge_memory_tower_prefix": true,
+      "table": {
+        "(0, 0)": [
+          0,
+          0
+        ],
+        "(0, 1)": [
+          0,
+          1
+        ],
+        "(1, 0)": [
+          1,
+          0
+        ],
+        "(1, 1)": [
+          1,
+          1
+        ]
+      },
+      "verifies_edge_memory_triple_quadruple_prefix": true
+    }
+  ]
+}

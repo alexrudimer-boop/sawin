@@ -283,6 +283,41 @@ class DegeneratePreimageMemoryAudit:
 
 
 @dataclass(frozen=True)
+class EdgeMemoryTowerAudit:
+    """Audit braid and forgetting consistency for adjacent edge memory."""
+
+    element_count: int
+    edge_label_count: int
+    arity3_tuple_count: int
+    arity4_tuple_count: int
+    arity3_encoding_injective: bool
+    arity4_encoding_injective: bool
+    braid_relation_on_edge_memory: bool
+    generator_updates_well_defined: Tuple[Tuple[int, bool], ...]
+    point_forgetting_well_defined: Tuple[Tuple[int, bool], ...]
+    records_finite_edge_memory_tower_prefix: bool
+
+    @property
+    def all_generator_updates_well_defined(self) -> bool:
+        return all(value for _index, value in self.generator_updates_well_defined)
+
+    @property
+    def all_point_forgetting_maps_well_defined(self) -> bool:
+        return all(value for _index, value in self.point_forgetting_well_defined)
+
+    @property
+    def verifies_edge_memory_triple_quadruple_prefix(self) -> bool:
+        return (
+            self.arity3_encoding_injective
+            and self.arity4_encoding_injective
+            and self.braid_relation_on_edge_memory
+            and self.all_generator_updates_well_defined
+            and self.all_point_forgetting_maps_well_defined
+            and self.records_finite_edge_memory_tower_prefix
+        )
+
+
+@dataclass(frozen=True)
 class LawBraidActionCertificate:
     braid_index: int
     tuple_count: int
@@ -2139,6 +2174,115 @@ def degenerate_preimage_memory_audit(
         finite_edge_memory_repairs_two_strand=True,
         tower_consistency_status="requires_triple_quadruple_check",
         recorded_fibres=tuple(fibres),
+    )
+
+
+def _edge_memory_label(solution: FiniteBraidedSet, left: object, right: object):
+    return (solution.R[(left, right)][0], left, right)
+
+
+def _edge_memory_tuple(
+    solution: FiniteBraidedSet,
+    tuple_value: Sequence[object],
+) -> Tuple[Tuple[object, object, object], ...]:
+    return tuple(
+        _edge_memory_label(solution, tuple_value[index], tuple_value[index + 1])
+        for index in range(len(tuple_value) - 1)
+    )
+
+
+def _edge_update_well_defined(
+    solution: FiniteBraidedSet,
+    arity: int,
+    generator_index: int,
+) -> bool:
+    seen = {}
+    for tuple_value in product(solution.elements, repeat=arity):
+        source = _edge_memory_tuple(solution, tuple_value)
+        target = _edge_memory_tuple(
+            solution,
+            solution.apply_R_at(tuple_value, generator_index),
+        )
+        previous = seen.get(source)
+        if previous is None:
+            seen[source] = target
+        elif previous != target:
+            return False
+    return True
+
+
+def _edge_forgetting_well_defined(
+    solution: FiniteBraidedSet,
+    arity: int,
+    forget_index: int,
+) -> bool:
+    seen = {}
+    for tuple_value in product(solution.elements, repeat=arity):
+        source = _edge_memory_tuple(solution, tuple_value)
+        forgotten = tuple(
+            value
+            for index, value in enumerate(tuple_value)
+            if index != forget_index
+        )
+        target = _edge_memory_tuple(solution, forgotten)
+        previous = seen.get(source)
+        if previous is None:
+            seen[source] = target
+        elif previous != target:
+            return False
+    return True
+
+
+def edge_memory_tower_audit(solution: FiniteBraidedSet) -> EdgeMemoryTowerAudit:
+    """Check the finite adjacent-edge memory through the first tower gates."""
+
+    elements = tuple(solution.elements)
+    edge_labels = {
+        _edge_memory_label(solution, left, right)
+        for left, right in product(elements, repeat=2)
+    }
+    arity3_encodings = {
+        _edge_memory_tuple(solution, tuple_value)
+        for tuple_value in product(elements, repeat=3)
+    }
+    arity4_encodings = {
+        _edge_memory_tuple(solution, tuple_value)
+        for tuple_value in product(elements, repeat=4)
+    }
+    braid_relation = True
+    for tuple_value in product(elements, repeat=3):
+        left = solution.apply_R_at(
+            solution.apply_R_at(solution.apply_R_at(tuple_value, 0), 1),
+            0,
+        )
+        right = solution.apply_R_at(
+            solution.apply_R_at(solution.apply_R_at(tuple_value, 1), 0),
+            1,
+        )
+        if _edge_memory_tuple(solution, left) != _edge_memory_tuple(solution, right):
+            braid_relation = False
+            break
+    generator_updates = tuple(
+        (index, _edge_update_well_defined(solution, 4, index))
+        for index in range(3)
+    )
+    forgetting = tuple(
+        (index, _edge_forgetting_well_defined(solution, 4, index))
+        for index in range(4)
+    )
+    tuple3_count = len(elements) ** 3
+    tuple4_count = len(elements) ** 4
+    return EdgeMemoryTowerAudit(
+        element_count=len(elements),
+        edge_label_count=len(edge_labels),
+        arity3_tuple_count=tuple3_count,
+        arity4_tuple_count=tuple4_count,
+        arity3_encoding_injective=len(arity3_encodings) == tuple3_count,
+        arity4_encoding_injective=len(arity4_encodings) == tuple4_count,
+        braid_relation_on_edge_memory=braid_relation,
+        generator_updates_well_defined=generator_updates,
+        point_forgetting_well_defined=forgetting,
+        records_finite_edge_memory_tower_prefix=True,
     )
 
 

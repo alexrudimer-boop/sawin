@@ -7,6 +7,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 from ybe_domination import (
     DegeneratePreimageMemoryAudit,
     DerivedHurwitzEnvelopeAudit,
+    EdgeMemoryTowerAudit,
     FiniteAugmentedArtinEnvelopePressureAudit,
     FiniteAugmentedArtinEnvelopePressureCase,
     FiniteAugmentedArtinEnvelopeRouteAudit,
@@ -14,6 +15,7 @@ from ybe_domination import (
     PointPushingGeneratorRow,
     degenerate_preimage_memory_audit,
     derived_hurwitz_envelope_audit,
+    edge_memory_tower_audit,
     finite_augmented_artin_envelope_pressure_audit,
     finite_augmented_artin_envelope_route_audit,
     rack_point_pushing_operator_label_audit,
@@ -239,6 +241,57 @@ class RackPointPushingOperatorLabelTests(unittest.TestCase):
             {fibre.status for fibre in audit.recorded_fibres},
             {"missing", "multiple_same_candidate"},
         )
+
+    def test_edge_memory_tower_audit_checks_first_tower_gates(self):
+        solution = FiniteBraidedSet(
+            (0, 1),
+            {
+                (0, 0): (1, 0),
+                (0, 1): (0, 0),
+                (1, 0): (1, 1),
+                (1, 1): (0, 1),
+            },
+        )
+
+        audit = edge_memory_tower_audit(solution)
+
+        self.assertIsInstance(audit, EdgeMemoryTowerAudit)
+        self.assertEqual(audit.edge_label_count, 4)
+        self.assertEqual(audit.arity3_tuple_count, 8)
+        self.assertEqual(audit.arity4_tuple_count, 16)
+        self.assertTrue(audit.arity3_encoding_injective)
+        self.assertTrue(audit.arity4_encoding_injective)
+        self.assertTrue(audit.braid_relation_on_edge_memory)
+        self.assertEqual(
+            audit.generator_updates_well_defined,
+            ((0, True), (1, True), (2, True)),
+        )
+        self.assertEqual(
+            audit.point_forgetting_well_defined,
+            ((0, True), (1, True), (2, True), (3, True)),
+        )
+        self.assertTrue(audit.verifies_edge_memory_triple_quadruple_prefix)
+
+    def test_edge_memory_tower_audit_also_handles_degenerate_identity_row(self):
+        solution = FiniteBraidedSet(
+            (0, 1),
+            {
+                (0, 0): (0, 0),
+                (0, 1): (0, 1),
+                (1, 0): (1, 0),
+                (1, 1): (1, 1),
+            },
+        )
+
+        audit = edge_memory_tower_audit(solution)
+
+        self.assertEqual(audit.edge_label_count, 4)
+        self.assertTrue(audit.arity3_encoding_injective)
+        self.assertTrue(audit.arity4_encoding_injective)
+        self.assertTrue(audit.braid_relation_on_edge_memory)
+        self.assertTrue(audit.all_generator_updates_well_defined)
+        self.assertTrue(audit.all_point_forgetting_maps_well_defined)
+        self.assertTrue(audit.verifies_edge_memory_triple_quadruple_prefix)
 
 
 if __name__ == "__main__":

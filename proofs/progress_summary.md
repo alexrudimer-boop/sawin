@@ -1743,6 +1743,18 @@ two-strand preimage lookup locally, but the audit records that this is only a
 local repair: route (1) still needs triple/quadruple compatibility and
 point-forgetting compatibility to turn edge memory into a finite
 group-Hurwitz tower with bounded vertical kernel.
+The new edge-memory tower prefix
+`proofs/edge_memory_tower_prefix.md` and generated audit
+`proofs/edge_memory_tower_audit.md` check the first local tower gates for the
+canonical adjacent edge label `e(x,y)=(lambda_x(y),x,y)`.  Adjacent edge
+labels encode arity-3 and arity-4 tuples injectively, the arity-3 braid
+relation survives edge encoding, and all arity-4 braid-generator and
+point-forgetting maps are well-defined on the finite edge-memory state space.
+This moves the remaining route-(1) target from local preimage ambiguity to
+the real point-pushing layer: compress this memory to one fixed finite
+operator/Hurwitz base with uniformly bounded-exponent vertical kernels, or
+find a degenerate table where that vertical compression fails compatibly in
+the `Q_X(3),Q_X(4),...` tower.
 
 The semigroup/Green route has also been narrowed to a precise Rees rectangle
 flatness target.  Ordinary Green/Rees theory leaves a sandwich-matrix
