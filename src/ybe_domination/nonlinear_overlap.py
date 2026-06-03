@@ -4839,6 +4839,43 @@ def universal_k_canonical_strand_carrier_rows(
     )
 
 
+def universal_k_canonical_strand_carrier_rows_with_values(
+    interval: LocalInterval,
+    component_values: object,
+) -> Tuple[UniversalKStrandCarrierRow, ...]:
+    """Evaluate canonical strand-carrier components in a finite target.
+
+    Canonical component labels are abstract.  Fixed-carrier endpoint observers
+    need actual endpoint-group elements, so this helper applies a supplied
+    component-value ledger while preserving the canonical strand-carrier
+    equations.  Missing component values deliberately leave carrier rows
+    uncovered for the downstream fixed-carrier audit to reject.
+    """
+
+    value_by_component_marker = {}
+    rows = (
+        component_values.items()
+        if isinstance(component_values, Mapping)
+        else _universal_k_row_input_tuple(component_values)
+    )
+    for row in rows:
+        parts = _universal_k_two_field_row_parts(row)
+        if parts is None:
+            continue
+        component, value = parts
+        value_by_component_marker.setdefault(_value_marker(component), value)
+
+    evaluated_rows = []
+    for color, point, component in universal_k_canonical_strand_carrier_rows(
+        interval
+    ):
+        marker = _value_marker(component)
+        if marker not in value_by_component_marker:
+            continue
+        evaluated_rows.append((color, point, value_by_component_marker[marker]))
+    return tuple(evaluated_rows)
+
+
 def universal_k_canonical_strand_carrier_labels(
     interval: LocalInterval,
 ) -> Mapping[Color, Mapping[FibrePoint, object]]:
@@ -15221,6 +15258,7 @@ def universal_k_endpoint_observer_builds_from_fixed_carrier_monodromy_by_family(
     ] = (),
     strand_carrier_rows_by_family: Sequence[Tuple[str, object]] = (),
     strand_carrier_track_counts_by_family: Sequence[Tuple[str, int]] = (),
+    canonical_strand_carrier_values_by_family: Sequence[Tuple[str, object]] = (),
     detector_track_initialization_rows: Tuple[
         UniversalKDetectorTrackInitializationRow,
         ...,
@@ -15312,6 +15350,9 @@ def universal_k_endpoint_observer_builds_from_fixed_carrier_monodromy_by_family(
     strand_carrier_track_count_map = _universal_k_family_object_map(
         strand_carrier_track_counts_by_family
     )
+    canonical_strand_carrier_value_map = _universal_k_family_object_map(
+        canonical_strand_carrier_values_by_family
+    )
 
     certificate_rows = []
     candidate_families = tuple(
@@ -15327,7 +15368,18 @@ def universal_k_endpoint_observer_builds_from_fixed_carrier_monodromy_by_family(
         )
         domain_map = carrier_domain_map.get(family)
         witness_map = carrier_witness_map.get(family)
-        if family in strand_carrier_map and (
+        family_strand_carrier_rows = strand_carrier_map.get(family)
+        if (
+            family_strand_carrier_rows is None
+            and family in canonical_strand_carrier_value_map
+        ):
+            family_strand_carrier_rows = (
+                universal_k_canonical_strand_carrier_rows_with_values(
+                    interval,
+                    canonical_strand_carrier_value_map[family],
+                )
+            )
+        if family_strand_carrier_rows is not None and (
             not callable(getattr(domain_map, "get", None))
             or not callable(getattr(witness_map, "get", None))
         ):
@@ -15339,7 +15391,7 @@ def universal_k_endpoint_observer_builds_from_fixed_carrier_monodromy_by_family(
                 universal_k_fixed_carrier_domain_ledger_from_strand_carriers(
                     interval,
                     reachable_seed_states,
-                    strand_carrier_map[family],
+                    family_strand_carrier_rows,
                     track_count=strand_carrier_track_count_map.get(family, 1),
                 )
             )
@@ -23200,6 +23252,7 @@ def post_linear_remaining_finite_system_audit(
     universal_k_monodromy_fixed_carrier_soundness_witnesses_by_family: object = (),
     universal_k_monodromy_strand_carrier_rows_by_family: object = (),
     universal_k_monodromy_strand_carrier_track_counts_by_family: object = (),
+    universal_k_monodromy_canonical_strand_carrier_values_by_family: object = (),
     universal_k_detector_track_counts_by_family: Tuple[Tuple[str, int], ...] = (),
     universal_k_detector_track_initialization_rows: object = (),
     universal_k_endpoint_target_audit: UniversalKEndpointTargetAudit | None = None,
@@ -23358,6 +23411,11 @@ def post_linear_remaining_finite_system_audit(
                 universal_k_monodromy_strand_carrier_track_counts_by_family
             )
         )
+        or bool(
+            _universal_k_row_input_tuple(
+                universal_k_monodromy_canonical_strand_carrier_values_by_family
+            )
+        )
     )
     fixed_carrier_monodromy_input_present = (
         bool(
@@ -23378,6 +23436,11 @@ def post_linear_remaining_finite_system_audit(
         or bool(
             _universal_k_row_input_tuple(
                 universal_k_monodromy_strand_carrier_track_counts_by_family
+            )
+        )
+        or bool(
+            _universal_k_row_input_tuple(
+                universal_k_monodromy_canonical_strand_carrier_values_by_family
             )
         )
     )
@@ -23464,6 +23527,9 @@ def post_linear_remaining_finite_system_audit(
                         ),
                         strand_carrier_track_counts_by_family=(
                             universal_k_monodromy_strand_carrier_track_counts_by_family
+                        ),
+                        canonical_strand_carrier_values_by_family=(
+                            universal_k_monodromy_canonical_strand_carrier_values_by_family
                         ),
                         detector_track_initialization_rows=(
                             universal_k_detector_track_initialization_input_rows

@@ -124,6 +124,7 @@ from ybe_domination import (
     universal_k_canonical_fibre_label_identity_rows,
     universal_k_canonical_strand_carrier_residual_faithfulness_audit,
     universal_k_canonical_strand_carrier_rows,
+    universal_k_canonical_strand_carrier_rows_with_values,
     universal_k_canonical_strand_carrier_soundness_audit,
     universal_k_coordinate_identity_residual_faithfulness_audit,
     universal_k_fibre_label_identity_audit,
@@ -6245,6 +6246,65 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
                     {
                         row.carrier_soundness_witness
                         for row in strand_certificate.identity_row_objects
+                    },
+                    key=repr,
+                )
+            ),
+            (("strand_carrier_equations",),),
+        )
+
+        canonical_component = universal_k_canonical_strand_carrier_rows(interval)[0][2]
+        canonical_value_rows = universal_k_canonical_strand_carrier_rows_with_values(
+            interval,
+            ((canonical_component, 1),),
+        )
+        self.assertEqual(
+            canonical_value_rows,
+            (("*", 0, 1), ("*", 1, 1)),
+        )
+        canonical_carrier_family_audit = (
+            universal_k_endpoint_observer_builds_from_fixed_carrier_monodromy_by_family(
+                interval,
+                seed_entries,
+                endpoint_groups_by_family=(("U", group),),
+                word_potential_templates_by_family=(
+                    (
+                        "U",
+                        (
+                            (seed_key, ((u1, 1), (u0, -1))),
+                            (next_key, ((u0, 1), (u1, -1))),
+                        ),
+                    ),
+                ),
+                positive_state_rows_by_family=(("U", tuple(positive_state_rows)),),
+                canonical_strand_carrier_values_by_family=(
+                    ("U", ((canonical_component, 1),)),
+                ),
+                detector_track_initialization_rows=detector_rows,
+                endpoint_target_audits_by_family=(("U", endpoint_target),),
+                residual_faithfulness_theorems_by_family=(("U", residual_theorem),),
+            )
+        )
+
+        self.assertEqual(canonical_carrier_family_audit.failure_reasons, ())
+        canonical_build = dict(canonical_carrier_family_audit.build_rows_exact)["U"]
+        self.assertEqual(
+            set(row.endpoint_value for row in canonical_build.positive_rows),
+            {1},
+        )
+        canonical_certificate = (
+            canonical_build.telescoping_detector_audit.word_potential_certificate
+        )
+        self.assertIsInstance(
+            canonical_certificate,
+            UniversalKFixedCarrierWordPotentialCertificate,
+        )
+        self.assertEqual(
+            tuple(
+                sorted(
+                    {
+                        row.carrier_soundness_witness
+                        for row in canonical_certificate.identity_row_objects
                     },
                     key=repr,
                 )
@@ -17533,6 +17593,32 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             ),
             universal_k_monodromy_fixed_carrier_soundness_witnesses_by_family=(
                 ("U", {stale_key: ("constant_carrier_track",)}),
+            ),
+        )
+
+        family_build = audit.universal_k_endpoint_observer_family_build
+        self.assertIsNotNone(family_build)
+        self.assertEqual(family_build.covered_endpoint_families_exact, ("U",))
+        build = dict(family_build.build_rows_exact)["U"]
+        self.assertIsInstance(
+            build.telescoping_detector_audit.word_potential_certificate,
+            UniversalKFixedCarrierWordPotentialCertificate,
+        )
+        self.assertIn(
+            ("endpoint_observer_family_build_extra_families", ("U",)),
+            audit.routed_endpoint_obstruction_data,
+        )
+
+    def test_post_linear_function_derives_canonical_carrier_monodromy_observer(self):
+        interval = one_color_latin_unit_triangular_interval()
+        canonical_component = universal_k_canonical_strand_carrier_rows(interval)[0][2]
+        audit = post_linear_remaining_finite_system_audit(
+            interval,
+            universal_k_monodromy_endpoint_groups_by_family=(("U", cyclic_group(2)),),
+            universal_k_monodromy_word_potential_templates_by_family=(("U", ()),),
+            universal_k_monodromy_positive_state_rows_by_family=(("U", ()),),
+            universal_k_monodromy_canonical_strand_carrier_values_by_family=(
+                ("U", ((canonical_component, 1),)),
             ),
         )
 

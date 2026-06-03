@@ -37,6 +37,12 @@ The exact repair target is now stated in
 bottleneck interval, a fixed descent-separating readout, fixed external
 endpoint groups, a faithful reconstruction rule, and all-`n` `V_beta`
 endpoint witnesses.
+The current `codex/atom-inner-row-lift` branch also records a new closed
+subcase in `proofs/canonical_strand_carrier_subcase.md`: when the canonical
+physical-strand carrier relation is fibrewise injective, carrier preservation
+is residual-faithful for U/C/M endpoint observers.  The same note records why
+the non-injective/universal carrier branch remains part of the open endpoint
+observer problem rather than a completed proof.
 
 The original target was to produce exactly one final outcome:
 
