@@ -1488,6 +1488,12 @@ ledger cannot masquerade as an empty or partial proof.
 The standalone monodromy representation audit now uses the same row filter:
 valid signed rows define the endpoint-state permutations, while malformed
 entries are retained as `endpoint_monodromy_representation_malformed_rows`.
+It also has an explicit far-relation regression: if two disjoint positive
+local-context permutations fail to commute on the exact reachable seed states,
+the representation audit reports `monodromy_far_relation_mismatch` even when
+each individual context map is a valid permutation.  This protects the
+full-braid coherence gate at the finite monodromy layer, alongside the
+adjacent YBE relation check.
 The positive monodromy-coboundary route has also been audited for internal
 viability.  With the current full-domain checker and templates that contain
 only current longitude variables, every constant coboundary defect is forced
@@ -1587,6 +1593,10 @@ and residual faithfulness.
 A new guardrail regression checks this explicitly: canonical component values
 without endpoint-target and residual-faithfulness rows do not prove a family
 observer, even though they can derive the strand-carrier singleton domains.
+The fixed-carrier soundness witness list has also been tightened: opaque
+`reachable_carrier_domain_invariant` assertions are rejected until backed by
+an implemented finite invariant checker, leaving only locally verified
+constant-track, singleton-domain, and strand-carrier-equation witnesses.
 This removes another false endpoint closure and leaves the same local
 nontrivial observer-existence gap: construct residual-faithful U/C/M
 monodromy-coboundary observers for all surviving intervals, or produce a
@@ -1596,8 +1606,8 @@ normalized-law counterexample.
 
 At the latest verified snapshot:
 
-- `python -m unittest tests.test_nonlinear_overlap` passed with 193 tests;
-- `python -m unittest discover -s tests` passed with 732 tests;
+- `python -m unittest tests.test_nonlinear_overlap` passed with 194 tests;
+- `python -m unittest discover -s tests` passed with 733 tests;
 - `python -m compileall -q src tests tools` passed;
 - `node --check tools/build_reduction_audit_workbook.mjs` passed;
 - the proof log DOCX and reduction audit workbook were regenerated, and the

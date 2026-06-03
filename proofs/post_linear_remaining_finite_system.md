@@ -874,6 +874,12 @@ before building endpoint-state maps: malformed signed-row ledger entries are
 retained as `endpoint_monodromy_representation_malformed_rows`, while the
 permutation, adjacent-relation, and far-relation checks consume only
 well-formed signed endpoint rows.
+The far-relation check is tested independently from the adjacent YBE check: a
+row table whose individual context maps are all permutations still fails with
+`monodromy_far_relation_mismatch` when two disjoint positive context maps do
+not commute on the exact reachable seed states.  Thus full
+braid-presentation coherence is enforced at the endpoint-state monodromy
+layer before endpoint labels are considered.
 The retained build itself is now an internal consistency certificate, not only
 a container for two successful subaudits.  A proving
 `UniversalKEndpointObserverBuild` must have positive rows exactly equal to
@@ -2790,6 +2796,11 @@ than a constant-carrier track unless those independent certificates are also
 present.  The regression suite now checks that canonical values alone leave
 the endpoint family unproved with explicit missing-target and
 missing-residual-theorem reasons.
+The fixed-carrier checker also refuses an opaque
+`reachable_carrier_domain_invariant` witness token.  Prefix-sound carrier
+closure must be proved by a locally verified form, such as constant tracks,
+explicit singleton domains, or strand-carrier equations, until a real finite
+reachable-domain invariant checker is supplied.
 This does not prove that every surviving U/C/M interval admits such
 observers; it gives the exact finite local checker and integration path that
 any proposed observer must pass.

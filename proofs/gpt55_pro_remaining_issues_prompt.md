@@ -1481,6 +1481,10 @@ the same rule before constructing the finite permutation representation:
 malformed signed-row entries are retained as
 `endpoint_monodromy_representation_malformed_rows`, and only genuine signed
 rows may contribute context/state maps for adjacent and far relations.
+The far relation is an independent finite gate: if every disjoint context map
+is a permutation but two such maps do not commute on the exact reachable seed
+states, the audit reports `monodromy_far_relation_mismatch` and the observer
+does not close.
 Moreover, the concrete endpoint group used for signed-row multiplication must
 match the group-valued target ledger: its order must equal the product of the
 listed endpoint-group orders for the active group-targeted families.  Symmetric
@@ -3525,15 +3529,19 @@ M=((m_{0,0},m_{0,1}),...,(m_{R_E-1,0},m_{R_E-1,1}))
 
 records the active fixed carrier pair for every detector track at that row.
 The row must also carry a soundness witness proving that every carrier tuple
-actually seen by that row along any braid prefix lies in `C_e`.  Valid
-all-`n` soundness witnesses include:
+actually seen by that row along any braid prefix lies in `C_e`.  The current
+finite checker accepts only locally verified all-`n` witness forms:
 
 ```text
 constant_carrier_track,
 explicit_singleton_carrier_domain,
-reachable_carrier_domain_invariant,
 strand_carrier_equations.
 ```
+
+A bare `reachable_carrier_domain_invariant` string is not accepted as a
+proof.  Such an invariant must first be implemented as a finite checker, or
+reduced to one of the locally verified witness forms above; otherwise it is
+exactly the missing prefix-sound carrier-closure theorem.
 
 The strand-carrier witness is the finite local invariant:
 

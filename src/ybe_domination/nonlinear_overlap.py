@@ -207,7 +207,6 @@ _UNIVERSAL_K_FIXED_CARRIER_SOUNDNESS_WITNESSES = frozenset(
     (
         "constant_carrier_track",
         "explicit_singleton_carrier_domain",
-        "reachable_carrier_domain_invariant",
         "strand_carrier_equations",
     )
 )

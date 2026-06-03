@@ -106,6 +106,10 @@ the universal-carrier branch.  In particular, when the canonical relation is
 universal, this ledger is only constant-carrier input unless a separate
 endpoint target and residual-faithfulness certificate is supplied; it cannot
 close an endpoint family by itself.
+Similarly, a claimed reachable carrier-domain invariant is not a proof token
+by name alone.  The finite checker currently accepts only locally verified
+carrier-soundness witnesses, such as constant tracks, explicit singleton
+domains, and strand-carrier equations.
 
 ## Remaining open branch
 

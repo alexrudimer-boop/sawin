@@ -5685,6 +5685,60 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             audit.failure_reasons,
         )
 
+    def test_endpoint_monodromy_representation_rejects_far_relation_mismatch(self):
+        context_a = ("U", "*", "*", 0, 0)
+        context_b = ("U", "*", "*", 1, 1)
+        presentation = UniversalKEndpointMonodromyPresentation(
+            expected_endpoint_families=("U",),
+            contexts=(context_a, context_b),
+            far_commutativity_relations=(((context_a, context_b), (context_b, context_a)),),
+        )
+        seed_a = ("*", "*", "left_constant_map_universal_kernel", "a")
+        seed_b = ("*", "*", "left_constant_map_universal_kernel", "b")
+        seed_c = ("*", "*", "left_constant_map_universal_kernel", "c")
+        reachable = (("U", seed_a), ("U", seed_b), ("U", seed_c))
+
+        def row(context, source, target):
+            _family, left_color, right_color, input_left, input_right = context
+            return UniversalKSignedEndpointGeneratorRow(
+                endpoint_family="U",
+                seed_state=source,
+                sign=1,
+                left_color=left_color,
+                right_color=right_color,
+                input_left=input_left,
+                input_right=input_right,
+                output_left=input_left,
+                output_right=input_right,
+                next_seed_state=target,
+                endpoint_value=0,
+            )
+
+        rows = (
+            row(context_a, seed_a, seed_b),
+            row(context_a, seed_b, seed_c),
+            row(context_a, seed_c, seed_a),
+            row(context_b, seed_a, seed_b),
+            row(context_b, seed_b, seed_a),
+            row(context_b, seed_c, seed_c),
+        )
+        audit = universal_k_endpoint_monodromy_representation_audit(
+            presentation,
+            reachable,
+            rows,
+        )
+
+        self.assertEqual(audit.context_map_failures, ())
+        self.assertFalse(audit.proves_monodromy_representation)
+        self.assertIn(
+            "monodromy_far_relation_mismatch",
+            tuple(failure[1] for failure in audit.relation_failures),
+        )
+        self.assertIn(
+            "endpoint_monodromy_representation_relation_failures",
+            audit.failure_reasons,
+        )
+
     def test_endpoint_monodromy_representation_rejects_malformed_reachable_states(self):
         context = ("U", "*", "*", 0, 0)
         presentation = UniversalKEndpointMonodromyPresentation(
@@ -11115,6 +11169,22 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertIn(
             "unknown_fixed_carrier_soundness_witness",
             tuple(failure[1] for failure in bad_domain.carrier_domain_failures),
+        )
+
+        opaque_invariant = replace(
+            empty_domain,
+            identity_rows=(
+                replace(
+                    empty_domain.identity_row_objects[0],
+                    carrier_domain=(((group.identity, group.identity),),),
+                    carrier_soundness_witness=("reachable_carrier_domain_invariant",),
+                ),
+            ),
+        )
+        self.assertFalse(opaque_invariant.carrier_domains_sound)
+        self.assertIn(
+            "unknown_fixed_carrier_soundness_witness",
+            tuple(failure[1] for failure in opaque_invariant.carrier_domain_failures),
         )
 
     def test_fixed_carrier_certificate_checks_declared_carrier_ledgers(self):
