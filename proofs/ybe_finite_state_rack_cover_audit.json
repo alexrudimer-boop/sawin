@@ -1,0 +1,64 @@
+{
+  "case_keys": [
+    "coordinatewise_rack_quotient_obstruction",
+    "fiber_label_first_coordinate_obstruction",
+    "rack_shadow_identity_gap",
+    "label_cocycle_equation",
+    "finite_state_decoder_criterion",
+    "structure_group_same_copy_obstruction"
+  ],
+  "cases": [
+    {
+      "consequence": "surjectivity forces rho_y(x)=x for every x,y, so general YBE solutions cannot be covered coordinatewise by a rack",
+      "key": "coordinatewise_rack_quotient_obstruction",
+      "role": "negative_coordinatewise",
+      "statement": "if pi:Y -> X is a coordinatewise quotient from a rack switch R_Y(a,b)=(a > b,a), then pi(a)=rho_{pi(b)}(pi(a)) for all a,b"
+    },
+    {
+      "consequence": "left-degenerate solutions are excluded immediately, and even nondegenerate solutions face a rack-shadow identity stronger than the YBE identity",
+      "key": "fiber_label_first_coordinate_obstruction",
+      "role": "negative_fiber_label",
+      "statement": "a fibre-labelled operation (x,s)>(y,t) with first coordinate lambda_x(y) requires the maps lambda_x to be bijective and cannot repair first-coordinate identities using labels"
+    },
+    {
+      "consequence": "the copied rack strand would need to carry future operator lambda_{rho_y(x)} even though it remains the old x-strand",
+      "key": "rack_shadow_identity_gap",
+      "role": "operator_gap",
+      "statement": "rack self-distributivity forces lambda_x lambda_y = lambda_{lambda_x(y)} lambda_x, while YBE gives lambda_x lambda_y = lambda_{lambda_x(y)} lambda_{rho_y(x)}"
+    },
+    {
+      "consequence": "finite labels are extra data; the YBE equations do not by themselves supply the required alpha-cocycle",
+      "key": "label_cocycle_equation",
+      "role": "remaining_label_problem",
+      "statement": "if the first-coordinate gap vanishes, the fibre labels must still solve a nonabelian rack cocycle equation for alpha"
+    },
+    {
+      "consequence": "finite rack domination by a direct cover reduces to a finite transducer/cocycle problem plus surjectivity of every decoded map Phi_n",
+      "key": "finite_state_decoder_criterion",
+      "role": "positive_reformulation",
+      "statement": "a marked quotient can only evade the copy obstruction by using a finite decoder state q with maps d:Q x Y -> X and tau:Q x Y -> Q satisfying the local two-symbol equations"
+    },
+    {
+      "consequence": "without finite decoder context, the group-rack approach also cannot make the copied x-strand represent rho_y(x)",
+      "key": "structure_group_same_copy_obstruction",
+      "role": "group_rack_warning",
+      "statement": "a finite quotient of the structure group used as a conjugation rack has the same copied second output g in (g,h)->(ghg^-1,g)"
+    }
+  ],
+  "coordinatewise_obstruction_formula": "pi(a)=rho_{pi(b)}(pi(a)); surjectivity implies rho_y(x)=x",
+  "coordinatewise_rack_quotient_obstruction_identified": true,
+  "decoder_equations_formula": "d(q,a > b)=lambda_{d(q,a)}(d(tau(q,a),b)); d(tau(q,a > b),a)=rho_{d(tau(q,a),b)}(d(q,a)); tau(tau(q,a > b),a)=tau(tau(q,a),b)",
+  "decoder_surjectivity_requirement_recorded": true,
+  "fiber_label_first_coordinate_obstruction_identified": true,
+  "finite_state_decoder_criterion_recorded": true,
+  "label_cocycle_equation_recorded": true,
+  "label_cocycle_formula": "alpha_{x,lambda_y(z)}(s,alpha_{y,z}(t,u)) = alpha_{lambda_x(y),lambda_x(z)}(alpha_{x,y}(s,t),alpha_{x,z}(s,u))",
+  "rack_shadow_identity_formula": "lambda_x lambda_y = lambda_{lambda_x(y)} lambda_x",
+  "rack_shadow_identity_recorded": true,
+  "rack_switch_formula": "R_Y(a,b)=(a > b,a)",
+  "records_finite_state_rack_cover_criterion": true,
+  "right_update_defect_formula": "Delta(x,y)=lambda_{rho_y(x)} lambda_x^-1",
+  "right_update_defect_identified": true,
+  "structure_group_obstruction_recorded": true,
+  "ybe_twisted_identity_formula": "lambda_x lambda_y = lambda_{lambda_x(y)} lambda_{rho_y(x)}"
+}

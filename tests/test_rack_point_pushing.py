@@ -24,6 +24,7 @@ from ybe_domination import (
     PullbackCoskeletalCriterionAudit,
     YBEBrunnianDerivativeGateAudit,
     YBECrossedSquareResidualAudit,
+    YBEFiniteStateRackCoverAudit,
     YBECoskeletalMechanismAudit,
     PrefixVerticalPeifferCubeTransportAudit,
     PrefixVerticalPeifferSquareAudit,
@@ -49,6 +50,7 @@ from ybe_domination import (
     pullback_coskeletal_criterion_audit,
     ybe_brunnian_derivative_gate_audit,
     ybe_crossed_square_residual_audit,
+    ybe_finite_state_rack_cover_audit,
     ybe_coskeletal_mechanism_audit,
     rack_point_pushing_operator_label_audit,
     rack_solution,
@@ -831,6 +833,40 @@ class RackPointPushingOperatorLabelTests(unittest.TestCase):
         )
         self.assertEqual(audit.cases[0].role, "model")
         self.assertEqual(audit.cases[-1].role, "negative_route")
+
+    def test_ybe_finite_state_rack_cover_rejects_coordinatewise_shortcut(self):
+        audit = ybe_finite_state_rack_cover_audit()
+
+        self.assertIsInstance(audit, YBEFiniteStateRackCoverAudit)
+        self.assertTrue(audit.records_finite_state_rack_cover_criterion)
+        self.assertTrue(audit.coordinatewise_rack_quotient_obstruction_identified)
+        self.assertTrue(audit.fiber_label_first_coordinate_obstruction_identified)
+        self.assertTrue(audit.rack_shadow_identity_recorded)
+        self.assertTrue(audit.label_cocycle_equation_recorded)
+        self.assertTrue(audit.finite_state_decoder_criterion_recorded)
+        self.assertTrue(audit.decoder_surjectivity_requirement_recorded)
+        self.assertTrue(audit.structure_group_obstruction_recorded)
+        self.assertTrue(audit.right_update_defect_identified)
+        self.assertEqual(audit.rack_switch_formula, "R_Y(a,b)=(a > b,a)")
+        self.assertIn("rho_y(x)=x", audit.coordinatewise_obstruction_formula)
+        self.assertIn("lambda_x lambda_y", audit.rack_shadow_identity_formula)
+        self.assertIn("lambda_{rho_y(x)}", audit.ybe_twisted_identity_formula)
+        self.assertIn("alpha_{x,lambda_y(z)}", audit.label_cocycle_formula)
+        self.assertIn("d(tau(q,a > b),a)", audit.decoder_equations_formula)
+        self.assertIn("Delta(x,y)", audit.right_update_defect_formula)
+        self.assertEqual(
+            audit.case_keys,
+            (
+                "coordinatewise_rack_quotient_obstruction",
+                "fiber_label_first_coordinate_obstruction",
+                "rack_shadow_identity_gap",
+                "label_cocycle_equation",
+                "finite_state_decoder_criterion",
+                "structure_group_same_copy_obstruction",
+            ),
+        )
+        self.assertEqual(audit.cases[0].role, "negative_coordinatewise")
+        self.assertEqual(audit.cases[-1].role, "group_rack_warning")
 
     def test_prefix_point_forgetting_restriction_records_vertical_rows(self):
         solution = FiniteBraidedSet(

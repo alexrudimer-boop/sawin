@@ -878,6 +878,71 @@ class YBECrossedSquareResidualAudit:
 
 
 @dataclass(frozen=True)
+class YBEFiniteStateRackCoverCase:
+    """One row in the finite-state rack-cover obstruction criterion."""
+
+    key: str
+    role: str
+    statement: str
+    consequence: str
+
+
+@dataclass(frozen=True)
+class YBEFiniteStateRackCoverAudit:
+    """Finite-state decoder criterion for marked rack covers of YBE actions."""
+
+    coordinatewise_rack_quotient_obstruction_identified: bool
+    fiber_label_first_coordinate_obstruction_identified: bool
+    rack_shadow_identity_recorded: bool
+    label_cocycle_equation_recorded: bool
+    finite_state_decoder_criterion_recorded: bool
+    decoder_surjectivity_requirement_recorded: bool
+    structure_group_obstruction_recorded: bool
+    right_update_defect_identified: bool
+    rack_switch_formula: str
+    coordinatewise_obstruction_formula: str
+    rack_shadow_identity_formula: str
+    ybe_twisted_identity_formula: str
+    label_cocycle_formula: str
+    decoder_equations_formula: str
+    right_update_defect_formula: str
+    cases: Tuple[YBEFiniteStateRackCoverCase, ...]
+
+    @property
+    def case_keys(self) -> Tuple[str, ...]:
+        return tuple(case.key for case in self.cases)
+
+    @property
+    def records_finite_state_rack_cover_criterion(self) -> bool:
+        return (
+            self.coordinatewise_rack_quotient_obstruction_identified
+            and self.fiber_label_first_coordinate_obstruction_identified
+            and self.rack_shadow_identity_recorded
+            and self.label_cocycle_equation_recorded
+            and self.finite_state_decoder_criterion_recorded
+            and self.decoder_surjectivity_requirement_recorded
+            and self.structure_group_obstruction_recorded
+            and self.right_update_defect_identified
+            and "R_Y(a,b)=(a > b,a)" in self.rack_switch_formula
+            and "rho_y(x)=x" in self.coordinatewise_obstruction_formula
+            and "lambda_x lambda_y" in self.rack_shadow_identity_formula
+            and "lambda_{rho_y(x)}" in self.ybe_twisted_identity_formula
+            and "alpha_{x,lambda_y(z)}" in self.label_cocycle_formula
+            and "d(tau(q,a > b),a)" in self.decoder_equations_formula
+            and "Delta(x,y)" in self.right_update_defect_formula
+            and self.case_keys
+            == (
+                "coordinatewise_rack_quotient_obstruction",
+                "fiber_label_first_coordinate_obstruction",
+                "rack_shadow_identity_gap",
+                "label_cocycle_equation",
+                "finite_state_decoder_criterion",
+                "structure_group_same_copy_obstruction",
+            )
+        )
+
+
+@dataclass(frozen=True)
 class PrefixPointForgettingRestrictionRow:
     """One marked generator comparison under stationary-strand deletion."""
 
@@ -4841,6 +4906,132 @@ def ybe_crossed_square_residual_audit() -> YBECrossedSquareResidualAudit:
         obstruction_invariant_formula=(
             "chi_I: K -> Q_I kills E_{p,q}, im kappa, and "
             "Pi^sharp V_{p,q,B}^{I,Br}, but chi_I(a_I) != 1"
+        ),
+        cases=cases,
+    )
+
+
+def ybe_finite_state_rack_cover_audit() -> YBEFiniteStateRackCoverAudit:
+    """Record the finite-state criterion for direct rack-cover attempts.
+
+    A coordinatewise rack quotient cannot model a general bijective YBE
+    solution because a rack switch copies one strand while a YBE switch updates
+    both strands.  The remaining possible direct route is a marked quotient
+    with a finite decoder state; this audit records the local equations such a
+    decoder must satisfy.
+    """
+
+    cases = (
+        YBEFiniteStateRackCoverCase(
+            key="coordinatewise_rack_quotient_obstruction",
+            role="negative_coordinatewise",
+            statement=(
+                "if pi:Y -> X is a coordinatewise quotient from a rack switch "
+                "R_Y(a,b)=(a > b,a), then pi(a)=rho_{pi(b)}(pi(a)) for all "
+                "a,b"
+            ),
+            consequence=(
+                "surjectivity forces rho_y(x)=x for every x,y, so general "
+                "YBE solutions cannot be covered coordinatewise by a rack"
+            ),
+        ),
+        YBEFiniteStateRackCoverCase(
+            key="fiber_label_first_coordinate_obstruction",
+            role="negative_fiber_label",
+            statement=(
+                "a fibre-labelled operation (x,s)>(y,t) with first coordinate "
+                "lambda_x(y) requires the maps lambda_x to be bijective and "
+                "cannot repair first-coordinate identities using labels"
+            ),
+            consequence=(
+                "left-degenerate solutions are excluded immediately, and even "
+                "nondegenerate solutions face a rack-shadow identity stronger "
+                "than the YBE identity"
+            ),
+        ),
+        YBEFiniteStateRackCoverCase(
+            key="rack_shadow_identity_gap",
+            role="operator_gap",
+            statement=(
+                "rack self-distributivity forces lambda_x lambda_y = "
+                "lambda_{lambda_x(y)} lambda_x, while YBE gives "
+                "lambda_x lambda_y = lambda_{lambda_x(y)} lambda_{rho_y(x)}"
+            ),
+            consequence=(
+                "the copied rack strand would need to carry future operator "
+                "lambda_{rho_y(x)} even though it remains the old x-strand"
+            ),
+        ),
+        YBEFiniteStateRackCoverCase(
+            key="label_cocycle_equation",
+            role="remaining_label_problem",
+            statement=(
+                "if the first-coordinate gap vanishes, the fibre labels must "
+                "still solve a nonabelian rack cocycle equation for alpha"
+            ),
+            consequence=(
+                "finite labels are extra data; the YBE equations do not by "
+                "themselves supply the required alpha-cocycle"
+            ),
+        ),
+        YBEFiniteStateRackCoverCase(
+            key="finite_state_decoder_criterion",
+            role="positive_reformulation",
+            statement=(
+                "a marked quotient can only evade the copy obstruction by "
+                "using a finite decoder state q with maps d:Q x Y -> X and "
+                "tau:Q x Y -> Q satisfying the local two-symbol equations"
+            ),
+            consequence=(
+                "finite rack domination by a direct cover reduces to a finite "
+                "transducer/cocycle problem plus surjectivity of every decoded "
+                "map Phi_n"
+            ),
+        ),
+        YBEFiniteStateRackCoverCase(
+            key="structure_group_same_copy_obstruction",
+            role="group_rack_warning",
+            statement=(
+                "a finite quotient of the structure group used as a conjugation "
+                "rack has the same copied second output g in (g,h)->(ghg^-1,g)"
+            ),
+            consequence=(
+                "without finite decoder context, the group-rack approach also "
+                "cannot make the copied x-strand represent rho_y(x)"
+            ),
+        ),
+    )
+    return YBEFiniteStateRackCoverAudit(
+        coordinatewise_rack_quotient_obstruction_identified=True,
+        fiber_label_first_coordinate_obstruction_identified=True,
+        rack_shadow_identity_recorded=True,
+        label_cocycle_equation_recorded=True,
+        finite_state_decoder_criterion_recorded=True,
+        decoder_surjectivity_requirement_recorded=True,
+        structure_group_obstruction_recorded=True,
+        right_update_defect_identified=True,
+        rack_switch_formula="R_Y(a,b)=(a > b,a)",
+        coordinatewise_obstruction_formula=(
+            "pi(a)=rho_{pi(b)}(pi(a)); surjectivity implies rho_y(x)=x"
+        ),
+        rack_shadow_identity_formula=(
+            "lambda_x lambda_y = lambda_{lambda_x(y)} lambda_x"
+        ),
+        ybe_twisted_identity_formula=(
+            "lambda_x lambda_y = lambda_{lambda_x(y)} lambda_{rho_y(x)}"
+        ),
+        label_cocycle_formula=(
+            "alpha_{x,lambda_y(z)}(s,alpha_{y,z}(t,u)) = "
+            "alpha_{lambda_x(y),lambda_x(z)}("
+            "alpha_{x,y}(s,t),alpha_{x,z}(s,u))"
+        ),
+        decoder_equations_formula=(
+            "d(q,a > b)=lambda_{d(q,a)}(d(tau(q,a),b)); "
+            "d(tau(q,a > b),a)=rho_{d(tau(q,a),b)}(d(q,a)); "
+            "tau(tau(q,a > b),a)=tau(tau(q,a),b)"
+        ),
+        right_update_defect_formula=(
+            "Delta(x,y)=lambda_{rho_y(x)} lambda_x^-1"
         ),
         cases=cases,
     )

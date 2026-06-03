@@ -2322,3 +2322,84 @@ Brunnian Moore element `a_I`.  So the next decisive task is no longer simply
 finding Brunnian point-pushing in finite YBE images; it is proving uniform
 Peiffer-complete vanishing after finite labels, or building such a
 crossed-square homology invariant for every fixed finite base.
+
+## YBE Finite-State Rack-Cover Criterion
+
+The note `proofs/ybe_finite_state_rack_cover_criterion.md` and generated
+audit `proofs/ybe_finite_state_rack_cover_audit.md` rule out the tempting
+coordinatewise shortcut for the MathOverflow problem.  With rack convention
+
+```text
+R_Y(a,b)=(a > b,a),
+```
+
+a coordinatewise quotient `pi:Y -> X` would force
+
+```text
+pi(a)=rho_{pi(b)}(pi(a))
+```
+
+for all `a,b`.  Surjectivity therefore implies
+
+```text
+rho_y(x)=x
+```
+
+for every `x,y in X`.  The opposite rack convention analogously forces the
+left action to be trivial.  Thus a general finite bijective YBE solution
+cannot be covered by simply taking a finite rack over `X` and projecting each
+coordinate independently.
+
+The fibre-labelled attempt
+
+```text
+(x,s) > (y,t) = (lambda_x(y), alpha_{x,y}(s,t))
+```
+
+also has a first-coordinate obstruction.  Rack self-distributivity forces
+
+```text
+lambda_x lambda_y =
+lambda_{lambda_x(y)} lambda_x,
+```
+
+whereas the YBE relation gives
+
+```text
+lambda_x lambda_y =
+lambda_{lambda_x(y)} lambda_{rho_y(x)}.
+```
+
+So the copied rack strand would need to carry the future operator of the
+updated YBE strand `rho_y(x)`.  Labels cannot repair this equality if the
+first coordinate is decoded coordinatewise; even favorable cases still need a
+finite nonabelian rack cocycle `alpha`.
+
+The exact direct-cover positive route is a finite-state decoder.  One needs a
+finite rack `Y`, a finite decoder state set `Q`, maps
+
+```text
+d:Q x Y -> X,
+tau:Q x Y -> Q,
+```
+
+and surjective decoded maps `Phi_n:Y^n -> X^n`, such that for every
+`q in Q` and `a,b in Y`,
+
+```text
+d(q,a > b)=lambda_{d(q,a)}(d(tau(q,a),b)),
+d(tau(q,a > b),a)=rho_{d(tau(q,a),b)}(d(q,a)),
+tau(tau(q,a > b),a)=tau(tau(q,a),b).
+```
+
+This criterion reframes the direct rack-cover question as a finite-state
+cocycle problem.  The obstruction is the right-update defect
+
+```text
+Delta(x,y)=lambda_{rho_y(x)} lambda_x^-1
+```
+
+or its noninvertible analogue.  Finite rack domination may still be true, but
+it cannot be proved by a naive coordinatewise rack cover; the finite labels
+must provide context that coherently reinterprets copied rack strands after
+crossings.
