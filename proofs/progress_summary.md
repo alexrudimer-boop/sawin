@@ -1707,6 +1707,18 @@ towers.  It also fixes the first obstruction-prefix generators
 `alpha_{i,4}` and `alpha_{i,5}` for the `Q_X(3)` and `Q_X(4)` pressure tests,
 so future negative attempts must defeat every fixed finite group-Hurwitz base
 plus bounded-exponent vertical kernel, not merely exhibit unbounded order.
+The companion pressure-test note
+`proofs/finite_augmented_artin_envelope_pressure_tests.md` and generated
+audit `proofs/finite_augmented_artin_envelope_pressure_audit.md` now list the
+true-or-false mechanisms for this missing lemma.  Positive routes must make
+either translation-pair labels `(lambda_x,rho_x)` or a finite
+structure/derived-action quotient into a well-defined label-Hurwitz model
+with coordinatewise vertical action in one fixed finite group.  Negative
+routes must realize one of four finite mechanisms in an actual finite YBE
+table: non-conjugation-stable labels, ordered-neighbor memory inside the
+label kernel, point-forgetting incompatibility of vertical kernels, or a
+genuinely unbounded vertical kernel.  The ledger explicitly excludes
+whole-image exponent growth as a valid obstruction.
 
 The semigroup/Green route has also been narrowed to a precise Rees rectangle
 flatness target.  Ordinary Green/Rees theory leaves a sandwich-matrix

@@ -5,8 +5,11 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from ybe_domination import (
+    FiniteAugmentedArtinEnvelopePressureAudit,
+    FiniteAugmentedArtinEnvelopePressureCase,
     FiniteAugmentedArtinEnvelopeRouteAudit,
     PointPushingGeneratorRow,
+    finite_augmented_artin_envelope_pressure_audit,
     finite_augmented_artin_envelope_route_audit,
     rack_point_pushing_operator_label_audit,
     rack_solution,
@@ -91,6 +94,48 @@ class RackPointPushingOperatorLabelTests(unittest.TestCase):
                 (4, 3, (4, 3, 3, -4)),
                 (4, 4, (4, 4)),
             ],
+        )
+
+    def test_augmented_artin_envelope_pressure_audit_lists_mechanisms(self):
+        audit = finite_augmented_artin_envelope_pressure_audit()
+
+        self.assertIsInstance(audit, FiniteAugmentedArtinEnvelopePressureAudit)
+        self.assertTrue(audit.route.records_route_one_pressure_test)
+        self.assertEqual(audit.case_count, 7)
+        self.assertEqual(audit.positive_obligation_count, 3)
+        self.assertEqual(audit.failure_mechanism_count, 4)
+        self.assertTrue(audit.records_true_or_false_mechanisms)
+        self.assertTrue(
+            all(
+                isinstance(case, FiniteAugmentedArtinEnvelopePressureCase)
+                for case in audit.cases
+            )
+        )
+        self.assertEqual(
+            audit.case_keys,
+            (
+                "rack_operator_conjugation_baseline",
+                "translation_pair_label_candidate",
+                "finite_structure_action_candidate",
+                "nonconjugation_stable_label_failure",
+                "ordered_neighbor_memory_failure",
+                "point_forgetting_incompatibility",
+                "unbounded_vertical_kernel_failure",
+            ),
+        )
+        self.assertNotIn("whole_exponent_growth", audit.case_keys)
+        self.assertEqual(
+            {
+                case.key
+                for case in audit.cases
+                if case.role == "negative_mechanism"
+            },
+            {
+                "nonconjugation_stable_label_failure",
+                "ordered_neighbor_memory_failure",
+                "point_forgetting_incompatibility",
+                "unbounded_vertical_kernel_failure",
+            },
         )
 
 
