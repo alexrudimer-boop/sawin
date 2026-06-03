@@ -54,6 +54,8 @@ EXTRA_MD.append(ROOT / "proofs" / "finite_augmented_artin_envelope_pressure_test
 EXTRA_MD.append(ROOT / "proofs" / "finite_augmented_artin_envelope_pressure_audit.md")
 EXTRA_MD.append(ROOT / "proofs" / "finite_derived_hurwitz_envelope.md")
 EXTRA_MD.append(ROOT / "proofs" / "derived_hurwitz_envelope_audit.md")
+EXTRA_MD.append(ROOT / "proofs" / "degenerate_preimage_memory_gate.md")
+EXTRA_MD.append(ROOT / "proofs" / "degenerate_preimage_memory_audit.md")
 EXTRA_MD.append(ROOT / "proofs" / "point_pushing_action_image_variety.md")
 EXTRA_MD.append(ROOT / "proofs" / "point_pushing_fixed_variety_domination.md")
 EXTRA_MD.append(ROOT / "proofs" / "last_strand_law_gap_audit.md")

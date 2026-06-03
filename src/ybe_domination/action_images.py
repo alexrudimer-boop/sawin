@@ -230,6 +230,59 @@ class DerivedHurwitzEnvelopeAudit:
 
 
 @dataclass(frozen=True)
+class PreimageMemoryFibre:
+    """One fibre of the degenerate derived-operation preimage relation."""
+
+    derived_left_label: object
+    original_left_label: object
+    preimages: Tuple[object, ...]
+    candidate_outputs: Tuple[Tuple[object, object], ...]
+    status: str
+
+
+@dataclass(frozen=True)
+class DegeneratePreimageMemoryAudit:
+    """Audit the finite edge-memory repair for preimage ambiguity."""
+
+    element_count: int
+    visible_pair_count: int
+    edge_memory_state_count: int
+    singleton_fibre_count: int
+    missing_fibre_count: int
+    multiple_same_candidate_count: int
+    ambiguous_candidate_count: int
+    visible_derived_operation_total: bool
+    finite_edge_memory_repairs_two_strand: bool
+    tower_consistency_status: str
+    recorded_fibres: Tuple[PreimageMemoryFibre, ...]
+
+    @property
+    def hidden_preimage_memory_needed(self) -> bool:
+        return (
+            self.missing_fibre_count
+            + self.multiple_same_candidate_count
+            + self.ambiguous_candidate_count
+            > 0
+        )
+
+    @property
+    def visible_compression_is_safe(self) -> bool:
+        return (
+            self.visible_derived_operation_total
+            and self.missing_fibre_count == 0
+            and self.ambiguous_candidate_count == 0
+        )
+
+    @property
+    def records_degenerate_memory_gate(self) -> bool:
+        return (
+            self.edge_memory_state_count == self.element_count * self.element_count
+            and self.finite_edge_memory_repairs_two_strand
+            and self.tower_consistency_status == "requires_triple_quadruple_check"
+        )
+
+
+@dataclass(frozen=True)
 class LawBraidActionCertificate:
     braid_index: int
     tuple_count: int
@@ -2010,6 +2063,82 @@ def derived_hurwitz_envelope_audit(
         interior_forgetting_unaugmented_matches=interior_forgetting,
         prefix_left_group_order=prefix_group_order,
         recorded_preimage_failures=tuple(failures),
+    )
+
+
+def degenerate_preimage_memory_audit(
+    solution: FiniteBraidedSet,
+    *,
+    max_recorded_fibres: int = 12,
+) -> DegeneratePreimageMemoryAudit:
+    """Audit the canonical finite edge memory for degenerate preimages.
+
+    A visible derived pair ``(a,b)`` asks for preimages ``y`` with
+    ``lambda_b(y)=a``.  The nondegenerate derived rack route works exactly
+    when every visible pair has one such ``y``.  The finite local repair is
+    to retain the edge-memory state ``(a,b,y)`` for each actual pair
+    ``(b,y)``.  This always has ``|X|^2`` states, but it is only a two-strand
+    repair; a tower proof still needs triple/quadruple compatibility.
+    """
+
+    elements = tuple(solution.elements)
+    fibres = []
+    singleton = 0
+    missing = 0
+    multiple_same = 0
+    ambiguous = 0
+    for derived_left, original_left in product(elements, repeat=2):
+        preimages = tuple(
+            value
+            for value in elements
+            if solution.R[(original_left, value)][0] == derived_left
+        )
+        candidates = tuple(
+            (
+                preimage,
+                _left_translate(
+                    solution,
+                    derived_left,
+                    solution.R[(original_left, preimage)][1],
+                ),
+            )
+            for preimage in preimages
+        )
+        if len(preimages) == 1:
+            status = "singleton"
+            singleton += 1
+        elif not preimages:
+            status = "missing"
+            missing += 1
+        elif len({candidate for _preimage, candidate in candidates}) == 1:
+            status = "multiple_same_candidate"
+            multiple_same += 1
+        else:
+            status = "ambiguous_candidates"
+            ambiguous += 1
+        if status != "singleton" and len(fibres) < max_recorded_fibres:
+            fibres.append(
+                PreimageMemoryFibre(
+                    derived_left_label=derived_left,
+                    original_left_label=original_left,
+                    preimages=preimages,
+                    candidate_outputs=candidates,
+                    status=status,
+                )
+            )
+    visible_total = missing == 0 and ambiguous == 0
+    return DegeneratePreimageMemoryAudit(
+        element_count=len(elements),
+        visible_pair_count=len(elements) * len(elements),
+        edge_memory_state_count=len(elements) * len(elements),
+        singleton_fibre_count=singleton,
+        missing_fibre_count=missing,
+        multiple_same_candidate_count=multiple_same,
+        ambiguous_candidate_count=ambiguous,
+        visible_derived_operation_total=visible_total,
+        finite_edge_memory_repairs_two_strand=True,
+        tower_consistency_status="requires_triple_quadruple_check",
+        recorded_fibres=tuple(fibres),
     )
 
 

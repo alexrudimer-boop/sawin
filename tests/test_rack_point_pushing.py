@@ -5,12 +5,14 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from ybe_domination import (
+    DegeneratePreimageMemoryAudit,
     DerivedHurwitzEnvelopeAudit,
     FiniteAugmentedArtinEnvelopePressureAudit,
     FiniteAugmentedArtinEnvelopePressureCase,
     FiniteAugmentedArtinEnvelopeRouteAudit,
     FiniteBraidedSet,
     PointPushingGeneratorRow,
+    degenerate_preimage_memory_audit,
     derived_hurwitz_envelope_audit,
     finite_augmented_artin_envelope_pressure_audit,
     finite_augmented_artin_envelope_route_audit,
@@ -187,6 +189,55 @@ class RackPointPushingOperatorLabelTests(unittest.TestCase):
         self.assertIn(
             audit.recorded_preimage_failures[0].kind,
             {"missing_preimage", "multiple_preimages_same_candidate"},
+        )
+
+    def test_degenerate_preimage_memory_audit_accepts_singleton_fibres(self):
+        solution = FiniteBraidedSet(
+            (0, 1),
+            {
+                (0, 0): (1, 0),
+                (0, 1): (0, 0),
+                (1, 0): (1, 1),
+                (1, 1): (0, 1),
+            },
+        )
+
+        audit = degenerate_preimage_memory_audit(solution)
+
+        self.assertIsInstance(audit, DegeneratePreimageMemoryAudit)
+        self.assertEqual(audit.edge_memory_state_count, 4)
+        self.assertEqual(audit.singleton_fibre_count, 4)
+        self.assertEqual(audit.missing_fibre_count, 0)
+        self.assertEqual(audit.multiple_same_candidate_count, 0)
+        self.assertEqual(audit.ambiguous_candidate_count, 0)
+        self.assertFalse(audit.hidden_preimage_memory_needed)
+        self.assertTrue(audit.visible_compression_is_safe)
+        self.assertTrue(audit.records_degenerate_memory_gate)
+
+    def test_degenerate_preimage_memory_audit_records_missing_memory_gate(self):
+        solution = FiniteBraidedSet(
+            (0, 1),
+            {
+                (0, 0): (0, 0),
+                (0, 1): (0, 1),
+                (1, 0): (1, 0),
+                (1, 1): (1, 1),
+            },
+        )
+
+        audit = degenerate_preimage_memory_audit(solution)
+
+        self.assertEqual(audit.edge_memory_state_count, 4)
+        self.assertEqual(audit.singleton_fibre_count, 0)
+        self.assertEqual(audit.missing_fibre_count, 2)
+        self.assertEqual(audit.multiple_same_candidate_count, 2)
+        self.assertEqual(audit.ambiguous_candidate_count, 0)
+        self.assertTrue(audit.hidden_preimage_memory_needed)
+        self.assertFalse(audit.visible_compression_is_safe)
+        self.assertTrue(audit.records_degenerate_memory_gate)
+        self.assertEqual(
+            {fibre.status for fibre in audit.recorded_fibres},
+            {"missing", "multiple_same_candidate"},
         )
 
 

@@ -1,0 +1,128 @@
+{
+  "description": "Finite preimage-memory audit for degenerate derived-Hurwitz preimage ambiguity.",
+  "rows": [
+    {
+      "ambiguous_candidate_count": 0,
+      "edge_memory_state_count": 4,
+      "element_count": 2,
+      "finite_edge_memory_repairs_two_strand": true,
+      "hidden_preimage_memory_needed": false,
+      "missing_fibre_count": 0,
+      "multiple_same_candidate_count": 0,
+      "name": "nondegenerate_singleton_fibres",
+      "recorded_fibres": [],
+      "records_degenerate_memory_gate": true,
+      "singleton_fibre_count": 4,
+      "table": {
+        "(0, 0)": [
+          1,
+          0
+        ],
+        "(0, 1)": [
+          0,
+          0
+        ],
+        "(1, 0)": [
+          1,
+          1
+        ],
+        "(1, 1)": [
+          0,
+          1
+        ]
+      },
+      "tower_consistency_status": "requires_triple_quadruple_check",
+      "visible_compression_is_safe": true,
+      "visible_derived_operation_total": true,
+      "visible_pair_count": 4
+    },
+    {
+      "ambiguous_candidate_count": 0,
+      "edge_memory_state_count": 4,
+      "element_count": 2,
+      "finite_edge_memory_repairs_two_strand": true,
+      "hidden_preimage_memory_needed": true,
+      "missing_fibre_count": 2,
+      "multiple_same_candidate_count": 2,
+      "name": "degenerate_identity_memory_gate",
+      "recorded_fibres": [
+        {
+          "candidate_outputs": [
+            [
+              0,
+              0
+            ],
+            [
+              1,
+              0
+            ]
+          ],
+          "derived_left_label": 0,
+          "original_left_label": 0,
+          "preimages": [
+            0,
+            1
+          ],
+          "status": "multiple_same_candidate"
+        },
+        {
+          "candidate_outputs": [],
+          "derived_left_label": 0,
+          "original_left_label": 1,
+          "preimages": [],
+          "status": "missing"
+        },
+        {
+          "candidate_outputs": [],
+          "derived_left_label": 1,
+          "original_left_label": 0,
+          "preimages": [],
+          "status": "missing"
+        },
+        {
+          "candidate_outputs": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "derived_left_label": 1,
+          "original_left_label": 1,
+          "preimages": [
+            0,
+            1
+          ],
+          "status": "multiple_same_candidate"
+        }
+      ],
+      "records_degenerate_memory_gate": true,
+      "singleton_fibre_count": 0,
+      "table": {
+        "(0, 0)": [
+          0,
+          0
+        ],
+        "(0, 1)": [
+          0,
+          1
+        ],
+        "(1, 0)": [
+          1,
+          0
+        ],
+        "(1, 1)": [
+          1,
+          1
+        ]
+      },
+      "tower_consistency_status": "requires_triple_quadruple_check",
+      "visible_compression_is_safe": false,
+      "visible_derived_operation_total": false,
+      "visible_pair_count": 4
+    }
+  ]
+}

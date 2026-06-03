@@ -1733,6 +1733,16 @@ guitarizing the forgotten tuple, so the finite prefix group
 rows, the audit records the first failure gate: the preimage `y` may be
 missing or nonunique, so the derived Hurwitz operation is not a total
 well-defined binary operation without extra memory.
+The next note `proofs/degenerate_preimage_memory_gate.md` and generated audit
+`proofs/degenerate_preimage_memory_audit.md` isolate the canonical finite
+local repair for that preimage ambiguity.  For each visible pair `(a,b)`,
+the fibre `P(a,b)={y:lambda_b(y)=a}` is classified as singleton, missing,
+multiple-same-candidate, or ambiguous.  The finite edge-memory graph
+`E_X={(a,b,y):lambda_b(y)=a}` always has `|X|^2` states and repairs the
+two-strand preimage lookup locally, but the audit records that this is only a
+local repair: route (1) still needs triple/quadruple compatibility and
+point-forgetting compatibility to turn edge memory into a finite
+group-Hurwitz tower with bounded vertical kernel.
 
 The semigroup/Green route has also been narrowed to a precise Rees rectangle
 flatness target.  Ordinary Green/Rees theory leaves a sandwich-matrix
