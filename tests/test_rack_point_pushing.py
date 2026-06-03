@@ -20,6 +20,7 @@ from ybe_domination import (
     PrefixGroupHurwitzCompressionPressureAudit,
     PrefixPointForgettingRestrictionAudit,
     PrefixPointPushingSurfaceAudit,
+    PrefixVerticalDefectTransportAudit,
     PrefixVerticalDefectTransformAudit,
     degenerate_preimage_memory_audit,
     derived_hurwitz_envelope_audit,
@@ -33,6 +34,7 @@ from ybe_domination import (
     prefix_group_hurwitz_compression_pressure_audit,
     prefix_point_forgetting_restriction_audit,
     prefix_point_pushing_surface_audit,
+    prefix_vertical_defect_transport_audit,
     prefix_vertical_defect_transform_audit,
     rack_point_pushing_operator_label_audit,
     rack_solution,
@@ -867,6 +869,78 @@ class RackPointPushingOperatorLabelTests(unittest.TestCase):
         self.assertEqual(audit.nontrivial_defect_count, 0)
         self.assertEqual(audit.order_spectrum, (1,))
         self.assertTrue(all(row.identity_defect for row in audit.rows))
+
+    def test_prefix_vertical_defect_transport_commutes_for_order_two_rows(self):
+        solution = FiniteBraidedSet(
+            (0, 1),
+            {
+                (0, 0): (1, 0),
+                (0, 1): (0, 0),
+                (1, 0): (1, 1),
+                (1, 1): (0, 1),
+            },
+        )
+
+        audit = prefix_vertical_defect_transport_audit(solution)
+
+        self.assertIsInstance(audit, PrefixVerticalDefectTransportAudit)
+        self.assertEqual(audit.left_prefix_monoid_size, 2)
+        self.assertEqual(audit.nonunit_prefix_count, 0)
+        self.assertEqual(audit.row_count, 80)
+        self.assertTrue(audit.verifies_first_vertical_defect_face_transport)
+        self.assertTrue(audit.all_additional_faces_surjective)
+        self.assertTrue(audit.all_defects_are_transportable)
+        self.assertTrue(audit.all_transports_commute)
+        self.assertEqual(audit.total_mismatch_count, 0)
+        self.assertEqual(audit.order_pair_spectrum, ((2, 2),))
+        self.assertEqual(
+            {
+                (row.from_deletion_level, row.to_deletion_level): sum(
+                    1
+                    for other in audit.rows
+                    if (
+                        other.from_deletion_level,
+                        other.to_deletion_level,
+                    )
+                    == (row.from_deletion_level, row.to_deletion_level)
+                )
+                for row in audit.rows
+            },
+            {(1, 2): 20, (2, 3): 60},
+        )
+        self.assertTrue(
+            all(
+                row.first_witness_target_input is None
+                and row.first_left_after_defect_then_delete is None
+                and row.first_right_after_delete_then_defect is None
+                for row in audit.rows
+            )
+        )
+
+    def test_prefix_vertical_defect_transport_identity_rows_are_trivial(self):
+        solution = FiniteBraidedSet(
+            (0, 1),
+            {
+                (0, 0): (0, 0),
+                (0, 1): (0, 1),
+                (1, 0): (1, 0),
+                (1, 1): (1, 1),
+            },
+        )
+
+        audit = prefix_vertical_defect_transport_audit(solution)
+
+        self.assertTrue(audit.verifies_first_vertical_defect_face_transport)
+        self.assertEqual(audit.total_mismatch_count, 0)
+        self.assertEqual(audit.order_pair_spectrum, ((1, 1),))
+        self.assertTrue(
+            all(
+                row.from_identity_defect
+                and row.to_identity_defect
+                and row.transport_commutes
+                for row in audit.rows
+            )
+        )
 
 
 if __name__ == "__main__":

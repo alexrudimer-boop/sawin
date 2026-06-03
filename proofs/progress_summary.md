@@ -2023,3 +2023,31 @@ coherence test.  It still does not decide finite rack domination: the missing
 step is to add face transports and compute the gauge-invariant
 Peiffer/Postnikov square-boundary class, modulo section-change coboundaries,
 over these extracted coefficient groups.
+
+## Vertical Defect Face Transport
+
+The note `proofs/prefix_vertical_defect_transport.md` and generated audit
+`proofs/prefix_vertical_defect_transport_audit.md` add the first transport
+check for those coefficient candidates.  For a deletion face `F`, an extra
+stationary deletion `r`, and a generator already vertical on `F`, the audit
+checks whether
+
+```text
+delete_r after defect_F
+=
+defect_{F union {r}} after delete_r
+```
+
+on the post-deletion target tuple space.
+
+For the nondegenerate two-point prefix witness, all `80` transport rows
+commute: `20` from deletion level `1` to `2`, and `60` from level `2` to
+`3`.  The order-pair spectrum is `((2, 2),)`.  For the degenerate identity
+row, all `80` transport rows commute with order-pair spectrum `((1, 1),)`.
+
+This shows that the already-existing vertical defects are functorial under
+one more stationary deletion in the first source arity where the square and
+cube ledgers live.  It is still not the Peiffer/Postnikov obstruction:
+distinct diagonal defects must next be compared around a deletion square,
+then quotiented by the section-change law and by pullback from a fixed finite
+operator-label Hurwitz base.

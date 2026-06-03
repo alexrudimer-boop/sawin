@@ -846,6 +846,101 @@ class PrefixVerticalDefectTransformAudit:
 
 
 @dataclass(frozen=True)
+class PrefixVerticalDefectTransportRow:
+    """Transport of an already-vertical defect across one more deletion."""
+
+    source_point_pushing_arity: int
+    source_braid_index: int
+    from_deletion_level: int
+    to_deletion_level: int
+    from_forget_stationary_indices: Tuple[int, ...]
+    extra_stationary_index: int
+    to_forget_stationary_indices: Tuple[int, ...]
+    source_generator_index: int
+    from_target_braid_index: int
+    to_target_braid_index: int
+    from_target_tuple_count: int
+    to_target_tuple_count: int
+    additional_face_surjective: bool
+    from_defect_is_permutation: bool
+    to_defect_is_permutation: bool
+    from_defect_order: int | None
+    to_defect_order: int | None
+    from_identity_defect: bool | None
+    to_identity_defect: bool | None
+    transport_commutes: bool
+    mismatch_count: int
+    first_witness_target_input: Tuple[object, ...] | None
+    first_left_after_defect_then_delete: Tuple[object, ...] | None
+    first_right_after_delete_then_defect: Tuple[object, ...] | None
+
+    @property
+    def defects_are_transportable(self) -> bool:
+        return (
+            self.additional_face_surjective
+            and self.from_defect_is_permutation
+            and self.to_defect_is_permutation
+        )
+
+
+@dataclass(frozen=True)
+class PrefixVerticalDefectTransportAudit:
+    """First face-transport check for vertical coefficient candidates."""
+
+    element_count: int
+    left_prefix_monoid_size: int
+    nonunit_prefix_count: int
+    source_point_pushing_arity: int
+    rows: Tuple[PrefixVerticalDefectTransportRow, ...]
+    records_first_vertical_defect_face_transport: bool
+
+    @property
+    def row_count(self) -> int:
+        return len(self.rows)
+
+    @property
+    def all_additional_faces_surjective(self) -> bool:
+        return all(row.additional_face_surjective for row in self.rows)
+
+    @property
+    def all_defects_are_transportable(self) -> bool:
+        return all(row.defects_are_transportable for row in self.rows)
+
+    @property
+    def all_transports_commute(self) -> bool:
+        return all(row.transport_commutes for row in self.rows)
+
+    @property
+    def total_mismatch_count(self) -> int:
+        return sum(row.mismatch_count for row in self.rows)
+
+    @property
+    def order_pair_spectrum(self) -> Tuple[Tuple[int, int], ...]:
+        return tuple(
+            sorted(
+                {
+                    (row.from_defect_order, row.to_defect_order)
+                    for row in self.rows
+                    if (
+                        row.from_defect_order is not None
+                        and row.to_defect_order is not None
+                    )
+                }
+            )
+        )
+
+    @property
+    def verifies_first_vertical_defect_face_transport(self) -> bool:
+        return (
+            self.source_point_pushing_arity == 5
+            and self.row_count == 80
+            and self.all_defects_are_transportable
+            and self.all_transports_commute
+            and self.records_first_vertical_defect_face_transport
+        )
+
+
+@dataclass(frozen=True)
 class LawBraidActionCertificate:
     braid_index: int
     tuple_count: int
@@ -3859,6 +3954,198 @@ def prefix_vertical_defect_transform_audit(
         ),
         rows=rows,
         records_vertical_defect_transform_extraction=True,
+    )
+
+
+def _delete_additional_target_stationary_index(
+    tuple_value: Sequence[object],
+    *,
+    source_braid_index: int,
+    already_forgetting: Sequence[int],
+    extra_stationary_index: int,
+) -> Tuple[object, ...]:
+    remaining_positions = tuple(
+        position
+        for position in range(1, source_braid_index + 1)
+        if position not in already_forgetting
+    )
+    return _delete_tuple_source_positions(
+        tuple_value,
+        remaining_positions,
+        (extra_stationary_index,),
+    )
+
+
+def _prefix_vertical_defect_transport_row(
+    solution: FiniteBraidedSet,
+    *,
+    source_point_pushing_arity: int,
+    from_forget_stationary_indices: Tuple[int, ...],
+    extra_stationary_index: int,
+    source_generator_index: int,
+) -> PrefixVerticalDefectTransportRow:
+    source_braid_index = source_point_pushing_arity + 1
+    from_forgets = tuple(sorted(from_forget_stationary_indices))
+    if from_forgets != from_forget_stationary_indices:
+        raise ValueError("from_forget_stationary_indices must be increasing")
+    if source_generator_index not in from_forgets:
+        raise ValueError("source generator must already be vertical")
+    if extra_stationary_index in from_forgets:
+        raise ValueError("extra deletion must be new")
+    if extra_stationary_index < 1 or extra_stationary_index > source_point_pushing_arity:
+        raise ValueError("can only delete stationary strands")
+
+    to_forgets = tuple(sorted((*from_forgets, extra_stationary_index)))
+    from_row = _prefix_vertical_defect_transform_row(
+        solution,
+        deletion_level=len(from_forgets),
+        source_point_pushing_arity=source_point_pushing_arity,
+        forget_stationary_indices=from_forgets,
+        source_generator_index=source_generator_index,
+    )
+    to_row = _prefix_vertical_defect_transform_row(
+        solution,
+        deletion_level=len(to_forgets),
+        source_point_pushing_arity=source_point_pushing_arity,
+        forget_stationary_indices=to_forgets,
+        source_generator_index=source_generator_index,
+    )
+
+    from_target_tuples = tuple(
+        product(solution.elements, repeat=from_row.target_braid_index)
+    )
+    to_target_tuples = tuple(
+        product(solution.elements, repeat=to_row.target_braid_index)
+    )
+    to_target_index = {
+        tuple_value: index
+        for index, tuple_value in enumerate(to_target_tuples)
+    }
+    additional_face_images = {
+        _delete_additional_target_stationary_index(
+            tuple_value,
+            source_braid_index=source_braid_index,
+            already_forgetting=from_forgets,
+            extra_stationary_index=extra_stationary_index,
+        )
+        for tuple_value in from_target_tuples
+    }
+    additional_face_surjective = additional_face_images == set(to_target_tuples)
+
+    mismatch_count = 0
+    first_witness_target_input = None
+    first_left_after_defect_then_delete = None
+    first_right_after_delete_then_defect = None
+    if (
+        from_row.defect_permutation is not None
+        and to_row.defect_permutation is not None
+    ):
+        for from_index, tuple_value in enumerate(from_target_tuples):
+            left_after_from_defect = from_target_tuples[
+                from_row.defect_permutation[from_index]
+            ]
+            left = _delete_additional_target_stationary_index(
+                left_after_from_defect,
+                source_braid_index=source_braid_index,
+                already_forgetting=from_forgets,
+                extra_stationary_index=extra_stationary_index,
+            )
+            deleted_input = _delete_additional_target_stationary_index(
+                tuple_value,
+                source_braid_index=source_braid_index,
+                already_forgetting=from_forgets,
+                extra_stationary_index=extra_stationary_index,
+            )
+            right = to_target_tuples[
+                to_row.defect_permutation[to_target_index[deleted_input]]
+            ]
+            if left == right:
+                continue
+            mismatch_count += 1
+            if first_witness_target_input is None:
+                first_witness_target_input = tuple(tuple_value)
+                first_left_after_defect_then_delete = left
+                first_right_after_delete_then_defect = right
+    else:
+        mismatch_count = len(from_target_tuples)
+        if from_target_tuples:
+            first_witness_target_input = tuple(from_target_tuples[0])
+
+    return PrefixVerticalDefectTransportRow(
+        source_point_pushing_arity=source_point_pushing_arity,
+        source_braid_index=source_braid_index,
+        from_deletion_level=len(from_forgets),
+        to_deletion_level=len(to_forgets),
+        from_forget_stationary_indices=from_forgets,
+        extra_stationary_index=extra_stationary_index,
+        to_forget_stationary_indices=to_forgets,
+        source_generator_index=source_generator_index,
+        from_target_braid_index=from_row.target_braid_index,
+        to_target_braid_index=to_row.target_braid_index,
+        from_target_tuple_count=len(from_target_tuples),
+        to_target_tuple_count=len(to_target_tuples),
+        additional_face_surjective=additional_face_surjective,
+        from_defect_is_permutation=from_row.defect_is_permutation,
+        to_defect_is_permutation=to_row.defect_is_permutation,
+        from_defect_order=from_row.defect_order,
+        to_defect_order=to_row.defect_order,
+        from_identity_defect=from_row.identity_defect,
+        to_identity_defect=to_row.identity_defect,
+        transport_commutes=mismatch_count == 0,
+        mismatch_count=mismatch_count,
+        first_witness_target_input=first_witness_target_input,
+        first_left_after_defect_then_delete=first_left_after_defect_then_delete,
+        first_right_after_delete_then_defect=first_right_after_delete_then_defect,
+    )
+
+
+def prefix_vertical_defect_transport_audit(
+    solution: FiniteBraidedSet,
+) -> PrefixVerticalDefectTransportAudit:
+    """Check face transport for already-vertical deletion defects."""
+
+    source_point_pushing_arity = 5
+    left_translations = _left_prefix_translations(solution)
+    monoid = TransformationMonoid.generated(left_translations.values())
+    row_specs: list[tuple[Tuple[int, ...], int, int]] = []
+    stationary_indices = range(1, source_point_pushing_arity + 1)
+    for deletion_level in (1, 2):
+        for from_forgets in combinations(stationary_indices, deletion_level):
+            for source_generator_index in from_forgets:
+                for extra_stationary_index in stationary_indices:
+                    if extra_stationary_index not in from_forgets:
+                        row_specs.append(
+                            (
+                                from_forgets,
+                                extra_stationary_index,
+                                source_generator_index,
+                            )
+                        )
+    rows = tuple(
+        _prefix_vertical_defect_transport_row(
+            solution,
+            source_point_pushing_arity=source_point_pushing_arity,
+            from_forget_stationary_indices=from_forgets,
+            extra_stationary_index=extra_stationary_index,
+            source_generator_index=source_generator_index,
+        )
+        for (
+            from_forgets,
+            extra_stationary_index,
+            source_generator_index,
+        ) in row_specs
+    )
+    return PrefixVerticalDefectTransportAudit(
+        element_count=len(solution.elements),
+        left_prefix_monoid_size=len(monoid.elements),
+        nonunit_prefix_count=sum(
+            1
+            for element in monoid.elements
+            if not _transformation_is_permutation(element)
+        ),
+        source_point_pushing_arity=source_point_pushing_arity,
+        rows=rows,
+        records_first_vertical_defect_face_transport=True,
     )
 
 
