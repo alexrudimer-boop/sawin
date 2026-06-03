@@ -2000,3 +2000,26 @@ class.  The next genuine obstruction would have to assemble the square
 defect ledgers into a Peiffer/Postnikov class and show that a base-trivial
 deletion cube has nontrivial transported square-boundary in a vertical
 coefficient group.
+
+## Vertical Defect Transform Extraction
+
+The note `proofs/prefix_vertical_defect_transform.md` and generated audit
+`proofs/prefix_vertical_defect_transform_audit.md` turn the raw
+deleted-generator mismatch ledgers into explicit transformations of the
+post-deletion target tuple space.  For each deleted-generator row, the audit
+groups source tuples by the tuple left after deleting the stationary strands
+and checks whether the post-source, post-deletion output depends only on that
+target tuple.
+
+For the nondegenerate two-point prefix witness, all `54` deleted-generator
+defects from the first single-, square-, and cube-deletion surfaces are
+well-defined on target tuples, all are permutations, and the order spectrum is
+`(2,)`.  At each deletion level there is one distinct nontrivial defect
+permutation.  For the degenerate identity row, all `54` defects are identity
+permutations, with order spectrum `(1,)`.
+
+This supplies concrete finite vertical coefficient candidates for the next
+coherence test.  It still does not decide finite rack domination: the missing
+step is to add face transports and compute the gauge-invariant
+Peiffer/Postnikov square-boundary class, modulo section-change coboundaries,
+over these extracted coefficient groups.

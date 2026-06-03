@@ -776,6 +776,76 @@ class PrefixDeletionCubeRestrictionAudit:
 
 
 @dataclass(frozen=True)
+class PrefixVerticalDefectTransformRow:
+    """A deleted-generator point-forgetting defect as a target-tuple map."""
+
+    deletion_level: int
+    source_point_pushing_arity: int
+    source_braid_index: int
+    target_point_pushing_arity: int
+    target_braid_index: int
+    forget_stationary_indices: Tuple[int, ...]
+    source_generator_index: int
+    source_braid_word: BraidWord
+    source_tuple_count: int
+    target_tuple_count: int
+    well_defined_on_deleted_tuple: bool
+    ambiguous_deleted_tuple_count: int
+    max_outputs_per_deleted_tuple: int
+    defect_is_permutation: bool
+    defect_permutation: Permutation | None
+    defect_order: int | None
+    identity_defect: bool | None
+    first_witness_input: Tuple[object, ...] | None
+    first_deleted_input: Tuple[object, ...] | None
+    first_deleted_after_source: Tuple[object, ...] | None
+
+    @property
+    def nontrivial_defect(self) -> bool:
+        return self.identity_defect is False
+
+
+@dataclass(frozen=True)
+class PrefixVerticalDefectTransformAudit:
+    """Coefficient-candidate extraction from diagonal deletion defects."""
+
+    element_count: int
+    left_prefix_monoid_size: int
+    nonunit_prefix_count: int
+    rows: Tuple[PrefixVerticalDefectTransformRow, ...]
+    records_vertical_defect_transform_extraction: bool
+
+    @property
+    def row_count(self) -> int:
+        return len(self.rows)
+
+    @property
+    def all_defects_well_defined(self) -> bool:
+        return all(row.well_defined_on_deleted_tuple for row in self.rows)
+
+    @property
+    def all_defects_are_permutations(self) -> bool:
+        return all(row.defect_is_permutation for row in self.rows)
+
+    @property
+    def nontrivial_defect_count(self) -> int:
+        return sum(1 for row in self.rows if row.nontrivial_defect)
+
+    @property
+    def order_spectrum(self) -> Tuple[int, ...]:
+        return tuple(sorted({row.defect_order for row in self.rows if row.defect_order}))
+
+    @property
+    def verifies_vertical_defect_transform_extraction(self) -> bool:
+        return (
+            self.row_count == 54
+            and self.all_defects_well_defined
+            and self.all_defects_are_permutations
+            and self.records_vertical_defect_transform_extraction
+        )
+
+
+@dataclass(frozen=True)
 class LawBraidActionCertificate:
     braid_index: int
     tuple_count: int
@@ -3639,6 +3709,156 @@ def prefix_deletion_cube_restriction_audit(
         target_point_pushing_arity=2,
         rows=rows,
         records_first_deletion_cube_surface=True,
+    )
+
+
+def _prefix_vertical_defect_transform_row(
+    solution: FiniteBraidedSet,
+    *,
+    deletion_level: int,
+    source_point_pushing_arity: int,
+    forget_stationary_indices: Tuple[int, ...],
+    source_generator_index: int,
+) -> PrefixVerticalDefectTransformRow:
+    from .braid_laws import pure_braid_generator
+
+    source_braid_index = source_point_pushing_arity + 1
+    target_point_pushing_arity = source_point_pushing_arity - deletion_level
+    target_braid_index = target_point_pushing_arity + 1
+    source_positions = tuple(range(1, source_braid_index + 1))
+    forgets = tuple(sorted(forget_stationary_indices))
+    if len(forgets) != deletion_level or forgets != forget_stationary_indices:
+        raise ValueError("forget_stationary_indices must be increasing")
+    if source_generator_index not in forgets:
+        raise ValueError("only deleted-generator defects are vertical rows")
+    if target_point_pushing_arity < 1:
+        raise ValueError("target point-pushing arity must be positive")
+
+    source_braid_word = pure_braid_generator(
+        source_generator_index,
+        source_braid_index,
+    )
+    deletion_order = tuple(reversed(forgets))
+    outputs_by_deleted_tuple: dict[Tuple[object, ...], set[Tuple[object, ...]]] = {}
+    first_witness_input = None
+    first_deleted_input = None
+    first_deleted_after_source = None
+    for tuple_value in product(solution.elements, repeat=source_braid_index):
+        deleted_input = _delete_tuple_source_positions(
+            tuple_value,
+            source_positions,
+            deletion_order,
+        )
+        deleted_after_source = _delete_tuple_source_positions(
+            solution.braid_action(source_braid_word, tuple_value),
+            source_positions,
+            deletion_order,
+        )
+        outputs_by_deleted_tuple.setdefault(deleted_input, set()).add(
+            deleted_after_source
+        )
+        if first_witness_input is None and deleted_after_source != deleted_input:
+            first_witness_input = tuple(tuple_value)
+            first_deleted_input = deleted_input
+            first_deleted_after_source = deleted_after_source
+
+    ambiguous_count = sum(
+        1
+        for outputs in outputs_by_deleted_tuple.values()
+        if len(outputs) > 1
+    )
+    max_outputs = max(
+        (len(outputs) for outputs in outputs_by_deleted_tuple.values()),
+        default=0,
+    )
+    well_defined = ambiguous_count == 0
+    target_tuples = tuple(product(solution.elements, repeat=target_braid_index))
+    target_index = {tuple_value: index for index, tuple_value in enumerate(target_tuples)}
+    defect_permutation = None
+    defect_is_permutation = False
+    defect_order = None
+    identity_defect = None
+    if well_defined and len(outputs_by_deleted_tuple) == len(target_tuples):
+        image_tuples = tuple(
+            next(iter(outputs_by_deleted_tuple[tuple_value]))
+            for tuple_value in target_tuples
+        )
+        if all(tuple_value in target_index for tuple_value in image_tuples):
+            image_indices = tuple(target_index[tuple_value] for tuple_value in image_tuples)
+            defect_is_permutation = set(image_indices) == set(range(len(target_tuples)))
+            if defect_is_permutation:
+                defect_permutation = image_indices
+                defect_order = permutation_order(defect_permutation)
+                identity_defect = defect_permutation == identity_permutation(
+                    len(target_tuples)
+                )
+
+    return PrefixVerticalDefectTransformRow(
+        deletion_level=deletion_level,
+        source_point_pushing_arity=source_point_pushing_arity,
+        source_braid_index=source_braid_index,
+        target_point_pushing_arity=target_point_pushing_arity,
+        target_braid_index=target_braid_index,
+        forget_stationary_indices=forgets,
+        source_generator_index=source_generator_index,
+        source_braid_word=source_braid_word,
+        source_tuple_count=len(solution.elements) ** source_braid_index,
+        target_tuple_count=len(target_tuples),
+        well_defined_on_deleted_tuple=well_defined,
+        ambiguous_deleted_tuple_count=ambiguous_count,
+        max_outputs_per_deleted_tuple=max_outputs,
+        defect_is_permutation=defect_is_permutation,
+        defect_permutation=defect_permutation,
+        defect_order=defect_order,
+        identity_defect=identity_defect,
+        first_witness_input=first_witness_input,
+        first_deleted_input=first_deleted_input,
+        first_deleted_after_source=first_deleted_after_source,
+    )
+
+
+def prefix_vertical_defect_transform_audit(
+    solution: FiniteBraidedSet,
+) -> PrefixVerticalDefectTransformAudit:
+    """Extract target-tuple transformations from diagonal deletion defects."""
+
+    left_translations = _left_prefix_translations(solution)
+    monoid = TransformationMonoid.generated(left_translations.values())
+    row_specs: list[tuple[int, int, Tuple[int, ...], int]] = []
+    for forgets in combinations(range(1, 5), 1):
+        for source_generator_index in forgets:
+            row_specs.append((1, 4, forgets, source_generator_index))
+    for forgets in combinations(range(1, 6), 2):
+        for source_generator_index in forgets:
+            row_specs.append((2, 5, forgets, source_generator_index))
+    for forgets in combinations(range(1, 6), 3):
+        for source_generator_index in forgets:
+            row_specs.append((3, 5, forgets, source_generator_index))
+    rows = tuple(
+        _prefix_vertical_defect_transform_row(
+            solution,
+            deletion_level=deletion_level,
+            source_point_pushing_arity=source_point_pushing_arity,
+            forget_stationary_indices=forget_stationary_indices,
+            source_generator_index=source_generator_index,
+        )
+        for (
+            deletion_level,
+            source_point_pushing_arity,
+            forget_stationary_indices,
+            source_generator_index,
+        ) in row_specs
+    )
+    return PrefixVerticalDefectTransformAudit(
+        element_count=len(solution.elements),
+        left_prefix_monoid_size=len(monoid.elements),
+        nonunit_prefix_count=sum(
+            1
+            for element in monoid.elements
+            if not _transformation_is_permutation(element)
+        ),
+        rows=rows,
+        records_vertical_defect_transform_extraction=True,
     )
 
 

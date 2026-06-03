@@ -20,6 +20,7 @@ from ybe_domination import (
     PrefixGroupHurwitzCompressionPressureAudit,
     PrefixPointForgettingRestrictionAudit,
     PrefixPointPushingSurfaceAudit,
+    PrefixVerticalDefectTransformAudit,
     degenerate_preimage_memory_audit,
     derived_hurwitz_envelope_audit,
     edge_memory_tower_audit,
@@ -32,6 +33,7 @@ from ybe_domination import (
     prefix_group_hurwitz_compression_pressure_audit,
     prefix_point_forgetting_restriction_audit,
     prefix_point_pushing_surface_audit,
+    prefix_vertical_defect_transform_audit,
     rack_point_pushing_operator_label_audit,
     rack_solution,
 )
@@ -788,6 +790,83 @@ class RackPointPushingOperatorLabelTests(unittest.TestCase):
                 for row in audit.rows
             )
         )
+
+    def test_prefix_vertical_defect_transform_extracts_order_two_rows(self):
+        solution = FiniteBraidedSet(
+            (0, 1),
+            {
+                (0, 0): (1, 0),
+                (0, 1): (0, 0),
+                (1, 0): (1, 1),
+                (1, 1): (0, 1),
+            },
+        )
+
+        audit = prefix_vertical_defect_transform_audit(solution)
+
+        self.assertIsInstance(audit, PrefixVerticalDefectTransformAudit)
+        self.assertEqual(audit.left_prefix_monoid_size, 2)
+        self.assertEqual(audit.nonunit_prefix_count, 0)
+        self.assertEqual(audit.row_count, 54)
+        self.assertTrue(audit.verifies_vertical_defect_transform_extraction)
+        self.assertTrue(audit.all_defects_well_defined)
+        self.assertTrue(audit.all_defects_are_permutations)
+        self.assertEqual(audit.nontrivial_defect_count, 54)
+        self.assertEqual(audit.order_spectrum, (2,))
+        self.assertEqual(
+            [
+                (
+                    row.deletion_level,
+                    row.target_braid_index,
+                    row.target_tuple_count,
+                    row.defect_order,
+                    row.identity_defect,
+                    row.ambiguous_deleted_tuple_count,
+                    row.max_outputs_per_deleted_tuple,
+                )
+                for row in audit.rows[:5]
+            ],
+            [
+                (1, 4, 16, 2, False, 0, 1),
+                (1, 4, 16, 2, False, 0, 1),
+                (1, 4, 16, 2, False, 0, 1),
+                (1, 4, 16, 2, False, 0, 1),
+                (2, 4, 16, 2, False, 0, 1),
+            ],
+        )
+        self.assertEqual(
+            {
+                deletion_level: len(
+                    {
+                        row.defect_permutation
+                        for row in audit.rows
+                        if row.deletion_level == deletion_level
+                    }
+                )
+                for deletion_level in (1, 2, 3)
+            },
+            {1: 1, 2: 1, 3: 1},
+        )
+
+    def test_prefix_vertical_defect_transform_identity_rows_are_trivial(self):
+        solution = FiniteBraidedSet(
+            (0, 1),
+            {
+                (0, 0): (0, 0),
+                (0, 1): (0, 1),
+                (1, 0): (1, 0),
+                (1, 1): (1, 1),
+            },
+        )
+
+        audit = prefix_vertical_defect_transform_audit(solution)
+
+        self.assertEqual(audit.left_prefix_monoid_size, 3)
+        self.assertEqual(audit.nonunit_prefix_count, 2)
+        self.assertTrue(audit.verifies_vertical_defect_transform_extraction)
+        self.assertEqual(audit.nontrivial_defect_count, 0)
+        self.assertEqual(audit.order_spectrum, (1,))
+        self.assertTrue(all(row.identity_defect for row in audit.rows))
 
 
 if __name__ == "__main__":
