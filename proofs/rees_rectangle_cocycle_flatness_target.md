@@ -135,6 +135,14 @@ vertical kernels absorb these rectangle cocycles.  A genuine obstruction must
 prove that no such fixed bounded vertical extension can absorb the resulting
 sequence.
 
+The companion note `proofs/rees_braid_cocycle_obstruction_pattern.md`
+sharpens this target.  It supplies explicit `C2`-labeled quotient rows on
+four states which satisfy the local braid relation while the commutator
+`[sigma1^2, sigma2^2]` closes on the quotient and records the nonidentity
+Schutzenberger label.  Thus a counterexample search should not merely look
+for a nonflat sandwich matrix; it should look for this labeled braid-cocycle
+pattern inside an actual finite bijective YBE local interval.
+
 ## Relation to the rack route
 
 For a finite rack `Y`, the operator map

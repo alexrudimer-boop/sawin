@@ -111,6 +111,48 @@ class ReesRectangleCocycleAudit:
 
 
 @dataclass(frozen=True)
+class LabeledPermutationBraidAudit:
+    """Audit two group-labeled quotient rows against the braid relation."""
+
+    group_order: int
+    group_identity: GroupElement
+    state_count: int
+    braid_relation_holds: bool
+    quotient_braid_relation_holds: bool
+    beta_word: Tuple[int, ...]
+    beta_is_quotient_closed: bool
+    beta_state_images: Tuple[Tuple[ReesIndex, ReesIndex, GroupElement], ...]
+    beta_distinct_labels: Tuple[GroupElement, ...]
+
+    @property
+    def beta_has_constant_label(self) -> bool:
+        return len(self.beta_distinct_labels) == 1
+
+    @property
+    def beta_constant_label(self) -> GroupElement | None:
+        if not self.beta_has_constant_label:
+            return None
+        return self.beta_distinct_labels[0]
+
+    @property
+    def beta_constant_label_is_nontrivial(self) -> bool:
+        return (
+            self.beta_constant_label is not None
+            and self.beta_constant_label != self.group_identity
+        )
+
+    @property
+    def verifies_closed_nontrivial_braid_holonomy(self) -> bool:
+        return (
+            self.braid_relation_holds
+            and self.quotient_braid_relation_holds
+            and self.beta_is_quotient_closed
+            and self.beta_has_constant_label
+            and self.beta_constant_label_is_nontrivial
+        )
+
+
+@dataclass(frozen=True)
 class AperiodicPermutationAudit:
     is_aperiodic: bool
     permutation_count: int
@@ -1242,6 +1284,167 @@ def rees_rectangle_cocycle_audit(
         recorded_rectangle_failures=tuple(rectangle_failures),
         coboundary_failure_count=coboundary_failure_count,
         recorded_coboundary_failures=tuple(coboundary_failures),
+    )
+
+
+def _inverse_permutation_transformation(transformation: Transformation) -> Transformation:
+    inverse = [0] * len(transformation)
+    seen = set()
+    for source, target in enumerate(transformation):
+        if target < 0 or target >= len(transformation) or target in seen:
+            raise ValueError("transformation is not a permutation")
+        seen.add(target)
+        inverse[target] = source
+    return tuple(inverse)
+
+
+def _validate_labeled_permutation_row(
+    group: FiniteGroup,
+    states: Tuple[ReesIndex, ...],
+    permutation: Mapping[ReesIndex, ReesIndex],
+    labels: Mapping[ReesIndex, GroupElement],
+) -> Tuple[Tuple[ReesIndex, ...], Tuple[GroupElement, ...]]:
+    state_set = set(states)
+    if set(permutation.keys()) != state_set:
+        raise ValueError("row permutation must be defined exactly on states")
+    if set(permutation.values()) != state_set:
+        raise ValueError("row permutation values must permute states")
+    if set(labels.keys()) != state_set:
+        raise ValueError("row labels must be defined exactly on states")
+    if any(label not in group.elements for label in labels.values()):
+        raise ValueError("row label outside group")
+    return (
+        tuple(permutation[state] for state in states),
+        tuple(labels[state] for state in states),
+    )
+
+
+def _state_transformation(
+    states: Tuple[ReesIndex, ...],
+    permutation: Mapping[ReesIndex, ReesIndex],
+) -> Transformation:
+    state_index = {state: index for index, state in enumerate(states)}
+    return tuple(state_index[permutation[state]] for state in states)
+
+
+def _labeled_permutation_transformation(
+    group: FiniteGroup,
+    states: Tuple[ReesIndex, ...],
+    permutation: Mapping[ReesIndex, ReesIndex],
+    labels: Mapping[ReesIndex, GroupElement],
+) -> Transformation:
+    domain = tuple((state, element) for state in states for element in group.elements)
+    domain_index = {point: index for index, point in enumerate(domain)}
+    return tuple(
+        domain_index[(permutation[state], group.mul(element, labels[state]))]
+        for state, element in domain
+    )
+
+
+def _evaluate_signed_transformation_word(
+    generators: Mapping[int, Transformation],
+    word: Sequence[int],
+) -> Transformation:
+    if not generators:
+        raise ValueError("need at least one generator")
+    degree = len(next(iter(generators.values())))
+    if any(len(generator) != degree for generator in generators.values()):
+        raise ValueError("all generators must have the same degree")
+    inverses = {
+        index: _inverse_permutation_transformation(generator)
+        for index, generator in generators.items()
+    }
+    out = identity_transformation(degree)
+    for letter in word:
+        if letter == 0 or abs(letter) not in generators:
+            raise ValueError("signed word contains an unknown generator")
+        factor = generators[letter] if letter > 0 else inverses[-letter]
+        out = compose_transformations(factor, out)
+    return out
+
+
+def labeled_permutation_braid_audit(
+    group: FiniteGroup,
+    states: Sequence[ReesIndex],
+    row1_permutation: Mapping[ReesIndex, ReesIndex],
+    row1_labels: Mapping[ReesIndex, GroupElement],
+    row2_permutation: Mapping[ReesIndex, ReesIndex],
+    row2_labels: Mapping[ReesIndex, GroupElement],
+    beta_word: Sequence[int] = (1, 1, 2, 2, -1, -1, -2, -2),
+) -> LabeledPermutationBraidAudit:
+    """Audit a two-row group-labeled quotient braid pattern.
+
+    A row ``(s, ell)`` acts on ``states x G`` by
+    ``(q,g) -> (s(q), g ell(q))``.  The default ``beta_word`` is the
+    commutator ``[sigma_1^2, sigma_2^2]`` in the listed word convention.
+    """
+
+    state_tuple = tuple(states)
+    if not state_tuple:
+        raise ValueError("states must be nonempty")
+    if len(set(state_tuple)) != len(state_tuple):
+        raise ValueError("states must be distinct")
+    _validate_labeled_permutation_row(
+        group, state_tuple, row1_permutation, row1_labels
+    )
+    _validate_labeled_permutation_row(
+        group, state_tuple, row2_permutation, row2_labels
+    )
+    beta_tuple = tuple(beta_word)
+    if not beta_tuple:
+        raise ValueError("beta_word must be nonempty")
+
+    quotient_generators = {
+        1: _state_transformation(state_tuple, row1_permutation),
+        2: _state_transformation(state_tuple, row2_permutation),
+    }
+    labeled_generators = {
+        1: _labeled_permutation_transformation(
+            group, state_tuple, row1_permutation, row1_labels
+        ),
+        2: _labeled_permutation_transformation(
+            group, state_tuple, row2_permutation, row2_labels
+        ),
+    }
+
+    quotient_braid_left = _evaluate_signed_transformation_word(
+        quotient_generators, (1, 2, 1)
+    )
+    quotient_braid_right = _evaluate_signed_transformation_word(
+        quotient_generators, (2, 1, 2)
+    )
+    labeled_braid_left = _evaluate_signed_transformation_word(
+        labeled_generators, (1, 2, 1)
+    )
+    labeled_braid_right = _evaluate_signed_transformation_word(
+        labeled_generators, (2, 1, 2)
+    )
+
+    beta = _evaluate_signed_transformation_word(labeled_generators, beta_tuple)
+    domain = tuple(
+        (state, element) for state in state_tuple for element in group.elements
+    )
+    domain_index = {point: index for index, point in enumerate(domain)}
+    beta_state_images = []
+    for state in state_tuple:
+        target_state, target_label = domain[beta[domain_index[(state, group.identity)]]]
+        beta_state_images.append((state, target_state, target_label))
+    distinct_labels = tuple(
+        sorted({label for _source, _target, label in beta_state_images}, key=repr)
+    )
+
+    return LabeledPermutationBraidAudit(
+        group_order=len(group.elements),
+        group_identity=group.identity,
+        state_count=len(state_tuple),
+        braid_relation_holds=labeled_braid_left == labeled_braid_right,
+        quotient_braid_relation_holds=quotient_braid_left == quotient_braid_right,
+        beta_word=beta_tuple,
+        beta_is_quotient_closed=all(
+            source == target for source, target, _label in beta_state_images
+        ),
+        beta_state_images=tuple(beta_state_images),
+        beta_distinct_labels=distinct_labels,
     )
 
 

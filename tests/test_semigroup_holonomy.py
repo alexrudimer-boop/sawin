@@ -10,6 +10,7 @@ from ybe_domination import (
     RightStabilizationLongitudeAudit,
     TransformationMonoid,
     LocalNormalizedLawPrefixWitnessAudit,
+    LabeledPermutationBraidAudit,
     ReesRectangleCocycleAudit,
     UnitPerfectResidualLongitudeAudit,
     aperiodic_permutation_audit,
@@ -19,6 +20,7 @@ from ybe_domination import (
     is_aperiodic_element,
     is_aperiodic_monoid,
     is_permutation_transformation,
+    labeled_permutation_braid_audit,
     local_normalized_law_prefix_witness_audit,
     local_symmetric_normalized_law_prefix_witness_audit,
     monoid_permutation_group,
@@ -103,6 +105,52 @@ class SemigroupHolonomyTests(unittest.TestCase):
         self.assertEqual(audit.recorded_rectangle_failures[0].omega, 1)
         self.assertEqual(audit.recorded_coboundary_failures[0].actual, 1)
         self.assertEqual(audit.recorded_coboundary_failures[0].expected, 0)
+
+    def test_labeled_permutation_braid_audit_finds_nonflat_c2_holonomy(self):
+        group = cyclic_group(2)
+        states = ("q00", "q01", "q10", "q11")
+        row1 = {
+            "q00": "q10",
+            "q01": "q11",
+            "q10": "q01",
+            "q11": "q00",
+        }
+        row2 = {
+            "q00": "q01",
+            "q01": "q10",
+            "q10": "q11",
+            "q11": "q00",
+        }
+        labels1 = {"q00": 0, "q01": 0, "q10": 0, "q11": 1}
+        labels2 = {"q00": 0, "q01": 0, "q10": 1, "q11": 0}
+
+        audit = labeled_permutation_braid_audit(
+            group,
+            states,
+            row1,
+            labels1,
+            row2,
+            labels2,
+        )
+
+        self.assertIsInstance(audit, LabeledPermutationBraidAudit)
+        self.assertTrue(audit.quotient_braid_relation_holds)
+        self.assertTrue(audit.braid_relation_holds)
+        self.assertEqual(audit.beta_word, (1, 1, 2, 2, -1, -1, -2, -2))
+        self.assertTrue(audit.beta_is_quotient_closed)
+        self.assertEqual(
+            audit.beta_state_images,
+            (
+                ("q00", "q00", 1),
+                ("q01", "q01", 1),
+                ("q10", "q10", 1),
+                ("q11", "q11", 1),
+            ),
+        )
+        self.assertEqual(audit.beta_distinct_labels, (1,))
+        self.assertEqual(audit.beta_constant_label, 1)
+        self.assertTrue(audit.beta_constant_label_is_nontrivial)
+        self.assertTrue(audit.verifies_closed_nontrivial_braid_holonomy)
 
     def test_reset_element_is_aperiodic(self):
         reset = (0, 0, 2)

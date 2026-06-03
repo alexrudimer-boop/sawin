@@ -772,6 +772,7 @@ from .green_branch import (
 )
 from .semigroup_holonomy import (
     AperiodicPermutationAudit,
+    LabeledPermutationBraidAudit,
     ReesRectangleCocycleAudit,
     ReesRectangleCocycleFailure,
     ReesSandwichCoboundaryFailure,
@@ -797,6 +798,7 @@ from .semigroup_holonomy import (
     is_aperiodic_element,
     is_aperiodic_monoid,
     is_permutation_transformation,
+    labeled_permutation_braid_audit,
     monoid_permutation_group,
     permutation_elements,
     rees_rectangle_cocycle,
@@ -955,6 +957,7 @@ __all__ = [
     "AbelianLongitudeMatrixWitnessAudit",
     "AbelianLongitudeMatrixWitnessLetter",
     "AperiodicPermutationAudit",
+    "LabeledPermutationBraidAudit",
     "ReesRectangleCocycleAudit",
     "ReesRectangleCocycleFailure",
     "ReesSandwichCoboundaryFailure",
@@ -1594,6 +1597,7 @@ __all__ = [
     "local_minimal_seed_saturation_dichotomy_audit",
     "local_master_bottleneck_summary",
     "lost_edge_external_routing_audit",
+    "labeled_permutation_braid_audit",
     "maximal_congruence_chain",
     "meet_partition",
     "meet_relation_families",

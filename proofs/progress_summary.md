@@ -1716,6 +1716,20 @@ identity sandwich entries and one nonidentity entry.  This square is not
 claimed to be a YBE solution; it is the finite pattern a negative route would
 have to realize compatibly in the point-pushing tower.
 
+The next Rees audit sharpens the obstruction target from a static sandwich
+matrix to a local braid-cocycle pattern.  The note
+`proofs/rees_braid_cocycle_obstruction_pattern.md` and generated audit
+`proofs/rees_braid_cocycle_obstruction_audit.md` use four quotient states
+`q00,q01,q10,q11` and two `C2`-labeled rows.  The rows satisfy
+`T1 T2 T1 = T2 T1 T2`, so the local braid/YBE cocycle identity holds, but
+the commutator `[sigma1^2,sigma2^2]` fixes every quotient state and adds the
+nonidentity `C2` label.  This shows that braid-cocycle consistency is weaker
+than Rees flatness.  The remaining all-`n` obstruction task is to realize
+this finite pattern inside an actual finite bijective degenerate YBE
+quotient-fibre interval and prove the resulting nonflat holonomy cannot be
+absorbed by a fixed finite group-Hurwitz base with bounded-exponent vertical
+kernel.
+
 ## Verification snapshot
 
 At the latest verified snapshot:

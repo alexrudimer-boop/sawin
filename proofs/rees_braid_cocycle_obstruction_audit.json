@@ -1,0 +1,153 @@
+{
+  "braid_audit": {
+    "beta_constant_label": 1,
+    "beta_constant_label_is_nontrivial": true,
+    "beta_distinct_labels": [
+      1
+    ],
+    "beta_has_constant_label": true,
+    "beta_is_quotient_closed": true,
+    "beta_state_images": [
+      [
+        "q00",
+        "q00",
+        1
+      ],
+      [
+        "q01",
+        "q01",
+        1
+      ],
+      [
+        "q10",
+        "q10",
+        1
+      ],
+      [
+        "q11",
+        "q11",
+        1
+      ]
+    ],
+    "beta_word": [
+      1,
+      1,
+      2,
+      2,
+      -1,
+      -1,
+      -2,
+      -2
+    ],
+    "braid_relation_holds": true,
+    "group_identity": 0,
+    "group_order": 2,
+    "quotient_braid_relation_holds": true,
+    "state_count": 4,
+    "verifies_closed_nontrivial_braid_holonomy": true
+  },
+  "description": "Small C2 Rees braid-cocycle obstruction pattern: nonflat sandwich rectangle plus YBE-compatible labeled quotient rows.",
+  "distinguished_rectangle_omega": 1,
+  "group": "C2_additive_0_identity_1_nonidentity",
+  "rectangle_audit": {
+    "base_column": "i0",
+    "base_row": "lambda0",
+    "coboundary_failure_count": 1,
+    "column_count": 2,
+    "column_factors": [
+      [
+        "i0",
+        0
+      ],
+      [
+        "i1",
+        0
+      ]
+    ],
+    "group_order": 2,
+    "is_flat": false,
+    "recorded_coboundary_failures": [
+      {
+        "actual": 1,
+        "column": "i1",
+        "expected": 0,
+        "row": "lambda1"
+      }
+    ],
+    "recorded_rectangle_failures": [
+      {
+        "column_left": "i0",
+        "column_right": "i1",
+        "omega": 1,
+        "row_bottom": "lambda1",
+        "row_top": "lambda0"
+      },
+      {
+        "column_left": "i1",
+        "column_right": "i0",
+        "omega": 1,
+        "row_bottom": "lambda1",
+        "row_top": "lambda0"
+      },
+      {
+        "column_left": "i0",
+        "column_right": "i1",
+        "omega": 1,
+        "row_bottom": "lambda0",
+        "row_top": "lambda1"
+      },
+      {
+        "column_left": "i1",
+        "column_right": "i0",
+        "omega": 1,
+        "row_bottom": "lambda0",
+        "row_top": "lambda1"
+      }
+    ],
+    "rectangle_cocycles_are_trivial": false,
+    "rectangle_count": 16,
+    "rectangle_failure_count": 4,
+    "row_count": 2,
+    "row_factors": [
+      [
+        "lambda0",
+        0
+      ],
+      [
+        "lambda1",
+        0
+      ]
+    ],
+    "sandwich_is_row_column_coboundary": false
+  },
+  "row1": {
+    "q00": "q10",
+    "q01": "q11",
+    "q10": "q01",
+    "q11": "q00"
+  },
+  "row1_labels": {
+    "q00": 0,
+    "q01": 0,
+    "q10": 0,
+    "q11": 1
+  },
+  "row2": {
+    "q00": "q01",
+    "q01": "q10",
+    "q10": "q11",
+    "q11": "q00"
+  },
+  "row2_labels": {
+    "q00": 0,
+    "q01": 0,
+    "q10": 1,
+    "q11": 0
+  },
+  "states": [
+    "q00",
+    "q01",
+    "q10",
+    "q11"
+  ]
+}
