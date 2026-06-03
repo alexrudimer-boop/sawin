@@ -69,6 +69,32 @@ T1 T2 T1 = T2 T1 T2.
 
 Thus the row labels satisfy the local braid cocycle identity.
 
+## Direct locality shadow
+
+There is an immediate caution.  A literal three-strand action coming from a
+set-theoretic solution has coordinate-local shadows:
+
+```text
+sigma1 preserves the third-coordinate fibres,
+sigma2 preserves the first-coordinate fibres.
+```
+
+Therefore, if the four quotient states themselves were a visible direct
+coordinate quotient, `s1` would have a nontrivial fixed partition and `s2`
+would have a nontrivial fixed partition, and some pair of those partitions
+would jointly separate the four states.
+
+The generated audit checks this necessary direct-locality condition.  A
+control `2 x 2` coordinate model passes.  The obstruction rows above do not:
+both `s1` and `s2` are four-cycles, so neither has a nontrivial fixed
+partition.  Consequently this pattern cannot be realized as a literal
+four-state coordinate-local quotient of a three-strand action.
+
+This does not rule out realization inside a finite bijective YBE solution.
+It narrows the realization problem: the pattern would have to appear deeper
+in a quotient-fibre interval after the outside-coordinate partitions have
+already been collapsed, transported, or hidden by the residual construction.
+
 ## Closed commutator holonomy
 
 Let

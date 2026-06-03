@@ -10,10 +10,12 @@ from ybe_domination import (
     RightStabilizationLongitudeAudit,
     TransformationMonoid,
     LocalNormalizedLawPrefixWitnessAudit,
+    BraidLocalityShadowAudit,
     LabeledPermutationBraidAudit,
     ReesRectangleCocycleAudit,
     UnitPerfectResidualLongitudeAudit,
     aperiodic_permutation_audit,
+    braid_locality_shadow_audit,
     compose_transformation_word,
     cyclic_group,
     identity_solution,
@@ -25,6 +27,7 @@ from ybe_domination import (
     local_symmetric_normalized_law_prefix_witness_audit,
     monoid_permutation_group,
     permutation_elements,
+    permutation_fixed_partitions,
     pure_braid_generator,
     rack_solution,
     rees_rectangle_cocycle,
@@ -151,6 +154,49 @@ class SemigroupHolonomyTests(unittest.TestCase):
         self.assertEqual(audit.beta_constant_label, 1)
         self.assertTrue(audit.beta_constant_label_is_nontrivial)
         self.assertTrue(audit.verifies_closed_nontrivial_braid_holonomy)
+
+    def test_braid_locality_shadow_accepts_direct_coordinate_model(self):
+        states = ("00", "01", "10", "11")
+        row1 = {"00": "10", "10": "00", "01": "11", "11": "01"}
+        row2 = {"00": "01", "01": "00", "10": "11", "11": "10"}
+
+        audit = braid_locality_shadow_audit(states, row1, row2)
+
+        self.assertIsInstance(audit, BraidLocalityShadowAudit)
+        self.assertEqual(audit.row1_cycle_lengths, (2, 2))
+        self.assertEqual(audit.row2_cycle_lengths, (2, 2))
+        self.assertTrue(audit.row1_has_nontrivial_fixed_partition)
+        self.assertTrue(audit.row2_has_nontrivial_fixed_partition)
+        self.assertGreaterEqual(audit.jointly_separating_fixed_pair_count, 1)
+        self.assertTrue(audit.direct_coordinate_shadow_possible)
+
+    def test_braid_locality_shadow_rejects_c2_obstruction_rows_directly(self):
+        states = ("q00", "q01", "q10", "q11")
+        row1 = {
+            "q00": "q10",
+            "q01": "q11",
+            "q10": "q01",
+            "q11": "q00",
+        }
+        row2 = {
+            "q00": "q01",
+            "q01": "q10",
+            "q10": "q11",
+            "q11": "q00",
+        }
+
+        row1_partitions = permutation_fixed_partitions(states, row1)
+        row2_partitions = permutation_fixed_partitions(states, row2)
+        audit = braid_locality_shadow_audit(states, row1, row2)
+
+        self.assertEqual(row1_partitions, ((("q00", "q01", "q10", "q11"),),))
+        self.assertEqual(row2_partitions, ((("q00", "q01", "q10", "q11"),),))
+        self.assertEqual(audit.row1_cycle_lengths, (4,))
+        self.assertEqual(audit.row2_cycle_lengths, (4,))
+        self.assertFalse(audit.row1_has_nontrivial_fixed_partition)
+        self.assertFalse(audit.row2_has_nontrivial_fixed_partition)
+        self.assertEqual(audit.jointly_separating_fixed_pair_count, 0)
+        self.assertFalse(audit.direct_coordinate_shadow_possible)
 
     def test_reset_element_is_aperiodic(self):
         reset = (0, 0, 2)

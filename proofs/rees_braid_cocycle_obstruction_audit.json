@@ -46,9 +46,66 @@
     "state_count": 4,
     "verifies_closed_nontrivial_braid_holonomy": true
   },
-  "description": "Small C2 Rees braid-cocycle obstruction pattern: nonflat sandwich rectangle plus YBE-compatible labeled quotient rows.",
+  "description": "Small C2 Rees braid-cocycle obstruction pattern: nonflat sandwich rectangle plus braid-compatible labeled quotient rows.",
+  "direct_coordinate_control_audit": {
+    "direct_coordinate_shadow_possible": true,
+    "jointly_separating_fixed_pair_count": 1,
+    "recorded_jointly_separating_fixed_pairs": [
+      [
+        [
+          [
+            "00",
+            "10"
+          ],
+          [
+            "01",
+            "11"
+          ]
+        ],
+        [
+          [
+            "00",
+            "01"
+          ],
+          [
+            "10",
+            "11"
+          ]
+        ]
+      ]
+    ],
+    "row1_cycle_lengths": [
+      2,
+      2
+    ],
+    "row1_fixed_partition_count": 2,
+    "row1_has_nontrivial_fixed_partition": true,
+    "row2_cycle_lengths": [
+      2,
+      2
+    ],
+    "row2_fixed_partition_count": 2,
+    "row2_has_nontrivial_fixed_partition": true,
+    "state_count": 4
+  },
   "distinguished_rectangle_omega": 1,
   "group": "C2_additive_0_identity_1_nonidentity",
+  "locality_shadow_audit": {
+    "direct_coordinate_shadow_possible": false,
+    "jointly_separating_fixed_pair_count": 0,
+    "recorded_jointly_separating_fixed_pairs": [],
+    "row1_cycle_lengths": [
+      4
+    ],
+    "row1_fixed_partition_count": 1,
+    "row1_has_nontrivial_fixed_partition": false,
+    "row2_cycle_lengths": [
+      4
+    ],
+    "row2_fixed_partition_count": 1,
+    "row2_has_nontrivial_fixed_partition": false,
+    "state_count": 4
+  },
   "rectangle_audit": {
     "base_column": "i0",
     "base_row": "lambda0",

@@ -72,3 +72,30 @@ a positive finite-rack-domination route needs an additional
 realization or flatness lemma: actual finite bijective YBE local
 quotient-fibre intervals must either avoid this pattern or force
 it into a bounded vertical coboundary.
+
+## Direct Locality Shadow
+
+A literal three-strand set-theoretic action has coordinate-local
+partitions: `sigma1` preserves the third-coordinate fibres, and
+`sigma2` preserves the first-coordinate fibres.  The locality
+shadow audit asks whether the two quotient rows have nontrivial
+fixed partitions which jointly separate the four states.
+
+For a direct `2 x 2` coordinate model, the control audit records:
+
+- direct coordinate shadow possible: `True`;
+- jointly separating fixed pair count: `1`.
+
+For the nonflat obstruction rows, the locality audit records:
+
+- row 1 cycle lengths: `(4,)`;
+- row 2 cycle lengths: `(4,)`;
+- row 1 has a nontrivial fixed partition: `False`;
+- row 2 has a nontrivial fixed partition: `False`;
+- direct coordinate shadow possible: `False`.
+
+Thus this four-state obstruction cannot be used as a literal
+visible coordinate-local quotient for a three-strand YBE action.
+A genuine realization would have to occur deeper inside a
+quotient-fibre interval where the outside-coordinate partitions
+have already been collapsed or transported.

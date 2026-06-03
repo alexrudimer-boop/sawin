@@ -1728,7 +1728,13 @@ than Rees flatness.  The remaining all-`n` obstruction task is to realize
 this finite pattern inside an actual finite bijective degenerate YBE
 quotient-fibre interval and prove the resulting nonflat holonomy cannot be
 absorbed by a fixed finite group-Hurwitz base with bounded-exponent vertical
-kernel.
+kernel.  A direct-locality shadow check has also been added: a literal
+three-strand coordinate quotient would give nontrivial fixed partitions for
+the `sigma1` and `sigma2` rows, jointly separating the four states.  The
+obstruction rows are both four-cycles and fail this direct coordinate-local
+condition, so any realization must occur deeper inside a quotient-fibre
+interval after the outside-coordinate partitions have been hidden or
+collapsed.
 
 ## Verification snapshot
 

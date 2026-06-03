@@ -152,6 +152,30 @@ class LabeledPermutationBraidAudit:
         )
 
 
+StatePartition = Tuple[Tuple[ReesIndex, ...], ...]
+
+
+@dataclass(frozen=True)
+class BraidLocalityShadowAudit:
+    """Audit coordinate-local partition shadows for two braid rows."""
+
+    state_count: int
+    row1_cycle_lengths: Tuple[int, ...]
+    row2_cycle_lengths: Tuple[int, ...]
+    row1_fixed_partition_count: int
+    row2_fixed_partition_count: int
+    row1_has_nontrivial_fixed_partition: bool
+    row2_has_nontrivial_fixed_partition: bool
+    jointly_separating_fixed_pair_count: int
+    recorded_jointly_separating_fixed_pairs: Tuple[
+        Tuple[StatePartition, StatePartition], ...
+    ]
+
+    @property
+    def direct_coordinate_shadow_possible(self) -> bool:
+        return self.jointly_separating_fixed_pair_count > 0
+
+
 @dataclass(frozen=True)
 class AperiodicPermutationAudit:
     is_aperiodic: bool
@@ -1445,6 +1469,158 @@ def labeled_permutation_braid_audit(
         ),
         beta_state_images=tuple(beta_state_images),
         beta_distinct_labels=distinct_labels,
+    )
+
+
+def _permutation_cycles(
+    states: Tuple[ReesIndex, ...],
+    permutation: Mapping[ReesIndex, ReesIndex],
+) -> Tuple[Tuple[ReesIndex, ...], ...]:
+    state_set = set(states)
+    if set(permutation.keys()) != state_set:
+        raise ValueError("permutation must be defined exactly on states")
+    if set(permutation.values()) != state_set:
+        raise ValueError("permutation values must permute states")
+    seen = set()
+    cycles = []
+    for state in states:
+        if state in seen:
+            continue
+        cycle = []
+        current = state
+        while current not in seen:
+            seen.add(current)
+            cycle.append(current)
+            current = permutation[current]
+        cycles.append(tuple(cycle))
+    return tuple(cycles)
+
+
+def _set_partitions(items: Tuple[int, ...]) -> Tuple[Tuple[Tuple[int, ...], ...], ...]:
+    if not items:
+        return (tuple(),)
+    first, *rest_list = items
+    rest = tuple(rest_list)
+    out = []
+    for partition in _set_partitions(rest):
+        out.append(((first,),) + partition)
+        for block_index in range(len(partition)):
+            replacement = []
+            for index, block in enumerate(partition):
+                if index == block_index:
+                    replacement.append(tuple(sorted((first,) + block)))
+                else:
+                    replacement.append(block)
+            out.append(tuple(replacement))
+    canonical = {
+        tuple(sorted((tuple(block) for block in partition), key=repr))
+        for partition in out
+    }
+    return tuple(sorted(canonical, key=repr))
+
+
+def _canonical_partition(blocks: Iterable[Iterable[ReesIndex]]) -> StatePartition:
+    return tuple(
+        sorted(
+            (tuple(sorted(block, key=repr)) for block in blocks if tuple(block)),
+            key=repr,
+        )
+    )
+
+
+def permutation_fixed_partitions(
+    states: Sequence[ReesIndex],
+    permutation: Mapping[ReesIndex, ReesIndex],
+) -> Tuple[StatePartition, ...]:
+    """Return partitions whose blocks are fixed setwise by a permutation."""
+
+    state_tuple = tuple(states)
+    if not state_tuple:
+        raise ValueError("states must be nonempty")
+    if len(set(state_tuple)) != len(state_tuple):
+        raise ValueError("states must be distinct")
+    cycles = _permutation_cycles(state_tuple, permutation)
+    cycle_partitions = _set_partitions(tuple(range(len(cycles))))
+    fixed_partitions = []
+    for cycle_partition in cycle_partitions:
+        blocks = []
+        for cycle_block in cycle_partition:
+            block = []
+            for cycle_index in cycle_block:
+                block.extend(cycles[cycle_index])
+            blocks.append(block)
+        fixed_partitions.append(_canonical_partition(blocks))
+    return tuple(sorted(set(fixed_partitions), key=repr))
+
+
+def _partition_is_nontrivial(partition: StatePartition, state_count: int) -> bool:
+    return 1 < len(partition) <= state_count
+
+
+def _partitions_meet_discretely(
+    left: StatePartition,
+    right: StatePartition,
+    state_count: int,
+) -> bool:
+    meet_blocks = []
+    for left_block in left:
+        left_set = set(left_block)
+        for right_block in right:
+            intersection = tuple(sorted(left_set.intersection(right_block), key=repr))
+            if intersection:
+                meet_blocks.append(intersection)
+    return len(meet_blocks) == state_count and all(len(block) == 1 for block in meet_blocks)
+
+
+def braid_locality_shadow_audit(
+    states: Sequence[ReesIndex],
+    row1_permutation: Mapping[ReesIndex, ReesIndex],
+    row2_permutation: Mapping[ReesIndex, ReesIndex],
+    max_recorded_pairs: int | None = 8,
+) -> BraidLocalityShadowAudit:
+    """Audit the simplest coordinate-local shadow for two braid rows.
+
+    In a literal three-strand set-theoretic action, ``sigma_1`` preserves the
+    third-coordinate partition and ``sigma_2`` preserves the first-coordinate
+    partition.  This finite check asks whether the supplied quotient rows have
+    nontrivial fixed partitions which jointly separate the states.
+    """
+
+    state_tuple = tuple(states)
+    if max_recorded_pairs is not None and max_recorded_pairs < 0:
+        raise ValueError("max_recorded_pairs must be nonnegative or None")
+    row1_cycles = _permutation_cycles(state_tuple, row1_permutation)
+    row2_cycles = _permutation_cycles(state_tuple, row2_permutation)
+    row1_partitions = permutation_fixed_partitions(state_tuple, row1_permutation)
+    row2_partitions = permutation_fixed_partitions(state_tuple, row2_permutation)
+    row1_nontrivial = tuple(
+        partition
+        for partition in row1_partitions
+        if _partition_is_nontrivial(partition, len(state_tuple))
+    )
+    row2_nontrivial = tuple(
+        partition
+        for partition in row2_partitions
+        if _partition_is_nontrivial(partition, len(state_tuple))
+    )
+    record_limit = None if max_recorded_pairs is None else max_recorded_pairs
+    separating_pairs = []
+    separating_count = 0
+    for row1_partition, row2_partition in product(row1_nontrivial, row2_nontrivial):
+        if _partitions_meet_discretely(row1_partition, row2_partition, len(state_tuple)):
+            separating_count += 1
+            if record_limit is None or len(separating_pairs) < record_limit:
+                separating_pairs.append((row1_partition, row2_partition))
+    return BraidLocalityShadowAudit(
+        state_count=len(state_tuple),
+        row1_cycle_lengths=tuple(sorted((len(cycle) for cycle in row1_cycles))),
+        row2_cycle_lengths=tuple(sorted((len(cycle) for cycle in row2_cycles))),
+        row1_fixed_partition_count=len(row1_partitions),
+        row2_fixed_partition_count=len(row2_partitions),
+        row1_has_nontrivial_fixed_partition=bool(row1_nontrivial),
+        row2_has_nontrivial_fixed_partition=bool(row2_nontrivial),
+        jointly_separating_fixed_pair_count=separating_count,
+        recorded_jointly_separating_fixed_pairs=tuple(separating_pairs),
     )
 
 

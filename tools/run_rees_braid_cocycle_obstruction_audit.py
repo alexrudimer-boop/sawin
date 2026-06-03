@@ -7,6 +7,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
 from ybe_domination import (  # noqa: E402
+    braid_locality_shadow_audit,
     cyclic_group,
     labeled_permutation_braid_audit,
     rees_rectangle_cocycle,
@@ -70,10 +71,19 @@ def build_report():
         row2,
         labels2,
     )
+    locality_audit = braid_locality_shadow_audit(states, row1, row2)
+    direct_states = ("00", "01", "10", "11")
+    direct_row1 = {"00": "10", "10": "00", "01": "11", "11": "01"}
+    direct_row2 = {"00": "01", "01": "00", "10": "11", "11": "10"}
+    direct_locality_audit = braid_locality_shadow_audit(
+        direct_states,
+        direct_row1,
+        direct_row2,
+    )
     report = {
         "description": (
             "Small C2 Rees braid-cocycle obstruction pattern: nonflat "
-            "sandwich rectangle plus YBE-compatible labeled quotient rows."
+            "sandwich rectangle plus braid-compatible labeled quotient rows."
         ),
         "group": "C2_additive_0_identity_1_nonidentity",
         "states": states,
@@ -103,6 +113,18 @@ def build_report():
                 braid_audit.verifies_closed_nontrivial_braid_holonomy
             ),
         },
+        "locality_shadow_audit": {
+            **asdict(locality_audit),
+            "direct_coordinate_shadow_possible": (
+                locality_audit.direct_coordinate_shadow_possible
+            ),
+        },
+        "direct_coordinate_control_audit": {
+            **asdict(direct_locality_audit),
+            "direct_coordinate_shadow_possible": (
+                direct_locality_audit.direct_coordinate_shadow_possible
+            ),
+        },
     }
     OUT_JSON.write_text(json.dumps(report, indent=2, sort_keys=True), encoding="utf-8")
     OUT_MD.write_text(render_markdown(report), encoding="utf-8")
@@ -112,6 +134,8 @@ def build_report():
 def render_markdown(report):
     rectangle = report["rectangle_audit"]
     braid = report["braid_audit"]
+    locality = report["locality_shadow_audit"]
+    direct_locality = report["direct_coordinate_control_audit"]
     lines = [
         "# Rees braid-cocycle obstruction audit",
         "",
@@ -191,6 +215,48 @@ def render_markdown(report):
             "realization or flatness lemma: actual finite bijective YBE local",
             "quotient-fibre intervals must either avoid this pattern or force",
             "it into a bounded vertical coboundary.",
+            "",
+            "## Direct Locality Shadow",
+            "",
+            "A literal three-strand set-theoretic action has coordinate-local",
+            "partitions: `sigma1` preserves the third-coordinate fibres, and",
+            "`sigma2` preserves the first-coordinate fibres.  The locality",
+            "shadow audit asks whether the two quotient rows have nontrivial",
+            "fixed partitions which jointly separate the four states.",
+            "",
+            "For a direct `2 x 2` coordinate model, the control audit records:",
+            "",
+            (
+                "- direct coordinate shadow possible: "
+                f"`{direct_locality['direct_coordinate_shadow_possible']}`;"
+            ),
+            (
+                "- jointly separating fixed pair count: "
+                f"`{direct_locality['jointly_separating_fixed_pair_count']}`."
+            ),
+            "",
+            "For the nonflat obstruction rows, the locality audit records:",
+            "",
+            f"- row 1 cycle lengths: `{tuple(locality['row1_cycle_lengths'])}`;",
+            f"- row 2 cycle lengths: `{tuple(locality['row2_cycle_lengths'])}`;",
+            (
+                "- row 1 has a nontrivial fixed partition: "
+                f"`{locality['row1_has_nontrivial_fixed_partition']}`;"
+            ),
+            (
+                "- row 2 has a nontrivial fixed partition: "
+                f"`{locality['row2_has_nontrivial_fixed_partition']}`;"
+            ),
+            (
+                "- direct coordinate shadow possible: "
+                f"`{locality['direct_coordinate_shadow_possible']}`."
+            ),
+            "",
+            "Thus this four-state obstruction cannot be used as a literal",
+            "visible coordinate-local quotient for a three-strand YBE action.",
+            "A genuine realization would have to occur deeper inside a",
+            "quotient-fibre interval where the outside-coordinate partitions",
+            "have already been collapsed or transported.",
             "",
         ]
     )
