@@ -1642,6 +1642,14 @@ four-point universe by affine block-map composition for `1 <= n <= 7`: all
 `24` untagged affine rows have central full-twist prefix orders
 `1,2,1,2,1,2,1`, and the maximum observed prefix order across all `481`
 affine YBE tables is `4`.
+The point-pushing companion
+`proofs/affine_f2_point_pushing_audit.md` checks the standard pure
+point-pushing generators `A_{i,q}` in the same translated affine universe for
+`2 <= q <= 5`.  All `24` untagged affine rows have generator-order profile
+`2,2,2,2`; the recorded untagged examples have point-pushing subgroup sizes
+`2,4,8,16` and exponent `2` through `q=5`.  Thus the easy pure-generator
+order route to a normalized-law counterexample also leaves this checked
+four-point affine universe.
 The coordinate-dependency guardrail
 `proofs/coordinate_dependency_audit.md` closes the elementary triangular
 degenerate shapes for this same obstruction route.  If the first output of a

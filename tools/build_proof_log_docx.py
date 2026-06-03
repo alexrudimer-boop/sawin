@@ -275,6 +275,7 @@ EXTRA_MD.append(ROOT / "proofs" / "three_colour_fibre2_product_audit.md")
 EXTRA_MD.append(ROOT / "proofs" / "linear_f2_audit.md")
 EXTRA_MD.append(ROOT / "proofs" / "affine_f2_audit.md")
 EXTRA_MD.append(ROOT / "proofs" / "affine_f2_full_twist_audit.md")
+EXTRA_MD.append(ROOT / "proofs" / "affine_f2_point_pushing_audit.md")
 EXTRA_MD.append(ROOT / "proofs" / "affine_linear_direct_symmetric_stress.md")
 OUT = ROOT / "proofs" / "sawin_proof_log.docx"
 

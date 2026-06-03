@@ -78,6 +78,20 @@ order profile
 Thus the untagged affine rows neither form primitive intervals nor stress the
 central full-twist obstruction in the checked prefix.
 
+The generated point-pushing companion audit
+`proofs/affine_f2_point_pushing_audit.md` checks the standard pure
+point-pushing generators `A_{i,q}` for `2 <= q <= 5` in the same universe.
+All `24` untagged affine rows have generator-order profile
+
+```text
+2, 2, 2, 2.
+```
+
+The recorded untagged examples have point-pushing subgroup sizes `2,4,8,16`
+and exponent `2` through `q=5`, so they also do not stress the elementary
+pure-generator order route to a normalized-law obstruction in the checked
+prefix.
+
 ## Consequence
 
 The smallest translated affine four-point universe does not produce B and does
