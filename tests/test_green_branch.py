@@ -172,23 +172,36 @@ class GreenBranchTests(unittest.TestCase):
         self.assertTrue(audit.positive_rigidity_condition_recorded)
         self.assertTrue(audit.negative_countercertificate_recorded)
         self.assertTrue(audit.finite_depth_group_gate_connected)
+        self.assertTrue(audit.flat_transport_only_recorded)
+        self.assertTrue(audit.full_green_class_scope_recorded)
+        self.assertTrue(audit.hidden_row_naturality_axiom_required)
+        self.assertTrue(audit.row_defect_cocycle_recorded)
         self.assertIn("supported completed rows", audit.actual_transport_formula)
+        self.assertIn("T_theta", audit.transport_local_system_formula)
         self.assertIn("theta_{e,e'}", audit.positive_rigidity_formula)
         self.assertIn("Aut(C_{p^m})", audit.countercertificate_formula)
+        self.assertIn("epsilon_Omega", audit.row_defect_cocycle_formula)
+        self.assertIn("row naturality", audit.missing_axiom_formula)
         self.assertEqual(
             audit.case_keys,
             (
                 "actual_completed_context_transport",
+                "actual_transport_flat_local_system",
                 "raw_rees_schutzenberger_shortcut_rejected",
                 "recurrent_hidden_component_filter",
                 "cyclic_p_primary_section_fibre",
+                "full_green_class_scope",
                 "positive_rigidity_target",
+                "hidden_row_naturality_missing_axiom",
+                "aut_row_defect_cocycle",
                 "negative_countercertificate_target",
                 "finite_depth_group_loop_guardrail",
             ),
         )
         self.assertEqual(audit.cases[0].role, "model_requirement")
-        self.assertEqual(audit.cases[1].role, "guardrail")
+        self.assertEqual(audit.cases[1].role, "what_ybe_forces")
+        self.assertEqual(audit.cases[7].role, "missing_axiom")
+        self.assertEqual(audit.cases[8].role, "obstruction_class")
         self.assertEqual(audit.cases[-1].role, "finite_prefix_guardrail")
 
     def test_small_green_section_transport_prefix_routes_group_loops_to_known_branches(self):

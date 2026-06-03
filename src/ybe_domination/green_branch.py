@@ -2197,9 +2197,16 @@ class GreenSectionTransportRigidityGateAudit:
     positive_rigidity_condition_recorded: bool
     negative_countercertificate_recorded: bool
     finite_depth_group_gate_connected: bool
+    flat_transport_only_recorded: bool
+    full_green_class_scope_recorded: bool
+    hidden_row_naturality_axiom_required: bool
+    row_defect_cocycle_recorded: bool
     actual_transport_formula: str
+    transport_local_system_formula: str
     positive_rigidity_formula: str
     countercertificate_formula: str
+    row_defect_cocycle_formula: str
+    missing_axiom_formula: str
     cases: Tuple[GreenSectionTransportRigidityCase, ...]
 
     @property
@@ -2216,16 +2223,27 @@ class GreenSectionTransportRigidityGateAudit:
             and self.positive_rigidity_condition_recorded
             and self.negative_countercertificate_recorded
             and self.finite_depth_group_gate_connected
+            and self.flat_transport_only_recorded
+            and self.full_green_class_scope_recorded
+            and self.hidden_row_naturality_axiom_required
+            and self.row_defect_cocycle_recorded
             and "supported completed rows" in self.actual_transport_formula
+            and "T_theta" in self.transport_local_system_formula
             and "theta_{e,e'}" in self.positive_rigidity_formula
             and "Aut(C_{p^m})" in self.countercertificate_formula
+            and "epsilon_Omega" in self.row_defect_cocycle_formula
+            and "row naturality" in self.missing_axiom_formula
             and self.case_keys
             == (
                 "actual_completed_context_transport",
+                "actual_transport_flat_local_system",
                 "raw_rees_schutzenberger_shortcut_rejected",
                 "recurrent_hidden_component_filter",
                 "cyclic_p_primary_section_fibre",
+                "full_green_class_scope",
                 "positive_rigidity_target",
+                "hidden_row_naturality_missing_axiom",
+                "aut_row_defect_cocycle",
                 "negative_countercertificate_target",
                 "finite_depth_group_loop_guardrail",
             )
@@ -2500,6 +2518,21 @@ def green_section_transport_rigidity_gate_audit() -> GreenSectionTransportRigidi
             ),
         ),
         GreenSectionTransportRigidityCase(
+            key="actual_transport_flat_local_system",
+            role="what_ybe_forces",
+            statement=(
+                "actual supported rows and YBE cube transports define a flat "
+                "local system of cyclic branch quotients "
+                "G_e=N_{C,d}(e)/N_{C,d+1}(e) with transport isomorphisms "
+                "T_theta:G_e -> G_{e'}"
+            ),
+            consequence=(
+                "cube coherence makes parallel transport well-defined up to "
+                "the actual completed-context relations, but flatness is not "
+                "the same as trivial holonomy"
+            ),
+        ),
+        GreenSectionTransportRigidityCase(
             key="raw_rees_schutzenberger_shortcut_rejected",
             role="guardrail",
             statement=(
@@ -2539,17 +2572,59 @@ def green_section_transport_rigidity_gate_audit() -> GreenSectionTransportRigidi
             ),
         ),
         GreenSectionTransportRigidityCase(
+            key="full_green_class_scope",
+            role="scope_of_fullness",
+            statement=(
+                "fullness of the regular Green R-class keeps retained germs "
+                "and their completed-row successors inside the same regular "
+                "component"
+            ),
+            consequence=(
+                "fullness makes the hidden cyclic fibres and their actual "
+                "transport groupoid well-defined, but it does not force the "
+                "resulting Aut(C_{p^m}) local system to have trivial holonomy"
+            ),
+        ),
+        GreenSectionTransportRigidityCase(
             key="positive_rigidity_target",
             role="positive_route",
             statement=(
-                "if theta_{e,e'} exists and both branches keep the same "
-                "recurrent hidden subsystem alive, the induced automorphisms "
-                "on N_{C,d}/N_{C,d+1} must agree"
+                "if theta_{e,e'} exists, both branches keep the same "
+                "recurrent hidden subsystem alive, and the hidden row action "
+                "is natural for actual transport, then the induced "
+                "automorphisms on N_{C,d}/N_{C,d+1} agree"
             ),
             consequence=(
-                "then the hidden branch is rigid under actual transport and "
-                "routes to the fixed Green/Schutzenberger/atom/unit detector "
-                "product"
+                "this is the needed positive axiom or lemma; it is not a "
+                "formal consequence of actual transport flatness alone"
+            ),
+        ),
+        GreenSectionTransportRigidityCase(
+            key="hidden_row_naturality_missing_axiom",
+            role="missing_axiom",
+            statement=(
+                "actual hidden row naturality requires "
+                "T_theta phi_e = phi_{e'} T_theta for every actual transport "
+                "theta:e -> e'"
+            ),
+            consequence=(
+                "after identifying fibres by T_theta this is exactly the "
+                "desired equality of hidden cyclic branch automorphisms"
+            ),
+        ),
+        GreenSectionTransportRigidityCase(
+            key="aut_row_defect_cocycle",
+            role="obstruction_class",
+            statement=(
+                "without row naturality the defect "
+                "epsilon_Omega(theta)=phi_{e'}^-1 T_theta phi_e T_theta^-1 "
+                "is an Aut(C_{p^m})-valued cocycle on the actual hidden "
+                "corridor category"
+            ),
+            consequence=(
+                "YBE cube identities force epsilon_Omega to respect actual "
+                "cube boundary paths; they do not force "
+                "epsilon_Omega(theta)=1 for every comparable pair"
             ),
         ),
         GreenSectionTransportRigidityCase(
@@ -2562,7 +2637,8 @@ def green_section_transport_rigidity_gate_audit() -> GreenSectionTransportRigidi
             ),
             consequence=(
                 "only such an objectwise transported unit mismatch would "
-                "produce a genuine Green section-holonomy obstruction"
+                "produce a genuine Green section-holonomy obstruction, namely "
+                "a nontrivial value of epsilon_Omega on actual transport"
             ),
         ),
         GreenSectionTransportRigidityCase(
@@ -2587,17 +2663,34 @@ def green_section_transport_rigidity_gate_audit() -> GreenSectionTransportRigidi
         positive_rigidity_condition_recorded=True,
         negative_countercertificate_recorded=True,
         finite_depth_group_gate_connected=True,
+        flat_transport_only_recorded=True,
+        full_green_class_scope_recorded=True,
+        hidden_row_naturality_axiom_required=True,
+        row_defect_cocycle_recorded=True,
         actual_transport_formula=(
             "theta_{e,e'} belongs to the category generated by supported "
             "completed rows and YBE cube transports"
         ),
+        transport_local_system_formula=(
+            "G_e=N_{C,d}(e)/N_{C,d+1}(e), and actual theta:e->e' gives "
+            "T_theta:G_e->G_{e'}"
+        ),
         positive_rigidity_formula=(
-            "theta_{e,e'} comparable and recurrent hidden subsystem equal "
-            "imply phi_e = phi_{e'} on N_{C,d}/N_{C,d+1}"
+            "theta_{e,e'} comparable, recurrent hidden subsystem equal, and "
+            "epsilon_Omega(theta_{e,e'})=1 imply phi_e = phi_{e'} after "
+            "transport on N_{C,d}/N_{C,d+1}"
         ),
         countercertificate_formula=(
             "finite X, full regular C, actual theta_{e,e'}, and "
             "phi_e != phi_{e'} in Aut(C_{p^m})"
+        ),
+        row_defect_cocycle_formula=(
+            "epsilon_Omega:Mor(K_Omega)->Aut(C_{p^m}) with "
+            "epsilon_Omega(Gamma_L)=epsilon_Omega(Gamma_R) on actual YBE cubes"
+        ),
+        missing_axiom_formula=(
+            "actual hidden row naturality, equivalently "
+            "epsilon_Omega(theta)=1 for every actual transport theta"
         ),
         cases=cases,
     )

@@ -2534,9 +2534,35 @@ theta_{e,e'}.
 The positive target is:
 
 ```text
-theta_{e,e'} comparable and recurrent hidden subsystem equal
+theta_{e,e'} comparable, recurrent hidden subsystem equal,
+and hidden row naturality
 imply phi_e = phi_{e'} on N_{C,d}/N_{C,d+1}.
 ```
+
+The current refinement is that actual YBE cube transport supplies a flat
+local system
+
+```text
+G_e=N_{C,d}(e)/N_{C,d+1}(e),    T_theta:G_e -> G_{e'}
+```
+
+over the hidden corridor category `K_Omega`; it does not by itself trivialize
+hidden section holonomy.  The exact missing axiom is actual hidden row
+naturality
+
+```text
+T_theta phi_e = phi_{e'} T_theta,
+```
+
+equivalently vanishing of the row-defect cocycle
+
+```text
+epsilon_Omega:Mor(K_Omega)->Aut(C_{p^m})
+```
+
+on every actual transport arrow.  YBE cube identities force
+`epsilon_Omega` to agree on the two actual boundary paths of each cube; they
+do not force `epsilon_Omega(theta)=1`.
 
 The negative target is a real countercertificate: a finite bijective YBE
 solution, a full regular Green class, actual comparable hidden section
@@ -2546,9 +2572,10 @@ branches, a cyclic p-primary branch quotient, and unequal units
 phi_e != phi_{e'} in Aut(C_{p^m}).
 ```
 
-This is the exact local pressure test queued for the next ChatGPT Pro probe:
-either actual YBE cube transport forces rigidity, or a genuine objectwise
-transported section-holonomy counterexample must be built.
+Thus actual completed-context comparability alone is not enough.  A positive
+route must prove the extra row-naturality/defect-vanishing statement from
+YBE-specific structure, while a negative route must build a genuine
+objectwise transported section-holonomy counterexample.
 
 ## Green Section Transport Prefix Audit
 

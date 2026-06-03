@@ -68,6 +68,22 @@ def render_markdown(report):
             f"`{report['finite_depth_group_gate_connected']}`;"
         ),
         (
+            "- flat transport only recorded: "
+            f"`{report['flat_transport_only_recorded']}`;"
+        ),
+        (
+            "- full Green-class scope recorded: "
+            f"`{report['full_green_class_scope_recorded']}`;"
+        ),
+        (
+            "- hidden row naturality axiom required: "
+            f"`{report['hidden_row_naturality_axiom_required']}`;"
+        ),
+        (
+            "- row-defect cocycle recorded: "
+            f"`{report['row_defect_cocycle_recorded']}`;"
+        ),
+        (
             "- records Green section transport rigidity gate: "
             f"`{report['records_green_section_transport_rigidity_gate']}`."
         ),
@@ -75,8 +91,11 @@ def render_markdown(report):
         "## Formulas",
         "",
         f"- actual transport: `{report['actual_transport_formula']}`;",
+        f"- local system: `{report['transport_local_system_formula']}`;",
         f"- positive rigidity: `{report['positive_rigidity_formula']}`;",
-        f"- countercertificate: `{report['countercertificate_formula']}`.",
+        f"- countercertificate: `{report['countercertificate_formula']}`;",
+        f"- row-defect cocycle: `{report['row_defect_cocycle_formula']}`;",
+        f"- missing axiom: `{report['missing_axiom_formula']}`.",
         "",
         "## Rows",
         "",
@@ -96,17 +115,18 @@ def render_markdown(report):
         [
             "## Meaning",
             "",
-            "A positive proof must show actual-transport rigidity: if two",
-            "admissible section branches are connected by a supported completed",
-            "context transport and keep the same recurrent hidden component",
-            "alive, then they induce the same unit on the cyclic p-primary",
-            "section quotient.",
+            "The YBE cube identities give a flat local system of hidden cyclic",
+            "branch quotients over the actual completed-context category.  They",
+            "do not, by themselves, force the section automorphisms to be a",
+            "natural endomorphism of that local system.",
             "",
-            "A negative proof must construct the corresponding objectwise",
-            "countercertificate: a finite bijective YBE solution, a full regular",
-            "Green class, actual comparable hidden section branches, and unequal",
-            "automorphisms in `Aut(C_{p^m})`.  Formal Green or Schutzenberger",
-            "motion is not sufficient.",
+            "A positive proof must therefore add or prove actual hidden row",
+            "naturality, equivalently `epsilon_Omega(theta)=1` for every actual",
+            "transport.  A negative proof must construct the corresponding",
+            "objectwise countercertificate: a finite bijective YBE solution, a",
+            "full regular Green class, actual comparable hidden section",
+            "branches, and unequal automorphisms in `Aut(C_{p^m})`.  Formal",
+            "Green or Schutzenberger motion is not sufficient.",
             "",
         ]
     )
@@ -122,6 +142,10 @@ def main():
             {
                 "case_keys": report["case_keys"],
                 "records": report["records_green_section_transport_rigidity_gate"],
+                "row_defect_cocycle": report["row_defect_cocycle_recorded"],
+                "row_naturality_required": report[
+                    "hidden_row_naturality_axiom_required"
+                ],
             },
             sort_keys=True,
         )

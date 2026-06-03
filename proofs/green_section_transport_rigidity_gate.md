@@ -61,9 +61,68 @@ The positive rigidity lemma would say that the induced units agree:
 phi_e = phi_{e'} in Aut(C_{p^m}).
 ```
 
-If true, hidden same-atom branch choices do not carry independent
-section-holonomy; they route into the already fixed Green/Schutzenberger,
-atom, and endpoint/unit detector product.
+The refined status is that this equality is not forced by actual
+completed-context comparability alone.  It follows if the hidden section
+action is natural for actual transport.
+
+## Flatness Versus Triviality
+
+Let `K_Omega` be the actual hidden corridor category of the recurrent
+component.  Its objects are retained germs `e=(s,x)` that keep `Omega`
+alive, and its arrows are generated only by supported completed rows and
+actual YBE cube identifications.
+
+For each object set
+
+```text
+G_e = N_{C,d}(e)/N_{C,d+1}(e) ~= C_{p^m}.
+```
+
+Actual transport gives isomorphisms
+
+```text
+T_theta:G_e -> G_{e'}
+```
+
+for arrows `theta:e -> e'`.  Fullness of the regular Green `R`-class is
+used here: it keeps retained germs and their completed-row successors inside
+the same regular component, so these cyclic branch fibres and their transport
+groupoid are well-defined.  Fullness does not imply that this local system
+has trivial holonomy.
+
+The section component gives hidden automorphisms
+
+```text
+phi_e in Aut(G_e).
+```
+
+The missing positive axiom is actual hidden row naturality:
+
+```text
+T_theta phi_e = phi_{e'} T_theta
+```
+
+for every actual transport `theta:e -> e'`.  Equivalently, the row-defect
+cocycle
+
+```text
+epsilon_Omega(theta)=phi_{e'}^{-1} T_theta phi_e T_theta^{-1}
+```
+
+must vanish.  The YBE cube identities imply flatness:
+
+```text
+epsilon_Omega(Gamma_L)=epsilon_Omega(Gamma_R)
+```
+
+for the two actual boundary paths of each supported cube.  They do not, by
+themselves, imply
+
+```text
+epsilon_Omega(theta)=1
+```
+
+for every comparable pair.
 
 ## Countercertificate Target
 
@@ -85,6 +144,10 @@ The raw `S_3` conjugation fibre action, a Rees sandwich coordinate, or a
 Schutzenberger target normalization is not enough unless it produces such an
 objectwise hidden class with actual completed-context transport.
 
+Equivalently, a negative example must realize a nontrivial value of
+`epsilon_Omega` on an actual hidden transport arrow, while still respecting
+all supported-row and YBE cube relations.
+
 ## Relation To The Existing Finite-Depth Gate
 
 The earlier note `proofs/green_holonomy_factorization_gate.md` records the
@@ -99,9 +162,10 @@ collapses.  That is necessary because residual braid actions are
 permutations.
 
 The present gate is the all-depth symbolic step after that guardrail.  A
-positive proof must show actual-transport rigidity of comparable hidden
-sections.  A negative proof must exhibit actual transported unit mismatch in
-the cyclic p-primary hidden fibre.
+positive proof must prove actual hidden row naturality, or otherwise show
+that the row-defect cocycle vanishes for every actual hidden corridor.  A
+negative proof must exhibit actual transported unit mismatch in the cyclic
+p-primary hidden fibre.
 
 The generated audit
 
