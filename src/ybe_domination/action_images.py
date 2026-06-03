@@ -67,6 +67,70 @@ class RackPointPushingOperatorLabelAudit:
 
 
 @dataclass(frozen=True)
+class PointPushingGeneratorRow:
+    """One standard last-strand point-pushing generator."""
+
+    point_pushing_arity: int
+    braid_index: int
+    generator_index: int
+    braid_word: BraidWord
+
+
+@dataclass(frozen=True)
+class FiniteAugmentedArtinEnvelopeRouteAudit:
+    """Symbolic route ledger for the point-pushing theorem strategy.
+
+    The rack-side operator-label extension is proved separately by the
+    rack note and finite-prefix audit.  This ledger records the exact
+    theorem route left after that correction: prove a finite augmented
+    Artin envelope for arbitrary finite bijective YBE solutions, then
+    realize compatible envelopes by finite racks.
+    """
+
+    rack_operator_label_exact_sequence_recorded: bool
+    rack_vertical_kernel_bound_recorded: bool
+    whole_point_pushing_exponent_bound_rejected: bool
+    domination_transfers_marked_point_pushing_quotients: bool
+    missing_augmented_envelope_lemma: str
+    missing_realization_lemma: str
+    obstruction_arities: Tuple[int, ...]
+    generator_rows: Tuple[PointPushingGeneratorRow, ...]
+    obstruction_requires_all_fixed_group_hurwitz_bases: bool
+    bounded_vertical_extension_is_live_invariant: bool
+
+    @property
+    def rack_side_invariant_is_ready(self) -> bool:
+        return (
+            self.rack_operator_label_exact_sequence_recorded
+            and self.rack_vertical_kernel_bound_recorded
+            and self.whole_point_pushing_exponent_bound_rejected
+            and self.domination_transfers_marked_point_pushing_quotients
+        )
+
+    @property
+    def remaining_theorem_lemmas(self) -> Tuple[str, str]:
+        return (self.missing_augmented_envelope_lemma, self.missing_realization_lemma)
+
+    @property
+    def has_first_obstruction_prefix(self) -> bool:
+        expected_count = sum(self.obstruction_arities)
+        return (
+            self.obstruction_arities == (3, 4)
+            and len(self.generator_rows) == expected_count
+            and all(row.braid_index == row.point_pushing_arity + 1 for row in self.generator_rows)
+        )
+
+    @property
+    def records_route_one_pressure_test(self) -> bool:
+        return (
+            self.rack_side_invariant_is_ready
+            and self.has_first_obstruction_prefix
+            and self.obstruction_requires_all_fixed_group_hurwitz_bases
+            and self.bounded_vertical_extension_is_live_invariant
+        )
+
+
+@dataclass(frozen=True)
 class LawBraidActionCertificate:
     braid_index: int
     tuple_count: int
@@ -1508,6 +1572,49 @@ def rack_point_pushing_operator_label_audit(
         quotient_map_well_defined=quotient_map_well_defined,
         vertical_exponent_divides_inner_exponent=vertical_divides,
         truncated=False,
+    )
+
+
+def finite_augmented_artin_envelope_route_audit(
+    obstruction_arities: Sequence[int] = (3, 4),
+) -> FiniteAugmentedArtinEnvelopeRouteAudit:
+    """Record the corrected point-pushing route and its first finite tests.
+
+    The live invariant is not a uniform exponent bound for the whole
+    point-pushing image.  It is a fixed finite group-Hurwitz base with
+    bounded-exponent vertical noise.  The returned rows spell out the
+    standard generators ``alpha_{i,n+1}`` for the first obstruction arities
+    so finite computations use the same Fadell-Neuwirth convention.
+    """
+
+    from .braid_laws import pure_braid_generator
+
+    rows = []
+    arities = tuple(obstruction_arities)
+    for arity in arities:
+        if arity < 1:
+            raise ValueError("obstruction arities must be positive")
+        braid_index = arity + 1
+        rows.extend(
+            PointPushingGeneratorRow(
+                point_pushing_arity=arity,
+                braid_index=braid_index,
+                generator_index=generator,
+                braid_word=pure_braid_generator(generator, braid_index),
+            )
+            for generator in range(1, arity + 1)
+        )
+    return FiniteAugmentedArtinEnvelopeRouteAudit(
+        rack_operator_label_exact_sequence_recorded=True,
+        rack_vertical_kernel_bound_recorded=True,
+        whole_point_pushing_exponent_bound_rejected=True,
+        domination_transfers_marked_point_pushing_quotients=True,
+        missing_augmented_envelope_lemma="finite augmented Artin-envelope lemma",
+        missing_realization_lemma="finite rack realization of compatible augmented Artin-envelope towers",
+        obstruction_arities=arities,
+        generator_rows=tuple(rows),
+        obstruction_requires_all_fixed_group_hurwitz_bases=True,
+        bounded_vertical_extension_is_live_invariant=True,
     )
 
 

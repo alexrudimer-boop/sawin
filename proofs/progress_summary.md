@@ -1695,6 +1695,18 @@ braid index.  The note
 the dihedral-rack warning example: finite racks can already have unbounded
 whole point-pushing complexity, so the invariant is the bounded-exponent
 vertical extension over a fixed group-Hurwitz tower.
+Route (1) is now recorded explicitly in
+`proofs/finite_augmented_artin_envelope_route.md`, with
+`proofs/finite_augmented_artin_envelope_route_audit.md` generated from the
+public helper `finite_augmented_artin_envelope_route_audit()`.  This ledger
+separates the proved rack-side operator-label extension from the two missing
+positive lemmas: the finite augmented Artin-envelope lemma for arbitrary
+finite bijective YBE point-pushing towers, and the realization lemma turning
+compatible augmented envelopes into marked quotients of actual finite rack
+towers.  It also fixes the first obstruction-prefix generators
+`alpha_{i,4}` and `alpha_{i,5}` for the `Q_X(3)` and `Q_X(4)` pressure tests,
+so future negative attempts must defeat every fixed finite group-Hurwitz base
+plus bounded-exponent vertical kernel, not merely exhibit unbounded order.
 
 The semigroup/Green route has also been narrowed to a precise Rees rectangle
 flatness target.  Ordinary Green/Rees theory leaves a sandwich-matrix
