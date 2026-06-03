@@ -2074,3 +2074,29 @@ prefix surface.  It does not settle finite rack domination: the next required
 step is to add the section-change/gauge normalization and test whether higher
 or mixed square classes are merely coboundaries or pullbacks from one fixed
 finite operator-label Hurwitz base.
+
+## Vertical Peiffer Cube Transport
+
+The note `proofs/prefix_vertical_peiffer_cube_transport.md` and generated
+audit `proofs/prefix_vertical_peiffer_cube_transport_audit.md` check the first
+cube-level transport law for the Peiffer square boundaries.  For each deleted
+stationary triple `T` and each pair face `F subset T`, the audit compares
+
+```text
+delete_{T-F} after Peiffer_F
+=
+Peiffer_T(F) after delete_{T-F}.
+```
+
+For the nondegenerate two-point prefix witness, all `30` pair-in-triple rows
+commute.  Both the transported pair Peiffer boundaries and the direct
+triple-face Peiffer boundaries are identity, so the Peiffer order-pair
+spectrum is `((1, 1),)` and the mismatch count is `0`.  For the degenerate
+identity row, all `30` rows commute for the identity-defect reason.
+
+The external theoretical pressure check identifies the remaining invariant as
+a normalized deletion `2`-cocycle with coefficients in vertical fibre
+bisection groups, modulo section-change gauge and pullback from one fixed
+finite operator-label Hurwitz base.  This audit verifies the first cubical
+coherence identity for the toy prefix surface, but the gauge quotient and
+fixed-base pullback test remain open.

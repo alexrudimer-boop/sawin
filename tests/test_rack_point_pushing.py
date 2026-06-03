@@ -20,6 +20,7 @@ from ybe_domination import (
     PrefixGroupHurwitzCompressionPressureAudit,
     PrefixPointForgettingRestrictionAudit,
     PrefixPointPushingSurfaceAudit,
+    PrefixVerticalPeifferCubeTransportAudit,
     PrefixVerticalPeifferSquareAudit,
     PrefixVerticalDefectTransportAudit,
     PrefixVerticalDefectTransformAudit,
@@ -35,6 +36,7 @@ from ybe_domination import (
     prefix_group_hurwitz_compression_pressure_audit,
     prefix_point_forgetting_restriction_audit,
     prefix_point_pushing_surface_audit,
+    prefix_vertical_peiffer_cube_transport_audit,
     prefix_vertical_peiffer_square_audit,
     prefix_vertical_defect_transport_audit,
     prefix_vertical_defect_transform_audit,
@@ -996,6 +998,91 @@ class RackPointPushingOperatorLabelTests(unittest.TestCase):
         self.assertEqual(audit.total_peiffer_moved_tuple_count, 0)
         self.assertEqual(audit.defect_order_pair_spectrum, ((1, 1),))
         self.assertEqual(audit.peiffer_order_spectrum, (1,))
+
+    def test_prefix_vertical_peiffer_cube_transport_is_trivial_for_prefix_rows(self):
+        solution = FiniteBraidedSet(
+            (0, 1),
+            {
+                (0, 0): (1, 0),
+                (0, 1): (0, 0),
+                (1, 0): (1, 1),
+                (1, 1): (0, 1),
+            },
+        )
+
+        audit = prefix_vertical_peiffer_cube_transport_audit(solution)
+
+        self.assertIsInstance(audit, PrefixVerticalPeifferCubeTransportAudit)
+        self.assertEqual(audit.left_prefix_monoid_size, 2)
+        self.assertEqual(audit.nonunit_prefix_count, 0)
+        self.assertEqual(audit.row_count, 30)
+        self.assertTrue(audit.verifies_first_vertical_peiffer_cube_transport)
+        self.assertTrue(audit.all_peiffer_boundaries_transportable)
+        self.assertTrue(audit.all_peiffer_transports_commute)
+        self.assertTrue(audit.all_pair_peiffer_boundaries_identity)
+        self.assertTrue(audit.all_triple_peiffer_boundaries_identity)
+        self.assertEqual(audit.total_mismatch_count, 0)
+        self.assertEqual(audit.total_pair_peiffer_moved_tuple_count, 0)
+        self.assertEqual(audit.total_triple_peiffer_moved_tuple_count, 0)
+        self.assertEqual(audit.peiffer_order_pair_spectrum, ((1, 1),))
+        self.assertEqual(
+            {
+                row.triple_forget_stationary_indices: sum(
+                    1
+                    for other in audit.rows
+                    if other.triple_forget_stationary_indices
+                    == row.triple_forget_stationary_indices
+                )
+                for row in audit.rows
+            },
+            {
+                (1, 2, 3): 3,
+                (1, 2, 4): 3,
+                (1, 2, 5): 3,
+                (1, 3, 4): 3,
+                (1, 3, 5): 3,
+                (1, 4, 5): 3,
+                (2, 3, 4): 3,
+                (2, 3, 5): 3,
+                (2, 4, 5): 3,
+                (3, 4, 5): 3,
+            },
+        )
+        self.assertTrue(
+            all(
+                row.first_witness_pair_target_input is None
+                and row.first_left_after_pair_peiffer_then_delete is None
+                and row.first_right_after_delete_then_triple_peiffer is None
+                for row in audit.rows
+            )
+        )
+
+    def test_prefix_vertical_peiffer_cube_transport_identity_rows_are_trivial(self):
+        solution = FiniteBraidedSet(
+            (0, 1),
+            {
+                (0, 0): (0, 0),
+                (0, 1): (0, 1),
+                (1, 0): (1, 0),
+                (1, 1): (1, 1),
+            },
+        )
+
+        audit = prefix_vertical_peiffer_cube_transport_audit(solution)
+
+        self.assertTrue(audit.verifies_first_vertical_peiffer_cube_transport)
+        self.assertEqual(audit.total_mismatch_count, 0)
+        self.assertEqual(audit.total_pair_peiffer_moved_tuple_count, 0)
+        self.assertEqual(audit.total_triple_peiffer_moved_tuple_count, 0)
+        self.assertEqual(audit.peiffer_order_pair_spectrum, ((1, 1),))
+        self.assertTrue(
+            all(
+                row.pair_peiffer_identity
+                and row.triple_peiffer_identity
+                and row.peiffer_transport_commutes
+                for row in audit.rows
+            )
+        )
 
 
 if __name__ == "__main__":

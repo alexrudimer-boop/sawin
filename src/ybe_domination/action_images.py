@@ -1051,6 +1051,116 @@ class PrefixVerticalPeifferSquareAudit:
 
 
 @dataclass(frozen=True)
+class PrefixVerticalPeifferCubeTransportRow:
+    """Transport of a Peiffer square boundary across a third deletion."""
+
+    source_point_pushing_arity: int
+    source_braid_index: int
+    triple_forget_stationary_indices: Tuple[int, int, int]
+    pair_forget_stationary_indices: Tuple[int, int]
+    extra_stationary_index: int
+    first_source_generator_index: int
+    second_source_generator_index: int
+    pair_target_braid_index: int
+    triple_target_braid_index: int
+    pair_target_tuple_count: int
+    triple_target_tuple_count: int
+    pair_defect_order_pair: Tuple[int | None, int | None]
+    triple_defect_order_pair: Tuple[int | None, int | None]
+    pair_peiffer_is_permutation: bool
+    triple_peiffer_is_permutation: bool
+    pair_peiffer_order: int | None
+    triple_peiffer_order: int | None
+    pair_peiffer_identity: bool | None
+    triple_peiffer_identity: bool | None
+    pair_peiffer_moved_tuple_count: int
+    triple_peiffer_moved_tuple_count: int
+    additional_face_surjective: bool
+    peiffer_transport_commutes: bool
+    mismatch_count: int
+    first_witness_pair_target_input: Tuple[object, ...] | None
+    first_left_after_pair_peiffer_then_delete: Tuple[object, ...] | None
+    first_right_after_delete_then_triple_peiffer: Tuple[object, ...] | None
+
+    @property
+    def peiffer_boundaries_are_transportable(self) -> bool:
+        return (
+            self.additional_face_surjective
+            and self.pair_peiffer_is_permutation
+            and self.triple_peiffer_is_permutation
+        )
+
+
+@dataclass(frozen=True)
+class PrefixVerticalPeifferCubeTransportAudit:
+    """First cube-transport check for vertical Peiffer square boundaries."""
+
+    element_count: int
+    left_prefix_monoid_size: int
+    nonunit_prefix_count: int
+    source_point_pushing_arity: int
+    rows: Tuple[PrefixVerticalPeifferCubeTransportRow, ...]
+    records_first_vertical_peiffer_cube_transport: bool
+
+    @property
+    def row_count(self) -> int:
+        return len(self.rows)
+
+    @property
+    def all_peiffer_boundaries_transportable(self) -> bool:
+        return all(row.peiffer_boundaries_are_transportable for row in self.rows)
+
+    @property
+    def all_peiffer_transports_commute(self) -> bool:
+        return all(row.peiffer_transport_commutes for row in self.rows)
+
+    @property
+    def all_pair_peiffer_boundaries_identity(self) -> bool:
+        return all(row.pair_peiffer_identity for row in self.rows)
+
+    @property
+    def all_triple_peiffer_boundaries_identity(self) -> bool:
+        return all(row.triple_peiffer_identity for row in self.rows)
+
+    @property
+    def total_mismatch_count(self) -> int:
+        return sum(row.mismatch_count for row in self.rows)
+
+    @property
+    def total_pair_peiffer_moved_tuple_count(self) -> int:
+        return sum(row.pair_peiffer_moved_tuple_count for row in self.rows)
+
+    @property
+    def total_triple_peiffer_moved_tuple_count(self) -> int:
+        return sum(row.triple_peiffer_moved_tuple_count for row in self.rows)
+
+    @property
+    def peiffer_order_pair_spectrum(self) -> Tuple[Tuple[int, int], ...]:
+        return tuple(
+            sorted(
+                {
+                    (row.pair_peiffer_order, row.triple_peiffer_order)
+                    for row in self.rows
+                    if (
+                        row.pair_peiffer_order is not None
+                        and row.triple_peiffer_order is not None
+                    )
+                }
+            )
+        )
+
+    @property
+    def verifies_first_vertical_peiffer_cube_transport(self) -> bool:
+        return (
+            self.source_point_pushing_arity == 5
+            and self.row_count == 30
+            and self.all_peiffer_boundaries_transportable
+            and self.all_peiffer_transports_commute
+            and self.records_first_vertical_peiffer_cube_transport
+        )
+
+
+@dataclass(frozen=True)
 class LawBraidActionCertificate:
     braid_index: int
     tuple_count: int
@@ -4398,6 +4508,258 @@ def prefix_vertical_peiffer_square_audit(
         source_point_pushing_arity=source_point_pushing_arity,
         rows=rows,
         records_first_vertical_peiffer_square_boundary=True,
+    )
+
+
+def _vertical_peiffer_boundary_data(
+    solution: FiniteBraidedSet,
+    *,
+    source_point_pushing_arity: int,
+    forget_stationary_indices: Tuple[int, ...],
+    first_source_generator_index: int,
+    second_source_generator_index: int,
+) -> tuple[
+    PrefixVerticalDefectTransformRow,
+    PrefixVerticalDefectTransformRow,
+    Tuple[Tuple[object, ...], ...],
+    Permutation | None,
+    int | None,
+    bool | None,
+    int,
+]:
+    first_defect = _prefix_vertical_defect_transform_row(
+        solution,
+        deletion_level=len(forget_stationary_indices),
+        source_point_pushing_arity=source_point_pushing_arity,
+        forget_stationary_indices=forget_stationary_indices,
+        source_generator_index=first_source_generator_index,
+    )
+    second_defect = _prefix_vertical_defect_transform_row(
+        solution,
+        deletion_level=len(forget_stationary_indices),
+        source_point_pushing_arity=source_point_pushing_arity,
+        forget_stationary_indices=forget_stationary_indices,
+        source_generator_index=second_source_generator_index,
+    )
+    target_tuples = tuple(
+        product(solution.elements, repeat=first_defect.target_braid_index)
+    )
+    peiffer_commutator = None
+    peiffer_order = None
+    peiffer_identity = None
+    moved_count = 0
+    if (
+        first_defect.defect_permutation is not None
+        and second_defect.defect_permutation is not None
+    ):
+        peiffer_commutator = _permutation_commutator(
+            first_defect.defect_permutation,
+            second_defect.defect_permutation,
+        )
+        peiffer_order = permutation_order(peiffer_commutator)
+        peiffer_identity = peiffer_commutator == identity_permutation(
+            len(peiffer_commutator)
+        )
+        moved_count = sum(
+            1
+            for index, image_index in enumerate(peiffer_commutator)
+            if index != image_index
+        )
+    return (
+        first_defect,
+        second_defect,
+        target_tuples,
+        peiffer_commutator,
+        peiffer_order,
+        peiffer_identity,
+        moved_count,
+    )
+
+
+def _prefix_vertical_peiffer_cube_transport_row(
+    solution: FiniteBraidedSet,
+    *,
+    source_point_pushing_arity: int,
+    triple_forget_stationary_indices: Tuple[int, int, int],
+    pair_forget_stationary_indices: Tuple[int, int],
+) -> PrefixVerticalPeifferCubeTransportRow:
+    source_braid_index = source_point_pushing_arity + 1
+    triple_forgets = tuple(sorted(triple_forget_stationary_indices))
+    pair_forgets = tuple(sorted(pair_forget_stationary_indices))
+    if (
+        len(triple_forgets) != 3
+        or triple_forgets != triple_forget_stationary_indices
+    ):
+        raise ValueError("triple_forget_stationary_indices must be increasing")
+    if len(pair_forgets) != 2 or pair_forgets != pair_forget_stationary_indices:
+        raise ValueError("pair_forget_stationary_indices must be increasing")
+    if not set(pair_forgets).issubset(triple_forgets):
+        raise ValueError("pair face must be contained in triple face")
+    if triple_forgets[0] < 1 or triple_forgets[-1] > source_point_pushing_arity:
+        raise ValueError("can only delete stationary strands")
+
+    extra_stationary_index = next(
+        index
+        for index in triple_forgets
+        if index not in pair_forgets
+    )
+    first_index, second_index = pair_forgets
+    (
+        pair_first_defect,
+        pair_second_defect,
+        pair_target_tuples,
+        pair_peiffer,
+        pair_peiffer_order,
+        pair_peiffer_identity,
+        pair_moved_count,
+    ) = _vertical_peiffer_boundary_data(
+        solution,
+        source_point_pushing_arity=source_point_pushing_arity,
+        forget_stationary_indices=pair_forgets,
+        first_source_generator_index=first_index,
+        second_source_generator_index=second_index,
+    )
+    (
+        triple_first_defect,
+        triple_second_defect,
+        triple_target_tuples,
+        triple_peiffer,
+        triple_peiffer_order,
+        triple_peiffer_identity,
+        triple_moved_count,
+    ) = _vertical_peiffer_boundary_data(
+        solution,
+        source_point_pushing_arity=source_point_pushing_arity,
+        forget_stationary_indices=triple_forgets,
+        first_source_generator_index=first_index,
+        second_source_generator_index=second_index,
+    )
+    triple_target_index = {
+        tuple_value: index
+        for index, tuple_value in enumerate(triple_target_tuples)
+    }
+    additional_face_images = {
+        _delete_additional_target_stationary_index(
+            tuple_value,
+            source_braid_index=source_braid_index,
+            already_forgetting=pair_forgets,
+            extra_stationary_index=extra_stationary_index,
+        )
+        for tuple_value in pair_target_tuples
+    }
+    additional_face_surjective = additional_face_images == set(triple_target_tuples)
+
+    mismatch_count = 0
+    first_witness_pair_target_input = None
+    first_left_after_pair_peiffer_then_delete = None
+    first_right_after_delete_then_triple_peiffer = None
+    if pair_peiffer is not None and triple_peiffer is not None:
+        for pair_index, tuple_value in enumerate(pair_target_tuples):
+            left_after_pair_peiffer = pair_target_tuples[pair_peiffer[pair_index]]
+            left = _delete_additional_target_stationary_index(
+                left_after_pair_peiffer,
+                source_braid_index=source_braid_index,
+                already_forgetting=pair_forgets,
+                extra_stationary_index=extra_stationary_index,
+            )
+            deleted_input = _delete_additional_target_stationary_index(
+                tuple_value,
+                source_braid_index=source_braid_index,
+                already_forgetting=pair_forgets,
+                extra_stationary_index=extra_stationary_index,
+            )
+            right = triple_target_tuples[
+                triple_peiffer[triple_target_index[deleted_input]]
+            ]
+            if left == right:
+                continue
+            mismatch_count += 1
+            if first_witness_pair_target_input is None:
+                first_witness_pair_target_input = tuple(tuple_value)
+                first_left_after_pair_peiffer_then_delete = left
+                first_right_after_delete_then_triple_peiffer = right
+    else:
+        mismatch_count = len(pair_target_tuples)
+        if pair_target_tuples:
+            first_witness_pair_target_input = tuple(pair_target_tuples[0])
+
+    return PrefixVerticalPeifferCubeTransportRow(
+        source_point_pushing_arity=source_point_pushing_arity,
+        source_braid_index=source_braid_index,
+        triple_forget_stationary_indices=triple_forgets,
+        pair_forget_stationary_indices=pair_forgets,
+        extra_stationary_index=extra_stationary_index,
+        first_source_generator_index=first_index,
+        second_source_generator_index=second_index,
+        pair_target_braid_index=pair_first_defect.target_braid_index,
+        triple_target_braid_index=triple_first_defect.target_braid_index,
+        pair_target_tuple_count=len(pair_target_tuples),
+        triple_target_tuple_count=len(triple_target_tuples),
+        pair_defect_order_pair=(
+            pair_first_defect.defect_order,
+            pair_second_defect.defect_order,
+        ),
+        triple_defect_order_pair=(
+            triple_first_defect.defect_order,
+            triple_second_defect.defect_order,
+        ),
+        pair_peiffer_is_permutation=pair_peiffer is not None,
+        triple_peiffer_is_permutation=triple_peiffer is not None,
+        pair_peiffer_order=pair_peiffer_order,
+        triple_peiffer_order=triple_peiffer_order,
+        pair_peiffer_identity=pair_peiffer_identity,
+        triple_peiffer_identity=triple_peiffer_identity,
+        pair_peiffer_moved_tuple_count=pair_moved_count,
+        triple_peiffer_moved_tuple_count=triple_moved_count,
+        additional_face_surjective=additional_face_surjective,
+        peiffer_transport_commutes=mismatch_count == 0,
+        mismatch_count=mismatch_count,
+        first_witness_pair_target_input=first_witness_pair_target_input,
+        first_left_after_pair_peiffer_then_delete=(
+            first_left_after_pair_peiffer_then_delete
+        ),
+        first_right_after_delete_then_triple_peiffer=(
+            first_right_after_delete_then_triple_peiffer
+        ),
+    )
+
+
+def prefix_vertical_peiffer_cube_transport_audit(
+    solution: FiniteBraidedSet,
+) -> PrefixVerticalPeifferCubeTransportAudit:
+    """Check cube transport for vertical Peiffer square boundaries."""
+
+    source_point_pushing_arity = 5
+    left_translations = _left_prefix_translations(solution)
+    monoid = TransformationMonoid.generated(left_translations.values())
+    row_specs = tuple(
+        (triple_forgets, pair_forgets)
+        for triple_forgets in combinations(
+            range(1, source_point_pushing_arity + 1),
+            3,
+        )
+        for pair_forgets in combinations(triple_forgets, 2)
+    )
+    rows = tuple(
+        _prefix_vertical_peiffer_cube_transport_row(
+            solution,
+            source_point_pushing_arity=source_point_pushing_arity,
+            triple_forget_stationary_indices=triple_forgets,
+            pair_forget_stationary_indices=pair_forgets,
+        )
+        for triple_forgets, pair_forgets in row_specs
+    )
+    return PrefixVerticalPeifferCubeTransportAudit(
+        element_count=len(solution.elements),
+        left_prefix_monoid_size=len(monoid.elements),
+        nonunit_prefix_count=sum(
+            1
+            for element in monoid.elements
+            if not _transformation_is_permutation(element)
+        ),
+        source_point_pushing_arity=source_point_pushing_arity,
+        rows=rows,
+        records_first_vertical_peiffer_cube_transport=True,
     )
 
 
