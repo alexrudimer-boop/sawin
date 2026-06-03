@@ -1,0 +1,87 @@
+{
+  "description": "Finite equation ledger for compressing prefix-edge memory to a fixed group-Hurwitz tower.",
+  "rows": [
+    {
+      "bounded_vertical_kernel_still_unproved": true,
+      "edge_state_count": 4,
+      "element_count": 2,
+      "faithful_prefix_monoid_group_embedding_obstructed": false,
+      "finite_transducer_alone_is_not_group_hurwitz": true,
+      "first_obstruction_arities": [
+        3,
+        4
+      ],
+      "forgetting_rescan_lumpability_equation_count": 16,
+      "left_prefix_monoid_size": 2,
+      "local_hurwitz_label_equation_count": 8,
+      "name": "nondegenerate_prefix_witness",
+      "nonunit_prefix_count": 0,
+      "product_invariance_equation_count": 8,
+      "records_group_hurwitz_compression_pressure": true,
+      "requires_conjugation_stable_image": true,
+      "requires_forgetting_rescan_lumpability": true,
+      "requires_group_label_map": true,
+      "requires_local_hurwitz_descend": true,
+      "requires_total_product_invariance": true,
+      "table": {
+        "(0, 0)": [
+          1,
+          0
+        ],
+        "(0, 1)": [
+          0,
+          0
+        ],
+        "(1, 0)": [
+          1,
+          1
+        ],
+        "(1, 1)": [
+          0,
+          1
+        ]
+      }
+    },
+    {
+      "bounded_vertical_kernel_still_unproved": true,
+      "edge_state_count": 6,
+      "element_count": 2,
+      "faithful_prefix_monoid_group_embedding_obstructed": true,
+      "finite_transducer_alone_is_not_group_hurwitz": true,
+      "first_obstruction_arities": [
+        3,
+        4
+      ],
+      "forgetting_rescan_lumpability_equation_count": 36,
+      "left_prefix_monoid_size": 3,
+      "local_hurwitz_label_equation_count": 12,
+      "name": "degenerate_identity_nonunit_prefix",
+      "nonunit_prefix_count": 2,
+      "product_invariance_equation_count": 12,
+      "records_group_hurwitz_compression_pressure": true,
+      "requires_conjugation_stable_image": true,
+      "requires_forgetting_rescan_lumpability": true,
+      "requires_group_label_map": true,
+      "requires_local_hurwitz_descend": true,
+      "requires_total_product_invariance": true,
+      "table": {
+        "(0, 0)": [
+          0,
+          0
+        ],
+        "(0, 1)": [
+          0,
+          1
+        ],
+        "(1, 0)": [
+          1,
+          0
+        ],
+        "(1, 1)": [
+          1,
+          1
+        ]
+      }
+    }
+  ]
+}

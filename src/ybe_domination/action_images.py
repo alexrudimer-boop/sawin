@@ -366,6 +366,41 @@ class PrefixEdgeTransducerAudit:
 
 
 @dataclass(frozen=True)
+class PrefixGroupHurwitzCompressionPressureAudit:
+    """Finite ledger for compressing prefix memory to group-Hurwitz labels."""
+
+    element_count: int
+    left_prefix_monoid_size: int
+    edge_state_count: int
+    nonunit_prefix_count: int
+    faithful_prefix_monoid_group_embedding_obstructed: bool
+    local_hurwitz_label_equation_count: int
+    product_invariance_equation_count: int
+    forgetting_rescan_lumpability_equation_count: int
+    first_obstruction_arities: Tuple[int, int]
+    requires_group_label_map: bool
+    requires_conjugation_stable_image: bool
+    requires_local_hurwitz_descend: bool
+    requires_total_product_invariance: bool
+    requires_forgetting_rescan_lumpability: bool
+    bounded_vertical_kernel_still_unproved: bool
+    finite_transducer_alone_is_not_group_hurwitz: bool
+
+    @property
+    def records_group_hurwitz_compression_pressure(self) -> bool:
+        return (
+            self.requires_group_label_map
+            and self.requires_conjugation_stable_image
+            and self.requires_local_hurwitz_descend
+            and self.requires_total_product_invariance
+            and self.requires_forgetting_rescan_lumpability
+            and self.bounded_vertical_kernel_still_unproved
+            and self.finite_transducer_alone_is_not_group_hurwitz
+            and self.first_obstruction_arities == (3, 4)
+        )
+
+
+@dataclass(frozen=True)
 class LawBraidActionCertificate:
     braid_index: int
     tuple_count: int
@@ -2506,6 +2541,58 @@ def prefix_edge_transducer_audit(
             size <= len(elements) for _index, size in max_fibres
         ),
         records_prefix_edge_transducer_tower=True,
+    )
+
+
+def _transformation_is_permutation(transformation: Transformation) -> bool:
+    return set(transformation) == set(range(len(transformation)))
+
+
+def prefix_group_hurwitz_compression_pressure_audit(
+    solution: FiniteBraidedSet,
+) -> PrefixGroupHurwitzCompressionPressureAudit:
+    """Record finite equations for group-completing prefix-edge memory.
+
+    A group-Hurwitz compression would be a map from prefix edges
+    ``(P,x,P lambda_x)`` to a conjugation-stable subset of one finite group
+    such that every local prefix-edge move descends to the ordinary Hurwitz
+    rule ``(h,k) -> (hkh^-1,h)``.  This helper does not search all finite
+    groups.  It records the exact finite equation family and the first
+    ``Q_X(3),Q_X(4)`` obstruction arities where such a compression must be
+    tested.
+    """
+
+    elements = tuple(solution.elements)
+    left_translations = _left_prefix_translations(solution)
+    monoid = TransformationMonoid.generated(left_translations.values())
+    edge_state_count = len(monoid.elements) * len(elements)
+    nonunit_count = sum(
+        1 for element in monoid.elements if not _transformation_is_permutation(element)
+    )
+    local_equations = len(monoid.elements) * len(elements) * len(elements)
+    forgetting_equations = (
+        len(monoid.elements)
+        * len(monoid.elements)
+        * len(elements)
+        * len(elements)
+    )
+    return PrefixGroupHurwitzCompressionPressureAudit(
+        element_count=len(elements),
+        left_prefix_monoid_size=len(monoid.elements),
+        edge_state_count=edge_state_count,
+        nonunit_prefix_count=nonunit_count,
+        faithful_prefix_monoid_group_embedding_obstructed=nonunit_count > 0,
+        local_hurwitz_label_equation_count=local_equations,
+        product_invariance_equation_count=local_equations,
+        forgetting_rescan_lumpability_equation_count=forgetting_equations,
+        first_obstruction_arities=(3, 4),
+        requires_group_label_map=True,
+        requires_conjugation_stable_image=True,
+        requires_local_hurwitz_descend=True,
+        requires_total_product_invariance=True,
+        requires_forgetting_rescan_lumpability=True,
+        bounded_vertical_kernel_still_unproved=True,
+        finite_transducer_alone_is_not_group_hurwitz=True,
     )
 
 

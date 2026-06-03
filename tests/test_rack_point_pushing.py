@@ -14,12 +14,14 @@ from ybe_domination import (
     FiniteBraidedSet,
     PointPushingGeneratorRow,
     PrefixEdgeTransducerAudit,
+    PrefixGroupHurwitzCompressionPressureAudit,
     degenerate_preimage_memory_audit,
     derived_hurwitz_envelope_audit,
     edge_memory_tower_audit,
     finite_augmented_artin_envelope_pressure_audit,
     finite_augmented_artin_envelope_route_audit,
     prefix_edge_transducer_audit,
+    prefix_group_hurwitz_compression_pressure_audit,
     rack_point_pushing_operator_label_audit,
     rack_solution,
 )
@@ -353,6 +355,53 @@ class RackPointPushingOperatorLabelTests(unittest.TestCase):
         self.assertTrue(audit.all_point_forgetting_maps_well_defined)
         self.assertTrue(audit.forgetting_fibres_bounded_by_element_count)
         self.assertTrue(audit.verifies_prefix_edge_transducer_prefix)
+
+    def test_prefix_group_hurwitz_pressure_records_group_like_prefix_case(self):
+        solution = FiniteBraidedSet(
+            (0, 1),
+            {
+                (0, 0): (1, 0),
+                (0, 1): (0, 0),
+                (1, 0): (1, 1),
+                (1, 1): (0, 1),
+            },
+        )
+
+        audit = prefix_group_hurwitz_compression_pressure_audit(solution)
+
+        self.assertIsInstance(
+            audit,
+            PrefixGroupHurwitzCompressionPressureAudit,
+        )
+        self.assertEqual(audit.left_prefix_monoid_size, 2)
+        self.assertEqual(audit.nonunit_prefix_count, 0)
+        self.assertFalse(audit.faithful_prefix_monoid_group_embedding_obstructed)
+        self.assertEqual(audit.local_hurwitz_label_equation_count, 8)
+        self.assertEqual(audit.product_invariance_equation_count, 8)
+        self.assertEqual(audit.forgetting_rescan_lumpability_equation_count, 16)
+        self.assertEqual(audit.first_obstruction_arities, (3, 4))
+        self.assertTrue(audit.records_group_hurwitz_compression_pressure)
+
+    def test_prefix_group_hurwitz_pressure_detects_nonunit_prefix_monoid(self):
+        solution = FiniteBraidedSet(
+            (0, 1),
+            {
+                (0, 0): (0, 0),
+                (0, 1): (0, 1),
+                (1, 0): (1, 0),
+                (1, 1): (1, 1),
+            },
+        )
+
+        audit = prefix_group_hurwitz_compression_pressure_audit(solution)
+
+        self.assertEqual(audit.left_prefix_monoid_size, 3)
+        self.assertEqual(audit.nonunit_prefix_count, 2)
+        self.assertTrue(audit.faithful_prefix_monoid_group_embedding_obstructed)
+        self.assertEqual(audit.local_hurwitz_label_equation_count, 12)
+        self.assertEqual(audit.product_invariance_equation_count, 12)
+        self.assertEqual(audit.forgetting_rescan_lumpability_equation_count, 36)
+        self.assertTrue(audit.records_group_hurwitz_compression_pressure)
 
 
 if __name__ == "__main__":

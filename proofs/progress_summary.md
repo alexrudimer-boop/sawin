@@ -1768,6 +1768,20 @@ the finite augmented Artin-envelope lemma: a transformation-monoid transducer
 must still be group-completed to a fixed finite group-Hurwitz base with
 bounded-exponent vertical noise, or a compatible `Q_X(3),Q_X(4),...`
 obstruction to that group-completion must be found.
+The follow-up note
+`proofs/prefix_group_hurwitz_compression_pressure.md` and generated audit
+`proofs/prefix_group_hurwitz_compression_pressure_audit.md` record the exact
+finite equations such a group-completion must satisfy.  A label map from
+prefix edges `(P,x,P lambda_x)` to a conjugation-stable subset of one finite
+group must descend every local move to the ordinary Hurwitz rule, preserve
+the total group-label product up to the allowed vertical kernel, and remain
+lumpable under interior point-forgetting prefix rescans.  The audit also
+separates the group-like prefix case from genuinely degenerate rows whose
+left-prefix monoid contains nonunit transformations; those nonunits cannot be
+faithfully embedded as a transformation monoid inside a group, so any
+positive proof must quotient or encode them with bounded vertical noise.  The
+first obstruction surface remains the compatible `Q_X(3)` and `Q_X(4)`
+point-pushing comparison.
 
 The semigroup/Green route has also been narrowed to a precise Rees rectangle
 flatness target.  Ordinary Green/Rees theory leaves a sandwich-matrix
