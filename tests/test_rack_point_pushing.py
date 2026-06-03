@@ -23,6 +23,7 @@ from ybe_domination import (
     PrefixPointPushingSurfaceAudit,
     PullbackCoskeletalCriterionAudit,
     YBEBrunnianDerivativeGateAudit,
+    YBECrossedSquareResidualAudit,
     YBECoskeletalMechanismAudit,
     PrefixVerticalPeifferCubeTransportAudit,
     PrefixVerticalPeifferSquareAudit,
@@ -47,6 +48,7 @@ from ybe_domination import (
     prefix_vertical_defect_transform_audit,
     pullback_coskeletal_criterion_audit,
     ybe_brunnian_derivative_gate_audit,
+    ybe_crossed_square_residual_audit,
     ybe_coskeletal_mechanism_audit,
     rack_point_pushing_operator_label_audit,
     rack_solution,
@@ -794,6 +796,41 @@ class RackPointPushingOperatorLabelTests(unittest.TestCase):
                 "fadell_neuwirth_decomposition_route",
             ),
         )
+
+    def test_ybe_crossed_square_residual_records_exact_obstruction_sequence(self):
+        audit = ybe_crossed_square_residual_audit()
+
+        self.assertIsInstance(audit, YBECrossedSquareResidualAudit)
+        self.assertTrue(audit.records_crossed_square_residual_criterion)
+        self.assertEqual(audit.crossed_square_vertices, ("L", "M", "N", "P"))
+        self.assertTrue(audit.crossed_square_model_identified)
+        self.assertTrue(audit.edge_degenerate_subgroup_identified)
+        self.assertTrue(audit.peiffer_mutual_subgroup_identified)
+        self.assertTrue(audit.fixed_base_pullback_subgroup_identified)
+        self.assertTrue(audit.residual_exact_sequence_recorded)
+        self.assertTrue(audit.boundary_obstruction_identified)
+        self.assertTrue(audit.moore_peiffer_obstruction_identified)
+        self.assertTrue(audit.peiffer_complete_vanishing_theorem_recorded)
+        self.assertTrue(audit.obstruction_invariant_form_recorded)
+        self.assertIn("R_{p,q}^I", audit.residual_quotient_formula)
+        self.assertIn("K/(K cap D_{p,q})", audit.exact_sequence_formula)
+        self.assertIn("H_partial^square", audit.boundary_obstruction_formula)
+        self.assertIn("H_2^square", audit.moore_peiffer_obstruction_formula)
+        self.assertIn("partial L = partial E_{p,q}", audit.compact_vanishing_formula)
+        self.assertIn("chi_I", audit.obstruction_invariant_formula)
+        self.assertEqual(
+            audit.case_keys,
+            (
+                "crossed_square_bisection_model",
+                "residual_exact_sequence",
+                "boundary_obstruction",
+                "moore_peiffer_homology",
+                "peiffer_complete_vanishing_theorem",
+                "crossed_square_countercertificate",
+            ),
+        )
+        self.assertEqual(audit.cases[0].role, "model")
+        self.assertEqual(audit.cases[-1].role, "negative_route")
 
     def test_prefix_point_forgetting_restriction_records_vertical_rows(self):
         solution = FiniteBraidedSet(

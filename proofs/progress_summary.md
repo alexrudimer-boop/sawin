@@ -2256,3 +2256,69 @@ a = nabla_q b_p nabla_p b_q m_{p,q} Pi^sharp(theta).
 Conversely, a positive Fadell-Neuwirth theorem can target exactly this
 decomposition after finite operator-label enrichment.  If it holds uniformly,
 all arbitrarily high Brunnian relative deletion `2`-classes vanish.
+
+## YBE Crossed-Square Residual Criterion
+
+The note `proofs/ybe_crossed_square_residual_criterion.md` and generated
+audit `proofs/ybe_crossed_square_residual_audit.md` identify the algebraic
+shape of the residual quotient left by the Brunnian derivative gate.  The two
+deletions `p` and `q` form a crossed square of finite vertical bisection
+groups
+
+```text
+L -> M,
+L -> N,
+M -> P,
+N -> P,
+```
+
+with Peiffer pairing `h: M x N -> L`.  In the Brunnian layer,
+`L=V_{p,q}^{I,Br}`, `M=V_p^{I,Br}`, and `N=V_q^{I,Br}`.  Let
+`partial:L -> M x N` be the two one-face restrictions and let
+`K=ker(partial)`.  If
+
+```text
+E_{p,q}=< nabla_q V_p^{I,Br}, nabla_p V_q^{I,Br} >^L,
+B_{p,q}=Pi^sharp V_{p,q,B}^{I,Br},
+D_{p,q}=< E_{p,q}, M_{p,q}, B_{p,q} >^L,
+```
+
+where `M_{p,q}` is the Peiffer mutual subgroup, then
+
+```text
+R_{p,q}^I = L/D_{p,q}
+```
+
+fits in the exact sequence
+
+```text
+1 -> K/(K cap D_{p,q})
+  -> R_{p,q}^I
+  -> partial L/partial D_{p,q}
+  -> 1.
+```
+
+Thus the residual quotient has two exact obstruction pieces:
+
+```text
+H_partial^square(I;p,q|B)=partial L/partial D_{p,q},
+H_2^square(I;p,q|B)=K/(K cap D_{p,q}).
+```
+
+A compact positive theorem is Peiffer-complete vanishing:
+
+```text
+partial L = partial E_{p,q}
+and
+K <= <im kappa, B_{p,q}>^L
+imply
+R_{p,q}^I=1.
+```
+
+The corresponding negative certificate is a family of invariants
+`chi_I:K -> Q_I` killing the edge subgroup, the Peiffer image `im kappa`, and
+the fixed-base pullback subgroup, but not killing a chosen high-arity
+Brunnian Moore element `a_I`.  So the next decisive task is no longer simply
+finding Brunnian point-pushing in finite YBE images; it is proving uniform
+Peiffer-complete vanishing after finite labels, or building such a
+crossed-square homology invariant for every fixed finite base.

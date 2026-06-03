@@ -811,6 +811,73 @@ class YBEBrunnianDerivativeGateAudit:
 
 
 @dataclass(frozen=True)
+class YBECrossedSquareResidualCase:
+    """One row in the crossed-square residual quotient criterion."""
+
+    key: str
+    role: str
+    statement: str
+    consequence: str
+
+
+@dataclass(frozen=True)
+class YBECrossedSquareResidualAudit:
+    """Crossed-square criterion for the residual double-deletion quotient."""
+
+    crossed_square_model_identified: bool
+    edge_degenerate_subgroup_identified: bool
+    peiffer_mutual_subgroup_identified: bool
+    fixed_base_pullback_subgroup_identified: bool
+    residual_exact_sequence_recorded: bool
+    boundary_obstruction_identified: bool
+    moore_peiffer_obstruction_identified: bool
+    peiffer_complete_vanishing_theorem_recorded: bool
+    obstruction_invariant_form_recorded: bool
+    crossed_square_vertices: Tuple[str, str, str, str]
+    residual_quotient_formula: str
+    exact_sequence_formula: str
+    boundary_obstruction_formula: str
+    moore_peiffer_obstruction_formula: str
+    compact_vanishing_formula: str
+    obstruction_invariant_formula: str
+    cases: Tuple[YBECrossedSquareResidualCase, ...]
+
+    @property
+    def case_keys(self) -> Tuple[str, ...]:
+        return tuple(case.key for case in self.cases)
+
+    @property
+    def records_crossed_square_residual_criterion(self) -> bool:
+        return (
+            self.crossed_square_model_identified
+            and self.edge_degenerate_subgroup_identified
+            and self.peiffer_mutual_subgroup_identified
+            and self.fixed_base_pullback_subgroup_identified
+            and self.residual_exact_sequence_recorded
+            and self.boundary_obstruction_identified
+            and self.moore_peiffer_obstruction_identified
+            and self.peiffer_complete_vanishing_theorem_recorded
+            and self.obstruction_invariant_form_recorded
+            and self.crossed_square_vertices == ("L", "M", "N", "P")
+            and "R_{p,q}^I" in self.residual_quotient_formula
+            and "K/(K cap D_{p,q})" in self.exact_sequence_formula
+            and "H_partial^square" in self.boundary_obstruction_formula
+            and "H_2^square" in self.moore_peiffer_obstruction_formula
+            and "partial L = partial E_{p,q}" in self.compact_vanishing_formula
+            and "chi_I" in self.obstruction_invariant_formula
+            and self.case_keys
+            == (
+                "crossed_square_bisection_model",
+                "residual_exact_sequence",
+                "boundary_obstruction",
+                "moore_peiffer_homology",
+                "peiffer_complete_vanishing_theorem",
+                "crossed_square_countercertificate",
+            )
+        )
+
+
+@dataclass(frozen=True)
 class PrefixPointForgettingRestrictionRow:
     """One marked generator comparison under stationary-strand deletion."""
 
@@ -4650,6 +4717,130 @@ def ybe_brunnian_derivative_gate_audit() -> YBEBrunnianDerivativeGateAudit:
         ),
         decomposition_formula=(
             "a = nabla_q b_p nabla_p b_q m_{p,q} Pi^sharp(theta)"
+        ),
+        cases=cases,
+    )
+
+
+def ybe_crossed_square_residual_audit() -> YBECrossedSquareResidualAudit:
+    """Record the crossed-square criterion for the residual quotient.
+
+    The two stationary deletion maps form a crossed square of finite
+    bisection groups.  The residual quotient from the Brunnian derivative gate
+    splits into a boundary quotient and a Moore-Peiffer homology quotient.
+    This audit records the exact sequence and the vanishing/obstruction
+    criteria supplied by that crossed-square algebra.
+    """
+
+    cases = (
+        YBECrossedSquareResidualCase(
+            key="crossed_square_bisection_model",
+            role="model",
+            statement=(
+                "the two deletion maps p and q give a crossed square "
+                "L -> M, L -> N, M -> P, N -> P of finite vertical "
+                "bisection groups over each survivor object"
+            ),
+            consequence=(
+                "the Peiffer pairing h:M x N -> L is the intrinsic source of "
+                "the bounded mutual two-strand subgroup"
+            ),
+        ),
+        YBECrossedSquareResidualCase(
+            key="residual_exact_sequence",
+            role="exact_sequence",
+            statement=(
+                "for L=V_{p,q}^{I,Br}, D_{p,q}=<E_{p,q}, M_{p,q}, B_{p,q}>^L, "
+                "and K=ker(partial:L -> M x N), there is an exact sequence "
+                "1 -> K/(K cap D_{p,q}) -> R_{p,q}^I -> partial L/partial D_{p,q} -> 1"
+            ),
+            consequence=(
+                "the residual quotient vanishes exactly when both the boundary "
+                "quotient and the Moore-Peiffer quotient vanish"
+            ),
+        ),
+        YBECrossedSquareResidualCase(
+            key="boundary_obstruction",
+            role="quotient_obstruction",
+            statement=(
+                "H_partial^square(I;p,q|B)=partial L/partial D_{p,q}"
+            ),
+            consequence=(
+                "a nonzero boundary class means some Brunnian double-deletion "
+                "bisection has one-face boundary not produced by edge, Peiffer, "
+                "or base terms"
+            ),
+        ),
+        YBECrossedSquareResidualCase(
+            key="moore_peiffer_homology",
+            role="cycle_obstruction",
+            statement=(
+                "H_2^square(I;p,q|B)=K/(K cap D_{p,q})"
+            ),
+            consequence=(
+                "a nonzero Moore-Peiffer class is a square-internal Brunnian "
+                "vertical cycle not generated by edge, Peiffer mutual, or base "
+                "pullback cycles"
+            ),
+        ),
+        YBECrossedSquareResidualCase(
+            key="peiffer_complete_vanishing_theorem",
+            role="positive_route",
+            statement=(
+                "if partial L=partial E_{p,q} and K <= <im kappa, B_{p,q}>^L, "
+                "then R_{p,q}^I=1"
+            ),
+            consequence=(
+                "finite operator labels only need to make the crossed square "
+                "Peiffer-complete on Brunnian boundaries and Moore cycles"
+            ),
+        ),
+        YBECrossedSquareResidualCase(
+            key="crossed_square_countercertificate",
+            role="negative_route",
+            statement=(
+                "a family of invariants chi_I on K killing E_{p,q}, im kappa, "
+                "and fixed-base pullback but not a_I certifies nonzero "
+                "H_2^square and hence nonzero R_{p,q}^I"
+            ),
+            consequence=(
+                "a counterexample must now exhibit crossed-square homology "
+                "surviving every fixed finite operator-label base"
+            ),
+        ),
+    )
+    return YBECrossedSquareResidualAudit(
+        crossed_square_model_identified=True,
+        edge_degenerate_subgroup_identified=True,
+        peiffer_mutual_subgroup_identified=True,
+        fixed_base_pullback_subgroup_identified=True,
+        residual_exact_sequence_recorded=True,
+        boundary_obstruction_identified=True,
+        moore_peiffer_obstruction_identified=True,
+        peiffer_complete_vanishing_theorem_recorded=True,
+        obstruction_invariant_form_recorded=True,
+        crossed_square_vertices=("L", "M", "N", "P"),
+        residual_quotient_formula=(
+            "R_{p,q}^I = L / D_{p,q}, where "
+            "D_{p,q}=<E_{p,q}, M_{p,q}, B_{p,q}>^L"
+        ),
+        exact_sequence_formula=(
+            "1 -> K/(K cap D_{p,q}) -> R_{p,q}^I -> "
+            "partial L/partial D_{p,q} -> 1"
+        ),
+        boundary_obstruction_formula=(
+            "H_partial^square(I;p,q|B) = partial L/partial D_{p,q}"
+        ),
+        moore_peiffer_obstruction_formula=(
+            "H_2^square(I;p,q|B) = K/(K cap D_{p,q})"
+        ),
+        compact_vanishing_formula=(
+            "partial L = partial E_{p,q} and "
+            "K <= <im kappa, B_{p,q}>^L imply R_{p,q}^I = 1"
+        ),
+        obstruction_invariant_formula=(
+            "chi_I: K -> Q_I kills E_{p,q}, im kappa, and "
+            "Pi^sharp V_{p,q,B}^{I,Br}, but chi_I(a_I) != 1"
         ),
         cases=cases,
     )
