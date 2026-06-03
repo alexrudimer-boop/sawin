@@ -1006,6 +1006,75 @@ class YBEGuitarDecoderBoundaryAudit:
 
 
 @dataclass(frozen=True)
+class YBEInverseBranchDeterminizationCase:
+    """One row in the total monoid-guitar determinization obstruction."""
+
+    key: str
+    role: str
+    statement: str
+    consequence: str
+
+
+@dataclass(frozen=True)
+class YBEInverseBranchDeterminizationAudit:
+    """Gate for total deterministic inverse-branch monoid decoders.
+
+    The guitar boundary leaves the degenerate case as an inverse-branch
+    problem over the finite transformation monoid M_rho.  This ledger records
+    the sharper obstruction: a total deterministic decoder of that monoid
+    type forces the relevant side actions to be surjective, hence bijective
+    for finite X.
+    """
+
+    total_decoder_surjectivity_recorded: bool
+    local_surjectivity_equation_recorded: bool
+    finite_side_bijection_forced: bool
+    total_monoid_guitar_negative_recorded: bool
+    powerset_relation_failure_recorded: bool
+    green_rank_drop_failure_recorded: bool
+    restricted_language_cocycle_recorded: bool
+    nondeterministic_kernel_gap_recorded: bool
+    initial_state_formula: str
+    local_surjectivity_equation_formula: str
+    forced_bijection_formula: str
+    monoid_rank_formula: str
+    branch_cocycle_formula: str
+    cases: Tuple[YBEInverseBranchDeterminizationCase, ...]
+
+    @property
+    def case_keys(self) -> Tuple[str, ...]:
+        return tuple(case.key for case in self.cases)
+
+    @property
+    def records_inverse_branch_determinization_gate(self) -> bool:
+        return (
+            self.total_decoder_surjectivity_recorded
+            and self.local_surjectivity_equation_recorded
+            and self.finite_side_bijection_forced
+            and self.total_monoid_guitar_negative_recorded
+            and self.powerset_relation_failure_recorded
+            and self.green_rank_drop_failure_recorded
+            and self.restricted_language_cocycle_recorded
+            and self.nondeterministic_kernel_gap_recorded
+            and "Phi_1" in self.initial_state_formula
+            and "rho" in self.local_surjectivity_equation_formula
+            and "R_y(X)=X" in self.forced_bijection_formula
+            and "rank(q R_x)" in self.monoid_rank_formula
+            and "arity-3" in self.branch_cocycle_formula
+            and self.case_keys
+            == (
+                "total_decoder_surjectivity",
+                "local_equation_forces_side_surjectivity",
+                "rank_drop_empty_inverse_fibre",
+                "powerset_relation_not_rack",
+                "green_schutzenberger_no_rank_repair",
+                "restricted_language_branch_cocycle",
+                "nondeterministic_kernel_gap",
+            )
+        )
+
+
+@dataclass(frozen=True)
 class PrefixPointForgettingRestrictionRow:
     """One marked generator comparison under stationary-strand deletion."""
 
@@ -5217,6 +5286,146 @@ def ybe_guitar_decoder_boundary_audit() -> YBEGuitarDecoderBoundaryAudit:
         monoid_gate_formula=(
             "Q=M_rho requires d(q,a) in q^-1(a), "
             "tau(q,a)=q R_{d(q,a)}, and the finite-state cocycle equations"
+        ),
+        cases=cases,
+    )
+
+
+def ybe_inverse_branch_determinization_audit() -> YBEInverseBranchDeterminizationAudit:
+    """Record the obstruction to total monoid-guitar determinization.
+
+    The degenerate guitar repair might try to replace the suffix group
+    G_rho by the finite transformation monoid M_rho and then determinize
+    inverse branches by powersets, partial sections, or Green data.  A total
+    decoder of that form cannot cover a genuinely right-degenerate solution:
+    the local decoder equation together with all-arity surjectivity forces
+    every relevant right action to be surjective, hence bijective for finite X.
+    """
+
+    cases = (
+        YBEInverseBranchDeterminizationCase(
+            key="total_decoder_surjectivity",
+            role="hypothesis",
+            statement=(
+                "a total finite-state rack decoder must give surjective maps "
+                "Phi_n:Y^n -> X^n for all n, so every one-step reachable "
+                "decoder state must still realize every next X-symbol"
+            ),
+            consequence=(
+                "the local two-symbol equations may be tested at arbitrary "
+                "right outputs, not only at outputs lying in an image of a "
+                "rank-dropping suffix transformation"
+            ),
+        ),
+        YBEInverseBranchDeterminizationCase(
+            key="local_equation_forces_side_surjectivity",
+            role="negative_total_decoder",
+            statement=(
+                "the decoder equation for the copied rack strand forces every "
+                "target value rho_y(x) to appear as a decoded value with fixed "
+                "old rack symbol a once x=d(q,a) and y is the decoded neighbor"
+            ),
+            consequence=(
+                "for the right-guitar convention, total deterministic decoding "
+                "forces R_y(X)=X for every y; since X is finite, all R_y are "
+                "bijections"
+            ),
+        ),
+        YBEInverseBranchDeterminizationCase(
+            key="rank_drop_empty_inverse_fibre",
+            role="first_failure",
+            statement=(
+                "if some R_y is not surjective, a monoid state q followed by "
+                "R_y has an output a with empty inverse fibre under q R_y"
+            ),
+            consequence=(
+                "the branch value d(q R_y,a) cannot be total; the obstruction "
+                "appears before any high-arity rack cocycle"
+            ),
+        ),
+        YBEInverseBranchDeterminizationCase(
+            key="powerset_relation_not_rack",
+            role="failed_determinization",
+            statement=(
+                "direct or inverse image operations on subsets are not "
+                "bijective when a finite transformation is nonbijective, and "
+                "saturated subsets lose singleton separation"
+            ),
+            consequence=(
+                "powerset or relation-valued guitars preserve possible "
+                "branches but do not produce a rack action proving pointwise "
+                "kernel inclusion on X^n"
+            ),
+        ),
+        YBEInverseBranchDeterminizationCase(
+            key="green_schutzenberger_no_rank_repair",
+            role="semigroup_warning",
+            statement=(
+                "Green R-class and Schutzenberger coordinates describe the "
+                "regular part of M_rho but do not undo a transition that drops "
+                "image rank from the identity state"
+            ),
+            consequence=(
+                "finite semigroup labels are useful diagnostics, but a "
+                "rank-dropping generator still creates empty branch fibres for "
+                "a total decoder"
+            ),
+        ),
+        YBEInverseBranchDeterminizationCase(
+            key="restricted_language_branch_cocycle",
+            role="remaining_restricted_problem",
+            statement=(
+                "if one restricts to a proper invariant language where empty "
+                "fibres are avoided, the selected partial inverse branches "
+                "must satisfy closure equations and an arity-3 rack "
+                "self-distributivity cocycle"
+            ),
+            consequence=(
+                "the obstruction can move from arity 2 to arity 3 only after "
+                "abandoning total decoding on all of Y^n"
+            ),
+        ),
+        YBEInverseBranchDeterminizationCase(
+            key="nondeterministic_kernel_gap",
+            role="kernel_gap",
+            statement=(
+                "a nondeterministic relation-valued decoder can record that "
+                "some inverse branch exists, but it does not give a functional "
+                "braid action on a finite rack alphabet"
+            ),
+            consequence=(
+                "Sawin kernel inclusion requires deterministic finite labels "
+                "or an equivalent marked quotient, not merely preservation of "
+                "a relation of possible decodings"
+            ),
+        ),
+    )
+    return YBEInverseBranchDeterminizationAudit(
+        total_decoder_surjectivity_recorded=True,
+        local_surjectivity_equation_recorded=True,
+        finite_side_bijection_forced=True,
+        total_monoid_guitar_negative_recorded=True,
+        powerset_relation_failure_recorded=True,
+        green_rank_drop_failure_recorded=True,
+        restricted_language_cocycle_recorded=True,
+        nondeterministic_kernel_gap_recorded=True,
+        initial_state_formula=(
+            "Phi_1(a)=d(q0,a) is surjective, and Phi_2 is surjective through "
+            "every one-step reachable state tau(q0,a)"
+        ),
+        local_surjectivity_equation_formula=(
+            "d(tau(q,a > b),a)=rho_{d(tau(q,a),b)}(d(q,a))"
+        ),
+        forced_bijection_formula=(
+            "total decoding implies R_y(X)=X for every y; finite X then "
+            "implies every R_y is bijective"
+        ),
+        monoid_rank_formula=(
+            "rank(q R_x) < rank(q) gives outputs a with (q R_x)^-1(a)=empty"
+        ),
+        branch_cocycle_formula=(
+            "on any restricted language, branch selectors must satisfy "
+            "closure plus the arity-3 rack self-distributivity cocycle"
         ),
         cases=cases,
     )

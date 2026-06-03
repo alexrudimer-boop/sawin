@@ -2478,3 +2478,35 @@ inverse-branch cocycle theorem: choose `d(q,a) in q^-1(a)` and
 `tau(q,a)=q R_{d(q,a)}` coherently so that the finite-state decoder equations
 and rack self-distributivity hold.  Failure of such finite deterministic
 branch choices is the sharpened direct-cover obstruction.
+
+## YBE Inverse-Branch Determinization Gate
+
+The note `proofs/ybe_inverse_branch_determinization_gate.md` and generated
+audit `proofs/ybe_inverse_branch_determinization_audit.md` sharpen the
+degenerate guitar route further.  The finite monoid `M_rho` gives finite
+suffix memory, but a total deterministic monoid-guitar decoder on all words
+would force the relevant one-sided maps to be surjective.
+
+For the right-guitar convention, the local decoder equation contains
+
+```text
+d(tau(q,a > b),a)=rho_{d(tau(q,a),b)}(d(q,a)).
+```
+
+Together with surjectivity of the decoded maps `Phi_n`, this forces
+
+```text
+R_y(X)=X for every y.
+```
+
+Since `X` is finite, every `R_y` is then bijective.  Thus no finite powerset,
+relation, inverse-branch, Green-class, or Schutzenberger determinization can
+give a total monoid-guitar rack decoder for a genuinely right-degenerate
+solution.  The left-oriented convention gives the analogous statement for
+the maps `lambda_x`.
+
+This is not a counterexample to finite rack domination.  It rules out a
+tempting direct strategy.  If a degenerate solution is rack-dominated, the
+cover must either use a non-guitar finite decoder or pass to a restricted
+invariant language whose partial branch choices satisfy the remaining
+arity-3 rack self-distributivity cocycle.

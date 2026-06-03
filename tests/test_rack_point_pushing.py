@@ -26,6 +26,7 @@ from ybe_domination import (
     YBECrossedSquareResidualAudit,
     YBEFiniteStateRackCoverAudit,
     YBEGuitarDecoderBoundaryAudit,
+    YBEInverseBranchDeterminizationAudit,
     YBECoskeletalMechanismAudit,
     PrefixVerticalPeifferCubeTransportAudit,
     PrefixVerticalPeifferSquareAudit,
@@ -53,6 +54,7 @@ from ybe_domination import (
     ybe_crossed_square_residual_audit,
     ybe_finite_state_rack_cover_audit,
     ybe_guitar_decoder_boundary_audit,
+    ybe_inverse_branch_determinization_audit,
     ybe_coskeletal_mechanism_audit,
     rack_point_pushing_operator_label_audit,
     rack_solution,
@@ -902,6 +904,39 @@ class RackPointPushingOperatorLabelTests(unittest.TestCase):
         )
         self.assertEqual(audit.cases[0].role, "positive_known_theorem")
         self.assertEqual(audit.cases[-1].role, "remaining_obligation")
+
+    def test_ybe_inverse_branch_determinization_gate_rejects_total_monoid_guitar(self):
+        audit = ybe_inverse_branch_determinization_audit()
+
+        self.assertIsInstance(audit, YBEInverseBranchDeterminizationAudit)
+        self.assertTrue(audit.records_inverse_branch_determinization_gate)
+        self.assertTrue(audit.total_decoder_surjectivity_recorded)
+        self.assertTrue(audit.local_surjectivity_equation_recorded)
+        self.assertTrue(audit.finite_side_bijection_forced)
+        self.assertTrue(audit.total_monoid_guitar_negative_recorded)
+        self.assertTrue(audit.powerset_relation_failure_recorded)
+        self.assertTrue(audit.green_rank_drop_failure_recorded)
+        self.assertTrue(audit.restricted_language_cocycle_recorded)
+        self.assertTrue(audit.nondeterministic_kernel_gap_recorded)
+        self.assertIn("Phi_1", audit.initial_state_formula)
+        self.assertIn("rho_", audit.local_surjectivity_equation_formula)
+        self.assertIn("R_y(X)=X", audit.forced_bijection_formula)
+        self.assertIn("rank(q R_x)", audit.monoid_rank_formula)
+        self.assertIn("arity-3", audit.branch_cocycle_formula)
+        self.assertEqual(
+            audit.case_keys,
+            (
+                "total_decoder_surjectivity",
+                "local_equation_forces_side_surjectivity",
+                "rank_drop_empty_inverse_fibre",
+                "powerset_relation_not_rack",
+                "green_schutzenberger_no_rank_repair",
+                "restricted_language_branch_cocycle",
+                "nondeterministic_kernel_gap",
+            ),
+        )
+        self.assertEqual(audit.cases[1].role, "negative_total_decoder")
+        self.assertEqual(audit.cases[-1].role, "kernel_gap")
 
     def test_prefix_point_forgetting_restriction_records_vertical_rows(self):
         solution = FiniteBraidedSet(
