@@ -1571,6 +1571,11 @@ by `universal_k_canonical_strand_carrier_congruence_audit(...)`.  Its finite
 trichotomy is: equality, which is the residual-faithful subcase above;
 proper, which is a local-minimal contradiction; or universal, which is the
 only canonical-carrier branch left for nontrivial U/C/M endpoint observers.
+The post-linear wrapper now consumes the proper case as a terminal System K
+exit: when the attached interval has an admissible proper canonical
+strand-carrier kernel, it reports
+`closed_by_canonical_strand_carrier_proper_congruence`, leaves no live K rows,
+and creates no U/C/M endpoint obligation.
 This removes another false endpoint closure and leaves the same local
 nontrivial observer-existence gap: construct residual-faithful U/C/M
 monodromy-coboundary observers for all surviving intervals, or produce a
@@ -1580,8 +1585,8 @@ normalized-law counterexample.
 
 At the latest verified snapshot:
 
-- `python -m unittest tests.test_nonlinear_overlap` passed with 191 tests;
-- `python -m unittest discover -s tests` passed with 730 tests;
+- `python -m unittest tests.test_nonlinear_overlap` passed with 192 tests;
+- `python -m unittest discover -s tests` passed with 731 tests;
 - `python -m compileall -q src tests tools` passed;
 - `node --check tools/build_reduction_audit_workbook.mjs` passed;
 - the proof log DOCX and reduction audit workbook were regenerated, and the

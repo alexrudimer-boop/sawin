@@ -16082,10 +16082,30 @@ class PostLinearRemainingFiniteSystemAudit:
         )
 
     @property
+    def canonical_strand_carrier_congruence(
+        self,
+    ) -> UniversalKCanonicalStrandCarrierCongruenceAudit | None:
+        if self.universal_k_signed_endpoint_interval is None:
+            return None
+        return universal_k_canonical_strand_carrier_congruence_audit(
+            self.universal_k_signed_endpoint_interval,
+        )
+
+    @property
+    def system_k_closed_by_canonical_strand_carrier_proper_congruence(self) -> bool:
+        audit = self.canonical_strand_carrier_congruence
+        return (
+            self.raw_system_k
+            and audit is not None
+            and audit.proves_local_minimal_proper_carrier_contradiction
+        )
+
+    @property
     def system_k_closed_by_proper_generated_closure(self) -> bool:
         return (
             self.system_k_closed_by_proper_defect_closure
             or self.system_k_closed_by_partial_constant_proper_closure
+            or self.system_k_closed_by_canonical_strand_carrier_proper_congruence
         )
 
     def _missing_profile_row(
@@ -17286,6 +17306,8 @@ class PostLinearRemainingFiniteSystemAudit:
             return "closed_by_triangular_latin_proper_closure"
         if self.system_k_closed_by_partial_constant_proper_closure:
             return "closed_by_missing_triangular_partial_constant_proper_closure"
+        if self.system_k_closed_by_canonical_strand_carrier_proper_congruence:
+            return "closed_by_canonical_strand_carrier_proper_congruence"
         if self.all_active_routed_endpoint_systems_closed:
             if self.active_routed_endpoint_systems == ("U",):
                 if self.system_u_closed_by_endpoint_observer_family_build:
@@ -21243,6 +21265,7 @@ class PostLinearRemainingFiniteSystemAudit:
                 ),
             )
         )
+        data.extend(self._canonical_strand_carrier_congruence_data)
         data.extend(self._universal_continuation_identity_routing_data)
         data.extend(self._triangular_recovery_endpoint_witness_data)
         data.extend(self._triangular_recovery_symmetric_endpoint_fork_data)
@@ -21254,6 +21277,32 @@ class PostLinearRemainingFiniteSystemAudit:
         data.extend(self._universal_k_signed_endpoint_generator_data)
         data.extend(self._universal_k_endpoint_observer_family_build_data)
         return tuple(data)
+
+    @property
+    def _canonical_strand_carrier_congruence_data(
+        self,
+    ) -> Tuple[Tuple[str, object], ...]:
+        audit = self.canonical_strand_carrier_congruence
+        if audit is None:
+            return ()
+        return (
+            (
+                "canonical_strand_carrier_kind",
+                audit.canonical_carrier_kind,
+            ),
+            (
+                "canonical_strand_carrier_admissible",
+                audit.canonical_carrier_is_admissible,
+            ),
+            (
+                "canonical_strand_carrier_proper_congruence_closes_system_k",
+                self.system_k_closed_by_canonical_strand_carrier_proper_congruence,
+            ),
+            (
+                "canonical_strand_carrier_failure_reasons",
+                audit.failure_reasons,
+            ),
+        )
 
     @property
     def _unsupported_companion_structural_contradiction_data(
@@ -21393,6 +21442,7 @@ class PostLinearRemainingFiniteSystemAudit:
                     "unclosed_routed_endpoint_systems",
                     self.unclosed_routed_endpoint_systems,
                 ),
+                *self._canonical_strand_carrier_congruence_data,
                 (
                     "active_companion_block_image_support_rows",
                     self.refinement.active_companion_block_image_support_rows,

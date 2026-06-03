@@ -3665,6 +3665,18 @@ proper     -> local-minimality contradiction;
 universal  -> remaining canonical-carrier endpoint-observer branch.
 ```
 
+The post-linear finite-system audit now treats the proper branch as a terminal
+System K closure.  With an attached interval, an admissible proper canonical
+strand-carrier kernel gives
+
+```text
+closed_by_canonical_strand_carrier_proper_congruence
+```
+
+with no live K rows and no U/C/M endpoint obligation.  The universal canonical
+carrier branch is the only non-injective canonical-carrier case that can still
+feed the endpoint-observer existence lemma.
+
 The all-`n` soundness proof is then:
 
 1. The fixed carriers are initialized before reading the braid word.

@@ -1960,6 +1960,38 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             audit.finite_obstruction_data,
         )
 
+    def test_post_linear_closes_proper_canonical_strand_carrier_kernel(self):
+        audit = PostLinearRemainingFiniteSystemAudit(
+            active_system_k_refinement(),
+            universal_k_signed_endpoint_interval=one_color_proper_strand_carrier_interval(),
+        )
+
+        self.assertEqual(
+            audit.system_name,
+            "closed_by_canonical_strand_carrier_proper_congruence",
+        )
+        self.assertFalse(audit.is_current_remaining_finite_system)
+        self.assertEqual(audit.live_k_missing_latin_row_defects, ())
+        self.assertEqual(audit.remaining_obligations, ())
+        self.assertIn(
+            ("canonical_strand_carrier_kind", "proper"),
+            audit.finite_obstruction_data,
+        )
+        self.assertIn(
+            (
+                "canonical_strand_carrier_proper_congruence_closes_system_k",
+                True,
+            ),
+            audit.finite_obstruction_data,
+        )
+        self.assertIn(
+            (
+                "canonical_strand_carrier_failure_reasons",
+                ("canonical_strand_carrier_kernel_proper",),
+            ),
+            audit.finite_obstruction_data,
+        )
+
     def test_post_linear_routes_no_triangular_row_when_profile_is_supplied(self):
         interval = one_color_right_triangular_nonlatin_interval()
         audit = PostLinearRemainingFiniteSystemAudit(

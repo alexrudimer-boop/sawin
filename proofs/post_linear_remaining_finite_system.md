@@ -2756,6 +2756,20 @@ universal  -> canonical carriers contain no fibre information, so the U/C/M
 
 Thus a non-injective canonical strand-carrier relation is not automatically a
 survivor.  Only the universal branch survives local-minimality.
+The post-linear finite-system audit consumes the proper branch directly.  If
+the raw System K row is active and the attached interval has an admissible
+proper canonical strand-carrier kernel, then
+
+```text
+system_name = closed_by_canonical_strand_carrier_proper_congruence
+is_current_remaining_finite_system = False
+remaining_obligations = ()
+```
+
+The audit data records the canonical carrier kind, admissibility, terminal
+flag, and failure reasons.  This is the same terminal pattern as the other
+proper generated congruence closures: no U/C/M endpoint family is created by a
+proper canonical carrier quotient.
 This does not prove that every surviving U/C/M interval admits such
 observers; it gives the exact finite local checker and integration path that
 any proposed observer must pass.
