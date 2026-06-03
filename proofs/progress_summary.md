@@ -1804,6 +1804,24 @@ every one of these rows `Q_X(3)` and `Q_X(4)` are trivial.  Consequently the
 first whole-table obstruction, if any, begins at size at least `4`, or else
 inside quotient-fibre local intervals rather than the tiny whole-table
 corpus.
+The next note
+`proofs/prefix_artin_envelope_cohomology.md` and generated audit
+`proofs/prefix_artin_envelope_cohomology_audit.md` rephrase the remaining
+finite augmented Artin-envelope lemma as an action-groupoid cohomology
+problem: a bounded Artin-equivariant transgression lemma.  At a fixed arity
+`K_n` is free, so the obstruction is not an abstract point-pushing relator.
+The missing structure is one finite operator-label groupoid or group-Hurwitz
+quotient, one finite coefficient system of vertical groups, and one bounded
+cohomology class whose pullbacks give the residual point-pushing extension
+classes for all arities.  These classes must restrict compatibly under
+point-forgetting, insertion, and relabelling maps.  The audit records this
+first ledger on `Q_X(3),Q_X(4)`: for the nondegenerate prefix witness the
+action-groupoid arrow counts are `128` and `512` with two orbits at both
+arities, while for the degenerate identity row all tuple orbits are
+singletons despite nonunit prefix memory.  This makes the next positive
+target precise and makes the negative target a compatible unbounded or
+nonrestricting vertical cocycle class, not merely unbounded point-pushing
+order.
 
 The semigroup/Green route has also been narrowed to a precise Rees rectangle
 flatness target.  Ordinary Green/Rees theory leaves a sandwich-matrix

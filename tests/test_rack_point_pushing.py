@@ -13,6 +13,7 @@ from ybe_domination import (
     FiniteAugmentedArtinEnvelopeRouteAudit,
     FiniteBraidedSet,
     PointPushingGeneratorRow,
+    PrefixArtinEnvelopeCohomologyAudit,
     PrefixEdgeTransducerAudit,
     PrefixGroupHurwitzCompressionPressureAudit,
     PrefixPointPushingSurfaceAudit,
@@ -21,6 +22,7 @@ from ybe_domination import (
     edge_memory_tower_audit,
     finite_augmented_artin_envelope_pressure_audit,
     finite_augmented_artin_envelope_route_audit,
+    prefix_artin_envelope_cohomology_audit,
     prefix_edge_transducer_audit,
     prefix_group_hurwitz_compression_pressure_audit,
     prefix_point_pushing_surface_audit,
@@ -482,6 +484,84 @@ class RackPointPushingOperatorLabelTests(unittest.TestCase):
             [
                 (16, 16, 1, 1, (1, 1, 1)),
                 (32, 32, 1, 1, (1, 1, 1, 1)),
+            ],
+        )
+
+    def test_prefix_artin_envelope_cohomology_records_action_groupoid(self):
+        solution = FiniteBraidedSet(
+            (0, 1),
+            {
+                (0, 0): (1, 0),
+                (0, 1): (0, 0),
+                (1, 0): (1, 1),
+                (1, 1): (0, 1),
+            },
+        )
+
+        audit = prefix_artin_envelope_cohomology_audit(
+            solution,
+            max_subgroup_size=1000,
+        )
+
+        self.assertIsInstance(audit, PrefixArtinEnvelopeCohomologyAudit)
+        self.assertEqual(audit.left_prefix_monoid_size, 2)
+        self.assertEqual(audit.nonunit_prefix_count, 0)
+        self.assertEqual(audit.operator_label_variable_count, 4)
+        self.assertEqual(audit.checked_arities, (3, 4))
+        self.assertTrue(audit.records_artin_envelope_cohomology_pressure)
+        self.assertTrue(audit.all_rows_untruncated)
+        self.assertEqual(
+            [
+                (
+                    row.point_pushing_group_size,
+                    row.point_pushing_group_exponent,
+                    row.orbit_count,
+                    row.max_orbit_size,
+                    row.action_groupoid_arrow_count,
+                    row.stabilizer_loop_arrow_count,
+                    row.generator_cocycle_value_count,
+                    row.restriction_to_previous_required,
+                    row.forgetting_naturality_square_count,
+                )
+                for row in audit.rows
+            ],
+            [
+                (8, 2, 2, 8, 128, 16, 48, False, 0),
+                (16, 2, 2, 16, 512, 32, 128, True, 512),
+            ],
+        )
+
+    def test_prefix_artin_envelope_cohomology_handles_identity_action(self):
+        solution = FiniteBraidedSet(
+            (0, 1),
+            {
+                (0, 0): (0, 0),
+                (0, 1): (0, 1),
+                (1, 0): (1, 0),
+                (1, 1): (1, 1),
+            },
+        )
+
+        audit = prefix_artin_envelope_cohomology_audit(solution)
+
+        self.assertEqual(audit.left_prefix_monoid_size, 3)
+        self.assertEqual(audit.nonunit_prefix_count, 2)
+        self.assertEqual(audit.operator_label_variable_count, 6)
+        self.assertTrue(audit.records_artin_envelope_cohomology_pressure)
+        self.assertEqual(
+            [
+                (
+                    row.point_pushing_group_size,
+                    row.orbit_count,
+                    row.max_orbit_size,
+                    row.action_groupoid_arrow_count,
+                    row.stabilizer_loop_arrow_count,
+                )
+                for row in audit.rows
+            ],
+            [
+                (1, 16, 1, 16, 16),
+                (1, 32, 1, 32, 32),
             ],
         )
 

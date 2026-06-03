@@ -456,6 +456,73 @@ class PrefixPointPushingSurfaceAudit:
 
 
 @dataclass(frozen=True)
+class PrefixArtinEnvelopeCohomologyRow:
+    """One action-groupoid row for finite Artin-envelope cohomology pressure."""
+
+    point_pushing_arity: int
+    braid_index: int
+    tuple_count: int
+    generator_count: int
+    point_pushing_group_size: int | None
+    point_pushing_group_exponent: int | None
+    orbit_count: int | None
+    max_orbit_size: int | None
+    action_groupoid_arrow_count: int | None
+    stabilizer_loop_arrow_count: int | None
+    generator_cocycle_value_count: int
+    restriction_to_previous_required: bool
+    forgetting_naturality_square_count: int
+    truncated: bool
+
+    @property
+    def computed_untruncated_cohomology_row(self) -> bool:
+        return (
+            not self.truncated
+            and self.point_pushing_group_size is not None
+            and self.point_pushing_group_exponent is not None
+            and self.orbit_count is not None
+            and self.max_orbit_size is not None
+            and self.action_groupoid_arrow_count is not None
+            and self.stabilizer_loop_arrow_count is not None
+        )
+
+
+@dataclass(frozen=True)
+class PrefixArtinEnvelopeCohomologyAudit:
+    """Finite ledger for the missing Artin-envelope cohomology lemma."""
+
+    element_count: int
+    left_prefix_monoid_size: int
+    nonunit_prefix_count: int
+    operator_label_variable_count: int
+    rows: Tuple[PrefixArtinEnvelopeCohomologyRow, ...]
+    fixed_finite_hurwitz_base_required: bool
+    vertical_cocycle_bounded_exponent_required: bool
+    quotient_groupoid_functor_required: bool
+    tower_restriction_compatibility_required: bool
+    finite_surface_only: bool
+
+    @property
+    def checked_arities(self) -> Tuple[int, ...]:
+        return tuple(row.point_pushing_arity for row in self.rows)
+
+    @property
+    def all_rows_untruncated(self) -> bool:
+        return all(row.computed_untruncated_cohomology_row for row in self.rows)
+
+    @property
+    def records_artin_envelope_cohomology_pressure(self) -> bool:
+        return (
+            self.checked_arities == (3, 4)
+            and self.fixed_finite_hurwitz_base_required
+            and self.vertical_cocycle_bounded_exponent_required
+            and self.quotient_groupoid_functor_required
+            and self.tower_restriction_compatibility_required
+            and self.finite_surface_only
+        )
+
+
+@dataclass(frozen=True)
 class LawBraidActionCertificate:
     braid_index: int
     tuple_count: int
@@ -2780,6 +2847,154 @@ def prefix_point_pushing_surface_audit(
         ),
         rows=rows,
         records_first_group_hurwitz_obstruction_surface=True,
+    )
+
+
+def _permutation_orbit_sizes(
+    size: int,
+    generators: Iterable[Permutation],
+) -> Tuple[int, ...]:
+    symmetric_generators = set(generators)
+    symmetric_generators.update(
+        invert_permutation(generator)
+        for generator in tuple(symmetric_generators)
+    )
+    seen = set()
+    orbit_sizes = []
+    for start in range(size):
+        if start in seen:
+            continue
+        orbit = {start}
+        queue = deque([start])
+        seen.add(start)
+        while queue:
+            current = queue.popleft()
+            for generator in symmetric_generators:
+                candidate = generator[current]
+                if candidate in seen:
+                    continue
+                seen.add(candidate)
+                orbit.add(candidate)
+                queue.append(candidate)
+        orbit_sizes.append(len(orbit))
+    return tuple(sorted(orbit_sizes, reverse=True))
+
+
+def _prefix_artin_envelope_cohomology_row(
+    solution: FiniteBraidedSet,
+    point_pushing_arity: int,
+    *,
+    max_subgroup_size: int | None,
+) -> PrefixArtinEnvelopeCohomologyRow:
+    from .braid_laws import pure_braid_generator
+    from .group_laws import lcm
+
+    braid_index = point_pushing_arity + 1
+    generator_braids = tuple(
+        pure_braid_generator(generator, braid_index)
+        for generator in range(1, point_pushing_arity + 1)
+    )
+    generator_images = tuple(
+        braid_word_permutation_image(solution, braid_index, braid_word)
+        for braid_word in generator_braids
+    )
+    tuple_count = len(solution.elements) ** braid_index
+    generator_count = len(generator_images)
+    generator_cocycle_value_count = generator_count * tuple_count
+    restriction_to_previous_required = point_pushing_arity > 3
+    forgetting_naturality_square_count = (
+        point_pushing_arity * generator_cocycle_value_count
+        if restriction_to_previous_required
+        else 0
+    )
+    try:
+        subgroup = generated_permutation_subgroup(
+            generator_images,
+            max_size=max_subgroup_size,
+        )
+    except ValueError:
+        return PrefixArtinEnvelopeCohomologyRow(
+            point_pushing_arity=point_pushing_arity,
+            braid_index=braid_index,
+            tuple_count=tuple_count,
+            generator_count=generator_count,
+            point_pushing_group_size=None,
+            point_pushing_group_exponent=None,
+            orbit_count=None,
+            max_orbit_size=None,
+            action_groupoid_arrow_count=None,
+            stabilizer_loop_arrow_count=None,
+            generator_cocycle_value_count=generator_cocycle_value_count,
+            restriction_to_previous_required=restriction_to_previous_required,
+            forgetting_naturality_square_count=forgetting_naturality_square_count,
+            truncated=True,
+        )
+    exponent = 1
+    for permutation in subgroup:
+        exponent = lcm(exponent, permutation_order(permutation))
+    orbit_sizes = _permutation_orbit_sizes(tuple_count, generator_images)
+    stabilizer_loop_arrow_count = sum(
+        1
+        for permutation in subgroup
+        for index in range(tuple_count)
+        if permutation[index] == index
+    )
+    return PrefixArtinEnvelopeCohomologyRow(
+        point_pushing_arity=point_pushing_arity,
+        braid_index=braid_index,
+        tuple_count=tuple_count,
+        generator_count=generator_count,
+        point_pushing_group_size=len(subgroup),
+        point_pushing_group_exponent=exponent,
+        orbit_count=len(orbit_sizes),
+        max_orbit_size=max(orbit_sizes, default=0),
+        action_groupoid_arrow_count=len(subgroup) * tuple_count,
+        stabilizer_loop_arrow_count=stabilizer_loop_arrow_count,
+        generator_cocycle_value_count=generator_cocycle_value_count,
+        restriction_to_previous_required=restriction_to_previous_required,
+        forgetting_naturality_square_count=forgetting_naturality_square_count,
+        truncated=False,
+    )
+
+
+def prefix_artin_envelope_cohomology_audit(
+    solution: FiniteBraidedSet,
+    *,
+    max_subgroup_size: int | None = None,
+) -> PrefixArtinEnvelopeCohomologyAudit:
+    """Record the first finite cohomology obligations for an Artin envelope.
+
+    This does not compute group cohomology.  It records the finite
+    action-groupoid surface on which a fixed operator-label Hurwitz quotient
+    and a uniformly bounded vertical cocycle would have to live.
+    """
+
+    left_translations = _left_prefix_translations(solution)
+    monoid = TransformationMonoid.generated(left_translations.values())
+    nonunit_count = sum(
+        1
+        for element in monoid.elements
+        if not _transformation_is_permutation(element)
+    )
+    rows = tuple(
+        _prefix_artin_envelope_cohomology_row(
+            solution,
+            arity,
+            max_subgroup_size=max_subgroup_size,
+        )
+        for arity in (3, 4)
+    )
+    return PrefixArtinEnvelopeCohomologyAudit(
+        element_count=len(solution.elements),
+        left_prefix_monoid_size=len(monoid.elements),
+        nonunit_prefix_count=nonunit_count,
+        operator_label_variable_count=len(monoid.elements) * len(solution.elements),
+        rows=rows,
+        fixed_finite_hurwitz_base_required=True,
+        vertical_cocycle_bounded_exponent_required=True,
+        quotient_groupoid_functor_required=True,
+        tower_restriction_compatibility_required=True,
+        finite_surface_only=True,
     )
 
 
