@@ -548,6 +548,12 @@ class ActionImageTests(unittest.TestCase):
 
         self.assertTrue(audit.prefix_detected)
         self.assertEqual(audit.checked_arities, (1, 2, 3))
+        self.assertTrue(audit.checked_arity_prefix_complete)
+        self.assertFalse(audit.proves_all_arity_marked_quotients)
+        self.assertEqual(
+            audit.remaining_all_arity_obligation,
+            "symbolic_all_arity_argument",
+        )
         self.assertTrue(audit.base_audit.marked_quotient_holds)
         self.assertEqual(tuple(row.failure_kind for row in audit.extension_rows), ("none", "none"))
         self.assertIsNone(audit.first_failure_arity)
@@ -564,6 +570,12 @@ class ActionImageTests(unittest.TestCase):
 
         self.assertFalse(audit.prefix_detected)
         self.assertEqual(audit.checked_arities, (1,))
+        self.assertFalse(audit.checked_arity_prefix_complete)
+        self.assertFalse(audit.proves_all_arity_marked_quotients)
+        self.assertEqual(
+            audit.remaining_all_arity_obligation,
+            "base_marked_quotient",
+        )
         self.assertFalse(audit.base_audit.marked_quotient_holds)
         self.assertEqual(audit.first_failure_arity, 1)
         self.assertEqual(audit.first_failure_kind, "base_marked_quotient")

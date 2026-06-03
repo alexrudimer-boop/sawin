@@ -198,6 +198,22 @@ class PointPushingBrunnianGatePrefixAudit:
     def checked_arities(self) -> Tuple[int, ...]:
         return (1,) + tuple(row.arity for row in self.extension_rows)
 
+    @property
+    def checked_arity_prefix_complete(self) -> bool:
+        return self.checked_arities == tuple(range(1, self.max_arity + 1))
+
+    @property
+    def proves_all_arity_marked_quotients(self) -> bool:
+        """Finite prefix data never proves the all-arity quotient tower."""
+
+        return False
+
+    @property
+    def remaining_all_arity_obligation(self) -> str:
+        if self.first_failure_kind is not None:
+            return self.first_failure_kind
+        return "symbolic_all_arity_argument"
+
 
 @dataclass(frozen=True)
 class PointPushingBaseArityCertificate:

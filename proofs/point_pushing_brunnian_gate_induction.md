@@ -177,6 +177,13 @@ failure and records:
 - otherwise the first extension `failure_kind`;
 - or no failure, meaning the finite prefix is detected.
 
+The audit now also exposes the guard fields
+`checked_arity_prefix_complete`, `proves_all_arity_marked_quotients`, and
+`remaining_all_arity_obligation`.  Even when every checked row passes,
+`proves_all_arity_marked_quotients` is false and the remaining obligation is
+`symbolic_all_arity_argument`; a finite prefix is not allowed to masquerade as
+the all-`k` marked quotient tower.
+
 This is still finite diagnostic evidence only.  A proof of A needs a symbolic
 all-arity argument for one fixed `G`; a proof of B needs an infinite symmetric
 tail of first failures with witness words.
