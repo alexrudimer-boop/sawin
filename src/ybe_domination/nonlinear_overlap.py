@@ -210,6 +210,13 @@ _UNIVERSAL_K_FIXED_CARRIER_SOUNDNESS_WITNESSES = frozenset(
         "strand_carrier_equations",
     )
 )
+_UNIVERSAL_K_FIXED_CARRIER_SINGLETON_DOMAIN_WITNESSES = frozenset(
+    (
+        "constant_carrier_track",
+        "explicit_singleton_carrier_domain",
+        "strand_carrier_equations",
+    )
+)
 
 
 def _universal_k_nonnegative_int(value: object) -> bool:
@@ -2622,19 +2629,17 @@ class UniversalKFixedCarrierWordPotentialCertificate:
                 failures.append(
                     (row.entry_key, "fixed_carrier_soundness_witness_missing", None)
                 )
-            if (
-                row.carrier_soundness_witness
-                and all(
-                    witness in _UNIVERSAL_K_FIXED_CARRIER_SOUNDNESS_WITNESSES
-                    for witness in row.carrier_soundness_witness
-                )
-                and len(row.carrier_domain) != 1
-            ):
+            singleton_witnesses = tuple(
+                witness
+                for witness in row.carrier_soundness_witness
+                if witness in _UNIVERSAL_K_FIXED_CARRIER_SINGLETON_DOMAIN_WITNESSES
+            )
+            if singleton_witnesses and len(row.carrier_domain) != 1:
                 failures.append(
                     (
                         row.entry_key,
                         "fixed_carrier_soundness_witness_requires_singleton_domain",
-                        row.carrier_soundness_witness,
+                        singleton_witnesses,
                     )
                 )
             if "constant_carrier_track" in row.carrier_soundness_witness:

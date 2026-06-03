@@ -2638,11 +2638,15 @@ carrier_domain = finite tuple of active carrier-pair tuples,
 carrier_soundness_witness = recognized finite witness names.
 ```
 
-The checker requires a nonempty carrier domain and a soundness witness such
-as `constant_carrier_track`, `explicit_singleton_carrier_domain`,
-`reachable_carrier_domain_invariant`, or `strand_carrier_equations`.  It then
-exhausts all current longitude-variable assignments in the finite endpoint
-group while holding the carrier tuple fixed, and verifies:
+The checker requires a nonempty carrier domain and a locally verified
+soundness witness, currently `constant_carrier_track`,
+`explicit_singleton_carrier_domain`, or `strand_carrier_equations`; a bare
+`reachable_carrier_domain_invariant` token is rejected until it is backed by
+an implemented finite invariant checker.  Each accepted witness proves a
+singleton row domain, and `constant_carrier_track` additionally requires the
+left and right active carrier values to agree on every detector track.  The
+checker then exhausts all current longitude-variable assignments in the
+finite endpoint group while holding the carrier tuple fixed, and verifies:
 
 ```text
 W_s(U)^-1 W_{s'}(A^+_{r,M}(U)) = h

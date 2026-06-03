@@ -11187,27 +11187,37 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             tuple(failure[1] for failure in opaque_invariant.carrier_domain_failures),
         )
 
-        non_singleton_singleton_witness = replace(
-            empty_domain,
-            identity_rows=(
-                replace(
-                    empty_domain.identity_row_objects[0],
-                    carrier_domain=(
-                        ((group.identity, group.identity),),
-                        ((1, 1),),
+        for singleton_witness in (
+            "constant_carrier_track",
+            "explicit_singleton_carrier_domain",
+            "strand_carrier_equations",
+        ):
+            with self.subTest(singleton_witness=singleton_witness):
+                non_singleton_singleton_witness = replace(
+                    empty_domain,
+                    identity_rows=(
+                        replace(
+                            empty_domain.identity_row_objects[0],
+                            carrier_domain=(
+                                ((group.identity, group.identity),),
+                                ((1, 1),),
+                            ),
+                            carrier_soundness_witness=(singleton_witness,),
+                        ),
                     ),
-                    carrier_soundness_witness=("explicit_singleton_carrier_domain",),
-                ),
-            ),
-        )
-        self.assertFalse(non_singleton_singleton_witness.carrier_domains_sound)
-        self.assertIn(
-            "fixed_carrier_soundness_witness_requires_singleton_domain",
-            tuple(
-                failure[1]
-                for failure in non_singleton_singleton_witness.carrier_domain_failures
-            ),
-        )
+                )
+                self.assertFalse(
+                    non_singleton_singleton_witness.carrier_domains_sound
+                )
+                self.assertIn(
+                    "fixed_carrier_soundness_witness_requires_singleton_domain",
+                    tuple(
+                        failure[1]
+                        for failure in (
+                            non_singleton_singleton_witness.carrier_domain_failures
+                        )
+                    ),
+                )
 
         nonconstant_constant_track = replace(
             empty_domain,
