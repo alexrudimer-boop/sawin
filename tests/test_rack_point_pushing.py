@@ -14,6 +14,7 @@ from ybe_domination import (
     FiniteBraidedSet,
     PointPushingGeneratorRow,
     PrefixArtinEnvelopeCohomologyAudit,
+    PrefixDeletionCubeRestrictionAudit,
     PrefixDeletionSquareRestrictionAudit,
     PrefixEdgeTransducerAudit,
     PrefixGroupHurwitzCompressionPressureAudit,
@@ -24,6 +25,7 @@ from ybe_domination import (
     edge_memory_tower_audit,
     finite_augmented_artin_envelope_pressure_audit,
     finite_augmented_artin_envelope_route_audit,
+    prefix_deletion_cube_restriction_audit,
     prefix_deletion_square_restriction_audit,
     prefix_artin_envelope_cohomology_audit,
     prefix_edge_transducer_audit,
@@ -699,6 +701,82 @@ class RackPointPushingOperatorLabelTests(unittest.TestCase):
         self.assertEqual(audit.left_prefix_monoid_size, 3)
         self.assertEqual(audit.nonunit_prefix_count, 2)
         self.assertTrue(audit.verifies_first_deletion_square_surface)
+        self.assertTrue(audit.deletion_orders_all_commute)
+        self.assertTrue(audit.all_rows_match)
+        self.assertEqual(audit.total_mismatch_count, 0)
+        self.assertTrue(
+            all(
+                row.first_witness_input is None
+                and row.first_deleted_after_source is None
+                and row.first_expected_target is None
+                for row in audit.rows
+            )
+        )
+
+    def test_prefix_deletion_cube_restriction_records_three_face_rows(self):
+        solution = FiniteBraidedSet(
+            (0, 1),
+            {
+                (0, 0): (1, 0),
+                (0, 1): (0, 0),
+                (1, 0): (1, 1),
+                (1, 1): (0, 1),
+            },
+        )
+
+        audit = prefix_deletion_cube_restriction_audit(solution)
+
+        self.assertIsInstance(audit, PrefixDeletionCubeRestrictionAudit)
+        self.assertEqual(audit.left_prefix_monoid_size, 2)
+        self.assertEqual(audit.nonunit_prefix_count, 0)
+        self.assertEqual(audit.source_point_pushing_arity, 5)
+        self.assertEqual(audit.target_point_pushing_arity, 2)
+        self.assertEqual(audit.row_count, 50)
+        self.assertTrue(audit.verifies_first_deletion_cube_surface)
+        self.assertTrue(audit.deletion_orders_all_commute)
+        self.assertTrue(audit.surviving_generator_all_match)
+        self.assertFalse(audit.all_rows_match)
+        self.assertEqual(audit.total_mismatch_count, 1920)
+        self.assertEqual(audit.deleted_generator_mismatch_count, 1920)
+        deleted_rows = tuple(
+            row
+            for row in audit.rows
+            if row.source_generator_deleted
+        )
+        surviving_rows = tuple(
+            row
+            for row in audit.rows
+            if not row.source_generator_deleted
+        )
+        self.assertEqual(len(deleted_rows), 30)
+        self.assertEqual(len(surviving_rows), 20)
+        self.assertTrue(all(row.deletion_order_count == 6 for row in audit.rows))
+        self.assertTrue(all(row.mismatch_count == 64 for row in deleted_rows))
+        self.assertTrue(all(row.mismatch_count == 0 for row in surviving_rows))
+        first_row = deleted_rows[0]
+        self.assertEqual(first_row.forget_stationary_indices, (1, 2, 3))
+        self.assertEqual(first_row.source_generator_index, 1)
+        self.assertIsNone(first_row.target_generator_index)
+        self.assertEqual(first_row.first_witness_input, (0, 0, 0, 0, 0, 0))
+        self.assertEqual(first_row.first_deleted_after_source, (0, 0, 1))
+        self.assertEqual(first_row.first_expected_target, (0, 0, 0))
+
+    def test_prefix_deletion_cube_restriction_identity_row_is_trivial(self):
+        solution = FiniteBraidedSet(
+            (0, 1),
+            {
+                (0, 0): (0, 0),
+                (0, 1): (0, 1),
+                (1, 0): (1, 0),
+                (1, 1): (1, 1),
+            },
+        )
+
+        audit = prefix_deletion_cube_restriction_audit(solution)
+
+        self.assertEqual(audit.left_prefix_monoid_size, 3)
+        self.assertEqual(audit.nonunit_prefix_count, 2)
+        self.assertTrue(audit.verifies_first_deletion_cube_surface)
         self.assertTrue(audit.deletion_orders_all_commute)
         self.assertTrue(audit.all_rows_match)
         self.assertEqual(audit.total_mismatch_count, 0)

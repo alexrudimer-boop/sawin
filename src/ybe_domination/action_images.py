@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from collections import deque
 from dataclasses import dataclass
-from itertools import combinations, product
+from itertools import combinations, permutations, product
 from typing import Iterable, Mapping, Sequence, Tuple
 
 from .artin_longitudes import BraidWord, FreeWord, NormalizedLawPrefixWitnessAudit
@@ -685,6 +685,93 @@ class PrefixDeletionSquareRestrictionAudit:
             and self.row_count == 50
             and self.deletion_orders_all_commute
             and self.records_first_deletion_square_surface
+        )
+
+
+@dataclass(frozen=True)
+class PrefixDeletionCubeRestrictionRow:
+    """One marked generator comparison after three stationary deletions."""
+
+    source_point_pushing_arity: int
+    source_braid_index: int
+    target_point_pushing_arity: int
+    target_braid_index: int
+    forget_stationary_indices: Tuple[int, int, int]
+    source_generator_index: int
+    target_generator_index: int | None
+    source_braid_word: BraidWord
+    target_braid_word: BraidWord
+    tuple_count: int
+    deletion_order_count: int
+    expected_identity_after_forgetting: bool
+    deletion_orders_commute: bool
+    matches_marked_triple_restriction: bool
+    mismatch_count: int
+    first_witness_input: Tuple[object, ...] | None
+    first_deleted_after_source: Tuple[object, ...] | None
+    first_expected_target: Tuple[object, ...] | None
+
+    @property
+    def source_generator_deleted(self) -> bool:
+        return self.source_generator_index in self.forget_stationary_indices
+
+    @property
+    def vertical_cube_cocycle_visible(self) -> bool:
+        return self.mismatch_count > 0
+
+
+@dataclass(frozen=True)
+class PrefixDeletionCubeRestrictionAudit:
+    """First three-face point-forgetting ledger for cube pressure."""
+
+    element_count: int
+    left_prefix_monoid_size: int
+    nonunit_prefix_count: int
+    source_point_pushing_arity: int
+    target_point_pushing_arity: int
+    rows: Tuple[PrefixDeletionCubeRestrictionRow, ...]
+    records_first_deletion_cube_surface: bool
+
+    @property
+    def row_count(self) -> int:
+        return len(self.rows)
+
+    @property
+    def total_mismatch_count(self) -> int:
+        return sum(row.mismatch_count for row in self.rows)
+
+    @property
+    def deleted_generator_mismatch_count(self) -> int:
+        return sum(
+            row.mismatch_count
+            for row in self.rows
+            if row.source_generator_deleted
+        )
+
+    @property
+    def surviving_generator_all_match(self) -> bool:
+        return all(
+            row.matches_marked_triple_restriction
+            for row in self.rows
+            if not row.source_generator_deleted
+        )
+
+    @property
+    def deletion_orders_all_commute(self) -> bool:
+        return all(row.deletion_orders_commute for row in self.rows)
+
+    @property
+    def all_rows_match(self) -> bool:
+        return all(row.matches_marked_triple_restriction for row in self.rows)
+
+    @property
+    def verifies_first_deletion_cube_surface(self) -> bool:
+        return (
+            self.source_point_pushing_arity == 5
+            and self.target_point_pushing_arity == 2
+            and self.row_count == 50
+            and self.deletion_orders_all_commute
+            and self.records_first_deletion_cube_surface
         )
 
 
@@ -3427,6 +3514,131 @@ def prefix_deletion_square_restriction_audit(
         target_point_pushing_arity=3,
         rows=rows,
         records_first_deletion_square_surface=True,
+    )
+
+
+def _prefix_deletion_cube_restriction_row(
+    solution: FiniteBraidedSet,
+    *,
+    source_generator_index: int,
+    forget_stationary_indices: Tuple[int, int, int],
+) -> PrefixDeletionCubeRestrictionRow:
+    from .braid_laws import pure_braid_generator
+
+    source_point_pushing_arity = 5
+    source_braid_index = source_point_pushing_arity + 1
+    target_point_pushing_arity = 2
+    target_braid_index = target_point_pushing_arity + 1
+    source_positions = tuple(range(1, source_braid_index + 1))
+    forgets = tuple(sorted(forget_stationary_indices))
+    if len(forgets) != 3 or forgets != forget_stationary_indices:
+        raise ValueError("forget_stationary_indices must be increasing")
+    if forgets[0] < 1 or forgets[-1] > source_point_pushing_arity:
+        raise ValueError("can only forget stationary strands")
+
+    source_braid_word = pure_braid_generator(
+        source_generator_index,
+        source_braid_index,
+    )
+    target_generator_index = _target_point_pushing_generator_after_forgetting_many(
+        source_generator_index,
+        forgets,
+    )
+    target_braid_word: BraidWord = (
+        tuple()
+        if target_generator_index is None
+        else pure_braid_generator(target_generator_index, target_braid_index)
+    )
+    deletion_orders = tuple(permutations(forgets))
+    canonical_order = tuple(reversed(forgets))
+    mismatch_count = 0
+    first_witness_input = None
+    first_deleted_after_source = None
+    first_expected_target = None
+    deletion_orders_commute = True
+    for tuple_value in product(solution.elements, repeat=source_braid_index):
+        source_image = solution.braid_action(source_braid_word, tuple_value)
+        deleted_after_source = _delete_tuple_source_positions(
+            source_image,
+            source_positions,
+            canonical_order,
+        )
+        for deletion_order in deletion_orders:
+            alternate_deleted_after_source = _delete_tuple_source_positions(
+                source_image,
+                source_positions,
+                deletion_order,
+            )
+            if alternate_deleted_after_source != deleted_after_source:
+                deletion_orders_commute = False
+
+        deleted_input = _delete_tuple_source_positions(
+            tuple_value,
+            source_positions,
+            canonical_order,
+        )
+        expected_target = (
+            deleted_input
+            if target_generator_index is None
+            else solution.braid_action(target_braid_word, deleted_input)
+        )
+        if deleted_after_source == expected_target:
+            continue
+        mismatch_count += 1
+        if first_witness_input is None:
+            first_witness_input = tuple(tuple_value)
+            first_deleted_after_source = deleted_after_source
+            first_expected_target = expected_target
+    return PrefixDeletionCubeRestrictionRow(
+        source_point_pushing_arity=source_point_pushing_arity,
+        source_braid_index=source_braid_index,
+        target_point_pushing_arity=target_point_pushing_arity,
+        target_braid_index=target_braid_index,
+        forget_stationary_indices=forgets,
+        source_generator_index=source_generator_index,
+        target_generator_index=target_generator_index,
+        source_braid_word=source_braid_word,
+        target_braid_word=target_braid_word,
+        tuple_count=len(solution.elements) ** source_braid_index,
+        deletion_order_count=len(deletion_orders),
+        expected_identity_after_forgetting=target_generator_index is None,
+        deletion_orders_commute=deletion_orders_commute,
+        matches_marked_triple_restriction=mismatch_count == 0,
+        mismatch_count=mismatch_count,
+        first_witness_input=first_witness_input,
+        first_deleted_after_source=first_deleted_after_source,
+        first_expected_target=first_expected_target,
+    )
+
+
+def prefix_deletion_cube_restriction_audit(
+    solution: FiniteBraidedSet,
+) -> PrefixDeletionCubeRestrictionAudit:
+    """Compare marked `Q_X(5)` generators after three stationary deletions."""
+
+    left_translations = _left_prefix_translations(solution)
+    monoid = TransformationMonoid.generated(left_translations.values())
+    rows = tuple(
+        _prefix_deletion_cube_restriction_row(
+            solution,
+            source_generator_index=source_generator_index,
+            forget_stationary_indices=forget_stationary_indices,
+        )
+        for forget_stationary_indices in combinations(range(1, 6), 3)
+        for source_generator_index in range(1, 6)
+    )
+    return PrefixDeletionCubeRestrictionAudit(
+        element_count=len(solution.elements),
+        left_prefix_monoid_size=len(monoid.elements),
+        nonunit_prefix_count=sum(
+            1
+            for element in monoid.elements
+            if not _transformation_is_permutation(element)
+        ),
+        source_point_pushing_arity=5,
+        target_point_pushing_arity=2,
+        rows=rows,
+        records_first_deletion_cube_surface=True,
     )
 
 

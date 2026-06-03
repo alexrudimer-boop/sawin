@@ -1970,3 +1970,33 @@ lemma must absorb with bounded vertical exponent.  The next possible
 obstruction is a genuine deletion-cube/Peiffer coherence class, where the
 two-face defects must themselves be compatible under three stationary
 deletions.
+
+## Deletion-Cube Restriction Ledger
+
+The note `proofs/prefix_deletion_cube_restriction.md` and generated audit
+`proofs/prefix_deletion_cube_restriction_audit.md` compute the first direct
+three-face point-forgetting ledger:
+
+```text
+Q_X(5) <= G_X(6)   --->   Q_X(2) <= G_X(3).
+```
+
+For source generator `alpha_{i,6}` and deleted stationary strands `j<k<l`,
+the marked target is identity exactly when `i` is one of the three deleted
+strands, and otherwise is the reindexed generator `alpha_{i-c,3}`.  The
+audit checks all ten deleted triples and five source generators, for `50`
+rows.  It also checks all six coordinate-deletion orders in every row.
+
+For the nondegenerate two-point prefix witness, all `20`
+surviving-generator rows match exactly.  The `30` rows where the source
+generator is deleted each have `64` mismatches, for total mismatch `1920`.
+All six deletion orders nevertheless commute in every row.  For the
+degenerate identity row all `50` rows match.
+
+This proves that the direct cube faces have ordinary semi-simplicial
+compatibility while the same vertical point-forgetting monodromy persists on
+deleted-generator rows.  It does not yet produce a gauge-invariant secondary
+class.  The next genuine obstruction would have to assemble the square
+defect ledgers into a Peiffer/Postnikov class and show that a base-trivial
+deletion cube has nontrivial transported square-boundary in a vertical
+coefficient group.
