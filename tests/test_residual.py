@@ -10,6 +10,7 @@ from ybe_domination import (
     QuotientMap,
     braid_action_order,
     bounded_words,
+    coxeter_braid_word,
     cyclic_group,
     full_twist_braid_word,
     identity_solution,
@@ -142,6 +143,26 @@ class ResidualTests(unittest.TestCase):
         self.assertEqual(full_twist_braid_word(4), (1, 2, 3) * 4)
         with self.assertRaises(ValueError):
             full_twist_braid_word(0)
+
+    def test_coxeter_braid_growth_is_not_full_twist_growth(self):
+        rack = rack_solution([0, 1, 2], lambda left, right: (-left + 2 * right) % 3)
+
+        coxeter_orders = [
+            braid_action_order(rack, n, coxeter_braid_word(n))
+            for n in range(2, 8)
+        ]
+        full_twist_orders = [
+            braid_action_order(rack, n, full_twist_braid_word(n))
+            for n in range(2, 8)
+        ]
+
+        self.assertEqual(coxeter_orders, [3, 6, 12, 10, 18, 14])
+        self.assertEqual(full_twist_orders, [3, 2, 3, 2, 3, 2])
+        for n, order in zip(range(2, 8), full_twist_orders):
+            audit = rack_full_twist_order_bound_audit(rack, n)
+            self.assertEqual(audit.action_order, order)
+            self.assertEqual(audit.inner_group_exponent, 6)
+            self.assertTrue(audit.proves_fixed_n_rack_full_twist_bound)
 
     def test_rack_full_twist_order_bound_audit_for_dihedral_rack(self):
         rack = rack_solution([0, 1, 2], lambda left, right: (2 * left - right) % 3)

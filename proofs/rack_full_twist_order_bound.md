@@ -154,3 +154,9 @@ and every checked prefix order divides the corresponding symbolic bound.
 This still leaves the real obstruction question open outside these branches:
 find a finite degenerate bijective YBE solution with unbounded central
 full-twist order, or prove a new uniform bound for the remaining classes.
+
+The guardrail `proofs/coxeter_vs_full_twist_guardrail.md` records a common
+false positive: the positive Coxeter braid `sigma_1 ... sigma_{n-1}` can have
+orders growing with `n` on a finite rack even though its central `n`-th power
+`Delta_n^2` remains uniformly bounded.  The full-twist obstruction must use
+the central element itself.

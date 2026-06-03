@@ -38,6 +38,14 @@ def full_twist_braid_word(n: int) -> Tuple[int, ...]:
     return tuple(generator for _ in range(n) for generator in range(1, n))
 
 
+def coxeter_braid_word(n: int) -> Tuple[int, ...]:
+    """Return the positive Coxeter braid ``sigma_1 ... sigma_{n-1}``."""
+
+    if n < 1:
+        raise ValueError("braid degree must be positive")
+    return tuple(range(1, n))
+
+
 def _lcm(a: int, b: int) -> int:
     if a == 0 or b == 0:
         return 0
