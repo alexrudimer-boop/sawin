@@ -1576,6 +1576,17 @@ exit: when the attached interval has an admissible proper canonical
 strand-carrier kernel, it reports
 `closed_by_canonical_strand_carrier_proper_congruence`, leaves no live K rows,
 and creates no U/C/M endpoint obligation.
+For the universal branch, the fixed-carrier monodromy constructor can now
+consume a finite canonical-component value ledger.  The helper
+`universal_k_canonical_strand_carrier_rows_with_values(...)` maps the abstract
+canonical components into endpoint-group elements and then lets the existing
+strand-carrier domain audit derive the singleton fixed-carrier domains.  This
+does not close a U/C/M endpoint family by itself; the resulting observer still
+has to prove monodromy, fixed-carrier coboundary constancy, target matching,
+and residual faithfulness.
+A new guardrail regression checks this explicitly: canonical component values
+without endpoint-target and residual-faithfulness rows do not prove a family
+observer, even though they can derive the strand-carrier singleton domains.
 This removes another false endpoint closure and leaves the same local
 nontrivial observer-existence gap: construct residual-faithful U/C/M
 monodromy-coboundary observers for all surviving intervals, or produce a
@@ -1585,8 +1596,8 @@ normalized-law counterexample.
 
 At the latest verified snapshot:
 
-- `python -m unittest tests.test_nonlinear_overlap` passed with 192 tests;
-- `python -m unittest discover -s tests` passed with 731 tests;
+- `python -m unittest tests.test_nonlinear_overlap` passed with 193 tests;
+- `python -m unittest discover -s tests` passed with 732 tests;
 - `python -m compileall -q src tests tools` passed;
 - `node --check tools/build_reduction_audit_workbook.mjs` passed;
 - the proof log DOCX and reduction audit workbook were regenerated, and the

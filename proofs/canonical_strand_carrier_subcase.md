@@ -102,7 +102,10 @@ canonical_strand_carrier_values_by_family
 
 to derive the concrete strand-carrier rows used by the certificate checker.
 This is an executable supplied-certificate path, not an existence theorem for
-the universal-carrier branch.
+the universal-carrier branch.  In particular, when the canonical relation is
+universal, this ledger is only constant-carrier input unless a separate
+endpoint target and residual-faithfulness certificate is supplied; it cannot
+close an endpoint family by itself.
 
 ## Remaining open branch
 

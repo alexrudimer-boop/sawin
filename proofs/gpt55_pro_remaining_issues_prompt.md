@@ -3677,6 +3677,19 @@ with no live K rows and no U/C/M endpoint obligation.  The universal canonical
 carrier branch is the only non-injective canonical-carrier case that can still
 feed the endpoint-observer existence lemma.
 
+For that universal branch, canonical components can be used as fixed-carrier
+input only after they are assigned values in the endpoint group.  The helper
+`universal_k_canonical_strand_carrier_rows_with_values(...)` evaluates the
+abstract canonical components in a supplied finite target and feeds the result
+to the existing strand-carrier fixed-domain audit.  This is not an endpoint
+closure: the observer must still pass the monodromy representation,
+fixed-carrier coboundary, endpoint-target, cutoff/readout if relevant, and
+residual-faithfulness checks.
+For a universal canonical carrier, such values are therefore only
+constant-carrier input.  A regression now checks that the family audit remains
+unproved and reports missing endpoint-target and residual-faithfulness
+certificates when those independent rows are not supplied.
+
 The all-`n` soundness proof is then:
 
 1. The fixed carriers are initialized before reading the braid word.

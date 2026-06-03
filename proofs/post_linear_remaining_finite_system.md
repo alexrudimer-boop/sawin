@@ -2770,6 +2770,26 @@ The audit data records the canonical carrier kind, admissibility, terminal
 flag, and failure reasons.  This is the same terminal pattern as the other
 proper generated congruence closures: no U/C/M endpoint family is created by a
 proper canonical carrier quotient.
+For surviving universal canonical-carrier branches, the fixed-carrier
+monodromy builder also accepts a canonical-component value ledger.  The helper
+
+```text
+universal_k_canonical_strand_carrier_rows_with_values(...)
+```
+
+evaluates the abstract canonical component labels in the supplied endpoint
+group, producing ordinary strand-carrier rows.  The existing
+`universal_k_fixed_carrier_domain_ledger_from_strand_carriers(...)` audit then
+derives the singleton carrier domains and `strand_carrier_equations`
+witnesses.  This is an input-normalization route only: malformed or missing
+component values are rejected downstream, and no U/C/M observer is closed
+without the usual monodromy, coboundary, endpoint-target, and
+residual-faithfulness certificates.
+In the universal canonical-carrier case the supplied values are no stronger
+than a constant-carrier track unless those independent certificates are also
+present.  The regression suite now checks that canonical values alone leave
+the endpoint family unproved with explicit missing-target and
+missing-residual-theorem reasons.
 This does not prove that every surviving U/C/M interval admits such
 observers; it gives the exact finite local checker and integration path that
 any proposed observer must pass.

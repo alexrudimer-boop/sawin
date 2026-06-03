@@ -6312,6 +6312,43 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             (("strand_carrier_equations",),),
         )
 
+        canonical_carrier_without_external_proofs = (
+            universal_k_endpoint_observer_builds_from_fixed_carrier_monodromy_by_family(
+                interval,
+                seed_entries,
+                endpoint_groups_by_family=(("U", group),),
+                word_potential_templates_by_family=(
+                    (
+                        "U",
+                        (
+                            (seed_key, ((u1, 1), (u0, -1))),
+                            (next_key, ((u0, 1), (u1, -1))),
+                        ),
+                    ),
+                ),
+                positive_state_rows_by_family=(("U", tuple(positive_state_rows)),),
+                canonical_strand_carrier_values_by_family=(
+                    ("U", ((canonical_component, 1),)),
+                ),
+                detector_track_initialization_rows=detector_rows,
+            )
+        )
+        self.assertFalse(
+            canonical_carrier_without_external_proofs.proves_family_endpoint_observers
+        )
+        self.assertIn(
+            "endpoint_observer_family_endpoint_targets_missing_families",
+            canonical_carrier_without_external_proofs.failure_reasons,
+        )
+        self.assertIn(
+            "endpoint_observer_family_residual_theorems_missing_families",
+            canonical_carrier_without_external_proofs.failure_reasons,
+        )
+        self.assertIn(
+            "endpoint_observer_family_builds_not_proved",
+            canonical_carrier_without_external_proofs.failure_reasons,
+        )
+
     def test_endpoint_observer_builder_records_all_ucm_active_families(self):
         interval = one_color_identity_interval()
         group = cyclic_group(2)
