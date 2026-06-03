@@ -1642,6 +1642,16 @@ four-point universe by affine block-map composition for `1 <= n <= 7`: all
 `24` untagged affine rows have central full-twist prefix orders
 `1,2,1,2,1,2,1`, and the maximum observed prefix order across all `481`
 affine YBE tables is `4`.
+The coordinate-dependency guardrail
+`proofs/coordinate_dependency_audit.md` closes the elementary triangular
+degenerate shapes for this same obstruction route.  If the first output of a
+finite bijective YBE table depends only on the first input, or the second
+output depends only on the second input, the YBE relation and bijectivity
+force the identity table.  If the dependency is on the opposite input, then
+bijectivity forces nondegeneracy, so the row routes through the existing
+left-nondegenerate/guitar branch.  Exact enumeration in sizes `1,2,3` finds
+`0` unclosed coordinate-dependency rows, with full-twist prefix orders checked
+through `n=5`.
 
 ## Verification snapshot
 

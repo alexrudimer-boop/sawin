@@ -1,0 +1,87 @@
+{
+  "all_dependency_rows_closed": true,
+  "description": "Exact tiny-corpus audit for finite bijective YBE tables with one-coordinate dependency profiles.",
+  "finite_checks_derived_from_tables": true,
+  "max_n": 5,
+  "sizes": [
+    1,
+    2,
+    3
+  ],
+  "summaries": [
+    {
+      "closed_coordinate_dependency_rows": 1,
+      "coordinate_dependency_reason_counts": {
+        "same_side_dependency_identity_collapse": 1
+      },
+      "coordinate_dependency_rows": 1,
+      "first_unclosed_dependency_rows": [],
+      "known_full_twist_reason_counts": {
+        "involutive_artin_permutation": 1
+      },
+      "max_full_twist_prefix_order": 1,
+      "max_n": 5,
+      "opposite_side_only_dependency_rows": 0,
+      "profile_counts": {
+        "first_depends_only_on_x+first_depends_only_on_y+second_depends_only_on_x+second_depends_only_on_y": 1
+      },
+      "same_side_dependency_rows": 1,
+      "size": 1,
+      "total_ybe_solutions": 1,
+      "unclosed_coordinate_dependency_rows": 0
+    },
+    {
+      "closed_coordinate_dependency_rows": 5,
+      "coordinate_dependency_reason_counts": {
+        "opposite_side_dependency_nondegenerate_branch": 4,
+        "same_side_dependency_identity_collapse": 1
+      },
+      "coordinate_dependency_rows": 5,
+      "first_unclosed_dependency_rows": [],
+      "known_full_twist_reason_counts": {
+        "involutive_artin_permutation": 3,
+        "permutation_form_twist_order": 2
+      },
+      "max_full_twist_prefix_order": 2,
+      "max_n": 5,
+      "opposite_side_only_dependency_rows": 4,
+      "profile_counts": {
+        "first_depends_only_on_x+second_depends_only_on_y": 1,
+        "first_depends_only_on_y+second_depends_only_on_x": 4
+      },
+      "same_side_dependency_rows": 1,
+      "size": 2,
+      "total_ybe_solutions": 5,
+      "unclosed_coordinate_dependency_rows": 0
+    },
+    {
+      "closed_coordinate_dependency_rows": 55,
+      "coordinate_dependency_reason_counts": {
+        "opposite_side_dependency_nondegenerate_branch": 54,
+        "same_side_dependency_identity_collapse": 1
+      },
+      "coordinate_dependency_rows": 55,
+      "first_unclosed_dependency_rows": [],
+      "known_full_twist_reason_counts": {
+        "involutive_artin_permutation": 19,
+        "left_nondegenerate_derived_rack_exponent": 35,
+        "permutation_form_twist_order": 12,
+        "rack_inner_group_exponent": 7
+      },
+      "max_full_twist_prefix_order": 3,
+      "max_n": 5,
+      "opposite_side_only_dependency_rows": 54,
+      "profile_counts": {
+        "first_depends_only_on_x+second_depends_only_on_y": 1,
+        "first_depends_only_on_y": 18,
+        "first_depends_only_on_y+second_depends_only_on_x": 18,
+        "none": 18,
+        "second_depends_only_on_x": 18
+      },
+      "same_side_dependency_rows": 1,
+      "size": 3,
+      "total_ybe_solutions": 73,
+      "unclosed_coordinate_dependency_rows": 0
+    }
+  ]
+}

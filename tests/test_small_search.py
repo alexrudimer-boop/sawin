@@ -10,6 +10,7 @@ from ybe_domination import (
     all_bijection_solutions,
     branch_tags,
     commutator_law_braid_moves,
+    coordinate_dependency_branch_audit,
     dependency_profile,
     derived_rack_operation_table,
     derived_rack_solution,
@@ -384,6 +385,60 @@ class SmallSearchTests(unittest.TestCase):
                 "involutive_artin_permutation": 19,
                 "rack_inner_group_exponent": 7,
                 "left_nondegenerate_derived_rack_exponent": 35,
+                "permutation_form_twist_order": 12,
+            },
+        )
+
+    def test_same_side_coordinate_dependency_collapses_in_tiny_corpus(self):
+        for size in (2, 3):
+            for solution in all_bijection_solutions(size):
+                profile = dependency_profile(solution)
+                if not (
+                    profile["first_depends_only_on_x"]
+                    or profile["second_depends_only_on_y"]
+                ):
+                    continue
+                audit = coordinate_dependency_branch_audit(solution, max_n=5)
+
+                self.assertEqual(
+                    audit.reason,
+                    "same_side_dependency_identity_collapse",
+                )
+                self.assertTrue(audit.identity_table)
+                self.assertTrue(audit.proves_coordinate_dependency_closed_branch)
+
+    def test_opposite_side_coordinate_dependency_routes_to_nondegenerate_branch(self):
+        counts = {}
+        for solution in all_bijection_solutions(3):
+            profile = dependency_profile(solution)
+            has_opposite_side_dependency = (
+                profile["first_depends_only_on_y"]
+                or profile["second_depends_only_on_x"]
+            )
+            has_same_side_dependency = (
+                profile["first_depends_only_on_x"]
+                or profile["second_depends_only_on_y"]
+            )
+            if not has_opposite_side_dependency or has_same_side_dependency:
+                continue
+            audit = coordinate_dependency_branch_audit(solution, max_n=5)
+            counts[audit.known_full_twist_reason] = (
+                counts.get(audit.known_full_twist_reason, 0) + 1
+            )
+
+            self.assertEqual(
+                audit.reason,
+                "opposite_side_dependency_nondegenerate_branch",
+            )
+            self.assertTrue(audit.nondegenerate)
+            self.assertTrue(audit.proves_coordinate_dependency_closed_branch)
+
+        self.assertEqual(
+            counts,
+            {
+                "involutive_artin_permutation": 6,
+                "rack_inner_group_exponent": 7,
+                "left_nondegenerate_derived_rack_exponent": 29,
                 "permutation_form_twist_order": 12,
             },
         )

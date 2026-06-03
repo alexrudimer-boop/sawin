@@ -406,6 +406,66 @@ class FullTwistKnownBranchBoundAudit:
         )
 
 
+@dataclass(frozen=True)
+class CoordinateDependencyBranchAudit:
+    """Known-branch routing for YBE tables with one-coordinate outputs.
+
+    The same-side cases mean ``pr_1 R(x,y)`` depends only on ``x`` or
+    ``pr_2 R(x,y)`` depends only on ``y``.  For a finite bijective YBE table
+    either condition forces the identity table.  The opposite-side cases mean
+    ``pr_1 R(x,y)`` depends only on ``y`` or ``pr_2 R(x,y)`` depends only on
+    ``x``; bijectivity then forces nondegeneracy, so the existing
+    left-nondegenerate/guitar branch applies.
+    """
+
+    solution_size: int
+    max_n: int
+    active_dependencies: Tuple[str, ...]
+    same_side_dependencies: Tuple[str, ...]
+    opposite_side_dependencies: Tuple[str, ...]
+    identity_table: bool
+    left_nondegenerate: bool
+    right_nondegenerate: bool
+    nondegenerate: bool
+    known_full_twist_reason: str | None
+    known_full_twist_bound: int | None
+    action_orders: Tuple[int, ...]
+    reason: str | None
+    finite_checks_derived_from_tables: bool
+
+    @property
+    def has_coordinate_dependency(self) -> bool:
+        return bool(self.active_dependencies)
+
+    @property
+    def has_same_side_dependency(self) -> bool:
+        return bool(self.same_side_dependencies)
+
+    @property
+    def has_opposite_side_dependency(self) -> bool:
+        return bool(self.opposite_side_dependencies)
+
+    @property
+    def proves_coordinate_dependency_closed_branch(self) -> bool:
+        if not (
+            self.finite_checks_derived_from_tables
+            and self.has_coordinate_dependency
+            and self.reason is not None
+        ):
+            return False
+        if self.has_same_side_dependency:
+            return (
+                self.reason == "same_side_dependency_identity_collapse"
+                and self.identity_table
+                and self.known_full_twist_reason is not None
+            )
+        return (
+            self.reason == "opposite_side_dependency_nondegenerate_branch"
+            and self.nondegenerate
+            and self.known_full_twist_reason is not None
+        )
+
+
 def _known_branch_certificate(
     *,
     solution: FiniteBraidedSet,
@@ -534,6 +594,57 @@ def known_branch_full_twist_order_bound_audit(
         action_orders=action_orders,
         reason=reason,
         uniform_bound=uniform_bound,
+        finite_checks_derived_from_tables=True,
+    )
+
+
+def coordinate_dependency_branch_audit(
+    solution: FiniteBraidedSet,
+    max_n: int,
+) -> CoordinateDependencyBranchAudit:
+    """Route one-coordinate dependency profiles to closed symbolic branches.
+
+    This helper is deliberately narrow.  It does not classify arbitrary
+    degenerate bijective YBE solutions; it only records the elementary
+    dependency profiles that cannot supply an unbounded full-twist obstruction.
+    """
+
+    if not solution.is_ybe():
+        raise ValueError("solution must satisfy the Yang-Baxter equation")
+    profile = dependency_profile(solution)
+    active = tuple(key for key, value in profile.items() if value)
+    same_side = tuple(
+        key
+        for key in ("first_depends_only_on_x", "second_depends_only_on_y")
+        if profile[key]
+    )
+    opposite_side = tuple(
+        key
+        for key in ("first_depends_only_on_y", "second_depends_only_on_x")
+        if profile[key]
+    )
+    full_twist = known_branch_full_twist_order_bound_audit(solution, max_n)
+    reason = None
+    if same_side:
+        if is_identity_table(solution):
+            reason = "same_side_dependency_identity_collapse"
+    elif opposite_side:
+        if is_nondegenerate(solution) and full_twist.reason is not None:
+            reason = "opposite_side_dependency_nondegenerate_branch"
+    return CoordinateDependencyBranchAudit(
+        solution_size=len(solution.elements),
+        max_n=max_n,
+        active_dependencies=active,
+        same_side_dependencies=same_side,
+        opposite_side_dependencies=opposite_side,
+        identity_table=is_identity_table(solution),
+        left_nondegenerate=is_left_nondegenerate(solution),
+        right_nondegenerate=is_right_nondegenerate(solution),
+        nondegenerate=is_nondegenerate(solution),
+        known_full_twist_reason=full_twist.reason,
+        known_full_twist_bound=full_twist.uniform_bound,
+        action_orders=full_twist.action_orders,
+        reason=reason,
         finite_checks_derived_from_tables=True,
     )
 
