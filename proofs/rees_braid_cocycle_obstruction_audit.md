@@ -117,3 +117,26 @@ Thus the four-state pattern is not directly induced by any
 two-element adjacent binary bijection, even before imposing YBE
 on that binary map.  This again pushes any possible realization
 into a more hidden quotient-fibre interval.
+
+## Outer-Constant Slice
+
+If the outside coordinate partitions are collapsed, embedded
+states have form `(a0, m_q, c0)`.  The two rows force the partial
+binary slices `R(a0,m_q)` and `R(m_q,c0)`.  The audit constructs
+the minimal raw slice realization and then checks the arbitrary
+bijective completion used for the certificate.
+
+- row 1 fixed states: `()`;
+- row 2 fixed states: `()`;
+- minimal raw basis size: `5`;
+- uses an extra outer symbol: `True`;
+- partial domain size: `8`;
+- partial image size: `8`;
+- partial slice is consistent: `True`;
+- constructed completion satisfies global YBE: `False`.
+
+So the four-cycle obstruction rows admit a raw adjacent-slice
+realization once a fifth basis symbol hides one outside
+coordinate, but the displayed bijective completion is not a YBE
+solution.  The remaining realization problem is therefore a
+global YBE completion problem, not a local braid-cocycle problem.

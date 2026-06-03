@@ -11,6 +11,7 @@ from ybe_domination import (  # noqa: E402
     braid_locality_shadow_audit,
     cyclic_group,
     labeled_permutation_braid_audit,
+    outer_constant_adjacent_slice_audit,
     rees_rectangle_cocycle,
     rees_rectangle_cocycle_audit,
 )
@@ -94,6 +95,7 @@ def build_report():
         row2,
         basis_size=2,
     )
+    outer_slice_audit = outer_constant_adjacent_slice_audit(states, row1, row2)
     report = {
         "description": (
             "Small C2 Rees braid-cocycle obstruction pattern: nonflat "
@@ -141,6 +143,7 @@ def build_report():
         },
         "adjacent_two_body_audit": asdict(adjacent_audit),
         "adjacent_two_body_ybe_audit": asdict(adjacent_ybe_audit),
+        "outer_constant_adjacent_slice_audit": asdict(outer_slice_audit),
     }
     OUT_JSON.write_text(json.dumps(report, indent=2, sort_keys=True), encoding="utf-8")
     OUT_MD.write_text(render_markdown(report), encoding="utf-8")
@@ -154,6 +157,7 @@ def render_markdown(report):
     direct_locality = report["direct_coordinate_control_audit"]
     adjacent = report["adjacent_two_body_audit"]
     adjacent_ybe = report["adjacent_two_body_ybe_audit"]
+    outer_slice = report["outer_constant_adjacent_slice_audit"]
     lines = [
         "# Rees braid-cocycle obstruction audit",
         "",
@@ -307,6 +311,35 @@ def render_markdown(report):
             "two-element adjacent binary bijection, even before imposing YBE",
             "on that binary map.  This again pushes any possible realization",
             "into a more hidden quotient-fibre interval.",
+            "",
+            "## Outer-Constant Slice",
+            "",
+            "If the outside coordinate partitions are collapsed, embedded",
+            "states have form `(a0, m_q, c0)`.  The two rows force the partial",
+            "binary slices `R(a0,m_q)` and `R(m_q,c0)`.  The audit constructs",
+            "the minimal raw slice realization and then checks the arbitrary",
+            "bijective completion used for the certificate.",
+            "",
+            f"- row 1 fixed states: `{tuple(outer_slice['row1_fixed_states'])}`;",
+            f"- row 2 fixed states: `{tuple(outer_slice['row2_fixed_states'])}`;",
+            f"- minimal raw basis size: `{outer_slice['minimal_raw_basis_size']}`;",
+            (
+                "- uses an extra outer symbol: "
+                f"`{outer_slice['uses_extra_outer_symbol']}`;"
+            ),
+            f"- partial domain size: `{outer_slice['partial_domain_size']}`;",
+            f"- partial image size: `{outer_slice['partial_image_size']}`;",
+            f"- partial slice is consistent: `{outer_slice['partial_is_consistent']}`;",
+            (
+                "- constructed completion satisfies global YBE: "
+                f"`{outer_slice['constructed_pair_map_satisfies_ybe']}`."
+            ),
+            "",
+            "So the four-cycle obstruction rows admit a raw adjacent-slice",
+            "realization once a fifth basis symbol hides one outside",
+            "coordinate, but the displayed bijective completion is not a YBE",
+            "solution.  The remaining realization problem is therefore a",
+            "global YBE completion problem, not a local braid-cocycle problem.",
             "",
         ]
     )

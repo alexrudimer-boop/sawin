@@ -195,6 +195,23 @@ class AdjacentTwoBodyRealizationAudit:
 
 
 @dataclass(frozen=True)
+class OuterConstantAdjacentSliceAudit:
+    """Audit the forced outer-constant adjacent-slice realization shape."""
+
+    state_count: int
+    row1_fixed_states: Tuple[ReesIndex, ...]
+    row2_fixed_states: Tuple[ReesIndex, ...]
+    minimal_raw_basis_size: int
+    uses_extra_outer_symbol: bool
+    partial_domain_size: int
+    partial_image_size: int
+    partial_is_consistent: bool
+    constructed_pair_map_satisfies_ybe: bool
+    recorded_pair_map: BinaryPairMap | None
+    recorded_embedding: StateTripleEmbedding | None
+
+
+@dataclass(frozen=True)
 class AperiodicPermutationAudit:
     is_aperiodic: bool
     permutation_count: int
@@ -1800,6 +1817,90 @@ def adjacent_two_body_realization_audit(
         realization_found=False,
         recorded_pair_map=None,
         recorded_embedding=None,
+    )
+
+
+def outer_constant_adjacent_slice_audit(
+    states: Sequence[ReesIndex],
+    row1_permutation: Mapping[ReesIndex, ReesIndex],
+    row2_permutation: Mapping[ReesIndex, ReesIndex],
+) -> OuterConstantAdjacentSliceAudit:
+    """Audit the raw adjacent-slice realization forced by collapsed ends.
+
+    If both outside coordinate partitions are collapsed, an embedded state has
+    form ``(a0, m_q, c0)``.  The two braid rows then force partial binary rows
+    ``R(a0,m_q)=(a0,m_{s1(q)})`` and
+    ``R(m_q,c0)=(m_{s2(q)},c0)``.  When ``a0`` and ``c0`` are both middle
+    symbols, consistency requires a ``row2`` fixed point for ``a0`` and a
+    ``row1`` fixed point for ``c0``.  Otherwise one extra outer symbol avoids
+    the overlap.
+    """
+
+    state_tuple = tuple(states)
+    if not state_tuple:
+        raise ValueError("states must be nonempty")
+    if len(set(state_tuple)) != len(state_tuple):
+        raise ValueError("states must be distinct")
+    _permutation_cycles(state_tuple, row1_permutation)
+    _permutation_cycles(state_tuple, row2_permutation)
+    state_index = {state: index for index, state in enumerate(state_tuple)}
+    row1_fixed = tuple(state for state in state_tuple if row1_permutation[state] == state)
+    row2_fixed = tuple(state for state in state_tuple if row2_permutation[state] == state)
+    uses_extra = not (row1_fixed and row2_fixed)
+    basis_size = len(state_tuple) + (1 if uses_extra else 0)
+    if uses_extra:
+        left_outer = len(state_tuple)
+        right_outer = 0
+    else:
+        left_outer = state_index[row2_fixed[0]]
+        right_outer = state_index[row1_fixed[0]]
+    embedding = {
+        state: (left_outer, state_index[state], right_outer)
+        for state in state_tuple
+    }
+    partial = {}
+    partial_consistent = True
+    for state in state_tuple:
+        middle = state_index[state]
+        row1_target = (
+            left_outer,
+            state_index[row1_permutation[state]],
+        )
+        row2_target = (
+            state_index[row2_permutation[state]],
+            right_outer,
+        )
+        for domain, image in (
+            ((left_outer, middle), row1_target),
+            ((middle, right_outer), row2_target),
+        ):
+            if domain in partial and partial[domain] != image:
+                partial_consistent = False
+            partial[domain] = image
+
+    pair_map = None
+    satisfies_ybe = False
+    if partial_consistent and len(set(partial.values())) == len(partial):
+        pairs = _basis_pairs(basis_size)
+        remaining_domain = [pair for pair in pairs if pair not in partial]
+        remaining_image = [pair for pair in pairs if pair not in set(partial.values())]
+        pair_map = dict(partial)
+        pair_map.update(zip(remaining_domain, remaining_image))
+        satisfies_ybe = _pair_map_satisfies_ybe(pair_map, basis_size)
+
+    return OuterConstantAdjacentSliceAudit(
+        state_count=len(state_tuple),
+        row1_fixed_states=row1_fixed,
+        row2_fixed_states=row2_fixed,
+        minimal_raw_basis_size=basis_size,
+        uses_extra_outer_symbol=uses_extra,
+        partial_domain_size=len(partial),
+        partial_image_size=len(set(partial.values())),
+        partial_is_consistent=partial_consistent
+        and len(set(partial.values())) == len(partial),
+        constructed_pair_map_satisfies_ybe=satisfies_ybe,
+        recorded_pair_map=_canonical_pair_map(pair_map) if pair_map is not None else None,
+        recorded_embedding=_canonical_embedding(embedding),
     )
 
 

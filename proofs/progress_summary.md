@@ -1739,7 +1739,12 @@ two-element adjacent-binary realization problem: no bijection `R:A^2->A^2`
 and embedding of the four states into `A^3` induces these two rows, even
 before requiring `R` to satisfy YBE globally.  Thus the current obstruction
 pattern is a residual quotient-fibre search target, not a direct small
-set-theoretic construction.
+set-theoretic construction.  The new outer-constant slice audit then shows
+the next forced shape: with embedded states `(a0,m_q,c0)`, the four-cycle rows
+need one extra outer symbol, so a raw adjacent-binary partial slice exists
+for `|A|=5` and extends to a bijection of `A^2`; the displayed completion
+does not satisfy YBE.  The realization problem has therefore been sharpened
+to a global YBE-completion problem for that partial adjacent slice.
 
 ## Verification snapshot
 

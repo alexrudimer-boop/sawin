@@ -13,6 +13,7 @@ from ybe_domination import (
     LocalNormalizedLawPrefixWitnessAudit,
     BraidLocalityShadowAudit,
     LabeledPermutationBraidAudit,
+    OuterConstantAdjacentSliceAudit,
     ReesRectangleCocycleAudit,
     UnitPerfectResidualLongitudeAudit,
     aperiodic_permutation_audit,
@@ -28,6 +29,7 @@ from ybe_domination import (
     local_normalized_law_prefix_witness_audit,
     local_symmetric_normalized_law_prefix_witness_audit,
     monoid_permutation_group,
+    outer_constant_adjacent_slice_audit,
     permutation_elements,
     permutation_fixed_partitions,
     pure_braid_generator,
@@ -260,6 +262,56 @@ class SemigroupHolonomyTests(unittest.TestCase):
         self.assertIsNone(audit.recorded_pair_map)
         self.assertFalse(ybe_audit.realization_found)
         self.assertLessEqual(ybe_audit.checked_embedding_count, audit.checked_embedding_count)
+
+    def test_outer_constant_adjacent_slice_audit_builds_c2_raw_slice(self):
+        states = ("q00", "q01", "q10", "q11")
+        row1 = {
+            "q00": "q10",
+            "q01": "q11",
+            "q10": "q01",
+            "q11": "q00",
+        }
+        row2 = {
+            "q00": "q01",
+            "q01": "q10",
+            "q10": "q11",
+            "q11": "q00",
+        }
+
+        audit = outer_constant_adjacent_slice_audit(states, row1, row2)
+
+        self.assertIsInstance(audit, OuterConstantAdjacentSliceAudit)
+        self.assertEqual(audit.row1_fixed_states, ())
+        self.assertEqual(audit.row2_fixed_states, ())
+        self.assertEqual(audit.minimal_raw_basis_size, 5)
+        self.assertTrue(audit.uses_extra_outer_symbol)
+        self.assertEqual(audit.partial_domain_size, 8)
+        self.assertEqual(audit.partial_image_size, 8)
+        self.assertTrue(audit.partial_is_consistent)
+        self.assertFalse(audit.constructed_pair_map_satisfies_ybe)
+        self.assertIsNotNone(audit.recorded_pair_map)
+        self.assertEqual(
+            audit.recorded_embedding,
+            (
+                ("q00", (4, 0, 0)),
+                ("q01", (4, 1, 0)),
+                ("q10", (4, 2, 0)),
+                ("q11", (4, 3, 0)),
+            ),
+        )
+
+    def test_outer_constant_adjacent_slice_audit_uses_fixed_points_without_extra_symbol(self):
+        states = ("q0",)
+        row = {"q0": "q0"}
+
+        audit = outer_constant_adjacent_slice_audit(states, row, row)
+
+        self.assertEqual(audit.row1_fixed_states, ("q0",))
+        self.assertEqual(audit.row2_fixed_states, ("q0",))
+        self.assertEqual(audit.minimal_raw_basis_size, 1)
+        self.assertFalse(audit.uses_extra_outer_symbol)
+        self.assertTrue(audit.partial_is_consistent)
+        self.assertTrue(audit.constructed_pair_map_satisfies_ybe)
 
     def test_reset_element_is_aperiodic(self):
         reset = (0, 0, 2)

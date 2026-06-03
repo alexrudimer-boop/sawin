@@ -104,6 +104,29 @@ of `A^3`.  Hence the obstruction pattern is not a direct two-element
 three-strand set-theoretic action; any actual YBE realization must be less
 literal.
 
+There is, however, a raw adjacent-slice realization once one outside
+coordinate is hidden.  Because both `s1` and `s2` are four-cycles, the direct
+locality partitions force the embedded states to have form
+
+```text
+(a0, m_q, c0).
+```
+
+If the basis is exactly the four middle symbols, the two forced slices overlap
+at `(a0,c0)` and would require fixed points of both rows.  No such fixed
+points exist.  With one extra outer symbol the overlap disappears, and the
+partial rules
+
+```text
+R(a0,m_q) = (a0,m_{s1(q)}),
+R(m_q,c0) = (m_{s2(q)},c0)
+```
+
+are consistent and extend to a bijection of `A^2`.  The generated audit
+constructs such a raw extension for `|A|=5`, but the displayed completion does
+not satisfy YBE on all of `A^3`.  The remaining realization problem is
+therefore a global YBE-completion problem for this partial adjacent slice.
+
 ## Closed commutator holonomy
 
 Let
