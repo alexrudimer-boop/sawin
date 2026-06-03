@@ -25,6 +25,7 @@ from ybe_domination import (
     YBEBrunnianDerivativeGateAudit,
     YBECrossedSquareResidualAudit,
     YBEFiniteStateRackCoverAudit,
+    YBEGuitarDecoderBoundaryAudit,
     YBECoskeletalMechanismAudit,
     PrefixVerticalPeifferCubeTransportAudit,
     PrefixVerticalPeifferSquareAudit,
@@ -51,6 +52,7 @@ from ybe_domination import (
     ybe_brunnian_derivative_gate_audit,
     ybe_crossed_square_residual_audit,
     ybe_finite_state_rack_cover_audit,
+    ybe_guitar_decoder_boundary_audit,
     ybe_coskeletal_mechanism_audit,
     rack_point_pushing_operator_label_audit,
     rack_solution,
@@ -867,6 +869,39 @@ class RackPointPushingOperatorLabelTests(unittest.TestCase):
         )
         self.assertEqual(audit.cases[0].role, "negative_coordinatewise")
         self.assertEqual(audit.cases[-1].role, "group_rack_warning")
+
+    def test_ybe_guitar_decoder_boundary_records_nondegenerate_closure(self):
+        audit = ybe_guitar_decoder_boundary_audit()
+
+        self.assertIsInstance(audit, YBEGuitarDecoderBoundaryAudit)
+        self.assertTrue(audit.records_guitar_decoder_boundary)
+        self.assertTrue(audit.right_guitar_hypothesis_recorded)
+        self.assertTrue(audit.derived_rack_operation_recorded)
+        self.assertTrue(audit.all_arity_kernel_equality_recorded)
+        self.assertTrue(audit.finite_state_decoder_realization_recorded)
+        self.assertTrue(audit.degenerate_j2_failure_recorded)
+        self.assertTrue(audit.monoid_inverse_branch_gate_recorded)
+        self.assertTrue(audit.no_automatic_unbounded_memory_obstruction_recorded)
+        self.assertTrue(audit.deterministic_decoder_obligation_recorded)
+        self.assertIn("R_y(x)=rho_y(x)", audit.right_guitar_formula)
+        self.assertIn("R_a(lambda_{R_b^-1(a)}(b))", audit.derived_rack_formula)
+        self.assertIn("ker rho_Y,n = ker rho_X,n", audit.kernel_equality_formula)
+        self.assertIn("Q=G_rho", audit.decoder_state_formula)
+        self.assertIn("J_2(x,y)=(R_y(x),y)", audit.degenerate_j2_failure_formula)
+        self.assertIn("Q=M_rho", audit.monoid_gate_formula)
+        self.assertEqual(
+            audit.case_keys,
+            (
+                "right_nondegenerate_guitar_theorem",
+                "derived_rack_domination",
+                "finite_state_decoder_realization",
+                "degenerate_j2_failure",
+                "monoid_inverse_branch_gate",
+                "deterministic_decoder_obligation",
+            ),
+        )
+        self.assertEqual(audit.cases[0].role, "positive_known_theorem")
+        self.assertEqual(audit.cases[-1].role, "remaining_obligation")
 
     def test_prefix_point_forgetting_restriction_records_vertical_rows(self):
         solution = FiniteBraidedSet(

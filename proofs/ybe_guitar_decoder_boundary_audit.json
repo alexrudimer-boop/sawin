@@ -1,0 +1,63 @@
+{
+  "all_arity_kernel_equality_recorded": true,
+  "case_keys": [
+    "right_nondegenerate_guitar_theorem",
+    "derived_rack_domination",
+    "finite_state_decoder_realization",
+    "degenerate_j2_failure",
+    "monoid_inverse_branch_gate",
+    "deterministic_decoder_obligation"
+  ],
+  "cases": [
+    {
+      "consequence": "the relevant nondegenerate branch is not a search result; it is closed by the standard guitar-map conjugacy theorem",
+      "key": "right_nondegenerate_guitar_theorem",
+      "role": "positive_known_theorem",
+      "statement": "if every right action R_y(x)=rho_y(x) is bijective, the right-guitar maps J_n are triangular bijections in every arity"
+    },
+    {
+      "consequence": "taking Y to be this derived rack gives kernel equality, hence finite rack domination, for every braid arity",
+      "key": "derived_rack_domination",
+      "role": "positive_domination",
+      "statement": "the derived operation a < b = R_a(lambda_{R_b^-1(a)}(b)) is a finite rack operation and its braid action is conjugate to the YBE action"
+    },
+    {
+      "consequence": "the finite-state rack-cover equations are solved exactly in the one-sided nondegenerate case",
+      "key": "finite_state_decoder_realization",
+      "role": "decoder_model",
+      "statement": "the inverse guitar map is a finite-state decoder with Q=G_rho, d(q,a)=q^-1(a), and tau(q,a)=q R_{q^-1(a)}"
+    },
+    {
+      "consequence": "the degenerate obstruction begins at inverse-branch choice, not at high arity or whole-image exponent growth",
+      "key": "degenerate_j2_failure",
+      "role": "first_failure",
+      "statement": "if some R_y is not bijective, then J_2(x,y)=(R_y(x),y) is not bijective and the derived formula needs a noncanonical preimage R_b^-1(a)"
+    },
+    {
+      "consequence": "finite memory is available, but braid compatibility becomes a finite inverse-branch cocycle system",
+      "key": "monoid_inverse_branch_gate",
+      "role": "finite_repair_gate",
+      "statement": "the transformation monoid M_rho is finite, but a decoder using Q=M_rho needs choices d(q,a) in q^-1(a) and updates tau(q,a)=q R_{d(q,a)}"
+    },
+    {
+      "consequence": "the unresolved degenerate regime is exactly the search for coherent deterministic finite decoder labels",
+      "key": "deterministic_decoder_obligation",
+      "role": "remaining_obligation",
+      "statement": "relation-valued or nondeterministic inverse branches do not give Sawin kernel inclusion unless they determinize to finite labels satisfying rack self-distributivity and decoder equations"
+    }
+  ],
+  "decoder_state_formula": "Q=G_rho, d(q,a)=q^-1(a), tau(q,a)=q R_{q^-1(a)}",
+  "degenerate_j2_failure_formula": "J_2(x,y)=(R_y(x),y), so nonbijective R_y makes J_2 nonbijective",
+  "degenerate_j2_failure_recorded": true,
+  "derived_rack_formula": "a < b = R_a(lambda_{R_b^-1(a)}(b))",
+  "derived_rack_operation_recorded": true,
+  "deterministic_decoder_obligation_recorded": true,
+  "finite_state_decoder_realization_recorded": true,
+  "kernel_equality_formula": "J_n rho_X,n(beta)=rho_Y,n(beta) J_n, hence ker rho_Y,n = ker rho_X,n for every n",
+  "monoid_gate_formula": "Q=M_rho requires d(q,a) in q^-1(a), tau(q,a)=q R_{d(q,a)}, and the finite-state cocycle equations",
+  "monoid_inverse_branch_gate_recorded": true,
+  "no_automatic_unbounded_memory_obstruction_recorded": true,
+  "records_guitar_decoder_boundary": true,
+  "right_guitar_formula": "R_y(x)=rho_y(x); if every R_y is bijective, J_n(x_1,...,x_n)=(R_{x_n}...R_{x_2}(x_1),...,x_n)",
+  "right_guitar_hypothesis_recorded": true
+}

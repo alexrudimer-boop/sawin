@@ -2403,3 +2403,78 @@ or its noninvertible analogue.  Finite rack domination may still be true, but
 it cannot be proved by a naive coordinatewise rack cover; the finite labels
 must provide context that coherently reinterprets copied rack strands after
 crossings.
+
+## YBE Guitar Decoder Boundary
+
+The note `proofs/ybe_guitar_decoder_boundary.md` and generated audit
+`proofs/ybe_guitar_decoder_boundary_audit.md` connect the finite-state
+rack-cover criterion with the known guitar-map theorem.  For the right-guitar
+convention, set
+
+```text
+R_y(x)=rho_y(x).
+```
+
+If every `R_y` is bijective, define
+
+```text
+J_n(x_1,...,x_n)=
+(R_{x_n}...R_{x_2}(x_1),
+ R_{x_n}...R_{x_3}(x_2),
+ ...,
+ R_{x_n}(x_{n-1}),
+ x_n).
+```
+
+The maps `J_n` are triangular bijections.  The derived rack operation is
+
+```text
+a < b = R_a(lambda_{R_b^-1(a)}(b)).
+```
+
+The guitar-map theorem gives
+
+```text
+J_n rho_X,n(beta)=rho_Y,n(beta) J_n
+```
+
+for every braid `beta`, hence
+
+```text
+ker rho_Y,n = ker rho_X,n
+```
+
+for every `n`.  This closes the one-sided nondegenerate branch with equality
+of kernels, which is stronger than finite rack domination.
+
+This same theorem is also a finite-state decoder construction.  Let
+
+```text
+G_rho=<R_x:x in X> <= Sym(X),
+Q=G_rho,
+d(q,a)=q^-1(a),
+tau(q,a)=q R_{q^-1(a)}.
+```
+
+Reading from right to left, these formulas recover `J_n^-1` and satisfy the
+finite-state decoder equations.
+
+If some `R_y` is not bijective, the first failure already occurs at
+
+```text
+J_2(x,y)=(R_y(x),y).
+```
+
+The derived rack formula then becomes undefined or multivalued because
+`R_b^-1(a)` is missing or nonunique.  The finite transformation monoid
+
+```text
+M_rho=<R_x:x in X> <= End(X)
+```
+
+is still finite, so there is no automatic infinite-memory obstruction at this
+level.  The missing degenerate theorem is instead a deterministic
+inverse-branch cocycle theorem: choose `d(q,a) in q^-1(a)` and
+`tau(q,a)=q R_{d(q,a)}` coherently so that the finite-state decoder equations
+and rack self-distributivity hold.  Failure of such finite deterministic
+branch choices is the sharpened direct-cover obstruction.

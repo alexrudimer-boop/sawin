@@ -943,6 +943,69 @@ class YBEFiniteStateRackCoverAudit:
 
 
 @dataclass(frozen=True)
+class YBEGuitarDecoderBoundaryCase:
+    """One row in the guitar-map finite-state decoder boundary."""
+
+    key: str
+    role: str
+    statement: str
+    consequence: str
+
+
+@dataclass(frozen=True)
+class YBEGuitarDecoderBoundaryAudit:
+    """Boundary between the guitar-derived rack theorem and degenerate repair."""
+
+    right_guitar_hypothesis_recorded: bool
+    derived_rack_operation_recorded: bool
+    all_arity_kernel_equality_recorded: bool
+    finite_state_decoder_realization_recorded: bool
+    degenerate_j2_failure_recorded: bool
+    monoid_inverse_branch_gate_recorded: bool
+    no_automatic_unbounded_memory_obstruction_recorded: bool
+    deterministic_decoder_obligation_recorded: bool
+    right_guitar_formula: str
+    derived_rack_formula: str
+    kernel_equality_formula: str
+    decoder_state_formula: str
+    degenerate_j2_failure_formula: str
+    monoid_gate_formula: str
+    cases: Tuple[YBEGuitarDecoderBoundaryCase, ...]
+
+    @property
+    def case_keys(self) -> Tuple[str, ...]:
+        return tuple(case.key for case in self.cases)
+
+    @property
+    def records_guitar_decoder_boundary(self) -> bool:
+        return (
+            self.right_guitar_hypothesis_recorded
+            and self.derived_rack_operation_recorded
+            and self.all_arity_kernel_equality_recorded
+            and self.finite_state_decoder_realization_recorded
+            and self.degenerate_j2_failure_recorded
+            and self.monoid_inverse_branch_gate_recorded
+            and self.no_automatic_unbounded_memory_obstruction_recorded
+            and self.deterministic_decoder_obligation_recorded
+            and "R_y(x)=rho_y(x)" in self.right_guitar_formula
+            and "R_a(lambda_{R_b^-1(a)}(b))" in self.derived_rack_formula
+            and "ker rho_Y,n = ker rho_X,n" in self.kernel_equality_formula
+            and "Q=G_rho" in self.decoder_state_formula
+            and "J_2(x,y)=(R_y(x),y)" in self.degenerate_j2_failure_formula
+            and "Q=M_rho" in self.monoid_gate_formula
+            and self.case_keys
+            == (
+                "right_nondegenerate_guitar_theorem",
+                "derived_rack_domination",
+                "finite_state_decoder_realization",
+                "degenerate_j2_failure",
+                "monoid_inverse_branch_gate",
+                "deterministic_decoder_obligation",
+            )
+        )
+
+
+@dataclass(frozen=True)
 class PrefixPointForgettingRestrictionRow:
     """One marked generator comparison under stationary-strand deletion."""
 
@@ -5032,6 +5095,128 @@ def ybe_finite_state_rack_cover_audit() -> YBEFiniteStateRackCoverAudit:
         ),
         right_update_defect_formula=(
             "Delta(x,y)=lambda_{rho_y(x)} lambda_x^-1"
+        ),
+        cases=cases,
+    )
+
+
+def ybe_guitar_decoder_boundary_audit() -> YBEGuitarDecoderBoundaryAudit:
+    """Record the guitar-map boundary of the finite-state decoder route.
+
+    The one-sided nondegenerate guitar theorem solves the decoder equations
+    with a finite group of suffix actions.  Degeneracy replaces that group by
+    a finite transformation monoid, where inverse branches are not canonical
+    and become the actual finite cocycle obligation.
+    """
+
+    cases = (
+        YBEGuitarDecoderBoundaryCase(
+            key="right_nondegenerate_guitar_theorem",
+            role="positive_known_theorem",
+            statement=(
+                "if every right action R_y(x)=rho_y(x) is bijective, the "
+                "right-guitar maps J_n are triangular bijections in every "
+                "arity"
+            ),
+            consequence=(
+                "the relevant nondegenerate branch is not a search result; it "
+                "is closed by the standard guitar-map conjugacy theorem"
+            ),
+        ),
+        YBEGuitarDecoderBoundaryCase(
+            key="derived_rack_domination",
+            role="positive_domination",
+            statement=(
+                "the derived operation a < b = R_a(lambda_{R_b^-1(a)}(b)) "
+                "is a finite rack operation and its braid action is conjugate "
+                "to the YBE action"
+            ),
+            consequence=(
+                "taking Y to be this derived rack gives kernel equality, hence "
+                "finite rack domination, for every braid arity"
+            ),
+        ),
+        YBEGuitarDecoderBoundaryCase(
+            key="finite_state_decoder_realization",
+            role="decoder_model",
+            statement=(
+                "the inverse guitar map is a finite-state decoder with "
+                "Q=G_rho, d(q,a)=q^-1(a), and tau(q,a)=q R_{q^-1(a)}"
+            ),
+            consequence=(
+                "the finite-state rack-cover equations are solved exactly in "
+                "the one-sided nondegenerate case"
+            ),
+        ),
+        YBEGuitarDecoderBoundaryCase(
+            key="degenerate_j2_failure",
+            role="first_failure",
+            statement=(
+                "if some R_y is not bijective, then J_2(x,y)=(R_y(x),y) is "
+                "not bijective and the derived formula needs a noncanonical "
+                "preimage R_b^-1(a)"
+            ),
+            consequence=(
+                "the degenerate obstruction begins at inverse-branch choice, "
+                "not at high arity or whole-image exponent growth"
+            ),
+        ),
+        YBEGuitarDecoderBoundaryCase(
+            key="monoid_inverse_branch_gate",
+            role="finite_repair_gate",
+            statement=(
+                "the transformation monoid M_rho is finite, but a decoder "
+                "using Q=M_rho needs choices d(q,a) in q^-1(a) and updates "
+                "tau(q,a)=q R_{d(q,a)}"
+            ),
+            consequence=(
+                "finite memory is available, but braid compatibility becomes "
+                "a finite inverse-branch cocycle system"
+            ),
+        ),
+        YBEGuitarDecoderBoundaryCase(
+            key="deterministic_decoder_obligation",
+            role="remaining_obligation",
+            statement=(
+                "relation-valued or nondeterministic inverse branches do not "
+                "give Sawin kernel inclusion unless they determinize to finite "
+                "labels satisfying rack self-distributivity and decoder equations"
+            ),
+            consequence=(
+                "the unresolved degenerate regime is exactly the search for "
+                "coherent deterministic finite decoder labels"
+            ),
+        ),
+    )
+    return YBEGuitarDecoderBoundaryAudit(
+        right_guitar_hypothesis_recorded=True,
+        derived_rack_operation_recorded=True,
+        all_arity_kernel_equality_recorded=True,
+        finite_state_decoder_realization_recorded=True,
+        degenerate_j2_failure_recorded=True,
+        monoid_inverse_branch_gate_recorded=True,
+        no_automatic_unbounded_memory_obstruction_recorded=True,
+        deterministic_decoder_obligation_recorded=True,
+        right_guitar_formula=(
+            "R_y(x)=rho_y(x); if every R_y is bijective, "
+            "J_n(x_1,...,x_n)=(R_{x_n}...R_{x_2}(x_1),...,x_n)"
+        ),
+        derived_rack_formula=(
+            "a < b = R_a(lambda_{R_b^-1(a)}(b))"
+        ),
+        kernel_equality_formula=(
+            "J_n rho_X,n(beta)=rho_Y,n(beta) J_n, hence "
+            "ker rho_Y,n = ker rho_X,n for every n"
+        ),
+        decoder_state_formula=(
+            "Q=G_rho, d(q,a)=q^-1(a), tau(q,a)=q R_{q^-1(a)}"
+        ),
+        degenerate_j2_failure_formula=(
+            "J_2(x,y)=(R_y(x),y), so nonbijective R_y makes J_2 nonbijective"
+        ),
+        monoid_gate_formula=(
+            "Q=M_rho requires d(q,a) in q^-1(a), "
+            "tau(q,a)=q R_{d(q,a)}, and the finite-state cocycle equations"
         ),
         cases=cases,
     )
