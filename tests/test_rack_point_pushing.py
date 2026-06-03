@@ -20,6 +20,7 @@ from ybe_domination import (
     PrefixGroupHurwitzCompressionPressureAudit,
     PrefixPointForgettingRestrictionAudit,
     PrefixPointPushingSurfaceAudit,
+    PrefixVerticalPeifferSquareAudit,
     PrefixVerticalDefectTransportAudit,
     PrefixVerticalDefectTransformAudit,
     degenerate_preimage_memory_audit,
@@ -34,6 +35,7 @@ from ybe_domination import (
     prefix_group_hurwitz_compression_pressure_audit,
     prefix_point_forgetting_restriction_audit,
     prefix_point_pushing_surface_audit,
+    prefix_vertical_peiffer_square_audit,
     prefix_vertical_defect_transport_audit,
     prefix_vertical_defect_transform_audit,
     rack_point_pushing_operator_label_audit,
@@ -941,6 +943,59 @@ class RackPointPushingOperatorLabelTests(unittest.TestCase):
                 for row in audit.rows
             )
         )
+
+    def test_prefix_vertical_peiffer_square_boundary_is_trivial_for_prefix_rows(self):
+        solution = FiniteBraidedSet(
+            (0, 1),
+            {
+                (0, 0): (1, 0),
+                (0, 1): (0, 0),
+                (1, 0): (1, 1),
+                (1, 1): (0, 1),
+            },
+        )
+
+        audit = prefix_vertical_peiffer_square_audit(solution)
+
+        self.assertIsInstance(audit, PrefixVerticalPeifferSquareAudit)
+        self.assertEqual(audit.left_prefix_monoid_size, 2)
+        self.assertEqual(audit.nonunit_prefix_count, 0)
+        self.assertEqual(audit.row_count, 10)
+        self.assertTrue(audit.verifies_first_vertical_peiffer_square_boundary)
+        self.assertTrue(audit.all_defects_are_permutations)
+        self.assertTrue(audit.all_single_transports_commute)
+        self.assertTrue(audit.all_peiffer_boundaries_identity)
+        self.assertEqual(audit.nontrivial_peiffer_boundary_count, 0)
+        self.assertEqual(audit.total_peiffer_moved_tuple_count, 0)
+        self.assertEqual(audit.defect_order_pair_spectrum, ((2, 2),))
+        self.assertEqual(audit.peiffer_order_spectrum, (1,))
+        self.assertTrue(
+            all(
+                row.first_witness_target_input is None
+                and row.first_witness_after_commutator is None
+                for row in audit.rows
+            )
+        )
+
+    def test_prefix_vertical_peiffer_square_identity_rows_are_trivial(self):
+        solution = FiniteBraidedSet(
+            (0, 1),
+            {
+                (0, 0): (0, 0),
+                (0, 1): (0, 1),
+                (1, 0): (1, 0),
+                (1, 1): (1, 1),
+            },
+        )
+
+        audit = prefix_vertical_peiffer_square_audit(solution)
+
+        self.assertTrue(audit.verifies_first_vertical_peiffer_square_boundary)
+        self.assertTrue(audit.all_peiffer_boundaries_identity)
+        self.assertEqual(audit.nontrivial_peiffer_boundary_count, 0)
+        self.assertEqual(audit.total_peiffer_moved_tuple_count, 0)
+        self.assertEqual(audit.defect_order_pair_spectrum, ((1, 1),))
+        self.assertEqual(audit.peiffer_order_spectrum, (1,))
 
 
 if __name__ == "__main__":

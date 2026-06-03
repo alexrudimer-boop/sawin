@@ -941,6 +941,116 @@ class PrefixVerticalDefectTransportAudit:
 
 
 @dataclass(frozen=True)
+class PrefixVerticalPeifferSquareRow:
+    """Peiffer commutator of two diagonal defects on a deletion square."""
+
+    source_point_pushing_arity: int
+    source_braid_index: int
+    forget_stationary_indices: Tuple[int, int]
+    first_source_generator_index: int
+    second_source_generator_index: int
+    target_braid_index: int
+    target_tuple_count: int
+    first_defect_is_permutation: bool
+    second_defect_is_permutation: bool
+    first_defect_order: int | None
+    second_defect_order: int | None
+    first_single_transport_commutes: bool
+    second_single_transport_commutes: bool
+    peiffer_commutator_permutation: Permutation | None
+    peiffer_commutator_order: int | None
+    peiffer_commutator_is_identity: bool | None
+    peiffer_moved_tuple_count: int
+    first_witness_target_input: Tuple[object, ...] | None
+    first_witness_after_commutator: Tuple[object, ...] | None
+
+    @property
+    def defects_are_permutations(self) -> bool:
+        return self.first_defect_is_permutation and self.second_defect_is_permutation
+
+    @property
+    def single_transports_commute(self) -> bool:
+        return self.first_single_transport_commutes and self.second_single_transport_commutes
+
+    @property
+    def nontrivial_peiffer_boundary(self) -> bool:
+        return self.peiffer_commutator_is_identity is False
+
+
+@dataclass(frozen=True)
+class PrefixVerticalPeifferSquareAudit:
+    """First Peiffer square-boundary computation for vertical defects."""
+
+    element_count: int
+    left_prefix_monoid_size: int
+    nonunit_prefix_count: int
+    source_point_pushing_arity: int
+    rows: Tuple[PrefixVerticalPeifferSquareRow, ...]
+    records_first_vertical_peiffer_square_boundary: bool
+
+    @property
+    def row_count(self) -> int:
+        return len(self.rows)
+
+    @property
+    def all_defects_are_permutations(self) -> bool:
+        return all(row.defects_are_permutations for row in self.rows)
+
+    @property
+    def all_single_transports_commute(self) -> bool:
+        return all(row.single_transports_commute for row in self.rows)
+
+    @property
+    def all_peiffer_boundaries_identity(self) -> bool:
+        return all(row.peiffer_commutator_is_identity for row in self.rows)
+
+    @property
+    def nontrivial_peiffer_boundary_count(self) -> int:
+        return sum(1 for row in self.rows if row.nontrivial_peiffer_boundary)
+
+    @property
+    def total_peiffer_moved_tuple_count(self) -> int:
+        return sum(row.peiffer_moved_tuple_count for row in self.rows)
+
+    @property
+    def defect_order_pair_spectrum(self) -> Tuple[Tuple[int, int], ...]:
+        return tuple(
+            sorted(
+                {
+                    (row.first_defect_order, row.second_defect_order)
+                    for row in self.rows
+                    if (
+                        row.first_defect_order is not None
+                        and row.second_defect_order is not None
+                    )
+                }
+            )
+        )
+
+    @property
+    def peiffer_order_spectrum(self) -> Tuple[int, ...]:
+        return tuple(
+            sorted(
+                {
+                    row.peiffer_commutator_order
+                    for row in self.rows
+                    if row.peiffer_commutator_order is not None
+                }
+            )
+        )
+
+    @property
+    def verifies_first_vertical_peiffer_square_boundary(self) -> bool:
+        return (
+            self.source_point_pushing_arity == 5
+            and self.row_count == 10
+            and self.all_defects_are_permutations
+            and self.all_single_transports_commute
+            and self.records_first_vertical_peiffer_square_boundary
+        )
+
+
+@dataclass(frozen=True)
 class LawBraidActionCertificate:
     braid_index: int
     tuple_count: int
@@ -4146,6 +4256,148 @@ def prefix_vertical_defect_transport_audit(
         source_point_pushing_arity=source_point_pushing_arity,
         rows=rows,
         records_first_vertical_defect_face_transport=True,
+    )
+
+
+def _permutation_commutator(first: Permutation, second: Permutation) -> Permutation:
+    """Return first second first^-1 second^-1 using left-after-right composition."""
+
+    return compose_permutations(
+        first,
+        compose_permutations(
+            second,
+            compose_permutations(
+                invert_permutation(first),
+                invert_permutation(second),
+            ),
+        ),
+    )
+
+
+def _prefix_vertical_peiffer_square_row(
+    solution: FiniteBraidedSet,
+    *,
+    source_point_pushing_arity: int,
+    forget_stationary_indices: Tuple[int, int],
+) -> PrefixVerticalPeifferSquareRow:
+    source_braid_index = source_point_pushing_arity + 1
+    forgets = tuple(sorted(forget_stationary_indices))
+    if len(forgets) != 2 or forgets != forget_stationary_indices:
+        raise ValueError("forget_stationary_indices must be increasing")
+    if forgets[0] < 1 or forgets[-1] > source_point_pushing_arity:
+        raise ValueError("can only delete stationary strands")
+
+    first_index, second_index = forgets
+    first_defect = _prefix_vertical_defect_transform_row(
+        solution,
+        deletion_level=2,
+        source_point_pushing_arity=source_point_pushing_arity,
+        forget_stationary_indices=forgets,
+        source_generator_index=first_index,
+    )
+    second_defect = _prefix_vertical_defect_transform_row(
+        solution,
+        deletion_level=2,
+        source_point_pushing_arity=source_point_pushing_arity,
+        forget_stationary_indices=forgets,
+        source_generator_index=second_index,
+    )
+    first_transport = _prefix_vertical_defect_transport_row(
+        solution,
+        source_point_pushing_arity=source_point_pushing_arity,
+        from_forget_stationary_indices=(first_index,),
+        extra_stationary_index=second_index,
+        source_generator_index=first_index,
+    )
+    second_transport = _prefix_vertical_defect_transport_row(
+        solution,
+        source_point_pushing_arity=source_point_pushing_arity,
+        from_forget_stationary_indices=(second_index,),
+        extra_stationary_index=first_index,
+        source_generator_index=second_index,
+    )
+
+    target_tuples = tuple(
+        product(solution.elements, repeat=first_defect.target_braid_index)
+    )
+    peiffer_commutator = None
+    peiffer_order = None
+    peiffer_is_identity = None
+    moved_count = 0
+    first_witness_target_input = None
+    first_witness_after_commutator = None
+    if (
+        first_defect.defect_permutation is not None
+        and second_defect.defect_permutation is not None
+    ):
+        peiffer_commutator = _permutation_commutator(
+            first_defect.defect_permutation,
+            second_defect.defect_permutation,
+        )
+        peiffer_order = permutation_order(peiffer_commutator)
+        identity = identity_permutation(len(peiffer_commutator))
+        peiffer_is_identity = peiffer_commutator == identity
+        for index, image_index in enumerate(peiffer_commutator):
+            if index == image_index:
+                continue
+            moved_count += 1
+            if first_witness_target_input is None:
+                first_witness_target_input = tuple(target_tuples[index])
+                first_witness_after_commutator = tuple(target_tuples[image_index])
+
+    return PrefixVerticalPeifferSquareRow(
+        source_point_pushing_arity=source_point_pushing_arity,
+        source_braid_index=source_braid_index,
+        forget_stationary_indices=forgets,
+        first_source_generator_index=first_index,
+        second_source_generator_index=second_index,
+        target_braid_index=first_defect.target_braid_index,
+        target_tuple_count=len(target_tuples),
+        first_defect_is_permutation=first_defect.defect_is_permutation,
+        second_defect_is_permutation=second_defect.defect_is_permutation,
+        first_defect_order=first_defect.defect_order,
+        second_defect_order=second_defect.defect_order,
+        first_single_transport_commutes=first_transport.transport_commutes,
+        second_single_transport_commutes=second_transport.transport_commutes,
+        peiffer_commutator_permutation=peiffer_commutator,
+        peiffer_commutator_order=peiffer_order,
+        peiffer_commutator_is_identity=peiffer_is_identity,
+        peiffer_moved_tuple_count=moved_count,
+        first_witness_target_input=first_witness_target_input,
+        first_witness_after_commutator=first_witness_after_commutator,
+    )
+
+
+def prefix_vertical_peiffer_square_audit(
+    solution: FiniteBraidedSet,
+) -> PrefixVerticalPeifferSquareAudit:
+    """Compute first Peiffer commutators for diagonal deletion defects."""
+
+    source_point_pushing_arity = 5
+    left_translations = _left_prefix_translations(solution)
+    monoid = TransformationMonoid.generated(left_translations.values())
+    rows = tuple(
+        _prefix_vertical_peiffer_square_row(
+            solution,
+            source_point_pushing_arity=source_point_pushing_arity,
+            forget_stationary_indices=forget_stationary_indices,
+        )
+        for forget_stationary_indices in combinations(
+            range(1, source_point_pushing_arity + 1),
+            2,
+        )
+    )
+    return PrefixVerticalPeifferSquareAudit(
+        element_count=len(solution.elements),
+        left_prefix_monoid_size=len(monoid.elements),
+        nonunit_prefix_count=sum(
+            1
+            for element in monoid.elements
+            if not _transformation_is_permutation(element)
+        ),
+        source_point_pushing_arity=source_point_pushing_arity,
+        rows=rows,
+        records_first_vertical_peiffer_square_boundary=True,
     )
 
 

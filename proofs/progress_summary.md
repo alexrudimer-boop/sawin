@@ -2051,3 +2051,26 @@ cube ledgers live.  It is still not the Peiffer/Postnikov obstruction:
 distinct diagonal defects must next be compared around a deletion square,
 then quotiented by the section-change law and by pullback from a fixed finite
 operator-label Hurwitz base.
+
+## Vertical Peiffer Square Boundary
+
+The note `proofs/prefix_vertical_peiffer_square.md` and generated audit
+`proofs/prefix_vertical_peiffer_square_audit.md` compute the first Peiffer
+commutator boundary for the extracted vertical defects.  For each deleted
+stationary pair `{i,j}` at source point-pushing arity `5`, the two deleted
+generators `alpha_{i,6}` and `alpha_{j,6}` both define vertical defect
+permutations after deleting `{i,j}`.  The audit computes their commutator on
+the post-deletion target tuple space.
+
+For the nondegenerate two-point prefix witness, all `10` pair-face
+commutators are identity.  The pair defects have order-pair spectrum
+`((2, 2),)`, but the Peiffer order spectrum is `(1,)`, with nontrivial
+boundary count `0` and moved-tuple count `0`.  For the degenerate identity
+row, the same commutators are identity with defect order-pair spectrum
+`((1, 1),)`.
+
+This eliminates the simplest square-boundary obstruction on the current toy
+prefix surface.  It does not settle finite rack domination: the next required
+step is to add the section-change/gauge normalization and test whether higher
+or mixed square classes are merely coboundaries or pullbacks from one fixed
+finite operator-label Hurwitz base.
