@@ -1597,6 +1597,11 @@ The fixed-carrier soundness witness list has also been tightened: opaque
 `reachable_carrier_domain_invariant` assertions are rejected until backed by
 an implemented finite invariant checker, leaving only locally verified
 constant-track, singleton-domain, and strand-carrier-equation witnesses.
+Those witnesses now have executable semantics rather than serving as labels:
+each currently accepted witness must justify a singleton carrier domain, and
+`constant_carrier_track` additionally requires the left and right active
+carrier value to be equal on every detector track.  Non-singleton domains or
+nonconstant active pairs are rejected before the coboundary identity is used.
 This removes another false endpoint closure and leaves the same local
 nontrivial observer-existence gap: construct residual-faithful U/C/M
 monodromy-coboundary observers for all surviving intervals, or produce a

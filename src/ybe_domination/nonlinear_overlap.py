@@ -2622,6 +2622,39 @@ class UniversalKFixedCarrierWordPotentialCertificate:
                 failures.append(
                     (row.entry_key, "fixed_carrier_soundness_witness_missing", None)
                 )
+            if (
+                row.carrier_soundness_witness
+                and all(
+                    witness in _UNIVERSAL_K_FIXED_CARRIER_SOUNDNESS_WITNESSES
+                    for witness in row.carrier_soundness_witness
+                )
+                and len(row.carrier_domain) != 1
+            ):
+                failures.append(
+                    (
+                        row.entry_key,
+                        "fixed_carrier_soundness_witness_requires_singleton_domain",
+                        row.carrier_soundness_witness,
+                    )
+                )
+            if "constant_carrier_track" in row.carrier_soundness_witness:
+                for index, carrier_tuple in enumerate(row.carrier_domain):
+                    parts = _universal_k_fixed_carrier_tuple_parts(carrier_tuple)
+                    if parts is None:
+                        continue
+                    mismatched_tracks = tuple(
+                        track_index
+                        for track_index, (left_value, right_value) in enumerate(parts)
+                        if left_value != right_value
+                    )
+                    if mismatched_tracks:
+                        failures.append(
+                            (
+                                row.entry_key,
+                                "constant_carrier_track_value_mismatch",
+                                (index, mismatched_tracks),
+                            )
+                        )
             for witness in _duplicate_values(row.carrier_soundness_witness):
                 failures.append(
                     (

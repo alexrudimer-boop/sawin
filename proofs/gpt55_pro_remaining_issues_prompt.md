@@ -3542,6 +3542,13 @@ A bare `reachable_carrier_domain_invariant` string is not accepted as a
 proof.  Such an invariant must first be implemented as a finite checker, or
 reduced to one of the locally verified witness forms above; otherwise it is
 exactly the missing prefix-sound carrier-closure theorem.
+The accepted witness forms are also shape-checked.  Each currently accepted
+fixed-carrier witness proves a singleton row domain `C_e`; non-singleton
+domains are reported as
+`fixed_carrier_soundness_witness_requires_singleton_domain`.  The
+`constant_carrier_track` witness further requires each active carrier pair
+`(m_{t,0},m_{t,1})` to have `m_{t,0}=m_{t,1}`; otherwise the checker reports
+`constant_carrier_track_value_mismatch`.
 
 The strand-carrier witness is the finite local invariant:
 

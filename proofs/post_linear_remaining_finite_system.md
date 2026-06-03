@@ -2801,6 +2801,14 @@ The fixed-carrier checker also refuses an opaque
 closure must be proved by a locally verified form, such as constant tracks,
 explicit singleton domains, or strand-carrier equations, until a real finite
 reachable-domain invariant checker is supplied.
+The accepted witness tokens also carry finite shape obligations.  Every
+currently accepted witness justifies a singleton `C_e`, so a non-singleton
+carrier domain is rejected with
+`fixed_carrier_soundness_witness_requires_singleton_domain`.  When the witness
+is `constant_carrier_track`, each detector-track pair in that singleton must
+have equal left and right carrier values; otherwise the checker reports
+`constant_carrier_track_value_mismatch`.  Thus a row cannot use a constant
+carrier witness to smuggle in row-dependent or prefix-dependent carrier data.
 This does not prove that every surviving U/C/M interval admits such
 observers; it gives the exact finite local checker and integration path that
 any proposed observer must pass.

@@ -11187,6 +11187,47 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             tuple(failure[1] for failure in opaque_invariant.carrier_domain_failures),
         )
 
+        non_singleton_singleton_witness = replace(
+            empty_domain,
+            identity_rows=(
+                replace(
+                    empty_domain.identity_row_objects[0],
+                    carrier_domain=(
+                        ((group.identity, group.identity),),
+                        ((1, 1),),
+                    ),
+                    carrier_soundness_witness=("explicit_singleton_carrier_domain",),
+                ),
+            ),
+        )
+        self.assertFalse(non_singleton_singleton_witness.carrier_domains_sound)
+        self.assertIn(
+            "fixed_carrier_soundness_witness_requires_singleton_domain",
+            tuple(
+                failure[1]
+                for failure in non_singleton_singleton_witness.carrier_domain_failures
+            ),
+        )
+
+        nonconstant_constant_track = replace(
+            empty_domain,
+            identity_rows=(
+                replace(
+                    empty_domain.identity_row_objects[0],
+                    carrier_domain=(((group.identity, 1),),),
+                    carrier_soundness_witness=("constant_carrier_track",),
+                ),
+            ),
+        )
+        self.assertFalse(nonconstant_constant_track.carrier_domains_sound)
+        self.assertIn(
+            "constant_carrier_track_value_mismatch",
+            tuple(
+                failure[1]
+                for failure in nonconstant_constant_track.carrier_domain_failures
+            ),
+        )
+
     def test_fixed_carrier_certificate_checks_declared_carrier_ledgers(self):
         group = cyclic_group(2)
         seed_state = ("*", "*", "left_constant_map_universal_kernel")
