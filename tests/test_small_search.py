@@ -30,6 +30,7 @@ from ybe_domination import (
     permutation_solution_pure_longitude_factorization,
     permutation_solution_maps,
     permutation_solution_twist_order,
+    prefix_point_pushing_tiny_corpus_audit,
     rack_solution,
     small_solution_summary,
     two_strand_symmetric_gate_summary,
@@ -387,6 +388,49 @@ class SmallSearchTests(unittest.TestCase):
                 "left_nondegenerate_derived_rack_exponent": 35,
                 "permutation_form_twist_order": 12,
             },
+        )
+
+    def test_size_two_prefix_point_pushing_tiny_corpus_has_no_bad_surface(self):
+        audit = prefix_point_pushing_tiny_corpus_audit(2)
+
+        self.assertEqual(audit.solution_count, 5)
+        self.assertEqual(audit.left_degenerate_count, 1)
+        self.assertEqual(audit.left_degenerate_nonunit_count, 1)
+        self.assertEqual(
+            audit.left_degenerate_nonunit_nontrivial_surface_count,
+            0,
+        )
+        self.assertEqual(audit.nontrivial_surface_count, 2)
+        self.assertEqual(audit.truncated_surface_count, 0)
+        self.assertEqual(audit.recorded_candidates, ())
+        self.assertEqual(len(audit.recorded_left_degenerate_nonunit_rows), 1)
+        self.assertTrue(audit.no_left_degenerate_nonunit_surface_candidates)
+        row = audit.recorded_left_degenerate_nonunit_rows[0]
+        self.assertTrue(row.left_degenerate)
+        self.assertEqual(row.nonunit_prefix_count, 2)
+        self.assertEqual((row.qx3_group_size, row.qx4_group_size), (1, 1))
+
+    def test_size_three_prefix_point_pushing_tiny_corpus_has_no_bad_surface(self):
+        audit = prefix_point_pushing_tiny_corpus_audit(3)
+
+        self.assertEqual(audit.solution_count, 73)
+        self.assertEqual(audit.left_degenerate_count, 7)
+        self.assertEqual(audit.left_degenerate_nonunit_count, 7)
+        self.assertEqual(
+            audit.left_degenerate_nonunit_nontrivial_surface_count,
+            0,
+        )
+        self.assertEqual(audit.nontrivial_surface_count, 54)
+        self.assertEqual(audit.truncated_surface_count, 12)
+        self.assertEqual(audit.recorded_candidates, ())
+        self.assertEqual(len(audit.recorded_left_degenerate_nonunit_rows), 7)
+        self.assertTrue(audit.no_left_degenerate_nonunit_surface_candidates)
+        self.assertTrue(
+            all(
+                (row.qx3_group_size, row.qx4_group_size) == (1, 1)
+                and not row.surface_truncated
+                for row in audit.recorded_left_degenerate_nonunit_rows
+            )
         )
 
     def test_same_side_coordinate_dependency_collapses_in_tiny_corpus(self):

@@ -64,6 +64,8 @@ EXTRA_MD.append(ROOT / "proofs" / "prefix_group_hurwitz_compression_pressure.md"
 EXTRA_MD.append(ROOT / "proofs" / "prefix_group_hurwitz_compression_pressure_audit.md")
 EXTRA_MD.append(ROOT / "proofs" / "prefix_point_pushing_surface.md")
 EXTRA_MD.append(ROOT / "proofs" / "prefix_point_pushing_surface_audit.md")
+EXTRA_MD.append(ROOT / "proofs" / "prefix_point_pushing_tiny_corpus.md")
+EXTRA_MD.append(ROOT / "proofs" / "prefix_point_pushing_tiny_corpus_audit.md")
 EXTRA_MD.append(ROOT / "proofs" / "point_pushing_action_image_variety.md")
 EXTRA_MD.append(ROOT / "proofs" / "point_pushing_fixed_variety_domination.md")
 EXTRA_MD.append(ROOT / "proofs" / "last_strand_law_gap_audit.md")

@@ -1,11 +1,15 @@
 from __future__ import annotations
 
+from collections import Counter
+from dataclasses import dataclass
 from itertools import islice, permutations, product
 from math import gcd
-from dataclasses import dataclass
 from typing import Dict, Iterable, Iterator, List, Sequence, Tuple
 
-from .action_images import braid_word_permutation_image
+from .action_images import (
+    braid_word_permutation_image,
+    prefix_point_pushing_surface_audit,
+)
 from .artin_longitudes import BraidWord, artin_longitudes, free_word_exponent_vector
 from .braid_laws import law_word_on_last_strand
 from .finite_braided_set import FiniteBraidedSet, rack_solution
@@ -466,6 +470,42 @@ class CoordinateDependencyBranchAudit:
         )
 
 
+@dataclass(frozen=True)
+class PrefixPointPushingTinyCorpusRow:
+    """One whole-solution row in the tiny prefix point-pushing corpus."""
+
+    solution_index: int
+    branch_tags: Tuple[str, ...]
+    left_degenerate: bool
+    nonunit_prefix_count: int
+    qx3_group_size: int | None
+    qx3_group_exponent: int | None
+    qx4_group_size: int | None
+    qx4_group_exponent: int | None
+    surface_truncated: bool
+    table_signature: Tuple[Tuple[object, object], ...]
+
+
+@dataclass(frozen=True)
+class PrefixPointPushingTinyCorpusAudit:
+    """Exhaustive whole-table scan for the first prefix surface candidates."""
+
+    size: int
+    solution_count: int
+    left_degenerate_count: int
+    left_degenerate_nonunit_count: int
+    left_degenerate_nonunit_nontrivial_surface_count: int
+    nontrivial_surface_count: int
+    truncated_surface_count: int
+    tag_profile_counts: Tuple[Tuple[str, int], ...]
+    recorded_candidates: Tuple[PrefixPointPushingTinyCorpusRow, ...]
+    recorded_left_degenerate_nonunit_rows: Tuple[PrefixPointPushingTinyCorpusRow, ...]
+
+    @property
+    def no_left_degenerate_nonunit_surface_candidates(self) -> bool:
+        return self.left_degenerate_nonunit_nontrivial_surface_count == 0
+
+
 def _known_branch_certificate(
     *,
     solution: FiniteBraidedSet,
@@ -788,6 +828,133 @@ def branch_tags(solution: FiniteBraidedSet) -> Tuple[str, ...]:
     if affine_cyclic_form(solution) is not None:
         tags.append("affine_cyclic")
     return tuple(tags)
+
+
+def _prefix_point_pushing_tiny_corpus_row(
+    *,
+    solution_index: int,
+    solution: FiniteBraidedSet,
+    tags: Tuple[str, ...],
+    left_degenerate: bool,
+    surface,
+) -> PrefixPointPushingTinyCorpusRow:
+    rows_by_arity = {
+        row.point_pushing_arity: row
+        for row in surface.rows
+    }
+    qx3 = rows_by_arity.get(3)
+    qx4 = rows_by_arity.get(4)
+    return PrefixPointPushingTinyCorpusRow(
+        solution_index=solution_index,
+        branch_tags=tags,
+        left_degenerate=left_degenerate,
+        nonunit_prefix_count=surface.nonunit_prefix_count,
+        qx3_group_size=None if qx3 is None else qx3.point_pushing_group_size,
+        qx3_group_exponent=(
+            None if qx3 is None else qx3.point_pushing_group_exponent
+        ),
+        qx4_group_size=None if qx4 is None else qx4.point_pushing_group_size,
+        qx4_group_exponent=(
+            None if qx4 is None else qx4.point_pushing_group_exponent
+        ),
+        surface_truncated=any(row.truncated for row in surface.rows),
+        table_signature=solution_table_signature(solution),
+    )
+
+
+def prefix_point_pushing_tiny_corpus_audit(
+    size: int,
+    *,
+    max_subgroup_size: int | None = 10000,
+    max_recorded_candidates: int = 5,
+    max_recorded_left_degenerate_nonunit_rows: int = 10,
+) -> PrefixPointPushingTinyCorpusAudit:
+    """Exhaustively scan tiny whole YBE tables for the first bad surface.
+
+    A recorded candidate is a left-degenerate solution whose prefix monoid has
+    a nonunit and whose computed `Q_X(3)` or `Q_X(4)` surface is nontrivial.
+    This finite audit deliberately does not search quotient-fibre intervals or
+    sizes beyond the requested whole-table corpus.
+    """
+
+    if size < 1:
+        raise ValueError("size must be positive")
+    if max_recorded_candidates < 0:
+        raise ValueError("max_recorded_candidates must be nonnegative")
+    if max_recorded_left_degenerate_nonunit_rows < 0:
+        raise ValueError(
+            "max_recorded_left_degenerate_nonunit_rows must be nonnegative"
+        )
+
+    solution_count = 0
+    left_degenerate_count = 0
+    left_degenerate_nonunit_count = 0
+    left_degenerate_nonunit_nontrivial_surface_count = 0
+    nontrivial_surface_count = 0
+    truncated_surface_count = 0
+    tag_profile_counter: Counter[str] = Counter()
+    recorded_candidates: List[PrefixPointPushingTinyCorpusRow] = []
+    recorded_left_degenerate_nonunit_rows: List[PrefixPointPushingTinyCorpusRow] = []
+
+    for solution_index, solution in enumerate(all_bijection_solutions(size)):
+        solution_count += 1
+        tags = branch_tags(solution)
+        tag_profile_counter["+".join(tags) if tags else "(untagged)"] += 1
+        left_degenerate = not is_left_nondegenerate(solution)
+        if left_degenerate:
+            left_degenerate_count += 1
+
+        surface = prefix_point_pushing_surface_audit(
+            solution,
+            max_subgroup_size=max_subgroup_size,
+        )
+        surface_truncated = any(row.truncated for row in surface.rows)
+        if surface_truncated:
+            truncated_surface_count += 1
+        nontrivial_surface = any(
+            row.point_pushing_group_size is not None
+            and row.point_pushing_group_size > 1
+            for row in surface.rows
+        )
+        if nontrivial_surface:
+            nontrivial_surface_count += 1
+
+        has_nonunit_prefix = surface.nonunit_prefix_count > 0
+        if left_degenerate and has_nonunit_prefix:
+            left_degenerate_nonunit_count += 1
+            row = _prefix_point_pushing_tiny_corpus_row(
+                solution_index=solution_index,
+                solution=solution,
+                tags=tags,
+                left_degenerate=left_degenerate,
+                surface=surface,
+            )
+            if (
+                len(recorded_left_degenerate_nonunit_rows)
+                < max_recorded_left_degenerate_nonunit_rows
+            ):
+                recorded_left_degenerate_nonunit_rows.append(row)
+            if nontrivial_surface:
+                left_degenerate_nonunit_nontrivial_surface_count += 1
+                if len(recorded_candidates) < max_recorded_candidates:
+                    recorded_candidates.append(row)
+
+    return PrefixPointPushingTinyCorpusAudit(
+        size=size,
+        solution_count=solution_count,
+        left_degenerate_count=left_degenerate_count,
+        left_degenerate_nonunit_count=left_degenerate_nonunit_count,
+        left_degenerate_nonunit_nontrivial_surface_count=(
+            left_degenerate_nonunit_nontrivial_surface_count
+        ),
+        nontrivial_surface_count=nontrivial_surface_count,
+        truncated_surface_count=truncated_surface_count,
+        tag_profile_counts=tuple(sorted(tag_profile_counter.items())),
+        recorded_candidates=tuple(recorded_candidates),
+        recorded_left_degenerate_nonunit_rows=tuple(
+            recorded_left_degenerate_nonunit_rows
+        ),
+    )
 
 
 def direct_symmetric_known_branch_reason(solution: FiniteBraidedSet) -> str | None:

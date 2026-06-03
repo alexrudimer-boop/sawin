@@ -1793,6 +1793,17 @@ with exponent `2`; on the degenerate identity row the point-pushing groups are
 trivial despite the nonunit prefix monoid.  Thus a negative route must use a
 less trivial degenerate table whose group-Hurwitz compression failure is
 visible in this marked surface and remains compatible in the tower.
+The tiny-corpus follow-up
+`proofs/prefix_point_pushing_tiny_corpus.md` and generated audit
+`proofs/prefix_point_pushing_tiny_corpus_audit.md` exhaustively check all
+whole bijective YBE tables on two and three points against that same first
+surface.  There are `5` size-two and `73` size-three tables.  The only
+size-two left-degenerate nonunit-prefix row is the identity table, and the
+seven size-three left-degenerate nonunit-prefix rows are all involutive; in
+every one of these rows `Q_X(3)` and `Q_X(4)` are trivial.  Consequently the
+first whole-table obstruction, if any, begins at size at least `4`, or else
+inside quotient-fibre local intervals rather than the tiny whole-table
+corpus.
 
 The semigroup/Green route has also been narrowed to a precise Rees rectangle
 flatness target.  Ordinary Green/Rees theory leaves a sandwich-matrix
