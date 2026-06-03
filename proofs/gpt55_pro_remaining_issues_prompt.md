@@ -3603,6 +3603,9 @@ Implementation status in the current proof code:
 ```text
 UniversalKFixedCarrierWordPotentialCertificate
 UniversalKFixedCarrierCoboundaryRow
+universal_k_canonical_strand_carrier_rows(...)
+universal_k_canonical_strand_carrier_soundness_audit(...)
+universal_k_canonical_strand_carrier_residual_faithfulness_audit(...)
 universal_k_fixed_carrier_domain_ledger_from_strand_carriers(...)
 universal_k_fixed_carrier_word_potential_certificate_from_monodromy(...)
 universal_k_endpoint_observer_positive_rows_from_fixed_carrier_word_potential(...)
@@ -3645,6 +3648,14 @@ singleton carrier-domain ledger: if the audit proves
 endpoint row key receives exactly the carrier tuple
 `((ell_a(x),ell_b(y)),...)` and the witness
 `strand_carrier_equations`.
+The strand-carrier rows may also be canonical: the canonical helper forms the
+least component relation forced by these swapped equations.  If the canonical
+components remain fibrewise injective, the canonical strand-carrier residual
+faithfulness audit closes that residual-trivial subcase.  The automatic
+residual selector tries this canonical strand-carrier theorem before the
+canonical coordinate-label theorem, and the top-level post-linear audit also
+exposes the explicit flag
+`universal_k_identity_canonical_strand_carrier_residual_faithfulness`.
 
 The all-`n` soundness proof is then:
 

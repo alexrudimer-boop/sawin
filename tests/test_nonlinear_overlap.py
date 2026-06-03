@@ -120,10 +120,14 @@ from ybe_domination import (
     universal_k_canonical_fibre_label_identity_audit,
     universal_k_canonical_fibre_label_identity_residual_faithfulness_audit,
     universal_k_canonical_fibre_label_identity_rows,
+    universal_k_canonical_strand_carrier_residual_faithfulness_audit,
+    universal_k_canonical_strand_carrier_rows,
+    universal_k_canonical_strand_carrier_soundness_audit,
     universal_k_coordinate_identity_residual_faithfulness_audit,
     universal_k_fibre_label_identity_audit,
     universal_k_fibre_label_identity_residual_faithfulness_audit,
     universal_k_interval_has_canonical_fibre_label_identity_action,
+    universal_k_interval_has_canonical_strand_carrier_action,
     universal_k_interval_has_coordinate_identity_fibre_action,
     universal_k_interval_has_fibre_label_identity_action,
     universal_k_interval_has_injective_strand_carrier_action,
@@ -7672,6 +7676,42 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             ("strand_carrier_equations",),
         )
 
+        canonical_rows = universal_k_canonical_strand_carrier_rows(interval)
+        canonical_audit = universal_k_canonical_strand_carrier_soundness_audit(interval)
+        self.assertEqual(
+            tuple((color, point) for color, point, _carrier in canonical_rows),
+            canonical_audit.expected_carrier_keys,
+        )
+        self.assertTrue(universal_k_interval_has_canonical_strand_carrier_action(interval))
+        self.assertTrue(canonical_audit.proves_injective_strand_carrier_soundness)
+        self.assertEqual(canonical_audit.failure_reasons, ())
+
+        canonical_residual = (
+            universal_k_canonical_strand_carrier_residual_faithfulness_audit(
+                interval,
+                seed_states,
+            )
+        )
+        self.assertTrue(canonical_residual.proves_residual_faithfulness)
+        self.assertEqual(
+            canonical_residual.residual_endpoint_channel_reasons,
+            ("canonical_strand_carrier_residual_channel",),
+        )
+
+        automatic_without_supplied_rows = (
+            universal_k_automatic_residual_faithfulness_audit(
+                interval,
+                seed_states,
+            )
+        )
+        self.assertTrue(
+            automatic_without_supplied_rows.proves_residual_faithfulness
+        )
+        self.assertEqual(
+            automatic_without_supplied_rows.residual_endpoint_channel_reasons,
+            ("canonical_strand_carrier_residual_channel",),
+        )
+
         noninjective_carrier_audit = universal_k_strand_carrier_soundness_audit(
             interval,
             (
@@ -7732,6 +7772,18 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertEqual(
             family_audit.product_residual_theorem_channel_reasons,
             ("strand_carrier_identity_residual_channel",),
+        )
+
+        canonical_family_audit = universal_k_identity_endpoint_observer_builds_by_family(
+            interval,
+            seed_entries,
+            derive_canonical_strand_carrier_residual_faithfulness=True,
+        )
+        self.assertEqual(canonical_family_audit.failure_reasons, ())
+        self.assertTrue(canonical_family_audit.proves_family_endpoint_observers)
+        self.assertEqual(
+            canonical_family_audit.product_residual_theorem_channel_reasons,
+            ("canonical_strand_carrier_residual_channel",),
         )
 
         malformed_carrier_audit = universal_k_strand_carrier_soundness_audit(
@@ -7990,8 +8042,18 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             ("canonical_fibre_label_identity_residual_channel",),
         )
 
-        open_audit = universal_k_automatic_residual_faithfulness_audit(
+        canonical_strand = universal_k_automatic_residual_faithfulness_audit(
             one_color_flip_interval(),
+            (("U", ("*", "*", "U_seed")),),
+        )
+        self.assertTrue(canonical_strand.proves_residual_faithfulness)
+        self.assertEqual(
+            canonical_strand.residual_endpoint_channel_reasons,
+            ("canonical_strand_carrier_residual_channel",),
+        )
+
+        open_audit = universal_k_automatic_residual_faithfulness_audit(
+            one_color_proper_rank_loss_interval(),
             (("U", ("*", "*", "U_seed")),),
         )
         self.assertFalse(open_audit.proves_residual_faithfulness)
@@ -17696,6 +17758,11 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             {
                 "universal_k_identity_fibre_label_residual_faithfulness": True,
                 "universal_k_identity_fibre_label_rows": (),
+            },
+            {
+                "universal_k_identity_canonical_strand_carrier_residual_faithfulness": (
+                    True
+                ),
             },
             {
                 "universal_k_identity_canonical_fibre_label_residual_faithfulness": (
