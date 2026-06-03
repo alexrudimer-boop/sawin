@@ -3605,6 +3605,7 @@ UniversalKFixedCarrierWordPotentialCertificate
 UniversalKFixedCarrierCoboundaryRow
 universal_k_fixed_carrier_word_potential_certificate_from_monodromy(...)
 universal_k_endpoint_observer_positive_rows_from_fixed_carrier_word_potential(...)
+universal_k_endpoint_observer_builds_from_fixed_carrier_monodromy_by_family(...)
 ```
 
 The endpoint-observer builder and the family endpoint-observer audit accept
@@ -3612,7 +3613,27 @@ this fixed-carrier certificate class alongside the original raw-variable
 word-potential certificate.  Thus a proposed fixed-carrier observer can now
 be checked all the way through positive rows, inverse-derived signed rows,
 telescoping detector audit, endpoint target audit, and residual-faithfulness
-audit.  This is infrastructure, not a universal existence proof.
+audit.  The family monodromy helper can derive the fixed-carrier certificates
+directly from:
+
+```text
+endpoint_groups_by_family,
+word_potential_templates_by_family,
+positive_state_rows_by_family,
+carrier_domains_by_family,
+carrier_soundness_witnesses_by_family.
+```
+
+The top-level post-linear audit exposes the carrier ledgers as:
+
+```text
+universal_k_monodromy_fixed_carrier_domains_by_family,
+universal_k_monodromy_fixed_carrier_soundness_witnesses_by_family.
+```
+
+When these are present, the monodromy construction path uses fixed-carrier
+certificates rather than full-domain raw-variable certificates.  This is
+infrastructure, not a universal existence proof.
 
 The all-`n` soundness proof is then:
 

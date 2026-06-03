@@ -2663,6 +2663,24 @@ The top-level `post_linear_remaining_finite_system_audit(...)` also accepts
 the fixed-carrier certificate through the existing word-potential certificate
 parameters, so no separate final assembly path is required for this certificate
 type.
+The family-level monodromy route can also derive fixed-carrier certificates
+directly:
+
+```text
+universal_k_endpoint_observer_builds_from_fixed_carrier_monodromy_by_family(...)
+```
+
+It takes endpoint groups, word-potential templates, positive monodromy rows,
+finite carrier-domain maps, and carrier-soundness witness maps.  The
+top-level post-linear audit exposes the carrier-domain maps as
+
+```text
+universal_k_monodromy_fixed_carrier_domains_by_family,
+universal_k_monodromy_fixed_carrier_soundness_witnesses_by_family.
+```
+
+When either of these ledgers is present, the top-level monodromy path uses
+the fixed-carrier constructor rather than the raw-variable constructor.
 This does not prove that every surviving U/C/M interval admits such
 observers; it gives the exact finite local checker and integration path that
 any proposed observer must pass.

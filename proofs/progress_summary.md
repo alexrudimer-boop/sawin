@@ -1537,6 +1537,15 @@ surviving intervals.  The top-level
 fixed-carrier certificate through its existing word-potential certificate
 parameters, so a proposed fixed-carrier observer now reaches the same
 post-linear audit surface as the raw-variable certificate path.
+The family monodromy constructor now has a fixed-carrier companion,
+`universal_k_endpoint_observer_builds_from_fixed_carrier_monodromy_by_family(...)`,
+which derives fixed-carrier certificates directly from endpoint groups,
+word-potential templates, positive state rows, carrier-domain ledgers, and
+carrier-soundness witness ledgers.  The top-level post-linear audit exposes
+matching `universal_k_monodromy_fixed_carrier_domains_by_family` and
+`universal_k_monodromy_fixed_carrier_soundness_witnesses_by_family`
+parameters; when these are present, the monodromy path derives fixed-carrier
+certificates instead of raw-variable certificates.
 This removes another false endpoint closure and leaves the same local
 nontrivial observer-existence gap: construct residual-faithful U/C/M
 monodromy-coboundary observers for all surviving intervals, or produce a

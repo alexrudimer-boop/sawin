@@ -100,6 +100,7 @@ from ybe_domination import (
     universal_k_endpoint_monodromy_representation_audit,
     universal_k_endpoint_observer_build,
     universal_k_endpoint_observer_builds_by_family,
+    universal_k_endpoint_observer_builds_from_fixed_carrier_monodromy_by_family,
     universal_k_endpoint_observer_builds_from_monodromy_by_family,
     universal_k_endpoint_observer_family_build_audit,
     universal_k_endpoint_observer_positive_rows_from_fixed_carrier_word_potential,
@@ -6041,6 +6042,113 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
         self.assertEqual(family_audit.failure_reasons, ())
         self.assertTrue(family_audit.proves_family_endpoint_observers)
 
+    def test_fixed_carrier_monodromy_builder_derives_family_observer(self):
+        interval = one_color_identity_interval()
+        group = cyclic_group(2)
+        seed_state = ("*", "*", "left_constant_map_universal_kernel")
+        next_state = ("*", "*", "left_constant_map_universal_kernel", "next")
+        seed_key = ("U", seed_state)
+        next_key = ("U", next_state)
+        seed_entries = (
+            (
+                (
+                    "*",
+                    "*",
+                    "L",
+                    "constant_map_kernel",
+                    ("*", (0, 1), "universal", "universal"),
+                ),
+                seed_key,
+            ),
+        )
+        reachable = (seed_key, next_key)
+        positive_keys = tuple(
+            key
+            for key in universal_k_signed_endpoint_required_entry_keys(
+                interval,
+                reachable,
+            )
+            if key[2] == 1
+        )
+        positive_state_rows = []
+        carrier_domains = {}
+        carrier_witnesses = {}
+        for key in positive_keys:
+            family, state, _sign, left_color, right_color, x, y = key
+            output_left, output_right = interval.T[(left_color, right_color, x, y)]
+            target_state = next_state if state == seed_state else seed_state
+            positive_state_rows.append(
+                UniversalKSignedEndpointGeneratorRow(
+                    endpoint_family=family,
+                    seed_state=state,
+                    sign=1,
+                    left_color=left_color,
+                    right_color=right_color,
+                    input_left=x,
+                    input_right=y,
+                    output_left=output_left,
+                    output_right=output_right,
+                    next_seed_state=target_state,
+                    endpoint_value=None,
+                )
+            )
+            carrier_domains[key] = (((1, 1),),)
+            carrier_witnesses[key] = ("constant_carrier_track",)
+        u0 = ("U", 0, 0)
+        u1 = ("U", 0, 1)
+        detector_rows = (
+            UniversalKDetectorTrackInitializationRow(
+                endpoint_family="U",
+                track_index=0,
+                assignment_rule="constant_nonidentity_fixed_carrier",
+                dependencies=("interval_data", "routed_seed_state", "strand_index"),
+                local_assignment_template=((("A", 0, 0), 1),),
+            ),
+        )
+        endpoint_target = UniversalKEndpointTargetAudit(
+            expected_endpoint_families=("U",),
+            covered_endpoint_families=("U",),
+            endpoint_group_orders=(("U", len(group.elements)),),
+            braid_index_independent=True,
+            product_families_separated=True,
+        )
+        residual_theorem = universal_k_strict_identity_residual_faithfulness_audit(
+            interval,
+            (seed_key,),
+        )
+
+        family_audit = (
+            universal_k_endpoint_observer_builds_from_fixed_carrier_monodromy_by_family(
+                interval,
+                seed_entries,
+                endpoint_groups_by_family=(("U", group),),
+                word_potential_templates_by_family=(
+                    (
+                        "U",
+                        (
+                            (seed_key, ((u1, 1), (u0, -1))),
+                            (next_key, ((u0, 1), (u1, -1))),
+                        ),
+                    ),
+                ),
+                positive_state_rows_by_family=(("U", tuple(positive_state_rows)),),
+                carrier_domains_by_family=(("U", carrier_domains),),
+                carrier_soundness_witnesses_by_family=(("U", carrier_witnesses),),
+                detector_track_initialization_rows=detector_rows,
+                endpoint_target_audits_by_family=(("U", endpoint_target),),
+                residual_faithfulness_theorems_by_family=(("U", residual_theorem),),
+            )
+        )
+
+        self.assertEqual(family_audit.failure_reasons, ())
+        self.assertTrue(family_audit.proves_family_endpoint_observers)
+        build = dict(family_audit.build_rows_exact)["U"]
+        self.assertIsInstance(
+            build.telescoping_detector_audit.word_potential_certificate,
+            UniversalKFixedCarrierWordPotentialCertificate,
+        )
+        self.assertEqual(set(row.endpoint_value for row in build.positive_rows), {1})
+
     def test_endpoint_observer_builder_records_all_ucm_active_families(self):
         interval = one_color_identity_interval()
         group = cyclic_group(2)
@@ -10690,6 +10798,38 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             "unknown_fixed_carrier_soundness_witness",
             tuple(failure[1] for failure in bad_domain.carrier_domain_failures),
         )
+
+    def test_fixed_carrier_certificate_checks_declared_carrier_ledgers(self):
+        group = cyclic_group(2)
+        seed_state = ("*", "*", "left_constant_map_universal_kernel")
+        seed_key = ("U", seed_state)
+        entry_key = ("U", seed_state, 1, "*", "*", 0, 0)
+        extra_key = ("U", seed_state, 1, "*", "*", "extra", "extra")
+        certificate = UniversalKFixedCarrierWordPotentialCertificate(
+            endpoint_group=group,
+            templates=((seed_key, ()),),
+            identity_rows=(
+                UniversalKFixedCarrierCoboundaryRow(
+                    entry_key=entry_key,
+                    next_seed_state=seed_state,
+                    endpoint_value=group.identity,
+                    carrier_domain=(((group.identity, group.identity),),),
+                    carrier_soundness_witness=("constant_carrier_track",),
+                ),
+            ),
+            normalized_seed_states=(seed_key,),
+            declared_carrier_domain_entry_keys=(extra_key,),
+            declared_carrier_soundness_entry_keys=(extra_key,),
+        )
+
+        failure_reasons = tuple(
+            failure[1] for failure in certificate.carrier_domain_failures
+        )
+        self.assertIn("missing_fixed_carrier_domain_declared_key", failure_reasons)
+        self.assertIn("missing_fixed_carrier_soundness_declared_key", failure_reasons)
+        self.assertIn("extra_fixed_carrier_domain_key", failure_reasons)
+        self.assertIn("extra_fixed_carrier_soundness_key", failure_reasons)
+        self.assertFalse(certificate.carrier_domains_sound)
 
     def test_word_potential_certificate_from_monodromy_filters_invalid_raw_rows(self):
         interval = one_color_identity_interval()
@@ -17158,6 +17298,35 @@ class NonlinearOverlapObstructionAuditTests(unittest.TestCase):
             audit.routed_endpoint_obstruction_data,
         )
         self.assertIn("no_routed_k_seed_states", signed.failure_reasons)
+
+    def test_post_linear_function_derives_fixed_carrier_monodromy_observer(self):
+        stale_state = ("*", "*", "left_constant_map_universal_kernel")
+        stale_key = ("U", stale_state, 1, "*", "*", 0, 0)
+        audit = post_linear_remaining_finite_system_audit(
+            one_color_latin_unit_triangular_interval(),
+            universal_k_monodromy_endpoint_groups_by_family=(("U", cyclic_group(2)),),
+            universal_k_monodromy_word_potential_templates_by_family=(("U", ()),),
+            universal_k_monodromy_positive_state_rows_by_family=(("U", ()),),
+            universal_k_monodromy_fixed_carrier_domains_by_family=(
+                ("U", {stale_key: (((1, 1),),)}),
+            ),
+            universal_k_monodromy_fixed_carrier_soundness_witnesses_by_family=(
+                ("U", {stale_key: ("constant_carrier_track",)}),
+            ),
+        )
+
+        family_build = audit.universal_k_endpoint_observer_family_build
+        self.assertIsNotNone(family_build)
+        self.assertEqual(family_build.covered_endpoint_families_exact, ("U",))
+        build = dict(family_build.build_rows_exact)["U"]
+        self.assertIsInstance(
+            build.telescoping_detector_audit.word_potential_certificate,
+            UniversalKFixedCarrierWordPotentialCertificate,
+        )
+        self.assertIn(
+            ("endpoint_observer_family_build_extra_families", ("U",)),
+            audit.routed_endpoint_obstruction_data,
+        )
 
     def test_post_linear_function_builds_endpoint_observer_from_monodromy(self):
         stale_state = ("*", "*", "left_constant_map_universal_kernel")

@@ -2315,6 +2315,11 @@ class UniversalKFixedCarrierWordPotentialCertificate:
     ]
     identity_rows: Tuple[UniversalKFixedCarrierCoboundaryRow, ...]
     normalized_seed_states: Tuple[Tuple[str, UniversalKSeedState], ...] = ()
+    declared_carrier_domain_entry_keys: Tuple[UniversalKSignedEndpointEntryKey, ...] = ()
+    declared_carrier_soundness_entry_keys: Tuple[
+        UniversalKSignedEndpointEntryKey,
+        ...,
+    ] = ()
 
     @property
     def template_rows(
@@ -2508,6 +2513,49 @@ class UniversalKFixedCarrierWordPotentialCertificate:
     def carrier_domain_failures(self) -> Tuple[UniversalKWordPotentialFailure, ...]:
         failures = []
         group_elements = set(self.endpoint_group.elements)
+        positive_keys = tuple(self.positive_identity_entry_keys_exact)
+        positive_key_markers = _value_marker_set(positive_keys)
+        declared_domain_markers = _value_marker_set(
+            self.declared_carrier_domain_entry_keys
+        )
+        declared_soundness_markers = _value_marker_set(
+            self.declared_carrier_soundness_entry_keys
+        )
+        for key in self.declared_carrier_domain_entry_keys:
+            if not _universal_k_signed_entry_key_well_formed(key) or key[2] != 1:
+                failures.append((key, "malformed_fixed_carrier_domain_key", key))
+        for key in self.declared_carrier_soundness_entry_keys:
+            if not _universal_k_signed_entry_key_well_formed(key) or key[2] != 1:
+                failures.append((key, "malformed_fixed_carrier_soundness_key", key))
+        for key in positive_keys:
+            if (
+                self.declared_carrier_domain_entry_keys
+                and _value_marker(key) not in declared_domain_markers
+            ):
+                failures.append(
+                    (key, "missing_fixed_carrier_domain_declared_key", key)
+                )
+            if (
+                self.declared_carrier_soundness_entry_keys
+                and _value_marker(key) not in declared_soundness_markers
+            ):
+                failures.append(
+                    (key, "missing_fixed_carrier_soundness_declared_key", key)
+                )
+        for key in self.declared_carrier_domain_entry_keys:
+            if (
+                _universal_k_signed_entry_key_well_formed(key)
+                and key[2] == 1
+                and _value_marker(key) not in positive_key_markers
+            ):
+                failures.append((key, "extra_fixed_carrier_domain_key", key))
+        for key in self.declared_carrier_soundness_entry_keys:
+            if (
+                _universal_k_signed_entry_key_well_formed(key)
+                and key[2] == 1
+                and _value_marker(key) not in positive_key_markers
+            ):
+                failures.append((key, "extra_fixed_carrier_soundness_key", key))
         for row in self.identity_row_objects:
             if not _universal_k_signed_entry_key_well_formed(row.entry_key):
                 failures.append((row.entry_key, "malformed_signed_entry_key", None))
@@ -13159,6 +13207,7 @@ class UniversalKEndpointObserverFamilyBuildAudit:
                 row.entry_key: row.detector_domain_assignments
                 for row in certificate.identity_row_objects
                 if _universal_k_is_positive_entry_key(row.entry_key)
+                and hasattr(row, "detector_domain_assignments")
                 and row.detector_domain_assignments is not None
             }
             if self._mapping_item_markers(
@@ -13176,6 +13225,7 @@ class UniversalKEndpointObserverFamilyBuildAudit:
                 row.entry_key: row.detector_domain_soundness_witness
                 for row in certificate.identity_row_objects
                 if _universal_k_is_positive_entry_key(row.entry_key)
+                and hasattr(row, "detector_domain_soundness_witness")
                 and row.detector_domain_soundness_witness
             }
             if self._mapping_item_markers(
@@ -13907,6 +13957,10 @@ def universal_k_fixed_carrier_word_potential_certificate_from_monodromy(
         identity_rows=tuple(identity_rows),
         normalized_seed_states=universal_k_signed_endpoint_seed_states(
             seed_classifier_entries
+        ),
+        declared_carrier_domain_entry_keys=tuple(carrier_domains_by_entry_key),
+        declared_carrier_soundness_entry_keys=tuple(
+            carrier_soundness_witness_by_entry_key
         ),
     )
 
@@ -14694,6 +14748,169 @@ def universal_k_endpoint_observer_builds_from_monodromy_by_family(
                     ),
                     detector_domain_soundness_witness_by_entry_key=(
                         domain_witnesses if hasattr(domain_witnesses, "get") else None
+                    ),
+                ),
+            )
+        )
+
+    return universal_k_endpoint_observer_builds_by_family(
+        interval,
+        seed_classifier_entries,
+        tuple(certificate_rows),
+        detector_track_initialization_rows=detector_track_initialization_rows,
+        endpoint_target_audits_by_family=endpoint_target_audits_by_family,
+        cutoff_readout_audits_by_family=cutoff_readout_audits_by_family,
+        residual_faithfulness_theorems_by_family=(
+            residual_faithfulness_theorems_by_family
+        ),
+        product_residual_faithfulness_theorem=product_residual_faithfulness_theorem,
+        monodromy_family_input_audit=monodromy_input_audit,
+    )
+
+
+def universal_k_endpoint_observer_builds_from_fixed_carrier_monodromy_by_family(
+    interval: LocalInterval,
+    seed_classifier_entries: Sequence[UniversalKSeedClassifierEntry],
+    endpoint_groups_by_family: Sequence[Tuple[str, FiniteGroup]],
+    word_potential_templates_by_family: Sequence[
+        Tuple[
+            str,
+            Sequence[
+                Tuple[Tuple[str, UniversalKSeedState], UniversalKWordPotentialWord]
+            ],
+        ]
+    ],
+    positive_state_rows_by_family: Sequence[
+        Tuple[str, Sequence[UniversalKSignedEndpointGeneratorRow]]
+    ],
+    *,
+    carrier_domains_by_family: Sequence[
+        Tuple[
+            str,
+            Mapping[
+                UniversalKSignedEndpointEntryKey,
+                Tuple[UniversalKFixedCarrierTuple, ...],
+            ],
+        ]
+    ] = (),
+    carrier_soundness_witnesses_by_family: Sequence[
+        Tuple[
+            str,
+            Mapping[UniversalKSignedEndpointEntryKey, Tuple[str, ...]],
+        ]
+    ] = (),
+    detector_track_initialization_rows: Tuple[
+        UniversalKDetectorTrackInitializationRow,
+        ...,
+    ] = (),
+    endpoint_target_audits_by_family: Sequence[
+        Tuple[str, UniversalKEndpointTargetAudit]
+    ] = (),
+    cutoff_readout_audits_by_family: Sequence[
+        Tuple[str, UniversalKCutoffReadoutAudit]
+    ] = (),
+    residual_faithfulness_theorems_by_family: Sequence[
+        Tuple[str, UniversalKResidualFaithfulnessAudit]
+    ] = (),
+    product_residual_faithfulness_theorem: (
+        UniversalKResidualFaithfulnessAudit | None
+    ) = None,
+    derive_automatic_residual_faithfulness: bool = False,
+    derive_strict_identity_residual_faithfulness: bool = False,
+    derive_coordinate_identity_residual_faithfulness: bool = False,
+    derive_singleton_fibre_residual_faithfulness: bool = False,
+    derive_strand_carrier_residual_faithfulness: bool = False,
+    derive_fibre_label_identity_residual_faithfulness: bool = False,
+    derive_canonical_fibre_label_identity_residual_faithfulness: bool = False,
+    strand_carrier_rows: object = (),
+    fibre_label_identity_rows: object = (),
+) -> UniversalKEndpointObserverFamilyBuildAudit:
+    """Build family observers from fixed-carrier monodromy data."""
+
+    residual_faithfulness_theorems_by_family, product_residual_faithfulness_theorem = (
+        _universal_k_residual_rows_with_identity_helpers(
+            interval,
+            seed_classifier_entries,
+            residual_faithfulness_theorems_by_family,
+            product_residual_faithfulness_theorem,
+            derive_automatic_residual_faithfulness=(
+                derive_automatic_residual_faithfulness
+            ),
+            derive_strict_identity_residual_faithfulness=(
+                derive_strict_identity_residual_faithfulness
+            ),
+            derive_coordinate_identity_residual_faithfulness=(
+                derive_coordinate_identity_residual_faithfulness
+            ),
+            derive_singleton_fibre_residual_faithfulness=(
+                derive_singleton_fibre_residual_faithfulness
+            ),
+            derive_strand_carrier_residual_faithfulness=(
+                derive_strand_carrier_residual_faithfulness
+            ),
+            derive_fibre_label_identity_residual_faithfulness=(
+                derive_fibre_label_identity_residual_faithfulness
+            ),
+            derive_canonical_fibre_label_identity_residual_faithfulness=(
+                derive_canonical_fibre_label_identity_residual_faithfulness
+            ),
+            strand_carrier_rows=strand_carrier_rows,
+            fibre_label_identity_rows=fibre_label_identity_rows,
+        )
+    )
+
+    monodromy_input_audit = universal_k_monodromy_family_input_audit(
+        interval,
+        seed_classifier_entries,
+        endpoint_groups_by_family,
+        word_potential_templates_by_family,
+        positive_state_rows_by_family,
+    )
+    endpoint_group_map = _universal_k_monodromy_valid_family_map(
+        monodromy_input_audit.endpoint_group_rows,
+        UniversalKMonodromyFamilyInputAudit._endpoint_group_predicate,
+    )
+    template_map = _universal_k_monodromy_valid_family_map(
+        monodromy_input_audit.word_potential_template_rows,
+        UniversalKMonodromyFamilyInputAudit._template_predicate,
+    )
+    positive_row_map = _universal_k_monodromy_valid_family_map(
+        monodromy_input_audit.positive_state_rows,
+        UniversalKMonodromyFamilyInputAudit._positive_rows_predicate,
+    )
+    carrier_domain_map = _universal_k_family_object_map(carrier_domains_by_family)
+    carrier_witness_map = _universal_k_family_object_map(
+        carrier_soundness_witnesses_by_family
+    )
+
+    certificate_rows = []
+    candidate_families = tuple(
+        sorted(
+            set(endpoint_group_map) & set(template_map) & set(positive_row_map),
+            key=repr,
+        )
+    )
+    for family in candidate_families:
+        family_entries = _universal_k_seed_classifier_entries_for_family(
+            seed_classifier_entries,
+            family,
+        )
+        domain_map = carrier_domain_map.get(family)
+        witness_map = carrier_witness_map.get(family)
+        certificate_rows.append(
+            (
+                family,
+                universal_k_fixed_carrier_word_potential_certificate_from_monodromy(
+                    interval,
+                    family_entries,
+                    endpoint_group_map[family],
+                    tuple(template_map.get(family, ())),
+                    tuple(positive_row_map.get(family, ())),
+                    carrier_domains_by_entry_key=(
+                        domain_map if hasattr(domain_map, "get") else None
+                    ),
+                    carrier_soundness_witness_by_entry_key=(
+                        witness_map if hasattr(witness_map, "get") else None
                     ),
                 ),
             )
@@ -22475,6 +22692,8 @@ def post_linear_remaining_finite_system_audit(
     universal_k_monodromy_positive_state_rows_by_family: object = (),
     universal_k_monodromy_detector_domain_assignments_by_family: object = (),
     universal_k_monodromy_detector_domain_soundness_witnesses_by_family: object = (),
+    universal_k_monodromy_fixed_carrier_domains_by_family: object = (),
+    universal_k_monodromy_fixed_carrier_soundness_witnesses_by_family: object = (),
     universal_k_detector_track_counts_by_family: Tuple[Tuple[str, int], ...] = (),
     universal_k_detector_track_initialization_rows: object = (),
     universal_k_endpoint_target_audit: UniversalKEndpointTargetAudit | None = None,
@@ -22611,6 +22830,28 @@ def post_linear_remaining_finite_system_audit(
                 universal_k_monodromy_detector_domain_soundness_witnesses_by_family
             )
         )
+        or bool(
+            _universal_k_row_input_tuple(
+                universal_k_monodromy_fixed_carrier_domains_by_family
+            )
+        )
+        or bool(
+            _universal_k_row_input_tuple(
+                universal_k_monodromy_fixed_carrier_soundness_witnesses_by_family
+            )
+        )
+    )
+    fixed_carrier_monodromy_input_present = (
+        bool(
+            _universal_k_row_input_tuple(
+                universal_k_monodromy_fixed_carrier_domains_by_family
+            )
+        )
+        or bool(
+            _universal_k_row_input_tuple(
+                universal_k_monodromy_fixed_carrier_soundness_witnesses_by_family
+            )
+        )
     )
     direct_family_input_present = (
         bool(
@@ -22670,65 +22911,126 @@ def post_linear_remaining_finite_system_audit(
             derive_endpoint_observer_family_build
             and monodromy_family_input_present
         ):
-            endpoint_observer_family_build = (
-                universal_k_endpoint_observer_builds_from_monodromy_by_family(
-                    interval,
-                    unsigned.universal_k_seed_classifier_entries,
-                    endpoint_groups_by_family=(
-                        universal_k_monodromy_endpoint_groups_by_family
-                    ),
-                    word_potential_templates_by_family=(
-                        universal_k_monodromy_word_potential_templates_by_family
-                    ),
-                    positive_state_rows_by_family=(
-                        universal_k_monodromy_positive_state_rows_by_family
-                    ),
-                    detector_domain_assignments_by_family=(
-                        universal_k_monodromy_detector_domain_assignments_by_family
-                    ),
-                    detector_domain_soundness_witnesses_by_family=(
-                        universal_k_monodromy_detector_domain_soundness_witnesses_by_family
-                    ),
-                    detector_track_initialization_rows=(
-                        universal_k_detector_track_initialization_input_rows
-                    ),
-                    endpoint_target_audits_by_family=(
-                        universal_k_endpoint_target_audits_by_family
-                    ),
-                    cutoff_readout_audits_by_family=(
-                        universal_k_cutoff_readout_audits_by_family
-                    ),
-                    residual_faithfulness_theorems_by_family=(
-                        universal_k_residual_faithfulness_theorems_by_family
-                    ),
-                    product_residual_faithfulness_theorem=(
-                        universal_k_residual_faithfulness_theorem
-                    ),
-                    derive_automatic_residual_faithfulness=(
-                        universal_k_identity_automatic_residual_faithfulness
-                    ),
-                    derive_strict_identity_residual_faithfulness=(
-                        universal_k_identity_strict_residual_faithfulness
-                    ),
-                    derive_coordinate_identity_residual_faithfulness=(
-                        universal_k_identity_coordinate_residual_faithfulness
-                    ),
-                    derive_singleton_fibre_residual_faithfulness=(
-                        universal_k_identity_singleton_residual_faithfulness
-                    ),
-                    derive_strand_carrier_residual_faithfulness=(
-                        universal_k_identity_strand_carrier_residual_faithfulness
-                    ),
-                    derive_fibre_label_identity_residual_faithfulness=(
-                        universal_k_identity_fibre_label_residual_faithfulness
-                    ),
-                    derive_canonical_fibre_label_identity_residual_faithfulness=(
-                        universal_k_identity_canonical_fibre_label_residual_faithfulness
-                    ),
-                    strand_carrier_rows=universal_k_identity_strand_carrier_rows,
-                    fibre_label_identity_rows=universal_k_identity_fibre_label_rows,
+            if fixed_carrier_monodromy_input_present:
+                endpoint_observer_family_build = (
+                    universal_k_endpoint_observer_builds_from_fixed_carrier_monodromy_by_family(
+                        interval,
+                        unsigned.universal_k_seed_classifier_entries,
+                        endpoint_groups_by_family=(
+                            universal_k_monodromy_endpoint_groups_by_family
+                        ),
+                        word_potential_templates_by_family=(
+                            universal_k_monodromy_word_potential_templates_by_family
+                        ),
+                        positive_state_rows_by_family=(
+                            universal_k_monodromy_positive_state_rows_by_family
+                        ),
+                        carrier_domains_by_family=(
+                            universal_k_monodromy_fixed_carrier_domains_by_family
+                        ),
+                        carrier_soundness_witnesses_by_family=(
+                            universal_k_monodromy_fixed_carrier_soundness_witnesses_by_family
+                        ),
+                        detector_track_initialization_rows=(
+                            universal_k_detector_track_initialization_input_rows
+                        ),
+                        endpoint_target_audits_by_family=(
+                            universal_k_endpoint_target_audits_by_family
+                        ),
+                        cutoff_readout_audits_by_family=(
+                            universal_k_cutoff_readout_audits_by_family
+                        ),
+                        residual_faithfulness_theorems_by_family=(
+                            universal_k_residual_faithfulness_theorems_by_family
+                        ),
+                        product_residual_faithfulness_theorem=(
+                            universal_k_residual_faithfulness_theorem
+                        ),
+                        derive_automatic_residual_faithfulness=(
+                            universal_k_identity_automatic_residual_faithfulness
+                        ),
+                        derive_strict_identity_residual_faithfulness=(
+                            universal_k_identity_strict_residual_faithfulness
+                        ),
+                        derive_coordinate_identity_residual_faithfulness=(
+                            universal_k_identity_coordinate_residual_faithfulness
+                        ),
+                        derive_singleton_fibre_residual_faithfulness=(
+                            universal_k_identity_singleton_residual_faithfulness
+                        ),
+                        derive_strand_carrier_residual_faithfulness=(
+                            universal_k_identity_strand_carrier_residual_faithfulness
+                        ),
+                        derive_fibre_label_identity_residual_faithfulness=(
+                            universal_k_identity_fibre_label_residual_faithfulness
+                        ),
+                        derive_canonical_fibre_label_identity_residual_faithfulness=(
+                            universal_k_identity_canonical_fibre_label_residual_faithfulness
+                        ),
+                        strand_carrier_rows=universal_k_identity_strand_carrier_rows,
+                        fibre_label_identity_rows=universal_k_identity_fibre_label_rows,
+                    )
                 )
-            )
+            else:
+                endpoint_observer_family_build = (
+                    universal_k_endpoint_observer_builds_from_monodromy_by_family(
+                        interval,
+                        unsigned.universal_k_seed_classifier_entries,
+                        endpoint_groups_by_family=(
+                            universal_k_monodromy_endpoint_groups_by_family
+                        ),
+                        word_potential_templates_by_family=(
+                            universal_k_monodromy_word_potential_templates_by_family
+                        ),
+                        positive_state_rows_by_family=(
+                            universal_k_monodromy_positive_state_rows_by_family
+                        ),
+                        detector_domain_assignments_by_family=(
+                            universal_k_monodromy_detector_domain_assignments_by_family
+                        ),
+                        detector_domain_soundness_witnesses_by_family=(
+                            universal_k_monodromy_detector_domain_soundness_witnesses_by_family
+                        ),
+                        detector_track_initialization_rows=(
+                            universal_k_detector_track_initialization_input_rows
+                        ),
+                        endpoint_target_audits_by_family=(
+                            universal_k_endpoint_target_audits_by_family
+                        ),
+                        cutoff_readout_audits_by_family=(
+                            universal_k_cutoff_readout_audits_by_family
+                        ),
+                        residual_faithfulness_theorems_by_family=(
+                            universal_k_residual_faithfulness_theorems_by_family
+                        ),
+                        product_residual_faithfulness_theorem=(
+                            universal_k_residual_faithfulness_theorem
+                        ),
+                        derive_automatic_residual_faithfulness=(
+                            universal_k_identity_automatic_residual_faithfulness
+                        ),
+                        derive_strict_identity_residual_faithfulness=(
+                            universal_k_identity_strict_residual_faithfulness
+                        ),
+                        derive_coordinate_identity_residual_faithfulness=(
+                            universal_k_identity_coordinate_residual_faithfulness
+                        ),
+                        derive_singleton_fibre_residual_faithfulness=(
+                            universal_k_identity_singleton_residual_faithfulness
+                        ),
+                        derive_strand_carrier_residual_faithfulness=(
+                            universal_k_identity_strand_carrier_residual_faithfulness
+                        ),
+                        derive_fibre_label_identity_residual_faithfulness=(
+                            universal_k_identity_fibre_label_residual_faithfulness
+                        ),
+                        derive_canonical_fibre_label_identity_residual_faithfulness=(
+                            universal_k_identity_canonical_fibre_label_residual_faithfulness
+                        ),
+                        strand_carrier_rows=universal_k_identity_strand_carrier_rows,
+                        fibre_label_identity_rows=universal_k_identity_fibre_label_rows,
+                    )
+                )
         elif (
             derive_endpoint_observer_family_build
             and direct_family_input_present
