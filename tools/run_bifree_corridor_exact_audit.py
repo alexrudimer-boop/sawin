@@ -15,6 +15,7 @@ from ybe_domination import (  # noqa: E402
     bifree_corridor_product_subgroup_audit,
     bifree_corridor_word_certificate,
     commutator,
+    cyclic_group,
     free_word_power,
     law_word_on_last_strand,
 )
@@ -95,6 +96,12 @@ def build_report():
     target = bifree_corridor_detector_target(interval)
     groups = bifree_corridor_detector_groups(interval)
     exact_n2 = bifree_corridor_exact_image_audit(interval, n=2, state_limit=1000)
+    exact_n2_with_extra_c5 = bifree_corridor_exact_image_audit(
+        interval,
+        n=2,
+        state_limit=1000,
+        extra_groups=(cyclic_group(5),),
+    )
     product_audit = bifree_corridor_product_subgroup_audit(interval, 2, (1, 1))
     law = commutator(free_word_power(0, 1), free_word_power(1, 1))
     n, braid = law_word_on_last_strand(law, arity=2)
@@ -110,6 +117,7 @@ def build_report():
             for name, group in groups.items()
         },
         "exact_n2": _audit_json(exact_n2),
+        "exact_n2_with_extra_c5": _audit_json(exact_n2_with_extra_c5),
         "product_subgroup_n2": _product_audit_json(product_audit),
         "commutator_certificate": {
             "n": certificate.n,
@@ -145,6 +153,7 @@ def build_report():
 
 def render_markdown(report):
     exact = report["exact_n2"]
+    exact_extra = report["exact_n2_with_extra_c5"]
     product_audit = report["product_subgroup_n2"]
     cert = report["commutator_certificate"]
     lines = [
@@ -179,6 +188,24 @@ def render_markdown(report):
         f"Kernel failure: `{exact['kernel_failure']}`.",
         f"Collision failure: `{exact['collision_failure']}`.",
         f"Proves fixed-n implication: `{exact['proves_fixed_n_implication']}`.",
+        "",
+        "## Exact n=2 Closure With Fixed Extra C5 Factor",
+        "",
+        "This row appends one fixed extra detector factor `C5`, representing",
+        "the quotient/known/unit detector slot in the corridor target.",
+        f"Visited states: `{exact_extra['visited_state_count']}`.",
+        f"Detector states: `{exact_extra['detector_state_count']}`.",
+        (
+            "Base-kernel detector states: "
+            f"`{exact_extra['base_kernel_detector_state_count']}`."
+        ),
+        f"Truncated: `{exact_extra['truncated']}`.",
+        f"Kernel failure: `{exact_extra['kernel_failure']}`.",
+        f"Collision failure: `{exact_extra['collision_failure']}`.",
+        (
+            "Proves fixed-n implication: "
+            f"`{exact_extra['proves_fixed_n_implication']}`."
+        ),
         "",
         "## Direct Product Subgroup Check",
         "",
@@ -237,7 +264,9 @@ def render_markdown(report):
             "that exact closure proves the `n=2` implication, while the",
             "commutator mover is seen by the order-`6` symmetric factor and is",
             "therefore not a B-shaped failure against the listed detector",
-            "factors.",
+            "factors.  The extra-`C5` row confirms that fixed quotient, known,",
+            "or endpoint/unit factors are part of the exact detector state, not",
+            "only part of the separate longitude-subgroup profile.",
             "",
         ]
     )

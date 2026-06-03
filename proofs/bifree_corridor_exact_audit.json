@@ -91,6 +91,18 @@
     "truncated": false,
     "visited_state_count": 12
   },
+  "exact_n2_with_extra_c5": {
+    "base_kernel_detector_state_count": 60,
+    "base_kernel_residual_state_count": 3,
+    "collision_failure": null,
+    "detector_state_count": 60,
+    "kernel_failure": null,
+    "n": 2,
+    "proves_fixed_n_implication": true,
+    "residual_state_count": 3,
+    "truncated": false,
+    "visited_state_count": 60
+  },
   "factor_orders": [
     2,
     3,

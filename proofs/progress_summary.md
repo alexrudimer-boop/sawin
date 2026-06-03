@@ -279,6 +279,10 @@ audits, and direct-product subgroup checks.  This is the executable slot for
 the quotient detector `Q`, known branch factors, and endpoint/unit detector
 groups in `H(pi,Q)`; the supplied list is still fixed at the interval level
 and cannot depend on braid index.
+The generated exact-image audit now records this at the fixed detector-state
+level as well: adding a fixed `C5` extra factor to the affine stress row raises
+the exact `n=2` reachable detector state count from `12` to `60`, with no
+kernel or collision failure.
 For intervals routed to a known total branch before the corridor fork, the
 local bottleneck summary now records the known-branch detector reason, group
 order, and `A_G` factor size.  Thus a closed tag cannot silently stand in for
@@ -859,6 +863,19 @@ right-stabilized extension is trivial on `X^n`.  Hence a moving `K_G` braid
 does force a moving actual point-pushing `K_G` layer; its word is an ordinary
 law only as a necessary condition.  The note is also a guardrail: conjugated
 layers or non-right embeddings require their own triviality proof.
+`proofs/rack_point_pushing_operator_label_invariant.md` now records the
+correct rack-only point-pushing structure.  For a finite rack `Y`, the
+last-strand point-pushing image `Q_Y(n)` maps to the finite group-Hurwitz
+operator-label image on tuples `(L_y)` in `Inn(Y)`, and the vertical kernel
+has exponent dividing `exp Inn(Y)` uniformly in `n`.  The whole image
+`Q_Y(n)` need not have bounded exponent; the generated audit
+`proofs/rack_point_pushing_operator_label_audit.md` records the warning row
+for the three-element dihedral rack where `exp Inn(Y)=6` but the checked
+arity-`3` point-pushing image exponent is `36`, while the vertical exponent is
+`1`.  The resulting point-pushing theorem target is the finite augmented
+Artin-envelope lemma: every finite bijective YBE point-pushing tower should
+have a finite operator-label Hurwitz model up to uniformly bounded-exponent
+vertical noise.
 `proofs/last_strand_law_gap_audit.md` now corrects the strongest
 point-pushing reformulation.  The implication
 `w in Law_k(G) => iota_{k+1}(w) in K_G(k+1)` is false for `k>=2`: the

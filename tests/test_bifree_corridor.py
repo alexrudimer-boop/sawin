@@ -159,6 +159,24 @@ class BiFreeCorridorCertificateTests(unittest.TestCase):
         self.assertTrue(audit.proves_fixed_n_implication)
         self.assertEqual(audit.visited_state_count, 12)
 
+    def test_exact_image_audit_includes_fixed_extra_factors(self):
+        interval = interval_from_solution(size_three_affine_candidate())
+
+        audit = bifree_corridor_exact_image_audit(
+            interval,
+            n=2,
+            state_limit=1000,
+            extra_groups=(cyclic_group(5),),
+        )
+
+        self.assertFalse(audit.truncated)
+        self.assertIsNone(audit.kernel_failure)
+        self.assertIsNone(audit.collision_failure)
+        self.assertTrue(audit.proves_fixed_n_implication)
+        self.assertEqual(audit.visited_state_count, 60)
+        self.assertEqual(audit.detector_state_count, 60)
+        self.assertEqual(audit.base_kernel_detector_state_count, 60)
+
 
 if __name__ == "__main__":
     unittest.main()

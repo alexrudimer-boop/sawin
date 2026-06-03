@@ -30,6 +30,18 @@ Kernel failure: `None`.
 Collision failure: `None`.
 Proves fixed-n implication: `True`.
 
+## Exact n=2 Closure With Fixed Extra C5 Factor
+
+This row appends one fixed extra detector factor `C5`, representing
+the quotient/known/unit detector slot in the corridor target.
+Visited states: `60`.
+Detector states: `60`.
+Base-kernel detector states: `60`.
+Truncated: `False`.
+Kernel failure: `None`.
+Collision failure: `None`.
+Proves fixed-n implication: `True`.
+
 ## Direct Product Subgroup Check
 
 Braid degree: `2`.
@@ -67,4 +79,6 @@ be fed into exact finite-image closure.  For the affine stress row,
 that exact closure proves the `n=2` implication, while the
 commutator mover is seen by the order-`6` symmetric factor and is
 therefore not a B-shaped failure against the listed detector
-factors.
+factors.  The extra-`C5` row confirms that fixed quotient, known,
+or endpoint/unit factors are part of the exact detector state, not
+only part of the separate longitude-subgroup profile.

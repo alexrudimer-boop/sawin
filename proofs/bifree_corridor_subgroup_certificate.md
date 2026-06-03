@@ -98,6 +98,12 @@ residual collision.  The same report records that the degree-`3` commutator
 mover is visible to the order-`6` symmetric factor.  This keeps exact
 fixed-index checks and finite-word subgroup profiles tied to one corridor
 detector list.
+The same exact-image audit now appends a fixed extra `C5` detector factor in
+the quotient/known/unit slot.  The reachable detector state count grows from
+`12` to `60`, with no kernel or collision failure, and the fixed-`n`
+implication still holds.  This confirms that fixed extra factors are part of
+the exact detector state itself, not only of the separate longitude-subgroup
+profile.
 
 The same generated audit now also includes a direct-product subgroup check on
 the degree-`2` pure braid `sigma_1^2`.  For the affine stress row the listed

@@ -37,6 +37,36 @@ class PureSubgroupGrowthRow:
 
 
 @dataclass(frozen=True)
+class RackPointPushingOperatorLabelAudit:
+    """Checked rack point-pushing operator-label extension in one arity."""
+
+    arity: int
+    braid_index: int
+    tuple_count: int
+    operator_label_tuple_count: int
+    inner_group_order: int
+    inner_group_exponent: int
+    point_pushing_group_order: int | None
+    point_pushing_group_exponent: int | None
+    hurwitz_quotient_order: int | None
+    vertical_kernel_size: int | None
+    vertical_kernel_exponent: int | None
+    operator_label_action_well_defined: bool
+    quotient_map_well_defined: bool | None
+    vertical_exponent_divides_inner_exponent: bool | None
+    truncated: bool
+
+    @property
+    def verifies_rack_operator_label_extension(self) -> bool:
+        return (
+            not self.truncated
+            and self.operator_label_action_well_defined
+            and self.quotient_map_well_defined is True
+            and self.vertical_exponent_divides_inner_exponent is True
+        )
+
+
+@dataclass(frozen=True)
 class LawBraidActionCertificate:
     braid_index: int
     tuple_count: int
@@ -1304,6 +1334,181 @@ def _point_pushing_action_generator_images(
         for generator in range(arity)
     }
     return braid_images_for_words(solution, braid_index, action_braids)
+
+
+def _rack_left_translation_permutations(
+    rack: FiniteBraidedSet,
+) -> Mapping[object, Permutation]:
+    index = {element: position for position, element in enumerate(rack.elements)}
+    translations = {}
+    for left in rack.elements:
+        images = []
+        for right in rack.elements:
+            first, second = rack.R[(left, right)]
+            if second != left:
+                raise ValueError("solution is not in rack form R(a,b)=(a*b,a)")
+            images.append(index[first])
+        permutation = tuple(images)
+        if set(permutation) != set(range(len(rack.elements))):
+            raise ValueError("left rack translation is not bijective")
+        translations[left] = permutation
+    return translations
+
+
+def _rack_operator_label_generator_images(
+    rack: FiniteBraidedSet,
+    arity: int,
+    action_images: Mapping[int, Permutation],
+) -> tuple[bool, int, Mapping[int, Permutation]]:
+    braid_index = arity + 1
+    translations = _rack_left_translation_permutations(rack)
+    tuple_values = tuple(product(rack.elements, repeat=braid_index))
+    labels_by_tuple_index = tuple(
+        tuple(translations[element] for element in tuple_value)
+        for tuple_value in tuple_values
+    )
+    label_tuples = tuple(sorted(set(labels_by_tuple_index), key=repr))
+    label_index = {label: position for position, label in enumerate(label_tuples)}
+    label_images = {}
+
+    for generator, action in action_images.items():
+        image_by_label: list[int | None] = [None] * len(label_tuples)
+        for tuple_index, source_label in enumerate(labels_by_tuple_index):
+            target_label = labels_by_tuple_index[action[tuple_index]]
+            source_index = label_index[source_label]
+            target_index = label_index[target_label]
+            previous = image_by_label[source_index]
+            if previous is None:
+                image_by_label[source_index] = target_index
+            elif previous != target_index:
+                return False, len(label_tuples), {}
+        if any(value is None for value in image_by_label):
+            return False, len(label_tuples), {}
+        label_images[generator] = tuple(value for value in image_by_label if value is not None)
+    return True, len(label_tuples), label_images
+
+
+def rack_point_pushing_operator_label_audit(
+    rack: FiniteBraidedSet,
+    arity: int,
+    *,
+    max_size: int | None = None,
+) -> RackPointPushingOperatorLabelAudit:
+    """Check the rack operator-label quotient for one point-pushing arity.
+
+    The rack convention is ``R(a,b)=(a*b,a)``.  The checked group is generated
+    by the standard last-strand pure braids ``A_{i,n+1}``, ``1<=i<=n``.  The
+    quotient is the induced action on tuples of left translations
+    ``(L_{y_1},...,L_{y_{n+1}})``; the vertical kernel consists of elements
+    acting trivially on those operator labels.
+    """
+
+    if arity < 1:
+        raise ValueError("arity must be positive")
+
+    from .artin_longitudes import rack_inner_group
+    from .group_laws import group_exponent, lcm
+
+    braid_index = arity + 1
+    tuple_count = len(rack.elements) ** braid_index
+    inner_group = rack_inner_group(rack)
+    inner_exponent = group_exponent(inner_group)
+    action_images = _point_pushing_action_generator_images(rack, arity)
+    label_well_defined, label_tuple_count, label_images = (
+        _rack_operator_label_generator_images(rack, arity, action_images)
+    )
+    if not label_well_defined:
+        return RackPointPushingOperatorLabelAudit(
+            arity=arity,
+            braid_index=braid_index,
+            tuple_count=tuple_count,
+            operator_label_tuple_count=label_tuple_count,
+            inner_group_order=len(inner_group.elements),
+            inner_group_exponent=inner_exponent,
+            point_pushing_group_order=None,
+            point_pushing_group_exponent=None,
+            hurwitz_quotient_order=None,
+            vertical_kernel_size=None,
+            vertical_kernel_exponent=None,
+            operator_label_action_well_defined=False,
+            quotient_map_well_defined=None,
+            vertical_exponent_divides_inner_exponent=None,
+            truncated=False,
+        )
+
+    pair_generators = {
+        generator: (action_images[generator], label_images[generator])
+        for generator in sorted(action_images)
+    }
+    try:
+        pair_subgroup = _generated_pair_subgroup_with_words(
+            pair_generators,
+            max_size=max_size,
+        )
+    except ValueError:
+        return RackPointPushingOperatorLabelAudit(
+            arity=arity,
+            braid_index=braid_index,
+            tuple_count=tuple_count,
+            operator_label_tuple_count=label_tuple_count,
+            inner_group_order=len(inner_group.elements),
+            inner_group_exponent=inner_exponent,
+            point_pushing_group_order=None,
+            point_pushing_group_exponent=None,
+            hurwitz_quotient_order=None,
+            vertical_kernel_size=None,
+            vertical_kernel_exponent=None,
+            operator_label_action_well_defined=True,
+            quotient_map_well_defined=None,
+            vertical_exponent_divides_inner_exponent=None,
+            truncated=True,
+        )
+
+    action_to_label: dict[Permutation, Permutation] = {}
+    quotient_map_well_defined = True
+    for action, label in pair_subgroup:
+        previous = action_to_label.get(action)
+        if previous is None:
+            action_to_label[action] = label
+        elif previous != label:
+            quotient_map_well_defined = False
+
+    actions = tuple(action_to_label)
+    labels = tuple(sorted(set(action_to_label.values())))
+    point_exponent = 1
+    for action in actions:
+        point_exponent = lcm(point_exponent, permutation_order(action))
+
+    vertical_kernel = None
+    vertical_exponent = None
+    vertical_divides = None
+    if quotient_map_well_defined:
+        label_identity = identity_permutation(label_tuple_count)
+        vertical_kernel = tuple(
+            action for action, label in action_to_label.items() if label == label_identity
+        )
+        vertical_exponent = 1
+        for action in vertical_kernel:
+            vertical_exponent = lcm(vertical_exponent, permutation_order(action))
+        vertical_divides = inner_exponent % vertical_exponent == 0
+
+    return RackPointPushingOperatorLabelAudit(
+        arity=arity,
+        braid_index=braid_index,
+        tuple_count=tuple_count,
+        operator_label_tuple_count=label_tuple_count,
+        inner_group_order=len(inner_group.elements),
+        inner_group_exponent=inner_exponent,
+        point_pushing_group_order=len(actions),
+        point_pushing_group_exponent=point_exponent,
+        hurwitz_quotient_order=len(labels),
+        vertical_kernel_size=None if vertical_kernel is None else len(vertical_kernel),
+        vertical_kernel_exponent=vertical_exponent,
+        operator_label_action_well_defined=True,
+        quotient_map_well_defined=quotient_map_well_defined,
+        vertical_exponent_divides_inner_exponent=vertical_divides,
+        truncated=False,
+    )
 
 
 def evaluate_free_word_on_permutations(
