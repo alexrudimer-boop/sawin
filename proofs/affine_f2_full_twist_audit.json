@@ -1,0 +1,585 @@
+{
+  "f2_dimension_2": {
+    "affine_ybe_count": 481,
+    "checked_affine_map_count": 1048576,
+    "dimension": 2,
+    "first_examples_by_profile": {
+      "tags=(untagged)|orders=1,2,1,2,1,2,1": {
+        "branch_tags": [],
+        "full_twist_orders": [
+          1,
+          2,
+          1,
+          2,
+          1,
+          2,
+          1
+        ],
+        "matrix": [
+          "0001",
+          "1101",
+          "1011",
+          "1000"
+        ],
+        "offset": "0011"
+      },
+      "tags=involutive+identity_table|orders=1,1,1,1,1,1,1": {
+        "branch_tags": [
+          "involutive",
+          "identity_table"
+        ],
+        "full_twist_orders": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "matrix": [
+          "1000",
+          "0100",
+          "0010",
+          "0001"
+        ],
+        "offset": "0000"
+      },
+      "tags=involutive+left_nondegenerate+right_nondegenerate+nondegenerate|orders=1,1,1,1,1,1,1": {
+        "branch_tags": [
+          "involutive",
+          "left_nondegenerate",
+          "right_nondegenerate",
+          "nondegenerate"
+        ],
+        "full_twist_orders": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "matrix": [
+          "0010",
+          "1001",
+          "1000",
+          "0110"
+        ],
+        "offset": "0000"
+      },
+      "tags=involutive+permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate|orders=1,1,1,1,1,1,1": {
+        "branch_tags": [
+          "involutive",
+          "permutation_form",
+          "left_nondegenerate",
+          "right_nondegenerate",
+          "nondegenerate"
+        ],
+        "full_twist_orders": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "matrix": [
+          "0001",
+          "0010",
+          "0100",
+          "1000"
+        ],
+        "offset": "0000"
+      },
+      "tags=involutive|orders=1,1,1,1,1,1,1": {
+        "branch_tags": [
+          "involutive"
+        ],
+        "full_twist_orders": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "matrix": [
+          "0001",
+          "1101",
+          "1011",
+          "1000"
+        ],
+        "offset": "0000"
+      },
+      "tags=left_nondegenerate+right_nondegenerate+nondegenerate|orders=1,2,1,2,1,2,1": {
+        "branch_tags": [
+          "left_nondegenerate",
+          "right_nondegenerate",
+          "nondegenerate"
+        ],
+        "full_twist_orders": [
+          1,
+          2,
+          1,
+          2,
+          1,
+          2,
+          1
+        ],
+        "matrix": [
+          "0010",
+          "1001",
+          "1000",
+          "0110"
+        ],
+        "offset": "0001"
+      },
+      "tags=left_nondegenerate+right_nondegenerate+nondegenerate|orders=1,2,2,2,2,2,2": {
+        "branch_tags": [
+          "left_nondegenerate",
+          "right_nondegenerate",
+          "nondegenerate"
+        ],
+        "full_twist_orders": [
+          1,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2
+        ],
+        "matrix": [
+          "0001",
+          "0010",
+          "0111",
+          "1011"
+        ],
+        "offset": "0000"
+      },
+      "tags=left_nondegenerate+right_nondegenerate+nondegenerate|orders=1,3,2,3,3,2,3": {
+        "branch_tags": [
+          "left_nondegenerate",
+          "right_nondegenerate",
+          "nondegenerate"
+        ],
+        "full_twist_orders": [
+          1,
+          3,
+          2,
+          3,
+          3,
+          2,
+          3
+        ],
+        "matrix": [
+          "0001",
+          "0011",
+          "0101",
+          "1111"
+        ],
+        "offset": "0000"
+      },
+      "tags=permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate|orders=1,2,1,2,1,2,1": {
+        "branch_tags": [
+          "permutation_form",
+          "left_nondegenerate",
+          "right_nondegenerate",
+          "nondegenerate"
+        ],
+        "full_twist_orders": [
+          1,
+          2,
+          1,
+          2,
+          1,
+          2,
+          1
+        ],
+        "matrix": [
+          "0001",
+          "0010",
+          "0100",
+          "1000"
+        ],
+        "offset": "0011"
+      },
+      "tags=permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate|orders=1,3,3,1,3,3,1": {
+        "branch_tags": [
+          "permutation_form",
+          "left_nondegenerate",
+          "right_nondegenerate",
+          "nondegenerate"
+        ],
+        "full_twist_orders": [
+          1,
+          3,
+          3,
+          1,
+          3,
+          3,
+          1
+        ],
+        "matrix": [
+          "0001",
+          "0011",
+          "0100",
+          "1100"
+        ],
+        "offset": "0000"
+      },
+      "tags=permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate|orders=1,4,2,4,1,4,2": {
+        "branch_tags": [
+          "permutation_form",
+          "left_nondegenerate",
+          "right_nondegenerate",
+          "nondegenerate"
+        ],
+        "full_twist_orders": [
+          1,
+          4,
+          2,
+          4,
+          1,
+          4,
+          2
+        ],
+        "matrix": [
+          "0001",
+          "0010",
+          "1000",
+          "0100"
+        ],
+        "offset": "0111"
+      },
+      "tags=rack_type+involutive+permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate|orders=1,1,1,1,1,1,1": {
+        "branch_tags": [
+          "rack_type",
+          "involutive",
+          "permutation_form",
+          "left_nondegenerate",
+          "right_nondegenerate",
+          "nondegenerate"
+        ],
+        "full_twist_orders": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "matrix": [
+          "0010",
+          "0001",
+          "1000",
+          "0100"
+        ],
+        "offset": "0000"
+      },
+      "tags=rack_type+left_nondegenerate+right_nondegenerate+nondegenerate|orders=1,2,2,2,2,2,2": {
+        "branch_tags": [
+          "rack_type",
+          "left_nondegenerate",
+          "right_nondegenerate",
+          "nondegenerate"
+        ],
+        "full_twist_orders": [
+          1,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2
+        ],
+        "matrix": [
+          "0010",
+          "1001",
+          "1000",
+          "0100"
+        ],
+        "offset": "0000"
+      },
+      "tags=rack_type+left_nondegenerate+right_nondegenerate+nondegenerate|orders=1,3,2,3,3,2,3": {
+        "branch_tags": [
+          "rack_type",
+          "left_nondegenerate",
+          "right_nondegenerate",
+          "nondegenerate"
+        ],
+        "full_twist_orders": [
+          1,
+          3,
+          2,
+          3,
+          3,
+          2,
+          3
+        ],
+        "matrix": [
+          "0111",
+          "1110",
+          "1000",
+          "0100"
+        ],
+        "offset": "0000"
+      },
+      "tags=rack_type+permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate|orders=1,2,1,2,1,2,1": {
+        "branch_tags": [
+          "rack_type",
+          "permutation_form",
+          "left_nondegenerate",
+          "right_nondegenerate",
+          "nondegenerate"
+        ],
+        "full_twist_orders": [
+          1,
+          2,
+          1,
+          2,
+          1,
+          2,
+          1
+        ],
+        "matrix": [
+          "0001",
+          "0010",
+          "1000",
+          "0100"
+        ],
+        "offset": "0000"
+      },
+      "tags=rack_type+permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate|orders=1,3,3,1,3,3,1": {
+        "branch_tags": [
+          "rack_type",
+          "permutation_form",
+          "left_nondegenerate",
+          "right_nondegenerate",
+          "nondegenerate"
+        ],
+        "full_twist_orders": [
+          1,
+          3,
+          3,
+          1,
+          3,
+          3,
+          1
+        ],
+        "matrix": [
+          "0001",
+          "0011",
+          "1000",
+          "0100"
+        ],
+        "offset": "0000"
+      },
+      "tags=rack_type+permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate|orders=1,4,2,4,1,4,2": {
+        "branch_tags": [
+          "rack_type",
+          "permutation_form",
+          "left_nondegenerate",
+          "right_nondegenerate",
+          "nondegenerate"
+        ],
+        "full_twist_orders": [
+          1,
+          4,
+          2,
+          4,
+          1,
+          4,
+          2
+        ],
+        "matrix": [
+          "0001",
+          "0010",
+          "1000",
+          "0100"
+        ],
+        "offset": "0100"
+      }
+    },
+    "invertible_affine_map_count": 322560,
+    "max_n": 7,
+    "max_observed_prefix_order": 4,
+    "max_order_cap": 100000,
+    "order_cap_exceeded_count": 0,
+    "point_count": 4,
+    "profile_counts": {
+      "tags=(untagged)|orders=1,2,1,2,1,2,1": 24,
+      "tags=involutive+identity_table|orders=1,1,1,1,1,1,1": 1,
+      "tags=involutive+left_nondegenerate+right_nondegenerate+nondegenerate|orders=1,1,1,1,1,1,1": 48,
+      "tags=involutive+permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate|orders=1,1,1,1,1,1,1": 23,
+      "tags=involutive|orders=1,1,1,1,1,1,1": 48,
+      "tags=left_nondegenerate+right_nondegenerate+nondegenerate|orders=1,2,1,2,1,2,1": 48,
+      "tags=left_nondegenerate+right_nondegenerate+nondegenerate|orders=1,2,2,2,2,2,2": 132,
+      "tags=left_nondegenerate+right_nondegenerate+nondegenerate|orders=1,3,2,3,3,2,3": 46,
+      "tags=permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate|orders=1,2,1,2,1,2,1": 39,
+      "tags=permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate|orders=1,3,3,1,3,3,1": 16,
+      "tags=permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate|orders=1,4,2,4,1,4,2": 18,
+      "tags=rack_type+involutive+permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate|orders=1,1,1,1,1,1,1": 1,
+      "tags=rack_type+left_nondegenerate+right_nondegenerate+nondegenerate|orders=1,2,2,2,2,2,2": 12,
+      "tags=rack_type+left_nondegenerate+right_nondegenerate+nondegenerate|orders=1,3,2,3,3,2,3": 2,
+      "tags=rack_type+permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate|orders=1,2,1,2,1,2,1": 9,
+      "tags=rack_type+permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate|orders=1,3,3,1,3,3,1": 8,
+      "tags=rack_type+permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate|orders=1,4,2,4,1,4,2": 6
+    },
+    "untagged_count": 24,
+    "untagged_examples": [
+      {
+        "full_twist_orders": [
+          1,
+          2,
+          1,
+          2,
+          1,
+          2,
+          1
+        ],
+        "matrix": [
+          "0001",
+          "1101",
+          "1011",
+          "1000"
+        ],
+        "offset": "0011"
+      },
+      {
+        "full_twist_orders": [
+          1,
+          2,
+          1,
+          2,
+          1,
+          2,
+          1
+        ],
+        "matrix": [
+          "0001",
+          "1101",
+          "1011",
+          "1000"
+        ],
+        "offset": "1100"
+      },
+      {
+        "full_twist_orders": [
+          1,
+          2,
+          1,
+          2,
+          1,
+          2,
+          1
+        ],
+        "matrix": [
+          "0010",
+          "0100",
+          "1000",
+          "0001"
+        ],
+        "offset": "0010"
+      },
+      {
+        "full_twist_orders": [
+          1,
+          2,
+          1,
+          2,
+          1,
+          2,
+          1
+        ],
+        "matrix": [
+          "0010",
+          "0100",
+          "1000",
+          "0001"
+        ],
+        "offset": "1000"
+      },
+      {
+        "full_twist_orders": [
+          1,
+          2,
+          1,
+          2,
+          1,
+          2,
+          1
+        ],
+        "matrix": [
+          "0010",
+          "1110",
+          "1000",
+          "1011"
+        ],
+        "offset": "0011"
+      },
+      {
+        "full_twist_orders": [
+          1,
+          2,
+          1,
+          2,
+          1,
+          2,
+          1
+        ],
+        "matrix": [
+          "0010",
+          "1110",
+          "1000",
+          "1011"
+        ],
+        "offset": "1100"
+      },
+      {
+        "full_twist_orders": [
+          1,
+          2,
+          1,
+          2,
+          1,
+          2,
+          1
+        ],
+        "matrix": [
+          "0011",
+          "0100",
+          "1001",
+          "0001"
+        ],
+        "offset": "0010"
+      },
+      {
+        "full_twist_orders": [
+          1,
+          2,
+          1,
+          2,
+          1,
+          2,
+          1
+        ],
+        "matrix": [
+          "0011",
+          "0100",
+          "1001",
+          "0001"
+        ],
+        "offset": "1000"
+      }
+    ],
+    "untagged_profile_counts": {
+      "1,2,1,2,1,2,1": 24
+    }
+  }
+}

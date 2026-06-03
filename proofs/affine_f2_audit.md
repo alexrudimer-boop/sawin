@@ -65,6 +65,19 @@ branches.  The untagged affine examples in the full scan all have proper
 mixed retraction/coretraction families, so they are not local-minimal
 primitive intervals.
 
+The generated full-twist companion audit
+`proofs/affine_f2_full_twist_audit.md` also checks the central element
+`(sigma_1 ... sigma_{n-1})^n` for `1 <= n <= 7` in this same universe using
+affine block-map composition.  All `24` untagged affine rows have the prefix
+order profile
+
+```text
+1, 2, 1, 2, 1, 2, 1.
+```
+
+Thus the untagged affine rows neither form primitive intervals nor stress the
+central full-twist obstruction in the checked prefix.
+
 ## Consequence
 
 The smallest translated affine four-point universe does not produce B and does

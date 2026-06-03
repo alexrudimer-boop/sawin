@@ -1636,6 +1636,12 @@ twist, and left-nondegenerate rows route through the derived rack.  Exhaustive
 size-three checks all land in one of these bounded branches.  Thus an
 unbounded full-twist obstruction, if it exists, must come from a genuinely
 remaining degenerate class not covered by these known symbolic branches.
+The generated affine companion audit
+`proofs/affine_f2_full_twist_audit.md` checks the translated affine
+four-point universe by affine block-map composition for `1 <= n <= 7`: all
+`24` untagged affine rows have central full-twist prefix orders
+`1,2,1,2,1,2,1`, and the maximum observed prefix order across all `481`
+affine YBE tables is `4`.
 
 ## Verification snapshot
 
