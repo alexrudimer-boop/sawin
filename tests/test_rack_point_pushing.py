@@ -17,6 +17,7 @@ from ybe_domination import (
     PrefixDeletionCubeRestrictionAudit,
     PrefixDeletionSquareRestrictionAudit,
     PrefixEdgeTransducerAudit,
+    PrefixFiniteBasePullbackGaugeAudit,
     PrefixGroupHurwitzCompressionPressureAudit,
     PrefixPointForgettingRestrictionAudit,
     PrefixPointPushingSurfaceAudit,
@@ -33,6 +34,7 @@ from ybe_domination import (
     prefix_deletion_square_restriction_audit,
     prefix_artin_envelope_cohomology_audit,
     prefix_edge_transducer_audit,
+    prefix_finite_base_pullback_gauge_audit,
     prefix_group_hurwitz_compression_pressure_audit,
     prefix_point_forgetting_restriction_audit,
     prefix_point_pushing_surface_audit,
@@ -576,6 +578,106 @@ class RackPointPushingOperatorLabelTests(unittest.TestCase):
             [
                 (1, 16, 1, 16, 16),
                 (1, 32, 1, 32, 32),
+            ],
+        )
+
+    def test_prefix_finite_base_pullback_gauge_records_trivial_prefix_class(self):
+        solution = FiniteBraidedSet(
+            (0, 1),
+            {
+                (0, 0): (1, 0),
+                (0, 1): (0, 0),
+                (1, 0): (1, 1),
+                (1, 1): (0, 1),
+            },
+        )
+
+        audit = prefix_finite_base_pullback_gauge_audit(
+            solution,
+            max_subgroup_size=10000,
+        )
+
+        self.assertIsInstance(audit, PrefixFiniteBasePullbackGaugeAudit)
+        self.assertEqual(audit.translation_pair_label_count, 1)
+        self.assertEqual(audit.left_translation_label_count, 1)
+        self.assertEqual(audit.right_translation_label_count, 1)
+        self.assertTrue(audit.crossing_descends_to_translation_pair_labels)
+        self.assertEqual(audit.crossing_label_ambiguity_count, 0)
+        self.assertEqual(audit.checked_arities, (3, 4, 5))
+        self.assertTrue(audit.all_rows_untruncated)
+        self.assertTrue(audit.all_label_actions_well_defined)
+        self.assertTrue(audit.all_quotient_maps_well_defined)
+        self.assertFalse(audit.all_canonical_section_gauges_trivial)
+        self.assertEqual(audit.vertical_kernel_exponent_spectrum, (2,))
+        self.assertEqual(audit.vertical_defect_transport_mismatch_count, 0)
+        self.assertEqual(audit.vertical_defect_order_spectrum, (2, 2))
+        self.assertEqual(audit.peiffer_square_nontrivial_boundary_count, 0)
+        self.assertEqual(audit.peiffer_cube_transport_mismatch_count, 0)
+        self.assertEqual(audit.peiffer_order_pair_spectrum, ((1, 1),))
+        self.assertTrue(audit.observed_deletion_two_cocycle_gauge_trivial)
+        self.assertTrue(audit.fixed_translation_pair_base_only)
+        self.assertTrue(audit.group_hurwitz_realization_still_required)
+        self.assertTrue(audit.records_prefix_finite_base_pullback_gauge_surface)
+        self.assertEqual(
+            [
+                (
+                    row.point_pushing_arity,
+                    row.label_tuple_count,
+                    row.max_label_fibre_size,
+                    row.tuple_action_group_size,
+                    row.label_action_group_size,
+                    row.vertical_kernel_size,
+                    row.vertical_kernel_exponent,
+                    row.canonical_section_displacement_count,
+                )
+                for row in audit.rows
+            ],
+            [
+                (3, 1, 16, 8, 1, 8, 2, 3),
+                (4, 1, 32, 16, 1, 16, 2, 4),
+                (5, 1, 64, 32, 1, 32, 2, 5),
+            ],
+        )
+
+    def test_prefix_finite_base_pullback_gauge_handles_identity_base(self):
+        solution = FiniteBraidedSet(
+            (0, 1),
+            {
+                (0, 0): (0, 0),
+                (0, 1): (0, 1),
+                (1, 0): (1, 0),
+                (1, 1): (1, 1),
+            },
+        )
+
+        audit = prefix_finite_base_pullback_gauge_audit(solution)
+
+        self.assertTrue(audit.records_prefix_finite_base_pullback_gauge_surface)
+        self.assertEqual(audit.translation_pair_label_count, 2)
+        self.assertEqual(audit.left_translation_label_count, 2)
+        self.assertEqual(audit.right_translation_label_count, 2)
+        self.assertEqual(audit.vertical_kernel_exponent_spectrum, (1,))
+        self.assertEqual(audit.vertical_defect_order_spectrum, (1, 1))
+        self.assertTrue(audit.observed_deletion_two_cocycle_gauge_trivial)
+        self.assertTrue(audit.all_canonical_section_gauges_trivial)
+        self.assertEqual(
+            [
+                (
+                    row.point_pushing_arity,
+                    row.label_tuple_count,
+                    row.max_label_fibre_size,
+                    row.tuple_action_group_size,
+                    row.label_action_group_size,
+                    row.vertical_kernel_size,
+                    row.vertical_kernel_exponent,
+                    row.canonical_section_displacement_count,
+                )
+                for row in audit.rows
+            ],
+            [
+                (3, 16, 1, 1, 1, 1, 1, 0),
+                (4, 32, 1, 1, 1, 1, 1, 0),
+                (5, 64, 1, 1, 1, 1, 1, 0),
             ],
         )
 

@@ -1,0 +1,239 @@
+{
+  "description": "Finite translation-pair base ledger for the fixed-base pullback and section-gauge pressure test.",
+  "rows": [
+    {
+      "all_canonical_section_gauges_trivial": false,
+      "all_label_actions_well_defined": true,
+      "all_quotient_maps_well_defined": true,
+      "all_rows_untruncated": true,
+      "checked_arities": [
+        3,
+        4,
+        5
+      ],
+      "crossing_descends_to_translation_pair_labels": true,
+      "crossing_label_ambiguity_count": 0,
+      "element_count": 2,
+      "fixed_translation_pair_base_only": true,
+      "group_hurwitz_realization_still_required": true,
+      "left_prefix_monoid_size": 2,
+      "left_translation_label_count": 1,
+      "name": "nondegenerate_prefix_witness",
+      "nonunit_prefix_count": 0,
+      "observed_deletion_two_cocycle_gauge_trivial": true,
+      "peiffer_cube_transport_mismatch_count": 0,
+      "peiffer_order_pair_spectrum": [
+        [
+          1,
+          1
+        ]
+      ],
+      "peiffer_square_nontrivial_boundary_count": 0,
+      "records_prefix_finite_base_pullback_gauge_surface": true,
+      "right_translation_label_count": 1,
+      "rows": [
+        {
+          "braid_index": 4,
+          "canonical_section_displacement_count": 3,
+          "canonical_section_gauge_trivial": false,
+          "generator_count": 3,
+          "label_action_group_exponent": 1,
+          "label_action_group_size": 1,
+          "label_action_well_defined": true,
+          "label_tuple_count": 1,
+          "max_label_fibre_size": 16,
+          "point_pushing_arity": 3,
+          "quotient_map_well_defined": true,
+          "truncated": false,
+          "tuple_action_group_exponent": 2,
+          "tuple_action_group_size": 8,
+          "tuple_count": 16,
+          "vertical_kernel_exponent": 2,
+          "vertical_kernel_size": 8
+        },
+        {
+          "braid_index": 5,
+          "canonical_section_displacement_count": 4,
+          "canonical_section_gauge_trivial": false,
+          "generator_count": 4,
+          "label_action_group_exponent": 1,
+          "label_action_group_size": 1,
+          "label_action_well_defined": true,
+          "label_tuple_count": 1,
+          "max_label_fibre_size": 32,
+          "point_pushing_arity": 4,
+          "quotient_map_well_defined": true,
+          "truncated": false,
+          "tuple_action_group_exponent": 2,
+          "tuple_action_group_size": 16,
+          "tuple_count": 32,
+          "vertical_kernel_exponent": 2,
+          "vertical_kernel_size": 16
+        },
+        {
+          "braid_index": 6,
+          "canonical_section_displacement_count": 5,
+          "canonical_section_gauge_trivial": false,
+          "generator_count": 5,
+          "label_action_group_exponent": 1,
+          "label_action_group_size": 1,
+          "label_action_well_defined": true,
+          "label_tuple_count": 1,
+          "max_label_fibre_size": 64,
+          "point_pushing_arity": 5,
+          "quotient_map_well_defined": true,
+          "truncated": false,
+          "tuple_action_group_exponent": 2,
+          "tuple_action_group_size": 32,
+          "tuple_count": 64,
+          "vertical_kernel_exponent": 2,
+          "vertical_kernel_size": 32
+        }
+      ],
+      "table": {
+        "(0, 0)": [
+          1,
+          0
+        ],
+        "(0, 1)": [
+          0,
+          0
+        ],
+        "(1, 0)": [
+          1,
+          1
+        ],
+        "(1, 1)": [
+          0,
+          1
+        ]
+      },
+      "translation_pair_label_count": 1,
+      "vertical_defect_order_spectrum": [
+        2,
+        2
+      ],
+      "vertical_defect_transport_mismatch_count": 0,
+      "vertical_kernel_exponent_spectrum": [
+        2
+      ]
+    },
+    {
+      "all_canonical_section_gauges_trivial": true,
+      "all_label_actions_well_defined": true,
+      "all_quotient_maps_well_defined": true,
+      "all_rows_untruncated": true,
+      "checked_arities": [
+        3,
+        4,
+        5
+      ],
+      "crossing_descends_to_translation_pair_labels": true,
+      "crossing_label_ambiguity_count": 0,
+      "element_count": 2,
+      "fixed_translation_pair_base_only": true,
+      "group_hurwitz_realization_still_required": true,
+      "left_prefix_monoid_size": 3,
+      "left_translation_label_count": 2,
+      "name": "degenerate_identity_finite_base_pullback",
+      "nonunit_prefix_count": 2,
+      "observed_deletion_two_cocycle_gauge_trivial": true,
+      "peiffer_cube_transport_mismatch_count": 0,
+      "peiffer_order_pair_spectrum": [
+        [
+          1,
+          1
+        ]
+      ],
+      "peiffer_square_nontrivial_boundary_count": 0,
+      "records_prefix_finite_base_pullback_gauge_surface": true,
+      "right_translation_label_count": 2,
+      "rows": [
+        {
+          "braid_index": 4,
+          "canonical_section_displacement_count": 0,
+          "canonical_section_gauge_trivial": true,
+          "generator_count": 3,
+          "label_action_group_exponent": 1,
+          "label_action_group_size": 1,
+          "label_action_well_defined": true,
+          "label_tuple_count": 16,
+          "max_label_fibre_size": 1,
+          "point_pushing_arity": 3,
+          "quotient_map_well_defined": true,
+          "truncated": false,
+          "tuple_action_group_exponent": 1,
+          "tuple_action_group_size": 1,
+          "tuple_count": 16,
+          "vertical_kernel_exponent": 1,
+          "vertical_kernel_size": 1
+        },
+        {
+          "braid_index": 5,
+          "canonical_section_displacement_count": 0,
+          "canonical_section_gauge_trivial": true,
+          "generator_count": 4,
+          "label_action_group_exponent": 1,
+          "label_action_group_size": 1,
+          "label_action_well_defined": true,
+          "label_tuple_count": 32,
+          "max_label_fibre_size": 1,
+          "point_pushing_arity": 4,
+          "quotient_map_well_defined": true,
+          "truncated": false,
+          "tuple_action_group_exponent": 1,
+          "tuple_action_group_size": 1,
+          "tuple_count": 32,
+          "vertical_kernel_exponent": 1,
+          "vertical_kernel_size": 1
+        },
+        {
+          "braid_index": 6,
+          "canonical_section_displacement_count": 0,
+          "canonical_section_gauge_trivial": true,
+          "generator_count": 5,
+          "label_action_group_exponent": 1,
+          "label_action_group_size": 1,
+          "label_action_well_defined": true,
+          "label_tuple_count": 64,
+          "max_label_fibre_size": 1,
+          "point_pushing_arity": 5,
+          "quotient_map_well_defined": true,
+          "truncated": false,
+          "tuple_action_group_exponent": 1,
+          "tuple_action_group_size": 1,
+          "tuple_count": 64,
+          "vertical_kernel_exponent": 1,
+          "vertical_kernel_size": 1
+        }
+      ],
+      "table": {
+        "(0, 0)": [
+          0,
+          0
+        ],
+        "(0, 1)": [
+          0,
+          1
+        ],
+        "(1, 0)": [
+          1,
+          0
+        ],
+        "(1, 1)": [
+          1,
+          1
+        ]
+      },
+      "translation_pair_label_count": 2,
+      "vertical_defect_order_spectrum": [
+        1,
+        1
+      ],
+      "vertical_defect_transport_mismatch_count": 0,
+      "vertical_kernel_exponent_spectrum": [
+        1
+      ]
+    }
+  ]
+}

@@ -2100,3 +2100,44 @@ bisection groups, modulo section-change gauge and pullback from one fixed
 finite operator-label Hurwitz base.  This audit verifies the first cubical
 coherence identity for the toy prefix surface, but the gauge quotient and
 fixed-base pullback test remain open.
+
+## Finite-Base Pullback and Gauge Prefix
+
+The note `proofs/prefix_finite_base_pullback_gauge.md` and generated audit
+`proofs/prefix_finite_base_pullback_gauge_audit.md` add the first explicit
+fixed-base/gauge ledger after the Peiffer cube transport check.  The tested
+finite base is the translation-pair label
+
+```text
+x |-> (lambda_x,rho_x),
+```
+
+and the checked arities are `3,4,5`, matching the first point-pushing surface
+and the arity where the Peiffer square/cube deletion ledgers live.
+
+For the nondegenerate two-point prefix witness, this finite base collapses to
+one label.  Hence the checked point-pushing images are entirely vertical over
+the candidate base, with vertical kernel exponent spectrum `(2,)`.  The
+canonical section has nonzero generator displacement, but the deletion-defect
+transport, Peiffer square, and Peiffer cube rows still show no
+low-dimensional deletion `2`-cocycle obstruction on this prefix surface.
+
+For the degenerate identity row, the translation-pair label tuple is
+injective and the point-pushing image is trivial, so the vertical and
+section-gauge rows are all trivial.
+
+This checkpoint removes the current low-dimensional pullback/gauge
+obstruction for the two recorded prefix rows.  It does not prove the finite
+augmented Artin-envelope lemma: the open step is still to promote such a
+finite label-action base to one fixed finite group-Hurwitz operator-label
+tower, uniformly in all arities, or to find a finite certificate that no such
+fixed base can pull back a candidate tower.
+
+The external theoretical checkpoint frames this as a strict finite
+gauge/pullback system for any fixed proposed base: choose a comparison to the
+base, a vertical coefficient system over it, and a section-change cochain
+whose coboundary moves the observed deletion `2`-cocycle into the pullback
+image.  Emptiness of that finite system at some arity is a real obstruction
+to that fixed base.  A uniform bounded-arity replacement for the all-arity
+condition would require an additional pullback-coskeletal lemma, which remains
+open.

@@ -523,6 +523,113 @@ class PrefixArtinEnvelopeCohomologyAudit:
 
 
 @dataclass(frozen=True)
+class PrefixFiniteBasePullbackGaugeRow:
+    """One arity of the finite-base pullback/gauge pressure surface."""
+
+    point_pushing_arity: int
+    braid_index: int
+    tuple_count: int
+    generator_count: int
+    label_tuple_count: int
+    max_label_fibre_size: int
+    label_action_well_defined: bool
+    tuple_action_group_size: int | None
+    tuple_action_group_exponent: int | None
+    label_action_group_size: int | None
+    label_action_group_exponent: int | None
+    quotient_map_well_defined: bool | None
+    vertical_kernel_size: int | None
+    vertical_kernel_exponent: int | None
+    canonical_section_displacement_count: int | None
+    canonical_section_gauge_trivial: bool | None
+    truncated: bool
+
+    @property
+    def computed_untruncated_pullback_row(self) -> bool:
+        return (
+            not self.truncated
+            and self.label_action_well_defined
+            and self.tuple_action_group_size is not None
+            and self.tuple_action_group_exponent is not None
+            and self.label_action_group_size is not None
+            and self.label_action_group_exponent is not None
+            and self.quotient_map_well_defined is not None
+            and self.vertical_kernel_size is not None
+            and self.vertical_kernel_exponent is not None
+            and self.canonical_section_displacement_count is not None
+            and self.canonical_section_gauge_trivial is not None
+        )
+
+
+@dataclass(frozen=True)
+class PrefixFiniteBasePullbackGaugeAudit:
+    """Finite translation-pair base ledger for pullback/gauge pressure."""
+
+    element_count: int
+    translation_pair_label_count: int
+    left_translation_label_count: int
+    right_translation_label_count: int
+    crossing_descends_to_translation_pair_labels: bool
+    crossing_label_ambiguity_count: int
+    left_prefix_monoid_size: int
+    nonunit_prefix_count: int
+    rows: Tuple[PrefixFiniteBasePullbackGaugeRow, ...]
+    vertical_defect_transport_mismatch_count: int
+    vertical_defect_order_spectrum: Tuple[int, ...]
+    peiffer_square_nontrivial_boundary_count: int
+    peiffer_cube_transport_mismatch_count: int
+    peiffer_order_pair_spectrum: Tuple[Tuple[int, int], ...]
+    observed_deletion_two_cocycle_gauge_trivial: bool
+    fixed_translation_pair_base_only: bool
+    group_hurwitz_realization_still_required: bool
+
+    @property
+    def checked_arities(self) -> Tuple[int, ...]:
+        return tuple(row.point_pushing_arity for row in self.rows)
+
+    @property
+    def all_rows_untruncated(self) -> bool:
+        return all(row.computed_untruncated_pullback_row for row in self.rows)
+
+    @property
+    def all_label_actions_well_defined(self) -> bool:
+        return all(row.label_action_well_defined for row in self.rows)
+
+    @property
+    def all_quotient_maps_well_defined(self) -> bool:
+        return all(row.quotient_map_well_defined for row in self.rows)
+
+    @property
+    def all_canonical_section_gauges_trivial(self) -> bool:
+        return all(row.canonical_section_gauge_trivial for row in self.rows)
+
+    @property
+    def vertical_kernel_exponent_spectrum(self) -> Tuple[int, ...]:
+        return tuple(
+            sorted(
+                {
+                    row.vertical_kernel_exponent
+                    for row in self.rows
+                    if row.vertical_kernel_exponent is not None
+                }
+            )
+        )
+
+    @property
+    def records_prefix_finite_base_pullback_gauge_surface(self) -> bool:
+        return (
+            self.checked_arities == (3, 4, 5)
+            and self.crossing_descends_to_translation_pair_labels
+            and self.all_rows_untruncated
+            and self.all_label_actions_well_defined
+            and self.all_quotient_maps_well_defined
+            and self.observed_deletion_two_cocycle_gauge_trivial
+            and self.fixed_translation_pair_base_only
+            and self.group_hurwitz_realization_still_required
+        )
+
+
+@dataclass(frozen=True)
 class PrefixPointForgettingRestrictionRow:
     """One marked generator comparison under stationary-strand deletion."""
 
@@ -3633,6 +3740,353 @@ def prefix_artin_envelope_cohomology_audit(
         quotient_groupoid_functor_required=True,
         tower_restriction_compatibility_required=True,
         finite_surface_only=True,
+    )
+
+
+def _transformation_order(transformation: Transformation) -> int | None:
+    if not _transformation_is_permutation(transformation):
+        return None
+    return permutation_order(transformation)
+
+
+def _translation_pair_labels(
+    solution: FiniteBraidedSet,
+) -> Mapping[object, Tuple[Transformation, Transformation]]:
+    index = {element: position for position, element in enumerate(solution.elements)}
+    labels = {}
+    for element in solution.elements:
+        left_translation = tuple(
+            index[solution.R[(element, right)][0]]
+            for right in solution.elements
+        )
+        right_translation = tuple(
+            index[solution.R[(left, element)][1]]
+            for left in solution.elements
+        )
+        labels[element] = (left_translation, right_translation)
+    return labels
+
+
+def _translation_pair_crossing_ambiguity_count(
+    solution: FiniteBraidedSet,
+    labels: Mapping[object, Tuple[Transformation, Transformation]],
+) -> int:
+    seen: dict[
+        Tuple[
+            Tuple[Transformation, Transformation],
+            Tuple[Transformation, Transformation],
+        ],
+        Tuple[
+            Tuple[Transformation, Transformation],
+            Tuple[Transformation, Transformation],
+        ],
+    ] = {}
+    ambiguities = 0
+    for left, right in product(solution.elements, repeat=2):
+        source = (labels[left], labels[right])
+        out_left, out_right = solution.R[(left, right)]
+        target = (labels[out_left], labels[out_right])
+        previous = seen.get(source)
+        if previous is None:
+            seen[source] = target
+        elif previous != target:
+            ambiguities += 1
+    return ambiguities
+
+
+def _label_action_generator_images(
+    solution: FiniteBraidedSet,
+    arity: int,
+    action_images: Mapping[int, Permutation],
+    labels: Mapping[object, Tuple[Transformation, Transformation]],
+) -> tuple[
+    bool,
+    int,
+    int,
+    Tuple[Tuple[Transformation, Transformation], ...],
+    Mapping[int, Permutation],
+]:
+    braid_index = arity + 1
+    tuple_values = tuple(product(solution.elements, repeat=braid_index))
+    labels_by_tuple_index = tuple(
+        tuple(labels[element] for element in tuple_value)
+        for tuple_value in tuple_values
+    )
+    label_tuples = tuple(sorted(set(labels_by_tuple_index), key=repr))
+    label_index = {label_tuple: index for index, label_tuple in enumerate(label_tuples)}
+    fibre_sizes = {label_tuple: 0 for label_tuple in label_tuples}
+    for label_tuple in labels_by_tuple_index:
+        fibre_sizes[label_tuple] += 1
+    max_fibre_size = max(fibre_sizes.values(), default=0)
+    label_images = {}
+
+    for generator, action in action_images.items():
+        image_by_label: list[int | None] = [None] * len(label_tuples)
+        for tuple_index, source_label in enumerate(labels_by_tuple_index):
+            target_label = labels_by_tuple_index[action[tuple_index]]
+            source_index = label_index[source_label]
+            target_index = label_index[target_label]
+            previous = image_by_label[source_index]
+            if previous is None:
+                image_by_label[source_index] = target_index
+            elif previous != target_index:
+                return (
+                    False,
+                    len(label_tuples),
+                    max_fibre_size,
+                    labels_by_tuple_index,
+                    {},
+                )
+        if any(value is None for value in image_by_label):
+            return (
+                False,
+                len(label_tuples),
+                max_fibre_size,
+                labels_by_tuple_index,
+                {},
+            )
+        label_images[generator] = tuple(
+            value for value in image_by_label if value is not None
+        )
+    return (
+        True,
+        len(label_tuples),
+        max_fibre_size,
+        labels_by_tuple_index,
+        label_images,
+    )
+
+
+def _permutation_subgroup_exponent(subgroup: Iterable[Permutation]) -> int:
+    from .group_laws import lcm
+
+    exponent = 1
+    for permutation in subgroup:
+        exponent = lcm(exponent, permutation_order(permutation))
+    return exponent
+
+
+def _canonical_section_displacement_count(
+    action_images: Mapping[int, Permutation],
+    label_images: Mapping[int, Permutation],
+    labels_by_tuple_index: Sequence[Tuple[Tuple[Transformation, Transformation], ...]],
+) -> int:
+    label_tuples = tuple(sorted(set(labels_by_tuple_index), key=repr))
+    label_index = {label_tuple: index for index, label_tuple in enumerate(label_tuples)}
+    section_by_label_index: dict[int, int] = {}
+    for tuple_index, label_tuple in enumerate(labels_by_tuple_index):
+        current = section_by_label_index.get(label_index[label_tuple])
+        if current is None or tuple_index < current:
+            section_by_label_index[label_index[label_tuple]] = tuple_index
+
+    displacement_count = 0
+    for generator, action in action_images.items():
+        label_action = label_images[generator]
+        for source_label_index, source_tuple_index in section_by_label_index.items():
+            target_label_index = label_action[source_label_index]
+            expected_tuple_index = section_by_label_index[target_label_index]
+            if action[source_tuple_index] != expected_tuple_index:
+                displacement_count += 1
+    return displacement_count
+
+
+def _prefix_finite_base_pullback_gauge_row(
+    solution: FiniteBraidedSet,
+    point_pushing_arity: int,
+    labels: Mapping[object, Tuple[Transformation, Transformation]],
+    *,
+    max_subgroup_size: int | None,
+) -> PrefixFiniteBasePullbackGaugeRow:
+    braid_index = point_pushing_arity + 1
+    tuple_count = len(solution.elements) ** braid_index
+    action_images = _point_pushing_action_generator_images(
+        solution,
+        point_pushing_arity,
+    )
+    (
+        label_well_defined,
+        label_tuple_count,
+        max_label_fibre_size,
+        labels_by_tuple_index,
+        label_images,
+    ) = _label_action_generator_images(
+        solution,
+        point_pushing_arity,
+        action_images,
+        labels,
+    )
+    if not label_well_defined:
+        return PrefixFiniteBasePullbackGaugeRow(
+            point_pushing_arity=point_pushing_arity,
+            braid_index=braid_index,
+            tuple_count=tuple_count,
+            generator_count=len(action_images),
+            label_tuple_count=label_tuple_count,
+            max_label_fibre_size=max_label_fibre_size,
+            label_action_well_defined=False,
+            tuple_action_group_size=None,
+            tuple_action_group_exponent=None,
+            label_action_group_size=None,
+            label_action_group_exponent=None,
+            quotient_map_well_defined=None,
+            vertical_kernel_size=None,
+            vertical_kernel_exponent=None,
+            canonical_section_displacement_count=None,
+            canonical_section_gauge_trivial=None,
+            truncated=False,
+        )
+
+    pair_generators = {
+        generator: (action_images[generator], label_images[generator])
+        for generator in sorted(action_images)
+    }
+    try:
+        pair_subgroup = _generated_pair_subgroup_with_words(
+            pair_generators,
+            max_size=max_subgroup_size,
+        )
+    except ValueError:
+        return PrefixFiniteBasePullbackGaugeRow(
+            point_pushing_arity=point_pushing_arity,
+            braid_index=braid_index,
+            tuple_count=tuple_count,
+            generator_count=len(action_images),
+            label_tuple_count=label_tuple_count,
+            max_label_fibre_size=max_label_fibre_size,
+            label_action_well_defined=True,
+            tuple_action_group_size=None,
+            tuple_action_group_exponent=None,
+            label_action_group_size=None,
+            label_action_group_exponent=None,
+            quotient_map_well_defined=None,
+            vertical_kernel_size=None,
+            vertical_kernel_exponent=None,
+            canonical_section_displacement_count=None,
+            canonical_section_gauge_trivial=None,
+            truncated=True,
+        )
+
+    labels_by_tuple_action: dict[Permutation, Permutation] = {}
+    quotient_map_well_defined = True
+    for tuple_action, label_action in pair_subgroup:
+        previous = labels_by_tuple_action.get(tuple_action)
+        if previous is None:
+            labels_by_tuple_action[tuple_action] = label_action
+        elif previous != label_action:
+            quotient_map_well_defined = False
+            break
+
+    tuple_subgroup = {tuple_action for tuple_action, _label_action in pair_subgroup}
+    label_subgroup = {label_action for _tuple_action, label_action in pair_subgroup}
+    label_identity = identity_permutation(label_tuple_count)
+    vertical_kernel = {
+        tuple_action
+        for tuple_action, label_action in pair_subgroup
+        if label_action == label_identity
+    }
+    section_displacement_count = _canonical_section_displacement_count(
+        action_images,
+        label_images,
+        labels_by_tuple_index,
+    )
+
+    return PrefixFiniteBasePullbackGaugeRow(
+        point_pushing_arity=point_pushing_arity,
+        braid_index=braid_index,
+        tuple_count=tuple_count,
+        generator_count=len(action_images),
+        label_tuple_count=label_tuple_count,
+        max_label_fibre_size=max_label_fibre_size,
+        label_action_well_defined=True,
+        tuple_action_group_size=len(tuple_subgroup),
+        tuple_action_group_exponent=_permutation_subgroup_exponent(tuple_subgroup),
+        label_action_group_size=len(label_subgroup),
+        label_action_group_exponent=_permutation_subgroup_exponent(label_subgroup),
+        quotient_map_well_defined=quotient_map_well_defined,
+        vertical_kernel_size=len(vertical_kernel),
+        vertical_kernel_exponent=_permutation_subgroup_exponent(vertical_kernel),
+        canonical_section_displacement_count=section_displacement_count,
+        canonical_section_gauge_trivial=section_displacement_count == 0,
+        truncated=False,
+    )
+
+
+def prefix_finite_base_pullback_gauge_audit(
+    solution: FiniteBraidedSet,
+    *,
+    max_subgroup_size: int | None = None,
+) -> PrefixFiniteBasePullbackGaugeAudit:
+    """Audit the first fixed-base pullback/gauge pressure surface.
+
+    The fixed candidate is the finite translation-pair label of an element:
+    its left and right coordinate transformations.  This is a finite
+    label-action base; the audit deliberately keeps the separate
+    group-Hurwitz realization obligation visible.
+    """
+
+    labels = _translation_pair_labels(solution)
+    left_labels = {label[0] for label in labels.values()}
+    right_labels = {label[1] for label in labels.values()}
+    crossing_ambiguities = _translation_pair_crossing_ambiguity_count(
+        solution,
+        labels,
+    )
+    left_translations = _left_prefix_translations(solution)
+    monoid = TransformationMonoid.generated(left_translations.values())
+    defect_transport = prefix_vertical_defect_transport_audit(solution)
+    peiffer_square = prefix_vertical_peiffer_square_audit(solution)
+    peiffer_cube = prefix_vertical_peiffer_cube_transport_audit(solution)
+    rows = tuple(
+        _prefix_finite_base_pullback_gauge_row(
+            solution,
+            arity,
+            labels,
+            max_subgroup_size=max_subgroup_size,
+        )
+        for arity in (3, 4, 5)
+    )
+    observed_trivial = (
+        defect_transport.total_mismatch_count == 0
+        and peiffer_square.nontrivial_peiffer_boundary_count == 0
+        and peiffer_cube.total_mismatch_count == 0
+        and peiffer_cube.all_peiffer_transports_commute
+    )
+    return PrefixFiniteBasePullbackGaugeAudit(
+        element_count=len(solution.elements),
+        translation_pair_label_count=len(set(labels.values())),
+        left_translation_label_count=len(left_labels),
+        right_translation_label_count=len(right_labels),
+        crossing_descends_to_translation_pair_labels=crossing_ambiguities == 0,
+        crossing_label_ambiguity_count=crossing_ambiguities,
+        left_prefix_monoid_size=len(monoid.elements),
+        nonunit_prefix_count=sum(
+            1
+            for element in monoid.elements
+            if not _transformation_is_permutation(element)
+        ),
+        rows=rows,
+        vertical_defect_transport_mismatch_count=(
+            defect_transport.total_mismatch_count
+        ),
+        vertical_defect_order_spectrum=defect_transport.order_pair_spectrum[0]
+        if len(defect_transport.order_pair_spectrum) == 1
+        else tuple(
+            sorted(
+                {
+                    order
+                    for pair in defect_transport.order_pair_spectrum
+                    for order in pair
+                }
+            )
+        ),
+        peiffer_square_nontrivial_boundary_count=(
+            peiffer_square.nontrivial_peiffer_boundary_count
+        ),
+        peiffer_cube_transport_mismatch_count=peiffer_cube.total_mismatch_count,
+        peiffer_order_pair_spectrum=peiffer_cube.peiffer_order_pair_spectrum,
+        observed_deletion_two_cocycle_gauge_trivial=observed_trivial,
+        fixed_translation_pair_base_only=True,
+        group_hurwitz_realization_still_required=True,
     )
 
 
