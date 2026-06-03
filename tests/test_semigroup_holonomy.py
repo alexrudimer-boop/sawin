@@ -10,6 +10,7 @@ from ybe_domination import (
     RightStabilizationLongitudeAudit,
     TransformationMonoid,
     LocalNormalizedLawPrefixWitnessAudit,
+    ReesRectangleCocycleAudit,
     UnitPerfectResidualLongitudeAudit,
     aperiodic_permutation_audit,
     compose_transformation_word,
@@ -24,6 +25,8 @@ from ybe_domination import (
     permutation_elements,
     pure_braid_generator,
     rack_solution,
+    rees_rectangle_cocycle,
+    rees_rectangle_cocycle_audit,
     transformation_power,
     unit_composite_abelianization_audit,
     unit_composite_detection_audit,
@@ -45,6 +48,62 @@ from ybe_domination import (
 
 
 class SemigroupHolonomyTests(unittest.TestCase):
+    def test_rees_rectangle_cocycle_audit_accepts_row_column_matrix(self):
+        group = cyclic_group(3)
+        rows = ("lambda0", "lambda1")
+        columns = ("i0", "i1", "i2")
+        row_factor = {"lambda0": 1, "lambda1": 2}
+        column_factor = {"i0": 0, "i1": 2, "i2": 1}
+        sandwich = {
+            (row, column): group.mul(row_factor[row], column_factor[column])
+            for row in rows
+            for column in columns
+        }
+
+        audit = rees_rectangle_cocycle_audit(group, rows, columns, sandwich)
+
+        self.assertIsInstance(audit, ReesRectangleCocycleAudit)
+        self.assertTrue(audit.rectangle_cocycles_are_trivial)
+        self.assertTrue(audit.sandwich_is_row_column_coboundary)
+        self.assertTrue(audit.flatness_matches_coboundary)
+        self.assertTrue(audit.is_flat)
+        self.assertEqual(audit.rectangle_failure_count, 0)
+        self.assertEqual(audit.coboundary_failure_count, 0)
+        self.assertEqual(audit.row_factors, (("lambda0", 1), ("lambda1", 2)))
+        self.assertEqual(audit.column_factors, (("i0", 0), ("i1", 2), ("i2", 1)))
+
+    def test_rees_rectangle_cocycle_audit_finds_c2_nonflat_square(self):
+        group = cyclic_group(2)
+        rows = ("lambda0", "lambda1")
+        columns = ("i0", "i1")
+        sandwich = {
+            ("lambda0", "i0"): 0,
+            ("lambda0", "i1"): 0,
+            ("lambda1", "i0"): 0,
+            ("lambda1", "i1"): 1,
+        }
+
+        omega = rees_rectangle_cocycle(
+            group,
+            sandwich,
+            "lambda0",
+            "lambda1",
+            "i0",
+            "i1",
+        )
+        audit = rees_rectangle_cocycle_audit(group, rows, columns, sandwich)
+
+        self.assertEqual(omega, 1)
+        self.assertFalse(audit.rectangle_cocycles_are_trivial)
+        self.assertFalse(audit.sandwich_is_row_column_coboundary)
+        self.assertTrue(audit.flatness_matches_coboundary)
+        self.assertFalse(audit.is_flat)
+        self.assertEqual(audit.rectangle_failure_count, 4)
+        self.assertEqual(audit.coboundary_failure_count, 1)
+        self.assertEqual(audit.recorded_rectangle_failures[0].omega, 1)
+        self.assertEqual(audit.recorded_coboundary_failures[0].actual, 1)
+        self.assertEqual(audit.recorded_coboundary_failures[0].expected, 0)
+
     def test_reset_element_is_aperiodic(self):
         reset = (0, 0, 2)
 

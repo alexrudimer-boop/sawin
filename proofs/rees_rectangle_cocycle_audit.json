@@ -1,0 +1,121 @@
+{
+  "description": "Finite Rees rectangle cocycle audit for the semigroup-corridor flatness pressure test.",
+  "rows": [
+    {
+      "base_column": "i0",
+      "base_row": "lambda0",
+      "case": "row_column_flat_C3_2x3",
+      "coboundary_failure_count": 0,
+      "column_count": 3,
+      "column_factors": [
+        [
+          "i0",
+          0
+        ],
+        [
+          "i1",
+          2
+        ],
+        [
+          "i2",
+          1
+        ]
+      ],
+      "distinguished_omega": null,
+      "flatness_matches_coboundary": true,
+      "group_order": 3,
+      "is_flat": true,
+      "recorded_coboundary_failures": [],
+      "recorded_rectangle_failures": [],
+      "rectangle_cocycles_are_trivial": true,
+      "rectangle_count": 36,
+      "rectangle_failure_count": 0,
+      "row_count": 2,
+      "row_factors": [
+        [
+          "lambda0",
+          1
+        ],
+        [
+          "lambda1",
+          2
+        ]
+      ],
+      "sandwich_is_row_column_coboundary": true
+    },
+    {
+      "base_column": "i0",
+      "base_row": "lambda0",
+      "case": "nonflat_C2_2x2",
+      "coboundary_failure_count": 1,
+      "column_count": 2,
+      "column_factors": [
+        [
+          "i0",
+          0
+        ],
+        [
+          "i1",
+          0
+        ]
+      ],
+      "distinguished_omega": 1,
+      "flatness_matches_coboundary": true,
+      "group_order": 2,
+      "is_flat": false,
+      "recorded_coboundary_failures": [
+        {
+          "actual": 1,
+          "column": "i1",
+          "expected": 0,
+          "row": "lambda1"
+        }
+      ],
+      "recorded_rectangle_failures": [
+        {
+          "column_left": "i0",
+          "column_right": "i1",
+          "omega": 1,
+          "row_bottom": "lambda1",
+          "row_top": "lambda0"
+        },
+        {
+          "column_left": "i1",
+          "column_right": "i0",
+          "omega": 1,
+          "row_bottom": "lambda1",
+          "row_top": "lambda0"
+        },
+        {
+          "column_left": "i0",
+          "column_right": "i1",
+          "omega": 1,
+          "row_bottom": "lambda0",
+          "row_top": "lambda1"
+        },
+        {
+          "column_left": "i1",
+          "column_right": "i0",
+          "omega": 1,
+          "row_bottom": "lambda0",
+          "row_top": "lambda1"
+        }
+      ],
+      "rectangle_cocycles_are_trivial": false,
+      "rectangle_count": 16,
+      "rectangle_failure_count": 4,
+      "row_count": 2,
+      "row_factors": [
+        [
+          "lambda0",
+          0
+        ],
+        [
+          "lambda1",
+          0
+        ]
+      ],
+      "sandwich_is_row_column_coboundary": false
+    }
+  ]
+}

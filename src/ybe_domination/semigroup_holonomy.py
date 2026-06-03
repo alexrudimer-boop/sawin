@@ -3,7 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from itertools import product
 from math import factorial
-from typing import TYPE_CHECKING, Iterable, Sequence, Tuple
+from typing import TYPE_CHECKING, Hashable, Iterable, Mapping, Sequence, Tuple
 
 from .artin_longitudes import (
     BraidWord,
@@ -41,6 +41,73 @@ if TYPE_CHECKING:
 ProductUnitGroupElement = Tuple[Transformation, ...]
 ProductLongitudeWitnessLetter = Tuple[Tuple[ProductUnitGroupElement, ...], int, int]
 ProductLongitudeWitness = Tuple[ProductLongitudeWitnessLetter, ...]
+ReesIndex = Hashable
+
+
+@dataclass(frozen=True)
+class ReesRectangleCocycleFailure:
+    """One nontrivial Rees rectangle cocycle in a sandwich matrix."""
+
+    row_top: ReesIndex
+    row_bottom: ReesIndex
+    column_left: ReesIndex
+    column_right: ReesIndex
+    omega: GroupElement
+
+
+@dataclass(frozen=True)
+class ReesSandwichCoboundaryFailure:
+    """One entry failing the chosen row-column factorization convention."""
+
+    row: ReesIndex
+    column: ReesIndex
+    actual: GroupElement
+    expected: GroupElement
+
+
+@dataclass(frozen=True)
+class ReesRectangleCocycleAudit:
+    """Audit Rees sandwich flatness for one finite regular component.
+
+    Rows are the ``Lambda`` indices and columns are the ``I`` indices in
+    ``M[G; I, Lambda; P]``.  The flat convention is
+    ``p[row,column] = row_factor[row] * column_factor[column]``.
+    """
+
+    group_order: int
+    row_count: int
+    column_count: int
+    base_row: ReesIndex
+    base_column: ReesIndex
+    row_factors: Tuple[Tuple[ReesIndex, GroupElement], ...]
+    column_factors: Tuple[Tuple[ReesIndex, GroupElement], ...]
+    rectangle_count: int
+    rectangle_failure_count: int
+    recorded_rectangle_failures: Tuple[ReesRectangleCocycleFailure, ...]
+    coboundary_failure_count: int
+    recorded_coboundary_failures: Tuple[ReesSandwichCoboundaryFailure, ...]
+
+    @property
+    def rectangle_cocycles_are_trivial(self) -> bool:
+        return self.rectangle_failure_count == 0
+
+    @property
+    def sandwich_is_row_column_coboundary(self) -> bool:
+        return self.coboundary_failure_count == 0
+
+    @property
+    def flatness_matches_coboundary(self) -> bool:
+        return (
+            self.rectangle_cocycles_are_trivial
+            == self.sandwich_is_row_column_coboundary
+        )
+
+    @property
+    def is_flat(self) -> bool:
+        return (
+            self.rectangle_cocycles_are_trivial
+            and self.sandwich_is_row_column_coboundary
+        )
 
 
 @dataclass(frozen=True)
@@ -1032,6 +1099,149 @@ def monoid_permutation_group(monoid: TransformationMonoid) -> FiniteGroup:
     return permutation_group_from_generators(
         permutation_elements(monoid.elements),
         degree=len(monoid.identity),
+    )
+
+
+def _rees_sandwich_entry(
+    group: FiniteGroup,
+    sandwich: Mapping[Tuple[ReesIndex, ReesIndex], GroupElement],
+    row: ReesIndex,
+    column: ReesIndex,
+) -> GroupElement:
+    value = sandwich[(row, column)]
+    if value not in group.elements:
+        raise ValueError("sandwich entry outside group")
+    return value
+
+
+def rees_rectangle_cocycle(
+    group: FiniteGroup,
+    sandwich: Mapping[Tuple[ReesIndex, ReesIndex], GroupElement],
+    row_top: ReesIndex,
+    row_bottom: ReesIndex,
+    column_left: ReesIndex,
+    column_right: ReesIndex,
+) -> GroupElement:
+    """Return ``p_tl p_bl^{-1} p_br p_tr^{-1}`` for one Rees rectangle."""
+
+    p_tl = _rees_sandwich_entry(group, sandwich, row_top, column_left)
+    p_bl = _rees_sandwich_entry(group, sandwich, row_bottom, column_left)
+    p_br = _rees_sandwich_entry(group, sandwich, row_bottom, column_right)
+    p_tr = _rees_sandwich_entry(group, sandwich, row_top, column_right)
+    return group.mul(
+        group.mul(group.mul(p_tl, group.inv(p_bl)), p_br),
+        group.inv(p_tr),
+    )
+
+
+def rees_rectangle_cocycle_audit(
+    group: FiniteGroup,
+    row_indices: Sequence[ReesIndex],
+    column_indices: Sequence[ReesIndex],
+    sandwich: Mapping[Tuple[ReesIndex, ReesIndex], GroupElement],
+    max_recorded_failures: int | None = 16,
+) -> ReesRectangleCocycleAudit:
+    """Audit whether a Rees sandwich matrix has trivial rectangle cocycle.
+
+    The equivalent base-gauge check uses the convention
+    ``p[row,column] = p[row,base_column] * p[base_row,base_column]^{-1}
+    * p[base_row,column]``.  This is the finite version of the flat Rees
+    rectangle condition needed by the semigroup-corridor route.
+    """
+
+    rows = tuple(row_indices)
+    columns = tuple(column_indices)
+    if not rows:
+        raise ValueError("row_indices must be nonempty")
+    if not columns:
+        raise ValueError("column_indices must be nonempty")
+    if len(set(rows)) != len(rows):
+        raise ValueError("row_indices must be distinct")
+    if len(set(columns)) != len(columns):
+        raise ValueError("column_indices must be distinct")
+    expected_keys = {(row, column) for row in rows for column in columns}
+    if set(sandwich.keys()) != expected_keys:
+        raise ValueError("sandwich keys must be exactly row_indices x column_indices")
+    if max_recorded_failures is not None and max_recorded_failures < 0:
+        raise ValueError("max_recorded_failures must be nonnegative or None")
+    for row, column in expected_keys:
+        _rees_sandwich_entry(group, sandwich, row, column)
+
+    record_limit = None if max_recorded_failures is None else max_recorded_failures
+    rectangle_failures = []
+    rectangle_failure_count = 0
+    for row_top, row_bottom, column_left, column_right in product(
+        rows,
+        rows,
+        columns,
+        columns,
+    ):
+        omega = rees_rectangle_cocycle(
+            group,
+            sandwich,
+            row_top,
+            row_bottom,
+            column_left,
+            column_right,
+        )
+        if omega != group.identity:
+            rectangle_failure_count += 1
+            if record_limit is None or len(rectangle_failures) < record_limit:
+                rectangle_failures.append(
+                    ReesRectangleCocycleFailure(
+                        row_top=row_top,
+                        row_bottom=row_bottom,
+                        column_left=column_left,
+                        column_right=column_right,
+                        omega=omega,
+                    )
+                )
+
+    base_row = rows[0]
+    base_column = columns[0]
+    base_entry = _rees_sandwich_entry(group, sandwich, base_row, base_column)
+    row_factor_map = {
+        row: _rees_sandwich_entry(group, sandwich, row, base_column)
+        for row in rows
+    }
+    column_factor_map = {
+        column: group.mul(
+            group.inv(base_entry),
+            _rees_sandwich_entry(group, sandwich, base_row, column),
+        )
+        for column in columns
+    }
+
+    coboundary_failures = []
+    coboundary_failure_count = 0
+    for row, column in product(rows, columns):
+        expected = group.mul(row_factor_map[row], column_factor_map[column])
+        actual = _rees_sandwich_entry(group, sandwich, row, column)
+        if actual != expected:
+            coboundary_failure_count += 1
+            if record_limit is None or len(coboundary_failures) < record_limit:
+                coboundary_failures.append(
+                    ReesSandwichCoboundaryFailure(
+                        row=row,
+                        column=column,
+                        actual=actual,
+                        expected=expected,
+                    )
+                )
+
+    return ReesRectangleCocycleAudit(
+        group_order=len(group.elements),
+        row_count=len(rows),
+        column_count=len(columns),
+        base_row=base_row,
+        base_column=base_column,
+        row_factors=tuple((row, row_factor_map[row]) for row in rows),
+        column_factors=tuple((column, column_factor_map[column]) for column in columns),
+        rectangle_count=len(rows) * len(rows) * len(columns) * len(columns),
+        rectangle_failure_count=rectangle_failure_count,
+        recorded_rectangle_failures=tuple(rectangle_failures),
+        coboundary_failure_count=coboundary_failure_count,
+        recorded_coboundary_failures=tuple(coboundary_failures),
     )
 
 

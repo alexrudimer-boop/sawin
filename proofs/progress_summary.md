@@ -1678,6 +1678,44 @@ left-nondegenerate/guitar branch.  Exact enumeration in sizes `1,2,3` finds
 `0` unclosed coordinate-dependency rows, with full-twist prefix orders checked
 through `n=5`.
 
+## 2026-06-03 point-pushing and Rees flatness correction
+
+The point-pushing route has been corrected away from a false bounded-exponent
+claim for the whole finite-rack point-pushing image.  The rack-only invariant
+is the operator-label Hurwitz quotient
+
+```text
+y |-> L_y in Inn(Y)
+```
+
+with a vertical kernel whose exponent divides `exp Inn(Y)`, uniformly in the
+braid index.  The note
+`proofs/rack_point_pushing_operator_label_invariant.md` and generated audit
+`proofs/rack_point_pushing_operator_label_audit.md` record this structure and
+the dihedral-rack warning example: finite racks can already have unbounded
+whole point-pushing complexity, so the invariant is the bounded-exponent
+vertical extension over a fixed group-Hurwitz tower.
+
+The semigroup/Green route has also been narrowed to a precise Rees rectangle
+flatness target.  Ordinary Green/Rees theory leaves a sandwich-matrix
+cocycle
+
+```text
+omega(lambda,mu; i,j)
+  = p[lambda,i] p[mu,i]^{-1} p[mu,j] p[lambda,j]^{-1}
+```
+
+which need not vanish in a general finite regular semigroup.  The new note
+`proofs/rees_rectangle_cocycle_flatness_target.md` isolates the missing
+YBE-specific lemma: Artin corridors in finite bijective YBE local intervals
+must force these Rees rectangles to be trivial, or at least coboundaries
+absorbed by uniformly bounded vertical noise.  The generated audit
+`proofs/rees_rectangle_cocycle_audit.md` fixes the nonabelian convention and
+checks the smallest algebraic obstruction, a `2 x 2` `C2` square with three
+identity sandwich entries and one nonidentity entry.  This square is not
+claimed to be a YBE solution; it is the finite pattern a negative route would
+have to realize compatibly in the point-pushing tower.
+
 ## Verification snapshot
 
 At the latest verified snapshot:
