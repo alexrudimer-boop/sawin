@@ -1822,6 +1822,20 @@ singletons despite nonunit prefix memory.  This makes the next positive
 target precise and makes the negative target a compatible unbounded or
 nonrestricting vertical cocycle class, not merely unbounded point-pushing
 order.
+The restriction-surface follow-up
+`proofs/prefix_point_forgetting_restriction.md` and generated audit
+`proofs/prefix_point_forgetting_restriction_audit.md` compute the first
+actual point-forgetting naturality comparison `Q_X(4) -> Q_X(3)`.  Deleting
+stationary strand `j` sends the marked generator `alpha_{i,5}` to identity
+for `i=j`, to `alpha_{i,4}` for `i<j`, and to `alpha_{i-1,4}` for `i>j`.
+For the nondegenerate prefix witness all off-diagonal rows match, while the
+four diagonal rows each have `32` tuple-level mismatches: the abstract braid
+forgets to identity, but the labels retain vertical monodromy around the
+deleted strand.  For the degenerate identity row all sixteen rows match.
+Thus the first concrete vertical point-forgetting cocycle is now visible, and
+the remaining theorem-level question is whether such diagonal cocycles are
+always absorbed by a fixed finite operator-label base with bounded vertical
+exponent.
 
 The semigroup/Green route has also been narrowed to a precise Rees rectangle
 flatness target.  Ordinary Green/Rees theory leaves a sandwich-matrix

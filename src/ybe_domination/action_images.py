@@ -523,6 +523,86 @@ class PrefixArtinEnvelopeCohomologyAudit:
 
 
 @dataclass(frozen=True)
+class PrefixPointForgettingRestrictionRow:
+    """One marked generator comparison under stationary-strand deletion."""
+
+    source_point_pushing_arity: int
+    source_braid_index: int
+    target_point_pushing_arity: int
+    target_braid_index: int
+    forget_stationary_index: int
+    source_generator_index: int
+    target_generator_index: int | None
+    source_braid_word: BraidWord
+    target_braid_word: BraidWord
+    tuple_count: int
+    expected_identity_after_forgetting: bool
+    matches_marked_restriction: bool
+    mismatch_count: int
+    first_witness_input: Tuple[object, ...] | None
+    first_deleted_after_source: Tuple[object, ...] | None
+    first_expected_target: Tuple[object, ...] | None
+
+    @property
+    def vertical_cocycle_visible(self) -> bool:
+        return self.mismatch_count > 0
+
+    @property
+    def diagonal_forgetting_row(self) -> bool:
+        return self.forget_stationary_index == self.source_generator_index
+
+
+@dataclass(frozen=True)
+class PrefixPointForgettingRestrictionAudit:
+    """First marked point-forgetting surface for vertical cocycle pressure."""
+
+    element_count: int
+    left_prefix_monoid_size: int
+    nonunit_prefix_count: int
+    source_point_pushing_arity: int
+    target_point_pushing_arity: int
+    rows: Tuple[PrefixPointForgettingRestrictionRow, ...]
+    records_first_point_forgetting_restriction_surface: bool
+
+    @property
+    def row_count(self) -> int:
+        return len(self.rows)
+
+    @property
+    def total_mismatch_count(self) -> int:
+        return sum(row.mismatch_count for row in self.rows)
+
+    @property
+    def diagonal_mismatch_count(self) -> int:
+        return sum(
+            row.mismatch_count
+            for row in self.rows
+            if row.diagonal_forgetting_row
+        )
+
+    @property
+    def off_diagonal_all_match(self) -> bool:
+        return all(
+            row.matches_marked_restriction
+            for row in self.rows
+            if not row.diagonal_forgetting_row
+        )
+
+    @property
+    def all_rows_match(self) -> bool:
+        return all(row.matches_marked_restriction for row in self.rows)
+
+    @property
+    def verifies_first_point_forgetting_restriction_surface(self) -> bool:
+        return (
+            self.source_point_pushing_arity == 4
+            and self.target_point_pushing_arity == 3
+            and self.row_count == 16
+            and self.records_first_point_forgetting_restriction_surface
+        )
+
+
+@dataclass(frozen=True)
 class LawBraidActionCertificate:
     braid_index: int
     tuple_count: int
@@ -2995,6 +3075,122 @@ def prefix_artin_envelope_cohomology_audit(
         quotient_groupoid_functor_required=True,
         tower_restriction_compatibility_required=True,
         finite_surface_only=True,
+    )
+
+
+def _delete_tuple_index(tuple_value: Sequence[object], delete_index: int) -> Tuple[object, ...]:
+    return tuple(
+        value
+        for index, value in enumerate(tuple_value)
+        if index != delete_index
+    )
+
+
+def _target_point_pushing_generator_after_forgetting(
+    source_generator_index: int,
+    forget_stationary_index: int,
+) -> int | None:
+    if source_generator_index == forget_stationary_index:
+        return None
+    if source_generator_index < forget_stationary_index:
+        return source_generator_index
+    return source_generator_index - 1
+
+
+def _prefix_point_forgetting_restriction_row(
+    solution: FiniteBraidedSet,
+    *,
+    source_generator_index: int,
+    forget_stationary_index: int,
+) -> PrefixPointForgettingRestrictionRow:
+    from .braid_laws import pure_braid_generator
+
+    source_point_pushing_arity = 4
+    source_braid_index = source_point_pushing_arity + 1
+    target_point_pushing_arity = 3
+    target_braid_index = target_point_pushing_arity + 1
+    delete_index = forget_stationary_index - 1
+    source_braid_word = pure_braid_generator(
+        source_generator_index,
+        source_braid_index,
+    )
+    target_generator_index = _target_point_pushing_generator_after_forgetting(
+        source_generator_index,
+        forget_stationary_index,
+    )
+    target_braid_word: BraidWord = (
+        tuple()
+        if target_generator_index is None
+        else pure_braid_generator(target_generator_index, target_braid_index)
+    )
+    mismatch_count = 0
+    first_witness_input = None
+    first_deleted_after_source = None
+    first_expected_target = None
+    for tuple_value in product(solution.elements, repeat=source_braid_index):
+        source_image = solution.braid_action(source_braid_word, tuple_value)
+        deleted_after_source = _delete_tuple_index(source_image, delete_index)
+        deleted_input = _delete_tuple_index(tuple_value, delete_index)
+        expected_target = (
+            deleted_input
+            if target_generator_index is None
+            else solution.braid_action(target_braid_word, deleted_input)
+        )
+        if deleted_after_source == expected_target:
+            continue
+        mismatch_count += 1
+        if first_witness_input is None:
+            first_witness_input = tuple(tuple_value)
+            first_deleted_after_source = deleted_after_source
+            first_expected_target = expected_target
+    return PrefixPointForgettingRestrictionRow(
+        source_point_pushing_arity=source_point_pushing_arity,
+        source_braid_index=source_braid_index,
+        target_point_pushing_arity=target_point_pushing_arity,
+        target_braid_index=target_braid_index,
+        forget_stationary_index=forget_stationary_index,
+        source_generator_index=source_generator_index,
+        target_generator_index=target_generator_index,
+        source_braid_word=source_braid_word,
+        target_braid_word=target_braid_word,
+        tuple_count=len(solution.elements) ** source_braid_index,
+        expected_identity_after_forgetting=target_generator_index is None,
+        matches_marked_restriction=mismatch_count == 0,
+        mismatch_count=mismatch_count,
+        first_witness_input=first_witness_input,
+        first_deleted_after_source=first_deleted_after_source,
+        first_expected_target=first_expected_target,
+    )
+
+
+def prefix_point_forgetting_restriction_audit(
+    solution: FiniteBraidedSet,
+) -> PrefixPointForgettingRestrictionAudit:
+    """Compare marked `Q_X(4)` generators after deleting one stationary strand."""
+
+    left_translations = _left_prefix_translations(solution)
+    monoid = TransformationMonoid.generated(left_translations.values())
+    rows = tuple(
+        _prefix_point_forgetting_restriction_row(
+            solution,
+            source_generator_index=source_generator_index,
+            forget_stationary_index=forget_stationary_index,
+        )
+        for forget_stationary_index in range(1, 5)
+        for source_generator_index in range(1, 5)
+    )
+    return PrefixPointForgettingRestrictionAudit(
+        element_count=len(solution.elements),
+        left_prefix_monoid_size=len(monoid.elements),
+        nonunit_prefix_count=sum(
+            1
+            for element in monoid.elements
+            if not _transformation_is_permutation(element)
+        ),
+        source_point_pushing_arity=4,
+        target_point_pushing_arity=3,
+        rows=rows,
+        records_first_point_forgetting_restriction_surface=True,
     )
 
 

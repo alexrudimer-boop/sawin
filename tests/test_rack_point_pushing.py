@@ -16,6 +16,7 @@ from ybe_domination import (
     PrefixArtinEnvelopeCohomologyAudit,
     PrefixEdgeTransducerAudit,
     PrefixGroupHurwitzCompressionPressureAudit,
+    PrefixPointForgettingRestrictionAudit,
     PrefixPointPushingSurfaceAudit,
     degenerate_preimage_memory_audit,
     derived_hurwitz_envelope_audit,
@@ -25,6 +26,7 @@ from ybe_domination import (
     prefix_artin_envelope_cohomology_audit,
     prefix_edge_transducer_audit,
     prefix_group_hurwitz_compression_pressure_audit,
+    prefix_point_forgetting_restriction_audit,
     prefix_point_pushing_surface_audit,
     rack_point_pushing_operator_label_audit,
     rack_solution,
@@ -563,6 +565,73 @@ class RackPointPushingOperatorLabelTests(unittest.TestCase):
                 (1, 16, 1, 16, 16),
                 (1, 32, 1, 32, 32),
             ],
+        )
+
+    def test_prefix_point_forgetting_restriction_records_vertical_rows(self):
+        solution = FiniteBraidedSet(
+            (0, 1),
+            {
+                (0, 0): (1, 0),
+                (0, 1): (0, 0),
+                (1, 0): (1, 1),
+                (1, 1): (0, 1),
+            },
+        )
+
+        audit = prefix_point_forgetting_restriction_audit(solution)
+
+        self.assertIsInstance(audit, PrefixPointForgettingRestrictionAudit)
+        self.assertEqual(audit.left_prefix_monoid_size, 2)
+        self.assertEqual(audit.nonunit_prefix_count, 0)
+        self.assertEqual(audit.row_count, 16)
+        self.assertTrue(audit.verifies_first_point_forgetting_restriction_surface)
+        self.assertTrue(audit.off_diagonal_all_match)
+        self.assertFalse(audit.all_rows_match)
+        self.assertEqual(audit.total_mismatch_count, 128)
+        self.assertEqual(audit.diagonal_mismatch_count, 128)
+        diagonal_rows = tuple(
+            row
+            for row in audit.rows
+            if row.diagonal_forgetting_row
+        )
+        self.assertEqual(len(diagonal_rows), 4)
+        self.assertTrue(
+            all(
+                row.expected_identity_after_forgetting
+                and row.target_generator_index is None
+                and row.mismatch_count == 32
+                and row.first_witness_input == (0, 0, 0, 0, 0)
+                and row.first_deleted_after_source == (0, 0, 0, 1)
+                and row.first_expected_target == (0, 0, 0, 0)
+                for row in diagonal_rows
+            )
+        )
+
+    def test_prefix_point_forgetting_restriction_identity_row_is_trivial(self):
+        solution = FiniteBraidedSet(
+            (0, 1),
+            {
+                (0, 0): (0, 0),
+                (0, 1): (0, 1),
+                (1, 0): (1, 0),
+                (1, 1): (1, 1),
+            },
+        )
+
+        audit = prefix_point_forgetting_restriction_audit(solution)
+
+        self.assertEqual(audit.left_prefix_monoid_size, 3)
+        self.assertEqual(audit.nonunit_prefix_count, 2)
+        self.assertTrue(audit.verifies_first_point_forgetting_restriction_surface)
+        self.assertTrue(audit.all_rows_match)
+        self.assertEqual(audit.total_mismatch_count, 0)
+        self.assertTrue(
+            all(
+                row.first_witness_input is None
+                and row.first_deleted_after_source is None
+                and row.first_expected_target is None
+                for row in audit.rows
+            )
         )
 
 
