@@ -1,0 +1,241 @@
+{
+  "description": "Concrete Q_X(3), Q_X(4) prefix-transducer point-pushing surface.",
+  "rows": [
+    {
+      "all_rows_untruncated": true,
+      "checked_arities": [
+        3,
+        4
+      ],
+      "element_count": 2,
+      "left_prefix_monoid_size": 2,
+      "name": "nondegenerate_prefix_witness",
+      "nonunit_prefix_count": 0,
+      "records_first_group_hurwitz_obstruction_surface": true,
+      "rows": [
+        {
+          "braid_index": 4,
+          "generator_braid_words": [
+            [
+              3,
+              2,
+              1,
+              1,
+              -2,
+              -3
+            ],
+            [
+              3,
+              2,
+              2,
+              -3
+            ],
+            [
+              3,
+              3
+            ]
+          ],
+          "generator_count": 3,
+          "generator_orders": [
+            2,
+            2,
+            2
+          ],
+          "point_pushing_arity": 3,
+          "point_pushing_group_exponent": 2,
+          "point_pushing_group_size": 8,
+          "prefix_action_matches_tuple_action": true,
+          "prefix_encoding_injective": true,
+          "prefix_path_count": 16,
+          "truncated": false,
+          "tuple_count": 16
+        },
+        {
+          "braid_index": 5,
+          "generator_braid_words": [
+            [
+              4,
+              3,
+              2,
+              1,
+              1,
+              -2,
+              -3,
+              -4
+            ],
+            [
+              4,
+              3,
+              2,
+              2,
+              -3,
+              -4
+            ],
+            [
+              4,
+              3,
+              3,
+              -4
+            ],
+            [
+              4,
+              4
+            ]
+          ],
+          "generator_count": 4,
+          "generator_orders": [
+            2,
+            2,
+            2,
+            2
+          ],
+          "point_pushing_arity": 4,
+          "point_pushing_group_exponent": 2,
+          "point_pushing_group_size": 16,
+          "prefix_action_matches_tuple_action": true,
+          "prefix_encoding_injective": true,
+          "prefix_path_count": 32,
+          "truncated": false,
+          "tuple_count": 32
+        }
+      ],
+      "table": {
+        "(0, 0)": [
+          1,
+          0
+        ],
+        "(0, 1)": [
+          0,
+          0
+        ],
+        "(1, 0)": [
+          1,
+          1
+        ],
+        "(1, 1)": [
+          0,
+          1
+        ]
+      },
+      "verifies_prefix_point_pushing_surface": true
+    },
+    {
+      "all_rows_untruncated": true,
+      "checked_arities": [
+        3,
+        4
+      ],
+      "element_count": 2,
+      "left_prefix_monoid_size": 3,
+      "name": "degenerate_identity_prefix_surface",
+      "nonunit_prefix_count": 2,
+      "records_first_group_hurwitz_obstruction_surface": true,
+      "rows": [
+        {
+          "braid_index": 4,
+          "generator_braid_words": [
+            [
+              3,
+              2,
+              1,
+              1,
+              -2,
+              -3
+            ],
+            [
+              3,
+              2,
+              2,
+              -3
+            ],
+            [
+              3,
+              3
+            ]
+          ],
+          "generator_count": 3,
+          "generator_orders": [
+            1,
+            1,
+            1
+          ],
+          "point_pushing_arity": 3,
+          "point_pushing_group_exponent": 1,
+          "point_pushing_group_size": 1,
+          "prefix_action_matches_tuple_action": true,
+          "prefix_encoding_injective": true,
+          "prefix_path_count": 16,
+          "truncated": false,
+          "tuple_count": 16
+        },
+        {
+          "braid_index": 5,
+          "generator_braid_words": [
+            [
+              4,
+              3,
+              2,
+              1,
+              1,
+              -2,
+              -3,
+              -4
+            ],
+            [
+              4,
+              3,
+              2,
+              2,
+              -3,
+              -4
+            ],
+            [
+              4,
+              3,
+              3,
+              -4
+            ],
+            [
+              4,
+              4
+            ]
+          ],
+          "generator_count": 4,
+          "generator_orders": [
+            1,
+            1,
+            1,
+            1
+          ],
+          "point_pushing_arity": 4,
+          "point_pushing_group_exponent": 1,
+          "point_pushing_group_size": 1,
+          "prefix_action_matches_tuple_action": true,
+          "prefix_encoding_injective": true,
+          "prefix_path_count": 32,
+          "truncated": false,
+          "tuple_count": 32
+        }
+      ],
+      "table": {
+        "(0, 0)": [
+          0,
+          0
+        ],
+        "(0, 1)": [
+          0,
+          1
+        ],
+        "(1, 0)": [
+          1,
+          0
+        ],
+        "(1, 1)": [
+          1,
+          1
+        ]
+      },
+      "verifies_prefix_point_pushing_surface": true
+    }
+  ]
+}

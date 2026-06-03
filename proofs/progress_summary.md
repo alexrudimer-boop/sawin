@@ -1782,6 +1782,17 @@ faithfully embedded as a transformation monoid inside a group, so any
 positive proof must quotient or encode them with bounded vertical noise.  The
 first obstruction surface remains the compatible `Q_X(3)` and `Q_X(4)`
 point-pushing comparison.
+That surface is now executable in `proofs/prefix_point_pushing_surface.md`
+and generated audit `proofs/prefix_point_pushing_surface_audit.md`.  The
+helper `prefix_point_pushing_surface_audit(X)` computes the standard
+`alpha_{i,4}` and `alpha_{i,5}` marked point-pushing generator actions, checks
+that prefix-path encoding sees the same action as the tuple action, and
+records finite subgroup size and exponent when untruncated.  On the two-point
+nondegenerate prefix witness the computed `Q_X(3),Q_X(4)` sizes are `8,16`
+with exponent `2`; on the degenerate identity row the point-pushing groups are
+trivial despite the nonunit prefix monoid.  Thus a negative route must use a
+less trivial degenerate table whose group-Hurwitz compression failure is
+visible in this marked surface and remains compatible in the tower.
 
 The semigroup/Green route has also been narrowed to a precise Rees rectangle
 flatness target.  Ordinary Green/Rees theory leaves a sandwich-matrix

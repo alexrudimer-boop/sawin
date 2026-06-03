@@ -15,6 +15,7 @@ from ybe_domination import (
     PointPushingGeneratorRow,
     PrefixEdgeTransducerAudit,
     PrefixGroupHurwitzCompressionPressureAudit,
+    PrefixPointPushingSurfaceAudit,
     degenerate_preimage_memory_audit,
     derived_hurwitz_envelope_audit,
     edge_memory_tower_audit,
@@ -22,6 +23,7 @@ from ybe_domination import (
     finite_augmented_artin_envelope_route_audit,
     prefix_edge_transducer_audit,
     prefix_group_hurwitz_compression_pressure_audit,
+    prefix_point_pushing_surface_audit,
     rack_point_pushing_operator_label_audit,
     rack_solution,
 )
@@ -402,6 +404,86 @@ class RackPointPushingOperatorLabelTests(unittest.TestCase):
         self.assertEqual(audit.product_invariance_equation_count, 12)
         self.assertEqual(audit.forgetting_rescan_lumpability_equation_count, 36)
         self.assertTrue(audit.records_group_hurwitz_compression_pressure)
+
+    def test_prefix_point_pushing_surface_records_first_obstruction_rows(self):
+        solution = FiniteBraidedSet(
+            (0, 1),
+            {
+                (0, 0): (1, 0),
+                (0, 1): (0, 0),
+                (1, 0): (1, 1),
+                (1, 1): (0, 1),
+            },
+        )
+
+        audit = prefix_point_pushing_surface_audit(solution, max_subgroup_size=1000)
+
+        self.assertIsInstance(audit, PrefixPointPushingSurfaceAudit)
+        self.assertEqual(audit.left_prefix_monoid_size, 2)
+        self.assertEqual(audit.nonunit_prefix_count, 0)
+        self.assertEqual(audit.checked_arities, (3, 4))
+        self.assertTrue(audit.verifies_prefix_point_pushing_surface)
+        self.assertEqual(
+            [row.generator_braid_words for row in audit.rows],
+            [
+                (
+                    (3, 2, 1, 1, -2, -3),
+                    (3, 2, 2, -3),
+                    (3, 3),
+                ),
+                (
+                    (4, 3, 2, 1, 1, -2, -3, -4),
+                    (4, 3, 2, 2, -3, -4),
+                    (4, 3, 3, -4),
+                    (4, 4),
+                ),
+            ],
+        )
+        self.assertEqual(
+            [
+                (
+                    row.tuple_count,
+                    row.prefix_path_count,
+                    row.point_pushing_group_size,
+                    row.point_pushing_group_exponent,
+                )
+                for row in audit.rows
+            ],
+            [(16, 16, 8, 2), (32, 32, 16, 2)],
+        )
+
+    def test_prefix_point_pushing_surface_handles_degenerate_identity_row(self):
+        solution = FiniteBraidedSet(
+            (0, 1),
+            {
+                (0, 0): (0, 0),
+                (0, 1): (0, 1),
+                (1, 0): (1, 0),
+                (1, 1): (1, 1),
+            },
+        )
+
+        audit = prefix_point_pushing_surface_audit(solution)
+
+        self.assertEqual(audit.left_prefix_monoid_size, 3)
+        self.assertEqual(audit.nonunit_prefix_count, 2)
+        self.assertTrue(audit.verifies_prefix_point_pushing_surface)
+        self.assertEqual(
+            [
+                (
+                    row.tuple_count,
+                    row.prefix_path_count,
+                    row.point_pushing_group_size,
+                    row.point_pushing_group_exponent,
+                    row.generator_orders,
+                )
+                for row in audit.rows
+            ],
+            [
+                (16, 16, 1, 1, (1, 1, 1)),
+                (32, 32, 1, 1, (1, 1, 1, 1)),
+            ],
+        )
 
 
 if __name__ == "__main__":

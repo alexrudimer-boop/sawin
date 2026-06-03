@@ -401,6 +401,61 @@ class PrefixGroupHurwitzCompressionPressureAudit:
 
 
 @dataclass(frozen=True)
+class PrefixPointPushingSurfaceRow:
+    """One concrete ``Q_X(n)`` prefix-transducer obstruction surface row."""
+
+    point_pushing_arity: int
+    braid_index: int
+    tuple_count: int
+    prefix_path_count: int
+    prefix_encoding_injective: bool
+    generator_count: int
+    generator_braid_words: Tuple[BraidWord, ...]
+    generator_orders: Tuple[int, ...]
+    point_pushing_group_size: int | None
+    point_pushing_group_exponent: int | None
+    prefix_action_matches_tuple_action: bool
+    truncated: bool
+
+    @property
+    def computed_untruncated_surface(self) -> bool:
+        return (
+            not self.truncated
+            and self.prefix_encoding_injective
+            and self.prefix_action_matches_tuple_action
+            and self.point_pushing_group_size is not None
+            and self.point_pushing_group_exponent is not None
+        )
+
+
+@dataclass(frozen=True)
+class PrefixPointPushingSurfaceAudit:
+    """Concrete ``Q_X(3),Q_X(4)`` surface for prefix transducer compression."""
+
+    element_count: int
+    left_prefix_monoid_size: int
+    nonunit_prefix_count: int
+    rows: Tuple[PrefixPointPushingSurfaceRow, ...]
+    records_first_group_hurwitz_obstruction_surface: bool
+
+    @property
+    def checked_arities(self) -> Tuple[int, ...]:
+        return tuple(row.point_pushing_arity for row in self.rows)
+
+    @property
+    def all_rows_untruncated(self) -> bool:
+        return all(row.computed_untruncated_surface for row in self.rows)
+
+    @property
+    def verifies_prefix_point_pushing_surface(self) -> bool:
+        return (
+            self.checked_arities == (3, 4)
+            and self.all_rows_untruncated
+            and self.records_first_group_hurwitz_obstruction_surface
+        )
+
+
+@dataclass(frozen=True)
 class LawBraidActionCertificate:
     braid_index: int
     tuple_count: int
@@ -2593,6 +2648,138 @@ def prefix_group_hurwitz_compression_pressure_audit(
         requires_forgetting_rescan_lumpability=True,
         bounded_vertical_kernel_still_unproved=True,
         finite_transducer_alone_is_not_group_hurwitz=True,
+    )
+
+
+def _prefix_action_matches_tuple_action(
+    solution: FiniteBraidedSet,
+    braid_word: BraidWord,
+    braid_index: int,
+    left_translations: Mapping[object, Transformation],
+) -> tuple[bool, int]:
+    tuple_values = tuple(product(solution.elements, repeat=braid_index))
+    path_values = tuple(
+        _left_prefix_path_tuple(solution, tuple_value, left_translations)
+        for tuple_value in tuple_values
+    )
+    path_to_index = {path: index for index, path in enumerate(path_values)}
+    if len(path_to_index) != len(tuple_values):
+        return False, len(path_to_index)
+    tuple_permutation = braid_word_permutation_image(
+        solution,
+        braid_index,
+        braid_word,
+    )
+    path_permutation = []
+    for tuple_value in tuple_values:
+        image = solution.braid_action(braid_word, tuple_value)
+        image_path = _left_prefix_path_tuple(solution, image, left_translations)
+        path_permutation.append(path_to_index[image_path])
+    return tuple(path_permutation) == tuple_permutation, len(path_to_index)
+
+
+def _prefix_point_pushing_surface_row(
+    solution: FiniteBraidedSet,
+    point_pushing_arity: int,
+    left_translations: Mapping[object, Transformation],
+    *,
+    max_subgroup_size: int | None,
+) -> PrefixPointPushingSurfaceRow:
+    from .braid_laws import pure_braid_generator
+    from .group_laws import lcm
+
+    braid_index = point_pushing_arity + 1
+    generator_braids = tuple(
+        pure_braid_generator(generator, braid_index)
+        for generator in range(1, point_pushing_arity + 1)
+    )
+    generator_images = tuple(
+        braid_word_permutation_image(solution, braid_index, braid_word)
+        for braid_word in generator_braids
+    )
+    generator_orders = tuple(permutation_order(image) for image in generator_images)
+    prefix_checks = tuple(
+        _prefix_action_matches_tuple_action(
+            solution,
+            braid_word,
+            braid_index,
+            left_translations,
+        )
+        for braid_word in generator_braids
+    )
+    prefix_path_count = min((count for _matches, count in prefix_checks), default=0)
+    tuple_count = len(solution.elements) ** braid_index
+    try:
+        subgroup = generated_permutation_subgroup(
+            generator_images,
+            max_size=max_subgroup_size,
+        )
+    except ValueError:
+        return PrefixPointPushingSurfaceRow(
+            point_pushing_arity=point_pushing_arity,
+            braid_index=braid_index,
+            tuple_count=tuple_count,
+            prefix_path_count=prefix_path_count,
+            prefix_encoding_injective=prefix_path_count == tuple_count,
+            generator_count=len(generator_braids),
+            generator_braid_words=generator_braids,
+            generator_orders=generator_orders,
+            point_pushing_group_size=None,
+            point_pushing_group_exponent=None,
+            prefix_action_matches_tuple_action=all(
+                matches for matches, _count in prefix_checks
+            ),
+            truncated=True,
+        )
+    exponent = 1
+    for permutation in subgroup:
+        exponent = lcm(exponent, permutation_order(permutation))
+    return PrefixPointPushingSurfaceRow(
+        point_pushing_arity=point_pushing_arity,
+        braid_index=braid_index,
+        tuple_count=tuple_count,
+        prefix_path_count=prefix_path_count,
+        prefix_encoding_injective=prefix_path_count == tuple_count,
+        generator_count=len(generator_braids),
+        generator_braid_words=generator_braids,
+        generator_orders=generator_orders,
+        point_pushing_group_size=len(subgroup),
+        point_pushing_group_exponent=exponent,
+        prefix_action_matches_tuple_action=all(
+            matches for matches, _count in prefix_checks
+        ),
+        truncated=False,
+    )
+
+
+def prefix_point_pushing_surface_audit(
+    solution: FiniteBraidedSet,
+    *,
+    max_subgroup_size: int | None = None,
+) -> PrefixPointPushingSurfaceAudit:
+    """Compute the first concrete ``Q_X(3),Q_X(4)`` prefix surfaces."""
+
+    left_translations = _left_prefix_translations(solution)
+    monoid = TransformationMonoid.generated(left_translations.values())
+    rows = tuple(
+        _prefix_point_pushing_surface_row(
+            solution,
+            arity,
+            left_translations,
+            max_subgroup_size=max_subgroup_size,
+        )
+        for arity in (3, 4)
+    )
+    return PrefixPointPushingSurfaceAudit(
+        element_count=len(solution.elements),
+        left_prefix_monoid_size=len(monoid.elements),
+        nonunit_prefix_count=sum(
+            1
+            for element in monoid.elements
+            if not _transformation_is_permutation(element)
+        ),
+        rows=rows,
+        records_first_group_hurwitz_obstruction_surface=True,
     )
 
 
