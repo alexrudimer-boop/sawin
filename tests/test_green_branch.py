@@ -192,20 +192,23 @@ class GreenBranchTests(unittest.TestCase):
         self.assertEqual(audit.cases[-1].role, "finite_prefix_guardrail")
 
     def test_small_green_section_transport_prefix_routes_group_loops_to_known_branches(self):
-        def scan(size):
+        def scan(size, depth):
             counts = {
                 "ybe": 0,
+                "truncated": 0,
                 "hidden_atom": 0,
                 "hidden_bijective": 0,
                 "nonidentity_group": 0,
                 "nonidentity_group_involutive": 0,
                 "unresolved_nonidentity_group": 0,
+                "max_morphism_count": 0,
+                "max_group_order": 1,
             }
             for solution in all_bijection_solutions(size):
                 counts["ybe"] += 1
                 audits = green_branch_audits(solution)
                 categories = [
-                    bounded_category_summary(audit, 2)
+                    bounded_category_summary(audit, depth, morphism_limit=50000)
                     for audit in audits
                 ]
                 groups = [
@@ -213,9 +216,23 @@ class GreenBranchTests(unittest.TestCase):
                     for audit in audits
                     for group in bounded_atom_trivial_loop_group_summaries(
                         audit,
-                        2,
+                        depth,
+                        morphism_limit=50000,
                     )
                 ]
+                counts["truncated"] += sum(
+                    1 for category in categories if category.truncated
+                )
+                if categories:
+                    counts["max_morphism_count"] = max(
+                        counts["max_morphism_count"],
+                        max(category.morphism_count for category in categories),
+                    )
+                if groups:
+                    counts["max_group_order"] = max(
+                        counts["max_group_order"],
+                        max(group.group_order for group in groups),
+                    )
                 if any(
                     category.hidden_atom_trivial_loop_count
                     for category in categories
@@ -240,25 +257,59 @@ class GreenBranchTests(unittest.TestCase):
             return counts
 
         self.assertEqual(
-            scan(2),
+            scan(2, 2),
             {
                 "ybe": 5,
+                "truncated": 0,
                 "hidden_atom": 1,
                 "hidden_bijective": 0,
                 "nonidentity_group": 0,
                 "nonidentity_group_involutive": 0,
                 "unresolved_nonidentity_group": 0,
+                "max_morphism_count": 7,
+                "max_group_order": 1,
             },
         )
         self.assertEqual(
-            scan(3),
+            scan(3, 2),
             {
                 "ybe": 73,
+                "truncated": 0,
                 "hidden_atom": 7,
                 "hidden_bijective": 3,
                 "nonidentity_group": 3,
                 "nonidentity_group_involutive": 3,
                 "unresolved_nonidentity_group": 0,
+                "max_morphism_count": 108,
+                "max_group_order": 2,
+            },
+        )
+        self.assertEqual(
+            scan(2, 3),
+            {
+                "ybe": 5,
+                "truncated": 0,
+                "hidden_atom": 1,
+                "hidden_bijective": 0,
+                "nonidentity_group": 0,
+                "nonidentity_group_involutive": 0,
+                "unresolved_nonidentity_group": 0,
+                "max_morphism_count": 15,
+                "max_group_order": 1,
+            },
+        )
+        self.assertEqual(
+            scan(3, 3),
+            {
+                "ybe": 73,
+                "truncated": 0,
+                "hidden_atom": 7,
+                "hidden_bijective": 3,
+                "nonidentity_group": 3,
+                "nonidentity_group_involutive": 3,
+                "unresolved_nonidentity_group": 0,
+                "max_morphism_count": 108,
+                "max_group_order": 2,
             },
         )
 

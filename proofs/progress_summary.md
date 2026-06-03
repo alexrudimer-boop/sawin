@@ -2555,9 +2555,9 @@ transported section-holonomy counterexample must be built.
 The note `proofs/green_section_transport_prefix.md` and generated audit
 `proofs/green_section_transport_prefix_audit.md` add a finite-prefix check for
 the rigidity gate.  The scan uses actual completed-context morphisms through
-depth `2` and counts only total bijective atom-trivial loops; reset-like
-atom-trivial collapses are discarded because residual braid actions are
-permutations.
+depths `2` and `3` and counts only total bijective atom-trivial loops;
+reset-like atom-trivial collapses are discarded because residual braid
+actions are permutations.
 
 The exhaustive size-`2` prefix has `5` YBE solutions.  It has one hidden
 atom-trivial loop solution, but no hidden bijective loop and no nonidentity
@@ -2568,6 +2568,11 @@ atom-trivial loop solutions, `3` hidden bijective loop solutions, and `3`
 nonidentity group-like atom-trivial loop solutions.  All `3` are involutive,
 so they route to an already known finite-G branch.  The unresolved
 nonidentity group-like loop count is `0`.
+
+The depth-`3` rerun is also untruncated.  For size `3`, the largest bounded
+completed-context category has `108` morphisms and the largest atom-trivial
+loop group has order `2`; the same `3` nonidentity group-like loops occur,
+again all involutive, with unresolved count `0`.
 
 Thus the finite prefix produces no new Green section-holonomy
 counterexample.  A genuine B-route example must occur outside this prefix or

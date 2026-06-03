@@ -18,8 +18,8 @@ proofs/green_section_transport_prefix_audit.md
 ```
 
 scans every bijective YBE solution of sizes `2` and `3` at completed-context
-depth `2`.  It uses the existing finite completed-context category and then
-keeps only total bijective atom-trivial loops.  Reset-like atom-trivial
+depths `2` and `3`.  It uses the existing finite completed-context category
+and then keeps only total bijective atom-trivial loops.  Reset-like atom-trivial
 collapses are deliberately ignored because residual braid actions are
 permutations.
 
@@ -36,6 +36,14 @@ size 3:
   YBE solutions = 73
   hidden atom-trivial loop solutions = 7
   hidden bijective loop solutions = 3
+  nonidentity group-like loop solutions = 3
+  involutive nonidentity group-like loop solutions = 3
+  unresolved nonidentity group-like loop solutions = 0
+
+size 3 at depth 3:
+  completed categories are untruncated
+  maximum bounded-category morphism count = 108
+  maximum atom-trivial loop group order = 2
   nonidentity group-like loop solutions = 3
   involutive nonidentity group-like loop solutions = 3
   unresolved nonidentity group-like loop solutions = 0
