@@ -16,6 +16,11 @@ from .group_laws import (
     two_strand_symmetric_longitude_period,
 )
 from .residual import action_permutation, permutation_order, product_solution
+from .residual import (
+    braid_action_order,
+    full_twist_braid_word,
+    rack_full_twist_order_bound_audit,
+)
 
 
 def all_bijection_solutions(size: int, max_checked: int | None = None) -> Iterator[FiniteBraidedSet]:
@@ -371,6 +376,36 @@ class KnownBranchDetectorCertificate:
     braid_index_independent: bool
 
 
+@dataclass(frozen=True)
+class FullTwistKnownBranchBoundAudit:
+    """Central full-twist order data for one known symbolic branch."""
+
+    solution_size: int
+    max_n: int
+    action_orders: Tuple[int, ...]
+    reason: str | None
+    uniform_bound: int | None
+    finite_checks_derived_from_tables: bool
+
+    @property
+    def symbolic_bound_available(self) -> bool:
+        return self.uniform_bound is not None
+
+    @property
+    def checked_orders_divide_bound(self) -> bool:
+        if self.uniform_bound is None:
+            return False
+        return all(self.uniform_bound % order == 0 for order in self.action_orders)
+
+    @property
+    def proves_checked_known_branch_full_twist_bound(self) -> bool:
+        return (
+            self.finite_checks_derived_from_tables
+            and self.symbolic_bound_available
+            and self.checked_orders_divide_bound
+        )
+
+
 def _known_branch_certificate(
     *,
     solution: FiniteBraidedSet,
@@ -446,6 +481,60 @@ def known_branch_detector_certificate(
         twist_order=None,
         proof_reference="proofs/direct_symmetric_known_branches.md",
         detector_kind="direct_symmetric_group",
+    )
+
+
+def known_branch_full_twist_order_bound_audit(
+    solution: FiniteBraidedSet,
+    max_n: int,
+) -> FullTwistKnownBranchBoundAudit:
+    """Audit central full-twist orders against known symbolic branch bounds.
+
+    This is not a classifier for every finite YBE solution.  It records the
+    current theorem-level branches where a fixed finite bound is known:
+    involutive, permutation-form, rack-type, and left-nondegenerate via the
+    derived rack.  The ``action_orders`` field is still a finite prefix check.
+    """
+
+    if max_n < 1:
+        raise ValueError("max_n must be positive")
+    if not solution.is_ybe():
+        raise ValueError("solution must satisfy the Yang-Baxter equation")
+    action_orders = tuple(
+        braid_action_order(solution, n, full_twist_braid_word(n))
+        for n in range(1, max_n + 1)
+    )
+    reason = None
+    uniform_bound = None
+    if is_involutive_solution(solution):
+        reason = "involutive_artin_permutation"
+        uniform_bound = 1
+    else:
+        twist_order = permutation_solution_twist_order(solution)
+        if twist_order is not None:
+            reason = "permutation_form_twist_order"
+            uniform_bound = twist_order
+        elif is_rack_type(solution):
+            reason = "rack_inner_group_exponent"
+            uniform_bound = rack_full_twist_order_bound_audit(
+                solution,
+                1,
+            ).inner_group_exponent
+        else:
+            derived = derived_rack_solution(solution)
+            if is_left_nondegenerate(solution) and derived is not None:
+                reason = "left_nondegenerate_derived_rack_exponent"
+                uniform_bound = rack_full_twist_order_bound_audit(
+                    derived,
+                    1,
+                ).inner_group_exponent
+    return FullTwistKnownBranchBoundAudit(
+        solution_size=len(solution.elements),
+        max_n=max_n,
+        action_orders=action_orders,
+        reason=reason,
+        uniform_bound=uniform_bound,
+        finite_checks_derived_from_tables=True,
     )
 
 

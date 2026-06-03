@@ -106,3 +106,51 @@ identities used above:
 
 This audit is a fixed-`n` regression for the symbolic argument above.  It does
 not by itself certify any unbounded family for non-rack YBE solutions.
+
+## Other Known Bounded Branches
+
+The full-twist obstruction is useful only if a finite YBE solution can make
+`ord rho_X,n(Delta_n^2)` grow with `n`.  Several non-rack branches are already
+known not to do this.
+
+For an involutive solution, the braid action factors through the symmetric
+group.  The full twist is pure, so its Artin permutation is the identity, and
+`Delta_n^2` acts trivially in every degree.
+
+For a permutation-form solution
+
+```text
+R(x,y) = (sigma(y), tau(x)),
+```
+
+with `sigma` and `tau` commuting, let `h=sigma tau`.  The existing pure
+longitude factorization says that a pure braid acts on coordinate `j` by
+`h` to the total exponent sum of the `j`-th Artin longitude.  For the full
+twist these sums are all `n-1`, hence
+
+```text
+Delta_n^2(x_1,...,x_n) = (h^(n-1)x_1, ..., h^(n-1)x_n).
+```
+
+Thus the full-twist order divides `ord(h)`, uniformly in `n`.
+
+For left-nondegenerate solutions, the Lebed-Vendramin guitar-map branch
+passes through the derived rack, so the rack bound applies to that branch.
+
+The helper `known_branch_full_twist_order_bound_audit(X,max_n)` records these
+known symbolic branches together with exact checked prefix orders.  It uses
+the priority `involutive`, then `permutation_form`, then `rack_type`, then
+`left_nondegenerate_derived_rack`, because overlapping branches may have
+sharper earlier bounds.  Exhaustive size-three checks currently split as
+
+```text
+involutive_artin_permutation:              19
+permutation_form_twist_order:              12
+rack_inner_group_exponent:                  7
+left_nondegenerate_derived_rack_exponent:  35
+```
+
+and every checked prefix order divides the corresponding symbolic bound.
+This still leaves the real obstruction question open outside these branches:
+find a finite degenerate bijective YBE solution with unbounded central
+full-twist order, or prove a new uniform bound for the remaining classes.

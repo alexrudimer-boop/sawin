@@ -1625,6 +1625,17 @@ and divisibility.  This does not yet solve the MO problem: the remaining
 obstruction route is to find a finite degenerate bijective YBE solution whose
 `rho_X,n(Delta_n^2)` orders grow with `n`, or else prove that such growth is
 impossible for all finite bijective YBE solutions.
+That route has also been narrowed for the known whole-solution branches.
+`known_branch_full_twist_order_bound_audit(X,max_n)` records exact checked
+prefix orders together with the symbolic uniform bound for involutive,
+permutation-form, rack-type, and left-nondegenerate derived-rack branches.
+For permutation-form solutions `R(x,y)=(sigma(y),tau(x))`, the pure-longitude
+formula gives `Delta_n^2=(sigma tau)^(n-1)` on every coordinate, so the order
+divides `ord(sigma tau)` uniformly in `n`; involutive rows have trivial full
+twist, and left-nondegenerate rows route through the derived rack.  Exhaustive
+size-three checks all land in one of these bounded branches.  Thus an
+unbounded full-twist obstruction, if it exists, must come from a genuinely
+remaining degenerate class not covered by these known symbolic branches.
 
 ## Verification snapshot
 

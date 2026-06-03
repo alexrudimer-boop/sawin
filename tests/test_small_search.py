@@ -21,6 +21,7 @@ from ybe_domination import (
     is_permutation_solution_form,
     is_rack_type,
     is_right_nondegenerate,
+    known_branch_full_twist_order_bound_audit,
     known_branch_detector_certificate,
     permutation_order,
     permutation_form_detector_group,
@@ -327,6 +328,65 @@ class SmallSearchTests(unittest.TestCase):
                 (1,),
                 (0, 1),
             )
+
+    def test_permutation_solution_full_twist_orders_divide_twist_order(self):
+        elements = (0, 1, 2, 3)
+        solution = FiniteBraidedSet(
+            elements,
+            {
+                (x, y): ((y + 1) % 4, x)
+                for x in elements
+                for y in elements
+            },
+        )
+
+        audit = known_branch_full_twist_order_bound_audit(solution, max_n=6)
+
+        self.assertEqual(audit.reason, "permutation_form_twist_order")
+        self.assertEqual(audit.uniform_bound, 4)
+        self.assertEqual(audit.action_orders, (1, 4, 2, 4, 1, 4))
+        self.assertTrue(audit.checked_orders_divide_bound)
+        self.assertTrue(audit.proves_checked_known_branch_full_twist_bound)
+
+    def test_left_nondegenerate_full_twist_bound_routes_to_derived_rack(self):
+        pairs = [(x, y) for x in range(3) for y in range(3)]
+        values = [
+            (0, 0),
+            (1, 0),
+            (2, 0),
+            (0, 1),
+            (1, 2),
+            (2, 2),
+            (0, 2),
+            (1, 1),
+            (2, 1),
+        ]
+        solution = FiniteBraidedSet(tuple(range(3)), dict(zip(pairs, values)))
+
+        audit = known_branch_full_twist_order_bound_audit(solution, max_n=5)
+
+        self.assertEqual(audit.reason, "left_nondegenerate_derived_rack_exponent")
+        self.assertIsNotNone(audit.uniform_bound)
+        self.assertTrue(audit.checked_orders_divide_bound)
+        self.assertTrue(audit.proves_checked_known_branch_full_twist_bound)
+
+    def test_size_three_known_branches_have_checked_full_twist_bounds(self):
+        counts = {}
+        for solution in all_bijection_solutions(3):
+            audit = known_branch_full_twist_order_bound_audit(solution, max_n=5)
+            counts[audit.reason] = counts.get(audit.reason, 0) + 1
+            self.assertTrue(audit.proves_checked_known_branch_full_twist_bound)
+
+        self.assertNotIn(None, counts)
+        self.assertEqual(
+            counts,
+            {
+                "involutive_artin_permutation": 19,
+                "rack_inner_group_exponent": 7,
+                "left_nondegenerate_derived_rack_exponent": 35,
+                "permutation_form_twist_order": 12,
+            },
+        )
 
     def test_nondegeneracy_detectors(self):
         values = {
