@@ -28,6 +28,10 @@ from .transducer_certificate import (
     rack_transducer_equivariance_failures,
     transducer_rackification_audit,
 )
+from .rack_residual_tower import (
+    RackResidualObstructionAudit,
+    rack_residual_obstruction_audit,
+)
 from .finite_group import (
     DerivedSeriesAudit,
     FiniteGroup,
@@ -1144,6 +1148,7 @@ __all__ = [
     "InvariantTransducerFailure",
     "MealyTransducer",
     "QuotientEquivarianceFailure",
+    "RackResidualObstructionAudit",
     "RackTransducerFailure",
     "TransducerRackificationAudit",
     "FullTwistKnownBranchBoundAudit",
@@ -1930,6 +1935,7 @@ __all__ = [
     "rack_extension_detector_audit",
     "rack_extension_projection_failures",
     "rack_full_twist_order_bound_audit",
+    "rack_residual_obstruction_audit",
     "rack_solution",
     "rack_transducer_equivariance_failures",
     "rack_inner_group",

@@ -2494,6 +2494,18 @@ The finite conditions are now executable as
 `src/ybe_domination/transducer_certificate.py`, with a regression verifying
 the affine Type A parity/offset certificate.
 
+The exact rack-residual obstruction tower is recorded in
+`proofs/rack_residual_obstruction_tower.md`.  Enumerating finite racks as
+`R_1,R_2,...` and setting `P_m=R_1 x ... x R_m`, define
+`N_{m,n}(X)` as the `X^n`-projection of the kernel of the finite joint image
+`< (rho^X_n(sigma_i),rho^{P_m}_n(sigma_i)) > -> Sym(P_m^n)`.  Then Sawin
+positive for `X` is exactly `exists m forall n, N_{m,n}(X)=1`, and the
+negative normalized-law branch is exactly
+`forall m exists n, N_{m,n}(X)!=1`.  The fixed-width computation is now
+executable as `rack_residual_obstruction_audit(X,Y,n)` for a supplied detector
+rack `Y`; it proves only fixed-width detector failure unless upgraded to the
+unbounded tower condition.
+
 ## Current conclusion
 
 As of this log entry, neither A nor B is proved.  The current decisive target

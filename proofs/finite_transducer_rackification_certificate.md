@@ -262,6 +262,12 @@ The checker also captures any future finite-state hidden-fibre gauge of the
 same kind: it audits the quotient equation, local rack-equivariance,
 local invariance, and the pair-automaton injectivity condition.
 
+The exact all-detector tower behind this fixed-candidate check is isolated in
+`proofs/rack_residual_obstruction_tower.md`.  In that language, a transducer
+certificate proves vanishing of the rack-residual tower for one finite
+detector.  The missing completeness theorem would show that every vanishing
+relative tower is witnessed by some finite Mealy/invariant certificate.
+
 However, the criterion is not a proof of Sawin by itself.  The remaining
 universal statement would be:
 
