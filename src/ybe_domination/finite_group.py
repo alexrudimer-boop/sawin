@@ -68,6 +68,43 @@ class FiniteGroup:
 
 
 @dataclass(frozen=True)
+class LabelledGraphEdge:
+    """A directed edge labelled by an element of a finite group."""
+
+    source: Hashable
+    target: Hashable
+    label: GroupElement
+
+
+@dataclass(frozen=True)
+class LabelledLoopSubgroupAudit:
+    """Spanning-tree computation of labels of based loops in a labelled graph."""
+
+    base_vertex: Hashable
+    reachable_vertices: Tuple[Hashable, ...]
+    tree_path_labels: Mapping[Hashable, GroupElement]
+    cycle_generators: Tuple[GroupElement, ...]
+    loop_subgroup_elements: Tuple[GroupElement, ...]
+    reversible_edges_checked: bool
+
+    @property
+    def reachable_vertex_count(self) -> int:
+        return len(self.reachable_vertices)
+
+    @property
+    def cycle_generator_count(self) -> int:
+        return len(self.cycle_generators)
+
+    @property
+    def loop_subgroup_order(self) -> int:
+        return len(self.loop_subgroup_elements)
+
+    @property
+    def has_nonidentity_loop_label(self) -> bool:
+        return len(self.loop_subgroup_elements) > 1
+
+
+@dataclass(frozen=True)
 class FiniteGroupHomomorphism:
     """A checked homomorphism between explicit finite groups."""
 
@@ -174,6 +211,87 @@ def subgroup_generated_elements(
                     seen.add(candidate)
                     queue.append(candidate)
     return tuple(sorted(seen, key=repr))
+
+
+def _coerce_labelled_graph_edge(
+    edge: LabelledGraphEdge | Tuple[Hashable, Hashable, GroupElement],
+) -> LabelledGraphEdge:
+    if isinstance(edge, LabelledGraphEdge):
+        return edge
+    source, target, label = edge
+    return LabelledGraphEdge(source, target, label)
+
+
+def labelled_loop_subgroup_audit(
+    group: FiniteGroup,
+    base_vertex: Hashable,
+    edges: Iterable[LabelledGraphEdge | Tuple[Hashable, Hashable, GroupElement]],
+    *,
+    require_reversible: bool = True,
+) -> LabelledLoopSubgroupAudit:
+    """Return the subgroup of group labels carried by loops at ``base_vertex``.
+
+    The endpoint search graph has one edge for each supported lifted braid
+    generator and its inverse.  In that inverse-closed setting, a spanning tree
+    computes all based loop labels: for an edge ``v -> w`` with label ``ell``,
+    the cycle generator is ``p_v ell p_w^{-1}``, where ``p_v`` is the tree path
+    label from the base to ``v``.
+    """
+
+    edge_rows = tuple(_coerce_labelled_graph_edge(edge) for edge in edges)
+    group_elements = set(group.elements)
+    if any(edge.label not in group_elements for edge in edge_rows):
+        raise ValueError("edge label outside group")
+
+    if require_reversible:
+        edge_keys = {
+            (edge.source, edge.target, edge.label)
+            for edge in edge_rows
+        }
+        for edge in edge_rows:
+            reverse = (edge.target, edge.source, group.inv(edge.label))
+            if reverse not in edge_keys:
+                raise ValueError("labelled graph must contain inverse edges")
+
+    adjacency: Dict[Hashable, list[LabelledGraphEdge]] = {}
+    for edge in edge_rows:
+        adjacency.setdefault(edge.source, []).append(edge)
+
+    tree_path_labels: Dict[Hashable, GroupElement] = {
+        base_vertex: group.identity,
+    }
+    queue = deque([base_vertex])
+    while queue:
+        current = queue.popleft()
+        current_label = tree_path_labels[current]
+        for edge in adjacency.get(current, ()):
+            if edge.target in tree_path_labels:
+                continue
+            tree_path_labels[edge.target] = group.mul(current_label, edge.label)
+            queue.append(edge.target)
+
+    reachable = set(tree_path_labels)
+    cycle_generators = []
+    for edge in edge_rows:
+        if edge.source not in reachable or edge.target not in reachable:
+            continue
+        source_path = tree_path_labels[edge.source]
+        target_path = tree_path_labels[edge.target]
+        cycle_generators.append(
+            group.mul(
+                group.mul(source_path, edge.label),
+                group.inv(target_path),
+            )
+        )
+
+    return LabelledLoopSubgroupAudit(
+        base_vertex=base_vertex,
+        reachable_vertices=tuple(sorted(reachable, key=repr)),
+        tree_path_labels=dict(tree_path_labels),
+        cycle_generators=tuple(cycle_generators),
+        loop_subgroup_elements=subgroup_generated_elements(group, cycle_generators),
+        reversible_edges_checked=require_reversible,
+    )
 
 
 def is_abelian_group(group: FiniteGroup) -> bool:

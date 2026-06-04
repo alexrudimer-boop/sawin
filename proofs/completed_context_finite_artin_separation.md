@@ -415,9 +415,12 @@ The sharper finite-degree form is recorded in
 quotient degree `s(I)` and one deletion width `N(I)` such that, in every
 arity, the full endpoint is determined by the finite profile consisting of
 `q_s Art` on the full branch and `(q_s Art, Ept)` on all deletion shadows of
-width at most `N`.  At fixed `s,N,n,c`, failure is a finite kernel computation
-in the decorated actual branch image; cofinal failures are exactly the
-implementable normalized-law endpoint obstruction.
+width at most `N`.  At fixed `s,N,n,c`, failure is the finite labelled-graph
+computation of the based loop-label subgroup
+`Lambda_{I,s,N,n,c}` and the endpoint witness subgroup
+`H={u in U : (1,u,(1,1)_J) in Lambda}`.  Cofinal nonidentity elements of
+these `H` subgroups are exactly the implementable normalized-law endpoint
+obstruction.
 
 ## Relation To Outcome B
 

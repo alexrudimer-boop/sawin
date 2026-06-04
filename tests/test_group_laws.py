@@ -17,6 +17,7 @@ from ybe_domination import (
     has_identity_longitude_signature,
     is_law_on_group,
     is_normal_subgroup,
+    labelled_loop_subgroup_audit,
     law_braid_longitude_subgroup_profile,
     law_sequence_prefix_audit,
     lcm_upto,
@@ -51,6 +52,31 @@ class GroupLawTests(unittest.TestCase):
         transposition = (1, 0, 2)
         subgroup = subgroup_generated_elements(group, [transposition])
         self.assertEqual(set(subgroup), {group.identity, transposition})
+
+    def test_labelled_loop_subgroup_uses_spanning_tree_cycles(self):
+        group = cyclic_group(3)
+        edges = (
+            ("base", "v", 1),
+            ("v", "base", 2),
+            ("v", "v", 1),
+            ("v", "v", 2),
+        )
+
+        audit = labelled_loop_subgroup_audit(group, "base", edges)
+
+        self.assertEqual(set(audit.reachable_vertices), {"base", "v"})
+        self.assertEqual(set(audit.loop_subgroup_elements), {0, 1, 2})
+        self.assertTrue(audit.has_nonidentity_loop_label)
+
+    def test_labelled_loop_subgroup_requires_inverse_edges_by_default(self):
+        group = cyclic_group(3)
+
+        with self.assertRaises(ValueError):
+            labelled_loop_subgroup_audit(
+                group,
+                "base",
+                (("base", "v", 1),),
+            )
 
     def test_normal_closure_and_quotient_group_for_s3(self):
         group = symmetric_group(3)
