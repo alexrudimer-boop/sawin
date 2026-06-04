@@ -55,6 +55,20 @@ class RackResidualTowerTests(unittest.TestCase):
 
         self.assertEqual([len(rack.elements) for rack in representatives], [1, 2, 2])
 
+    def test_small_rack_representatives_size_three_prefix_is_practical(self):
+        representatives = small_rack_representatives(3)
+        prefixes = rack_product_prefixes(representatives, max_detector_size=256)
+
+        self.assertEqual(len(representatives), 9)
+        self.assertEqual(
+            [len(rack.elements) for rack in representatives],
+            [1, 2, 2, 3, 3, 3, 3, 3, 3],
+        )
+        self.assertEqual(
+            [len(prefix.elements) for prefix in prefixes],
+            [1, 2, 4, 12, 36, 108],
+        )
+
     def test_product_prefix_containing_solution_has_no_cyclic_mover(self):
         solution = rack_solution((0, 1), lambda _left, right: 1 - right)
         prefixes = rack_product_prefixes(small_rack_representatives(2))
