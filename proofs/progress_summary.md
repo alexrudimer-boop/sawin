@@ -2872,3 +2872,13 @@ three-element dihedral rack.  Exact checks with the dihedral rack show image
 orders `3,24,648` for both the rack and `X` in arities `2,3,4`, with no
 detector-kernel obstruction.  Thus this row has become an all-`n`
 dihedral-repair target rather than a valid pressure core.
+That target is now refuted by
+`proofs/affine_f2_q3_dihedral_native_image_audit.md`.  Native group generation
+avoids tuple enumeration and computes image orders through arity `5`; the
+orders match through `n=4` but at `n=5` the affine survivor has image order
+`77760`, while `D_3` has image order `51840`.  The same audit finds an
+explicit positive braid word of length `25` in the `D_3` kernel that moves the
+zero tuple of `X^5`.  The row is therefore not closed by `D_3`; the next
+positive search is a larger finite rack detector, and the next negative
+search is whether these arity-5 witnesses can be lifted cofinally against
+rack prefixes.

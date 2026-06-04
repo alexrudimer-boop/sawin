@@ -1,6 +1,13 @@
 # Affine F2^3 Dihedral Repair Candidate
 
-Status: queued for GPT-5.5 Pro on 2026-06-04.
+Status: superseded by the arity-5 native D3 failure audit on 2026-06-04.
+
+Supersession summary:
+
+- Native image generation shows the `D_3` repair fails at arity `5`.
+- The follow-up prompt
+  `2026-06-04-affine-f2-q3-after-d3-failure.md` gives the exact arity-5
+  kernel witness and asks for the next all-`n` decision.
 
 Prompt:
 

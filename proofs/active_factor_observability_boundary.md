@@ -129,6 +129,20 @@ checks with that rack show matching braid image orders and no kernel
 obstruction through arity `4`.  Thus the concrete all-`n` task is now to prove
 or refute the dihedral-rack repair for this affine table.
 
+The native-image audit
+`proofs/affine_f2_q3_dihedral_native_image_audit.md` refutes that repair at
+the next arity.  Working with the affine `F_2` action of `X` and the linear
+`F_3` action of `D_3`, it computes
+
+```text
+n=5: |G_D3|=51840, |G_X|=77760.
+```
+
+It also gives a length-`25` positive braid word in the `D_3` kernel that
+moves the zero tuple of `X^5`.  Thus the first structurally rigid affine
+survivor is not dominated by `D_3`; the next target is a larger finite rack
+detector or a cofinal rack-prefix obstruction.
+
 ## Cofinal Rack-Prefix Obstruction
 
 A genuine negative answer to Sawin needs more than sequential primitivity.

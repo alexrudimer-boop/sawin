@@ -223,7 +223,7 @@ def _bounded_ordered_prefix_pressure_rows(
     rows = small_rack_prefix_obstruction_rows(
         solution,
         max_rack_size=3,
-        max_arity=3,
+        max_arity=2,
         max_detector_size=64,
         state_limit=50_000,
     )
@@ -396,8 +396,8 @@ def build_report() -> dict[str, object]:
             "three-element dihedral rack representative: exact checks through "
             "arity 4 show matching braid image orders and no detector-kernel "
             "obstruction. This is therefore not a valid pressure core yet; "
-            "the next task is to prove the dihedral repair all-n or find a "
-            "different survivor whose pressure is not repaired by small racks."
+            "the companion native-image audit tests this repair at arity 5, "
+            "where it fails."
         ),
     }
 
