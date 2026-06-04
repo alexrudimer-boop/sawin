@@ -76,6 +76,152 @@ These constraints are only necessary.  They do not prove that a finite
 braided-quiver row system is the completed-context interval of some finite
 one-vertex YBE table.
 
+## Naive actualization is false
+
+The naive theorem that these local quiver conditions imply one-vertex
+actualization is false.  A one-vertex ordinary YBE table must satisfy the YBE
+on every triple of letters, including triples whose intermediate adjacent
+pairs are unsupported in the quiver row system.  Supported quiver-cube
+coherence does not see all of these mixed unsupported constraints.
+
+Here is an explicit one-vertex obstruction with trivial endpoint labels.  Let
+the edge set contain distinct symbols
+
+```text
+x,y,z,u,v,a,b,c,d,h,k,p,w,t
+```
+
+and filler symbols
+
+```text
+A_i,B_i       for 1 <= i <= 6.
+```
+
+Let the supported pair set consist of the eighteen pairs
+
+```text
+p_1=(x,y),     q_1=(u,v),     r_1=(A_1,B_1),
+p_2=(y,z),     q_2=(a,b),     r_2=(A_2,B_2),
+p_3=(x,a),     q_3=(c,d),     r_3=(A_3,B_3),
+p_4=(d,b),     q_4=(h,k),     r_4=(A_4,B_4),
+p_5=(u,p),     q_5=(c,h),     r_5=(A_5,B_5),
+p_6=(w,t),     q_6=(p,k),     r_6=(A_6,B_6).
+```
+
+Define the supported row bijection as the product of six cycles
+
+```text
+p_i -> q_i -> r_i -> p_i.
+```
+
+The six important rows are
+
+```text
+B(x,y)=(u,v),
+B(y,z)=(a,b),
+B(x,a)=(c,d),
+B(d,b)=(h,k),
+B(u,p)=(c,h),
+B(w,t)=(p,k).
+```
+
+Boundary preservation and context-product compatibility are automatic because
+the quiver has one vertex.  Global table consistency holds because each edge
+is its own colour.  The supported cube checks are vacuous: every supported
+length-three path exits the supported pair set before both sides of a braid
+cube can be evaluated.
+
+If an ordinary bijective YBE table `r:X^2 -> X^2` realized this system, the
+six rows would force
+
+```text
+r(x,y)=(u,v),
+r(y,z)=(a,b),
+r(x,a)=(c,d),
+r(d,b)=(h,k),
+r(u,p)=(c,h),
+r(w,t)=(p,k).
+```
+
+Now apply ordinary YBE to `(x,y,z)`.  The right-hand braid word gives
+
+```text
+r_23(x,y,z)=(x,a,b),
+r_12(x,a,b)=(c,d,b),
+r_23(c,d,b)=(c,h,k).
+```
+
+For the left-hand word, write `r(v,z)=(P,Q)`.  Then
+
+```text
+r_12(x,y,z)=(u,v,z),
+r_23(u,v,z)=(u,P,Q).
+```
+
+To finish at `(c,h,k)`, one must have
+
+```text
+Q=k,       r(u,P)=(c,h).
+```
+
+Since `r(u,p)=(c,h)` and `r` is injective, `P=p`.  Hence ordinary YBE forces
+
+```text
+r(v,z)=(p,k).
+```
+
+But the specified row already has
+
+```text
+r(w,t)=(p,k).
+```
+
+The input pairs `(v,z)` and `(w,t)` are distinct, contradicting bijectivity of
+`r`.  Thus no ordinary finite or infinite one-vertex YBE table realizes this
+row system.
+
+The obstruction is a mixed unsupported YBE-forcing collision: ordinary YBE
+forces a value on an unsupported pair, and that value is already used by a
+different supported input pair.
+
+## Corrected completion gate
+
+A finite quiver row system is a serious negative candidate only if its partial
+pair map admits a finite total ordinary YBE completion.  At minimum it must
+pass a mixed-cube propagation test.
+
+Start with the partial pair map
+
+```text
+r_0: P -> P
+```
+
+defined by the supported rows.  For every triple `(x,y,z)`, partially evaluate
+
+```text
+r_12 r_23 r_12(x,y,z)
+and
+r_23 r_12 r_23(x,y,z)
+```
+
+using the currently known values of `r_0`.  Whenever one side is fully known
+and the other side has exactly one unknown pair value, ordinary YBE forces
+that unknown value.  Add it if it is unused; reject if it collides with the
+image of a different input pair.  Iterate this closure.
+
+This propagation test is necessary, not sufficient.  The full corrected
+candidate condition is:
+
+```text
+There exists a finite set X containing the row letters and a bijection
+r:X^2 -> X^2 extending the partial row map such that r satisfies ordinary
+YBE on X^3.
+```
+
+Only after this ordinary YBE-completion gate is passed does it make sense to
+ask for finite context transitions `tau_x`, retained germs, endpoint labels,
+and preservation of the intended braid-realizable endpoint language.
+
 ## Actualization theorem needed for B
 
 The formal partial-Wirtinger construction in
@@ -90,10 +236,10 @@ Finite endpoint-labelled actualization theorem:
 
 Given a finite inverse braided-quiver row system with endpoint labels,
 boundary preservation, global table consistency after finite refinement,
-context-product compatibility, inverse-row saturation, and YBE cube
-coherence, construct a finite set X, a bijective YBE table r:X^2 -> X^2,
-a completed-context residual interval I, and an isomorphism from the row
-system to I preserving:
+context-product compatibility, inverse-row saturation, supported YBE cube
+coherence, and ordinary finite YBE-completability, construct a finite set X, a
+bijective YBE table r:X^2 -> X^2, a completed-context residual interval I, and
+an isomorphism from the row system to I preserving:
 
   - the row operation;
   - the endpoint map;
@@ -121,10 +267,12 @@ A. Prove direct profinite endpoint-language separation for every actual
 
 B. Construct an actual finite YBE interval whose braid-realizable endpoint
    language violates this separation.  A formal nonseparable row language
-   becomes relevant only after a one-vertex actualization preserving W_u^br.
+   becomes relevant only after a finite ordinary YBE-completion and
+   one-vertex actualization preserving W_u^br.
 ```
 
 Thus the current decisive negative target is not merely "find a
 nonresidually finite formal row group."  It is "actualize a nonseparable
-endpoint-labelled braided-quiver row system into one finite YBE table, or
-produce the nonseparable actual interval directly."
+endpoint-labelled braided-quiver row system into one finite YBE table after
+passing the ordinary YBE-completion gate, or produce the nonseparable actual
+interval directly."

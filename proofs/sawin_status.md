@@ -2401,7 +2401,12 @@ finite braided-quiver system coming from one global finite YBE table
 preservation, global table consistency, context-product compatibility,
 inverse-row saturation, YBE cube coherence, and Artin-readout cube coherence,
 and it must preserve the braid-realizable endpoint languages `W_u^br` after
-actualization.
+actualization.  The naive supported-cube actualization theorem is false:
+ordinary one-vertex YBE also imposes mixed unsupported cube constraints.  In
+the explicit gate example, ordinary YBE forces an unsupported value
+`r(v,z)=(p,k)` while the row system already specifies `r(w,t)=(p,k)`,
+contradicting bijectivity.  Hence a formal negative candidate must first pass
+ordinary finite YBE-completion, not merely quiver cube coherence.
 
 Fixed-arity finite separation is also insufficient.  For each braid index
 `n`, the image of `B_n` on `X^n` is finite, but the required detector is one
@@ -2445,7 +2450,7 @@ tending to infinity; that gives the normalized-law no-rack sequence.
 Formal partial-row nonseparability, failure of one-vertex actualization for a
 formal row system, or failure of stronger structural properties such as
 virtual freeness of `Art_I`, remains only a gap unless it is made actual and
-braid-realizable.  Equivalently, a negative proof must actualize a
-nonseparable endpoint-labelled braided-quiver row system into one finite YBE
-table while preserving `W_u^br`, or produce the nonseparable actual interval
-directly.
+braid-realizable.  Equivalently, a negative proof must exhibit a nonseparable
+endpoint-labelled row system that survives ordinary finite YBE-completion and
+one-vertex actualization while preserving `W_u^br`, or produce the
+nonseparable actual interval directly.

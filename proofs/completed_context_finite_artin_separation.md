@@ -289,11 +289,15 @@ supported triples, and Artin-readout coherence around those same cubes.
 These are necessary actualness tests, not a realization theorem.  To turn the
 formal partial-Wirtinger warning into outcome B, one must either construct the
 actual finite YBE interval directly, or prove a finite endpoint-labelled
-one-vertex actualization theorem that embeds the finite braided-quiver row
-system into one global finite YBE table while preserving the braid-realizable
-endpoint languages `W_u^br`.  Failure of such an actualization for a formal
-row system is only another gap; it is not evidence for outcome A unless it is
-replaced by direct profinite separation for every actual interval.
+one-vertex actualization theorem that first completes the finite
+braided-quiver row system to an ordinary finite YBE table and then preserves
+the braid-realizable endpoint languages `W_u^br`.  The naive supported-cube
+actualization theorem is false: ordinary YBE imposes mixed unsupported cube
+constraints, and these can force a pair value that collides with an already
+specified row image, contradicting bijectivity of the table.  Failure of such
+an actualization for a formal row system is only another gap; it is not
+evidence for outcome A unless it is replaced by direct profinite separation
+for every actual interval.
 
 This gate is recorded separately in
 `proofs/completed_context_actualization_gate.md`.
