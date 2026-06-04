@@ -139,3 +139,16 @@ projection to `Sym(X^n)`.  If it does, the audit returns a witness braid word
 and a first moved `X^n` tuple.  This proves only fixed-width detector failure;
 the Sawin problem is precisely the missing bounded-width/universal-detector
 step.
+
+The helper `small_rack_representatives(k)` enumerates labelled racks up to
+size `k` and de-duplicates them up to relabeling by canonical operation-table
+signature.  The helper `small_rack_prefix_obstruction_rows(X,k,N,...)` then
+builds product prefixes from those representatives and runs the fixed-width
+audits through arity `N`, subject to a detector-size cap.  These rows provide
+reproducible finite pressure tests for the tower; they do not enumerate all
+finite racks and do not replace the missing all-arity theorem.
+
+As a regression, the affine size-four Type A model still has a fixed-width
+obstruction against the first two small rack prefixes, but the obstruction
+vanishes through arity `3` once the two-element cyclic rack enters the product
+prefix.

@@ -2,10 +2,16 @@ from __future__ import annotations
 
 from collections import deque
 from dataclasses import dataclass
-from itertools import product
-from typing import Optional, Tuple
+from itertools import permutations, product
+from typing import Iterable, Optional, Tuple
 
-from .finite_braided_set import Element, FiniteBraidedSet, Word
+from .finite_braided_set import (
+    Element,
+    FiniteBraidedSet,
+    Word,
+    product_solution,
+    rack_solution,
+)
 from .residual import action_permutation
 
 Permutation = Tuple[int, ...]
@@ -29,6 +35,18 @@ class RackResidualObstructionAudit:
     @property
     def proves_fixed_width_domination_failure(self) -> bool:
         return not self.truncated and self.kernel_contains_nonidentity is True
+
+
+@dataclass(frozen=True)
+class RackPrefixObstructionRow:
+    detector_prefix_length: int
+    detector_size: int
+    arity: int
+    audit: RackResidualObstructionAudit
+
+    @property
+    def obstruction_found(self) -> bool:
+        return self.audit.proves_fixed_width_domination_failure
 
 
 def _compose_permutations(left: Permutation, right: Permutation) -> Permutation:
@@ -161,3 +179,142 @@ def rack_residual_obstruction_audit(
         first_moved_tuple_image=moved_image,
         truncated=False,
     )
+
+
+def _compose_index_permutations(left: Permutation, right: Permutation) -> Permutation:
+    return tuple(left[right[index]] for index in range(len(left)))
+
+
+def _invert_index_permutation(permutation: Permutation) -> Permutation:
+    inverse = [0] * len(permutation)
+    for index, image in enumerate(permutation):
+        inverse[image] = index
+    return tuple(inverse)
+
+
+def _rack_signature(rack: FiniteBraidedSet) -> Tuple[Tuple[int, ...], ...]:
+    index = {element: position for position, element in enumerate(rack.elements)}
+    return tuple(
+        tuple(index[rack.R[(left, right)][0]] for right in rack.elements)
+        for left in rack.elements
+    )
+
+
+def canonical_rack_signature(rack: FiniteBraidedSet) -> Tuple[Tuple[int, ...], ...]:
+    """Return the lexicographically least operation table under relabeling."""
+
+    size = len(rack.elements)
+    raw = _rack_signature(rack)
+    signatures = []
+    for relabel in permutations(range(size)):
+        inverse = _invert_index_permutation(tuple(relabel))
+        signatures.append(
+            tuple(
+                tuple(
+                    relabel[raw[inverse[left]][inverse[right]]]
+                    for right in range(size)
+                )
+                for left in range(size)
+            )
+        )
+    return min(signatures)
+
+
+def labelled_rack_solutions(size: int) -> Tuple[FiniteBraidedSet, ...]:
+    """Enumerate all labelled racks on `range(size)`.
+
+    This is intended for small sizes only.  It enumerates all choices of left
+    translations and filters by the rack conjugacy identity.
+    """
+
+    if size < 1:
+        raise ValueError("rack size must be positive")
+    elements = tuple(range(size))
+    all_permutations = tuple(permutations(elements))
+    racks = []
+    for translations in product(all_permutations, repeat=size):
+        ok = True
+        for left in elements:
+            left_inverse = _invert_index_permutation(translations[left])
+            for right in elements:
+                output = translations[left][right]
+                conjugate = _compose_index_permutations(
+                    _compose_index_permutations(translations[left], translations[right]),
+                    left_inverse,
+                )
+                if translations[output] != conjugate:
+                    ok = False
+                    break
+            if not ok:
+                break
+        if ok:
+            racks.append(
+                rack_solution(
+                    elements,
+                    lambda left, right, translations=translations: translations[left][right],
+                )
+            )
+    return tuple(racks)
+
+
+def small_rack_representatives(max_size: int) -> Tuple[FiniteBraidedSet, ...]:
+    """Return one labelled representative of each rack isomorphism class."""
+
+    if max_size < 1:
+        raise ValueError("maximum rack size must be positive")
+    representatives = []
+    seen = set()
+    for size in range(1, max_size + 1):
+        for rack in labelled_rack_solutions(size):
+            signature = canonical_rack_signature(rack)
+            if (size, signature) in seen:
+                continue
+            seen.add((size, signature))
+            representatives.append(rack)
+    return tuple(representatives)
+
+
+def rack_product_prefixes(
+    racks: Iterable[FiniteBraidedSet],
+    max_detector_size: Optional[int] = None,
+) -> Tuple[FiniteBraidedSet, ...]:
+    """Return successive Cartesian product prefixes of the supplied racks."""
+
+    prefixes = []
+    current = None
+    for rack in racks:
+        candidate = rack if current is None else product_solution(current, rack)
+        if max_detector_size is not None and len(candidate.elements) > max_detector_size:
+            break
+        prefixes.append(candidate)
+        current = candidate
+    return tuple(prefixes)
+
+
+def small_rack_prefix_obstruction_rows(
+    solution: FiniteBraidedSet,
+    max_rack_size: int,
+    max_arity: int,
+    max_detector_size: Optional[int] = None,
+    state_limit: int = 100_000,
+) -> Tuple[RackPrefixObstructionRow, ...]:
+    """Run fixed-width obstruction audits for small rack product prefixes."""
+
+    rows = []
+    prefixes = rack_product_prefixes(
+        small_rack_representatives(max_rack_size),
+        max_detector_size=max_detector_size,
+    )
+    for prefix_index, detector in enumerate(prefixes, start=1):
+        for arity in range(1, max_arity + 1):
+            rows.append(
+                RackPrefixObstructionRow(
+                    detector_prefix_length=prefix_index,
+                    detector_size=len(detector.elements),
+                    arity=arity,
+                    audit=rack_residual_obstruction_audit(
+                        solution, detector, arity, state_limit=state_limit
+                    ),
+                )
+            )
+    return tuple(rows)
