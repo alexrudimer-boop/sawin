@@ -47,6 +47,22 @@ class AffineRigidPressureCoreTests(unittest.TestCase):
             },
         )
 
+    def test_affine_prime_line_seven_has_no_terminal_survivor(self):
+        f7 = self.report["prime_lines"]["f7"]
+
+        self.assertTrue(f7["exact_exhaustive_affine_line"])
+        self.assertEqual(f7["affine_ybe_count"], 715)
+        self.assertEqual(f7["terminal_survivor_count"], 0)
+        self.assertEqual(f7["structural_survivor_count"], 0)
+        self.assertEqual(f7["rigid_pressure_core_candidate_count"], 0)
+        self.assertEqual(
+            f7["first_failed_filter_counts"],
+            {
+                "bidegenerate": 714,
+                "noninvolutive": 1,
+            },
+        )
+
     def test_named_affine_f2_dimension_three_pressure_row_is_not_rigid(self):
         pressure_row = self.report["dimension_three_named_pressure_row"]
 

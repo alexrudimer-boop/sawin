@@ -253,6 +253,7 @@ def build_report() -> dict[str, object]:
     prime_lines = {
         "f3": scan_affine_prime_line(3),
         "f5": scan_affine_prime_line(5),
+        "f7": scan_affine_prime_line(7),
     }
     dimension_three_pressure = named_dimension_three_pressure_row()
     q3_resolution = companion_dimension_three_q3_resolution()
@@ -266,13 +267,13 @@ def build_report() -> dict[str, object]:
             "The exact affine-linear size-four family over F_2^2 has terminal "
             "survivors, but no structural rigid-pressure-core survivor: all "
             "24 terminal survivors fail quotient-rigidity.  The exact affine "
-            "line searches over F_3 and F_5 have no terminal survivors.  The "
-            "named hidden-cyclic F_2^3 pressure row remains a useful guardrail "
-            "but fails observer and subsolution rigidity and is already closed "
-            "by a finite sequential rack gauge.  The companion q=3 affine "
-            "F_2^3 pressure row is tracked in its own audit and is also closed "
-            "positively, with all-arity kernel equality to the tetrahedral "
-            "four-element rack."
+            "line searches over F_3, F_5, and F_7 have no terminal survivors.  "
+            "The named hidden-cyclic F_2^3 pressure row remains a useful "
+            "guardrail but fails observer and subsolution rigidity and is "
+            "already closed by a finite sequential rack gauge.  The companion "
+            "q=3 affine F_2^3 pressure row is tracked in its own audit and is "
+            "also closed positively, with all-arity kernel equality to the "
+            "tetrahedral four-element rack."
         ),
     }
 

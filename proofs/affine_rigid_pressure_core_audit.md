@@ -50,6 +50,17 @@ Representative terminal survivor records:
 - rigid pressure core candidates: `0`;
 - first failed filter counts: `{'bidegenerate': 220, 'noninvolutive': 1}`.
 
+### `F7`
+
+- exhaustive affine-line scan: `True`;
+- checked affine maps: `117649`;
+- invertible affine maps: `98784`;
+- affine YBE tables: `715`;
+- terminal survivors: `0`;
+- structural survivors: `0`;
+- rigid pressure core candidates: `0`;
+- first failed filter counts: `{'bidegenerate': 714, 'noninvolutive': 1}`.
+
 ## Named `F_2^3` Pressure Row
 
 - bidegenerate: `True`;
@@ -71,4 +82,4 @@ Representative terminal survivor records:
 
 ## Conclusion
 
-The exact affine-linear size-four family over F_2^2 has terminal survivors, but no structural rigid-pressure-core survivor: all 24 terminal survivors fail quotient-rigidity.  The exact affine line searches over F_3 and F_5 have no terminal survivors.  The named hidden-cyclic F_2^3 pressure row remains a useful guardrail but fails observer and subsolution rigidity and is already closed by a finite sequential rack gauge.  The companion q=3 affine F_2^3 pressure row is tracked in its own audit and is also closed positively, with all-arity kernel equality to the tetrahedral four-element rack.
+The exact affine-linear size-four family over F_2^2 has terminal survivors, but no structural rigid-pressure-core survivor: all 24 terminal survivors fail quotient-rigidity.  The exact affine line searches over F_3, F_5, and F_7 have no terminal survivors.  The named hidden-cyclic F_2^3 pressure row remains a useful guardrail but fails observer and subsolution rigidity and is already closed by a finite sequential rack gauge.  The companion q=3 affine F_2^3 pressure row is tracked in its own audit and is also closed positively, with all-arity kernel equality to the tetrahedral four-element rack.

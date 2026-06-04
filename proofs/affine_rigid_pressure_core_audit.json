@@ -1,5 +1,5 @@
 {
-  "conclusion": "The exact affine-linear size-four family over F_2^2 has terminal survivors, but no structural rigid-pressure-core survivor: all 24 terminal survivors fail quotient-rigidity.  The exact affine line searches over F_3 and F_5 have no terminal survivors.  The named hidden-cyclic F_2^3 pressure row remains a useful guardrail but fails observer and subsolution rigidity and is already closed by a finite sequential rack gauge.  The companion q=3 affine F_2^3 pressure row is tracked in its own audit and is also closed positively, with all-arity kernel equality to the tetrahedral four-element rack.",
+  "conclusion": "The exact affine-linear size-four family over F_2^2 has terminal survivors, but no structural rigid-pressure-core survivor: all 24 terminal survivors fail quotient-rigidity.  The exact affine line searches over F_3, F_5, and F_7 have no terminal survivors.  The named hidden-cyclic F_2^3 pressure row remains a useful guardrail but fails observer and subsolution rigidity and is already closed by a finite sequential rack gauge.  The companion q=3 affine F_2^3 pressure row is tracked in its own audit and is also closed positively, with all-arity kernel equality to the tetrahedral four-element rack.",
   "dimension_three_companion_q3_resolution": {
     "name": "affine_f2_q3_tetrahedral_pressure_row",
     "point_count": 8,
@@ -271,6 +271,32 @@
       "point_count": 5,
       "pressure_attempted": false,
       "prime": 5,
+      "rigid_pressure_core_candidate_count": 0,
+      "structural_survivor_count": 0,
+      "terminal_survivor_count": 0,
+      "terminal_survivor_samples": []
+    },
+    "f7": {
+      "affine_ybe_count": 715,
+      "branch_tag_counts": {
+        "involutive+identity_table+affine_cyclic": 1,
+        "involutive+permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate+affine_cyclic": 41,
+        "left_nondegenerate+right_nondegenerate+nondegenerate+affine_cyclic": 415,
+        "permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate+affine_cyclic": 211,
+        "rack_type+involutive+permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate+affine_cyclic": 1,
+        "rack_type+left_nondegenerate+right_nondegenerate+nondegenerate+affine_cyclic": 5,
+        "rack_type+permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate+affine_cyclic": 41
+      },
+      "checked_affine_map_count": 117649,
+      "exact_exhaustive_affine_line": true,
+      "first_failed_filter_counts": {
+        "bidegenerate": 714,
+        "noninvolutive": 1
+      },
+      "invertible_affine_map_count": 98784,
+      "point_count": 7,
+      "pressure_attempted": false,
+      "prime": 7,
       "rigid_pressure_core_candidate_count": 0,
       "structural_survivor_count": 0,
       "terminal_survivor_count": 0,
