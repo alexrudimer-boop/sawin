@@ -2689,3 +2689,12 @@ spanning-tree cycle labels, and the finite endpoint witness subgroup is
 `H={u in U : (1,u,(1,1)_J) in Lambda}`.  A nontrivial endpoint in `H` is an
 actual Artin-null Brunnian certificate; cofinal certificates as `s,N` grow
 give the normalized-law no-rack sequence.
+
+The next same-chat Pro answer sharpened this again in
+`proofs/vertical_kernel_endpoint_lemma.md`.  It is enough to prove the
+corresponding endpoint kernel vanishing on the one-strand
+Fadell-Neuwirth vertical kernels.  For the last-strand deletion, compute
+`H^vert_{I,s,N,n,c}` from the same deletion-decorated labelled graph but using
+only the standard point-pushing generators `A_{i,n}`.  Fixed `s,N` with
+`H^vert={1}` for all `n,c` imply full endpoint determinacy by induction;
+cofinal nonidentity vertical witnesses give a smaller actual negative search.

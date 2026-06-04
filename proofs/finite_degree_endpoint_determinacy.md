@@ -100,6 +100,14 @@ This is stronger than bare profinite endpoint separation.  It says that after
 passing to one finite Artin quotient and all deletion shadows of one bounded
 width, the endpoint has bounded degree.
 
+The same-chat Pro follow-up sharpened the first proof obligation further in
+`proofs/vertical_kernel_endpoint_lemma.md`.  It is enough to prove this
+determinacy only on the one-strand Fadell-Neuwirth vertical kernels
+`ker(d_hat_n:L_n(c)->L_{n-1}(d_hat_n c))`; the full lemma then follows by
+induction, lifting the lower-arity branch by a straight last strand and
+applying the vertical statement to the quotient branch
+`gamma tilde_gamma^{-1}`.
+
 ## Why It Implies Endpoint Separation
 
 Assume the lemma.  Let `u in U`, `u != 1`, and set `q=q_s`.
@@ -470,3 +478,13 @@ K_{I,s,N,n,c}.
 The first closes the positive route.  The second gives an explicit, executable
 negative search target; if the witnesses persist cofinally in `s,N`, they
 diagonalize to the required no-rack sequence.
+
+The sharper first local target is the vertical version:
+
+```text
+prove H^vert_{I,s,N,n,c}={1} for all n,c after one fixed s,N,
+```
+
+where `H^vert` is computed from the deletion-decorated graph generated only by
+the last-strand point-pushing generators `A_{i,n}`.  This is recorded in
+`proofs/vertical_kernel_endpoint_lemma.md`.

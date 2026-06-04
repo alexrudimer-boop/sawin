@@ -422,6 +422,14 @@ computation of the based loop-label subgroup
 these `H` subgroups are exactly the implementable normalized-law endpoint
 obstruction.
 
+The sharper first proof target is the vertical-kernel version in
+`proofs/vertical_kernel_endpoint_lemma.md`.  Restrict the finite labelled graph
+to the last-strand point-pushing generators `A_{i,n}` of
+`ker(d_hat_n:L_n(c)->L_{n-1}(d_hat_n c))`, and compute
+`H^vert_{I,s,N,n,c}`.  Vanishing of these vertical subgroups for fixed `s,N`
+implies the full finite-degree endpoint determinacy by a last-strand deletion
+induction.
+
 ## Relation To Outcome B
 
 Failure of raw row-defect vanishing does not imply a no-rack obstruction.  It

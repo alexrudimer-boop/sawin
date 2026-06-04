@@ -2646,6 +2646,17 @@ extract
 `s,N` makes all such `H` trivial closes the positive endpoint route; cofinal
 actual certificates with `u != 1` as `s,N` grow give the normalized-law
 negative route.
+The follow-up Pro query reduced the first proof obligation to the vertical
+Fadell-Neuwirth kernel, recorded in
+`proofs/vertical_kernel_endpoint_lemma.md`.  For the last-strand deletion
+`d_hat_n:L_n(c)->L_{n-1}(d_hat_n c)`, define `H^vert_{I,s,N,n,c}` by the same
+finite labelled-loop subgroup construction but using only the standard
+point-pushing generators `A_{i,n}` of `ker d_hat_n`.  If every actual interval
+has fixed `s,N` with `H^vert={1}` for all `n,c`, the full endpoint
+determinacy lemma follows by induction: delete the last strand, lift the
+lower branch back by a straight strand, and apply the vertical statement to
+the quotient branch.  Cofinal nonidentity `H^vert` witnesses give the smaller
+actual negative search.
 Formal partial-row nonseparability, failure of one-vertex actualization for a
 formal row system, or failure of stronger structural properties such as
 virtual freeness of `Art_I`, remains only a gap unless it is made actual and
