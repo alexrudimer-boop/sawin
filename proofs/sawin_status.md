@@ -28,6 +28,8 @@ Web search on 2026-05-28 found the finite-rack domination problem as an open
 MathOverflow question by Will Sawin.  A recheck on the same date found the
 page still with `0` answers and no posted resolution:
 https://mathoverflow.net/questions/509988/set-theoretic-solutions-to-the-yang-baxter-equations-and-racks
+Direct recheck on 2026-06-04 again found the page with `0` answers and no
+posted resolution.
 
 A linked MathOverflow question isolates a "local branch-choice rigidity"
 obstruction in Green R-classes; that page also had `0` answers on recheck:
