@@ -2472,6 +2472,24 @@ transducer/gauge from the quotient, fibres, and extension cocycle.  Failure of
 one restricted construction is only another induction gap; failure for every
 finite rack gauge is the relative normalized-law negative branch.
 
+The restricted finite-state version is now recorded in
+`proofs/finite_transducer_rackification_certificate.md`.  Suppose
+`pi:X->Z` is a quotient already dominated by a rack `R_Z`.  A finite rack
+`S`, a left-to-right Mealy transducer `M:X^*->S^*`, and an optional invariant
+transducer `N:X^*->I^*` form a certificate when their local two-letter
+equivariance/invariance equations hold and the combined output
+`(pi^n,N_n,M_n):X^n->Z^n x I^n x S^n` is injective for every `n`.  The local
+equations are finite table checks, and all-length injectivity is a finite
+pair-automaton reachability check.  Under these hypotheses `R_Z x S`
+dominates `X`.  This captures the affine size-four Type A cyclic-rack gauge,
+but it is a certificate theorem, not a universal existence theorem.  The
+missing positive lemma is that every remaining actual finite YBE extension
+admits such a finite transducer certificate, or a similarly restricted
+finite-state gauge constructed from the quotient/fibre cocycle.  The
+fixed-candidate obstruction automata in the same note detect failure for a
+given rack and fixed arity; the unresolved quantifier is still uniformity in
+`n` and over all finite racks.
+
 ## Current conclusion
 
 As of this log entry, neither A nor B is proved.  The current decisive target
