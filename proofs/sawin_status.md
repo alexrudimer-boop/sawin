@@ -2395,6 +2395,17 @@ counterexample, because the rows may not be realized by supported
 completed-context germs.  It does show that a positive structural proof must
 use a further actual-YBE property, not only the abstract row presentation.
 
+Fixed-arity finite separation is also insufficient.  For each braid index
+`n`, the image of `B_n` on `X^n` is finite, but the required detector is one
+finite quotient of `Art_I` working uniformly in all arities.  A compactness
+proof would need an additional bounded-width/no-high-arity endpoint theorem:
+every nonidentity braid-realizable endpoint should have a bounded deletion
+shadow or completed-context minor, functorial for Artin readout, that still
+sees the endpoint.  YBE cube flatness does not currently prove such a theorem.
+Failure of bounded width alone is not a no-rack obstruction; only failure of
+direct profinite separation for `W_u^br` is equivalent to the normalized-law
+negative sequence.
+
 ## Current conclusion
 
 As of this log entry, neither A nor B is proved.  The current decisive target

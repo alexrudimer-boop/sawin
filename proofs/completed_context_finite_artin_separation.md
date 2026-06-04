@@ -263,6 +263,47 @@ use an additional actual-YBE restriction, such as a genuine total rack/groupoid
 completion, rational-subset separability of the actual `Art_I^T`, or the
 sharp direct endpoint-language separation above.
 
+## Uniformity Guardrail
+
+Fixed braid-index finite separation does not imply the required all-arity
+finite quotient.  For each fixed `n`, the braid action on `X^n` has finite
+image, so a nontrivial endpoint branch is separated by some finite quotient
+depending on `n`.  The theorem needs one finite quotient
+
+```text
+q: Art_I -> H
+```
+
+working for every braid index and every braid-realizable branch.
+
+The logical gap is real.  In a free group `F_2`, for each integer `m` one may
+choose a nontrivial word
+
+```text
+w_m in intersection ker(phi)
+```
+
+where the intersection runs over all homomorphisms from `F_2` to finite groups
+of size at most `m`.  Each singleton `{w_m}` is separated from `1` by residual
+finiteness, but no single finite quotient separates `1` from all `w_m`: any
+finite quotient of size at most `m` kills `w_m`.  Thus pointwise finite
+separation is compatible with convergence to `1` in the profinite topology.
+
+A sufficient compactness mechanism would be a bounded-width endpoint theorem:
+there is `N=N(I)` such that every actual braid-realizable branch with
+nonidentity endpoint has a deletion shadow, completed-context minor, or
+bounded subbranch on at most `N` active strands that still has nonidentity
+endpoint, with Artin readout functorially obtained from the original one.
+Then finitely many bounded-arity endpoint languages could be separated and
+their finite quotients multiplied.
+
+Current YBE cube identities do not supply this bounded-width theorem.  They
+make endpoint transport coherent; they do not rule out high-arity endpoint
+branches whose bounded deletion shadows are endpoint-trivial.  Failure of
+bounded width alone is not a no-rack obstruction, since the full language
+might still be separated by one finite quotient.  The exact negative condition
+remains failure of direct profinite separation for `W_u^br`.
+
 If it holds, define the finite endpoint readout on the image of `q Art` by
 
 ```text
