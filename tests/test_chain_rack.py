@@ -1,6 +1,7 @@
 import sys
 import unittest
 from dataclasses import dataclass
+from itertools import product
 from pathlib import Path
 from typing import Tuple
 
@@ -8,12 +9,14 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from ybe_domination import (
     FiniteGroup,
+    LocalInterval,
     assemble_closed_local_detector_chain_rack,
     assemble_congruence_chain_rack,
     closed_local_detector_chain,
     cyclic_group,
     identity_solution,
     is_rack_solution,
+    local_master_bottleneck_summary,
     rack_solution,
 )
 
@@ -153,6 +156,49 @@ class CongruenceChainRackTests(unittest.TestCase):
         self.assertEqual(assembly.final_rack_size, 1 * 8 * 2)
         self.assertTrue(assembly.size_formula_holds)
         self.assertEqual(tuple(step.interval_index for step in assembly.steps), (12, 13))
+
+    def test_identity_base_cyclic_monodromy_row_feeds_closed_chain_assembly(self):
+        colors = (0, 1)
+        points = (0, 1, 2)
+        interval = LocalInterval(
+            colors,
+            {color: points for color in colors},
+            {(left, right): (left, right) for left in colors for right in colors},
+            {
+                (left_color, right_color, left_point, right_point): (
+                    right_point,
+                    (left_point + 1) % 3,
+                )
+                for left_color, right_color, left_point, right_point in product(
+                    colors,
+                    colors,
+                    points,
+                    points,
+                )
+            },
+        )
+        summary = local_master_bottleneck_summary(interval)
+
+        self.assertEqual(summary.verdict, "product_finite_g_branch")
+        self.assertEqual(summary.product_holonomy_details, ("swapped_identity_base_cyclic",))
+        self.assertEqual(summary.closed_detector_group_orders, (3,))
+        self.assertEqual(summary.closed_detector_gaps, ())
+
+        chain = closed_local_detector_chain((summary,), first_interval_index=18)
+        self.assertTrue(chain.is_complete)
+        self.assertEqual(chain.detector_group_orders, (3,))
+
+        terminal = rack_solution(["top"], lambda _left, right: right)
+        assembly = assemble_closed_local_detector_chain_rack(
+            terminal,
+            (summary,),
+            first_interval_index=18,
+        )
+
+        self.assertEqual(assembly.detector_group_orders, (3,))
+        self.assertEqual(assembly.final_rack_size, 18)
+        self.assertEqual(assembly.expected_final_rack_size, 18)
+        self.assertTrue(assembly.size_formula_holds)
 
     def test_endpoint_observer_closed_verdicts_feed_chain_assembly(self):
         terminal = rack_solution(["top"], lambda _left, right: right)

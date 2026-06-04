@@ -30,6 +30,17 @@ and fixed detector group order `3`.  Thus nontrivial transport monodromy is
 not itself a Sawin obstruction.  It is a residual finite motion that must be
 included in the detector.
 
+The audit also runs the congruence-chain handoff on this row.  Starting from
+the one-point terminal rack, the closed row contributes `G=C_3`, and
+
+```text
+assemble_closed_local_detector_chain_rack(...)
+```
+
+builds the sharp detector factor of size `2*3^2=18` with the expected size
+formula.  This is the executable bridge from finite monodromy certificate to
+finite rack factor.
+
 ## Certificate Data
 
 Let `pi:X -> Z` be a finite YBE quotient with crossing-closed fibres.  Suppose
@@ -115,6 +126,14 @@ Q_i = Q_{i+1} x A_{G_i}
 for each local row.  Rows with open product holonomy, delegated affine gaps,
 or missing endpoint-observer groups are rejected rather than silently treated
 as solved.
+
+The regression
+
+```text
+tests/test_chain_rack.py::test_identity_base_cyclic_monodromy_row_feeds_closed_chain_assembly
+```
+
+checks this exact path for the order-three monodromy witness.
 
 ## Consequence
 

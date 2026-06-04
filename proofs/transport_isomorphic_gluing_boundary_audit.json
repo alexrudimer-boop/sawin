@@ -5,7 +5,18 @@
   "all_product_like_rows_have_transport_isomorphisms": true,
   "all_rows_transport_isomorphic": true,
   "all_transport_loop_groups_trivial": false,
+  "assembled_detector_group_orders": [
+    3
+  ],
+  "assembled_expected_final_rack_size": 18,
+  "assembled_final_rack_size": 18,
+  "assembled_size_formula_holds": true,
+  "assembled_terminal_rack_size": 1,
   "branch_tags": [],
+  "closed_detector_chain_complete": true,
+  "closed_detector_chain_group_orders": [
+    3
+  ],
   "consequence": "transport-isomorphic product-like rows do not force simultaneous identity-gauge normalization; this example has loop monodromy of order 3",
   "description": "r((a,x),(b,y))=((a,y),(b,x+1 mod 3))",
   "element_count": 6,

@@ -29,7 +29,11 @@ colours, and the two colour fibres are crossing-closed.
 - local router verdict: `product_finite_g_branch`;
 - local router product holonomy details: `('swapped_identity_base_cyclic',)`;
 - local router detector group orders: `(3,)`;
-- local router detector gaps: `()`.
+- local router detector gaps: `()`;
+- closed detector chain complete: `True`;
+- assembled detector group orders: `(3,)`;
+- assembled final rack size from one-point terminal rack: `18`;
+- assembled size formula holds: `True`.
 
 ## Consequence
 
@@ -46,3 +50,8 @@ with detector group order `3`; see
 `proofs/identity_base_product_branch.md`.  Its role here is only to
 make the flatness obligation in
 `proofs/transport_isomorphic_gluing_boundary.md` explicit.
+
+The same router row feeds the closed-chain rack assembly.  Starting
+from the one-point terminal rack, the single detector group `C_3`
+produces the sharp factor size `2*3^2=18`, and the generated audit
+checks this size formula directly.

@@ -12,7 +12,10 @@ sys.path.insert(0, str(ROOT / "src"))
 from ybe_domination import (  # noqa: E402
     FiniteBraidedSet,
     LocalInterval,
+    assemble_closed_local_detector_chain_rack,
     branch_tags,
+    closed_local_detector_chain,
+    rack_solution,
     local_master_bottleneck_summary,
     subsolution_fibre_transition_audit,
     subsolution_fibre_transport_isomorphism_audit,
@@ -79,6 +82,9 @@ def build_report() -> dict:
     router = local_master_bottleneck_summary(
         identity_base_cyclic_transport_interval()
     )
+    terminal_rack = rack_solution(("*",), lambda _left, right: right)
+    closed_chain = closed_local_detector_chain((router,))
+    assembly = assemble_closed_local_detector_chain_rack(terminal_rack, (router,))
     return {
         "name": "identity_base_cyclic_transport",
         "description": "r((a,x),(b,y))=((a,y),(b,x+1 mod 3))",
@@ -117,6 +123,13 @@ def build_report() -> dict:
         ),
         "local_router_detector_gaps": router.closed_detector_gaps,
         "local_router_remaining_obligation": router.remaining_obligation,
+        "closed_detector_chain_complete": closed_chain.is_complete,
+        "closed_detector_chain_group_orders": closed_chain.detector_group_orders,
+        "assembled_terminal_rack_size": assembly.terminal_rack_size,
+        "assembled_detector_group_orders": assembly.detector_group_orders,
+        "assembled_final_rack_size": assembly.final_rack_size,
+        "assembled_expected_final_rack_size": assembly.expected_final_rack_size,
+        "assembled_size_formula_holds": assembly.size_formula_holds,
         "consequence": (
             "transport-isomorphic product-like rows do not force simultaneous "
             "identity-gauge normalization; this example has loop monodromy "
@@ -172,7 +185,15 @@ def render_markdown(report: dict) -> str:
         "- local router detector group orders: "
         f"`{report['local_router_detector_group_orders']}`;",
         "- local router detector gaps: "
-        f"`{report['local_router_detector_gaps']}`.",
+        f"`{report['local_router_detector_gaps']}`;",
+        "- closed detector chain complete: "
+        f"`{report['closed_detector_chain_complete']}`;",
+        "- assembled detector group orders: "
+        f"`{report['assembled_detector_group_orders']}`;",
+        "- assembled final rack size from one-point terminal rack: "
+        f"`{report['assembled_final_rack_size']}`;",
+        "- assembled size formula holds: "
+        f"`{report['assembled_size_formula_holds']}`.",
         "",
         "## Consequence",
         "",
@@ -189,6 +210,11 @@ def render_markdown(report: dict) -> str:
         "`proofs/identity_base_product_branch.md`.  Its role here is only to",
         "make the flatness obligation in",
         "`proofs/transport_isomorphic_gluing_boundary.md` explicit.",
+        "",
+        "The same router row feeds the closed-chain rack assembly.  Starting",
+        "from the one-point terminal rack, the single detector group `C_3`",
+        "produces the sharp factor size `2*3^2=18`, and the generated audit",
+        "checks this size formula directly.",
     ]
     return "\n".join(lines) + "\n"
 
