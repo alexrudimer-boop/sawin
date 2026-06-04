@@ -2369,6 +2369,15 @@ For each fixed nonidentity endpoint value `u`, the sublanguage
 finite completed-context automaton with the finite endpoint value included in
 the state.
 
+The sharp braid-action target is the sublanguage
+
+```text
+W_u^br = { alpha(gamma) : gamma is actual residual-braid-realizable
+                         and Ept(gamma)=u }.
+```
+
+Separating every `W_u` is sufficient; separating every `W_u^br` is exact.
+
 Thus the positive route may be attacked by a genuine rational/profinite
 separability theorem for actual YBE Artin row groups and their endpoint
 languages.  A negative route must make failure of this profinite separation
@@ -2388,12 +2397,19 @@ use a further actual-YBE property, not only the abstract row presentation.
 
 ## Current conclusion
 
-As of this log entry, neither A nor B is proved.  The next decisive work is to
-prove the bi-free universal-corridor factorization target: the finite
-symmetric kernel-block/Schutzenberger group product `H(pi,Q)` must detect the
-all-`n` residual braid action for arbitrary finite fibres and quotient
-colours.  Equivalently, every group-like corridor or semigroup unit label
-must be proved to lie in the appropriate longitude-value subgroup of a fixed
-finite detector group.  If this fails, a concrete YBE table must be given
-whose normalized-law residual holonomy escapes every finite group detector in
-that unit/group-like part.
+As of this log entry, neither A nor B is proved.  The current decisive target
+is direct profinite endpoint-language separation for the braid-realizable
+endpoint languages of the remaining completed-context intervals:
+
+```text
+1 notin closure(W_u^br) in Art_I^T
+```
+
+for every nonidentity endpoint value `u`.  Proving this for every actual
+finite YBE interval gives the fixed finite endpoint quotient needed by the
+sharp obstruction theorem and hence completes the positive route.  Refuting it
+means exhibiting nonseparating actual residual braid branches in arities
+tending to infinity; that gives the normalized-law no-rack sequence.
+Formal partial-row nonseparability, or failure of stronger structural
+properties such as virtual freeness of `Art_I`, remains only a gap unless it
+is made actual and braid-realizable.

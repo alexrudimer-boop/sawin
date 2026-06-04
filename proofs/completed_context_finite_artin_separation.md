@@ -160,6 +160,20 @@ The finite completed-context automaton with endpoint value in its state
 accepts exactly `W_u`, so `W_u` is rational in `Art_I^T` and
 `W_!=1 = union_{u != 1} W_u`.
 
+The sharp target may be slightly smaller.  Let
+
+```text
+W_u^br = { alpha(gamma) in Art_I^T :
+           gamma is realized by an actual residual braid branch and
+           epsilon(gamma) = u }.
+```
+
+Separating every `W_u` from `1` is sufficient.  Separating `W_u^br` from `1`
+is the exact braid-action requirement.  A nonseparable formal path matters for
+Sawin domination only when it is represented by actual residual braid
+branches, because only then does it produce moving elements in some
+`X^n`.
+
 Then finite Artin-null endpoint separation is equivalent to
 
 ```text
@@ -184,15 +198,15 @@ very strong sufficient condition, and YBE cube flatness only makes
 is that the actual nontrivial endpoint language is profinitely separated from
 `1` by the universal Artin row group.
 
-Failure of this profinite separation for actual braid-realizable paths is
-equivalent to the normalized-law endpoint obstruction.  Enumerating finite
-groups and evaluating all homomorphisms from `Art_I` to the first finitely
-many groups gives paths whose Artin readouts are invisible to those groups
-while `epsilon` remains nontrivial.  If those paths are realized by residual
-braid branches in arities tending to infinity, the diagonal sequence is
-invisible to every fixed finite longitude detector but still moves a residual
-tuple.  Failure only inside a larger formal path category is weaker, because
-formal paths need not correspond to actual residual braid branches.
+Failure of profinite separation for `W_u^br` is equivalent to the
+normalized-law endpoint obstruction.  Enumerating finite groups and evaluating
+all homomorphisms from `Art_I` to the first finitely many groups gives
+braid-realizable paths whose Artin readouts are invisible to those groups
+while `epsilon` remains nontrivial.  Stabilizing by unused strands if needed,
+the diagonal sequence is invisible to every fixed finite longitude detector
+but still moves a residual tuple.  Failure only inside a larger formal path
+category is weaker, because formal paths need not correspond to actual
+residual braid branches.
 
 ## Partial-Wirtinger Guardrail
 
