@@ -172,6 +172,7 @@ class TransducerRackificationAudit:
 
 @dataclass(frozen=True)
 class CanonicalQuotientAudit:
+    quotient_failures: Tuple[QuotientEquivarianceFailure, ...]
     action_failures: Tuple[CanonicalQuotientActionFailure, ...]
     equation_failures: Tuple[CanonicalQuotientEquationFailure, ...]
     invariant_failures: Tuple[InvariantTransducerFailure, ...]
@@ -180,7 +181,8 @@ class CanonicalQuotientAudit:
     @property
     def finite_conditions_hold(self) -> bool:
         return (
-            not self.action_failures
+            not self.quotient_failures
+            and not self.action_failures
             and not self.equation_failures
             and not self.invariant_failures
             and self.injectivity_witness is None
@@ -490,15 +492,25 @@ def canonical_quotient_combined_output(
     word: Tuple[Element, ...],
     data: CanonicalQuotientData,
     invariant_transducer: Optional[InvariantTransducer] = None,
-) -> Tuple[Optional[Tuple[Element, ...]], Tuple[Tuple[GroupElement, Element], ...]]:
-    """Return `(N_n, C_n)` for one input word."""
+    quotient_map: Optional[Mapping[Element, Element]] = None,
+) -> Tuple[
+    Optional[Tuple[Element, ...]],
+    Optional[Tuple[Element, ...]],
+    Tuple[Tuple[GroupElement, Element], ...],
+]:
+    """Return `(pi^n, N_n, C_n)` for one input word."""
 
+    quotient_word = (
+        None
+        if quotient_map is None
+        else tuple(quotient_map[letter] for letter in word)
+    )
     invariant_word = (
         None
         if invariant_transducer is None
         else invariant_transducer.outputs(word)
     )
-    return (invariant_word, data.outputs(word))
+    return (quotient_word, invariant_word, data.outputs(word))
 
 
 def combined_transducer_output(
@@ -522,6 +534,7 @@ def all_length_canonical_quotient_injectivity_witness(
     solution: FiniteBraidedSet,
     data: CanonicalQuotientData,
     invariant_transducer: Optional[InvariantTransducer] = None,
+    quotient_map: Optional[Mapping[Element, Element]] = None,
 ) -> Optional[InjectivityWitness]:
     """Find two different words with identical canonical outputs, if any."""
 
@@ -539,6 +552,7 @@ def all_length_canonical_quotient_injectivity_witness(
         q_left, p_left, q_right, p_right, already_differs = state
         for left in solution.elements:
             left_output = (
+                None if quotient_map is None else quotient_map[left],
                 None
                 if invariant_transducer is None
                 else invariant_transducer.output(p_left, left),
@@ -546,6 +560,7 @@ def all_length_canonical_quotient_injectivity_witness(
             )
             for right in solution.elements:
                 right_output = (
+                    None if quotient_map is None else quotient_map[right],
                     None
                     if invariant_transducer is None
                     else invariant_transducer.output(p_right, right),
@@ -583,10 +598,15 @@ def canonical_quotient_audit(
     solution: FiniteBraidedSet,
     data: CanonicalQuotientData,
     invariant_transducer: Optional[InvariantTransducer] = None,
+    quotient: Optional[FiniteBraidedSet] = None,
+    quotient_map: Optional[Mapping[Element, Element]] = None,
 ) -> CanonicalQuotientAudit:
     """Audit canonical quotient equations and all-length reconstruction."""
 
     return CanonicalQuotientAudit(
+        quotient_failures=()
+        if quotient is None or quotient_map is None
+        else quotient_equivariance_failures(solution, quotient, quotient_map),
         action_failures=canonical_quotient_action_failures(data),
         equation_failures=canonical_quotient_equation_failures(solution, data),
         invariant_failures=()
@@ -596,6 +616,7 @@ def canonical_quotient_audit(
             solution,
             data,
             invariant_transducer,
+            quotient_map,
         ),
     )
 

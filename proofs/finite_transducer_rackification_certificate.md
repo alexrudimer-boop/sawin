@@ -390,9 +390,11 @@ The canonical form is now executable.  The helper
 canonical_quotient_audit(solution,data,invariant_transducer=None)
 ```
 
-checks the finite group action, the equations `(Q),(H1),(H2),(F1),(F2)`, the
-optional invariant observer equations, and all-length pair-automaton
-injectivity.  The helper
+checks optional quotient equivariance, the finite group action, the equations
+`(Q),(H1),(H2),(F1),(F2)`, optional invariant observer equations, and
+all-length pair-automaton injectivity.  Thus the executable certificate now
+keeps three channels separate: quotient data, rack-active canonical data, and
+position-invariant observer data.  The helper
 
 ```text
 canonical_quotient_product_rack(data)
