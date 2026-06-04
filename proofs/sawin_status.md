@@ -2666,6 +2666,20 @@ not refute Sawin, because the underlying solution is already dominated by the
 two-point flip rack.  It refutes the endpoint-labelled interval lemma as too
 broad: a viable endpoint route must add a constraint tying endpoint labels to
 the residual action, or otherwise exclude such artificial marker endpoints.
+The repair note `proofs/rackable_endpoint_absorption.md` identifies one exact
+safe constraint.  If the endpoint labels are faithful finite fibre bisections
+and YBE forces the covariance
+
+```text
+phi_{p*q} = phi_p phi_q phi_p^-1,
+```
+
+then the endpoint bisections and the endpoint fibre form a finite rack
+`C sqcup F` that detects every nontrivial endpoint.  Thus the marker
+obstruction cannot be upgraded into a Sawin counterexample: before repair it
+is not actual residual movement, and after faithful repair it is rack-detected.
+A genuine negative endpoint sequence must be actual, profinitely Artin-null,
+and not absorbed by any such finite rackable endpoint factor.
 Formal partial-row nonseparability, failure of one-vertex actualization for a
 formal row system, or failure of stronger structural properties such as
 virtual freeness of `Art_I`, remains only a gap unless it is made actual and

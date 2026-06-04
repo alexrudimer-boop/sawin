@@ -2708,3 +2708,14 @@ have trivial bounded deletion shadows and trivial Artin readout but fixed
 nontrivial endpoint.  This is not a Sawin counterexample because the
 underlying flip solution is rack-dominated.  It only shows that arbitrary
 endpoint-labelled intervals are too broad for the endpoint-separation route.
+
+`proofs/rackable_endpoint_absorption.md` records the repair.  If those
+endpoint labels are made faithful as actual finite fibre bisections, then YBE
+forces either commuting endpoint bisections over the old flip table or
+conjugation covariance `phi_{p*q}=phi_p phi_q phi_p^-1`.  In the noncommuting
+case the bisections and endpoint fibre form a finite rack `C sqcup F`; any
+nontrivial endpoint moves a point of that rack and is detected by it.  Thus
+the marker obstruction cannot be upgraded into a Sawin-negative sequence.
+The negative search now has the sharper admissibility test: witnesses must be
+actual, profinitely Artin-null, and not absorbed by a finite rackable endpoint
+factor.

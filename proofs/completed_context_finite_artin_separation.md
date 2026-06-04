@@ -438,6 +438,20 @@ example is rack-harmless for Sawin but shows that endpoint-labelled interval
 data need an additional admissibility constraint before this separation route
 can be used.
 
+The admissibility repair is recorded in
+`proofs/rackable_endpoint_absorption.md`.  If the endpoint labels are upgraded
+to faithful finite fibre bisections and the YBE forces the covariance
+
+```text
+phi_{p*q} = phi_p phi_q phi_p^-1,
+```
+
+then the bisections and the finite fibre form a finite rack detector
+`C sqcup F`.  Any branch with nontrivial endpoint moves a point of this rack,
+so it cannot be invisible to all finite racks.  Hence an endpoint-language
+failure is Sawin-negative only after excluding this rackable endpoint
+absorption.
+
 ## Relation To Outcome B
 
 Failure of raw row-defect vanishing does not imply a no-rack obstruction.  It

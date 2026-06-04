@@ -497,3 +497,17 @@ where `H^vert` is computed from the deletion-decorated graph generated only by
 the last-strand point-pushing generators `A_{i,n}`.  It is recorded, and then
 refuted as stated, in `proofs/vertical_kernel_endpoint_lemma.md` and
 `proofs/vertical_kernel_endpoint_refutation.md`.
+
+The refutation has a repair fence in
+`proofs/rackable_endpoint_absorption.md`.  Endpoint Brunnian witnesses are
+Sawin-relevant only if the endpoint is actual residual movement and is not
+already absorbed by a finite rack of endpoint bisections.  When the endpoint
+is a faithful finite fibre action satisfying the YBE covariance
+
+```text
+phi_{p*q} = phi_p phi_q phi_p^-1,
+```
+
+the bisections form a finite conjugation/action rack `C sqcup F` that detects
+every nontrivial endpoint.  Thus a cofinal negative seed must be profinitely
+Artin-null and non-rackable, not merely endpoint-nontrivial.

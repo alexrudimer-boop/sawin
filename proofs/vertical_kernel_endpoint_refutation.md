@@ -277,6 +277,21 @@ This does not produce a Sawin counterexample: the underlying `X` is an
 involutive flip solution, dominated by the two-point flip rack.  It only
 refutes this endpoint-separation lemma as a route to Sawin.
 
+The repair/upgrade analysis is recorded in
+`proofs/rackable_endpoint_absorption.md`.  If these external endpoint labels
+are made faithful as actual finite marker-fibre bisections, YBE forces either
+commuting bisections over the old flip table, or conjugation covariance
+
+```text
+phi_{p*q} = phi_p phi_q phi_p^-1.
+```
+
+In the noncommuting case the bisections assemble into a finite rack
+`C sqcup F`, with `C` a finite conjugation-stable set of endpoint bisections
+and `F` the endpoint fibre.  The same Brunnian vertical words then move an
+actual point of that rack, so they are detected by a finite rack.  Thus the
+marker obstruction is endpoint-realizable only in a rack-harmless way.
+
 ## Guardrail
 
 The one-germ flip interval does not refute the lemma because its endpoint is
@@ -288,3 +303,7 @@ Any endpoint route that remains viable must impose an additional restriction
 excluding such artificial endpoint-labelled intervals, or it must tie endpoint
 labels to the actual residual action more tightly than the current interval
 axioms do.
+
+The tighter admissibility filter is now: endpoint motion must be actual and
+not absorbed by a finite conjugation/action rack factor.  Faithful rackable
+endpoint movement is automatically Sawin-harmless.
