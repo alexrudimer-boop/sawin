@@ -142,6 +142,50 @@ def product_solution(left: FiniteBraidedSet, right: FiniteBraidedSet) -> FiniteB
     return FiniteBraidedSet(elements, table)
 
 
+def flip_disjoint_union_solution(
+    left: FiniteBraidedSet,
+    right: FiniteBraidedSet,
+    left_tag: Hashable = 0,
+    right_tag: Hashable = 1,
+) -> FiniteBraidedSet:
+    """Return the disjoint union that flips across the two components.
+
+    Elements are tagged as ``(left_tag, x)`` and ``(right_tag, y)``.  Crossings
+    inside one component use that component's table, while mixed-component
+    crossings are the flip ``(x,y) -> (y,x)``.  If both inputs are racks, this
+    is the rack disjoint union with cross-component left translations acting
+    trivially on the other component.
+    """
+
+    if left_tag == right_tag:
+        raise ValueError("component tags must be distinct")
+    left_elements = tuple((left_tag, element) for element in left.elements)
+    right_elements = tuple((right_tag, element) for element in right.elements)
+    elements = left_elements + right_elements
+    left_set = set(left_elements)
+    right_set = set(right_elements)
+    table = {}
+    for first in elements:
+        for second in elements:
+            first_tag, first_value = first
+            second_tag, second_value = second
+            if first in left_set and second in left_set:
+                out_first, out_second = left.R[(first_value, second_value)]
+                table[(first, second)] = (
+                    (left_tag, out_first),
+                    (left_tag, out_second),
+                )
+            elif first in right_set and second in right_set:
+                out_first, out_second = right.R[(first_value, second_value)]
+                table[(first, second)] = (
+                    (right_tag, out_first),
+                    (right_tag, out_second),
+                )
+            else:
+                table[(first, second)] = (second, first)
+    return FiniteBraidedSet(elements, table)
+
+
 def is_subsolution_subset(
     solution: FiniteBraidedSet, subset: Iterable[Element]
 ) -> bool:

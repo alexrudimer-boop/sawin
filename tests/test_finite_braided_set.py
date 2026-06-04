@@ -1,5 +1,6 @@
 import sys
 import unittest
+from itertools import product
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
@@ -7,6 +8,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 from ybe_domination import (
     FiniteBraidedSet,
     admits_rack_quotient_cover,
+    flip_disjoint_union_solution,
     identity_solution,
     is_rack_solution,
     is_subsolution_subset,
@@ -20,6 +22,18 @@ from ybe_domination import (
 
 
 class FiniteBraidedSetTests(unittest.TestCase):
+    @staticmethod
+    def component_pattern(tup):
+        return tuple(element[0] for element in tup)
+
+    @staticmethod
+    def symmetric_pattern_action(word, pattern):
+        out = list(pattern)
+        for signed_generator in word:
+            index = abs(signed_generator) - 1
+            out[index], out[index + 1] = out[index + 1], out[index]
+        return tuple(out)
+
     def test_identity_solution_is_ybe(self):
         solution = identity_solution([0, 1])
         self.assertTrue(solution.is_ybe())
@@ -42,6 +56,59 @@ class FiniteBraidedSetTests(unittest.TestCase):
         self.assertTrue(product.is_ybe())
         self.assertTrue(is_rack_solution(product))
         self.assertEqual(len(product.elements), 6)
+
+    def test_flip_disjoint_union_solution_is_ybe(self):
+        left = rack_solution([0, 1], lambda _left, right: right)
+        right = identity_solution(["x", "y"])
+
+        union = flip_disjoint_union_solution(left, right, "L", "R")
+
+        self.assertTrue(union.is_ybe())
+        self.assertEqual(
+            union.R[(("L", 0), ("R", "x"))],
+            (("R", "x"), ("L", 0)),
+        )
+        self.assertEqual(
+            union.R[(("R", "x"), ("L", 0))],
+            (("L", 0), ("R", "x")),
+        )
+
+    def test_flip_disjoint_union_of_racks_is_a_rack(self):
+        left = rack_solution([0, 1], lambda _left, right: 1 - right)
+        right = rack_solution(["x", "y"], lambda _left, right: right)
+
+        union = flip_disjoint_union_solution(left, right, "L", "R")
+
+        self.assertTrue(union.is_ybe())
+        self.assertTrue(is_rack_solution(union))
+
+    def test_flip_disjoint_union_color_map_is_braid_equivariant(self):
+        left = identity_solution(["a", "b"])
+        right = rack_solution([0, 1], lambda _left, right: 1 - right)
+        union = flip_disjoint_union_solution(left, right, "L", "R")
+        word = (1, 2, -1, 2)
+
+        for tup in product(union.elements, repeat=3):
+            image = union.braid_action(word, tup)
+            self.assertEqual(
+                self.component_pattern(image),
+                self.symmetric_pattern_action(word, self.component_pattern(tup)),
+            )
+
+    def test_flip_disjoint_union_pure_braid_deletes_to_same_color_subbraid(self):
+        left = rack_solution([0, 1], lambda _left, right: 1 - right)
+        right = identity_solution(["r"])
+        union = flip_disjoint_union_solution(left, right, "L", "R")
+        pure_word = (2, 1, 1, -2)
+
+        for a, b in product(left.elements, repeat=2):
+            tup = (("L", a), ("R", "r"), ("L", b))
+            image = union.braid_action(pure_word, tup)
+            left_image = left.braid_action((1, 1), (a, b))
+            self.assertEqual(
+                image,
+                (("L", left_image[0]), ("R", "r"), ("L", left_image[1])),
+            )
 
     def test_identity_solution_is_not_rack_form_unless_singleton(self):
         self.assertFalse(is_rack_solution(identity_solution([0, 1])))

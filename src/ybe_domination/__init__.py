@@ -3,6 +3,7 @@
 from .finite_braided_set import (
     FiniteBraidedSet,
     admits_rack_quotient_cover,
+    flip_disjoint_union_solution,
     identity_solution,
     is_rack_solution,
     is_subsolution_subset,
@@ -1636,6 +1637,7 @@ __all__ = [
     "generated_permutation_subgroup_with_words",
     "evaluate_free_word_on_permutations",
     "finite_group_longitude_signature",
+    "flip_disjoint_union_solution",
     "first_moved_tuple",
     "free_word_exponent_vector",
     "free_word_power",

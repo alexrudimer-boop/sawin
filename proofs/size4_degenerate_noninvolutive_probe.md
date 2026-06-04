@@ -43,6 +43,10 @@ The 40 reported examples split into two observed types.
 All 40 reported examples have crossing order four, so they are not involutive.
 The reported Type B description is a twisted union of the trivial solution on
 `{0,1}` with the permutation solution `R(a,b)=(b,1-a)` on `{2,3}`.
+The general flip-across twisted-union closure theorem is now recorded in
+`proofs/flip_twisted_union_domination.md`: if finite racks dominate two
+component solutions, then the flip-across disjoint union of those racks
+dominates the flip-across disjoint union of the component solutions.
 
 ## Local rack-image audit
 
@@ -73,11 +77,13 @@ tables, but an all-arity structural proof of the observed mechanism:
 
 ```
 Type A solutions are braid-equivalent to the two-element cyclic rack.
-Type B twisted-union solutions are braid-equivalent to the rack L_0=L_1=id, L_2=(01).
+Type B twisted-union solutions are dominated by the flip-across union of the
+component rack detectors; in the observed size-four case this is the rack
+L_0=L_1=id, L_2=(01).
 ```
 
-If that proof can be obtained, the current size-four evidence becomes a stable
-positive branch rather than a bounded-level computation.  A complete size-four
-classification still requires committing the forced-search script and the 40
-tables, or replacing the search by a theoretical classification of the
-degenerate non-involutive size-four cases.
+The Type B proof is now supplied by the flip-across union theorem.  The Type A
+braid-equivalence and a complete size-four classification still require
+committing the forced-search script and the 40 tables, or replacing the search
+by a theoretical classification of the degenerate non-involutive size-four
+cases.

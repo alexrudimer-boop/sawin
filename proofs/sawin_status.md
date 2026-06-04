@@ -2447,6 +2447,15 @@ evidence and a theorem target rather than a reproducible classification:
 prove all-arity braid-equivalence for the two observed twisted-union families,
 or commit the finite census and then classify its output.
 
+The Type B mechanism has now been promoted from a bounded computation to a
+closure theorem in `proofs/flip_twisted_union_domination.md`.  If two finite
+solutions are dominated by finite racks, then their flip-across disjoint union
+is dominated by the flip-across disjoint union of the rack detectors.  The
+proof uses the color map `X^n -> {A,B}^n`, its equivariance through
+`B_n -> S_n`, and the pure-braid decomposition obtained by deleting all
+strands outside a fixed color class.  This adds a new positive family:
+iterated flip-across unions of already dominated pieces.
+
 ## Current conclusion
 
 As of this log entry, neither A nor B is proved.  The current decisive target
