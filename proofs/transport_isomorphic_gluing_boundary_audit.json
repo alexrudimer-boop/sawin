@@ -1,0 +1,47 @@
+{
+  "all_mixed_rows_product_like": true,
+  "all_mixed_transitions_product_like": true,
+  "all_mixed_transitions_swapped_product_like": true,
+  "all_product_like_rows_have_transport_isomorphisms": true,
+  "all_rows_transport_isomorphic": true,
+  "all_transport_loop_groups_trivial": false,
+  "branch_tags": [],
+  "consequence": "transport-isomorphic product-like rows do not force simultaneous identity-gauge normalization; this example has loop monodromy of order 3",
+  "description": "r((a,x),(b,y))=((a,y),(b,x+1 mod 3))",
+  "element_count": 6,
+  "is_ybe": true,
+  "name": "identity_base_cyclic_transport",
+  "partition": [
+    [
+      "(0, 0)",
+      "(0, 1)",
+      "(0, 2)"
+    ],
+    [
+      "(1, 0)",
+      "(1, 1)",
+      "(1, 2)"
+    ]
+  ],
+  "transport_edge_count": 6,
+  "transport_loop_group_orders": [
+    {
+      "block": [
+        "(0, 0)",
+        "(0, 1)",
+        "(0, 2)"
+      ],
+      "loop_generator_count": 4,
+      "loop_group_order": 3
+    },
+    {
+      "block": [
+        "(1, 0)",
+        "(1, 1)",
+        "(1, 2)"
+      ],
+      "loop_generator_count": 4,
+      "loop_group_order": 3
+    }
+  ]
+}

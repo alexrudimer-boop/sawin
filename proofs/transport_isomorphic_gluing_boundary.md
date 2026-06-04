@@ -79,6 +79,10 @@ subsolution_fibre_transport_monodromy_audit(solution, partition)
 therefore records a real gate, not cosmetic metadata.  Type B passes this
 gate with trivial loop monodromy.  Type A does not even reach the gate,
 because its product-like transports are not internal-solution isomorphisms.
+The generated audit
+`proofs/transport_isomorphic_gluing_boundary_audit.md` gives a concrete
+six-point transport-isomorphic product-like solution with loop monodromy of
+order `3`, so the flatness issue is not merely hypothetical.
 
 ## Split-Tower Obligation
 

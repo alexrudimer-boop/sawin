@@ -6,6 +6,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from ybe_domination import (
+    FiniteBraidedSet,
     flip_disjoint_union_solution,
     identity_solution,
     one_state_invariant_observer_partition,
@@ -98,6 +99,35 @@ class TerminalBranchTriageTests(unittest.TestCase):
 
         self.assertTrue(monodromy.all_rows_transport_isomorphic)
         self.assertTrue(monodromy.all_loop_groups_trivial)
+
+    def test_transport_isomorphic_rows_can_have_nontrivial_loop_monodromy(self):
+        elements = tuple(product((0, 1), (0, 1, 2)))
+        table = {}
+        for left_color, left_point in elements:
+            for right_color, right_point in elements:
+                table[((left_color, left_point), (right_color, right_point))] = (
+                    (left_color, right_point),
+                    (right_color, (left_point + 1) % 3),
+                )
+        solution = FiniteBraidedSet(elements, table)
+        partition = (
+            frozenset((0, point) for point in (0, 1, 2)),
+            frozenset((1, point) for point in (0, 1, 2)),
+        )
+
+        self.assertTrue(solution.is_ybe())
+
+        transport = subsolution_fibre_transport_isomorphism_audit(solution, partition)
+        self.assertTrue(transport.all_mixed_rows_product_like)
+        self.assertTrue(transport.all_product_like_rows_have_transport_isomorphisms)
+
+        monodromy = subsolution_fibre_transport_monodromy_audit(solution, partition)
+        self.assertTrue(monodromy.all_rows_transport_isomorphic)
+        self.assertFalse(monodromy.all_loop_groups_trivial)
+        self.assertEqual(
+            tuple(row.loop_group_order for row in monodromy.rows),
+            (3, 3),
+        )
 
 
 if __name__ == "__main__":
