@@ -2546,6 +2546,14 @@ any remaining `D_{a_X(h)+1}`-blind but `X`-visible braid must have no
 group for a supplied cutoff `s`, using pure braid generators and all deletion
 shadows through `h`.
 
+The next concrete negative search target is now sharper than ordinary
+high-arity behavior: find a size-five finite YBE table that is bi-degenerate,
+non-involutive, not flip-split, quotient-minimal, has nontrivial pure braid
+image, and satisfies `E_{X,2,n}!=1` for some `n>=3`.  If size five has no such
+table, the next structured target is affine-linear `X=F_2^3`, filtered for
+left-degeneracy and non-involutivity, then tested for nontrivial
+`E_{X,h,n}` as `h` grows.
+
 ## Current conclusion
 
 As of this log entry, neither A nor B is proved.  The current decisive target

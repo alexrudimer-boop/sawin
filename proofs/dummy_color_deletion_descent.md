@@ -220,3 +220,41 @@ forall h exists n, E_{X,h,n} != 1
 for one finite table `X` would give the normalized-law no-rack sequence.
 Proving that `E_{X,h,n}=1` for all `n` once `h=h(X)` would give a finite rack
 dominator.
+
+## Concrete Search Targets
+
+The bounded-support query identifies the first plausible finite-table
+counterexample filter.  Since size four is explained by known branches and the
+flip-across twisted-union theorem, the next brute-force target is:
+
+```text
+|X| = 5,
+X bi-degenerate,
+X non-involutive,
+X not a flip-across disjoint union of smaller dominated pieces,
+X quotient-minimal or subdirectly irreducible as a YBE algebra,
+rho^X_n(P_n) != 1 for some small n,
+E_{X,2,n} != 1 for some n >= 3.
+```
+
+The last condition is the first serious bounded-deletion obstruction: the
+witness is invisible to all racks of size at most `a_X(2)+1`, visible on
+`X^n`, and invisible after every deletion to one or two strands.
+
+If no size-five table passes this filter, the next structured target is the
+affine-linear family on `F_2^3`.  Search affine bijections
+
+```text
+r(x,y) = M (x,y)^T + c,      M in GL_6(F_2), c in F_2^6,
+```
+
+subject to the affine YBE equations, left-degeneracy of the first output
+block, and non-involutivity.  Then test
+
+```text
+E_{X,2,n}, E_{X,3,n}, E_{X,4,n}
+```
+
+for increasing `n`.  This family is large enough to escape the size-four
+phenomena, but structured enough that the YBE constraints and braid actions
+are affine-linear finite computations.
