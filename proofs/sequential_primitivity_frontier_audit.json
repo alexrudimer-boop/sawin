@@ -1,0 +1,77 @@
+{
+  "candidate_names": [],
+  "conclusion": "The exhaustive size-3 corpus has no sequential-primitivity candidate, and the current size-4/affine pressure representatives are closed by explicit active-factor or sequential rack certificates. The next falsifiable search frontier starts at larger nonterminal tables, for example size 5 or structured affine-linear families beyond the hidden cyclic gauge.",
+  "representative_candidate_count": 0,
+  "representatives": [
+    {
+      "candidate": false,
+      "certificate_kind": "sequential cyclic rack gauge plus parity observer",
+      "finite_conditions_hold": true,
+      "has_nontrivial_one_state_observer": true,
+      "has_point_separating_proper_quotients": false,
+      "has_subsolution_fibre_congruence": true,
+      "injectivity_witness": null,
+      "involutive": false,
+      "name": "size4_affine_type_a",
+      "solution_size": 4,
+      "ybe": true
+    },
+    {
+      "candidate": false,
+      "certificate_kind": "two proper active quotient factors",
+      "finite_conditions_hold": true,
+      "has_flip_across_decomposition": true,
+      "has_point_separating_proper_quotients": true,
+      "injectivity_witness": null,
+      "involutive": false,
+      "name": "size4_type_b_flip_across",
+      "proper_factor_sizes": [
+        3,
+        3
+      ],
+      "solution_size": 4,
+      "ybe": true
+    },
+    {
+      "active_factor_size": 4,
+      "candidate": false,
+      "certificate_kind": "two-state hidden cyclic rack gauge plus inert observer",
+      "detector_group_order": 2,
+      "finite_conditions_hold": true,
+      "injectivity_witness": null,
+      "known_branch_reason": null,
+      "name": "affine_f2_hidden_cyclic_pressure_row",
+      "solution_size": 8,
+      "ybe": true
+    }
+  ],
+  "size_3": {
+    "branch_tag_counts": {
+      "involutive": 6,
+      "involutive+identity_table+affine_cyclic": 1,
+      "involutive+left_nondegenerate+right_nondegenerate+nondegenerate": 6,
+      "involutive+permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate+affine_cyclic": 5,
+      "left_nondegenerate+right_nondegenerate+nondegenerate": 24,
+      "left_nondegenerate+right_nondegenerate+nondegenerate+affine_cyclic": 11,
+      "permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate+affine_cyclic": 7,
+      "rack_type+involutive+permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate+affine_cyclic": 1,
+      "rack_type+left_nondegenerate+right_nondegenerate+nondegenerate": 6,
+      "rack_type+left_nondegenerate+right_nondegenerate+nondegenerate+affine_cyclic": 1,
+      "rack_type+permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate+affine_cyclic": 5
+    },
+    "candidate_count": 0,
+    "candidate_signatures": [],
+    "conclusion": "no size-3 sequential-primitivity candidate",
+    "exact_exhaustive": true,
+    "known_branch_count": 73,
+    "known_branch_reasons": {
+      "involutive_artin_permutation": 19,
+      "left_nondegenerate_guitar_derived_rack": 35,
+      "permutation_twist_subgroup": 12,
+      "rack_inner_group_subgroup": 7
+    },
+    "name": "exhaustive_size_3_corpus",
+    "solution_count": 73
+  },
+  "title": "Sequential-primitivity frontier audit"
+}

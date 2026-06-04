@@ -1,6 +1,18 @@
 # Sequential Primitivity Challenge
 
-Status: queued for GPT-5.5 Pro on 2026-06-04.
+Status: answered by GPT-5.5 Pro on 2026-06-04.
+
+Answer summary:
+
+- No proof of active-factor observability, no alternate proof of Sawin YES,
+  and no concrete Sawin-negative table was supplied.
+- Sequential primitivity alone remains too weak; the next falsifiable finite
+  target should also exhibit actual small-rack-prefix pressure.
+- The proposed search target is a rigid pressure core: a nonterminal,
+  quotient-rigid, subsolution-rigid, observer-rigid, transport-split-rigid
+  finite YBE table with `N_{m,n}(X) != 1` for a first small rack prefix.
+- This answer is recorded in `proofs/active_factor_observability_boundary.md`
+  and made executable by `tools/run_rigid_pressure_core_audit.py`.
 
 Prompt:
 

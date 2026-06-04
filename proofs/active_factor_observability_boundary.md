@@ -75,6 +75,40 @@ primitive:
 These examples remain proof-mechanism guardrails rather than negative
 evidence.
 
+The generated audit `proofs/sequential_primitivity_frontier_audit.md` adds the
+current finite frontier.  Exhaustively, the size-three corpus has `73` YBE
+tables and no sequential-primitivity candidate: all route to involutive,
+permutation, rack-inner, or left-nondegenerate/guitar terminal branches.  The
+same audit records that the named pressure representatives currently in the
+repo are closed by explicit certificates:
+
+- size-four affine Type A by a cyclic rack gauge plus parity observer;
+- size-four Type B by two proper active quotient factors;
+- the affine `F_2^3` hidden cyclic pressure row by a two-state cyclic rack
+  gauge plus inert observer.
+
+Thus the next falsifiable search frontier is not size three and not these
+named pressure rows; it starts at larger nonterminal tables, such as size five
+or structured affine-linear families beyond the hidden cyclic gauge.
+
+The subsequent Pro refinement makes the negative-search target more concrete.
+Sequential primitivity is still too weak: it defeats one induction method but
+does not exhibit rack-prefix pressure.  The next table to search for is a
+rigid pressure core, meaning a finite table that survives all terminal
+filters, has no proper quotient, no crossing-closed subsolution, no
+one-state invariant observer, no transport-isomorphic fibre splitting, and
+then has actual small-rack-prefix pressure
+
+```text
+N_{m,n}(X) != 1
+```
+
+for a prefix containing the racks of size at most `3`.  The generated audit
+`proofs/rigid_pressure_core_audit.md` makes these finite filters executable:
+the exhaustive size-three corpus has no terminal survivor, and the current
+size-four/affine pressure representatives all fail one of the rigidity
+filters before rack-prefix pressure is even tested.
+
 ## Cofinal Rack-Prefix Obstruction
 
 A genuine negative answer to Sawin needs more than sequential primitivity.
@@ -140,3 +174,8 @@ target is a finite table that is:
 - and with nontrivial `N_{m,n}(X)` for every rack prefix `P_m`.
 
 No such table is currently known.
+
+The first finite approximation of that last line is now the rigid pressure
+core target: find a table with nontrivial `N_{m,n}(X)` for the first small
+rack prefix after all currently understood proper-factor, observer, and
+split mechanisms have been blocked.

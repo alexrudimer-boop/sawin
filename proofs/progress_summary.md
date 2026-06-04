@@ -2770,6 +2770,11 @@ strengthening of Sawin's positive direction.  Its exact obstruction is
 sequential primitivity, but a Sawin-negative proof still requires the stronger
 cofinal rack-prefix nonseparation condition
 `forall m exists n, N_{m,n}(X)!=1`.
+The generated `proofs/sequential_primitivity_frontier_audit.md` makes the
+first search gate reproducible: the exhaustive size-three corpus has `73`
+solutions and no sequential-primitivity candidate, while the size-four Type A,
+size-four Type B, and affine `F_2^3` hidden cyclic pressure rows are all
+closed by explicit active-factor or sequential rack certificates.
 The subsequent Pro refinement puts the positive lemma in canonical finite
 quotient form.  With
 `M_X=<X | xy=uv whenever r_X(x,y)=(u,v)>`, a certificate is equivalently finite
@@ -2837,3 +2842,14 @@ coarsest one-state invariant observer partition, and now records the sharper
 proper-congruence case where every fibre block is a subsolution.  A positive
 row feeds the certificate layer; a negative row is only triage, not a no-rack
 obstruction.
+The newest Pro answer sharpens the negative-search side into a finite target:
+a rigid pressure core.  Such a table must be bi-degenerate, non-involutive,
+non-rack, not flip-across, quotient-rigid, subsolution-rigid,
+observer-rigid, free of transport-isomorphic fibre splittings, and must
+exhibit actual small-rack-prefix pressure `N_{m,n}(X)!=1`.  The generated
+audit `proofs/rigid_pressure_core_audit.md` makes this filter executable.
+It finds no size-three candidate exhaustively; the size-four affine Type A,
+size-four Type B, and affine `F_2^3` hidden cyclic representatives each fail
+one of the rigidity filters before pressure is attempted.  Thus the next
+falsifiable search starts at larger nonterminal tables, preferably size five
+or structured affine-linear families.

@@ -99,6 +99,8 @@ EXTRA_MD.append(ROOT / "proofs" / "ybe_equivariant_reconstruction_closure_audit.
 EXTRA_MD.append(ROOT / "proofs" / "finite_transducer_rackification_certificate.md")
 EXTRA_MD.append(ROOT / "proofs" / "active_factor_observability_boundary.md")
 EXTRA_MD.append(ROOT / "proofs" / "active_factor_observability_audit.md")
+EXTRA_MD.append(ROOT / "proofs" / "sequential_primitivity_frontier_audit.md")
+EXTRA_MD.append(ROOT / "proofs" / "rigid_pressure_core_audit.md")
 EXTRA_MD.append(ROOT / "proofs" / "transport_isomorphic_gluing_boundary.md")
 EXTRA_MD.append(ROOT / "proofs" / "transport_isomorphic_gluing_boundary_audit.md")
 EXTRA_MD.append(ROOT / "proofs" / "monodromy_augmented_transport_gluing_certificate.md")
