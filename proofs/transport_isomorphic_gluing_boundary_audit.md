@@ -26,6 +26,8 @@ colours, and the two colour fibres are crossing-closed.
 - transport edge count: `6`;
 - transport loop group orders: `[3, 3]`;
 - all transport loop groups trivial: `False`;
+- naive identity-normalized split model is YBE: `False`;
+- first naive split YBE failure: `{'input': '((0, 0), (0, 0), (1, 0))', 'sigma1_sigma2_sigma1': '((0, 0), (0, 1), (1, 1))', 'sigma2_sigma1_sigma2': '((0, 0), (0, 0), (1, 1))'}`;
 - local router verdict: `product_finite_g_branch`;
 - local router product holonomy details: `('swapped_identity_base_cyclic',)`;
 - local router detector group orders: `(3,)`;
@@ -45,6 +47,9 @@ part of the proposed gluing theorem, but the transport groupoid has
 loop monodromy of order `3`.  Therefore product-like
 transport-isomorphism does not by itself justify replacing every
 mixed transport by the identity in one global block gauge.
+For this witness, the naive identity-normalized split model is not
+even a YBE solution; the audit records an explicit braid-relation
+failure.
 
 The example is not being proposed as a Sawin counterexample.  It is
 one of the identity-base cyclic product rows already routed by

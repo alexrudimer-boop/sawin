@@ -88,6 +88,25 @@ also records that the local router closes this row as
 repair is not to ignore monodromy, but to make the finite monodromy detector
 part of the marked factor.
 
+A later Pro verdict reasserted the positive theorem by constructing a split
+model `T` in which all mixed transports are replaced by the identity.  The
+six-point monodromy witness rules out this literal construction.  If one
+keeps the internal cyclic row on each colour fibre and erases only the mixed
+cyclic monodromy, the resulting table fails the braid relation:
+
+```text
+input:  ((0,0),(0,0),(1,0))
+s1 s2 s1: ((0,0),(0,1),(1,1))
+s2 s1 s2: ((0,0),(0,0),(1,1))
+```
+
+The generated audit now records this failure under
+`naive_identity_normalized_split_ybe = False`.  This does not make the witness
+a Sawin counterexample; the same row is still braid-equivalent to the cyclic
+rack after the position gauge `u_i=x_i-i mod 3`.  It only shows that
+transport-isomorphism must be used through a monodromy/readout certificate,
+not through unconditional identity normalization.
+
 ## Split-Tower Obligation
 
 Even after a split or normalized transport model `T` is built, the domination
@@ -124,6 +143,12 @@ What remains to upgrade the Pro blueprint to the stated restricted theorem is
 the split-tower domination lemma, possibly with explicit monodromy
 rackification.  The certificate-level repaired form is recorded in
 `proofs/monodromy_augmented_transport_gluing_certificate.md`.
+
+The latest verdict therefore confirms the negative answer to Question B, but
+it does not yet replace the certificate theorem by the original unrestricted
+Question A theorem.  A proof of Question A as stated would still need to show
+that every nontrivial transport loop monodromy and every non-permutation
+quotient-colour trajectory is absorbed by a fixed finite detector tower.
 
 ## Current Use
 

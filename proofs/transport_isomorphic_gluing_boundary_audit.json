@@ -35,6 +35,12 @@
   ],
   "local_router_remaining_obligation": "Use the closed product subbranch: coboundary telescope, one-colour pairwise cyclic detector, fibre-size-two affine detector, or known total branch.",
   "local_router_verdict": "product_finite_g_branch",
+  "naive_identity_normalized_split_first_ybe_failure": {
+    "input": "((0, 0), (0, 0), (1, 0))",
+    "sigma1_sigma2_sigma1": "((0, 0), (0, 1), (1, 1))",
+    "sigma2_sigma1_sigma2": "((0, 0), (0, 0), (1, 1))"
+  },
+  "naive_identity_normalized_split_ybe": false,
   "name": "identity_base_cyclic_transport",
   "partition": [
     [

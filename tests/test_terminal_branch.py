@@ -3,7 +3,9 @@ import unittest
 from itertools import product
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT))
+sys.path.insert(0, str(ROOT / "src"))
 
 from ybe_domination import (
     FiniteBraidedSet,
@@ -16,6 +18,11 @@ from ybe_domination import (
     subsolution_fibre_transport_isomorphism_audit,
     subsolution_fibre_transport_monodromy_audit,
     terminal_branch_triage_audit,
+)
+
+from tools.run_transport_isomorphic_gluing_boundary_audit import (
+    first_ybe_failure,
+    naive_identity_normalized_split_solution,
 )
 
 
@@ -157,6 +164,19 @@ class TerminalBranchTriageTests(unittest.TestCase):
                         gauge(solution.braid_action((generator,), tup)),
                         cyclic.braid_action((generator,), gauge(tup)),
                     )
+
+    def test_naive_identity_normalized_split_can_fail_ybe(self):
+        split = naive_identity_normalized_split_solution()
+
+        self.assertFalse(split.is_ybe())
+        self.assertEqual(
+            first_ybe_failure(split),
+            {
+                "input": "((0, 0), (0, 0), (1, 0))",
+                "sigma1_sigma2_sigma1": "((0, 0), (0, 1), (1, 1))",
+                "sigma2_sigma1_sigma2": "((0, 0), (0, 0), (1, 1))",
+            },
+        )
 
 
 if __name__ == "__main__":

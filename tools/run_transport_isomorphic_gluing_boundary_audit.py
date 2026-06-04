@@ -42,6 +42,49 @@ def identity_base_cyclic_transport_solution() -> FiniteBraidedSet:
     return FiniteBraidedSet(elements, table)
 
 
+def naive_identity_normalized_split_solution() -> FiniteBraidedSet:
+    """Return the split model obtained by erasing mixed cyclic monodromy.
+
+    This is the model produced by the naive "gauge all mixed transports to
+    identity" step for the identity-base cyclic transport witness.  It is
+    intentionally audited because nontrivial loop monodromy makes this
+    identity split fail the Yang-Baxter equation.
+    """
+
+    colors = (0, 1)
+    points = (0, 1, 2)
+    elements = tuple(product(colors, points))
+    table = {}
+    for left_color, left_point in elements:
+        for right_color, right_point in elements:
+            if left_color == right_color:
+                table[((left_color, left_point), (right_color, right_point))] = (
+                    (left_color, right_point),
+                    (right_color, (left_point + 1) % 3),
+                )
+            else:
+                table[((left_color, left_point), (right_color, right_point))] = (
+                    (left_color, right_point),
+                    (right_color, left_point),
+                )
+    return FiniteBraidedSet(elements, table)
+
+
+def first_ybe_failure(solution: FiniteBraidedSet) -> dict | None:
+    if solution.is_ybe():
+        return None
+    for triple in product(solution.elements, repeat=3):
+        left = solution.braid_action((1, 2, 1), triple)
+        right = solution.braid_action((2, 1, 2), triple)
+        if left != right:
+            return {
+                "input": repr(triple),
+                "sigma1_sigma2_sigma1": repr(left),
+                "sigma2_sigma1_sigma2": repr(right),
+            }
+    raise AssertionError("is_ybe() failed but no witness was found")
+
+
 def cyclic_rack_solution(order: int) -> FiniteBraidedSet:
     elements = tuple(range(order))
     return rack_solution(elements, lambda _left, right: (right + 1) % order)
@@ -99,6 +142,7 @@ def _block_data(block) -> list[str]:
 
 def build_report() -> dict:
     solution = identity_base_cyclic_transport_solution()
+    naive_split = naive_identity_normalized_split_solution()
     partition = colour_partition(solution)
     transition = subsolution_fibre_transition_audit(solution, partition)
     transport = subsolution_fibre_transport_isomorphism_audit(solution, partition)
@@ -158,6 +202,10 @@ def build_report() -> dict:
         "cyclic_rack_detector": "C_3 with R(u,v)=(v+1,u)",
         "cyclic_rack_gauge_verified_through_degree": 5,
         "cyclic_rack_gauge_check_passed": cyclic_rack_gauge_verified_through(5),
+        "naive_identity_normalized_split_ybe": naive_split.is_ybe(),
+        "naive_identity_normalized_split_first_ybe_failure": first_ybe_failure(
+            naive_split
+        ),
         "consequence": (
             "transport-isomorphic product-like rows do not force simultaneous "
             "identity-gauge normalization; this example has loop monodromy "
@@ -206,6 +254,10 @@ def render_markdown(report: dict) -> str:
         f"`{orders}`;",
         "- all transport loop groups trivial: "
         f"`{report['all_transport_loop_groups_trivial']}`;",
+        "- naive identity-normalized split model is YBE: "
+        f"`{report['naive_identity_normalized_split_ybe']}`;",
+        "- first naive split YBE failure: "
+        f"`{report['naive_identity_normalized_split_first_ybe_failure']}`;",
         "- local router verdict: "
         f"`{report['local_router_verdict']}`;",
         "- local router product holonomy details: "
@@ -236,6 +288,9 @@ def render_markdown(report: dict) -> str:
         "loop monodromy of order `3`.  Therefore product-like",
         "transport-isomorphism does not by itself justify replacing every",
         "mixed transport by the identity in one global block gauge.",
+        "For this witness, the naive identity-normalized split model is not",
+        "even a YBE solution; the audit records an explicit braid-relation",
+        "failure.",
         "",
         "The example is not being proposed as a Sawin counterexample.  It is",
         "one of the identity-base cyclic product rows already routed by",
