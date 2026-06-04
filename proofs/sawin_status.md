@@ -2518,9 +2518,12 @@ failure after all lower arities pass must survive in this quotient.  The flip
 rack satisfies the criterion with `B=2`, recovering the involutive branch.
 The finite fixed-arity realized cross-effect is now executable as
 `realized_parabolic_cross_effect_audit(X,Y,B,n)`: it closes the finite joint
-image, extracts the detector-kernel image, parabolically embeds lower-kernel
-word representatives, normally closes them inside the finite joint image, and
-returns a witness braid word if the quotient is nontrivial.
+image, extracts the detector-kernel image, embeds lower-kernel `X`-permutations
+as finite block permutations `(1,h_X^[j,k])`, normally closes them inside the
+finite joint image, and returns a witness braid word if the quotient is
+nontrivial.  The quotient is computed in the joint image and is canonically
+identified with `rho^X_n(K^Y_n)/rho^X_n(J^Y_{B,n})` because projection to the
+`X` coordinate is injective on the detector-kernel image.
 
 ## Current conclusion
 

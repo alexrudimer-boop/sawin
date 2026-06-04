@@ -266,11 +266,46 @@ def rack_residual_obstruction_audit(
     )
 
 
-def _shift_parabolic_word(word: Word, block_start: int) -> Word:
-    return tuple(
-        (1 if signed > 0 else -1) * (abs(signed) + block_start)
-        for signed in word
-    )
+def _decode_index(index: int, base_size: int, length: int) -> list[int]:
+    digits = [0] * length
+    for position in range(length - 1, -1, -1):
+        digits[position] = index % base_size
+        index //= base_size
+    return digits
+
+
+def _encode_digits(digits: Iterable[int], base_size: int) -> int:
+    index = 0
+    for digit in digits:
+        index = index * base_size + digit
+    return index
+
+
+def _block_embed_permutation(
+    permutation: Permutation,
+    base_size: int,
+    width: int,
+    n: int,
+    block_start: int,
+) -> Permutation:
+    """Embed a permutation of `base_size**width` block-tuples into arity `n`."""
+
+    if width < 1:
+        raise ValueError("block width must be positive")
+    if not 0 <= block_start <= n - width:
+        raise ValueError("block does not fit in the target arity")
+    if len(permutation) != base_size**width:
+        raise ValueError("permutation size does not match the block width")
+
+    embedded = []
+    for index in range(base_size**n):
+        digits = _decode_index(index, base_size, n)
+        block = digits[block_start : block_start + width]
+        block_index = _encode_digits(block, base_size)
+        image_block = _decode_index(permutation[block_index], base_size, width)
+        digits[block_start : block_start + width] = image_block
+        embedded.append(_encode_digits(digits, base_size))
+    return tuple(embedded)
 
 
 def _subgroup_generated_by_pairs(
@@ -357,7 +392,7 @@ def realized_parabolic_cross_effect_audit(
     kernel_image = {
         pair for pair in full_seen if pair[0] == detector_identity
     }
-    seeds = []
+    seeds: set[PairPermutation] = set()
     for width in range(1, min(bound, n) + 1):
         lower_seen, _lower_generators, lower_truncated = _joint_image_with_words(
             solution, detector, width, state_limit
@@ -378,17 +413,27 @@ def realized_parabolic_cross_effect_audit(
                 truncated=True,
             )
         lower_detector_identity = tuple(range(len(detector.elements) ** width))
-        for lower_pair, lower_word in lower_seen.items():
-            if lower_pair[0] != lower_detector_identity or not lower_word:
+        lower_solution_identity = tuple(range(len(solution.elements) ** width))
+        for lower_pair in lower_seen:
+            if (
+                lower_pair[0] != lower_detector_identity
+                or lower_pair[1] == lower_solution_identity
+            ):
                 continue
             for block_start in range(0, n - width + 1):
-                shifted_word = _shift_parabolic_word(lower_word, block_start)
-                seeds.append(
-                    (
-                        action_permutation(detector, n, shifted_word),
-                        action_permutation(solution, n, shifted_word),
-                    )
+                seed = (
+                    detector_identity,
+                    _block_embed_permutation(
+                        lower_pair[1],
+                        len(solution.elements),
+                        width,
+                        n,
+                        block_start,
+                    ),
                 )
+                if seed not in full_seen:
+                    raise AssertionError("parabolic seed is not in the joint image")
+                seeds.add(seed)
 
     parabolic_image, parabolic_truncated = _normal_closure_in_joint_image(
         identity,
@@ -412,6 +457,9 @@ def realized_parabolic_cross_effect_audit(
             truncated=True,
         )
 
+    if not parabolic_image <= kernel_image:
+        raise AssertionError("parabolic normal closure escaped the detector kernel")
+
     first_witness_pair = None
     first_witness_word = None
     for pair, word in full_seen.items():
@@ -427,6 +475,8 @@ def realized_parabolic_cross_effect_audit(
     )
     quotient_size = None
     if parabolic_image:
+        if len(kernel_image) % len(parabolic_image) != 0:
+            raise AssertionError("parabolic image size does not divide kernel image size")
         quotient_size = len(kernel_image) // len(parabolic_image)
     return RealizedParabolicCrossEffectAudit(
         bound=bound,
