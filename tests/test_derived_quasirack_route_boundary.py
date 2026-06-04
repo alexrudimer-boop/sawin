@@ -36,6 +36,18 @@ class DerivedQuasirackRouteBoundaryTests(unittest.TestCase):
         self.assertIn("commutation condition fails", gap["quasi_left_nondegenerate_failure"])
         self.assertIn("two-point flip rack", gap["domination_status"])
 
+    def test_noninvolutive_observer_product_gap_records_broader_positive_branch(self):
+        report = build_report()
+        gap = report["noninvolutive_observer_product_gap"]
+
+        self.assertEqual(gap["name"], "observer_product_s3_conjugation")
+        self.assertIn("S_3", gap["table_formula"])
+        self.assertTrue(any("non-involutive" in item for item in gap["properties"]))
+        self.assertTrue(
+            any("rack-kernel equivalent" in item for item in gap["properties"])
+        )
+        self.assertIn("observer-factor", report["next_prompt"])
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -21,9 +21,41 @@ class RigidPressureCoreTests(unittest.TestCase):
         self.assertEqual(report["closed_pressure_representative_count"], 1)
 
         representatives = {row["name"]: row for row in report["representatives"]}
+        self.assertIn("everywhere-coordinate-singular", report["definition"])
+        self.assertIn("bijective L_x or R_x", report["singular_filter"])
+        self.assertTrue(
+            representatives["size4_affine_type_a"]["everywhere_bisingular"]
+        )
+        self.assertEqual(
+            representatives["size4_affine_type_a"][
+                "left_bijective_coordinate_count"
+            ],
+            0,
+        )
+        self.assertEqual(
+            representatives["size4_affine_type_a"][
+                "right_bijective_coordinate_count"
+            ],
+            0,
+        )
         self.assertEqual(
             representatives["size4_affine_type_a"]["first_failed_filter"],
             "quotient_rigid",
+        )
+        self.assertFalse(
+            representatives["size4_type_b_flip_across"]["everywhere_bisingular"]
+        )
+        self.assertEqual(
+            representatives["size4_type_b_flip_across"][
+                "left_bijective_coordinate_count"
+            ],
+            2,
+        )
+        self.assertEqual(
+            representatives["size4_type_b_flip_across"][
+                "right_bijective_coordinate_count"
+            ],
+            2,
         )
         self.assertEqual(
             representatives["size4_type_b_flip_across"]["first_failed_filter"],

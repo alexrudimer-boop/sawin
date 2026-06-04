@@ -50,6 +50,11 @@ class RigidPressureCoreRow:
     left_degenerate: bool
     right_degenerate: bool
     bidegenerate: bool
+    left_bijective_coordinate_count: int
+    right_bijective_coordinate_count: int
+    everywhere_left_singular: bool
+    everywhere_right_singular: bool
+    everywhere_bisingular: bool
     noninvolutive: bool
     not_rack: bool
     flip_across_partition_count: int | None
@@ -86,6 +91,7 @@ def _first_failed_filter(row_data: dict) -> str | None:
         ("noninvolutive", row_data["noninvolutive"]),
         ("not_rack", row_data["not_rack"]),
         ("not_flip_across", row_data["not_flip_across"]),
+        ("everywhere_bisingular", row_data["everywhere_bisingular"]),
         ("quotient_rigid", row_data["quotient_rigid"]),
         ("subsolution_rigid", row_data["subsolution_rigid"]),
         ("observer_rigid", row_data["observer_rigid"]),
@@ -99,6 +105,20 @@ def _first_failed_filter(row_data: dict) -> str | None:
         if value is not True:
             return name
     return None
+
+
+def _coordinate_bijective_counts(solution: FiniteBraidedSet) -> tuple[int, int]:
+    left_count = 0
+    right_count = 0
+    for left in solution.elements:
+        images = [solution.R[(left, right)][0] for right in solution.elements]
+        if len(set(images)) == len(solution.elements):
+            left_count += 1
+    for right in solution.elements:
+        images = [solution.R[(left, right)][1] for left in solution.elements]
+        if len(set(images)) == len(solution.elements):
+            right_count += 1
+    return left_count, right_count
 
 
 def _transport_split_count(solution: FiniteBraidedSet) -> int | None:
@@ -157,6 +177,10 @@ def rigid_pressure_core_row(
     left_degenerate = not is_left_nondegenerate(solution)
     right_degenerate = not is_right_nondegenerate(solution)
     bidegenerate = left_degenerate and right_degenerate
+    left_bijective_count, right_bijective_count = _coordinate_bijective_counts(solution)
+    everywhere_left_singular = left_bijective_count == 0
+    everywhere_right_singular = right_bijective_count == 0
+    everywhere_bisingular = everywhere_left_singular and everywhere_right_singular
     noninvolutive = not is_involutive_solution(solution)
     not_rack = not is_rack_type(solution)
 
@@ -195,6 +219,7 @@ def rigid_pressure_core_row(
     )
     structural_values = (
         terminal_survives,
+        everywhere_bisingular,
         quotient_rigid,
         subsolution_rigid,
         observer_rigid,
@@ -220,6 +245,7 @@ def rigid_pressure_core_row(
         "noninvolutive": noninvolutive,
         "not_rack": not_rack,
         "not_flip_across": not_flip_across,
+        "everywhere_bisingular": everywhere_bisingular,
         "quotient_rigid": quotient_rigid,
         "subsolution_rigid": subsolution_rigid,
         "observer_rigid": observer_rigid,
@@ -236,6 +262,11 @@ def rigid_pressure_core_row(
         left_degenerate=left_degenerate,
         right_degenerate=right_degenerate,
         bidegenerate=bidegenerate,
+        left_bijective_coordinate_count=left_bijective_count,
+        right_bijective_coordinate_count=right_bijective_count,
+        everywhere_left_singular=everywhere_left_singular,
+        everywhere_right_singular=everywhere_right_singular,
+        everywhere_bisingular=everywhere_bisingular,
         noninvolutive=noninvolutive,
         not_rack=not_rack,
         flip_across_partition_count=flip_count,
@@ -325,8 +356,16 @@ def build_report() -> dict:
         "title": "Rigid pressure core audit",
         "definition": (
             "A rigid pressure core is a nonterminal, quotient-rigid, "
-            "subsolution-rigid, observer-rigid, transport-split-rigid finite "
-            "YBE table with actual small-rack prefix pressure."
+            "everywhere-coordinate-singular, subsolution-rigid, "
+            "observer-rigid, transport-split-rigid finite YBE table with "
+            "actual small-rack prefix pressure."
+        ),
+        "singular_filter": (
+            "The everywhere-coordinate-singular condition is now a theorem-level "
+            "necessary filter for minimal counterexamples outside the "
+            "left/right-nondegenerate branches and with no proper "
+            "crossing-closed subsolution: any bijective L_x or R_x would "
+            "generate a nonempty crossing-closed subsolution locus."
         ),
         "size_3": size_three_report(),
         "representatives": [asdict(row) for row in representatives],
@@ -360,6 +399,10 @@ def render_markdown(report: dict) -> str:
         "",
         report["definition"],
         "",
+        "## Singular Coordinate Filter",
+        "",
+        report["singular_filter"],
+        "",
         "## Exhaustive Size 3 Corpus",
         "",
     ]
@@ -385,6 +428,11 @@ def render_markdown(report: dict) -> str:
                 f"- size: `{row['size']}`;",
                 f"- tags: `{row['branch_tags']}`;",
                 f"- bidegenerate: `{row['bidegenerate']}`;",
+                "- left bijective coordinate maps: "
+                f"`{row['left_bijective_coordinate_count']}`;",
+                "- right bijective coordinate maps: "
+                f"`{row['right_bijective_coordinate_count']}`;",
+                f"- everywhere bisingular: `{row['everywhere_bisingular']}`;",
                 f"- noninvolutive: `{row['noninvolutive']}`;",
                 f"- not rack: `{row['not_rack']}`;",
                 f"- not flip-across: `{row['not_flip_across']}`;",

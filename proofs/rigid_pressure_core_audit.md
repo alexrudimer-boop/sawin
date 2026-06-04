@@ -6,7 +6,11 @@ Sawin's problem.
 
 ## Definition
 
-A rigid pressure core is a nonterminal, quotient-rigid, subsolution-rigid, observer-rigid, transport-split-rigid finite YBE table with actual small-rack prefix pressure.
+A rigid pressure core is a nonterminal, quotient-rigid, everywhere-coordinate-singular, subsolution-rigid, observer-rigid, transport-split-rigid finite YBE table with actual small-rack prefix pressure.
+
+## Singular Coordinate Filter
+
+The everywhere-coordinate-singular condition is now a theorem-level necessary filter for minimal counterexamples outside the left/right-nondegenerate branches and with no proper crossing-closed subsolution: any bijective L_x or R_x would generate a nonempty crossing-closed subsolution locus.
 
 ## Exhaustive Size 3 Corpus
 
@@ -24,6 +28,9 @@ A rigid pressure core is a nonterminal, quotient-rigid, subsolution-rigid, obser
 - size: `4`;
 - tags: `()`;
 - bidegenerate: `True`;
+- left bijective coordinate maps: `0`;
+- right bijective coordinate maps: `0`;
+- everywhere bisingular: `True`;
 - noninvolutive: `True`;
 - not rack: `True`;
 - not flip-across: `True`;
@@ -41,6 +48,9 @@ A rigid pressure core is a nonterminal, quotient-rigid, subsolution-rigid, obser
 - size: `4`;
 - tags: `()`;
 - bidegenerate: `True`;
+- left bijective coordinate maps: `2`;
+- right bijective coordinate maps: `2`;
+- everywhere bisingular: `False`;
 - noninvolutive: `True`;
 - not rack: `True`;
 - not flip-across: `False`;
@@ -58,6 +68,9 @@ A rigid pressure core is a nonterminal, quotient-rigid, subsolution-rigid, obser
 - size: `8`;
 - tags: `()`;
 - bidegenerate: `True`;
+- left bijective coordinate maps: `0`;
+- right bijective coordinate maps: `0`;
+- everywhere bisingular: `True`;
 - noninvolutive: `True`;
 - not rack: `True`;
 - not flip-across: `True`;

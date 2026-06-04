@@ -1,6 +1,26 @@
 # Asymptotic Rigid-Core Endpoint Prompt
 
-Status: ask_now / prepared for GPT-5.5 Pro on 2026-06-04.
+Status: partially_answered / GPT-5.5 Pro response received on 2026-06-04.
+
+Partial answer recorded:
+
+- fixed-arity rack cofinality is correct for `n >= 2`, using Asada's
+  Artin-form congruence subgroup theorem for full braid groups;
+- the sharpened negative condition is correct: a genuine no-rack
+  counterexample must have rack-prefix failures at arbitrarily high arities;
+- the everywhere-singular coordinate filter is correct for minimal rigid-core
+  searches outside the one-sided nondegenerate branches and without proper
+  crossing-closed subsolutions;
+- the asymptotic everywhere-singular rigid-core exclusion theorem remains
+  unproved;
+- a new derived/quasi-rack route boundary example was supplied:
+  `X={0,1} x S_3` with
+  `r((e,g),(f,h))=((e,ghg^{-1}),(f,g))`, where classical/quasi-derived
+  constructions fail but rack domination holds by the `S_3` conjugation rack
+  plus inert observer bits.
+
+The next active prompt asks whether this observer-factor mechanism can be
+promoted to a theorem or refuted by an explicit rigid-core obstruction.
 
 Prompt:
 

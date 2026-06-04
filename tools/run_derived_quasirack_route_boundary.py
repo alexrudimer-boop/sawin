@@ -19,7 +19,7 @@ def build_report() -> dict[str, object]:
         ),
         "next_prompt": (
             "prompts/gpt55_pro/"
-            "2026-06-04-asymptotic-rigid-core-endpoint_ask_now.md"
+            "2026-06-04-observer-factor-rackification_ask_now.md"
         ),
         "cover_lemma": {
             "statement": (
@@ -77,18 +77,40 @@ def build_report() -> dict[str, object]:
                 "degenerate solution"
             ),
         },
+        "noninvolutive_observer_product_gap": {
+            "name": "observer_product_s3_conjugation",
+            "table_formula": (
+                "X={0,1} x S_3, "
+                "r((e,g),(f,h))=((e,ghg^{-1}),(f,g))"
+            ),
+            "properties": [
+                "finite bijective YBE solution",
+                "everywhere left- and right-degenerate",
+                "non-involutive",
+                "non-affine over any abelian group by varying lambda fixed-point counts",
+                "classical derived solution undefined because no lambda_x is surjective",
+                "quasi-left-nondegenerate idempotent commutation fails",
+                "rack-kernel equivalent to the S_3 conjugation rack plus inert observer bits",
+            ],
+            "proof_artifact": (
+                "proofs/observer_product_derived_route_boundary.md"
+            ),
+        },
         "open_requirements": [
             "define D(X) for genuinely degenerate finite bijective solutions without hidden nondegeneracy assumptions",
             "prove or refute the all-arity kernel comparison between D(X) and X",
             "prove or refute finite rack domination for the resulting quasi-rack class",
             "test the construction on a genuinely degenerate non-affine finite table of size at least four that is non-involutive",
+            "replace the derived/quasi-rack route by an active rack factor plus invariant observer theorem, or find a rigid-core obstruction to such a theorem",
         ],
         "conclusion": (
             "The cover lemma gives a useful sufficient branch, but the naive "
             "derived quasi-rack route is not yet a theorem for all degenerate "
             "solutions.  The next decisive test is a size-four or larger "
             "degenerate non-involutive table outside the quasi-left-"
-            "nondegenerate subclass."
+            "nondegenerate subclass.  The observer-product S_3 example shows "
+            "that such tables can still be rack-dominated by an active rack "
+            "factor plus inert observer channels."
         ),
     }
 
@@ -97,6 +119,7 @@ def render_markdown(report: dict[str, object]) -> str:
     cover = report["cover_lemma"]
     target = report["derived_quasirack_target"]
     gap = report["quasirack_gap_example"]
+    observer_gap = report["noninvolutive_observer_product_gap"]
     lines = [
         "# Derived Quasi-Rack Route Boundary",
         "",
@@ -143,6 +166,23 @@ def render_markdown(report: dict[str, object]) -> str:
             f"`{gap['quasi_left_nondegenerate_failure']}`;",
             f"- domination status: `{gap['domination_status']}`;",
             f"- lesson: `{gap['lesson']}`.",
+            "",
+            "## Non-Involutive Observer-Product Gap",
+            "",
+            f"Name: `{observer_gap['name']}`.",
+            "",
+            f"Formula: `{observer_gap['table_formula']}`.",
+            "",
+            "Properties:",
+            "",
+        ]
+    )
+    for item in observer_gap["properties"]:
+        lines.append(f"- {item};")
+    lines.extend(
+        [
+            "",
+            f"Proof artifact: `{observer_gap['proof_artifact']}`.",
             "",
             "## Open Requirements",
             "",

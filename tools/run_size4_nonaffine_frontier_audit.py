@@ -234,7 +234,7 @@ def build_report() -> dict[str, object]:
         ),
         "next_prompt": (
             "prompts/gpt55_pro/"
-            "2026-06-04-asymptotic-rigid-core-endpoint_ask_now.md"
+            "2026-06-04-observer-factor-rackification_ask_now.md"
         ),
     }
 

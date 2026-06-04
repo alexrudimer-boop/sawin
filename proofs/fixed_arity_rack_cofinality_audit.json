@@ -22,7 +22,7 @@
     "statement": "For the Artin embedding B_n -> Aut(F_n), every finite-index subgroup of B_n contains a principal congruence kernel ker(B_n -> Aut(F_n/K)) for some characteristic finite-index subgroup K <= F_n.",
     "status": "Used as external literature input; Stylianakis records this form as Asada's theorem and notes Thurston's elementary proof."
   },
-  "next_prompt": "prompts/gpt55_pro/2026-06-04-asymptotic-rigid-core-endpoint_ask_now.md",
+  "next_prompt": "prompts/gpt55_pro/2026-06-04-observer-factor-rackification_ask_now.md",
   "sharpened_negative_condition": {
     "new_condition": "forall m forall N exists n>N with N_{m,n}(X) != 1",
     "old_condition": "forall m exists n with N_{m,n}(X) != 1",

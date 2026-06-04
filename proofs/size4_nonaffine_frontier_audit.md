@@ -49,4 +49,4 @@ The repo now contains an explicit non-affine size-four degenerate non-involutive
 
 ## Next Prompt
 
-`prompts/gpt55_pro/2026-06-04-asymptotic-rigid-core-endpoint_ask_now.md`.
+`prompts/gpt55_pro/2026-06-04-observer-factor-rackification_ask_now.md`.
