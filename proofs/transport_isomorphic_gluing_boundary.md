@@ -82,7 +82,11 @@ because its product-like transports are not internal-solution isomorphisms.
 The generated audit
 `proofs/transport_isomorphic_gluing_boundary_audit.md` gives a concrete
 six-point transport-isomorphic product-like solution with loop monodromy of
-order `3`, so the flatness issue is not merely hypothetical.
+order `3`, so the flatness issue is not merely hypothetical.  The same audit
+also records that the local router closes this row as
+`product_finite_g_branch` with detector group order `3`; thus the intended
+repair is not to ignore monodromy, but to make the finite monodromy detector
+part of the marked factor.
 
 ## Split-Tower Obligation
 

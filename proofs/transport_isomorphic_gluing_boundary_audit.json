@@ -10,6 +10,16 @@
   "description": "r((a,x),(b,y))=((a,y),(b,x+1 mod 3))",
   "element_count": 6,
   "is_ybe": true,
+  "local_router_detector_gaps": [],
+  "local_router_detector_group_orders": [
+    3
+  ],
+  "local_router_product_branch": "swapped",
+  "local_router_product_holonomy_details": [
+    "swapped_identity_base_cyclic"
+  ],
+  "local_router_remaining_obligation": "Use the closed product subbranch: coboundary telescope, one-colour pairwise cyclic detector, fibre-size-two affine detector, or known total branch.",
+  "local_router_verdict": "product_finite_g_branch",
   "name": "identity_base_cyclic_transport",
   "partition": [
     [

@@ -11,7 +11,9 @@ sys.path.insert(0, str(ROOT / "src"))
 
 from ybe_domination import (  # noqa: E402
     FiniteBraidedSet,
+    LocalInterval,
     branch_tags,
+    local_master_bottleneck_summary,
     subsolution_fibre_transition_audit,
     subsolution_fibre_transport_isomorphism_audit,
     subsolution_fibre_transport_monodromy_audit,
@@ -37,6 +39,25 @@ def identity_base_cyclic_transport_solution() -> FiniteBraidedSet:
     return FiniteBraidedSet(elements, table)
 
 
+def identity_base_cyclic_transport_interval() -> LocalInterval:
+    colors = (0, 1)
+    points = (0, 1, 2)
+    fibres = {color: points for color in colors}
+    base_R = {(left, right): (left, right) for left in colors for right in colors}
+    table = {}
+    for left_color, right_color, left_point, right_point in product(
+        colors,
+        colors,
+        points,
+        points,
+    ):
+        table[(left_color, right_color, left_point, right_point)] = (
+            right_point,
+            (left_point + 1) % 3,
+        )
+    return LocalInterval(colors, fibres, base_R, table)
+
+
 def colour_partition(solution: FiniteBraidedSet):
     colors = sorted({color for color, _point in solution.elements})
     return tuple(
@@ -55,6 +76,9 @@ def build_report() -> dict:
     transition = subsolution_fibre_transition_audit(solution, partition)
     transport = subsolution_fibre_transport_isomorphism_audit(solution, partition)
     monodromy = subsolution_fibre_transport_monodromy_audit(solution, partition)
+    router = local_master_bottleneck_summary(
+        identity_base_cyclic_transport_interval()
+    )
     return {
         "name": "identity_base_cyclic_transport",
         "description": "r((a,x),(b,y))=((a,y),(b,x+1 mod 3))",
@@ -83,6 +107,16 @@ def build_report() -> dict:
             }
             for row in monodromy.rows
         ],
+        "local_router_verdict": router.verdict,
+        "local_router_product_branch": router.product_branch,
+        "local_router_product_holonomy_details": (
+            router.product_holonomy_details
+        ),
+        "local_router_detector_group_orders": (
+            router.closed_detector_group_orders
+        ),
+        "local_router_detector_gaps": router.closed_detector_gaps,
+        "local_router_remaining_obligation": router.remaining_obligation,
         "consequence": (
             "transport-isomorphic product-like rows do not force simultaneous "
             "identity-gauge normalization; this example has loop monodromy "
@@ -130,7 +164,15 @@ def render_markdown(report: dict) -> str:
         "- transport loop group orders: "
         f"`{orders}`;",
         "- all transport loop groups trivial: "
-        f"`{report['all_transport_loop_groups_trivial']}`.",
+        f"`{report['all_transport_loop_groups_trivial']}`;",
+        "- local router verdict: "
+        f"`{report['local_router_verdict']}`;",
+        "- local router product holonomy details: "
+        f"`{report['local_router_product_holonomy_details']}`;",
+        "- local router detector group orders: "
+        f"`{report['local_router_detector_group_orders']}`;",
+        "- local router detector gaps: "
+        f"`{report['local_router_detector_gaps']}`.",
         "",
         "## Consequence",
         "",
@@ -141,10 +183,11 @@ def render_markdown(report: dict) -> str:
         "mixed transport by the identity in one global block gauge.",
         "",
         "The example is not being proposed as a Sawin counterexample.  It is",
-        "one of the identity-base cyclic product rows already routed to the",
-        "cyclic pairwise-linking detector branch in",
-        "`proofs/two_colour_fibre3_product_audit.md`.  Its role here is only",
-        "to make the flatness obligation in",
+        "one of the identity-base cyclic product rows already routed by",
+        "`local_master_bottleneck_summary()` to `product_finite_g_branch`",
+        "with detector group order `3`; see",
+        "`proofs/identity_base_product_branch.md`.  Its role here is only to",
+        "make the flatness obligation in",
         "`proofs/transport_isomorphic_gluing_boundary.md` explicit.",
     ]
     return "\n".join(lines) + "\n"
