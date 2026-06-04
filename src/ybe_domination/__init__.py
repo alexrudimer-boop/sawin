@@ -31,10 +31,12 @@ from .transducer_certificate import (
 from .rack_residual_tower import (
     RackPrefixObstructionRow,
     RackResidualObstructionAudit,
+    RealizedParabolicCrossEffectAudit,
     canonical_rack_signature,
     labelled_rack_solutions,
     rack_product_prefixes,
     rack_residual_obstruction_audit,
+    realized_parabolic_cross_effect_audit,
     small_rack_prefix_obstruction_rows,
     small_rack_representatives,
 )
@@ -1157,6 +1159,7 @@ __all__ = [
     "RackPrefixObstructionRow",
     "RackResidualObstructionAudit",
     "RackTransducerFailure",
+    "RealizedParabolicCrossEffectAudit",
     "TransducerRackificationAudit",
     "FullTwistKnownBranchBoundAudit",
     "GeneratedCongruenceAudit",
@@ -1947,6 +1950,7 @@ __all__ = [
     "rack_product_prefixes",
     "rack_residual_obstruction_audit",
     "rack_solution",
+    "realized_parabolic_cross_effect_audit",
     "rack_transducer_equivariance_failures",
     "rack_inner_group",
     "rack_inner_detector_lift_audit",

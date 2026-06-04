@@ -11,6 +11,7 @@ from ybe_domination import (
     rack_product_prefixes,
     rack_residual_obstruction_audit,
     rack_solution,
+    realized_parabolic_cross_effect_audit,
     small_rack_prefix_obstruction_rows,
     small_rack_representatives,
 )
@@ -107,6 +108,33 @@ class RackResidualTowerTests(unittest.TestCase):
         self.assertTrue(by_prefix_and_arity[(2, 2)].obstruction_found)
         self.assertFalse(by_prefix_and_arity[(3, 2)].obstruction_found)
         self.assertFalse(by_prefix_and_arity[(3, 3)].obstruction_found)
+
+    def test_one_point_detector_has_high_arity_cross_effect_at_bound_one(self):
+        solution = rack_solution((0, 1), lambda _left, right: 1 - right)
+        detector = identity_solution(("z",))
+
+        audit = realized_parabolic_cross_effect_audit(
+            solution, detector, bound=1, n=2
+        )
+
+        self.assertFalse(audit.truncated)
+        self.assertTrue(audit.quotient_nontrivial)
+        self.assertTrue(audit.proves_realized_high_arity_obstruction)
+        self.assertEqual(audit.parabolic_image_size, 1)
+        self.assertEqual(audit.first_witness_word, (1,))
+        self.assertNotEqual(audit.first_moved_tuple, audit.first_moved_tuple_image)
+
+    def test_flip_detector_cross_effect_vanishes_at_bound_two(self):
+        solution = affine_f2_type_a_solution()
+        detector = rack_solution((0, 1), lambda _left, right: right)
+
+        audit = realized_parabolic_cross_effect_audit(
+            solution, detector, bound=2, n=3
+        )
+
+        self.assertFalse(audit.truncated)
+        self.assertFalse(audit.quotient_nontrivial)
+        self.assertEqual(audit.kernel_image_size, audit.parabolic_image_size)
 
 
 if __name__ == "__main__":

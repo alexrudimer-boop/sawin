@@ -2516,6 +2516,11 @@ is the cross-effect `Q^Y_{B,n}=K^Y_n/J^Y_{B,n}`, and for a target `X` its
 realized image `C^{X,Y}_{B,n}=rho^X_n(K^Y_n)/rho^X_n(J^Y_{B,n})`.  A first
 failure after all lower arities pass must survive in this quotient.  The flip
 rack satisfies the criterion with `B=2`, recovering the involutive branch.
+The finite fixed-arity realized cross-effect is now executable as
+`realized_parabolic_cross_effect_audit(X,Y,B,n)`: it closes the finite joint
+image, extracts the detector-kernel image, parabolically embeds lower-kernel
+word representatives, normally closes them inside the finite joint image, and
+returns a witness braid word if the quotient is nontrivial.
 
 ## Current conclusion
 
