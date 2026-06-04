@@ -1,6 +1,17 @@
 # Product-Like Subsolution-Fibre Transport Gauge
 
-Status: queued for GPT-5.5 Pro on 2026-06-04.
+Status: answered from GPT-5.5 Pro on 2026-06-04, pasted by the user.
+
+Answer summary:
+
+- Verdict supplied by Pro: Question A true under the stated
+  transport-isomorphism hypothesis.
+- Verdict supplied by Pro: Question B false, with the size-four affine Type A
+  model as a product-like but non-transport-isomorphic counterexample.
+- Repo-side action: Question B is promoted to the product-like transport
+  boundary audit.  Question A is being audited further because the supplied
+  proof uses a split-tower domination step and an identity-gauge normalization
+  step whose hypotheses must be made certificate-explicit.
 
 Prompt:
 
