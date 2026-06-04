@@ -2414,6 +2414,19 @@ Failure of bounded width alone is not a no-rack obstruction; only failure of
 direct profinite separation for `W_u^br` is equivalent to the normalized-law
 negative sequence.
 
+The exact deletion/Fadell-Neuwirth pressure test is now isolated in
+`proofs/artin_null_brunnian_endpoint_cross_effect.md`.  For an actual interval
+with loop groups `L_n(c)`, deletion maps `d_J`, Artin readouts `alpha_n`, and
+endpoint maps `epsilon_n`, the ordinary groups
+`BrEnd_{n,N}(c)=epsilon_n(K_{n,N}(c))` record high-arity endpoint branches
+whose all `N`-strand deletion shadows are endpoint-trivial.  Arbitrarily large
+ordinary Brunnian endpoint cross-effects are only a gap, because one fixed
+finite Artin quotient may still detect the full branch.  The no-rack
+condition is stronger: for some `u != 1`, the Artin-null Brunnian endpoint
+languages with trivial bounded endpoint and Artin deletion shadows have `1`
+in their profinite closures for every width.  That profinite Artin-null
+Brunnian obstruction is equivalent to the normalized-law no-rack sequence.
+
 ## Current conclusion
 
 As of this log entry, neither A nor B is proved.  The current decisive target

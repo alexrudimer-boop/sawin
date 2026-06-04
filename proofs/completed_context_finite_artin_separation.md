@@ -339,6 +339,16 @@ bounded width alone is not a no-rack obstruction, since the full language
 might still be separated by one finite quotient.  The exact negative condition
 remains failure of direct profinite separation for `W_u^br`.
 
+The sharper deletion formulation is recorded in
+`proofs/artin_null_brunnian_endpoint_cross_effect.md`.  For each width `N`,
+the ordinary cross-effect `BrEnd_{n,N}(c)` measures nonidentity endpoints
+whose every `N`-strand deletion shadow is endpoint-trivial.  Its nonvanishing
+in unbounded arity is only a high-arity gap.  The true negative condition is
+the profinite Artin-null Brunnian endpoint obstruction: actual branches with
+endpoint `u != 1`, trivial bounded deletion endpoint/Artin shadows, and full
+Artin readouts converging to `1` in every finite quotient.  That profinite
+Artin-null version is equivalent to the normalized-law no-rack sequence.
+
 If it holds, define the finite endpoint readout on the image of `q Art` by
 
 ```text
