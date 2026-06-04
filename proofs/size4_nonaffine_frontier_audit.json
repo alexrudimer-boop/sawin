@@ -1,0 +1,117 @@
+{
+  "next_prompt": "prompts/gpt55_pro/2026-06-04-asymptotic-rigid-core-endpoint_ask_now.md",
+  "remaining_gap": "The repo now contains an explicit non-affine size-four degenerate non-involutive solution, but it is not a rigid-core candidate: it is a flip-across union with proper active quotient factors.  The remaining size-four question is whether any degenerate non-involutive solution lies outside the Type A affine gauge and Type B flip-across mechanisms.",
+  "rows": [
+    {
+      "active_certificate": null,
+      "affine_f2_square_model": {
+        "is_affine_over_f2_square_up_to_relabeling": true,
+        "label": {
+          "(0, 0)": [
+            0,
+            0
+          ],
+          "(0, 1)": [
+            0,
+            1
+          ],
+          "(1, 0)": [
+            1,
+            0
+          ],
+          "(1, 1)": [
+            1,
+            1
+          ]
+        },
+        "linear_columns": [
+          [
+            0,
+            1,
+            1,
+            1
+          ],
+          [
+            0,
+            1,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            1,
+            0
+          ],
+          [
+            1,
+            1,
+            1,
+            0
+          ]
+        ],
+        "translation": [
+          0,
+          0,
+          1,
+          1
+        ]
+      },
+      "coordinate_degeneracy": {
+        "everywhere_left_singular": true,
+        "everywhere_right_singular": true,
+        "left_bijective_elements": [],
+        "left_degenerate": true,
+        "right_bijective_elements": [],
+        "right_degenerate": true
+      },
+      "element_count": 4,
+      "has_flip_across_decomposition": false,
+      "has_point_separating_proper_quotients": false,
+      "has_proper_subsolution": true,
+      "is_involutive": false,
+      "is_ybe": true,
+      "mechanism": "all-arity parity/fibre gauge to the two-element cyclic rack",
+      "name": "size4_type_a_affine_f2"
+    },
+    {
+      "active_certificate": {
+        "finite_conditions_hold": true,
+        "injectivity_witness": null,
+        "proper_factor_sizes": [
+          3,
+          3
+        ]
+      },
+      "affine_f2_square_model": {
+        "is_affine_over_f2_square_up_to_relabeling": false,
+        "label": null,
+        "linear_columns": null,
+        "translation": null
+      },
+      "coordinate_degeneracy": {
+        "everywhere_left_singular": false,
+        "everywhere_right_singular": false,
+        "left_bijective_elements": [
+          "('P', 0)",
+          "('P', 1)"
+        ],
+        "left_degenerate": true,
+        "right_bijective_elements": [
+          "('P', 0)",
+          "('P', 1)"
+        ],
+        "right_degenerate": true
+      },
+      "element_count": 4,
+      "has_flip_across_decomposition": true,
+      "has_point_separating_proper_quotients": true,
+      "has_proper_subsolution": true,
+      "is_involutive": false,
+      "is_ybe": true,
+      "mechanism": "flip-across union of the two-point identity solution and the two-point toggle permutation solution",
+      "name": "size4_type_b_flip_across_nonaffine"
+    }
+  ],
+  "title": "Size-four non-affine frontier audit"
+}

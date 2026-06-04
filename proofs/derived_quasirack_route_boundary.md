@@ -48,7 +48,7 @@ Table rows:
 
 ## Prompt
 
-Next prompt: `prompts/gpt55_pro/2026-06-04-size4-degenerate-nonaffine-derived-test_ask_now.md`.
+Next prompt: `prompts/gpt55_pro/2026-06-04-asymptotic-rigid-core-endpoint_ask_now.md`.
 
 ## Conclusion
 

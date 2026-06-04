@@ -15,7 +15,7 @@
     "kernel_target": "construct a finite derived/quasi-rack object D(X) with ker rho^{D(X)}_n <= ker rho^X_n, or kernel equality after finite observer factors",
     "rack_domination_target": "prove every finite D(X) is rack-dominated, for example by showing it is a Plonka sum, g-twist, or finite extension of actual racks with kernel-trivial fixed factors"
   },
-  "next_prompt": "prompts/gpt55_pro/2026-06-04-size4-degenerate-nonaffine-derived-test_ask_now.md",
+  "next_prompt": "prompts/gpt55_pro/2026-06-04-asymptotic-rigid-core-endpoint_ask_now.md",
   "open_requirements": [
     "define D(X) for genuinely degenerate finite bijective solutions without hidden nondegeneracy assumptions",
     "prove or refute the all-arity kernel comparison between D(X) and X",

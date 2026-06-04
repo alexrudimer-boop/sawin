@@ -1,0 +1,76 @@
+# Fixed-Arity Rack Cofinality Audit
+
+This generated audit records a sharpened endpoint for the finite-rack
+domination problem.  It uses the Artin-form congruence subgroup
+property for braid groups as an external theorem.
+
+## Literature Input
+
+Name: `Artin congruence subgroup property for braid groups`.
+
+Statement used: For the Artin embedding B_n -> Aut(F_n), every finite-index subgroup of B_n contains a principal congruence kernel ker(B_n -> Aut(F_n/K)) for some characteristic finite-index subgroup K <= F_n.
+
+Status: Used as external literature input; Stylianakis records this form as Asada's theorem and notes Thurston's elementary proof.
+
+Sources checked:
+
+- `stylianakis`: https://eprints.gla.ac.uk/159155/1/159155.pdf
+- `brendle_notes`: https://www.maths.gla.ac.uk/~tbrendle/papers/BraidCongruence.pdf
+
+## Fixed-Arity Theorem
+
+Fix n >= 2. For every finite quotient representation theta:B_n -> H, there is a finite rack Y such that ker rho^Y_n <= ker theta.
+
+Detector: Y is the conjugation rack of G=F_n/K, where K is the characteristic finite-index subgroup supplied by the Artin congruence subgroup property.
+
+Proof steps:
+
+- Let N=ker theta. Since H is finite, N has finite index in B_n.;
+- Choose characteristic finite-index K <= F_n with C_G=ker(B_n -> Aut(F_n/K)) <= N.;
+- Set G=F_n/K and give G the conjugation rack operation a*b=aba^{-1}.;
+- Under the standard Artin convention sigma_i sends (x_i,x_{i+1}) to (x_i x_{i+1} x_i^{-1}, x_i), which is exactly the conjugation rack crossing on the tuple of quotient generators.;
+- If beta is trivial on the rack action on G^n, it fixes every tuple, in particular the tuple of quotient free generators.;
+- Those quotient generators generate G, so beta is trivial in Aut(G), hence beta lies in C_G <= N.;
+
+Consequence: For every finite YBE solution X and every fixed arity n, some finite rack Y_n satisfies ker rho^{Y_n}_n <= ker rho^X_n.
+
+## Sharpened Negative Condition
+
+Old condition: `forall m exists n with N_{m,n}(X) != 1`.
+
+New condition: `forall m forall N exists n>N with N_{m,n}(X) != 1`.
+
+Reason:
+
+- Let P be a finite product of racks.;
+- If P dominates X in all arities above N_0, use fixed-arity cofinality to choose racks Q_n for the bounded arities 2 <= n <= N_0.;
+- Then Y=P x product_{2 <= n <= N_0} Q_n is a finite rack dominating X in every arity.;
+- Therefore a genuinely non-dominated X must have rack-prefix pressure above every finite arity cutoff.;
+
+## Asymptotic Endpoint
+
+No finite bijective YBE solution is simultaneously a rigid core and asymptotically rack-invisible, i.e. satisfies forall m forall N exists n>N with N_{m,n}(X) != 1.
+
+Why it implies Sawin YES: A minimal Sawin counterexample must avoid all settled positive branches, hence must be rigid. Fixed-arity rack cofinality then forces its obstruction to be unbounded in arity. Excluding asymptotically rack-invisible rigid cores excludes minimal counterexamples.
+
+Why this is sharper than full rigid-core exclusion: Rigid-looking cores whose rack-prefix pressure is bounded in arity no longer need to be excluded separately, because fixed-arity cofinality would patch the bounded arities.
+
+## Singular Coordinate Filter
+
+A minimal counterexample outside the left/right-nondegenerate branches and with no proper crossing-closed subsolution has every L_x and every R_x non-bijective.
+
+Proof steps:
+
+- Let U_L={x: L_x is bijective}.;
+- The first YBE component identity gives L_{L_x(y)} L_{R_y(x)} = L_x L_y.;
+- If x,y in U_L, the right side is bijective; over a finite set both left-side factors are bijective.;
+- Thus r(U_L^2) is contained in U_L^2, and bijectivity of r makes this equality.;
+- So U_L is empty, all of X, or a proper crossing-closed subsolution.;
+- The left-nondegenerate branch excludes U_L=X, and the no-proper-subsolution rigid-core condition excludes nonempty proper U_L.;
+- The same argument using R_z R_y = R_{R_z(y)} R_{L_y(z)} gives the right-coordinate conclusion.;
+
+Finite-table filter: A rigid-core search can reject any nonterminal candidate with at least one bijective left coordinate map or at least one bijective right coordinate map.
+
+## Next Prompt
+
+`prompts/gpt55_pro/2026-06-04-asymptotic-rigid-core-endpoint_ask_now.md`.

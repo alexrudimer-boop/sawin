@@ -19,7 +19,7 @@ def build_report() -> dict[str, object]:
         ),
         "next_prompt": (
             "prompts/gpt55_pro/"
-            "2026-06-04-size4-degenerate-nonaffine-derived-test_ask_now.md"
+            "2026-06-04-asymptotic-rigid-core-endpoint_ask_now.md"
         ),
         "cover_lemma": {
             "statement": (

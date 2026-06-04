@@ -1,6 +1,22 @@
 # Size-4 Degenerate Non-Affine Derived Test Prompt
 
-Status: ask_now / prepared for GPT-5.5 Pro on 2026-06-04.
+Status: partially_answered / GPT-5.5 Pro and local computation on 2026-06-04.
+
+Partial answer recorded:
+
+- the size-3 degenerate non-affine examples are involutive and hence
+  dominated by the two-point flip rack;
+- the three-point example `r_1` fails the quasi-left-nondegenerate
+  idempotent-commutation condition, so the naive derived/quasi-rack route
+  is not a general theorem as stated;
+- local repo computation shows the committed size-four Type B representative
+  is genuinely non-affine over `F_2^2` under every relabeling, but it is
+  already closed by the flip-across/product-rack mechanism.
+
+The remaining size-four question is whether any degenerate non-involutive
+solution lies outside the Type A affine gauge and Type B flip-across
+mechanisms.  The current active prompt has been sharpened to the asymptotic
+rigid-core endpoint.
 
 Prompt:
 
