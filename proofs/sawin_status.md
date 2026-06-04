@@ -2525,6 +2525,17 @@ nontrivial.  The quotient is computed in the joint image and is canonically
 identified with `rho^X_n(K^Y_n)/rho^X_n(J^Y_{B,n})` because projection to the
 `X` coordinate is injective on the detector-kernel image.
 
+The same-chat Pro endpoint query sharpened the global fork in
+`proofs/uniform_rack_size_endpoint.md`.  For any individual braid `beta`
+visible on a finite solution `X`, finite racks do detect `beta`: use the
+faithful Artin action of `B_n` on `F_n`, residual finiteness of the free group,
+and the finite conjugation rack of a quotient separating `beta(x_j)` from
+`x_j`.  Therefore Sawin is exactly the uniformity question whether the minimum
+size of such a rack detector is bounded over all `X`-visible braids.  For a
+fixed `X`, finite-rack domination is equivalent to
+`sup_{rho^X_n(beta)!=1} d_X(n,beta)<infinity`; failure of this bound is exactly
+the normalized-law no-rack sequence for `X`.
+
 ## Current conclusion
 
 As of this log entry, neither A nor B is proved.  The current decisive target
