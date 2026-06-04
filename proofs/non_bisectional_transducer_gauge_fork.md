@@ -178,6 +178,21 @@ injectivity.  Such data prove domination by `R_Z x S`.  Conversely, absence of
 such data under any fixed size bounds is only a bounded certificate failure,
 not a no-rack theorem.
 
+The next refinement makes this certificate canonical.  Equivalently, for the
+structure monoid `M_X=<X | xy=uv>`, one seeks a finite right `M_X`-set `Q`, a
+finite group `H` acting on a finite set `F`, and assignments
+`h_{q,x} in H`, `f_{q,x} in F` satisfying the local equations recorded in
+`proofs/finite_transducer_rackification_certificate.md`, with all-length
+injectivity into `(H x F)^n`.  The detector rack is then the canonical product
+rack
+
+```text
+(alpha,z)*(beta,w)=(alpha beta alpha^{-1},alpha.w).
+```
+
+This canonical form is equivalent to the earlier sequential rack certificate
+via `S -> Inn(S) x S`.
+
 ## Exact Negative Search Target
 
 A genuine Sawin counterexample must now have all three properties:

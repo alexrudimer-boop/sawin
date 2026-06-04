@@ -277,6 +277,91 @@ existence is a finite constraint-satisfaction problem plus the finite
 pair-automaton reachability test above.  Thus fixed-candidate and
 fixed-bound searches are terminating.
 
+The next same-chat Pro refinement gives an equivalent canonical algebraic
+form of the same certificate.  Let
+
+```text
+M_X = < X | xy=uv whenever r_X(x,y)=(u,v) >
+```
+
+be the structure monoid.  A sequential rack certificate is equivalent to
+finite data
+
+```text
+Q, H, F, h_{q,x} in H, f_{q,x} in F,
+```
+
+where `Q` is a finite right `M_X`-set with base state `q0`, `H` is a finite
+group acting on the finite set `F`, and the assignments are defined for
+reachable `q in Q` and `x in X`.  For every reachable `q` and
+`r_X(x,y)=(u,v)`, the finite equations are:
+
+```text
+qxy = quv,                                      (Q)
+h_{q,u} = h_{q,x} h_{qx,y} h_{q,x}^{-1},       (H1)
+h_{qu,v} = h_{q,x},                            (H2)
+f_{q,u} = h_{q,x} . f_{qx,y},                  (F1)
+f_{qu,v} = f_{q,x}.                            (F2)
+```
+
+The all-length reconstruction map is
+
+```text
+C_n(x_1,...,x_n)
+  =
+((h_{q_{i-1},x_i}, f_{q_{i-1},x_i}))_{i=1}^n,
+q_i = q0 x_1 ... x_i,
+```
+
+possibly with the known quotient and invariant observer coordinates appended.
+The certificate condition is that `C_n` is injective for every `n`, again
+checked by the finite pair automaton.
+
+Given such canonical data, form the finite rack
+
+```text
+Y = H x F,
+(alpha,z)*(beta,w) = (alpha beta alpha^{-1}, alpha.w).
+```
+
+The left translations satisfy the rack identity because
+
+```text
+L_(alpha,z) L_(beta,w)
+  =
+L_((alpha,z)*(beta,w)) L_(alpha,z).
+```
+
+Equations `(H1),(F1),(H2),(F2)` say exactly that a local YBE crossing in `X`
+is sent by `C_n` to the rack crossing in `Y`.  Hence `C_n` is
+`B_n`-equivariant, and all-length injectivity gives domination by `Y`.
+
+Conversely, any sequential certificate with finite rack `S` has this
+canonical form by embedding
+
+```text
+S -> Inn(S) x S,        s |-> (L_s,s),
+```
+
+using `H=Inn(S)`, `F=S`, `h_{q,x}=L_{omega(q,x)}`, and
+`f_{q,x}=omega(q,x)`.  The rack identity gives
+
+```text
+L_{s*t}=L_s L_t L_s^{-1},
+```
+
+which is exactly `(H1),(H2)`, while the second coordinate gives
+`(F1),(F2)`.  Therefore:
+
+```text
+finite sequential rack certificate
+  <=> finite canonical quotient data (Q,H,F,h,f).
+```
+
+This is the current sharp positive sublemma: prove that every remaining
+finite bijective YBE solution admits such finite canonical quotient data, or
+find one explicit table failing all finite rack detectors.
+
 The affine `F_2^3` pressure row from
 `proofs/affine_f2_hidden_cyclic_gauge.md` is now also a regression for this
 certificate format.  For
@@ -322,11 +407,12 @@ However, the criterion is not a proof of Sawin by itself.  The remaining
 universal statement would be:
 
 ```text
-Finite sequential-rack observability lemma.
+Canonical finite quotient / finite sequential-rack observability lemma.
 
 Every actual finite YBE solution has such a finite sequential rack gauge
-certificate after the known quotient, involutive, left-nondegenerate,
-flip-union, and small kernel-equivalence branches are removed.
+certificate, equivalently finite canonical quotient data `(Q,H,F,h,f)`, after
+the known quotient, involutive, left-nondegenerate, flip-union, and small
+kernel-equivalence branches are removed.
 ```
 
 No proof of that universal existence theorem is currently available in the

@@ -2722,6 +2722,19 @@ Thus the exact remaining positive lemma is finite sequential-rack
 observability.  The exact all-rack negative test is the cofinal rack-prefix
 obstruction `forall m exists n, N_{m,n}(X)!=1`; absence of certificates under
 fixed size bounds is only a bounded search failure.
+The follow-up Pro answer sharpens the positive lemma to the canonical finite
+quotient lemma, also recorded in
+`proofs/finite_transducer_rackification_certificate.md`.  Let
+`M_X=<X | xy=uv whenever r_X(x,y)=(u,v)>`.  A sequential certificate is
+equivalent to finite data `Q,H,F,h_{q,x},f_{q,x}`, where `Q` is a finite right
+`M_X`-set, `H` acts on `F`, the equations `(Q),(H1),(H2),(F1),(F2)` hold, and
+the all-length map into `(H x F)^n` passes the pair-automaton injectivity
+test.  The detecting rack is `H x F` with
+`(alpha,z)*(beta,w)=(alpha beta alpha^{-1},alpha.w)`.  Conversely any
+sequential rack certificate embeds into this form via
+`S -> Inn(S) x S`, `s |-> (L_s,s)`.  Thus the current decisive positive
+target is proving this canonical finite quotient lemma for every remaining
+finite YBE table.
 Formal partial-row nonseparability, failure of one-vertex actualization for a
 formal row system, or failure of stronger structural properties such as
 virtual freeness of `Art_I`, remains only a gap unless it is made actual and

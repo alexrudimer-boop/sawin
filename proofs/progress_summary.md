@@ -2748,3 +2748,13 @@ lemma is finite sequential-rack observability.  The remaining negative test
 is the cofinal rack-prefix obstruction
 `forall m exists n, N_{m,n}(X)!=1`; failure of bounded transducer searches
 alone is not enough.
+The subsequent Pro refinement puts the positive lemma in canonical finite
+quotient form.  With
+`M_X=<X | xy=uv whenever r_X(x,y)=(u,v)>`, a certificate is equivalently finite
+data `Q,H,F,h_{q,x},f_{q,x}` where `Q` is a finite right `M_X`-set, `H` acts
+on `F`, the equations `(Q),(H1),(H2),(F1),(F2)` hold, and the left-to-right
+map into `(H x F)^n` is injective in every arity.  The rack is
+`H x F` with `(alpha,z)*(beta,w)=(alpha beta alpha^{-1},alpha.w)`.
+Thus the exact positive target is the canonical finite quotient lemma; the
+exact negative target remains one explicit finite YBE table satisfying the
+cofinal rack-prefix obstruction.
