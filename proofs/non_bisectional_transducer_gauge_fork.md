@@ -193,6 +193,15 @@ rack
 This canonical form is equivalent to the earlier sequential rack certificate
 via `S -> Inn(S) x S`.
 
+The rack-only version of this canonical form is too narrow.  If the
+all-length reconstruction uses only `Q,H,F` rack-active outputs, then any
+left-degeneracy collision `lambda_x(y_1)=lambda_x(y_2)` forces the two
+rack-output words `(x,y_1)` and `(x,y_2)` to coincide, because rack left
+translations are bijective.  Thus rack-only canonical data force
+left-nondegeneracy.  The affine row above is therefore the minimal route
+obstruction: it has no rack-only canonical certificate, but it is still
+dominated by the observer-augmented cyclic gauge.
+
 ## Exact Negative Search Target
 
 A genuine Sawin counterexample must now have all three properties:

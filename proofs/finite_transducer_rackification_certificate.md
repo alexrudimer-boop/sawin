@@ -354,13 +354,35 @@ which is exactly `(H1),(H2)`, while the second coordinate gives
 `(F1),(F2)`.  Therefore:
 
 ```text
-finite sequential rack certificate
+rack-active part of a finite sequential rack certificate
   <=> finite canonical quotient data (Q,H,F,h,f).
 ```
 
-This is the current sharp positive sublemma: prove that every remaining
-finite bijective YBE solution admits such finite canonical quotient data, or
-find one explicit table failing all finite rack detectors.
+There is an important degenerate caveat.  If all-length injectivity is
+required from the rack-active `Q,H,F` outputs alone, then such a rack-only
+canonical certificate forces left-nondegeneracy.  Indeed, suppose
+`lambda_x(y_1)=lambda_x(y_2)=u` with `y_1 != y_2`, and write the canonical
+output as `O(q,x)`.  For `r(x,y_i)=(u,v_i)`, local equivariance gives
+
+```text
+O(q,u)=O(q,x)*O(qx,y_i),        i=1,2.
+```
+
+Since rack left translations are bijective,
+
+```text
+O(qx,y_1)=O(qx,y_2).
+```
+
+Thus `(x,y_1)` and `(x,y_2)` have the same rack-active canonical output,
+contradicting all-length injectivity.  Therefore genuinely degenerate rows
+need the observer-augmented form: some finite information may be
+braid-invariant by position rather than rack-active.
+
+The current sharp positive sublemma is consequently observer-augmented:
+prove that every remaining finite bijective YBE solution admits finite
+canonical quotient data together with finite invariant observer data, or find
+one explicit table failing all finite rack detectors.
 
 The canonical form is now executable.  The helper
 
@@ -385,6 +407,10 @@ Q=Z/2, H=C2, F=F_2^2, h_{q,x}=1, f_{q,(a,z)}=J^q z + q c,
 ```
 
 with the inert `a` coordinate supplied by the invariant observer.
+The companion regression
+`test_affine_f2_canonical_certificate_needs_invariant_output` records the
+two-letter collision proving that this row has no rack-only `Q,H,F` injective
+certificate.
 
 The affine `F_2^3` pressure row from
 `proofs/affine_f2_hidden_cyclic_gauge.md` is now also a regression for this
@@ -431,11 +457,13 @@ However, the criterion is not a proof of Sawin by itself.  The remaining
 universal statement would be:
 
 ```text
-Canonical finite quotient / finite sequential-rack observability lemma.
+Observer-augmented canonical finite quotient / finite sequential-rack
+observability lemma.
 
 Every actual finite YBE solution has such a finite sequential rack gauge
-certificate, equivalently finite canonical quotient data `(Q,H,F,h,f)`, after
-the known quotient, involutive, left-nondegenerate, flip-union, and small
+certificate, equivalently finite canonical quotient data `(Q,H,F,h,f)`
+together with finite invariant observer data when needed, after the known
+quotient, involutive, left-nondegenerate, flip-union, and small
 kernel-equivalence branches are removed.
 ```
 

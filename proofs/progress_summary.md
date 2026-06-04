@@ -2763,3 +2763,12 @@ checks the finite action/equation/injectivity conditions and
 `canonical_quotient_product_rack(...)` constructs `H x F`.  The affine
 `F_2^3` hidden cyclic row has a canonical certificate regression with
 `Q=Z/2`, `H=C2`, `F=F_2^2`, and the inert coordinate as an invariant observer.
+The syntactic-route Pro follow-up shows why the observer is essential:
+all-length injectivity from rack-active `Q,H,F` outputs alone forces
+left-nondegeneracy, because a collision
+`lambda_x(y_1)=lambda_x(y_2)` makes the rack-output words `(x,y_1)` and
+`(x,y_2)` identical.  Thus the corrected positive target is the
+observer-augmented canonical finite quotient lemma, not a bare `Q,H,F`
+finite-index theorem.  The affine `F_2^3` row is the concrete compactness
+failure for the bare route: no rack-only canonical certificate, but still
+dominated by the observer-augmented cyclic gauge.

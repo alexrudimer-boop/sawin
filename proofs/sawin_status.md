@@ -2738,6 +2738,14 @@ finite YBE table.
 The helper `canonical_quotient_audit(...)` now checks this finite action,
 local equation, and all-length injectivity certificate directly, while
 `canonical_quotient_product_rack(...)` constructs the detector rack `H x F`.
+The syntactic-route follow-up refines this again: a rack-only `Q,H,F`
+canonical certificate with no invariant observer can exist only when `X` is
+left-nondegenerate.  If `lambda_x(y_1)=lambda_x(y_2)`, local equivariance and
+bijectivity of rack left translations force the rack outputs after the prefix
+`x` on `y_1` and `y_2` to agree, contradicting all-length injectivity.  Hence
+the degenerate branch must use observer-augmented canonical data; the affine
+`F_2^3` row is the minimal example showing that absence of a rack-only
+canonical certificate does not imply a cofinal rack-prefix obstruction.
 Formal partial-row nonseparability, failure of one-vertex actualization for a
 formal row system, or failure of stronger structural properties such as
 virtual freeness of `Art_I`, remains only a gap unless it is made actual and
