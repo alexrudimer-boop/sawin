@@ -12,6 +12,7 @@ from ybe_domination import (
     interval_covers,
     is_congruence,
     maximal_congruence_chain,
+    quotient_factor_compression_audit,
     quotient_solution,
     rack_solution,
     universal_congruence,
@@ -78,6 +79,50 @@ class CongruenceTests(unittest.TestCase):
         self.assertEqual(chain[-1], universal_congruence(solution.elements))
         covers = interval_covers(congruences(solution))
         self.assertTrue(all((a, b) in covers for a, b in zip(chain, chain[1:])))
+
+    def test_point_separating_quotients_give_proper_active_factor_certificate(self):
+        elements = tuple((a, b) for a in range(2) for b in range(2))
+        solution = rack_solution(elements, lambda _left, right: right)
+        first_coordinate = (
+            frozenset([(0, 0), (0, 1)]),
+            frozenset([(1, 0), (1, 1)]),
+        )
+        second_coordinate = (
+            frozenset([(0, 0), (1, 0)]),
+            frozenset([(0, 1), (1, 1)]),
+        )
+
+        audit = quotient_factor_compression_audit(
+            solution,
+            (first_coordinate, second_coordinate),
+        )
+
+        self.assertTrue(audit.proves_proper_quotient_compression)
+        self.assertEqual(audit.quotient_sizes, (2, 2))
+        self.assertIsNone(audit.injectivity_witness)
+
+    def test_nonseparating_quotient_family_has_injectivity_witness(self):
+        elements = tuple((a, b) for a in range(2) for b in range(2))
+        solution = rack_solution(elements, lambda _left, right: right)
+        first_coordinate = (
+            frozenset([(0, 0), (0, 1)]),
+            frozenset([(1, 0), (1, 1)]),
+        )
+
+        audit = quotient_factor_compression_audit(solution, (first_coordinate,))
+
+        self.assertFalse(audit.proves_proper_quotient_compression)
+        self.assertFalse(audit.point_reconstruction_holds)
+        self.assertIsNotNone(audit.injectivity_witness)
+
+    def test_noncongruence_quotient_family_is_rejected(self):
+        solution = rack_solution([0, 1, 2], lambda a, b: (2 * a - b) % 3)
+        bad = (frozenset([0, 1]), frozenset([2]))
+
+        audit = quotient_factor_compression_audit(solution, (bad,))
+
+        self.assertFalse(audit.all_partitions_are_congruences)
+        self.assertIsNone(audit.certificate)
 
 
 if __name__ == "__main__":

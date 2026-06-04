@@ -2779,6 +2779,11 @@ proper-factor format: `A union B` maps to the two smaller quotient factors
 `A union {*}` and `{*} union B`, and the two collapsed outputs reconstruct
 the original coordinate.  This makes proper compression candidates finite and
 auditable when supplied, but it is still not a universal compression theorem.
+The quotient-only special case is also executable as
+`quotient_factor_compression_audit(...)`: proper total YBE quotient maps form
+one-state active factors, and a family proves compression exactly when the
+common refinement of its congruences is equality.  This turns the
+point-separating quotient gluing theorem into a finite audit.
 Formal partial-row nonseparability, failure of one-vertex actualization for a
 formal row system, or failure of stronger structural properties such as
 virtual freeness of `Art_I`, remains only a gap unless it is made actual and

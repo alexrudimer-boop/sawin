@@ -547,6 +547,27 @@ product reconstructs `X` coordinatewise.  Thus flip-across domination can be
 viewed either through the pure-braid color-pattern proof or through a proper
 multi-active-factor certificate.
 
+There is an even smaller quotient-only subcase.  Given a finite family of
+proper congruences `theta_alpha` on `X`, the quotient maps
+
+```text
+pi_alpha:X -> X/theta_alpha
+```
+
+are one-state active-factor transducers.  Their product is injective on
+`X^n` for every `n` exactly when the common refinement of the `theta_alpha`
+is equality on `X`.  The helper
+
+```text
+quotient_factor_compression_audit(X, (theta_alpha)_alpha)
+```
+
+builds these quotient factors, runs the multi-active-factor certificate
+checker, and records whether all factors are proper and jointly reconstruct
+`X`.  Thus point-separating proper total YBE quotients are now an executable
+proper-compression certificate.  This is the finite version of the safe
+gluing principle for genuine total quotients.
+
 This refinement also explains why a Myhill-Nerode finite prefix congruence is
 not by itself decisive.  A finite prefix quotient `Q` only gives the monoid
 relation `qxy=quv`.  One must still solve the nonabelian crossed-cocycle

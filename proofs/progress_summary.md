@@ -2801,3 +2801,9 @@ quotient factors `A union {*}` and `{*} union B`, whose one-state quotient
 outputs jointly reconstruct `A union B`.  This does not prove proper
 compression in general, but it turns any proposed finite family of smaller
 active factors into a finite auditable certificate.
+The quotient-only subcase is now executable as
+`quotient_factor_compression_audit(...)`: a finite family of proper YBE
+congruences gives one-state active-factor quotient maps, and the audit checks
+that their common refinement is equality and that the multi-factor
+pair-automaton has no all-length collision.  This records point-separating
+proper total quotients as a proper active-factor compression certificate.

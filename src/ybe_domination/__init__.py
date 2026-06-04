@@ -430,6 +430,7 @@ from .label_detectors import (
 )
 from .congruence import (
     CongruenceInterval,
+    QuotientFactorCompressionAudit,
     block_map,
     common_refinement,
     congruences,
@@ -438,6 +439,7 @@ from .congruence import (
     interval_covers,
     is_congruence,
     maximal_congruence_chain,
+    quotient_factor_compression_audit,
     quotient_solution,
     refines,
     universal_congruence,
@@ -1201,6 +1203,7 @@ __all__ = [
     "MealyTransducer",
     "MultiActiveFactorCertificateAudit",
     "QuotientEquivarianceFailure",
+    "QuotientFactorCompressionAudit",
     "BoundedDeletionSupportAudit",
     "BoundedDeletionSearchTriage",
     "PureBraidImageAudit",
@@ -2005,6 +2008,7 @@ __all__ = [
     "quotient_group_by_normal_subgroup",
     "subgroup_as_group",
     "quotient_interval_by_family",
+    "quotient_factor_compression_audit",
     "quotient_solution",
     "quotient_equivariance_failures",
     "quotient_image_kernel_summary",

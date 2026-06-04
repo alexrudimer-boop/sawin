@@ -2,11 +2,17 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from itertools import product
-from typing import Dict, FrozenSet, Iterable, List, Sequence, Tuple
+from typing import Dict, FrozenSet, Iterable, List, Optional, Sequence, Tuple
 
 from .finite_braided_set import Element, FiniteBraidedSet
 from .local_interval import LocalInterval, canonical_partition, set_partitions
 from .residual import QuotientMap
+from .transducer_certificate import (
+    InjectivityWitness,
+    MealyTransducer,
+    MultiActiveFactorCertificateAudit,
+    multi_active_factor_certificate_audit,
+)
 
 Block = FrozenSet[Element]
 Partition = Tuple[Block, ...]
@@ -195,3 +201,86 @@ class CongruenceInterval:
                 table[(a, b, x, y)] = (u, v)
         return LocalInterval(colors, fibres, base_R, table)
 
+
+@dataclass(frozen=True)
+class QuotientFactorCompressionAudit:
+    solution: FiniteBraidedSet
+    partitions: Tuple[Partition, ...]
+    quotient_sizes: Tuple[int, ...]
+    common_refinement: Partition
+    certificate: Optional[MultiActiveFactorCertificateAudit]
+
+    @property
+    def all_partitions_are_congruences(self) -> bool:
+        return all(is_congruence(self.solution, partition) for partition in self.partitions)
+
+    @property
+    def all_factors_are_proper(self) -> bool:
+        return all(size < len(self.solution.elements) for size in self.quotient_sizes)
+
+    @property
+    def point_reconstruction_holds(self) -> bool:
+        return self.common_refinement == equality_congruence(self.solution.elements)
+
+    @property
+    def injectivity_witness(self) -> Optional[InjectivityWitness]:
+        return None if self.certificate is None else self.certificate.injectivity_witness
+
+    @property
+    def proves_proper_quotient_compression(self) -> bool:
+        return (
+            self.certificate is not None
+            and self.all_partitions_are_congruences
+            and self.all_factors_are_proper
+            and self.point_reconstruction_holds
+            and self.certificate.finite_conditions_hold
+        )
+
+
+def quotient_factor_compression_audit(
+    solution: FiniteBraidedSet,
+    partitions: Sequence[Partition],
+) -> QuotientFactorCompressionAudit:
+    """Build the active-factor certificate carried by total quotient maps."""
+
+    normalized_partitions = tuple(normalize_partition(partition) for partition in partitions)
+    if not normalized_partitions:
+        refinement = universal_congruence(solution.elements)
+        return QuotientFactorCompressionAudit(solution, (), (), refinement, None)
+
+    refinement = normalized_partitions[0]
+    for partition in normalized_partitions[1:]:
+        refinement = common_refinement(refinement, partition)
+
+    if not all(is_congruence(solution, partition) for partition in normalized_partitions):
+        quotient_sizes = tuple(len(partition) for partition in normalized_partitions)
+        return QuotientFactorCompressionAudit(
+            solution,
+            normalized_partitions,
+            quotient_sizes,
+            refinement,
+            None,
+        )
+
+    active_factors = []
+    quotient_sizes = []
+    state = "q"
+    for partition in normalized_partitions:
+        qmap = quotient_solution(solution, partition)
+        quotient_sizes.append(len(qmap.quotient.elements))
+        omega = {(state, element): qmap.pi[element] for element in solution.elements}
+        delta = {(state, element): state for element in solution.elements}
+        transducer = MealyTransducer((state,), state, delta, omega)
+        active_factors.append((qmap.quotient, transducer))
+
+    certificate = multi_active_factor_certificate_audit(
+        solution,
+        tuple(active_factors),
+    )
+    return QuotientFactorCompressionAudit(
+        solution,
+        normalized_partitions,
+        tuple(quotient_sizes),
+        refinement,
+        certificate,
+    )
