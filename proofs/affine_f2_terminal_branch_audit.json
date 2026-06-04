@@ -17,6 +17,17 @@
     "invertible_affine_map_count": 322560,
     "no_untagged_entry_evasion": true,
     "point_count": 4,
+    "subsolution_fibre_transition_counts": {
+      "direct_product_like:1": 6,
+      "direct_product_like:1+swapped_product_like:1": 6,
+      "direct_product_like:13": 1,
+      "none": 204,
+      "swapped_product_like:1": 182,
+      "swapped_product_like:13": 1,
+      "swapped_product_like:2": 54,
+      "swapped_product_like:3": 9,
+      "swapped_product_like:4": 18
+    },
     "tag_entry_counts": {
       "tags=(untagged)|entry=quotient_separating+subsolution+subsolution_fibre_congruence+observer": 12,
       "tags=(untagged)|entry=subsolution+subsolution_fibre_congruence+observer": 12,
@@ -49,11 +60,44 @@
       "tags=rack_type+permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate|entry=quotient_separating+subsolution+subsolution_fibre_congruence": 9,
       "tags=rack_type+permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate|entry=subsolution+subsolution_fibre_congruence": 8
     },
+    "tag_subsolution_fibre_transition_counts": {
+      "tags=(untagged)|transition=swapped_product_like:1": 24,
+      "tags=involutive+identity_table|transition=direct_product_like:13": 1,
+      "tags=involutive+left_nondegenerate+right_nondegenerate+nondegenerate|transition=none": 36,
+      "tags=involutive+left_nondegenerate+right_nondegenerate+nondegenerate|transition=swapped_product_like:1": 3,
+      "tags=involutive+left_nondegenerate+right_nondegenerate+nondegenerate|transition=swapped_product_like:2": 6,
+      "tags=involutive+left_nondegenerate+right_nondegenerate+nondegenerate|transition=swapped_product_like:3": 3,
+      "tags=involutive+permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate|transition=none": 6,
+      "tags=involutive+permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate|transition=swapped_product_like:1": 11,
+      "tags=involutive+permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate|transition=swapped_product_like:4": 6,
+      "tags=involutive|transition=direct_product_like:1": 6,
+      "tags=involutive|transition=direct_product_like:1+swapped_product_like:1": 6,
+      "tags=involutive|transition=none": 18,
+      "tags=involutive|transition=swapped_product_like:1": 18,
+      "tags=left_nondegenerate+right_nondegenerate+nondegenerate|transition=none": 106,
+      "tags=left_nondegenerate+right_nondegenerate+nondegenerate|transition=swapped_product_like:1": 75,
+      "tags=left_nondegenerate+right_nondegenerate+nondegenerate|transition=swapped_product_like:2": 42,
+      "tags=left_nondegenerate+right_nondegenerate+nondegenerate|transition=swapped_product_like:3": 3,
+      "tags=permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate|transition=none": 30,
+      "tags=permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate|transition=swapped_product_like:1": 37,
+      "tags=permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate|transition=swapped_product_like:4": 6,
+      "tags=rack_type+involutive+permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate|transition=swapped_product_like:13": 1,
+      "tags=rack_type+left_nondegenerate+right_nondegenerate+nondegenerate|transition=none": 2,
+      "tags=rack_type+left_nondegenerate+right_nondegenerate+nondegenerate|transition=swapped_product_like:1": 3,
+      "tags=rack_type+left_nondegenerate+right_nondegenerate+nondegenerate|transition=swapped_product_like:2": 6,
+      "tags=rack_type+left_nondegenerate+right_nondegenerate+nondegenerate|transition=swapped_product_like:3": 3,
+      "tags=rack_type+permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate|transition=none": 6,
+      "tags=rack_type+permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate|transition=swapped_product_like:1": 11,
+      "tags=rack_type+permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate|transition=swapped_product_like:4": 6
+    },
     "untagged_count": 24,
     "untagged_entry_counts": {
       "quotient_separating+subsolution+subsolution_fibre_congruence+observer": 12,
       "subsolution+subsolution_fibre_congruence+observer": 12
     },
-    "untagged_no_entry_count": 0
+    "untagged_no_entry_count": 0,
+    "untagged_subsolution_fibre_transition_counts": {
+      "swapped_product_like:1": 24
+    }
   }
 }

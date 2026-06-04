@@ -25,6 +25,20 @@ It is a finite search artifact, not a proof of the universal theorem.
 | `subsolution+subsolution_fibre_congruence` | 38 |
 | `subsolution+subsolution_fibre_congruence+observer` | 24 |
 
+## Subsolution-Fibre Transition Counts
+
+| transition signature | count |
+| --- | ---: |
+| `direct_product_like:1` | 6 |
+| `direct_product_like:1+swapped_product_like:1` | 6 |
+| `direct_product_like:13` | 1 |
+| `none` | 204 |
+| `swapped_product_like:1` | 182 |
+| `swapped_product_like:13` | 1 |
+| `swapped_product_like:2` | 54 |
+| `swapped_product_like:3` | 9 |
+| `swapped_product_like:4` | 18 |
+
 ## Untagged Rows
 
 | entry signature | count |
@@ -32,9 +46,17 @@ It is a finite search artifact, not a proof of the universal theorem.
 | `quotient_separating+subsolution+subsolution_fibre_congruence+observer` | 12 |
 | `subsolution+subsolution_fibre_congruence+observer` | 12 |
 
+## Untagged Subsolution-Fibre Transition Rows
+
+| transition signature | count |
+| --- | ---: |
+| `swapped_product_like:1` | 24 |
+
 All 24 untagged affine rows have a terminal entry branch: 12 have
 point-separating proper quotients plus subsolution and observer entries,
 and 12 have subsolution plus observer entries.  Thus the affine
 `F_2^2` residual rows do not supply a terminal-branch evader.
 The `subsolution_fibre_congruence` marker records the sharper branch
 where a proper quotient has crossing-closed fibre blocks.
+The transition signature records whether those mixed-fibre crossings
+are product-like, swapped-product-like, or genuinely non-product-like.

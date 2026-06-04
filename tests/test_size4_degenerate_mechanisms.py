@@ -13,6 +13,7 @@ from ybe_domination import (
     is_rack_solution,
     rack_residual_obstruction_audit,
     rack_solution,
+    subsolution_fibre_transition_audit,
     terminal_branch_triage_audit,
 )
 
@@ -113,24 +114,38 @@ class SizeFourDegenerateMechanismTests(unittest.TestCase):
             self.assertFalse(audit.kernel_contains_nonidentity)
 
     def test_terminal_branch_triage_sees_size_four_mechanisms(self):
-        type_a = terminal_branch_triage_audit(affine_f2_type_a_solution())
+        type_a_solution = affine_f2_type_a_solution()
+        type_a = terminal_branch_triage_audit(type_a_solution)
         self.assertFalse(type_a.has_point_separating_proper_quotients)
         self.assertFalse(type_a.has_flip_across_decomposition)
         self.assertTrue(type_a.has_nontrivial_one_state_observer)
         self.assertTrue(type_a.has_proper_subsolution)
         self.assertTrue(type_a.has_subsolution_fibre_congruence)
-
-        type_b = terminal_branch_triage_audit(
-            flip_disjoint_union_solution(
-                identity_solution((0, 1)),
-                permutation_solution_with_toggle(),
-                "T",
-                "P",
-            )
+        type_a_transition = subsolution_fibre_transition_audit(
+            type_a_solution,
+            type_a.subsolution_fibre_congruences[0],
         )
+        self.assertTrue(type_a_transition.all_mixed_transitions_product_like)
+        self.assertTrue(type_a_transition.all_mixed_transitions_swapped_product_like)
+        self.assertFalse(type_a_transition.all_mixed_transitions_direct_product_like)
+
+        type_b_solution = flip_disjoint_union_solution(
+            identity_solution((0, 1)),
+            permutation_solution_with_toggle(),
+            "T",
+            "P",
+        )
+        type_b = terminal_branch_triage_audit(type_b_solution)
         self.assertTrue(type_b.has_point_separating_proper_quotients)
         self.assertTrue(type_b.has_flip_across_decomposition)
         self.assertTrue(type_b.has_subsolution_fibre_congruence)
+        type_b_transition = subsolution_fibre_transition_audit(
+            type_b_solution,
+            type_b.subsolution_fibre_congruences[0],
+        )
+        self.assertTrue(type_b_transition.all_mixed_transitions_product_like)
+        self.assertTrue(type_b_transition.all_mixed_transitions_swapped_product_like)
+        self.assertFalse(type_b_transition.all_mixed_transitions_direct_product_like)
 
 
 if __name__ == "__main__":

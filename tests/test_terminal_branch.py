@@ -11,6 +11,7 @@ from ybe_domination import (
     one_state_invariant_observer_partition,
     rack_solution,
     subsolution_fibre_congruences,
+    subsolution_fibre_transition_audit,
     terminal_branch_triage_audit,
 )
 
@@ -70,6 +71,21 @@ class TerminalBranchTriageTests(unittest.TestCase):
             ),
             partitions,
         )
+
+    def test_flip_across_mixed_fibre_transitions_are_swapped_product_like(self):
+        left = identity_solution(("a", "b"))
+        right = identity_solution(("c", "d"))
+        solution = flip_disjoint_union_solution(left, right, "L", "R")
+        partition = (
+            frozenset([("L", "a"), ("L", "b")]),
+            frozenset([("R", "c"), ("R", "d")]),
+        )
+
+        audit = subsolution_fibre_transition_audit(solution, partition)
+
+        self.assertTrue(audit.all_mixed_transitions_product_like)
+        self.assertTrue(audit.all_mixed_transitions_swapped_product_like)
+        self.assertFalse(audit.all_mixed_transitions_direct_product_like)
 
 
 if __name__ == "__main__":

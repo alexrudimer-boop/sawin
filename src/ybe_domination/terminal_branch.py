@@ -6,6 +6,7 @@ from typing import FrozenSet, Tuple
 
 from .congruence import (
     Partition,
+    block_map,
     common_refinement,
     congruences,
     equality_congruence,
@@ -71,6 +72,49 @@ class TerminalBranchTriageAudit:
             or self.has_flip_across_decomposition
             or self.has_nontrivial_one_state_observer
         )
+
+
+@dataclass(frozen=True)
+class MixedFibreTransitionRow:
+    input_left_block: FrozenSet[Element]
+    input_right_block: FrozenSet[Element]
+    output_left_block: FrozenSet[Element]
+    output_right_block: FrozenSet[Element]
+    first_depends_only_on_left: bool
+    first_depends_only_on_right: bool
+    second_depends_only_on_left: bool
+    second_depends_only_on_right: bool
+
+    @property
+    def direct_product_like(self) -> bool:
+        return self.first_depends_only_on_left and self.second_depends_only_on_right
+
+    @property
+    def swapped_product_like(self) -> bool:
+        return self.first_depends_only_on_right and self.second_depends_only_on_left
+
+    @property
+    def product_like(self) -> bool:
+        return self.direct_product_like or self.swapped_product_like
+
+
+@dataclass(frozen=True)
+class SubsolutionFibreTransitionAudit:
+    solution: FiniteBraidedSet
+    partition: Partition
+    rows: Tuple[MixedFibreTransitionRow, ...]
+
+    @property
+    def all_mixed_transitions_product_like(self) -> bool:
+        return all(row.product_like for row in self.rows)
+
+    @property
+    def all_mixed_transitions_direct_product_like(self) -> bool:
+        return all(row.direct_product_like for row in self.rows)
+
+    @property
+    def all_mixed_transitions_swapped_product_like(self) -> bool:
+        return all(row.swapped_product_like for row in self.rows)
 
 
 def _proper_nonempty_subsets(elements: Tuple[Element, ...]):
@@ -166,6 +210,78 @@ def subsolution_fibre_congruences(
         and partition != universal_congruence(solution.elements)
         and is_subsolution_fibre_congruence(solution, partition)
     )
+
+
+def subsolution_fibre_transition_audit(
+    solution: FiniteBraidedSet,
+    partition: Partition,
+) -> SubsolutionFibreTransitionAudit:
+    """Audit coordinate-dependence of mixed crossings between fibre blocks."""
+
+    mapping = block_map(partition)
+    rows = []
+    for left_block in partition:
+        for right_block in partition:
+            if left_block == right_block:
+                continue
+
+            output_left_blocks = set()
+            output_right_blocks = set()
+            first_by_left = []
+            first_by_right = []
+            second_by_left = []
+            second_by_right = []
+
+            for left in left_block:
+                first_values = set()
+                second_values = set()
+                for right in right_block:
+                    out_left, out_right = solution.R[(left, right)]
+                    output_left_blocks.add(mapping[out_left])
+                    output_right_blocks.add(mapping[out_right])
+                    first_values.add(out_left)
+                    second_values.add(out_right)
+                first_by_left.append(first_values)
+                second_by_left.append(second_values)
+
+            for right in right_block:
+                first_values = set()
+                second_values = set()
+                for left in left_block:
+                    out_left, out_right = solution.R[(left, right)]
+                    first_values.add(out_left)
+                    second_values.add(out_right)
+                first_by_right.append(first_values)
+                second_by_right.append(second_values)
+
+            if len(output_left_blocks) != 1 or len(output_right_blocks) != 1:
+                raise ValueError(
+                    "partition must be compatible with mixed-block outputs"
+                )
+            output_left_block = next(iter(output_left_blocks))
+            output_right_block = next(iter(output_right_blocks))
+
+            rows.append(
+                MixedFibreTransitionRow(
+                    input_left_block=left_block,
+                    input_right_block=right_block,
+                    output_left_block=output_left_block,
+                    output_right_block=output_right_block,
+                    first_depends_only_on_left=all(
+                        len(values) <= 1 for values in first_by_left
+                    ),
+                    first_depends_only_on_right=all(
+                        len(values) <= 1 for values in first_by_right
+                    ),
+                    second_depends_only_on_left=all(
+                        len(values) <= 1 for values in second_by_left
+                    ),
+                    second_depends_only_on_right=all(
+                        len(values) <= 1 for values in second_by_right
+                    ),
+                )
+            )
+    return SubsolutionFibreTransitionAudit(solution, partition, tuple(rows))
 
 
 def one_state_invariant_observer_partition(solution: FiniteBraidedSet) -> Partition:

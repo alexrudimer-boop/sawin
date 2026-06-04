@@ -732,6 +732,20 @@ proper subsolution and weaker than point-separating quotient compression; the
 missing issue is whether the mixed-fibre transition cocycle always admits a
 finite active-factor gauge.
 
+The companion helper
+
+```text
+subsolution_fibre_transition_audit(X,theta)
+```
+
+audits that missing mixed layer for a chosen subsolution-fibre congruence
+`theta`.  For each ordered pair of distinct fibre blocks, it records whether
+the first and second output coordinates depend only on the left input fibre,
+only on the right input fibre, or genuinely on both.  Product-like rows are
+either direct-product-like or swapped-product-like; non-product-like rows are
+the finite shadow of a real mixed-fibre transition cocycle that would need an
+active-factor gauge rather than pure quotient-plus-block gluing.
+
 This audit is a triage tool, not a negative theorem.  If it finds an entry
 branch, the branch can feed the quotient or multi-active-factor certificate
 layer.  If it finds none, the solution has merely passed these first finite
