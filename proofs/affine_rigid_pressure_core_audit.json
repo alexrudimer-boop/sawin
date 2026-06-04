@@ -1,5 +1,14 @@
 {
-  "conclusion": "The exact affine-linear size-four family over F_2^2 has terminal survivors, but no structural rigid-pressure-core survivor: all 24 terminal survivors fail quotient-rigidity.  The exact affine line searches over F_3 and F_5 have no terminal survivors.  The named F_2^3 pressure row remains a useful guardrail but fails observer and subsolution rigidity and is already closed by a finite sequential rack gauge.",
+  "conclusion": "The exact affine-linear size-four family over F_2^2 has terminal survivors, but no structural rigid-pressure-core survivor: all 24 terminal survivors fail quotient-rigidity.  The exact affine line searches over F_3 and F_5 have no terminal survivors.  The named hidden-cyclic F_2^3 pressure row remains a useful guardrail but fails observer and subsolution rigidity and is already closed by a finite sequential rack gauge.  The companion q=3 affine F_2^3 pressure row is tracked in its own audit and is also closed positively, with all-arity kernel equality to the tetrahedral four-element rack.",
+  "dimension_three_companion_q3_resolution": {
+    "name": "affine_f2_q3_tetrahedral_pressure_row",
+    "point_count": 8,
+    "proof_artifact": "proofs/affine_f2_q3_full_tetrahedral_conjugacy_audit.md",
+    "rescanned_in_this_audit": false,
+    "resolution": "all-arity braid-kernel equality with the four-element tetrahedral Alexander rack, after adding n fixed observer bits",
+    "rigid_pressure_audit": "proofs/affine_f2_q3_rigid_pressure_core_audit.md",
+    "same_affine_dimension": true
+  },
   "dimension_three_named_pressure_row": {
     "bidegenerate": true,
     "branch_tags": [],

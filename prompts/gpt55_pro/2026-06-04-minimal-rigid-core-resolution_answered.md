@@ -1,6 +1,6 @@
 # Minimal Rigid Core Resolution Prompt
 
-Status: ask_now / prepared for GPT-5.5 Pro on 2026-06-04.
+Status: answered / Pro response incorporated on 2026-06-04.
 
 Prompt:
 

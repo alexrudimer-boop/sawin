@@ -1,6 +1,6 @@
 {
   "candidate_names": [],
-  "conclusion": "The exhaustive size-3 corpus has no sequential-primitivity candidate, and the current size-4/affine pressure representatives are closed by explicit active-factor or sequential rack certificates. The next falsifiable search frontier starts at larger nonterminal tables, for example size 5 or structured affine-linear families beyond the hidden cyclic gauge.",
+  "conclusion": "The exhaustive size-3 corpus has no sequential-primitivity candidate, and the current size-4/affine pressure representatives are closed by explicit active-factor certificates, sequential rack gauges, or all-arity kernel equality with a small rack. The next falsifiable search frontier starts at larger nonterminal tables, for example size 5 or structured affine-linear families beyond the hidden cyclic and tetrahedral affine guardrails.",
   "representative_candidate_count": 0,
   "representatives": [
     {
@@ -41,6 +41,17 @@
       "injectivity_witness": null,
       "known_branch_reason": null,
       "name": "affine_f2_hidden_cyclic_pressure_row",
+      "solution_size": 8,
+      "ybe": true
+    },
+    {
+      "active_factor_size": 4,
+      "candidate": false,
+      "certificate_kind": "all-arity kernel equality with the four-element tetrahedral rack plus fixed observer bits",
+      "finite_conditions_hold": true,
+      "injectivity_witness": null,
+      "name": "affine_f2_q3_tetrahedral_pressure_row",
+      "proof_artifact": "proofs/affine_f2_q3_full_tetrahedral_conjugacy_audit.md",
       "solution_size": 8,
       "ybe": true
     }

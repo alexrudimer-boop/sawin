@@ -60,6 +60,15 @@ Representative terminal survivor records:
 - first failed filter: `quotient_rigid`;
 - known closure: `two-state hidden cyclic rack gauge plus inert observer`.
 
+## Companion `F_2^3` Tetrahedral Pressure Row
+
+- name: `affine_f2_q3_tetrahedral_pressure_row`;
+- point count: `8`;
+- rescanned in this audit: `False`;
+- resolution: `all-arity braid-kernel equality with the four-element tetrahedral Alexander rack, after adding n fixed observer bits`;
+- proof artifact: `proofs/affine_f2_q3_full_tetrahedral_conjugacy_audit.md`;
+- rigid pressure audit: `proofs/affine_f2_q3_rigid_pressure_core_audit.md`.
+
 ## Conclusion
 
-The exact affine-linear size-four family over F_2^2 has terminal survivors, but no structural rigid-pressure-core survivor: all 24 terminal survivors fail quotient-rigidity.  The exact affine line searches over F_3 and F_5 have no terminal survivors.  The named F_2^3 pressure row remains a useful guardrail but fails observer and subsolution rigidity and is already closed by a finite sequential rack gauge.
+The exact affine-linear size-four family over F_2^2 has terminal survivors, but no structural rigid-pressure-core survivor: all 24 terminal survivors fail quotient-rigidity.  The exact affine line searches over F_3 and F_5 have no terminal survivors.  The named hidden-cyclic F_2^3 pressure row remains a useful guardrail but fails observer and subsolution rigidity and is already closed by a finite sequential rack gauge.  The companion q=3 affine F_2^3 pressure row is tracked in its own audit and is also closed positively, with all-arity kernel equality to the tetrahedral four-element rack.

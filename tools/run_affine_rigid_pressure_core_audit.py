@@ -229,6 +229,25 @@ def named_dimension_three_pressure_row() -> dict[str, object]:
     return data
 
 
+def companion_dimension_three_q3_resolution() -> dict[str, object]:
+    return {
+        "name": "affine_f2_q3_tetrahedral_pressure_row",
+        "point_count": 8,
+        "same_affine_dimension": True,
+        "rescanned_in_this_audit": False,
+        "resolution": (
+            "all-arity braid-kernel equality with the four-element "
+            "tetrahedral Alexander rack, after adding n fixed observer bits"
+        ),
+        "proof_artifact": (
+            "proofs/affine_f2_q3_full_tetrahedral_conjugacy_audit.md"
+        ),
+        "rigid_pressure_audit": (
+            "proofs/affine_f2_q3_rigid_pressure_core_audit.md"
+        ),
+    }
+
+
 def build_report() -> dict[str, object]:
     dimension_two = scan_affine_f2_dimension_two()
     prime_lines = {
@@ -236,19 +255,24 @@ def build_report() -> dict[str, object]:
         "f5": scan_affine_prime_line(5),
     }
     dimension_three_pressure = named_dimension_three_pressure_row()
+    q3_resolution = companion_dimension_three_q3_resolution()
     return {
         "title": "Affine rigid pressure core audit",
         "dimension_two": dimension_two,
         "prime_lines": prime_lines,
         "dimension_three_named_pressure_row": dimension_three_pressure,
+        "dimension_three_companion_q3_resolution": q3_resolution,
         "conclusion": (
             "The exact affine-linear size-four family over F_2^2 has terminal "
             "survivors, but no structural rigid-pressure-core survivor: all "
             "24 terminal survivors fail quotient-rigidity.  The exact affine "
             "line searches over F_3 and F_5 have no terminal survivors.  The "
-            "named F_2^3 pressure row remains a useful guardrail but fails "
-            "observer and subsolution rigidity and is already closed by a "
-            "finite sequential rack gauge."
+            "named hidden-cyclic F_2^3 pressure row remains a useful guardrail "
+            "but fails observer and subsolution rigidity and is already closed "
+            "by a finite sequential rack gauge.  The companion q=3 affine "
+            "F_2^3 pressure row is tracked in its own audit and is also closed "
+            "positively, with all-arity kernel equality to the tetrahedral "
+            "four-element rack."
         ),
     }
 
@@ -257,6 +281,7 @@ def render_markdown(report: dict[str, object]) -> str:
     dimension_two = report["dimension_two"]
     prime_lines = report["prime_lines"]
     dimension_three = report["dimension_three_named_pressure_row"]
+    q3_resolution = report["dimension_three_companion_q3_resolution"]
     lines = [
         "# Affine Rigid Pressure Core Audit",
         "",
@@ -329,6 +354,16 @@ def render_markdown(report: dict[str, object]) -> str:
             f"- first failed filter: `{dimension_three['first_failed_filter']}`;",
             "- known closure: "
             f"`{dimension_three['closed_by_known_certificate']}`.",
+            "",
+            "## Companion `F_2^3` Tetrahedral Pressure Row",
+            "",
+            f"- name: `{q3_resolution['name']}`;",
+            f"- point count: `{q3_resolution['point_count']}`;",
+            "- rescanned in this audit: "
+            f"`{q3_resolution['rescanned_in_this_audit']}`;",
+            f"- resolution: `{q3_resolution['resolution']}`;",
+            f"- proof artifact: `{q3_resolution['proof_artifact']}`;",
+            f"- rigid pressure audit: `{q3_resolution['rigid_pressure_audit']}`.",
             "",
             "## Conclusion",
             "",

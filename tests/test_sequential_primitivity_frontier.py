@@ -30,6 +30,13 @@ class SequentialPrimitivityFrontierTests(unittest.TestCase):
                 "finite_conditions_hold"
             ]
         )
+        tetrahedral = representatives["affine_f2_q3_tetrahedral_pressure_row"]
+        self.assertTrue(tetrahedral["finite_conditions_hold"])
+        self.assertFalse(tetrahedral["candidate"])
+        self.assertEqual(
+            tetrahedral["proof_artifact"],
+            "proofs/affine_f2_q3_full_tetrahedral_conjugacy_audit.md",
+        )
 
 
 if __name__ == "__main__":

@@ -55,6 +55,18 @@ class AffineRigidPressureCoreTests(unittest.TestCase):
         self.assertFalse(pressure_row["subsolution_rigid"])
         self.assertFalse(pressure_row["rigid_pressure_core_candidate"])
 
+    def test_companion_affine_f2_q3_row_is_recorded_as_resolved(self):
+        q3 = self.report["dimension_three_companion_q3_resolution"]
+
+        self.assertEqual(q3["point_count"], 8)
+        self.assertTrue(q3["same_affine_dimension"])
+        self.assertFalse(q3["rescanned_in_this_audit"])
+        self.assertIn("tetrahedral", q3["resolution"])
+        self.assertEqual(
+            q3["proof_artifact"],
+            "proofs/affine_f2_q3_full_tetrahedral_conjugacy_audit.md",
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

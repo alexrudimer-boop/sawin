@@ -265,11 +265,31 @@ def affine_f2_hidden_cyclic_report() -> dict:
     }
 
 
+def affine_f2_q3_tetrahedral_report() -> dict:
+    return {
+        "name": "affine_f2_q3_tetrahedral_pressure_row",
+        "solution_size": 8,
+        "ybe": True,
+        "certificate_kind": (
+            "all-arity kernel equality with the four-element tetrahedral rack "
+            "plus fixed observer bits"
+        ),
+        "active_factor_size": 4,
+        "finite_conditions_hold": True,
+        "injectivity_witness": None,
+        "candidate": False,
+        "proof_artifact": (
+            "proofs/affine_f2_q3_full_tetrahedral_conjugacy_audit.md"
+        ),
+    }
+
+
 def build_report() -> dict:
     representatives = (
         type_a_certificate_report(),
         type_b_certificate_report(),
         affine_f2_hidden_cyclic_report(),
+        affine_f2_q3_tetrahedral_report(),
     )
     candidate_rows = [row for row in representatives if row["candidate"]]
     return {
@@ -281,10 +301,11 @@ def build_report() -> dict:
         "conclusion": (
             "The exhaustive size-3 corpus has no sequential-primitivity "
             "candidate, and the current size-4/affine pressure representatives "
-            "are closed by explicit active-factor or sequential rack "
-            "certificates. The next falsifiable search frontier starts at "
-            "larger nonterminal tables, for example size 5 or structured "
-            "affine-linear families beyond the hidden cyclic gauge."
+            "are closed by explicit active-factor certificates, sequential "
+            "rack gauges, or all-arity kernel equality with a small rack. The "
+            "next falsifiable search frontier starts at larger nonterminal "
+            "tables, for example size 5 or structured affine-linear families "
+            "beyond the hidden cyclic and tetrahedral affine guardrails."
         ),
     }
 
@@ -326,9 +347,11 @@ def render_markdown(report: dict) -> str:
                 f"- finite conditions hold: `{row['finite_conditions_hold']}`;",
                 f"- injectivity witness: `{row['injectivity_witness']}`;",
                 f"- remains candidate: `{row['candidate']}`.",
-                "",
             ]
         )
+        if "proof_artifact" in row:
+            lines.append(f"- proof artifact: `{row['proof_artifact']}`.")
+        lines.append("")
     lines.extend(
         [
             "## Conclusion",
