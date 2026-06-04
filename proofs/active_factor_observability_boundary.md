@@ -118,6 +118,17 @@ test.  The same audit exhausts affine-line maps over `F_5`: there are `221`
 bijective affine YBE tables and no terminal survivor, so the first affine
 size-five line frontier is also closed.
 
+The next affine audit, `proofs/affine_f2_q3_rigid_pressure_core_audit.md`,
+finds the first serious finite-prefix pressure candidates.  In the affine
+`F_2^3` family, `226241` affine YBE tables occur.  Among them, `3360` rows
+survive bidegeneracy, noninvolutivity, observer-rigidity,
+subsolution-rigidity, and pair-generated quotient-rigidity.  The first
+survivor has actual pressure against the product prefix containing all rack
+representatives of size at most `3`: the detector has size `36`, and
+`sigma_1^4` is trivial on it but moves the candidate in arity `2`.  This is
+not a Sawin counterexample; it is now the concrete table whose all-`n` fate
+must be proved.
+
 ## Cofinal Rack-Prefix Obstruction
 
 A genuine negative answer to Sawin needs more than sequential primitivity.

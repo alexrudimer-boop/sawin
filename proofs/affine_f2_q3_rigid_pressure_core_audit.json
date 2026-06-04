@@ -1,0 +1,340 @@
+{
+  "conclusion": "The affine F_2^3 family contains finite rigid-pressure-core candidates in the falsifiable finite-prefix sense: 3360 rows survive the bidegenerate, noninvolutive, observer-rigid, subsolution-rigid, and pair-generated quotient-rigid filters. The first survivor has nontrivial kernel pressure against the product prefix containing all rack representatives of size at most 3. This is not a Sawin counterexample; it is the first serious candidate table whose pressure must be tested cofinally or explained by a larger finite rack detector.",
+  "counts": {
+    "affine_ybe_table_count": 226241,
+    "bidegenerate_failed": 149184,
+    "linear_ybe_block_count": 26153,
+    "noninvolutive_failed": 18369,
+    "observer_failed": 29120,
+    "observer_rigid": 29568,
+    "quotient_failed": 5040,
+    "rigid_structural_survivor_count": 3360,
+    "subsolution_failed": 21168,
+    "subsolution_rigid": 8400,
+    "terminal_without_flip_count": 58688
+  },
+  "dimension": 3,
+  "first_quotient_failure": {
+    "matrix": [
+      "100000",
+      "000010",
+      "000001",
+      "010110",
+      "001011",
+      "010011"
+    ],
+    "offset": "001010",
+    "witness": "((0, 0, 0), (0, 1, 1), 2)"
+  },
+  "first_rigid_pressure_candidate": {
+    "blocks": [
+      10,
+      265,
+      220,
+      349
+    ],
+    "branch_tags": [],
+    "finite_rigid_pressure_core_candidate": true,
+    "first_full_size3_prefix_pressure": {
+      "arity": 2,
+      "detector_image_size": 4,
+      "detector_prefix_length": 5,
+      "detector_size": 36,
+      "first_moved_tuple": "((0, 0, 0), (0, 0, 0))",
+      "first_moved_tuple_image": "((0, 0, 1), (1, 0, 0))",
+      "first_witness_word": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "joint_image_size": 12,
+      "kernel_size": 3,
+      "obstruction_found": true,
+      "solution_image_size": 3,
+      "truncated": false
+    },
+    "matrix": [
+      "010100",
+      "100100",
+      "000001",
+      "001101",
+      "110110",
+      "110101"
+    ],
+    "not_flip_across": true,
+    "not_flip_across_reason": "subsolution-rigid rows cannot have a flip-across decomposition, since each side would be a proper crossing-closed subsolution",
+    "observer_partition_block_count": 1,
+    "offset": "001100",
+    "pair_generated_quotient_rigid": true,
+    "pressure_rows": [
+      {
+        "arity": 1,
+        "detector_image_size": 1,
+        "detector_prefix_length": 1,
+        "detector_size": 1,
+        "first_moved_tuple": null,
+        "first_moved_tuple_image": null,
+        "first_witness_word": null,
+        "joint_image_size": 1,
+        "kernel_size": 1,
+        "obstruction_found": false,
+        "solution_image_size": 1,
+        "truncated": false
+      },
+      {
+        "arity": 2,
+        "detector_image_size": 1,
+        "detector_prefix_length": 1,
+        "detector_size": 1,
+        "first_moved_tuple": "((0, 0, 0), (0, 0, 0))",
+        "first_moved_tuple_image": "((0, 0, 1), (1, 0, 0))",
+        "first_witness_word": [
+          1
+        ],
+        "joint_image_size": 3,
+        "kernel_size": 3,
+        "obstruction_found": true,
+        "solution_image_size": 3,
+        "truncated": false
+      },
+      {
+        "arity": 3,
+        "detector_image_size": 1,
+        "detector_prefix_length": 1,
+        "detector_size": 1,
+        "first_moved_tuple": "((0, 0, 0), (0, 0, 0), (0, 0, 0))",
+        "first_moved_tuple_image": "((0, 0, 1), (1, 0, 0), (0, 0, 0))",
+        "first_witness_word": [
+          1
+        ],
+        "joint_image_size": 24,
+        "kernel_size": 24,
+        "obstruction_found": true,
+        "solution_image_size": 24,
+        "truncated": false
+      },
+      {
+        "arity": 1,
+        "detector_image_size": 1,
+        "detector_prefix_length": 2,
+        "detector_size": 2,
+        "first_moved_tuple": null,
+        "first_moved_tuple_image": null,
+        "first_witness_word": null,
+        "joint_image_size": 1,
+        "kernel_size": 1,
+        "obstruction_found": false,
+        "solution_image_size": 1,
+        "truncated": false
+      },
+      {
+        "arity": 2,
+        "detector_image_size": 2,
+        "detector_prefix_length": 2,
+        "detector_size": 2,
+        "first_moved_tuple": "((0, 0, 0), (0, 0, 0))",
+        "first_moved_tuple_image": "((1, 1, 1), (1, 1, 1))",
+        "first_witness_word": [
+          1,
+          1
+        ],
+        "joint_image_size": 6,
+        "kernel_size": 3,
+        "obstruction_found": true,
+        "solution_image_size": 3,
+        "truncated": false
+      },
+      {
+        "arity": 3,
+        "detector_image_size": 6,
+        "detector_prefix_length": 2,
+        "detector_size": 2,
+        "first_moved_tuple": "((0, 0, 0), (0, 0, 0), (0, 0, 0))",
+        "first_moved_tuple_image": "((1, 1, 1), (1, 1, 1), (0, 0, 0))",
+        "first_witness_word": [
+          1,
+          1
+        ],
+        "joint_image_size": 144,
+        "kernel_size": 24,
+        "obstruction_found": true,
+        "solution_image_size": 24,
+        "truncated": false
+      },
+      {
+        "arity": 1,
+        "detector_image_size": 1,
+        "detector_prefix_length": 3,
+        "detector_size": 4,
+        "first_moved_tuple": null,
+        "first_moved_tuple_image": null,
+        "first_witness_word": null,
+        "joint_image_size": 1,
+        "kernel_size": 1,
+        "obstruction_found": false,
+        "solution_image_size": 1,
+        "truncated": false
+      },
+      {
+        "arity": 2,
+        "detector_image_size": 4,
+        "detector_prefix_length": 3,
+        "detector_size": 4,
+        "first_moved_tuple": "((0, 0, 0), (0, 0, 0))",
+        "first_moved_tuple_image": "((0, 0, 1), (1, 0, 0))",
+        "first_witness_word": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "joint_image_size": 12,
+        "kernel_size": 3,
+        "obstruction_found": true,
+        "solution_image_size": 3,
+        "truncated": false
+      },
+      {
+        "arity": 3,
+        "detector_image_size": 24,
+        "detector_prefix_length": 3,
+        "detector_size": 4,
+        "first_moved_tuple": "((0, 0, 0), (0, 0, 0), (0, 0, 0))",
+        "first_moved_tuple_image": "((0, 0, 1), (1, 0, 0), (0, 0, 0))",
+        "first_witness_word": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "joint_image_size": 576,
+        "kernel_size": 24,
+        "obstruction_found": true,
+        "solution_image_size": 24,
+        "truncated": false
+      },
+      {
+        "arity": 1,
+        "detector_image_size": 1,
+        "detector_prefix_length": 4,
+        "detector_size": 12,
+        "first_moved_tuple": null,
+        "first_moved_tuple_image": null,
+        "first_witness_word": null,
+        "joint_image_size": 1,
+        "kernel_size": 1,
+        "obstruction_found": false,
+        "solution_image_size": 1,
+        "truncated": false
+      },
+      {
+        "arity": 2,
+        "detector_image_size": 4,
+        "detector_prefix_length": 4,
+        "detector_size": 12,
+        "first_moved_tuple": "((0, 0, 0), (0, 0, 0))",
+        "first_moved_tuple_image": "((0, 0, 1), (1, 0, 0))",
+        "first_witness_word": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "joint_image_size": 12,
+        "kernel_size": 3,
+        "obstruction_found": true,
+        "solution_image_size": 3,
+        "truncated": false
+      },
+      {
+        "arity": 3,
+        "detector_image_size": 24,
+        "detector_prefix_length": 4,
+        "detector_size": 12,
+        "first_moved_tuple": "((0, 0, 0), (0, 0, 0), (0, 0, 0))",
+        "first_moved_tuple_image": "((0, 0, 1), (1, 0, 0), (0, 0, 0))",
+        "first_witness_word": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "joint_image_size": 576,
+        "kernel_size": 24,
+        "obstruction_found": true,
+        "solution_image_size": 24,
+        "truncated": false
+      },
+      {
+        "arity": 1,
+        "detector_image_size": 1,
+        "detector_prefix_length": 5,
+        "detector_size": 36,
+        "first_moved_tuple": null,
+        "first_moved_tuple_image": null,
+        "first_witness_word": null,
+        "joint_image_size": 1,
+        "kernel_size": 1,
+        "obstruction_found": false,
+        "solution_image_size": 1,
+        "truncated": false
+      },
+      {
+        "arity": 2,
+        "detector_image_size": 4,
+        "detector_prefix_length": 5,
+        "detector_size": 36,
+        "first_moved_tuple": "((0, 0, 0), (0, 0, 0))",
+        "first_moved_tuple_image": "((0, 0, 1), (1, 0, 0))",
+        "first_witness_word": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "joint_image_size": 12,
+        "kernel_size": 3,
+        "obstruction_found": true,
+        "solution_image_size": 3,
+        "truncated": false
+      },
+      {
+        "arity": 3,
+        "detector_image_size": 48,
+        "detector_prefix_length": 5,
+        "detector_size": 36,
+        "first_moved_tuple": "((0, 0, 0), (0, 0, 0), (0, 0, 0))",
+        "first_moved_tuple_image": "((0, 0, 1), (1, 0, 0), (0, 0, 0))",
+        "first_witness_word": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "joint_image_size": 1152,
+        "kernel_size": 24,
+        "obstruction_found": true,
+        "solution_image_size": 24,
+        "truncated": false
+      }
+    ],
+    "proper_subsolution_count": 0
+  },
+  "rank_histogram": {
+    "B_rank=0,C_rank=0": 1,
+    "B_rank=1,C_rank=1": 448,
+    "B_rank=2,C_rank=2": 14616,
+    "B_rank=3,C_rank=3": 11088
+  },
+  "title": "Affine F2^3 rigid pressure core audit",
+  "valid_offset_count_histogram": {
+    "1": 1,
+    "16": 6090,
+    "2": 336,
+    "32": 525,
+    "4": 10584,
+    "64": 1,
+    "8": 8616
+  }
+}

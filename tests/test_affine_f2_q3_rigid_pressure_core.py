@@ -1,0 +1,67 @@
+import json
+import sys
+import unittest
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT))
+sys.path.insert(0, str(ROOT / "src"))
+sys.path.insert(0, str(ROOT / "tools"))
+
+from run_affine_f2_audit import affine_solution
+from run_affine_f2_q3_pressure_audit import _block_matrix
+from tools.run_affine_f2_q3_rigid_pressure_core_audit import (
+    affine_square_is_identity,
+    generated_congruence_block_count,
+    offset_tuple,
+    quotient_rigidity_witness,
+    valid_affine_offsets,
+)
+from ybe_domination import one_state_invariant_observer_partition
+from ybe_domination import proper_subsolution_subsets
+
+
+class AffineF2Q3RigidPressureCoreTests(unittest.TestCase):
+    def test_generated_audit_records_first_finite_pressure_candidate(self):
+        report = json.loads(
+            (ROOT / "proofs" / "affine_f2_q3_rigid_pressure_core_audit.json")
+            .read_text(encoding="utf-8")
+        )
+        counts = report["counts"]
+
+        self.assertEqual(counts["linear_ybe_block_count"], 26153)
+        self.assertEqual(counts["affine_ybe_table_count"], 226241)
+        self.assertEqual(counts["terminal_without_flip_count"], 58688)
+        self.assertEqual(counts["rigid_structural_survivor_count"], 3360)
+
+        candidate = report["first_rigid_pressure_candidate"]
+        self.assertTrue(candidate["finite_rigid_pressure_core_candidate"])
+        pressure = candidate["first_full_size3_prefix_pressure"]
+        self.assertEqual(pressure["detector_size"], 36)
+        self.assertEqual(pressure["arity"], 2)
+        self.assertTrue(pressure["obstruction_found"])
+        self.assertEqual(pressure["first_witness_word"], [1, 1, 1, 1])
+
+    def test_first_candidate_satisfies_structural_filters(self):
+        blocks = (10, 265, 220, 349)
+        offset = 12
+        matrix = _block_matrix(*blocks)
+        solution = affine_solution(matrix, offset_tuple(offset), 3)
+
+        self.assertIn(offset, valid_affine_offsets(blocks))
+        self.assertFalse(affine_square_is_identity(blocks, offset))
+        self.assertEqual(len(one_state_invariant_observer_partition(solution)), 1)
+        self.assertEqual(proper_subsolution_subsets(solution), tuple())
+        quotient_rigid, witness = quotient_rigidity_witness(solution)
+        self.assertTrue(quotient_rigid, witness)
+
+        for left_index, left in enumerate(solution.elements):
+            for right in solution.elements[left_index + 1 :]:
+                self.assertEqual(
+                    generated_congruence_block_count(solution, (left, right)),
+                    1,
+                )
+
+
+if __name__ == "__main__":
+    unittest.main()

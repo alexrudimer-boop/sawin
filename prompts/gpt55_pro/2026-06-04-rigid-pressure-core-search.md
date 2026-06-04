@@ -1,6 +1,14 @@
 # Rigid Pressure Core Search
 
-Status: queued for GPT-5.5 Pro on 2026-06-04.
+Status: superseded by the affine `F_2^3` candidate prompt on 2026-06-04.
+
+Supersession summary:
+
+- The repo found a concrete affine `F_2^3` finite-prefix rigid pressure core
+  candidate.
+- The follow-up prompt
+  `2026-06-04-affine-f2-q3-rigid-pressure-candidate.md` asks GPT-5.5 Pro to
+  decide that exact table all-n.
 
 Prompt:
 
