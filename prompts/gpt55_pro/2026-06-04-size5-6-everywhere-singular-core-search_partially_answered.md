@@ -1,6 +1,8 @@
 # Size 5/6 Everywhere-Singular Core Search Prompt
 
-Status: ask_now / prepared for GPT-5.5 Pro on 2026-06-04.
+Status: partially_answered / GPT-5.5 Pro supplied the U,V exact-cover search
+pipeline, stronger everywhere-singular filters, and compressed rack-prefix
+pressure method on 2026-06-04.
 
 Prompt:
 
