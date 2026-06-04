@@ -205,7 +205,7 @@ def build_report() -> dict[str, object]:
         ),
         "next_prompt": (
             "prompts/gpt55_pro/"
-            "2026-06-04-observer-factor-rackification_ask_now.md"
+            "2026-06-04-size5-6-everywhere-singular-core-search_ask_now.md"
         ),
     }
 

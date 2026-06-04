@@ -34,7 +34,7 @@
     6,
     6
   ],
-  "next_prompt": "prompts/gpt55_pro/2026-06-04-observer-factor-rackification_ask_now.md",
+  "next_prompt": "prompts/gpt55_pro/2026-06-04-size5-6-everywhere-singular-core-search_ask_now.md",
   "nonaffine_reason": "For any affine model over an abelian group, every nonempty fixed set of lambda_x has cardinality |ker(1-B)|.  Here all lambda_x have fixed points, but the counts vary with S_3 centralizer sizes.",
   "quasi_left_failure_witness": {
     "commutes": false,

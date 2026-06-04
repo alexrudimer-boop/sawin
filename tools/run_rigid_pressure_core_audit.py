@@ -4,6 +4,7 @@ import json
 import sys
 from collections import Counter
 from dataclasses import asdict, dataclass
+from itertools import product
 from pathlib import Path
 from typing import Sequence
 
@@ -55,6 +56,13 @@ class RigidPressureCoreRow:
     everywhere_left_singular: bool
     everywhere_right_singular: bool
     everywhere_bisingular: bool
+    left_min_image_size: int
+    right_min_image_size: int
+    left_min_image_union_size: int
+    right_min_image_union_size: int
+    left_min_image_union_crossing_closed: bool
+    right_min_image_union_crossing_closed: bool
+    no_minimal_image_subsolution: bool
     noninvolutive: bool
     not_rack: bool
     flip_across_partition_count: int | None
@@ -92,6 +100,7 @@ def _first_failed_filter(row_data: dict) -> str | None:
         ("not_rack", row_data["not_rack"]),
         ("not_flip_across", row_data["not_flip_across"]),
         ("everywhere_bisingular", row_data["everywhere_bisingular"]),
+        ("no_minimal_image_subsolution", row_data["no_minimal_image_subsolution"]),
         ("quotient_rigid", row_data["quotient_rigid"]),
         ("subsolution_rigid", row_data["subsolution_rigid"]),
         ("observer_rigid", row_data["observer_rigid"]),
@@ -119,6 +128,58 @@ def _coordinate_bijective_counts(solution: FiniteBraidedSet) -> tuple[int, int]:
         if len(set(images)) == len(solution.elements):
             right_count += 1
     return left_count, right_count
+
+
+def _is_crossing_closed_subset(
+    solution: FiniteBraidedSet,
+    subset: frozenset,
+) -> bool:
+    if not subset or len(subset) == len(solution.elements):
+        return False
+    for left, right in product(subset, repeat=2):
+        out_left, out_right = solution.R[(left, right)]
+        if out_left not in subset or out_right not in subset:
+            return False
+    return True
+
+
+def _minimal_image_obstruction(solution: FiniteBraidedSet) -> dict[str, object]:
+    left_images = {}
+    right_images = {}
+    for left in solution.elements:
+        left_images[left] = frozenset(
+            solution.R[(left, right)][0] for right in solution.elements
+        )
+    for right in solution.elements:
+        right_images[right] = frozenset(
+            solution.R[(left, right)][1] for left in solution.elements
+        )
+
+    left_min = min(len(image) for image in left_images.values())
+    right_min = min(len(image) for image in right_images.values())
+    left_union = frozenset(
+        element
+        for image in left_images.values()
+        if len(image) == left_min
+        for element in image
+    )
+    right_union = frozenset(
+        element
+        for image in right_images.values()
+        if len(image) == right_min
+        for element in image
+    )
+    left_closed = _is_crossing_closed_subset(solution, left_union)
+    right_closed = _is_crossing_closed_subset(solution, right_union)
+    return {
+        "left_min_image_size": left_min,
+        "right_min_image_size": right_min,
+        "left_min_image_union_size": len(left_union),
+        "right_min_image_union_size": len(right_union),
+        "left_min_image_union_crossing_closed": left_closed,
+        "right_min_image_union_crossing_closed": right_closed,
+        "no_minimal_image_subsolution": not left_closed and not right_closed,
+    }
 
 
 def _transport_split_count(solution: FiniteBraidedSet) -> int | None:
@@ -181,6 +242,7 @@ def rigid_pressure_core_row(
     everywhere_left_singular = left_bijective_count == 0
     everywhere_right_singular = right_bijective_count == 0
     everywhere_bisingular = everywhere_left_singular and everywhere_right_singular
+    min_image = _minimal_image_obstruction(solution)
     noninvolutive = not is_involutive_solution(solution)
     not_rack = not is_rack_type(solution)
 
@@ -246,6 +308,7 @@ def rigid_pressure_core_row(
         "not_rack": not_rack,
         "not_flip_across": not_flip_across,
         "everywhere_bisingular": everywhere_bisingular,
+        "no_minimal_image_subsolution": min_image["no_minimal_image_subsolution"],
         "quotient_rigid": quotient_rigid,
         "subsolution_rigid": subsolution_rigid,
         "observer_rigid": observer_rigid,
@@ -267,6 +330,17 @@ def rigid_pressure_core_row(
         everywhere_left_singular=everywhere_left_singular,
         everywhere_right_singular=everywhere_right_singular,
         everywhere_bisingular=everywhere_bisingular,
+        left_min_image_size=min_image["left_min_image_size"],
+        right_min_image_size=min_image["right_min_image_size"],
+        left_min_image_union_size=min_image["left_min_image_union_size"],
+        right_min_image_union_size=min_image["right_min_image_union_size"],
+        left_min_image_union_crossing_closed=min_image[
+            "left_min_image_union_crossing_closed"
+        ],
+        right_min_image_union_crossing_closed=min_image[
+            "right_min_image_union_crossing_closed"
+        ],
+        no_minimal_image_subsolution=min_image["no_minimal_image_subsolution"],
         noninvolutive=noninvolutive,
         not_rack=not_rack,
         flip_across_partition_count=flip_count,
@@ -357,8 +431,9 @@ def build_report() -> dict:
         "definition": (
             "A rigid pressure core is a nonterminal, quotient-rigid, "
             "everywhere-coordinate-singular, subsolution-rigid, "
-            "observer-rigid, transport-split-rigid finite YBE table with "
-            "actual small-rack prefix pressure."
+            "minimal-image-obstruction-free, observer-rigid, "
+            "transport-split-rigid finite YBE table with actual small-rack "
+            "prefix pressure."
         ),
         "singular_filter": (
             "The everywhere-coordinate-singular condition is now a theorem-level "
@@ -366,6 +441,13 @@ def build_report() -> dict:
             "left/right-nondegenerate branches and with no proper "
             "crossing-closed subsolution: any bijective L_x or R_x would "
             "generate a nonempty crossing-closed subsolution locus."
+        ),
+        "minimal_image_filter": (
+            "For an everywhere-singular table, take the union S_L of images "
+            "of L_x having minimal cardinality, and similarly S_R for R_x.  "
+            "If either union is a nonempty proper crossing-closed subset, the "
+            "table is not subsolution-rigid.  A rigid-core candidate must "
+            "therefore pass no_minimal_image_subsolution."
         ),
         "size_3": size_three_report(),
         "representatives": [asdict(row) for row in representatives],
@@ -403,6 +485,10 @@ def render_markdown(report: dict) -> str:
         "",
         report["singular_filter"],
         "",
+        "## Minimal-Image Filter",
+        "",
+        report["minimal_image_filter"],
+        "",
         "## Exhaustive Size 3 Corpus",
         "",
     ]
@@ -433,6 +519,18 @@ def render_markdown(report: dict) -> str:
                 "- right bijective coordinate maps: "
                 f"`{row['right_bijective_coordinate_count']}`;",
                 f"- everywhere bisingular: `{row['everywhere_bisingular']}`;",
+                f"- left minimal image size: `{row['left_min_image_size']}`;",
+                f"- right minimal image size: `{row['right_min_image_size']}`;",
+                "- left minimal-image union size: "
+                f"`{row['left_min_image_union_size']}`;",
+                "- right minimal-image union size: "
+                f"`{row['right_min_image_union_size']}`;",
+                "- left minimal-image union crossing closed: "
+                f"`{row['left_min_image_union_crossing_closed']}`;",
+                "- right minimal-image union crossing closed: "
+                f"`{row['right_min_image_union_crossing_closed']}`;",
+                "- no minimal-image subsolution: "
+                f"`{row['no_minimal_image_subsolution']}`;",
                 f"- noninvolutive: `{row['noninvolutive']}`;",
                 f"- not rack: `{row['not_rack']}`;",
                 f"- not flip-across: `{row['not_flip_across']}`;",

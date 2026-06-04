@@ -6,11 +6,15 @@ Sawin's problem.
 
 ## Definition
 
-A rigid pressure core is a nonterminal, quotient-rigid, everywhere-coordinate-singular, subsolution-rigid, observer-rigid, transport-split-rigid finite YBE table with actual small-rack prefix pressure.
+A rigid pressure core is a nonterminal, quotient-rigid, everywhere-coordinate-singular, subsolution-rigid, minimal-image-obstruction-free, observer-rigid, transport-split-rigid finite YBE table with actual small-rack prefix pressure.
 
 ## Singular Coordinate Filter
 
 The everywhere-coordinate-singular condition is now a theorem-level necessary filter for minimal counterexamples outside the left/right-nondegenerate branches and with no proper crossing-closed subsolution: any bijective L_x or R_x would generate a nonempty crossing-closed subsolution locus.
+
+## Minimal-Image Filter
+
+For an everywhere-singular table, take the union S_L of images of L_x having minimal cardinality, and similarly S_R for R_x.  If either union is a nonempty proper crossing-closed subset, the table is not subsolution-rigid.  A rigid-core candidate must therefore pass no_minimal_image_subsolution.
 
 ## Exhaustive Size 3 Corpus
 
@@ -31,6 +35,13 @@ The everywhere-coordinate-singular condition is now a theorem-level necessary fi
 - left bijective coordinate maps: `0`;
 - right bijective coordinate maps: `0`;
 - everywhere bisingular: `True`;
+- left minimal image size: `2`;
+- right minimal image size: `2`;
+- left minimal-image union size: `4`;
+- right minimal-image union size: `4`;
+- left minimal-image union crossing closed: `False`;
+- right minimal-image union crossing closed: `False`;
+- no minimal-image subsolution: `True`;
 - noninvolutive: `True`;
 - not rack: `True`;
 - not flip-across: `True`;
@@ -51,6 +62,13 @@ The everywhere-coordinate-singular condition is now a theorem-level necessary fi
 - left bijective coordinate maps: `2`;
 - right bijective coordinate maps: `2`;
 - everywhere bisingular: `False`;
+- left minimal image size: `3`;
+- right minimal image size: `3`;
+- left minimal-image union size: `4`;
+- right minimal-image union size: `4`;
+- left minimal-image union crossing closed: `False`;
+- right minimal-image union crossing closed: `False`;
+- no minimal-image subsolution: `True`;
 - noninvolutive: `True`;
 - not rack: `True`;
 - not flip-across: `False`;
@@ -71,6 +89,13 @@ The everywhere-coordinate-singular condition is now a theorem-level necessary fi
 - left bijective coordinate maps: `0`;
 - right bijective coordinate maps: `0`;
 - everywhere bisingular: `True`;
+- left minimal image size: `4`;
+- right minimal image size: `4`;
+- left minimal-image union size: `8`;
+- right minimal-image union size: `8`;
+- left minimal-image union crossing closed: `False`;
+- right minimal-image union crossing closed: `False`;
+- no minimal-image subsolution: `True`;
 - noninvolutive: `True`;
 - not rack: `True`;
 - not flip-across: `True`;

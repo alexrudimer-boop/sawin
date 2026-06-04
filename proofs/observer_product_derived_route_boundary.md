@@ -53,4 +53,4 @@ The example is finite, bijective, everywhere degenerate, non-involutive, and non
 
 ## Next Prompt
 
-`prompts/gpt55_pro/2026-06-04-observer-factor-rackification_ask_now.md`.
+`prompts/gpt55_pro/2026-06-04-size5-6-everywhere-singular-core-search_ask_now.md`.

@@ -1,0 +1,65 @@
+{
+  "conclusion": "The inert observer theorem is a strict positive branch.  It covers the E x S_3 derived-route boundary example but is too narrow for Type A sequential gauges and Type B flip-across routing.  Those require the existing active-factor/transducer certificate framework.",
+  "next_prompt": "prompts/gpt55_pro/2026-06-04-size5-6-everywhere-singular-core-search_ask_now.md",
+  "rows": [
+    {
+      "audit": {
+        "finite_conditions_hold": true,
+        "injectivity_collision": null,
+        "kernel_conclusion": "ker rho^X_n = ker rho^Y_n for every n",
+        "observer_alphabet_size": 2,
+        "observer_failure": null,
+        "rack_factor_failure": null,
+        "rack_size": 6,
+        "solution_size": 12
+      },
+      "expectation": "passes: the S_3 rack coordinate is active and the E coordinate is inert",
+      "name": "observer_product_s3_conjugation"
+    },
+    {
+      "audit": {
+        "finite_conditions_hold": false,
+        "injectivity_collision": null,
+        "kernel_conclusion": null,
+        "observer_alphabet_size": 2,
+        "observer_failure": null,
+        "rack_factor_failure": {
+          "actual": "(0, 1)",
+          "expected": "(1, 0)",
+          "left": "(0, 0)",
+          "right": "(0, 0)"
+        },
+        "rack_size": 2,
+        "solution_size": 4
+      },
+      "expectation": "fails: Type A needs a sequential prefix-dependent gauge, not a pointwise rack factor",
+      "name": "size4_affine_type_a_naive_pointwise"
+    },
+    {
+      "audit": {
+        "finite_conditions_hold": false,
+        "injectivity_collision": null,
+        "kernel_conclusion": null,
+        "observer_alphabet_size": 2,
+        "observer_failure": {
+          "actual": "('P', 'T')",
+          "expected": "('T', 'P')",
+          "left": "('T', 0)",
+          "right": "('P', 0)"
+        },
+        "rack_factor_failure": {
+          "actual": "(0, 0)",
+          "expected": "(1, 0)",
+          "left": "('T', 0)",
+          "right": "('T', 0)"
+        },
+        "rack_size": 2,
+        "solution_size": 4
+      },
+      "expectation": "fails: mixed flip-across crossings route the tag observer rather than fixing it pointwise",
+      "name": "size4_type_b_flip_across_naive_tag"
+    }
+  ],
+  "theorem": "If maps o:X->I and q:X->Y to a finite rack Y satisfy o(u)=o(x), o(v)=o(y), and (q(u),q(v))=r_Y(q(x),q(y)) for every r_X(x,y)=(u,v), and x->(o(x),q(x)) is injective, then X^n is B_n-isomorphic to a B_n-invariant subset of Y^n x I^n with I^n fixed pointwise.  If the map is bijective onto Y x I on one letters, then ker rho^X_n = ker rho^Y_n for all n.",
+  "title": "Inert observer rack-factor audit"
+}

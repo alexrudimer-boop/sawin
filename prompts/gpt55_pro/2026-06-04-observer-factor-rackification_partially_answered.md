@@ -1,6 +1,21 @@
 # Observer-Factor Rackification Prompt
 
-Status: ask_now / prepared for GPT-5.5 Pro on 2026-06-04.
+Status: partially_answered / GPT-5.5 Pro response received on 2026-06-04.
+
+Partial answer recorded:
+
+- the periodic observer-rack factorization theorem is a strict all-arity
+  positive mechanism, not equivalent to Sawin;
+- it covers both `E x S_3` with the `S_3` conjugation rack and the affine
+  `F_2^3` tetrahedral example;
+- the pointwise inert-observer theorem is the period-1 subcase;
+- no explicit rigid-core no-rack table was supplied;
+- the minimal-image obstruction was proposed as a cheap finite-table filter;
+- the next material computation is size `5` and `6` everywhere-singular
+  rigid-core enumeration followed by `P_{<=4}` pressure through `n<=7`.
+
+The next active prompt asks for a concrete enumeration strategy/normal form
+for that size `5`/`6` search.
 
 Prompt:
 
@@ -87,6 +102,29 @@ where B_n acts trivially on I_n, or more generally where I_n is reconstructed fr
 for all beta in B_n.
 
 This would imply rack domination, and often kernel equality.
+
+There is already a strict pointwise subcase:
+
+If there are maps
+
+    o:X -> I,
+    q:X -> Y
+
+to a finite set I and finite rack Y such that, for every
+
+    r_X(x,y)=(u,v),
+
+one has
+
+    o(u)=o(x),  o(v)=o(y),
+    (q(u),q(v)) = r_Y(q(x),q(y)),
+
+and x -> (o(x),q(x)) is injective, then X^n embeds B_n-equivariantly into
+Y^n x I^n with I^n fixed pointwise. If the one-letter code is bijective onto
+I x Y, then ker rho^X_n = ker rho^Y_n for all n. This covers the E x S_3
+example. It does not cover Type A, which needs a sequential prefix-dependent
+gauge, or Type B, where flip-across crossings route the observer colors rather
+than fixing them pointwise.
 
 Task:
 

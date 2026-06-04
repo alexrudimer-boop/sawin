@@ -46,7 +46,7 @@ class DerivedQuasirackRouteBoundaryTests(unittest.TestCase):
         self.assertTrue(
             any("rack-kernel equivalent" in item for item in gap["properties"])
         )
-        self.assertIn("observer-factor", report["next_prompt"])
+        self.assertIn("size5-6", report["next_prompt"])
 
 
 if __name__ == "__main__":

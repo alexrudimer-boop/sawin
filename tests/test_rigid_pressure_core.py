@@ -23,8 +23,16 @@ class RigidPressureCoreTests(unittest.TestCase):
         representatives = {row["name"]: row for row in report["representatives"]}
         self.assertIn("everywhere-coordinate-singular", report["definition"])
         self.assertIn("bijective L_x or R_x", report["singular_filter"])
+        self.assertIn("no_minimal_image_subsolution", report["minimal_image_filter"])
         self.assertTrue(
             representatives["size4_affine_type_a"]["everywhere_bisingular"]
+        )
+        self.assertTrue(
+            representatives["size4_affine_type_a"]["no_minimal_image_subsolution"]
+        )
+        self.assertEqual(
+            representatives["size4_affine_type_a"]["left_min_image_union_size"],
+            4,
         )
         self.assertEqual(
             representatives["size4_affine_type_a"][
@@ -44,6 +52,11 @@ class RigidPressureCoreTests(unittest.TestCase):
         )
         self.assertFalse(
             representatives["size4_type_b_flip_across"]["everywhere_bisingular"]
+        )
+        self.assertTrue(
+            representatives["size4_type_b_flip_across"][
+                "no_minimal_image_subsolution"
+            ]
         )
         self.assertEqual(
             representatives["size4_type_b_flip_across"][

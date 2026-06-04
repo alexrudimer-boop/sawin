@@ -67,7 +67,7 @@ Proof artifact: `proofs/observer_product_derived_route_boundary.md`.
 
 ## Prompt
 
-Next prompt: `prompts/gpt55_pro/2026-06-04-observer-factor-rackification_ask_now.md`.
+Next prompt: `prompts/gpt55_pro/2026-06-04-size5-6-everywhere-singular-core-search_ask_now.md`.
 
 ## Conclusion
 
