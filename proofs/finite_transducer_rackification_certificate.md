@@ -449,6 +449,86 @@ checks this finite certificate directly.  This is the clean executable
 replacement for trying to force a non-surjective local YBE row into a
 single-strand bisectional fibre model.
 
+## Recursive active-factor certificate
+
+The latest same-chat Pro refinement identifies the next finite information
+type beyond a rack-active channel and a position-invariant observer.  Let `T`
+be a finite YBE solution that is already known to be dominated by a finite
+rack `R_T`.  A recursive active-factor certificate consists of a finite
+Mealy transducer
+
+```text
+delta: Q x X -> Q,
+omega: Q x X -> T,
+```
+
+together with optional quotient and invariant-observer channels as above.
+For every reachable `q` and every `r_X(x,y)=(u,v)`, the active-factor channel
+must satisfy
+
+```text
+delta(delta(q,x),y) = delta(delta(q,u),v)
+```
+
+and
+
+```text
+r_T(omega(q,x), omega(delta(q,x),y))
+  =
+(omega(q,u), omega(delta(q,u),v)).
+```
+
+Thus the sequential map `F_n:X^n -> T^n` is `B_n`-equivariant.  If the
+combined output
+
+```text
+(pi^n, N_n, F_n):X^n -> Z^n x I^n x T^n
+```
+
+is injective in every arity, then the product of the known rack detector for
+`Z` and the known rack detector for `T` dominates `X`.  The proof is exactly
+the equivariant reconstruction argument: a braid invisible to both detector
+racks fixes all visible coordinates, and injectivity forces it to fix the
+original `X^n` tuple.
+
+This strictly generalizes the earlier certificate classes:
+
+```text
+invariant observer      = active factor with trivial braid action,
+rack-active output      = active factor T is a rack,
+quotient/color detector = active factor T is a smaller dominated solution.
+```
+
+For fixed finite `Q`, `T`, and optional observer data, the check is still
+finite: local two-letter equations plus the same pair-automaton all-length
+injectivity test.  The executable helper
+
+```text
+active_factor_certificate_audit(...)
+```
+
+now implements this generalized fixed-candidate check.  The affine
+`F_2^3` hidden cyclic row is also tested through this active-factor interface,
+with `T` equal to the constant-action cyclic rack on the hidden `F_2^2`
+coordinate.
+
+This refinement also explains why a Myhill-Nerode finite prefix congruence is
+not by itself decisive.  A finite prefix quotient `Q` only gives the monoid
+relation `qxy=quv`.  One must still solve the nonabelian crossed-cocycle
+realization problem, for example the finite equations
+
+```text
+h_{q,u}=h_{q,x}h_{qx,y}h_{q,x}^{-1},
+h_{qu,v}=h_{q,x},
+f_{q,u}=h_{q,x}.f_{qx,y},
+f_{qu,v}=f_{q,x},
+```
+
+or, more generally, the finite active-factor equation with target `T`, and
+then prove all-length injectivity.  Failure of this restricted certificate
+class is therefore not yet a Sawin-negative theorem; the genuine negative
+branch remains the cofinal rack-prefix obstruction below.
+
 The exact all-detector tower behind this fixed-candidate check is isolated in
 `proofs/rack_residual_obstruction_tower.md`.  In that language, a transducer
 certificate proves vanishing of the rack-residual tower for one finite
@@ -459,18 +539,19 @@ However, the criterion is not a proof of Sawin by itself.  The remaining
 universal statement would be:
 
 ```text
-Observer-augmented canonical finite quotient / finite sequential-rack
-observability lemma.
+Recursive active-factor observability lemma.
 
-Every actual finite YBE solution has such a finite sequential rack gauge
-certificate, equivalently finite canonical quotient data `(Q,H,F,h,f)`
-together with finite invariant observer data when needed, after the known
-quotient, involutive, left-nondegenerate, flip-union, and small
-kernel-equivalence branches are removed.
+Every actual finite YBE solution has a finite sequential output into already
+rack-dominated active factors, with enough quotient and invariant observer
+coordinates to reconstruct `X^n` in every arity, after the known quotient,
+involutive, left-nondegenerate, flip-union, and small kernel-equivalence
+branches are removed.
 ```
 
 No proof of that universal existence theorem is currently available in the
-ledger.  Failure of one proposed finite transducer class is only a gap.
+ledger.  The observer-augmented canonical `Q,H,F` certificate is the special
+case where the active factor is a rack of the form `H x F`; it is not known to
+be complete.  Failure of one proposed finite transducer class is only a gap.
 Failure for all finite rack detectors is the normalized-law negative branch.
 
 Equivalently, the exact finite-rack negative test for a fixed rack prefix is

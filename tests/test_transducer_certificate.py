@@ -10,6 +10,7 @@ from ybe_domination import (
     FiniteBraidedSet,
     InvariantTransducer,
     MealyTransducer,
+    active_factor_certificate_audit,
     all_length_canonical_quotient_injectivity_witness,
     all_length_injectivity_witness,
     canonical_quotient_audit,
@@ -218,6 +219,26 @@ class TransducerCertificateTests(unittest.TestCase):
             solution,
             quotient,
             quotient_map,
+            constant_action,
+            rack_transducer,
+            invariant_transducer,
+        )
+
+        self.assertTrue(audit.finite_conditions_hold)
+
+    def test_affine_f2_hidden_cyclic_gauge_has_active_factor_certificate(self):
+        solution = affine_f2_hidden_cyclic_solution()
+        fibre = tuple(product((0, 1), repeat=2))
+        constant_action = rack_solution(
+            fibre,
+            lambda _left, right: ((right[0] + 1) % 2, (right[1] + 1) % 2),
+        )
+        rack_transducer, invariant_transducer = (
+            affine_f2_hidden_cyclic_transducers(solution)
+        )
+
+        audit = active_factor_certificate_audit(
+            solution,
             constant_action,
             rack_transducer,
             invariant_transducer,

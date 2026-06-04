@@ -2746,6 +2746,18 @@ bijectivity of rack left translations force the rack outputs after the prefix
 the degenerate branch must use observer-augmented canonical data; the affine
 `F_2^3` row is the minimal example showing that absence of a rack-only
 canonical certificate does not imply a cofinal rack-prefix obstruction.
+The newest Pro refinement demotes finite prefix congruence as a decisive
+route: it only gives `qxy=quv`, while the hard part is a finite
+crossed-cocycle realization plus all-length injectivity.  The next certificate
+class is recursive active-factor observability.  One allows a finite
+sequential output into an already rack-dominated finite YBE factor `T`,
+checked by
+`r_T(omega(q,x),omega(qx,y))=(omega(q,u),omega(qu,v))` and the usual finite
+pair-automaton injectivity test, with optional quotient and invariant
+observer channels.  This is now executable as
+`active_factor_certificate_audit(...)`; the canonical `Q,H,F` theorem is its
+rack-target special case.  Failure of bounded searches in this certificate
+class is still only evidence, not a Sawin-negative proof.
 Formal partial-row nonseparability, failure of one-vertex actualization for a
 formal row system, or failure of stronger structural properties such as
 virtual freeness of `Art_I`, remains only a gap unless it is made actual and

@@ -171,6 +171,25 @@ class TransducerRackificationAudit:
 
 
 @dataclass(frozen=True)
+class ActiveFactorCertificateAudit:
+    """Finite check for sequential output into an already dominated YBE factor."""
+
+    quotient_failures: Tuple[QuotientEquivarianceFailure, ...]
+    factor_failures: Tuple[RackTransducerFailure, ...]
+    invariant_failures: Tuple[InvariantTransducerFailure, ...]
+    injectivity_witness: Optional[InjectivityWitness]
+
+    @property
+    def finite_conditions_hold(self) -> bool:
+        return (
+            not self.quotient_failures
+            and not self.factor_failures
+            and not self.invariant_failures
+            and self.injectivity_witness is None
+        )
+
+
+@dataclass(frozen=True)
 class CanonicalQuotientAudit:
     quotient_failures: Tuple[QuotientEquivarianceFailure, ...]
     action_failures: Tuple[CanonicalQuotientActionFailure, ...]
@@ -438,6 +457,16 @@ def rack_transducer_equivariance_failures(
     return tuple(failures)
 
 
+def active_factor_transducer_equivariance_failures(
+    solution: FiniteBraidedSet,
+    factor: FiniteBraidedSet,
+    transducer: MealyTransducer,
+) -> Tuple[RackTransducerFailure, ...]:
+    """Check the two-letter equations for output into a finite YBE factor."""
+
+    return rack_transducer_equivariance_failures(solution, factor, transducer)
+
+
 def invariant_transducer_failures(
     solution: FiniteBraidedSet,
     transducer: InvariantTransducer,
@@ -528,6 +557,27 @@ def combined_transducer_output(
         else invariant_transducer.outputs(word)
     )
     return (quotient_word, invariant_word, rack_transducer.outputs(word))
+
+
+def active_factor_combined_output(
+    word: Tuple[Element, ...],
+    active_factor_transducer: MealyTransducer,
+    invariant_transducer: Optional[InvariantTransducer] = None,
+    quotient_map: Optional[Mapping[Element, Element]] = None,
+) -> Tuple[Optional[Tuple[Element, ...]], Optional[Tuple[Element, ...]], Tuple[Element, ...]]:
+    """Return optional quotient, optional invariant, and active-factor outputs."""
+
+    quotient_word = (
+        None
+        if quotient_map is None
+        else tuple(quotient_map[letter] for letter in word)
+    )
+    invariant_word = (
+        None
+        if invariant_transducer is None
+        else invariant_transducer.outputs(word)
+    )
+    return (quotient_word, invariant_word, active_factor_transducer.outputs(word))
 
 
 def all_length_canonical_quotient_injectivity_witness(
@@ -621,16 +671,13 @@ def canonical_quotient_audit(
     )
 
 
-def all_length_injectivity_witness(
+def all_length_active_factor_injectivity_witness(
     solution: FiniteBraidedSet,
-    quotient_map: Mapping[Element, Element],
-    rack_transducer: MealyTransducer,
+    active_factor_transducer: MealyTransducer,
     invariant_transducer: Optional[InvariantTransducer] = None,
+    quotient_map: Optional[Mapping[Element, Element]] = None,
 ) -> Optional[InjectivityWitness]:
-    """Find two different words with identical combined outputs, if any.
-
-    This is the finite pair-automaton test from the certificate theorem.
-    """
+    """Find different words with identical active-factor certificate outputs."""
 
     if invariant_transducer is None:
         invariant_initial = None
@@ -638,9 +685,9 @@ def all_length_injectivity_witness(
         invariant_initial = invariant_transducer.initial
 
     start = (
-        rack_transducer.initial,
+        active_factor_transducer.initial,
         invariant_initial,
-        rack_transducer.initial,
+        active_factor_transducer.initial,
         invariant_initial,
         False,
     )
@@ -652,24 +699,24 @@ def all_length_injectivity_witness(
         q_left, p_left, q_right, p_right, already_differs = state
         for left in solution.elements:
             left_output = (
-                quotient_map[left],
+                None if quotient_map is None else quotient_map[left],
                 None
                 if invariant_transducer is None
                 else invariant_transducer.output(p_left, left),
-                rack_transducer.output(q_left, left),
+                active_factor_transducer.output(q_left, left),
             )
             for right in solution.elements:
                 right_output = (
-                    quotient_map[right],
+                    None if quotient_map is None else quotient_map[right],
                     None
                     if invariant_transducer is None
                     else invariant_transducer.output(p_right, right),
-                    rack_transducer.output(q_right, right),
+                    active_factor_transducer.output(q_right, right),
                 )
                 if left_output != right_output:
                     continue
-                next_left_state = rack_transducer.next_state(q_left, left)
-                next_right_state = rack_transducer.next_state(q_right, right)
+                next_left_state = active_factor_transducer.next_state(q_left, left)
+                next_right_state = active_factor_transducer.next_state(q_right, right)
                 if invariant_transducer is None:
                     next_left_inv = None
                     next_right_inv = None
@@ -692,6 +739,54 @@ def all_length_injectivity_witness(
                     seen.add(next_state)
                     queue.append((next_state, next_left_word, next_right_word))
     return None
+
+
+def all_length_injectivity_witness(
+    solution: FiniteBraidedSet,
+    quotient_map: Mapping[Element, Element],
+    rack_transducer: MealyTransducer,
+    invariant_transducer: Optional[InvariantTransducer] = None,
+) -> Optional[InjectivityWitness]:
+    """Find two different words with identical combined outputs, if any.
+
+    This is the finite pair-automaton test from the certificate theorem.
+    """
+
+    return all_length_active_factor_injectivity_witness(
+        solution,
+        rack_transducer,
+        invariant_transducer,
+        quotient_map,
+    )
+
+
+def active_factor_certificate_audit(
+    solution: FiniteBraidedSet,
+    factor: FiniteBraidedSet,
+    factor_transducer: MealyTransducer,
+    invariant_transducer: Optional[InvariantTransducer] = None,
+    quotient: Optional[FiniteBraidedSet] = None,
+    quotient_map: Optional[Mapping[Element, Element]] = None,
+) -> ActiveFactorCertificateAudit:
+    """Audit sequential output into a known rack-dominated YBE factor."""
+
+    return ActiveFactorCertificateAudit(
+        quotient_failures=()
+        if quotient is None or quotient_map is None
+        else quotient_equivariance_failures(solution, quotient, quotient_map),
+        factor_failures=active_factor_transducer_equivariance_failures(
+            solution, factor, factor_transducer
+        ),
+        invariant_failures=()
+        if invariant_transducer is None
+        else invariant_transducer_failures(solution, invariant_transducer),
+        injectivity_witness=all_length_active_factor_injectivity_witness(
+            solution,
+            factor_transducer,
+            invariant_transducer,
+            quotient_map,
+        ),
+    )
 
 
 def transducer_rackification_audit(

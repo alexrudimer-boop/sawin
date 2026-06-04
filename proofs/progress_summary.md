@@ -2772,3 +2772,15 @@ observer-augmented canonical finite quotient lemma, not a bare `Q,H,F`
 finite-index theorem.  The affine `F_2^3` row is the concrete compactness
 failure for the bare route: no rack-only canonical certificate, but still
 dominated by the observer-augmented cyclic gauge.
+The newest Pro refinement broadens the certificate target again.  Finite
+prefix congruence is not enough: after choosing a finite prefix quotient and
+observer one must still solve a finite crossed-cocycle realization and prove
+all-length injectivity.  The next exact finite information type is sequential
+output into an already rack-dominated finite YBE active factor `T`.  For
+finite `Q` and `omega:Q x X -> T`, the local equation is
+`r_T(omega(q,x),omega(qx,y))=(omega(q,u),omega(qu,v))`, together with the
+same state equation and pair-automaton injectivity test.  This is now
+represented by `active_factor_certificate_audit(...)`; the canonical `Q,H,F`
+case is the special case where `T` is the rack `H x F`.  The revised positive
+target is recursive active-factor observability, while the exact negative
+target remains the cofinal rack-prefix obstruction.

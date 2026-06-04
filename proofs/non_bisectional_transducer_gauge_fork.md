@@ -202,13 +202,31 @@ left-nondegeneracy.  The affine row above is therefore the minimal route
 obstruction: it has no rack-only canonical certificate, but it is still
 dominated by the observer-augmented cyclic gauge.
 
+The newest refinement broadens the certificate target one more step.  A finite
+prefix congruence `Q` does not itself give domination: after `qxy=quv` one
+still has to solve the nonabelian crossed-cocycle equations and prove
+all-length injectivity.  The exact recursive certificate class therefore lets
+the active output land in any finite YBE factor `T` already known to be
+rack-dominated.  The local equation is
+
+```text
+r_T(omega(q,x),omega(qx,y))=(omega(q,u),omega(qu,v)),
+```
+
+with the same state equation, optional observer outputs, and finite
+pair-automaton injectivity test.  The helper
+`active_factor_certificate_audit(...)` now checks fixed candidates of this
+kind.  The canonical `Q,H,F` certificate is the special case in which `T` is
+the rack `H x F`.
+
 ## Exact Negative Search Target
 
 A genuine Sawin counterexample must now have all three properties:
 
 1. non-bisectional local movement, so
    `proofs/rackable_endpoint_absorption.md` does not apply;
-2. no finite transducer/rack gauge reconstructing the hidden motion;
+2. no finite recursive active-factor/transducer gauge reconstructing the
+   hidden motion;
 3. a cofinal Artin-null Brunnian branch family: for every finite rack prefix
    `P_m`, some braid `beta_m` satisfies
 
@@ -241,5 +259,6 @@ N_X = { x in X : lambda_x:X -> X is not surjective }.
 
 The remaining computational search should look for actual finite YBE tables
 with `N_X` nonempty, outside the known positive branches, and with no finite
-sequential gauge certificate visible through growing arities.  Only after
-that would one try to build the cofinal Artin-null Brunnian sequence.
+recursive active-factor gauge certificate visible through growing arities.
+Only after that would one try to build the cofinal Artin-null Brunnian
+sequence.
