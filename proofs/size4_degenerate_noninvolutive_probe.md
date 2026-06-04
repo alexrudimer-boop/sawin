@@ -98,7 +98,8 @@ without using braid-image orders; see
 `tools/run_product_like_transport_boundary_audit.py`.  For the Type B
 flip-across model, the subsolution-fibre mixed rows are swapped-product-like
 and the one-coordinate mixed transports are isomorphisms of the internal block
-subsolutions.  For the Type A affine model, the same mixed rows are
-swapped-product-like bijections but not subsolution isomorphisms.  Thus Type A
-genuinely needs its separate parity/fibre gauge, while Type B is in the
-literal flip-across transport branch.
+subsolutions, with trivial transport loop monodromy.  For the Type A affine
+model, the same mixed rows are swapped-product-like bijections but not
+subsolution isomorphisms.  Thus Type A genuinely needs its separate
+parity/fibre gauge, while Type B is in the literal flip-across transport
+branch.

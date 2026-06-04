@@ -13,6 +13,7 @@ from ybe_domination import (
     subsolution_fibre_congruences,
     subsolution_fibre_transition_audit,
     subsolution_fibre_transport_isomorphism_audit,
+    subsolution_fibre_transport_monodromy_audit,
     terminal_branch_triage_audit,
 )
 
@@ -92,6 +93,11 @@ class TerminalBranchTriageTests(unittest.TestCase):
 
         self.assertTrue(transport.all_mixed_rows_product_like)
         self.assertTrue(transport.all_product_like_rows_have_transport_isomorphisms)
+
+        monodromy = subsolution_fibre_transport_monodromy_audit(solution, partition)
+
+        self.assertTrue(monodromy.all_rows_transport_isomorphic)
+        self.assertTrue(monodromy.all_loop_groups_trivial)
 
 
 if __name__ == "__main__":

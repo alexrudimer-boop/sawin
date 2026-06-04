@@ -16,6 +16,7 @@ from ybe_domination import (
     subsolution_fibre_congruences,
     subsolution_fibre_transition_audit,
     subsolution_fibre_transport_isomorphism_audit,
+    subsolution_fibre_transport_monodromy_audit,
     terminal_branch_triage_audit,
 )
 
@@ -142,6 +143,11 @@ class SizeFourDegenerateMechanismTests(unittest.TestCase):
         self.assertFalse(
             type_a_transport.all_product_like_rows_have_transport_isomorphisms
         )
+        type_a_monodromy = subsolution_fibre_transport_monodromy_audit(
+            type_a_solution,
+            type_a.subsolution_fibre_congruences[0],
+        )
+        self.assertFalse(type_a_monodromy.all_rows_transport_isomorphic)
 
         type_b_solution = flip_disjoint_union_solution(
             identity_solution((0, 1)),
@@ -168,6 +174,11 @@ class SizeFourDegenerateMechanismTests(unittest.TestCase):
         self.assertTrue(
             type_b_transport.all_product_like_rows_have_transport_isomorphisms
         )
+        type_b_monodromy = subsolution_fibre_transport_monodromy_audit(
+            type_b_solution,
+            type_b.subsolution_fibre_congruences[0],
+        )
+        self.assertTrue(type_b_monodromy.all_loop_groups_trivial)
 
 
 if __name__ == "__main__":

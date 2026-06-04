@@ -19,9 +19,9 @@ isomorphisms of the internal block subsolutions.
 - flip-across decomposition: `False`;
 - nontrivial one-state observer: `True`.
 
-| partition | product-like | transport isomorphism |
-| --- | --- | --- |
-| `[['(0, 0)', '(1, 1)'], ['(0, 1)', '(1, 0)']]` | `True` | `False` |
+| partition | product-like | transport isomorphism | loop groups trivial |
+| --- | --- | --- | --- |
+| `[['(0, 0)', '(1, 1)'], ['(0, 1)', '(1, 0)']]` | `True` | `False` | `False` |
 
 ## type_b_flip_across
 
@@ -34,10 +34,10 @@ isomorphisms of the internal block subsolutions.
 - flip-across decomposition: `True`;
 - nontrivial one-state observer: `False`.
 
-| partition | product-like | transport isomorphism |
-| --- | --- | --- |
-| `[["('P', 0)", "('P', 1)"], ["('T', 0)", "('T', 1)"]]` | `True` | `True` |
-| `[["('T', 0)"], ["('T', 1)"], ["('P', 0)", "('P', 1)"]]` | `True` | `True` |
+| partition | product-like | transport isomorphism | loop groups trivial |
+| --- | --- | --- | --- |
+| `[["('P', 0)", "('P', 1)"], ["('T', 0)", "('T', 1)"]]` | `True` | `True` | `True` |
+| `[["('T', 0)"], ["('T', 1)"], ["('P', 0)", "('P', 1)"]]` | `True` | `True` | `True` |
 
 ## Consequence
 
@@ -52,4 +52,5 @@ Thus Question B from the queued Pro prompt has a negative finite
 answer in this sense: product-like mixed transport is a real weaker
 condition than product-like transport by subsolution isomorphisms.
 The Type B flip-across model lies on the positive transport branch,
-while Type A requires the separate parity/fibre gauge.
+with trivial transport loop monodromy, while Type A requires the
+separate parity/fibre gauge.

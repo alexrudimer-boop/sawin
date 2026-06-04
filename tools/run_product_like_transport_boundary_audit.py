@@ -17,6 +17,7 @@ from ybe_domination import (  # noqa: E402
     is_involutive_solution,
     subsolution_fibre_congruences,
     subsolution_fibre_transport_isomorphism_audit,
+    subsolution_fibre_transport_monodromy_audit,
     terminal_branch_triage_audit,
 )
 
@@ -112,6 +113,7 @@ def _model_report(name: str, solution: FiniteBraidedSet) -> dict:
     transport_rows = []
     for partition in fibre_congruences:
         audit = subsolution_fibre_transport_isomorphism_audit(solution, partition)
+        monodromy = subsolution_fibre_transport_monodromy_audit(solution, partition)
         transport_rows.append(
             {
                 "partition": _partition_data(partition),
@@ -119,6 +121,17 @@ def _model_report(name: str, solution: FiniteBraidedSet) -> dict:
                 "all_product_like_rows_have_transport_isomorphisms": (
                     audit.all_product_like_rows_have_transport_isomorphisms
                 ),
+                "all_transport_loop_groups_trivial": (
+                    monodromy.all_loop_groups_trivial
+                ),
+                "transport_loop_group_orders": [
+                    {
+                        "block": _block_data(row.block),
+                        "loop_generator_count": row.loop_generator_count,
+                        "loop_group_order": row.loop_group_order,
+                    }
+                    for row in monodromy.rows
+                ],
                 "rows": [_transport_row_data(row) for row in audit.rows],
             }
         )
@@ -187,18 +200,19 @@ def render_markdown(report: dict) -> str:
                 "- nontrivial one-state observer: "
                 f"`{model['has_nontrivial_one_state_observer']}`.",
                 "",
-                "| partition | product-like | transport isomorphism |",
-                "| --- | --- | --- |",
+                "| partition | product-like | transport isomorphism | loop groups trivial |",
+                "| --- | --- | --- | --- |",
             ]
         )
         for audit in model["transport_audits"]:
             lines.append(
                 f"| `{audit['partition']}` | "
                 f"`{audit['all_mixed_rows_product_like']}` | "
-                f"`{audit['all_product_like_rows_have_transport_isomorphisms']}` |"
+                f"`{audit['all_product_like_rows_have_transport_isomorphisms']}` | "
+                f"`{audit['all_transport_loop_groups_trivial']}` |"
             )
         if not model["transport_audits"]:
-            lines.append("| none | `False` | `False` |")
+            lines.append("| none | `False` | `False` | `False` |")
         lines.append("")
 
     lines.extend(
@@ -216,7 +230,8 @@ def render_markdown(report: dict) -> str:
             "answer in this sense: product-like mixed transport is a real weaker",
             "condition than product-like transport by subsolution isomorphisms.",
             "The Type B flip-across model lies on the positive transport branch,",
-            "while Type A requires the separate parity/fibre gauge.",
+            "with trivial transport loop monodromy, while Type A requires the",
+            "separate parity/fibre gauge.",
         ]
     )
     return "\n".join(lines) + "\n"

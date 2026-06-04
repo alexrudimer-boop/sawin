@@ -39,6 +39,7 @@
       {
         "all_mixed_rows_product_like": true,
         "all_product_like_rows_have_transport_isomorphisms": false,
+        "all_transport_loop_groups_trivial": false,
         "partition": [
           [
             "(0, 0)",
@@ -184,7 +185,8 @@
               }
             ]
           }
-        ]
+        ],
+        "transport_loop_group_orders": []
       }
     ]
   },
@@ -250,6 +252,7 @@
       {
         "all_mixed_rows_product_like": true,
         "all_product_like_rows_have_transport_isomorphisms": true,
+        "all_transport_loop_groups_trivial": true,
         "partition": [
           [
             "('P', 0)",
@@ -395,11 +398,30 @@
               }
             ]
           }
+        ],
+        "transport_loop_group_orders": [
+          {
+            "block": [
+              "('P', 0)",
+              "('P', 1)"
+            ],
+            "loop_generator_count": 0,
+            "loop_group_order": 1
+          },
+          {
+            "block": [
+              "('T', 0)",
+              "('T', 1)"
+            ],
+            "loop_generator_count": 0,
+            "loop_group_order": 1
+          }
         ]
       },
       {
         "all_mixed_rows_product_like": true,
         "all_product_like_rows_have_transport_isomorphisms": true,
+        "all_transport_loop_groups_trivial": true,
         "partition": [
           [
             "('T', 0)"
@@ -930,6 +952,30 @@
                 ]
               }
             ]
+          }
+        ],
+        "transport_loop_group_orders": [
+          {
+            "block": [
+              "('T', 0)"
+            ],
+            "loop_generator_count": 0,
+            "loop_group_order": 1
+          },
+          {
+            "block": [
+              "('T', 1)"
+            ],
+            "loop_generator_count": 0,
+            "loop_group_order": 1
+          },
+          {
+            "block": [
+              "('P', 0)",
+              "('P', 1)"
+            ],
+            "loop_generator_count": 0,
+            "loop_group_order": 1
           }
         ]
       }

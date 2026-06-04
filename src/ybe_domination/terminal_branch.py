@@ -13,6 +13,7 @@ from .congruence import (
     generated_partition,
     universal_congruence,
 )
+from .finite_group import permutation_group_from_generators
 from .finite_braided_set import Element, FiniteBraidedSet, is_subsolution_subset
 
 
@@ -188,6 +189,39 @@ class SubsolutionFibreTransportIsomorphismAudit:
     @property
     def all_product_like_rows_have_transport_isomorphisms(self) -> bool:
         return all(row.product_like_transport_isomorphism for row in self.rows)
+
+
+@dataclass(frozen=True)
+class MixedFibreTransportMonodromyEdge:
+    source_block: FrozenSet[Element]
+    target_block: FrozenSet[Element]
+    mapping: Tuple[Tuple[Element, Element], ...]
+
+
+@dataclass(frozen=True)
+class MixedFibreTransportMonodromyRow:
+    block: FrozenSet[Element]
+    loop_generator_count: int
+    loop_group_order: int
+
+    @property
+    def has_trivial_loop_group(self) -> bool:
+        return self.loop_group_order == 1
+
+
+@dataclass(frozen=True)
+class SubsolutionFibreTransportMonodromyAudit:
+    solution: FiniteBraidedSet
+    partition: Partition
+    all_rows_transport_isomorphic: bool
+    edges: Tuple[MixedFibreTransportMonodromyEdge, ...]
+    rows: Tuple[MixedFibreTransportMonodromyRow, ...]
+
+    @property
+    def all_loop_groups_trivial(self) -> bool:
+        return self.all_rows_transport_isomorphic and all(
+            row.has_trivial_loop_group for row in self.rows
+        )
 
 
 def _proper_nonempty_subsets(elements: Tuple[Element, ...]):
@@ -478,6 +512,153 @@ def subsolution_fibre_transport_isomorphism_audit(
             )
         )
     return SubsolutionFibreTransportIsomorphismAudit(solution, partition, tuple(rows))
+
+
+def _transport_map_dict(
+    transport_map: MixedFibreTransportMap,
+) -> Dict[Element, Element]:
+    return dict(transport_map.mapping)
+
+
+def _compose_maps(
+    first: Dict[Element, Element],
+    second: Dict[Element, Element],
+) -> Dict[Element, Element]:
+    """Return `second` after `first`."""
+
+    return {source: second[first[source]] for source in first}
+
+
+def _invert_map(mapping: Dict[Element, Element]) -> Dict[Element, Element]:
+    return {target: source for source, target in mapping.items()}
+
+
+def _identity_map(block: FrozenSet[Element]) -> Dict[Element, Element]:
+    return {element: element for element in block}
+
+
+def _canonical_mapping_tuple(
+    mapping: Dict[Element, Element],
+) -> Tuple[Tuple[Element, Element], ...]:
+    return tuple(sorted(mapping.items(), key=lambda item: repr(item[0])))
+
+
+def _monodromy_edge_from_map(
+    transport_map: MixedFibreTransportMap,
+) -> MixedFibreTransportMonodromyEdge:
+    return MixedFibreTransportMonodromyEdge(
+        source_block=transport_map.source_block,
+        target_block=transport_map.target_block,
+        mapping=transport_map.mapping,
+    )
+
+
+def _inverse_monodromy_edge(
+    edge: MixedFibreTransportMonodromyEdge,
+) -> MixedFibreTransportMonodromyEdge:
+    inverse = _invert_map(dict(edge.mapping))
+    return MixedFibreTransportMonodromyEdge(
+        source_block=edge.target_block,
+        target_block=edge.source_block,
+        mapping=_canonical_mapping_tuple(inverse),
+    )
+
+
+def _transport_monodromy_edges(
+    transport_audit: SubsolutionFibreTransportIsomorphismAudit,
+) -> Tuple[MixedFibreTransportMonodromyEdge, ...]:
+    edges = []
+    seen = set()
+    for row in transport_audit.rows:
+        maps = []
+        if row.direct_transport_isomorphism:
+            maps.extend((row.first_from_left, row.second_from_right))
+        if row.swapped_transport_isomorphism:
+            maps.extend((row.first_from_right, row.second_from_left))
+        for transport_map in maps:
+            edge = _monodromy_edge_from_map(transport_map)
+            for oriented_edge in (edge, _inverse_monodromy_edge(edge)):
+                key = (
+                    oriented_edge.source_block,
+                    oriented_edge.target_block,
+                    oriented_edge.mapping,
+                )
+                if key not in seen:
+                    seen.add(key)
+                    edges.append(oriented_edge)
+    return tuple(edges)
+
+
+def _loop_group_order(
+    base_block: FrozenSet[Element],
+    edges: Tuple[MixedFibreTransportMonodromyEdge, ...],
+) -> Tuple[int, int]:
+    by_source = {}
+    for edge in edges:
+        by_source.setdefault(edge.source_block, []).append(edge)
+
+    path_maps: Dict[FrozenSet[Element], Dict[Element, Element]] = {
+        base_block: _identity_map(base_block)
+    }
+    queue = [base_block]
+    loop_maps = []
+    while queue:
+        source = queue.pop(0)
+        source_path = path_maps[source]
+        for edge in by_source.get(source, ()):
+            edge_map = dict(edge.mapping)
+            candidate = _compose_maps(source_path, edge_map)
+            if edge.target_block not in path_maps:
+                path_maps[edge.target_block] = candidate
+                queue.append(edge.target_block)
+                continue
+            existing = path_maps[edge.target_block]
+            loop_map = _compose_maps(candidate, _invert_map(existing))
+            if loop_map != _identity_map(base_block):
+                loop_maps.append(loop_map)
+
+    block_order = tuple(sorted(base_block, key=repr))
+    index = {element: position for position, element in enumerate(block_order)}
+    generators = []
+    for loop_map in loop_maps:
+        generators.append(tuple(index[loop_map[element]] for element in block_order))
+    group = permutation_group_from_generators(generators, degree=len(block_order))
+    return len(generators), len(group.elements)
+
+
+def subsolution_fibre_transport_monodromy_audit(
+    solution: FiniteBraidedSet,
+    partition: Partition,
+) -> SubsolutionFibreTransportMonodromyAudit:
+    """Compute loop monodromy of transport-isomorphic mixed fibre maps."""
+
+    transport_audit = subsolution_fibre_transport_isomorphism_audit(solution, partition)
+    all_transport_isomorphic = (
+        transport_audit.all_product_like_rows_have_transport_isomorphisms
+    )
+    edges = (
+        _transport_monodromy_edges(transport_audit)
+        if all_transport_isomorphic
+        else ()
+    )
+    rows = []
+    if all_transport_isomorphic:
+        for block in partition:
+            generator_count, group_order = _loop_group_order(block, edges)
+            rows.append(
+                MixedFibreTransportMonodromyRow(
+                    block=block,
+                    loop_generator_count=generator_count,
+                    loop_group_order=group_order,
+                )
+            )
+    return SubsolutionFibreTransportMonodromyAudit(
+        solution=solution,
+        partition=partition,
+        all_rows_transport_isomorphic=all_transport_isomorphic,
+        edges=edges,
+        rows=tuple(rows),
+    )
 
 
 def one_state_invariant_observer_partition(solution: FiniteBraidedSet) -> Partition:
