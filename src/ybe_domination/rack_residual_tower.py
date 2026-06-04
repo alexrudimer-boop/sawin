@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from collections import deque
 from dataclasses import dataclass
-from itertools import permutations, product
+from itertools import combinations, permutations, product
 from typing import Iterable, Optional, Tuple
 
 from .finite_braided_set import (
@@ -71,6 +71,28 @@ class RealizedParabolicCrossEffectAudit:
         return not self.truncated and self.quotient_nontrivial is True
 
 
+@dataclass(frozen=True)
+class BoundedDeletionSupportAudit:
+    """Finite arity audit for the dummy-color bounded-deletion obstruction."""
+
+    rack_size_bound: int
+    h: int
+    n: int
+    detector_size: Optional[int]
+    subset_count: int
+    joint_image_size: Optional[int]
+    obstruction_size: Optional[int]
+    obstruction_nontrivial: Optional[bool]
+    first_witness_word: Optional[Word]
+    first_moved_tuple: Optional[Tuple[Element, ...]]
+    first_moved_tuple_image: Optional[Tuple[Element, ...]]
+    truncated: bool
+
+    @property
+    def proves_bounded_deletion_support_failure(self) -> bool:
+        return not self.truncated and self.obstruction_nontrivial is True
+
+
 def _compose_permutations(left: Permutation, right: Permutation) -> Permutation:
     if len(left) != len(right):
         raise ValueError("permutations must have the same size")
@@ -85,6 +107,7 @@ def _invert_permutation(permutation: Permutation) -> Permutation:
 
 
 PairPermutation = Tuple[Permutation, Permutation]
+MultiPermutation = Tuple[Permutation, ...]
 
 
 def _compose_pair(left: PairPermutation, right: PairPermutation) -> PairPermutation:
@@ -98,6 +121,19 @@ def _invert_pair(pair: PairPermutation) -> PairPermutation:
     return (_invert_permutation(pair[0]), _invert_permutation(pair[1]))
 
 
+def _compose_multi(left: MultiPermutation, right: MultiPermutation) -> MultiPermutation:
+    if len(left) != len(right):
+        raise ValueError("multi-permutations must have the same arity")
+    return tuple(
+        _compose_permutations(left_part, right_part)
+        for left_part, right_part in zip(left, right)
+    )
+
+
+def _invert_multi(permutation: MultiPermutation) -> MultiPermutation:
+    return tuple(_invert_permutation(part) for part in permutation)
+
+
 def _first_moved_tuple(
     solution: FiniteBraidedSet, n: int, permutation: Permutation
 ) -> Tuple[Optional[Tuple[Element, ...]], Optional[Tuple[Element, ...]]]:
@@ -106,6 +142,39 @@ def _first_moved_tuple(
         if index != image_index:
             return tuple(tuples[index]), tuple(tuples[image_index])
     return None, None
+
+
+def _invert_word(word: Word) -> Word:
+    return tuple(-signed for signed in reversed(word))
+
+
+def _pure_generator_word(left: int, right: int) -> Word:
+    """Return the standard pure braid generator A_{left,right}."""
+
+    if left < 1 or right <= left:
+        raise ValueError("pure generator requires 1 <= left < right")
+    return (
+        tuple(range(right - 1, left, -1))
+        + (left, left)
+        + tuple(-generator for generator in range(left + 1, right))
+    )
+
+
+def _deletion_subsets(n: int, h: int) -> Tuple[Tuple[int, ...], ...]:
+    return tuple(
+        subset
+        for size in range(2, min(h, n) + 1)
+        for subset in combinations(range(1, n + 1), size)
+    )
+
+
+def _deleted_pure_generator_word(
+    left: int, right: int, subset: Tuple[int, ...]
+) -> Optional[Word]:
+    if left not in subset or right not in subset:
+        return None
+    rank = {strand: index + 1 for index, strand in enumerate(subset)}
+    return _pure_generator_word(rank[left], rank[right])
 
 
 def _joint_generators(
@@ -487,6 +556,159 @@ def realized_parabolic_cross_effect_audit(
         quotient_size=quotient_size,
         quotient_nontrivial=first_witness_pair is not None,
         seed_count=len(seeds),
+        first_witness_word=first_witness_word,
+        first_moved_tuple=moved,
+        first_moved_tuple_image=moved_image,
+        truncated=False,
+    )
+
+
+def _rack_size_detector(max_rack_size: int) -> FiniteBraidedSet:
+    representatives = small_rack_representatives(max_rack_size)
+    prefixes = rack_product_prefixes(representatives)
+    if not prefixes:
+        raise ValueError("at least one rack representative is required")
+    return prefixes[-1]
+
+
+def bounded_deletion_support_audit(
+    solution: FiniteBraidedSet,
+    h: int,
+    n: int,
+    rack_size_bound: int,
+    state_limit: int = 100_000,
+) -> BoundedDeletionSupportAudit:
+    """Compute the finite obstruction group E_{X,h,n} for one cutoff.
+
+    The detector is the product of all rack isomorphism classes of size at
+    most ``rack_size_bound``.  The closure uses pure braid generators
+    ``A_ij`` and records the full detector action, the full ``X`` action, and
+    all ``X`` actions after deletion to subsets of size at most ``h``.
+    """
+
+    if h < 1:
+        raise ValueError("h must be positive")
+    if n < 1:
+        raise ValueError("braid degree must be positive")
+    if rack_size_bound < 2:
+        raise ValueError("rack_size_bound must be at least 2 for pure deletion")
+
+    detector = _rack_size_detector(rack_size_bound)
+    subsets = _deletion_subsets(n, h)
+    detector_identity = tuple(range(len(detector.elements) ** n))
+    solution_identity = tuple(range(len(solution.elements) ** n))
+    deletion_identities = tuple(
+        tuple(range(len(solution.elements) ** len(subset)))
+        for subset in subsets
+    )
+    identity: MultiPermutation = (
+        detector_identity,
+        solution_identity,
+        *deletion_identities,
+    )
+
+    if n < 2:
+        return BoundedDeletionSupportAudit(
+            rack_size_bound=rack_size_bound,
+            h=h,
+            n=n,
+            detector_size=len(detector.elements),
+            subset_count=len(subsets),
+            joint_image_size=1,
+            obstruction_size=1,
+            obstruction_nontrivial=False,
+            first_witness_word=None,
+            first_moved_tuple=None,
+            first_moved_tuple_image=None,
+            truncated=False,
+        )
+
+    generators: list[Tuple[Word, MultiPermutation]] = []
+    for left in range(1, n):
+        for right in range(left + 1, n + 1):
+            word = _pure_generator_word(left, right)
+            components: list[Permutation] = [
+                action_permutation(detector, n, word),
+                action_permutation(solution, n, word),
+            ]
+            for subset, deletion_identity in zip(subsets, deletion_identities):
+                deleted_word = _deleted_pure_generator_word(left, right, subset)
+                if deleted_word is None:
+                    components.append(deletion_identity)
+                else:
+                    components.append(
+                        action_permutation(solution, len(subset), deleted_word)
+                    )
+            generator = tuple(components)
+            generators.append((word, generator))
+            generators.append((_invert_word(word), _invert_multi(generator)))
+
+    seen: dict[MultiPermutation, Word] = {identity: tuple()}
+    queue = deque((identity,))
+    obstruction_solution = {solution_identity}
+    first_witness_state = None
+    first_witness_word = None
+
+    while queue:
+        state = queue.popleft()
+        state_word = seen[state]
+        for generator_word, generator in generators:
+            next_state = _compose_multi(generator, state)
+            if next_state in seen:
+                continue
+            next_word = state_word + tuple(generator_word)
+            seen[next_state] = next_word
+            detector_trivial = next_state[0] == detector_identity
+            deletions_trivial = all(
+                next_state[index + 2] == deletion_identity
+                for index, deletion_identity in enumerate(deletion_identities)
+            )
+            if detector_trivial and deletions_trivial:
+                obstruction_solution.add(next_state[1])
+                if (
+                    next_state[1] != solution_identity
+                    and first_witness_state is None
+                ):
+                    first_witness_state = next_state
+                    first_witness_word = next_word
+            if len(seen) > state_limit:
+                moved, moved_image = (
+                    (None, None)
+                    if first_witness_state is None
+                    else _first_moved_tuple(solution, n, first_witness_state[1])
+                )
+                return BoundedDeletionSupportAudit(
+                    rack_size_bound=rack_size_bound,
+                    h=h,
+                    n=n,
+                    detector_size=len(detector.elements),
+                    subset_count=len(subsets),
+                    joint_image_size=None,
+                    obstruction_size=None,
+                    obstruction_nontrivial=None,
+                    first_witness_word=first_witness_word,
+                    first_moved_tuple=moved,
+                    first_moved_tuple_image=moved_image,
+                    truncated=True,
+                )
+            queue.append(next_state)
+
+    moved, moved_image = (
+        (None, None)
+        if first_witness_state is None
+        else _first_moved_tuple(solution, n, first_witness_state[1])
+    )
+    return BoundedDeletionSupportAudit(
+        rack_size_bound=rack_size_bound,
+        h=h,
+        n=n,
+        detector_size=len(detector.elements),
+        subset_count=len(subsets),
+        joint_image_size=len(seen),
+        obstruction_size=len(obstruction_solution),
+        obstruction_nontrivial=any(
+            permutation != solution_identity for permutation in obstruction_solution
+        ),
         first_witness_word=first_witness_word,
         first_moved_tuple=moved,
         first_moved_tuple_image=moved_image,

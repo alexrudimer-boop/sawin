@@ -2536,6 +2536,16 @@ fixed `X`, finite-rack domination is equivalent to
 `sup_{rho^X_n(beta)!=1} d_X(n,beta)<infinity`; failure of this bound is exactly
 the normalized-law no-rack sequence for `X`.
 
+The follow-up Pro query produced the concrete dummy-color deletion descent in
+`proofs/dummy_color_deletion_descent.md`: deleting any subset of strands sends
+`D_{s+1}(n)` into `D_s(k)`.  This gives a bounded-deletion-support endpoint:
+after bounded arities have been killed by a finite rack-size cutoff `a_X(h)`,
+any remaining `D_{a_X(h)+1}`-blind but `X`-visible braid must have no
+`X`-visible deletion shadow on at most `h` strands.  The new helper
+`bounded_deletion_support_audit(X,h,n,s)` computes the finite obstruction
+group for a supplied cutoff `s`, using pure braid generators and all deletion
+shadows through `h`.
+
 ## Current conclusion
 
 As of this log entry, neither A nor B is proved.  The current decisive target

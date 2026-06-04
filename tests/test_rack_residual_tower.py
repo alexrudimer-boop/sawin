@@ -6,6 +6,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from ybe_domination import (
+    bounded_deletion_support_audit,
     FiniteBraidedSet,
     identity_solution,
     rack_product_prefixes,
@@ -135,6 +136,22 @@ class RackResidualTowerTests(unittest.TestCase):
         self.assertFalse(audit.truncated)
         self.assertFalse(audit.quotient_nontrivial)
         self.assertEqual(audit.kernel_image_size, audit.parabolic_image_size)
+
+    def test_bounded_deletion_support_audit_vanishes_for_cyclic_rack(self):
+        solution = rack_solution((0, 1), lambda _left, right: 1 - right)
+
+        audit = bounded_deletion_support_audit(
+            solution,
+            h=2,
+            n=3,
+            rack_size_bound=2,
+        )
+
+        self.assertFalse(audit.truncated)
+        self.assertEqual(audit.detector_size, 4)
+        self.assertEqual(audit.subset_count, 3)
+        self.assertFalse(audit.obstruction_nontrivial)
+        self.assertFalse(audit.proves_bounded_deletion_support_failure)
 
 
 if __name__ == "__main__":

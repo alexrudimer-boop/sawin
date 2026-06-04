@@ -29,9 +29,11 @@ from .transducer_certificate import (
     transducer_rackification_audit,
 )
 from .rack_residual_tower import (
+    BoundedDeletionSupportAudit,
     RackPrefixObstructionRow,
     RackResidualObstructionAudit,
     RealizedParabolicCrossEffectAudit,
+    bounded_deletion_support_audit,
     canonical_rack_signature,
     labelled_rack_solutions,
     rack_product_prefixes,
@@ -1156,6 +1158,7 @@ __all__ = [
     "InvariantTransducerFailure",
     "MealyTransducer",
     "QuotientEquivarianceFailure",
+    "BoundedDeletionSupportAudit",
     "RackPrefixObstructionRow",
     "RackResidualObstructionAudit",
     "RackTransducerFailure",
@@ -1550,6 +1553,7 @@ __all__ = [
     "atom_index",
     "atom_word",
     "bounded_atom_trivial_loop_group_summaries",
+    "bounded_deletion_support_audit",
     "block_map",
     "braid_images_for_words",
     "braid_action_order",
