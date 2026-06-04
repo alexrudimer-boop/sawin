@@ -86,6 +86,15 @@ Checked repair rows:
 - arity `3`: joint `24`, detector `24`, solution `24`, obstruction `False`, truncated `False`.
 - arity `4`: joint `648`, detector `648`, solution `648`, obstruction `False`, truncated `False`.
 
+Size-four tetrahedral resolution:
+
+- detector size: `4`;
+- operation rows: `[[0, 2, 3, 1], [3, 1, 0, 2], [1, 3, 2, 0], [2, 0, 1, 3]]`;
+- detector description: `tetrahedral Alexander rack on F_2^2 with a*b=T b+(I+T)a, T row masks (2,3)`;
+- proof artifact: `proofs/affine_f2_q3_full_tetrahedral_conjugacy_audit.md`;
+- kernel equality in all arities: `True`;
+- conjugacy summary: `In shifted X coordinates, Phi_n=(P_n,R_n) is a bijection X^n -> Y^n x F_2^n conjugating rho^X_n to rho^Y_n x id.`.
+
 ## Conclusion
 
-The affine F_2^3 family contains 3360 rows that survive the bidegenerate, noninvolutive, observer-rigid, subsolution-rigid, and pair-generated quotient-rigid filters. The first survivor has kernel pressure against the bounded ordered rack prefix of size 36, but that pressure is repaired by the missing three-element dihedral rack representative: exact checks through arity 4 show matching braid image orders and no detector-kernel obstruction. This is therefore not a valid pressure core yet; the companion native-image audit tests this repair at arity 5, where it fails.
+The affine F_2^3 family contains 3360 rows that survive the bidegenerate, noninvolutive, observer-rigid, subsolution-rigid, and pair-generated quotient-rigid filters. The first survivor has kernel pressure against the bounded ordered rack prefix of size 36, but that pressure is repaired by the missing three-element dihedral rack representative: exact checks through arity 4 show matching braid image orders and no detector-kernel obstruction. The companion native-image audit then shows that D3 fails at arity 5. The final tetrahedral conjugacy audit resolves the row positively: a four-element tetrahedral rack has the same braid kernels as this affine X in every arity.

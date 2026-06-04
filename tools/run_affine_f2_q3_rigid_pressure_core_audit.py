@@ -373,6 +373,27 @@ def build_report() -> dict[str, object]:
                 "image_orders_match_through_checked_arities"
             ]
         )
+        first_candidate["tetrahedral_size4_resolution"] = {
+            "detector_size": 4,
+            "operation_rows": [
+                [0, 2, 3, 1],
+                [3, 1, 0, 2],
+                [1, 3, 2, 0],
+                [2, 0, 1, 3],
+            ],
+            "detector_description": (
+                "tetrahedral Alexander rack on F_2^2 with "
+                "a*b=T b+(I+T)a, T row masks (2,3)"
+            ),
+            "proof_artifact": (
+                "proofs/affine_f2_q3_full_tetrahedral_conjugacy_audit.md"
+            ),
+            "kernel_equality_all_arities": True,
+            "conjugacy_summary": (
+                "In shifted X coordinates, Phi_n=(P_n,R_n) is a bijection "
+                "X^n -> Y^n x F_2^n conjugating rho^X_n to rho^Y_n x id."
+            ),
+        }
 
     return {
         "title": "Affine F2^3 rigid pressure core audit",
@@ -395,9 +416,10 @@ def build_report() -> dict[str, object]:
             "size 36, but that pressure is repaired by the missing "
             "three-element dihedral rack representative: exact checks through "
             "arity 4 show matching braid image orders and no detector-kernel "
-            "obstruction. This is therefore not a valid pressure core yet; "
-            "the companion native-image audit tests this repair at arity 5, "
-            "where it fails."
+            "obstruction. The companion native-image audit then shows that "
+            "D3 fails at arity 5. The final tetrahedral conjugacy audit "
+            "resolves the row positively: a four-element tetrahedral rack has "
+            "the same braid kernels as this affine X in every arity."
         ),
     }
 
@@ -524,6 +546,21 @@ def render_markdown(report: dict[str, object]) -> str:
                 f"obstruction `{row['obstruction_found']}`, "
                 f"truncated `{row['truncated']}`."
             )
+        tetra = candidate["tetrahedral_size4_resolution"]
+        lines.extend(
+            [
+                "",
+                "Size-four tetrahedral resolution:",
+                "",
+                f"- detector size: `{tetra['detector_size']}`;",
+                f"- operation rows: `{tetra['operation_rows']}`;",
+                f"- detector description: `{tetra['detector_description']}`;",
+                f"- proof artifact: `{tetra['proof_artifact']}`;",
+                "- kernel equality in all arities: "
+                f"`{tetra['kernel_equality_all_arities']}`;",
+                f"- conjugacy summary: `{tetra['conjugacy_summary']}`.",
+            ]
+        )
     lines.extend(["", "## Conclusion", "", report["conclusion"]])
     return "\n".join(lines) + "\n"
 

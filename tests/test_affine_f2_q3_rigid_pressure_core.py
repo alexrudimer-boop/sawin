@@ -51,6 +51,22 @@ class AffineF2Q3RigidPressureCoreTests(unittest.TestCase):
             [row["joint_image_size"] for row in repair["checked_rows"]],
             [3, 24, 648],
         )
+        tetrahedral = candidate["tetrahedral_size4_resolution"]
+        self.assertEqual(tetrahedral["detector_size"], 4)
+        self.assertTrue(tetrahedral["kernel_equality_all_arities"])
+        self.assertEqual(
+            tetrahedral["proof_artifact"],
+            "proofs/affine_f2_q3_full_tetrahedral_conjugacy_audit.md",
+        )
+        self.assertEqual(
+            tetrahedral["operation_rows"],
+            [
+                [0, 2, 3, 1],
+                [3, 1, 0, 2],
+                [1, 3, 2, 0],
+                [2, 0, 1, 3],
+            ],
+        )
 
     def test_first_candidate_satisfies_structural_filters(self):
         blocks = (10, 265, 220, 349)
