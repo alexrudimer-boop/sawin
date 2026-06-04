@@ -40,6 +40,54 @@ colours, and the two colour fibres are crossing-closed.
 - cyclic rack gauge verified through degree: `5`;
 - cyclic rack gauge check passed: `True`.
 
+## Pro Counter-Audit Examples
+
+The later Pro counter-audit isolates the two proof gaps as separate
+finite examples.  Both examples satisfy the stated product-like
+transport-isomorphism hypotheses and are rack-dominated by other
+routes; their role is to invalidate the proof mechanism.
+
+### Gap 1: Loop Monodromy
+
+Let `X={0,1} x Z/3` and
+
+```text
+r((a,i),(b,j))=((b,j+1),(a,i+1)).
+```
+
+- YBE: `True`;
+- all mixed rows product-like: `True`;
+- product-like transports are internal-solution isomorphisms: `True`;
+- transport loop group orders: `[3, 3]`;
+- `sigma_1^2` witness: `((0, 0), (1, 0)) -> ((0, 2), (1, 2))`.
+
+Thus coherent transport isomorphisms can have nontrivial loop
+monodromy; no block gauge can conjugate a 3-cycle transport to the
+identity.
+
+### Gap 2: Quotient Colour Routing
+
+Let `Z=Z/3` be the dihedral rack with `a*b=2a-b`, and take the
+Cartesian product of `Z` with a two-point identity fibre.  Then
+
+```text
+r((a,i),(b,j))=((a*b,i),(a,j)).
+```
+
+- total YBE: `True`;
+- quotient YBE: `True`;
+- all mixed rows product-like: `True`;
+- product-like transports are internal-solution isomorphisms: `True`;
+- transport loop group orders: `[1, 1, 1]`;
+- quotient word and path: `(1, 1, 1)` sends `((0, 1), (2, 0), (1, 2), (0, 1))`;
+- returns to base: `True`;
+- changes colours before returning: `True`.
+
+So even with trivial fibre transport, a quotient-kernel braid can
+move quotient colours during the word and return only at the end.
+The fixed-colour substrand-deletion argument is therefore not a
+formal consequence of the stated hypotheses.
+
 ## Consequence
 
 This six-point solution satisfies the local transport-isomorphism

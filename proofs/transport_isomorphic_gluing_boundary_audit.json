@@ -54,6 +54,59 @@
       "(1, 2)"
     ]
   ],
+  "pro_gap_1_flip_base_cyclic": {
+    "all_mixed_rows_product_like": true,
+    "all_product_like_rows_have_transport_isomorphisms": true,
+    "description": "r((a,i),(b,j))=((b,j+1),(a,i+1))",
+    "is_ybe": true,
+    "sigma1_squared_input": "((0, 0), (1, 0))",
+    "sigma1_squared_output": "((0, 2), (1, 2))",
+    "transport_loop_group_orders": [
+      3,
+      3
+    ]
+  },
+  "pro_gap_2_dihedral_quotient_routing": {
+    "all_mixed_rows_product_like": true,
+    "all_product_like_rows_have_transport_isomorphisms": true,
+    "changes_colours_midword": true,
+    "description": "product of the Z/3 dihedral rack quotient with a two-point identity fibre",
+    "is_ybe": true,
+    "quotient_is_ybe": true,
+    "returning_quotient_base": [
+      0,
+      1
+    ],
+    "returning_quotient_path": [
+      [
+        0,
+        1
+      ],
+      [
+        2,
+        0
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "returning_quotient_word": [
+      1,
+      1,
+      1
+    ],
+    "returns_to_base": true,
+    "transport_loop_group_orders": [
+      1,
+      1,
+      1
+    ]
+  },
   "transport_edge_count": 6,
   "transport_loop_group_orders": [
     {

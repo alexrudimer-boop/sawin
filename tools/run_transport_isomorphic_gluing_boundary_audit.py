@@ -17,6 +17,8 @@ from ybe_domination import (  # noqa: E402
     closed_local_detector_chain,
     rack_solution,
     local_master_bottleneck_summary,
+    identity_solution,
+    product_solution,
     subsolution_fibre_transition_audit,
     subsolution_fibre_transport_isomorphism_audit,
     subsolution_fibre_transport_monodromy_audit,
@@ -40,6 +42,32 @@ def identity_base_cyclic_transport_solution() -> FiniteBraidedSet:
                 (right_color, (left_point + 1) % 3),
             )
     return FiniteBraidedSet(elements, table)
+
+
+def flip_base_cyclic_transport_solution() -> FiniteBraidedSet:
+    """Return Pro's flip-base cyclic transport monodromy witness."""
+
+    colors = (0, 1)
+    points = (0, 1, 2)
+    elements = tuple(product(colors, points))
+    table = {}
+    for left_color, left_point in elements:
+        for right_color, right_point in elements:
+            table[((left_color, left_point), (right_color, right_point))] = (
+                (right_color, (right_point + 1) % 3),
+                (left_color, (left_point + 1) % 3),
+            )
+    return FiniteBraidedSet(elements, table)
+
+
+def dihedral_quotient_inert_fibre_solution() -> tuple[
+    FiniteBraidedSet, FiniteBraidedSet
+]:
+    """Return the product witness for non-fixed quotient-colour routing."""
+
+    quotient = rack_solution((0, 1, 2), lambda left, right: (2 * left - right) % 3)
+    fibre = identity_solution((0, 1))
+    return product_solution(quotient, fibre), quotient
 
 
 def naive_identity_normalized_split_solution() -> FiniteBraidedSet:
@@ -83,6 +111,19 @@ def first_ybe_failure(solution: FiniteBraidedSet) -> dict | None:
                 "sigma2_sigma1_sigma2": repr(right),
             }
     raise AssertionError("is_ybe() failed but no witness was found")
+
+
+def quotient_colour_path(
+    quotient: FiniteBraidedSet,
+    word: Sequence[int],
+    base_tuple: Sequence[int],
+) -> tuple[tuple[int, ...], ...]:
+    path = [tuple(base_tuple)]
+    current = tuple(base_tuple)
+    for generator in word:
+        current = quotient.braid_action((generator,), current)
+        path.append(current)
+    return tuple(path)
 
 
 def cyclic_rack_solution(order: int) -> FiniteBraidedSet:
@@ -143,6 +184,30 @@ def _block_data(block) -> list[str]:
 def build_report() -> dict:
     solution = identity_base_cyclic_transport_solution()
     naive_split = naive_identity_normalized_split_solution()
+    flip_cyclic = flip_base_cyclic_transport_solution()
+    flip_partition = colour_partition(flip_cyclic)
+    flip_transport = subsolution_fibre_transport_isomorphism_audit(
+        flip_cyclic, flip_partition
+    )
+    flip_monodromy = subsolution_fibre_transport_monodromy_audit(
+        flip_cyclic, flip_partition
+    )
+    dihedral_product, dihedral_quotient = dihedral_quotient_inert_fibre_solution()
+    dihedral_partition = tuple(
+        frozenset(element for element in dihedral_product.elements if element[0] == color)
+        for color in dihedral_quotient.elements
+    )
+    dihedral_transport = subsolution_fibre_transport_isomorphism_audit(
+        dihedral_product, dihedral_partition
+    )
+    dihedral_monodromy = subsolution_fibre_transport_monodromy_audit(
+        dihedral_product, dihedral_partition
+    )
+    routing_word = (1, 1, 1)
+    routing_base = (0, 1)
+    routing_path = quotient_colour_path(
+        dihedral_quotient, routing_word, routing_base
+    )
     partition = colour_partition(solution)
     transition = subsolution_fibre_transition_audit(solution, partition)
     transport = subsolution_fibre_transport_isomorphism_audit(solution, partition)
@@ -206,6 +271,45 @@ def build_report() -> dict:
         "naive_identity_normalized_split_first_ybe_failure": first_ybe_failure(
             naive_split
         ),
+        "pro_gap_1_flip_base_cyclic": {
+            "description": "r((a,i),(b,j))=((b,j+1),(a,i+1))",
+            "is_ybe": flip_cyclic.is_ybe(),
+            "all_mixed_rows_product_like": flip_transport.all_mixed_rows_product_like,
+            "all_product_like_rows_have_transport_isomorphisms": (
+                flip_transport.all_product_like_rows_have_transport_isomorphisms
+            ),
+            "transport_loop_group_orders": [
+                row.loop_group_order for row in flip_monodromy.rows
+            ],
+            "sigma1_squared_input": repr(((0, 0), (1, 0))),
+            "sigma1_squared_output": repr(
+                flip_cyclic.braid_action((1, 1), ((0, 0), (1, 0)))
+            ),
+        },
+        "pro_gap_2_dihedral_quotient_routing": {
+            "description": (
+                "product of the Z/3 dihedral rack quotient with a two-point "
+                "identity fibre"
+            ),
+            "is_ybe": dihedral_product.is_ybe(),
+            "quotient_is_ybe": dihedral_quotient.is_ybe(),
+            "all_mixed_rows_product_like": (
+                dihedral_transport.all_mixed_rows_product_like
+            ),
+            "all_product_like_rows_have_transport_isomorphisms": (
+                dihedral_transport.all_product_like_rows_have_transport_isomorphisms
+            ),
+            "transport_loop_group_orders": [
+                row.loop_group_order for row in dihedral_monodromy.rows
+            ],
+            "returning_quotient_word": routing_word,
+            "returning_quotient_base": routing_base,
+            "returning_quotient_path": routing_path,
+            "returns_to_base": routing_path[-1] == routing_path[0],
+            "changes_colours_midword": any(
+                state != routing_path[0] for state in routing_path[1:-1]
+            ),
+        },
         "consequence": (
             "transport-isomorphic product-like rows do not force simultaneous "
             "identity-gauge normalization; this example has loop monodromy "
@@ -218,6 +322,8 @@ def render_markdown(report: dict) -> str:
     orders = [
         row["loop_group_order"] for row in report["transport_loop_group_orders"]
     ]
+    gap1 = report["pro_gap_1_flip_base_cyclic"]
+    gap2 = report["pro_gap_2_dihedral_quotient_routing"]
     lines = [
         "# Transport-Isomorphic Gluing Boundary Audit",
         "",
@@ -280,6 +386,61 @@ def render_markdown(report: dict) -> str:
         f"`{report['cyclic_rack_gauge_verified_through_degree']}`;",
         "- cyclic rack gauge check passed: "
         f"`{report['cyclic_rack_gauge_check_passed']}`.",
+        "",
+        "## Pro Counter-Audit Examples",
+        "",
+        "The later Pro counter-audit isolates the two proof gaps as separate",
+        "finite examples.  Both examples satisfy the stated product-like",
+        "transport-isomorphism hypotheses and are rack-dominated by other",
+        "routes; their role is to invalidate the proof mechanism.",
+        "",
+        "### Gap 1: Loop Monodromy",
+        "",
+        "Let `X={0,1} x Z/3` and",
+        "",
+        "```text",
+        "r((a,i),(b,j))=((b,j+1),(a,i+1)).",
+        "```",
+        "",
+        f"- YBE: `{gap1['is_ybe']}`;",
+        f"- all mixed rows product-like: `{gap1['all_mixed_rows_product_like']}`;",
+        "- product-like transports are internal-solution isomorphisms: "
+        f"`{gap1['all_product_like_rows_have_transport_isomorphisms']}`;",
+        "- transport loop group orders: "
+        f"`{gap1['transport_loop_group_orders']}`;",
+        "- `sigma_1^2` witness: "
+        f"`{gap1['sigma1_squared_input']} -> {gap1['sigma1_squared_output']}`.",
+        "",
+        "Thus coherent transport isomorphisms can have nontrivial loop",
+        "monodromy; no block gauge can conjugate a 3-cycle transport to the",
+        "identity.",
+        "",
+        "### Gap 2: Quotient Colour Routing",
+        "",
+        "Let `Z=Z/3` be the dihedral rack with `a*b=2a-b`, and take the",
+        "Cartesian product of `Z` with a two-point identity fibre.  Then",
+        "",
+        "```text",
+        "r((a,i),(b,j))=((a*b,i),(a,j)).",
+        "```",
+        "",
+        f"- total YBE: `{gap2['is_ybe']}`;",
+        f"- quotient YBE: `{gap2['quotient_is_ybe']}`;",
+        f"- all mixed rows product-like: `{gap2['all_mixed_rows_product_like']}`;",
+        "- product-like transports are internal-solution isomorphisms: "
+        f"`{gap2['all_product_like_rows_have_transport_isomorphisms']}`;",
+        "- transport loop group orders: "
+        f"`{gap2['transport_loop_group_orders']}`;",
+        "- quotient word and path: "
+        f"`{gap2['returning_quotient_word']}` sends "
+        f"`{gap2['returning_quotient_path']}`;",
+        f"- returns to base: `{gap2['returns_to_base']}`;",
+        f"- changes colours before returning: `{gap2['changes_colours_midword']}`.",
+        "",
+        "So even with trivial fibre transport, a quotient-kernel braid can",
+        "move quotient colours during the word and return only at the end.",
+        "The fixed-colour substrand-deletion argument is therefore not a",
+        "formal consequence of the stated hypotheses.",
         "",
         "## Consequence",
         "",

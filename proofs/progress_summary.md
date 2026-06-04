@@ -2748,6 +2748,15 @@ lemma is finite sequential-rack observability.  The remaining negative test
 is the cofinal rack-prefix obstruction
 `forall m exists n, N_{m,n}(X)!=1`; failure of bounded transducer searches
 alone is not enough.
+The same certificate boundary now applies to the product-like
+transport-isomorphic gluing route.  The 2026-06-04 counter-audit in
+`proofs/transport_isomorphic_gluing_boundary.md` gives finite proof-audit
+examples with nontrivial transport loop monodromy and with quotient colours
+that change during a quotient-kernel braid before returning.  Thus this
+gluing route needs trivial/rack-detected monodromy plus
+deletion-decomposable routing, or an explicit active-factor certificate; it
+is not an unconditional theorem under product-like transport-isomorphism
+alone.
 The subsequent Pro refinement puts the positive lemma in canonical finite
 quotient form.  With
 `M_X=<X | xy=uv whenever r_X(x,y)=(u,v)>`, a certificate is equivalently finite

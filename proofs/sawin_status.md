@@ -2794,6 +2794,11 @@ gap rather than a rack-prefix obstruction.
 Future GPT-5.5 Pro prompts are archived under `prompts/gpt55_pro/` before or
 while they are sent, so the question queue remains available if the ChatGPT UI
 is inaccessible.
+The 2026-06-04 transport-gluing counter-audit is recorded in
+`proofs/transport_isomorphic_gluing_boundary.md`: product-like
+transport-isomorphic gluing remains a certificate theorem, not a theorem under
+the original hypotheses, because nontrivial transport loop monodromy and
+non-fixed quotient-colour routing are real finite proof gaps.
 Formal partial-row nonseparability, failure of one-vertex actualization for a
 formal row system, or failure of stronger structural properties such as
 virtual freeness of `Art_I`, remains only a gap unless it is made actual and

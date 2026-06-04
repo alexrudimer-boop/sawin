@@ -21,8 +21,11 @@ from ybe_domination import (
 )
 
 from tools.run_transport_isomorphic_gluing_boundary_audit import (
+    dihedral_quotient_inert_fibre_solution,
     first_ybe_failure,
+    flip_base_cyclic_transport_solution,
     naive_identity_normalized_split_solution,
+    quotient_colour_path,
 )
 
 
@@ -177,6 +180,49 @@ class TerminalBranchTriageTests(unittest.TestCase):
                 "sigma2_sigma1_sigma2": "((0, 0), (0, 0), (1, 1))",
             },
         )
+
+    def test_flip_base_cyclic_transport_has_loop_monodromy(self):
+        solution = flip_base_cyclic_transport_solution()
+        partition = (
+            frozenset((0, point) for point in (0, 1, 2)),
+            frozenset((1, point) for point in (0, 1, 2)),
+        )
+
+        self.assertTrue(solution.is_ybe())
+
+        transport = subsolution_fibre_transport_isomorphism_audit(solution, partition)
+        self.assertTrue(transport.all_mixed_rows_product_like)
+        self.assertTrue(transport.all_product_like_rows_have_transport_isomorphisms)
+
+        monodromy = subsolution_fibre_transport_monodromy_audit(solution, partition)
+        self.assertTrue(monodromy.all_rows_transport_isomorphic)
+        self.assertFalse(monodromy.all_loop_groups_trivial)
+        self.assertEqual(tuple(row.loop_group_order for row in monodromy.rows), (3, 3))
+        self.assertEqual(
+            solution.braid_action((1, 1), ((0, 0), (1, 0))),
+            ((0, 2), (1, 2)),
+        )
+
+    def test_dihedral_quotient_can_return_after_midword_colour_changes(self):
+        solution, quotient = dihedral_quotient_inert_fibre_solution()
+        partition = tuple(
+            frozenset(element for element in solution.elements if element[0] == color)
+            for color in quotient.elements
+        )
+
+        self.assertTrue(solution.is_ybe())
+
+        transport = subsolution_fibre_transport_isomorphism_audit(solution, partition)
+        self.assertTrue(transport.all_mixed_rows_product_like)
+        self.assertTrue(transport.all_product_like_rows_have_transport_isomorphisms)
+
+        monodromy = subsolution_fibre_transport_monodromy_audit(solution, partition)
+        self.assertTrue(monodromy.all_loop_groups_trivial)
+
+        path = quotient_colour_path(quotient, (1, 1, 1), (0, 1))
+        self.assertEqual(path, ((0, 1), (2, 0), (1, 2), (0, 1)))
+        self.assertEqual(path[-1], path[0])
+        self.assertTrue(any(state != path[0] for state in path[1:-1]))
 
 
 if __name__ == "__main__":

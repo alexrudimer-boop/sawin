@@ -150,6 +150,40 @@ Question A theorem.  A proof of Question A as stated would still need to show
 that every nontrivial transport loop monodromy and every non-permutation
 quotient-colour trajectory is absorbed by a fixed finite detector tower.
 
+The follow-up counter-audit gives a clean finite witness for the quotient
+colour problem.  Let `Z=Z/3` be the dihedral rack `a*b=2a-b`, and take the
+product of `Z` with a two-point identity fibre:
+
+```text
+r((a,i),(b,j))=((a*b,i),(a,j)).
+```
+
+Projection to `Z` has crossing-closed fibres, identity internal block
+solutions, product-like mixed rows, and transport-isomorphic identity fibre
+maps.  Nevertheless the quotient word `sigma_1^3` fixes the initial colour
+pair `(0,1)` only after the path
+
+```text
+(0,1) -> (2,0) -> (1,2) -> (0,1).
+```
+
+Thus a quotient-kernel braid need not preserve a fixed set of `a`-coloured
+substrands during the word.  The fixed-colour deletion proof is valid for
+flip-across/permutation routing, but not as a formal consequence of the
+original transport-isomorphic hypotheses.
+
+The counter-audit also gives a variant of the monodromy witness over the
+flip quotient:
+
+```text
+r((a,i),(b,j))=((b,j+1),(a,i+1)).
+```
+
+It satisfies the same transport-isomorphism hypotheses and has loop monodromy
+of order `3`; `sigma_1^2` sends `((0,0),(1,0))` to `((0,2),(1,2))`.  As with
+the identity-base cyclic witness, this is a proof-audit example, not a Sawin
+counterexample.
+
 ## Current Use
 
 The boundary is now:

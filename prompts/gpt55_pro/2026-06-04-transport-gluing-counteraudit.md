@@ -1,6 +1,19 @@
 # Transport Gluing Counter-Audit
 
-Status: queued for GPT-5.5 Pro on 2026-06-04.
+Status: answered by GPT-5.5 Pro on 2026-06-04.
+
+Answer summary:
+
+- outcome B in this prompt's choices: the original proof mechanism is not
+  valid as stated;
+- gap 1 is real: transport-isomorphic mixed maps can have nontrivial loop
+  monodromy, so the identity-normalized split construction requires an
+  added flatness condition or finite monodromy detector;
+- gap 2 is real: quotient colour dynamics need not admit fixed-colour
+  substrand deletion, so the split tower needs deletion-decomposable routing
+  or an explicit finite active-factor certificate;
+- the supplied finite examples audit the proof only. They are not Sawin
+  counterexamples.
 
 Prompt:
 
