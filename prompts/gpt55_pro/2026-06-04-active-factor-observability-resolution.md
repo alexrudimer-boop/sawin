@@ -1,6 +1,22 @@
 # Active-Factor Observability Resolution
 
-Status: queued for GPT-5.5 Pro on 2026-06-04.
+Status: answered by GPT-5.5 Pro on 2026-06-04.
+
+Answer summary:
+
+- no proof of the active-factor observability theorem is available from the
+  current data;
+- no alternate proof of Sawin YES and no concrete Sawin-negative finite table
+  are available from the current data;
+- active-factor observability is stronger than Sawin-positive, because rack
+  domination is only a braid-kernel inclusion while observability asks for a
+  coordinatewise finite sequential reconstruction;
+- the exact obstruction to the active-factor theorem is sequential
+  primitivity: every proper finite active-factor/observer code has an
+  all-length collision;
+- sequential primitivity alone would only refute this induction method.  A
+  Sawin-negative table still requires the cofinal rack-prefix obstruction
+  `forall m exists n, N_{m,n}(X) != 1`.
 
 Prompt:
 

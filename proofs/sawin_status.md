@@ -2799,6 +2799,12 @@ The 2026-06-04 transport-gluing counter-audit is recorded in
 transport-isomorphic gluing remains a certificate theorem, not a theorem under
 the original hypotheses, because nontrivial transport loop monodromy and
 non-fixed quotient-colour routing are real finite proof gaps.
+The follow-up active-factor verdict is recorded in
+`proofs/active_factor_observability_boundary.md`: proper active-factor
+observability remains an unresolved strengthening of the positive direction.
+The exact obstruction to that induction method is sequential primitivity, but
+the exact obstruction to Sawin itself is still the stronger cofinal
+rack-prefix nonseparation condition.
 Formal partial-row nonseparability, failure of one-vertex actualization for a
 formal row system, or failure of stronger structural properties such as
 virtual freeness of `Art_I`, remains only a gap unless it is made actual and

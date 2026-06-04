@@ -3,7 +3,9 @@ import unittest
 from itertools import product
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT))
+sys.path.insert(0, str(ROOT / "src"))
 
 from ybe_domination import (
     CanonicalQuotientData,
@@ -24,6 +26,8 @@ from ybe_domination import (
     rack_solution,
     transducer_rackification_audit,
 )
+
+from tools.run_active_factor_observability_audit import build_report
 
 
 def affine_f2_type_a_solution():
@@ -360,6 +364,25 @@ class TransducerCertificateTests(unittest.TestCase):
 
         self.assertFalse(audit.finite_conditions_hold)
         self.assertTrue(audit.action_failures)
+
+    def test_active_factor_observability_audit_closes_gap_examples(self):
+        report = build_report()
+
+        self.assertTrue(report["all_examples_closed_by_certificate"])
+        examples = {example["name"]: example for example in report["examples"]}
+        self.assertTrue(
+            examples["identity_base_cyclic_transport"]["finite_conditions_hold"]
+        )
+        self.assertTrue(
+            examples["flip_base_cyclic_transport"]["finite_conditions_hold"]
+        )
+        self.assertTrue(
+            examples["dihedral_quotient_inert_fibre"]["finite_conditions_hold"]
+        )
+        self.assertTrue(
+            examples["dihedral_quotient_inert_fibre"]["changes_colours_midword"]
+        )
+        self.assertTrue(examples["flip_base_cyclic_transport"]["proper_factor"])
 
 
 if __name__ == "__main__":

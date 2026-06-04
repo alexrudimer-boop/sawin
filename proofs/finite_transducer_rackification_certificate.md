@@ -640,6 +640,19 @@ certificate proves vanishing of the rack-residual tower for one finite
 detector.  The missing completeness theorem would show that every vanishing
 relative tower is witnessed by some finite Mealy/invariant certificate.
 
+The generated audit `proofs/active_factor_observability_audit.md` checks the
+finite active-factor repair on the current transport-gluing proof-gap
+examples.  The identity-base cyclic monodromy row is closed by the three-state
+position gauge `u_i=x_i-i mod 3` into the three-point cyclic rack, with colour
+as an invariant observer.  The flip-base cyclic monodromy row is closed by
+the proper active factor given by its three-point fibre solution over the
+two-point flip quotient.  The dihedral quotient example, where quotient
+colours move and return only at the end, is closed by the quotient rack plus
+the inert fibre coordinate as an invariant observer.  Thus these finite
+proof-gap examples do not point to a negative answer; they show exactly what
+kind of active-factor/observer certificate a positive theorem must produce
+uniformly.
+
 However, the criterion is not a proof of Sawin by itself.  The remaining
 universal statement would be:
 

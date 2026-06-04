@@ -2757,6 +2757,19 @@ gluing route needs trivial/rack-detected monodromy plus
 deletion-decomposable routing, or an explicit active-factor certificate; it
 is not an unconditional theorem under product-like transport-isomorphism
 alone.
+The generated `proofs/active_factor_observability_audit.md` verifies that the
+known monodromy and routing gap examples themselves are closed by such
+certificates: the identity-base cyclic row uses the position-gauge cyclic
+rack plus colour observer, the flip-base cyclic row uses a proper fibre
+active factor over the flip quotient, and the dihedral quotient row uses the
+quotient rack plus inert-fibre observer.  Hence those examples are
+proof-mechanism guardrails, not negative evidence.
+The boundary note `proofs/active_factor_observability_boundary.md` records the
+current Pro verdict: active-factor observability is an unresolved
+strengthening of Sawin's positive direction.  Its exact obstruction is
+sequential primitivity, but a Sawin-negative proof still requires the stronger
+cofinal rack-prefix nonseparation condition
+`forall m exists n, N_{m,n}(X)!=1`.
 The subsequent Pro refinement puts the positive lemma in canonical finite
 quotient form.  With
 `M_X=<X | xy=uv whenever r_X(x,y)=(u,v)>`, a certificate is equivalently finite

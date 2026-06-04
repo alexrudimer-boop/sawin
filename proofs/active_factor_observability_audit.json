@@ -1,0 +1,72 @@
+{
+  "all_examples_closed_by_certificate": true,
+  "consequence": "The finite monodromy and quotient-routing proof gaps are not negative evidence by themselves: both are absorbed by proper active-factor or quotient+observer certificates in these witnesses. The unresolved theorem is universal existence of such certificates, or a cofinal rack-prefix obstruction.",
+  "examples": [
+    {
+      "description": "r((a,x),(b,y))=((a,y),(b,x+1))",
+      "factor_failure_count": 0,
+      "factor_is_rack": true,
+      "factor_size": 3,
+      "finite_conditions_hold": true,
+      "injectivity_witness": null,
+      "invariant_failure_count": 0,
+      "invariant_state_count": 1,
+      "name": "identity_base_cyclic_transport",
+      "observer": "colour a",
+      "position_gauge": "u_i = x_i - i mod 3",
+      "solution_size": 6,
+      "state_count": 3
+    },
+    {
+      "description": "r((a,i),(b,j))=((b,j+1),(a,i+1))",
+      "factor_failure_count": 0,
+      "factor_left_nondegenerate": true,
+      "factor_size": 3,
+      "finite_conditions_hold": true,
+      "injectivity_witness": null,
+      "monodromy_witness": "sigma_1^2 sends ((0,0),(1,0)) to ((0,2),(1,2))",
+      "name": "flip_base_cyclic_transport",
+      "proper_factor": true,
+      "quotient_failure_count": 0,
+      "quotient_size": 2,
+      "solution_size": 6
+    },
+    {
+      "active_factor_count": 0,
+      "changes_colours_midword": true,
+      "description": "r((a,i),(b,j))=((a*b,i),(a,j)), a*b=2a-b mod 3",
+      "finite_conditions_hold": true,
+      "injectivity_witness": null,
+      "invariant_failure_count": 0,
+      "name": "dihedral_quotient_inert_fibre",
+      "observer": "inert fibre coordinate i",
+      "quotient_failure_count": 0,
+      "quotient_size": 3,
+      "returning_quotient_path": [
+        [
+          0,
+          1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "returning_quotient_word": [
+        1,
+        1,
+        1
+      ],
+      "solution_size": 6
+    }
+  ],
+  "title": "Active-factor observability audit"
+}
