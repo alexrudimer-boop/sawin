@@ -17,8 +17,10 @@ from ybe_domination import (
     canonical_quotient_product_rack,
     combined_transducer_output,
     cyclic_group,
+    flip_disjoint_union_solution,
     identity_solution,
     is_rack_solution,
+    multi_active_factor_certificate_audit,
     rack_solution,
     transducer_rackification_audit,
 )
@@ -129,6 +131,16 @@ def affine_f2_hidden_cyclic_canonical_data(solution):
         h,
         f,
     )
+
+
+def one_state_transducer(solution, output_map):
+    state = "q"
+    delta = {}
+    omega = {}
+    for letter in solution.elements:
+        delta[(state, letter)] = state
+        omega[(state, letter)] = output_map[letter]
+    return MealyTransducer((state,), state, delta, omega)
 
 
 class TransducerCertificateTests(unittest.TestCase):
@@ -244,6 +256,37 @@ class TransducerCertificateTests(unittest.TestCase):
             invariant_transducer,
         )
 
+        self.assertTrue(audit.finite_conditions_hold)
+
+    def test_flip_across_union_has_proper_active_factor_certificate(self):
+        trivial = identity_solution((0, 1))
+        cyclic = rack_solution((0, 1), lambda _left, right: 1 - right)
+        target = flip_disjoint_union_solution(trivial, cyclic, "T", "C")
+        dummy = identity_solution(("dummy",))
+        trivial_factor = flip_disjoint_union_solution(trivial, dummy, "T", "D")
+        cyclic_factor = flip_disjoint_union_solution(dummy, cyclic, "D", "C")
+        trivial_map = {}
+        cyclic_map = {}
+        for tag, value in target.elements:
+            if tag == "T":
+                trivial_map[(tag, value)] = ("T", value)
+                cyclic_map[(tag, value)] = ("D", "dummy")
+            else:
+                trivial_map[(tag, value)] = ("D", "dummy")
+                cyclic_map[(tag, value)] = ("C", value)
+        trivial_transducer = one_state_transducer(target, trivial_map)
+        cyclic_transducer = one_state_transducer(target, cyclic_map)
+
+        audit = multi_active_factor_certificate_audit(
+            target,
+            (
+                (trivial_factor, trivial_transducer),
+                (cyclic_factor, cyclic_transducer),
+            ),
+        )
+
+        self.assertLess(len(trivial_factor.elements), len(target.elements))
+        self.assertLess(len(cyclic_factor.elements), len(target.elements))
         self.assertTrue(audit.finite_conditions_hold)
 
     def test_affine_f2_hidden_cyclic_gauge_has_canonical_certificate(self):

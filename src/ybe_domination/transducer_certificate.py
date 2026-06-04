@@ -190,6 +190,31 @@ class ActiveFactorCertificateAudit:
 
 
 @dataclass(frozen=True)
+class IndexedActiveFactorFailure:
+    factor_index: int
+    failure: RackTransducerFailure
+
+
+@dataclass(frozen=True)
+class MultiActiveFactorCertificateAudit:
+    """Finite check for a product of active-factor transducer outputs."""
+
+    quotient_failures: Tuple[QuotientEquivarianceFailure, ...]
+    factor_failures: Tuple[IndexedActiveFactorFailure, ...]
+    invariant_failures: Tuple[InvariantTransducerFailure, ...]
+    injectivity_witness: Optional[InjectivityWitness]
+
+    @property
+    def finite_conditions_hold(self) -> bool:
+        return (
+            not self.quotient_failures
+            and not self.factor_failures
+            and not self.invariant_failures
+            and self.injectivity_witness is None
+        )
+
+
+@dataclass(frozen=True)
 class CanonicalQuotientAudit:
     quotient_failures: Tuple[QuotientEquivarianceFailure, ...]
     action_failures: Tuple[CanonicalQuotientActionFailure, ...]
@@ -580,6 +605,34 @@ def active_factor_combined_output(
     return (quotient_word, invariant_word, active_factor_transducer.outputs(word))
 
 
+def multi_active_factor_combined_output(
+    word: Tuple[Element, ...],
+    active_factor_transducers: Tuple[MealyTransducer, ...],
+    invariant_transducer: Optional[InvariantTransducer] = None,
+    quotient_map: Optional[Mapping[Element, Element]] = None,
+) -> Tuple[
+    Optional[Tuple[Element, ...]],
+    Optional[Tuple[Element, ...]],
+    Tuple[Tuple[Element, ...], ...],
+]:
+    """Return optional quotient, optional invariant, and all active outputs."""
+
+    quotient_word = (
+        None
+        if quotient_map is None
+        else tuple(quotient_map[letter] for letter in word)
+    )
+    invariant_word = (
+        None
+        if invariant_transducer is None
+        else invariant_transducer.outputs(word)
+    )
+    active_words = tuple(
+        transducer.outputs(word) for transducer in active_factor_transducers
+    )
+    return (quotient_word, invariant_word, active_words)
+
+
 def all_length_canonical_quotient_injectivity_witness(
     solution: FiniteBraidedSet,
     data: CanonicalQuotientData,
@@ -741,6 +794,102 @@ def all_length_active_factor_injectivity_witness(
     return None
 
 
+def all_length_multi_active_factor_injectivity_witness(
+    solution: FiniteBraidedSet,
+    active_factor_transducers: Tuple[MealyTransducer, ...],
+    invariant_transducer: Optional[InvariantTransducer] = None,
+    quotient_map: Optional[Mapping[Element, Element]] = None,
+) -> Optional[InjectivityWitness]:
+    """Find different words with identical multi-factor certificate outputs."""
+
+    if invariant_transducer is None:
+        invariant_initial = None
+    else:
+        invariant_initial = invariant_transducer.initial
+
+    initial_active_states = tuple(
+        transducer.initial for transducer in active_factor_transducers
+    )
+    start = (
+        initial_active_states,
+        invariant_initial,
+        initial_active_states,
+        invariant_initial,
+        False,
+    )
+    queue = deque([(start, tuple(), tuple())])
+    seen = {start}
+
+    while queue:
+        state, left_word, right_word = queue.popleft()
+        q_lefts, p_left, q_rights, p_right, already_differs = state
+        for left in solution.elements:
+            left_active_outputs = tuple(
+                transducer.output(q_left, left)
+                for transducer, q_left in zip(active_factor_transducers, q_lefts)
+            )
+            left_output = (
+                None if quotient_map is None else quotient_map[left],
+                None
+                if invariant_transducer is None
+                else invariant_transducer.output(p_left, left),
+                left_active_outputs,
+            )
+            for right in solution.elements:
+                right_active_outputs = tuple(
+                    transducer.output(q_right, right)
+                    for transducer, q_right in zip(
+                        active_factor_transducers,
+                        q_rights,
+                    )
+                )
+                right_output = (
+                    None if quotient_map is None else quotient_map[right],
+                    None
+                    if invariant_transducer is None
+                    else invariant_transducer.output(p_right, right),
+                    right_active_outputs,
+                )
+                if left_output != right_output:
+                    continue
+                next_left_states = tuple(
+                    transducer.next_state(q_left, left)
+                    for transducer, q_left in zip(
+                        active_factor_transducers,
+                        q_lefts,
+                    )
+                )
+                next_right_states = tuple(
+                    transducer.next_state(q_right, right)
+                    for transducer, q_right in zip(
+                        active_factor_transducers,
+                        q_rights,
+                    )
+                )
+                if invariant_transducer is None:
+                    next_left_inv = None
+                    next_right_inv = None
+                else:
+                    next_left_inv = invariant_transducer.next_state(p_left, left)
+                    next_right_inv = invariant_transducer.next_state(p_right, right)
+                differs = already_differs or left != right
+                next_state = (
+                    next_left_states,
+                    next_left_inv,
+                    next_right_states,
+                    next_right_inv,
+                    differs,
+                )
+                next_left_word = left_word + (left,)
+                next_right_word = right_word + (right,)
+                if differs:
+                    return InjectivityWitness(next_left_word, next_right_word)
+                if next_state not in seen:
+                    seen.add(next_state)
+                    queue.append((next_state, next_left_word, next_right_word))
+    return None
+
+
 def all_length_injectivity_witness(
     solution: FiniteBraidedSet,
     quotient_map: Mapping[Element, Element],
@@ -783,6 +932,41 @@ def active_factor_certificate_audit(
         injectivity_witness=all_length_active_factor_injectivity_witness(
             solution,
             factor_transducer,
+            invariant_transducer,
+            quotient_map,
+        ),
+    )
+
+
+def multi_active_factor_certificate_audit(
+    solution: FiniteBraidedSet,
+    active_factors: Tuple[Tuple[FiniteBraidedSet, MealyTransducer], ...],
+    invariant_transducer: Optional[InvariantTransducer] = None,
+    quotient: Optional[FiniteBraidedSet] = None,
+    quotient_map: Optional[Mapping[Element, Element]] = None,
+) -> MultiActiveFactorCertificateAudit:
+    """Audit a finite family of active-factor transducer channels."""
+
+    factor_failures = []
+    for index, (factor, transducer) in enumerate(active_factors):
+        for failure in active_factor_transducer_equivariance_failures(
+            solution,
+            factor,
+            transducer,
+        ):
+            factor_failures.append(IndexedActiveFactorFailure(index, failure))
+
+    return MultiActiveFactorCertificateAudit(
+        quotient_failures=()
+        if quotient is None or quotient_map is None
+        else quotient_equivariance_failures(solution, quotient, quotient_map),
+        factor_failures=tuple(factor_failures),
+        invariant_failures=()
+        if invariant_transducer is None
+        else invariant_transducer_failures(solution, invariant_transducer),
+        injectivity_witness=all_length_multi_active_factor_injectivity_witness(
+            solution,
+            tuple(transducer for _factor, transducer in active_factors),
             invariant_transducer,
             quotient_map,
         ),

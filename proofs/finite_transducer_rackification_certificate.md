@@ -512,6 +512,41 @@ now implements this generalized fixed-candidate check.  The affine
 with `T` equal to the constant-action cyclic rack on the hidden `F_2^2`
 coordinate.
 
+The proper-compression theorem needs several active factors at once.  The
+fixed-candidate checker now also has the multi-factor form
+
+```text
+multi_active_factor_certificate_audit(...)
+```
+
+for data `(T_alpha,Q_alpha,omega_alpha)_alpha`.  It checks the two-letter
+equivariance equation for every active factor and runs one pair automaton on
+the combined one-letter output tuple
+
+```text
+(pi(x), nu(p,x), (omega_alpha(q_alpha,x))_alpha).
+```
+
+This is the executable finite test for any proposed proper active-factor
+compression.  The flip-across union branch supplies a regression.  If
+
+```text
+X = A union B
+```
+
+with flip-across interaction, then the two quotient factors
+
+```text
+T_A = A union {*},
+T_B = {*} union B
+```
+
+are strictly smaller than `X`.  The one-state maps collapse the opposite
+component to the dummy point.  They are active-factor quotient maps, and their
+product reconstructs `X` coordinatewise.  Thus flip-across domination can be
+viewed either through the pure-braid color-pattern proof or through a proper
+multi-active-factor certificate.
+
 This refinement also explains why a Myhill-Nerode finite prefix congruence is
 not by itself decisive.  A finite prefix quotient `Q` only gives the monoid
 relation `qxy=quv`.  One must still solve the nonabelian crossed-cocycle

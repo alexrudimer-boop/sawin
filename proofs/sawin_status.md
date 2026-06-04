@@ -2771,6 +2771,14 @@ into racks and strictly smaller already dominated YBE active factors.  Kernel
 inclusion in braid images is weaker than such a coordinatewise block-code
 reconstruction, so failure of proper-factor certificate searches still does
 not imply the cofinal rack-prefix obstruction.
+The executable certificate layer now supports several active factors:
+`multi_active_factor_certificate_audit(...)` checks a finite family
+`(T_alpha,Q_alpha,omega_alpha)` and runs one combined pair automaton for
+all-length injectivity.  The flip-across union branch is a regression in this
+proper-factor format: `A union B` maps to the two smaller quotient factors
+`A union {*}` and `{*} union B`, and the two collapsed outputs reconstruct
+the original coordinate.  This makes proper compression candidates finite and
+auditable when supplied, but it is still not a universal compression theorem.
 Formal partial-row nonseparability, failure of one-vertex actualization for a
 formal row system, or failure of stronger structural properties such as
 virtual freeness of `Art_I`, remains only a gap unless it is made actual and

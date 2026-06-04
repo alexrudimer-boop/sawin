@@ -2793,3 +2793,11 @@ be a rack or a strictly smaller already dominated YBE solution.  Kernel
 inclusion between braid representations does not automatically produce such a
 coordinatewise sequential code, so failure of proper-factor certificate
 search still does not imply the cofinal rack-prefix obstruction.
+The proper-factor side now has an executable fixed-candidate hook:
+`multi_active_factor_certificate_audit(...)` checks finitely many active
+factors at once, with one combined pair-automaton injectivity test.  The
+flip-across union theorem is represented in this format by the two smaller
+quotient factors `A union {*}` and `{*} union B`, whose one-state quotient
+outputs jointly reconstruct `A union B`.  This does not prove proper
+compression in general, but it turns any proposed finite family of smaller
+active factors into a finite auditable certificate.
