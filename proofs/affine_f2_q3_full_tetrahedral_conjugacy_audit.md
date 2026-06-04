@@ -28,6 +28,19 @@ r_i=S_{i-1}+a_i+b_i.
 
 Set `Phi_n=(P_n,R_n):X^n -> Y^n x F_2^n`.
 
+## Corrected Local Rule
+
+The shifted local `X` matrix sends adjacent inputs
+`(a,b,c),(A,B,C)` to
+
+```text
+((b+A, a+A, C), (c+A+C, a+b+A+B, a+b+A+C)).
+```
+
+The fifth coordinate is `B'=a+b+A+B`.  Omitting the `A` term breaks
+`R_n`-invariance already at arity `2`; the matrix row
+`(1,1,0,1,1,0)` is the source of the corrected term.
+
 ## Checked Rows
 
 | n | rank Phi | bijective | P equivariant | R invariant | conjugates generators |
@@ -62,6 +75,17 @@ Set `Phi_n=(P_n,R_n):X^n -> Y^n x F_2^n`.
 | 28 | 84 | True | True | True | True |
 | 29 | 87 | True | True | True | True |
 | 30 | 90 | True | True | True | True |
+
+## Exhaustive State Checks
+
+| n | states | Phi bijective | P equivariant | R invariant | braid relations |
+|---|---:|---|---|---|---|
+| 1 | 8 | True | True | True | True |
+| 2 | 64 | True | True | True | True |
+| 3 | 512 | True | True | True | True |
+| 4 | 4096 | True | True | True | True |
+| 5 | 32768 | True | True | True | True |
+| 6 | 262144 | True | True | True | True |
 
 ## Proof Skeleton
 

@@ -13,6 +13,7 @@ from run_affine_f2_q3_tetrahedral_module_audit import (  # noqa: E402
     _candidate_generator,
     _matrix_product_f2,
     _matrix_rank_f2,
+    _matrix_vector_f2,
     _rack24_generator,
 )
 
@@ -117,17 +118,118 @@ def _row(arity: int) -> dict:
     }
 
 
-def build_report(max_arity: int = 30) -> dict:
+def _apply(rows: tuple[int, ...], vector: int) -> int:
+    return _matrix_vector_f2(rows, vector)
+
+
+def _state_level_row(arity: int) -> dict:
+    state_count = 1 << (3 * arity)
+    x_generators = tuple(
+        _candidate_generator(arity, index)[0] for index in range(arity - 1)
+    )
+    y_generators = tuple(
+        _rack24_generator(arity, index) for index in range(arity - 1)
+    )
+    p_rows = _p_rows(arity)
+    r_rows = _r_rows(arity)
+    phi_rows = _phi_rows(arity)
+    phi_images = set()
+    p_failures = []
+    r_failures = []
+    braid_failures = []
+    commute_failures = []
+
+    for state in range(state_count):
+        phi_images.add(_apply(phi_rows, state))
+        for index, x_generator in enumerate(x_generators):
+            x_image = _apply(x_generator, state)
+            if _apply(p_rows, x_image) != _apply(
+                y_generators[index],
+                _apply(p_rows, state),
+            ):
+                p_failures.append((state, index + 1))
+            if _apply(r_rows, x_image) != _apply(r_rows, state):
+                r_failures.append((state, index + 1))
+        for index in range(max(0, arity - 2)):
+            left = _apply(
+                x_generators[index],
+                _apply(
+                    x_generators[index + 1],
+                    _apply(x_generators[index], state),
+                ),
+            )
+            right = _apply(
+                x_generators[index + 1],
+                _apply(
+                    x_generators[index],
+                    _apply(x_generators[index + 1], state),
+                ),
+            )
+            if left != right:
+                braid_failures.append((state, index + 1))
+        for left_index in range(arity - 1):
+            for right_index in range(left_index + 2, arity - 1):
+                left = _apply(
+                    x_generators[left_index],
+                    _apply(x_generators[right_index], state),
+                )
+                right = _apply(
+                    x_generators[right_index],
+                    _apply(x_generators[left_index], state),
+                )
+                if left != right:
+                    commute_failures.append((state, left_index + 1, right_index + 1))
+
+    return {
+        "arity": arity,
+        "state_count": state_count,
+        "p_equivariant_on_states": not p_failures,
+        "p_first_failure": None if not p_failures else p_failures[0],
+        "r_invariant_on_states": not r_failures,
+        "r_first_failure": None if not r_failures else r_failures[0],
+        "phi_image_count": len(phi_images),
+        "phi_bijective_on_states": len(phi_images) == state_count,
+        "x_adjacent_braid_relations_on_states": not braid_failures,
+        "x_first_braid_failure": None if not braid_failures else braid_failures[0],
+        "x_distant_commute_relations_on_states": not commute_failures,
+        "x_first_commute_failure": None
+        if not commute_failures
+        else commute_failures[0],
+    }
+
+
+def _state_level_checks(max_state_arity: int) -> list[dict]:
+    return [_state_level_row(arity) for arity in range(1, max_state_arity + 1)]
+
+
+def build_report(max_arity: int = 30, max_state_arity: int = 6) -> dict:
     rows = [_row(arity) for arity in range(1, max_arity + 1)]
+    state_rows = _state_level_checks(max_state_arity)
     return {
         "title": "Affine F2^3 full tetrahedral conjugacy audit",
         "max_arity": max_arity,
+        "max_state_arity": max_state_arity,
         "rows": rows,
+        "state_rows": state_rows,
         "all_checked_phi_bijective": all(row["phi_bijective"] for row in rows),
         "all_checked_p_equivariant": all(row["p_equivariant"] for row in rows),
         "all_checked_r_invariant": all(row["r_invariant"] for row in rows),
         "all_checked_conjugacy": all(
             row["phi_conjugates_generators"] for row in rows
+        ),
+        "all_state_checked_phi_bijective": all(
+            row["phi_bijective_on_states"] for row in state_rows
+        ),
+        "all_state_checked_p_equivariant": all(
+            row["p_equivariant_on_states"] for row in state_rows
+        ),
+        "all_state_checked_r_invariant": all(
+            row["r_invariant_on_states"] for row in state_rows
+        ),
+        "all_state_checked_x_braid_relations": all(
+            row["x_adjacent_braid_relations_on_states"]
+            and row["x_distant_commute_relations_on_states"]
+            for row in state_rows
         ),
         "conclusion": (
             "The explicit maps P_n and R_n identify the shifted affine X action "
@@ -174,6 +276,19 @@ def render_markdown(report: dict) -> str:
         "",
         "Set `Phi_n=(P_n,R_n):X^n -> Y^n x F_2^n`.",
         "",
+        "## Corrected Local Rule",
+        "",
+        "The shifted local `X` matrix sends adjacent inputs",
+        "`(a,b,c),(A,B,C)` to",
+        "",
+        "```text",
+        "((b+A, a+A, C), (c+A+C, a+b+A+B, a+b+A+C)).",
+        "```",
+        "",
+        "The fifth coordinate is `B'=a+b+A+B`.  Omitting the `A` term breaks",
+        "`R_n`-invariance already at arity `2`; the matrix row",
+        "`(1,1,0,1,1,0)` is the source of the corrected term.",
+        "",
         "## Checked Rows",
         "",
         "| n | rank Phi | bijective | P equivariant | R invariant | conjugates generators |",
@@ -184,6 +299,26 @@ def render_markdown(report: dict) -> str:
             f"| {row['arity']} | {row['phi_rank']} | "
             f"{row['phi_bijective']} | {row['p_equivariant']} | "
             f"{row['r_invariant']} | {row['phi_conjugates_generators']} |"
+        )
+    lines.extend(
+        [
+            "",
+            "## Exhaustive State Checks",
+            "",
+            "| n | states | Phi bijective | P equivariant | R invariant | braid relations |",
+            "|---|---:|---|---|---|---|",
+        ]
+    )
+    for row in report["state_rows"]:
+        braid_ok = (
+            row["x_adjacent_braid_relations_on_states"]
+            and row["x_distant_commute_relations_on_states"]
+        )
+        lines.append(
+            f"| {row['arity']} | {row['state_count']} | "
+            f"{row['phi_bijective_on_states']} | "
+            f"{row['p_equivariant_on_states']} | "
+            f"{row['r_invariant_on_states']} | {braid_ok} |"
         )
     lines.extend(
         [
@@ -225,7 +360,8 @@ def render_markdown(report: dict) -> str:
 
 def main(argv: Sequence[str] | None = None) -> int:
     max_arity = int(argv[0]) if argv else 30
-    report = build_report(max_arity=max_arity)
+    max_state_arity = int(argv[1]) if argv and len(argv) > 1 else 6
+    report = build_report(max_arity=max_arity, max_state_arity=max_state_arity)
     OUT_JSON.write_text(json.dumps(report, indent=2), encoding="utf-8")
     OUT_MD.write_text(render_markdown(report), encoding="utf-8")
     print(OUT_JSON)

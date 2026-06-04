@@ -1,6 +1,7 @@
 {
   "title": "Affine F2^3 full tetrahedral conjugacy audit",
   "max_arity": 30,
+  "max_state_arity": 6,
   "rows": [
     {
       "arity": 1,
@@ -423,9 +424,99 @@
       "phi_failing_generators": []
     }
   ],
+  "state_rows": [
+    {
+      "arity": 1,
+      "state_count": 8,
+      "p_equivariant_on_states": true,
+      "p_first_failure": null,
+      "r_invariant_on_states": true,
+      "r_first_failure": null,
+      "phi_image_count": 8,
+      "phi_bijective_on_states": true,
+      "x_adjacent_braid_relations_on_states": true,
+      "x_first_braid_failure": null,
+      "x_distant_commute_relations_on_states": true,
+      "x_first_commute_failure": null
+    },
+    {
+      "arity": 2,
+      "state_count": 64,
+      "p_equivariant_on_states": true,
+      "p_first_failure": null,
+      "r_invariant_on_states": true,
+      "r_first_failure": null,
+      "phi_image_count": 64,
+      "phi_bijective_on_states": true,
+      "x_adjacent_braid_relations_on_states": true,
+      "x_first_braid_failure": null,
+      "x_distant_commute_relations_on_states": true,
+      "x_first_commute_failure": null
+    },
+    {
+      "arity": 3,
+      "state_count": 512,
+      "p_equivariant_on_states": true,
+      "p_first_failure": null,
+      "r_invariant_on_states": true,
+      "r_first_failure": null,
+      "phi_image_count": 512,
+      "phi_bijective_on_states": true,
+      "x_adjacent_braid_relations_on_states": true,
+      "x_first_braid_failure": null,
+      "x_distant_commute_relations_on_states": true,
+      "x_first_commute_failure": null
+    },
+    {
+      "arity": 4,
+      "state_count": 4096,
+      "p_equivariant_on_states": true,
+      "p_first_failure": null,
+      "r_invariant_on_states": true,
+      "r_first_failure": null,
+      "phi_image_count": 4096,
+      "phi_bijective_on_states": true,
+      "x_adjacent_braid_relations_on_states": true,
+      "x_first_braid_failure": null,
+      "x_distant_commute_relations_on_states": true,
+      "x_first_commute_failure": null
+    },
+    {
+      "arity": 5,
+      "state_count": 32768,
+      "p_equivariant_on_states": true,
+      "p_first_failure": null,
+      "r_invariant_on_states": true,
+      "r_first_failure": null,
+      "phi_image_count": 32768,
+      "phi_bijective_on_states": true,
+      "x_adjacent_braid_relations_on_states": true,
+      "x_first_braid_failure": null,
+      "x_distant_commute_relations_on_states": true,
+      "x_first_commute_failure": null
+    },
+    {
+      "arity": 6,
+      "state_count": 262144,
+      "p_equivariant_on_states": true,
+      "p_first_failure": null,
+      "r_invariant_on_states": true,
+      "r_first_failure": null,
+      "phi_image_count": 262144,
+      "phi_bijective_on_states": true,
+      "x_adjacent_braid_relations_on_states": true,
+      "x_first_braid_failure": null,
+      "x_distant_commute_relations_on_states": true,
+      "x_first_commute_failure": null
+    }
+  ],
   "all_checked_phi_bijective": true,
   "all_checked_p_equivariant": true,
   "all_checked_r_invariant": true,
   "all_checked_conjugacy": true,
+  "all_state_checked_phi_bijective": true,
+  "all_state_checked_p_equivariant": true,
+  "all_state_checked_r_invariant": true,
+  "all_state_checked_x_braid_relations": true,
   "conclusion": "The explicit maps P_n and R_n identify the shifted affine X action with the tetrahedral rack action plus n fixed observer bits in every checked arity.  The formulas are local-recursive in n, so the accompanying proof records the all-arity argument: Phi_n=(P_n,R_n) is bijective and B_n-equivariant from X^n to Y^n x F_2^n, with B_n acting trivially on the second factor.  Consequently the braid kernels of this X and the tetrahedral rack Y are equal in every arity."
 }

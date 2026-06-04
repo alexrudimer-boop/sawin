@@ -1,6 +1,6 @@
 # Minimal Rigid-Core Exclusion Proof Prompt
 
-Status: ask_now / prepared for GPT-5.5 Pro on 2026-06-04.
+Status: partially_answered / Pro response incorporated on 2026-06-04.
 
 Prompt:
 
@@ -46,6 +46,22 @@ Current state and known positive branches:
    - Exact affine-line search on F_3: 31 YBE tables, 0 terminal survivors.
    - Exact affine-line search on F_5: 221 YBE tables, 0 terminal survivors.
    - Exact affine-line search on F_7: 715 YBE tables, 0 terminal survivors.
+
+   In fact the one-dimensional affine-line case is now symbolically closed over any field. For
+
+       r(x,y)=(a x+b y+c, d x+e y+f),
+
+   bidegeneracy means b=d=0 and bijectivity then means ae != 0. The YBE equations include
+
+       a(a+bd-1)=0,
+       e(1-e-bd)=0,
+       e(cd+f)=0,
+
+   and the middle constant equation
+
+       -ace+aef-af-bf+cd+ce-c+f=0.
+
+   With b=d=0 and ae != 0 these force a=e=1, f=0, and then c=0. Thus the only bidegenerate bijective affine-line YBE map is the identity r(x,y)=(x,y), so affine-line families over fields cannot contain a bi-degenerate non-involutive rigid core.
 
 Guardrails / failed broad methods:
 

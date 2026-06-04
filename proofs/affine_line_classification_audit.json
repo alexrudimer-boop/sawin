@@ -1,0 +1,111 @@
+{
+  "ansatz": "r(x,y)=(a x+b y+c, d x+e y+f) over a field",
+  "bidegenerate_classification": {
+    "assumptions": "b=d=0 and ae != 0",
+    "conclusion": "the only bidegenerate bijective affine-line YBE solution is r(x,y)=(x,y)",
+    "consequence": "no bidegenerate non-involutive affine-line rigid core exists over any field",
+    "deduction": [
+      "a(a-1)=0 and a != 0 force a=1",
+      "e(1-e)=0 and e != 0 force e=1",
+      "e(cd+f)=0 with d=0 and e=1 forces f=0",
+      "the middle constant equation then forces c=0"
+    ]
+  },
+  "bijection_condition": "ae-bd != 0",
+  "conclusion": "The prime-line scans over F_3, F_5, and F_7 are instances of an all-field lemma: bidegenerate bijective affine-line YBE maps are forced to be the identity solution.  Hence the one-dimensional affine-line family cannot contain a minimal rigid core.",
+  "finite_prime_checks": {
+    "F_2": {
+      "affine_ybe_count": 5,
+      "all_bidegenerate_rows_identity": true,
+      "bidegenerate_bijective_ybe_row_count": 1,
+      "bidegenerate_bijective_ybe_rows": [
+        {
+          "coefficients": [
+            1,
+            0,
+            0,
+            0,
+            1,
+            0
+          ],
+          "identity": true,
+          "involutive": true
+        }
+      ],
+      "terminal_survivor_count": 0
+    },
+    "F_3": {
+      "affine_ybe_count": 31,
+      "all_bidegenerate_rows_identity": true,
+      "bidegenerate_bijective_ybe_row_count": 1,
+      "bidegenerate_bijective_ybe_rows": [
+        {
+          "coefficients": [
+            1,
+            0,
+            0,
+            0,
+            1,
+            0
+          ],
+          "identity": true,
+          "involutive": true
+        }
+      ],
+      "terminal_survivor_count": 0
+    },
+    "F_5": {
+      "affine_ybe_count": 221,
+      "all_bidegenerate_rows_identity": true,
+      "bidegenerate_bijective_ybe_row_count": 1,
+      "bidegenerate_bijective_ybe_rows": [
+        {
+          "coefficients": [
+            1,
+            0,
+            0,
+            0,
+            1,
+            0
+          ],
+          "identity": true,
+          "involutive": true
+        }
+      ],
+      "terminal_survivor_count": 0
+    },
+    "F_7": {
+      "affine_ybe_count": 715,
+      "all_bidegenerate_rows_identity": true,
+      "bidegenerate_bijective_ybe_row_count": 1,
+      "bidegenerate_bijective_ybe_rows": [
+        {
+          "coefficients": [
+            1,
+            0,
+            0,
+            0,
+            1,
+            0
+          ],
+          "identity": true,
+          "involutive": true
+        }
+      ],
+      "terminal_survivor_count": 0
+    }
+  },
+  "left_degenerate_condition": "b=0",
+  "right_degenerate_condition": "d=0",
+  "title": "Affine-line classification audit",
+  "ybe_equations": [
+    "a(a+bd-1)=0",
+    "abe=0",
+    "a(bf+c)=0",
+    "ade=0",
+    "ae(e-a)=0",
+    "-ace+aef-af-bf+cd+ce-c+f=0",
+    "e(1-e-bd)=0",
+    "e(cd+f)=0"
+  ]
+}
