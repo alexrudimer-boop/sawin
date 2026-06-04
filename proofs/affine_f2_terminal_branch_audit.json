@@ -1,0 +1,57 @@
+{
+  "f2_dimension_2": {
+    "affine_ybe_count": 481,
+    "checked_affine_map_count": 1048576,
+    "dimension": 2,
+    "entry_counts": {
+      "none": 138,
+      "quotient_separating": 6,
+      "quotient_separating+flip+subsolution": 10,
+      "quotient_separating+subsolution": 180,
+      "quotient_separating+subsolution+observer": 25,
+      "subsolution": 98,
+      "subsolution+observer": 24
+    },
+    "first_untagged_no_entry": null,
+    "invertible_affine_map_count": 322560,
+    "no_untagged_entry_evasion": true,
+    "point_count": 4,
+    "tag_entry_counts": {
+      "tags=(untagged)|entry=quotient_separating+subsolution+observer": 12,
+      "tags=(untagged)|entry=subsolution+observer": 12,
+      "tags=involutive+identity_table|entry=quotient_separating+subsolution+observer": 1,
+      "tags=involutive+left_nondegenerate+right_nondegenerate+nondegenerate|entry=none": 24,
+      "tags=involutive+left_nondegenerate+right_nondegenerate+nondegenerate|entry=quotient_separating+flip+subsolution": 3,
+      "tags=involutive+left_nondegenerate+right_nondegenerate+nondegenerate|entry=quotient_separating+subsolution": 9,
+      "tags=involutive+left_nondegenerate+right_nondegenerate+nondegenerate|entry=subsolution": 12,
+      "tags=involutive+permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate|entry=none": 6,
+      "tags=involutive+permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate|entry=quotient_separating+subsolution": 9,
+      "tags=involutive+permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate|entry=subsolution": 8,
+      "tags=involutive|entry=none": 6,
+      "tags=involutive|entry=quotient_separating+subsolution+observer": 12,
+      "tags=involutive|entry=subsolution": 18,
+      "tags=involutive|entry=subsolution+observer": 12,
+      "tags=left_nondegenerate+right_nondegenerate+nondegenerate|entry=none": 72,
+      "tags=left_nondegenerate+right_nondegenerate+nondegenerate|entry=quotient_separating+flip+subsolution": 3,
+      "tags=left_nondegenerate+right_nondegenerate+nondegenerate|entry=quotient_separating+subsolution": 117,
+      "tags=left_nondegenerate+right_nondegenerate+nondegenerate|entry=subsolution": 34,
+      "tags=permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate|entry=none": 24,
+      "tags=permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate|entry=quotient_separating": 6,
+      "tags=permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate|entry=quotient_separating+subsolution": 27,
+      "tags=permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate|entry=subsolution": 16,
+      "tags=rack_type+involutive+permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate|entry=quotient_separating+flip+subsolution": 1,
+      "tags=rack_type+left_nondegenerate+right_nondegenerate+nondegenerate|entry=quotient_separating+flip+subsolution": 3,
+      "tags=rack_type+left_nondegenerate+right_nondegenerate+nondegenerate|entry=quotient_separating+subsolution": 9,
+      "tags=rack_type+left_nondegenerate+right_nondegenerate+nondegenerate|entry=subsolution": 2,
+      "tags=rack_type+permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate|entry=none": 6,
+      "tags=rack_type+permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate|entry=quotient_separating+subsolution": 9,
+      "tags=rack_type+permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate|entry=subsolution": 8
+    },
+    "untagged_count": 24,
+    "untagged_entry_counts": {
+      "quotient_separating+subsolution+observer": 12,
+      "subsolution+observer": 12
+    },
+    "untagged_no_entry_count": 0
+  }
+}
