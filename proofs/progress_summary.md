@@ -2882,3 +2882,13 @@ zero tuple of `X^5`.  The row is therefore not closed by `D_3`; the next
 positive search is a larger finite rack detector, and the next negative
 search is whether these arity-5 witnesses can be lifted cofinally against
 rack prefixes.
+The next small-rack audit tests individual rack representatives of size at
+most `4` using tuple permutations on the rack side and native affine
+transformations on the `X` side.  Eight representatives survive the
+two-strand order filter at arity `5`; six have explicit kernel witnesses, one
+truncates, and one survives exactly.  The survivor is representative `24`, the
+four-element rack with operation rows `[0,2,3,1]`, `[3,1,0,2]`,
+`[1,3,2,0]`, `[2,0,1,3]`.  Its joint, detector, and `X` image orders agree
+through arities `2`--`5`: `3,24,648,77760`.  The current positive target is
+an all-`n` proof that this rack dominates the affine survivor, or the first
+arity where it fails.

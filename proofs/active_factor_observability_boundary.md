@@ -143,6 +143,24 @@ moves the zero tuple of `X^5`.  Thus the first structurally rigid affine
 survivor is not dominated by `D_3`; the next target is a larger finite rack
 detector or a cofinal rack-prefix obstruction.
 
+The small-rack native detector audit
+`proofs/affine_f2_q3_small_rack_native_detector_audit.md` tests the viable
+individual rack representatives of size at most `4` at arity `5`.  All but
+one viable rack either fail by a detector-kernel witness or truncate at the
+state limit.  The survivor is rack representative `24`, a four-element rack
+with operation table rows
+
+```text
+[0,2,3,1]
+[3,1,0,2]
+[1,3,2,0]
+[2,0,1,3]
+```
+
+For this rack, the joint, detector, and `X` image orders agree through
+arities `2,3,4,5` as `3,24,648,77760`, with no obstruction.  This is now the
+main positive target for the affine survivor.
+
 ## Cofinal Rack-Prefix Obstruction
 
 A genuine negative answer to Sawin needs more than sequential primitivity.

@@ -1,6 +1,15 @@
 # Affine F2^3 Candidate After D3 Failure
 
-Status: queued for GPT-5.5 Pro on 2026-06-04.
+Status: superseded by the size-4 rack target prompt on 2026-06-04.
+
+Supersession summary:
+
+- Individual small-rack native testing found a 4-element rack, representative
+  `24` in `small_rack_representatives(4)`, with exact image equality through
+  arity `5`.
+- The follow-up prompt
+  `2026-06-04-affine-f2-q3-size4-rack-target.md` asks GPT-5.5 Pro to prove or
+  refute domination by that exact rack.
 
 Prompt:
 
