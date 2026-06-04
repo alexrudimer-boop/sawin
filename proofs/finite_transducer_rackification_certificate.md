@@ -252,7 +252,15 @@ with `rho^X_{n_m}(beta_m) != 1` and `n_m -> infinity`.
 This criterion captures the size-four Type A affine cyclic-rack model: the
 invariant transducer outputs the parity coordinates, and the rack transducer
 outputs the fibre coordinates carrying the two-element cyclic rack action.
-It also captures any future finite-state hidden-fibre gauge of the same kind.
+The executable checker in `src/ybe_domination/transducer_certificate.py`,
+backed by `tests/test_transducer_certificate.py`, verifies this finite
+certificate directly.  In the causal Mealy convention used there, the Type A
+rack transducer stores whether the first coordinate has already been read and
+then carries the offset in the recurrence `H_{j+1}=H_j+p_{j+1}+1`.
+
+The checker also captures any future finite-state hidden-fibre gauge of the
+same kind: it audits the quotient equation, local rack-equivariance,
+local invariance, and the pair-automaton injectivity condition.
 
 However, the criterion is not a proof of Sawin by itself.  The remaining
 universal statement would be:

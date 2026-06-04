@@ -2489,6 +2489,10 @@ finite-state gauge constructed from the quotient/fibre cocycle.  The
 fixed-candidate obstruction automata in the same note detect failure for a
 given rack and fixed arity; the unresolved quantifier is still uniformity in
 `n` and over all finite racks.
+The finite conditions are now executable as
+`transducer_rackification_audit(...)` in
+`src/ybe_domination/transducer_certificate.py`, with a regression verifying
+the affine Type A parity/offset certificate.
 
 ## Current conclusion
 
