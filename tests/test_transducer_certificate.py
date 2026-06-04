@@ -6,12 +6,18 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from ybe_domination import (
+    CanonicalQuotientData,
     FiniteBraidedSet,
     InvariantTransducer,
     MealyTransducer,
+    all_length_canonical_quotient_injectivity_witness,
     all_length_injectivity_witness,
+    canonical_quotient_audit,
+    canonical_quotient_product_rack,
     combined_transducer_output,
+    cyclic_group,
     identity_solution,
+    is_rack_solution,
     rack_solution,
     transducer_rackification_audit,
 )
@@ -84,6 +90,44 @@ def affine_f2_hidden_cyclic_transducers(solution):
             inv_nu[(state, letter)] = a
     return (MealyTransducer(states, 0, rack_delta, rack_omega),
             InvariantTransducer(states, 0, inv_delta, inv_nu))
+
+
+def affine_f2_hidden_cyclic_canonical_data(solution):
+    states = (0, 1)
+    group = cyclic_group(2)
+    fibres = tuple(product((0, 1), repeat=2))
+    transition = {}
+    action = {}
+    h = {}
+    f = {}
+    for group_element in group.elements:
+        for fibre in fibres:
+            if group_element == 0:
+                action[(group_element, fibre)] = fibre
+            else:
+                action[(group_element, fibre)] = (
+                    (fibre[0] + 1) % 2,
+                    (fibre[1] + 1) % 2,
+                )
+    for state in states:
+        for letter in solution.elements:
+            _a, z1, z2 = letter
+            transition[(state, letter)] = 1 - state
+            h[(state, letter)] = 1
+            if state == 0:
+                f[(state, letter)] = (z1, z2)
+            else:
+                f[(state, letter)] = ((z2 + 1) % 2, (z1 + 1) % 2)
+    return CanonicalQuotientData(
+        states,
+        0,
+        transition,
+        group,
+        fibres,
+        action,
+        h,
+        f,
+    )
 
 
 class TransducerCertificateTests(unittest.TestCase):
@@ -180,6 +224,78 @@ class TransducerCertificateTests(unittest.TestCase):
         )
 
         self.assertTrue(audit.finite_conditions_hold)
+
+    def test_affine_f2_hidden_cyclic_gauge_has_canonical_certificate(self):
+        solution = affine_f2_hidden_cyclic_solution()
+        data = affine_f2_hidden_cyclic_canonical_data(solution)
+        _rack_transducer, invariant_transducer = (
+            affine_f2_hidden_cyclic_transducers(solution)
+        )
+
+        audit = canonical_quotient_audit(solution, data, invariant_transducer)
+        detector = canonical_quotient_product_rack(data)
+
+        self.assertTrue(audit.finite_conditions_hold)
+        self.assertTrue(is_rack_solution(detector))
+
+    def test_affine_f2_canonical_certificate_needs_invariant_output(self):
+        solution = affine_f2_hidden_cyclic_solution()
+        data = affine_f2_hidden_cyclic_canonical_data(solution)
+
+        witness = all_length_canonical_quotient_injectivity_witness(
+            solution,
+            data,
+        )
+
+        self.assertIsNotNone(witness)
+        self.assertNotEqual(witness.left_word, witness.right_word)
+
+    def test_bad_canonical_fibre_label_fails_local_equations(self):
+        solution = affine_f2_hidden_cyclic_solution()
+        data = affine_f2_hidden_cyclic_canonical_data(solution)
+        bad_f = {key: key[1][1:] for key in data.f}
+        bad_data = CanonicalQuotientData(
+            data.states,
+            data.initial,
+            data.transition,
+            data.group,
+            data.fibres,
+            data.action,
+            data.h,
+            bad_f,
+        )
+        _rack_transducer, invariant_transducer = (
+            affine_f2_hidden_cyclic_transducers(solution)
+        )
+
+        audit = canonical_quotient_audit(solution, bad_data, invariant_transducer)
+
+        self.assertFalse(audit.finite_conditions_hold)
+        self.assertTrue(audit.equation_failures)
+
+    def test_bad_canonical_action_fails_action_check(self):
+        solution = affine_f2_hidden_cyclic_solution()
+        data = affine_f2_hidden_cyclic_canonical_data(solution)
+        bad_action = dict(data.action)
+        bad_action[(1, (0, 0))] = ("outside",)
+        bad_data = CanonicalQuotientData(
+            data.states,
+            data.initial,
+            data.transition,
+            data.group,
+            data.fibres,
+            bad_action,
+            data.h,
+            data.f,
+        )
+        _rack_transducer, invariant_transducer = (
+            affine_f2_hidden_cyclic_transducers(solution)
+        )
+
+        audit = canonical_quotient_audit(solution, bad_data, invariant_transducer)
+
+        self.assertFalse(audit.finite_conditions_hold)
+        self.assertTrue(audit.action_failures)
 
 
 if __name__ == "__main__":

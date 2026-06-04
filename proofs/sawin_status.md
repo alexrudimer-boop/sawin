@@ -2735,6 +2735,9 @@ sequential rack certificate embeds into this form via
 `S -> Inn(S) x S`, `s |-> (L_s,s)`.  Thus the current decisive positive
 target is proving this canonical finite quotient lemma for every remaining
 finite YBE table.
+The helper `canonical_quotient_audit(...)` now checks this finite action,
+local equation, and all-length injectivity certificate directly, while
+`canonical_quotient_product_rack(...)` constructs the detector rack `H x F`.
 Formal partial-row nonseparability, failure of one-vertex actualization for a
 formal row system, or failure of stronger structural properties such as
 virtual freeness of `Art_I`, remains only a gap unless it is made actual and

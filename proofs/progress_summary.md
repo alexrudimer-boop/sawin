@@ -2758,3 +2758,8 @@ map into `(H x F)^n` is injective in every arity.  The rack is
 Thus the exact positive target is the canonical finite quotient lemma; the
 exact negative target remains one explicit finite YBE table satisfying the
 cofinal rack-prefix obstruction.
+This target is now represented by code: `canonical_quotient_audit(...)`
+checks the finite action/equation/injectivity conditions and
+`canonical_quotient_product_rack(...)` constructs `H x F`.  The affine
+`F_2^3` hidden cyclic row has a canonical certificate regression with
+`Q=Z/2`, `H=C2`, `F=F_2^2`, and the inert coordinate as an invariant observer.

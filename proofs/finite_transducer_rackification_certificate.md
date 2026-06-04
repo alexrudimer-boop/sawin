@@ -362,6 +362,30 @@ This is the current sharp positive sublemma: prove that every remaining
 finite bijective YBE solution admits such finite canonical quotient data, or
 find one explicit table failing all finite rack detectors.
 
+The canonical form is now executable.  The helper
+
+```text
+canonical_quotient_audit(solution,data,invariant_transducer=None)
+```
+
+checks the finite group action, the equations `(Q),(H1),(H2),(F1),(F2)`, the
+optional invariant observer equations, and all-length pair-automaton
+injectivity.  The helper
+
+```text
+canonical_quotient_product_rack(data)
+```
+
+constructs the rack `H x F`.  The regression
+`tests/test_transducer_certificate.py::test_affine_f2_hidden_cyclic_gauge_has_canonical_certificate`
+checks the affine `F_2^3` row using
+
+```text
+Q=Z/2, H=C2, F=F_2^2, h_{q,x}=1, f_{q,(a,z)}=J^q z + q c,
+```
+
+with the inert `a` coordinate supplied by the invariant observer.
+
 The affine `F_2^3` pressure row from
 `proofs/affine_f2_hidden_cyclic_gauge.md` is now also a regression for this
 certificate format.  For
