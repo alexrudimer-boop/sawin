@@ -39,7 +39,235 @@
       0
     ]
   },
-  "conclusion": "The Stage A code separates one-sided nondegenerate rack rows from everywhere-singular U-data.  The size-4 affine Type A row passes Stage A and is therefore a useful regression example for the planned d=5,6 enumeration.",
+  "conclusion": "The Stage A code separates one-sided nondegenerate rack rows from everywhere-singular U-data.  The exact size-2 and size-3 enumerations now give a regression baseline, while the budgeted size-4 run confirms the Stage A feasibility test has many nontrivial candidates and needs the requested Pro sharpening before d=5,6 exhaustive enumeration.",
+  "enumeration": {
+    "budgeted_size_4": {
+      "canonical_count": 30,
+      "completed_balanced_count": 15733,
+      "emitted_count": 3,
+      "examples": [
+        [
+          [
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            1,
+            1,
+            1
+          ],
+          [
+            2,
+            2,
+            2,
+            2
+          ],
+          [
+            3,
+            3,
+            3,
+            3
+          ]
+        ],
+        [
+          [
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            1,
+            1,
+            1
+          ],
+          [
+            2,
+            2,
+            2,
+            3
+          ],
+          [
+            3,
+            3,
+            2,
+            3
+          ]
+        ],
+        [
+          [
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            1,
+            1,
+            1
+          ],
+          [
+            2,
+            2,
+            2,
+            3
+          ],
+          [
+            3,
+            3,
+            3,
+            2
+          ]
+        ]
+      ],
+      "feasibility_nonempty_count": 107,
+      "node_count": 50000,
+      "row_singular_count": 15733,
+      "size": 4,
+      "truncated": true
+    },
+    "exact_size_2": {
+      "canonical_count": 1,
+      "completed_balanced_count": 2,
+      "emitted_count": 1,
+      "examples": [
+        [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            1
+          ]
+        ]
+      ],
+      "feasibility_nonempty_count": 1,
+      "node_count": 9,
+      "row_singular_count": 2,
+      "size": 2,
+      "truncated": false
+    },
+    "exact_size_3": {
+      "canonical_count": 6,
+      "completed_balanced_count": 492,
+      "emitted_count": 6,
+      "examples": [
+        [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            1,
+            1
+          ],
+          [
+            2,
+            2,
+            2
+          ]
+        ],
+        [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            1,
+            2
+          ],
+          [
+            2,
+            1,
+            2
+          ]
+        ],
+        [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            1,
+            2
+          ],
+          [
+            2,
+            2,
+            1
+          ]
+        ],
+        [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            2,
+            1
+          ],
+          [
+            2,
+            2,
+            1
+          ]
+        ],
+        [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            2,
+            2
+          ],
+          [
+            2,
+            1,
+            1
+          ]
+        ],
+        [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            2,
+            1,
+            1
+          ],
+          [
+            1,
+            2,
+            2
+          ]
+        ]
+      ],
+      "feasibility_nonempty_count": 19,
+      "node_count": 2326,
+      "row_singular_count": 492,
+      "size": 3,
+      "truncated": false
+    }
+  },
   "next_prompt": "prompts/gpt55_pro/2026-06-04-stage-a-u-array-enumeration_ask_now.md",
   "purpose": "Record reusable Stage A checks for the size 5/6 everywhere-singular search: balanced U counts, singular U rows, Y1-derived A_xy feasibility, and simultaneous-relabeling canonicalization.",
   "rows": [

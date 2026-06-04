@@ -18,6 +18,7 @@ from ybe_domination.stage_a_u_arrays import (  # noqa: E402
     StageAUArrayProfile,
     canonical_u_array,
     relabel_u_array,
+    stage_a_enumeration_audit,
     stage_a_profile_from_solution,
     u_array_from_solution,
 )
@@ -68,6 +69,9 @@ def canonicalization_checks() -> dict[str, object]:
 
 def build_report() -> dict[str, object]:
     rows = example_rows()
+    exact_size_2 = stage_a_enumeration_audit(2, max_examples=10)
+    exact_size_3 = stage_a_enumeration_audit(3, max_examples=10)
+    budgeted_size_4 = stage_a_enumeration_audit(4, max_nodes=50_000, max_examples=3)
     return {
         "title": "Stage A U-array audit",
         "purpose": (
@@ -93,11 +97,18 @@ def build_report() -> dict[str, object]:
             for row in rows
         ],
         "canonicalization": canonicalization_checks(),
+        "enumeration": {
+            "exact_size_2": asdict(exact_size_2),
+            "exact_size_3": asdict(exact_size_3),
+            "budgeted_size_4": asdict(budgeted_size_4),
+        },
         "conclusion": (
             "The Stage A code separates one-sided nondegenerate rack rows from "
-            "everywhere-singular U-data.  The size-4 affine Type A row passes "
-            "Stage A and is therefore a useful regression example for the "
-            "planned d=5,6 enumeration."
+            "everywhere-singular U-data.  The exact size-2 and size-3 "
+            "enumerations now give a regression baseline, while the budgeted "
+            "size-4 run confirms the Stage A feasibility test has many "
+            "nontrivial candidates and needs the requested Pro sharpening "
+            "before d=5,6 exhaustive enumeration."
         ),
         "next_prompt": (
             "prompts/gpt55_pro/"
@@ -146,6 +157,29 @@ def render_markdown(report: dict[str, object]) -> str:
             f"- example: `{canonical['example']}`;",
             f"- canonical equal after relabeling: `{canonical['canonical_equal']}`;",
             "",
+            "## Enumeration Baseline",
+            "",
+        ]
+    )
+    enumeration = report["enumeration"]
+    for name, audit in enumeration.items():
+        lines.extend(
+            [
+                f"### {name}",
+                "",
+                f"- size: `{audit['size']}`;",
+                f"- nodes: `{audit['node_count']}`;",
+                f"- completed balanced arrays: `{audit['completed_balanced_count']}`;",
+                f"- row-singular arrays: `{audit['row_singular_count']}`;",
+                f"- A_xy feasible arrays: `{audit['feasibility_nonempty_count']}`;",
+                f"- canonical arrays: `{audit['canonical_count']}`;",
+                f"- emitted examples: `{audit['emitted_count']}`;",
+                f"- truncated: `{audit['truncated']}`.",
+                "",
+            ]
+        )
+    lines.extend(
+        [
             "## Conclusion",
             "",
             str(report["conclusion"]),

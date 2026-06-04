@@ -3,7 +3,7 @@ from __future__ import annotations
 from collections import Counter
 from dataclasses import dataclass
 from itertools import permutations
-from typing import Sequence
+from typing import Iterator, Sequence
 
 from .finite_braided_set import FiniteBraidedSet
 
@@ -22,6 +22,19 @@ class StageAUArrayProfile:
     maximum_feasibility_size: int
     feasibility_size_counts: tuple[tuple[int, int], ...]
     canonical: bool | None
+
+
+@dataclass(frozen=True)
+class StageAEnumerationAudit:
+    size: int
+    node_count: int
+    completed_balanced_count: int
+    row_singular_count: int
+    feasibility_nonempty_count: int
+    canonical_count: int
+    emitted_count: int
+    truncated: bool
+    examples: tuple[UArray, ...]
 
 
 def normalize_u_array(array: Sequence[Sequence[int]]) -> UArray:
@@ -174,4 +187,134 @@ def stage_a_profile_from_solution(
     return stage_a_profile_from_u(
         u_array_from_solution(solution),
         canonicalize=canonicalize,
+    )
+
+
+def enumerate_stage_a_u_arrays(
+    size: int,
+    *,
+    canonical_only: bool = True,
+    max_nodes: int | None = None,
+) -> Iterator[UArray]:
+    audit = stage_a_enumeration_audit(
+        size,
+        canonical_only=canonical_only,
+        max_nodes=max_nodes,
+        max_examples=None,
+    )
+    yield from audit.examples
+
+
+def stage_a_enumeration_audit(
+    size: int,
+    *,
+    canonical_only: bool = True,
+    max_nodes: int | None = None,
+    max_examples: int | None = 20,
+) -> StageAEnumerationAudit:
+    if size <= 0:
+        raise ValueError("size must be positive")
+    if max_nodes is not None and max_nodes < 0:
+        raise ValueError("max_nodes must be nonnegative")
+    if max_examples is not None and max_examples < 0:
+        raise ValueError("max_examples must be nonnegative")
+
+    total_cells = size * size
+    entries = [-1] * total_cells
+    counts = [0] * size
+    row_seen = [0] * size
+    row_has_duplicate = [False] * size
+    node_count = 0
+    completed_balanced_count = 0
+    row_singular_count = 0
+    feasibility_nonempty_count = 0
+    canonical_count = 0
+    examples: list[UArray] = []
+    truncated = False
+
+    def can_still_balance(next_position: int) -> bool:
+        remaining = total_cells - next_position
+        return all(count <= size and count + remaining >= size for count in counts)
+
+    def current_array() -> UArray:
+        return tuple(
+            tuple(entries[row * size + col] for col in range(size))
+            for row in range(size)
+        )
+
+    def record_if_candidate() -> None:
+        nonlocal completed_balanced_count
+        nonlocal row_singular_count
+        nonlocal feasibility_nonempty_count
+        nonlocal canonical_count
+
+        array = current_array()
+        if not balanced_symbol_counts(array):
+            return
+        completed_balanced_count += 1
+        if not rows_singular(array):
+            return
+        row_singular_count += 1
+        if not stage_a_feasibility_nonempty(array):
+            return
+        feasibility_nonempty_count += 1
+        if canonical_only and not is_canonical_u_array(array):
+            return
+        canonical_count += 1
+        if max_examples is None or len(examples) < max_examples:
+            examples.append(array)
+
+    def search(position: int) -> None:
+        nonlocal node_count
+        nonlocal truncated
+
+        if truncated:
+            return
+        if max_nodes is not None and node_count >= max_nodes:
+            truncated = True
+            return
+        node_count += 1
+
+        if position == total_cells:
+            record_if_candidate()
+            return
+
+        row = position // size
+        is_row_end = position % size == size - 1
+        for value in range(size):
+            if counts[value] >= size:
+                continue
+
+            old_seen = row_seen[row]
+            old_duplicate = row_has_duplicate[row]
+            bit = 1 << value
+            entries[position] = value
+            counts[value] += 1
+            row_has_duplicate[row] = old_duplicate or bool(old_seen & bit)
+            row_seen[row] = old_seen | bit
+
+            row_ok = True
+            if is_row_end and not row_has_duplicate[row]:
+                row_ok = False
+            if row_ok and can_still_balance(position + 1):
+                search(position + 1)
+
+            row_seen[row] = old_seen
+            row_has_duplicate[row] = old_duplicate
+            counts[value] -= 1
+            entries[position] = -1
+            if truncated:
+                break
+
+    search(0)
+    return StageAEnumerationAudit(
+        size=size,
+        node_count=node_count,
+        completed_balanced_count=completed_balanced_count,
+        row_singular_count=row_singular_count,
+        feasibility_nonempty_count=feasibility_nonempty_count,
+        canonical_count=canonical_count,
+        emitted_count=len(examples),
+        truncated=truncated,
+        examples=tuple(examples),
     )
