@@ -1,5 +1,17 @@
 {
-  "conclusion": "No rigid pressure core appears in the exhaustive size-three corpus or in the current named pressure representatives.  The next falsifiable search target is a larger table, preferably size five or a structured affine-linear family, that survives all finite rigidity filters and then exhibits N_{m,n}(X)!=1 for a small rack prefix.",
+  "closed_pressure_representative_count": 1,
+  "closed_pressure_representatives": [
+    {
+      "closure_kind": "all-arity braid-kernel equality with the four-element tetrahedral Alexander rack, plus n fixed observer bits",
+      "family": "affine-linear F_2^3",
+      "name": "affine_f2_q3_tetrahedral_pressure_row",
+      "proof_artifact": "proofs/affine_f2_q3_full_tetrahedral_conjugacy_audit.md",
+      "rigid_core_consequence": "not a rigid core, because it is braid-kernel equivalent to a finite rack in every arity",
+      "size": 8,
+      "structural_audit": "proofs/affine_f2_q3_rigid_pressure_core_audit.md"
+    }
+  ],
+  "conclusion": "No rigid pressure core appears in the exhaustive size-three corpus or in the current named pressure representatives.  The affine F_2^3 q=3 pressure row is now tracked as a closed representative, because the tetrahedral-rack conjugacy gives all-arity kernel equality.  The next falsifiable search target is a larger table, preferably size five or a structured affine-linear family, that survives all finite rigidity filters and then exhibits N_{m,n}(X)!=1 for a small rack prefix.",
   "definition": "A rigid pressure core is a nonterminal, quotient-rigid, subsolution-rigid, observer-rigid, transport-split-rigid finite YBE table with actual small-rack prefix pressure.",
   "representative_candidate_count": 0,
   "representatives": [

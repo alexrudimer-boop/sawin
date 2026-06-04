@@ -294,8 +294,33 @@ def representative_rows() -> tuple[RigidPressureCoreRow, ...]:
     )
 
 
+def closed_pressure_representatives() -> tuple[dict[str, object], ...]:
+    return (
+        {
+            "name": "affine_f2_q3_tetrahedral_pressure_row",
+            "size": 8,
+            "family": "affine-linear F_2^3",
+            "structural_audit": (
+                "proofs/affine_f2_q3_rigid_pressure_core_audit.md"
+            ),
+            "proof_artifact": (
+                "proofs/affine_f2_q3_full_tetrahedral_conjugacy_audit.md"
+            ),
+            "closure_kind": (
+                "all-arity braid-kernel equality with the four-element "
+                "tetrahedral Alexander rack, plus n fixed observer bits"
+            ),
+            "rigid_core_consequence": (
+                "not a rigid core, because it is braid-kernel equivalent to a "
+                "finite rack in every arity"
+            ),
+        },
+    )
+
+
 def build_report() -> dict:
     representatives = representative_rows()
+    closed_representatives = closed_pressure_representatives()
     return {
         "title": "Rigid pressure core audit",
         "definition": (
@@ -305,16 +330,20 @@ def build_report() -> dict:
         ),
         "size_3": size_three_report(),
         "representatives": [asdict(row) for row in representatives],
+        "closed_pressure_representatives": list(closed_representatives),
         "representative_candidate_count": sum(
             row.rigid_pressure_core_candidate for row in representatives
         ),
+        "closed_pressure_representative_count": len(closed_representatives),
         "conclusion": (
             "No rigid pressure core appears in the exhaustive size-three "
             "corpus or in the current named pressure representatives.  The "
-            "next falsifiable search target is a larger table, preferably "
-            "size five or a structured affine-linear family, that survives "
-            "all finite rigidity filters and then exhibits N_{m,n}(X)!=1 "
-            "for a small rack prefix."
+            "affine F_2^3 q=3 pressure row is now tracked as a closed "
+            "representative, because the tetrahedral-rack conjugacy gives "
+            "all-arity kernel equality.  The next falsifiable search target "
+            "is a larger table, preferably size five or a structured "
+            "affine-linear family, that survives all finite rigidity filters "
+            "and then exhibits N_{m,n}(X)!=1 for a small rack prefix."
         ),
     }
 
@@ -373,11 +402,28 @@ def render_markdown(report: dict) -> str:
                 "",
             ]
         )
+    lines.extend(["## Closed Pressure Representatives", ""])
+    for row in report["closed_pressure_representatives"]:
+        lines.extend(
+            [
+                f"### {row['name']}",
+                "",
+                f"- size: `{row['size']}`;",
+                f"- family: `{row['family']}`;",
+                f"- closure kind: `{row['closure_kind']}`;",
+                f"- proof artifact: `{row['proof_artifact']}`;",
+                f"- structural audit: `{row['structural_audit']}`;",
+                f"- rigid-core consequence: `{row['rigid_core_consequence']}`.",
+                "",
+            ]
+        )
     lines.extend(
         [
             "## Conclusion",
             "",
             f"- representative candidate count: `{report['representative_candidate_count']}`;",
+            "- closed pressure representative count: "
+            f"`{report['closed_pressure_representative_count']}`;",
             "",
             report["conclusion"],
         ]

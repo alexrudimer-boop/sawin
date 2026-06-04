@@ -18,6 +18,7 @@ class RigidPressureCoreTests(unittest.TestCase):
         self.assertEqual(report["size_3"]["structural_survivor_count"], 0)
         self.assertEqual(report["size_3"]["candidate_count"], 0)
         self.assertEqual(report["representative_candidate_count"], 0)
+        self.assertEqual(report["closed_pressure_representative_count"], 1)
 
         representatives = {row["name"]: row for row in report["representatives"]}
         self.assertEqual(
@@ -32,6 +33,17 @@ class RigidPressureCoreTests(unittest.TestCase):
             representatives["affine_f2_hidden_cyclic_pressure_row"][
                 "observer_rigid"
             ]
+        )
+        closed = {
+            row["name"]: row for row in report["closed_pressure_representatives"]
+        }
+        self.assertEqual(
+            closed["affine_f2_q3_tetrahedral_pressure_row"]["proof_artifact"],
+            "proofs/affine_f2_q3_full_tetrahedral_conjugacy_audit.md",
+        )
+        self.assertIn(
+            "kernel equality",
+            closed["affine_f2_q3_tetrahedral_pressure_row"]["closure_kind"],
         )
 
 

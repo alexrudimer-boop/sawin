@@ -70,8 +70,20 @@ A rigid pressure core is a nonterminal, quotient-rigid, subsolution-rigid, obser
 - first failed filter: `quotient_rigid`;
 - rigid pressure core candidate: `False`.
 
+## Closed Pressure Representatives
+
+### affine_f2_q3_tetrahedral_pressure_row
+
+- size: `8`;
+- family: `affine-linear F_2^3`;
+- closure kind: `all-arity braid-kernel equality with the four-element tetrahedral Alexander rack, plus n fixed observer bits`;
+- proof artifact: `proofs/affine_f2_q3_full_tetrahedral_conjugacy_audit.md`;
+- structural audit: `proofs/affine_f2_q3_rigid_pressure_core_audit.md`;
+- rigid-core consequence: `not a rigid core, because it is braid-kernel equivalent to a finite rack in every arity`.
+
 ## Conclusion
 
 - representative candidate count: `0`;
+- closed pressure representative count: `1`;
 
-No rigid pressure core appears in the exhaustive size-three corpus or in the current named pressure representatives.  The next falsifiable search target is a larger table, preferably size five or a structured affine-linear family, that survives all finite rigidity filters and then exhibits N_{m,n}(X)!=1 for a small rack prefix.
+No rigid pressure core appears in the exhaustive size-three corpus or in the current named pressure representatives.  The affine F_2^3 q=3 pressure row is now tracked as a closed representative, because the tetrahedral-rack conjugacy gives all-arity kernel equality.  The next falsifiable search target is a larger table, preferably size five or a structured affine-linear family, that survives all finite rigidity filters and then exhibits N_{m,n}(X)!=1 for a small rack prefix.
