@@ -2600,6 +2600,14 @@ image, and satisfies `E_{X,2,n}!=1` for some `n>=3`.  If size five has no such
 table, the next structured target is affine-linear `X=F_2^3`, filtered for
 left-degeneracy and non-involutivity, then tested for nontrivial
 `E_{X,h,n}` as `h` grows.
+The new generated audit `proofs/affine_f2_q3_pressure_audit.md` makes that
+structured target reproducible: it derives the `26153` invertible linear YBE
+blocks over `F_2^3` from the block equations, finds `15065` singular-left
+blocks, and records the first left-degenerate non-involutive affine row with
+no current `branch_tags` classification.  That row has `a_X(2)=2`, first pure
+movement at arity `2`, and exact `Q_3` bounded-deletion obstruction
+`E_{X,2,3}=E_{X,2,4}=1`; the local `n=5` stabilizer run exceeded the
+five-minute interactive budget.
 
 ## Current conclusion
 

@@ -57,6 +57,20 @@ The crossing-order histogram was:
 
 Every listed crossing order divides `1680`.
 
+The follow-up `proofs/affine_f2_q3_pressure_audit.md` reconstructs the same
+`26153` linear-block count from the affine block equations and keeps the first
+left-degenerate non-involutive pressure row for the `Q_3` bounded-deletion
+test.  That row has no current `branch_tags` classification, has `a_X(2)=2`,
+and still has
+
+```text
+E_{X,2,3}^{(Q_3)} = 1,
+E_{X,2,4}^{(Q_3)} = 1.
+```
+
+This moves the affine `F_2^3` data from a two-strand direct-symmetric check to
+an actual bounded-deletion pressure check, still finite-prefix only.
+
 ## Affine-linear maps on F_3^2
 
 For affine-linear YBE solutions on `F_3^2`, so `|X|=9`, the reported scan had:

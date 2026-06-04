@@ -266,6 +266,22 @@ Type-A: E_{X,2,5} = 1, joint image order = 12899450880.
 The Type-A `n=6` stabilizer run did not finish within the local five-minute
 timeout, so no arity-six conclusion is recorded.
 
+The generated affine pressure audit
+`proofs/affine_f2_q3_pressure_audit.md` also reconstructs the larger
+`F_2^3` affine-linear block count and records the first left-degenerate
+non-involutive affine row with no current `branch_tags` classification.  For
+that row:
+
+```text
+a_X(2) = 2,
+first pure nontrivial arity = 2,
+E_{X,2,3} = 1,
+E_{X,2,4} = 1.
+```
+
+The local `n=5` stabilizer attempt for this `F_2^3` row exceeded the
+five-minute interactive budget.
+
 ## Scope
 
 This compression does not prove a bounded-deletion theorem for all

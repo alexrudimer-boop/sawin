@@ -1,0 +1,115 @@
+{
+  "dimension": 3,
+  "first_left_degenerate_blocks": [
+    1,
+    160,
+    160,
+    1
+  ],
+  "first_left_degenerate_matrix": [
+    "100000",
+    "000001",
+    "000010",
+    "000100",
+    "001000",
+    "010000"
+  ],
+  "first_left_degenerate_offsets": [
+    {
+      "branch_tags": [
+        "involutive"
+      ],
+      "involutive": true,
+      "offset": "000000"
+    },
+    {
+      "branch_tags": [],
+      "involutive": false,
+      "offset": "000011"
+    },
+    {
+      "branch_tags": [],
+      "involutive": false,
+      "offset": "001001"
+    },
+    {
+      "branch_tags": [
+        "involutive"
+      ],
+      "involutive": true,
+      "offset": "001010"
+    },
+    {
+      "branch_tags": [
+        "involutive"
+      ],
+      "involutive": true,
+      "offset": "010001"
+    },
+    {
+      "branch_tags": [],
+      "involutive": false,
+      "offset": "010010"
+    },
+    {
+      "branch_tags": [],
+      "involutive": false,
+      "offset": "011000"
+    },
+    {
+      "branch_tags": [
+        "involutive"
+      ],
+      "involutive": true,
+      "offset": "011011"
+    }
+  ],
+  "first_pressure_row": {
+    "branch_tags": [],
+    "first_pure_nontrivial_arity": 2,
+    "involutive": false,
+    "matrix": [
+      "100000",
+      "000001",
+      "000010",
+      "000100",
+      "001000",
+      "010000"
+    ],
+    "offset": "000011",
+    "q3_affine_compressed_n3": {
+      "detector_component_count": 3,
+      "detector_size": 2916,
+      "h": 2,
+      "joint_image_size": 1728,
+      "n": 3,
+      "obstruction_nontrivial": false,
+      "obstruction_size": 1,
+      "rack_size_bound": 3,
+      "subset_count": 3,
+      "truncated": false
+    },
+    "q3_stabilizer_n4": {
+      "detector_component_count": 9,
+      "detector_size": 2916,
+      "h": 2,
+      "joint_image_size": 1119744,
+      "n": 4,
+      "obstruction_nontrivial": false,
+      "obstruction_size": 1,
+      "rack_size_bound": 3,
+      "subset_count": 6,
+      "truncated": false
+    },
+    "two_strand_cutoff": 2
+  },
+  "linear_ybe_block_count": 26153,
+  "rank_histogram": {
+    "B_rank=0,C_rank=0": 1,
+    "B_rank=1,C_rank=1": 448,
+    "B_rank=2,C_rank=2": 14616,
+    "B_rank=3,C_rank=3": 11088
+  },
+  "singular_left_block_count": 15065,
+  "singular_right_block_count": 15065
+}
