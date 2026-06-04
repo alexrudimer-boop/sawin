@@ -27,6 +27,7 @@ class TerminalBranchTriageAudit:
 
     solution: FiniteBraidedSet
     proper_congruences: Tuple[Partition, ...]
+    subsolution_fibre_congruences: Tuple[Partition, ...]
     quotient_common_refinement: Partition
     proper_subsolutions: Tuple[FrozenSet[Element], ...]
     flip_across_partitions: Tuple[FlipAcrossPartition, ...]
@@ -46,6 +47,10 @@ class TerminalBranchTriageAudit:
         )
 
     @property
+    def has_subsolution_fibre_congruence(self) -> bool:
+        return bool(self.subsolution_fibre_congruences)
+
+    @property
     def has_proper_subsolution(self) -> bool:
         return bool(self.proper_subsolutions)
 
@@ -62,6 +67,7 @@ class TerminalBranchTriageAudit:
         return (
             self.has_point_separating_proper_quotients
             or self.has_proper_subsolution
+            or self.has_subsolution_fibre_congruence
             or self.has_flip_across_decomposition
             or self.has_nontrivial_one_state_observer
         )
@@ -138,6 +144,30 @@ def proper_subsolution_subsets(
     )
 
 
+def is_subsolution_fibre_congruence(
+    solution: FiniteBraidedSet,
+    partition: Partition,
+) -> bool:
+    """Return whether every congruence block is a crossing-closed subsolution."""
+
+    return all(is_subsolution_subset(solution, block) for block in partition)
+
+
+def subsolution_fibre_congruences(
+    solution: FiniteBraidedSet,
+    max_size: int = 7,
+) -> Tuple[Partition, ...]:
+    """Enumerate proper congruences whose blocks are all subsolutions."""
+
+    return tuple(
+        partition
+        for partition in congruences(solution, max_size=max_size)
+        if partition != equality_congruence(solution.elements)
+        and partition != universal_congruence(solution.elements)
+        and is_subsolution_fibre_congruence(solution, partition)
+    )
+
+
 def one_state_invariant_observer_partition(solution: FiniteBraidedSet) -> Partition:
     """Return the coarsest partition through which every one-state observer factors."""
 
@@ -163,6 +193,12 @@ def terminal_branch_triage_audit(
         if partition != equality_congruence(solution.elements)
         and len(partition) < len(solution.elements)
     )
+    subsolution_fibres = tuple(
+        partition
+        for partition in proper
+        if partition != universal_congruence(solution.elements)
+        and is_subsolution_fibre_congruence(solution, partition)
+    )
     if not proper:
         refinement = universal_congruence(solution.elements)
     else:
@@ -172,6 +208,7 @@ def terminal_branch_triage_audit(
     return TerminalBranchTriageAudit(
         solution=solution,
         proper_congruences=proper,
+        subsolution_fibre_congruences=subsolution_fibres,
         quotient_common_refinement=refinement,
         proper_subsolutions=proper_subsolution_subsets(solution, max_size=max_size),
         flip_across_partitions=flip_across_partitions(solution, max_size=max_size),

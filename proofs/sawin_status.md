@@ -2787,7 +2787,8 @@ point-separating quotient gluing theorem into a finite audit.
 The finite entry-branch triage is now executable as
 `terminal_branch_triage_audit(...)`: it checks proper total quotients,
 point-separating quotient families, proper subsolutions, flip-across
-decompositions, and one-state invariant observers.  This records the standard
+decompositions, one-state invariant observers, and the sharper case of
+proper congruences whose fibres are subsolutions.  This records the standard
 ways proper compression can start, but failure of the triage remains only a
 gap rather than a rack-prefix obstruction.
 Future GPT-5.5 Pro prompts are archived under `prompts/gpt55_pro/` before or

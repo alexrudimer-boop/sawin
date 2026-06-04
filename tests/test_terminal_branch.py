@@ -10,6 +10,7 @@ from ybe_domination import (
     identity_solution,
     one_state_invariant_observer_partition,
     rack_solution,
+    subsolution_fibre_congruences,
     terminal_branch_triage_audit,
 )
 
@@ -34,6 +35,7 @@ class TerminalBranchTriageTests(unittest.TestCase):
 
         self.assertTrue(audit.has_flip_across_decomposition)
         self.assertEqual(len(audit.flip_across_partitions), 1)
+        self.assertTrue(audit.has_subsolution_fibre_congruence)
 
     def test_identity_solution_has_one_state_invariant_observer(self):
         solution = identity_solution((0, 1))
@@ -53,6 +55,21 @@ class TerminalBranchTriageTests(unittest.TestCase):
 
         self.assertFalse(audit.has_nontrivial_one_state_observer)
         self.assertEqual(audit.observer_partition, (frozenset([0, 1]),))
+
+    def test_subsolution_fibre_congruence_detects_block_partition(self):
+        left = identity_solution(("a", "b"))
+        right = identity_solution(("c", "d"))
+        solution = flip_disjoint_union_solution(left, right, "L", "R")
+
+        partitions = subsolution_fibre_congruences(solution)
+
+        self.assertIn(
+            (
+                frozenset([("L", "a"), ("L", "b")]),
+                frozenset([("R", "c"), ("R", "d")]),
+            ),
+            partitions,
+        )
 
 
 if __name__ == "__main__":

@@ -118,6 +118,7 @@ class SizeFourDegenerateMechanismTests(unittest.TestCase):
         self.assertFalse(type_a.has_flip_across_decomposition)
         self.assertTrue(type_a.has_nontrivial_one_state_observer)
         self.assertTrue(type_a.has_proper_subsolution)
+        self.assertTrue(type_a.has_subsolution_fibre_congruence)
 
         type_b = terminal_branch_triage_audit(
             flip_disjoint_union_solution(
@@ -129,6 +130,7 @@ class SizeFourDegenerateMechanismTests(unittest.TestCase):
         )
         self.assertTrue(type_b.has_point_separating_proper_quotients)
         self.assertTrue(type_b.has_flip_across_decomposition)
+        self.assertTrue(type_b.has_subsolution_fibre_congruence)
 
 
 if __name__ == "__main__":

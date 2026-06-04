@@ -18,8 +18,10 @@ from .terminal_branch import (
     TerminalBranchTriageAudit,
     flip_across_partitions,
     is_flip_across_partition,
+    is_subsolution_fibre_congruence,
     one_state_invariant_observer_partition,
     proper_subsolution_subsets,
+    subsolution_fibre_congruences,
     terminal_branch_triage_audit,
 )
 from .transducer_certificate import (
@@ -1820,6 +1822,7 @@ __all__ = [
     "is_rack_type",
     "is_rack_solution",
     "is_flip_across_partition",
+    "is_subsolution_fibre_congruence",
     "is_subsolution_subset",
     "left_regular_representation",
     "is_permutation_solution_form",
@@ -2088,6 +2091,7 @@ __all__ = [
     "subgroup_generated_elements",
     "symmetric_group_inclusion",
     "subsolution",
+    "subsolution_fibre_congruences",
     "terminal_branch_triage_audit",
     "side_opposite_local_interval",
     "identity_readout_labels",

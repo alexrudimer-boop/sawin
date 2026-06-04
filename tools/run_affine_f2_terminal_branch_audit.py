@@ -27,6 +27,8 @@ def _entry_signature(audit) -> str:
         entries.append("flip")
     if audit.has_proper_subsolution:
         entries.append("subsolution")
+    if audit.has_subsolution_fibre_congruence:
+        entries.append("subsolution_fibre_congruence")
     if audit.has_nontrivial_one_state_observer:
         entries.append("observer")
     return "+".join(entries) if entries else "none"
@@ -124,11 +126,13 @@ def render_markdown(report: dict) -> str:
     lines.extend(
         [
             "",
-            "All 24 untagged affine rows have a terminal entry branch: 12 have",
-            "point-separating proper quotients plus subsolution and observer entries,",
-            "and 12 have subsolution plus observer entries.  Thus the affine",
-            "`F_2^2` residual rows do not supply a terminal-branch evader.",
-        ]
+        "All 24 untagged affine rows have a terminal entry branch: 12 have",
+        "point-separating proper quotients plus subsolution and observer entries,",
+        "and 12 have subsolution plus observer entries.  Thus the affine",
+        "`F_2^2` residual rows do not supply a terminal-branch evader.",
+        "The `subsolution_fibre_congruence` marker records the sharper branch",
+        "where a proper quotient has crossing-closed fibre blocks.",
+    ]
     )
     return "\n".join(lines) + "\n"
 

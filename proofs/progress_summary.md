@@ -2810,6 +2810,8 @@ proper total quotients as a proper active-factor compression certificate.
 The standard first-entry tests are also executable as
 `terminal_branch_triage_audit(...)`: it enumerates proper quotient
 congruences, checks whether all proper quotients point-separate, records
-proper subsolutions, detects flip-across decompositions, and computes the
-coarsest one-state invariant observer partition.  A positive row feeds the
-certificate layer; a negative row is only triage, not a no-rack obstruction.
+proper subsolutions, detects flip-across decompositions, computes the
+coarsest one-state invariant observer partition, and now records the sharper
+proper-congruence case where every fibre block is a subsolution.  A positive
+row feeds the certificate layer; a negative row is only triage, not a no-rack
+obstruction.

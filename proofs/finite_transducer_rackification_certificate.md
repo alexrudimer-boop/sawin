@@ -708,6 +708,7 @@ compression can begin:
 proper total quotient congruences,
 point-separating families of proper quotients,
 proper crossing-closed subsolutions,
+proper congruences whose fibres are crossing-closed subsolutions,
 flip-across decompositions,
 one-state invariant observers.
 ```
@@ -723,6 +724,13 @@ block.  The flip-across check requires two nonempty crossing-closed blocks
 whose mixed crossings are literal flips in both directions.  The quotient
 check uses all proper congruences and asks whether their common refinement is
 equality.
+
+The sharper field `subsolution_fibre_congruences` records the intermediate
+case targeted by the next branch question: a proper YBE quotient whose fibre
+blocks are themselves subsolutions.  This is stronger than merely having a
+proper subsolution and weaker than point-separating quotient compression; the
+missing issue is whether the mixed-fibre transition cocycle always admits a
+finite active-factor gauge.
 
 This audit is a triage tool, not a negative theorem.  If it finds an entry
 branch, the branch can feed the quotient or multi-active-factor certificate
