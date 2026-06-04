@@ -2830,6 +2830,21 @@ induced `X` fibre action is affine-conjugate to rack24 on an invariant
 Alexander slice `L_n(z)=sum_i t^{i-1}z_i=s`.  A uniform proof of this
 slice-conjugacy mechanism, together with faithfulness of the full linearized
 `X` action to the fibre action, would close this candidate positively.
+The slice-coset coverage audit checks the faithfulness issue more directly:
+through arity `8`, every quotient coset of the full shifted-linear `X` action
+induces an affine action on `W_n` that is conjugate to rack24 on some invariant
+slice `L_n=s`.  Thus the current positive theorem target is all-coset
+slice-coverage for every `n`, or equivalently a structural explanation of why
+rack24 controls every coset of the full `X` action.
+The period-3 reduction audit sharpens this again.  The explicit map
+`D_n(x)_i=C_{n-i mod 3}(a_i+b_i+a_{i+1}, c_i+c_{i+1})` intertwines the
+shifted `X` action with the reduced tetrahedral action on adjacent
+differences through arity `18`; its kernel is pointwise fixed, and `D_n`
+together with all invariant linear observers has full rank exactly for
+`3` not dividing `n`.  Hence rack24 controls all non-`3k` arities by this
+linear certificate.  The only remaining possible mismatch is a two-dimensional
+period-3 shear at arities `n=3k`; since `n=3` and `n=6` pass, the first
+unresolved arity is `n=9`.
 Formal partial-row nonseparability, failure of one-vertex actualization for a
 formal row system, or failure of stronger structural properties such as
 virtual freeness of `Art_I`, remains only a gap unless it is made actual and

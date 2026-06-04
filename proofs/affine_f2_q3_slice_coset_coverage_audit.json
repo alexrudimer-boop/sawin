@@ -1,0 +1,106 @@
+{
+  "title": "Affine F2^3 slice coset coverage audit",
+  "max_arity": 8,
+  "rows": [
+    {
+      "arity": 2,
+      "quotient_dimension": 4,
+      "coset_count": 16,
+      "all_cosets_covered": true,
+      "first_uncovered_coset": null,
+      "matching_slice_counts": {
+        "0": 16,
+        "1": 16,
+        "t": 16,
+        "t+1": 16
+      },
+      "seconds": 0.001
+    },
+    {
+      "arity": 3,
+      "quotient_dimension": 5,
+      "coset_count": 32,
+      "all_cosets_covered": true,
+      "first_uncovered_coset": null,
+      "matching_slice_counts": {
+        "0": 8,
+        "1": 24,
+        "t": 24,
+        "t+1": 24
+      },
+      "seconds": 0.018
+    },
+    {
+      "arity": 4,
+      "quotient_dimension": 6,
+      "coset_count": 64,
+      "all_cosets_covered": true,
+      "first_uncovered_coset": null,
+      "matching_slice_counts": {
+        "0": 64,
+        "1": 64,
+        "t": 64,
+        "t+1": 64
+      },
+      "seconds": 0.166
+    },
+    {
+      "arity": 5,
+      "quotient_dimension": 7,
+      "coset_count": 128,
+      "all_cosets_covered": true,
+      "first_uncovered_coset": null,
+      "matching_slice_counts": {
+        "0": 128,
+        "1": 128,
+        "t": 128,
+        "t+1": 128
+      },
+      "seconds": 1.231
+    },
+    {
+      "arity": 6,
+      "quotient_dimension": 8,
+      "coset_count": 256,
+      "all_cosets_covered": true,
+      "first_uncovered_coset": null,
+      "matching_slice_counts": {
+        "0": 64,
+        "1": 192,
+        "t": 192,
+        "t+1": 192
+      },
+      "seconds": 6.564
+    },
+    {
+      "arity": 7,
+      "quotient_dimension": 9,
+      "coset_count": 512,
+      "all_cosets_covered": true,
+      "first_uncovered_coset": null,
+      "matching_slice_counts": {
+        "0": 512,
+        "1": 512,
+        "t": 512,
+        "t+1": 512
+      },
+      "seconds": 24.782
+    },
+    {
+      "arity": 8,
+      "quotient_dimension": 10,
+      "coset_count": 1024,
+      "all_cosets_covered": true,
+      "first_uncovered_coset": null,
+      "matching_slice_counts": {
+        "0": 1024,
+        "1": 1024,
+        "t": 1024,
+        "t+1": 1024
+      },
+      "seconds": 98.541
+    }
+  ],
+  "all_checked_cosets_covered": true,
+  "conclusion": "For every checked arity through 8, every quotient coset of the full shifted-linear X representation induces an affine W-action that is conjugate to the tetrahedral rack action on at least one invariant Alexander slice L_n=s.  This is stronger than checking one fibre: it is finite evidence that the full X action is controlled by the rack slice family."
+}

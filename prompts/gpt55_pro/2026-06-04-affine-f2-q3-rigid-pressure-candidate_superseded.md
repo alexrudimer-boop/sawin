@@ -6,7 +6,7 @@ Supersession summary:
 
 - Native image generation shows the `D_3` repair fails at arity `5`.
 - The follow-up prompt
-  `2026-06-04-affine-f2-q3-after-d3-failure.md` gives the exact arity-5
+  `2026-06-04-affine-f2-q3-after-d3-failure_superseded.md` gives the exact arity-5
   kernel witness and asks for the next all-`n` decision.
 
 Prompt:

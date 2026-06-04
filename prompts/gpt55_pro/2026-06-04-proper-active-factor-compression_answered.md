@@ -1,6 +1,6 @@
 # Proper Active-Factor Compression
 
-Status: sent in the same GPT-5.5 Pro chat on 2026-06-04.
+Status: answered by GPT-5.5 Pro on 2026-06-04.
 
 Prompt:
 

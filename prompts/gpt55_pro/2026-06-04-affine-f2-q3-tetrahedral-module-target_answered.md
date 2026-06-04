@@ -1,7 +1,7 @@
 # Affine F2^3 Tetrahedral Module Target
 
 Status: answered by GPT-5.5 Pro on 2026-06-04; follow-up queued in
-`2026-06-04-affine-f2-q3-arity6-slice-parabolic-target.md`.
+`2026-06-04-affine-f2-q3-arity6-slice-parabolic-target_partially_answered.md`.
 
 Prompt:
 

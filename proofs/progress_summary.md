@@ -2916,3 +2916,20 @@ slice certificate through arity `10`: rack24 over `F_4` preserves
 to rack24 restricted to `L_n=s` for at least one `s` in every checked arity
 `2 <= n <= 10`.  This gives a concrete all-`n` theorem target independent of
 naive group enumeration.
+The companion slice-coset audit strengthens the faithfulness side through
+arity `8`.  In the shifted-linear `X` representation, `W_n` is invariant and
+the quotient `V_n/W_n` is fixed by every braid generator.  Each quotient coset
+therefore induces an affine action on `W_n`.  The audit checks all quotient
+cosets through `n=8` and finds that every one is affine-conjugate to rack24 on
+some invariant Alexander slice `L_n=s`.  A uniform all-coset slice-coverage
+proof would explain why rack24 controls the full `X` action, not only one
+chosen fibre.
+The latest period-3 reduction audit makes the remaining obstruction still
+smaller.  It verifies through arity `18` that the explicit edge-defect map
+`D_n(x)_i=C_{n-i mod 3}(a_i+b_i+a_{i+1}, c_i+c_{i+1})` intertwines the
+shifted `X` action with the reduced tetrahedral action on adjacent
+differences.  Its kernel is fixed by all shifted `X` generators, and together
+with all invariant linear observers it separates the full `X` module exactly
+when `3` does not divide `n`.  For `n=3k`, the only remaining visible gap is a
+two-dimensional shear.  Since `n=3` and `n=6` already pass, the next exact
+computation for this rack is `K_9`.

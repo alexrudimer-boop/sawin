@@ -1,7 +1,7 @@
 # Affine F2^3 Size-4 Rack Target
 
 Status: superseded on 2026-06-04 by
-`2026-06-04-affine-f2-q3-tetrahedral-module-target.md`.
+`2026-06-04-affine-f2-q3-tetrahedral-module-target_answered.md`.
 
 Prompt:
 

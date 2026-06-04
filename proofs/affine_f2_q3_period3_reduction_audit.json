@@ -1,0 +1,320 @@
+{
+  "title": "Affine F2^3 period-3 reduction audit",
+  "max_arity": 18,
+  "d_map": {
+    "edge_defects": "p_i=a_i+b_i+a_{i+1}, q_i=c_i+c_{i+1}",
+    "twists": {
+      "0": [
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "1": [
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "2": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ]
+      ]
+    },
+    "formula": "D_n(x)_i=C_{n-i mod 3}(p_i,q_i)"
+  },
+  "intertwiner_rows": [
+    {
+      "arity": 2,
+      "all_generators_intertwine": true,
+      "failing_generators": []
+    },
+    {
+      "arity": 3,
+      "all_generators_intertwine": true,
+      "failing_generators": []
+    },
+    {
+      "arity": 4,
+      "all_generators_intertwine": true,
+      "failing_generators": []
+    },
+    {
+      "arity": 5,
+      "all_generators_intertwine": true,
+      "failing_generators": []
+    },
+    {
+      "arity": 6,
+      "all_generators_intertwine": true,
+      "failing_generators": []
+    },
+    {
+      "arity": 7,
+      "all_generators_intertwine": true,
+      "failing_generators": []
+    },
+    {
+      "arity": 8,
+      "all_generators_intertwine": true,
+      "failing_generators": []
+    },
+    {
+      "arity": 9,
+      "all_generators_intertwine": true,
+      "failing_generators": []
+    },
+    {
+      "arity": 10,
+      "all_generators_intertwine": true,
+      "failing_generators": []
+    },
+    {
+      "arity": 11,
+      "all_generators_intertwine": true,
+      "failing_generators": []
+    },
+    {
+      "arity": 12,
+      "all_generators_intertwine": true,
+      "failing_generators": []
+    },
+    {
+      "arity": 13,
+      "all_generators_intertwine": true,
+      "failing_generators": []
+    },
+    {
+      "arity": 14,
+      "all_generators_intertwine": true,
+      "failing_generators": []
+    },
+    {
+      "arity": 15,
+      "all_generators_intertwine": true,
+      "failing_generators": []
+    },
+    {
+      "arity": 16,
+      "all_generators_intertwine": true,
+      "failing_generators": []
+    },
+    {
+      "arity": 17,
+      "all_generators_intertwine": true,
+      "failing_generators": []
+    },
+    {
+      "arity": 18,
+      "all_generators_intertwine": true,
+      "failing_generators": []
+    }
+  ],
+  "rank_rows": [
+    {
+      "arity": 2,
+      "ambient_dimension": 6,
+      "d_rank": 2,
+      "d_kernel_dimension": 4,
+      "invariant_observer_dimension": 4,
+      "d_kernel_pointwise_fixed": true,
+      "combined_rank": 6,
+      "missing_dimension": 0,
+      "arity_divisible_by_3": false
+    },
+    {
+      "arity": 3,
+      "ambient_dimension": 9,
+      "d_rank": 4,
+      "d_kernel_dimension": 5,
+      "invariant_observer_dimension": 5,
+      "d_kernel_pointwise_fixed": true,
+      "combined_rank": 7,
+      "missing_dimension": 2,
+      "arity_divisible_by_3": true
+    },
+    {
+      "arity": 4,
+      "ambient_dimension": 12,
+      "d_rank": 6,
+      "d_kernel_dimension": 6,
+      "invariant_observer_dimension": 6,
+      "d_kernel_pointwise_fixed": true,
+      "combined_rank": 12,
+      "missing_dimension": 0,
+      "arity_divisible_by_3": false
+    },
+    {
+      "arity": 5,
+      "ambient_dimension": 15,
+      "d_rank": 8,
+      "d_kernel_dimension": 7,
+      "invariant_observer_dimension": 7,
+      "d_kernel_pointwise_fixed": true,
+      "combined_rank": 15,
+      "missing_dimension": 0,
+      "arity_divisible_by_3": false
+    },
+    {
+      "arity": 6,
+      "ambient_dimension": 18,
+      "d_rank": 10,
+      "d_kernel_dimension": 8,
+      "invariant_observer_dimension": 8,
+      "d_kernel_pointwise_fixed": true,
+      "combined_rank": 16,
+      "missing_dimension": 2,
+      "arity_divisible_by_3": true
+    },
+    {
+      "arity": 7,
+      "ambient_dimension": 21,
+      "d_rank": 12,
+      "d_kernel_dimension": 9,
+      "invariant_observer_dimension": 9,
+      "d_kernel_pointwise_fixed": true,
+      "combined_rank": 21,
+      "missing_dimension": 0,
+      "arity_divisible_by_3": false
+    },
+    {
+      "arity": 8,
+      "ambient_dimension": 24,
+      "d_rank": 14,
+      "d_kernel_dimension": 10,
+      "invariant_observer_dimension": 10,
+      "d_kernel_pointwise_fixed": true,
+      "combined_rank": 24,
+      "missing_dimension": 0,
+      "arity_divisible_by_3": false
+    },
+    {
+      "arity": 9,
+      "ambient_dimension": 27,
+      "d_rank": 16,
+      "d_kernel_dimension": 11,
+      "invariant_observer_dimension": 11,
+      "d_kernel_pointwise_fixed": true,
+      "combined_rank": 25,
+      "missing_dimension": 2,
+      "arity_divisible_by_3": true
+    },
+    {
+      "arity": 10,
+      "ambient_dimension": 30,
+      "d_rank": 18,
+      "d_kernel_dimension": 12,
+      "invariant_observer_dimension": 12,
+      "d_kernel_pointwise_fixed": true,
+      "combined_rank": 30,
+      "missing_dimension": 0,
+      "arity_divisible_by_3": false
+    },
+    {
+      "arity": 11,
+      "ambient_dimension": 33,
+      "d_rank": 20,
+      "d_kernel_dimension": 13,
+      "invariant_observer_dimension": 13,
+      "d_kernel_pointwise_fixed": true,
+      "combined_rank": 33,
+      "missing_dimension": 0,
+      "arity_divisible_by_3": false
+    },
+    {
+      "arity": 12,
+      "ambient_dimension": 36,
+      "d_rank": 22,
+      "d_kernel_dimension": 14,
+      "invariant_observer_dimension": 14,
+      "d_kernel_pointwise_fixed": true,
+      "combined_rank": 34,
+      "missing_dimension": 2,
+      "arity_divisible_by_3": true
+    },
+    {
+      "arity": 13,
+      "ambient_dimension": 39,
+      "d_rank": 24,
+      "d_kernel_dimension": 15,
+      "invariant_observer_dimension": 15,
+      "d_kernel_pointwise_fixed": true,
+      "combined_rank": 39,
+      "missing_dimension": 0,
+      "arity_divisible_by_3": false
+    },
+    {
+      "arity": 14,
+      "ambient_dimension": 42,
+      "d_rank": 26,
+      "d_kernel_dimension": 16,
+      "invariant_observer_dimension": 16,
+      "d_kernel_pointwise_fixed": true,
+      "combined_rank": 42,
+      "missing_dimension": 0,
+      "arity_divisible_by_3": false
+    },
+    {
+      "arity": 15,
+      "ambient_dimension": 45,
+      "d_rank": 28,
+      "d_kernel_dimension": 17,
+      "invariant_observer_dimension": 17,
+      "d_kernel_pointwise_fixed": true,
+      "combined_rank": 43,
+      "missing_dimension": 2,
+      "arity_divisible_by_3": true
+    },
+    {
+      "arity": 16,
+      "ambient_dimension": 48,
+      "d_rank": 30,
+      "d_kernel_dimension": 18,
+      "invariant_observer_dimension": 18,
+      "d_kernel_pointwise_fixed": true,
+      "combined_rank": 48,
+      "missing_dimension": 0,
+      "arity_divisible_by_3": false
+    },
+    {
+      "arity": 17,
+      "ambient_dimension": 51,
+      "d_rank": 32,
+      "d_kernel_dimension": 19,
+      "invariant_observer_dimension": 19,
+      "d_kernel_pointwise_fixed": true,
+      "combined_rank": 51,
+      "missing_dimension": 0,
+      "arity_divisible_by_3": false
+    },
+    {
+      "arity": 18,
+      "ambient_dimension": 54,
+      "d_rank": 34,
+      "d_kernel_dimension": 20,
+      "invariant_observer_dimension": 20,
+      "d_kernel_pointwise_fixed": true,
+      "combined_rank": 52,
+      "missing_dimension": 2,
+      "arity_divisible_by_3": true
+    }
+  ],
+  "all_checked_generators_intertwine": true,
+  "all_checked_kernels_fixed": true,
+  "missing_dimension_pattern_holds": true,
+  "conclusion": "The explicit D_n map intertwines the shifted-linear X action with the reduced tetrahedral action on adjacent-difference coordinates through every checked arity.  Its kernel is pointwise fixed by the X generators, and D_n together with all linear invariant observers separates the full X module except for a two-dimensional remainder exactly when n is divisible by 3.  This supports the reduction of the remaining rack24-domination question to a period-3 shear cocycle at arities 3k."
+}

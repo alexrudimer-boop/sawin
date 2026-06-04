@@ -1,6 +1,6 @@
 # Affine F2^3 All-n Slice/Parabolic Target After Arity 6
 
-Status: queued for GPT-5.5 Pro on 2026-06-04.
+Status: ask_now / queued for GPT-5.5 Pro on 2026-06-04.
 
 Prompt:
 
@@ -80,9 +80,26 @@ Each slice L_n=s has F_2 dimension 2n-2. The repo verified by solving affine con
     n=9: 1,t,t+1
     n=10: 0,1,t,t+1
 
+Stronger coset-coverage evidence. In the shifted-linear X representation, the fibre module W_n is invariant and V_n/W_n is fixed by each braid generator. Therefore every quotient coset of V_n/W_n carries an affine action on W_n. The repo checked every quotient coset through n=8, and every such affine W_n-action is conjugate to rack Y restricted to at least one invariant slice L_n=s. Slice match counts by arity are:
+
+    n=2, quotient cosets 16:
+      0:16, 1:16, t:16, t+1:16
+    n=3, quotient cosets 32:
+      0:8, 1:24, t:24, t+1:24
+    n=4, quotient cosets 64:
+      0:64, 1:64, t:64, t+1:64
+    n=5, quotient cosets 128:
+      0:128, 1:128, t:128, t+1:128
+    n=6, quotient cosets 256:
+      0:64, 1:192, t:192, t+1:192
+    n=7, quotient cosets 512:
+      0:512, 1:512, t:512, t+1:512
+    n=8, quotient cosets 1024:
+      0:1024, 1:1024, t:1024, t+1:1024
+
 Please now resolve one of these all-n questions:
 
-A. Prove a uniform all-n slice-conjugacy theorem. Give an explicit affine change of variables, or a recurrence constructing one, showing that the induced X fibre action is affine-conjugate to tetrahedral rack Y on a slice L_n=s(n). Also prove that this fibre/slice action faithfully controls the full shifted X action, so that Y dominates X.
+A. Prove a uniform all-n all-coset slice-coverage theorem. Give an explicit affine change of variables, or a recurrence constructing one, showing that every quotient coset action of the full shifted X representation on W_n is affine-conjugate to tetrahedral rack Y on some slice L_n=s. This would prove that rack Y controls the full shifted X action, not only one fibre.
 
 B. Prove the rack-only finite-to-infinite theorem: for the tetrahedral rack Y, ker rho^Y_n is normally generated in B_n by consecutive parabolic copies of ker rho^Y_k for k<=6, for every n>6. Since kernel equality is now checked through n=6, this would prove Y dominates X in all arities.
 

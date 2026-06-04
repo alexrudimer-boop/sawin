@@ -2,7 +2,7 @@
 
 Status: partially resolved locally on 2026-06-04.  The arity-6 matrix-group
 test passes with order `39,813,120`; follow-up queued in
-`2026-06-04-affine-f2-q3-alln-slice-parabolic-after-arity6.md`.
+`2026-06-04-affine-f2-q3-alln-slice-parabolic-after-arity6_ask_now.md`.
 
 Prompt:
 

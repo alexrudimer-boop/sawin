@@ -218,6 +218,32 @@ the all-`n` proof, but it gives a concrete uniform theorem to try to prove:
 existence of such a slice conjugacy for all `n`, plus faithfulness of the full
 linearized `X` action to that fibre/slice action.
 
+The follow-up coset audit
+`proofs/affine_f2_q3_slice_coset_coverage_audit.md` strengthens the finite
+evidence in exactly the faithfulness direction.  Since the shifted-linear `X`
+action is identity on `V_n/W_n`, every quotient coset carries an affine action
+on `W_n`.  Through arity `8`, every such coset action is affine-conjugate to
+rack24 on at least one invariant slice `L_n=s`.  So the remaining positive
+claim can be stated as an all-coset slice-coverage theorem, not merely a
+single preferred fibre theorem.
+
+The period-3 reduction audit
+`proofs/affine_f2_q3_period3_reduction_audit.md` records the next sharpening.
+It verifies the explicit edge-defect map
+
+```text
+p_i=a_i+b_i+a_{i+1},   q_i=c_i+c_{i+1},
+D_n(x)_i=C_{n-i mod 3}(p_i,q_i)
+```
+
+through arity `18`, and checks that `D_n X_i = Ybar_i D_n`, where `Ybar_i`
+is the reduced tetrahedral action on adjacent differences.  The kernel of
+`D_n` is pointwise fixed by the shifted `X` generators, and `D_n` together
+with all invariant linear observers has full rank exactly when `3` does not
+divide `n`; when `n=3k` it misses two dimensions.  Thus rack24 domination is
+now reduced to a period-3 shear problem, with the first unresolved arity
+after the checked `n=3,6` cases being `n=9`.
+
 ## Cofinal Rack-Prefix Obstruction
 
 A genuine negative answer to Sawin needs more than sequential primitivity.

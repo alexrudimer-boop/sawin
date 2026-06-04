@@ -7,7 +7,7 @@ Supersession summary:
 - The repo found a concrete affine `F_2^3` finite-prefix rigid pressure core
   candidate.
 - The follow-up prompt
-  `2026-06-04-affine-f2-q3-rigid-pressure-candidate.md` asks GPT-5.5 Pro to
+  `2026-06-04-affine-f2-q3-rigid-pressure-candidate_superseded.md` asks GPT-5.5 Pro to
   decide that exact table all-n.
 
 Prompt:
