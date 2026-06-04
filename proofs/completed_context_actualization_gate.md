@@ -222,6 +222,25 @@ Only after this ordinary YBE-completion gate is passed does it make sense to
 ask for finite context transitions `tau_x`, retained germs, endpoint labels,
 and preservation of the intended braid-realizable endpoint language.
 
+Even a finite ordinary YBE completion would still not decide the Sawin fork by
+itself.  It is only the first collapse a negative candidate must survive.  The
+candidate must also occur as an actual completed-context residual interval and
+must preserve the actual braid-realizable endpoint language.  The corrected
+finite test is therefore:
+
+```text
+For every nonidentity endpoint u, is there a finite quotient
+phi: Art_I -> Q such that no actual endpoint-u branch has phi-trivial
+Artin readout?
+```
+
+Equivalently, a negative example must produce one actual interval and one
+`u != 1` such that every finite quotient `phi:Art_I -> Q` has an actual
+endpoint-`u` branch whose Artin readout is `phi`-trivial.  This condition, for
+an already actual interval, is equivalent to the normalized-law no-rack
+sequence.  Failure of an earlier ordinary-completion or actualization criterion
+is only another gap.
+
 ## Actualization theorem needed for B
 
 The formal partial-Wirtinger construction in

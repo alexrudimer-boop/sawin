@@ -2432,6 +2432,21 @@ languages with trivial bounded endpoint and Artin deletion shadows have `1`
 in their profinite closures for every width.  That profinite Artin-null
 Brunnian obstruction is equivalent to the normalized-law no-rack sequence.
 
+There is also a bounded positive-data branch at size four, recorded in
+`proofs/size4_degenerate_noninvolutive_probe.md`.  A targeted forced probe
+found 40 degenerate non-involutive size-four solutions, all reported to be
+bi-degenerate and of crossing order four.  The reported examples split into
+two types: 16 with the same observed braid kernels as the two-element cyclic
+rack `R(a,b)=(1-b,a)`, and 24 with the same observed braid image orders as
+the three-element rack `L_0=L_1=id, L_2=(01)`.  The local script
+`tools/audit_size4_degenerate_probe.py` verifies the rack-side image orders
+`4,24,192,1920,23040` for the cyclic rack through `n=6` and
+`4,48,1536,122880` for the size-three rack through `n=5`.  Since the 40
+solution tables and the forced-search script are not yet committed, this is
+evidence and a theorem target rather than a reproducible classification:
+prove all-arity braid-equivalence for the two observed twisted-union families,
+or commit the finite census and then classify its output.
+
 ## Current conclusion
 
 As of this log entry, neither A nor B is proved.  The current decisive target
