@@ -1,0 +1,46 @@
+{
+  "title": "Affine F2^3 arity-6 matrix group audit",
+  "arity": 6,
+  "y_dimension": 12,
+  "x_dimension": 18,
+  "y_vector_count": 4096,
+  "x_vector_count": 262144,
+  "joint_permutation_degree": 266240,
+  "orders": {
+    "Y": 39813120,
+    "X": 39813120,
+    "joint": 39813120
+  },
+  "generator_timings": [
+    {
+      "generator": 1,
+      "seconds": 0.816
+    },
+    {
+      "generator": 2,
+      "seconds": 0.83
+    },
+    {
+      "generator": 3,
+      "seconds": 0.901
+    },
+    {
+      "generator": 4,
+      "seconds": 1.44
+    },
+    {
+      "generator": 5,
+      "seconds": 1.298
+    }
+  ],
+  "order_timings": {
+    "Y": 1.672,
+    "X": 160.695,
+    "joint": 160.724
+  },
+  "total_seconds": 328.377,
+  "pro_expected_unitary_order": 41057280,
+  "all_orders_equal": true,
+  "joint_kernel_trivial": true,
+  "conclusion": "The arity-6 matrix-group computation passes for rack24: the tetrahedral rack image, the shifted-linear X image, and the joint image all have order 39,813,120.  Thus K_6 is trivial.  This also corrects the provisional unitary-pattern guess 41,057,280."
+}

@@ -184,6 +184,40 @@ fibre-module identification with the tetrahedral Alexander rack persists
 uniformly in `n`.  A direct arity-`6` tuple closure is not the right primitive
 check; the expected image is already too large for naive enumeration.
 
+The next Pro audit adds two refinements.  First, the affine `X` action is
+globally linear after the one-based position shift
+
+```text
+x_i |-> x_i+(0,0,i mod 2).
+```
+
+Thus the arity-`6` test is a joint matrix-group computation in
+`GL_12(2) x GL_18(2)`.  The focused audit
+`proofs/affine_f2_q3_arity6_matrix_group_audit.md` runs this check using
+matrix actions on the underlying vector spaces and SymPy Schreier-Sims.  It
+finds
+
+```text
+|G_Y(6)| = |G_X(6)| = |G_{Y,X}(6)| = 39,813,120.
+```
+
+So the direct arity-`6` joint kernel `K_6` is trivial.  This also corrects the
+provisional unitary-pattern guess `41,057,280`.
+
+Second, the native module audit now checks a cheaper representation
+certificate: the full tetrahedral Alexander representation over `F_4`
+preserves
+
+```text
+L_n(z_1,...,z_n)=sum_i t^{i-1}z_i,
+```
+
+and the induced `X` fibre action is affine-conjugate to rack24 restricted to
+an invariant slice `L_n=s` for every `2 <= n <= 10`.  This does not yet replace
+the all-`n` proof, but it gives a concrete uniform theorem to try to prove:
+existence of such a slice conjugacy for all `n`, plus faithfulness of the full
+linearized `X` action to that fibre/slice action.
+
 ## Cofinal Rack-Prefix Obstruction
 
 A genuine negative answer to Sawin needs more than sequential primitivity.

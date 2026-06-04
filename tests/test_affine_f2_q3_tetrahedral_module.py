@@ -58,6 +58,51 @@ class AffineF2Q3TetrahedralModuleAuditTest(unittest.TestCase):
         )
         self.assertEqual(report["rack24_alexander_model"]["T_row_masks"], [2, 3])
 
+    def test_x_linearization_and_slice_conjugacy_checks(self) -> None:
+        report = json.loads(
+            (ROOT / "proofs" / "affine_f2_q3_tetrahedral_module_audit.json")
+            .read_text(encoding="utf-8")
+        )
+        self.assertEqual(
+            [
+                row["arity"]
+                for row in report["x_linearized_model"]["linearization_rows"]
+                if row["all_generators_linearized"]
+            ],
+            list(range(2, 11)),
+        )
+        self.assertEqual(
+            report["x_linearized_model"]["local_matrix_rows"],
+            [
+                "010100",
+                "100100",
+                "000001",
+                "001101",
+                "110110",
+                "110101",
+            ],
+        )
+        conjugacy_rows = report["invariant_slice_model"]["conjugacy_rows"]
+        self.assertEqual([row["arity"] for row in conjugacy_rows], list(range(2, 11)))
+        self.assertTrue(all(row["has_matching_slice"] for row in conjugacy_rows))
+        self.assertEqual(
+            {
+                row["arity"]: row["matching_slice_constant_names"]
+                for row in conjugacy_rows
+            },
+            {
+                2: ["0", "1", "t", "t+1"],
+                3: ["1", "t", "t+1"],
+                4: ["0", "1", "t", "t+1"],
+                5: ["0", "1", "t", "t+1"],
+                6: ["0"],
+                7: ["0", "1", "t", "t+1"],
+                8: ["0", "1", "t", "t+1"],
+                9: ["1", "t", "t+1"],
+                10: ["0", "1", "t", "t+1"],
+            },
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

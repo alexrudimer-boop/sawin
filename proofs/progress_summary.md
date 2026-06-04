@@ -2904,3 +2904,15 @@ image, and fibre--`X` joint image all have the same order:
 `3,24,648,77760`.  This rules out the possibility that the arity-5 agreement
 was a tuple-enumeration accident; the remaining positive problem is to prove
 the fibre-module/rack24 equivalence uniformly in `n`.
+The next Pro response identifies a cleaner arity-6 test: the affine `X` action
+is linearized by the one-based shift `x_i -> x_i+(0,0,i mod 2)`, so the
+decisive finite computation for this rack is the joint matrix group in
+`GL_12(2) x GL_18(2)`.  The focused arity-6 matrix audit now runs that test:
+`|G_Y(6)|=|G_X(6)|=|G_{Y,X}(6)|=39,813,120`, so the direct arity-6 joint
+kernel is trivial.  This corrects the provisional expected order
+`41,057,280`.  The native module audit also records an invariant
+slice certificate through arity `10`: rack24 over `F_4` preserves
+`L_n(z)=sum_i t^{i-1}z_i`, and the induced `X` fibre action is affine-conjugate
+to rack24 restricted to `L_n=s` for at least one `s` in every checked arity
+`2 <= n <= 10`.  This gives a concrete all-`n` theorem target independent of
+naive group enumeration.

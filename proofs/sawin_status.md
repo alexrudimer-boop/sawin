@@ -2820,6 +2820,16 @@ fibre image, and all pairwise joint images have common orders
 `3,24,648,77760`.  The exact positive target for this table is now an all-`n`
 proof of that tetrahedral fibre-module equivalence; the exact negative target
 would be the first arity where rack24 has a detector-kernel word moving `X`.
+The latest refinement linearizes the affine `X` action by the shift
+`x_i -> x_i+(0,0,i mod 2)`, so the direct arity-`6` pressure test is a matrix
+group computation in `GL_12(2) x GL_18(2)`.  The focused arity-`6` audit finds
+`|G_Y(6)|=|G_X(6)|=|G_{Y,X}(6)|=39,813,120`, so the arity-`6` joint kernel is
+trivial; it also corrects the provisional expected order `41,057,280`.
+Independently, the tetrahedral-module audit checks through arity `10` that the
+induced `X` fibre action is affine-conjugate to rack24 on an invariant
+Alexander slice `L_n(z)=sum_i t^{i-1}z_i=s`.  A uniform proof of this
+slice-conjugacy mechanism, together with faithfulness of the full linearized
+`X` action to the fibre action, would close this candidate positively.
 Formal partial-row nonseparability, failure of one-vertex actualization for a
 formal row system, or failure of stronger structural properties such as
 virtual freeness of `Art_I`, remains only a gap unless it is made actual and
