@@ -16,6 +16,7 @@ from run_linear_f2_audit import mat_rank, matrix_signature  # noqa: E402
 from ybe_domination import (  # noqa: E402
     branch_tags,
     subsolution_fibre_transition_audit,
+    subsolution_fibre_transport_isomorphism_audit,
     terminal_branch_triage_audit,
 )
 
@@ -60,6 +61,26 @@ def _transition_signature(solution, audit) -> str:
     return "+".join(f"{label}:{count}" for label, count in sorted(counts.items()))
 
 
+def _transport_partition_signature(transport_audit) -> str:
+    if transport_audit.all_product_like_rows_have_transport_isomorphisms:
+        return "product_like_transport_isomorphism"
+    if transport_audit.all_mixed_rows_product_like:
+        return "product_like_nonisomorphic_transport"
+    return "non_product_like"
+
+
+def _transport_signature(solution, audit) -> str:
+    if not audit.subsolution_fibre_congruences:
+        return "none"
+    counts: Counter[str] = Counter()
+    for partition in audit.subsolution_fibre_congruences:
+        transport_audit = subsolution_fibre_transport_isomorphism_audit(
+            solution, partition
+        )
+        counts[_transport_partition_signature(transport_audit)] += 1
+    return "+".join(f"{label}:{count}" for label, count in sorted(counts.items()))
+
+
 def scan(dimension: int = 2) -> dict:
     rows = tuple(itertools.product((0, 1), repeat=2 * dimension))
     offsets = tuple(itertools.product((0, 1), repeat=2 * dimension))
@@ -68,10 +89,13 @@ def scan(dimension: int = 2) -> dict:
     ybe_count = 0
     entry_counts: Counter[str] = Counter()
     transition_counts: Counter[str] = Counter()
+    transport_counts: Counter[str] = Counter()
     tag_entry_counts: Counter[tuple[str, str]] = Counter()
     tag_transition_counts: Counter[tuple[str, str]] = Counter()
+    tag_transport_counts: Counter[tuple[str, str]] = Counter()
     untagged_entry_counts: Counter[str] = Counter()
     untagged_transition_counts: Counter[str] = Counter()
+    untagged_transport_counts: Counter[str] = Counter()
     first_untagged_no_entry = None
 
     for matrix in itertools.product(rows, repeat=2 * dimension):
@@ -89,13 +113,17 @@ def scan(dimension: int = 2) -> dict:
             audit = terminal_branch_triage_audit(solution)
             entry = _entry_signature(audit)
             transition = _transition_signature(solution, audit)
+            transport = _transport_signature(solution, audit)
             entry_counts[entry] += 1
             transition_counts[transition] += 1
+            transport_counts[transport] += 1
             tag_entry_counts[(tag_label, entry)] += 1
             tag_transition_counts[(tag_label, transition)] += 1
+            tag_transport_counts[(tag_label, transport)] += 1
             if not tags:
                 untagged_entry_counts[entry] += 1
                 untagged_transition_counts[transition] += 1
+                untagged_transport_counts[transport] += 1
                 if entry == "none" and first_untagged_no_entry is None:
                     first_untagged_no_entry = {
                         "matrix": matrix_signature(matrix),
@@ -113,6 +141,7 @@ def scan(dimension: int = 2) -> dict:
         "subsolution_fibre_transition_counts": dict(
             sorted(transition_counts.items())
         ),
+        "subsolution_fibre_transport_counts": dict(sorted(transport_counts.items())),
         "tag_entry_counts": {
             f"tags={tag}|entry={entry}": count
             for (tag, entry), count in sorted(tag_entry_counts.items())
@@ -121,10 +150,17 @@ def scan(dimension: int = 2) -> dict:
             f"tags={tag}|transition={transition}": count
             for (tag, transition), count in sorted(tag_transition_counts.items())
         },
+        "tag_subsolution_fibre_transport_counts": {
+            f"tags={tag}|transport={transport}": count
+            for (tag, transport), count in sorted(tag_transport_counts.items())
+        },
         "untagged_count": sum(untagged_entry_counts.values()),
         "untagged_entry_counts": dict(sorted(untagged_entry_counts.items())),
         "untagged_subsolution_fibre_transition_counts": dict(
             sorted(untagged_transition_counts.items())
+        ),
+        "untagged_subsolution_fibre_transport_counts": dict(
+            sorted(untagged_transport_counts.items())
         ),
         "untagged_no_entry_count": untagged_no_entry_count,
         "first_untagged_no_entry": first_untagged_no_entry,
@@ -170,6 +206,17 @@ def render_markdown(report: dict) -> str:
     lines.extend(
         [
             "",
+            "## Subsolution-Fibre Transport Counts",
+            "",
+            "| transport signature | count |",
+            "| --- | ---: |",
+        ]
+    )
+    for transport, count in report["subsolution_fibre_transport_counts"].items():
+        lines.append(f"| `{transport}` | {count} |")
+    lines.extend(
+        [
+            "",
             "## Untagged Rows",
             "",
             "| entry signature | count |",
@@ -194,6 +241,19 @@ def render_markdown(report: dict) -> str:
     lines.extend(
         [
             "",
+            "## Untagged Subsolution-Fibre Transport Rows",
+            "",
+            "| transport signature | count |",
+            "| --- | ---: |",
+        ]
+    )
+    for transport, count in report[
+        "untagged_subsolution_fibre_transport_counts"
+    ].items():
+        lines.append(f"| `{transport}` | {count} |")
+    lines.extend(
+        [
+            "",
         "All 24 untagged affine rows have a terminal entry branch: 12 have",
         "point-separating proper quotients plus subsolution and observer entries,",
         "and 12 have subsolution plus observer entries.  Thus the affine",
@@ -202,6 +262,8 @@ def render_markdown(report: dict) -> str:
         "where a proper quotient has crossing-closed fibre blocks.",
         "The transition signature records whether those mixed-fibre crossings",
         "are product-like, swapped-product-like, or genuinely non-product-like.",
+        "The transport signature records whether the resulting one-coordinate",
+        "mixed maps are already isomorphisms of the internal fibre subsolutions.",
     ]
     )
     return "\n".join(lines) + "\n"

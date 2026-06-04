@@ -16,7 +16,10 @@ from .finite_braided_set import (
 from .terminal_branch import (
     FlipAcrossPartition,
     MixedFibreTransitionRow,
+    MixedFibreTransportMap,
+    MixedFibreTransportRow,
     SubsolutionFibreTransitionAudit,
+    SubsolutionFibreTransportIsomorphismAudit,
     TerminalBranchTriageAudit,
     flip_across_partitions,
     is_flip_across_partition,
@@ -25,6 +28,7 @@ from .terminal_branch import (
     proper_subsolution_subsets,
     subsolution_fibre_congruences,
     subsolution_fibre_transition_audit,
+    subsolution_fibre_transport_isomorphism_audit,
     terminal_branch_triage_audit,
 )
 from .transducer_certificate import (
@@ -1197,7 +1201,10 @@ __all__ = [
     "TerminalGaugeTelescopingAudit",
     "TerminalBranchTriageAudit",
     "MixedFibreTransitionRow",
+    "MixedFibreTransportMap",
+    "MixedFibreTransportRow",
     "SubsolutionFibreTransitionAudit",
+    "SubsolutionFibreTransportIsomorphismAudit",
     "UniversalContinuationIdentityEndpointWitnessAudit",
     "UniversalContinuationIdentitySymmetricEndpointForkAudit",
     "ExactImageAudit",
@@ -2098,6 +2105,7 @@ __all__ = [
     "subsolution",
     "subsolution_fibre_congruences",
     "subsolution_fibre_transition_audit",
+    "subsolution_fibre_transport_isomorphism_audit",
     "terminal_branch_triage_audit",
     "side_opposite_local_interval",
     "identity_readout_labels",

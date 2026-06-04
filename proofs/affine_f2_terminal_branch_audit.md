@@ -39,6 +39,18 @@ It is a finite search artifact, not a proof of the universal theorem.
 | `swapped_product_like:3` | 9 |
 | `swapped_product_like:4` | 18 |
 
+## Subsolution-Fibre Transport Counts
+
+| transport signature | count |
+| --- | ---: |
+| `none` | 204 |
+| `product_like_nonisomorphic_transport:1` | 24 |
+| `product_like_transport_isomorphism:1` | 164 |
+| `product_like_transport_isomorphism:13` | 2 |
+| `product_like_transport_isomorphism:2` | 60 |
+| `product_like_transport_isomorphism:3` | 9 |
+| `product_like_transport_isomorphism:4` | 18 |
+
 ## Untagged Rows
 
 | entry signature | count |
@@ -52,6 +64,13 @@ It is a finite search artifact, not a proof of the universal theorem.
 | --- | ---: |
 | `swapped_product_like:1` | 24 |
 
+## Untagged Subsolution-Fibre Transport Rows
+
+| transport signature | count |
+| --- | ---: |
+| `product_like_nonisomorphic_transport:1` | 12 |
+| `product_like_transport_isomorphism:1` | 12 |
+
 All 24 untagged affine rows have a terminal entry branch: 12 have
 point-separating proper quotients plus subsolution and observer entries,
 and 12 have subsolution plus observer entries.  Thus the affine
@@ -60,3 +79,5 @@ The `subsolution_fibre_congruence` marker records the sharper branch
 where a proper quotient has crossing-closed fibre blocks.
 The transition signature records whether those mixed-fibre crossings
 are product-like, swapped-product-like, or genuinely non-product-like.
+The transport signature records whether the resulting one-coordinate
+mixed maps are already isomorphisms of the internal fibre subsolutions.

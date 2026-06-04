@@ -28,6 +28,15 @@
       "swapped_product_like:3": 9,
       "swapped_product_like:4": 18
     },
+    "subsolution_fibre_transport_counts": {
+      "none": 204,
+      "product_like_nonisomorphic_transport:1": 24,
+      "product_like_transport_isomorphism:1": 164,
+      "product_like_transport_isomorphism:13": 2,
+      "product_like_transport_isomorphism:2": 60,
+      "product_like_transport_isomorphism:3": 9,
+      "product_like_transport_isomorphism:4": 18
+    },
     "tag_entry_counts": {
       "tags=(untagged)|entry=quotient_separating+subsolution+subsolution_fibre_congruence+observer": 12,
       "tags=(untagged)|entry=subsolution+subsolution_fibre_congruence+observer": 12,
@@ -90,6 +99,37 @@
       "tags=rack_type+permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate|transition=swapped_product_like:1": 11,
       "tags=rack_type+permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate|transition=swapped_product_like:4": 6
     },
+    "tag_subsolution_fibre_transport_counts": {
+      "tags=(untagged)|transport=product_like_nonisomorphic_transport:1": 12,
+      "tags=(untagged)|transport=product_like_transport_isomorphism:1": 12,
+      "tags=involutive+identity_table|transport=product_like_transport_isomorphism:13": 1,
+      "tags=involutive+left_nondegenerate+right_nondegenerate+nondegenerate|transport=none": 36,
+      "tags=involutive+left_nondegenerate+right_nondegenerate+nondegenerate|transport=product_like_transport_isomorphism:1": 3,
+      "tags=involutive+left_nondegenerate+right_nondegenerate+nondegenerate|transport=product_like_transport_isomorphism:2": 6,
+      "tags=involutive+left_nondegenerate+right_nondegenerate+nondegenerate|transport=product_like_transport_isomorphism:3": 3,
+      "tags=involutive+permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate|transport=none": 6,
+      "tags=involutive+permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate|transport=product_like_transport_isomorphism:1": 11,
+      "tags=involutive+permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate|transport=product_like_transport_isomorphism:4": 6,
+      "tags=involutive|transport=none": 18,
+      "tags=involutive|transport=product_like_nonisomorphic_transport:1": 12,
+      "tags=involutive|transport=product_like_transport_isomorphism:1": 12,
+      "tags=involutive|transport=product_like_transport_isomorphism:2": 6,
+      "tags=left_nondegenerate+right_nondegenerate+nondegenerate|transport=none": 106,
+      "tags=left_nondegenerate+right_nondegenerate+nondegenerate|transport=product_like_transport_isomorphism:1": 75,
+      "tags=left_nondegenerate+right_nondegenerate+nondegenerate|transport=product_like_transport_isomorphism:2": 42,
+      "tags=left_nondegenerate+right_nondegenerate+nondegenerate|transport=product_like_transport_isomorphism:3": 3,
+      "tags=permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate|transport=none": 30,
+      "tags=permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate|transport=product_like_transport_isomorphism:1": 37,
+      "tags=permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate|transport=product_like_transport_isomorphism:4": 6,
+      "tags=rack_type+involutive+permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate|transport=product_like_transport_isomorphism:13": 1,
+      "tags=rack_type+left_nondegenerate+right_nondegenerate+nondegenerate|transport=none": 2,
+      "tags=rack_type+left_nondegenerate+right_nondegenerate+nondegenerate|transport=product_like_transport_isomorphism:1": 3,
+      "tags=rack_type+left_nondegenerate+right_nondegenerate+nondegenerate|transport=product_like_transport_isomorphism:2": 6,
+      "tags=rack_type+left_nondegenerate+right_nondegenerate+nondegenerate|transport=product_like_transport_isomorphism:3": 3,
+      "tags=rack_type+permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate|transport=none": 6,
+      "tags=rack_type+permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate|transport=product_like_transport_isomorphism:1": 11,
+      "tags=rack_type+permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate|transport=product_like_transport_isomorphism:4": 6
+    },
     "untagged_count": 24,
     "untagged_entry_counts": {
       "quotient_separating+subsolution+subsolution_fibre_congruence+observer": 12,
@@ -98,6 +138,10 @@
     "untagged_no_entry_count": 0,
     "untagged_subsolution_fibre_transition_counts": {
       "swapped_product_like:1": 24
+    },
+    "untagged_subsolution_fibre_transport_counts": {
+      "product_like_nonisomorphic_transport:1": 12,
+      "product_like_transport_isomorphism:1": 12
     }
   }
 }

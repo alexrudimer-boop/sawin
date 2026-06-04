@@ -12,6 +12,7 @@ from ybe_domination import (
     rack_solution,
     subsolution_fibre_congruences,
     subsolution_fibre_transition_audit,
+    subsolution_fibre_transport_isomorphism_audit,
     terminal_branch_triage_audit,
 )
 
@@ -86,6 +87,11 @@ class TerminalBranchTriageTests(unittest.TestCase):
         self.assertTrue(audit.all_mixed_transitions_product_like)
         self.assertTrue(audit.all_mixed_transitions_swapped_product_like)
         self.assertFalse(audit.all_mixed_transitions_direct_product_like)
+
+        transport = subsolution_fibre_transport_isomorphism_audit(solution, partition)
+
+        self.assertTrue(transport.all_mixed_rows_product_like)
+        self.assertTrue(transport.all_product_like_rows_have_transport_isomorphisms)
 
 
 if __name__ == "__main__":

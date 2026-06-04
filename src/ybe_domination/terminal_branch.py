@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from itertools import combinations
-from typing import FrozenSet, Tuple
+from typing import Dict, FrozenSet, Tuple
 
 from .congruence import (
     Partition,
@@ -115,6 +115,79 @@ class SubsolutionFibreTransitionAudit:
     @property
     def all_mixed_transitions_swapped_product_like(self) -> bool:
         return all(row.swapped_product_like for row in self.rows)
+
+
+@dataclass(frozen=True)
+class MixedFibreTransportMap:
+    input_left_block: FrozenSet[Element]
+    input_right_block: FrozenSet[Element]
+    source_block: FrozenSet[Element]
+    target_block: FrozenSet[Element]
+    source_coordinate: str
+    output_coordinate: str
+    mapping: Tuple[Tuple[Element, Element], ...]
+    is_well_defined: bool
+    is_bijection: bool
+    is_subsolution_isomorphism: bool
+
+
+@dataclass(frozen=True)
+class MixedFibreTransportRow:
+    input_left_block: FrozenSet[Element]
+    input_right_block: FrozenSet[Element]
+    first_from_left: MixedFibreTransportMap
+    first_from_right: MixedFibreTransportMap
+    second_from_left: MixedFibreTransportMap
+    second_from_right: MixedFibreTransportMap
+
+    @property
+    def direct_product_like(self) -> bool:
+        return (
+            self.first_from_left.is_well_defined
+            and self.second_from_right.is_well_defined
+        )
+
+    @property
+    def swapped_product_like(self) -> bool:
+        return (
+            self.first_from_right.is_well_defined
+            and self.second_from_left.is_well_defined
+        )
+
+    @property
+    def direct_transport_isomorphism(self) -> bool:
+        return (
+            self.first_from_left.is_subsolution_isomorphism
+            and self.second_from_right.is_subsolution_isomorphism
+        )
+
+    @property
+    def swapped_transport_isomorphism(self) -> bool:
+        return (
+            self.first_from_right.is_subsolution_isomorphism
+            and self.second_from_left.is_subsolution_isomorphism
+        )
+
+    @property
+    def product_like_transport_isomorphism(self) -> bool:
+        return self.direct_transport_isomorphism or self.swapped_transport_isomorphism
+
+
+@dataclass(frozen=True)
+class SubsolutionFibreTransportIsomorphismAudit:
+    solution: FiniteBraidedSet
+    partition: Partition
+    rows: Tuple[MixedFibreTransportRow, ...]
+
+    @property
+    def all_mixed_rows_product_like(self) -> bool:
+        return all(
+            row.direct_product_like or row.swapped_product_like for row in self.rows
+        )
+
+    @property
+    def all_product_like_rows_have_transport_isomorphisms(self) -> bool:
+        return all(row.product_like_transport_isomorphism for row in self.rows)
 
 
 def _proper_nonempty_subsets(elements: Tuple[Element, ...]):
@@ -282,6 +355,129 @@ def subsolution_fibre_transition_audit(
                 )
             )
     return SubsolutionFibreTransitionAudit(solution, partition, tuple(rows))
+
+
+def _is_subsolution_isomorphism(
+    solution: FiniteBraidedSet,
+    source_block: FrozenSet[Element],
+    target_block: FrozenSet[Element],
+    mapping: Dict[Element, Element],
+) -> bool:
+    if set(mapping.keys()) != set(source_block):
+        return False
+    if set(mapping.values()) != set(target_block):
+        return False
+    if len(set(mapping.values())) != len(mapping):
+        return False
+    for left in source_block:
+        for right in source_block:
+            out_left, out_right = solution.R[(left, right)]
+            target_left, target_right = solution.R[(mapping[left], mapping[right])]
+            if (target_left, target_right) != (mapping[out_left], mapping[out_right]):
+                return False
+    return True
+
+
+def _mixed_coordinate_transport_map(
+    solution: FiniteBraidedSet,
+    input_left_block: FrozenSet[Element],
+    input_right_block: FrozenSet[Element],
+    source_coordinate: str,
+    output_coordinate: str,
+    target_block: FrozenSet[Element],
+) -> MixedFibreTransportMap:
+    source_block = input_left_block if source_coordinate == "left" else input_right_block
+    other_block = input_right_block if source_coordinate == "left" else input_left_block
+    mapping: Dict[Element, Element] = {}
+    well_defined = True
+
+    for source in source_block:
+        values = set()
+        for other in other_block:
+            if source_coordinate == "left":
+                out_left, out_right = solution.R[(source, other)]
+            else:
+                out_left, out_right = solution.R[(other, source)]
+            values.add(out_left if output_coordinate == "first" else out_right)
+        if len(values) != 1:
+            well_defined = False
+        else:
+            mapping[source] = next(iter(values))
+
+    is_bijection = (
+        well_defined
+        and set(mapping.keys()) == set(source_block)
+        and set(mapping.values()) == set(target_block)
+        and len(set(mapping.values())) == len(mapping)
+    )
+    is_isomorphism = well_defined and _is_subsolution_isomorphism(
+        solution,
+        source_block,
+        target_block,
+        mapping,
+    )
+    return MixedFibreTransportMap(
+        input_left_block=input_left_block,
+        input_right_block=input_right_block,
+        source_block=source_block,
+        target_block=target_block,
+        source_coordinate=source_coordinate,
+        output_coordinate=output_coordinate,
+        mapping=tuple(sorted(mapping.items(), key=lambda item: repr(item[0]))),
+        is_well_defined=well_defined,
+        is_bijection=is_bijection,
+        is_subsolution_isomorphism=is_isomorphism,
+    )
+
+
+def subsolution_fibre_transport_isomorphism_audit(
+    solution: FiniteBraidedSet,
+    partition: Partition,
+) -> SubsolutionFibreTransportIsomorphismAudit:
+    """Audit whether product-like mixed transports preserve block solutions."""
+
+    transition_audit = subsolution_fibre_transition_audit(solution, partition)
+    rows = []
+    for row in transition_audit.rows:
+        rows.append(
+            MixedFibreTransportRow(
+                input_left_block=row.input_left_block,
+                input_right_block=row.input_right_block,
+                first_from_left=_mixed_coordinate_transport_map(
+                    solution,
+                    row.input_left_block,
+                    row.input_right_block,
+                    "left",
+                    "first",
+                    row.output_left_block,
+                ),
+                first_from_right=_mixed_coordinate_transport_map(
+                    solution,
+                    row.input_left_block,
+                    row.input_right_block,
+                    "right",
+                    "first",
+                    row.output_left_block,
+                ),
+                second_from_left=_mixed_coordinate_transport_map(
+                    solution,
+                    row.input_left_block,
+                    row.input_right_block,
+                    "left",
+                    "second",
+                    row.output_right_block,
+                ),
+                second_from_right=_mixed_coordinate_transport_map(
+                    solution,
+                    row.input_left_block,
+                    row.input_right_block,
+                    "right",
+                    "second",
+                    row.output_right_block,
+                ),
+            )
+        )
+    return SubsolutionFibreTransportIsomorphismAudit(solution, partition, tuple(rows))
 
 
 def one_state_invariant_observer_partition(solution: FiniteBraidedSet) -> Partition:

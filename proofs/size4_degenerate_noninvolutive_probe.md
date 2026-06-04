@@ -91,3 +91,12 @@ affine model is supplied by the cyclic-rack coordinate theorem.  A complete
 size-four classification still requires committing the forced-search script and
 the 40 tables, or replacing the search by a theoretical classification of the
 degenerate non-involutive size-four cases.
+
+The terminal-branch transport audit now distinguishes the two mechanisms
+without using braid-image orders.  For the Type B flip-across model, the
+subsolution-fibre mixed rows are swapped-product-like and the one-coordinate
+mixed transports are isomorphisms of the internal block subsolutions.  For the
+Type A affine model, the same mixed rows are swapped-product-like bijections
+but not subsolution isomorphisms.  Thus Type A genuinely needs its separate
+parity/fibre gauge, while Type B is in the literal flip-across transport
+branch.

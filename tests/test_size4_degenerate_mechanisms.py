@@ -14,6 +14,7 @@ from ybe_domination import (
     rack_residual_obstruction_audit,
     rack_solution,
     subsolution_fibre_transition_audit,
+    subsolution_fibre_transport_isomorphism_audit,
     terminal_branch_triage_audit,
 )
 
@@ -128,6 +129,14 @@ class SizeFourDegenerateMechanismTests(unittest.TestCase):
         self.assertTrue(type_a_transition.all_mixed_transitions_product_like)
         self.assertTrue(type_a_transition.all_mixed_transitions_swapped_product_like)
         self.assertFalse(type_a_transition.all_mixed_transitions_direct_product_like)
+        type_a_transport = subsolution_fibre_transport_isomorphism_audit(
+            type_a_solution,
+            type_a.subsolution_fibre_congruences[0],
+        )
+        self.assertTrue(type_a_transport.all_mixed_rows_product_like)
+        self.assertFalse(
+            type_a_transport.all_product_like_rows_have_transport_isomorphisms
+        )
 
         type_b_solution = flip_disjoint_union_solution(
             identity_solution((0, 1)),
@@ -146,6 +155,14 @@ class SizeFourDegenerateMechanismTests(unittest.TestCase):
         self.assertTrue(type_b_transition.all_mixed_transitions_product_like)
         self.assertTrue(type_b_transition.all_mixed_transitions_swapped_product_like)
         self.assertFalse(type_b_transition.all_mixed_transitions_direct_product_like)
+        type_b_transport = subsolution_fibre_transport_isomorphism_audit(
+            type_b_solution,
+            type_b.subsolution_fibre_congruences[0],
+        )
+        self.assertTrue(type_b_transport.all_mixed_rows_product_like)
+        self.assertTrue(
+            type_b_transport.all_product_like_rows_have_transport_isomorphisms
+        )
 
 
 if __name__ == "__main__":

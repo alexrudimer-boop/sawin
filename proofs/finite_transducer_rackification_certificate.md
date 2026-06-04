@@ -746,6 +746,22 @@ either direct-product-like or swapped-product-like; non-product-like rows are
 the finite shadow of a real mixed-fibre transition cocycle that would need an
 active-factor gauge rather than pure quotient-plus-block gluing.
 
+The further helper
+
+```text
+subsolution_fibre_transport_isomorphism_audit(X,theta)
+```
+
+checks the next finite obstruction.  When a mixed row is product-like, each
+output coordinate gives a one-variable transport map from one input block to
+one output block.  The audit records whether the direct or swapped pair of
+transport maps is not merely bijective but an isomorphism of the internal
+block subsolutions.  This separates the literal flip-across/transport branch
+from the stronger gauge branch: the size-four Type B flip-across example has
+product-like transport isomorphisms, whereas the Type A affine example has
+product-like bijective mixed transports that are not isomorphisms of the block
+subsolutions and must instead be handled by its parity/fibre coordinate gauge.
+
 This audit is a triage tool, not a negative theorem.  If it finds an entry
 branch, the branch can feed the quotient or multi-active-factor certificate
 layer.  If it finds none, the solution has merely passed these first finite
