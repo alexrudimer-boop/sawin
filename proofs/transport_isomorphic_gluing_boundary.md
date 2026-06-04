@@ -122,7 +122,8 @@ sequential code X^n -> T_n, then X is rack-dominated.
 This follows immediately from the equivariant reconstruction closure theorem.
 What remains to upgrade the Pro blueprint to the stated restricted theorem is
 the split-tower domination lemma, possibly with explicit monodromy
-rackification.
+rackification.  The certificate-level repaired form is recorded in
+`proofs/monodromy_augmented_transport_gluing_certificate.md`.
 
 ## Current Use
 
