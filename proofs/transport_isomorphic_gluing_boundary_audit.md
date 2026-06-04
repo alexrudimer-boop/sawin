@@ -33,7 +33,10 @@ colours, and the two colour fibres are crossing-closed.
 - closed detector chain complete: `True`;
 - assembled detector group orders: `(3,)`;
 - assembled final rack size from one-point terminal rack: `18`;
-- assembled size formula holds: `True`.
+- assembled size formula holds: `True`;
+- cyclic rack gauge: `u_i = x_i - i mod 3`;
+- cyclic rack gauge verified through degree: `5`;
+- cyclic rack gauge check passed: `True`.
 
 ## Consequence
 
@@ -55,3 +58,10 @@ The same router row feeds the closed-chain rack assembly.  Starting
 from the one-point terminal rack, the single detector group `C_3`
 produces the sharp factor size `2*3^2=18`, and the generated audit
 checks this size formula directly.
+
+There is also a direct all-arity explanation for this row.  In
+one-based positions, the fibre gauge `u_i=x_i-i mod 3` conjugates the
+fibre crossing `(x,y)->(y,x+1)` to the cyclic rack crossing
+`(u,v)->(v+1,u)`.  The generated audit verifies this generator
+identity through degree `5`; the displayed formula is the all-arity
+reason.

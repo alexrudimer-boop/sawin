@@ -129,6 +129,35 @@ class TerminalBranchTriageTests(unittest.TestCase):
             (3, 3),
         )
 
+    def test_identity_base_cyclic_transport_has_position_gauge_to_cyclic_rack(self):
+        elements = tuple(product((0, 1), (0, 1, 2)))
+        solution = FiniteBraidedSet(
+            elements,
+            {
+                ((left_color, left_point), (right_color, right_point)): (
+                    (left_color, right_point),
+                    (right_color, (left_point + 1) % 3),
+                )
+                for left_color, left_point in elements
+                for right_color, right_point in elements
+            },
+        )
+        cyclic = rack_solution((0, 1, 2), lambda _left, right: (right + 1) % 3)
+
+        def gauge(tup):
+            return tuple(
+                (point - index) % 3
+                for index, (_color, point) in enumerate(tup, start=1)
+            )
+
+        for degree in range(2, 6):
+            for generator in range(1, degree):
+                for tup in product(solution.elements, repeat=degree):
+                    self.assertEqual(
+                        gauge(solution.braid_action((generator,), tup)),
+                        cyclic.braid_action((generator,), gauge(tup)),
+                    )
+
 
 if __name__ == "__main__":
     unittest.main()

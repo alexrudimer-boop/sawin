@@ -18,6 +18,10 @@
     3
   ],
   "consequence": "transport-isomorphic product-like rows do not force simultaneous identity-gauge normalization; this example has loop monodromy of order 3",
+  "cyclic_rack_detector": "C_3 with R(u,v)=(v+1,u)",
+  "cyclic_rack_gauge_check_passed": true,
+  "cyclic_rack_gauge_formula": "u_i = x_i - i mod 3",
+  "cyclic_rack_gauge_verified_through_degree": 5,
   "description": "r((a,x),(b,y))=((a,y),(b,x+1 mod 3))",
   "element_count": 6,
   "is_ybe": true,

@@ -41,6 +41,31 @@ builds the sharp detector factor of size `2*3^2=18` with the expected size
 formula.  This is the executable bridge from finite monodromy certificate to
 finite rack factor.
 
+For this identity-base cyclic row there is an even more explicit all-arity
+gauge.  Write the fibre crossing as
+
+```text
+(x,y) -> (y,x+1)
+```
+
+over `Z/3`.  In one-based position `i`, set
+
+```text
+u_i = x_i - i mod 3.
+```
+
+Then a generator `sigma_i` acts in the `u`-coordinates by
+
+```text
+(u_i,u_{i+1}) -> (u_{i+1}+1,u_i),
+```
+
+which is the cyclic rack crossing for `C_3`.  Thus the order-three monodromy
+row has the same braid kernels as the three-point cyclic rack on the fibre
+coordinate, while the colour coordinate is a braid-invariant observer.  The
+generated audit checks this generator identity through degree `5`; the
+displayed position-gauge formula is independent of arity.
+
 ## Certificate Data
 
 Let `pi:X -> Z` be a finite YBE quotient with crossing-closed fibres.  Suppose

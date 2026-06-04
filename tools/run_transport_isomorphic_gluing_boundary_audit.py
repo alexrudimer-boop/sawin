@@ -42,6 +42,30 @@ def identity_base_cyclic_transport_solution() -> FiniteBraidedSet:
     return FiniteBraidedSet(elements, table)
 
 
+def cyclic_rack_solution(order: int) -> FiniteBraidedSet:
+    elements = tuple(range(order))
+    return rack_solution(elements, lambda _left, right: (right + 1) % order)
+
+
+def _position_gauge_fibres(tup: Sequence[tuple[int, int]], order: int) -> tuple[int, ...]:
+    return tuple((point - index) % order for index, (_color, point) in enumerate(tup, start=1))
+
+
+def cyclic_rack_gauge_verified_through(max_degree: int = 5) -> bool:
+    solution = identity_base_cyclic_transport_solution()
+    rack = cyclic_rack_solution(3)
+    for degree in range(2, max_degree + 1):
+        for generator in range(1, degree):
+            for tup in product(solution.elements, repeat=degree):
+                image = solution.braid_action((generator,), tup)
+                if _position_gauge_fibres(image, 3) != rack.braid_action(
+                    (generator,),
+                    _position_gauge_fibres(tup, 3),
+                ):
+                    return False
+    return True
+
+
 def identity_base_cyclic_transport_interval() -> LocalInterval:
     colors = (0, 1)
     points = (0, 1, 2)
@@ -130,6 +154,10 @@ def build_report() -> dict:
         "assembled_final_rack_size": assembly.final_rack_size,
         "assembled_expected_final_rack_size": assembly.expected_final_rack_size,
         "assembled_size_formula_holds": assembly.size_formula_holds,
+        "cyclic_rack_gauge_formula": "u_i = x_i - i mod 3",
+        "cyclic_rack_detector": "C_3 with R(u,v)=(v+1,u)",
+        "cyclic_rack_gauge_verified_through_degree": 5,
+        "cyclic_rack_gauge_check_passed": cyclic_rack_gauge_verified_through(5),
         "consequence": (
             "transport-isomorphic product-like rows do not force simultaneous "
             "identity-gauge normalization; this example has loop monodromy "
@@ -193,7 +221,13 @@ def render_markdown(report: dict) -> str:
         "- assembled final rack size from one-point terminal rack: "
         f"`{report['assembled_final_rack_size']}`;",
         "- assembled size formula holds: "
-        f"`{report['assembled_size_formula_holds']}`.",
+        f"`{report['assembled_size_formula_holds']}`;",
+        "- cyclic rack gauge: "
+        f"`{report['cyclic_rack_gauge_formula']}`;",
+        "- cyclic rack gauge verified through degree: "
+        f"`{report['cyclic_rack_gauge_verified_through_degree']}`;",
+        "- cyclic rack gauge check passed: "
+        f"`{report['cyclic_rack_gauge_check_passed']}`.",
         "",
         "## Consequence",
         "",
@@ -215,6 +249,13 @@ def render_markdown(report: dict) -> str:
         "from the one-point terminal rack, the single detector group `C_3`",
         "produces the sharp factor size `2*3^2=18`, and the generated audit",
         "checks this size formula directly.",
+        "",
+        "There is also a direct all-arity explanation for this row.  In",
+        "one-based positions, the fibre gauge `u_i=x_i-i mod 3` conjugates the",
+        "fibre crossing `(x,y)->(y,x+1)` to the cyclic rack crossing",
+        "`(u,v)->(v+1,u)`.  The generated audit verifies this generator",
+        "identity through degree `5`; the displayed formula is the all-arity",
+        "reason.",
     ]
     return "\n".join(lines) + "\n"
 
