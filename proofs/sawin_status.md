@@ -2446,6 +2446,12 @@ solution tables and the forced-search script are not yet committed, this is
 evidence and a theorem target rather than a reproducible classification:
 prove all-arity braid-equivalence for the two observed twisted-union families,
 or commit the finite census and then classify its output.
+The Type A side now has an explicit affine model in
+`proofs/affine_f2_cyclic_rack_equivalence.md`: for
+`X=F_2^2`, the formula
+`r((a,b),(c,d))=((d,a+b+d),(a+c+d+1,a+1))` preserves the parities
+`p_j=a_j+b_j`, and on each parity fibre the coordinates
+`t_j=a_j+H_j` carry the two-element cyclic rack action.
 
 The Type B mechanism has now been promoted from a bounded computation to a
 closure theorem in `proofs/flip_twisted_union_domination.md`.  If two finite

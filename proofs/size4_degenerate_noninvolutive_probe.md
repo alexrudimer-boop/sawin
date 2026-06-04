@@ -27,6 +27,9 @@ The 40 reported examples split into two observed types.
   range.  In particular the rack image orders for `n=2,3,4,5` are
   `4,24,192,1920`; the local audit also records the rack image order
   `23040` at `n=6`.  Exact domination was reported through `n=6`.
+  A concrete affine `F_2^2` Type A model and its all-arity fibrewise conjugacy
+  to this cyclic rack action are recorded in
+  `proofs/affine_f2_cyclic_rack_equivalence.md`.
 
 - Type B: 24 solutions have the same observed braid image orders as the
   three-element rack with left translations
@@ -76,14 +79,15 @@ The next useful theorem target is therefore not another detector for these
 tables, but an all-arity structural proof of the observed mechanism:
 
 ```
-Type A solutions are braid-equivalent to the two-element cyclic rack.
+Type A solutions are represented by the affine F_2^2 cyclic-rack-equivalent
+model, up to the remaining census equivalence checks.
 Type B twisted-union solutions are dominated by the flip-across union of the
 component rack detectors; in the observed size-four case this is the rack
 L_0=L_1=id, L_2=(01).
 ```
 
 The Type B proof is now supplied by the flip-across union theorem.  The Type A
-braid-equivalence and a complete size-four classification still require
-committing the forced-search script and the 40 tables, or replacing the search
-by a theoretical classification of the degenerate non-involutive size-four
-cases.
+affine model is supplied by the cyclic-rack coordinate theorem.  A complete
+size-four classification still requires committing the forced-search script and
+the 40 tables, or replacing the search by a theoretical classification of the
+degenerate non-involutive size-four cases.
