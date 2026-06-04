@@ -2608,6 +2608,12 @@ no current `branch_tags` classification.  That row has `a_X(2)=2`, first pure
 movement at arity `2`, and exact `Q_3` bounded-deletion obstruction
 `E_{X,2,3}=E_{X,2,4}=1`; the local `n=5` stabilizer run exceeded the
 five-minute interactive budget.
+The companion guardrail `proofs/fixed_q3_affine_rack_obstruction.md` shows
+that a fixed-`Q_3` affine endpoint is too strong in general: the affine rack
+`X=F_5`, `R(x,y)=(-x+2y,x)`, has `a_X(2)=2` but already has
+`E^{(3)}_{X,2,3}!=1`.  Since this `X` is itself a rack, the obstruction is not
+Sawin-negative; it only forces the positive target to use the true growing
+cutoff `a_X(h)+1`, not the first serious detector `Q_3`.
 
 ## Current conclusion
 

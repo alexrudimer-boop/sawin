@@ -254,6 +254,28 @@ class RackResidualTowerTests(unittest.TestCase):
             permutation_audit.obstruction_nontrivial,
         )
 
+    def test_fixed_q3_affine_rack_has_brunnian_obstruction_at_arity_three(self):
+        solution = rack_solution(
+            tuple(range(5)),
+            lambda left, right: (-left + 2 * right) % 5,
+        )
+
+        audit = bounded_deletion_support_q3_compressed_audit(
+            solution,
+            h=2,
+            n=3,
+        )
+
+        self.assertFalse(audit.truncated)
+        self.assertEqual(audit.detector_size, 2916)
+        self.assertEqual(audit.detector_component_count, 3)
+        self.assertEqual(audit.subset_count, 3)
+        self.assertEqual(audit.joint_image_size, 3456)
+        self.assertEqual(audit.obstruction_size, 2)
+        self.assertTrue(audit.obstruction_nontrivial)
+        self.assertIsNotNone(audit.first_witness_word)
+        self.assertNotEqual(audit.first_moved_tuple, audit.first_moved_tuple_image)
+
     def test_stabilizer_q3_bounded_deletion_audit_closes_type_b_at_arity_four(self):
         solution = flip_across_type_b_solution()
 

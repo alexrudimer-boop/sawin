@@ -282,6 +282,25 @@ E_{X,2,4} = 1.
 The local `n=5` stabilizer attempt for this `F_2^3` row exceeded the
 five-minute interactive budget.
 
+The note `proofs/fixed_q3_affine_rack_obstruction.md` records the opposite
+guardrail: fixed-`Q_3` bounded deletion is false in general, even for the
+one-dimensional affine rack
+
+```text
+X=F_5,
+R(x,y)=(-x+2y,x).
+```
+
+For this rack, `a_X(2)=2`, but the exact compressed audit gives
+
+```text
+E^{(3)}_{X,2,3} != 1.
+```
+
+This does not refute Sawin, since `X` is itself a finite rack.  It only shows
+that the affine endpoint cannot keep the detector fixed at `Q_3`; it must use
+the true cutoff `a_X(h)+1`.
+
 ## Scope
 
 This compression does not prove a bounded-deletion theorem for all
