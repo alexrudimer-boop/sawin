@@ -2736,3 +2736,15 @@ two-element cyclic rack.  The remaining positive theorem is therefore a
 finite transducer/rack gauge theorem for non-bisectional hidden motion.  A
 true negative example must combine non-bisectional local movement, no finite
 transducer/rack gauge, and a cofinal Artin-null Brunnian branch family.
+
+`proofs/finite_transducer_rackification_certificate.md` now records the
+sharper form of that fork.  The finite sequential rack gauge is a certificate
+theorem, not a universal theorem: fixed data
+`(Z,R_Z,S,Q,P,delta,omega,Delta,nu)` are checked by local two-letter
+equations plus a finite pair-automaton injectivity test, and then prove
+domination by `R_Z x S`.  The affine `F_2^3` hidden cyclic gauge is now an
+executable regression of this certificate format.  The remaining positive
+lemma is finite sequential-rack observability.  The remaining negative test
+is the cofinal rack-prefix obstruction
+`forall m exists n, N_{m,n}(X)!=1`; failure of bounded transducer searches
+alone is not enough.

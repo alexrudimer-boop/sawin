@@ -262,6 +262,56 @@ The checker also captures any future finite-state hidden-fibre gauge of the
 same kind: it audits the quotient equation, local rack-equivariance,
 local invariance, and the pair-automaton injectivity condition.
 
+The later same-chat Pro refinement identifies this note as the precise finite
+certificate theorem rather than as a broad theorem.  A proposed sequential
+rack gauge certificate consists of finite data
+
+```text
+(Z,R_Z,S,Q,P,delta,omega,Delta,nu)
+```
+
+where `Z` is an optional known quotient dominated by `R_Z`, `S` is the rack
+readout, `Q` is the causal Mealy state set for the rack readout, and `P` is an
+optional invariant observer.  For fixed size bounds on these data, certificate
+existence is a finite constraint-satisfaction problem plus the finite
+pair-automaton reachability test above.  Thus fixed-candidate and
+fixed-bound searches are terminating.
+
+The affine `F_2^3` pressure row from
+`proofs/affine_f2_hidden_cyclic_gauge.md` is now also a regression for this
+certificate format.  For
+
+```text
+X = F_2 x F_2^2,
+R((a,z),(b,w)) = ((a,Jw),(b,Jz+c)),
+J(z1,z2)=(z2,z1), c=(1,1),
+```
+
+take the two-state transducer `Q=Z/2`,
+
+```text
+delta(q,(a,z)) = q+1,
+omega(q,(a,z)) = J^q z + q c,
+```
+
+take the constant-action rack on `F_2^2`,
+
+```text
+s*t = t+c,
+```
+
+and take the invariant observer `nu(a,z)=a`.  The combined output
+
+```text
+(a_i,z_i)_i |-> ((a_i)_i,(J^i z_i + (i mod 2)c)_i)
+```
+
+is injective in every arity, and the local equations hold.  The regression
+`tests/test_transducer_certificate.py::test_affine_f2_hidden_cyclic_gauge_has_sequential_certificate`
+checks this finite certificate directly.  This is the clean executable
+replacement for trying to force a non-surjective local YBE row into a
+single-strand bisectional fibre model.
+
 The exact all-detector tower behind this fixed-candidate check is isolated in
 `proofs/rack_residual_obstruction_tower.md`.  In that language, a transducer
 certificate proves vanishing of the rack-residual tower for one finite
@@ -272,11 +322,45 @@ However, the criterion is not a proof of Sawin by itself.  The remaining
 universal statement would be:
 
 ```text
-Every actual finite YBE solution has such a finite transducer certificate
-after the known quotient, involutive, left-nondegenerate, and flip-union
-branches are removed.
+Finite sequential-rack observability lemma.
+
+Every actual finite YBE solution has such a finite sequential rack gauge
+certificate after the known quotient, involutive, left-nondegenerate,
+flip-union, and small kernel-equivalence branches are removed.
 ```
 
 No proof of that universal existence theorem is currently available in the
 ledger.  Failure of one proposed finite transducer class is only a gap.
 Failure for all finite rack detectors is the normalized-law negative branch.
+
+Equivalently, the exact finite-rack negative test for a fixed rack prefix is
+as follows.  Enumerate finite racks and let
+
+```text
+P_m = Y_1 x ... x Y_m.
+```
+
+For fixed `m,n`, form
+
+```text
+Gamma_{m,n}(X)
+  =
+< (rho^{P_m}_n(sigma_i),rho^X_n(sigma_i)) : 1 <= i < n >
+<= Sym(P_m^n) x Sym(X^n)
+```
+
+and
+
+```text
+N_{m,n}(X) = { g_X : (1,g_X) in Gamma_{m,n}(X) }.
+```
+
+Then `N_{m,n}(X)!=1` is an explicit finite braid word invisible to the rack
+prefix `P_m` and nontrivial on `X^n`.  A genuine Sawin-negative proof requires
+
+```text
+forall m exists n,  N_{m,n}(X) != 1.
+```
+
+That cofinal rack-prefix obstruction, not failure of any bounded transducer
+search by itself, is the normalized-law no-rack sequence.

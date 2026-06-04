@@ -54,6 +54,38 @@ def affine_type_a_transducers(solution):
             InvariantTransducer(states, ("start", 0), inv_delta, inv_nu))
 
 
+def affine_f2_hidden_cyclic_solution():
+    elements = tuple(product((0, 1), repeat=3))
+    table = {}
+    for a, z1, z2 in elements:
+        for b, w1, w2 in elements:
+            table[((a, z1, z2), (b, w1, w2))] = (
+                (a, w2, w1),
+                (b, (z2 + 1) % 2, (z1 + 1) % 2),
+            )
+    return FiniteBraidedSet(elements, table)
+
+
+def affine_f2_hidden_cyclic_transducers(solution):
+    states = (0, 1)
+    rack_delta = {}
+    rack_omega = {}
+    inv_delta = {}
+    inv_nu = {}
+    for state in states:
+        for letter in solution.elements:
+            a, z1, z2 = letter
+            rack_delta[(state, letter)] = 1 - state
+            if state == 0:
+                rack_omega[(state, letter)] = (z1, z2)
+            else:
+                rack_omega[(state, letter)] = ((z2 + 1) % 2, (z1 + 1) % 2)
+            inv_delta[(state, letter)] = state
+            inv_nu[(state, letter)] = a
+    return (MealyTransducer(states, 0, rack_delta, rack_omega),
+            InvariantTransducer(states, 0, inv_delta, inv_nu))
+
+
 class TransducerCertificateTests(unittest.TestCase):
     def test_affine_type_a_has_finite_transducer_certificate(self):
         solution = affine_f2_type_a_solution()
@@ -124,6 +156,30 @@ class TransducerCertificateTests(unittest.TestCase):
 
         self.assertFalse(audit.finite_conditions_hold)
         self.assertTrue(audit.rack_failures)
+
+    def test_affine_f2_hidden_cyclic_gauge_has_sequential_certificate(self):
+        solution = affine_f2_hidden_cyclic_solution()
+        quotient = identity_solution(("z",))
+        quotient_map = {element: "z" for element in solution.elements}
+        fibre = tuple(product((0, 1), repeat=2))
+        constant_action = rack_solution(
+            fibre,
+            lambda _left, right: ((right[0] + 1) % 2, (right[1] + 1) % 2),
+        )
+        rack_transducer, invariant_transducer = (
+            affine_f2_hidden_cyclic_transducers(solution)
+        )
+
+        audit = transducer_rackification_audit(
+            solution,
+            quotient,
+            quotient_map,
+            constant_action,
+            rack_transducer,
+            invariant_transducer,
+        )
+
+        self.assertTrue(audit.finite_conditions_hold)
 
 
 if __name__ == "__main__":

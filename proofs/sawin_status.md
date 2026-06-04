@@ -2710,6 +2710,18 @@ two-element cyclic rack.  Thus the remaining positive target is a finite
 transducer/rack gauge theorem for non-bisectional hidden motion, and the
 remaining negative target must show non-bisectional movement with no finite
 transducer/rack gauge plus a cofinal Artin-null Brunnian branch family.
+The latest same-chat Pro refinement is now folded into
+`proofs/finite_transducer_rackification_certificate.md`.  The finite
+sequential rack gauge is a certificate theorem, not a proved universal
+theorem: fixed candidate data
+`(Z,R_Z,S,Q,P,delta,omega,Delta,nu)` are checked by local two-letter
+equations and a finite pair-automaton injectivity test, and successful data
+prove domination by `R_Z x S`.  The affine `F_2^3` hidden cyclic gauge now has
+such an executable certificate in `tests/test_transducer_certificate.py`.
+Thus the exact remaining positive lemma is finite sequential-rack
+observability.  The exact all-rack negative test is the cofinal rack-prefix
+obstruction `forall m exists n, N_{m,n}(X)!=1`; absence of certificates under
+fixed size bounds is only a bounded search failure.
 Formal partial-row nonseparability, failure of one-vertex actualization for a
 formal row system, or failure of stronger structural properties such as
 virtual freeness of `Art_I`, remains only a gap unless it is made actual and

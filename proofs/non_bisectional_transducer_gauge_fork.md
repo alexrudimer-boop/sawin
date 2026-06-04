@@ -163,6 +163,21 @@ The affine row is the model positive case: its gauge is not a local
 single-strand bisection of the original `X` coordinate, but it is a finite
 position-dependent marked braid factor.
 
+The sharper certificate formulation is recorded in
+`proofs/finite_transducer_rackification_certificate.md`.  There the remaining
+positive lemma is renamed finite sequential-rack observability: after the
+known positive reductions, find finite data
+
+```text
+(Z,R_Z,S,Q,P,delta,omega,Delta,nu)
+```
+
+whose local two-letter equations make the sequential readouts
+braid-equivariant/invariant and whose pair automaton proves all-length
+injectivity.  Such data prove domination by `R_Z x S`.  Conversely, absence of
+such data under any fixed size bounds is only a bounded certificate failure,
+not a no-rack theorem.
+
 ## Exact Negative Search Target
 
 A genuine Sawin counterexample must now have all three properties:
@@ -181,6 +196,18 @@ rho^X_{n_m}(beta_m) != 1.
 The affine `F_2^3` row has property 1 but fails property 2 because the gauge
 above reduces it to a constant-action rack.  Failure of bisectional enrichment
 alone is therefore only a search filter.
+
+The actual all-rack negative test is the cofinal rack-prefix obstruction from
+`proofs/finite_transducer_rackification_certificate.md`: for every finite rack
+prefix `P_m`, some arity `n` must have a nontrivial
+
+```text
+N_{m,n}(X) = { g_X : (1,g_X) in
+< (rho^{P_m}_n(sigma_i),rho^X_n(sigma_i)) > }.
+```
+
+That condition supplies the normalized-law braid sequence.  It remains stronger
+than failing to find a finite sequential certificate in a bounded search.
 
 For a concrete finite YBE table `X`, the first filter is
 

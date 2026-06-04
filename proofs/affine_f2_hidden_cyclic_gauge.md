@@ -22,6 +22,9 @@ has image `{a} x W`, so no finite permutation-fibre semiconjugacy can
 reconstruct the actual local update.  This failure is not Sawin-negative
 because the position-dependent gauge below still gives kernel equality with
 the two-element cyclic rack.
+The same gauge is now also recorded as a finite sequential rack certificate in
+`proofs/finite_transducer_rackification_certificate.md` and checked by
+`tests/test_transducer_certificate.py`.
 
 ## The Row
 
