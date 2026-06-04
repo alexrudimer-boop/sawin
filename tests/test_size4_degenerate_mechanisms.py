@@ -13,6 +13,7 @@ from ybe_domination import (
     is_rack_solution,
     rack_residual_obstruction_audit,
     rack_solution,
+    subsolution_fibre_congruences,
     subsolution_fibre_transition_audit,
     subsolution_fibre_transport_isomorphism_audit,
     terminal_branch_triage_audit,
@@ -122,6 +123,10 @@ class SizeFourDegenerateMechanismTests(unittest.TestCase):
         self.assertTrue(type_a.has_nontrivial_one_state_observer)
         self.assertTrue(type_a.has_proper_subsolution)
         self.assertTrue(type_a.has_subsolution_fibre_congruence)
+        self.assertEqual(
+            len(subsolution_fibre_congruences(type_a_solution)),
+            1,
+        )
         type_a_transition = subsolution_fibre_transition_audit(
             type_a_solution,
             type_a.subsolution_fibre_congruences[0],

@@ -1,0 +1,938 @@
+{
+  "type_a_affine_f2": {
+    "congruence_block_sizes": [
+      [
+        4
+      ],
+      [
+        2,
+        2
+      ],
+      [
+        1,
+        1,
+        1,
+        1
+      ]
+    ],
+    "element_count": 4,
+    "has_flip_across_decomposition": false,
+    "has_nontrivial_one_state_observer": true,
+    "is_involutive": false,
+    "is_ybe": true,
+    "name": "type_a_affine_f2",
+    "proper_congruence_count": 2,
+    "proper_subsolution_fibre_congruence_count": 1,
+    "proper_subsolution_fibre_congruences": [
+      [
+        [
+          "(0, 0)",
+          "(1, 1)"
+        ],
+        [
+          "(0, 1)",
+          "(1, 0)"
+        ]
+      ]
+    ],
+    "transport_audits": [
+      {
+        "all_mixed_rows_product_like": true,
+        "all_product_like_rows_have_transport_isomorphisms": false,
+        "partition": [
+          [
+            "(0, 0)",
+            "(1, 1)"
+          ],
+          [
+            "(0, 1)",
+            "(1, 0)"
+          ]
+        ],
+        "rows": [
+          {
+            "direct_product_like": false,
+            "direct_transport_isomorphism": false,
+            "input_left_block": [
+              "(0, 0)",
+              "(1, 1)"
+            ],
+            "input_right_block": [
+              "(0, 1)",
+              "(1, 0)"
+            ],
+            "product_like_transport_isomorphism": false,
+            "swapped_product_like": true,
+            "swapped_transport_isomorphism": false,
+            "well_defined_maps": [
+              {
+                "is_bijection": true,
+                "is_subsolution_isomorphism": false,
+                "is_well_defined": true,
+                "mapping": [
+                  [
+                    "(0, 1)",
+                    "(1, 1)"
+                  ],
+                  [
+                    "(1, 0)",
+                    "(0, 0)"
+                  ]
+                ],
+                "output_coordinate": "first",
+                "source_block": [
+                  "(0, 1)",
+                  "(1, 0)"
+                ],
+                "source_coordinate": "right",
+                "target_block": [
+                  "(0, 0)",
+                  "(1, 1)"
+                ]
+              },
+              {
+                "is_bijection": true,
+                "is_subsolution_isomorphism": false,
+                "is_well_defined": true,
+                "mapping": [
+                  [
+                    "(0, 0)",
+                    "(0, 1)"
+                  ],
+                  [
+                    "(1, 1)",
+                    "(1, 0)"
+                  ]
+                ],
+                "output_coordinate": "second",
+                "source_block": [
+                  "(0, 0)",
+                  "(1, 1)"
+                ],
+                "source_coordinate": "left",
+                "target_block": [
+                  "(0, 1)",
+                  "(1, 0)"
+                ]
+              }
+            ]
+          },
+          {
+            "direct_product_like": false,
+            "direct_transport_isomorphism": false,
+            "input_left_block": [
+              "(0, 1)",
+              "(1, 0)"
+            ],
+            "input_right_block": [
+              "(0, 0)",
+              "(1, 1)"
+            ],
+            "product_like_transport_isomorphism": false,
+            "swapped_product_like": true,
+            "swapped_transport_isomorphism": false,
+            "well_defined_maps": [
+              {
+                "is_bijection": true,
+                "is_subsolution_isomorphism": false,
+                "is_well_defined": true,
+                "mapping": [
+                  [
+                    "(0, 0)",
+                    "(0, 1)"
+                  ],
+                  [
+                    "(1, 1)",
+                    "(1, 0)"
+                  ]
+                ],
+                "output_coordinate": "first",
+                "source_block": [
+                  "(0, 0)",
+                  "(1, 1)"
+                ],
+                "source_coordinate": "right",
+                "target_block": [
+                  "(0, 1)",
+                  "(1, 0)"
+                ]
+              },
+              {
+                "is_bijection": true,
+                "is_subsolution_isomorphism": false,
+                "is_well_defined": true,
+                "mapping": [
+                  [
+                    "(0, 1)",
+                    "(1, 1)"
+                  ],
+                  [
+                    "(1, 0)",
+                    "(0, 0)"
+                  ]
+                ],
+                "output_coordinate": "second",
+                "source_block": [
+                  "(0, 1)",
+                  "(1, 0)"
+                ],
+                "source_coordinate": "left",
+                "target_block": [
+                  "(0, 0)",
+                  "(1, 1)"
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "type_b_flip_across": {
+    "congruence_block_sizes": [
+      [
+        4
+      ],
+      [
+        2,
+        2
+      ],
+      [
+        1,
+        1,
+        2
+      ],
+      [
+        1,
+        1,
+        2
+      ],
+      [
+        1,
+        1,
+        1,
+        1
+      ]
+    ],
+    "element_count": 4,
+    "has_flip_across_decomposition": true,
+    "has_nontrivial_one_state_observer": false,
+    "is_involutive": false,
+    "is_ybe": true,
+    "name": "type_b_flip_across",
+    "proper_congruence_count": 4,
+    "proper_subsolution_fibre_congruence_count": 2,
+    "proper_subsolution_fibre_congruences": [
+      [
+        [
+          "('P', 0)",
+          "('P', 1)"
+        ],
+        [
+          "('T', 0)",
+          "('T', 1)"
+        ]
+      ],
+      [
+        [
+          "('T', 0)"
+        ],
+        [
+          "('T', 1)"
+        ],
+        [
+          "('P', 0)",
+          "('P', 1)"
+        ]
+      ]
+    ],
+    "transport_audits": [
+      {
+        "all_mixed_rows_product_like": true,
+        "all_product_like_rows_have_transport_isomorphisms": true,
+        "partition": [
+          [
+            "('P', 0)",
+            "('P', 1)"
+          ],
+          [
+            "('T', 0)",
+            "('T', 1)"
+          ]
+        ],
+        "rows": [
+          {
+            "direct_product_like": false,
+            "direct_transport_isomorphism": false,
+            "input_left_block": [
+              "('P', 0)",
+              "('P', 1)"
+            ],
+            "input_right_block": [
+              "('T', 0)",
+              "('T', 1)"
+            ],
+            "product_like_transport_isomorphism": true,
+            "swapped_product_like": true,
+            "swapped_transport_isomorphism": true,
+            "well_defined_maps": [
+              {
+                "is_bijection": true,
+                "is_subsolution_isomorphism": true,
+                "is_well_defined": true,
+                "mapping": [
+                  [
+                    "('T', 0)",
+                    "('T', 0)"
+                  ],
+                  [
+                    "('T', 1)",
+                    "('T', 1)"
+                  ]
+                ],
+                "output_coordinate": "first",
+                "source_block": [
+                  "('T', 0)",
+                  "('T', 1)"
+                ],
+                "source_coordinate": "right",
+                "target_block": [
+                  "('T', 0)",
+                  "('T', 1)"
+                ]
+              },
+              {
+                "is_bijection": true,
+                "is_subsolution_isomorphism": true,
+                "is_well_defined": true,
+                "mapping": [
+                  [
+                    "('P', 0)",
+                    "('P', 0)"
+                  ],
+                  [
+                    "('P', 1)",
+                    "('P', 1)"
+                  ]
+                ],
+                "output_coordinate": "second",
+                "source_block": [
+                  "('P', 0)",
+                  "('P', 1)"
+                ],
+                "source_coordinate": "left",
+                "target_block": [
+                  "('P', 0)",
+                  "('P', 1)"
+                ]
+              }
+            ]
+          },
+          {
+            "direct_product_like": false,
+            "direct_transport_isomorphism": false,
+            "input_left_block": [
+              "('T', 0)",
+              "('T', 1)"
+            ],
+            "input_right_block": [
+              "('P', 0)",
+              "('P', 1)"
+            ],
+            "product_like_transport_isomorphism": true,
+            "swapped_product_like": true,
+            "swapped_transport_isomorphism": true,
+            "well_defined_maps": [
+              {
+                "is_bijection": true,
+                "is_subsolution_isomorphism": true,
+                "is_well_defined": true,
+                "mapping": [
+                  [
+                    "('P', 0)",
+                    "('P', 0)"
+                  ],
+                  [
+                    "('P', 1)",
+                    "('P', 1)"
+                  ]
+                ],
+                "output_coordinate": "first",
+                "source_block": [
+                  "('P', 0)",
+                  "('P', 1)"
+                ],
+                "source_coordinate": "right",
+                "target_block": [
+                  "('P', 0)",
+                  "('P', 1)"
+                ]
+              },
+              {
+                "is_bijection": true,
+                "is_subsolution_isomorphism": true,
+                "is_well_defined": true,
+                "mapping": [
+                  [
+                    "('T', 0)",
+                    "('T', 0)"
+                  ],
+                  [
+                    "('T', 1)",
+                    "('T', 1)"
+                  ]
+                ],
+                "output_coordinate": "second",
+                "source_block": [
+                  "('T', 0)",
+                  "('T', 1)"
+                ],
+                "source_coordinate": "left",
+                "target_block": [
+                  "('T', 0)",
+                  "('T', 1)"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "all_mixed_rows_product_like": true,
+        "all_product_like_rows_have_transport_isomorphisms": true,
+        "partition": [
+          [
+            "('T', 0)"
+          ],
+          [
+            "('T', 1)"
+          ],
+          [
+            "('P', 0)",
+            "('P', 1)"
+          ]
+        ],
+        "rows": [
+          {
+            "direct_product_like": true,
+            "direct_transport_isomorphism": true,
+            "input_left_block": [
+              "('T', 0)"
+            ],
+            "input_right_block": [
+              "('T', 1)"
+            ],
+            "product_like_transport_isomorphism": true,
+            "swapped_product_like": true,
+            "swapped_transport_isomorphism": true,
+            "well_defined_maps": [
+              {
+                "is_bijection": true,
+                "is_subsolution_isomorphism": true,
+                "is_well_defined": true,
+                "mapping": [
+                  [
+                    "('T', 0)",
+                    "('T', 0)"
+                  ]
+                ],
+                "output_coordinate": "first",
+                "source_block": [
+                  "('T', 0)"
+                ],
+                "source_coordinate": "left",
+                "target_block": [
+                  "('T', 0)"
+                ]
+              },
+              {
+                "is_bijection": true,
+                "is_subsolution_isomorphism": true,
+                "is_well_defined": true,
+                "mapping": [
+                  [
+                    "('T', 1)",
+                    "('T', 0)"
+                  ]
+                ],
+                "output_coordinate": "first",
+                "source_block": [
+                  "('T', 1)"
+                ],
+                "source_coordinate": "right",
+                "target_block": [
+                  "('T', 0)"
+                ]
+              },
+              {
+                "is_bijection": true,
+                "is_subsolution_isomorphism": true,
+                "is_well_defined": true,
+                "mapping": [
+                  [
+                    "('T', 0)",
+                    "('T', 1)"
+                  ]
+                ],
+                "output_coordinate": "second",
+                "source_block": [
+                  "('T', 0)"
+                ],
+                "source_coordinate": "left",
+                "target_block": [
+                  "('T', 1)"
+                ]
+              },
+              {
+                "is_bijection": true,
+                "is_subsolution_isomorphism": true,
+                "is_well_defined": true,
+                "mapping": [
+                  [
+                    "('T', 1)",
+                    "('T', 1)"
+                  ]
+                ],
+                "output_coordinate": "second",
+                "source_block": [
+                  "('T', 1)"
+                ],
+                "source_coordinate": "right",
+                "target_block": [
+                  "('T', 1)"
+                ]
+              }
+            ]
+          },
+          {
+            "direct_product_like": false,
+            "direct_transport_isomorphism": false,
+            "input_left_block": [
+              "('T', 0)"
+            ],
+            "input_right_block": [
+              "('P', 0)",
+              "('P', 1)"
+            ],
+            "product_like_transport_isomorphism": true,
+            "swapped_product_like": true,
+            "swapped_transport_isomorphism": true,
+            "well_defined_maps": [
+              {
+                "is_bijection": true,
+                "is_subsolution_isomorphism": true,
+                "is_well_defined": true,
+                "mapping": [
+                  [
+                    "('P', 0)",
+                    "('P', 0)"
+                  ],
+                  [
+                    "('P', 1)",
+                    "('P', 1)"
+                  ]
+                ],
+                "output_coordinate": "first",
+                "source_block": [
+                  "('P', 0)",
+                  "('P', 1)"
+                ],
+                "source_coordinate": "right",
+                "target_block": [
+                  "('P', 0)",
+                  "('P', 1)"
+                ]
+              },
+              {
+                "is_bijection": true,
+                "is_subsolution_isomorphism": true,
+                "is_well_defined": true,
+                "mapping": [
+                  [
+                    "('T', 0)",
+                    "('T', 0)"
+                  ]
+                ],
+                "output_coordinate": "second",
+                "source_block": [
+                  "('T', 0)"
+                ],
+                "source_coordinate": "left",
+                "target_block": [
+                  "('T', 0)"
+                ]
+              },
+              {
+                "is_bijection": false,
+                "is_subsolution_isomorphism": false,
+                "is_well_defined": true,
+                "mapping": [
+                  [
+                    "('P', 0)",
+                    "('T', 0)"
+                  ],
+                  [
+                    "('P', 1)",
+                    "('T', 0)"
+                  ]
+                ],
+                "output_coordinate": "second",
+                "source_block": [
+                  "('P', 0)",
+                  "('P', 1)"
+                ],
+                "source_coordinate": "right",
+                "target_block": [
+                  "('T', 0)"
+                ]
+              }
+            ]
+          },
+          {
+            "direct_product_like": true,
+            "direct_transport_isomorphism": true,
+            "input_left_block": [
+              "('T', 1)"
+            ],
+            "input_right_block": [
+              "('T', 0)"
+            ],
+            "product_like_transport_isomorphism": true,
+            "swapped_product_like": true,
+            "swapped_transport_isomorphism": true,
+            "well_defined_maps": [
+              {
+                "is_bijection": true,
+                "is_subsolution_isomorphism": true,
+                "is_well_defined": true,
+                "mapping": [
+                  [
+                    "('T', 1)",
+                    "('T', 1)"
+                  ]
+                ],
+                "output_coordinate": "first",
+                "source_block": [
+                  "('T', 1)"
+                ],
+                "source_coordinate": "left",
+                "target_block": [
+                  "('T', 1)"
+                ]
+              },
+              {
+                "is_bijection": true,
+                "is_subsolution_isomorphism": true,
+                "is_well_defined": true,
+                "mapping": [
+                  [
+                    "('T', 0)",
+                    "('T', 1)"
+                  ]
+                ],
+                "output_coordinate": "first",
+                "source_block": [
+                  "('T', 0)"
+                ],
+                "source_coordinate": "right",
+                "target_block": [
+                  "('T', 1)"
+                ]
+              },
+              {
+                "is_bijection": true,
+                "is_subsolution_isomorphism": true,
+                "is_well_defined": true,
+                "mapping": [
+                  [
+                    "('T', 1)",
+                    "('T', 0)"
+                  ]
+                ],
+                "output_coordinate": "second",
+                "source_block": [
+                  "('T', 1)"
+                ],
+                "source_coordinate": "left",
+                "target_block": [
+                  "('T', 0)"
+                ]
+              },
+              {
+                "is_bijection": true,
+                "is_subsolution_isomorphism": true,
+                "is_well_defined": true,
+                "mapping": [
+                  [
+                    "('T', 0)",
+                    "('T', 0)"
+                  ]
+                ],
+                "output_coordinate": "second",
+                "source_block": [
+                  "('T', 0)"
+                ],
+                "source_coordinate": "right",
+                "target_block": [
+                  "('T', 0)"
+                ]
+              }
+            ]
+          },
+          {
+            "direct_product_like": false,
+            "direct_transport_isomorphism": false,
+            "input_left_block": [
+              "('T', 1)"
+            ],
+            "input_right_block": [
+              "('P', 0)",
+              "('P', 1)"
+            ],
+            "product_like_transport_isomorphism": true,
+            "swapped_product_like": true,
+            "swapped_transport_isomorphism": true,
+            "well_defined_maps": [
+              {
+                "is_bijection": true,
+                "is_subsolution_isomorphism": true,
+                "is_well_defined": true,
+                "mapping": [
+                  [
+                    "('P', 0)",
+                    "('P', 0)"
+                  ],
+                  [
+                    "('P', 1)",
+                    "('P', 1)"
+                  ]
+                ],
+                "output_coordinate": "first",
+                "source_block": [
+                  "('P', 0)",
+                  "('P', 1)"
+                ],
+                "source_coordinate": "right",
+                "target_block": [
+                  "('P', 0)",
+                  "('P', 1)"
+                ]
+              },
+              {
+                "is_bijection": true,
+                "is_subsolution_isomorphism": true,
+                "is_well_defined": true,
+                "mapping": [
+                  [
+                    "('T', 1)",
+                    "('T', 1)"
+                  ]
+                ],
+                "output_coordinate": "second",
+                "source_block": [
+                  "('T', 1)"
+                ],
+                "source_coordinate": "left",
+                "target_block": [
+                  "('T', 1)"
+                ]
+              },
+              {
+                "is_bijection": false,
+                "is_subsolution_isomorphism": false,
+                "is_well_defined": true,
+                "mapping": [
+                  [
+                    "('P', 0)",
+                    "('T', 1)"
+                  ],
+                  [
+                    "('P', 1)",
+                    "('T', 1)"
+                  ]
+                ],
+                "output_coordinate": "second",
+                "source_block": [
+                  "('P', 0)",
+                  "('P', 1)"
+                ],
+                "source_coordinate": "right",
+                "target_block": [
+                  "('T', 1)"
+                ]
+              }
+            ]
+          },
+          {
+            "direct_product_like": false,
+            "direct_transport_isomorphism": false,
+            "input_left_block": [
+              "('P', 0)",
+              "('P', 1)"
+            ],
+            "input_right_block": [
+              "('T', 0)"
+            ],
+            "product_like_transport_isomorphism": true,
+            "swapped_product_like": true,
+            "swapped_transport_isomorphism": true,
+            "well_defined_maps": [
+              {
+                "is_bijection": false,
+                "is_subsolution_isomorphism": false,
+                "is_well_defined": true,
+                "mapping": [
+                  [
+                    "('P', 0)",
+                    "('T', 0)"
+                  ],
+                  [
+                    "('P', 1)",
+                    "('T', 0)"
+                  ]
+                ],
+                "output_coordinate": "first",
+                "source_block": [
+                  "('P', 0)",
+                  "('P', 1)"
+                ],
+                "source_coordinate": "left",
+                "target_block": [
+                  "('T', 0)"
+                ]
+              },
+              {
+                "is_bijection": true,
+                "is_subsolution_isomorphism": true,
+                "is_well_defined": true,
+                "mapping": [
+                  [
+                    "('T', 0)",
+                    "('T', 0)"
+                  ]
+                ],
+                "output_coordinate": "first",
+                "source_block": [
+                  "('T', 0)"
+                ],
+                "source_coordinate": "right",
+                "target_block": [
+                  "('T', 0)"
+                ]
+              },
+              {
+                "is_bijection": true,
+                "is_subsolution_isomorphism": true,
+                "is_well_defined": true,
+                "mapping": [
+                  [
+                    "('P', 0)",
+                    "('P', 0)"
+                  ],
+                  [
+                    "('P', 1)",
+                    "('P', 1)"
+                  ]
+                ],
+                "output_coordinate": "second",
+                "source_block": [
+                  "('P', 0)",
+                  "('P', 1)"
+                ],
+                "source_coordinate": "left",
+                "target_block": [
+                  "('P', 0)",
+                  "('P', 1)"
+                ]
+              }
+            ]
+          },
+          {
+            "direct_product_like": false,
+            "direct_transport_isomorphism": false,
+            "input_left_block": [
+              "('P', 0)",
+              "('P', 1)"
+            ],
+            "input_right_block": [
+              "('T', 1)"
+            ],
+            "product_like_transport_isomorphism": true,
+            "swapped_product_like": true,
+            "swapped_transport_isomorphism": true,
+            "well_defined_maps": [
+              {
+                "is_bijection": false,
+                "is_subsolution_isomorphism": false,
+                "is_well_defined": true,
+                "mapping": [
+                  [
+                    "('P', 0)",
+                    "('T', 1)"
+                  ],
+                  [
+                    "('P', 1)",
+                    "('T', 1)"
+                  ]
+                ],
+                "output_coordinate": "first",
+                "source_block": [
+                  "('P', 0)",
+                  "('P', 1)"
+                ],
+                "source_coordinate": "left",
+                "target_block": [
+                  "('T', 1)"
+                ]
+              },
+              {
+                "is_bijection": true,
+                "is_subsolution_isomorphism": true,
+                "is_well_defined": true,
+                "mapping": [
+                  [
+                    "('T', 1)",
+                    "('T', 1)"
+                  ]
+                ],
+                "output_coordinate": "first",
+                "source_block": [
+                  "('T', 1)"
+                ],
+                "source_coordinate": "right",
+                "target_block": [
+                  "('T', 1)"
+                ]
+              },
+              {
+                "is_bijection": true,
+                "is_subsolution_isomorphism": true,
+                "is_well_defined": true,
+                "mapping": [
+                  [
+                    "('P', 0)",
+                    "('P', 0)"
+                  ],
+                  [
+                    "('P', 1)",
+                    "('P', 1)"
+                  ]
+                ],
+                "output_coordinate": "second",
+                "source_block": [
+                  "('P', 0)",
+                  "('P', 1)"
+                ],
+                "source_coordinate": "left",
+                "target_block": [
+                  "('P', 0)",
+                  "('P', 1)"
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
