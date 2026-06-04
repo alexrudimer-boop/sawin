@@ -9,6 +9,13 @@ smaller Fadell-Neuwirth endpoint theorem whose proof implies finite-degree
 endpoint determinacy by induction, and whose cofinal failure gives a more
 focused actual search.
 
+Follow-up: the theorem isolated here is false as stated.  See
+`proofs/vertical_kernel_endpoint_refutation.md` for an actual flip-solution
+endpoint-labelled interval with cofinal nonidentity `H^vert` witnesses.  That
+refutation does not refute Sawin's problem, because the underlying solution is
+involutive and already dominated by the two-point flip rack.  It shows that
+the endpoint-labelled interval axioms are too broad for this route.
+
 ## Setup
 
 Fix an actual finite completed-context interval
@@ -319,15 +326,18 @@ H^vert_{I,3,2,3,c} != 1.
 Such a hit is only a finite-level pressure witness.  A no-rack outcome still
 requires a cofinal recursive family in `(s,N)`.
 
-## Current Fork
+## Status After Refutation
 
-The decisive missing theorem is now:
+The vertical theorem below would have implied finite Artin-null endpoint
+separation:
 
 ```text
 for every actual finite interval I, there exist s,N such that
 H^vert_{I,s,N,n,c}={1} for every n,c.
 ```
 
-Proving this completes finite Artin-null endpoint separation.  Cofinal failure
-of this vertical statement gives the required actual normalized-law no-rack
-branch family.
+The flip-marker interval in
+`proofs/vertical_kernel_endpoint_refutation.md` gives cofinal nonidentity
+`H^vert` witnesses, so this theorem is not available as a proof route without
+extra hypotheses tying endpoint labels more tightly to rack domination or to
+the actual residual action.

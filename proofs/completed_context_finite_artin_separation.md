@@ -430,6 +430,14 @@ to the last-strand point-pushing generators `A_{i,n}` of
 implies the full finite-degree endpoint determinacy by a last-strand deletion
 induction.
 
+This vertical target is false as stated.  The refutation in
+`proofs/vertical_kernel_endpoint_refutation.md` is an actual endpoint-labelled
+interval over the involutive flip solution with marker-strand endpoint labels
+in `S_3`; Brunnian vertical point-pushing words defeat every fixed `s,N`.  The
+example is rack-harmless for Sawin but shows that endpoint-labelled interval
+data need an additional admissibility constraint before this separation route
+can be used.
+
 ## Relation To Outcome B
 
 Failure of raw row-defect vanishing does not imply a no-rack obstruction.  It

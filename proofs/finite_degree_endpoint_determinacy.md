@@ -108,6 +108,14 @@ induction, lifting the lower-arity branch by a straight last strand and
 applying the vertical statement to the quotient branch
 `gamma tilde_gamma^{-1}`.
 
+A subsequent Pro query refuted that vertical statement as written; see
+`proofs/vertical_kernel_endpoint_refutation.md`.  The refutation uses an actual
+endpoint-labelled interval over an involutive flip solution, so it is not a
+Sawin counterexample.  It shows that the current endpoint-labelled interval
+axioms allow artificial nonabelian marker endpoints, and any positive endpoint
+route needs an extra hypothesis excluding them or a tighter connection to the
+actual residual action.
+
 ## Why It Implies Endpoint Separation
 
 Assume the lemma.  Let `u in U`, `u != 1`, and set `q=q_s`.
@@ -479,12 +487,13 @@ The first closes the positive route.  The second gives an explicit, executable
 negative search target; if the witnesses persist cofinally in `s,N`, they
 diagonalize to the required no-rack sequence.
 
-The sharper first local target is the vertical version:
+The vertical version was the sharper first local target:
 
 ```text
 prove H^vert_{I,s,N,n,c}={1} for all n,c after one fixed s,N,
 ```
 
 where `H^vert` is computed from the deletion-decorated graph generated only by
-the last-strand point-pushing generators `A_{i,n}`.  This is recorded in
-`proofs/vertical_kernel_endpoint_lemma.md`.
+the last-strand point-pushing generators `A_{i,n}`.  It is recorded, and then
+refuted as stated, in `proofs/vertical_kernel_endpoint_lemma.md` and
+`proofs/vertical_kernel_endpoint_refutation.md`.

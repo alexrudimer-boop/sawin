@@ -2657,6 +2657,15 @@ determinacy lemma follows by induction: delete the last strand, lift the
 lower branch back by a straight strand, and apply the vertical statement to
 the quotient branch.  Cofinal nonidentity `H^vert` witnesses give the smaller
 actual negative search.
+The next Pro query refuted this vertical statement as written; see
+`proofs/vertical_kernel_endpoint_refutation.md`.  The refutation is an actual
+endpoint-labelled interval built over the involutive flip solution, with a
+marker strand whose crossings realize arbitrary transpositions in `S_3` and
+Brunnian vertical words with endpoint a fixed nontrivial 3-cycle.  This does
+not refute Sawin, because the underlying solution is already dominated by the
+two-point flip rack.  It refutes the endpoint-labelled interval lemma as too
+broad: a viable endpoint route must add a constraint tying endpoint labels to
+the residual action, or otherwise exclude such artificial marker endpoints.
 Formal partial-row nonseparability, failure of one-vertex actualization for a
 formal row system, or failure of stronger structural properties such as
 virtual freeness of `Art_I`, remains only a gap unless it is made actual and

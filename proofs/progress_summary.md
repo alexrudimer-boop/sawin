@@ -2698,3 +2698,13 @@ Fadell-Neuwirth vertical kernels.  For the last-strand deletion, compute
 only the standard point-pushing generators `A_{i,n}`.  Fixed `s,N` with
 `H^vert={1}` for all `n,c` imply full endpoint determinacy by induction;
 cofinal nonidentity vertical witnesses give a smaller actual negative search.
+
+`proofs/vertical_kernel_endpoint_refutation.md` records the subsequent Pro
+guardrail: this vertical statement is false as written.  An actual
+endpoint-labelled interval over the involutive flip solution lets one marker
+strand cross multiple old germs, producing arbitrary transposition endpoint
+values in `S_3`; Brunnian words in the vertical point-pushing generators then
+have trivial bounded deletion shadows and trivial Artin readout but fixed
+nontrivial endpoint.  This is not a Sawin counterexample because the
+underlying flip solution is rack-dominated.  It only shows that arbitrary
+endpoint-labelled intervals are too broad for the endpoint-separation route.
