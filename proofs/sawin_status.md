@@ -2550,6 +2550,22 @@ to invisibility on each rack factor.  This makes exact `Q_3` checks feasible
 in small arities without building permutations on `(2916)^n` tuples; for the
 known Type-A affine and Type-B flip-across size-four solutions it closes
 `E_{X,2,3}=1` with joint image size `1728`.
+The companion helper `bounded_deletion_support_stabilizer_audit(X,h,n,s)`
+embeds all components as a disjoint-union permutation group and computes the
+pointwise stabilizer of the detector/deletion components.  It proves the same
+obstruction group exactly, without retaining braid words, and closes the known
+Type-B check one arity higher: `E_{X,2,4}=1` with joint image order `1119744`.
+The `Q_3`-specific note `proofs/q3_small_rack_compression.md` gives a smaller
+exact formula
+
+```text
+D_3(n)=ker(B_n->S_n) cap ker(ell mod 2) cap ker(w mod 3) cap ker(delta_n),
+```
+
+where `ell` is pairwise linking, `w` is row-sum linking, and `delta_n` is the
+three-color dihedral rack representation over `F_3`.  The helper
+`bounded_deletion_support_q3_compressed_audit(X,h,n)` implements that formula
+and keeps braid-word witnesses when the compressed closure is small enough.
 
 The cheap front-end filters are now executable in
 `src/ybe_domination/rack_residual_tower.py`.  Since `B_2` is cyclic,

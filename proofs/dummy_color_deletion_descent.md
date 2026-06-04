@@ -231,6 +231,51 @@ E_{X,2,3} = 1
 
 against this exact compressed `Q_3` detector, with joint closure size `1728`.
 
+A second exact helper
+
+```text
+bounded_deletion_support_stabilizer_audit(X,h,n,s)
+```
+
+embeds all detector factors, the full `X^n` action, and all deletion shadows
+as a single permutation group on a disjoint union of component state sets.  It
+then computes the pointwise stabilizer of the detector and deletion components
+and projects that stabilizer to the `X^n` component.  This is the same
+obstruction group `E_{X,h,n}`.  Unlike the BFS helper, it does not retain braid
+words for nontrivial elements, but it can close larger arities.  For the known
+Type-B flip-across solution it proves
+
+```text
+E_{X,2,4} = 1
+```
+
+with exact joint image order `1119744`.
+
+For the special but important cutoff `s=3`, the note
+`proofs/q3_small_rack_compression.md` records an even smaller exact
+description:
+
+```text
+D_3(n)
+ =
+ker(B_n -> S_n)
+cap ker(ell mod 2)
+cap ker(w mod 3)
+cap ker(delta_n),
+```
+
+where `ell` is pairwise pure-braid linking, `w` is row-sum linking, and
+`delta_n` is the three-color dihedral rack representation over `F_3`.  The
+helper
+
+```text
+bounded_deletion_support_q3_compressed_audit(X,h,n)
+```
+
+uses this formula to replace the nine rack-factor detector components by
+linking mod `2`, row-sum mod `3`, and one `GL_n(F_3)` matrix.  This version
+retains witness braid words when the compressed closure itself is tractable.
+
 Thus:
 
 ```text

@@ -8,6 +8,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 from ybe_domination import (
     bounded_deletion_search_triage,
     bounded_deletion_support_audit,
+    bounded_deletion_support_q3_compressed_audit,
+    bounded_deletion_support_stabilizer_audit,
     FiniteBraidedSet,
     flip_disjoint_union_solution,
     identity_solution,
@@ -185,6 +187,41 @@ class RackResidualTowerTests(unittest.TestCase):
         self.assertEqual(audit.detector_size, 2916)
         self.assertEqual(audit.detector_component_count, 9)
         self.assertEqual(audit.joint_image_size, 1728)
+        self.assertFalse(audit.obstruction_nontrivial)
+
+    def test_q3_linking_compressed_audit_matches_type_b_at_arity_three(self):
+        solution = flip_across_type_b_solution()
+
+        audit = bounded_deletion_support_q3_compressed_audit(
+            solution,
+            h=2,
+            n=3,
+        )
+
+        self.assertFalse(audit.truncated)
+        self.assertEqual(audit.detector_size, 2916)
+        self.assertEqual(audit.detector_component_count, 3)
+        self.assertEqual(audit.subset_count, 3)
+        self.assertEqual(audit.joint_image_size, 1728)
+        self.assertEqual(audit.obstruction_size, 1)
+        self.assertFalse(audit.obstruction_nontrivial)
+
+    def test_stabilizer_q3_bounded_deletion_audit_closes_type_b_at_arity_four(self):
+        solution = flip_across_type_b_solution()
+
+        audit = bounded_deletion_support_stabilizer_audit(
+            solution,
+            h=2,
+            n=4,
+            rack_size_bound=3,
+        )
+
+        self.assertFalse(audit.truncated)
+        self.assertEqual(audit.detector_size, 2916)
+        self.assertEqual(audit.detector_component_count, 9)
+        self.assertEqual(audit.subset_count, 6)
+        self.assertEqual(audit.joint_image_size, 1119744)
+        self.assertEqual(audit.obstruction_size, 1)
         self.assertFalse(audit.obstruction_nontrivial)
 
     def test_two_strand_rack_cutoff_finds_cyclic_rack_stage(self):

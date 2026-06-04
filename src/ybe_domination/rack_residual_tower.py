@@ -188,6 +188,8 @@ def _invert_permutation(permutation: Permutation) -> Permutation:
 
 PairPermutation = Tuple[Permutation, Permutation]
 MultiPermutation = Tuple[Permutation, ...]
+MatrixFlat = Tuple[int, ...]
+Q3CompressedState = Tuple[object, ...]
 
 
 def _compose_pair(left: PairPermutation, right: PairPermutation) -> PairPermutation:
@@ -212,6 +214,136 @@ def _compose_multi(left: MultiPermutation, right: MultiPermutation) -> MultiPerm
 
 def _invert_multi(permutation: MultiPermutation) -> MultiPermutation:
     return tuple(_invert_permutation(part) for part in permutation)
+
+
+def _identity_matrix(size: int) -> MatrixFlat:
+    return tuple(
+        1 if row == col else 0
+        for row in range(size)
+        for col in range(size)
+    )
+
+
+def _matrix_multiply_mod(
+    left: MatrixFlat,
+    right: MatrixFlat,
+    size: int,
+    modulus: int,
+) -> MatrixFlat:
+    return tuple(
+        sum(
+            left[row * size + inner] * right[inner * size + col]
+            for inner in range(size)
+        )
+        % modulus
+        for row in range(size)
+        for col in range(size)
+    )
+
+
+def _matrix_inverse_mod(
+    matrix: MatrixFlat,
+    size: int,
+    modulus: int,
+) -> MatrixFlat:
+    rows = [
+        [
+            matrix[row * size + col] % modulus
+            for col in range(size)
+        ]
+        + [
+            1 if row == col else 0
+            for col in range(size)
+        ]
+        for row in range(size)
+    ]
+    for col in range(size):
+        pivot = None
+        for row in range(col, size):
+            if rows[row][col] % modulus:
+                pivot = row
+                break
+        if pivot is None:
+            raise ValueError("matrix is not invertible modulo the supplied modulus")
+        rows[col], rows[pivot] = rows[pivot], rows[col]
+        pivot_inverse = pow(rows[col][col] % modulus, -1, modulus)
+        rows[col] = [(entry * pivot_inverse) % modulus for entry in rows[col]]
+        for row in range(size):
+            if row == col:
+                continue
+            factor = rows[row][col] % modulus
+            if not factor:
+                continue
+            rows[row] = [
+                (entry - factor * pivot_entry) % modulus
+                for entry, pivot_entry in zip(rows[row], rows[col])
+            ]
+    return tuple(
+        rows[row][size + col] % modulus
+        for row in range(size)
+        for col in range(size)
+    )
+
+
+def _dihedral_sigma_matrix(n: int, signed_generator: int) -> MatrixFlat:
+    if signed_generator == 0:
+        raise ValueError("braid generators are nonzero")
+    generator = abs(signed_generator)
+    if generator < 1 or generator >= n:
+        raise ValueError("braid generator is out of range")
+    matrix = list(_identity_matrix(n))
+    row = generator - 1
+    col = generator - 1
+    block = ((2, 2), (1, 0))
+    for block_row in range(2):
+        for block_col in range(2):
+            matrix[(row + block_row) * n + col + block_col] = block[block_row][
+                block_col
+            ]
+    matrix_tuple = tuple(matrix)
+    if signed_generator < 0:
+        return _matrix_inverse_mod(matrix_tuple, n, 3)
+    return matrix_tuple
+
+
+def _dihedral_word_matrix(n: int, word: Word) -> MatrixFlat:
+    state = _identity_matrix(n)
+    for signed_generator in word:
+        state = _matrix_multiply_mod(
+            _dihedral_sigma_matrix(n, signed_generator),
+            state,
+            n,
+            3,
+        )
+    return state
+
+
+def _compose_q3_compressed_state(
+    left: Q3CompressedState,
+    right: Q3CompressedState,
+    n: int,
+) -> Q3CompressedState:
+    if len(left) != len(right):
+        raise ValueError("compressed states must have the same arity")
+    pair = tuple((a + b) % 2 for a, b in zip(left[0], right[0]))
+    row = tuple((a + b) % 3 for a, b in zip(left[1], right[1]))
+    dihedral = _matrix_multiply_mod(left[2], right[2], n, 3)
+    permutations = tuple(
+        _compose_permutations(left_part, right_part)
+        for left_part, right_part in zip(left[3:], right[3:])
+    )
+    return (pair, row, dihedral, *permutations)
+
+
+def _invert_q3_compressed_state(
+    state: Q3CompressedState,
+    n: int,
+) -> Q3CompressedState:
+    pair = state[0]
+    row = tuple((-entry) % 3 for entry in state[1])
+    dihedral = _matrix_inverse_mod(state[2], n, 3)
+    permutations = tuple(_invert_permutation(part) for part in state[3:])
+    return (pair, row, dihedral, *permutations)
 
 
 def _first_moved_tuple(
@@ -761,6 +893,171 @@ def bounded_deletion_search_triage(
     )
 
 
+def bounded_deletion_support_q3_compressed_audit(
+    solution: FiniteBraidedSet,
+    h: int,
+    n: int,
+    state_limit: int = 100_000,
+) -> BoundedDeletionSupportAudit:
+    """Compute the ``Q_3`` bounded-deletion obstruction by compressed data.
+
+    The product of all racks of size at most three is detected, on pure
+    braids, by pairwise linking mod 2, row-sum linking mod 3, and the
+    three-color dihedral rack matrix over ``F_3``.  This helper closes that
+    compressed finite image together with the full ``X^n`` action and all
+    deletion shadows through ``h``.
+    """
+
+    if h < 1:
+        raise ValueError("h must be positive")
+    if n < 1:
+        raise ValueError("braid degree must be positive")
+
+    subsets = _deletion_subsets(n, h)
+    pair_indices = {
+        pair: index
+        for index, pair in enumerate(combinations(range(1, n + 1), 2))
+    }
+    pair_identity = tuple(0 for _ in pair_indices)
+    row_identity = tuple(0 for _ in range(n))
+    dihedral_identity = _identity_matrix(n)
+    solution_identity = tuple(range(len(solution.elements) ** n))
+    deletion_identities = tuple(
+        tuple(range(len(solution.elements) ** len(subset)))
+        for subset in subsets
+    )
+    identity: Q3CompressedState = (
+        pair_identity,
+        row_identity,
+        dihedral_identity,
+        solution_identity,
+        *deletion_identities,
+    )
+    deletion_start_index = 4
+
+    if n < 2:
+        return BoundedDeletionSupportAudit(
+            rack_size_bound=3,
+            h=h,
+            n=n,
+            detector_size=2916,
+            detector_component_count=3,
+            subset_count=len(subsets),
+            joint_image_size=1,
+            obstruction_size=1,
+            obstruction_nontrivial=False,
+            first_witness_word=None,
+            first_moved_tuple=None,
+            first_moved_tuple_image=None,
+            truncated=False,
+        )
+
+    generators: list[Tuple[Word, Q3CompressedState]] = []
+    for left in range(1, n):
+        for right in range(left + 1, n + 1):
+            word = _pure_generator_word(left, right)
+            pair_component = [0] * len(pair_indices)
+            pair_component[pair_indices[(left, right)]] = 1
+            row_component = [0] * n
+            row_component[left - 1] = 1
+            row_component[right - 1] = 1
+            components: Q3CompressedState = (
+                tuple(pair_component),
+                tuple(row_component),
+                _dihedral_word_matrix(n, word),
+                action_permutation(solution, n, word),
+                *(
+                    deletion_identity
+                    if _deleted_pure_generator_word(left, right, subset) is None
+                    else action_permutation(
+                        solution,
+                        len(subset),
+                        _deleted_pure_generator_word(left, right, subset),
+                    )
+                    for subset, deletion_identity in zip(subsets, deletion_identities)
+                ),
+            )
+            generators.append((word, components))
+            generators.append(
+                (_invert_word(word), _invert_q3_compressed_state(components, n))
+            )
+
+    seen: dict[Q3CompressedState, Word] = {identity: tuple()}
+    queue = deque((identity,))
+    obstruction_solution = {solution_identity}
+    first_witness_state = None
+    first_witness_word = None
+
+    while queue:
+        state = queue.popleft()
+        state_word = seen[state]
+        for generator_word, generator in generators:
+            next_state = _compose_q3_compressed_state(generator, state, n)
+            if next_state in seen:
+                continue
+            next_word = state_word + tuple(generator_word)
+            seen[next_state] = next_word
+            detector_trivial = (
+                next_state[0] == pair_identity
+                and next_state[1] == row_identity
+                and next_state[2] == dihedral_identity
+            )
+            deletions_trivial = all(
+                next_state[deletion_start_index + index] == deletion_identity
+                for index, deletion_identity in enumerate(deletion_identities)
+            )
+            if detector_trivial and deletions_trivial:
+                obstruction_solution.add(next_state[3])
+                if next_state[3] != solution_identity and first_witness_state is None:
+                    first_witness_state = next_state
+                    first_witness_word = next_word
+            if len(seen) > state_limit:
+                moved, moved_image = (
+                    (None, None)
+                    if first_witness_state is None
+                    else _first_moved_tuple(solution, n, first_witness_state[3])
+                )
+                return BoundedDeletionSupportAudit(
+                    rack_size_bound=3,
+                    h=h,
+                    n=n,
+                    detector_size=2916,
+                    detector_component_count=3,
+                    subset_count=len(subsets),
+                    joint_image_size=None,
+                    obstruction_size=None,
+                    obstruction_nontrivial=None,
+                    first_witness_word=first_witness_word,
+                    first_moved_tuple=moved,
+                    first_moved_tuple_image=moved_image,
+                    truncated=True,
+                )
+            queue.append(next_state)
+
+    moved, moved_image = (
+        (None, None)
+        if first_witness_state is None
+        else _first_moved_tuple(solution, n, first_witness_state[3])
+    )
+    return BoundedDeletionSupportAudit(
+        rack_size_bound=3,
+        h=h,
+        n=n,
+        detector_size=2916,
+        detector_component_count=3,
+        subset_count=len(subsets),
+        joint_image_size=len(seen),
+        obstruction_size=len(obstruction_solution),
+        obstruction_nontrivial=any(
+            permutation != solution_identity for permutation in obstruction_solution
+        ),
+        first_witness_word=first_witness_word,
+        first_moved_tuple=moved,
+        first_moved_tuple_image=moved_image,
+        truncated=False,
+    )
+
+
 def bounded_deletion_support_audit(
     solution: FiniteBraidedSet,
     h: int,
@@ -785,10 +1082,9 @@ def bounded_deletion_support_audit(
     if rack_size_bound < 2:
         raise ValueError("rack_size_bound must be at least 2 for pure deletion")
 
-    detector_components = small_rack_representatives(rack_size_bound)
-    detector_size = 1
-    for detector in detector_components:
-        detector_size *= len(detector.elements)
+    detector_components, detector_size = _bounded_deletion_detector_components(
+        rack_size_bound
+    )
     subsets = _deletion_subsets(n, h)
     detector_identities = tuple(
         tuple(range(len(detector.elements) ** n))
@@ -828,19 +1124,14 @@ def bounded_deletion_support_audit(
     for left in range(1, n):
         for right in range(left + 1, n + 1):
             word = _pure_generator_word(left, right)
-            components: list[Permutation] = [
-                action_permutation(detector, n, word)
-                for detector in detector_components
-            ]
-            components.append(action_permutation(solution, n, word))
-            for subset, deletion_identity in zip(subsets, deletion_identities):
-                deleted_word = _deleted_pure_generator_word(left, right, subset)
-                if deleted_word is None:
-                    components.append(deletion_identity)
-                else:
-                    components.append(
-                        action_permutation(solution, len(subset), deleted_word)
-                    )
+            components = _bounded_deletion_generator_components(
+                solution,
+                detector_components,
+                subsets,
+                n,
+                left,
+                right,
+            )
             generator = tuple(components)
             generators.append((word, generator))
             generators.append((_invert_word(word), _invert_multi(generator)))
@@ -921,6 +1212,193 @@ def bounded_deletion_support_audit(
             permutation != solution_identity for permutation in obstruction_solution
         ),
         first_witness_word=first_witness_word,
+        first_moved_tuple=moved,
+        first_moved_tuple_image=moved_image,
+        truncated=False,
+    )
+
+
+def _bounded_deletion_detector_components(
+    rack_size_bound: int,
+) -> Tuple[Tuple[FiniteBraidedSet, ...], int]:
+    detector_components = small_rack_representatives(rack_size_bound)
+    detector_size = 1
+    for detector in detector_components:
+        detector_size *= len(detector.elements)
+    return detector_components, detector_size
+
+
+def _bounded_deletion_generator_components(
+    solution: FiniteBraidedSet,
+    detector_components: Tuple[FiniteBraidedSet, ...],
+    subsets: Tuple[Tuple[int, ...], ...],
+    n: int,
+    left: int,
+    right: int,
+) -> Tuple[Permutation, ...]:
+    word = _pure_generator_word(left, right)
+    components: list[Permutation] = [
+        action_permutation(detector, n, word)
+        for detector in detector_components
+    ]
+    components.append(action_permutation(solution, n, word))
+    for subset in subsets:
+        deleted_word = _deleted_pure_generator_word(left, right, subset)
+        if deleted_word is None:
+            components.append(tuple(range(len(solution.elements) ** len(subset))))
+        else:
+            components.append(
+                action_permutation(solution, len(subset), deleted_word)
+            )
+    return tuple(components)
+
+
+def bounded_deletion_support_stabilizer_audit(
+    solution: FiniteBraidedSet,
+    h: int,
+    n: int,
+    rack_size_bound: int,
+) -> BoundedDeletionSupportAudit:
+    """Compute ``E_{X,h,n}`` using permutation-group stabilizers.
+
+    This is an exact alternative to ``bounded_deletion_support_audit``.  It
+    embeds the detector components, the full ``X`` action, and all deletion
+    shadows into one disjoint-union permutation action.  The obstruction group
+    is the image on the ``X^n`` component of the pointwise stabilizer of every
+    detector and deletion-shadow component.
+
+    The stabilizer method avoids BFS enumeration of the joint image and can
+    close larger arities, but it does not retain braid words for nontrivial
+    stabilizer elements.
+    """
+
+    if h < 1:
+        raise ValueError("h must be positive")
+    if n < 1:
+        raise ValueError("braid degree must be positive")
+    if rack_size_bound < 2:
+        raise ValueError("rack_size_bound must be at least 2 for pure deletion")
+
+    try:
+        from sympy.combinatorics import Permutation as SympyPermutation
+        from sympy.combinatorics import PermutationGroup
+    except ImportError as exc:  # pragma: no cover - depends on environment
+        raise RuntimeError(
+            "bounded_deletion_support_stabilizer_audit requires sympy"
+        ) from exc
+
+    detector_components, detector_size = _bounded_deletion_detector_components(
+        rack_size_bound
+    )
+    subsets = _deletion_subsets(n, h)
+    solution_degree = len(solution.elements) ** n
+    deletion_degrees = tuple(len(solution.elements) ** len(subset) for subset in subsets)
+    detector_degrees = tuple(
+        len(detector.elements) ** n
+        for detector in detector_components
+    )
+    component_degrees = detector_degrees + (solution_degree,) + deletion_degrees
+    solution_component_index = len(detector_degrees)
+    offsets = []
+    total_degree = 0
+    for degree in component_degrees:
+        offsets.append(total_degree)
+        total_degree += degree
+    solution_offset = offsets[solution_component_index]
+
+    if n < 2:
+        return BoundedDeletionSupportAudit(
+            rack_size_bound=rack_size_bound,
+            h=h,
+            n=n,
+            detector_size=detector_size,
+            detector_component_count=len(detector_components),
+            subset_count=len(subsets),
+            joint_image_size=1,
+            obstruction_size=1,
+            obstruction_nontrivial=False,
+            first_witness_word=None,
+            first_moved_tuple=None,
+            first_moved_tuple_image=None,
+            truncated=False,
+        )
+
+    def embed_components(components: Tuple[Permutation, ...]):
+        if len(components) != len(component_degrees):
+            raise ValueError("component count mismatch")
+        array = list(range(total_degree))
+        for offset, component in zip(offsets, components):
+            for index, image in enumerate(component):
+                array[offset + index] = offset + image
+        return SympyPermutation(array)
+
+    generators = []
+    for left in range(1, n):
+        for right in range(left + 1, n + 1):
+            generators.append(
+                embed_components(
+                    _bounded_deletion_generator_components(
+                        solution,
+                        detector_components,
+                        subsets,
+                        n,
+                        left,
+                        right,
+                    )
+                )
+            )
+
+    group = PermutationGroup(generators)
+    fixed_points = []
+    for component_index, (offset, degree) in enumerate(
+        zip(offsets, component_degrees)
+    ):
+        if component_index == solution_component_index:
+            continue
+        fixed_points.extend(range(offset, offset + degree))
+    stabilizer = group.pointwise_stabilizer(fixed_points)
+
+    solution_identity = tuple(range(solution_degree))
+    nontrivial_restrictions = []
+    for generator in stabilizer.generators:
+        array = generator.array_form
+        restriction = tuple(
+            array[solution_offset + index] - solution_offset
+            for index in range(solution_degree)
+        )
+        if restriction != solution_identity:
+            nontrivial_restrictions.append(restriction)
+
+    first_restriction = (
+        None if not nontrivial_restrictions else nontrivial_restrictions[0]
+    )
+    if not nontrivial_restrictions:
+        obstruction_size = 1
+    else:
+        obstruction_group = PermutationGroup(
+            [
+                SympyPermutation(list(restriction))
+                for restriction in nontrivial_restrictions
+            ]
+        )
+        obstruction_size = int(obstruction_group.order())
+
+    moved, moved_image = (
+        (None, None)
+        if first_restriction is None
+        else _first_moved_tuple(solution, n, first_restriction)
+    )
+    return BoundedDeletionSupportAudit(
+        rack_size_bound=rack_size_bound,
+        h=h,
+        n=n,
+        detector_size=detector_size,
+        detector_component_count=len(detector_components),
+        subset_count=len(subsets),
+        joint_image_size=int(group.order()),
+        obstruction_size=obstruction_size,
+        obstruction_nontrivial=obstruction_size != 1,
+        first_witness_word=None,
         first_moved_tuple=moved,
         first_moved_tuple_image=moved_image,
         truncated=False,
