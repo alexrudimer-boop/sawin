@@ -26,6 +26,30 @@ Representative terminal survivor records:
 - offset `0010`, first failed `quotient_rigid`, congruences `4`, observer blocks `2`.
 - offset `1000`, first failed `quotient_rigid`, congruences `4`, observer blocks `2`.
 
+## Exact Affine Prime-Line Searches
+
+### `F3`
+
+- exhaustive affine-line scan: `True`;
+- checked affine maps: `729`;
+- invertible affine maps: `432`;
+- affine YBE tables: `31`;
+- terminal survivors: `0`;
+- structural survivors: `0`;
+- rigid pressure core candidates: `0`;
+- first failed filter counts: `{'bidegenerate': 30, 'noninvolutive': 1}`.
+
+### `F5`
+
+- exhaustive affine-line scan: `True`;
+- checked affine maps: `15625`;
+- invertible affine maps: `12000`;
+- affine YBE tables: `221`;
+- terminal survivors: `0`;
+- structural survivors: `0`;
+- rigid pressure core candidates: `0`;
+- first failed filter counts: `{'bidegenerate': 220, 'noninvolutive': 1}`.
+
 ## Named `F_2^3` Pressure Row
 
 - bidegenerate: `True`;
@@ -38,4 +62,4 @@ Representative terminal survivor records:
 
 ## Conclusion
 
-The exact affine-linear size-four family over F_2^2 has terminal survivors, but no structural rigid-pressure-core survivor: all 24 terminal survivors fail quotient-rigidity.  The named F_2^3 pressure row remains a useful guardrail but fails observer and subsolution rigidity and is already closed by a finite sequential rack gauge.
+The exact affine-linear size-four family over F_2^2 has terminal survivors, but no structural rigid-pressure-core survivor: all 24 terminal survivors fail quotient-rigidity.  The exact affine line searches over F_3 and F_5 have no terminal survivors.  The named F_2^3 pressure row remains a useful guardrail but fails observer and subsolution rigidity and is already closed by a finite sequential rack gauge.

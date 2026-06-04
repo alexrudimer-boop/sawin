@@ -2857,5 +2857,7 @@ The structured affine-linear frontier now has an exact first pass in
 `proofs/affine_rigid_pressure_core_audit.md`: all affine maps on `F_2^2` were
 checked, giving `481` affine YBE tables.  The `24` terminal survivors all
 fail quotient-rigidity, so no affine-linear size-four rigid pressure core
-exists in this search space.  The named affine `F_2^3` pressure row remains
-non-rigid because it has a nontrivial observer and proper subsolutions.
+exists in this search space.  The same audit checks affine-line maps over
+`F_5`, giving `221` affine YBE tables and no terminal survivor.  The named
+affine `F_2^3` pressure row remains non-rigid because it has a nontrivial
+observer and proper subsolutions.

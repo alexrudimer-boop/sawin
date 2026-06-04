@@ -114,7 +114,9 @@ The affine-linear subsearch is now separated out in
 on `F_2^2`, there are `481` bijective YBE tables.  Of these, `24` survive the
 terminal filters, but all `24` fail quotient-rigidity.  Thus the first
 structured affine size-four frontier is also exhausted before the pressure
-test.
+test.  The same audit exhausts affine-line maps over `F_5`: there are `221`
+bijective affine YBE tables and no terminal survivor, so the first affine
+size-five line frontier is also closed.
 
 ## Cofinal Rack-Prefix Obstruction
 

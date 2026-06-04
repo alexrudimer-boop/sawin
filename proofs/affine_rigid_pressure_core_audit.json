@@ -1,5 +1,5 @@
 {
-  "conclusion": "The exact affine-linear size-four family over F_2^2 has terminal survivors, but no structural rigid-pressure-core survivor: all 24 terminal survivors fail quotient-rigidity.  The named F_2^3 pressure row remains a useful guardrail but fails observer and subsolution rigidity and is already closed by a finite sequential rack gauge.",
+  "conclusion": "The exact affine-linear size-four family over F_2^2 has terminal survivors, but no structural rigid-pressure-core survivor: all 24 terminal survivors fail quotient-rigidity.  The exact affine line searches over F_3 and F_5 have no terminal survivors.  The named F_2^3 pressure row remains a useful guardrail but fails observer and subsolution rigidity and is already closed by a finite sequential rack gauge.",
   "dimension_three_named_pressure_row": {
     "bidegenerate": true,
     "branch_tags": [],
@@ -213,6 +213,60 @@
         "transport_split_count": 0
       }
     ]
+  },
+  "prime_lines": {
+    "f3": {
+      "affine_ybe_count": 31,
+      "branch_tag_counts": {
+        "involutive+identity_table+affine_cyclic": 1,
+        "involutive+permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate+affine_cyclic": 5,
+        "left_nondegenerate+right_nondegenerate+nondegenerate+affine_cyclic": 11,
+        "permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate+affine_cyclic": 7,
+        "rack_type+involutive+permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate+affine_cyclic": 1,
+        "rack_type+left_nondegenerate+right_nondegenerate+nondegenerate+affine_cyclic": 1,
+        "rack_type+permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate+affine_cyclic": 5
+      },
+      "checked_affine_map_count": 729,
+      "exact_exhaustive_affine_line": true,
+      "first_failed_filter_counts": {
+        "bidegenerate": 30,
+        "noninvolutive": 1
+      },
+      "invertible_affine_map_count": 432,
+      "point_count": 3,
+      "pressure_attempted": false,
+      "prime": 3,
+      "rigid_pressure_core_candidate_count": 0,
+      "structural_survivor_count": 0,
+      "terminal_survivor_count": 0,
+      "terminal_survivor_samples": []
+    },
+    "f5": {
+      "affine_ybe_count": 221,
+      "branch_tag_counts": {
+        "involutive+identity_table+affine_cyclic": 1,
+        "involutive+permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate+affine_cyclic": 19,
+        "left_nondegenerate+right_nondegenerate+nondegenerate+affine_cyclic": 117,
+        "permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate+affine_cyclic": 61,
+        "rack_type+involutive+permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate+affine_cyclic": 1,
+        "rack_type+left_nondegenerate+right_nondegenerate+nondegenerate+affine_cyclic": 3,
+        "rack_type+permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate+affine_cyclic": 19
+      },
+      "checked_affine_map_count": 15625,
+      "exact_exhaustive_affine_line": true,
+      "first_failed_filter_counts": {
+        "bidegenerate": 220,
+        "noninvolutive": 1
+      },
+      "invertible_affine_map_count": 12000,
+      "point_count": 5,
+      "pressure_attempted": false,
+      "prime": 5,
+      "rigid_pressure_core_candidate_count": 0,
+      "structural_survivor_count": 0,
+      "terminal_survivor_count": 0,
+      "terminal_survivor_samples": []
+    }
   },
   "title": "Affine rigid pressure core audit"
 }
