@@ -2350,6 +2350,26 @@ this separation, when witnessed by actual residual braid branches in
 unbounded arity, is exactly the normalized-law endpoint obstruction required
 for a negative route.
 
+The same endpoint target now has a profinite-language form.  If `T` is the
+finite set of terminal Artin slots and
+
+```text
+W_!=1 = { alpha(gamma) in Art_I^T : Ept(gamma) != 1 }
+```
+
+is the actual nontrivial endpoint Artin language, then finite endpoint
+absorption is equivalent to
+
+```text
+1 notin closure(W_!=1) in the profinite topology of Art_I^T.
+```
+
+Thus the positive route may be attacked by a genuine rational/profinite
+separability theorem for actual YBE Artin row groups and their endpoint
+languages.  A negative route must make failure of this profinite separation
+actual and braid-realizable; a formal nonseparable row-language alone is only
+another gap.
+
 ## Current conclusion
 
 As of this log entry, neither A nor B is proved.  The next decisive work is to

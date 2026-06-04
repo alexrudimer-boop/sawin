@@ -123,6 +123,64 @@ ker(q Art) <= ker(Ept).
 
 This is the finite Artin-null endpoint separation identity.
 
+## Profinite Language Form
+
+The same condition can be phrased as a profinite separation problem for the
+actual endpoint language.  Let `T` be the finite set of terminal label slots
+used by the completed-context branch, and write
+
+```text
+alpha: P_I -> Art_I^T
+```
+
+for the terminal Artin readout.  Write
+
+```text
+epsilon: P_I -> U(M)
+```
+
+for the original unit endpoint functor.  Define the nontrivial endpoint
+Artin language
+
+```text
+W_!=1 = { alpha(gamma) in Art_I^T :
+          gamma in P_I and epsilon(gamma) != 1 }.
+```
+
+Then finite Artin-null endpoint separation is equivalent to
+
+```text
+1 notin closure(W_!=1) in the profinite topology of Art_I^T.
+```
+
+Indeed, a finite quotient `q: Art_I -> H` with
+
+```text
+q^T alpha(gamma) = 1  =>  epsilon(gamma) = 1
+```
+
+is exactly an open finite-index neighbourhood of `1` in `Art_I^T` disjoint
+from `W_!=1`.  Conversely, if `1` is not in the profinite closure of
+`W_!=1`, some finite-index normal subgroup `K normal in Art_I` has
+`K^T` disjoint from `W_!=1`; the quotient `Art_I/K` is the desired finite
+Artin detector group.
+
+This reformulation separates two issues.  Raw row-defect vanishing gives a
+very strong sufficient condition, and YBE cube flatness only makes
+`epsilon` and `alpha` well-defined on actual paths.  The exact missing theorem
+is that the actual nontrivial endpoint language is profinitely separated from
+`1` by the universal Artin row group.
+
+Failure of this profinite separation for actual braid-realizable paths is
+equivalent to the normalized-law endpoint obstruction.  Enumerating finite
+groups and evaluating all homomorphisms from `Art_I` to the first finitely
+many groups gives paths whose Artin readouts are invisible to those groups
+while `epsilon` remains nontrivial.  If those paths are realized by residual
+braid branches in arities tending to infinity, the diagonal sequence is
+invisible to every fixed finite longitude detector but still moves a residual
+tuple.  Failure only inside a larger formal path category is weaker, because
+formal paths need not correspond to actual residual braid branches.
+
 If it holds, define the finite endpoint readout on the image of `q Art` by
 
 ```text
@@ -220,4 +278,3 @@ A: prove finite Artin-null endpoint separation for every actual remaining
 B: produce actual residual braid branches violating finite Artin separation
    for every finite group, hence a normalized-law no-rack sequence.
 ```
-
