@@ -211,6 +211,26 @@ In the decisive application one takes `s=a_X(h)+1`; for small pressure tests,
 the helper makes the obstruction group executable whenever the product rack
 `Q_s` is small enough to build.
 
+The implementation stores the `Q_s` detector componentwise.  Since `Q_s` is a
+Cartesian product of the small rack representatives, a braid is invisible on
+`Q_s^n` if and only if it is invisible on every representative factor.  Thus
+the audit is exact but avoids forming the permutation action on
+`(|Q_s|)^n` states.  For `s=3`, this replaces a single detector of size
+`2916` by the nine rack factors of sizes
+
+```text
+1, 2, 2, 3, 3, 3, 3, 3, 3.
+```
+
+As regression checks, the known size-four Type-A affine solution and the
+Type-B flip-across solution both have
+
+```text
+E_{X,2,3} = 1
+```
+
+against this exact compressed `Q_3` detector, with joint closure size `1728`.
+
 Thus:
 
 ```text
@@ -220,6 +240,67 @@ forall h exists n, E_{X,h,n} != 1
 for one finite table `X` would give the normalized-law no-rack sequence.
 Proving that `E_{X,h,n}=1` for all `n` once `h=h(X)` would give a finite rack
 dominator.
+
+## Cheap Front-End Filters
+
+At `h=2` the first cutoff can be computed without closing any high-arity
+image.  Since
+
+```text
+B_2 ~= Z,
+```
+
+the two-strand detector kernel for `Q_s` is just a cyclic period.  Let
+
+```text
+L_s = lcm { ord(rho^R_2(sigma_1)) : R a rack, |R| <= s }.
+```
+
+Then
+
+```text
+D_s(2) <= ker rho^X_2
+```
+
+if and only if
+
+```text
+ord(rho^X_2(sigma_1)) divides L_s.
+```
+
+The helper
+
+```text
+two_strand_rack_cutoff_audit(X,max_rack_size)
+```
+
+records these `L_s` values and returns the first checked cutoff.  The helper
+
+```text
+pure_braid_image_audit(X,n)
+```
+
+checks exactly whether one of the standard pure generators `A_ij` acts
+nontrivially on `X^n`; if no generator moves, then the pure image is trivial
+because the `A_ij` generate `P_n`.  Finally
+
+```text
+bounded_deletion_search_triage(X,max_rack_size,max_pure_arity)
+```
+
+bundles the two checks.  For the known size-four degenerate non-involutive
+families, including the affine Type-A example and the flip-across Type-B
+example, the readout is
+
+```text
+ord(rho^X_2(sigma_1)) = 4,
+a_X(2) = 2,
+first pure nontrivial arity = 2.
+```
+
+Thus those examples put the first serious bounded-deletion pressure at the
+`Q_3` detector.  The point of the front-end filter is to avoid confusing
+crossing-order noise with a genuine high-arity deletion obstruction.
 
 ## Concrete Search Targets
 

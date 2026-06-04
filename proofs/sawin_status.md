@@ -2544,7 +2544,31 @@ any remaining `D_{a_X(h)+1}`-blind but `X`-visible braid must have no
 `X`-visible deletion shadow on at most `h` strands.  The new helper
 `bounded_deletion_support_audit(X,h,n,s)` computes the finite obstruction
 group for a supplied cutoff `s`, using pure braid generators and all deletion
-shadows through `h`.
+shadows through `h`.  The helper now records the `Q_s` detector
+componentwise, using the fact that invisibility on a product rack is equivalent
+to invisibility on each rack factor.  This makes exact `Q_3` checks feasible
+in small arities without building permutations on `(2916)^n` tuples; for the
+known Type-A affine and Type-B flip-across size-four solutions it closes
+`E_{X,2,3}=1` with joint image size `1728`.
+
+The cheap front-end filters are now executable in
+`src/ybe_domination/rack_residual_tower.py`.  Since `B_2` is cyclic,
+`two_strand_rack_cutoff_audit(X,max_rack_size)` computes `a_X(2)` by the
+period test
+
+```text
+ord(rho^X_2(sigma_1)) divides
+lcm { ord(rho^R_2(sigma_1)) : |R| <= s }.
+```
+
+`pure_braid_image_audit(X,n)` then checks whether one of the standard pure
+generators `A_ij` already moves `X^n`.  The bundled
+`bounded_deletion_search_triage(X,max_rack_size,max_pure_arity)` reports the
+first pure nontrivial arity and the suggested next detector bound
+`a_X(2)+1`.  On the known size-four degenerate non-involutive families the
+readout is `ord=4`, `a_X(2)=2`, and first pure nontrivial arity `2`, so any
+remaining obstruction is genuinely a `Q_3` bounded-deletion question rather
+than a two-strand crossing-order artefact.
 
 The next concrete negative search target is now sharper than ordinary
 high-arity behavior: find a size-five finite YBE table that is bi-degenerate,

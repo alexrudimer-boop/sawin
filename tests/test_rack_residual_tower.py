@@ -6,15 +6,19 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from ybe_domination import (
+    bounded_deletion_search_triage,
     bounded_deletion_support_audit,
     FiniteBraidedSet,
+    flip_disjoint_union_solution,
     identity_solution,
+    pure_braid_image_audit,
     rack_product_prefixes,
     rack_residual_obstruction_audit,
     rack_solution,
     realized_parabolic_cross_effect_audit,
     small_rack_prefix_obstruction_rows,
     small_rack_representatives,
+    two_strand_rack_cutoff_audit,
 )
 
 
@@ -28,6 +32,19 @@ def affine_f2_type_a_solution():
                 ((a + c + d + 1) % 2, (a + 1) % 2),
             )
     return FiniteBraidedSet(elements, table)
+
+
+def flip_across_type_b_solution():
+    trivial2 = rack_solution((0, 1), lambda _left, right: right)
+    perm2 = FiniteBraidedSet(
+        (2, 3),
+        {
+            (left, right): (right, 5 - left)
+            for left in (2, 3)
+            for right in (2, 3)
+        },
+    )
+    return flip_disjoint_union_solution(trivial2, perm2)
 
 
 class RackResidualTowerTests(unittest.TestCase):
@@ -149,9 +166,65 @@ class RackResidualTowerTests(unittest.TestCase):
 
         self.assertFalse(audit.truncated)
         self.assertEqual(audit.detector_size, 4)
+        self.assertEqual(audit.detector_component_count, 3)
         self.assertEqual(audit.subset_count, 3)
         self.assertFalse(audit.obstruction_nontrivial)
         self.assertFalse(audit.proves_bounded_deletion_support_failure)
+
+    def test_compressed_q3_bounded_deletion_audit_closes_type_b_at_arity_three(self):
+        solution = flip_across_type_b_solution()
+
+        audit = bounded_deletion_support_audit(
+            solution,
+            h=2,
+            n=3,
+            rack_size_bound=3,
+        )
+
+        self.assertFalse(audit.truncated)
+        self.assertEqual(audit.detector_size, 2916)
+        self.assertEqual(audit.detector_component_count, 9)
+        self.assertEqual(audit.joint_image_size, 1728)
+        self.assertFalse(audit.obstruction_nontrivial)
+
+    def test_two_strand_rack_cutoff_finds_cyclic_rack_stage(self):
+        solution = rack_solution((0, 1), lambda _left, right: 1 - right)
+
+        audit = two_strand_rack_cutoff_audit(solution, max_rack_size=2)
+
+        self.assertEqual(audit.solution_crossing_order, 4)
+        self.assertEqual(audit.cutoff, 2)
+        self.assertFalse(audit.rows[0].detects_solution)
+        self.assertTrue(audit.rows[1].detects_solution)
+        self.assertEqual(audit.rows[1].crossing_lcm, 4)
+
+    def test_pure_braid_image_trigger_detects_cyclic_but_not_flip_rack(self):
+        cyclic = rack_solution((0, 1), lambda _left, right: 1 - right)
+        flip = rack_solution((0, 1), lambda _left, right: right)
+
+        cyclic_audit = pure_braid_image_audit(cyclic, n=2)
+        flip_audit = pure_braid_image_audit(flip, n=3)
+
+        self.assertTrue(cyclic_audit.image_nontrivial)
+        self.assertEqual(cyclic_audit.first_witness_word, (1, 1))
+        self.assertNotEqual(
+            cyclic_audit.first_moved_tuple,
+            cyclic_audit.first_moved_tuple_image,
+        )
+        self.assertFalse(flip_audit.image_nontrivial)
+
+    def test_bounded_deletion_search_triage_suggests_next_detector_bound(self):
+        solution = affine_f2_type_a_solution()
+
+        triage = bounded_deletion_search_triage(
+            solution,
+            max_rack_size=2,
+            max_pure_arity=3,
+        )
+
+        self.assertEqual(triage.two_strand_cutoff.cutoff, 2)
+        self.assertEqual(triage.suggested_rack_size_bound, 3)
+        self.assertEqual(triage.first_pure_nontrivial_arity, 2)
 
 
 if __name__ == "__main__":
