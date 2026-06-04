@@ -27,8 +27,11 @@ from ybe_domination import (  # noqa: E402
     branch_tags,
     one_state_invariant_observer_partition,
     proper_subsolution_subsets,
+    rack_residual_obstruction_audit,
+    small_rack_representatives,
     small_rack_prefix_obstruction_rows,
 )
+from ybe_domination.residual import action_permutation, permutation_order  # noqa: E402
 
 OUT_JSON = ROOT / "proofs" / "affine_f2_q3_rigid_pressure_core_audit.json"
 OUT_MD = ROOT / "proofs" / "affine_f2_q3_rigid_pressure_core_audit.md"
@@ -195,7 +198,28 @@ def quotient_rigidity_witness(
     return True, None
 
 
-def _pressure_rows(solution: FiniteBraidedSet) -> tuple[dict[str, object], ...]:
+def _obstruction_audit_dict(audit) -> dict[str, object]:
+    return {
+        "truncated": audit.truncated,
+        "joint_image_size": audit.joint_image_size,
+        "solution_image_size": audit.solution_image_size,
+        "detector_image_size": audit.detector_image_size,
+        "kernel_size": audit.kernel_size,
+        "kernel_contains_nonidentity": audit.kernel_contains_nonidentity,
+        "obstruction_found": audit.proves_fixed_width_domination_failure,
+        "first_witness_word": audit.first_witness_word,
+        "first_moved_tuple": None
+        if audit.first_moved_tuple is None
+        else repr(audit.first_moved_tuple),
+        "first_moved_tuple_image": None
+        if audit.first_moved_tuple_image is None
+        else repr(audit.first_moved_tuple_image),
+    }
+
+
+def _bounded_ordered_prefix_pressure_rows(
+    solution: FiniteBraidedSet,
+) -> tuple[dict[str, object], ...]:
     rows = small_rack_prefix_obstruction_rows(
         solution,
         max_rack_size=3,
@@ -208,22 +232,49 @@ def _pressure_rows(solution: FiniteBraidedSet) -> tuple[dict[str, object], ...]:
             "detector_prefix_length": row.detector_prefix_length,
             "detector_size": row.detector_size,
             "arity": row.arity,
-            "obstruction_found": row.obstruction_found,
-            "truncated": row.audit.truncated,
-            "joint_image_size": row.audit.joint_image_size,
-            "solution_image_size": row.audit.solution_image_size,
-            "detector_image_size": row.audit.detector_image_size,
-            "kernel_size": row.audit.kernel_size,
-            "first_witness_word": row.audit.first_witness_word,
-            "first_moved_tuple": None
-            if row.audit.first_moved_tuple is None
-            else repr(row.audit.first_moved_tuple),
-            "first_moved_tuple_image": None
-            if row.audit.first_moved_tuple_image is None
-            else repr(row.audit.first_moved_tuple_image),
+            **_obstruction_audit_dict(row.audit),
         }
         for row in rows
     )
+
+
+def _dihedral_repair_rows(solution: FiniteBraidedSet) -> dict[str, object]:
+    """Audit the missing size-three dihedral rack detector through arity four."""
+
+    racks = small_rack_representatives(3)
+    detector_index = 8
+    detector = racks[detector_index - 1]
+    rows = []
+    for arity in range(2, 5):
+        audit = rack_residual_obstruction_audit(
+            solution,
+            detector,
+            arity,
+            state_limit=200_000,
+        )
+        rows.append({"arity": arity, **_obstruction_audit_dict(audit)})
+    return {
+        "detector_index_in_small_rack_representatives_3": detector_index,
+        "detector_size": len(detector.elements),
+        "detector_two_strand_order": permutation_order(
+            action_permutation(detector, 2, (1,))
+        ),
+        "detector_table": [
+            repr(detector.R[(left, right)])
+            for left in detector.elements
+            for right in detector.elements
+        ],
+        "checked_rows": rows,
+        "kernel_inclusion_holds_through_checked_arities": all(
+            row["obstruction_found"] is False and row["truncated"] is False
+            for row in rows
+        ),
+        "image_orders_match_through_checked_arities": all(
+            row["joint_image_size"] == row["detector_image_size"]
+            and row["joint_image_size"] == row["solution_image_size"]
+            for row in rows
+        ),
+    }
 
 
 def build_report() -> dict[str, object]:
@@ -291,11 +342,18 @@ def build_report() -> dict[str, object]:
                         "decomposition, since each side would be a proper "
                         "crossing-closed subsolution"
                     ),
-                    "pressure_rows": _pressure_rows(solution),
+                    "bounded_ordered_prefix_pressure_rows": (
+                        _bounded_ordered_prefix_pressure_rows(solution)
+                    ),
+                    "dihedral_size3_repair": _dihedral_repair_rows(solution),
                 }
 
-    pressure_rows = () if first_candidate is None else first_candidate["pressure_rows"]
-    first_full_prefix_pressure = next(
+    pressure_rows = (
+        ()
+        if first_candidate is None
+        else first_candidate["bounded_ordered_prefix_pressure_rows"]
+    )
+    first_bounded_prefix_pressure = next(
         (
             row
             for row in pressure_rows
@@ -304,9 +362,16 @@ def build_report() -> dict[str, object]:
         None,
     )
     if first_candidate is not None:
-        first_candidate["first_full_size3_prefix_pressure"] = first_full_prefix_pressure
-        first_candidate["finite_rigid_pressure_core_candidate"] = (
-            first_full_prefix_pressure is not None
+        first_candidate["first_bounded_ordered_prefix_pressure"] = (
+            first_bounded_prefix_pressure
+        )
+        first_candidate["finite_prefix_pressure_repaired_by_size3_rack"] = (
+            first_candidate["dihedral_size3_repair"][
+                "kernel_inclusion_holds_through_checked_arities"
+            ]
+            and first_candidate["dihedral_size3_repair"][
+                "image_orders_match_through_checked_arities"
+            ]
         )
 
     return {
@@ -323,15 +388,16 @@ def build_report() -> dict[str, object]:
         "first_quotient_failure": first_quotient_failure,
         "first_rigid_pressure_candidate": first_candidate,
         "conclusion": (
-            "The affine F_2^3 family contains finite rigid-pressure-core "
-            "candidates in the falsifiable finite-prefix sense: 3360 rows "
-            "survive the bidegenerate, noninvolutive, observer-rigid, "
-            "subsolution-rigid, and pair-generated quotient-rigid filters. "
-            "The first survivor has nontrivial kernel pressure against the "
-            "product prefix containing all rack representatives of size at "
-            "most 3. This is not a Sawin counterexample; it is the first "
-            "serious candidate table whose pressure must be tested cofinally "
-            "or explained by a larger finite rack detector."
+            "The affine F_2^3 family contains 3360 rows that survive the "
+            "bidegenerate, noninvolutive, observer-rigid, subsolution-rigid, "
+            "and pair-generated quotient-rigid filters. The first survivor "
+            "has kernel pressure against the bounded ordered rack prefix of "
+            "size 36, but that pressure is repaired by the missing "
+            "three-element dihedral rack representative: exact checks through "
+            "arity 4 show matching braid image orders and no detector-kernel "
+            "obstruction. This is therefore not a valid pressure core yet; "
+            "the next task is to prove the dihedral repair all-n or find a "
+            "different survivor whose pressure is not repaired by small racks."
         ),
     }
 
@@ -345,7 +411,9 @@ def render_markdown(report: dict[str, object]) -> str:
         "This generated audit applies the rigid-pressure-core filters to the",
         "affine-linear `F_2^3` family using the linear YBE block equations",
         "and affine offset equations.  It is a finite-prefix pressure audit,",
-        "not a Sawin counterexample.",
+            "not a Sawin counterexample.  The bounded ordered prefix used",
+            "below is not the full product of all racks of size at most `3`;",
+            "it stops at detector size `36`.",
         "",
         "## Census",
         "",
@@ -385,7 +453,6 @@ def render_markdown(report: dict[str, object]) -> str:
     if candidate is None:
         lines.extend(["## Candidate", "", "No rigid structural survivor was found."])
     else:
-        pressure = candidate["first_full_size3_prefix_pressure"]
         lines.extend(
             [
                 "## First Rigid Pressure Candidate",
@@ -405,13 +472,14 @@ def render_markdown(report: dict[str, object]) -> str:
                 "- pair-generated quotient-rigid: "
                 f"`{candidate['pair_generated_quotient_rigid']}`;",
                 f"- not flip-across: `{candidate['not_flip_across']}`;",
-                "- finite rigid-pressure-core candidate: "
-                f"`{candidate['finite_rigid_pressure_core_candidate']}`.",
+                "- bounded-prefix pressure repaired by size-3 rack: "
+                f"`{candidate['finite_prefix_pressure_repaired_by_size3_rack']}`.",
                 "",
-                "First pressure row for the full size-`<=3` rack prefix:",
+                "First pressure row for the bounded ordered rack prefix:",
                 "",
             ]
         )
+        pressure = candidate["first_bounded_ordered_prefix_pressure"]
         if pressure is None:
             lines.append("- none found in the checked prefix.")
         else:
@@ -426,6 +494,35 @@ def render_markdown(report: dict[str, object]) -> str:
                     f"- moved tuple: `{pressure['first_moved_tuple']}`;",
                     f"- moved image: `{pressure['first_moved_tuple_image']}`.",
                 ]
+            )
+        repair = candidate["dihedral_size3_repair"]
+        lines.extend(
+            [
+                "",
+                "Size-three dihedral repair check:",
+                "",
+                "- detector index in `small_rack_representatives(3)`: "
+                f"`{repair['detector_index_in_small_rack_representatives_3']}`;",
+                f"- detector size: `{repair['detector_size']}`;",
+                f"- two-strand order: `{repair['detector_two_strand_order']}`;",
+                "- kernel inclusion holds through checked arities: "
+                f"`{repair['kernel_inclusion_holds_through_checked_arities']}`;",
+                "- image orders match through checked arities: "
+                f"`{repair['image_orders_match_through_checked_arities']}`.",
+                "",
+                "Checked repair rows:",
+                "",
+            ]
+        )
+        for row in repair["checked_rows"]:
+            lines.append(
+                "- "
+                f"arity `{row['arity']}`: "
+                f"joint `{row['joint_image_size']}`, "
+                f"detector `{row['detector_image_size']}`, "
+                f"solution `{row['solution_image_size']}`, "
+                f"obstruction `{row['obstruction_found']}`, "
+                f"truncated `{row['truncated']}`."
             )
     lines.extend(["", "## Conclusion", "", report["conclusion"]])
     return "\n".join(lines) + "\n"

@@ -22,7 +22,7 @@ from ybe_domination import proper_subsolution_subsets
 
 
 class AffineF2Q3RigidPressureCoreTests(unittest.TestCase):
-    def test_generated_audit_records_first_finite_pressure_candidate(self):
+    def test_generated_audit_records_repaired_bounded_prefix_pressure(self):
         report = json.loads(
             (ROOT / "proofs" / "affine_f2_q3_rigid_pressure_core_audit.json")
             .read_text(encoding="utf-8")
@@ -35,12 +35,22 @@ class AffineF2Q3RigidPressureCoreTests(unittest.TestCase):
         self.assertEqual(counts["rigid_structural_survivor_count"], 3360)
 
         candidate = report["first_rigid_pressure_candidate"]
-        self.assertTrue(candidate["finite_rigid_pressure_core_candidate"])
-        pressure = candidate["first_full_size3_prefix_pressure"]
+        self.assertTrue(candidate["finite_prefix_pressure_repaired_by_size3_rack"])
+        pressure = candidate["first_bounded_ordered_prefix_pressure"]
         self.assertEqual(pressure["detector_size"], 36)
         self.assertEqual(pressure["arity"], 2)
         self.assertTrue(pressure["obstruction_found"])
         self.assertEqual(pressure["first_witness_word"], [1, 1, 1, 1])
+
+        repair = candidate["dihedral_size3_repair"]
+        self.assertEqual(repair["detector_size"], 3)
+        self.assertEqual(repair["detector_two_strand_order"], 3)
+        self.assertTrue(repair["kernel_inclusion_holds_through_checked_arities"])
+        self.assertTrue(repair["image_orders_match_through_checked_arities"])
+        self.assertEqual(
+            [row["joint_image_size"] for row in repair["checked_rows"]],
+            [3, 24, 648],
+        )
 
     def test_first_candidate_satisfies_structural_filters(self):
         blocks = (10, 265, 220, 349)

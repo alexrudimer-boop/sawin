@@ -2861,13 +2861,14 @@ exists in this search space.  The same audit checks affine-line maps over
 `F_5`, giving `221` affine YBE tables and no terminal survivor.  The named
 affine `F_2^3` pressure row remains non-rigid because it has a nontrivial
 observer and proper subsolutions.
-The affine `F_2^3` family now supplies the first finite-prefix rigid pressure
-core candidates.  The generated audit
+The affine `F_2^3` family now supplies the first structurally rigid survivor
+pool.  The generated audit
 `proofs/affine_f2_q3_rigid_pressure_core_audit.md` counts `226241` affine YBE
 tables and `3360` rigid structural survivors after bidegeneracy,
 noninvolutivity, observer, subsolution, and pair-generated quotient filters.
-For the first survivor, the product prefix containing all racks of size at
-most `3` has size `36`, and `sigma_1^4` is in that detector kernel in arity
-`2` while moving `((0,0,0),(0,0,0))` to `((0,0,1),(1,0,0))` on `X`.  This is
-finite-prefix pressure only; the next decisive task is either a larger finite
-rack detector/gauge for this table or a cofinal rack-prefix obstruction.
+For the first survivor, `sigma_1^4` gives pressure against a bounded ordered
+rack prefix of size `36`, but that prefix had stopped before the relevant
+three-element dihedral rack.  Exact checks with the dihedral rack show image
+orders `3,24,648` for both the rack and `X` in arities `2,3,4`, with no
+detector-kernel obstruction.  Thus this row has become an all-`n`
+dihedral-repair target rather than a valid pressure core.

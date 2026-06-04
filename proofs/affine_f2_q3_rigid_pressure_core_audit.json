@@ -1,5 +1,5 @@
 {
-  "conclusion": "The affine F_2^3 family contains finite rigid-pressure-core candidates in the falsifiable finite-prefix sense: 3360 rows survive the bidegenerate, noninvolutive, observer-rigid, subsolution-rigid, and pair-generated quotient-rigid filters. The first survivor has nontrivial kernel pressure against the product prefix containing all rack representatives of size at most 3. This is not a Sawin counterexample; it is the first serious candidate table whose pressure must be tested cofinally or explained by a larger finite rack detector.",
+  "conclusion": "The affine F_2^3 family contains 3360 rows that survive the bidegenerate, noninvolutive, observer-rigid, subsolution-rigid, and pair-generated quotient-rigid filters. The first survivor has kernel pressure against the bounded ordered rack prefix of size 36, but that pressure is repaired by the missing three-element dihedral rack representative: exact checks through arity 4 show matching braid image orders and no detector-kernel obstruction. This is therefore not a valid pressure core yet; the next task is to prove the dihedral repair all-n or find a different survivor whose pressure is not repaired by small racks.",
   "counts": {
     "affine_ybe_table_count": 226241,
     "bidegenerate_failed": 149184,
@@ -33,41 +33,7 @@
       220,
       349
     ],
-    "branch_tags": [],
-    "finite_rigid_pressure_core_candidate": true,
-    "first_full_size3_prefix_pressure": {
-      "arity": 2,
-      "detector_image_size": 4,
-      "detector_prefix_length": 5,
-      "detector_size": 36,
-      "first_moved_tuple": "((0, 0, 0), (0, 0, 0))",
-      "first_moved_tuple_image": "((0, 0, 1), (1, 0, 0))",
-      "first_witness_word": [
-        1,
-        1,
-        1,
-        1
-      ],
-      "joint_image_size": 12,
-      "kernel_size": 3,
-      "obstruction_found": true,
-      "solution_image_size": 3,
-      "truncated": false
-    },
-    "matrix": [
-      "010100",
-      "100100",
-      "000001",
-      "001101",
-      "110110",
-      "110101"
-    ],
-    "not_flip_across": true,
-    "not_flip_across_reason": "subsolution-rigid rows cannot have a flip-across decomposition, since each side would be a proper crossing-closed subsolution",
-    "observer_partition_block_count": 1,
-    "offset": "001100",
-    "pair_generated_quotient_rigid": true,
-    "pressure_rows": [
+    "bounded_ordered_prefix_pressure_rows": [
       {
         "arity": 1,
         "detector_image_size": 1,
@@ -77,6 +43,7 @@
         "first_moved_tuple_image": null,
         "first_witness_word": null,
         "joint_image_size": 1,
+        "kernel_contains_nonidentity": false,
         "kernel_size": 1,
         "obstruction_found": false,
         "solution_image_size": 1,
@@ -93,6 +60,7 @@
           1
         ],
         "joint_image_size": 3,
+        "kernel_contains_nonidentity": true,
         "kernel_size": 3,
         "obstruction_found": true,
         "solution_image_size": 3,
@@ -109,6 +77,7 @@
           1
         ],
         "joint_image_size": 24,
+        "kernel_contains_nonidentity": true,
         "kernel_size": 24,
         "obstruction_found": true,
         "solution_image_size": 24,
@@ -123,6 +92,7 @@
         "first_moved_tuple_image": null,
         "first_witness_word": null,
         "joint_image_size": 1,
+        "kernel_contains_nonidentity": false,
         "kernel_size": 1,
         "obstruction_found": false,
         "solution_image_size": 1,
@@ -140,6 +110,7 @@
           1
         ],
         "joint_image_size": 6,
+        "kernel_contains_nonidentity": true,
         "kernel_size": 3,
         "obstruction_found": true,
         "solution_image_size": 3,
@@ -157,6 +128,7 @@
           1
         ],
         "joint_image_size": 144,
+        "kernel_contains_nonidentity": true,
         "kernel_size": 24,
         "obstruction_found": true,
         "solution_image_size": 24,
@@ -171,6 +143,7 @@
         "first_moved_tuple_image": null,
         "first_witness_word": null,
         "joint_image_size": 1,
+        "kernel_contains_nonidentity": false,
         "kernel_size": 1,
         "obstruction_found": false,
         "solution_image_size": 1,
@@ -190,6 +163,7 @@
           1
         ],
         "joint_image_size": 12,
+        "kernel_contains_nonidentity": true,
         "kernel_size": 3,
         "obstruction_found": true,
         "solution_image_size": 3,
@@ -209,6 +183,7 @@
           1
         ],
         "joint_image_size": 576,
+        "kernel_contains_nonidentity": true,
         "kernel_size": 24,
         "obstruction_found": true,
         "solution_image_size": 24,
@@ -223,6 +198,7 @@
         "first_moved_tuple_image": null,
         "first_witness_word": null,
         "joint_image_size": 1,
+        "kernel_contains_nonidentity": false,
         "kernel_size": 1,
         "obstruction_found": false,
         "solution_image_size": 1,
@@ -242,6 +218,7 @@
           1
         ],
         "joint_image_size": 12,
+        "kernel_contains_nonidentity": true,
         "kernel_size": 3,
         "obstruction_found": true,
         "solution_image_size": 3,
@@ -261,6 +238,7 @@
           1
         ],
         "joint_image_size": 576,
+        "kernel_contains_nonidentity": true,
         "kernel_size": 24,
         "obstruction_found": true,
         "solution_image_size": 24,
@@ -275,6 +253,7 @@
         "first_moved_tuple_image": null,
         "first_witness_word": null,
         "joint_image_size": 1,
+        "kernel_contains_nonidentity": false,
         "kernel_size": 1,
         "obstruction_found": false,
         "solution_image_size": 1,
@@ -294,6 +273,7 @@
           1
         ],
         "joint_image_size": 12,
+        "kernel_contains_nonidentity": true,
         "kernel_size": 3,
         "obstruction_found": true,
         "solution_image_size": 3,
@@ -313,12 +293,107 @@
           1
         ],
         "joint_image_size": 1152,
+        "kernel_contains_nonidentity": true,
         "kernel_size": 24,
         "obstruction_found": true,
         "solution_image_size": 24,
         "truncated": false
       }
     ],
+    "branch_tags": [],
+    "dihedral_size3_repair": {
+      "checked_rows": [
+        {
+          "arity": 2,
+          "detector_image_size": 3,
+          "first_moved_tuple": null,
+          "first_moved_tuple_image": null,
+          "first_witness_word": null,
+          "joint_image_size": 3,
+          "kernel_contains_nonidentity": false,
+          "kernel_size": 1,
+          "obstruction_found": false,
+          "solution_image_size": 3,
+          "truncated": false
+        },
+        {
+          "arity": 3,
+          "detector_image_size": 24,
+          "first_moved_tuple": null,
+          "first_moved_tuple_image": null,
+          "first_witness_word": null,
+          "joint_image_size": 24,
+          "kernel_contains_nonidentity": false,
+          "kernel_size": 1,
+          "obstruction_found": false,
+          "solution_image_size": 24,
+          "truncated": false
+        },
+        {
+          "arity": 4,
+          "detector_image_size": 648,
+          "first_moved_tuple": null,
+          "first_moved_tuple_image": null,
+          "first_witness_word": null,
+          "joint_image_size": 648,
+          "kernel_contains_nonidentity": false,
+          "kernel_size": 1,
+          "obstruction_found": false,
+          "solution_image_size": 648,
+          "truncated": false
+        }
+      ],
+      "detector_index_in_small_rack_representatives_3": 8,
+      "detector_size": 3,
+      "detector_table": [
+        "(0, 0)",
+        "(2, 0)",
+        "(1, 0)",
+        "(2, 1)",
+        "(1, 1)",
+        "(0, 1)",
+        "(1, 2)",
+        "(0, 2)",
+        "(2, 2)"
+      ],
+      "detector_two_strand_order": 3,
+      "image_orders_match_through_checked_arities": true,
+      "kernel_inclusion_holds_through_checked_arities": true
+    },
+    "finite_prefix_pressure_repaired_by_size3_rack": true,
+    "first_bounded_ordered_prefix_pressure": {
+      "arity": 2,
+      "detector_image_size": 4,
+      "detector_prefix_length": 5,
+      "detector_size": 36,
+      "first_moved_tuple": "((0, 0, 0), (0, 0, 0))",
+      "first_moved_tuple_image": "((0, 0, 1), (1, 0, 0))",
+      "first_witness_word": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "joint_image_size": 12,
+      "kernel_contains_nonidentity": true,
+      "kernel_size": 3,
+      "obstruction_found": true,
+      "solution_image_size": 3,
+      "truncated": false
+    },
+    "matrix": [
+      "010100",
+      "100100",
+      "000001",
+      "001101",
+      "110110",
+      "110101"
+    ],
+    "not_flip_across": true,
+    "not_flip_across_reason": "subsolution-rigid rows cannot have a flip-across decomposition, since each side would be a proper crossing-closed subsolution",
+    "observer_partition_block_count": 1,
+    "offset": "001100",
+    "pair_generated_quotient_rigid": true,
     "proper_subsolution_count": 0
   },
   "rank_histogram": {

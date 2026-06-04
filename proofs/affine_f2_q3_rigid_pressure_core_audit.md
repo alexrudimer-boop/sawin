@@ -3,7 +3,9 @@
 This generated audit applies the rigid-pressure-core filters to the
 affine-linear `F_2^3` family using the linear YBE block equations
 and affine offset equations.  It is a finite-prefix pressure audit,
-not a Sawin counterexample.
+not a Sawin counterexample.  The bounded ordered prefix used
+below is not the full product of all racks of size at most `3`;
+it stops at detector size `36`.
 
 ## Census
 
@@ -57,9 +59,9 @@ Matrix rows:
 - branch tags: `[]`;
 - pair-generated quotient-rigid: `True`;
 - not flip-across: `True`;
-- finite rigid-pressure-core candidate: `True`.
+- bounded-prefix pressure repaired by size-3 rack: `True`.
 
-First pressure row for the full size-`<=3` rack prefix:
+First pressure row for the bounded ordered rack prefix:
 
 - detector prefix length: `5`;
 - detector size: `36`;
@@ -70,6 +72,20 @@ First pressure row for the full size-`<=3` rack prefix:
 - moved tuple: `((0, 0, 0), (0, 0, 0))`;
 - moved image: `((0, 0, 1), (1, 0, 0))`.
 
+Size-three dihedral repair check:
+
+- detector index in `small_rack_representatives(3)`: `8`;
+- detector size: `3`;
+- two-strand order: `3`;
+- kernel inclusion holds through checked arities: `True`;
+- image orders match through checked arities: `True`.
+
+Checked repair rows:
+
+- arity `2`: joint `3`, detector `3`, solution `3`, obstruction `False`, truncated `False`.
+- arity `3`: joint `24`, detector `24`, solution `24`, obstruction `False`, truncated `False`.
+- arity `4`: joint `648`, detector `648`, solution `648`, obstruction `False`, truncated `False`.
+
 ## Conclusion
 
-The affine F_2^3 family contains finite rigid-pressure-core candidates in the falsifiable finite-prefix sense: 3360 rows survive the bidegenerate, noninvolutive, observer-rigid, subsolution-rigid, and pair-generated quotient-rigid filters. The first survivor has nontrivial kernel pressure against the product prefix containing all rack representatives of size at most 3. This is not a Sawin counterexample; it is the first serious candidate table whose pressure must be tested cofinally or explained by a larger finite rack detector.
+The affine F_2^3 family contains 3360 rows that survive the bidegenerate, noninvolutive, observer-rigid, subsolution-rigid, and pair-generated quotient-rigid filters. The first survivor has kernel pressure against the bounded ordered rack prefix of size 36, but that pressure is repaired by the missing three-element dihedral rack representative: exact checks through arity 4 show matching braid image orders and no detector-kernel obstruction. This is therefore not a valid pressure core yet; the next task is to prove the dihedral repair all-n or find a different survivor whose pressure is not repaired by small racks.

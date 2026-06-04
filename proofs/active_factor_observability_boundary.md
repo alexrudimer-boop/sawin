@@ -119,15 +119,15 @@ bijective affine YBE tables and no terminal survivor, so the first affine
 size-five line frontier is also closed.
 
 The next affine audit, `proofs/affine_f2_q3_rigid_pressure_core_audit.md`,
-finds the first serious finite-prefix pressure candidates.  In the affine
-`F_2^3` family, `226241` affine YBE tables occur.  Among them, `3360` rows
-survive bidegeneracy, noninvolutivity, observer-rigidity,
-subsolution-rigidity, and pair-generated quotient-rigidity.  The first
-survivor has actual pressure against the product prefix containing all rack
-representatives of size at most `3`: the detector has size `36`, and
-`sigma_1^4` is trivial on it but moves the candidate in arity `2`.  This is
-not a Sawin counterexample; it is now the concrete table whose all-`n` fate
-must be proved.
+finds the first structurally rigid affine `F_2^3` survivors.  In this family,
+`226241` affine YBE tables occur.  Among them, `3360` rows survive
+bidegeneracy, noninvolutivity, observer-rigidity, subsolution-rigidity, and
+pair-generated quotient-rigidity.  The first survivor has pressure against a
+bounded ordered rack prefix of size `36`, but this was a cutoff artifact: the
+prefix had not yet included the relevant three-element dihedral rack.  Exact
+checks with that rack show matching braid image orders and no kernel
+obstruction through arity `4`.  Thus the concrete all-`n` task is now to prove
+or refute the dihedral-rack repair for this affine table.
 
 ## Cofinal Rack-Prefix Obstruction
 
