@@ -1,6 +1,7 @@
 # Affine F2^3 Size-4 Rack Target
 
-Status: queued for GPT-5.5 Pro on 2026-06-04.
+Status: superseded on 2026-06-04 by
+`2026-06-04-affine-f2-q3-tetrahedral-module-target.md`.
 
 Prompt:
 

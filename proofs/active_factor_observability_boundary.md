@@ -161,6 +161,29 @@ For this rack, the joint, detector, and `X` image orders agree through
 arities `2,3,4,5` as `3,24,648,77760`, with no obstruction.  This is now the
 main positive target for the affine survivor.
 
+The companion native module audit
+`proofs/affine_f2_q3_tetrahedral_module_audit.md` identifies this rack as the
+Alexander rack on `F_2^2`
+
+```text
+a*b = T b + (I+T)a,        T rows = (2,3),
+```
+
+with braid crossing `(a,b) -> (a*b,a)`.  For the affine `F_2^3` survivor, the
+affine offsets generate an explicit `2n-2` dimensional fibre module with basis
+given by alternating prefix sums in the strand coordinates.  Through arity
+`5`, the rack24 image, the full `X` image, the induced affine fibre image, and
+all pairwise joint images have the same orders
+
+```text
+3, 24, 648, 77760.
+```
+
+Thus the current all-`n` positive target is sharper: prove that this
+fibre-module identification with the tetrahedral Alexander rack persists
+uniformly in `n`.  A direct arity-`6` tuple closure is not the right primitive
+check; the expected image is already too large for naive enumeration.
+
 ## Cofinal Rack-Prefix Obstruction
 
 A genuine negative answer to Sawin needs more than sequential primitivity.

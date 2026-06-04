@@ -2805,6 +2805,21 @@ observability remains an unresolved strengthening of the positive direction.
 The exact obstruction to that induction method is sequential primitivity, but
 the exact obstruction to Sawin itself is still the stronger cofinal
 rack-prefix nonseparation condition.
+The current concrete affine frontier is the rigid affine `F_2^3` survivor
+recorded in `proofs/affine_f2_q3_rigid_pressure_core_audit.md`.  The
+three-element dihedral repair is refuted in
+`proofs/affine_f2_q3_dihedral_native_image_audit.md`: it matches through
+arity `4` but fails at arity `5`, where `|G_D3|=51840` and
+`|G_X|=77760`.  The next small-rack audit leaves a single size-four survivor,
+rack representative `24`, with operation rows `[0,2,3,1]`, `[3,1,0,2]`,
+`[1,3,2,0]`, `[2,0,1,3]`.  The native tetrahedral-module audit identifies
+this rack as the Alexander rack on `F_2^2` with `a*b=T b+(I+T)a`, `T` row
+masks `(2,3)`, and extracts an explicit `2n-2` dimensional affine fibre
+module for `X`.  Through arity `5`, the rack image, full `X` image, induced
+fibre image, and all pairwise joint images have common orders
+`3,24,648,77760`.  The exact positive target for this table is now an all-`n`
+proof of that tetrahedral fibre-module equivalence; the exact negative target
+would be the first arity where rack24 has a detector-kernel word moving `X`.
 Formal partial-row nonseparability, failure of one-vertex actualization for a
 formal row system, or failure of stronger structural properties such as
 virtual freeness of `Art_I`, remains only a gap unless it is made actual and
