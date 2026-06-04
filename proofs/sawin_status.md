@@ -2462,6 +2462,16 @@ proof uses the color map `X^n -> {A,B}^n`, its equivariance through
 strands outside a fixed color class.  This adds a new positive family:
 iterated flip-across unions of already dominated pieces.
 
+The remaining hidden-fibre induction route has a guardrail in
+`proofs/minimal_hidden_fibre_gauge_criterion.md`.  For a quotient `X -> Z`,
+an unrestricted finite rack gauge `S` satisfying
+`ker rho^Z_n cap ker rho^S_n <= ker rho^X_n` for all `n` is not a smaller
+lemma: allowing arbitrary `S` makes the criterion equivalent to Sawin for
+`X`.  A useful theorem must therefore construct a restricted finite
+transducer/gauge from the quotient, fibres, and extension cocycle.  Failure of
+one restricted construction is only another induction gap; failure for every
+finite rack gauge is the relative normalized-law negative branch.
+
 ## Current conclusion
 
 As of this log entry, neither A nor B is proved.  The current decisive target
