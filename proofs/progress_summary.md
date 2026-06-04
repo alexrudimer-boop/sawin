@@ -2933,3 +2933,19 @@ with all invariant linear observers it separates the full `X` module exactly
 when `3` does not divide `n`.  For `n=3k`, the only remaining visible gap is a
 two-dimensional shear.  Since `n=3` and `n=6` already pass, the next exact
 computation for this rack is `K_9`.
+The period-3 shear split audit rules out a tempting shortcut: through arity
+`30`, there is no linear section correction `P` with generator shear
+`P(A_iq)+P(q)`.  Thus the extension is nonsplit even in the passing arities
+`3` and `6`.  The remaining proof has to use finite relations in the
+tetrahedral rack image, or else find the first relation whose shear is
+nonzero.
+GPT-5.5 Pro then supplied the missing full coordinate, and the repo audit
+`proofs/affine_f2_q3_full_tetrahedral_conjugacy_audit.md` verifies it.  Define
+`P_n` by `z_1=C_n(a_1,c_1)` and
+`z_{i+1}=z_i+C_{n-i}(a_i+b_i+a_{i+1},c_i+c_{i+1})`, and define invariant
+observer bits `r_i=sum_{j<i}(a_j+c_j)+a_i+b_i`.  The combined map
+`Phi_n=(P_n,R_n):X^n -> Y^n x F_2^n` is bijective and generator-equivariant
+through `n=30`, with a local-recursive proof for all `n`.  Consequently the
+affine `F_2^3` pressure core is not a counterexample: it has
+`ker rho^X_n = ker rho^Y_n` for every arity, where `Y` is the tetrahedral
+four-element rack.

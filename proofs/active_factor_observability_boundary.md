@@ -244,6 +244,26 @@ divide `n`; when `n=3k` it misses two dimensions.  Thus rack24 domination is
 now reduced to a period-3 shear problem, with the first unresolved arity
 after the checked `n=3,6` cases being `n=9`.
 
+The companion split audit
+`proofs/affine_f2_q3_period3_shear_split_audit.md` rules out the easiest
+version of that shear problem: through arity `30`, the hidden two-dimensional
+space is fixed, but the generator shear is not a global linear coboundary
+`P(A_iq)+P(q)`.  So the extension is genuinely nonsplit even at `n=3` and
+`n=6`, where the full joint-kernel checks pass.  Any all-`n` proof must use
+relations in the tetrahedral rack image, not just a section-gauge split.
+
+The full tetrahedral conjugacy audit
+`proofs/affine_f2_q3_full_tetrahedral_conjugacy_audit.md` resolves the
+candidate positively.  In shifted `X` coordinates it defines a full rack
+coordinate `P_n:X^n -> Y^n` by keeping the missing constant-colour coordinate
+`z_1=C_n(a_1,c_1)` and recursively setting
+`z_{i+1}=z_i+C_{n-i}(a_i+b_i+a_{i+1},c_i+c_{i+1})`.  Together with the
+invariant observers `r_i=sum_{j<i}(a_j+c_j)+a_i+b_i`, the map
+`Phi_n=(P_n,R_n)` is a bijection `X^n -> Y^n x F_2^n` and conjugates the
+shifted `X` braid action to the tetrahedral rack action plus a trivial
+`F_2^n` factor.  Therefore this affine pressure core has
+`ker rho^X_n = ker rho^Y_n` for every `n`.
+
 ## Cofinal Rack-Prefix Obstruction
 
 A genuine negative answer to Sawin needs more than sequential primitivity.

@@ -2845,6 +2845,22 @@ together with all invariant linear observers has full rank exactly for
 linear certificate.  The only remaining possible mismatch is a two-dimensional
 period-3 shear at arities `n=3k`; since `n=3` and `n=6` pass, the first
 unresolved arity is `n=9`.
+The split audit rules out the simplest positive repair: the hidden shear is
+not a global coboundary through arity `30`.  Thus there is no linear section
+change that splits the extension in the checked period-3 cases.  The remaining
+question is sharper: whether all defining relations of the tetrahedral rack
+image have zero accumulated shear, or whether the first nonzero accumulated
+shear appears at `n=9`.
+The full tetrahedral conjugacy audit resolves that question for this table.
+The missing coordinate is not a shear relation but the constant-colour
+coordinate of the full tetrahedral rack representation.  With
+`z_1=C_n(a_1,c_1)`,
+`z_{i+1}=z_i+C_{n-i}(a_i+b_i+a_{i+1},c_i+c_{i+1})`, and fixed observer bits
+`r_i=sum_{j<i}(a_j+c_j)+a_i+b_i`, the map
+`Phi_n=(P_n,R_n)` gives a bijection
+`X^n -> Y^n x F_2^n` conjugating the shifted affine `X` action to the
+tetrahedral rack action plus a trivial factor.  Hence
+`ker rho^X_n=ker rho^Y_n` for all `n` for this affine pressure core.
 Formal partial-row nonseparability, failure of one-vertex actualization for a
 formal row system, or failure of stronger structural properties such as
 virtual freeness of `Art_I`, remains only a gap unless it is made actual and

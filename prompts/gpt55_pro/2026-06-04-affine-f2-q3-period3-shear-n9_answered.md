@@ -1,6 +1,7 @@
 # Affine F2^3 Period-3 Shear / n=9 Target
 
-Status: ask_now / queued for GPT-5.5 Pro on 2026-06-04.
+Status: answered by GPT-5.5 Pro on 2026-06-04; promoted to
+`proofs/affine_f2_q3_full_tetrahedral_conjugacy_audit.md`.
 
 Prompt:
 
