@@ -41,6 +41,13 @@ I need you to audit the proof, not just restate it.
 
 Potential gap 1: transport-isomorphic edge maps need not be simultaneously gauge-normalizable to identity unless the transport groupoid has trivial loop monodromy. YBE coherence seems to make a functorial groupoid action, but coherent loop automorphisms can still be nontrivial. Does the hypothesis above force trivial loop monodromy? If yes, prove it. If not, repair the theorem by incorporating the finite loop monodromy into the detector/transducer, or give a counterexample to the identity-normalization step.
 
+Here is a concrete witness that the flatness issue is real. Let
+
+    X = {0,1} x Z/3,
+    r((a,x),(b,y)) = ((a,y),(b,x+1)).
+
+The quotient by the first coordinate is the identity solution on two colours; the fibres over 0 and 1 are crossing-closed three-point subsolutions. All mixed rows are swapped-product-like. The one-variable transports are internal-solution isomorphisms, but the transport groupoid has loop monodromy of order 3 on each fibre: moving around a colour loop applies x -> x+1. Thus transport-isomorphic product-like rows do not force simultaneous identity gauge-normalization. This example is not a Sawin counterexample; it is an identity-base cyclic product row, plausibly detected by a finite cyclic pairwise-linking detector. Its role is to kill the naive identity-normalization step.
+
 Potential gap 2: the proof that the split solution T is dominated by quotient and block racks says that, after quotient triviality, one can delete all strands not carrying colour a and get an internal braid beta_a. This is clear for flip-across or permutation-like colour motion, but a general finite quotient YBE solution can change colours along the braid trajectory and return only at the end. Does the product-like transport-isomorphic hypothesis force enough strand-colour conservation for this substrand deletion argument? If yes, prove it. If not, give the correct finite marked-factor or active-factor certificate needed for T.
 
 Please give one of the following outcomes:
