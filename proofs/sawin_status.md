@@ -2689,6 +2689,27 @@ is not actual residual movement, and after faithful repair it is rack-detected.
 A genuine negative endpoint sequence must be actual, profinitely Artin-null,
 and non-bisectional or non-probe-complete rather than merely endpoint
 nontrivial.
+The next same-chat Pro answer sharpened this again in
+`proofs/non_bisectional_transducer_gauge_fork.md`.  Universal finite
+single-strand bisectional enrichment is false.  The affine `F_2^3` row
+
+```text
+R((a,z),(b,w))=((a,Jw),(b,Jz+c))
+```
+
+has non-surjective local maps
+
+```text
+lambda_(a,z)(b,w)=(a,Jw),
+```
+
+so no finite permutation-fibre semiconjugacy can reconstruct its actual local
+movement.  This is not a Sawin counterexample: the position-dependent gauge
+`u_i=J^i z_i+(i mod 2)c` makes the row braid-kernel equivalent to the
+two-element cyclic rack.  Thus the remaining positive target is a finite
+transducer/rack gauge theorem for non-bisectional hidden motion, and the
+remaining negative target must show non-bisectional movement with no finite
+transducer/rack gauge plus a cofinal Artin-null Brunnian branch family.
 Formal partial-row nonseparability, failure of one-vertex actualization for a
 formal row system, or failure of stronger structural properties such as
 virtual freeness of `Art_I`, remains only a gap unless it is made actual and

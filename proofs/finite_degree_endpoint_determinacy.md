@@ -514,3 +514,11 @@ detects every nontrivial endpoint and also supplies a finite Artin quotient
 `Art_I -> Phi`.  Thus a cofinal negative seed must be profinitely Artin-null,
 non-bisectional or non-probe-complete, and non-rackable, not merely
 endpoint-nontrivial.
+
+The follow-up fork in `proofs/non_bisectional_transducer_gauge_fork.md` shows
+that the word "non-bisectional" is not empty: the affine `F_2^3` pressure row
+has non-surjective local maps and cannot be reconstructed by finite
+single-strand permutation fibres.  It is nevertheless rack-dominated by a
+finite position-dependent gauge.  Hence a genuine cofinal endpoint failure
+must also rule out finite transducer/rack gauges, not just bisectional
+endpoint absorption.

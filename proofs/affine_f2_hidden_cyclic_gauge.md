@@ -10,6 +10,19 @@ all-arity braid-kernel equivalent to the two-element cyclic rack.  Thus `Q_2`
 already dominates it, and every fixed-`Q_3` bounded-deletion obstruction is
 trivial.
 
+The later note `proofs/non_bisectional_transducer_gauge_fork.md` records a
+second role for this row: it refutes universal single-strand bisectional
+endpoint enrichment.  For fixed `x=(a,z)`, the map
+
+```text
+lambda_x(b,w)=(a,Jw)
+```
+
+has image `{a} x W`, so no finite permutation-fibre semiconjugacy can
+reconstruct the actual local update.  This failure is not Sawin-negative
+because the position-dependent gauge below still gives kernel equality with
+the two-element cyclic rack.
+
 ## The Row
 
 Let `X=F_2^3` and write elements as

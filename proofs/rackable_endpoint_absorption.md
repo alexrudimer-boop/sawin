@@ -351,3 +351,11 @@ The flip-marker refutation fails the first condition before repair, and after
 faithful repair it is rack-detected by `Phi x F`.  It is therefore a guardrail
 against an overbroad endpoint lemma, not evidence for a Sawin-negative
 solution.
+
+The follow-up note `proofs/non_bisectional_transducer_gauge_fork.md` records
+the next fork.  Universal faithful bisectional enrichment is false: the affine
+`F_2^3` pressure row has non-surjective local maps and cannot be reconstructed
+by finite single-strand permutation fibres.  That row is still Sawin-harmless,
+because a finite position-dependent gauge makes it braid-kernel equivalent to
+the two-element cyclic rack.  Thus the remaining positive target is a finite
+transducer/rack gauge theorem for non-bisectional hidden motion.

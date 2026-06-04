@@ -50,6 +50,18 @@ def affine_f2_type_a_matrix_data():
     )
 
 
+def affine_f2_hidden_cyclic_gauge_solution():
+    elements = tuple(product((0, 1), repeat=3))
+    table = {}
+    for a, z1, z2 in elements:
+        for b, w1, w2 in elements:
+            table[((a, z1, z2), (b, w1, w2))] = (
+                (a, w2, w1),
+                (b, (z2 + 1) % 2, (z1 + 1) % 2),
+            )
+    return FiniteBraidedSet(elements, table)
+
+
 def flip_across_type_b_solution():
     trivial2 = rack_solution((0, 1), lambda _left, right: right)
     perm2 = FiniteBraidedSet(
@@ -142,6 +154,19 @@ class RackResidualTowerTests(unittest.TestCase):
         self.assertTrue(by_prefix_and_arity[(2, 2)].obstruction_found)
         self.assertFalse(by_prefix_and_arity[(3, 2)].obstruction_found)
         self.assertFalse(by_prefix_and_arity[(3, 3)].obstruction_found)
+
+    def test_affine_f2_hidden_cyclic_gauge_row_is_non_bisectional(self):
+        solution = affine_f2_hidden_cyclic_gauge_solution()
+        left = (0, 0, 0)
+        first_outputs = {
+            solution.R[(left, right)][0]
+            for right in solution.elements
+        }
+
+        self.assertTrue(solution.is_ybe())
+        self.assertEqual(len(solution.elements), 8)
+        self.assertEqual(len(first_outputs), 4)
+        self.assertNotEqual(set(first_outputs), set(solution.elements))
 
     def test_one_point_detector_has_high_arity_cross_effect_at_bound_one(self):
         solution = rack_solution((0, 1), lambda _left, right: 1 - right)

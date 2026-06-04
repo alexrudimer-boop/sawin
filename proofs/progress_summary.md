@@ -2723,3 +2723,16 @@ cannot be upgraded into a Sawin-negative sequence.  The negative search now
 has the sharper admissibility test: witnesses must be actual, profinitely
 Artin-null, and non-bisectional/non-probe-complete rather than merely
 endpoint-nontrivial.
+
+`proofs/non_bisectional_transducer_gauge_fork.md` records the next same-chat
+Pro fork.  Universal single-strand bisectional enrichment is false: the affine
+`F_2^3` row
+`R((a,z),(b,w))=((a,Jw),(b,Jz+c))` has non-surjective local maps
+`lambda_(a,z)(b,w)=(a,Jw)`, so no finite permutation-fibre semiconjugacy can
+reconstruct its actual movement.  This is not a Sawin counterexample because
+`proofs/affine_f2_hidden_cyclic_gauge.md` gives the finite position-dependent
+gauge `u_i=J^i z_i+(i mod 2)c`, making the row braid-kernel equivalent to the
+two-element cyclic rack.  The remaining positive theorem is therefore a
+finite transducer/rack gauge theorem for non-bisectional hidden motion.  A
+true negative example must combine non-bisectional local movement, no finite
+transducer/rack gauge, and a cofinal Artin-null Brunnian branch family.
