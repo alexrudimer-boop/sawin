@@ -13,6 +13,7 @@ from ybe_domination import (
     is_rack_solution,
     rack_residual_obstruction_audit,
     rack_solution,
+    terminal_branch_triage_audit,
 )
 
 
@@ -110,6 +111,24 @@ class SizeFourDegenerateMechanismTests(unittest.TestCase):
             audit = rack_residual_obstruction_audit(target, detector, n)
             self.assertFalse(audit.truncated)
             self.assertFalse(audit.kernel_contains_nonidentity)
+
+    def test_terminal_branch_triage_sees_size_four_mechanisms(self):
+        type_a = terminal_branch_triage_audit(affine_f2_type_a_solution())
+        self.assertFalse(type_a.has_point_separating_proper_quotients)
+        self.assertFalse(type_a.has_flip_across_decomposition)
+        self.assertTrue(type_a.has_nontrivial_one_state_observer)
+        self.assertTrue(type_a.has_proper_subsolution)
+
+        type_b = terminal_branch_triage_audit(
+            flip_disjoint_union_solution(
+                identity_solution((0, 1)),
+                permutation_solution_with_toggle(),
+                "T",
+                "P",
+            )
+        )
+        self.assertTrue(type_b.has_point_separating_proper_quotients)
+        self.assertTrue(type_b.has_flip_across_decomposition)
 
 
 if __name__ == "__main__":

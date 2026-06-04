@@ -2807,3 +2807,9 @@ congruences gives one-state active-factor quotient maps, and the audit checks
 that their common refinement is equality and that the multi-factor
 pair-automaton has no all-length collision.  This records point-separating
 proper total quotients as a proper active-factor compression certificate.
+The standard first-entry tests are also executable as
+`terminal_branch_triage_audit(...)`: it enumerates proper quotient
+congruences, checks whether all proper quotients point-separate, records
+proper subsolutions, detects flip-across decompositions, and computes the
+coarsest one-state invariant observer partition.  A positive row feeds the
+certificate layer; a negative row is only triage, not a no-rack obstruction.

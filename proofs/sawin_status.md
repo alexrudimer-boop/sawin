@@ -2784,6 +2784,12 @@ The quotient-only special case is also executable as
 one-state active factors, and a family proves compression exactly when the
 common refinement of its congruences is equality.  This turns the
 point-separating quotient gluing theorem into a finite audit.
+The finite entry-branch triage is now executable as
+`terminal_branch_triage_audit(...)`: it checks proper total quotients,
+point-separating quotient families, proper subsolutions, flip-across
+decompositions, and one-state invariant observers.  This records the standard
+ways proper compression can start, but failure of the triage remains only a
+gap rather than a rack-prefix obstruction.
 Formal partial-row nonseparability, failure of one-vertex actualization for a
 formal row system, or failure of stronger structural properties such as
 virtual freeness of `Art_I`, remains only a gap unless it is made actual and
