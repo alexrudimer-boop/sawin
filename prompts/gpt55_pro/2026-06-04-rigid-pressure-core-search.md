@@ -48,6 +48,7 @@ The next finite-table target suggested by the previous answer is a rigid pressur
 Executable finite checks now show:
 
 - Exhaustively, all 73 size-3 bijective YBE tables fail before this target: 66 fail bidegeneracy and the remaining 7 fail noninvolutivity.
+- Exhaustively over affine-linear maps on F_2^2, there are 481 bijective affine YBE tables; 24 survive the terminal filters, and all 24 fail quotient-rigidity.
 - The size-4 affine Type A representative fails quotient-rigidity, subsolution-rigidity, and observer-rigidity.
 - The size-4 Type B flip-across representative fails the flip-across exclusion and has transport-isomorphic split structure.
 - The affine F_2^3 hidden cyclic pressure row fails observer-rigidity and subsolution-rigidity, and is closed by a sequential cyclic rack gauge plus inert observer.

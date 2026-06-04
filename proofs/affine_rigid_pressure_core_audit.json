@@ -1,0 +1,218 @@
+{
+  "conclusion": "The exact affine-linear size-four family over F_2^2 has terminal survivors, but no structural rigid-pressure-core survivor: all 24 terminal survivors fail quotient-rigidity.  The named F_2^3 pressure row remains a useful guardrail but fails observer and subsolution rigidity and is already closed by a finite sequential rack gauge.",
+  "dimension_three_named_pressure_row": {
+    "bidegenerate": true,
+    "branch_tags": [],
+    "closed_by_known_certificate": "two-state hidden cyclic rack gauge plus inert observer",
+    "congruence_count": null,
+    "first_failed_filter": "quotient_rigid",
+    "first_pressure_witness": null,
+    "flip_across_partition_count": 0,
+    "left_degenerate": true,
+    "name": "affine_f2_hidden_cyclic_pressure_row",
+    "no_transport_isomorphic_split": null,
+    "noninvolutive": true,
+    "not_flip_across": true,
+    "not_rack": true,
+    "observer_partition_block_count": 2,
+    "observer_rigid": false,
+    "proper_subsolution_count": 8,
+    "quotient_rigid": null,
+    "rack_prefix_pressure_attempted": false,
+    "rack_prefix_pressure_found": null,
+    "rack_prefix_pressure_truncated": null,
+    "right_degenerate": true,
+    "rigid_pressure_core_candidate": false,
+    "size": 8,
+    "structural_filter_survives": null,
+    "subsolution_rigid": false,
+    "terminal_filter_survives": true,
+    "transport_split_count": null,
+    "ybe": true
+  },
+  "dimension_two": {
+    "affine_ybe_count": 481,
+    "branch_tag_counts": {
+      "(untagged)": 24,
+      "involutive": 48,
+      "involutive+identity_table": 1,
+      "involutive+left_nondegenerate+right_nondegenerate+nondegenerate": 48,
+      "involutive+permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate": 23,
+      "left_nondegenerate+right_nondegenerate+nondegenerate": 226,
+      "permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate": 73,
+      "rack_type+involutive+permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate": 1,
+      "rack_type+left_nondegenerate+right_nondegenerate+nondegenerate": 14,
+      "rack_type+permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate": 23
+    },
+    "checked_affine_map_count": 1048576,
+    "dimension": 2,
+    "exact_exhaustive_affine_linear": true,
+    "first_failed_filter_counts": {
+      "bidegenerate": 408,
+      "noninvolutive": 49,
+      "quotient_rigid": 24
+    },
+    "invertible_affine_map_count": 322560,
+    "point_count": 4,
+    "pressure_attempted": false,
+    "rigid_pressure_core_candidate_count": 0,
+    "structural_survivor_count": 0,
+    "structural_survivor_samples": [],
+    "terminal_survivor_count": 24,
+    "terminal_survivor_samples": [
+      {
+        "branch_tags": [],
+        "congruence_count": 3,
+        "first_failed_filter": "quotient_rigid",
+        "matrix": [
+          "0001",
+          "1101",
+          "1011",
+          "1000"
+        ],
+        "no_transport_isomorphic_split": true,
+        "observer_partition_block_count": 2,
+        "observer_rigid": false,
+        "offset": "0011",
+        "proper_subsolution_count": 2,
+        "quotient_rigid": false,
+        "subsolution_rigid": false,
+        "transport_split_count": 0
+      },
+      {
+        "branch_tags": [],
+        "congruence_count": 3,
+        "first_failed_filter": "quotient_rigid",
+        "matrix": [
+          "0001",
+          "1101",
+          "1011",
+          "1000"
+        ],
+        "no_transport_isomorphic_split": true,
+        "observer_partition_block_count": 2,
+        "observer_rigid": false,
+        "offset": "1100",
+        "proper_subsolution_count": 2,
+        "quotient_rigid": false,
+        "subsolution_rigid": false,
+        "transport_split_count": 0
+      },
+      {
+        "branch_tags": [],
+        "congruence_count": 4,
+        "first_failed_filter": "quotient_rigid",
+        "matrix": [
+          "0010",
+          "0100",
+          "1000",
+          "0001"
+        ],
+        "no_transport_isomorphic_split": false,
+        "observer_partition_block_count": 2,
+        "observer_rigid": false,
+        "offset": "0010",
+        "proper_subsolution_count": 2,
+        "quotient_rigid": false,
+        "subsolution_rigid": false,
+        "transport_split_count": 1
+      },
+      {
+        "branch_tags": [],
+        "congruence_count": 4,
+        "first_failed_filter": "quotient_rigid",
+        "matrix": [
+          "0010",
+          "0100",
+          "1000",
+          "0001"
+        ],
+        "no_transport_isomorphic_split": false,
+        "observer_partition_block_count": 2,
+        "observer_rigid": false,
+        "offset": "1000",
+        "proper_subsolution_count": 2,
+        "quotient_rigid": false,
+        "subsolution_rigid": false,
+        "transport_split_count": 1
+      },
+      {
+        "branch_tags": [],
+        "congruence_count": 4,
+        "first_failed_filter": "quotient_rigid",
+        "matrix": [
+          "0010",
+          "1110",
+          "1000",
+          "1011"
+        ],
+        "no_transport_isomorphic_split": false,
+        "observer_partition_block_count": 2,
+        "observer_rigid": false,
+        "offset": "0011",
+        "proper_subsolution_count": 2,
+        "quotient_rigid": false,
+        "subsolution_rigid": false,
+        "transport_split_count": 1
+      },
+      {
+        "branch_tags": [],
+        "congruence_count": 4,
+        "first_failed_filter": "quotient_rigid",
+        "matrix": [
+          "0010",
+          "1110",
+          "1000",
+          "1011"
+        ],
+        "no_transport_isomorphic_split": false,
+        "observer_partition_block_count": 2,
+        "observer_rigid": false,
+        "offset": "1100",
+        "proper_subsolution_count": 2,
+        "quotient_rigid": false,
+        "subsolution_rigid": false,
+        "transport_split_count": 1
+      },
+      {
+        "branch_tags": [],
+        "congruence_count": 3,
+        "first_failed_filter": "quotient_rigid",
+        "matrix": [
+          "0011",
+          "0100",
+          "1001",
+          "0001"
+        ],
+        "no_transport_isomorphic_split": true,
+        "observer_partition_block_count": 2,
+        "observer_rigid": false,
+        "offset": "0010",
+        "proper_subsolution_count": 2,
+        "quotient_rigid": false,
+        "subsolution_rigid": false,
+        "transport_split_count": 0
+      },
+      {
+        "branch_tags": [],
+        "congruence_count": 3,
+        "first_failed_filter": "quotient_rigid",
+        "matrix": [
+          "0011",
+          "0100",
+          "1001",
+          "0001"
+        ],
+        "no_transport_isomorphic_split": true,
+        "observer_partition_block_count": 2,
+        "observer_rigid": false,
+        "offset": "1000",
+        "proper_subsolution_count": 2,
+        "quotient_rigid": false,
+        "subsolution_rigid": false,
+        "transport_split_count": 0
+      }
+    ]
+  },
+  "title": "Affine rigid pressure core audit"
+}

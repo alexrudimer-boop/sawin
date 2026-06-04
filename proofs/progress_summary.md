@@ -2853,3 +2853,9 @@ size-four Type B, and affine `F_2^3` hidden cyclic representatives each fail
 one of the rigidity filters before pressure is attempted.  Thus the next
 falsifiable search starts at larger nonterminal tables, preferably size five
 or structured affine-linear families.
+The structured affine-linear frontier now has an exact first pass in
+`proofs/affine_rigid_pressure_core_audit.md`: all affine maps on `F_2^2` were
+checked, giving `481` affine YBE tables.  The `24` terminal survivors all
+fail quotient-rigidity, so no affine-linear size-four rigid pressure core
+exists in this search space.  The named affine `F_2^3` pressure row remains
+non-rigid because it has a nontrivial observer and proper subsolutions.

@@ -109,6 +109,13 @@ the exhaustive size-three corpus has no terminal survivor, and the current
 size-four/affine pressure representatives all fail one of the rigidity
 filters before rack-prefix pressure is even tested.
 
+The affine-linear subsearch is now separated out in
+`proofs/affine_rigid_pressure_core_audit.md`.  Exhaustively over affine maps
+on `F_2^2`, there are `481` bijective YBE tables.  Of these, `24` survive the
+terminal filters, but all `24` fail quotient-rigidity.  Thus the first
+structured affine size-four frontier is also exhausted before the pressure
+test.
+
 ## Cofinal Rack-Prefix Obstruction
 
 A genuine negative answer to Sawin needs more than sequential primitivity.
