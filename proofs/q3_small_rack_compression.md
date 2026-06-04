@@ -269,8 +269,11 @@ timeout, so no arity-six conclusion is recorded.
 The generated affine pressure audit
 `proofs/affine_f2_q3_pressure_audit.md` also reconstructs the larger
 `F_2^3` affine-linear block count and records the first left-degenerate
-non-involutive affine row with no current `branch_tags` classification.  For
-that row:
+non-involutive affine row with no current `branch_tags` classification.  The
+follow-up hidden cyclic gauge note
+`proofs/affine_f2_hidden_cyclic_gauge.md` proves that row is all-arity
+braid-kernel equivalent to the two-element cyclic rack, so `Q_2` already
+dominates it.  Its finite checks are:
 
 ```text
 a_X(2) = 2,
@@ -279,8 +282,9 @@ E_{X,2,3} = 1,
 E_{X,2,4} = 1.
 ```
 
-The local `n=5` stabilizer attempt for this `F_2^3` row exceeded the
-five-minute interactive budget.
+The hidden gauge upgrades these finite checks to
+`E^{(3)}_{X,h,n}=1` for every `h,n`; no `n=5` stabilizer computation is needed
+for this row.
 
 The note `proofs/fixed_q3_affine_rack_obstruction.md` records the opposite
 guardrail: fixed-`Q_3` bounded deletion is false in general, even for the

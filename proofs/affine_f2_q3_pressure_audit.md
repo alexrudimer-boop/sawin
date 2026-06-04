@@ -54,9 +54,15 @@ affine compressed n=3: E=1, joint=1728, nontrivial=False
 stabilizer n=4: E=1, joint=1119744, nontrivial=False
 ```
 
-Thus the first structured affine `F_2^3` degenerate
-non-involutive pressure row still has trivial `Q_3`
-bounded-deletion obstruction through arity four.  This is
-finite-prefix evidence only; the local `n=5` stabilizer run was
-not included because it exceeded the five-minute budget in the
-interactive run.
+The follow-up hidden-gauge proof in
+`proofs/affine_f2_hidden_cyclic_gauge.md` closes this row in all
+arities: after a position-dependent change of coordinates, this
+row is braid-kernel equivalent to the two-element cyclic rack.
+Thus `Q_2` already dominates it, and
+
+```text
+E^{(3)}_{X,h,n} = 1 for every h,n.
+```
+
+The finite `n=3,4` computations above are retained as regression
+checks of the compressed and stabilizer implementations.

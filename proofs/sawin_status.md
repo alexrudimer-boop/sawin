@@ -2604,10 +2604,12 @@ The new generated audit `proofs/affine_f2_q3_pressure_audit.md` makes that
 structured target reproducible: it derives the `26153` invertible linear YBE
 blocks over `F_2^3` from the block equations, finds `15065` singular-left
 blocks, and records the first left-degenerate non-involutive affine row with
-no current `branch_tags` classification.  That row has `a_X(2)=2`, first pure
-movement at arity `2`, and exact `Q_3` bounded-deletion obstruction
-`E_{X,2,3}=E_{X,2,4}=1`; the local `n=5` stabilizer run exceeded the
-five-minute interactive budget.
+no current `branch_tags` classification.  The hidden cyclic gauge note
+`proofs/affine_f2_hidden_cyclic_gauge.md` closes that row in all arities:
+although it has `a_X(2)=2` and first pure movement at arity `2`, it is
+braid-kernel equivalent to the two-element cyclic rack.  Hence `Q_2` already
+dominates it and `E^{(3)}_{X,h,n}=1` for every `h,n`; the exact `n=3,4`
+bounded-deletion computations are now regression checks for the gauge.
 The companion guardrail `proofs/fixed_q3_affine_rack_obstruction.md` shows
 that a fixed-`Q_3` affine endpoint is too strong in general: the affine rack
 `X=F_5`, `R(x,y)=(-x+2y,x)`, has `a_X(2)=2` but already has

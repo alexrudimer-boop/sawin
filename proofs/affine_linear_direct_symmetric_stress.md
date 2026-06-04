@@ -61,15 +61,19 @@ The follow-up `proofs/affine_f2_q3_pressure_audit.md` reconstructs the same
 `26153` linear-block count from the affine block equations and keeps the first
 left-degenerate non-involutive pressure row for the `Q_3` bounded-deletion
 test.  That row has no current `branch_tags` classification, has `a_X(2)=2`,
-and still has
+and has the exact finite checks
 
 ```text
 E_{X,2,3}^{(Q_3)} = 1,
 E_{X,2,4}^{(Q_3)} = 1.
 ```
 
-This moves the affine `F_2^3` data from a two-strand direct-symmetric check to
-an actual bounded-deletion pressure check, still finite-prefix only.
+The subsequent hidden cyclic gauge note
+`proofs/affine_f2_hidden_cyclic_gauge.md` proves this row is all-arity
+braid-kernel equivalent to the two-element cyclic rack.  Thus the affine
+`F_2^3` pressure row has become a closed positive case, and the `n=3,4`
+bounded-deletion computations are retained as regressions rather than
+finite-prefix evidence.
 
 ## Affine-linear maps on F_3^2
 

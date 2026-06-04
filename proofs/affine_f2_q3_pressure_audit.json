@@ -67,7 +67,9 @@
   "first_pressure_row": {
     "branch_tags": [],
     "first_pure_nontrivial_arity": 2,
+    "hidden_constant_action_2_gauge": true,
     "involutive": false,
+    "kernel_equivalent_rack": "two-element cyclic rack",
     "matrix": [
       "100000",
       "000001",
@@ -77,6 +79,7 @@
       "010000"
     ],
     "offset": "000011",
+    "q2_dominates_all_arities": true,
     "q3_affine_compressed_n3": {
       "detector_component_count": 3,
       "detector_size": 2916,
