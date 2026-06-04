@@ -1,0 +1,160 @@
+{
+  "canonicalization": {
+    "canonical_equal": true,
+    "example": "size4_affine_type_a",
+    "original_word": [
+      0,
+      3,
+      0,
+      3,
+      1,
+      2,
+      1,
+      2,
+      1,
+      2,
+      1,
+      2,
+      0,
+      3,
+      0,
+      3
+    ],
+    "relabeled_word": [
+      3,
+      3,
+      0,
+      0,
+      1,
+      1,
+      2,
+      2,
+      1,
+      1,
+      2,
+      2,
+      3,
+      3,
+      0,
+      0
+    ]
+  },
+  "conclusion": "The Stage A code separates one-sided nondegenerate rack rows from everywhere-singular U-data.  The size-4 affine Type A row passes Stage A and is therefore a useful regression example for the planned d=5,6 enumeration.",
+  "next_prompt": "prompts/gpt55_pro/2026-06-04-stage-a-u-array-enumeration_ask_now.md",
+  "purpose": "Record reusable Stage A checks for the size 5/6 everywhere-singular search: balanced U counts, singular U rows, Y1-derived A_xy feasibility, and simultaneous-relabeling canonicalization.",
+  "rows": [
+    {
+      "branch_tags": [
+        "involutive",
+        "identity_table",
+        "affine_cyclic"
+      ],
+      "name": "identity_3",
+      "profile": {
+        "balanced_symbol_counts": true,
+        "canonical": true,
+        "feasibility_nonempty": true,
+        "feasibility_size_counts": [
+          [
+            3,
+            9
+          ]
+        ],
+        "maximum_feasibility_size": 3,
+        "minimum_feasibility_size": 3,
+        "rows_singular": true,
+        "size": 3,
+        "stage_a_candidate": true
+      },
+      "size": 3,
+      "ybe": true
+    },
+    {
+      "branch_tags": [
+        "rack_type",
+        "involutive",
+        "permutation_form",
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate",
+        "affine_cyclic"
+      ],
+      "name": "trivial_rack_3",
+      "profile": {
+        "balanced_symbol_counts": true,
+        "canonical": true,
+        "feasibility_nonempty": true,
+        "feasibility_size_counts": [
+          [
+            3,
+            9
+          ]
+        ],
+        "maximum_feasibility_size": 3,
+        "minimum_feasibility_size": 3,
+        "rows_singular": false,
+        "size": 3,
+        "stage_a_candidate": false
+      },
+      "size": 3,
+      "ybe": true
+    },
+    {
+      "branch_tags": [
+        "rack_type",
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate",
+        "affine_cyclic"
+      ],
+      "name": "dihedral_rack_3",
+      "profile": {
+        "balanced_symbol_counts": true,
+        "canonical": true,
+        "feasibility_nonempty": true,
+        "feasibility_size_counts": [
+          [
+            1,
+            9
+          ]
+        ],
+        "maximum_feasibility_size": 1,
+        "minimum_feasibility_size": 1,
+        "rows_singular": false,
+        "size": 3,
+        "stage_a_candidate": false
+      },
+      "size": 3,
+      "ybe": true
+    },
+    {
+      "branch_tags": [],
+      "name": "size4_affine_type_a",
+      "profile": {
+        "balanced_symbol_counts": true,
+        "canonical": false,
+        "feasibility_nonempty": true,
+        "feasibility_size_counts": [
+          [
+            2,
+            16
+          ]
+        ],
+        "maximum_feasibility_size": 2,
+        "minimum_feasibility_size": 2,
+        "rows_singular": true,
+        "size": 4,
+        "stage_a_candidate": true
+      },
+      "size": 4,
+      "ybe": true
+    }
+  ],
+  "stage_a_constraints": [
+    "each symbol occurs exactly d times in U",
+    "each row map y -> U[x,y] is singular",
+    "A_xy={v : L_{U[x,y]} L_v = L_x L_y} is nonempty for every cell",
+    "U is canonicalized under simultaneous relabeling"
+  ],
+  "title": "Stage A U-array audit"
+}
