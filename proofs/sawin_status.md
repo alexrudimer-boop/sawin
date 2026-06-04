@@ -2394,6 +2394,14 @@ Such a formal partial-Wirtinger construction is not an actual YBE
 counterexample, because the rows may not be realized by supported
 completed-context germs.  It does show that a positive structural proof must
 use a further actual-YBE property, not only the abstract row presentation.
+The sharpened actualness requirement is recorded in
+`proofs/completed_context_actualization_gate.md`: an actual row system is a
+finite braided-quiver system coming from one global finite YBE table
+`r:X^2->X^2`.  Thus a formal negative candidate must pass boundary
+preservation, global table consistency, context-product compatibility,
+inverse-row saturation, YBE cube coherence, and Artin-readout cube coherence,
+and it must preserve the braid-realizable endpoint languages `W_u^br` after
+actualization.
 
 Fixed-arity finite separation is also insufficient.  For each braid index
 `n`, the image of `B_n` on `X^n` is finite, but the required detector is one
@@ -2421,6 +2429,10 @@ finite YBE interval gives the fixed finite endpoint quotient needed by the
 sharp obstruction theorem and hence completes the positive route.  Refuting it
 means exhibiting nonseparating actual residual braid branches in arities
 tending to infinity; that gives the normalized-law no-rack sequence.
-Formal partial-row nonseparability, or failure of stronger structural
-properties such as virtual freeness of `Art_I`, remains only a gap unless it
-is made actual and braid-realizable.
+Formal partial-row nonseparability, failure of one-vertex actualization for a
+formal row system, or failure of stronger structural properties such as
+virtual freeness of `Art_I`, remains only a gap unless it is made actual and
+braid-realizable.  Equivalently, a negative proof must actualize a
+nonseparable endpoint-labelled braided-quiver row system into one finite YBE
+table while preserving `W_u^br`, or produce the nonseparable actual interval
+directly.

@@ -263,6 +263,41 @@ use an additional actual-YBE restriction, such as a genuine total rack/groupoid
 completion, rational-subset separability of the actual `Art_I^T`, or the
 sharp direct endpoint-language separation above.
 
+## Actualization Gate
+
+The negative route has the dual burden: formal partial-Wirtinger
+nonseparability matters only after it is made actual.  An actual
+completed-context row system is a finite braided-quiver system that comes from
+one finite set-theoretic YBE table.  Its germs and rows have the form
+
+```text
+e=(s,x),        f=(s tau_x,y),
+r(x,y)=(u,v),
+e'=(s,u),       f'=(s tau_u,v).
+```
+
+Consequently any formal candidate must at least satisfy boundary preservation
+
+```text
+s tau_x tau_y = s tau_u tau_v,
+```
+
+global table consistency for each input letter pair `(x,y)`, inverse-row
+saturation on supported length-two paths, actual YBE cube coherence on
+supported triples, and Artin-readout coherence around those same cubes.
+
+These are necessary actualness tests, not a realization theorem.  To turn the
+formal partial-Wirtinger warning into outcome B, one must either construct the
+actual finite YBE interval directly, or prove a finite endpoint-labelled
+one-vertex actualization theorem that embeds the finite braided-quiver row
+system into one global finite YBE table while preserving the braid-realizable
+endpoint languages `W_u^br`.  Failure of such an actualization for a formal
+row system is only another gap; it is not evidence for outcome A unless it is
+replaced by direct profinite separation for every actual interval.
+
+This gate is recorded separately in
+`proofs/completed_context_actualization_gate.md`.
+
 ## Uniformity Guardrail
 
 Fixed braid-index finite separation does not imply the required all-arity
