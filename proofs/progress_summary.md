@@ -2675,3 +2675,15 @@ Thus the finite prefix produces no new Green section-holonomy
 counterexample.  A genuine B-route example must occur outside this prefix or
 outside the known branches, and must still provide actual transported unequal
 units in `Aut(C_{p^m})`.
+
+`proofs/finite_degree_endpoint_determinacy.md` records the current sharpest
+global endpoint fork from the same-chat Pro separation query.  For an actual
+completed-context interval `I`, let `q_s:Art_I->A_s` be the product of all
+finite quotients of order at most `s`.  The positive lemma asks for `s(I)` and
+`N(I)` such that, in every arity and base context, the endpoint `epsilon_n` is
+determined by the finite profile `q_s alpha_n` together with all deleted
+profiles `(q_s alpha_J,epsilon_J)` for `|J|<=N`.  At fixed parameters, failure
+is checked by closing a finite decorated branch image and computing the kernel
+of the projection that forgets only the full endpoint.  A nontrivial endpoint
+in that kernel is an actual Artin-null Brunnian witness; cofinal witnesses as
+`s,N` grow give the normalized-law no-rack sequence.

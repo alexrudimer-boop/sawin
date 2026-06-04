@@ -2632,6 +2632,17 @@ finite YBE interval gives the fixed finite endpoint quotient needed by the
 sharp obstruction theorem and hence completes the positive route.  Refuting it
 means exhibiting nonseparating actual residual braid branches in arities
 tending to infinity; that gives the normalized-law no-rack sequence.
+The same-chat Pro endpoint query sharpened this into
+`proofs/finite_degree_endpoint_determinacy.md`: for each actual interval `I`,
+one should prove the existence of a finite quotient degree `s(I)` and deletion
+width `N(I)` such that the endpoint `epsilon_n` is determined, for every
+arity and base context, by the finite profile consisting of `q_s alpha_n` and
+all deleted `(q_s alpha_J,epsilon_J)` for `|J|<=N`.  At fixed
+`(I,s,N,n,c)` this has an executable finite kernel test: close the decorated
+actual branch image and look for a kernel element whose full Artin/deletion
+coordinates are trivial but whose endpoint is nontrivial.  A proof of the
+determinacy lemma closes the positive endpoint route; cofinal actual kernel
+witnesses as `s,N` grow give the normalized-law negative route.
 Formal partial-row nonseparability, failure of one-vertex actualization for a
 formal row system, or failure of stronger structural properties such as
 virtual freeness of `Art_I`, remains only a gap unless it is made actual and

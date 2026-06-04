@@ -410,6 +410,15 @@ Every actual endpoint map Ept of a remaining local interval is separated by
 some finite quotient of its universal Artin row group Art_I.
 ```
 
+The sharper finite-degree form is recorded in
+`proofs/finite_degree_endpoint_determinacy.md`.  It asks for one finite
+quotient degree `s(I)` and one deletion width `N(I)` such that, in every
+arity, the full endpoint is determined by the finite profile consisting of
+`q_s Art` on the full branch and `(q_s Art, Ept)` on all deletion shadows of
+width at most `N`.  At fixed `s,N,n,c`, failure is a finite kernel computation
+in the decorated actual branch image; cofinal failures are exactly the
+implementable normalized-law endpoint obstruction.
+
 ## Relation To Outcome B
 
 Failure of raw row-defect vanishing does not imply a no-rack obstruction.  It
