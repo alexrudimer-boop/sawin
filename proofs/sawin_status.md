@@ -2674,12 +2674,21 @@ and YBE forces the covariance
 phi_{p*q} = phi_p phi_q phi_p^-1,
 ```
 
-then the endpoint bisections and the endpoint fibre form a finite rack
-`C sqcup F` that detects every nontrivial endpoint.  Thus the marker
+then the endpoint bisections and the endpoint fibre form the finite product
+rack `Phi x F`, with operation
+
+```text
+(alpha,z)*(beta,w) = (alpha beta alpha^-1, alpha(w)).
+```
+
+The factor map `(e,z) |-> (phi_e,z)` is equivariant for supported branch
+words, so the rack detects every nontrivial faithful endpoint; the same
+covariance gives a finite Artin quotient `Art_I -> Phi`.  Thus the marker
 obstruction cannot be upgraded into a Sawin counterexample: before repair it
 is not actual residual movement, and after faithful repair it is rack-detected.
 A genuine negative endpoint sequence must be actual, profinitely Artin-null,
-and not absorbed by any such finite rackable endpoint factor.
+and non-bisectional or non-probe-complete rather than merely endpoint
+nontrivial.
 Formal partial-row nonseparability, failure of one-vertex actualization for a
 formal row system, or failure of stronger structural properties such as
 virtual freeness of `Art_I`, remains only a gap unless it is made actual and

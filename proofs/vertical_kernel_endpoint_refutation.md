@@ -286,11 +286,17 @@ commuting bisections over the old flip table, or conjugation covariance
 phi_{p*q} = phi_p phi_q phi_p^-1.
 ```
 
-In the noncommuting case the bisections assemble into a finite rack
-`C sqcup F`, with `C` a finite conjugation-stable set of endpoint bisections
-and `F` the endpoint fibre.  The same Brunnian vertical words then move an
-actual point of that rack, so they are detected by a finite rack.  Thus the
-marker obstruction is endpoint-realizable only in a rack-harmless way.
+In the noncommuting case the bisections assemble into the finite product rack
+`Phi x F`, where `Phi` is the finite endpoint-bisection group and `F` is the
+endpoint fibre.  The map
+
+```text
+(e,z) |-> (phi_e,z)
+```
+
+is equivariant for supported branch words, so the same Brunnian vertical words
+move an actual point of that rack.  Thus the marker obstruction is
+endpoint-realizable only in a rack-harmless way.
 
 ## Guardrail
 
@@ -304,6 +310,7 @@ excluding such artificial endpoint-labelled intervals, or it must tie endpoint
 labels to the actual residual action more tightly than the current interval
 axioms do.
 
-The tighter admissibility filter is now: endpoint motion must be actual and
-not absorbed by a finite conjugation/action rack factor.  Faithful rackable
-endpoint movement is automatically Sawin-harmless.
+The tighter admissibility filter is now: endpoint motion must be actual,
+faithfully bisectional/probe-complete, and not absorbed by the finite product
+rack `Phi x F`.  Faithful bisectional endpoint movement is automatically
+Sawin-harmless.

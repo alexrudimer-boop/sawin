@@ -508,6 +508,9 @@ is a faithful finite fibre action satisfying the YBE covariance
 phi_{p*q} = phi_p phi_q phi_p^-1,
 ```
 
-the bisections form a finite conjugation/action rack `C sqcup F` that detects
-every nontrivial endpoint.  Thus a cofinal negative seed must be profinitely
-Artin-null and non-rackable, not merely endpoint-nontrivial.
+the bisections form the finite product rack `Phi x F`, and the map
+`(e,z) |-> (phi_e,z)` is equivariant for supported branch words.  This rack
+detects every nontrivial endpoint and also supplies a finite Artin quotient
+`Art_I -> Phi`.  Thus a cofinal negative seed must be profinitely Artin-null,
+non-bisectional or non-probe-complete, and non-rackable, not merely
+endpoint-nontrivial.

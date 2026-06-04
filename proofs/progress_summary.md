@@ -2712,10 +2712,14 @@ endpoint-labelled intervals are too broad for the endpoint-separation route.
 `proofs/rackable_endpoint_absorption.md` records the repair.  If those
 endpoint labels are made faithful as actual finite fibre bisections, then YBE
 forces either commuting endpoint bisections over the old flip table or
-conjugation covariance `phi_{p*q}=phi_p phi_q phi_p^-1`.  In the noncommuting
-case the bisections and endpoint fibre form a finite rack `C sqcup F`; any
-nontrivial endpoint moves a point of that rack and is detected by it.  Thus
-the marker obstruction cannot be upgraded into a Sawin-negative sequence.
-The negative search now has the sharper admissibility test: witnesses must be
-actual, profinitely Artin-null, and not absorbed by a finite rackable endpoint
-factor.
+conjugation covariance `phi_{e'}=phi_e phi_f phi_e^-1`,
+`phi_{f'}=phi_e`.  In the noncommuting case the bisections and endpoint fibre
+form the finite product rack `Phi x F`, with
+`(alpha,z)*(beta,w)=(alpha beta alpha^-1,alpha(w))`.  The map
+`(e,z)->(phi_e,z)` is equivariant for supported branch words, so any
+nontrivial endpoint moves a point of that rack and is detected by it; it also
+gives a finite Artin quotient `Art_I->Phi`.  Thus the marker obstruction
+cannot be upgraded into a Sawin-negative sequence.  The negative search now
+has the sharper admissibility test: witnesses must be actual, profinitely
+Artin-null, and non-bisectional/non-probe-complete rather than merely
+endpoint-nontrivial.

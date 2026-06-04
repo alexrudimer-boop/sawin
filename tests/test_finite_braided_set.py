@@ -18,6 +18,7 @@ from ybe_domination import (
     rack_solution,
     reverse_braid_word,
     subsolution,
+    symmetric_group,
 )
 
 
@@ -109,6 +110,33 @@ class FiniteBraidedSetTests(unittest.TestCase):
                 image,
                 (("L", left_image[0]), ("R", "r"), ("L", left_image[1])),
             )
+
+    def test_faithful_endpoint_bisections_form_absorbing_product_rack(self):
+        group = symmetric_group(3)
+        identity = group.identity
+        elements = tuple((operator, fibre) for operator in group.elements for fibre in group.elements)
+
+        def endpoint_rack_op(left, right):
+            operator, _fibre = left
+            right_operator, right_fibre = right
+            return (
+                group.mul(group.mul(operator, right_operator), group.inv(operator)),
+                group.mul(operator, right_fibre),
+            )
+
+        rack = rack_solution(elements, endpoint_rack_op)
+        transposition = next(
+            element
+            for element in group.elements
+            if element != identity and group.mul(element, element) == identity
+        )
+
+        self.assertTrue(rack.is_ybe())
+        self.assertTrue(is_rack_solution(rack))
+        self.assertNotEqual(
+            endpoint_rack_op((transposition, identity), (identity, identity)),
+            (identity, identity),
+        )
 
     def test_identity_solution_is_not_rack_form_unless_singleton(self):
         self.assertFalse(is_rack_solution(identity_solution([0, 1])))

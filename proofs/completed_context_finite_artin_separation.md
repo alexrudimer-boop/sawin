@@ -446,11 +446,17 @@ to faithful finite fibre bisections and the YBE forces the covariance
 phi_{p*q} = phi_p phi_q phi_p^-1,
 ```
 
-then the bisections and the finite fibre form a finite rack detector
-`C sqcup F`.  Any branch with nontrivial endpoint moves a point of this rack,
-so it cannot be invisible to all finite racks.  Hence an endpoint-language
-failure is Sawin-negative only after excluding this rackable endpoint
-absorption.
+then the bisections and the finite fibre form the finite product rack detector
+`Phi x F`, with operation
+
+```text
+(alpha,z)*(beta,w) = (alpha beta alpha^-1, alpha(w)).
+```
+
+The map `(e,z) |-> (phi_e,z)` is equivariant for supported branch words, and
+any branch with nontrivial endpoint moves a point of this rack.  Hence an
+endpoint-language failure is Sawin-negative only after excluding faithful
+bisectional/probe-complete endpoint absorption.
 
 ## Relation To Outcome B
 
