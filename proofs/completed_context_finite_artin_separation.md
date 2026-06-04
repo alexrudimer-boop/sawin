@@ -147,6 +147,19 @@ W_!=1 = { alpha(gamma) in Art_I^T :
           gamma in P_I and epsilon(gamma) != 1 }.
 ```
 
+Since the retained germ set, supported rows, terminal slots, and endpoint
+group are finite, this language is a finite union of rational subsets.  For
+each nonidentity endpoint value `u in U(M)`, define
+
+```text
+W_u = { alpha(gamma) in Art_I^T :
+        gamma in P_I and epsilon(gamma) = u }.
+```
+
+The finite completed-context automaton with endpoint value in its state
+accepts exactly `W_u`, so `W_u` is rational in `Art_I^T` and
+`W_!=1 = union_{u != 1} W_u`.
+
 Then finite Artin-null endpoint separation is equivalent to
 
 ```text
@@ -180,6 +193,61 @@ braid branches in arities tending to infinity, the diagonal sequence is
 invisible to every fixed finite longitude detector but still moves a residual
 tuple.  Failure only inside a larger formal path category is weaker, because
 formal paths need not correspond to actual residual braid branches.
+
+## Partial-Wirtinger Guardrail
+
+The row presentation itself is too broad to prove the profinite theorem.
+If the supported rows formed a total finite rack on `E`, the meridian part
+would be the adjoint group of a finite rack.  Its action on `E` would factor
+through a finite permutation group and the kernel would centralize the
+generators.  That would put the meridian part in a very tame finite-by-central
+class.
+
+Actual completed-context rows are only partially supported.  For a retained
+germ `e=(s,x)`, the row with `f` exists only when `f=(s tau_x,y)` for an
+actual continuation.  There is no automatic operation `e * f` on all pairs of
+retained germs, and no proof that unsupported pairs can be filled without
+changing the actual endpoint language.  Thus the finite rack adjoint-group
+argument does not apply directly.
+
+As a formal warning, partial Artin-row systems can encode arbitrary
+presentation relators through the longitude labels.  Given a positive word
+
+```text
+w = c_1 ... c_s
+```
+
+add formal germs `b_0,...,b_{s-1}` and formal rows
+
+```text
+(e,f,e',f') = (c_t, b_{t-1}, b_t, c_t)
+```
+
+with `b_s=b_0`.  The longitude relations give
+
+```text
+l_{b_t} = a_{c_t} l_{b_{t-1}},
+```
+
+so going around the cycle imposes
+
+```text
+a_{c_s} ... a_{c_1} = 1.
+```
+
+The corresponding meridian relations only conjugate the auxiliary
+`a_{b_t}` labels and are redundant after the relator.  By adding inverse
+letters, this formal mechanism can encode an arbitrary finitely presented
+group, up to harmless free factors.  Choosing a non-residually-finite group
+and a nontrivial element in its finite residual then gives a formal endpoint
+language `{eta}` with `1` in its profinite closure.
+
+This does not produce a YBE counterexample: the constructed rows are formal
+and need not be realized by an actual finite bijective YBE interval.  It only
+shows that row form plus cube-flatness is insufficient.  A positive proof must
+use an additional actual-YBE restriction, such as a genuine total rack/groupoid
+completion, rational-subset separability of the actual `Art_I^T`, or the
+sharp direct endpoint-language separation above.
 
 If it holds, define the finite endpoint readout on the image of `q Art` by
 

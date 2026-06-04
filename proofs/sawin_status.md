@@ -2364,11 +2364,27 @@ absorption is equivalent to
 1 notin closure(W_!=1) in the profinite topology of Art_I^T.
 ```
 
+For each fixed nonidentity endpoint value `u`, the sublanguage
+`W_u={alpha(gamma): Ept(gamma)=u}` is rational, because it is accepted by the
+finite completed-context automaton with the finite endpoint value included in
+the state.
+
 Thus the positive route may be attacked by a genuine rational/profinite
 separability theorem for actual YBE Artin row groups and their endpoint
 languages.  A negative route must make failure of this profinite separation
 actual and braid-realizable; a formal nonseparable row-language alone is only
 another gap.
+
+There is also a guardrail against an over-strong structural shortcut.  The
+displayed Artin row relations, taken as a formal partial row system, can
+encode arbitrary finitely presented relators through cycles of the longitude
+relations `l_{e'}=a_e l_f`.  Thus row form plus YBE-cube flatness alone does
+not force the universal Artin row group to be virtually free, virtually
+abelian, rational-subset separable, or the adjoint group of a finite rack.
+Such a formal partial-Wirtinger construction is not an actual YBE
+counterexample, because the rows may not be realized by supported
+completed-context germs.  It does show that a positive structural proof must
+use a further actual-YBE property, not only the abstract row presentation.
 
 ## Current conclusion
 
