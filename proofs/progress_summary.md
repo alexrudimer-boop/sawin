@@ -2784,3 +2784,12 @@ represented by `active_factor_certificate_audit(...)`; the canonical `Q,H,F`
 case is the special case where `T` is the rack `H x F`.  The revised positive
 target is recursive active-factor observability, while the exact negative
 target remains the cofinal rack-prefix obstruction.
+The follow-up Pro answer gives the equivalence boundary.  Active-factor
+certificates are equivalent to rack domination only in the tautological
+non-recursive form where `T=X` is allowed: if a rack `Y` dominates `X`, take a
+one-state identity transducer into `T=X`.  The recursive route needs a
+strictly stronger proper active-factor compression theorem, requiring `T` to
+be a rack or a strictly smaller already dominated YBE solution.  Kernel
+inclusion between braid representations does not automatically produce such a
+coordinatewise sequential code, so failure of proper-factor certificate
+search still does not imply the cofinal rack-prefix obstruction.

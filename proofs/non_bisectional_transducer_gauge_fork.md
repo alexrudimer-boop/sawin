@@ -219,6 +219,16 @@ pair-automaton injectivity test.  The helper
 kind.  The canonical `Q,H,F` certificate is the special case in which `T` is
 the rack `H x F`.
 
+There is a tautological equivalence if `T=X` is allowed: a rack domination of
+`X` makes `X` itself an already dominated active factor, and the one-state
+identity transducer is an injective certificate.  This does not help the
+induction.  The nontrivial missing theorem is proper active-factor
+compression: outside terminal positive classes, a rack-dominated
+non-bisectional `X` should admit a finite sequential reconstruction using
+only racks and strictly smaller already dominated active factors.  No compactness
+argument currently turns failure of that proper compression search into a
+no-rack sequence.
+
 ## Exact Negative Search Target
 
 A genuine Sawin counterexample must now have all three properties:

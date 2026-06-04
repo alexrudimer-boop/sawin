@@ -529,6 +529,55 @@ then prove all-length injectivity.  Failure of this restricted certificate
 class is therefore not yet a Sawin-negative theorem; the genuine negative
 branch remains the cofinal rack-prefix obstruction below.
 
+### Tautological equivalence and proper compression
+
+The next same-chat Pro answer isolates the exact equivalence boundary.  If the
+active factor is allowed to be `T=X` itself, then finite rack domination is
+equivalent to existence of an active-factor certificate.  The nontrivial
+direction is precisely the certificate theorem above.  Conversely, if a rack
+`Y` dominates `X`, take
+
+```text
+T=X,
+Q={q0},
+delta(q0,x)=q0,
+omega(q0,x)=x.
+```
+
+The local equation is just `r_X(x,y)=(u,v)`, and the all-length code is the
+identity map on `X^n`.  Since `T=X` is already dominated by `Y`, this is a
+finite active-factor certificate.
+
+Thus
+
+```text
+X is rack-dominated
+  <=>
+X has an active-factor certificate with T=X allowed.
+```
+
+This is only a tautological non-recursive equivalence.  The recursive lemma
+needed for an induction is strictly stronger: the active factors must be
+racks or strictly smaller already dominated YBE solutions.  The exact missing
+positive theorem is therefore the following compression statement.
+
+```text
+Proper active-factor compression theorem.
+
+If X is rack-dominated and is not already in a terminal positive class, then
+X admits a jointly injective finite sequential code into racks and strictly
+smaller rack-dominated YBE active factors, with optional quotient and
+invariant observer channels.
+```
+
+Kernel inclusion alone does not supply this compression.  Rack domination
+gives a quotient relation between finite braid-image representations in each
+arity, while the certificate asks for one fixed coordinatewise finite
+left-to-right block code.  A quotient of permutation representations need not
+come from such a symbolic transducer.  Consequently, failure to find a proper
+active-factor certificate is not a no-rack theorem unless it is accompanied by
+the cofinal rack-prefix obstruction.
+
 The exact all-detector tower behind this fixed-candidate check is isolated in
 `proofs/rack_residual_obstruction_tower.md`.  In that language, a transducer
 certificate proves vanishing of the rack-residual tower for one finite
@@ -551,8 +600,10 @@ branches are removed.
 No proof of that universal existence theorem is currently available in the
 ledger.  The observer-augmented canonical `Q,H,F` certificate is the special
 case where the active factor is a rack of the form `H x F`; it is not known to
-be complete.  Failure of one proposed finite transducer class is only a gap.
-Failure for all finite rack detectors is the normalized-law negative branch.
+be complete.  Even the broader recursive active-factor certificate is not
+known to be complete without the proper-compression theorem above.  Failure of
+one proposed finite transducer class is only a gap.  Failure for all finite
+rack detectors is the normalized-law negative branch.
 
 Equivalently, the exact finite-rack negative test for a fixed rack prefix is
 as follows.  Enumerate finite racks and let

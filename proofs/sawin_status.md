@@ -2760,6 +2760,17 @@ observer channels.  This is now executable as
 `active_factor_certificate_audit(...)`; the canonical `Q,H,F` theorem is its
 rack-target special case.  Failure of bounded searches in this certificate
 class is still only evidence, not a Sawin-negative proof.
+The follow-up Pro answer fixes the equivalence boundary.  If the active factor
+`T=X` is allowed, then active-factor certificates are equivalent to rack
+domination: a dominating rack `Y` makes `T=X` an already dominated factor, and
+the one-state identity transducer gives an all-length injective code.  This is
+tautological and non-recursive.  The actual induction route needs a proper
+active-factor compression theorem: outside terminal positive classes, a
+rack-dominated `X` should admit a jointly injective finite sequential code
+into racks and strictly smaller already dominated YBE active factors.  Kernel
+inclusion in braid images is weaker than such a coordinatewise block-code
+reconstruction, so failure of proper-factor certificate searches still does
+not imply the cofinal rack-prefix obstruction.
 Formal partial-row nonseparability, failure of one-vertex actualization for a
 formal row system, or failure of stronger structural properties such as
 virtual freeness of `Art_I`, remains only a gap unless it is made actual and
