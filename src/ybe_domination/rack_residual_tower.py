@@ -189,6 +189,7 @@ def _invert_permutation(permutation: Permutation) -> Permutation:
 PairPermutation = Tuple[Permutation, Permutation]
 MultiPermutation = Tuple[Permutation, ...]
 MatrixFlat = Tuple[int, ...]
+AffineMapFlat = Tuple[MatrixFlat, Tuple[int, ...]]
 Q3CompressedState = Tuple[object, ...]
 
 
@@ -282,6 +283,200 @@ def _matrix_inverse_mod(
         rows[row][size + col] % modulus
         for row in range(size)
         for col in range(size)
+    )
+
+
+def _matrix_vector_multiply_mod(
+    matrix: MatrixFlat,
+    vector: Tuple[int, ...],
+    size: int,
+    modulus: int,
+) -> Tuple[int, ...]:
+    return tuple(
+        sum(matrix[row * size + col] * vector[col] for col in range(size))
+        % modulus
+        for row in range(size)
+    )
+
+
+def _normalize_matrix_flat(
+    matrix: Iterable[Iterable[int]],
+    size: int,
+    modulus: int,
+) -> MatrixFlat:
+    rows = tuple(tuple(entry % modulus for entry in row) for row in matrix)
+    if len(rows) != size or any(len(row) != size for row in rows):
+        raise ValueError("matrix has the wrong dimensions")
+    return tuple(entry for row in rows for entry in row)
+
+
+def _normalize_vector(
+    vector: Iterable[int],
+    size: int,
+    modulus: int,
+) -> Tuple[int, ...]:
+    entries = tuple(entry % modulus for entry in vector)
+    if len(entries) != size:
+        raise ValueError("vector has the wrong dimension")
+    return entries
+
+
+def _identity_affine_map(size: int) -> AffineMapFlat:
+    return (_identity_matrix(size), tuple(0 for _ in range(size)))
+
+
+def _compose_affine_mod2(
+    left: AffineMapFlat,
+    right: AffineMapFlat,
+) -> AffineMapFlat:
+    """Return ``left after right`` for affine maps over ``F_2``."""
+
+    left_matrix, left_offset = left
+    right_matrix, right_offset = right
+    size = len(left_offset)
+    if len(right_offset) != size:
+        raise ValueError("affine maps must have the same dimension")
+    matrix = _matrix_multiply_mod(left_matrix, right_matrix, size, 2)
+    translated = _matrix_vector_multiply_mod(left_matrix, right_offset, size, 2)
+    offset = tuple(a ^ b for a, b in zip(translated, left_offset))
+    return (matrix, offset)
+
+
+def _invert_affine_mod2(affine_map: AffineMapFlat) -> AffineMapFlat:
+    matrix, offset = affine_map
+    size = len(offset)
+    inverse_matrix = _matrix_inverse_mod(matrix, size, 2)
+    inverse_offset = _matrix_vector_multiply_mod(inverse_matrix, offset, size, 2)
+    return (inverse_matrix, inverse_offset)
+
+
+def _affine_generator_map_mod2(
+    local_matrix: MatrixFlat,
+    local_offset: Tuple[int, ...],
+    dimension: int,
+    braid_index: int,
+    signed_generator: int,
+) -> AffineMapFlat:
+    if signed_generator == 0:
+        raise ValueError("braid generators are nonzero")
+    generator = abs(signed_generator)
+    if generator < 1 or generator >= braid_index:
+        raise ValueError("braid generator is out of range")
+    local_size = 2 * dimension
+    if signed_generator < 0:
+        block_matrix = _matrix_inverse_mod(local_matrix, local_size, 2)
+        block_offset = _matrix_vector_multiply_mod(
+            block_matrix,
+            local_offset,
+            local_size,
+            2,
+        )
+    else:
+        block_matrix = local_matrix
+        block_offset = local_offset
+
+    total_size = dimension * braid_index
+    start = dimension * (generator - 1)
+    matrix = list(_identity_matrix(total_size))
+    offset = [0] * total_size
+    for block_row in range(local_size):
+        target_row = start + block_row
+        for col in range(total_size):
+            matrix[target_row * total_size + col] = 0
+        for block_col in range(local_size):
+            matrix[target_row * total_size + start + block_col] = block_matrix[
+                block_row * local_size + block_col
+            ]
+        offset[target_row] = block_offset[block_row]
+    return (tuple(matrix), tuple(offset))
+
+
+def _affine_word_map_mod2(
+    local_matrix: MatrixFlat,
+    local_offset: Tuple[int, ...],
+    dimension: int,
+    braid_index: int,
+    word: Word,
+) -> AffineMapFlat:
+    current = _identity_affine_map(dimension * braid_index)
+    for signed_generator in word:
+        current = _compose_affine_mod2(
+            _affine_generator_map_mod2(
+                local_matrix,
+                local_offset,
+                dimension,
+                braid_index,
+                signed_generator,
+            ),
+            current,
+        )
+    return current
+
+
+def _compose_q3_affine_compressed_state(
+    left: Q3CompressedState,
+    right: Q3CompressedState,
+    n: int,
+) -> Q3CompressedState:
+    if len(left) != len(right):
+        raise ValueError("compressed states must have the same arity")
+    pair = tuple((a + b) % 2 for a, b in zip(left[0], right[0]))
+    row = tuple((a + b) % 3 for a, b in zip(left[1], right[1]))
+    dihedral = _matrix_multiply_mod(left[2], right[2], n, 3)
+    affine_maps = tuple(
+        _compose_affine_mod2(left_part, right_part)
+        for left_part, right_part in zip(left[3:], right[3:])
+    )
+    return (pair, row, dihedral, *affine_maps)
+
+
+def _invert_q3_affine_compressed_state(
+    state: Q3CompressedState,
+    n: int,
+) -> Q3CompressedState:
+    pair = state[0]
+    row = tuple((-entry) % 3 for entry in state[1])
+    dihedral = _matrix_inverse_mod(state[2], n, 3)
+    affine_maps = tuple(_invert_affine_mod2(part) for part in state[3:])
+    return (pair, row, dihedral, *affine_maps)
+
+
+def _vector_to_affine_tuple(
+    vector: Tuple[int, ...],
+    dimension: int,
+) -> Tuple[Tuple[int, ...], ...]:
+    return tuple(
+        tuple(vector[start:start + dimension])
+        for start in range(0, len(vector), dimension)
+    )
+
+
+def _first_moved_affine_tuple(
+    affine_map: AffineMapFlat,
+    dimension: int,
+) -> Tuple[Optional[Tuple[Element, ...]], Optional[Tuple[Element, ...]]]:
+    matrix, offset = affine_map
+    size = len(offset)
+    if size % dimension:
+        raise ValueError("affine map dimension is not a multiple of element size")
+    identity = _identity_matrix(size)
+    if offset != tuple(0 for _ in range(size)):
+        vector = tuple(0 for _ in range(size))
+        image = offset
+    elif matrix != identity:
+        moved_col = next(
+            col
+            for col in range(size)
+            if tuple(matrix[row * size + col] for row in range(size))
+            != tuple(1 if row == col else 0 for row in range(size))
+        )
+        vector = tuple(1 if col == moved_col else 0 for col in range(size))
+        image = tuple(matrix[row * size + moved_col] for row in range(size))
+    else:
+        return None, None
+    return (
+        _vector_to_affine_tuple(vector, dimension),
+        _vector_to_affine_tuple(image, dimension),
     )
 
 
@@ -1050,6 +1245,202 @@ def bounded_deletion_support_q3_compressed_audit(
         obstruction_size=len(obstruction_solution),
         obstruction_nontrivial=any(
             permutation != solution_identity for permutation in obstruction_solution
+        ),
+        first_witness_word=first_witness_word,
+        first_moved_tuple=moved,
+        first_moved_tuple_image=moved_image,
+        truncated=False,
+    )
+
+
+def bounded_deletion_support_affine_q3_compressed_audit(
+    matrix: Iterable[Iterable[int]],
+    offset: Iterable[int],
+    dimension: int,
+    h: int,
+    n: int,
+    state_limit: int = 100_000,
+) -> BoundedDeletionSupportAudit:
+    """Compute the ``Q_3`` deletion obstruction for affine ``F_2`` solutions.
+
+    The local crossing is
+
+    ``R(x,y) = M(x,y) + t``
+
+    on ``(F_2^dimension)^2``.  This helper is the affine analogue of
+    ``bounded_deletion_support_q3_compressed_audit``: it keeps the small-rack
+    detector side as pairwise linking, row-sum linking, and the dihedral
+    ``F_3`` matrix, while storing the ``X`` and deleted ``X`` actions as
+    augmented affine maps over ``F_2`` instead of permutations of ``X^n``.
+    """
+
+    if dimension < 1:
+        raise ValueError("dimension must be positive")
+    if h < 1:
+        raise ValueError("h must be positive")
+    if n < 1:
+        raise ValueError("braid degree must be positive")
+
+    local_size = 2 * dimension
+    local_matrix = _normalize_matrix_flat(matrix, local_size, 2)
+    local_offset = _normalize_vector(offset, local_size, 2)
+    _matrix_inverse_mod(local_matrix, local_size, 2)
+
+    subsets = _deletion_subsets(n, h)
+    pair_indices = {
+        pair: index
+        for index, pair in enumerate(combinations(range(1, n + 1), 2))
+    }
+    pair_identity = tuple(0 for _ in pair_indices)
+    row_identity = tuple(0 for _ in range(n))
+    dihedral_identity = _identity_matrix(n)
+    solution_identity = _identity_affine_map(dimension * n)
+    deletion_identities = tuple(
+        _identity_affine_map(dimension * len(subset))
+        for subset in subsets
+    )
+    identity: Q3CompressedState = (
+        pair_identity,
+        row_identity,
+        dihedral_identity,
+        solution_identity,
+        *deletion_identities,
+    )
+    deletion_start_index = 4
+
+    if n < 2:
+        return BoundedDeletionSupportAudit(
+            rack_size_bound=3,
+            h=h,
+            n=n,
+            detector_size=2916,
+            detector_component_count=3,
+            subset_count=len(subsets),
+            joint_image_size=1,
+            obstruction_size=1,
+            obstruction_nontrivial=False,
+            first_witness_word=None,
+            first_moved_tuple=None,
+            first_moved_tuple_image=None,
+            truncated=False,
+        )
+
+    generators: list[Tuple[Word, Q3CompressedState]] = []
+    for left in range(1, n):
+        for right in range(left + 1, n + 1):
+            word = _pure_generator_word(left, right)
+            pair_component = [0] * len(pair_indices)
+            pair_component[pair_indices[(left, right)]] = 1
+            row_component = [0] * n
+            row_component[left - 1] = 1
+            row_component[right - 1] = 1
+            deletion_components = []
+            for subset, deletion_identity in zip(subsets, deletion_identities):
+                deleted_word = _deleted_pure_generator_word(left, right, subset)
+                deletion_components.append(
+                    deletion_identity
+                    if deleted_word is None
+                    else _affine_word_map_mod2(
+                        local_matrix,
+                        local_offset,
+                        dimension,
+                        len(subset),
+                        deleted_word,
+                    )
+                )
+            components: Q3CompressedState = (
+                tuple(pair_component),
+                tuple(row_component),
+                _dihedral_word_matrix(n, word),
+                _affine_word_map_mod2(
+                    local_matrix,
+                    local_offset,
+                    dimension,
+                    n,
+                    word,
+                ),
+                *deletion_components,
+            )
+            generators.append((word, components))
+            generators.append(
+                (
+                    _invert_word(word),
+                    _invert_q3_affine_compressed_state(components, n),
+                )
+            )
+
+    seen: dict[Q3CompressedState, Word] = {identity: tuple()}
+    queue = deque((identity,))
+    obstruction_solution = {solution_identity}
+    first_witness_state = None
+    first_witness_word = None
+
+    while queue:
+        state = queue.popleft()
+        state_word = seen[state]
+        for generator_word, generator in generators:
+            next_state = _compose_q3_affine_compressed_state(generator, state, n)
+            if next_state in seen:
+                continue
+            next_word = state_word + tuple(generator_word)
+            seen[next_state] = next_word
+            detector_trivial = (
+                next_state[0] == pair_identity
+                and next_state[1] == row_identity
+                and next_state[2] == dihedral_identity
+            )
+            deletions_trivial = all(
+                next_state[deletion_start_index + index] == deletion_identity
+                for index, deletion_identity in enumerate(deletion_identities)
+            )
+            if detector_trivial and deletions_trivial:
+                obstruction_solution.add(next_state[3])
+                if next_state[3] != solution_identity and first_witness_state is None:
+                    first_witness_state = next_state
+                    first_witness_word = next_word
+            if len(seen) > state_limit:
+                moved, moved_image = (
+                    (None, None)
+                    if first_witness_state is None
+                    else _first_moved_affine_tuple(
+                        first_witness_state[3],
+                        dimension,
+                    )
+                )
+                return BoundedDeletionSupportAudit(
+                    rack_size_bound=3,
+                    h=h,
+                    n=n,
+                    detector_size=2916,
+                    detector_component_count=3,
+                    subset_count=len(subsets),
+                    joint_image_size=None,
+                    obstruction_size=None,
+                    obstruction_nontrivial=None,
+                    first_witness_word=first_witness_word,
+                    first_moved_tuple=moved,
+                    first_moved_tuple_image=moved_image,
+                    truncated=True,
+                )
+            queue.append(next_state)
+
+    moved, moved_image = (
+        (None, None)
+        if first_witness_state is None
+        else _first_moved_affine_tuple(first_witness_state[3], dimension)
+    )
+    return BoundedDeletionSupportAudit(
+        rack_size_bound=3,
+        h=h,
+        n=n,
+        detector_size=2916,
+        detector_component_count=3,
+        subset_count=len(subsets),
+        joint_image_size=len(seen),
+        obstruction_size=len(obstruction_solution),
+        obstruction_nontrivial=any(
+            affine_map != solution_identity
+            for affine_map in obstruction_solution
         ),
         first_witness_word=first_witness_word,
         first_moved_tuple=moved,

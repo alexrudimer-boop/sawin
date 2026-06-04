@@ -8,6 +8,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 from ybe_domination import (
     bounded_deletion_search_triage,
     bounded_deletion_support_audit,
+    bounded_deletion_support_affine_q3_compressed_audit,
     bounded_deletion_support_q3_compressed_audit,
     bounded_deletion_support_stabilizer_audit,
     FiniteBraidedSet,
@@ -34,6 +35,19 @@ def affine_f2_type_a_solution():
                 ((a + c + d + 1) % 2, (a + 1) % 2),
             )
     return FiniteBraidedSet(elements, table)
+
+
+def affine_f2_type_a_matrix_data():
+    return (
+        (
+            (0, 0, 0, 1),
+            (1, 1, 0, 1),
+            (1, 0, 1, 1),
+            (1, 0, 0, 0),
+        ),
+        (0, 0, 1, 1),
+        2,
+    )
 
 
 def flip_across_type_b_solution():
@@ -205,6 +219,40 @@ class RackResidualTowerTests(unittest.TestCase):
         self.assertEqual(audit.joint_image_size, 1728)
         self.assertEqual(audit.obstruction_size, 1)
         self.assertFalse(audit.obstruction_nontrivial)
+
+    def test_affine_q3_compressed_audit_matches_type_a_at_arity_three(self):
+        solution = affine_f2_type_a_solution()
+        matrix, offset, dimension = affine_f2_type_a_matrix_data()
+
+        permutation_audit = bounded_deletion_support_q3_compressed_audit(
+            solution,
+            h=2,
+            n=3,
+        )
+        affine_audit = bounded_deletion_support_affine_q3_compressed_audit(
+            matrix,
+            offset,
+            dimension,
+            h=2,
+            n=3,
+        )
+
+        self.assertFalse(affine_audit.truncated)
+        self.assertEqual(affine_audit.detector_size, 2916)
+        self.assertEqual(affine_audit.detector_component_count, 3)
+        self.assertEqual(affine_audit.subset_count, 3)
+        self.assertEqual(
+            affine_audit.joint_image_size,
+            permutation_audit.joint_image_size,
+        )
+        self.assertEqual(
+            affine_audit.obstruction_size,
+            permutation_audit.obstruction_size,
+        )
+        self.assertEqual(
+            affine_audit.obstruction_nontrivial,
+            permutation_audit.obstruction_nontrivial,
+        )
 
     def test_stabilizer_q3_bounded_deletion_audit_closes_type_b_at_arity_four(self):
         solution = flip_across_type_b_solution()

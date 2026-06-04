@@ -38,6 +38,7 @@ from .rack_residual_tower import (
     TwoStrandRackCutoffAudit,
     TwoStrandRackCutoffRow,
     bounded_deletion_search_triage,
+    bounded_deletion_support_affine_q3_compressed_audit,
     bounded_deletion_support_q3_compressed_audit,
     bounded_deletion_support_stabilizer_audit,
     bounded_deletion_support_audit,

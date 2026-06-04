@@ -2555,6 +2555,9 @@ embeds all components as a disjoint-union permutation group and computes the
 pointwise stabilizer of the detector/deletion components.  It proves the same
 obstruction group exactly, without retaining braid words, and closes the known
 Type-B check one arity higher: `E_{X,2,4}=1` with joint image order `1119744`.
+It also closes the affine Type-A check at `n=4` with the same joint image
+order and at `n=5` with `E_{X,2,5}=1` and joint image order `12899450880`;
+the local `n=6` attempt timed out and is not recorded as evidence.
 The `Q_3`-specific note `proofs/q3_small_rack_compression.md` gives a smaller
 exact formula
 
@@ -2566,6 +2569,10 @@ where `ell` is pairwise linking, `w` is row-sum linking, and `delta_n` is the
 three-color dihedral rack representation over `F_3`.  The helper
 `bounded_deletion_support_q3_compressed_audit(X,h,n)` implements that formula
 and keeps braid-word witnesses when the compressed closure is small enough.
+For affine-linear `F_2` solutions, the companion
+`bounded_deletion_support_affine_q3_compressed_audit(M,t,d,h,n)` stores the
+full and deleted `X` actions as augmented affine maps over `F_2`; on the
+Type-A affine row it matches the permutation `Q_3` closure at arity three.
 
 The cheap front-end filters are now executable in
 `src/ybe_domination/rack_residual_tower.py`.  Since `B_2` is cyclic,

@@ -204,6 +204,27 @@ bounded_deletion_support_stabilizer_audit(X,h,n,3)
 uses a disjoint-union permutation-group stabilizer instead.  It does not retain
 braid words, but it can prove exact vanishing in larger arities.
 
+For affine-linear solutions over `F_2`, the helper
+
+```text
+bounded_deletion_support_affine_q3_compressed_audit(M,t,d,h,n)
+```
+
+uses the same `Q_3` detector data, but stores the full `X^n` action and all
+deleted `X` actions as augmented affine maps over `F_2`, not as permutations
+of `X^n`.  This is an exact representation of the braid action when
+`X=F_2^d` and
+
+```text
+R(x,y) = M(x,y)+t.
+```
+
+It is therefore a convention check and a non-enumerating compressed finite
+matrix model for the affine branch.  It still closes the generated finite
+image by breadth-first search, so large matrix images can remain too large
+for exhaustive closure; in that case the stabilizer helper gives a separate
+exact arity check when the underlying finite set is still small enough.
+
 ## Current Regression Data
 
 For the known size-four Type-B flip-across solution:
@@ -219,12 +240,31 @@ joint image size = 1728,
 E_{X,2,3} = 1.
 ```
 
-The stabilizer audit proves one arity higher:
+The known size-four Type-A affine solution
 
 ```text
-E_{X,2,4} = 1,
-joint image order = 1119744.
+X=F_2^2,
+R((a,b),(c,d))=((d,a+b+d),(a+c+d+1,a+1))
 ```
+
+has the same compressed `Q_3` arity-three result.  The affine-matrix helper
+matches the permutation helper exactly at this arity:
+
+```text
+joint image size = 1728,
+E_{X,2,3} = 1.
+```
+
+The stabilizer audit proves larger exact vanishing checks:
+
+```text
+Type-B: E_{X,2,4} = 1, joint image order = 1119744.
+Type-A: E_{X,2,4} = 1, joint image order = 1119744.
+Type-A: E_{X,2,5} = 1, joint image order = 12899450880.
+```
+
+The Type-A `n=6` stabilizer run did not finish within the local five-minute
+timeout, so no arity-six conclusion is recorded.
 
 ## Scope
 

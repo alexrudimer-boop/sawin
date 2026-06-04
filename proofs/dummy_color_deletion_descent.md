@@ -251,6 +251,16 @@ E_{X,2,4} = 1
 
 with exact joint image order `1119744`.
 
+For the known Type-A affine solution it proves the same `n=4` vanishing with
+the same joint image order, and also proves
+
+```text
+E_{X,2,5} = 1
+```
+
+with exact joint image order `12899450880`.  A local Type-A `n=6` run did not
+finish within the five-minute timeout and is not recorded as evidence.
+
 For the special but important cutoff `s=3`, the note
 `proofs/q3_small_rack_compression.md` records an even smaller exact
 description:
@@ -275,6 +285,18 @@ bounded_deletion_support_q3_compressed_audit(X,h,n)
 uses this formula to replace the nine rack-factor detector components by
 linking mod `2`, row-sum mod `3`, and one `GL_n(F_3)` matrix.  This version
 retains witness braid words when the compressed closure itself is tractable.
+
+For affine-linear `F_2` tables, the helper
+
+```text
+bounded_deletion_support_affine_q3_compressed_audit(M,t,d,h,n)
+```
+
+stores the full and deleted `X` actions as augmented affine maps over `F_2`
+inside the same compressed `Q_3` detector closure.  On the Type-A affine row
+it matches the permutation `Q_3` audit at arity three, giving another exact
+check that the affine matrix convention and the finite-set action convention
+agree.
 
 Thus:
 
