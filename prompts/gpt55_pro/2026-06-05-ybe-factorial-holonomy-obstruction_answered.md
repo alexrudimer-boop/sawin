@@ -1,6 +1,45 @@
 # YBE Factorial Holonomy Obstruction Prompt
 
-Status: ask_now / prepared for GPT-5.5 Pro on 2026-06-05.
+Status: answered / GPT-5.5 Pro response recorded on 2026-06-05.
+
+Follow-up status:
+
+GPT-5.5 Pro concluded that factorial transporter phenomena are not forbidden
+by YBE-origin contextual rack relations.  They already occur for the
+one-point YBE solution.  If `X={*}` and `M=C_m`, then `C_M(X)` is the free
+quandle on `m` generators and
+
+```text
+As(C_M(X)) ~= F_m.
+```
+
+For `m=2`, taking `h=g_1` and `H=<g_0>` gives the factorial family
+
+```text
+T={h^{n!}:n>=1}
+```
+
+which is pointwise separable from `H` but not uniformly separable in finite
+quotients.
+
+However, this example is not harmful for Sawin: the one-point solution has no
+distinct same-orbit pairs, so `Omega=empty`.  It is an ambient contextual-rack
+obstruction, not a harmful tower obstruction.
+
+The new precise boundary is:
+
+```text
+YBE contextual racks can have factorial holonomy, but harmful orbit-relevant
+factorial holonomy is not yet constructed.
+```
+
+Thus no pure theorem about `As(C_M(X))` can force uniform stabilizer
+separation.  The missing theorem must use orbit relevance:
+
+```text
+Every orbit-relevant profinite/factorial holonomy in C_M(X) is either
+uniformly separable, finite-rack absorbed, or finite-active-factor extractable.
+```
 
 Prompt:
 
@@ -120,4 +159,3 @@ Guardrails:
 - Do not assume a partial pro-YBE operation extends to a finite total
   bijective YBE solution.
 ```
-

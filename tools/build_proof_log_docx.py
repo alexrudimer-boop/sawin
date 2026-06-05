@@ -133,6 +133,7 @@ EXTRA_MD.append(ROOT / "proofs" / "finite_index_contextual_rigidity_obstruction.
 EXTRA_MD.append(ROOT / "proofs" / "harmful_contextual_collapse_dichotomy.md")
 EXTRA_MD.append(ROOT / "proofs" / "harmful_collapse_ultrafilter_boundary.md")
 EXTRA_MD.append(ROOT / "proofs" / "profinite_limit_vs_finite_extraction_boundary.md")
+EXTRA_MD.append(ROOT / "proofs" / "ambient_factorial_holonomy_boundary.md")
 EXTRA_MD.append(ROOT / "proofs" / "minimal_ideal_escape_rack_construction.md")
 EXTRA_MD.append(ROOT / "proofs" / "active_factor_observability_audit.md")
 EXTRA_MD.append(ROOT / "proofs" / "sequential_primitivity_frontier_audit.md")
