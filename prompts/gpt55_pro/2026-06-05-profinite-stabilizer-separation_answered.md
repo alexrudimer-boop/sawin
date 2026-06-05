@@ -1,6 +1,26 @@
 # Profinite Stabilizer Separation Prompt
 
-Status: ask_now / prepared for GPT-5.5 Pro on 2026-06-05.
+Status: answered on 2026-06-05.
+
+Follow-up status:
+
+GPT-5.5 Pro confirmed the profinite stabilizer criterion, but found a sharper
+structural correction: the relation `(VL1)` collapses every prefix generator
+`a_{p,x}` to `a_{1,p(x)}`.  Thus the prefix vertex rack `V_L(X)` is really the
+normalized prefix rack `W_L(X)` on generators `b_z`, `z in X`, with relations
+
+    b_{pL_u(v)} = b_{p(u)} triangleright b_{p(x)}.
+
+Consequently, prefix vertexization through `V_L(X)` factors through the
+normalized prefix map
+
+    D_n(x_1,...,x_n)=(x_1,L_{x_1}(x_2),...,L_{x_1}...L_{x_{n-1}}(x_n)).
+
+The residual route now has two independent barriers: normalized-prefix
+orbit-faithfulness and profinite stabilizer separability in
+`As(W_L(X))`.  The next active prompt asks whether this normalized-prefix
+barrier can be bypassed by a full-arrow rack detector, converted into an
+active factor, or proved harmless for residual rigid cores.
 
 Prompt:
 
@@ -135,4 +155,3 @@ Important:
   it with a realizable obstruction, or reduce it to a smaller checkable
   structural theorem.
 ```
-
