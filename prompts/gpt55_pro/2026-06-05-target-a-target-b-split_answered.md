@@ -1,6 +1,34 @@
 # Target A Target B Split Prompt
 
-Status: ask now / awaiting GPT-5.5 Pro response.
+Status: answered / GPT-5.5 Pro response recorded on 2026-06-05.
+
+Follow-up status:
+
+GPT-5.5 Pro confirmed that the contextual route is now exactly the finite
+extraction dichotomy / Residual-Rigid Harmful Collapse Exclusion.  The
+strongest valid theorem is conditional:
+
+```text
+Branch I: direct finite rack absorption;
+Branch II: independent proper active factor not factoring through E_M.
+```
+
+Target B remains logically possible, but currently behaves like an added
+hypothesis unless one finds a genuinely non-rack source of coordinatewise YBE
+data.  The most actionable direction is Target A.
+
+The concrete Target A formulation is:
+
+```text
+Primitive bad-pair finite-basis theorem.
+There exists a finite set of primitive bad-pair patterns such that every bad
+pair contains, reduces to, or factors through one of them in a context-stable
+YBE-compatible way; moreover each primitive pattern is separated by a finite
+contextual rack detector.
+```
+
+Taking the product of the finitely many primitive-pattern detectors would give
+direct finite rack absorption.
 
 Prompt:
 
