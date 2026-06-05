@@ -18,6 +18,8 @@ from ybe_domination.stage_a_u_arrays import (  # noqa: E402
     stage_b_bucket_csp_profile,
     stage_b_bucket_permutation_gac_audit,
     stage_b_bucket_permutation_v_search_audit,
+    stage_b_bucket_column_singularity_possible,
+    stage_b_bucket_noninvolutive_possible,
     stage_b_gac_propagation_audit,
     stage_b_gac_v_search_audit,
     u_array_from_solution,
@@ -36,6 +38,7 @@ def example_rows() -> tuple[dict[str, object], ...]:
     rows = []
     for name, solution in examples:
         u_array = u_array_from_solution(solution)
+        bucket_gac = stage_b_bucket_permutation_gac_audit(u_array)
         rows.append(
             {
                 "name": name,
@@ -51,8 +54,18 @@ def example_rows() -> tuple[dict[str, object], ...]:
                         max_examples=3,
                     )
                 ),
-                "bucket_permutation_gac": asdict(
-                    stage_b_bucket_permutation_gac_audit(u_array)
+                "bucket_permutation_gac": asdict(bucket_gac),
+                "bucket_column_singularity_possible": (
+                    stage_b_bucket_column_singularity_possible(
+                        u_array,
+                        bucket_gac.domains,
+                    )
+                ),
+                "bucket_noninvolutive_possible": (
+                    stage_b_bucket_noninvolutive_possible(
+                        u_array,
+                        bucket_gac.domains,
+                    )
                 ),
                 "bucket_permutation_search": asdict(
                     stage_b_bucket_permutation_v_search_audit(
@@ -88,6 +101,8 @@ def build_report() -> dict[str, object]:
             "bucket-permutation GAC over whole bijections C(u,P)->B(u,P)",
             "bucket-permutation branching for column-singular non-involutive completions",
             "Aut(U)-aware canonical state rejection for bucket-permutation branches",
+            "exact bucket-domain column-singularity feasibility before branching",
+            "exact bucket-domain non-involutivity feasibility before branching",
         ],
         "rows": list(example_rows()),
         "conclusion": (
@@ -103,10 +118,14 @@ def build_report() -> dict[str, object]:
             "is now refined by bucket-permutation GAC, which preserves whole "
             "bucket-bijection correlations and forces the identity example "
             "without cell-level branching.  The bucket search records Aut(U) "
-            "and rejects noncanonical branch states under that stabilizer.  "
-            "This is the next precheck layer before full d=5,6 Stage B search."
+            "and rejects noncanonical branch states under that stabilizer.  It "
+            "also uses exact bucket-domain column feasibility, which rejects "
+            "the dihedral rack regression as not column-singular, and exact "
+            "non-involutivity feasibility, which rejects identity-type states "
+            "as forced involutive.  This is the next precheck layer before "
+            "full d=5,6 Stage B search."
         ),
-        "next_prompt": "prompts/gpt55_pro/2026-06-04-bucket-permutation-frontier-next-step_ask_now.md",
+        "next_prompt": "prompts/gpt55_pro/2026-06-04-component-canonical-branching-next-step_ask_now.md",
     }
 
 
@@ -164,6 +183,10 @@ def render_markdown(report: dict[str, object]) -> str:
                 f"`{bucket_gac['final_domain_size_counts']}`;",
                 "- bucket-permutation singleton/noninvolutive: "
                 f"`{bucket_gac['all_singleton']}` / `{bucket_gac['noninvolutive']}`;",
+                "- bucket-domain column-singularity possible: "
+                f"`{row['bucket_column_singularity_possible']}`;",
+                "- bucket-domain non-involutivity possible: "
+                f"`{row['bucket_noninvolutive_possible']}`;",
                 "- bucket-permutation search nodes / accepted: "
                 f"`{bucket_search['node_count']}` / `{bucket_search['accepted_count']}`;",
                 "- bucket-permutation Aut(U) / canonical rejections: "

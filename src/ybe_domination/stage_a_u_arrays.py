@@ -1031,6 +1031,159 @@ def _stage_b_bucket_domains_to_cell_domains(
     return _frozen_domains(cell_domains)
 
 
+def _stage_b_bucket_column_singular_possible_for_data(
+    buckets: Sequence[StageABucket],
+    bucket_permutations: Sequence[Sequence[Sequence[int]]],
+    domains: Sequence[Sequence[int]],
+    *,
+    size: int,
+) -> bool:
+    for column in range(size):
+        states: set[tuple[int, bool]] = {(0, False)}
+        for bucket_index, bucket in enumerate(buckets):
+            column_cell_indices = tuple(
+                cell_index
+                for cell_index, cell in enumerate(bucket.cells)
+                if cell[1] == column
+            )
+            if not column_cell_indices:
+                continue
+            options: set[tuple[int, bool]] = set()
+            for permutation_index in domains[bucket_index]:
+                permutation = bucket_permutations[bucket_index][permutation_index]
+                mask = 0
+                duplicate = False
+                for cell_index in column_cell_indices:
+                    value_bit = 1 << permutation[cell_index]
+                    duplicate = duplicate or bool(mask & value_bit)
+                    mask |= value_bit
+                options.add((mask, duplicate))
+            if not options:
+                return False
+            next_states: set[tuple[int, bool]] = set()
+            for used_mask, has_duplicate in states:
+                for option_mask, option_duplicate in options:
+                    next_states.add(
+                        (
+                            used_mask | option_mask,
+                            has_duplicate
+                            or option_duplicate
+                            or bool(used_mask & option_mask),
+                        )
+                    )
+            states = next_states
+        if not any(has_duplicate for _used_mask, has_duplicate in states):
+            return False
+    return True
+
+
+def _stage_b_cell_assignments_compatible(
+    assignments: Sequence[tuple[Cell, int]],
+    buckets: Sequence[StageABucket],
+    bucket_permutations: Sequence[Sequence[Sequence[int]]],
+    domains: Sequence[Sequence[int]],
+) -> bool:
+    cell_lookup = _stage_b_cell_bucket_lookup(buckets)
+    pattern = _stage_b_bucket_pattern_from_assignments(
+        assignments,
+        buckets,
+        cell_lookup,
+    )
+    if pattern is None:
+        return False
+    support_sets = _stage_b_pattern_support_sets(pattern, bucket_permutations)
+    return all(
+        set(domains[bucket_index]).intersection(support_set)
+        for bucket_index, support_set in support_sets.items()
+    )
+
+
+def _stage_b_bucket_noninvolutive_possible_for_data(
+    u_rows: UArray,
+    buckets: Sequence[StageABucket],
+    bucket_permutations: Sequence[Sequence[Sequence[int]]],
+    domains: Sequence[Sequence[int]],
+) -> bool:
+    size = len(u_rows)
+    for x in range(size):
+        for y in range(size):
+            output_u = u_rows[x][y]
+            first_cell = (x, y)
+            for value in range(size):
+                if not _stage_b_cell_assignments_compatible(
+                    ((first_cell, value),),
+                    buckets,
+                    bucket_permutations,
+                    domains,
+                ):
+                    continue
+                if u_rows[output_u][value] != x:
+                    return True
+                second_cell = (output_u, value)
+                for second_value in range(size):
+                    if second_value == y:
+                        continue
+                    if _stage_b_cell_assignments_compatible(
+                        (
+                            (first_cell, value),
+                            (second_cell, second_value),
+                        ),
+                        buckets,
+                        bucket_permutations,
+                        domains,
+                    ):
+                        return True
+    return False
+
+
+def stage_b_bucket_column_singularity_possible(
+    array: Sequence[Sequence[int]],
+    domains: Sequence[Sequence[int]],
+) -> bool:
+    u_rows = normalize_u_array(array)
+    buckets = stage_a_factorization_buckets(u_rows)
+    bucket_permutations = _stage_b_bucket_permutations(buckets)
+    if len(domains) != len(buckets):
+        raise ValueError("bucket domains must match the bucket count")
+    normalized_domains = []
+    for bucket_index, domain in enumerate(domains):
+        allowed = set(range(len(bucket_permutations[bucket_index])))
+        domain_set = set(domain)
+        if not domain_set.issubset(allowed):
+            raise ValueError("bucket domain index out of range")
+        normalized_domains.append(tuple(sorted(domain_set)))
+    return _stage_b_bucket_column_singular_possible_for_data(
+        buckets,
+        bucket_permutations,
+        normalized_domains,
+        size=len(u_rows),
+    )
+
+
+def stage_b_bucket_noninvolutive_possible(
+    array: Sequence[Sequence[int]],
+    domains: Sequence[Sequence[int]],
+) -> bool:
+    u_rows = normalize_u_array(array)
+    buckets = stage_a_factorization_buckets(u_rows)
+    bucket_permutations = _stage_b_bucket_permutations(buckets)
+    if len(domains) != len(buckets):
+        raise ValueError("bucket domains must match the bucket count")
+    normalized_domains = []
+    for bucket_index, domain in enumerate(domains):
+        allowed = set(range(len(bucket_permutations[bucket_index])))
+        domain_set = set(domain)
+        if not domain_set.issubset(allowed):
+            raise ValueError("bucket domain index out of range")
+        normalized_domains.append(tuple(sorted(domain_set)))
+    return _stage_b_bucket_noninvolutive_possible_for_data(
+        u_rows,
+        buckets,
+        bucket_permutations,
+        normalized_domains,
+    )
+
+
 def _stage_b_bucket_permutation_extract_v(
     buckets: Sequence[StageABucket],
     bucket_permutations: Sequence[Sequence[Sequence[int]]],
@@ -1326,14 +1479,20 @@ def stage_b_bucket_permutation_v_search_audit(
             record_if_complete(v_rows)
             return
         if require_column_singular:
-            cell_domains = _stage_b_bucket_domains_to_cell_domains(
+            if not _stage_b_bucket_column_singular_possible_for_data(
                 buckets,
                 bucket_permutations,
-                tuple(set(domain) for domain in gac.domains),
+                gac.domains,
                 size=size,
-            )
-            if not stage_b_column_singularity_possible(cell_domains):
+            ):
                 return
+        if require_noninvolutive and not _stage_b_bucket_noninvolutive_possible_for_data(
+            u_rows,
+            buckets,
+            bucket_permutations,
+            gac.domains,
+        ):
+            return
         bucket_index = _stage_b_choose_bucket_branch(gac.domains)
         if bucket_index is None:
             return

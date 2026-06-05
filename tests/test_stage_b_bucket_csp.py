@@ -15,6 +15,8 @@ from ybe_domination.stage_a_u_arrays import (
     stage_b_bucket_triple_value_has_support,
     stage_b_bucket_permutation_gac_audit,
     stage_b_bucket_permutation_v_search_audit,
+    stage_b_bucket_column_singularity_possible,
+    stage_b_bucket_noninvolutive_possible,
     stage_b_bucket_domain_state_is_canonical,
     stage_b_column_singularity_possible,
     stage_b_gac_dynamic_universe,
@@ -131,6 +133,54 @@ class StageBBucketCSPTests(unittest.TestCase):
         self.assertEqual(audit.accepted_count, 1)
         self.assertEqual(audit.examples, (v_array,))
         self.assertFalse(audit.truncated)
+
+    def test_bucket_column_singularity_feasibility_is_exact_on_regressions(self):
+        dihedral = rack_solution((0, 1, 2), lambda left, right: (2 * left - right) % 3)
+        dihedral_u = u_array_from_solution(dihedral)
+        dihedral_gac = stage_b_bucket_permutation_gac_audit(dihedral_u)
+        affine_u = u_array_from_solution(affine_f2_type_a_solution())
+        affine_gac = stage_b_bucket_permutation_gac_audit(affine_u)
+
+        self.assertFalse(
+            stage_b_bucket_column_singularity_possible(
+                dihedral_u,
+                dihedral_gac.domains,
+            )
+        )
+        self.assertTrue(
+            stage_b_bucket_column_singularity_possible(
+                affine_u,
+                affine_gac.domains,
+            )
+        )
+
+    def test_bucket_noninvolutive_feasibility_is_exact_on_regressions(self):
+        identity_u = u_array_from_solution(identity_solution((0, 1, 2)))
+        identity_gac = stage_b_bucket_permutation_gac_audit(identity_u)
+        dihedral = rack_solution((0, 1, 2), lambda left, right: (2 * left - right) % 3)
+        dihedral_u = u_array_from_solution(dihedral)
+        dihedral_gac = stage_b_bucket_permutation_gac_audit(dihedral_u)
+        affine_u = u_array_from_solution(affine_f2_type_a_solution())
+        affine_gac = stage_b_bucket_permutation_gac_audit(affine_u)
+
+        self.assertFalse(
+            stage_b_bucket_noninvolutive_possible(
+                identity_u,
+                identity_gac.domains,
+            )
+        )
+        self.assertTrue(
+            stage_b_bucket_noninvolutive_possible(
+                dihedral_u,
+                dihedral_gac.domains,
+            )
+        )
+        self.assertTrue(
+            stage_b_bucket_noninvolutive_possible(
+                affine_u,
+                affine_gac.domains,
+            )
+        )
 
     def test_bucket_domain_state_canonical_checker_accepts_root_state(self):
         u_array = u_array_from_solution(affine_f2_type_a_solution())

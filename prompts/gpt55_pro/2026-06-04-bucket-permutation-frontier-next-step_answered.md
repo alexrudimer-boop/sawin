@@ -1,6 +1,16 @@
 # Bucket-Permutation Stage B Frontier Prompt
 
-Status: ask_now / prepared for GPT-5.5 Pro on 2026-06-04.
+Status: answered / GPT-5.5 Pro answered on 2026-06-04.
+
+Answer summary:
+
+- Use exact canonical bucket-permutation branching modulo Aut(U).
+- Build the remaining constraint hypergraph after bucket-GAC.
+- Decompose independent components before branching.
+- Add exact bucket-domain column-singularity feasibility.
+- Add exact bucket-domain non-involutivity feasibility.
+- Use canonical augmentation: branch on bucket orbits under the current stabilizer and value orbits under the selected bucket stabilizer.
+- The current implementation incorporated exact bucket column feasibility, exact non-involutivity feasibility, and global Aut(U) state rejection; component decomposition and full stabilizer-orbit branching remain the next target.
 
 Prompt:
 
