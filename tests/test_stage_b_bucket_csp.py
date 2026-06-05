@@ -14,9 +14,11 @@ from ybe_domination.stage_a_u_arrays import (
     stage_b_bucket_triple_has_support,
     stage_b_bucket_triple_value_has_support,
     stage_b_bucket_permutation_gac_audit,
+    stage_b_relation_gac_audit,
     stage_b_bucket_permutation_v_search_audit,
     stage_b_bucket_constraint_hypergraph_audit,
     stage_b_stabilizer_branch_audit,
+    stage_b_component_solver_audit,
     stage_b_bucket_column_singularity_possible,
     stage_b_bucket_noninvolutive_possible,
     stage_b_bucket_domain_state_is_canonical,
@@ -114,6 +116,26 @@ class StageBBucketCSPTests(unittest.TestCase):
         self.assertEqual(audit.singleton_y2_y3_verified, True)
         self.assertEqual(audit.noninvolutive, False)
 
+    def test_relation_gac_adds_compiled_column_relations(self):
+        identity_u = u_array_from_solution(identity_solution((0, 1, 2)))
+        dihedral = rack_solution((0, 1, 2), lambda left, right: (2 * left - right) % 3)
+        dihedral_u = u_array_from_solution(dihedral)
+        affine_u = u_array_from_solution(affine_f2_type_a_solution())
+
+        identity_audit = stage_b_relation_gac_audit(identity_u)
+        dihedral_audit = stage_b_relation_gac_audit(dihedral_u)
+        affine_audit = stage_b_relation_gac_audit(affine_u)
+
+        self.assertEqual(identity_audit.column_pattern_count, 63)
+        self.assertTrue(identity_audit.column_singularity_possible)
+        self.assertFalse(identity_audit.noninvolutive_possible)
+        self.assertEqual(dihedral_audit.column_pattern_count, 0)
+        self.assertFalse(dihedral_audit.locally_consistent)
+        self.assertEqual(affine_audit.final_domain_product, "256")
+        self.assertEqual(affine_audit.ybe_pattern_count, 156)
+        self.assertEqual(affine_audit.column_pattern_count, 16)
+        self.assertTrue(affine_audit.locally_consistent)
+
     def test_u_array_automorphisms_are_computed_exactly_on_regressions(self):
         identity_u = u_array_from_solution(identity_solution((0, 1, 2)))
         affine_u = u_array_from_solution(affine_f2_type_a_solution())
@@ -132,9 +154,20 @@ class StageBBucketCSPTests(unittest.TestCase):
         self.assertEqual(audit.node_count, 3)
         self.assertEqual(audit.aut_u_order, 2)
         self.assertEqual(audit.canonical_rejection_count, 0)
+        self.assertEqual(audit.stabilizer_branch_count, 1)
+        self.assertEqual(audit.stabilizer_child_reduction_count, 0)
         self.assertEqual(audit.accepted_count, 1)
         self.assertEqual(audit.examples, (v_array,))
         self.assertFalse(audit.truncated)
+
+        plain_audit = stage_b_bucket_permutation_v_search_audit(
+            u_array,
+            require_column_singular=True,
+            require_noninvolutive=True,
+            use_stabilizer_branching=False,
+        )
+        self.assertEqual(plain_audit.accepted_count, audit.accepted_count)
+        self.assertEqual(plain_audit.examples, audit.examples)
 
     def test_bucket_column_singularity_feasibility_is_exact_on_regressions(self):
         dihedral = rack_solution((0, 1, 2), lambda left, right: (2 * left - right) % 3)
@@ -228,6 +261,26 @@ class StageBBucketCSPTests(unittest.TestCase):
         self.assertEqual(affine_audit.selected_bucket_orbit_size, 2)
         self.assertEqual(affine_audit.selected_value_representatives, (0, 1))
         self.assertEqual(affine_audit.child_domain_count, 2)
+
+    def test_component_solver_audit_counts_affine_local_solutions(self):
+        identity_u = u_array_from_solution(identity_solution((0, 1, 2)))
+        dihedral = rack_solution((0, 1, 2), lambda left, right: (2 * left - right) % 3)
+        dihedral_u = u_array_from_solution(dihedral)
+        affine_u = u_array_from_solution(affine_f2_type_a_solution())
+
+        identity_audit = stage_b_component_solver_audit(identity_u)
+        dihedral_audit = stage_b_component_solver_audit(dihedral_u)
+        affine_audit = stage_b_component_solver_audit(affine_u)
+
+        self.assertFalse(identity_audit.locally_consistent)
+        self.assertFalse(dihedral_audit.locally_consistent)
+        self.assertTrue(affine_audit.locally_consistent)
+        self.assertEqual(affine_audit.component_count, 1)
+        self.assertEqual(affine_audit.component_solution_counts, (2,))
+        self.assertEqual(affine_audit.component_noninv_solution_counts, (1,))
+        self.assertEqual(affine_audit.global_solution_count, "2")
+        self.assertEqual(affine_audit.global_noninv_solution_count, "1")
+        self.assertEqual(affine_audit.accepted_count, "1")
 
     def test_column_singularity_feasibility_filter_detects_forced_permutation(self):
         self.assertFalse(

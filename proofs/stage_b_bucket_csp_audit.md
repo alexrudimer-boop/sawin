@@ -13,12 +13,14 @@ Record the bucket-domain CSP precheck used before full Stage B backtracking: Hal
 - GAC-assisted Stage B branching for column-singular non-involutive completions;
 - early column-singularity feasibility rejection when a column has no possible duplicate value;
 - bucket-permutation GAC over whole bijections C(u,P)->B(u,P);
+- compiled relation-level GAC over YBE and column-singularity relations;
 - bucket-permutation branching for column-singular non-involutive completions;
 - Aut(U)-aware canonical state rejection for bucket-permutation branches;
 - exact bucket-domain column-singularity feasibility before branching;
 - exact bucket-domain non-involutivity feasibility before branching;
 - remaining bucket-constraint hypergraph and connected components after bucket-GAC;
 - current-stabilizer component, bucket, and value-orbit branch audit;
+- component-local solver audit with non-involutivity OR combination;
 
 ## Example Rows
 
@@ -46,6 +48,9 @@ Record the bucket-domain CSP precheck used before full Stage B backtracking: Hal
 - bucket-permutation domain product: `216` -> `1`;
 - bucket-permutation domain size counts: `((1, 3),)`;
 - bucket-permutation singleton/noninvolutive: `True` / `False`;
+- relation-GAC domain product: `216` -> `1`;
+- relation-GAC pattern counts YBE/column: `27` / `63`;
+- relation-GAC deletions / locally consistent: `15` / `True`;
 - bucket-domain column-singularity possible: `True`;
 - bucket-domain non-involutivity possible: `False`;
 - bucket hypergraph components / largest: `0` / `0`;
@@ -54,8 +59,11 @@ Record the bucket-domain CSP precheck used before full Stage B backtracking: Hal
 - bucket hypergraph column/noninv feasible: `True` / `False`;
 - stabilizer branch order/component orbits: `0` / `0`;
 - stabilizer selected component/bucket/value reps: `None` / `None` / `()`;
+- component solver counts / noninv counts: `()` / `()`;
+- component solver global/noninv/accepted: `0` / `0` / `0`;
 - bucket-permutation search nodes / accepted: `1` / `0`;
 - bucket-permutation Aut(U) / canonical rejections: `6` / `0`;
+- bucket-permutation stabilizer branches / child reductions: `0` / `0`;
 - bucket-permutation search truncated: `False`.
 
 ### dihedral_rack_3
@@ -82,6 +90,9 @@ Record the bucket-domain CSP precheck used before full Stage B backtracking: Hal
 - bucket-permutation domain product: `1` -> `1`;
 - bucket-permutation domain size counts: `((1, 9),)`;
 - bucket-permutation singleton/noninvolutive: `True` / `True`;
+- relation-GAC domain product: `1` -> `1`;
+- relation-GAC pattern counts YBE/column: `27` / `0`;
+- relation-GAC deletions / locally consistent: `0` / `False`;
 - bucket-domain column-singularity possible: `False`;
 - bucket-domain non-involutivity possible: `True`;
 - bucket hypergraph components / largest: `0` / `0`;
@@ -90,8 +101,11 @@ Record the bucket-domain CSP precheck used before full Stage B backtracking: Hal
 - bucket hypergraph column/noninv feasible: `False` / `True`;
 - stabilizer branch order/component orbits: `0` / `0`;
 - stabilizer selected component/bucket/value reps: `None` / `None` / `()`;
+- component solver counts / noninv counts: `()` / `()`;
+- component solver global/noninv/accepted: `0` / `0` / `0`;
 - bucket-permutation search nodes / accepted: `1` / `0`;
 - bucket-permutation Aut(U) / canonical rejections: `6` / `0`;
+- bucket-permutation stabilizer branches / child reductions: `0` / `0`;
 - bucket-permutation search truncated: `False`.
 
 ### size4_affine_type_a
@@ -118,6 +132,9 @@ Record the bucket-domain CSP precheck used before full Stage B backtracking: Hal
 - bucket-permutation domain product: `256` -> `256`;
 - bucket-permutation domain size counts: `((2, 8),)`;
 - bucket-permutation singleton/noninvolutive: `False` / `None`;
+- relation-GAC domain product: `256` -> `256`;
+- relation-GAC pattern counts YBE/column: `156` / `16`;
+- relation-GAC deletions / locally consistent: `0` / `True`;
 - bucket-domain column-singularity possible: `True`;
 - bucket-domain non-involutivity possible: `True`;
 - bucket hypergraph components / largest: `1` / `8`;
@@ -126,14 +143,17 @@ Record the bucket-domain CSP precheck used before full Stage B backtracking: Hal
 - bucket hypergraph column/noninv feasible: `True` / `True`;
 - stabilizer branch order/component orbits: `2` / `1`;
 - stabilizer selected component/bucket/value reps: `(0, 1, 2, 3, 4, 5, 6, 7)` / `0` / `(0, 1)`;
+- component solver counts / noninv counts: `(2,)` / `(1,)`;
+- component solver global/noninv/accepted: `2` / `1` / `1`;
 - bucket-permutation search nodes / accepted: `3` / `1`;
 - bucket-permutation Aut(U) / canonical rejections: `2` / `0`;
+- bucket-permutation stabilizer branches / child reductions: `1` / `0`;
 - bucket-permutation search truncated: `False`.
 
 ## Conclusion
 
-The current examples all pass local bucket-CSP consistency.  The profile still distinguishes their domain geometry: identity has three 3-cell buckets, the dihedral rack has nine forced cells, and affine Type A has eight 2-cell buckets.  Exact GAC forces the dihedral rack table and preserves all values needed for the known affine Type A completion.  GAC-assisted branching recovers the unique non-involutive affine Type A completion in three search nodes.  The branch search also rejects any non-singleton state where some V-column can no longer become singular.  This is now refined by bucket-permutation GAC, which preserves whole bucket-bijection correlations and forces the identity example without cell-level branching.  The bucket search records Aut(U) and rejects noncanonical branch states under that stabilizer.  It also uses exact bucket-domain column feasibility, which rejects the dihedral rack regression as not column-singular, and exact non-involutivity feasibility, which rejects identity-type states as forced involutive.  The remaining hypergraph audit shows whether unresolved bucket choices decompose into independent components before full d=5,6 Stage B search.
+The current examples all pass local bucket-CSP consistency.  The profile still distinguishes their domain geometry: identity has three 3-cell buckets, the dihedral rack has nine forced cells, and affine Type A has eight 2-cell buckets.  Exact GAC forces the dihedral rack table and preserves all values needed for the known affine Type A completion.  GAC-assisted branching recovers the unique non-involutive affine Type A completion in three search nodes.  The branch search also rejects any non-singleton state where some V-column can no longer become singular.  This is now refined by bucket-permutation GAC, which preserves whole bucket-bijection correlations and forces the identity example without cell-level branching.  The bucket search records Aut(U) and rejects noncanonical branch states under that stabilizer.  It also uses exact bucket-domain column feasibility, which rejects the dihedral rack regression as not column-singular, and exact non-involutivity feasibility, which rejects identity-type states as forced involutive.  Relation-GAC now propagates compiled YBE and column-singularity relations, and the component solver audit counts local component solutions while combining non-involutivity as a global OR.  The next step is production component enumeration for the d=5,6 frontier.
 
 ## Next Prompt
 
-`prompts/gpt55_pro/2026-06-04-component-local-solver-integration-next-step_ask_now.md`.
+`prompts/gpt55_pro/2026-06-04-production-component-stageb-size56-next-step_ask_now.md`.

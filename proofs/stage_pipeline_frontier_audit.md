@@ -36,9 +36,12 @@ Connect row-catalogue Stage A enumeration to bucket-CSP, Stage B exact cover, an
 - GAC locally consistent: `True`;
 - bucket-permutation product: `216` -> `1`;
 - bucket-permutation locally consistent: `True`;
+- relation-GAC product: `216` -> `1`;
+- relation-GAC deletions / locally consistent: `15` / `True`;
 - bucket hypergraph components / largest: `0` / `0`;
 - bucket relation patterns YBE/column/noninv: `27` / `3` / `0`;
 - stabilizer branch order/component orbits/child reps: `0` / `0` / `0`;
+- component solver global/noninv/accepted: `0` / `0` / `0`;
 - Stage B accepted completions: `0`;
 - Stage B emitted completions: `0`;
 - Stage B truncated: `False`;
@@ -48,6 +51,7 @@ Connect row-catalogue Stage A enumeration to bucket-CSP, Stage B exact cover, an
 - bucket Stage B nodes: `1`;
 - bucket Stage B accepted completions: `0`;
 - bucket Stage B Aut(U) / canonical rejections: `6` / `0`;
+- bucket Stage B stabilizer branches / child reductions: `0` / `0`;
 - bucket Stage B truncated: `False`;
 - rigid first failed filters: `()`.
 
@@ -63,9 +67,12 @@ Connect row-catalogue Stage A enumeration to bucket-CSP, Stage B exact cover, an
 - GAC locally consistent: `True`;
 - bucket-permutation product: `331776` -> `1`;
 - bucket-permutation locally consistent: `True`;
+- relation-GAC product: `331776` -> `1`;
+- relation-GAC deletions / locally consistent: `92` / `True`;
 - bucket hypergraph components / largest: `0` / `0`;
 - bucket relation patterns YBE/column/noninv: `64` / `4` / `0`;
 - stabilizer branch order/component orbits/child reps: `0` / `0` / `0`;
+- component solver global/noninv/accepted: `0` / `0` / `0`;
 - Stage B accepted completions: `0`;
 - Stage B emitted completions: `0`;
 - Stage B truncated: `False`;
@@ -75,6 +82,7 @@ Connect row-catalogue Stage A enumeration to bucket-CSP, Stage B exact cover, an
 - bucket Stage B nodes: `1`;
 - bucket Stage B accepted completions: `0`;
 - bucket Stage B Aut(U) / canonical rejections: `24` / `0`;
+- bucket Stage B stabilizer branches / child reductions: `0` / `0`;
 - bucket Stage B truncated: `False`;
 - rigid first failed filters: `()`.
 
@@ -90,9 +98,12 @@ Connect row-catalogue Stage A enumeration to bucket-CSP, Stage B exact cover, an
 - GAC locally consistent: `True`;
 - bucket-permutation product: `256` -> `256`;
 - bucket-permutation locally consistent: `True`;
+- relation-GAC product: `256` -> `256`;
+- relation-GAC deletions / locally consistent: `0` / `True`;
 - bucket hypergraph components / largest: `1` / `8`;
 - bucket relation patterns YBE/column/noninv: `156` / `16` / `24`;
 - stabilizer branch order/component orbits/child reps: `2` / `1` / `2`;
+- component solver global/noninv/accepted: `2` / `1` / `1`;
 - Stage B accepted completions: `1`;
 - Stage B emitted completions: `1`;
 - Stage B truncated: `False`;
@@ -102,6 +113,7 @@ Connect row-catalogue Stage A enumeration to bucket-CSP, Stage B exact cover, an
 - bucket Stage B nodes: `3`;
 - bucket Stage B accepted completions: `1`;
 - bucket Stage B Aut(U) / canonical rejections: `2` / `0`;
+- bucket Stage B stabilizer branches / child reductions: `1` / `0`;
 - bucket Stage B truncated: `False`;
 - rigid first failed filters: `('quotient_rigid',)`.
 

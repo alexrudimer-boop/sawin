@@ -69,6 +69,8 @@ class StageBBucketPermutationSearchAudit:
     size: int
     node_count: int
     canonical_rejection_count: int
+    stabilizer_branch_count: int
+    stabilizer_child_reduction_count: int
     exact_cover_count: int
     column_singular_count: int
     y2_y3_count: int
@@ -145,6 +147,37 @@ class StageBBucketPermutationGACAudit:
 
 
 @dataclass(frozen=True)
+class StageBRelationGACAudit:
+    size: int
+    bucket_count: int
+    ybe_relation_count: int
+    column_relation_count: int
+    ybe_pattern_count: int
+    column_pattern_count: int
+    initial_domain_size_counts: tuple[tuple[int, int], ...]
+    final_domain_size_counts: tuple[tuple[int, int], ...]
+    initial_domain_mass: int
+    final_domain_mass: int
+    initial_domain_product: str
+    final_domain_product: str
+    deletion_count: int
+    iteration_count: int
+    empty_domain: bool
+    all_singleton: bool
+    singleton_bucket_count: int
+    unresolved_bucket_count: int
+    maximum_bucket_domain_size: int
+    singleton_y2_y3_verified: bool | None
+    column_singular: bool | None
+    noninvolutive: bool | None
+    column_singularity_possible: bool
+    noninvolutive_possible: bool
+    locally_consistent: bool
+    domains: tuple[tuple[int, ...], ...]
+    extracted_v: VArray | None
+
+
+@dataclass(frozen=True)
 class StageBBucketConstraintHypergraphAudit:
     size: int
     bucket_count: int
@@ -184,6 +217,23 @@ class StageBStabilizerBranchAudit:
     selected_value_orbit_count: int
     selected_value_representatives: tuple[int, ...]
     child_domain_count: int
+    locally_consistent: bool
+
+
+@dataclass(frozen=True)
+class StageBComponentSolverAudit:
+    size: int
+    bucket_count: int
+    relation_gac_locally_consistent: bool
+    component_count: int
+    component_size_counts: tuple[tuple[int, int], ...]
+    component_solution_counts: tuple[int, ...]
+    component_noninv_solution_counts: tuple[int, ...]
+    forced_noninv_witness: bool
+    global_solution_count: str
+    global_noninv_solution_count: str
+    accepted_count: str
+    truncated: bool
     locally_consistent: bool
 
 
@@ -1386,6 +1436,35 @@ def _stage_b_surviving_pattern_buckets(
     return buckets
 
 
+def _stage_b_relation_feasible(
+    pattern_supports: Sequence[dict[int, set[int]]],
+    domains: Sequence[Sequence[int]],
+) -> bool:
+    return any(_stage_b_support_is_feasible(support, domains) for support in pattern_supports)
+
+
+def _stage_b_support_unresolved_scope(
+    support: dict[int, set[int]],
+    domains: Sequence[Sequence[int]],
+) -> frozenset[int]:
+    return frozenset(
+        bucket_index
+        for bucket_index in support
+        if len(domains[bucket_index]) > 1
+    )
+
+
+def _stage_b_relation_unresolved_scope(
+    pattern_supports: Sequence[dict[int, set[int]]],
+    domains: Sequence[Sequence[int]],
+) -> frozenset[int]:
+    scope: set[int] = set()
+    for support in pattern_supports:
+        if _stage_b_support_is_feasible(support, domains):
+            scope.update(_stage_b_support_unresolved_scope(support, domains))
+    return frozenset(scope)
+
+
 def _stage_b_connected_components(
     vertices: set[int],
     edges: Sequence[frozenset[int]],
@@ -1580,6 +1659,9 @@ def stage_b_bucket_constraint_hypergraph_audit(
 def stage_b_stabilizer_branch_audit(
     array: Sequence[Sequence[int]],
     domains: Sequence[Sequence[int]] | None = None,
+    *,
+    require_column_singular: bool = True,
+    require_noninvolutive: bool = True,
 ) -> StageBStabilizerBranchAudit:
     u_rows = normalize_u_array(array)
     size = len(u_rows)
@@ -1612,7 +1694,11 @@ def stage_b_stabilizer_branch_audit(
         _stage_b_bucket_permutation_action(buckets, bucket_permutations, automorphism)
         for automorphism in automorphisms
     )
-    if not gac.locally_consistent or not hypergraph.locally_consistent:
+    required_relations_consistent = (
+        (not require_column_singular or hypergraph.column_singularity_possible)
+        and (not require_noninvolutive or hypergraph.noninvolutive_possible)
+    )
+    if not gac.locally_consistent or not required_relations_consistent:
         return StageBStabilizerBranchAudit(
             size=size,
             bucket_count=len(buckets),
@@ -1773,6 +1859,252 @@ def stage_b_stabilizer_branch_audit(
         selected_value_representatives=selected_value_representatives,
         child_domain_count=len(selected_value_representatives),
         locally_consistent=True,
+    )
+
+
+def stage_b_component_solver_audit(
+    array: Sequence[Sequence[int]],
+    domains: Sequence[Sequence[int]] | None = None,
+    *,
+    require_column_singular: bool = True,
+    require_noninvolutive: bool = True,
+    max_component_solutions: int | None = 100_000,
+) -> StageBComponentSolverAudit:
+    u_rows = normalize_u_array(array)
+    size = len(u_rows)
+    relation_gac = stage_b_relation_gac_audit(
+        u_rows,
+        domains,
+        require_column_singular=require_column_singular,
+    )
+    if not relation_gac.locally_consistent:
+        return StageBComponentSolverAudit(
+            size=size,
+            bucket_count=relation_gac.bucket_count,
+            relation_gac_locally_consistent=False,
+            component_count=0,
+            component_size_counts=tuple(),
+            component_solution_counts=tuple(),
+            component_noninv_solution_counts=tuple(),
+            forced_noninv_witness=False,
+            global_solution_count="0",
+            global_noninv_solution_count="0",
+            accepted_count="0",
+            truncated=False,
+            locally_consistent=False,
+        )
+
+    buckets = stage_a_factorization_buckets(u_rows)
+    bucket_permutations = _stage_b_bucket_permutations(buckets)
+    reduced_domains = relation_gac.domains
+    patterns_by_triple = _stage_b_compile_bucket_support_patterns(u_rows, buckets)
+    ybe_supports = tuple(
+        _stage_b_compile_bucket_pattern_supports(
+            patterns_by_triple,
+            bucket_permutations,
+        )[triple]
+        for triple in sorted(patterns_by_triple)
+    )
+    column_supports = (
+        _stage_b_compile_column_singular_supports(
+            buckets,
+            bucket_permutations,
+            reduced_domains,
+            size=size,
+        )
+        if require_column_singular
+        else tuple()
+    )
+    relation_supports = tuple(ybe_supports) + tuple(column_supports)
+    for supports in relation_supports:
+        if not _stage_b_relation_feasible(supports, reduced_domains):
+            return StageBComponentSolverAudit(
+                size=size,
+                bucket_count=len(buckets),
+                relation_gac_locally_consistent=True,
+                component_count=0,
+                component_size_counts=tuple(),
+                component_solution_counts=tuple(),
+                component_noninv_solution_counts=tuple(),
+                forced_noninv_witness=False,
+                global_solution_count="0",
+                global_noninv_solution_count="0",
+                accepted_count="0",
+                truncated=False,
+                locally_consistent=False,
+            )
+
+    witness_supports = _stage_b_compile_noninvolutive_witness_supports(
+        u_rows,
+        buckets,
+        bucket_permutations,
+        reduced_domains,
+    )
+    feasible_witnesses = tuple(
+        support
+        for support in witness_supports
+        if _stage_b_support_is_feasible(support, reduced_domains)
+    )
+    forced_noninv_witness = any(
+        not _stage_b_support_unresolved_scope(support, reduced_domains)
+        for support in feasible_witnesses
+    )
+    if require_noninvolutive and not feasible_witnesses:
+        return StageBComponentSolverAudit(
+            size=size,
+            bucket_count=len(buckets),
+            relation_gac_locally_consistent=True,
+            component_count=0,
+            component_size_counts=tuple(),
+            component_solution_counts=tuple(),
+            component_noninv_solution_counts=tuple(),
+            forced_noninv_witness=False,
+            global_solution_count="0",
+            global_noninv_solution_count="0",
+            accepted_count="0",
+            truncated=False,
+            locally_consistent=False,
+        )
+
+    hypergraph = stage_b_bucket_constraint_hypergraph_audit(u_rows, reduced_domains)
+    components = hypergraph.components
+    if not components:
+        solution_count = 1 if relation_gac.extracted_v is not None else 0
+        noninv_count = (
+            solution_count
+            if forced_noninv_witness or relation_gac.noninvolutive is True
+            else 0
+        )
+        accepted_count = noninv_count if require_noninvolutive else solution_count
+        return StageBComponentSolverAudit(
+            size=size,
+            bucket_count=len(buckets),
+            relation_gac_locally_consistent=True,
+            component_count=0,
+            component_size_counts=tuple(),
+            component_solution_counts=tuple(),
+            component_noninv_solution_counts=tuple(),
+            forced_noninv_witness=forced_noninv_witness,
+            global_solution_count=str(solution_count),
+            global_noninv_solution_count=str(noninv_count),
+            accepted_count=str(accepted_count),
+            truncated=False,
+            locally_consistent=accepted_count > 0,
+        )
+
+    component_solution_counts: list[int] = []
+    component_noninv_counts: list[int] = []
+    truncated = False
+
+    for component in components:
+        component_set = set(component)
+        component_relations = []
+        for supports in relation_supports:
+            scope = _stage_b_relation_unresolved_scope(supports, reduced_domains)
+            if scope and scope.issubset(component_set):
+                component_relations.append(supports)
+        component_witnesses = tuple(
+            support
+            for support in feasible_witnesses
+            if (
+                scope := _stage_b_support_unresolved_scope(support, reduced_domains)
+            )
+            and scope.issubset(component_set)
+        )
+        local_domains = [set(domain) for domain in reduced_domains]
+        solution_count = 0
+        noninv_count = 0
+
+        def relation_feasible_with_current_domains(
+            supports: Sequence[dict[int, set[int]]],
+        ) -> bool:
+            return _stage_b_relation_feasible(
+                supports,
+                tuple(tuple(sorted(domain)) for domain in local_domains),
+            )
+
+        def support_feasible_with_current_domains(support: dict[int, set[int]]) -> bool:
+            return _stage_b_support_is_feasible(
+                support,
+                tuple(tuple(sorted(domain)) for domain in local_domains),
+            )
+
+        def recurse() -> None:
+            nonlocal solution_count
+            nonlocal noninv_count
+            nonlocal truncated
+            if truncated:
+                return
+            if max_component_solutions is not None and solution_count >= max_component_solutions:
+                truncated = True
+                return
+            for supports in component_relations:
+                if not relation_feasible_with_current_domains(supports):
+                    return
+            branch_bucket = None
+            branch_size = 10**9
+            for bucket_index in component:
+                domain_size = len(local_domains[bucket_index])
+                if 1 < domain_size < branch_size:
+                    branch_bucket = bucket_index
+                    branch_size = domain_size
+            if branch_bucket is None:
+                solution_count += 1
+                if forced_noninv_witness or any(
+                    support_feasible_with_current_domains(support)
+                    for support in component_witnesses
+                ):
+                    noninv_count += 1
+                return
+            original_domain = set(local_domains[branch_bucket])
+            for permutation_index in sorted(original_domain):
+                local_domains[branch_bucket] = {permutation_index}
+                recurse()
+                if truncated:
+                    break
+            local_domains[branch_bucket] = original_domain
+
+        recurse()
+        component_solution_counts.append(solution_count)
+        component_noninv_counts.append(noninv_count)
+        if truncated:
+            break
+
+    if truncated:
+        global_solution_count = 0
+        global_noninv_solution_count = 0
+    else:
+        global_solution_count = 1
+        all_involutive_product = 1
+        for solution_count, noninv_count in zip(
+            component_solution_counts,
+            component_noninv_counts,
+        ):
+            global_solution_count *= solution_count
+            all_involutive_product *= solution_count - noninv_count
+        global_noninv_solution_count = (
+            global_solution_count
+            if forced_noninv_witness
+            else global_solution_count - all_involutive_product
+        )
+    accepted_count = (
+        global_noninv_solution_count if require_noninvolutive else global_solution_count
+    )
+    component_sizes = tuple(len(component) for component in components)
+    return StageBComponentSolverAudit(
+        size=size,
+        bucket_count=len(buckets),
+        relation_gac_locally_consistent=True,
+        component_count=len(components),
+        component_size_counts=tuple(sorted(Counter(component_sizes).items())),
+        component_solution_counts=tuple(component_solution_counts),
+        component_noninv_solution_counts=tuple(component_noninv_counts),
+        forced_noninv_witness=forced_noninv_witness,
+        global_solution_count=str(global_solution_count),
+        global_noninv_solution_count=str(global_noninv_solution_count),
+        accepted_count=str(accepted_count),
+        truncated=truncated,
+        locally_consistent=accepted_count > 0 and not truncated,
     )
 
 
@@ -1949,6 +2281,174 @@ def stage_b_bucket_permutation_gac_audit(
     )
 
 
+def stage_b_relation_gac_audit(
+    array: Sequence[Sequence[int]],
+    initial_domains: Sequence[Sequence[int]] | None = None,
+    *,
+    require_column_singular: bool = True,
+) -> StageBRelationGACAudit:
+    u_rows = normalize_u_array(array)
+    size = len(u_rows)
+    if not stage_a_multiset_factorization_holds(u_rows):
+        return StageBRelationGACAudit(
+            size=size,
+            bucket_count=0,
+            ybe_relation_count=size**3,
+            column_relation_count=size if require_column_singular else 0,
+            ybe_pattern_count=0,
+            column_pattern_count=0,
+            initial_domain_size_counts=tuple(),
+            final_domain_size_counts=tuple(),
+            initial_domain_mass=0,
+            final_domain_mass=0,
+            initial_domain_product="0",
+            final_domain_product="0",
+            deletion_count=0,
+            iteration_count=0,
+            empty_domain=True,
+            all_singleton=False,
+            singleton_bucket_count=0,
+            unresolved_bucket_count=0,
+            maximum_bucket_domain_size=0,
+            singleton_y2_y3_verified=None,
+            column_singular=None,
+            noninvolutive=None,
+            column_singularity_possible=False,
+            noninvolutive_possible=False,
+            locally_consistent=False,
+            domains=tuple(),
+            extracted_v=None,
+        )
+
+    buckets = stage_a_factorization_buckets(u_rows)
+    bucket_permutations = _stage_b_bucket_permutations(buckets)
+    if initial_domains is None:
+        domains = [set(range(len(permutations_))) for permutations_ in bucket_permutations]
+    else:
+        if len(initial_domains) != len(buckets):
+            raise ValueError("initial bucket domains must match the bucket count")
+        domains = []
+        for bucket_index, domain in enumerate(initial_domains):
+            allowed = set(range(len(bucket_permutations[bucket_index])))
+            domain_set = set(domain)
+            if not domain_set.issubset(allowed):
+                raise ValueError("initial bucket domain index out of range")
+            domains.append(domain_set)
+
+    initial_counts = _stage_b_bucket_domain_size_counts(domains)
+    initial_mass = sum(len(domain) for domain in domains)
+    initial_product = _stage_b_bucket_domain_product(domains)
+    patterns_by_triple = _stage_b_compile_bucket_support_patterns(u_rows, buckets)
+    ybe_supports = _stage_b_compile_bucket_pattern_supports(
+        patterns_by_triple,
+        bucket_permutations,
+    )
+    column_supports = (
+        _stage_b_compile_column_singular_supports(
+            buckets,
+            bucket_permutations,
+            tuple(tuple(sorted(domain)) for domain in domains),
+            size=size,
+        )
+        if require_column_singular
+        else tuple()
+    )
+    relation_supports = tuple(ybe_supports[triple] for triple in sorted(ybe_supports))
+    relation_supports += column_supports
+    ybe_pattern_count = sum(len(patterns) for patterns in patterns_by_triple.values())
+    column_pattern_count = sum(len(patterns) for patterns in column_supports)
+    deletion_count = 0
+    empty_domain = False
+    iteration_count = 0
+    while True:
+        iteration_count += 1
+        before_mass = sum(len(domain) for domain in domains)
+        for supports in relation_supports:
+            ok, deleted = _stage_b_enforce_bucket_permutation_triple_gac(
+                domains,
+                supports,
+            )
+            deletion_count += deleted
+            if not ok:
+                empty_domain = True
+                break
+        after_mass = sum(len(domain) for domain in domains)
+        if empty_domain or after_mass == before_mass:
+            break
+
+    frozen_domains = tuple(tuple(sorted(domain)) for domain in domains)
+    extracted_v = _stage_b_bucket_permutation_extract_v(
+        buckets,
+        bucket_permutations,
+        domains,
+        size=size,
+    )
+    singleton_y2_y3_verified = (
+        uv_y2_y3_hold(u_rows, extracted_v) if extracted_v is not None else None
+    )
+    column_singular = (
+        v_columns_singular(extracted_v) if extracted_v is not None else None
+    )
+    noninvolutive = (
+        not uv_is_involutive(u_rows, extracted_v) if extracted_v is not None else None
+    )
+    column_singularity_possible = (
+        _stage_b_bucket_column_singular_possible_for_data(
+            buckets,
+            bucket_permutations,
+            frozen_domains,
+            size=size,
+        )
+        if not empty_domain
+        else False
+    )
+    noninvolutive_possible = (
+        _stage_b_bucket_noninvolutive_possible_for_data(
+            u_rows,
+            buckets,
+            bucket_permutations,
+            frozen_domains,
+        )
+        if not empty_domain
+        else False
+    )
+    final_sizes = tuple(len(domain) for domain in domains)
+    locally_consistent = (
+        not empty_domain
+        and (singleton_y2_y3_verified is not False)
+        and (not require_column_singular or column_singularity_possible)
+    )
+    return StageBRelationGACAudit(
+        size=size,
+        bucket_count=len(buckets),
+        ybe_relation_count=size**3,
+        column_relation_count=size if require_column_singular else 0,
+        ybe_pattern_count=ybe_pattern_count,
+        column_pattern_count=column_pattern_count,
+        initial_domain_size_counts=initial_counts,
+        final_domain_size_counts=_stage_b_bucket_domain_size_counts(domains),
+        initial_domain_mass=initial_mass,
+        final_domain_mass=sum(final_sizes),
+        initial_domain_product=initial_product,
+        final_domain_product=_stage_b_bucket_domain_product(domains),
+        deletion_count=deletion_count,
+        iteration_count=iteration_count,
+        empty_domain=empty_domain,
+        all_singleton=extracted_v is not None,
+        singleton_bucket_count=sum(1 for size_ in final_sizes if size_ == 1),
+        unresolved_bucket_count=sum(1 for size_ in final_sizes if size_ > 1),
+        maximum_bucket_domain_size=max(final_sizes) if final_sizes else 0,
+        singleton_y2_y3_verified=singleton_y2_y3_verified,
+        column_singular=column_singular,
+        noninvolutive=noninvolutive,
+        column_singularity_possible=column_singularity_possible,
+        noninvolutive_possible=noninvolutive_possible,
+        locally_consistent=locally_consistent,
+        domains=frozen_domains,
+        extracted_v=extracted_v,
+    )
+
+
 def _stage_b_choose_bucket_branch(
     domains: Sequence[Sequence[int]],
 ) -> int | None:
@@ -1968,6 +2468,7 @@ def stage_b_bucket_permutation_v_search_audit(
     require_column_singular: bool = True,
     require_noninvolutive: bool = False,
     canonicalize: bool = True,
+    use_stabilizer_branching: bool = True,
     max_nodes: int | None = None,
     max_examples: int | None = 20,
 ) -> StageBBucketPermutationSearchAudit:
@@ -1987,6 +2488,8 @@ def stage_b_bucket_permutation_v_search_audit(
             size=size,
             node_count=0,
             canonical_rejection_count=0,
+            stabilizer_branch_count=0,
+            stabilizer_child_reduction_count=0,
             exact_cover_count=0,
             column_singular_count=0,
             y2_y3_count=0,
@@ -2007,6 +2510,8 @@ def stage_b_bucket_permutation_v_search_audit(
     )
     node_count = 0
     canonical_rejection_count = 0
+    stabilizer_branch_count = 0
+    stabilizer_child_reduction_count = 0
     exact_cover_count = 0
     column_singular_count = 0
     y2_y3_count = 0
@@ -2045,6 +2550,8 @@ def stage_b_bucket_permutation_v_search_audit(
     def search(domains: Sequence[Sequence[int]]) -> None:
         nonlocal node_count
         nonlocal canonical_rejection_count
+        nonlocal stabilizer_branch_count
+        nonlocal stabilizer_child_reduction_count
         nonlocal truncated
 
         if truncated:
@@ -2054,7 +2561,11 @@ def stage_b_bucket_permutation_v_search_audit(
             return
         node_count += 1
 
-        gac = stage_b_bucket_permutation_gac_audit(u_rows, domains)
+        gac = stage_b_relation_gac_audit(
+            u_rows,
+            domains,
+            require_column_singular=require_column_singular,
+        )
         if not gac.locally_consistent:
             return
         if canonicalize:
@@ -2070,25 +2581,32 @@ def stage_b_bucket_permutation_v_search_audit(
         if v_rows is not None:
             record_if_complete(v_rows)
             return
-        if require_column_singular:
-            if not _stage_b_bucket_column_singular_possible_for_data(
-                buckets,
-                bucket_permutations,
-                gac.domains,
-                size=size,
-            ):
-                return
-        if require_noninvolutive and not _stage_b_bucket_noninvolutive_possible_for_data(
-            u_rows,
-            buckets,
-            bucket_permutations,
-            gac.domains,
-        ):
+        if require_noninvolutive and not gac.noninvolutive_possible:
             return
-        bucket_index = _stage_b_choose_bucket_branch(gac.domains)
+        branch_values = None
+        if canonicalize and use_stabilizer_branching:
+            branch_audit = stage_b_stabilizer_branch_audit(
+                u_rows,
+                gac.domains,
+                require_column_singular=require_column_singular,
+                require_noninvolutive=require_noninvolutive,
+            )
+            if branch_audit.locally_consistent and branch_audit.selected_bucket is not None:
+                bucket_index = branch_audit.selected_bucket
+                branch_values = branch_audit.selected_value_representatives
+                stabilizer_branch_count += 1
+                stabilizer_child_reduction_count += (
+                    branch_audit.selected_bucket_domain_size - len(branch_values)
+                )
+            else:
+                bucket_index = _stage_b_choose_bucket_branch(gac.domains)
+        else:
+            bucket_index = _stage_b_choose_bucket_branch(gac.domains)
         if bucket_index is None:
             return
-        for permutation_index in gac.domains[bucket_index]:
+        if branch_values is None:
+            branch_values = gac.domains[bucket_index]
+        for permutation_index in branch_values:
             branch_domains = tuple(
                 (permutation_index,) if index == bucket_index else domain
                 for index, domain in enumerate(gac.domains)
@@ -2103,6 +2621,8 @@ def stage_b_bucket_permutation_v_search_audit(
         size=size,
         node_count=node_count,
         canonical_rejection_count=canonical_rejection_count,
+        stabilizer_branch_count=stabilizer_branch_count,
+        stabilizer_child_reduction_count=stabilizer_child_reduction_count,
         exact_cover_count=exact_cover_count,
         column_singular_count=column_singular_count,
         y2_y3_count=y2_y3_count,

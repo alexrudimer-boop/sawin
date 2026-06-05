@@ -9,15 +9,17 @@
     "GAC-assisted Stage B branching for column-singular non-involutive completions",
     "early column-singularity feasibility rejection when a column has no possible duplicate value",
     "bucket-permutation GAC over whole bijections C(u,P)->B(u,P)",
+    "compiled relation-level GAC over YBE and column-singularity relations",
     "bucket-permutation branching for column-singular non-involutive completions",
     "Aut(U)-aware canonical state rejection for bucket-permutation branches",
     "exact bucket-domain column-singularity feasibility before branching",
     "exact bucket-domain non-involutivity feasibility before branching",
     "remaining bucket-constraint hypergraph and connected components after bucket-GAC",
-    "current-stabilizer component, bucket, and value-orbit branch audit"
+    "current-stabilizer component, bucket, and value-orbit branch audit",
+    "component-local solver audit with non-involutivity OR combination"
   ],
-  "conclusion": "The current examples all pass local bucket-CSP consistency.  The profile still distinguishes their domain geometry: identity has three 3-cell buckets, the dihedral rack has nine forced cells, and affine Type A has eight 2-cell buckets.  Exact GAC forces the dihedral rack table and preserves all values needed for the known affine Type A completion.  GAC-assisted branching recovers the unique non-involutive affine Type A completion in three search nodes.  The branch search also rejects any non-singleton state where some V-column can no longer become singular.  This is now refined by bucket-permutation GAC, which preserves whole bucket-bijection correlations and forces the identity example without cell-level branching.  The bucket search records Aut(U) and rejects noncanonical branch states under that stabilizer.  It also uses exact bucket-domain column feasibility, which rejects the dihedral rack regression as not column-singular, and exact non-involutivity feasibility, which rejects identity-type states as forced involutive.  The remaining hypergraph audit shows whether unresolved bucket choices decompose into independent components before full d=5,6 Stage B search.",
-  "next_prompt": "prompts/gpt55_pro/2026-06-04-component-local-solver-integration-next-step_ask_now.md",
+  "conclusion": "The current examples all pass local bucket-CSP consistency.  The profile still distinguishes their domain geometry: identity has three 3-cell buckets, the dihedral rack has nine forced cells, and affine Type A has eight 2-cell buckets.  Exact GAC forces the dihedral rack table and preserves all values needed for the known affine Type A completion.  GAC-assisted branching recovers the unique non-involutive affine Type A completion in three search nodes.  The branch search also rejects any non-singleton state where some V-column can no longer become singular.  This is now refined by bucket-permutation GAC, which preserves whole bucket-bijection correlations and forces the identity example without cell-level branching.  The bucket search records Aut(U) and rejects noncanonical branch states under that stabilizer.  It also uses exact bucket-domain column feasibility, which rejects the dihedral rack regression as not column-singular, and exact non-involutivity feasibility, which rejects identity-type states as forced involutive.  Relation-GAC now propagates compiled YBE and column-singularity relations, and the component solver audit counts local component solutions while combining non-involutivity as a global OR.  The next step is production component enumeration for the d=5,6 frontier.",
+  "next_prompt": "prompts/gpt55_pro/2026-06-04-production-component-stageb-size56-next-step_ask_now.md",
   "purpose": "Record the bucket-domain CSP precheck used before full Stage B backtracking: Hall all-different consistency per output u and local support for every Y2/Y3 triple.  Also record the exact generalized arc-consistency propagation over bucket variables.",
   "rows": [
     {
@@ -116,8 +118,25 @@
         "node_count": 1,
         "noninvolutive_count": 0,
         "size": 3,
+        "stabilizer_branch_count": 0,
+        "stabilizer_child_reduction_count": 0,
         "truncated": false,
         "y2_y3_count": 1
+      },
+      "component_solver": {
+        "accepted_count": "0",
+        "bucket_count": 3,
+        "component_count": 0,
+        "component_noninv_solution_counts": [],
+        "component_size_counts": [],
+        "component_solution_counts": [],
+        "forced_noninv_witness": false,
+        "global_noninv_solution_count": "0",
+        "global_solution_count": "0",
+        "locally_consistent": false,
+        "relation_gac_locally_consistent": true,
+        "size": 3,
+        "truncated": false
       },
       "gac": {
         "all_singleton": false,
@@ -231,6 +250,71 @@
         "size": 3,
         "unsupported_y2_y3_triple_count": 0,
         "variable_count": 9
+      },
+      "relation_gac": {
+        "all_singleton": true,
+        "bucket_count": 3,
+        "column_pattern_count": 63,
+        "column_relation_count": 3,
+        "column_singular": true,
+        "column_singularity_possible": true,
+        "deletion_count": 15,
+        "domains": [
+          [
+            0
+          ],
+          [
+            0
+          ],
+          [
+            0
+          ]
+        ],
+        "empty_domain": false,
+        "extracted_v": [
+          [
+            0,
+            1,
+            2
+          ],
+          [
+            0,
+            1,
+            2
+          ],
+          [
+            0,
+            1,
+            2
+          ]
+        ],
+        "final_domain_mass": 3,
+        "final_domain_product": "1",
+        "final_domain_size_counts": [
+          [
+            1,
+            3
+          ]
+        ],
+        "initial_domain_mass": 18,
+        "initial_domain_product": "216",
+        "initial_domain_size_counts": [
+          [
+            6,
+            3
+          ]
+        ],
+        "iteration_count": 2,
+        "locally_consistent": true,
+        "maximum_bucket_domain_size": 1,
+        "noninvolutive": false,
+        "noninvolutive_possible": false,
+        "singleton_bucket_count": 3,
+        "singleton_y2_y3_verified": true,
+        "size": 3,
+        "unresolved_bucket_count": 0,
+        "ybe_pattern_count": 27,
+        "ybe_relation_count": 27
       },
       "size": 3,
       "source_solution_ybe": true,
@@ -362,13 +446,30 @@
         "canonical_rejection_count": 0,
         "column_singular_count": 0,
         "emitted_count": 0,
-        "exact_cover_count": 1,
+        "exact_cover_count": 0,
         "examples": [],
         "node_count": 1,
         "noninvolutive_count": 0,
         "size": 3,
+        "stabilizer_branch_count": 0,
+        "stabilizer_child_reduction_count": 0,
         "truncated": false,
         "y2_y3_count": 0
+      },
+      "component_solver": {
+        "accepted_count": "0",
+        "bucket_count": 9,
+        "component_count": 0,
+        "component_noninv_solution_counts": [],
+        "component_size_counts": [],
+        "component_solution_counts": [],
+        "forced_noninv_witness": false,
+        "global_noninv_solution_count": "0",
+        "global_solution_count": "0",
+        "locally_consistent": false,
+        "relation_gac_locally_consistent": false,
+        "size": 3,
+        "truncated": false
       },
       "gac": {
         "all_singleton": true,
@@ -480,6 +581,89 @@
         "size": 3,
         "unsupported_y2_y3_triple_count": 0,
         "variable_count": 9
+      },
+      "relation_gac": {
+        "all_singleton": true,
+        "bucket_count": 9,
+        "column_pattern_count": 0,
+        "column_relation_count": 3,
+        "column_singular": false,
+        "column_singularity_possible": false,
+        "deletion_count": 0,
+        "domains": [
+          [
+            0
+          ],
+          [
+            0
+          ],
+          [
+            0
+          ],
+          [
+            0
+          ],
+          [
+            0
+          ],
+          [
+            0
+          ],
+          [
+            0
+          ],
+          [
+            0
+          ],
+          [
+            0
+          ]
+        ],
+        "empty_domain": true,
+        "extracted_v": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            1,
+            1
+          ],
+          [
+            2,
+            2,
+            2
+          ]
+        ],
+        "final_domain_mass": 9,
+        "final_domain_product": "1",
+        "final_domain_size_counts": [
+          [
+            1,
+            9
+          ]
+        ],
+        "initial_domain_mass": 9,
+        "initial_domain_product": "1",
+        "initial_domain_size_counts": [
+          [
+            1,
+            9
+          ]
+        ],
+        "iteration_count": 1,
+        "locally_consistent": false,
+        "maximum_bucket_domain_size": 1,
+        "noninvolutive": true,
+        "noninvolutive_possible": false,
+        "singleton_bucket_count": 9,
+        "singleton_y2_y3_verified": true,
+        "size": 3,
+        "unresolved_bucket_count": 0,
+        "ybe_pattern_count": 27,
+        "ybe_relation_count": 27
       },
       "size": 3,
       "source_solution_ybe": true,
@@ -661,8 +845,34 @@
         "node_count": 3,
         "noninvolutive_count": 1,
         "size": 4,
+        "stabilizer_branch_count": 1,
+        "stabilizer_child_reduction_count": 0,
         "truncated": false,
         "y2_y3_count": 2
+      },
+      "component_solver": {
+        "accepted_count": "1",
+        "bucket_count": 8,
+        "component_count": 1,
+        "component_noninv_solution_counts": [
+          1
+        ],
+        "component_size_counts": [
+          [
+            8,
+            1
+          ]
+        ],
+        "component_solution_counts": [
+          2
+        ],
+        "forced_noninv_witness": false,
+        "global_noninv_solution_count": "1",
+        "global_solution_count": "2",
+        "locally_consistent": true,
+        "relation_gac_locally_consistent": true,
+        "size": 4,
+        "truncated": false
       },
       "gac": {
         "all_singleton": false,
@@ -824,6 +1034,78 @@
         "size": 4,
         "unsupported_y2_y3_triple_count": 0,
         "variable_count": 16
+      },
+      "relation_gac": {
+        "all_singleton": false,
+        "bucket_count": 8,
+        "column_pattern_count": 16,
+        "column_relation_count": 4,
+        "column_singular": null,
+        "column_singularity_possible": true,
+        "deletion_count": 0,
+        "domains": [
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "empty_domain": false,
+        "extracted_v": null,
+        "final_domain_mass": 16,
+        "final_domain_product": "256",
+        "final_domain_size_counts": [
+          [
+            2,
+            8
+          ]
+        ],
+        "initial_domain_mass": 16,
+        "initial_domain_product": "256",
+        "initial_domain_size_counts": [
+          [
+            2,
+            8
+          ]
+        ],
+        "iteration_count": 1,
+        "locally_consistent": true,
+        "maximum_bucket_domain_size": 2,
+        "noninvolutive": null,
+        "noninvolutive_possible": true,
+        "singleton_bucket_count": 0,
+        "singleton_y2_y3_verified": null,
+        "size": 4,
+        "unresolved_bucket_count": 8,
+        "ybe_pattern_count": 156,
+        "ybe_relation_count": 64
       },
       "size": 4,
       "source_solution_ybe": true,

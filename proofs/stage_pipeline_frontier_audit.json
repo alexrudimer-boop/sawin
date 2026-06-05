@@ -112,8 +112,25 @@
         "node_count": 1,
         "noninvolutive_count": 0,
         "size": 3,
+        "stabilizer_branch_count": 0,
+        "stabilizer_child_reduction_count": 0,
         "truncated": false,
         "y2_y3_count": 1
+      },
+      "component_solver": {
+        "accepted_count": "0",
+        "bucket_count": 3,
+        "component_count": 0,
+        "component_noninv_solution_counts": [],
+        "component_size_counts": [],
+        "component_solution_counts": [],
+        "forced_noninv_witness": false,
+        "global_noninv_solution_count": "0",
+        "global_solution_count": "0",
+        "locally_consistent": false,
+        "relation_gac_locally_consistent": true,
+        "size": 3,
+        "truncated": false
       },
       "gac": {
         "all_singleton": false,
@@ -212,6 +229,71 @@
         "y2_y3_count": 1
       },
       "name": "row_exact_size3_u0",
+      "relation_gac": {
+        "all_singleton": true,
+        "bucket_count": 3,
+        "column_pattern_count": 63,
+        "column_relation_count": 3,
+        "column_singular": true,
+        "column_singularity_possible": true,
+        "deletion_count": 15,
+        "domains": [
+          [
+            0
+          ],
+          [
+            0
+          ],
+          [
+            0
+          ]
+        ],
+        "empty_domain": false,
+        "extracted_v": [
+          [
+            0,
+            1,
+            2
+          ],
+          [
+            0,
+            1,
+            2
+          ],
+          [
+            0,
+            1,
+            2
+          ]
+        ],
+        "final_domain_mass": 3,
+        "final_domain_product": "1",
+        "final_domain_size_counts": [
+          [
+            1,
+            3
+          ]
+        ],
+        "initial_domain_mass": 18,
+        "initial_domain_product": "216",
+        "initial_domain_size_counts": [
+          [
+            6,
+            3
+          ]
+        ],
+        "iteration_count": 2,
+        "locally_consistent": true,
+        "maximum_bucket_domain_size": 1,
+        "noninvolutive": false,
+        "noninvolutive_possible": false,
+        "singleton_bucket_count": 3,
+        "singleton_y2_y3_verified": true,
+        "size": 3,
+        "unresolved_bucket_count": 0,
+        "ybe_pattern_count": 27,
+        "ybe_relation_count": 27
+      },
       "require_noninvolutive": true,
       "size": 3,
       "solution_rows": [],
@@ -368,8 +450,25 @@
         "node_count": 1,
         "noninvolutive_count": 0,
         "size": 4,
+        "stabilizer_branch_count": 0,
+        "stabilizer_child_reduction_count": 0,
         "truncated": false,
         "y2_y3_count": 1
+      },
+      "component_solver": {
+        "accepted_count": "0",
+        "bucket_count": 4,
+        "component_count": 0,
+        "component_noninv_solution_counts": [],
+        "component_size_counts": [],
+        "component_solution_counts": [],
+        "forced_noninv_witness": false,
+        "global_noninv_solution_count": "0",
+        "global_solution_count": "0",
+        "locally_consistent": false,
+        "relation_gac_locally_consistent": true,
+        "size": 4,
+        "truncated": false
       },
       "gac": {
         "all_singleton": false,
@@ -521,6 +620,83 @@
         "y2_y3_count": 1
       },
       "name": "row_budget_size4_u0",
+      "relation_gac": {
+        "all_singleton": true,
+        "bucket_count": 4,
+        "column_pattern_count": 928,
+        "column_relation_count": 4,
+        "column_singular": true,
+        "column_singularity_possible": true,
+        "deletion_count": 92,
+        "domains": [
+          [
+            0
+          ],
+          [
+            0
+          ],
+          [
+            0
+          ],
+          [
+            0
+          ]
+        ],
+        "empty_domain": false,
+        "extracted_v": [
+          [
+            0,
+            1,
+            2,
+            3
+          ],
+          [
+            0,
+            1,
+            2,
+            3
+          ],
+          [
+            0,
+            1,
+            2,
+            3
+          ],
+          [
+            0,
+            1,
+            2,
+            3
+          ]
+        ],
+        "final_domain_mass": 4,
+        "final_domain_product": "1",
+        "final_domain_size_counts": [
+          [
+            1,
+            4
+          ]
+        ],
+        "initial_domain_mass": 96,
+        "initial_domain_product": "331776",
+        "initial_domain_size_counts": [
+          [
+            24,
+            4
+          ]
+        ],
+        "iteration_count": 2,
+        "locally_consistent": true,
+        "maximum_bucket_domain_size": 1,
+        "noninvolutive": false,
+        "noninvolutive_possible": false,
+        "singleton_bucket_count": 4,
+        "singleton_y2_y3_verified": true,
+        "size": 4,
+        "unresolved_bucket_count": 0,
+        "ybe_pattern_count": 64,
+        "ybe_relation_count": 64
+      },
       "require_noninvolutive": true,
       "size": 4,
       "solution_rows": [],
@@ -728,8 +904,34 @@
         "node_count": 3,
         "noninvolutive_count": 1,
         "size": 4,
+        "stabilizer_branch_count": 1,
+        "stabilizer_child_reduction_count": 0,
         "truncated": false,
         "y2_y3_count": 2
+      },
+      "component_solver": {
+        "accepted_count": "1",
+        "bucket_count": 8,
+        "component_count": 1,
+        "component_noninv_solution_counts": [
+          1
+        ],
+        "component_size_counts": [
+          [
+            8,
+            1
+          ]
+        ],
+        "component_solution_counts": [
+          2
+        ],
+        "forced_noninv_witness": false,
+        "global_noninv_solution_count": "1",
+        "global_solution_count": "2",
+        "locally_consistent": true,
+        "relation_gac_locally_consistent": true,
+        "size": 4,
+        "truncated": false
       },
       "gac": {
         "all_singleton": false,
@@ -876,6 +1078,78 @@
         "y2_y3_count": 2
       },
       "name": "known_affine_type_a",
+      "relation_gac": {
+        "all_singleton": false,
+        "bucket_count": 8,
+        "column_pattern_count": 16,
+        "column_relation_count": 4,
+        "column_singular": null,
+        "column_singularity_possible": true,
+        "deletion_count": 0,
+        "domains": [
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "empty_domain": false,
+        "extracted_v": null,
+        "final_domain_mass": 16,
+        "final_domain_product": "256",
+        "final_domain_size_counts": [
+          [
+            2,
+            8
+          ]
+        ],
+        "initial_domain_mass": 16,
+        "initial_domain_product": "256",
+        "initial_domain_size_counts": [
+          [
+            2,
+            8
+          ]
+        ],
+        "iteration_count": 1,
+        "locally_consistent": true,
+        "maximum_bucket_domain_size": 2,
+        "noninvolutive": null,
+        "noninvolutive_possible": true,
+        "singleton_bucket_count": 0,
+        "singleton_y2_y3_verified": null,
+        "size": 4,
+        "unresolved_bucket_count": 8,
+        "ybe_pattern_count": 156,
+        "ybe_relation_count": 64
+      },
       "require_noninvolutive": true,
       "size": 4,
       "solution_rows": [

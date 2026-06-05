@@ -21,7 +21,9 @@ from ybe_domination.stage_a_u_arrays import (  # noqa: E402
     stage_b_bucket_constraint_hypergraph_audit,
     stage_b_bucket_permutation_gac_audit,
     stage_b_bucket_permutation_v_search_audit,
+    stage_b_relation_gac_audit,
     stage_b_stabilizer_branch_audit,
+    stage_b_component_solver_audit,
     stage_b_gac_propagation_audit,
     stage_b_gac_v_search_audit,
     stage_b_v_exact_cover_audit,
@@ -83,8 +85,10 @@ def frontier_row(
         max_examples=max_solution_rows,
     )
     bucket_gac = stage_b_bucket_permutation_gac_audit(u_array)
+    relation_gac = stage_b_relation_gac_audit(u_array)
     bucket_hypergraph = stage_b_bucket_constraint_hypergraph_audit(u_array)
     stabilizer_branch = stage_b_stabilizer_branch_audit(u_array)
+    component_solver = stage_b_component_solver_audit(u_array)
     bucket_stage_b = stage_b_bucket_permutation_v_search_audit(
         u_array,
         require_column_singular=True,
@@ -99,8 +103,10 @@ def frontier_row(
         "bucket_csp": asdict(csp),
         "gac": asdict(gac),
         "bucket_gac": asdict(bucket_gac),
+        "relation_gac": asdict(relation_gac),
         "bucket_hypergraph": asdict(bucket_hypergraph),
         "stabilizer_branch": asdict(stabilizer_branch),
+        "component_solver": asdict(component_solver),
         "stage_b": asdict(stage_b),
         "gac_stage_b": asdict(gac_stage_b),
         "bucket_stage_b": asdict(bucket_stage_b),
@@ -196,8 +202,10 @@ def render_markdown(report: dict[str, object]) -> str:
         csp = row["bucket_csp"]
         gac = row["gac"]
         bucket_gac = row["bucket_gac"]
+        relation_gac = row["relation_gac"]
         bucket_hypergraph = row["bucket_hypergraph"]
         stabilizer_branch = row["stabilizer_branch"]
+        component_solver = row["component_solver"]
         stage_b = row["stage_b"]
         gac_stage_b = row["gac_stage_b"]
         bucket_stage_b = row["bucket_stage_b"]
@@ -223,6 +231,12 @@ def render_markdown(report: dict[str, object]) -> str:
                 f"`{bucket_gac['final_domain_product']}`;",
                 f"- bucket-permutation locally consistent: "
                 f"`{bucket_gac['locally_consistent']}`;",
+                "- relation-GAC product: "
+                f"`{relation_gac['initial_domain_product']}` -> "
+                f"`{relation_gac['final_domain_product']}`;",
+                "- relation-GAC deletions / locally consistent: "
+                f"`{relation_gac['deletion_count']}` / "
+                f"`{relation_gac['locally_consistent']}`;",
                 "- bucket hypergraph components / largest: "
                 f"`{bucket_hypergraph['component_count']}` / "
                 f"`{bucket_hypergraph['largest_component_size']}`;",
@@ -234,6 +248,10 @@ def render_markdown(report: dict[str, object]) -> str:
                 f"`{stabilizer_branch['stabilizer_order']}` / "
                 f"`{stabilizer_branch['component_orbit_count']}` / "
                 f"`{stabilizer_branch['child_domain_count']}`;",
+                "- component solver global/noninv/accepted: "
+                f"`{component_solver['global_solution_count']}` / "
+                f"`{component_solver['global_noninv_solution_count']}` / "
+                f"`{component_solver['accepted_count']}`;",
                 f"- Stage B accepted completions: `{stage_b['accepted_count']}`;",
                 f"- Stage B emitted completions: `{stage_b['emitted_count']}`;",
                 f"- Stage B truncated: `{stage_b['truncated']}`;",
@@ -246,6 +264,9 @@ def render_markdown(report: dict[str, object]) -> str:
                 f"- bucket Stage B Aut(U) / canonical rejections: "
                 f"`{bucket_stage_b['aut_u_order']}` / "
                 f"`{bucket_stage_b['canonical_rejection_count']}`;",
+                "- bucket Stage B stabilizer branches / child reductions: "
+                f"`{bucket_stage_b['stabilizer_branch_count']}` / "
+                f"`{bucket_stage_b['stabilizer_child_reduction_count']}`;",
                 f"- bucket Stage B truncated: `{bucket_stage_b['truncated']}`;",
                 f"- rigid first failed filters: `{tuple(first_failures)}`.",
                 "",

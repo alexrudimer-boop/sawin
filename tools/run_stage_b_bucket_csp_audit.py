@@ -17,9 +17,11 @@ from ybe_domination import identity_solution, rack_solution  # noqa: E402
 from ybe_domination.stage_a_u_arrays import (  # noqa: E402
     stage_b_bucket_csp_profile,
     stage_b_bucket_permutation_gac_audit,
+    stage_b_relation_gac_audit,
     stage_b_bucket_permutation_v_search_audit,
     stage_b_bucket_constraint_hypergraph_audit,
     stage_b_stabilizer_branch_audit,
+    stage_b_component_solver_audit,
     stage_b_bucket_column_singularity_possible,
     stage_b_bucket_noninvolutive_possible,
     stage_b_gac_propagation_audit,
@@ -41,6 +43,7 @@ def example_rows() -> tuple[dict[str, object], ...]:
     for name, solution in examples:
         u_array = u_array_from_solution(solution)
         bucket_gac = stage_b_bucket_permutation_gac_audit(u_array)
+        relation_gac = stage_b_relation_gac_audit(u_array)
         rows.append(
             {
                 "name": name,
@@ -57,6 +60,7 @@ def example_rows() -> tuple[dict[str, object], ...]:
                     )
                 ),
                 "bucket_permutation_gac": asdict(bucket_gac),
+                "relation_gac": asdict(relation_gac),
                 "bucket_column_singularity_possible": (
                     stage_b_bucket_column_singularity_possible(
                         u_array,
@@ -74,6 +78,9 @@ def example_rows() -> tuple[dict[str, object], ...]:
                 ),
                 "stabilizer_branch": asdict(
                     stage_b_stabilizer_branch_audit(u_array)
+                ),
+                "component_solver": asdict(
+                    stage_b_component_solver_audit(u_array)
                 ),
                 "bucket_permutation_search": asdict(
                     stage_b_bucket_permutation_v_search_audit(
@@ -107,12 +114,14 @@ def build_report() -> dict[str, object]:
             "GAC-assisted Stage B branching for column-singular non-involutive completions",
             "early column-singularity feasibility rejection when a column has no possible duplicate value",
             "bucket-permutation GAC over whole bijections C(u,P)->B(u,P)",
+            "compiled relation-level GAC over YBE and column-singularity relations",
             "bucket-permutation branching for column-singular non-involutive completions",
             "Aut(U)-aware canonical state rejection for bucket-permutation branches",
             "exact bucket-domain column-singularity feasibility before branching",
             "exact bucket-domain non-involutivity feasibility before branching",
             "remaining bucket-constraint hypergraph and connected components after bucket-GAC",
             "current-stabilizer component, bucket, and value-orbit branch audit",
+            "component-local solver audit with non-involutivity OR combination",
         ],
         "rows": list(example_rows()),
         "conclusion": (
@@ -132,11 +141,13 @@ def build_report() -> dict[str, object]:
             "also uses exact bucket-domain column feasibility, which rejects "
             "the dihedral rack regression as not column-singular, and exact "
             "non-involutivity feasibility, which rejects identity-type states "
-            "as forced involutive.  The remaining hypergraph audit shows "
-            "whether unresolved bucket choices decompose into independent "
-            "components before full d=5,6 Stage B search."
+            "as forced involutive.  Relation-GAC now propagates compiled "
+            "YBE and column-singularity relations, and the component solver "
+            "audit counts local component solutions while combining "
+            "non-involutivity as a global OR.  The next step is production "
+            "component enumeration for the d=5,6 frontier."
         ),
-        "next_prompt": "prompts/gpt55_pro/2026-06-04-component-local-solver-integration-next-step_ask_now.md",
+        "next_prompt": "prompts/gpt55_pro/2026-06-04-production-component-stageb-size56-next-step_ask_now.md",
     }
 
 
@@ -157,9 +168,11 @@ def render_markdown(report: dict[str, object]) -> str:
         gac = row["gac"]
         gac_search = row["gac_noninvolutive_search"]
         bucket_gac = row["bucket_permutation_gac"]
+        relation_gac = row["relation_gac"]
         bucket_search = row["bucket_permutation_search"]
         hypergraph = row["bucket_constraint_hypergraph"]
         stabilizer_branch = row["stabilizer_branch"]
+        component_solver = row["component_solver"]
         lines.extend(
             [
                 f"### {row['name']}",
@@ -196,6 +209,15 @@ def render_markdown(report: dict[str, object]) -> str:
                 f"`{bucket_gac['final_domain_size_counts']}`;",
                 "- bucket-permutation singleton/noninvolutive: "
                 f"`{bucket_gac['all_singleton']}` / `{bucket_gac['noninvolutive']}`;",
+                "- relation-GAC domain product: "
+                f"`{relation_gac['initial_domain_product']}` -> "
+                f"`{relation_gac['final_domain_product']}`;",
+                "- relation-GAC pattern counts YBE/column: "
+                f"`{relation_gac['ybe_pattern_count']}` / "
+                f"`{relation_gac['column_pattern_count']}`;",
+                "- relation-GAC deletions / locally consistent: "
+                f"`{relation_gac['deletion_count']}` / "
+                f"`{relation_gac['locally_consistent']}`;",
                 "- bucket-domain column-singularity possible: "
                 f"`{row['bucket_column_singularity_possible']}`;",
                 "- bucket-domain non-involutivity possible: "
@@ -221,11 +243,21 @@ def render_markdown(report: dict[str, object]) -> str:
                 f"`{stabilizer_branch['selected_component']}` / "
                 f"`{stabilizer_branch['selected_bucket']}` / "
                 f"`{stabilizer_branch['selected_value_representatives']}`;",
+                "- component solver counts / noninv counts: "
+                f"`{component_solver['component_solution_counts']}` / "
+                f"`{component_solver['component_noninv_solution_counts']}`;",
+                "- component solver global/noninv/accepted: "
+                f"`{component_solver['global_solution_count']}` / "
+                f"`{component_solver['global_noninv_solution_count']}` / "
+                f"`{component_solver['accepted_count']}`;",
                 "- bucket-permutation search nodes / accepted: "
                 f"`{bucket_search['node_count']}` / `{bucket_search['accepted_count']}`;",
                 "- bucket-permutation Aut(U) / canonical rejections: "
                 f"`{bucket_search['aut_u_order']}` / "
                 f"`{bucket_search['canonical_rejection_count']}`;",
+                "- bucket-permutation stabilizer branches / child reductions: "
+                f"`{bucket_search['stabilizer_branch_count']}` / "
+                f"`{bucket_search['stabilizer_child_reduction_count']}`;",
                 f"- bucket-permutation search truncated: `{bucket_search['truncated']}`.",
                 "",
             ]

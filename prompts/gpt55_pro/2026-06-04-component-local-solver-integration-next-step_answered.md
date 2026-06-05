@@ -1,6 +1,22 @@
 # Component-Local Solver Integration Prompt
 
-Status: ask_now / prepared for GPT-5.5 Pro on 2026-06-04.
+Status: answered / GPT-5.5 Pro answered on 2026-06-04.
+
+Answer summary:
+
+- Implement relation reduction and relation-level GAC over compiled YBE and column-singularity relations.
+- Keep non-involutivity as a global OR over compiled witness patterns.
+- Build components only after reducing YBE, column, and noninv witness scopes against current domains.
+- Use the current stabilizer Gamma(D) for component/bucket/value orbit branching.
+- Minimal first slice: relation reduction, relation-GAC, current stabilizer, value-orbit branching, then component decomposition.
+
+Implementation response:
+
+- Added compiled relation-GAC audit over YBE and column relations.
+- Stage B bucket search now uses relation-GAC before exact noninvolutivity pruning and stabilizer-aware value-orbit branching.
+- Added component-local solver audit that enumerates component solutions and combines non-involutivity through the global OR count.
+- The affine Type A regression reports one component with two local solutions, one non-involutive, hence one accepted rigid-core-style completion.
+- Remaining work: use component-local summaries to drive production Stage B enumeration for d=5,6 and then run the size frontier.
 
 Prompt:
 
