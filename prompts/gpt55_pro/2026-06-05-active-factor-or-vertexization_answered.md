@@ -1,6 +1,21 @@
 # Active Factor Or Vertexization Prompt
 
-Status: ask_now / prepared for GPT-5.5 Pro on 2026-06-05.
+Status: answered on 2026-06-05.
+
+Follow-up status:
+
+GPT-5.5 Pro confirmed that the branch is inductively strong only after
+strengthening "active factor" to a domination-reducing inert active factor:
+there must be equivariant maps `Pi_n:X^n -> Z^n` and inert maps
+`eta_n:X^n -> I_n` such that `(Pi_n,eta_n)` is injective, or equivalently
+`ker rho_n^Z <= ker rho_n^X` must be proved directly.  Ordinary solution
+quotients give the opposite kernel containment and are not enough.
+
+The response also defined the universal prefix vertex rack `V_L(X)` and
+identified the remaining gap as a finite holonomy-rack separation lemma:
+in a residual rigid core with no proper inert active factor, the finite-rack
+residual congruence of `V_L(X)` should separate distinct points inside every
+braid orbit.  This is now the active missing lemma.
 
 Prompt:
 
@@ -147,4 +162,3 @@ Important:
   obstruction, or give a smaller checkable theorem that still advances the
   Sawin endpoint.
 ```
-
