@@ -1,6 +1,15 @@
 # Product-Hurwitz Separability Prompt
 
-Status: ask_now / prepared for GPT-5.5 Pro on 2026-06-05.
+Status: answered on 2026-06-05.
+
+Follow-up status:
+
+GPT-5.5 Pro confirmed the product-Hurwitz theorem and rejected the unproved
+residual-core separability statement.  The corrected endpoint is a universal
+Hurwitz rack finite separation condition, plus a sharper prefix-path rack
+vertexization theorem.  The new active prompt asks whether every residual
+product-observer case has either a proper kernel-reflecting active factor or a
+finite prefix-path rack vertexization.
 
 Prompt:
 
@@ -139,4 +148,3 @@ Important constraints:
   observers.
 - If the answer is conditional, state the missing lemma precisely.
 ```
-
