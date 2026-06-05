@@ -1,6 +1,39 @@
 # Beyond Residual Endpoint Extraction Prompt
 
-Status: ask now / awaiting GPT-5.5 Pro response.
+Status: answered / GPT-5.5 Pro response recorded on 2026-06-05.
+
+Follow-up status:
+
+GPT-5.5 Pro closed the residual-endpoint extraction route.  Under the
+no-detector hypothesis, every fixed-`M` residual endpoint system `E_M`
+collapses an actual kernel-fiber bad pair, and every quotient or totalization
+factoring through `E_M` remains non-orbit-injective.
+
+Thus the only remaining contextual routes are:
+
+```text
+direct finite rack absorption,
+```
+
+or
+
+```text
+an independently constructed proper active factor not factoring through E_M.
+```
+
+Any active factor avoiding `E_M` must separate endpoint symbols that are
+finite-rack invisible in `C_M(X)`, and therefore is not induced by a finite
+rack quotient of `C_M(X)`.  It must be proved as genuinely non-rack active
+data: finite `M`, finite `Z`, maps `pi_{a,b}:X->Z`, contextual compatibility,
+total bijective YBE on `Z^2`, and global orbit-injectivity/kernel reflection.
+
+The sharp target is now the proper contextual dichotomy:
+
+```text
+finite rack absorption
+or
+independent proper active extraction.
+```
 
 Prompt:
 
