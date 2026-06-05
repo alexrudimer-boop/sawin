@@ -1,6 +1,50 @@
 # Proper Contextual Dichotomy Audit Prompt
 
-Status: ask now / awaiting GPT-5.5 Pro response.
+Status: answered / GPT-5.5 Pro response recorded on 2026-06-05.
+
+Follow-up status:
+
+GPT-5.5 Pro concluded that the Proper Contextual Dichotomy is not a formal
+consequence of the current contextual machinery.  It is not literally Sawin,
+because it asks for extra structure:
+
+```text
+uniform finite contextual rack visibility
+```
+
+or
+
+```text
+strict orbit-injective YBE descent.
+```
+
+But as a proof strategy it is strong enough to solve Sawin by induction, and
+a minimal counterexample would violate it.
+
+After residual endpoint extraction is ruled out, the only coherent exits are:
+
+```text
+direct finite rack absorption
+```
+
+or
+
+```text
+an independently constructed proper active factor not induced by finite rack
+quotients of C_M(X).
+```
+
+The active branch is now best viewed as an added extraction theorem, not as a
+formal consequence of harmful contextual collapse.  The exact missing theorem
+is:
+
+```text
+residual-rigid harmful collapse exclusion.
+```
+
+It says there is no finite bijective YBE solution with no finite contextual
+rack detector, all residual endpoint systems non-orbit-injective on actual
+bad pairs, and no strictly proper independent active factor.
 
 Prompt:
 
