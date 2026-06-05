@@ -1,6 +1,23 @@
 # Contextual Prefix Rack Separation Prompt
 
-Status: ask_now / prepared for GPT-5.5 Pro on 2026-06-05.
+Status: answered on 2026-06-05.
+
+Follow-up status:
+
+GPT-5.5 Pro confirmed that the two-sided contextual rack `C_L(X)` is
+algebraically valid, universal for two-sided contextual rack labels, and
+strictly stronger than the normalized one-sided rack `W_L(X)`.  It avoids the
+immediate `a_{p,x}=a_{1,p(x)}` collapse by transporting prefix escape data into
+the right context.
+
+The answer also confirmed that `C_L(X)` does not close Sawin by itself.  It
+creates the sharper missing lemma: contextual orbitwise finite-rack separation
+for `Theta_n`, equivalently no orbit-relevant same-`Theta` collisions and no
+orbit-relevant nonclosed stabilizer cosets in `As(C_L(X))`.  Failure of
+contextual separation remains state/context-dependent and does not
+automatically yield a domination-reducing active factor.  The next active
+prompt asks whether this contextual barrier can be eliminated by a higher
+contextual/escape-holonomy detector or turned into a finite obstruction.
 
 Prompt:
 
@@ -142,4 +159,3 @@ Important:
 - A useful answer should either prove contextual finite separation, refute it
   with a realizable obstruction, or isolate the exact new missing lemma.
 ```
-
