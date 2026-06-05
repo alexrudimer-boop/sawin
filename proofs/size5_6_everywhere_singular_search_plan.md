@@ -25,6 +25,8 @@ Search for or rule out finite bijective YBE tables on 5 and 6 points that are ev
 
 - goal: `enumerate canonical U arrays before searching V`;
 - feasibility set: `A_xy={v in X : L_{U[x,y]} o L_v = L_x o L_y}`;
+- multiset factorization: `for every u, multiset{L_x L_y : L_x(y)=u} equals multiset{L_u L_v : v in X}`;
+- bucket checkpoint: `for every (u,P), store cells C(u,P)={(x,y):L_x(y)=u, L_x L_y=P} and values V(u,P)={v:L_u L_v=P}`;
 - canonicalization: `U^pi[x,y]=pi(U[pi^{-1}x,pi^{-1}y]); keep the lexicographically minimal word over all d! relabelings`;
 
 Constraints:
@@ -32,6 +34,7 @@ Constraints:
 - each symbol occurs exactly d times globally in U;
 - each U-row is singular;
 - for each cell (x,y), A_xy is nonempty;
+- the multiset-factorization law holds for every output u;
 - U is canonical under simultaneous relabeling;
 
 Next decisive prompt: `ask whether Stage A already rules out d=5, or request a certifiable canonical enumeration scheme/count`.
@@ -39,7 +42,8 @@ Next decisive prompt: `ask whether Stage A already rules out d=5, or request a c
 ## Stage B: V Exact Cover
 
 - goal: `assign V after U passes Stage A`;
-- variables: `V[x,y] in A_xy`;
+- variables: `V[x,y] in bucket domain V(U[x,y], L_x L_y)`;
+- bucket variables: `V choices are bucket permutations C(u,P)->V(u,P), not arbitrary choices from A_xy`;
 - branching: `choose a cell minimizing remaining allowed unused values in its U-fibre`;
 
 Constraints:

@@ -86,19 +86,23 @@
     "warning": "do not build the product rack P_{<=4} as a set"
   },
   "stage_a_u_enumeration": {
+    "bucket_checkpoint": "for every (u,P), store cells C(u,P)={(x,y):L_x(y)=u, L_x L_y=P} and values V(u,P)={v:L_u L_v=P}",
     "canonicalization": "U^pi[x,y]=pi(U[pi^{-1}x,pi^{-1}y]); keep the lexicographically minimal word over all d! relabelings",
     "constraints": [
       "each symbol occurs exactly d times globally in U",
       "each U-row is singular",
       "for each cell (x,y), A_xy is nonempty",
+      "the multiset-factorization law holds for every output u",
       "U is canonical under simultaneous relabeling"
     ],
     "feasibility_set": "A_xy={v in X : L_{U[x,y]} o L_v = L_x o L_y}",
     "goal": "enumerate canonical U arrays before searching V",
+    "multiset_factorization": "for every u, multiset{L_x L_y : L_x(y)=u} equals multiset{L_u L_v : v in X}",
     "next_decisive_prompt": "ask whether Stage A already rules out d=5, or request a certifiable canonical enumeration scheme/count"
   },
   "stage_b_v_exact_cover": {
     "branching": "choose a cell minimizing remaining allowed unused values in its U-fibre",
+    "bucket_variables": "V choices are bucket permutations C(u,P)->V(u,P), not arbitrary choices from A_xy",
     "constraints": [
       "(U[x,y],V[x,y]) are all distinct",
       "each V-column is singular",
@@ -106,7 +110,7 @@
       "r^2 is not the identity"
     ],
     "goal": "assign V after U passes Stage A",
-    "variables": "V[x,y] in A_xy"
+    "variables": "V[x,y] in bucket domain V(U[x,y], L_x L_y)"
   },
   "status": "search plan only; no exhaustive size 5 or 6 enumeration has been run",
   "stopping_criteria": [

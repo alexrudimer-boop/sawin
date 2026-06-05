@@ -1,6 +1,8 @@
 # Stage A U-Array Enumeration Prompt
 
-Status: ask_now / prepared for GPT-5.5 Pro on 2026-06-04.
+Status: answered / GPT-5.5 Pro supplied the U-only multiset
+factorization law, bucket checkpoint construction, and Stage B bucket-CSP
+reduction on 2026-06-04.
 
 Prompt:
 

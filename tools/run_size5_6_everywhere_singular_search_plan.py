@@ -74,10 +74,19 @@ def build_report() -> dict[str, object]:
                 "each symbol occurs exactly d times globally in U",
                 "each U-row is singular",
                 "for each cell (x,y), A_xy is nonempty",
+                "the multiset-factorization law holds for every output u",
                 "U is canonical under simultaneous relabeling",
             ],
             "feasibility_set": (
                 "A_xy={v in X : L_{U[x,y]} o L_v = L_x o L_y}"
+            ),
+            "multiset_factorization": (
+                "for every u, multiset{L_x L_y : L_x(y)=u} equals "
+                "multiset{L_u L_v : v in X}"
+            ),
+            "bucket_checkpoint": (
+                "for every (u,P), store cells C(u,P)={(x,y):L_x(y)=u, "
+                "L_x L_y=P} and values V(u,P)={v:L_u L_v=P}"
             ),
             "canonicalization": (
                 "U^pi[x,y]=pi(U[pi^{-1}x,pi^{-1}y]); keep the "
@@ -90,7 +99,11 @@ def build_report() -> dict[str, object]:
         },
         "stage_b_v_exact_cover": {
             "goal": "assign V after U passes Stage A",
-            "variables": "V[x,y] in A_xy",
+            "variables": "V[x,y] in bucket domain V(U[x,y], L_x L_y)",
+            "bucket_variables": (
+                "V choices are bucket permutations C(u,P)->V(u,P), not "
+                "arbitrary choices from A_xy"
+            ),
             "constraints": [
                 "(U[x,y],V[x,y]) are all distinct",
                 "each V-column is singular",
@@ -267,6 +280,8 @@ def render_markdown(report: dict[str, object]) -> str:
             "",
             f"- goal: `{stage_a['goal']}`;",
             f"- feasibility set: `{stage_a['feasibility_set']}`;",
+            f"- multiset factorization: `{stage_a['multiset_factorization']}`;",
+            f"- bucket checkpoint: `{stage_a['bucket_checkpoint']}`;",
             f"- canonicalization: `{stage_a['canonicalization']}`;",
             "",
             "Constraints:",
@@ -288,6 +303,7 @@ def render_markdown(report: dict[str, object]) -> str:
         [
             f"- goal: `{stage_b['goal']}`;",
             f"- variables: `{stage_b['variables']}`;",
+            f"- bucket variables: `{stage_b['bucket_variables']}`;",
             f"- branching: `{stage_b['branching']}`;",
             "",
             "Constraints:",

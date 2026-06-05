@@ -84,6 +84,10 @@ def build_report() -> dict[str, object]:
             "each symbol occurs exactly d times in U",
             "each row map y -> U[x,y] is singular",
             "A_xy={v : L_{U[x,y]} L_v = L_x L_y} is nonempty for every cell",
+            (
+                "for every u, multiset{L_x L_y : L_x(y)=u} equals "
+                "multiset{L_u L_v : v in X}"
+            ),
             "U is canonicalized under simultaneous relabeling",
         ],
         "rows": [
@@ -104,11 +108,11 @@ def build_report() -> dict[str, object]:
         },
         "conclusion": (
             "The Stage A code separates one-sided nondegenerate rack rows from "
-            "everywhere-singular U-data.  The exact size-2 and size-3 "
-            "enumerations now give a regression baseline, while the budgeted "
-            "size-4 run confirms the Stage A feasibility test has many "
-            "nontrivial candidates and needs the requested Pro sharpening "
-            "before d=5,6 exhaustive enumeration."
+            "everywhere-singular U-data.  The multiset-factorization law "
+            "shrinks the exact size-3 canonical Stage A baseline from six "
+            "A_xy-feasible arrays to one MF-valid array.  The budgeted size-4 "
+            "run remains a truncated search, but all retained examples now "
+            "satisfy the stronger Y1-plus-bijectivity law."
         ),
         "next_prompt": (
             "prompts/gpt55_pro/"
@@ -141,10 +145,13 @@ def render_markdown(report: dict[str, object]) -> str:
                 f"- balanced symbol counts: `{profile['balanced_symbol_counts']}`;",
                 f"- rows singular: `{profile['rows_singular']}`;",
                 f"- A_xy nonempty: `{profile['feasibility_nonempty']}`;",
+                f"- multiset factorization: `{profile['multiset_factorization']}`;",
                 f"- Stage A candidate: `{profile['stage_a_candidate']}`;",
                 "- feasibility size range: "
                 f"`{profile['minimum_feasibility_size']}..{profile['maximum_feasibility_size']}`;",
                 f"- feasibility size counts: `{profile['feasibility_size_counts']}`;",
+                f"- bucket count: `{profile['bucket_count']}`;",
+                f"- maximum bucket size: `{profile['maximum_bucket_size']}`;",
                 f"- canonical: `{profile['canonical']}`.",
                 "",
             ]
@@ -172,6 +179,8 @@ def render_markdown(report: dict[str, object]) -> str:
                 f"- completed balanced arrays: `{audit['completed_balanced_count']}`;",
                 f"- row-singular arrays: `{audit['row_singular_count']}`;",
                 f"- A_xy feasible arrays: `{audit['feasibility_nonempty_count']}`;",
+                "- multiset-factorization arrays: "
+                f"`{audit['multiset_factorization_count']}`;",
                 f"- canonical arrays: `{audit['canonical_count']}`;",
                 f"- emitted examples: `{audit['emitted_count']}`;",
                 f"- truncated: `{audit['truncated']}`.",

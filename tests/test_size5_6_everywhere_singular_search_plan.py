@@ -29,7 +29,10 @@ class SizeFiveSixEverywhereSingularSearchPlanTests(unittest.TestCase):
         self.assertIn("Y1", identities)
         self.assertIn("L_{U[x,y]} L_v = L_x L_y", identities["Y1"]["use"])
         self.assertIn("A_xy={v in X", stage_a["feasibility_set"])
+        self.assertIn("multiset{L_x L_y", stage_a["multiset_factorization"])
+        self.assertIn("C(u,P)", stage_a["bucket_checkpoint"])
         self.assertIn("nonempty", " ".join(stage_a["constraints"]))
+        self.assertIn("multiset-factorization", " ".join(stage_a["constraints"]))
         self.assertIn("d!", stage_a["canonicalization"])
         self.assertTrue(
             self.report["next_prompt"].endswith(
@@ -41,7 +44,8 @@ class SizeFiveSixEverywhereSingularSearchPlanTests(unittest.TestCase):
         stage_b = self.report["stage_b_v_exact_cover"]
         constraints = " ".join(stage_b["constraints"])
 
-        self.assertIn("V[x,y] in A_xy", stage_b["variables"])
+        self.assertIn("bucket domain", stage_b["variables"])
+        self.assertIn("bucket permutations", stage_b["bucket_variables"])
         self.assertIn("(U[x,y],V[x,y])", constraints)
         self.assertIn("Y2 and Y3", constraints)
         self.assertIn("r^2", constraints)
