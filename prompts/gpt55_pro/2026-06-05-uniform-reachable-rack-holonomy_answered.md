@@ -1,6 +1,29 @@
 # Uniform Reachable Rack Holonomy Prompt
 
-Status: ask now / awaiting GPT-5.5 Pro response.
+Status: answered by GPT-5.5 Pro on 2026-06-05.
+
+Response summary:
+
+- Reachable kernel-fiber holonomy has objects `(n,p,a)` with `a` in the
+  fiber of `kappa^n:X^n -> P_X^n` over `p`, and arrows given by actual
+  `beta in K_n(P_X)` with target `beta a`.
+- The only holonomy relevant to domination is actual nontrivial monodromy
+  `a -> beta a` inside an `X^n` fiber; ambient loops are irrelevant.
+- Rack-valued endpoint holonomy is exactly finite contextual rack detection:
+  finite endpoint labels must satisfy the defining relations of `C_M(X)`.
+- Uniform reachable rack-valued holonomy separation is equivalent to the
+  finite endpoint-change cover theorem, hence equivalent to direct finite
+  contextual rack absorption.  It is not a weaker lemma.
+- Pointwise holonomy separation is insufficient: an escaping ultrafilter can
+  avoid every fixed finite detector even if individual arrows are separated
+  one at a time.
+- Stabilizer/path holonomy is invisible to endpoint rack detectors unless it
+  becomes word-defined finite rack-valued endpoint data; path-dependent data
+  alone does not imply kernel domination.
+- Failure of uniform rack-valued holonomy separation does not produce Target B
+  without independent finite coordinatewise YBE data and orbit-injectivity.
+- The next exact Target A sublemma remains the No Brunnian Harmful Ultrafilter
+  Theorem.
 
 Prompt:
 
