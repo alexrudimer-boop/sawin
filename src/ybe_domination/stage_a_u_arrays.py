@@ -64,6 +64,19 @@ class StageBVExactCoverAudit:
     examples: tuple[VArray, ...]
 
 
+@dataclass(frozen=True)
+class StageBBucketCSPProfile:
+    size: int
+    variable_count: int
+    bucket_count: int
+    domain_size_counts: tuple[tuple[int, int], ...]
+    forced_variable_count: int
+    maximum_domain_size: int
+    hall_all_different_ok: bool
+    unsupported_y2_y3_triple_count: int
+    locally_consistent: bool
+
+
 def normalize_u_array(array: Sequence[Sequence[int]]) -> UArray:
     rows = tuple(tuple(row) for row in array)
     size = len(rows)
@@ -262,6 +275,133 @@ def stage_a_bucket_domains(
         for x, y in bucket.cells:
             domains[x][y] = bucket.values
     return tuple(tuple(row) for row in domains)
+
+
+def _assign_domain_value(
+    assignment: dict[Cell, int],
+    domains: Sequence[Sequence[Sequence[int]]],
+    cell: Cell,
+    value: int,
+) -> bool:
+    x, y = cell
+    if value not in domains[x][y]:
+        return False
+    old = assignment.get(cell)
+    if old is not None:
+        return old == value
+    assignment[cell] = value
+    return True
+
+
+def stage_b_bucket_triple_has_support(
+    array: Sequence[Sequence[int]],
+    domains: Sequence[Sequence[Sequence[int]]],
+    triple: tuple[int, int, int],
+) -> bool:
+    u_rows = normalize_u_array(array)
+    size = len(u_rows)
+    x, y, z = triple
+    x_uyz_cell = (x, u_rows[y][z])
+    yz_cell = (y, z)
+    xy_cell = (x, y)
+    for v_xy in domains[x][y]:
+        left_y2_cell = (u_rows[x][y], u_rows[v_xy][z])
+        left_y3_cell = (v_xy, z)
+        for v_x_uyz in domains[x_uyz_cell[0]][x_uyz_cell[1]]:
+            for v_yz in domains[y][z]:
+                right_y2 = u_rows[v_x_uyz][v_yz]
+                right_y3_cell = (v_x_uyz, v_yz)
+                base = {}
+                if not _assign_domain_value(base, domains, xy_cell, v_xy):
+                    continue
+                if not _assign_domain_value(base, domains, x_uyz_cell, v_x_uyz):
+                    continue
+                if not _assign_domain_value(base, domains, yz_cell, v_yz):
+                    continue
+                if not _assign_domain_value(base, domains, left_y2_cell, right_y2):
+                    continue
+                for y3_value in range(size):
+                    assignment = dict(base)
+                    if not _assign_domain_value(
+                        assignment,
+                        domains,
+                        left_y3_cell,
+                        y3_value,
+                    ):
+                        continue
+                    if _assign_domain_value(
+                        assignment,
+                        domains,
+                        right_y3_cell,
+                        y3_value,
+                    ):
+                        return True
+    return False
+
+
+def stage_b_hall_all_different_ok(
+    array: Sequence[Sequence[int]],
+    domains: Sequence[Sequence[Sequence[int]]],
+) -> bool:
+    u_rows = normalize_u_array(array)
+    size = len(u_rows)
+    for output_u in range(size):
+        cells = [
+            (x, y)
+            for x in range(size)
+            for y in range(size)
+            if u_rows[x][y] == output_u
+        ]
+        for mask in range(1, 1 << len(cells)):
+            union_values = set()
+            subset_size = 0
+            for index, cell in enumerate(cells):
+                if mask & (1 << index):
+                    subset_size += 1
+                    union_values.update(domains[cell[0]][cell[1]])
+            if len(union_values) < subset_size:
+                return False
+    return True
+
+
+def stage_b_bucket_csp_profile(
+    array: Sequence[Sequence[int]],
+) -> StageBBucketCSPProfile:
+    u_rows = normalize_u_array(array)
+    size = len(u_rows)
+    if not stage_a_multiset_factorization_holds(u_rows):
+        return StageBBucketCSPProfile(
+            size=size,
+            variable_count=size * size,
+            bucket_count=0,
+            domain_size_counts=tuple(),
+            forced_variable_count=0,
+            maximum_domain_size=0,
+            hall_all_different_ok=False,
+            unsupported_y2_y3_triple_count=size**3,
+            locally_consistent=False,
+        )
+    buckets = stage_a_factorization_buckets(u_rows)
+    domains = stage_a_bucket_domains(u_rows)
+    domain_sizes = tuple(len(domains[x][y]) for x in range(size) for y in range(size))
+    hall_ok = stage_b_hall_all_different_ok(u_rows, domains)
+    unsupported = 0
+    for x in range(size):
+        for y in range(size):
+            for z in range(size):
+                if not stage_b_bucket_triple_has_support(u_rows, domains, (x, y, z)):
+                    unsupported += 1
+    return StageBBucketCSPProfile(
+        size=size,
+        variable_count=size * size,
+        bucket_count=len(buckets),
+        domain_size_counts=tuple(sorted(Counter(domain_sizes).items())),
+        forced_variable_count=sum(1 for size_ in domain_sizes if size_ == 1),
+        maximum_domain_size=max(domain_sizes) if domain_sizes else 0,
+        hall_all_different_ok=hall_ok,
+        unsupported_y2_y3_triple_count=unsupported,
+        locally_consistent=hall_ok and unsupported == 0,
+    )
 
 
 def stage_a_feasibility_nonempty(array: Sequence[Sequence[int]]) -> bool:

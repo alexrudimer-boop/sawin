@@ -1,0 +1,77 @@
+{
+  "checks": [
+    "domain-size profile for variables W_xy=V[x,y]",
+    "Hall all-different test on cells with fixed U[x,y]=u",
+    "Y2/Y3 local support test for each triple (x,y,z)",
+    "locally_consistent iff Hall succeeds and no Y2/Y3 triple is unsupported"
+  ],
+  "conclusion": "The current examples all pass local bucket-CSP consistency.  The profile still distinguishes their domain geometry: identity has three 3-cell buckets, the dihedral rack has nine forced cells, and affine Type A has eight 2-cell buckets.  This is the next precheck layer before full d=5,6 Stage B search.",
+  "next_prompt": "prompts/gpt55_pro/2026-06-04-stage-b-bucket-csp_ask_now.md",
+  "purpose": "Record the bucket-domain CSP precheck used before full Stage B backtracking: Hall all-different consistency per output u and local support for every Y2/Y3 triple.",
+  "rows": [
+    {
+      "name": "identity_3",
+      "profile": {
+        "bucket_count": 3,
+        "domain_size_counts": [
+          [
+            3,
+            9
+          ]
+        ],
+        "forced_variable_count": 0,
+        "hall_all_different_ok": true,
+        "locally_consistent": true,
+        "maximum_domain_size": 3,
+        "size": 3,
+        "unsupported_y2_y3_triple_count": 0,
+        "variable_count": 9
+      },
+      "size": 3,
+      "source_solution_ybe": true
+    },
+    {
+      "name": "dihedral_rack_3",
+      "profile": {
+        "bucket_count": 9,
+        "domain_size_counts": [
+          [
+            1,
+            9
+          ]
+        ],
+        "forced_variable_count": 9,
+        "hall_all_different_ok": true,
+        "locally_consistent": true,
+        "maximum_domain_size": 1,
+        "size": 3,
+        "unsupported_y2_y3_triple_count": 0,
+        "variable_count": 9
+      },
+      "size": 3,
+      "source_solution_ybe": true
+    },
+    {
+      "name": "size4_affine_type_a",
+      "profile": {
+        "bucket_count": 8,
+        "domain_size_counts": [
+          [
+            2,
+            16
+          ]
+        ],
+        "forced_variable_count": 0,
+        "hall_all_different_ok": true,
+        "locally_consistent": true,
+        "maximum_domain_size": 2,
+        "size": 4,
+        "unsupported_y2_y3_triple_count": 0,
+        "variable_count": 16
+      },
+      "size": 4,
+      "source_solution_ybe": true
+    }
+  ],
+  "title": "Stage B bucket-CSP audit"
+}

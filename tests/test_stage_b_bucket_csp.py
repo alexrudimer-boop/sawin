@@ -1,0 +1,77 @@
+import sys
+import unittest
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+from tools.run_sequential_primitivity_frontier_audit import affine_f2_type_a_solution
+from tools.run_stage_b_bucket_csp_audit import build_report
+from ybe_domination import identity_solution, rack_solution
+from ybe_domination.stage_a_u_arrays import (
+    stage_a_bucket_domains,
+    stage_b_bucket_csp_profile,
+    stage_b_bucket_triple_has_support,
+    stage_b_hall_all_different_ok,
+    u_array_from_solution,
+)
+
+
+class StageBBucketCSPTests(unittest.TestCase):
+    def test_identity_bucket_profile_has_three_large_domains(self):
+        u_array = u_array_from_solution(identity_solution((0, 1, 2)))
+        profile = stage_b_bucket_csp_profile(u_array)
+
+        self.assertEqual(profile.bucket_count, 3)
+        self.assertEqual(profile.domain_size_counts, ((3, 9),))
+        self.assertEqual(profile.forced_variable_count, 0)
+        self.assertTrue(profile.hall_all_different_ok)
+        self.assertEqual(profile.unsupported_y2_y3_triple_count, 0)
+        self.assertTrue(profile.locally_consistent)
+
+    def test_dihedral_bucket_profile_is_forced(self):
+        solution = rack_solution((0, 1, 2), lambda left, right: (2 * left - right) % 3)
+        profile = stage_b_bucket_csp_profile(u_array_from_solution(solution))
+
+        self.assertEqual(profile.bucket_count, 9)
+        self.assertEqual(profile.domain_size_counts, ((1, 9),))
+        self.assertEqual(profile.forced_variable_count, 9)
+        self.assertTrue(profile.locally_consistent)
+
+    def test_affine_type_a_bucket_profile_has_two_cell_buckets(self):
+        profile = stage_b_bucket_csp_profile(
+            u_array_from_solution(affine_f2_type_a_solution())
+        )
+
+        self.assertEqual(profile.bucket_count, 8)
+        self.assertEqual(profile.domain_size_counts, ((2, 16),))
+        self.assertEqual(profile.maximum_domain_size, 2)
+        self.assertTrue(profile.hall_all_different_ok)
+        self.assertEqual(profile.unsupported_y2_y3_triple_count, 0)
+
+    def test_local_triple_support_and_hall_are_explicit_checks(self):
+        u_array = u_array_from_solution(affine_f2_type_a_solution())
+        domains = stage_a_bucket_domains(u_array)
+
+        self.assertTrue(stage_b_hall_all_different_ok(u_array, domains))
+        self.assertTrue(stage_b_bucket_triple_has_support(u_array, domains, (0, 1, 2)))
+
+    def test_generated_bucket_csp_audit_records_examples(self):
+        report = build_report()
+        rows = {row["name"]: row for row in report["rows"]}
+
+        self.assertIn("Hall all-different", " ".join(report["checks"]))
+        self.assertTrue(rows["identity_3"]["profile"]["locally_consistent"])
+        self.assertEqual(
+            rows["dihedral_rack_3"]["profile"]["forced_variable_count"],
+            9,
+        )
+        self.assertEqual(
+            rows["size4_affine_type_a"]["profile"]["maximum_domain_size"],
+            2,
+        )
+        self.assertTrue(report["next_prompt"].endswith("_ask_now.md"))
+
+
+if __name__ == "__main__":
+    unittest.main()

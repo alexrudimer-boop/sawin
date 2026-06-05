@@ -107,6 +107,7 @@ EXTRA_MD.append(ROOT / "proofs" / "periodic_observer_rack_factorization_audit.md
 EXTRA_MD.append(ROOT / "proofs" / "size5_6_everywhere_singular_search_plan.md")
 EXTRA_MD.append(ROOT / "proofs" / "stage_a_u_array_audit.md")
 EXTRA_MD.append(ROOT / "proofs" / "stage_b_v_exact_cover_audit.md")
+EXTRA_MD.append(ROOT / "proofs" / "stage_b_bucket_csp_audit.md")
 EXTRA_MD.append(ROOT / "proofs" / "active_factor_observability_audit.md")
 EXTRA_MD.append(ROOT / "proofs" / "sequential_primitivity_frontier_audit.md")
 EXTRA_MD.append(ROOT / "proofs" / "size4_nonaffine_frontier_audit.md")
