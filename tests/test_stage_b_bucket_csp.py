@@ -15,6 +15,7 @@ from ybe_domination.stage_a_u_arrays import (
     stage_b_bucket_triple_value_has_support,
     stage_b_bucket_permutation_gac_audit,
     stage_b_bucket_permutation_v_search_audit,
+    stage_b_bucket_constraint_hypergraph_audit,
     stage_b_bucket_column_singularity_possible,
     stage_b_bucket_noninvolutive_possible,
     stage_b_bucket_domain_state_is_canonical,
@@ -181,6 +182,27 @@ class StageBBucketCSPTests(unittest.TestCase):
                 affine_gac.domains,
             )
         )
+
+    def test_bucket_constraint_hypergraph_components_on_regressions(self):
+        identity_u = u_array_from_solution(identity_solution((0, 1, 2)))
+        affine_u = u_array_from_solution(affine_f2_type_a_solution())
+
+        identity_audit = stage_b_bucket_constraint_hypergraph_audit(identity_u)
+        affine_audit = stage_b_bucket_constraint_hypergraph_audit(affine_u)
+
+        self.assertEqual(identity_audit.unresolved_bucket_count, 0)
+        self.assertEqual(identity_audit.component_count, 0)
+        self.assertTrue(identity_audit.column_singularity_possible)
+        self.assertFalse(identity_audit.noninvolutive_possible)
+        self.assertFalse(identity_audit.locally_consistent)
+        self.assertEqual(affine_audit.unresolved_bucket_count, 8)
+        self.assertEqual(affine_audit.ybe_pattern_count, 156)
+        self.assertEqual(affine_audit.column_pattern_count, 16)
+        self.assertEqual(affine_audit.noninvolutive_witness_count, 24)
+        self.assertEqual(affine_audit.component_count, 1)
+        self.assertEqual(affine_audit.largest_component_size, 8)
+        self.assertGreaterEqual(affine_audit.ybe_hyperedge_count, 1)
+        self.assertTrue(affine_audit.locally_consistent)
 
     def test_bucket_domain_state_canonical_checker_accepts_root_state(self):
         u_array = u_array_from_solution(affine_f2_type_a_solution())

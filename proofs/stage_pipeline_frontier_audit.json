@@ -80,6 +80,27 @@
         "triple_count": 27,
         "unresolved_bucket_count": 0
       },
+      "bucket_hypergraph": {
+        "bucket_count": 3,
+        "column_hyperedge_count": 0,
+        "column_pattern_count": 3,
+        "column_singularity_possible": true,
+        "component_count": 0,
+        "component_size_counts": [],
+        "components": [],
+        "edge_size_counts": [],
+        "involutive_hyperedge_count": 0,
+        "isolated_vertex_count": 0,
+        "largest_component_size": 0,
+        "locally_consistent": false,
+        "noninvolutive_possible": false,
+        "noninvolutive_witness_count": 0,
+        "size": 3,
+        "total_hyperedge_count": 0,
+        "unresolved_bucket_count": 0,
+        "ybe_hyperedge_count": 0,
+        "ybe_pattern_count": 27
+      },
       "bucket_stage_b": {
         "accepted_count": 0,
         "aut_u_order": 6,
@@ -296,6 +317,27 @@
         "support_pattern_count": 64,
         "triple_count": 64,
         "unresolved_bucket_count": 0
+      },
+      "bucket_hypergraph": {
+        "bucket_count": 4,
+        "column_hyperedge_count": 0,
+        "column_pattern_count": 4,
+        "column_singularity_possible": true,
+        "component_count": 0,
+        "component_size_counts": [],
+        "components": [],
+        "edge_size_counts": [],
+        "involutive_hyperedge_count": 0,
+        "isolated_vertex_count": 0,
+        "largest_component_size": 0,
+        "locally_consistent": false,
+        "noninvolutive_possible": false,
+        "noninvolutive_witness_count": 0,
+        "size": 4,
+        "total_hyperedge_count": 0,
+        "unresolved_bucket_count": 0,
+        "ybe_hyperedge_count": 0,
+        "ybe_pattern_count": 64
       },
       "bucket_stage_b": {
         "accepted_count": 0,
@@ -561,6 +603,56 @@
         "support_pattern_count": 156,
         "triple_count": 64,
         "unresolved_bucket_count": 8
+      },
+      "bucket_hypergraph": {
+        "bucket_count": 8,
+        "column_hyperedge_count": 4,
+        "column_pattern_count": 16,
+        "column_singularity_possible": true,
+        "component_count": 1,
+        "component_size_counts": [
+          [
+            8,
+            1
+          ]
+        ],
+        "components": [
+          [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ]
+        ],
+        "edge_size_counts": [
+          [
+            2,
+            8
+          ],
+          [
+            3,
+            12
+          ],
+          [
+            4,
+            5
+          ]
+        ],
+        "involutive_hyperedge_count": 4,
+        "isolated_vertex_count": 0,
+        "largest_component_size": 8,
+        "locally_consistent": true,
+        "noninvolutive_possible": true,
+        "noninvolutive_witness_count": 24,
+        "size": 4,
+        "total_hyperedge_count": 25,
+        "unresolved_bucket_count": 8,
+        "ybe_hyperedge_count": 19,
+        "ybe_pattern_count": 156
       },
       "bucket_stage_b": {
         "accepted_count": 1,

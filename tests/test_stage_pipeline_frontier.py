@@ -44,6 +44,8 @@ class StagePipelineFrontierTests(unittest.TestCase):
         self.assertEqual(affine["stage_b"]["accepted_count"], 1)
         self.assertEqual(affine["gac_stage_b"]["accepted_count"], 1)
         self.assertEqual(affine["bucket_stage_b"]["accepted_count"], 1)
+        self.assertEqual(affine["bucket_hypergraph"]["component_count"], 1)
+        self.assertEqual(affine["bucket_hypergraph"]["largest_component_size"], 8)
         self.assertEqual(len(affine["solution_rows"]), 1)
         self.assertEqual(
             affine["solution_rows"][0]["rigid_pressure_core_row"]["first_failed_filter"],

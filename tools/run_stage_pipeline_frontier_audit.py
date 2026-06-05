@@ -18,6 +18,7 @@ from ybe_domination.stage_a_u_arrays import (  # noqa: E402
     row_catalogue_stage_a_enumeration_audit,
     solution_from_uv_arrays,
     stage_b_bucket_csp_profile,
+    stage_b_bucket_constraint_hypergraph_audit,
     stage_b_bucket_permutation_gac_audit,
     stage_b_bucket_permutation_v_search_audit,
     stage_b_gac_propagation_audit,
@@ -81,6 +82,7 @@ def frontier_row(
         max_examples=max_solution_rows,
     )
     bucket_gac = stage_b_bucket_permutation_gac_audit(u_array)
+    bucket_hypergraph = stage_b_bucket_constraint_hypergraph_audit(u_array)
     bucket_stage_b = stage_b_bucket_permutation_v_search_audit(
         u_array,
         require_column_singular=True,
@@ -95,6 +97,7 @@ def frontier_row(
         "bucket_csp": asdict(csp),
         "gac": asdict(gac),
         "bucket_gac": asdict(bucket_gac),
+        "bucket_hypergraph": asdict(bucket_hypergraph),
         "stage_b": asdict(stage_b),
         "gac_stage_b": asdict(gac_stage_b),
         "bucket_stage_b": asdict(bucket_stage_b),
@@ -190,6 +193,7 @@ def render_markdown(report: dict[str, object]) -> str:
         csp = row["bucket_csp"]
         gac = row["gac"]
         bucket_gac = row["bucket_gac"]
+        bucket_hypergraph = row["bucket_hypergraph"]
         stage_b = row["stage_b"]
         gac_stage_b = row["gac_stage_b"]
         bucket_stage_b = row["bucket_stage_b"]
@@ -215,6 +219,13 @@ def render_markdown(report: dict[str, object]) -> str:
                 f"`{bucket_gac['final_domain_product']}`;",
                 f"- bucket-permutation locally consistent: "
                 f"`{bucket_gac['locally_consistent']}`;",
+                "- bucket hypergraph components / largest: "
+                f"`{bucket_hypergraph['component_count']}` / "
+                f"`{bucket_hypergraph['largest_component_size']}`;",
+                "- bucket relation patterns YBE/column/noninv: "
+                f"`{bucket_hypergraph['ybe_pattern_count']}` / "
+                f"`{bucket_hypergraph['column_pattern_count']}` / "
+                f"`{bucket_hypergraph['noninvolutive_witness_count']}`;",
                 f"- Stage B accepted completions: `{stage_b['accepted_count']}`;",
                 f"- Stage B emitted completions: `{stage_b['emitted_count']}`;",
                 f"- Stage B truncated: `{stage_b['truncated']}`;",

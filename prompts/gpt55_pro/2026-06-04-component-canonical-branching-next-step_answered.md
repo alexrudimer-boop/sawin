@@ -1,6 +1,20 @@
 # Component Canonical Branching Prompt
 
-Status: ask_now / prepared for GPT-5.5 Pro on 2026-06-04.
+Status: answered / GPT-5.5 Pro answered on 2026-06-04.
+
+Answer summary:
+
+- Compile Y2/Y3, column singularity, and non-involutivity into bucket-pattern relations.
+- Build the remaining constraint hypergraph from all three relation families.
+- Component decomposition is sound only if column-singularity scopes and non-involutivity witness scopes are included.
+- Solve components modulo the current stabilizer Gamma(D), not just the root Aut(U).
+- Branch by component orbit, then bucket orbit, then bucket-permutation value orbit under the selected stabilizer.
+
+Implementation response:
+
+- The repository now has a bucket-constraint hypergraph audit after bucket-GAC.
+- It records compiled YBE triple patterns, exact column-singularity patterns, non-involutivity witness patterns, connected components, and relation feasibility flags.
+- Full component solving and Gamma(D)-canonical augmentation remain the next implementation layer.
 
 Prompt:
 
@@ -81,6 +95,9 @@ Stage B implemented so far:
 6. Aut(U) global state canonical rejection.
    Compute Aut(U) exactly. It acts on buckets and bucket permutations. A bucket-domain state D is rejected if its code is not minimal in its Aut(U)-orbit.
 
+7. Remaining bucket-constraint hypergraph audit.
+   After bucket-GAC, build hyperedges from surviving Y2/Y3 support patterns, column-singularity constraints, and involutivity-dependency edges. Connected components are computed on unresolved buckets.
+
 Regression facts:
 
 - identity_3:
@@ -102,13 +119,13 @@ Regression facts:
     Aut(U) order 2;
     column-singularity possible true;
     non-involutivity possible true;
+    hypergraph has one connected component of size 8, with YBE/column/involutive edge counts 19/4/4;
     bucket branching recovers the unique column-singular non-involutive completion in 3 nodes;
     known rack-dominated table.
 
 Remaining missing layer from the previous answer:
 
-- build exact remaining constraint hypergraph after bucket-GAC;
-- decompose independent connected components;
+- use the exact remaining constraint hypergraph to solve independent connected components;
 - implement canonical augmentation using the current stabilizer Gamma(D), bucket orbits, and value orbits, instead of only global orbit-minimal state rejection.
 
 Task:

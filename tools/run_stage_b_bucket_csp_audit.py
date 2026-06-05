@@ -18,6 +18,7 @@ from ybe_domination.stage_a_u_arrays import (  # noqa: E402
     stage_b_bucket_csp_profile,
     stage_b_bucket_permutation_gac_audit,
     stage_b_bucket_permutation_v_search_audit,
+    stage_b_bucket_constraint_hypergraph_audit,
     stage_b_bucket_column_singularity_possible,
     stage_b_bucket_noninvolutive_possible,
     stage_b_gac_propagation_audit,
@@ -67,6 +68,9 @@ def example_rows() -> tuple[dict[str, object], ...]:
                         bucket_gac.domains,
                     )
                 ),
+                "bucket_constraint_hypergraph": asdict(
+                    stage_b_bucket_constraint_hypergraph_audit(u_array)
+                ),
                 "bucket_permutation_search": asdict(
                     stage_b_bucket_permutation_v_search_audit(
                         u_array,
@@ -103,6 +107,7 @@ def build_report() -> dict[str, object]:
             "Aut(U)-aware canonical state rejection for bucket-permutation branches",
             "exact bucket-domain column-singularity feasibility before branching",
             "exact bucket-domain non-involutivity feasibility before branching",
+            "remaining bucket-constraint hypergraph and connected components after bucket-GAC",
         ],
         "rows": list(example_rows()),
         "conclusion": (
@@ -122,10 +127,11 @@ def build_report() -> dict[str, object]:
             "also uses exact bucket-domain column feasibility, which rejects "
             "the dihedral rack regression as not column-singular, and exact "
             "non-involutivity feasibility, which rejects identity-type states "
-            "as forced involutive.  This is the next precheck layer before "
-            "full d=5,6 Stage B search."
+            "as forced involutive.  The remaining hypergraph audit shows "
+            "whether unresolved bucket choices decompose into independent "
+            "components before full d=5,6 Stage B search."
         ),
-        "next_prompt": "prompts/gpt55_pro/2026-06-04-component-canonical-branching-next-step_ask_now.md",
+        "next_prompt": "prompts/gpt55_pro/2026-06-04-stabilizer-component-solver-next-step_ask_now.md",
     }
 
 
@@ -147,6 +153,7 @@ def render_markdown(report: dict[str, object]) -> str:
         gac_search = row["gac_noninvolutive_search"]
         bucket_gac = row["bucket_permutation_gac"]
         bucket_search = row["bucket_permutation_search"]
+        hypergraph = row["bucket_constraint_hypergraph"]
         lines.extend(
             [
                 f"### {row['name']}",
@@ -187,6 +194,20 @@ def render_markdown(report: dict[str, object]) -> str:
                 f"`{row['bucket_column_singularity_possible']}`;",
                 "- bucket-domain non-involutivity possible: "
                 f"`{row['bucket_noninvolutive_possible']}`;",
+                "- bucket hypergraph components / largest: "
+                f"`{hypergraph['component_count']}` / "
+                f"`{hypergraph['largest_component_size']}`;",
+                "- bucket relation patterns YBE/column/noninv: "
+                f"`{hypergraph['ybe_pattern_count']}` / "
+                f"`{hypergraph['column_pattern_count']}` / "
+                f"`{hypergraph['noninvolutive_witness_count']}`;",
+                "- bucket hypergraph edge counts YBE/column/involutive: "
+                f"`{hypergraph['ybe_hyperedge_count']}` / "
+                f"`{hypergraph['column_hyperedge_count']}` / "
+                f"`{hypergraph['involutive_hyperedge_count']}`;",
+                "- bucket hypergraph column/noninv feasible: "
+                f"`{hypergraph['column_singularity_possible']}` / "
+                f"`{hypergraph['noninvolutive_possible']}`;",
                 "- bucket-permutation search nodes / accepted: "
                 f"`{bucket_search['node_count']}` / `{bucket_search['accepted_count']}`;",
                 "- bucket-permutation Aut(U) / canonical rejections: "

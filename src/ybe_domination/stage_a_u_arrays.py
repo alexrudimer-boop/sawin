@@ -144,6 +144,29 @@ class StageBBucketPermutationGACAudit:
     extracted_v: VArray | None
 
 
+@dataclass(frozen=True)
+class StageBBucketConstraintHypergraphAudit:
+    size: int
+    bucket_count: int
+    unresolved_bucket_count: int
+    ybe_pattern_count: int
+    column_pattern_count: int
+    noninvolutive_witness_count: int
+    ybe_hyperedge_count: int
+    column_hyperedge_count: int
+    involutive_hyperedge_count: int
+    total_hyperedge_count: int
+    edge_size_counts: tuple[tuple[int, int], ...]
+    component_count: int
+    component_size_counts: tuple[tuple[int, int], ...]
+    largest_component_size: int
+    isolated_vertex_count: int
+    components: tuple[tuple[int, ...], ...]
+    column_singularity_possible: bool
+    noninvolutive_possible: bool
+    locally_consistent: bool
+
+
 def normalize_u_array(array: Sequence[Sequence[int]]) -> UArray:
     rows = tuple(tuple(row) for row in array)
     size = len(rows)
@@ -1000,6 +1023,16 @@ def _stage_b_compile_bucket_pattern_supports(
     }
 
 
+def _stage_b_support_is_feasible(
+    support: dict[int, set[int]],
+    domains: Sequence[Sequence[int]],
+) -> bool:
+    return all(
+        set(domains[bucket_index]).intersection(support_set)
+        for bucket_index, support_set in support.items()
+    )
+
+
 def _stage_b_bucket_domain_size_counts(
     domains: Sequence[set[int]],
 ) -> tuple[tuple[int, int], ...]:
@@ -1181,6 +1214,301 @@ def stage_b_bucket_noninvolutive_possible(
         buckets,
         bucket_permutations,
         normalized_domains,
+    )
+
+
+def _stage_b_compile_column_singular_supports(
+    buckets: Sequence[StageABucket],
+    bucket_permutations: Sequence[Sequence[Sequence[int]]],
+    domains: Sequence[Sequence[int]],
+    *,
+    size: int,
+) -> tuple[tuple[dict[int, set[int]], ...], ...]:
+    cell_lookup = _stage_b_cell_bucket_lookup(buckets)
+    domain_sets = tuple(set(domain) for domain in domains)
+    cell_domains = _stage_b_bucket_domains_to_cell_domains(
+        buckets,
+        bucket_permutations,
+        domain_sets,
+        size=size,
+    )
+    column_supports = []
+    for column in range(size):
+        pattern_set = set()
+        column_domains = tuple(cell_domains[row][column] for row in range(size))
+        for values in product(*column_domains):
+            if len(set(values)) == size:
+                continue
+            pattern = _stage_b_bucket_pattern_from_assignments(
+                tuple(((row, column), values[row]) for row in range(size)),
+                buckets,
+                cell_lookup,
+            )
+            if pattern is not None:
+                pattern_set.add(pattern)
+        column_supports.append(
+            tuple(
+                _stage_b_pattern_support_sets(pattern, bucket_permutations)
+                for pattern in sorted(pattern_set)
+            )
+        )
+    return tuple(column_supports)
+
+
+def _stage_b_compile_noninvolutive_witness_supports(
+    u_rows: UArray,
+    buckets: Sequence[StageABucket],
+    bucket_permutations: Sequence[Sequence[Sequence[int]]],
+    domains: Sequence[Sequence[int]],
+) -> tuple[dict[int, set[int]], ...]:
+    size = len(u_rows)
+    cell_lookup = _stage_b_cell_bucket_lookup(buckets)
+    domain_sets = tuple(set(domain) for domain in domains)
+    cell_domains = _stage_b_bucket_domains_to_cell_domains(
+        buckets,
+        bucket_permutations,
+        domain_sets,
+        size=size,
+    )
+    witness_supports = []
+    for x in range(size):
+        for y in range(size):
+            output_u = u_rows[x][y]
+            first_cell = (x, y)
+            for value in cell_domains[x][y]:
+                if u_rows[output_u][value] != x:
+                    pattern = _stage_b_bucket_pattern_from_assignments(
+                        ((first_cell, value),),
+                        buckets,
+                        cell_lookup,
+                    )
+                    if pattern is not None:
+                        witness_supports.append(
+                            _stage_b_pattern_support_sets(pattern, bucket_permutations)
+                        )
+                    continue
+
+                second_cell = (output_u, value)
+                for second_value in cell_domains[second_cell[0]][second_cell[1]]:
+                    if second_value == y:
+                        continue
+                    pattern = _stage_b_bucket_pattern_from_assignments(
+                        (
+                            (first_cell, value),
+                            (second_cell, second_value),
+                        ),
+                        buckets,
+                        cell_lookup,
+                    )
+                    if pattern is not None:
+                        witness_supports.append(
+                            _stage_b_pattern_support_sets(pattern, bucket_permutations)
+                        )
+    return tuple(witness_supports)
+
+
+def _stage_b_surviving_pattern_buckets(
+    pattern_supports: Sequence[dict[int, set[int]]],
+    domains: Sequence[Sequence[int]],
+    unresolved: set[int],
+) -> set[int]:
+    buckets: set[int] = set()
+    for support in pattern_supports:
+        if _stage_b_support_is_feasible(support, domains):
+            buckets.update(
+                bucket_index for bucket_index in support if bucket_index in unresolved
+            )
+    return buckets
+
+
+def _stage_b_connected_components(
+    vertices: set[int],
+    edges: Sequence[frozenset[int]],
+) -> tuple[tuple[int, ...], ...]:
+    parent = {vertex: vertex for vertex in vertices}
+
+    def find(vertex: int) -> int:
+        root = vertex
+        while parent[root] != root:
+            root = parent[root]
+        while parent[vertex] != vertex:
+            old = parent[vertex]
+            parent[vertex] = root
+            vertex = old
+        return root
+
+    def union(left: int, right: int) -> None:
+        left_root = find(left)
+        right_root = find(right)
+        if left_root != right_root:
+            parent[right_root] = left_root
+
+    for edge in edges:
+        edge_vertices = tuple(edge)
+        for vertex in edge_vertices[1:]:
+            union(edge_vertices[0], vertex)
+    components: dict[int, list[int]] = {}
+    for vertex in vertices:
+        components.setdefault(find(vertex), []).append(vertex)
+    return tuple(sorted(tuple(sorted(component)) for component in components.values()))
+
+
+def stage_b_bucket_constraint_hypergraph_audit(
+    array: Sequence[Sequence[int]],
+    domains: Sequence[Sequence[int]] | None = None,
+) -> StageBBucketConstraintHypergraphAudit:
+    u_rows = normalize_u_array(array)
+    size = len(u_rows)
+    if not stage_a_multiset_factorization_holds(u_rows):
+        return StageBBucketConstraintHypergraphAudit(
+            size=size,
+            bucket_count=0,
+            unresolved_bucket_count=0,
+            ybe_pattern_count=0,
+            column_pattern_count=0,
+            noninvolutive_witness_count=0,
+            ybe_hyperedge_count=0,
+            column_hyperedge_count=0,
+            involutive_hyperedge_count=0,
+            total_hyperedge_count=0,
+            edge_size_counts=tuple(),
+            component_count=0,
+            component_size_counts=tuple(),
+            largest_component_size=0,
+            isolated_vertex_count=0,
+            components=tuple(),
+            column_singularity_possible=False,
+            noninvolutive_possible=False,
+            locally_consistent=False,
+        )
+
+    gac = stage_b_bucket_permutation_gac_audit(u_rows, domains)
+    if not gac.locally_consistent:
+        return StageBBucketConstraintHypergraphAudit(
+            size=size,
+            bucket_count=0,
+            unresolved_bucket_count=0,
+            ybe_pattern_count=0,
+            column_pattern_count=0,
+            noninvolutive_witness_count=0,
+            ybe_hyperedge_count=0,
+            column_hyperedge_count=0,
+            involutive_hyperedge_count=0,
+            total_hyperedge_count=0,
+            edge_size_counts=tuple(),
+            component_count=0,
+            component_size_counts=tuple(),
+            largest_component_size=0,
+            isolated_vertex_count=0,
+            components=tuple(),
+            column_singularity_possible=False,
+            noninvolutive_possible=False,
+            locally_consistent=False,
+        )
+
+    buckets = stage_a_factorization_buckets(u_rows)
+    bucket_permutations = _stage_b_bucket_permutations(buckets)
+    patterns_by_triple = _stage_b_compile_bucket_support_patterns(u_rows, buckets)
+    pattern_supports_by_triple = _stage_b_compile_bucket_pattern_supports(
+        patterns_by_triple,
+        bucket_permutations,
+    )
+    column_supports = _stage_b_compile_column_singular_supports(
+        buckets,
+        bucket_permutations,
+        gac.domains,
+        size=size,
+    )
+    noninvolutive_supports = _stage_b_compile_noninvolutive_witness_supports(
+        u_rows,
+        buckets,
+        bucket_permutations,
+        gac.domains,
+    )
+    unresolved = {
+        bucket_index
+        for bucket_index, domain in enumerate(gac.domains)
+        if len(domain) > 1
+    }
+    ybe_pattern_count = 0
+    ybe_edges: set[frozenset[int]] = set()
+    for pattern_supports in pattern_supports_by_triple.values():
+        ybe_pattern_count += sum(
+            1
+            for support in pattern_supports
+            if _stage_b_support_is_feasible(support, gac.domains)
+        )
+        edge = _stage_b_surviving_pattern_buckets(
+            pattern_supports,
+            gac.domains,
+            unresolved,
+        )
+        if len(edge) > 1:
+            ybe_edges.add(frozenset(edge))
+
+    column_pattern_count = 0
+    column_edges: set[frozenset[int]] = set()
+    for pattern_supports in column_supports:
+        feasible_count = sum(
+            1
+            for support in pattern_supports
+            if _stage_b_support_is_feasible(support, gac.domains)
+        )
+        column_pattern_count += feasible_count
+        edge = _stage_b_surviving_pattern_buckets(
+            pattern_supports,
+            gac.domains,
+            unresolved,
+        )
+        if len(edge) > 1:
+            column_edges.add(frozenset(edge))
+
+    involutive_edges: set[frozenset[int]] = set()
+    noninvolutive_witness_count = 0
+    for support in noninvolutive_supports:
+        if not _stage_b_support_is_feasible(support, gac.domains):
+            continue
+        noninvolutive_witness_count += 1
+        edge = {bucket_index for bucket_index in support if bucket_index in unresolved}
+        if len(edge) > 1:
+            involutive_edges.add(frozenset(edge))
+
+    all_edges = tuple(
+        sorted(
+            ybe_edges | column_edges | involutive_edges,
+            key=lambda edge: (len(edge), tuple(edge)),
+        )
+    )
+    components = _stage_b_connected_components(unresolved, all_edges)
+    component_sizes = tuple(len(component) for component in components)
+    column_singularity_possible = all(
+        any(
+            _stage_b_support_is_feasible(support, gac.domains)
+            for support in pattern_supports
+        )
+        for pattern_supports in column_supports
+    )
+    noninvolutive_possible = noninvolutive_witness_count > 0
+    return StageBBucketConstraintHypergraphAudit(
+        size=size,
+        bucket_count=len(buckets),
+        unresolved_bucket_count=len(unresolved),
+        ybe_pattern_count=ybe_pattern_count,
+        column_pattern_count=column_pattern_count,
+        noninvolutive_witness_count=noninvolutive_witness_count,
+        ybe_hyperedge_count=len(ybe_edges),
+        column_hyperedge_count=len(column_edges),
+        involutive_hyperedge_count=len(involutive_edges),
+        total_hyperedge_count=len(all_edges),
+        edge_size_counts=tuple(sorted(Counter(len(edge) for edge in all_edges).items())),
+        component_count=len(components),
+        component_size_counts=tuple(sorted(Counter(component_sizes).items())),
+        largest_component_size=max(component_sizes) if component_sizes else 0,
+        isolated_vertex_count=sum(1 for size_ in component_sizes if size_ == 1),
+        components=components,
+        column_singularity_possible=column_singularity_possible,
+        noninvolutive_possible=noninvolutive_possible,
+        locally_consistent=column_singularity_possible and noninvolutive_possible,
     )
 
 
