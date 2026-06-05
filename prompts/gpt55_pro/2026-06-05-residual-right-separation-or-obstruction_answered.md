@@ -1,6 +1,52 @@
 # Residual Right-Separation Or Obstruction Prompt
 
-Status: ask_now / prepared for GPT-5.5 Pro on 2026-06-05.
+Status: answered / GPT-5.5 Pro response recorded on 2026-06-05.
+
+Follow-up status:
+
+GPT-5.5 Pro concluded that residual rigidity should not be expected to imply
+finite right-separation for all active pairs in `L_X`.  That condition is too
+strong, because right scattering can be harmless.
+
+The key example is the nondegenerate constant-action solution
+
+```text
+X={0,1},
+r(i,j)=(j,1-i).
+```
+
+Its left structure monoid has actual right scattering:
+
+```text
+lambda_0 lambda_0 = lambda_0 lambda_1,
+lambda_0 != lambda_1.
+```
+
+But the solution is itself a rack under `j triangleright i=1-i`, so taking
+`Y=X` gives `ker rho_n^Y=ker rho_n^X` for every `n`.  The trivial contextual
+state quotient `M=1` also gives a direct detector: `C_1(X)` maps to this rack
+by `d_i -> i`, and the resulting labels are globally injective.
+
+Thus the right replacement is:
+
+```text
+residual rigidity must exclude only harmful right scattering,
+not all right scattering.
+```
+
+The new missing lemma is the harmful contextual collapse dichotomy:
+
+```text
+Every orbit-relevant profinite contextual collapse either
+  (i) is absorbed by a finite contextual rack detector, or
+  (ii) descends to a finite-index, crossing-compatible active factor Z
+       with ker rho_n^Z <= ker rho_n^X for all n.
+```
+
+Residual rigidity would exclude the second alternative, while the first gives
+Sawin domination.  Finite right-separation, bounded bad witnesses, and uniform
+stabilizer separation remain useful sufficient hypotheses, but none follows
+formally from residual rigidity alone.
 
 Prompt:
 
@@ -135,4 +181,3 @@ Important guardrails:
 - If a proposed obstruction is not residual-rigid, say exactly which branch
   removes it and what remains after removal.
 ```
-
