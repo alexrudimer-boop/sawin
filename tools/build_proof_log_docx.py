@@ -146,6 +146,7 @@ EXTRA_MD.append(ROOT / "proofs" / "residual_rigid_harmful_collapse_exclusion.md"
 EXTRA_MD.append(ROOT / "proofs" / "finite_extraction_dichotomy_boundary.md")
 EXTRA_MD.append(ROOT / "proofs" / "target_a_primitive_bad_core_frontier.md")
 EXTRA_MD.append(ROOT / "proofs" / "finite_endpoint_change_cover_theorem.md")
+EXTRA_MD.append(ROOT / "proofs" / "no_brunnian_harmful_ultrafilter_frontier.md")
 EXTRA_MD.append(ROOT / "proofs" / "minimal_ideal_escape_rack_construction.md")
 EXTRA_MD.append(ROOT / "proofs" / "active_factor_observability_audit.md")
 EXTRA_MD.append(ROOT / "proofs" / "sequential_primitivity_frontier_audit.md")

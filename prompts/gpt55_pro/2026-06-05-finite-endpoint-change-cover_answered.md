@@ -1,6 +1,46 @@
 # Finite Endpoint-Change Cover Prompt
 
-Status: ask now / awaiting GPT-5.5 Pro response.
+Status: answered / GPT-5.5 Pro response recorded on 2026-06-05.
+
+Follow-up status:
+
+GPT-5.5 Pro confirmed the equivalence:
+
+```text
+finite endpoint-change cover
+iff
+direct finite contextual rack absorption.
+```
+
+The key reason is coordinatewise detection.  A contextual rack detector has
+
+```text
+Lambda_n^D=phi^n Theta_n^M:X^n -> Y^n,
+```
+
+so if it separates a bad pair, some single coordinate endpoint symbol changes
+under a finite rack quotient.  There is no hidden multi-coordinate rack
+separation.
+
+The negation is an ultrafilter `U` on actual bad pairs such that, for every
+finite `M`, `U`-almost every bad pair has all coordinate endpoint changes
+finite-rack invisible:
+
+```text
+epsilon_i^M(a) equiv_M epsilon_i^M(beta a) for every i.
+```
+
+The exact Target A theorem is therefore:
+
+```text
+No Brunnian harmful ultrafilter theorem.
+Every harmful ultrafilter on actual bad pairs contains some finite-rack
+separable one-coordinate endpoint-change cylinder.
+```
+
+The most promising proof mechanism, if any, is uniform reachable rack-valued
+holonomy separation.  Bounded arity and bounded braid length remain useful
+special cases but are likely too strong as primary targets.
 
 Prompt:
 
