@@ -48,6 +48,27 @@ The observers Lambda_n and Gamma_n are inert quotient maps of the B_n-set X^n,
 but they do not by themselves give a finite rack detector. Sawin still requires
 a finite rack Y whose kernel is contained in the X-kernel in every arity.
 
+Additional exact upgrade:
+
+Lambda_n is the endpoint of an injective finite prefix-path code. Let S_L^1 be
+the finite left coordinate monoid with identity, and define
+
+    p_0=1,   p_i=L_{x_1}...L_{x_i}.
+
+Then
+
+    P^L_n(x_1,...,x_n)=((p_0,x_1),(p_1,x_2),...,(p_{n-1},x_n))
+
+is injective into paths in the finite Cayley graph S_L^1 --x--> S_L^1. If
+r(x_i,x_{i+1})=(u,v), the local rewrite is
+
+    (p,x_i),(pL_{x_i},x_{i+1})  ->  (p,u),(pL_u,v),
+
+and it is well-defined because L_u L_v=L_{x_i}L_{x_{i+1}}. Thus X^n is
+conjugate to a finite local Yang-Baxter path groupoid action on valid paths.
+This is stronger than the inert observer but still not a rack action on all of
+Y^n.
+
 Task:
 
 Resolve or sharply reduce the remaining gap:
@@ -64,8 +85,8 @@ A. Observer-fiber induction:
 
 B. Observer-rack factorization:
    Construct a finite rack Y and finite inert observer data I_n, built from the
-   product semigroups S_L,S_R or their minimal-ideal transport groupoids, such
-   that
+   product semigroups S_L,S_R, their prefix-path groupoids, or their
+   minimal-ideal transport groupoids, such that
 
        X^n -> Y^n x I_n
 
@@ -73,8 +94,8 @@ B. Observer-rack factorization:
 
 C. No-go theorem:
    Prove that product observers alone cannot support such an induction or
-   rackification. If so, identify the extra structure needed beyond
-   Lambda_n/Gamma_n.
+   rackification. If so, identify the extra structure needed beyond the
+   prefix-path groupoid action.
 
 D. Smaller exact theorem:
    State the precise theorem that would convert unavoidable product observers
