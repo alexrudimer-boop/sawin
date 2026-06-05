@@ -1,6 +1,48 @@
 # Harmful Contextual Collapse Extraction Prompt
 
-Status: ask_now / prepared for GPT-5.5 Pro on 2026-06-05.
+Status: answered / GPT-5.5 Pro response recorded on 2026-06-05.
+
+Follow-up status:
+
+GPT-5.5 Pro made the obstruction precise in terms of bad-pair sets.  A finite
+contextual rack detector `D=(M,phi)` has a bad set `B_D` of same-orbit pairs
+not separated by the labels `Lambda_n^D`.  The detector proves Sawin for `X`
+exactly when `B_D=empty`.
+
+Because detector products satisfy
+
+```text
+B_{D1 x D2}=B_{D1} cap B_{D2},
+```
+
+uniform failure of all finite detectors gives an ultrafilter on the set of
+same-orbit pairs containing every `B_D`.  This is the sharp operational
+definition of a harmful contextual tower collapse.  It is necessarily
+nonprincipal and unbounded in arity whenever fixed finite bad pairs are
+pointwise separable.
+
+The response then identified the exact quantifier gap:
+
+```text
+forall finite detectors D, exists bad pair omega_D in B_D
+does not imply
+exists one finite active factor Z satisfying all crossing identities.
+```
+
+Thus the harmful-collapse dichotomy still needs a genuine finite active
+extraction lemma.  Non-absorption by finite contextual rack detectors does not
+force functionality, totality, cofunctionality, YBE on unreached triples,
+bijectivity, or orbit-injectivity for a finite `Z`.
+
+The sharp missing lemma is now:
+
+```text
+Every harmful profinite contextual/holonomy collapse is either
+finite-rack absorbed or finite-active-factor extractable.
+```
+
+This is strictly smaller than Sawin and isolates the quantifier reversal still
+missing from the contextual tower route.
 
 Prompt:
 
@@ -137,4 +179,3 @@ Guardrails:
   bijective YBE solution without proof.
 - If an obstruction is absorbed by a rack detector, classify it as harmless.
 ```
-

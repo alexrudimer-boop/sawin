@@ -1,0 +1,479 @@
+# Harmful Collapse Ultrafilter Boundary
+
+Date: 2026-06-05
+
+This note records the precise obstruction after trying to prove the harmful
+contextual collapse dichotomy.  The central issue is a quantifier gap:
+
+```text
+for every finite detector D, there exists a bad pair for D
+does not imply
+there exists one finite active factor Z satisfying all crossing identities.
+```
+
+The finite-state contextual tower therefore still needs a finite active
+extraction theorem.  The tower supplies pointwise failures of finite detectors;
+it does not by itself produce a single finite, crossing-compatible,
+kernel-reflecting active factor.
+
+## Bad Sets For Detectors
+
+A finite contextual rack detector is a pair
+
+```text
+D=(M,phi),
+```
+
+where `M` is a finite quotient of `L_X` and
+
+```text
+phi:C_M(X) -> Y
+```
+
+is a finite rack quotient.  Write
+
+```text
+Lambda_n^D = phi^n Theta_n^M:X^n -> Y^n.
+```
+
+Let
+
+```text
+Omega_n={
+  (x,x') in X^n x X^n :
+  x != x',
+  x' in B_n.x
+},
+
+Omega=disjoint_union_n Omega_n.
+```
+
+Define the bad set of `D` by
+
+```text
+B_D={
+  (x,x') in Omega :
+  Lambda_n^D(x)=Lambda_n^D(x')
+}.
+```
+
+Then `D` proves Sawin for `X` exactly when
+
+```text
+B_D=empty.
+```
+
+Indeed, if `B_D=empty` and `beta in ker rho_n^Y`, then for every `x in X^n`,
+
+```text
+Lambda_n^D(rho_n^X(beta)x)
+=
+rho_n^Y(beta)Lambda_n^D(x)
+=
+Lambda_n^D(x).
+```
+
+The two `X`-points are in the same braid orbit, so `B_D=empty` forces
+`rho_n^X(beta)x=x`.
+
+Thus the tower problem is exactly the problem of finding one finite detector
+with empty bad set.
+
+## Harmful Means Uniform Tower Failure
+
+Products of finite contextual rack detectors satisfy
+
+```text
+B_{D1 x D2}=B_{D1} cap B_{D2}.
+```
+
+Therefore, if every finite detector fails, the family `{B_D}` has the finite
+intersection property.  Hence there is an ultrafilter `U` on `Omega` such that
+
+```text
+B_D in U
+```
+
+for every finite detector `D`.
+
+This gives the sharp operational definition:
+
+```text
+A harmful contextual tower collapse is a bad-pair ultrafilter U on Omega
+containing every B_D.
+```
+
+Equivalently, harmful means that all finite detectors fail in a way compatible
+with finite products.
+
+This definition excludes harmless scattering.  If there is a finite detector
+with `B_D=empty`, no such ultrafilter exists.
+
+If each fixed bad pair is pointwise separated by some detector, then `U` is
+nonprincipal.  Also, if all same-orbit bad pairs of arity at most `N` are
+pointwise separated, then by a finite product one detector separates all of
+them.  Thus any harmful ultrafilter satisfies
+
+```text
+disjoint_union_{n>N} Omega_n in U
+```
+
+for every `N`.  Harmfulness is therefore an unbounded-arity phenomenon.
+
+## Profinite Contextual Collapse
+
+Let
+
+```text
+K=profinite_completion(L_X) x X x profinite_completion(L_X).
+```
+
+For a word `x=(x_1,...,x_n)`, define its contextual letter at position `i` by
+
+```text
+kappa_i(x)=(
+  lambda_{x_1}...lambda_{x_{i-1}},
+  x_i,
+  lambda_{x_{i+1}}...lambda_{x_n}
+) in K.
+```
+
+A closed relation
+
+```text
+R subset K x K
+```
+
+is an abstract profinite contextual collapse.
+
+For a finite quotient `theta:L_X -> M`, let
+
+```text
+q_theta:K -> M x X x M
+```
+
+be the projection.  The `theta`-thickening of `R` is
+
+```text
+R[theta]=(q_theta x q_theta)^(-1)((q_theta x q_theta)(R)).
+```
+
+Thus `R[theta]` is exactly what the finite state quotient `theta` can see of
+`R`.
+
+Define
+
+```text
+Omega(R,theta)={
+  (x,x') in Omega_n :
+  (kappa_i(x),kappa_i(x')) in R[theta] for every i
+}.
+```
+
+A finite detector `D` absorbs `R` if, for some finite resolution `theta`,
+
+```text
+B_D cap Omega(R,theta)=empty.
+```
+
+The collapse `R` is harmful if no finite detector absorbs it:
+
+```text
+B_D cap Omega(R,theta) != empty
+```
+
+for every finite detector `D` and every finite resolution `theta`.
+
+This means that arbitrarily fine finite approximations still contain bad
+pairs.  It is stronger than a single right-scattering equality and excludes
+already detected examples.
+
+## The Dichotomy Becomes A Finite Extraction Problem
+
+Under this definition, absorption is the negation of harmfulness.  Therefore
+the nontrivial form of the dichotomy is:
+
+```text
+If a harmful collapse exists, then it descends to a proper finite active
+factor Z with ker rho_n^Z <= ker rho_n^X for all n.
+```
+
+This is the hard implication:
+
+```text
+forall D, exists omega_D in B_D
+=> exists (M,Z,pi) satisfying all crossing and kernel-reflection conditions.
+```
+
+It is a quantifier reversal.  Pointwise residual separation does not supply
+it.
+
+The exact missing theorem is:
+
+```text
+Finite active extraction lemma.
+Every harmful bad-pair ultrafilter has a finite-index contextual quotient whose
+induced contextual equivalence is functional, total, bijective,
+YBE-compatible, and orbit-injective in the kernel-reflecting direction.
+```
+
+This lemma is strictly smaller than Sawin, but it is not a formal consequence
+of the contextual tower.
+
+## Conditions For A Finite Active Factor
+
+Fix a finite quotient
+
+```text
+theta:L_X -> M.
+```
+
+Let `Z` be a finite set generated by images of maps
+
+```text
+pi_{a,b}:X -> Z,
+a,b in M.
+```
+
+For each `r_X(x,y)=(u,v)`, the proposed active crossing is
+
+```text
+r_Z(
+  pi_{a,lambda_y b}(x),
+  pi_{a lambda_x,b}(y)
+)
+=
+(
+  pi_{a,lambda_v b}(u),
+  pi_{a lambda_u,b}(v)
+).
+```
+
+Equivalently, define a relation
+
+```text
+Gamma subset Z^2 x Z^2
+```
+
+by all such contextual crossings.  This relation defines a finite bijective
+YBE solution only if the following conditions hold.
+
+### Functionality
+
+For every input `(A,B) in Z^2`, there is at most one output `(C,D)` with
+
+```text
+(A,B) Gamma (C,D).
+```
+
+The output must depend only on the two `Z` inputs, not on hidden contexts.
+
+### Totality
+
+Every pair `(A,B) in Z^2` occurs as an input.  Otherwise the crossing is only
+partial.
+
+### Cofunctionality And Bijectivity
+
+Every output has a unique input.  Since `Z` is finite, this is equivalent to
+the resulting map `r_Z:Z^2 -> Z^2` being bijective together with totality.
+
+### YBE On All Triples
+
+The induced map must satisfy YBE on all of `Z^3`.  This is not automatic if
+some triples of `Z^3` are not realized by contextual triples from `X`.
+
+### Braid Equivariance
+
+Define
+
+```text
+Pi_n(x_1,...,x_n)_i = pi_{a_i,b_i}(x_i),
+```
+
+where
+
+```text
+a_i=theta(lambda_{x_1}...lambda_{x_{i-1}}),
+b_i=theta(lambda_{x_{i+1}}...lambda_{x_n}).
+```
+
+If the crossing rule is a genuine YBE solution, then the local formula gives
+braid equivariance:
+
+```text
+Pi_n(rho_n^X(beta)x)=rho_n^Z(beta)Pi_n(x).
+```
+
+### Kernel Reflection
+
+The exact condition needed for domination is
+
+```text
+ker rho_n^Z <= ker rho_n^X
+```
+
+for every `n`.  A strong sufficient condition is orbit-injectivity of `Pi_n`:
+
+```text
+Pi_n(x)=Pi_n(x'),  x' in B_n.x  =>  x=x'.
+```
+
+Orbit-injectivity is stronger than logically necessary, but it is the clean
+condition supplied by contextual detectors.
+
+## Why Non-Absorption Does Not Force Extraction
+
+Non-absorption is a statement of the form
+
+```text
+forall D, B_D != empty.
+```
+
+Finite active extraction requires
+
+```text
+exists (M,Z,pi)
+```
+
+with the functional, total, bijective, YBE, equivariance, and kernel-reflection
+properties above.
+
+The implication can fail for several precise reasons:
+
+```text
+infinite-index contextual behavior;
+nonfunctional crossing relation;
+partiality on unreached pairs;
+nonbijectivity;
+YBE failure on unreached triples;
+loss of orbit-injectivity.
+```
+
+Any one of these blocks construction of a finite active factor.
+
+## Harmless Right Scattering
+
+The constant-action solution
+
+```text
+X={0,1},
+r(i,j)=(j,1-i)
+```
+
+has actual right scattering in `L_X`:
+
+```text
+lambda_0 lambda_0 = lambda_0 lambda_1,
+lambda_0 != lambda_1.
+```
+
+But it is itself a rack under
+
+```text
+j triangleright i = 1-i.
+```
+
+Taking `Y=X` gives equality of braid kernels in every arity.  Also, the
+trivial contextual state `M=1` gives a globally injective detector.  Therefore
+this scattering is harmless.
+
+The guardrail is:
+
+```text
+right scattering is harmful only if it survives all finite contextual rack
+detectors.
+```
+
+## Uniform Stabilizer Separation
+
+For fixed `M`, let
+
+```text
+R=C_M(X),
+G=As(R).
+```
+
+If `r'=g.r` and `H=Stab_G(r)`, finite rack quotients separate `r` from `r'`
+only when finite quotients of `G` separate `gH` from `H`.
+
+Pointwise separability says `g notin closure(H)`.  Uniform separability of a
+family `T subset G\H` requires
+
+```text
+closure(T) cap closure(H)=empty.
+```
+
+The factorial model shows pointwise separation is not enough:
+
+```text
+G=Z,
+H={0},
+T={n! : n>=1}.
+```
+
+Every `n!` is individually separated from `0`, but no single finite quotient
+separates all of `T` from `0`.
+
+The same mechanism appears in a rack associated group whenever an
+orbit-relevant element `h` has an infinite-order action modulo a stabilizer:
+the family `h^{n!}` is pointwise nontrivial but accumulates at the stabilizer
+in finite quotients.
+
+There is no formal rack-theoretic obstruction to this.  A YBE-specific uniform
+transporter theorem would be needed.
+
+## Escape Holonomy
+
+Escape holonomy records more than two-sided contextual states.  It remembers a
+transporter or stabilizer coset,
+
+```text
+g Stab(r) subset As(C_M(X)),
+```
+
+or the analogous coset in an escape action groupoid.
+
+Escape holonomy can separate individual witnesses.  To close the finite rack
+route it must be compressed into finite data satisfying:
+
+```text
+finite holonomy image modulo stabilizers;
+crossing compatibility;
+uniform stabilizer-coset separation;
+realization by a finite rack quotient.
+```
+
+Otherwise it remains genuinely profinite or non-finite-state, and the same
+factorial accumulation obstruction can occur.
+
+## Strongest Current Theorems
+
+The contextual tower criterion is valid:
+
+```text
+If one finite detector D has B_D=empty, then ker rho_n^Y <= ker rho_n^X for
+every n.
+```
+
+Bounded harmful witnesses imply Sawin by taking a finite product of detectors
+for all same-orbit pairs up to the bound.
+
+The finite extraction principle implies residual-rigid Sawin:
+
+```text
+Every harmful contextual collapse either is finite-rack absorbed or yields a
+proper finite active factor Z with ker rho_n^Z <= ker rho_n^X.
+```
+
+In a minimal-counterexample proof, the active factor is handled by induction,
+and residual rigidity excludes it.
+
+The sharp missing lemma is:
+
+```text
+Every harmful profinite contextual/holonomy collapse is either finite-rack
+absorbed or finite-active-factor extractable.
+```
+
+This is the exact quantifier reversal still missing from the current route.
