@@ -1,6 +1,21 @@
 # Uniform Contextual Tower Separation Prompt
 
-Status: ask_now / prepared for GPT-5.5 Pro on 2026-06-05.
+Status: answered on 2026-06-05.
+
+Follow-up status:
+
+GPT-5.5 Pro confirmed that the contextual tower is valid but still conditional:
+the missing lemma is uniform finite-state contextual separation, not pointwise
+residual separation.  It also proved a useful guardrail: the positive left
+structure monoid `L_X` is residually finite by length-truncation quotients.
+This separates fixed contexts, but does not supply one finite state quotient
+working for all arities.
+
+The remaining obstructions are unbounded finite-state context requirements,
+profinite scattering states in the completion of `L_X`, and nonclosed
+stabilizer cosets in `As(C_M(X))`.  The next active prompt asks whether these
+obstructions can be reduced to a bounded bad-witness theorem, an active-factor
+extraction theorem, or a realizable counterpattern.
 
 Prompt:
 
@@ -140,4 +155,3 @@ Important:
   separation, refute it with a realizable obstruction, or reduce it to a
   sharper finite/profinite/active-factor theorem.
 ```
-
