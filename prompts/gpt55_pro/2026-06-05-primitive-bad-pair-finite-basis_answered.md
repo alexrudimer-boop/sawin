@@ -1,6 +1,35 @@
 # Primitive Bad-Pair Finite-Basis Prompt
 
-Status: ask now / awaiting GPT-5.5 Pro response.
+Status: answered / GPT-5.5 Pro response recorded on 2026-06-05.
+
+Follow-up status:
+
+GPT-5.5 Pro sharpened Target A: because finite contextual rack detectors label
+words coordinatewise, every detector-separated bad pair has a one-coordinate
+endpoint-change certificate.  Multi-coordinate primitive cores are unnecessary
+for Target A.
+
+The precise Target A theorem is:
+
+```text
+Finite endpoint-change cover theorem.
+There exist finitely many finite-rack separable endpoint-change patterns
+(M_j,s_j,t_j) such that every kernel-fiber bad pair realizes one of them in
+some coordinate.
+```
+
+This is equivalent to direct finite contextual rack absorption.  One direction
+takes the product of the finitely many pair-separating rack quotients; the
+converse extracts the finite set of endpoint pairs separated by a successful
+detector.
+
+The most actionable next theorem is therefore:
+
+```text
+No Brunnian harmful ultrafilter theorem.
+There is no harmful ultrafilter on actual bad pairs that avoids every
+finite-rack separable one-coordinate endpoint-change cylinder.
+```
 
 Prompt:
 
