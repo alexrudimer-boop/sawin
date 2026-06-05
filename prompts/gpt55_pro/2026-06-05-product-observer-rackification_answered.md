@@ -1,6 +1,15 @@
 # Product Observer Rackification Prompt
 
-Status: ask_now / prepared for GPT-5.5 Pro on 2026-06-05.
+Status: answered on 2026-06-05.
+
+Follow-up status:
+
+GPT-5.5 Pro gave the corrected reduction: product observers alone are inert
+gradings and cannot reduce Sawin without additional fiber control.  The exact
+positive replacement is product-Hurwitz separability: suffix-local rack labels
+`c_t:X -> Y` satisfying `(LH1),(LH2)` and all-arity injectivity of
+`(C_n,Lambda_n,J_n)`.  A separate queued prompt records the minimal-ideal
+escape-rack strand-separation route.
 
 Prompt:
 
@@ -69,6 +78,26 @@ conjugate to a finite local Yang-Baxter path groupoid action on valid paths.
 This is stronger than the inert observer but still not a rack action on all of
 Y^n.
 
+Naive totalization warning:
+
+The path rewrite is defined on valid adjacent edge pairs
+
+    ((p,x),(pL_x,y)).
+
+The obvious extension
+
+    ((p,x),(q,y)) -> ((p,u),(pL_u,v))
+
+agrees on valid pairs but erases q and is not bijective when |S_L^1|>1. The
+opposite repair
+
+    ((p,x),(q,y)) -> ((p,u),(q,v))
+
+keeps q but fails to agree with the valid path rewrite when q=pL_x, because
+the second source should become pL_u. Thus prefix-path rackification requires
+extra finite state or a genuine embedding into a total rack/YBE detector; it is
+not automatic totalization.
+
 Task:
 
 Resolve or sharply reduce the remaining gap:
@@ -95,7 +124,9 @@ B. Observer-rack factorization:
 C. No-go theorem:
    Prove that product observers alone cannot support such an induction or
    rackification. If so, identify the extra structure needed beyond the
-   prefix-path groupoid action.
+   prefix-path groupoid action. In particular, address whether the partial
+   prefix-path action can be embedded into a total finite YBE solution or rack
+   without losing bijectivity.
 
 D. Smaller exact theorem:
    State the precise theorem that would convert unavoidable product observers
