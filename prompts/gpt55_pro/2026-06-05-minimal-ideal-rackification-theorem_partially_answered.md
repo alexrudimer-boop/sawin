@@ -1,6 +1,9 @@
 # Minimal-Ideal Rackification Theorem Prompt
 
-Status: ask_now / prepared for GPT-5.5 Pro on 2026-06-05.
+Status: partially_answered / GPT-5.5 Pro corrected the rackification endpoint:
+minimal ideals give transport groupoids and finite observers, but not a rack
+detector; the next missing theorem is the Y2-coupling/observer-code lemma for
+the combined left/right groupoids.
 
 Prompt:
 
@@ -65,6 +68,27 @@ The right side gives a second transport groupoid from K_R. A serious positive
 route probably needs the combined left/right groupoids and their YBE
 compatibility.
 
+Additional exact facts:
+
+For every n, the products
+
+    O^L_n(x_1,...,x_n)=L_{x_1}...L_{x_n},
+    O^R_n(x_1,...,x_n)=R_{x_n}...R_{x_1}
+
+are finite braid-invariant observers. This follows from the identities
+L_{L_x(y)} L_{R_y(x)}=L_x L_y and
+R_{R_y(x)} R_{L_x(y)}=R_y R_x.
+
+Moreover, for s in the left minimal ideal K_L, each L_x restricts to a
+bijection im(s)->im(L_x s), and the local YBE row r(x,y)=(u,v) gives a flat
+transport square
+
+    L_u L_v s = L_x L_y s.
+
+The right minimal ideal has the dual flatness. This proves finite transport
+flatness, but not rack domination: it still does not construct coordinate rack
+colours or an all-arity injective code.
+
 What is not proved:
 
 This groupoid does not yet give a finite rack detector or a braid-equivariant
@@ -104,8 +128,9 @@ C. Prove a no-go theorem for this route: construct formal left/right
 
 D. Identify the exact missing lemma in proof-level form. It should be a precise
    statement about cross-coordinate escapes, kernel-family transport, Green/Rees
-   data, or the middle YBE identity. It should be strong enough that proving it
-   would give a finite rack detector, not just another finite invariant.
+   data, semigroup observer products O^L_n/O^R_n, or the middle YBE identity.
+   It should be strong enough that proving it would give a finite rack detector,
+   not just another finite invariant.
 
 Important:
 
