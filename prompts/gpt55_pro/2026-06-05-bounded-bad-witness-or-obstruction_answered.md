@@ -1,6 +1,22 @@
 # Bounded Bad Witness Or Obstruction Prompt
 
-Status: ask_now / prepared for GPT-5.5 Pro on 2026-06-05.
+Status: answered on 2026-06-05.
+
+Follow-up status:
+
+GPT-5.5 Pro concluded that the bounded bad-witness theorem is not justified by
+the current residual-rigid hypotheses.  It would prove Sawin via the
+contextual tower, but residual finiteness of `L_X` and the absence of proper
+domination-reducing active factors do not give the required compactness or
+noetherianity.
+
+The exact missing lemma is now a finite-index contextual Myhill-Nerode /
+contextual rigidity statement: orbit-relevant contextual behavior must factor
+through one finite two-sided state system, with the resulting stabilizer
+families uniformly profinitely separated.  The next active prompt asks whether
+that finite-index contextual rigidity lemma can be proved, refuted by a
+realizable infinite-state obstruction, or reduced to a sharper active-factor
+alternative.
 
 Prompt:
 
@@ -140,4 +156,3 @@ Important:
 - A useful answer should either prove a bounded/uniformity theorem, refute it
   with a realizable obstruction, or isolate the exact next missing lemma.
 ```
-
