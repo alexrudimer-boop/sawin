@@ -1,6 +1,22 @@
 # Normalized Prefix Or Full Holonomy Prompt
 
-Status: ask_now / prepared for GPT-5.5 Pro on 2026-06-05.
+Status: answered on 2026-06-05.
+
+Follow-up status:
+
+GPT-5.5 Pro confirmed that the collapse `V_L(X) ~= W_L(X)` is unavoidable
+for every one-coordinate prefix rack label satisfying the rack crossing rule.
+Thus the one-sided normalized-prefix route can close the residual branch only
+after proving both normalized-prefix orbit faithfulness and profinite
+stabilizer separability in `As(W_L(X))`.
+
+The answer also gave a stronger rack-native detector: the two-sided contextual
+prefix rack `C_L(X)` with generators `c_{p,x,q}` depending on a left prefix
+and right suffix.  This avoids the immediate collapse to `p(x)` and retains
+more prefix-arrow/Rees sandwich data while still satisfying an ordinary rack
+crossing rule.  The next active prompt asks whether finite separation for
+`C_L(X)` can close the residual branch, or whether it has an analogous
+collapse/profinite obstruction.
 
 Prompt:
 
@@ -125,4 +141,3 @@ Important:
   harmless, refute that with a realizable obstruction, or propose a genuinely
   stronger full-arrow rack detector.
 ```
-
