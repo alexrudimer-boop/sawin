@@ -16,6 +16,8 @@ from tools.run_sequential_primitivity_frontier_audit import (  # noqa: E402
 from ybe_domination import identity_solution, rack_solution  # noqa: E402
 from ybe_domination.stage_a_u_arrays import (  # noqa: E402
     stage_b_bucket_csp_profile,
+    stage_b_bucket_permutation_gac_audit,
+    stage_b_bucket_permutation_v_search_audit,
     stage_b_gac_propagation_audit,
     stage_b_gac_v_search_audit,
     u_array_from_solution,
@@ -49,6 +51,17 @@ def example_rows() -> tuple[dict[str, object], ...]:
                         max_examples=3,
                     )
                 ),
+                "bucket_permutation_gac": asdict(
+                    stage_b_bucket_permutation_gac_audit(u_array)
+                ),
+                "bucket_permutation_search": asdict(
+                    stage_b_bucket_permutation_v_search_audit(
+                        u_array,
+                        require_column_singular=True,
+                        require_noninvolutive=True,
+                        max_examples=3,
+                    )
+                ),
             }
         )
     return tuple(rows)
@@ -71,6 +84,9 @@ def build_report() -> dict[str, object]:
             "exact GAC value deletion using dynamic Y2/Y3 implication supports",
             "singleton GAC domains are extracted and directly verified against Y2/Y3",
             "GAC-assisted Stage B branching for column-singular non-involutive completions",
+            "early column-singularity feasibility rejection when a column has no possible duplicate value",
+            "bucket-permutation GAC over whole bijections C(u,P)->B(u,P)",
+            "bucket-permutation branching for column-singular non-involutive completions",
         ],
         "rows": list(example_rows()),
         "conclusion": (
@@ -81,10 +97,14 @@ def build_report() -> dict[str, object]:
             "the dihedral rack table and preserves all values needed for the "
             "known affine Type A completion.  GAC-assisted branching recovers "
             "the unique non-involutive affine Type A completion in three "
-            "search nodes.  This is the next precheck layer before full d=5,6 "
-            "Stage B search."
+            "search nodes.  The branch search also rejects any non-singleton "
+            "state where some V-column can no longer become singular.  This "
+            "is now refined by bucket-permutation GAC, which preserves whole "
+            "bucket-bijection correlations and forces the identity example "
+            "without cell-level branching.  This is the next precheck layer "
+            "before full d=5,6 Stage B search."
         ),
-        "next_prompt": "prompts/gpt55_pro/2026-06-04-gac-frontier-next-step_ask_now.md",
+        "next_prompt": "prompts/gpt55_pro/2026-06-04-bucket-permutation-frontier-next-step_ask_now.md",
     }
 
 
@@ -104,6 +124,8 @@ def render_markdown(report: dict[str, object]) -> str:
         profile = row["profile"]
         gac = row["gac"]
         gac_search = row["gac_noninvolutive_search"]
+        bucket_gac = row["bucket_permutation_gac"]
+        bucket_search = row["bucket_permutation_search"]
         lines.extend(
             [
                 f"### {row['name']}",
@@ -133,6 +155,16 @@ def render_markdown(report: dict[str, object]) -> str:
                 "- GAC non-involutive search nodes / accepted: "
                 f"`{gac_search['node_count']}` / `{gac_search['accepted_count']}`;",
                 f"- GAC non-involutive search truncated: `{gac_search['truncated']}`.",
+                "- bucket-permutation domain product: "
+                f"`{bucket_gac['initial_domain_product']}` -> "
+                f"`{bucket_gac['final_domain_product']}`;",
+                "- bucket-permutation domain size counts: "
+                f"`{bucket_gac['final_domain_size_counts']}`;",
+                "- bucket-permutation singleton/noninvolutive: "
+                f"`{bucket_gac['all_singleton']}` / `{bucket_gac['noninvolutive']}`;",
+                "- bucket-permutation search nodes / accepted: "
+                f"`{bucket_search['node_count']}` / `{bucket_search['accepted_count']}`;",
+                f"- bucket-permutation search truncated: `{bucket_search['truncated']}`.",
                 "",
             ]
         )

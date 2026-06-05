@@ -101,6 +101,33 @@ class StageBGACPropagationAudit:
     extracted_v: VArray | None
 
 
+@dataclass(frozen=True)
+class StageBBucketPermutationGACAudit:
+    size: int
+    bucket_count: int
+    triple_count: int
+    support_pattern_count: int
+    initial_domain_size_counts: tuple[tuple[int, int], ...]
+    final_domain_size_counts: tuple[tuple[int, int], ...]
+    initial_domain_mass: int
+    final_domain_mass: int
+    initial_domain_product: str
+    final_domain_product: str
+    deletion_count: int
+    iteration_count: int
+    empty_domain: bool
+    all_singleton: bool
+    singleton_bucket_count: int
+    unresolved_bucket_count: int
+    maximum_bucket_domain_size: int
+    singleton_y2_y3_verified: bool | None
+    column_singular: bool | None
+    noninvolutive: bool | None
+    locally_consistent: bool
+    domains: tuple[tuple[int, ...], ...]
+    extracted_v: VArray | None
+
+
 def normalize_u_array(array: Sequence[Sequence[int]]) -> UArray:
     rows = tuple(tuple(row) for row in array)
     size = len(rows)
@@ -741,6 +768,489 @@ def _stage_b_choose_branch_cell(
     return best_cell
 
 
+def stage_b_column_singularity_possible(
+    domains: Sequence[Sequence[Sequence[int]]],
+) -> bool:
+    size = len(domains)
+    for y in range(size):
+        has_possible_duplicate = False
+        for x1 in range(size):
+            for x2 in range(x1 + 1, size):
+                if set(domains[x1][y]).intersection(domains[x2][y]):
+                    has_possible_duplicate = True
+                    break
+            if has_possible_duplicate:
+                break
+        if not has_possible_duplicate:
+            return False
+    return True
+
+
+def _stage_b_bucket_permutations(
+    buckets: Sequence[StageABucket],
+) -> tuple[tuple[tuple[int, ...], ...], ...]:
+    return tuple(tuple(permutations(bucket.values)) for bucket in buckets)
+
+
+def _stage_b_cell_bucket_lookup(
+    buckets: Sequence[StageABucket],
+) -> dict[Cell, tuple[int, int]]:
+    lookup: dict[Cell, tuple[int, int]] = {}
+    for bucket_index, bucket in enumerate(buckets):
+        for cell_index, cell in enumerate(bucket.cells):
+            lookup[cell] = (bucket_index, cell_index)
+    return lookup
+
+
+def _stage_b_bucket_pattern_from_assignments(
+    assignments: Sequence[tuple[Cell, int]],
+    buckets: Sequence[StageABucket],
+    cell_lookup: dict[Cell, tuple[int, int]],
+) -> tuple[tuple[int, tuple[tuple[int, int], ...]], ...] | None:
+    merged: dict[Cell, int] = {}
+    for cell, value in assignments:
+        old = merged.get(cell)
+        if old is not None and old != value:
+            return None
+        merged[cell] = value
+
+    bucket_assignments: dict[int, list[tuple[int, int]]] = {}
+    for cell, value in merged.items():
+        bucket_index, cell_index = cell_lookup[cell]
+        if value not in buckets[bucket_index].values:
+            return None
+        bucket_assignments.setdefault(bucket_index, []).append((cell_index, value))
+
+    pattern_rows = []
+    for bucket_index, pairs in bucket_assignments.items():
+        seen_values: dict[int, int] = {}
+        for cell_index, value in pairs:
+            old_cell_index = seen_values.get(value)
+            if old_cell_index is not None and old_cell_index != cell_index:
+                return None
+            seen_values[value] = cell_index
+        pattern_rows.append((bucket_index, tuple(sorted(pairs))))
+    return tuple(sorted(pattern_rows))
+
+
+def _stage_b_compile_bucket_support_patterns(
+    u_rows: UArray,
+    buckets: Sequence[StageABucket],
+) -> dict[tuple[int, int, int], tuple[tuple[tuple[int, tuple[tuple[int, int], ...]], ...], ...]]:
+    size = len(u_rows)
+    cell_domains = stage_a_bucket_domains(u_rows)
+    cell_lookup = _stage_b_cell_bucket_lookup(buckets)
+    compiled: dict[
+        tuple[int, int, int],
+        tuple[tuple[tuple[int, tuple[tuple[int, int], ...]], ...], ...],
+    ] = {}
+    for x in range(size):
+        for y in range(size):
+            for z in range(size):
+                output_u = u_rows[x][y]
+                cell_1 = (x, y)
+                cell_2 = (x, u_rows[y][z])
+                cell_3 = (y, z)
+                pattern_set = set()
+                for value_1 in cell_domains[cell_1[0]][cell_1[1]]:
+                    y2_cell = (output_u, u_rows[value_1][z])
+                    y3_left_cell = (value_1, z)
+                    for value_2 in cell_domains[cell_2[0]][cell_2[1]]:
+                        for value_3 in cell_domains[cell_3[0]][cell_3[1]]:
+                            y2_value = u_rows[value_2][value_3]
+                            y3_right_cell = (value_2, value_3)
+                            for y3_value in range(size):
+                                pattern = _stage_b_bucket_pattern_from_assignments(
+                                    (
+                                        (cell_1, value_1),
+                                        (cell_2, value_2),
+                                        (cell_3, value_3),
+                                        (y2_cell, y2_value),
+                                        (y3_left_cell, y3_value),
+                                        (y3_right_cell, y3_value),
+                                    ),
+                                    buckets,
+                                    cell_lookup,
+                                )
+                                if pattern is not None:
+                                    pattern_set.add(pattern)
+                compiled[(x, y, z)] = tuple(sorted(pattern_set))
+    return compiled
+
+
+def _stage_b_pattern_support_sets(
+    pattern: tuple[tuple[int, tuple[tuple[int, int], ...]], ...],
+    bucket_permutations: Sequence[Sequence[Sequence[int]]],
+) -> dict[int, set[int]]:
+    support_sets: dict[int, set[int]] = {}
+    for bucket_index, pairs in pattern:
+        supported = set()
+        for permutation_index, permutation in enumerate(bucket_permutations[bucket_index]):
+            if all(permutation[cell_index] == value for cell_index, value in pairs):
+                supported.add(permutation_index)
+        support_sets[bucket_index] = supported
+    return support_sets
+
+
+def _stage_b_compile_bucket_pattern_supports(
+    patterns_by_triple: dict[
+        tuple[int, int, int],
+        tuple[tuple[tuple[int, tuple[tuple[int, int], ...]], ...], ...],
+    ],
+    bucket_permutations: Sequence[Sequence[Sequence[int]]],
+) -> dict[tuple[int, int, int], tuple[dict[int, set[int]], ...]]:
+    return {
+        triple: tuple(
+            _stage_b_pattern_support_sets(pattern, bucket_permutations)
+            for pattern in patterns
+        )
+        for triple, patterns in patterns_by_triple.items()
+    }
+
+
+def _stage_b_bucket_domain_size_counts(
+    domains: Sequence[set[int]],
+) -> tuple[tuple[int, int], ...]:
+    return tuple(sorted(Counter(len(domain) for domain in domains).items()))
+
+
+def _stage_b_bucket_domain_product(domains: Sequence[set[int]]) -> str:
+    product_value = 1
+    for domain in domains:
+        product_value *= len(domain)
+    return str(product_value)
+
+
+def _stage_b_bucket_domains_to_cell_domains(
+    buckets: Sequence[StageABucket],
+    bucket_permutations: Sequence[Sequence[Sequence[int]]],
+    domains: Sequence[set[int]],
+    *,
+    size: int,
+) -> tuple[tuple[tuple[int, ...], ...], ...]:
+    cell_domains: list[list[set[int]]] = [
+        [set() for _y in range(size)] for _x in range(size)
+    ]
+    for bucket_index, bucket in enumerate(buckets):
+        for permutation_index in domains[bucket_index]:
+            permutation = bucket_permutations[bucket_index][permutation_index]
+            for cell_index, cell in enumerate(bucket.cells):
+                cell_domains[cell[0]][cell[1]].add(permutation[cell_index])
+    return _frozen_domains(cell_domains)
+
+
+def _stage_b_bucket_permutation_extract_v(
+    buckets: Sequence[StageABucket],
+    bucket_permutations: Sequence[Sequence[Sequence[int]]],
+    domains: Sequence[set[int]],
+    *,
+    size: int,
+) -> VArray | None:
+    rows = [[-1 for _y in range(size)] for _x in range(size)]
+    for bucket_index, bucket in enumerate(buckets):
+        if len(domains[bucket_index]) != 1:
+            return None
+        permutation = bucket_permutations[bucket_index][next(iter(domains[bucket_index]))]
+        for cell_index, cell in enumerate(bucket.cells):
+            rows[cell[0]][cell[1]] = permutation[cell_index]
+    if any(value == -1 for row in rows for value in row):
+        return None
+    return tuple(tuple(row) for row in rows)
+
+
+def _stage_b_enforce_bucket_permutation_triple_gac(
+    domains: list[set[int]],
+    pattern_supports: Sequence[dict[int, set[int]]],
+) -> tuple[bool, int]:
+    deletion_count = 0
+    mentioned_buckets = sorted(
+        {bucket_index for support in pattern_supports for bucket_index in support}
+    )
+    if not pattern_supports:
+        return False, deletion_count
+    for bucket_index in mentioned_buckets:
+        allowed: set[int] = set()
+        for support in pattern_supports:
+            feasible = True
+            for other_bucket, support_set in support.items():
+                if other_bucket == bucket_index:
+                    continue
+                if not domains[other_bucket].intersection(support_set):
+                    feasible = False
+                    break
+            if not feasible:
+                continue
+            allowed.update(support.get(bucket_index, domains[bucket_index]))
+        before = len(domains[bucket_index])
+        domains[bucket_index].intersection_update(allowed)
+        deletion_count += before - len(domains[bucket_index])
+        if not domains[bucket_index]:
+            return False, deletion_count
+    return True, deletion_count
+
+
+def stage_b_bucket_permutation_gac_audit(
+    array: Sequence[Sequence[int]],
+    initial_domains: Sequence[Sequence[int]] | None = None,
+) -> StageBBucketPermutationGACAudit:
+    u_rows = normalize_u_array(array)
+    size = len(u_rows)
+    if not stage_a_multiset_factorization_holds(u_rows):
+        return StageBBucketPermutationGACAudit(
+            size=size,
+            bucket_count=0,
+            triple_count=size**3,
+            support_pattern_count=0,
+            initial_domain_size_counts=tuple(),
+            final_domain_size_counts=tuple(),
+            initial_domain_mass=0,
+            final_domain_mass=0,
+            initial_domain_product="0",
+            final_domain_product="0",
+            deletion_count=0,
+            iteration_count=0,
+            empty_domain=True,
+            all_singleton=False,
+            singleton_bucket_count=0,
+            unresolved_bucket_count=0,
+            maximum_bucket_domain_size=0,
+            singleton_y2_y3_verified=None,
+            column_singular=None,
+            noninvolutive=None,
+            locally_consistent=False,
+            domains=tuple(),
+            extracted_v=None,
+        )
+
+    buckets = stage_a_factorization_buckets(u_rows)
+    bucket_permutations = _stage_b_bucket_permutations(buckets)
+    if initial_domains is None:
+        domains = [set(range(len(permutations_))) for permutations_ in bucket_permutations]
+    else:
+        if len(initial_domains) != len(buckets):
+            raise ValueError("initial bucket domains must match the bucket count")
+        domains = []
+        for bucket_index, domain in enumerate(initial_domains):
+            allowed = set(range(len(bucket_permutations[bucket_index])))
+            domain_set = set(domain)
+            if not domain_set.issubset(allowed):
+                raise ValueError("initial bucket domain index out of range")
+            domains.append(domain_set)
+    initial_counts = _stage_b_bucket_domain_size_counts(domains)
+    initial_mass = sum(len(domain) for domain in domains)
+    initial_product = _stage_b_bucket_domain_product(domains)
+    patterns_by_triple = _stage_b_compile_bucket_support_patterns(u_rows, buckets)
+    pattern_supports_by_triple = _stage_b_compile_bucket_pattern_supports(
+        patterns_by_triple,
+        bucket_permutations,
+    )
+    support_pattern_count = sum(len(patterns) for patterns in patterns_by_triple.values())
+    deletion_count = 0
+    empty_domain = False
+    iteration_count = 0
+    while True:
+        iteration_count += 1
+        before_mass = sum(len(domain) for domain in domains)
+        for triple in sorted(pattern_supports_by_triple):
+            ok, deleted = _stage_b_enforce_bucket_permutation_triple_gac(
+                domains,
+                pattern_supports_by_triple[triple],
+            )
+            deletion_count += deleted
+            if not ok:
+                empty_domain = True
+                break
+        after_mass = sum(len(domain) for domain in domains)
+        if empty_domain or after_mass == before_mass:
+            break
+
+    frozen_domains = tuple(tuple(sorted(domain)) for domain in domains)
+    extracted_v = _stage_b_bucket_permutation_extract_v(
+        buckets,
+        bucket_permutations,
+        domains,
+        size=size,
+    )
+    singleton_y2_y3_verified = (
+        uv_y2_y3_hold(u_rows, extracted_v) if extracted_v is not None else None
+    )
+    column_singular = (
+        v_columns_singular(extracted_v) if extracted_v is not None else None
+    )
+    noninvolutive = (
+        not uv_is_involutive(u_rows, extracted_v) if extracted_v is not None else None
+    )
+    final_sizes = tuple(len(domain) for domain in domains)
+    locally_consistent = (
+        not empty_domain
+        and (singleton_y2_y3_verified is not False)
+    )
+    return StageBBucketPermutationGACAudit(
+        size=size,
+        bucket_count=len(buckets),
+        triple_count=size**3,
+        support_pattern_count=support_pattern_count,
+        initial_domain_size_counts=initial_counts,
+        final_domain_size_counts=_stage_b_bucket_domain_size_counts(domains),
+        initial_domain_mass=initial_mass,
+        final_domain_mass=sum(final_sizes),
+        initial_domain_product=initial_product,
+        final_domain_product=_stage_b_bucket_domain_product(domains),
+        deletion_count=deletion_count,
+        iteration_count=iteration_count,
+        empty_domain=empty_domain,
+        all_singleton=extracted_v is not None,
+        singleton_bucket_count=sum(1 for size_ in final_sizes if size_ == 1),
+        unresolved_bucket_count=sum(1 for size_ in final_sizes if size_ > 1),
+        maximum_bucket_domain_size=max(final_sizes) if final_sizes else 0,
+        singleton_y2_y3_verified=singleton_y2_y3_verified,
+        column_singular=column_singular,
+        noninvolutive=noninvolutive,
+        locally_consistent=locally_consistent,
+        domains=frozen_domains,
+        extracted_v=extracted_v,
+    )
+
+
+def _stage_b_choose_bucket_branch(
+    domains: Sequence[Sequence[int]],
+) -> int | None:
+    best_bucket = None
+    best_size = 10**9
+    for bucket_index, domain in enumerate(domains):
+        domain_size = len(domain)
+        if 1 < domain_size < best_size:
+            best_bucket = bucket_index
+            best_size = domain_size
+    return best_bucket
+
+
+def stage_b_bucket_permutation_v_search_audit(
+    u_array: Sequence[Sequence[int]],
+    *,
+    require_column_singular: bool = True,
+    require_noninvolutive: bool = False,
+    max_nodes: int | None = None,
+    max_examples: int | None = 20,
+) -> StageBVExactCoverAudit:
+    u_rows = normalize_u_array(u_array)
+    size = len(u_rows)
+    if max_nodes is not None and max_nodes < 0:
+        raise ValueError("max_nodes must be nonnegative")
+    if max_examples is not None and max_examples < 0:
+        raise ValueError("max_examples must be nonnegative")
+
+    if (
+        not balanced_symbol_counts(u_rows)
+        or not stage_a_feasibility_nonempty(u_rows)
+        or not stage_a_multiset_factorization_holds(u_rows)
+    ):
+        return StageBVExactCoverAudit(
+            size=size,
+            node_count=0,
+            exact_cover_count=0,
+            column_singular_count=0,
+            y2_y3_count=0,
+            noninvolutive_count=0,
+            accepted_count=0,
+            emitted_count=0,
+            truncated=False,
+            examples=tuple(),
+        )
+
+    buckets = stage_a_factorization_buckets(u_rows)
+    bucket_permutations = _stage_b_bucket_permutations(buckets)
+    node_count = 0
+    exact_cover_count = 0
+    column_singular_count = 0
+    y2_y3_count = 0
+    noninvolutive_count = 0
+    accepted_count = 0
+    examples: list[VArray] = []
+    truncated = False
+
+    def record_if_complete(v_rows: VArray) -> None:
+        nonlocal exact_cover_count
+        nonlocal column_singular_count
+        nonlocal y2_y3_count
+        nonlocal noninvolutive_count
+        nonlocal accepted_count
+
+        if not uv_pair_orthogonal(u_rows, v_rows):
+            return
+        exact_cover_count += 1
+        column_singular = v_columns_singular(v_rows)
+        if column_singular:
+            column_singular_count += 1
+        if require_column_singular and not column_singular:
+            return
+        if not uv_y2_y3_hold(u_rows, v_rows):
+            return
+        y2_y3_count += 1
+        noninvolutive = not uv_is_involutive(u_rows, v_rows)
+        if noninvolutive:
+            noninvolutive_count += 1
+        if require_noninvolutive and not noninvolutive:
+            return
+        accepted_count += 1
+        if max_examples is None or len(examples) < max_examples:
+            examples.append(v_rows)
+
+    def search(domains: Sequence[Sequence[int]]) -> None:
+        nonlocal node_count
+        nonlocal truncated
+
+        if truncated:
+            return
+        if max_nodes is not None and node_count >= max_nodes:
+            truncated = True
+            return
+        node_count += 1
+
+        gac = stage_b_bucket_permutation_gac_audit(u_rows, domains)
+        if not gac.locally_consistent:
+            return
+        v_rows = gac.extracted_v
+        if v_rows is not None:
+            record_if_complete(v_rows)
+            return
+        if require_column_singular:
+            cell_domains = _stage_b_bucket_domains_to_cell_domains(
+                buckets,
+                bucket_permutations,
+                tuple(set(domain) for domain in gac.domains),
+                size=size,
+            )
+            if not stage_b_column_singularity_possible(cell_domains):
+                return
+        bucket_index = _stage_b_choose_bucket_branch(gac.domains)
+        if bucket_index is None:
+            return
+        for permutation_index in gac.domains[bucket_index]:
+            branch_domains = tuple(
+                (permutation_index,) if index == bucket_index else domain
+                for index, domain in enumerate(gac.domains)
+            )
+            search(branch_domains)
+            if truncated:
+                break
+
+    initial_domains = tuple(tuple(range(len(perms))) for perms in bucket_permutations)
+    search(initial_domains)
+    return StageBVExactCoverAudit(
+        size=size,
+        node_count=node_count,
+        exact_cover_count=exact_cover_count,
+        column_singular_count=column_singular_count,
+        y2_y3_count=y2_y3_count,
+        noninvolutive_count=noninvolutive_count,
+        accepted_count=accepted_count,
+        emitted_count=len(examples),
+        truncated=truncated,
+        examples=tuple(examples),
+    )
+
+
 def stage_b_gac_v_search_audit(
     u_array: Sequence[Sequence[int]],
     *,
@@ -828,6 +1338,10 @@ def stage_b_gac_v_search_audit(
         v_rows = gac.extracted_v
         if v_rows is not None:
             record_if_complete(v_rows)
+            return
+        if require_column_singular and not stage_b_column_singularity_possible(
+            gac.domains
+        ):
             return
         cell = _stage_b_choose_branch_cell(gac.domains)
         if cell is None:

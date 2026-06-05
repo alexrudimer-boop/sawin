@@ -34,12 +34,17 @@ Connect row-catalogue Stage A enumeration to bucket-CSP, Stage B exact cover, an
 - GAC domain mass: `27` -> `27`;
 - GAC forced variables: `0`;
 - GAC locally consistent: `True`;
+- bucket-permutation product: `216` -> `1`;
+- bucket-permutation locally consistent: `True`;
 - Stage B accepted completions: `0`;
 - Stage B emitted completions: `0`;
 - Stage B truncated: `False`;
 - GAC Stage B nodes: `12`;
 - GAC Stage B accepted completions: `0`;
 - GAC Stage B truncated: `False`;
+- bucket Stage B nodes: `1`;
+- bucket Stage B accepted completions: `0`;
+- bucket Stage B truncated: `False`;
 - rigid first failed filters: `()`.
 
 ### row_budget_size4_u0
@@ -52,12 +57,17 @@ Connect row-catalogue Stage A enumeration to bucket-CSP, Stage B exact cover, an
 - GAC domain mass: `64` -> `64`;
 - GAC forced variables: `0`;
 - GAC locally consistent: `True`;
+- bucket-permutation product: `331776` -> `1`;
+- bucket-permutation locally consistent: `True`;
 - Stage B accepted completions: `0`;
 - Stage B emitted completions: `0`;
 - Stage B truncated: `False`;
 - GAC Stage B nodes: `30`;
 - GAC Stage B accepted completions: `0`;
 - GAC Stage B truncated: `False`;
+- bucket Stage B nodes: `1`;
+- bucket Stage B accepted completions: `0`;
+- bucket Stage B truncated: `False`;
 - rigid first failed filters: `()`.
 
 ### known_affine_type_a
@@ -70,12 +80,17 @@ Connect row-catalogue Stage A enumeration to bucket-CSP, Stage B exact cover, an
 - GAC domain mass: `32` -> `32`;
 - GAC forced variables: `0`;
 - GAC locally consistent: `True`;
+- bucket-permutation product: `256` -> `256`;
+- bucket-permutation locally consistent: `True`;
 - Stage B accepted completions: `1`;
 - Stage B emitted completions: `1`;
 - Stage B truncated: `False`;
 - GAC Stage B nodes: `3`;
 - GAC Stage B accepted completions: `1`;
 - GAC Stage B truncated: `False`;
+- bucket Stage B nodes: `3`;
+- bucket Stage B accepted completions: `1`;
+- bucket Stage B truncated: `False`;
 - rigid first failed filters: `('quotient_rigid',)`.
 
 ## Conclusion

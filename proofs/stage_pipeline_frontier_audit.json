@@ -19,6 +19,79 @@
         "unsupported_y2_y3_triple_count": 0,
         "variable_count": 9
       },
+      "bucket_gac": {
+        "all_singleton": true,
+        "bucket_count": 3,
+        "column_singular": true,
+        "deletion_count": 15,
+        "domains": [
+          [
+            0
+          ],
+          [
+            0
+          ],
+          [
+            0
+          ]
+        ],
+        "empty_domain": false,
+        "extracted_v": [
+          [
+            0,
+            1,
+            2
+          ],
+          [
+            0,
+            1,
+            2
+          ],
+          [
+            0,
+            1,
+            2
+          ]
+        ],
+        "final_domain_mass": 3,
+        "final_domain_product": "1",
+        "final_domain_size_counts": [
+          [
+            1,
+            3
+          ]
+        ],
+        "initial_domain_mass": 18,
+        "initial_domain_product": "216",
+        "initial_domain_size_counts": [
+          [
+            6,
+            3
+          ]
+        ],
+        "iteration_count": 2,
+        "locally_consistent": true,
+        "maximum_bucket_domain_size": 1,
+        "noninvolutive": false,
+        "singleton_bucket_count": 3,
+        "singleton_y2_y3_verified": true,
+        "size": 3,
+        "support_pattern_count": 27,
+        "triple_count": 27,
+        "unresolved_bucket_count": 0
+      },
+      "bucket_stage_b": {
+        "accepted_count": 0,
+        "column_singular_count": 1,
+        "emitted_count": 0,
+        "exact_cover_count": 1,
+        "examples": [],
+        "node_count": 1,
+        "noninvolutive_count": 0,
+        "size": 3,
+        "truncated": false,
+        "y2_y3_count": 1
+      },
       "gac": {
         "all_singleton": false,
         "bucket_count": 3,
@@ -148,6 +221,91 @@
         "size": 4,
         "unsupported_y2_y3_triple_count": 0,
         "variable_count": 16
+      },
+      "bucket_gac": {
+        "all_singleton": true,
+        "bucket_count": 4,
+        "column_singular": true,
+        "deletion_count": 92,
+        "domains": [
+          [
+            0
+          ],
+          [
+            0
+          ],
+          [
+            0
+          ],
+          [
+            0
+          ]
+        ],
+        "empty_domain": false,
+        "extracted_v": [
+          [
+            0,
+            1,
+            2,
+            3
+          ],
+          [
+            0,
+            1,
+            2,
+            3
+          ],
+          [
+            0,
+            1,
+            2,
+            3
+          ],
+          [
+            0,
+            1,
+            2,
+            3
+          ]
+        ],
+        "final_domain_mass": 4,
+        "final_domain_product": "1",
+        "final_domain_size_counts": [
+          [
+            1,
+            4
+          ]
+        ],
+        "initial_domain_mass": 96,
+        "initial_domain_product": "331776",
+        "initial_domain_size_counts": [
+          [
+            24,
+            4
+          ]
+        ],
+        "iteration_count": 2,
+        "locally_consistent": true,
+        "maximum_bucket_domain_size": 1,
+        "noninvolutive": false,
+        "singleton_bucket_count": 4,
+        "singleton_y2_y3_verified": true,
+        "size": 4,
+        "support_pattern_count": 64,
+        "triple_count": 64,
+        "unresolved_bucket_count": 0
+      },
+      "bucket_stage_b": {
+        "accepted_count": 0,
+        "column_singular_count": 1,
+        "emitted_count": 0,
+        "exact_cover_count": 1,
+        "examples": [],
+        "node_count": 1,
+        "noninvolutive_count": 0,
+        "size": 4,
+        "truncated": false,
+        "y2_y3_count": 1
       },
       "gac": {
         "all_singleton": false,
@@ -331,6 +489,113 @@
         "size": 4,
         "unsupported_y2_y3_triple_count": 0,
         "variable_count": 16
+      },
+      "bucket_gac": {
+        "all_singleton": false,
+        "bucket_count": 8,
+        "column_singular": null,
+        "deletion_count": 0,
+        "domains": [
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "empty_domain": false,
+        "extracted_v": null,
+        "final_domain_mass": 16,
+        "final_domain_product": "256",
+        "final_domain_size_counts": [
+          [
+            2,
+            8
+          ]
+        ],
+        "initial_domain_mass": 16,
+        "initial_domain_product": "256",
+        "initial_domain_size_counts": [
+          [
+            2,
+            8
+          ]
+        ],
+        "iteration_count": 1,
+        "locally_consistent": true,
+        "maximum_bucket_domain_size": 2,
+        "noninvolutive": null,
+        "singleton_bucket_count": 0,
+        "singleton_y2_y3_verified": null,
+        "size": 4,
+        "support_pattern_count": 156,
+        "triple_count": 64,
+        "unresolved_bucket_count": 8
+      },
+      "bucket_stage_b": {
+        "accepted_count": 1,
+        "column_singular_count": 2,
+        "emitted_count": 1,
+        "exact_cover_count": 2,
+        "examples": [
+          [
+            [
+              3,
+              1,
+              1,
+              3
+            ],
+            [
+              3,
+              1,
+              1,
+              3
+            ],
+            [
+              0,
+              2,
+              2,
+              0
+            ],
+            [
+              0,
+              2,
+              2,
+              0
+            ]
+          ]
+        ],
+        "node_count": 3,
+        "noninvolutive_count": 1,
+        "size": 4,
+        "truncated": false,
+        "y2_y3_count": 2
       },
       "gac": {
         "all_singleton": false,

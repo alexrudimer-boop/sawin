@@ -1,6 +1,15 @@
 # Stage B GAC Frontier Next-Step Prompt
 
-Status: ask_now / prepared for GPT-5.5 Pro on 2026-06-04.
+Status: answered / GPT-5.5 Pro answered on 2026-06-04.
+
+Answer summary:
+
+- Replace cell-value GAC by bucket-permutation GAC.
+- Treat each bucket bijection C(u,P)->B(u,P) as one finite-domain variable.
+- Compile each Y2/Y3 triple into finite support patterns over bucket bijections.
+- Use bitset-style generalized arc consistency to delete whole bucket permutations.
+- Branch on bucket permutations, not individual cells.
+- Add column-singularity and non-involutivity checks/pruning at the bucket level.
 
 Prompt:
 
