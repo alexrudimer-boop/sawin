@@ -97,6 +97,7 @@ Current regression facts from the implementation:
 - size-4 affine Type A pressure row:
     bucket domains product 256 -> 256 under bucket-GAC;
     bucket-permutation branching recovers the unique column-singular non-involutive completion in 3 nodes;
+    Aut(U) has order 2 and canonical-state rejection rejects 0 branches on this regression;
     that completion is the known rack-dominated affine Type A table.
 
 - exact size-3 row-catalogue Stage A has one canonical MF-valid U and no non-involutive Stage B completion.
@@ -113,7 +114,7 @@ A. A stronger Stage A U-only constraint beyond multiset factorization, derived f
 
 B. A bucket-permutation-level theorem: for example, a condition under which a non-singleton bucket-GAC fixed point forces a quotient, subsolution, observer, involutivity, or observer-rack factorization.
 
-C. A canonicalization/automorphism pruning method for bucket-permutation branching with precise correctness, using Aut(U), suitable for d=5,6.
+C. A stronger canonicalization/automorphism pruning method beyond the current Aut(U) orbit-minimal bucket-domain-state rejection, with precise correctness, suitable for d=5,6.
 
 D. A proof that no size-5 everywhere-singular MF-valid U can have a column-singular non-involutive Stage B completion.
 

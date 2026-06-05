@@ -65,6 +65,22 @@ class StageBVExactCoverAudit:
 
 
 @dataclass(frozen=True)
+class StageBBucketPermutationSearchAudit:
+    size: int
+    node_count: int
+    canonical_rejection_count: int
+    exact_cover_count: int
+    column_singular_count: int
+    y2_y3_count: int
+    noninvolutive_count: int
+    accepted_count: int
+    emitted_count: int
+    truncated: bool
+    aut_u_order: int
+    examples: tuple[VArray, ...]
+
+
+@dataclass(frozen=True)
 class StageBBucketCSPProfile:
     size: int
     variable_count: int
@@ -802,6 +818,82 @@ def _stage_b_cell_bucket_lookup(
     return lookup
 
 
+def _stage_b_bucket_permutation_action(
+    buckets: Sequence[StageABucket],
+    bucket_permutations: Sequence[Sequence[Sequence[int]]],
+    automorphism: Sequence[int],
+) -> tuple[tuple[int, ...], ...]:
+    cell_lookup = _stage_b_cell_bucket_lookup(buckets)
+    permutation_lookup = tuple(
+        {tuple(permutation): index for index, permutation in enumerate(permutations_)}
+        for permutations_ in bucket_permutations
+    )
+    action = [tuple() for _bucket in buckets]
+    for bucket_index, bucket in enumerate(buckets):
+        bucket_action = []
+        for permutation in bucket_permutations[bucket_index]:
+            target_bucket_index = None
+            target_values: list[int | None] | None = None
+            for cell_index, cell in enumerate(bucket.cells):
+                mapped_cell = (automorphism[cell[0]], automorphism[cell[1]])
+                mapped_value = automorphism[permutation[cell_index]]
+                new_bucket_index, new_cell_index = cell_lookup[mapped_cell]
+                if target_bucket_index is None:
+                    target_bucket_index = new_bucket_index
+                    target_values = [None] * len(buckets[new_bucket_index].cells)
+                elif target_bucket_index != new_bucket_index:
+                    raise ValueError("automorphism did not preserve bucket cells")
+                if target_values is None:
+                    raise ValueError("missing target bucket values")
+                target_values[new_cell_index] = mapped_value
+            if target_bucket_index is None or target_values is None:
+                raise ValueError("empty buckets are not supported")
+            mapped_tuple = tuple(value for value in target_values if value is not None)
+            if len(mapped_tuple) != len(target_values):
+                raise ValueError("automorphism did not fill the target bucket")
+            bucket_action.append(
+                (target_bucket_index, permutation_lookup[target_bucket_index][mapped_tuple])
+            )
+        action[bucket_index] = tuple(bucket_action)
+    return tuple(action)
+
+
+def _stage_b_bucket_domain_state_word(
+    domains: Sequence[Sequence[int]],
+) -> tuple[tuple[int, ...], ...]:
+    return tuple(tuple(sorted(domain)) for domain in domains)
+
+
+def _stage_b_transform_bucket_domain_state(
+    domains: Sequence[Sequence[int]],
+    action: Sequence[Sequence[tuple[int, int]]],
+) -> tuple[tuple[int, ...], ...]:
+    transformed: list[set[int]] = [set() for _domain in domains]
+    for bucket_index, domain in enumerate(domains):
+        for permutation_index in domain:
+            target_bucket, target_permutation = action[bucket_index][permutation_index]
+            transformed[target_bucket].add(target_permutation)
+    return tuple(tuple(sorted(domain)) for domain in transformed)
+
+
+def stage_b_bucket_domain_state_is_canonical(
+    array: Sequence[Sequence[int]],
+    domains: Sequence[Sequence[int]],
+) -> bool:
+    u_rows = normalize_u_array(array)
+    buckets = stage_a_factorization_buckets(u_rows)
+    bucket_permutations = _stage_b_bucket_permutations(buckets)
+    actions = tuple(
+        _stage_b_bucket_permutation_action(buckets, bucket_permutations, automorphism)
+        for automorphism in u_array_automorphisms(u_rows)
+    )
+    state_word = _stage_b_bucket_domain_state_word(domains)
+    return state_word == min(
+        _stage_b_transform_bucket_domain_state(domains, action)
+        for action in actions
+    )
+
+
 def _stage_b_bucket_pattern_from_assignments(
     assignments: Sequence[tuple[Cell, int]],
     buckets: Sequence[StageABucket],
@@ -1130,9 +1222,10 @@ def stage_b_bucket_permutation_v_search_audit(
     *,
     require_column_singular: bool = True,
     require_noninvolutive: bool = False,
+    canonicalize: bool = True,
     max_nodes: int | None = None,
     max_examples: int | None = 20,
-) -> StageBVExactCoverAudit:
+) -> StageBBucketPermutationSearchAudit:
     u_rows = normalize_u_array(u_array)
     size = len(u_rows)
     if max_nodes is not None and max_nodes < 0:
@@ -1145,9 +1238,10 @@ def stage_b_bucket_permutation_v_search_audit(
         or not stage_a_feasibility_nonempty(u_rows)
         or not stage_a_multiset_factorization_holds(u_rows)
     ):
-        return StageBVExactCoverAudit(
+        return StageBBucketPermutationSearchAudit(
             size=size,
             node_count=0,
+            canonical_rejection_count=0,
             exact_cover_count=0,
             column_singular_count=0,
             y2_y3_count=0,
@@ -1155,12 +1249,19 @@ def stage_b_bucket_permutation_v_search_audit(
             accepted_count=0,
             emitted_count=0,
             truncated=False,
+            aut_u_order=0,
             examples=tuple(),
         )
 
     buckets = stage_a_factorization_buckets(u_rows)
     bucket_permutations = _stage_b_bucket_permutations(buckets)
+    automorphisms = u_array_automorphisms(u_rows)
+    automorphism_actions = tuple(
+        _stage_b_bucket_permutation_action(buckets, bucket_permutations, automorphism)
+        for automorphism in automorphisms
+    )
     node_count = 0
+    canonical_rejection_count = 0
     exact_cover_count = 0
     column_singular_count = 0
     y2_y3_count = 0
@@ -1198,6 +1299,7 @@ def stage_b_bucket_permutation_v_search_audit(
 
     def search(domains: Sequence[Sequence[int]]) -> None:
         nonlocal node_count
+        nonlocal canonical_rejection_count
         nonlocal truncated
 
         if truncated:
@@ -1210,6 +1312,15 @@ def stage_b_bucket_permutation_v_search_audit(
         gac = stage_b_bucket_permutation_gac_audit(u_rows, domains)
         if not gac.locally_consistent:
             return
+        if canonicalize:
+            state_word = _stage_b_bucket_domain_state_word(gac.domains)
+            canonical_word = min(
+                _stage_b_transform_bucket_domain_state(gac.domains, action)
+                for action in automorphism_actions
+            )
+            if state_word != canonical_word:
+                canonical_rejection_count += 1
+                return
         v_rows = gac.extracted_v
         if v_rows is not None:
             record_if_complete(v_rows)
@@ -1237,9 +1348,10 @@ def stage_b_bucket_permutation_v_search_audit(
 
     initial_domains = tuple(tuple(range(len(perms))) for perms in bucket_permutations)
     search(initial_domains)
-    return StageBVExactCoverAudit(
+    return StageBBucketPermutationSearchAudit(
         size=size,
         node_count=node_count,
+        canonical_rejection_count=canonical_rejection_count,
         exact_cover_count=exact_cover_count,
         column_singular_count=column_singular_count,
         y2_y3_count=y2_y3_count,
@@ -1247,6 +1359,7 @@ def stage_b_bucket_permutation_v_search_audit(
         accepted_count=accepted_count,
         emitted_count=len(examples),
         truncated=truncated,
+        aut_u_order=len(automorphisms),
         examples=tuple(examples),
     )
 
@@ -1453,6 +1566,34 @@ def relabel_u_array(array: Sequence[Sequence[int]], permutation: Sequence[int]) 
     return tuple(
         tuple(perm[rows[inverse[x]][inverse[y]]] for y in range(size))
         for x in range(size)
+    )
+
+
+def relabel_v_array(
+    array: Sequence[Sequence[int]],
+    permutation: Sequence[int],
+) -> VArray:
+    rows = normalize_v_array(array)
+    size = len(rows)
+    perm = tuple(permutation)
+    if sorted(perm) != list(range(size)):
+        raise ValueError("permutation must relabel the V array domain")
+    inverse = [0] * size
+    for old, new in enumerate(perm):
+        inverse[new] = old
+    return tuple(
+        tuple(perm[rows[inverse[x]][inverse[y]]] for y in range(size))
+        for x in range(size)
+    )
+
+
+def u_array_automorphisms(array: Sequence[Sequence[int]]) -> tuple[tuple[int, ...], ...]:
+    rows = normalize_u_array(array)
+    size = len(rows)
+    return tuple(
+        perm
+        for perm in permutations(range(size))
+        if relabel_u_array(rows, perm) == rows
     )
 
 

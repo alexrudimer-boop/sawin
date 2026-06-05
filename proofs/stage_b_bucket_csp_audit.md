@@ -14,6 +14,7 @@ Record the bucket-domain CSP precheck used before full Stage B backtracking: Hal
 - early column-singularity feasibility rejection when a column has no possible duplicate value;
 - bucket-permutation GAC over whole bijections C(u,P)->B(u,P);
 - bucket-permutation branching for column-singular non-involutive completions;
+- Aut(U)-aware canonical state rejection for bucket-permutation branches;
 
 ## Example Rows
 
@@ -42,6 +43,7 @@ Record the bucket-domain CSP precheck used before full Stage B backtracking: Hal
 - bucket-permutation domain size counts: `((1, 3),)`;
 - bucket-permutation singleton/noninvolutive: `True` / `False`;
 - bucket-permutation search nodes / accepted: `1` / `0`;
+- bucket-permutation Aut(U) / canonical rejections: `6` / `0`;
 - bucket-permutation search truncated: `False`.
 
 ### dihedral_rack_3
@@ -69,6 +71,7 @@ Record the bucket-domain CSP precheck used before full Stage B backtracking: Hal
 - bucket-permutation domain size counts: `((1, 9),)`;
 - bucket-permutation singleton/noninvolutive: `True` / `True`;
 - bucket-permutation search nodes / accepted: `1` / `0`;
+- bucket-permutation Aut(U) / canonical rejections: `6` / `0`;
 - bucket-permutation search truncated: `False`.
 
 ### size4_affine_type_a
@@ -96,11 +99,12 @@ Record the bucket-domain CSP precheck used before full Stage B backtracking: Hal
 - bucket-permutation domain size counts: `((2, 8),)`;
 - bucket-permutation singleton/noninvolutive: `False` / `None`;
 - bucket-permutation search nodes / accepted: `3` / `1`;
+- bucket-permutation Aut(U) / canonical rejections: `2` / `0`;
 - bucket-permutation search truncated: `False`.
 
 ## Conclusion
 
-The current examples all pass local bucket-CSP consistency.  The profile still distinguishes their domain geometry: identity has three 3-cell buckets, the dihedral rack has nine forced cells, and affine Type A has eight 2-cell buckets.  Exact GAC forces the dihedral rack table and preserves all values needed for the known affine Type A completion.  GAC-assisted branching recovers the unique non-involutive affine Type A completion in three search nodes.  The branch search also rejects any non-singleton state where some V-column can no longer become singular.  This is now refined by bucket-permutation GAC, which preserves whole bucket-bijection correlations and forces the identity example without cell-level branching.  This is the next precheck layer before full d=5,6 Stage B search.
+The current examples all pass local bucket-CSP consistency.  The profile still distinguishes their domain geometry: identity has three 3-cell buckets, the dihedral rack has nine forced cells, and affine Type A has eight 2-cell buckets.  Exact GAC forces the dihedral rack table and preserves all values needed for the known affine Type A completion.  GAC-assisted branching recovers the unique non-involutive affine Type A completion in three search nodes.  The branch search also rejects any non-singleton state where some V-column can no longer become singular.  This is now refined by bucket-permutation GAC, which preserves whole bucket-bijection correlations and forces the identity example without cell-level branching.  The bucket search records Aut(U) and rejects noncanonical branch states under that stabilizer.  This is the next precheck layer before full d=5,6 Stage B search.
 
 ## Next Prompt
 

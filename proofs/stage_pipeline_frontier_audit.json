@@ -82,6 +82,8 @@
       },
       "bucket_stage_b": {
         "accepted_count": 0,
+        "aut_u_order": 6,
+        "canonical_rejection_count": 0,
         "column_singular_count": 1,
         "emitted_count": 0,
         "exact_cover_count": 1,
@@ -297,6 +299,8 @@
       },
       "bucket_stage_b": {
         "accepted_count": 0,
+        "aut_u_order": 24,
+        "canonical_rejection_count": 0,
         "column_singular_count": 1,
         "emitted_count": 0,
         "exact_cover_count": 1,
@@ -560,6 +564,8 @@
       },
       "bucket_stage_b": {
         "accepted_count": 1,
+        "aut_u_order": 2,
+        "canonical_rejection_count": 0,
         "column_singular_count": 2,
         "emitted_count": 1,
         "exact_cover_count": 2,

@@ -224,6 +224,9 @@ def render_markdown(report: dict[str, object]) -> str:
                 f"- bucket Stage B nodes: `{bucket_stage_b['node_count']}`;",
                 f"- bucket Stage B accepted completions: "
                 f"`{bucket_stage_b['accepted_count']}`;",
+                f"- bucket Stage B Aut(U) / canonical rejections: "
+                f"`{bucket_stage_b['aut_u_order']}` / "
+                f"`{bucket_stage_b['canonical_rejection_count']}`;",
                 f"- bucket Stage B truncated: `{bucket_stage_b['truncated']}`;",
                 f"- rigid first failed filters: `{tuple(first_failures)}`.",
                 "",

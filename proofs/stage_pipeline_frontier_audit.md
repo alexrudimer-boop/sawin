@@ -44,6 +44,7 @@ Connect row-catalogue Stage A enumeration to bucket-CSP, Stage B exact cover, an
 - GAC Stage B truncated: `False`;
 - bucket Stage B nodes: `1`;
 - bucket Stage B accepted completions: `0`;
+- bucket Stage B Aut(U) / canonical rejections: `6` / `0`;
 - bucket Stage B truncated: `False`;
 - rigid first failed filters: `()`.
 
@@ -67,6 +68,7 @@ Connect row-catalogue Stage A enumeration to bucket-CSP, Stage B exact cover, an
 - GAC Stage B truncated: `False`;
 - bucket Stage B nodes: `1`;
 - bucket Stage B accepted completions: `0`;
+- bucket Stage B Aut(U) / canonical rejections: `24` / `0`;
 - bucket Stage B truncated: `False`;
 - rigid first failed filters: `()`.
 
@@ -90,6 +92,7 @@ Connect row-catalogue Stage A enumeration to bucket-CSP, Stage B exact cover, an
 - GAC Stage B truncated: `False`;
 - bucket Stage B nodes: `3`;
 - bucket Stage B accepted completions: `1`;
+- bucket Stage B Aut(U) / canonical rejections: `2` / `0`;
 - bucket Stage B truncated: `False`;
 - rigid first failed filters: `('quotient_rigid',)`.
 

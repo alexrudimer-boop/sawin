@@ -15,12 +15,14 @@ from ybe_domination.stage_a_u_arrays import (
     stage_b_bucket_triple_value_has_support,
     stage_b_bucket_permutation_gac_audit,
     stage_b_bucket_permutation_v_search_audit,
+    stage_b_bucket_domain_state_is_canonical,
     stage_b_column_singularity_possible,
     stage_b_gac_dynamic_universe,
     stage_b_gac_propagation_audit,
     stage_b_gac_v_search_audit,
     stage_b_hall_all_different_ok,
     u_array_from_solution,
+    u_array_automorphisms,
     uv_arrays_from_solution,
 )
 
@@ -108,6 +110,13 @@ class StageBBucketCSPTests(unittest.TestCase):
         self.assertEqual(audit.singleton_y2_y3_verified, True)
         self.assertEqual(audit.noninvolutive, False)
 
+    def test_u_array_automorphisms_are_computed_exactly_on_regressions(self):
+        identity_u = u_array_from_solution(identity_solution((0, 1, 2)))
+        affine_u = u_array_from_solution(affine_f2_type_a_solution())
+
+        self.assertEqual(len(u_array_automorphisms(identity_u)), 6)
+        self.assertEqual(len(u_array_automorphisms(affine_u)), 2)
+
     def test_bucket_permutation_search_recovers_affine_completion(self):
         u_array, v_array = uv_arrays_from_solution(affine_f2_type_a_solution())
         audit = stage_b_bucket_permutation_v_search_audit(
@@ -117,9 +126,17 @@ class StageBBucketCSPTests(unittest.TestCase):
         )
 
         self.assertEqual(audit.node_count, 3)
+        self.assertEqual(audit.aut_u_order, 2)
+        self.assertEqual(audit.canonical_rejection_count, 0)
         self.assertEqual(audit.accepted_count, 1)
         self.assertEqual(audit.examples, (v_array,))
         self.assertFalse(audit.truncated)
+
+    def test_bucket_domain_state_canonical_checker_accepts_root_state(self):
+        u_array = u_array_from_solution(affine_f2_type_a_solution())
+        gac = stage_b_bucket_permutation_gac_audit(u_array)
+
+        self.assertTrue(stage_b_bucket_domain_state_is_canonical(u_array, gac.domains))
 
     def test_column_singularity_feasibility_filter_detects_forced_permutation(self):
         self.assertFalse(
