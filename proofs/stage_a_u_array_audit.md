@@ -83,7 +83,7 @@ Record reusable Stage A checks for the size 5/6 everywhere-singular search: bala
 
 ## Enumeration Baseline
 
-### exact_size_2
+### cell_exact_size_2
 
 - size: `2`;
 - nodes: `9`;
@@ -95,7 +95,7 @@ Record reusable Stage A checks for the size 5/6 everywhere-singular search: bala
 - emitted examples: `1`;
 - truncated: `False`.
 
-### exact_size_3
+### cell_exact_size_3
 
 - size: `3`;
 - nodes: `2326`;
@@ -107,7 +107,7 @@ Record reusable Stage A checks for the size 5/6 everywhere-singular search: bala
 - emitted examples: `1`;
 - truncated: `False`.
 
-### budgeted_size_4
+### cell_budgeted_size_4
 
 - size: `4`;
 - nodes: `50000`;
@@ -119,10 +119,46 @@ Record reusable Stage A checks for the size 5/6 everywhere-singular search: bala
 - emitted examples: `1`;
 - truncated: `True`.
 
+### row_exact_size_2
+
+- size: `2`;
+- nodes: `5`;
+- completed balanced arrays: `2`;
+- row-singular arrays: `2`;
+- A_xy feasible arrays: `1`;
+- multiset-factorization arrays: `1`;
+- canonical arrays: `1`;
+- emitted examples: `1`;
+- truncated: `False`.
+
+### row_exact_size_3
+
+- size: `3`;
+- nodes: `772`;
+- completed balanced arrays: `492`;
+- row-singular arrays: `492`;
+- A_xy feasible arrays: `19`;
+- multiset-factorization arrays: `1`;
+- canonical arrays: `1`;
+- emitted examples: `1`;
+- truncated: `False`.
+
+### row_budgeted_size_4
+
+- size: `4`;
+- nodes: `50000`;
+- completed balanced arrays: `43718`;
+- row-singular arrays: `43718`;
+- A_xy feasible arrays: `146`;
+- multiset-factorization arrays: `1`;
+- canonical arrays: `1`;
+- emitted examples: `1`;
+- truncated: `True`.
+
 ## Conclusion
 
-The Stage A code separates one-sided nondegenerate rack rows from everywhere-singular U-data.  The multiset-factorization law shrinks the exact size-3 canonical Stage A baseline from six A_xy-feasible arrays to one MF-valid array.  The budgeted size-4 run remains a truncated search, but all retained examples now satisfy the stronger Y1-plus-bijectivity law.
+The Stage A code separates one-sided nondegenerate rack rows from everywhere-singular U-data.  The multiset-factorization law shrinks the exact size-3 canonical Stage A baseline from six A_xy-feasible arrays to one MF-valid array.  The row-catalogue enumerator reproduces the exact d=2,3 baselines with fewer nodes than the cell search and is the preferred path for d=5,6.
 
 ## Next Prompt
 
-`prompts/gpt55_pro/2026-06-04-stage-a-u-array-enumeration_ask_now.md`.
+`prompts/gpt55_pro/2026-06-04-stage-b-bucket-csp_ask_now.md`.

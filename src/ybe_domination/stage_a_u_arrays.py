@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from collections import Counter
 from dataclasses import dataclass
-from itertools import permutations
+from itertools import permutations, product
 from typing import Iterator, Sequence
 
 from .finite_braided_set import FiniteBraidedSet
@@ -618,6 +618,124 @@ def stage_a_enumeration_audit(
         node_count=node_count,
         completed_balanced_count=completed_balanced_count,
         row_singular_count=row_singular_count,
+        feasibility_nonempty_count=feasibility_nonempty_count,
+        multiset_factorization_count=multiset_factorization_count,
+        canonical_count=canonical_count,
+        emitted_count=len(examples),
+        truncated=truncated,
+        examples=tuple(examples),
+    )
+
+
+def singular_transformations(size: int) -> tuple[tuple[int, ...], ...]:
+    if size <= 0:
+        raise ValueError("size must be positive")
+    return tuple(
+        mapping
+        for mapping in product(range(size), repeat=size)
+        if len(set(mapping)) < size
+    )
+
+
+def transformation_symbol_counts(mapping: Sequence[int], *, size: int | None = None) -> tuple[int, ...]:
+    values = tuple(mapping)
+    if size is None:
+        size = len(values)
+    counts = [0] * size
+    for value in values:
+        if value < 0 or value >= size:
+            raise ValueError("mapping values must lie in the requested domain")
+        counts[value] += 1
+    return tuple(counts)
+
+
+def row_catalogue_stage_a_enumeration_audit(
+    size: int,
+    *,
+    canonical_only: bool = True,
+    max_nodes: int | None = None,
+    max_examples: int | None = 20,
+) -> StageAEnumerationAudit:
+    if size <= 0:
+        raise ValueError("size must be positive")
+    if max_nodes is not None and max_nodes < 0:
+        raise ValueError("max_nodes must be nonnegative")
+    if max_examples is not None and max_examples < 0:
+        raise ValueError("max_examples must be nonnegative")
+
+    rows = singular_transformations(size)
+    row_counts = tuple(transformation_symbol_counts(row, size=size) for row in rows)
+    assigned: list[tuple[int, ...]] = []
+    counts = [0] * size
+    node_count = 0
+    completed_balanced_count = 0
+    feasibility_nonempty_count = 0
+    multiset_factorization_count = 0
+    canonical_count = 0
+    examples: list[UArray] = []
+    truncated = False
+
+    def can_still_balance(depth: int) -> bool:
+        remaining_rows = size - depth
+        return all(count <= size and count + remaining_rows * size >= size for count in counts)
+
+    def record_if_candidate() -> None:
+        nonlocal completed_balanced_count
+        nonlocal feasibility_nonempty_count
+        nonlocal multiset_factorization_count
+        nonlocal canonical_count
+
+        array = tuple(assigned)
+        if any(count != size for count in counts):
+            return
+        completed_balanced_count += 1
+        if not stage_a_feasibility_nonempty(array):
+            return
+        feasibility_nonempty_count += 1
+        if not stage_a_multiset_factorization_holds(array):
+            return
+        multiset_factorization_count += 1
+        if canonical_only and not is_canonical_u_array(array):
+            return
+        canonical_count += 1
+        if max_examples is None or len(examples) < max_examples:
+            examples.append(array)
+
+    def search(depth: int) -> None:
+        nonlocal node_count
+        nonlocal truncated
+
+        if truncated:
+            return
+        if max_nodes is not None and node_count >= max_nodes:
+            truncated = True
+            return
+        node_count += 1
+
+        if depth == size:
+            record_if_candidate()
+            return
+
+        for row, count_vector in zip(rows, row_counts):
+            if any(counts[value] + count_vector[value] > size for value in range(size)):
+                continue
+            for value in range(size):
+                counts[value] += count_vector[value]
+            assigned.append(row)
+            if can_still_balance(depth + 1):
+                search(depth + 1)
+            assigned.pop()
+            for value in range(size):
+                counts[value] -= count_vector[value]
+            if truncated:
+                break
+
+    search(0)
+    return StageAEnumerationAudit(
+        size=size,
+        node_count=node_count,
+        completed_balanced_count=completed_balanced_count,
+        row_singular_count=completed_balanced_count,
         feasibility_nonempty_count=feasibility_nonempty_count,
         multiset_factorization_count=multiset_factorization_count,
         canonical_count=canonical_count,

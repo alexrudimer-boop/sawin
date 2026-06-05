@@ -70,6 +70,11 @@ def build_report() -> dict[str, object]:
         ],
         "stage_a_u_enumeration": {
             "goal": "enumerate canonical U arrays before searching V",
+            "preferred_implementation": (
+                "enumerate singular row transformations L_x rather than "
+                "individual cells; maintain global symbol counts and apply "
+                "MF at completed row families"
+            ),
             "constraints": [
                 "each symbol occurs exactly d times globally in U",
                 "each U-row is singular",
@@ -279,6 +284,7 @@ def render_markdown(report: dict[str, object]) -> str:
             "## Stage A: U Enumeration",
             "",
             f"- goal: `{stage_a['goal']}`;",
+            f"- preferred implementation: `{stage_a['preferred_implementation']}`;",
             f"- feasibility set: `{stage_a['feasibility_set']}`;",
             f"- multiset factorization: `{stage_a['multiset_factorization']}`;",
             f"- bucket checkpoint: `{stage_a['bucket_checkpoint']}`;",

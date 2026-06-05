@@ -24,6 +24,7 @@ Search for or rule out finite bijective YBE tables on 5 and 6 points that are ev
 ## Stage A: U Enumeration
 
 - goal: `enumerate canonical U arrays before searching V`;
+- preferred implementation: `enumerate singular row transformations L_x rather than individual cells; maintain global symbol counts and apply MF at completed row families`;
 - feasibility set: `A_xy={v in X : L_{U[x,y]} o L_v = L_x o L_y}`;
 - multiset factorization: `for every u, multiset{L_x L_y : L_x(y)=u} equals multiset{L_u L_v : v in X}`;
 - bucket checkpoint: `for every (u,P), store cells C(u,P)={(x,y):L_x(y)=u, L_x L_y=P} and values V(u,P)={v:L_u L_v=P}`;

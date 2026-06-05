@@ -18,6 +18,7 @@ from ybe_domination.stage_a_u_arrays import (  # noqa: E402
     StageAUArrayProfile,
     canonical_u_array,
     relabel_u_array,
+    row_catalogue_stage_a_enumeration_audit,
     stage_a_enumeration_audit,
     stage_a_profile_from_solution,
     u_array_from_solution,
@@ -72,6 +73,13 @@ def build_report() -> dict[str, object]:
     exact_size_2 = stage_a_enumeration_audit(2, max_examples=10)
     exact_size_3 = stage_a_enumeration_audit(3, max_examples=10)
     budgeted_size_4 = stage_a_enumeration_audit(4, max_nodes=50_000, max_examples=3)
+    row_exact_size_2 = row_catalogue_stage_a_enumeration_audit(2, max_examples=10)
+    row_exact_size_3 = row_catalogue_stage_a_enumeration_audit(3, max_examples=10)
+    row_budgeted_size_4 = row_catalogue_stage_a_enumeration_audit(
+        4,
+        max_nodes=50_000,
+        max_examples=3,
+    )
     return {
         "title": "Stage A U-array audit",
         "purpose": (
@@ -102,21 +110,24 @@ def build_report() -> dict[str, object]:
         ],
         "canonicalization": canonicalization_checks(),
         "enumeration": {
-            "exact_size_2": asdict(exact_size_2),
-            "exact_size_3": asdict(exact_size_3),
-            "budgeted_size_4": asdict(budgeted_size_4),
+            "cell_exact_size_2": asdict(exact_size_2),
+            "cell_exact_size_3": asdict(exact_size_3),
+            "cell_budgeted_size_4": asdict(budgeted_size_4),
+            "row_exact_size_2": asdict(row_exact_size_2),
+            "row_exact_size_3": asdict(row_exact_size_3),
+            "row_budgeted_size_4": asdict(row_budgeted_size_4),
         },
         "conclusion": (
             "The Stage A code separates one-sided nondegenerate rack rows from "
             "everywhere-singular U-data.  The multiset-factorization law "
             "shrinks the exact size-3 canonical Stage A baseline from six "
-            "A_xy-feasible arrays to one MF-valid array.  The budgeted size-4 "
-            "run remains a truncated search, but all retained examples now "
-            "satisfy the stronger Y1-plus-bijectivity law."
+            "A_xy-feasible arrays to one MF-valid array.  The row-catalogue "
+            "enumerator reproduces the exact d=2,3 baselines with fewer nodes "
+            "than the cell search and is the preferred path for d=5,6."
         ),
         "next_prompt": (
             "prompts/gpt55_pro/"
-            "2026-06-04-stage-a-u-array-enumeration_ask_now.md"
+            "2026-06-04-stage-b-bucket-csp_ask_now.md"
         ),
     }
 

@@ -39,9 +39,9 @@
       0
     ]
   },
-  "conclusion": "The Stage A code separates one-sided nondegenerate rack rows from everywhere-singular U-data.  The multiset-factorization law shrinks the exact size-3 canonical Stage A baseline from six A_xy-feasible arrays to one MF-valid array.  The budgeted size-4 run remains a truncated search, but all retained examples now satisfy the stronger Y1-plus-bijectivity law.",
+  "conclusion": "The Stage A code separates one-sided nondegenerate rack rows from everywhere-singular U-data.  The multiset-factorization law shrinks the exact size-3 canonical Stage A baseline from six A_xy-feasible arrays to one MF-valid array.  The row-catalogue enumerator reproduces the exact d=2,3 baselines with fewer nodes than the cell search and is the preferred path for d=5,6.",
   "enumeration": {
-    "budgeted_size_4": {
+    "cell_budgeted_size_4": {
       "canonical_count": 1,
       "completed_balanced_count": 15733,
       "emitted_count": 1,
@@ -80,7 +80,7 @@
       "size": 4,
       "truncated": true
     },
-    "exact_size_2": {
+    "cell_exact_size_2": {
       "canonical_count": 1,
       "completed_balanced_count": 2,
       "emitted_count": 1,
@@ -103,7 +103,7 @@
       "size": 2,
       "truncated": false
     },
-    "exact_size_3": {
+    "cell_exact_size_3": {
       "canonical_count": 1,
       "completed_balanced_count": 492,
       "emitted_count": 1,
@@ -132,9 +132,101 @@
       "row_singular_count": 492,
       "size": 3,
       "truncated": false
+    },
+    "row_budgeted_size_4": {
+      "canonical_count": 1,
+      "completed_balanced_count": 43718,
+      "emitted_count": 1,
+      "examples": [
+        [
+          [
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            1,
+            1,
+            1
+          ],
+          [
+            2,
+            2,
+            2,
+            2
+          ],
+          [
+            3,
+            3,
+            3,
+            3
+          ]
+        ]
+      ],
+      "feasibility_nonempty_count": 146,
+      "multiset_factorization_count": 1,
+      "node_count": 50000,
+      "row_singular_count": 43718,
+      "size": 4,
+      "truncated": true
+    },
+    "row_exact_size_2": {
+      "canonical_count": 1,
+      "completed_balanced_count": 2,
+      "emitted_count": 1,
+      "examples": [
+        [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            1
+          ]
+        ]
+      ],
+      "feasibility_nonempty_count": 1,
+      "multiset_factorization_count": 1,
+      "node_count": 5,
+      "row_singular_count": 2,
+      "size": 2,
+      "truncated": false
+    },
+    "row_exact_size_3": {
+      "canonical_count": 1,
+      "completed_balanced_count": 492,
+      "emitted_count": 1,
+      "examples": [
+        [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            1,
+            1
+          ],
+          [
+            2,
+            2,
+            2
+          ]
+        ]
+      ],
+      "feasibility_nonempty_count": 19,
+      "multiset_factorization_count": 1,
+      "node_count": 772,
+      "row_singular_count": 492,
+      "size": 3,
+      "truncated": false
     }
   },
-  "next_prompt": "prompts/gpt55_pro/2026-06-04-stage-a-u-array-enumeration_ask_now.md",
+  "next_prompt": "prompts/gpt55_pro/2026-06-04-stage-b-bucket-csp_ask_now.md",
   "purpose": "Record reusable Stage A checks for the size 5/6 everywhere-singular search: balanced U counts, singular U rows, Y1-derived A_xy feasibility, and simultaneous-relabeling canonicalization.",
   "rows": [
     {

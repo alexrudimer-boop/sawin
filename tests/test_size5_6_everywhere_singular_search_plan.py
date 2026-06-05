@@ -27,6 +27,7 @@ class SizeFiveSixEverywhereSingularSearchPlanTests(unittest.TestCase):
         stage_a = self.report["stage_a_u_enumeration"]
 
         self.assertIn("Y1", identities)
+        self.assertIn("singular row transformations", stage_a["preferred_implementation"])
         self.assertIn("L_{U[x,y]} L_v = L_x L_y", identities["Y1"]["use"])
         self.assertIn("A_xy={v in X", stage_a["feasibility_set"])
         self.assertIn("multiset{L_x L_y", stage_a["multiset_factorization"])

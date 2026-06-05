@@ -98,7 +98,8 @@
     "feasibility_set": "A_xy={v in X : L_{U[x,y]} o L_v = L_x o L_y}",
     "goal": "enumerate canonical U arrays before searching V",
     "multiset_factorization": "for every u, multiset{L_x L_y : L_x(y)=u} equals multiset{L_u L_v : v in X}",
-    "next_decisive_prompt": "ask whether Stage A already rules out d=5, or request a certifiable canonical enumeration scheme/count"
+    "next_decisive_prompt": "ask whether Stage A already rules out d=5, or request a certifiable canonical enumeration scheme/count",
+    "preferred_implementation": "enumerate singular row transformations L_x rather than individual cells; maintain global symbol counts and apply MF at completed row families"
   },
   "stage_b_v_exact_cover": {
     "branching": "choose a cell minimizing remaining allowed unused values in its U-fibre",

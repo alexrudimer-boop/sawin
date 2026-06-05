@@ -13,6 +13,7 @@ from ybe_domination.stage_a_u_arrays import (
     canonical_u_array,
     compose_maps,
     relabel_u_array,
+    row_catalogue_stage_a_enumeration_audit,
     rows_singular,
     stage_a_bucket_domains,
     stage_a_factorization_buckets,
@@ -101,11 +102,20 @@ class StageAUArrayTests(unittest.TestCase):
         self.assertFalse(rows["dihedral_rack_3"]["profile"]["rows_singular"])
         self.assertTrue(rows["size4_affine_type_a"]["profile"]["stage_a_candidate"])
         self.assertTrue(report["canonicalization"]["canonical_equal"])
-        self.assertEqual(enumeration["exact_size_2"]["canonical_count"], 1)
-        self.assertEqual(enumeration["exact_size_3"]["feasibility_nonempty_count"], 19)
-        self.assertEqual(enumeration["exact_size_3"]["multiset_factorization_count"], 1)
-        self.assertEqual(enumeration["exact_size_3"]["canonical_count"], 1)
-        self.assertTrue(enumeration["budgeted_size_4"]["truncated"])
+        self.assertEqual(enumeration["cell_exact_size_2"]["canonical_count"], 1)
+        self.assertEqual(enumeration["cell_exact_size_3"]["feasibility_nonempty_count"], 19)
+        self.assertEqual(
+            enumeration["cell_exact_size_3"]["multiset_factorization_count"],
+            1,
+        )
+        self.assertEqual(enumeration["cell_exact_size_3"]["canonical_count"], 1)
+        self.assertEqual(enumeration["row_exact_size_3"]["canonical_count"], 1)
+        self.assertLess(
+            enumeration["row_exact_size_3"]["node_count"],
+            enumeration["cell_exact_size_3"]["node_count"],
+        )
+        self.assertTrue(enumeration["cell_budgeted_size_4"]["truncated"])
+        self.assertTrue(enumeration["row_budgeted_size_4"]["truncated"])
         self.assertTrue(report["next_prompt"].endswith("_ask_now.md"))
 
     def test_exact_tiny_stage_a_enumeration_counts(self):
@@ -122,6 +132,18 @@ class StageAUArrayTests(unittest.TestCase):
         self.assertEqual(size_3.multiset_factorization_count, 1)
         self.assertEqual(size_3.canonical_count, 1)
         self.assertEqual(size_3.emitted_count, 1)
+
+    def test_row_catalogue_matches_exact_tiny_stage_a_counts(self):
+        cell_size_2 = stage_a_enumeration_audit(2, max_examples=None)
+        row_size_2 = row_catalogue_stage_a_enumeration_audit(2, max_examples=None)
+        cell_size_3 = stage_a_enumeration_audit(3, max_examples=None)
+        row_size_3 = row_catalogue_stage_a_enumeration_audit(3, max_examples=None)
+
+        self.assertEqual(row_size_2.canonical_count, cell_size_2.canonical_count)
+        self.assertEqual(row_size_2.examples, cell_size_2.examples)
+        self.assertEqual(row_size_3.canonical_count, cell_size_3.canonical_count)
+        self.assertEqual(row_size_3.examples, cell_size_3.examples)
+        self.assertLess(row_size_3.node_count, cell_size_3.node_count)
 
     def test_budgeted_enumeration_reports_truncation(self):
         audit = stage_a_enumeration_audit(4, max_nodes=1000, max_examples=2)
