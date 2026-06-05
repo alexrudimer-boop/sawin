@@ -1,6 +1,8 @@
 # Everywhere-Singular Rigid-Core Theory Prompt
 
-Status: ask_now / prepared for GPT-5.5 Pro on 2026-06-04.
+Status: partially_answered / GPT-5.5 Pro supplied the minimal-ideal
+transport groupoid correction; the remaining theorem is now the rackification
+of that groupoid plus observer data.
 
 Prompt:
 
@@ -42,6 +44,13 @@ Current rigorous reductions:
    and has no nonempty proper crossing-closed subsolution, then every coordinate
    map L_x and R_y is singular. This follows because the set of x for which L_x
    is bijective is crossing-closed, and similarly on the right.
+6. For the finite transformation monoid M_L=<L_x>^1, if I is its minimal
+   two-sided ideal and Omega_L=union_{f in I} im(f), then every L_a preserves
+   Omega_L. Hence if Omega_L is proper and R_y(x) lies in Omega_L for all
+   x,y in Omega_L, then Omega_L is a proper crossing-closed subsolution. Thus a
+   rigid core must either have Omega_L=X or must have a cross-coordinate escape
+   R_y(x) outside Omega_L. The right-handed dual holds for the minimal ideal of
+   <R_y>^1.
 
 Therefore the remaining theoretical endpoint is an asymptotically
 rack-invisible rigid core: a finite bijective YBE solution X that is
@@ -97,7 +106,11 @@ B. Prove a semigroup-theoretic decomposition theorem using the transformation
        nontrivial quotient, subsolution, or observer unless X is already
        rack-factorable.
 
-   Prove this or give a precise obstruction.
+   Prove this or give a precise obstruction. In particular, handle the
+   cross-coordinate escape case: Omega_L proper, L_a(Omega_L) subset Omega_L
+   for all a, but R_y(x) leaves Omega_L for some x,y in Omega_L. Does the full
+   middle YBE identity force that escape to generate a quotient, observer, or
+   active rack factor?
 
 C. Refute the proposed structural route by constructing a purely mathematical
    obstruction pattern, not just a search plan: a finite set of transformation

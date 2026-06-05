@@ -30,10 +30,15 @@ page still with `0` answers and no posted resolution:
 https://mathoverflow.net/questions/509988/set-theoretic-solutions-to-the-yang-baxter-equations-and-racks
 Direct recheck on 2026-06-04 again found the page with `0` answers and no
 posted resolution.
+Direct recheck on 2026-06-05 again found the page with `0` answers and no
+posted resolution.  The page states the core question as whether every finite
+bijective set-theoretic YBE solution is dominated by a finite rack, and records
+the left-nondegenerate positive branch via Lebed-Vendramin Proposition 6.2(4).
 
 A linked MathOverflow question isolates a "local branch-choice rigidity"
 obstruction in Green R-classes; that page also had `0` answers on recheck:
 https://mathoverflow.net/questions/510916/local-branch-choice-rigidity-in-green-r-classes-of-finite-set-theoretic-yang-baxter-solutions
+The same linked page still had `0` answers on the 2026-06-05 recheck.
 
 That obstruction matches the master local-minimal residual gap in the current
 reduction program.
