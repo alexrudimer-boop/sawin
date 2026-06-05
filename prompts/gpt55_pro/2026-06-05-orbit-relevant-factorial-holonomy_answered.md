@@ -1,6 +1,41 @@
 # Orbit-Relevant Factorial Holonomy Prompt
 
-Status: ask_now / prepared for GPT-5.5 Pro on 2026-06-05.
+Status: answered / GPT-5.5 Pro response recorded on 2026-06-05.
+
+Follow-up status:
+
+GPT-5.5 Pro concluded that fixed-`M` contextual endpoint labels live in a
+finite set:
+
+```text
+S_M={d_{a,x,b}:a,b in M, x in X}.
+```
+
+Therefore a shift-rack-style factorial obstruction cannot occur as a fixed-`M`
+endpoint-label obstruction.  If the finitely many pairs in `S_M` are
+pointwise finite-rack separated, one finite product quotient is injective on
+all of `S_M`; after that, remaining fixed-`M` bad pairs are exactly those with
+identical `Theta_n^M` label tuples.
+
+So factorial holonomy inside `As(C_M(X))` can be ambient or hidden path
+holonomy, but fixed-`M` endpoint nonuniformity is not the main issue.  The
+remaining possible obstruction is:
+
+```text
+unbounded finite-state context, not fixed-M rack holonomy.
+```
+
+The one-point/free-quandle example is ambient, not reachable: actual contextual
+labels are diagonal tuples of one generator `e_{n-1 mod m}`, and
+`Omega=empty`.  Product or trivial padding keeps such holonomy inert or gives a
+proper domination-equivalent active factor.
+
+The new sharp missing lemma is:
+
+```text
+Every orbit-relevant profinite escape-holonomy collapse is either
+finite-state/rack-absorbed or yields a proper finite active factor.
+```
 
 Prompt:
 
@@ -101,4 +136,3 @@ Guardrails:
 - Do not assume finite active extraction without checking functionality,
   totality, bijectivity, YBE, and kernel reflection.
 ```
-
