@@ -1,6 +1,16 @@
 # Stage B Bucket CSP Prompt
 
-Status: ask_now / prepared for GPT-5.5 Pro on 2026-06-04.
+Status: answered / GPT-5.5 Pro answered on 2026-06-04.
+
+Answer summary:
+
+- Implement exact generalized arc consistency over Stage B bucket variables W_xy=V[x,y].
+- Keep bucket bijection constraints C(u,P) -> B(u,P), with Hall filtering inside each bucket.
+- For each triple (x,y,z), use dynamic Y2/Y3 implications:
+  W_xy=a, W_{x,U[y,z]}=b, W_yz=c imply
+  W_{U[x,y],U[a,z]}=U[b,c] and W_{a,z}=W_{b,c}.
+- Delete a domain value exactly when it has no support in this dynamic triple relation.
+- After propagation, branch on the smallest unresolved bucket; final checks handle column singularity and non-involutivity.
 
 Prompt:
 

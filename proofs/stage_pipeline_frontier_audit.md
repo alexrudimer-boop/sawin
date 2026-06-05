@@ -1,0 +1,74 @@
+# Stage Pipeline Frontier Audit
+
+Connect row-catalogue Stage A enumeration to bucket-CSP, Stage B exact cover, and the existing rigid-pressure filters.  This is a bounded frontier audit, not an exhaustive size 4, 5, or 6 search.
+
+## Stage A Frontiers
+
+### exact_size_3
+
+- size: `3`;
+- nodes: `772`;
+- MF-valid arrays: `1`;
+- canonical arrays: `1`;
+- emitted examples: `1`;
+- truncated: `False`.
+
+### budget_size_4
+
+- size: `4`;
+- nodes: `50000`;
+- MF-valid arrays: `1`;
+- canonical arrays: `1`;
+- emitted examples: `1`;
+- truncated: `True`.
+
+## Pipeline Rows
+
+### row_exact_size3_u0
+
+- size: `3`;
+- require noninvolutive: `True`;
+- bucket count: `3`;
+- maximum domain size: `3`;
+- locally consistent: `True`;
+- GAC domain mass: `27` -> `27`;
+- GAC forced variables: `0`;
+- GAC locally consistent: `True`;
+- Stage B accepted completions: `0`;
+- Stage B emitted completions: `0`;
+- Stage B truncated: `False`;
+- rigid first failed filters: `()`.
+
+### row_budget_size4_u0
+
+- size: `4`;
+- require noninvolutive: `True`;
+- bucket count: `4`;
+- maximum domain size: `4`;
+- locally consistent: `True`;
+- GAC domain mass: `64` -> `64`;
+- GAC forced variables: `0`;
+- GAC locally consistent: `True`;
+- Stage B accepted completions: `0`;
+- Stage B emitted completions: `0`;
+- Stage B truncated: `False`;
+- rigid first failed filters: `()`.
+
+### known_affine_type_a
+
+- size: `4`;
+- require noninvolutive: `True`;
+- bucket count: `8`;
+- maximum domain size: `2`;
+- locally consistent: `True`;
+- GAC domain mass: `32` -> `32`;
+- GAC forced variables: `0`;
+- GAC locally consistent: `True`;
+- Stage B accepted completions: `1`;
+- Stage B emitted completions: `1`;
+- Stage B truncated: `False`;
+- rigid first failed filters: `('quotient_rigid',)`.
+
+## Conclusion
+
+The exact d=3 row-catalogue frontier has no non-involutive Stage B completion.  The first d=4 budgeted row-catalogue frontier is also identity-type and has no non-involutive completion.  The named affine Type A regression still passes the same pipeline and is rejected by the rigid-core filters at quotient rigidity.

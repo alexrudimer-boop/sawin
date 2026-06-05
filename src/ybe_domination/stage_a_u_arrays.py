@@ -77,6 +77,30 @@ class StageBBucketCSPProfile:
     locally_consistent: bool
 
 
+@dataclass(frozen=True)
+class StageBGACPropagationAudit:
+    size: int
+    variable_count: int
+    bucket_count: int
+    initial_domain_size_counts: tuple[tuple[int, int], ...]
+    final_domain_size_counts: tuple[tuple[int, int], ...]
+    initial_domain_mass: int
+    final_domain_mass: int
+    hall_value_deletion_count: int
+    unsupported_value_deletion_count: int
+    iteration_count: int
+    forced_variable_count: int
+    unresolved_variable_count: int
+    maximum_domain_size: int
+    hall_contradiction: bool
+    empty_domain: bool
+    all_singleton: bool
+    singleton_y2_y3_verified: bool | None
+    locally_consistent: bool
+    domains: tuple[tuple[tuple[int, ...], ...], ...]
+    extracted_v: VArray | None
+
+
 def normalize_u_array(array: Sequence[Sequence[int]]) -> UArray:
     rows = tuple(tuple(row) for row in array)
     size = len(rows)
@@ -337,6 +361,308 @@ def stage_b_bucket_triple_has_support(
                     ):
                         return True
     return False
+
+
+def _domain_size_counts(
+    domains: Sequence[Sequence[Sequence[int]]],
+) -> tuple[tuple[int, int], ...]:
+    sizes = tuple(len(cell_domain) for row in domains for cell_domain in row)
+    return tuple(sorted(Counter(sizes).items()))
+
+
+def _domain_mass(domains: Sequence[Sequence[Sequence[int]]]) -> int:
+    return sum(len(cell_domain) for row in domains for cell_domain in row)
+
+
+def _frozen_domains(
+    domains: Sequence[Sequence[set[int]]],
+) -> tuple[tuple[tuple[int, ...], ...], ...]:
+    return tuple(
+        tuple(tuple(sorted(cell_domain)) for cell_domain in row)
+        for row in domains
+    )
+
+
+def _domain_sets(
+    domains: Sequence[Sequence[Sequence[int]]],
+) -> list[list[set[int]]]:
+    return [[set(cell_domain) for cell_domain in row] for row in domains]
+
+
+def stage_b_gac_dynamic_universe(
+    array: Sequence[Sequence[int]],
+    domains: Sequence[Sequence[Sequence[int]]],
+    triple: tuple[int, int, int],
+) -> tuple[Cell, ...]:
+    u_rows = normalize_u_array(array)
+    x, y, z = triple
+    core_x_uyz = (x, u_rows[y][z])
+    cells: set[Cell] = {(x, y), core_x_uyz, (y, z)}
+    output_u = u_rows[x][y]
+    for value_xy in domains[x][y]:
+        cells.add((output_u, u_rows[value_xy][z]))
+        cells.add((value_xy, z))
+    for value_x_uyz in domains[core_x_uyz[0]][core_x_uyz[1]]:
+        for value_yz in domains[y][z]:
+            cells.add((value_x_uyz, value_yz))
+    return tuple(sorted(cells))
+
+
+def _stage_b_bucket_triple_value_has_support_for_rows(
+    u_rows: UArray,
+    domains: Sequence[Sequence[Sequence[int]]],
+    triple: tuple[int, int, int],
+    tested_cell: Cell,
+    tested_value: int,
+) -> bool:
+    size = len(u_rows)
+    x, y, z = triple
+    output_u = u_rows[x][y]
+    xy_cell = (x, y)
+    x_uyz_cell = (x, u_rows[y][z])
+    yz_cell = (y, z)
+    for value_xy in domains[x][y]:
+        left_y2_cell = (output_u, u_rows[value_xy][z])
+        left_y3_cell = (value_xy, z)
+        for value_x_uyz in domains[x_uyz_cell[0]][x_uyz_cell[1]]:
+            for value_yz in domains[y][z]:
+                right_y2 = u_rows[value_x_uyz][value_yz]
+                right_y3_cell = (value_x_uyz, value_yz)
+                base: dict[Cell, int] = {}
+                if not _assign_domain_value(base, domains, xy_cell, value_xy):
+                    continue
+                if not _assign_domain_value(
+                    base,
+                    domains,
+                    x_uyz_cell,
+                    value_x_uyz,
+                ):
+                    continue
+                if not _assign_domain_value(base, domains, yz_cell, value_yz):
+                    continue
+                if not _assign_domain_value(
+                    base,
+                    domains,
+                    left_y2_cell,
+                    right_y2,
+                ):
+                    continue
+                for y3_value in range(size):
+                    assignment = dict(base)
+                    if not _assign_domain_value(
+                        assignment,
+                        domains,
+                        left_y3_cell,
+                        y3_value,
+                    ):
+                        continue
+                    if not _assign_domain_value(
+                        assignment,
+                        domains,
+                        right_y3_cell,
+                        y3_value,
+                    ):
+                        continue
+                    assigned_value = assignment.get(tested_cell)
+                    if assigned_value is None or assigned_value == tested_value:
+                        return True
+    return False
+
+
+def stage_b_bucket_triple_value_has_support(
+    array: Sequence[Sequence[int]],
+    domains: Sequence[Sequence[Sequence[int]]],
+    triple: tuple[int, int, int],
+    tested_cell: Cell,
+    tested_value: int,
+) -> bool:
+    u_rows = normalize_u_array(array)
+    x, y = tested_cell
+    if tested_value not in domains[x][y]:
+        return False
+    return _stage_b_bucket_triple_value_has_support_for_rows(
+        u_rows,
+        domains,
+        triple,
+        tested_cell,
+        tested_value,
+    )
+
+
+def _enforce_bucket_hall_filtering(
+    domains: list[list[set[int]]],
+    buckets: Sequence[StageABucket],
+) -> tuple[bool, int]:
+    deletion_count = 0
+    for bucket in buckets:
+        cells = tuple(bucket.cells)
+        cell_count = len(cells)
+        for mask in range(1, 1 << cell_count):
+            subset_values: set[int] = set()
+            subset_size = 0
+            for index, cell in enumerate(cells):
+                if mask & (1 << index):
+                    subset_size += 1
+                    subset_values.update(domains[cell[0]][cell[1]])
+            if len(subset_values) < subset_size:
+                return False, deletion_count
+            if len(subset_values) == subset_size:
+                for index, cell in enumerate(cells):
+                    if mask & (1 << index):
+                        continue
+                    cell_domain = domains[cell[0]][cell[1]]
+                    before = len(cell_domain)
+                    cell_domain.difference_update(subset_values)
+                    deletion_count += before - len(cell_domain)
+                    if not cell_domain:
+                        return False, deletion_count
+    return True, deletion_count
+
+
+def _enforce_triple_gac_filtering(
+    u_rows: UArray,
+    domains: list[list[set[int]]],
+    triple: tuple[int, int, int],
+) -> tuple[bool, int]:
+    deletion_count = 0
+    frozen = _frozen_domains(domains)
+    for cell in stage_b_gac_dynamic_universe(u_rows, frozen, triple):
+        x, y = cell
+        for value in tuple(domains[x][y]):
+            current = _frozen_domains(domains)
+            if not _stage_b_bucket_triple_value_has_support_for_rows(
+                u_rows,
+                current,
+                triple,
+                cell,
+                value,
+            ):
+                domains[x][y].remove(value)
+                deletion_count += 1
+                if not domains[x][y]:
+                    return False, deletion_count
+    return True, deletion_count
+
+
+def _domains_extract_v(
+    domains: Sequence[Sequence[Sequence[int]]],
+) -> VArray | None:
+    rows = []
+    for domain_row in domains:
+        values = []
+        for cell_domain in domain_row:
+            if len(cell_domain) != 1:
+                return None
+            values.append(tuple(cell_domain)[0])
+        rows.append(tuple(values))
+    return tuple(rows)
+
+
+def stage_b_gac_propagation_audit(
+    array: Sequence[Sequence[int]],
+) -> StageBGACPropagationAudit:
+    u_rows = normalize_u_array(array)
+    size = len(u_rows)
+    variable_count = size * size
+    empty_domains: tuple[tuple[tuple[int, ...], ...], ...] = tuple(
+        tuple(tuple() for _y in range(size)) for _x in range(size)
+    )
+    if not stage_a_multiset_factorization_holds(u_rows):
+        return StageBGACPropagationAudit(
+            size=size,
+            variable_count=variable_count,
+            bucket_count=0,
+            initial_domain_size_counts=tuple(),
+            final_domain_size_counts=tuple(),
+            initial_domain_mass=0,
+            final_domain_mass=0,
+            hall_value_deletion_count=0,
+            unsupported_value_deletion_count=0,
+            iteration_count=0,
+            forced_variable_count=0,
+            unresolved_variable_count=variable_count,
+            maximum_domain_size=0,
+            hall_contradiction=True,
+            empty_domain=True,
+            all_singleton=False,
+            singleton_y2_y3_verified=None,
+            locally_consistent=False,
+            domains=empty_domains,
+            extracted_v=None,
+        )
+
+    buckets = stage_a_factorization_buckets(u_rows)
+    initial_domains = stage_a_bucket_domains(u_rows)
+    domains = _domain_sets(initial_domains)
+    initial_mass = _domain_mass(initial_domains)
+    hall_deletions = 0
+    unsupported_deletions = 0
+    hall_contradiction = False
+    empty_domain = False
+    iteration_count = 0
+
+    while True:
+        iteration_count += 1
+        before_mass = _domain_mass(_frozen_domains(domains))
+        hall_ok, deleted = _enforce_bucket_hall_filtering(domains, buckets)
+        hall_deletions += deleted
+        if not hall_ok:
+            hall_contradiction = True
+            empty_domain = any(not cell_domain for row in domains for cell_domain in row)
+            break
+        for x in range(size):
+            for y in range(size):
+                for z in range(size):
+                    triple_ok, deleted = _enforce_triple_gac_filtering(
+                        u_rows,
+                        domains,
+                        (x, y, z),
+                    )
+                    unsupported_deletions += deleted
+                    if not triple_ok:
+                        empty_domain = True
+                        break
+                if empty_domain:
+                    break
+            if empty_domain:
+                break
+        after_mass = _domain_mass(_frozen_domains(domains))
+        if empty_domain or after_mass == before_mass:
+            break
+
+    final_domains = _frozen_domains(domains)
+    final_sizes = tuple(len(final_domains[x][y]) for x in range(size) for y in range(size))
+    extracted_v = _domains_extract_v(final_domains)
+    singleton_y2_y3_verified = (
+        uv_y2_y3_hold(u_rows, extracted_v) if extracted_v is not None else None
+    )
+    locally_consistent = (
+        not hall_contradiction
+        and not empty_domain
+        and (singleton_y2_y3_verified is not False)
+    )
+    return StageBGACPropagationAudit(
+        size=size,
+        variable_count=variable_count,
+        bucket_count=len(buckets),
+        initial_domain_size_counts=_domain_size_counts(initial_domains),
+        final_domain_size_counts=_domain_size_counts(final_domains),
+        initial_domain_mass=initial_mass,
+        final_domain_mass=_domain_mass(final_domains),
+        hall_value_deletion_count=hall_deletions,
+        unsupported_value_deletion_count=unsupported_deletions,
+        iteration_count=iteration_count,
+        forced_variable_count=sum(1 for size_ in final_sizes if size_ == 1),
+        unresolved_variable_count=sum(1 for size_ in final_sizes if size_ > 1),
+        maximum_domain_size=max(final_sizes) if final_sizes else 0,
+        hall_contradiction=hall_contradiction,
+        empty_domain=empty_domain,
+        all_singleton=extracted_v is not None,
+        singleton_y2_y3_verified=singleton_y2_y3_verified,
+        locally_consistent=locally_consistent,
+        domains=final_domains,
+        extracted_v=extracted_v,
+    )
 
 
 def stage_b_hall_all_different_ok(
@@ -851,17 +1177,10 @@ def stage_b_v_exact_cover_audit(
     if max_examples is not None and max_examples < 0:
         raise ValueError("max_examples must be nonnegative")
 
-    bucket_domains = (
-        stage_a_bucket_domains(u_rows)
-        if stage_a_multiset_factorization_holds(u_rows)
-        else None
-    )
     total_cells = size * size
-    if (
-        not balanced_symbol_counts(u_rows)
-        or not stage_a_feasibility_nonempty(u_rows)
-        or bucket_domains is None
-    ):
+    gac = stage_b_gac_propagation_audit(u_rows)
+    bucket_domains = gac.domains if gac.locally_consistent else None
+    if not balanced_symbol_counts(u_rows) or not stage_a_feasibility_nonempty(u_rows) or bucket_domains is None:
         return StageBVExactCoverAudit(
             size=size,
             node_count=0,

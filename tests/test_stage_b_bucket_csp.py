@@ -12,8 +12,12 @@ from ybe_domination.stage_a_u_arrays import (
     stage_a_bucket_domains,
     stage_b_bucket_csp_profile,
     stage_b_bucket_triple_has_support,
+    stage_b_bucket_triple_value_has_support,
+    stage_b_gac_dynamic_universe,
+    stage_b_gac_propagation_audit,
     stage_b_hall_all_different_ok,
     u_array_from_solution,
+    uv_arrays_from_solution,
 )
 
 
@@ -55,6 +59,44 @@ class StageBBucketCSPTests(unittest.TestCase):
 
         self.assertTrue(stage_b_hall_all_different_ok(u_array, domains))
         self.assertTrue(stage_b_bucket_triple_has_support(u_array, domains, (0, 1, 2)))
+
+    def test_gac_forces_dihedral_rack_v_array(self):
+        solution = rack_solution((0, 1, 2), lambda left, right: (2 * left - right) % 3)
+        u_array, v_array = uv_arrays_from_solution(solution)
+        audit = stage_b_gac_propagation_audit(u_array)
+
+        self.assertTrue(audit.locally_consistent)
+        self.assertTrue(audit.all_singleton)
+        self.assertEqual(audit.extracted_v, v_array)
+        self.assertEqual(audit.singleton_y2_y3_verified, True)
+
+    def test_gac_keeps_known_affine_stage_b_solution_available(self):
+        u_array, v_array = uv_arrays_from_solution(affine_f2_type_a_solution())
+        audit = stage_b_gac_propagation_audit(u_array)
+
+        self.assertTrue(audit.locally_consistent)
+        self.assertFalse(audit.all_singleton)
+        self.assertEqual(audit.initial_domain_mass, 32)
+        self.assertEqual(audit.final_domain_mass, 32)
+        for x, row in enumerate(v_array):
+            for y, value in enumerate(row):
+                self.assertIn(value, audit.domains[x][y])
+
+    def test_dynamic_universe_and_value_support_are_exact_queries(self):
+        u_array = u_array_from_solution(affine_f2_type_a_solution())
+        domains = stage_a_bucket_domains(u_array)
+        universe = stage_b_gac_dynamic_universe(u_array, domains, (0, 1, 2))
+
+        self.assertIn((0, 1), universe)
+        self.assertTrue(
+            stage_b_bucket_triple_value_has_support(
+                u_array,
+                domains,
+                (0, 1, 2),
+                (0, 1),
+                domains[0][1][0],
+            )
+        )
 
     def test_generated_bucket_csp_audit_records_examples(self):
         report = build_report()

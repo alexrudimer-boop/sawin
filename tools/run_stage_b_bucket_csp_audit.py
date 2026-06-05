@@ -16,6 +16,7 @@ from tools.run_sequential_primitivity_frontier_audit import (  # noqa: E402
 from ybe_domination import identity_solution, rack_solution  # noqa: E402
 from ybe_domination.stage_a_u_arrays import (  # noqa: E402
     stage_b_bucket_csp_profile,
+    stage_b_gac_propagation_audit,
     u_array_from_solution,
 )
 
@@ -31,14 +32,14 @@ def example_rows() -> tuple[dict[str, object], ...]:
     )
     rows = []
     for name, solution in examples:
+        u_array = u_array_from_solution(solution)
         rows.append(
             {
                 "name": name,
                 "size": len(solution.elements),
                 "source_solution_ybe": solution.is_ybe(),
-                "profile": asdict(
-                    stage_b_bucket_csp_profile(u_array_from_solution(solution))
-                ),
+                "profile": asdict(stage_b_bucket_csp_profile(u_array)),
+                "gac": asdict(stage_b_gac_propagation_audit(u_array)),
             }
         )
     return tuple(rows)
@@ -50,25 +51,28 @@ def build_report() -> dict[str, object]:
         "purpose": (
             "Record the bucket-domain CSP precheck used before full Stage B "
             "backtracking: Hall all-different consistency per output u and "
-            "local support for every Y2/Y3 triple."
+            "local support for every Y2/Y3 triple.  Also record the exact "
+            "generalized arc-consistency propagation over bucket variables."
         ),
         "checks": [
             "domain-size profile for variables W_xy=V[x,y]",
             "Hall all-different test on cells with fixed U[x,y]=u",
             "Y2/Y3 local support test for each triple (x,y,z)",
             "locally_consistent iff Hall succeeds and no Y2/Y3 triple is unsupported",
+            "exact GAC value deletion using dynamic Y2/Y3 implication supports",
+            "singleton GAC domains are extracted and directly verified against Y2/Y3",
         ],
         "rows": list(example_rows()),
         "conclusion": (
             "The current examples all pass local bucket-CSP consistency.  The "
             "profile still distinguishes their domain geometry: identity has "
             "three 3-cell buckets, the dihedral rack has nine forced cells, "
-            "and affine Type A has eight 2-cell buckets.  This is the next "
-            "precheck layer before full d=5,6 Stage B search."
+            "and affine Type A has eight 2-cell buckets.  Exact GAC forces "
+            "the dihedral rack table and preserves all values needed for the "
+            "known affine Type A completion.  This is the next precheck layer "
+            "before full d=5,6 Stage B search."
         ),
-        "next_prompt": (
-            "prompts/gpt55_pro/2026-06-04-stage-b-bucket-csp_ask_now.md"
-        ),
+        "next_prompt": "prompts/gpt55_pro/2026-06-04-gac-frontier-next-step_ask_now.md",
     }
 
 
@@ -86,6 +90,7 @@ def render_markdown(report: dict[str, object]) -> str:
     lines.extend(["", "## Example Rows", ""])
     for row in report["rows"]:
         profile = row["profile"]
+        gac = row["gac"]
         lines.extend(
             [
                 f"### {row['name']}",
@@ -101,6 +106,17 @@ def render_markdown(report: dict[str, object]) -> str:
                 "- unsupported Y2/Y3 triples: "
                 f"`{profile['unsupported_y2_y3_triple_count']}`;",
                 f"- locally consistent: `{profile['locally_consistent']}`.",
+                f"- GAC final domain size counts: `{gac['final_domain_size_counts']}`;",
+                f"- GAC initial/final domain mass: "
+                f"`{gac['initial_domain_mass']}` / `{gac['final_domain_mass']}`;",
+                "- GAC deletions, Hall/Y2-Y3: "
+                f"`{gac['hall_value_deletion_count']}` / "
+                f"`{gac['unsupported_value_deletion_count']}`;",
+                f"- GAC forced variables: `{gac['forced_variable_count']}`;",
+                f"- GAC all singleton: `{gac['all_singleton']}`;",
+                f"- GAC singleton Y2/Y3 verified: "
+                f"`{gac['singleton_y2_y3_verified']}`;",
+                f"- GAC locally consistent: `{gac['locally_consistent']}`.",
                 "",
             ]
         )
