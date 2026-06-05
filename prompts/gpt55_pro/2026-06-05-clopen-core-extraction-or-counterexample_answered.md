@@ -1,6 +1,60 @@
 # Clopen Core Extraction Or Counterexample Prompt
 
-Status: ask now / awaiting GPT-5.5 Pro response.
+Status: answered / GPT-5.5 Pro response recorded on 2026-06-05.
+
+Follow-up status:
+
+GPT-5.5 Pro identified a decisive obstruction to one proposed extraction
+principle: failure of global orbit-injectivity.
+
+For fixed finite `M`, let `E_M` be the finite quotient of the endpoint symbol
+set `S_M=M x X x M` by finite-rack residual equivalence in `C_M(X)`.  Since
+`S_M` is finite, one finite rack quotient realizes this maximal finite-rack
+observable endpoint quotient on endpoint generators.
+
+Under the hypothesis that no finite contextual rack detector separates all
+bad pairs, this strongest fixed-`M` endpoint detector still collapses an
+actual bad pair:
+
+```text
+beta a != a,
+beta a in B_n.a,
+Pi_n^{E_M}(beta a)=Pi_n^{E_M}(a).
+```
+
+Thus `Pi_n^{E_M}` is not globally orbit-injective.  Any quotient or
+totalization that factors through `E_M` remains non-orbit-injective, because
+it has already identified this actual same-orbit pair.
+
+The failed implication is:
+
+```text
+no finite contextual rack detector
+=> residual endpoint system, or quotient of it, totalizes to an orbit-injective
+   proper active factor.
+```
+
+The valid theorem remains conditional: if finite data `M,Z,pi_{a,b}` and a
+total bijective YBE map `r_Z` are independently given, are contextually
+compatible, and the induced maps `Pi_n` are globally orbit-injective, then
+`ker rho_n^Z <= ker rho_n^X` for all `n`.
+
+Additional follow-up:
+
+GPT-5.5 Pro also confirmed that the context-stable clopen core lemma itself
+is not a consequence of compactness, Higman's lemma, Stone duality, profinite
+semigroup theory, or ordinary automata theory.  If a detector `D` separates a
+clopen core `C`, then `Occ(C) cap B_D` is empty, so a harmful ultrafilter
+containing every `B_D` cannot contain `Occ(C)`.  Hence a theorem saying every
+harmful ultrafilter contains a detector-separated core is already a proof that
+harmful ultrafilters do not exist.
+
+The final target from this response is the finite extraction dichotomy:
+
+```text
+Every orbit-relevant harmful profinite contextual collapse is finite-rack
+absorbed or finite-active-factor extractable.
+```
 
 Prompt:
 

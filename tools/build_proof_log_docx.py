@@ -139,6 +139,8 @@ EXTRA_MD.append(ROOT / "proofs" / "unbounded_exact_contextual_collapse_boundary.
 EXTRA_MD.append(ROOT / "proofs" / "regular_exact_contextual_collision_boundary.md")
 EXTRA_MD.append(ROOT / "proofs" / "braid_reachability_context_stable_boundary.md")
 EXTRA_MD.append(ROOT / "proofs" / "context_stable_clopen_core_boundary.md")
+EXTRA_MD.append(ROOT / "proofs" / "clopen_core_compactness_obstruction.md")
+EXTRA_MD.append(ROOT / "proofs" / "residual_endpoint_orbit_injectivity_obstruction.md")
 EXTRA_MD.append(ROOT / "proofs" / "minimal_ideal_escape_rack_construction.md")
 EXTRA_MD.append(ROOT / "proofs" / "active_factor_observability_audit.md")
 EXTRA_MD.append(ROOT / "proofs" / "sequential_primitivity_frontier_audit.md")
