@@ -1,6 +1,26 @@
 # No Brunnian Harmful Ultrafilter Prompt
 
-Status: ask now / awaiting GPT-5.5 Pro response.
+Status: answered by GPT-5.5 Pro on 2026-06-05.
+
+Response summary:
+
+- The theorem is exactly Target A only after correcting "one-coordinate
+  cylinder" to mean an arity-relative existential coordinate event, not a
+  fixed absolute coordinate.
+- For a finite quotient `M`, the correct visible set is
+  `D_M={bad pairs (n,a,beta): exists i<=n with epsilon_i^M(a) not equiv_M
+  epsilon_i^M(beta a)}`.
+- A harmful ultrafilter is an ultrafilter `U` with
+  `H_M=B\D_M in U` for every finite quotient `M`.
+- No harmful ultrafilter is equivalent to a finite cover by the `D_M`; because
+  visibility is monotone under product refinements, this is equivalent to one
+  finite quotient `M_*` with `B=D_{M_*}`.
+- Fixed-coordinate cylinders `C_{M,j}` are too strong: an ultrafilter may
+  contain `D_M=union_j C_{M,j}` without containing any fixed `C_{M,j}`.
+- Local YBE identities prove contextual endpoint transport is well defined and
+  rack-compatible, but they do not prove that nontrivial `K_n(P_X)` monodromy
+  creates a finite-rack-separable endpoint change.
+- The missing input is a global non-Brunnian endpoint-faithfulness principle.
 
 Prompt:
 
