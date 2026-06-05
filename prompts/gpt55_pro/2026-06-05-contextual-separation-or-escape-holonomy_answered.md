@@ -1,6 +1,24 @@
 # Contextual Separation Or Escape Holonomy Prompt
 
-Status: ask_now / prepared for GPT-5.5 Pro on 2026-06-05.
+Status: answered on 2026-06-05.
+
+Follow-up status:
+
+GPT-5.5 Pro confirmed that `C_L(X)` is valid and stronger than `W_L(X)`, but
+still leaves an independent contextual finite/profinite separation barrier.
+It identified a further scattering normalization:
+
+    c_{L_a,x,q}=c_{1,L_a(x),Delta_a(x)q},
+
+and hence a finite loss when different words give the same left transformation
+but different escape products.  It also isolated finite contextual scattering
+cycles, profinite nonclosed stabilizer cosets in `As(C_L(X))`, and the exact
+determinacy condition under which escape-holonomy labels factor through
+`C_L(X)`.
+
+The next active prompt asks whether this contextual barrier can be eliminated
+by a finite-state contextual tower, converted into a state-dependent active
+factor, or realized as a genuine obstruction.
 
 Prompt:
 
@@ -139,4 +157,3 @@ Important:
   realizable obstruction, or state the exact stronger finite/profinite/escape
   lemma needed next.
 ```
-
