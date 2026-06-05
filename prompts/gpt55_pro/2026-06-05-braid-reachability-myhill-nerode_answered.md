@@ -1,6 +1,37 @@
 # Braid Reachability Myhill-Nerode Prompt
 
-Status: ask now / awaiting GPT-5.5 Pro response.
+Status: answered / GPT-5.5 Pro response recorded on 2026-06-05.
+
+Follow-up status:
+
+GPT-5.5 Pro separated the three relevant relations:
+
+```text
+Theta_n^M(x)=Theta_n^M(x')              fixed-M endpoint equality,
+x' in B_n.x                             braid-orbit reachability,
+existence of one detector for all n,M    uniformity over arities and states.
+```
+
+The endpoint relation is finite-state.  The braid-orbit relation is not
+regular in general: for the flip rack on `{0,1}`, braid orbits are Parikh
+classes, and a standard convolution intersection gives the nonregular
+language `{(0,1)^n(1,0)^n:n>=0}`.  Thus YBE gives braid consistency, not
+finite-state orbit reachability.
+
+The response also distinguished weak Higman boundedness from the useful
+boundedness needed here.  Every bad language over the finite alphabet
+`X x X` has finitely many subsequence-minimal elements, but deleting observer
+strands changes contextual states, so a short standalone bad subsequence need
+not separate the original long pair.  The needed theorem is a
+context-stable bounded core theorem.
+
+The sharp missing target is now:
+
+```text
+Every harmful unbounded exact contextual collapse is either finite-rack
+detected, or factors through finitely many context states in a
+crossing-compatible and kernel-reflecting way.
+```
 
 Prompt:
 
