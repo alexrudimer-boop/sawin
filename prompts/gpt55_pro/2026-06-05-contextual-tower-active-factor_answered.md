@@ -1,6 +1,21 @@
 # Contextual Tower Or Active Factor Prompt
 
-Status: ask_now / prepared for GPT-5.5 Pro on 2026-06-05.
+Status: answered on 2026-06-05.
+
+Follow-up status:
+
+GPT-5.5 Pro confirmed that the finite-state contextual tower `C_M(X)` is the
+right strengthening of `C_L(X)`, but it still does not close Sawin without a
+uniform finite/profinite lemma.  Pointwise separation by finer finite state
+quotients is not enough: Sawin requires one finite state quotient `M` and one
+finite rack quotient working for every arity.
+
+The answer identified three independent barriers: finite-state uniformity,
+contextual scattering cycles surviving all finite `M`, and nonclosed
+stabilizer cosets in `As(C_M(X))`.  The next active prompt asks whether this
+uniform tower lemma can be proved for residual rigid cores, refuted by a
+realizable tower-equivalence obstruction, or replaced by a finite automaton /
+escape-holonomy detector theorem.
 
 Prompt:
 
@@ -174,4 +189,3 @@ Important:
   theorem, refute it with a realizable obstruction, or isolate the exact next
   missing finite/profinite lemma.
 ```
-
