@@ -1,6 +1,45 @@
 # Context-Stable Collapse Lemma Prompt
 
-Status: ask now / awaiting GPT-5.5 Pro response.
+Status: answered / GPT-5.5 Pro response recorded on 2026-06-05.
+
+Follow-up status:
+
+GPT-5.5 Pro formulated the useful bounded object as a clopen core in the
+profinite contextual alphabet
+
+```text
+K=hat{L_X} x X x hat{L_X}.
+```
+
+For a bad pair `omega=(x,x')`, define contextual paired letters
+
+```text
+Delta_i(omega)=(kappa_i(x),kappa_i(x')) in K^2.
+```
+
+A context-stable core of size `m` is a clopen subset
+
+```text
+C subset (K^2)^m.
+```
+
+A detector separates `C` if every tuple in `C` has some coordinate pair whose
+two finite detector labels differ.  This is stable under arbitrary surrounding
+observers because the core remembers the full left and right contextual
+profinite states.
+
+The response confirmed that Higman only gives weak subsequence boundedness,
+not this context-stable notion: deletion changes prefix/suffix states, braid
+reachability is not hereditary under deleting strands, and the profinite
+alphabet `K` is generally infinite.
+
+The sharp missing lemma is now:
+
+```text
+Every harmful unbounded exact contextual collapse has a bounded
+context-stable clopen core, or else it is finite-index and active-factor
+extractable.
+```
 
 Prompt:
 
