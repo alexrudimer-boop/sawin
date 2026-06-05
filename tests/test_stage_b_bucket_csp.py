@@ -19,6 +19,7 @@ from ybe_domination.stage_a_u_arrays import (
     stage_b_bucket_constraint_hypergraph_audit,
     stage_b_stabilizer_branch_audit,
     stage_b_component_solver_audit,
+    stage_b_component_v_search_audit,
     stage_b_bucket_column_singularity_possible,
     stage_b_bucket_noninvolutive_possible,
     stage_b_bucket_domain_state_is_canonical,
@@ -281,6 +282,26 @@ class StageBBucketCSPTests(unittest.TestCase):
         self.assertEqual(affine_audit.global_solution_count, "2")
         self.assertEqual(affine_audit.global_noninv_solution_count, "1")
         self.assertEqual(affine_audit.accepted_count, "1")
+
+    def test_component_search_emits_affine_completion(self):
+        u_array, v_array = uv_arrays_from_solution(affine_f2_type_a_solution())
+
+        audit = stage_b_component_v_search_audit(
+            u_array,
+            require_column_singular=True,
+            require_noninvolutive=True,
+            max_examples=3,
+        )
+
+        self.assertEqual(audit.component_solution_counts, (2,))
+        self.assertEqual(audit.component_noninv_solution_counts, (1,))
+        self.assertEqual(audit.global_solution_count, "2")
+        self.assertEqual(audit.global_noninv_solution_count, "1")
+        self.assertEqual(audit.exact_cover_count, 2)
+        self.assertEqual(audit.noninvolutive_count, 1)
+        self.assertEqual(audit.accepted_count, 1)
+        self.assertEqual(audit.examples, (v_array,))
+        self.assertFalse(audit.truncated)
 
     def test_column_singularity_feasibility_filter_detects_forced_permutation(self):
         self.assertFalse(

@@ -1,0 +1,364 @@
+{
+  "bounds": {
+    "max_bucket_permutations": 120,
+    "max_component_solutions": 10000,
+    "max_v_examples": 3,
+    "stage_a_max_examples": 3,
+    "stage_a_max_nodes": 1000
+  },
+  "conclusion": "This run exercises the production component Stage B search on the first bounded Stage A size-5 and size-6 U-frontiers.  It is a smoke/frontier execution artifact: any surviving V completion is passed immediately into the rigid-core filter row, but a truncated Stage A row does not rule out later U arrays.",
+  "next_prompt": "prompts/gpt55_pro/2026-06-04-everywhere-singular-rigid-core-theory_ask_now.md",
+  "rows": [
+    {
+      "size": 5,
+      "stage_a": {
+        "canonical_count": 1,
+        "completed_balanced_count": 897,
+        "emitted_count": 1,
+        "examples": [
+          [
+            [
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              1,
+              1,
+              1,
+              1,
+              1
+            ],
+            [
+              2,
+              2,
+              2,
+              2,
+              2
+            ],
+            [
+              3,
+              3,
+              3,
+              3,
+              3
+            ],
+            [
+              4,
+              4,
+              4,
+              4,
+              4
+            ]
+          ]
+        ],
+        "feasibility_nonempty_count": 107,
+        "multiset_factorization_count": 1,
+        "node_count": 1000,
+        "row_singular_count": 897,
+        "size": 5,
+        "truncated": true
+      },
+      "u_rows": [
+        {
+          "component_search": {
+            "accepted_count": 0,
+            "bucket_count": 5,
+            "column_singular_count": 0,
+            "component_count": 0,
+            "component_noninv_solution_counts": [],
+            "component_solution_counts": [],
+            "emitted_count": 0,
+            "exact_cover_count": 0,
+            "examples": [],
+            "forced_noninv_witness": false,
+            "global_noninv_solution_count": "0",
+            "global_solution_count": "0",
+            "noninvolutive_count": 0,
+            "size": 5,
+            "truncated": false,
+            "y2_y3_count": 0
+          },
+          "component_solver": {
+            "accepted_count": "0",
+            "bucket_count": 5,
+            "component_count": 0,
+            "component_noninv_solution_counts": [],
+            "component_size_counts": [],
+            "component_solution_counts": [],
+            "forced_noninv_witness": false,
+            "global_noninv_solution_count": "0",
+            "global_solution_count": "0",
+            "locally_consistent": false,
+            "relation_gac_locally_consistent": true,
+            "size": 5,
+            "truncated": false
+          },
+          "maximum_bucket_permutations": 120,
+          "relation_gac": {
+            "all_singleton": true,
+            "bucket_count": 5,
+            "column_pattern_count": 15025,
+            "column_relation_count": 5,
+            "column_singular": true,
+            "column_singularity_possible": true,
+            "deletion_count": 595,
+            "domains": [
+              [
+                0
+              ],
+              [
+                0
+              ],
+              [
+                0
+              ],
+              [
+                0
+              ],
+              [
+                0
+              ]
+            ],
+            "empty_domain": false,
+            "extracted_v": [
+              [
+                0,
+                1,
+                2,
+                3,
+                4
+              ],
+              [
+                0,
+                1,
+                2,
+                3,
+                4
+              ],
+              [
+                0,
+                1,
+                2,
+                3,
+                4
+              ],
+              [
+                0,
+                1,
+                2,
+                3,
+                4
+              ],
+              [
+                0,
+                1,
+                2,
+                3,
+                4
+              ]
+            ],
+            "final_domain_mass": 5,
+            "final_domain_product": "1",
+            "final_domain_size_counts": [
+              [
+                1,
+                5
+              ]
+            ],
+            "initial_domain_mass": 600,
+            "initial_domain_product": "24883200000",
+            "initial_domain_size_counts": [
+              [
+                120,
+                5
+              ]
+            ],
+            "iteration_count": 2,
+            "locally_consistent": true,
+            "maximum_bucket_domain_size": 1,
+            "noninvolutive": false,
+            "noninvolutive_possible": false,
+            "singleton_bucket_count": 5,
+            "singleton_y2_y3_verified": true,
+            "size": 5,
+            "unresolved_bucket_count": 0,
+            "ybe_pattern_count": 125,
+            "ybe_relation_count": 125
+          },
+          "solution_rows": [],
+          "stage_b_skipped_reason": null,
+          "u_index": 0,
+          "u_rows": [
+            [
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              1,
+              1,
+              1,
+              1,
+              1
+            ],
+            [
+              2,
+              2,
+              2,
+              2,
+              2
+            ],
+            [
+              3,
+              3,
+              3,
+              3,
+              3
+            ],
+            [
+              4,
+              4,
+              4,
+              4,
+              4
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "size": 6,
+      "stage_a": {
+        "canonical_count": 1,
+        "completed_balanced_count": 928,
+        "emitted_count": 1,
+        "examples": [
+          [
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              1,
+              1,
+              1,
+              1,
+              1,
+              1
+            ],
+            [
+              2,
+              2,
+              2,
+              2,
+              2,
+              2
+            ],
+            [
+              3,
+              3,
+              3,
+              3,
+              3,
+              3
+            ],
+            [
+              4,
+              4,
+              4,
+              4,
+              4,
+              4
+            ],
+            [
+              5,
+              5,
+              5,
+              5,
+              5,
+              5
+            ]
+          ]
+        ],
+        "feasibility_nonempty_count": 364,
+        "multiset_factorization_count": 1,
+        "node_count": 1000,
+        "row_singular_count": 928,
+        "size": 6,
+        "truncated": true
+      },
+      "u_rows": [
+        {
+          "component_search": null,
+          "component_solver": null,
+          "maximum_bucket_permutations": 720,
+          "relation_gac": null,
+          "solution_rows": [],
+          "stage_b_skipped_reason": "maximum bucket permutation count exceeds bound",
+          "u_index": 0,
+          "u_rows": [
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              1,
+              1,
+              1,
+              1,
+              1,
+              1
+            ],
+            [
+              2,
+              2,
+              2,
+              2,
+              2,
+              2
+            ],
+            [
+              3,
+              3,
+              3,
+              3,
+              3,
+              3
+            ],
+            [
+              4,
+              4,
+              4,
+              4,
+              4,
+              4
+            ],
+            [
+              5,
+              5,
+              5,
+              5,
+              5,
+              5
+            ]
+          ]
+        }
+      ]
+    }
+  ],
+  "status": "bounded execution audit, not an exhaustive size 5 or 6 search",
+  "title": "Size 5/6 component Stage B frontier audit"
+}

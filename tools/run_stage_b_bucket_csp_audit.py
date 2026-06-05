@@ -22,6 +22,7 @@ from ybe_domination.stage_a_u_arrays import (  # noqa: E402
     stage_b_bucket_constraint_hypergraph_audit,
     stage_b_stabilizer_branch_audit,
     stage_b_component_solver_audit,
+    stage_b_component_v_search_audit,
     stage_b_bucket_column_singularity_possible,
     stage_b_bucket_noninvolutive_possible,
     stage_b_gac_propagation_audit,
@@ -82,6 +83,14 @@ def example_rows() -> tuple[dict[str, object], ...]:
                 "component_solver": asdict(
                     stage_b_component_solver_audit(u_array)
                 ),
+                "component_search": asdict(
+                    stage_b_component_v_search_audit(
+                        u_array,
+                        require_column_singular=True,
+                        require_noninvolutive=True,
+                        max_examples=3,
+                    )
+                ),
                 "bucket_permutation_search": asdict(
                     stage_b_bucket_permutation_v_search_audit(
                         u_array,
@@ -122,6 +131,7 @@ def build_report() -> dict[str, object]:
             "remaining bucket-constraint hypergraph and connected components after bucket-GAC",
             "current-stabilizer component, bucket, and value-orbit branch audit",
             "component-local solver audit with non-involutivity OR combination",
+            "component-local production search emitting verified V completions",
         ],
         "rows": list(example_rows()),
         "conclusion": (
@@ -144,10 +154,12 @@ def build_report() -> dict[str, object]:
             "as forced involutive.  Relation-GAC now propagates compiled "
             "YBE and column-singularity relations, and the component solver "
             "audit counts local component solutions while combining "
-            "non-involutivity as a global OR.  The next step is production "
-            "component enumeration for the d=5,6 frontier."
+            "non-involutivity as a global OR.  The production component "
+            "frontier is now a supporting audit layer; the next Pro prompt "
+            "pivots back to the theoretical everywhere-singular rigid-core "
+            "endpoint."
         ),
-        "next_prompt": "prompts/gpt55_pro/2026-06-04-production-component-stageb-size56-next-step_ask_now.md",
+        "next_prompt": "prompts/gpt55_pro/2026-06-04-everywhere-singular-rigid-core-theory_ask_now.md",
     }
 
 
@@ -173,6 +185,7 @@ def render_markdown(report: dict[str, object]) -> str:
         hypergraph = row["bucket_constraint_hypergraph"]
         stabilizer_branch = row["stabilizer_branch"]
         component_solver = row["component_solver"]
+        component_search = row["component_search"]
         lines.extend(
             [
                 f"### {row['name']}",
@@ -250,6 +263,11 @@ def render_markdown(report: dict[str, object]) -> str:
                 f"`{component_solver['global_solution_count']}` / "
                 f"`{component_solver['global_noninv_solution_count']}` / "
                 f"`{component_solver['accepted_count']}`;",
+                "- component search exact/noninv/accepted/emitted: "
+                f"`{component_search['exact_cover_count']}` / "
+                f"`{component_search['noninvolutive_count']}` / "
+                f"`{component_search['accepted_count']}` / "
+                f"`{component_search['emitted_count']}`;",
                 "- bucket-permutation search nodes / accepted: "
                 f"`{bucket_search['node_count']}` / `{bucket_search['accepted_count']}`;",
                 "- bucket-permutation Aut(U) / canonical rejections: "

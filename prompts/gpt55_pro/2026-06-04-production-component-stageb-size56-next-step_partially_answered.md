@@ -1,6 +1,7 @@
 # Production Component Stage B Size 5/6 Prompt
 
-Status: ask_now / prepared for GPT-5.5 Pro on 2026-06-04.
+Status: partially_answered / implemented locally as the production component
+Stage B frontier audit; no longer the prompt to answer now.
 
 Prompt:
 

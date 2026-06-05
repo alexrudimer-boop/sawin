@@ -237,6 +237,26 @@ class StageBComponentSolverAudit:
     locally_consistent: bool
 
 
+@dataclass(frozen=True)
+class StageBComponentSearchAudit:
+    size: int
+    bucket_count: int
+    component_count: int
+    component_solution_counts: tuple[int, ...]
+    component_noninv_solution_counts: tuple[int, ...]
+    forced_noninv_witness: bool
+    global_solution_count: str
+    global_noninv_solution_count: str
+    exact_cover_count: int
+    column_singular_count: int
+    y2_y3_count: int
+    noninvolutive_count: int
+    accepted_count: int
+    emitted_count: int
+    truncated: bool
+    examples: tuple[VArray, ...]
+
+
 def normalize_u_array(array: Sequence[Sequence[int]]) -> UArray:
     rows = tuple(tuple(row) for row in array)
     size = len(rows)
@@ -1465,6 +1485,51 @@ def _stage_b_relation_unresolved_scope(
     return frozenset(scope)
 
 
+def _stage_b_support_feasible_for_domain_sets(
+    support: dict[int, set[int]],
+    domains: Sequence[set[int]],
+) -> bool:
+    return all(domains[bucket_index].intersection(support_set) for bucket_index, support_set in support.items())
+
+
+def _stage_b_relation_feasible_for_domain_sets(
+    pattern_supports: Sequence[dict[int, set[int]]],
+    domains: Sequence[set[int]],
+) -> bool:
+    return any(
+        _stage_b_support_feasible_for_domain_sets(support, domains)
+        for support in pattern_supports
+    )
+
+
+def _stage_b_component_relations_and_witnesses(
+    components: Sequence[Sequence[int]],
+    relation_supports: Sequence[Sequence[dict[int, set[int]]]],
+    witness_supports: Sequence[dict[int, set[int]]],
+    domains: Sequence[Sequence[int]],
+) -> tuple[tuple[tuple[dict[int, set[int]], ...], ...], tuple[tuple[dict[int, set[int]], ...], ...]]:
+    component_relations = []
+    component_witnesses = []
+    for component in components:
+        component_set = set(component)
+        relation_rows = []
+        for supports in relation_supports:
+            scope = _stage_b_relation_unresolved_scope(supports, domains)
+            if scope and scope.issubset(component_set):
+                relation_rows.append(supports)
+        witness_rows = tuple(
+            support
+            for support in witness_supports
+            if (
+                scope := _stage_b_support_unresolved_scope(support, domains)
+            )
+            and scope.issubset(component_set)
+        )
+        component_relations.append(tuple(relation_rows))
+        component_witnesses.append(witness_rows)
+    return tuple(component_relations), tuple(component_witnesses)
+
+
 def _stage_b_connected_components(
     vertices: set[int],
     edges: Sequence[frozenset[int]],
@@ -2105,6 +2170,334 @@ def stage_b_component_solver_audit(
         accepted_count=str(accepted_count),
         truncated=truncated,
         locally_consistent=accepted_count > 0 and not truncated,
+    )
+
+
+def stage_b_component_v_search_audit(
+    u_array: Sequence[Sequence[int]],
+    *,
+    require_column_singular: bool = True,
+    require_noninvolutive: bool = True,
+    max_component_solutions: int | None = 100_000,
+    max_examples: int | None = 20,
+) -> StageBComponentSearchAudit:
+    u_rows = normalize_u_array(u_array)
+    size = len(u_rows)
+    if max_component_solutions is not None and max_component_solutions < 0:
+        raise ValueError("max_component_solutions must be nonnegative")
+    if max_examples is not None and max_examples < 0:
+        raise ValueError("max_examples must be nonnegative")
+
+    relation_gac = stage_b_relation_gac_audit(
+        u_rows,
+        require_column_singular=require_column_singular,
+    )
+    if not relation_gac.locally_consistent:
+        return StageBComponentSearchAudit(
+            size=size,
+            bucket_count=relation_gac.bucket_count,
+            component_count=0,
+            component_solution_counts=tuple(),
+            component_noninv_solution_counts=tuple(),
+            forced_noninv_witness=False,
+            global_solution_count="0",
+            global_noninv_solution_count="0",
+            exact_cover_count=0,
+            column_singular_count=0,
+            y2_y3_count=0,
+            noninvolutive_count=0,
+            accepted_count=0,
+            emitted_count=0,
+            truncated=False,
+            examples=tuple(),
+        )
+
+    buckets = stage_a_factorization_buckets(u_rows)
+    bucket_permutations = _stage_b_bucket_permutations(buckets)
+    reduced_domains = relation_gac.domains
+    patterns_by_triple = _stage_b_compile_bucket_support_patterns(u_rows, buckets)
+    ybe_supports = tuple(
+        _stage_b_compile_bucket_pattern_supports(
+            patterns_by_triple,
+            bucket_permutations,
+        )[triple]
+        for triple in sorted(patterns_by_triple)
+    )
+    column_supports = (
+        _stage_b_compile_column_singular_supports(
+            buckets,
+            bucket_permutations,
+            reduced_domains,
+            size=size,
+        )
+        if require_column_singular
+        else tuple()
+    )
+    relation_supports = tuple(ybe_supports) + tuple(column_supports)
+    if any(not _stage_b_relation_feasible(supports, reduced_domains) for supports in relation_supports):
+        return StageBComponentSearchAudit(
+            size=size,
+            bucket_count=len(buckets),
+            component_count=0,
+            component_solution_counts=tuple(),
+            component_noninv_solution_counts=tuple(),
+            forced_noninv_witness=False,
+            global_solution_count="0",
+            global_noninv_solution_count="0",
+            exact_cover_count=0,
+            column_singular_count=0,
+            y2_y3_count=0,
+            noninvolutive_count=0,
+            accepted_count=0,
+            emitted_count=0,
+            truncated=False,
+            examples=tuple(),
+        )
+
+    witness_supports = _stage_b_compile_noninvolutive_witness_supports(
+        u_rows,
+        buckets,
+        bucket_permutations,
+        reduced_domains,
+    )
+    feasible_witnesses = tuple(
+        support
+        for support in witness_supports
+        if _stage_b_support_is_feasible(support, reduced_domains)
+    )
+    forced_noninv_witness = any(
+        not _stage_b_support_unresolved_scope(support, reduced_domains)
+        for support in feasible_witnesses
+    )
+    if require_noninvolutive and not feasible_witnesses:
+        return StageBComponentSearchAudit(
+            size=size,
+            bucket_count=len(buckets),
+            component_count=0,
+            component_solution_counts=tuple(),
+            component_noninv_solution_counts=tuple(),
+            forced_noninv_witness=False,
+            global_solution_count="0",
+            global_noninv_solution_count="0",
+            exact_cover_count=0,
+            column_singular_count=0,
+            y2_y3_count=0,
+            noninvolutive_count=0,
+            accepted_count=0,
+            emitted_count=0,
+            truncated=False,
+            examples=tuple(),
+        )
+
+    hypergraph = stage_b_bucket_constraint_hypergraph_audit(u_rows, reduced_domains)
+    components = hypergraph.components
+    if not components:
+        examples = []
+        exact_cover_count = 0
+        column_singular_count = 0
+        y2_y3_count = 0
+        noninvolutive_count = 0
+        accepted_count = 0
+        v_rows = relation_gac.extracted_v
+        if v_rows is not None:
+            exact_cover_count = 1 if uv_pair_orthogonal(u_rows, v_rows) else 0
+            column_singular = v_columns_singular(v_rows)
+            column_singular_count = 1 if column_singular else 0
+            y2_y3 = uv_y2_y3_hold(u_rows, v_rows)
+            y2_y3_count = 1 if y2_y3 else 0
+            noninvolutive = not uv_is_involutive(u_rows, v_rows)
+            noninvolutive_count = 1 if noninvolutive else 0
+            if (
+                exact_cover_count
+                and (not require_column_singular or column_singular)
+                and y2_y3
+                and (not require_noninvolutive or noninvolutive)
+            ):
+                accepted_count = 1
+                if max_examples is None or max_examples > 0:
+                    examples.append(v_rows)
+        return StageBComponentSearchAudit(
+            size=size,
+            bucket_count=len(buckets),
+            component_count=0,
+            component_solution_counts=tuple(),
+            component_noninv_solution_counts=tuple(),
+            forced_noninv_witness=forced_noninv_witness,
+            global_solution_count=str(1 if v_rows is not None else 0),
+            global_noninv_solution_count=str(noninvolutive_count),
+            exact_cover_count=exact_cover_count,
+            column_singular_count=column_singular_count,
+            y2_y3_count=y2_y3_count,
+            noninvolutive_count=noninvolutive_count,
+            accepted_count=accepted_count,
+            emitted_count=len(examples),
+            truncated=False,
+            examples=tuple(examples),
+        )
+
+    component_relations, component_witnesses = _stage_b_component_relations_and_witnesses(
+        components,
+        relation_supports,
+        feasible_witnesses,
+        reduced_domains,
+    )
+    component_solution_counts: list[int] = []
+    component_noninv_counts: list[int] = []
+    component_examples: list[list[tuple[dict[int, int], bool]]] = []
+    truncated = False
+    for component_index, component in enumerate(components):
+        local_domains = [set(domain) for domain in reduced_domains]
+        local_examples: list[tuple[dict[int, int], bool]] = []
+        solution_count = 0
+        noninv_count = 0
+
+        def recurse_component() -> None:
+            nonlocal solution_count
+            nonlocal noninv_count
+            nonlocal truncated
+            if truncated:
+                return
+            if max_component_solutions is not None and solution_count >= max_component_solutions:
+                truncated = True
+                return
+            for supports in component_relations[component_index]:
+                if not _stage_b_relation_feasible_for_domain_sets(supports, local_domains):
+                    return
+            branch_bucket = None
+            branch_size = 10**9
+            for bucket_index in component:
+                domain_size = len(local_domains[bucket_index])
+                if 1 < domain_size < branch_size:
+                    branch_bucket = bucket_index
+                    branch_size = domain_size
+            if branch_bucket is None:
+                assignment = {
+                    bucket_index: next(iter(local_domains[bucket_index]))
+                    for bucket_index in component
+                }
+                noninv = forced_noninv_witness or any(
+                    _stage_b_support_feasible_for_domain_sets(support, local_domains)
+                    for support in component_witnesses[component_index]
+                )
+                solution_count += 1
+                if noninv:
+                    noninv_count += 1
+                local_examples.append((assignment, noninv))
+                return
+            original_domain = set(local_domains[branch_bucket])
+            for permutation_index in sorted(original_domain):
+                local_domains[branch_bucket] = {permutation_index}
+                recurse_component()
+                if truncated:
+                    break
+            local_domains[branch_bucket] = original_domain
+
+        recurse_component()
+        component_solution_counts.append(solution_count)
+        component_noninv_counts.append(noninv_count)
+        component_examples.append(local_examples)
+        if truncated:
+            break
+
+    if truncated:
+        global_solution_count = 0
+        global_noninv_solution_count = 0
+    else:
+        global_solution_count = 1
+        all_involutive_product = 1
+        for solution_count, noninv_count in zip(
+            component_solution_counts,
+            component_noninv_counts,
+        ):
+            global_solution_count *= solution_count
+            all_involutive_product *= solution_count - noninv_count
+        global_noninv_solution_count = (
+            global_solution_count
+            if forced_noninv_witness
+            else global_solution_count - all_involutive_product
+        )
+
+    exact_cover_count = 0
+    column_singular_count = 0
+    y2_y3_count = 0
+    noninvolutive_count = 0
+    accepted_count = 0
+    emitted: list[VArray] = []
+
+    def record_candidate(assignments: Sequence[tuple[dict[int, int], bool]]) -> None:
+        nonlocal exact_cover_count
+        nonlocal column_singular_count
+        nonlocal y2_y3_count
+        nonlocal noninvolutive_count
+        nonlocal accepted_count
+        domain_sets = [set(domain) for domain in reduced_domains]
+        combo_noninv = forced_noninv_witness
+        for assignment, local_noninv in assignments:
+            combo_noninv = combo_noninv or local_noninv
+            for bucket_index, permutation_index in assignment.items():
+                domain_sets[bucket_index] = {permutation_index}
+        v_rows = _stage_b_bucket_permutation_extract_v(
+            buckets,
+            bucket_permutations,
+            domain_sets,
+            size=size,
+        )
+        if v_rows is None or not uv_pair_orthogonal(u_rows, v_rows):
+            return
+        exact_cover_count += 1
+        column_singular = v_columns_singular(v_rows)
+        if column_singular:
+            column_singular_count += 1
+        if require_column_singular and not column_singular:
+            return
+        if not uv_y2_y3_hold(u_rows, v_rows):
+            return
+        y2_y3_count += 1
+        noninvolutive = not uv_is_involutive(u_rows, v_rows)
+        if noninvolutive:
+            noninvolutive_count += 1
+        if require_noninvolutive and not (combo_noninv and noninvolutive):
+            return
+        accepted_count += 1
+        if max_examples is None or len(emitted) < max_examples:
+            emitted.append(v_rows)
+
+    def combine(component_index: int, partial: list[tuple[dict[int, int], bool]]) -> None:
+        nonlocal truncated
+        if max_examples is not None and len(emitted) >= max_examples:
+            truncated = True
+            return
+        if component_index == len(component_examples):
+            record_candidate(partial)
+            return
+        for local_solution in component_examples[component_index]:
+            partial.append(local_solution)
+            combine(component_index + 1, partial)
+            partial.pop()
+            if max_examples is not None and len(emitted) >= max_examples:
+                truncated = True
+                break
+
+    if not truncated and component_examples and all(component_examples):
+        combine(0, [])
+
+    return StageBComponentSearchAudit(
+        size=size,
+        bucket_count=len(buckets),
+        component_count=len(components),
+        component_solution_counts=tuple(component_solution_counts),
+        component_noninv_solution_counts=tuple(component_noninv_counts),
+        forced_noninv_witness=forced_noninv_witness,
+        global_solution_count=str(global_solution_count),
+        global_noninv_solution_count=str(global_noninv_solution_count),
+        exact_cover_count=exact_cover_count,
+        column_singular_count=column_singular_count,
+        y2_y3_count=y2_y3_count,
+        noninvolutive_count=noninvolutive_count,
+        accepted_count=accepted_count,
+        emitted_count=len(emitted),
+        truncated=truncated,
+        examples=tuple(emitted),
     )
 
 

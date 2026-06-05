@@ -24,6 +24,7 @@ from ybe_domination.stage_a_u_arrays import (  # noqa: E402
     stage_b_relation_gac_audit,
     stage_b_stabilizer_branch_audit,
     stage_b_component_solver_audit,
+    stage_b_component_v_search_audit,
     stage_b_gac_propagation_audit,
     stage_b_gac_v_search_audit,
     stage_b_v_exact_cover_audit,
@@ -89,6 +90,12 @@ def frontier_row(
     bucket_hypergraph = stage_b_bucket_constraint_hypergraph_audit(u_array)
     stabilizer_branch = stage_b_stabilizer_branch_audit(u_array)
     component_solver = stage_b_component_solver_audit(u_array)
+    component_stage_b = stage_b_component_v_search_audit(
+        u_array,
+        require_column_singular=True,
+        require_noninvolutive=require_noninvolutive,
+        max_examples=max_solution_rows,
+    )
     bucket_stage_b = stage_b_bucket_permutation_v_search_audit(
         u_array,
         require_column_singular=True,
@@ -107,6 +114,7 @@ def frontier_row(
         "bucket_hypergraph": asdict(bucket_hypergraph),
         "stabilizer_branch": asdict(stabilizer_branch),
         "component_solver": asdict(component_solver),
+        "component_stage_b": asdict(component_stage_b),
         "stage_b": asdict(stage_b),
         "gac_stage_b": asdict(gac_stage_b),
         "bucket_stage_b": asdict(bucket_stage_b),
@@ -206,6 +214,7 @@ def render_markdown(report: dict[str, object]) -> str:
         bucket_hypergraph = row["bucket_hypergraph"]
         stabilizer_branch = row["stabilizer_branch"]
         component_solver = row["component_solver"]
+        component_stage_b = row["component_stage_b"]
         stage_b = row["stage_b"]
         gac_stage_b = row["gac_stage_b"]
         bucket_stage_b = row["bucket_stage_b"]
@@ -252,6 +261,11 @@ def render_markdown(report: dict[str, object]) -> str:
                 f"`{component_solver['global_solution_count']}` / "
                 f"`{component_solver['global_noninv_solution_count']}` / "
                 f"`{component_solver['accepted_count']}`;",
+                "- component Stage B exact/noninv/accepted/emitted: "
+                f"`{component_stage_b['exact_cover_count']}` / "
+                f"`{component_stage_b['noninvolutive_count']}` / "
+                f"`{component_stage_b['accepted_count']}` / "
+                f"`{component_stage_b['emitted_count']}`;",
                 f"- Stage B accepted completions: `{stage_b['accepted_count']}`;",
                 f"- Stage B emitted completions: `{stage_b['emitted_count']}`;",
                 f"- Stage B truncated: `{stage_b['truncated']}`;",

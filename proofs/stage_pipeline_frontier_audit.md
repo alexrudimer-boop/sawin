@@ -42,6 +42,7 @@ Connect row-catalogue Stage A enumeration to bucket-CSP, Stage B exact cover, an
 - bucket relation patterns YBE/column/noninv: `27` / `3` / `0`;
 - stabilizer branch order/component orbits/child reps: `0` / `0` / `0`;
 - component solver global/noninv/accepted: `0` / `0` / `0`;
+- component Stage B exact/noninv/accepted/emitted: `0` / `0` / `0` / `0`;
 - Stage B accepted completions: `0`;
 - Stage B emitted completions: `0`;
 - Stage B truncated: `False`;
@@ -73,6 +74,7 @@ Connect row-catalogue Stage A enumeration to bucket-CSP, Stage B exact cover, an
 - bucket relation patterns YBE/column/noninv: `64` / `4` / `0`;
 - stabilizer branch order/component orbits/child reps: `0` / `0` / `0`;
 - component solver global/noninv/accepted: `0` / `0` / `0`;
+- component Stage B exact/noninv/accepted/emitted: `0` / `0` / `0` / `0`;
 - Stage B accepted completions: `0`;
 - Stage B emitted completions: `0`;
 - Stage B truncated: `False`;
@@ -104,6 +106,7 @@ Connect row-catalogue Stage A enumeration to bucket-CSP, Stage B exact cover, an
 - bucket relation patterns YBE/column/noninv: `156` / `16` / `24`;
 - stabilizer branch order/component orbits/child reps: `2` / `1` / `2`;
 - component solver global/noninv/accepted: `2` / `1` / `1`;
+- component Stage B exact/noninv/accepted/emitted: `2` / `1` / `1` / `1`;
 - Stage B accepted completions: `1`;
 - Stage B emitted completions: `1`;
 - Stage B truncated: `False`;
