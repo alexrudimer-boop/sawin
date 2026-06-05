@@ -1,6 +1,62 @@
 # Finite-Index Contextual Rigidity Prompt
 
-Status: ask_now / prepared for GPT-5.5 Pro on 2026-06-05.
+Status: answered / GPT-5.5 Pro response recorded on 2026-06-05.
+
+Follow-up status:
+
+GPT-5.5 Pro concluded that finite-index contextual rigidity is not derivable
+from the listed residual-rigid hypotheses.  The obstruction is a missing
+compactness/noetherianity principle:
+
+```text
+pointwise finite separation of each fixed context
+does not imply
+finite-index contextual behavior over all arities.
+```
+
+The response sharpened the boundary in four ways.
+
+First, finite right-separation in the structure monoid is stricter than
+ordinary residual finiteness.  For `p,q in L_X`, the profinite equalizer
+
+```text
+E(p,q)={ahat in profinite L_X : ahat p = ahat q}
+```
+
+is empty exactly when one finite quotient separates the right translations by
+`p` and `q` at every finite state.  Residual finiteness separates only fixed
+elements.
+
+Second, YBE origin and even nondegeneracy do not rule out right scattering.
+The constant-action solution on `{0,1}`,
+
+```text
+r(i,j)=(j,1-i),
+```
+
+is bijective and nondegenerate, but its left structure monoid has
+`lambda_0 lambda_0 = lambda_0 lambda_1` while `lambda_0 != lambda_1`.
+
+Third, bounded bad witnesses are not obtained merely from braid locality,
+deleting strands, Fadell-Neuwirth forgetting, or product observers, because
+long observer words can be essential to the prefix/suffix states that create a
+contextual collapse.
+
+Fourth, pointwise stabilizer separability is not enough.  Uniform separation
+of an infinite transporter family is stronger, as shown abstractly by the
+factorial sequence `T={n!:n>=1}` in `Z` accumulating at the trivial stabilizer
+in every finite quotient.
+
+The remaining target is therefore a sharper theorem:
+
+```text
+Residual-rigid X
+=> finite-index, crossing-compatible, uniformly stabilizer-separable
+   contextual behavior.
+```
+
+This is still conditional and strictly smaller than Sawin, but it is not yet
+proved by the current route.
 
 Prompt:
 
@@ -131,4 +187,3 @@ Important:
 - A useful answer should either prove finite-index contextual rigidity, refute
   it with a realizable obstruction, or reduce it to a sharper theorem.
 ```
-
