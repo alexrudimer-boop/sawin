@@ -167,6 +167,26 @@ class StageBBucketConstraintHypergraphAudit:
     locally_consistent: bool
 
 
+@dataclass(frozen=True)
+class StageBStabilizerBranchAudit:
+    size: int
+    bucket_count: int
+    aut_u_order: int
+    stabilizer_order: int
+    unresolved_bucket_count: int
+    component_count: int
+    component_orbit_count: int
+    selected_component: tuple[int, ...] | None
+    selected_component_orbit_size: int
+    selected_bucket: int | None
+    selected_bucket_orbit_size: int
+    selected_bucket_domain_size: int
+    selected_value_orbit_count: int
+    selected_value_representatives: tuple[int, ...]
+    child_domain_count: int
+    locally_consistent: bool
+
+
 def normalize_u_array(array: Sequence[Sequence[int]]) -> UArray:
     rows = tuple(tuple(row) for row in array)
     size = len(rows)
@@ -899,6 +919,51 @@ def _stage_b_transform_bucket_domain_state(
     return tuple(tuple(sorted(domain)) for domain in transformed)
 
 
+def _stage_b_bucket_action_map(
+    action: Sequence[Sequence[tuple[int, int]]],
+) -> tuple[int, ...]:
+    mapping = []
+    for bucket_action in action:
+        targets = {target_bucket for target_bucket, _target_permutation in bucket_action}
+        if len(targets) != 1:
+            raise ValueError("bucket action does not map bucket permutations to one bucket")
+        mapping.append(next(iter(targets)))
+    return tuple(mapping)
+
+
+def _stage_b_current_stabilizer_actions(
+    domains: Sequence[Sequence[int]],
+    actions: Sequence[Sequence[Sequence[tuple[int, int]]]],
+) -> tuple[Sequence[Sequence[tuple[int, int]]], ...]:
+    state_word = _stage_b_bucket_domain_state_word(domains)
+    return tuple(
+        action
+        for action in actions
+        if _stage_b_transform_bucket_domain_state(domains, action) == state_word
+    )
+
+
+def _stage_b_orbit_representatives(
+    items: Sequence[int | tuple[int, ...]],
+    transform,
+) -> tuple[tuple[int | tuple[int, ...], tuple[int | tuple[int, ...], ...]], ...]:
+    unseen = set(items)
+    orbits = []
+    while unseen:
+        start = min(unseen)
+        orbit = {start}
+        frontier = [start]
+        while frontier:
+            item = frontier.pop()
+            for image in transform(item):
+                if image not in orbit:
+                    orbit.add(image)
+                    frontier.append(image)
+        unseen.difference_update(orbit)
+        orbits.append((min(orbit), tuple(sorted(orbit))))
+    return tuple(sorted(orbits, key=lambda row: row[0]))
+
+
 def stage_b_bucket_domain_state_is_canonical(
     array: Sequence[Sequence[int]],
     domains: Sequence[Sequence[int]],
@@ -1509,6 +1574,205 @@ def stage_b_bucket_constraint_hypergraph_audit(
         column_singularity_possible=column_singularity_possible,
         noninvolutive_possible=noninvolutive_possible,
         locally_consistent=column_singularity_possible and noninvolutive_possible,
+    )
+
+
+def stage_b_stabilizer_branch_audit(
+    array: Sequence[Sequence[int]],
+    domains: Sequence[Sequence[int]] | None = None,
+) -> StageBStabilizerBranchAudit:
+    u_rows = normalize_u_array(array)
+    size = len(u_rows)
+    if not stage_a_multiset_factorization_holds(u_rows):
+        return StageBStabilizerBranchAudit(
+            size=size,
+            bucket_count=0,
+            aut_u_order=0,
+            stabilizer_order=0,
+            unresolved_bucket_count=0,
+            component_count=0,
+            component_orbit_count=0,
+            selected_component=None,
+            selected_component_orbit_size=0,
+            selected_bucket=None,
+            selected_bucket_orbit_size=0,
+            selected_bucket_domain_size=0,
+            selected_value_orbit_count=0,
+            selected_value_representatives=tuple(),
+            child_domain_count=0,
+            locally_consistent=False,
+        )
+
+    gac = stage_b_bucket_permutation_gac_audit(u_rows, domains)
+    hypergraph = stage_b_bucket_constraint_hypergraph_audit(u_rows, gac.domains)
+    buckets = stage_a_factorization_buckets(u_rows)
+    bucket_permutations = _stage_b_bucket_permutations(buckets)
+    automorphisms = u_array_automorphisms(u_rows)
+    automorphism_actions = tuple(
+        _stage_b_bucket_permutation_action(buckets, bucket_permutations, automorphism)
+        for automorphism in automorphisms
+    )
+    if not gac.locally_consistent or not hypergraph.locally_consistent:
+        return StageBStabilizerBranchAudit(
+            size=size,
+            bucket_count=len(buckets),
+            aut_u_order=len(automorphisms),
+            stabilizer_order=0,
+            unresolved_bucket_count=hypergraph.unresolved_bucket_count,
+            component_count=hypergraph.component_count,
+            component_orbit_count=0,
+            selected_component=None,
+            selected_component_orbit_size=0,
+            selected_bucket=None,
+            selected_bucket_orbit_size=0,
+            selected_bucket_domain_size=0,
+            selected_value_orbit_count=0,
+            selected_value_representatives=tuple(),
+            child_domain_count=0,
+            locally_consistent=False,
+        )
+
+    stabilizer_actions = _stage_b_current_stabilizer_actions(
+        gac.domains,
+        automorphism_actions,
+    )
+    bucket_maps = tuple(_stage_b_bucket_action_map(action) for action in stabilizer_actions)
+    components = hypergraph.components
+    if not components:
+        return StageBStabilizerBranchAudit(
+            size=size,
+            bucket_count=len(buckets),
+            aut_u_order=len(automorphisms),
+            stabilizer_order=len(stabilizer_actions),
+            unresolved_bucket_count=hypergraph.unresolved_bucket_count,
+            component_count=0,
+            component_orbit_count=0,
+            selected_component=None,
+            selected_component_orbit_size=0,
+            selected_bucket=None,
+            selected_bucket_orbit_size=0,
+            selected_bucket_domain_size=0,
+            selected_value_orbit_count=0,
+            selected_value_representatives=tuple(),
+            child_domain_count=0,
+            locally_consistent=True,
+        )
+
+    component_items = tuple(components)
+
+    def transform_component(component: tuple[int, ...]) -> tuple[tuple[int, ...], ...]:
+        return tuple(
+            tuple(sorted(bucket_map[bucket] for bucket in component))
+            for bucket_map in bucket_maps
+        )
+
+    component_orbits = _stage_b_orbit_representatives(
+        component_items,
+        transform_component,
+    )
+    component_orbit_by_rep = {
+        representative: orbit for representative, orbit in component_orbits
+    }
+
+    def component_signature(component: tuple[int, ...]) -> tuple[int, int, tuple[int, ...]]:
+        product_value = 1
+        for bucket_index in component:
+            product_value *= len(gac.domains[bucket_index])
+        return (len(component), product_value, component)
+
+    selected_component = min(
+        (representative for representative, _orbit in component_orbits),
+        key=component_signature,
+    )
+    selected_component_set = set(selected_component)
+    component_stabilizer_actions = tuple(
+        action
+        for action, bucket_map in zip(stabilizer_actions, bucket_maps)
+        if {
+            bucket_map[bucket_index]
+            for bucket_index in selected_component
+        }
+        == selected_component_set
+    )
+    component_bucket_maps = tuple(
+        _stage_b_bucket_action_map(action) for action in component_stabilizer_actions
+    )
+    unresolved_buckets = tuple(
+        bucket_index
+        for bucket_index in selected_component
+        if len(gac.domains[bucket_index]) > 1
+    )
+    if not unresolved_buckets:
+        selected_bucket = None
+        selected_bucket_orbit = tuple()
+        selected_value_orbits: tuple[tuple[int | tuple[int, ...], tuple[int | tuple[int, ...], ...]], ...] = tuple()
+    else:
+
+        def transform_bucket(bucket_index: int) -> tuple[int, ...]:
+            return tuple(bucket_map[bucket_index] for bucket_map in component_bucket_maps)
+
+        bucket_orbits = _stage_b_orbit_representatives(
+            unresolved_buckets,
+            transform_bucket,
+        )
+
+        def bucket_signature(bucket_index: int) -> tuple[int, int, int]:
+            return (
+                len(gac.domains[bucket_index]),
+                len(buckets[bucket_index].cells),
+                bucket_index,
+            )
+
+        selected_bucket = min(
+            (representative for representative, _orbit in bucket_orbits),
+            key=bucket_signature,
+        )
+        selected_bucket_orbit = next(
+            orbit for representative, orbit in bucket_orbits if representative == selected_bucket
+        )
+        bucket_stabilizer_actions = tuple(
+            action
+            for action in component_stabilizer_actions
+            if _stage_b_bucket_action_map(action)[selected_bucket] == selected_bucket
+        )
+
+        def transform_value(permutation_index: int) -> tuple[int, ...]:
+            images = []
+            for action in bucket_stabilizer_actions:
+                target_bucket, target_permutation = action[selected_bucket][permutation_index]
+                if target_bucket == selected_bucket:
+                    images.append(target_permutation)
+            return tuple(images)
+
+        selected_value_orbits = _stage_b_orbit_representatives(
+            gac.domains[selected_bucket],
+            transform_value,
+        )
+
+    selected_value_representatives = tuple(
+        representative
+        for representative, _orbit in selected_value_orbits
+        if isinstance(representative, int)
+    )
+    return StageBStabilizerBranchAudit(
+        size=size,
+        bucket_count=len(buckets),
+        aut_u_order=len(automorphisms),
+        stabilizer_order=len(stabilizer_actions),
+        unresolved_bucket_count=hypergraph.unresolved_bucket_count,
+        component_count=hypergraph.component_count,
+        component_orbit_count=len(component_orbits),
+        selected_component=selected_component,
+        selected_component_orbit_size=len(component_orbit_by_rep[selected_component]),
+        selected_bucket=selected_bucket,
+        selected_bucket_orbit_size=len(selected_bucket_orbit),
+        selected_bucket_domain_size=(
+            len(gac.domains[selected_bucket]) if selected_bucket is not None else 0
+        ),
+        selected_value_orbit_count=len(selected_value_orbits),
+        selected_value_representatives=selected_value_representatives,
+        child_domain_count=len(selected_value_representatives),
+        locally_consistent=True,
     )
 
 

@@ -215,6 +215,24 @@
       "require_noninvolutive": true,
       "size": 3,
       "solution_rows": [],
+      "stabilizer_branch": {
+        "aut_u_order": 6,
+        "bucket_count": 3,
+        "child_domain_count": 0,
+        "component_count": 0,
+        "component_orbit_count": 0,
+        "locally_consistent": false,
+        "selected_bucket": null,
+        "selected_bucket_domain_size": 0,
+        "selected_bucket_orbit_size": 0,
+        "selected_component": null,
+        "selected_component_orbit_size": 0,
+        "selected_value_orbit_count": 0,
+        "selected_value_representatives": [],
+        "size": 3,
+        "stabilizer_order": 0,
+        "unresolved_bucket_count": 0
+      },
       "stage_b": {
         "accepted_count": 0,
         "column_singular_count": 1,
@@ -506,6 +524,24 @@
       "require_noninvolutive": true,
       "size": 4,
       "solution_rows": [],
+      "stabilizer_branch": {
+        "aut_u_order": 24,
+        "bucket_count": 4,
+        "child_domain_count": 0,
+        "component_count": 0,
+        "component_orbit_count": 0,
+        "locally_consistent": false,
+        "selected_bucket": null,
+        "selected_bucket_domain_size": 0,
+        "selected_bucket_orbit_size": 0,
+        "selected_component": null,
+        "selected_component_orbit_size": 0,
+        "selected_value_orbit_count": 0,
+        "selected_value_representatives": [],
+        "size": 4,
+        "stabilizer_order": 0,
+        "unresolved_bucket_count": 0
+      },
       "stage_b": {
         "accepted_count": 0,
         "column_singular_count": 1,
@@ -889,6 +925,36 @@
           "ybe": true
         }
       ],
+      "stabilizer_branch": {
+        "aut_u_order": 2,
+        "bucket_count": 8,
+        "child_domain_count": 2,
+        "component_count": 1,
+        "component_orbit_count": 1,
+        "locally_consistent": true,
+        "selected_bucket": 0,
+        "selected_bucket_domain_size": 2,
+        "selected_bucket_orbit_size": 2,
+        "selected_component": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "selected_component_orbit_size": 1,
+        "selected_value_orbit_count": 2,
+        "selected_value_representatives": [
+          0,
+          1
+        ],
+        "size": 4,
+        "stabilizer_order": 2,
+        "unresolved_bucket_count": 8
+      },
       "stage_b": {
         "accepted_count": 1,
         "column_singular_count": 2,

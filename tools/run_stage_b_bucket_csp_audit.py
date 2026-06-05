@@ -19,6 +19,7 @@ from ybe_domination.stage_a_u_arrays import (  # noqa: E402
     stage_b_bucket_permutation_gac_audit,
     stage_b_bucket_permutation_v_search_audit,
     stage_b_bucket_constraint_hypergraph_audit,
+    stage_b_stabilizer_branch_audit,
     stage_b_bucket_column_singularity_possible,
     stage_b_bucket_noninvolutive_possible,
     stage_b_gac_propagation_audit,
@@ -71,6 +72,9 @@ def example_rows() -> tuple[dict[str, object], ...]:
                 "bucket_constraint_hypergraph": asdict(
                     stage_b_bucket_constraint_hypergraph_audit(u_array)
                 ),
+                "stabilizer_branch": asdict(
+                    stage_b_stabilizer_branch_audit(u_array)
+                ),
                 "bucket_permutation_search": asdict(
                     stage_b_bucket_permutation_v_search_audit(
                         u_array,
@@ -108,6 +112,7 @@ def build_report() -> dict[str, object]:
             "exact bucket-domain column-singularity feasibility before branching",
             "exact bucket-domain non-involutivity feasibility before branching",
             "remaining bucket-constraint hypergraph and connected components after bucket-GAC",
+            "current-stabilizer component, bucket, and value-orbit branch audit",
         ],
         "rows": list(example_rows()),
         "conclusion": (
@@ -131,7 +136,7 @@ def build_report() -> dict[str, object]:
             "whether unresolved bucket choices decompose into independent "
             "components before full d=5,6 Stage B search."
         ),
-        "next_prompt": "prompts/gpt55_pro/2026-06-04-stabilizer-component-solver-next-step_ask_now.md",
+        "next_prompt": "prompts/gpt55_pro/2026-06-04-component-local-solver-integration-next-step_ask_now.md",
     }
 
 
@@ -154,6 +159,7 @@ def render_markdown(report: dict[str, object]) -> str:
         bucket_gac = row["bucket_permutation_gac"]
         bucket_search = row["bucket_permutation_search"]
         hypergraph = row["bucket_constraint_hypergraph"]
+        stabilizer_branch = row["stabilizer_branch"]
         lines.extend(
             [
                 f"### {row['name']}",
@@ -208,6 +214,13 @@ def render_markdown(report: dict[str, object]) -> str:
                 "- bucket hypergraph column/noninv feasible: "
                 f"`{hypergraph['column_singularity_possible']}` / "
                 f"`{hypergraph['noninvolutive_possible']}`;",
+                "- stabilizer branch order/component orbits: "
+                f"`{stabilizer_branch['stabilizer_order']}` / "
+                f"`{stabilizer_branch['component_orbit_count']}`;",
+                "- stabilizer selected component/bucket/value reps: "
+                f"`{stabilizer_branch['selected_component']}` / "
+                f"`{stabilizer_branch['selected_bucket']}` / "
+                f"`{stabilizer_branch['selected_value_representatives']}`;",
                 "- bucket-permutation search nodes / accepted: "
                 f"`{bucket_search['node_count']}` / `{bucket_search['accepted_count']}`;",
                 "- bucket-permutation Aut(U) / canonical rejections: "

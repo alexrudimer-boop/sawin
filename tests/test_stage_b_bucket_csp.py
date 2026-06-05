@@ -16,6 +16,7 @@ from ybe_domination.stage_a_u_arrays import (
     stage_b_bucket_permutation_gac_audit,
     stage_b_bucket_permutation_v_search_audit,
     stage_b_bucket_constraint_hypergraph_audit,
+    stage_b_stabilizer_branch_audit,
     stage_b_bucket_column_singularity_possible,
     stage_b_bucket_noninvolutive_possible,
     stage_b_bucket_domain_state_is_canonical,
@@ -209,6 +210,24 @@ class StageBBucketCSPTests(unittest.TestCase):
         gac = stage_b_bucket_permutation_gac_audit(u_array)
 
         self.assertTrue(stage_b_bucket_domain_state_is_canonical(u_array, gac.domains))
+
+    def test_stabilizer_branch_audit_selects_affine_branch_frontier(self):
+        identity_u = u_array_from_solution(identity_solution((0, 1, 2)))
+        affine_u = u_array_from_solution(affine_f2_type_a_solution())
+
+        identity_audit = stage_b_stabilizer_branch_audit(identity_u)
+        affine_audit = stage_b_stabilizer_branch_audit(affine_u)
+
+        self.assertFalse(identity_audit.locally_consistent)
+        self.assertTrue(affine_audit.locally_consistent)
+        self.assertEqual(affine_audit.aut_u_order, 2)
+        self.assertEqual(affine_audit.stabilizer_order, 2)
+        self.assertEqual(affine_audit.component_orbit_count, 1)
+        self.assertEqual(affine_audit.selected_component, tuple(range(8)))
+        self.assertEqual(affine_audit.selected_bucket, 0)
+        self.assertEqual(affine_audit.selected_bucket_orbit_size, 2)
+        self.assertEqual(affine_audit.selected_value_representatives, (0, 1))
+        self.assertEqual(affine_audit.child_domain_count, 2)
 
     def test_column_singularity_feasibility_filter_detects_forced_permutation(self):
         self.assertFalse(

@@ -1,6 +1,20 @@
 # Stabilizer Component Solver Prompt
 
-Status: ask_now / prepared for GPT-5.5 Pro on 2026-06-04.
+Status: answered / GPT-5.5 Pro answered on 2026-06-04.
+
+Answer summary:
+
+- Compile Y2/Y3, column singularity, and non-involutivity into bucket-pattern relations.
+- Include column-singularity hyperedges and non-involutivity witness hyperedges; component decomposition is unsound without them.
+- Compute the current stabilizer Gamma(D) at each branch state.
+- Branch by component orbit, then bucket orbit inside the chosen component, then value orbit under the selected bucket stabilizer.
+- Component-local solutions can be combined by product, with the only global condition that at least one component realizes a non-involutivity witness.
+
+Implementation response:
+
+- The current repository now has compiled relation hypergraph auditing and current-stabilizer branch auditing.
+- The affine Type A regression has one component of size 8 and root stabilizer order 2; the selected bucket is 0 with value representatives (0, 1).
+- Full component-local solution enumeration and integration into Stage B branching remain the next implementation target.
 
 Prompt:
 

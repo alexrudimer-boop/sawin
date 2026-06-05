@@ -18,6 +18,7 @@ Record the bucket-domain CSP precheck used before full Stage B backtracking: Hal
 - exact bucket-domain column-singularity feasibility before branching;
 - exact bucket-domain non-involutivity feasibility before branching;
 - remaining bucket-constraint hypergraph and connected components after bucket-GAC;
+- current-stabilizer component, bucket, and value-orbit branch audit;
 
 ## Example Rows
 
@@ -51,6 +52,8 @@ Record the bucket-domain CSP precheck used before full Stage B backtracking: Hal
 - bucket relation patterns YBE/column/noninv: `27` / `3` / `0`;
 - bucket hypergraph edge counts YBE/column/involutive: `0` / `0` / `0`;
 - bucket hypergraph column/noninv feasible: `True` / `False`;
+- stabilizer branch order/component orbits: `0` / `0`;
+- stabilizer selected component/bucket/value reps: `None` / `None` / `()`;
 - bucket-permutation search nodes / accepted: `1` / `0`;
 - bucket-permutation Aut(U) / canonical rejections: `6` / `0`;
 - bucket-permutation search truncated: `False`.
@@ -85,6 +88,8 @@ Record the bucket-domain CSP precheck used before full Stage B backtracking: Hal
 - bucket relation patterns YBE/column/noninv: `27` / `0` / `6`;
 - bucket hypergraph edge counts YBE/column/involutive: `0` / `0` / `0`;
 - bucket hypergraph column/noninv feasible: `False` / `True`;
+- stabilizer branch order/component orbits: `0` / `0`;
+- stabilizer selected component/bucket/value reps: `None` / `None` / `()`;
 - bucket-permutation search nodes / accepted: `1` / `0`;
 - bucket-permutation Aut(U) / canonical rejections: `6` / `0`;
 - bucket-permutation search truncated: `False`.
@@ -119,6 +124,8 @@ Record the bucket-domain CSP precheck used before full Stage B backtracking: Hal
 - bucket relation patterns YBE/column/noninv: `156` / `16` / `24`;
 - bucket hypergraph edge counts YBE/column/involutive: `19` / `4` / `4`;
 - bucket hypergraph column/noninv feasible: `True` / `True`;
+- stabilizer branch order/component orbits: `2` / `1`;
+- stabilizer selected component/bucket/value reps: `(0, 1, 2, 3, 4, 5, 6, 7)` / `0` / `(0, 1)`;
 - bucket-permutation search nodes / accepted: `3` / `1`;
 - bucket-permutation Aut(U) / canonical rejections: `2` / `0`;
 - bucket-permutation search truncated: `False`.
@@ -129,4 +136,4 @@ The current examples all pass local bucket-CSP consistency.  The profile still d
 
 ## Next Prompt
 
-`prompts/gpt55_pro/2026-06-04-stabilizer-component-solver-next-step_ask_now.md`.
+`prompts/gpt55_pro/2026-06-04-component-local-solver-integration-next-step_ask_now.md`.

@@ -38,6 +38,7 @@ Connect row-catalogue Stage A enumeration to bucket-CSP, Stage B exact cover, an
 - bucket-permutation locally consistent: `True`;
 - bucket hypergraph components / largest: `0` / `0`;
 - bucket relation patterns YBE/column/noninv: `27` / `3` / `0`;
+- stabilizer branch order/component orbits/child reps: `0` / `0` / `0`;
 - Stage B accepted completions: `0`;
 - Stage B emitted completions: `0`;
 - Stage B truncated: `False`;
@@ -64,6 +65,7 @@ Connect row-catalogue Stage A enumeration to bucket-CSP, Stage B exact cover, an
 - bucket-permutation locally consistent: `True`;
 - bucket hypergraph components / largest: `0` / `0`;
 - bucket relation patterns YBE/column/noninv: `64` / `4` / `0`;
+- stabilizer branch order/component orbits/child reps: `0` / `0` / `0`;
 - Stage B accepted completions: `0`;
 - Stage B emitted completions: `0`;
 - Stage B truncated: `False`;
@@ -90,6 +92,7 @@ Connect row-catalogue Stage A enumeration to bucket-CSP, Stage B exact cover, an
 - bucket-permutation locally consistent: `True`;
 - bucket hypergraph components / largest: `1` / `8`;
 - bucket relation patterns YBE/column/noninv: `156` / `16` / `24`;
+- stabilizer branch order/component orbits/child reps: `2` / `1` / `2`;
 - Stage B accepted completions: `1`;
 - Stage B emitted completions: `1`;
 - Stage B truncated: `False`;
