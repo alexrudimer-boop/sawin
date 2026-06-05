@@ -1,6 +1,37 @@
 # Residual-Rigid Harmful Collapse Exclusion Prompt
 
-Status: ask now / awaiting GPT-5.5 Pro response.
+Status: answered / GPT-5.5 Pro response recorded on 2026-06-05.
+
+Follow-up status:
+
+GPT-5.5 Pro confirmed that Residual-Rigid Harmful Collapse Exclusion is the
+exact missing theorem for the contextual route, but it is not presently a
+consequence of residual endpoint machinery, compactness, or local YBE
+identities.
+
+The strongest valid conclusion is conditional:
+
+```text
+Sawin follows if every finite X admits either finite rack absorption or strict
+orbit-injective active descent.
+```
+
+Every minimal counterexample to Sawin would be a residual-rigid harmful
+collapse: it has bad pairs, no finite contextual rack detector, all residual
+endpoint systems `E_M` non-orbit-injective on actual bad pairs, and no proper
+active factor with `ker rho^Z <= ker rho^X`.  Conversely, Sawin might still
+hold by a rack domination mechanism outside contextual detectors and active
+descent, so this remains a structured route rather than a restatement.
+
+The next actionable target splits into:
+
+```text
+Target A: direct finite rack absorption by a YBE-specific bounded-core /
+finite-index / holonomy-uniformity theorem;
+
+Target B: independent active extraction not factoring through E_M, with
+total bijective YBE and global orbit-injectivity.
+```
 
 Prompt:
 
