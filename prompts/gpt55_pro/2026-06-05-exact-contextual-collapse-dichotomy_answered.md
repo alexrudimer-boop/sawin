@@ -1,6 +1,43 @@
 # Exact Contextual Collapse Dichotomy Prompt
 
-Status: ask_now / prepared for GPT-5.5 Pro on 2026-06-05.
+Status: answered / GPT-5.5 Pro response recorded on 2026-06-05.
+
+Follow-up status:
+
+GPT-5.5 Pro confirmed that the fixed-`M` endpoint issue is finite.  After
+separating the finite endpoint set `S_M`, fixed-`M` badness is exactly:
+
+```text
+x != x',
+x' in B_n.x,
+Theta_n^M(x)=Theta_n^M(x')
+```
+
+inside `C_M(X)^n`.
+
+The label-equality side is finite-state.  For fixed `M`, define
+
+```text
+E_M subset (M x X x M)^2
+```
+
+by equality of contextual generators in `C_M(X)`.  Then
+`Theta_n^M(x)=Theta_n^M(x')` is recognized by finite state annotations of left
+and right context products.  Thus the exact label-collision relation is a
+regular relation over `X x X`.
+
+The hard part is the braid-orbit condition `x' in B_n.x`.  For a general
+finite bijective YBE solution, the current hypotheses do not imply that this
+reachability relation is regular, automatic, noetherian, or bounded by finite
+semigroup data.  Even if it were regular, regularity alone would not give one
+finite detector for all arities without a finite-index detector equivalence.
+
+The sharp missing lemma remains:
+
+```text
+Every harmful unbounded exact contextual collapse is either finite-index /
+rack-absorbed or finite-active-factor extractable.
+```
 
 Prompt:
 
@@ -105,4 +142,3 @@ Guardrails:
   solution without checking functionality, totality, YBE, and kernel
   reflection.
 ```
-
