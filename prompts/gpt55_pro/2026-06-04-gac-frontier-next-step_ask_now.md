@@ -103,6 +103,7 @@ Current regression facts:
 - Identity solution on 3 points: GAC leaves 9 variables with domain size 3.
 - Dihedral rack on 3 points: GAC forces all 9 V-values and verifies Y2/Y3.
 - Size-4 affine Type A pressure row: Stage A gives 8 two-cell buckets. GAC leaves all domains of size 2, and exact Stage B has exactly one non-involutive completion, the known rack-dominated affine table.
+- GAC-assisted branching now recovers that unique affine Type A non-involutive completion in 3 search nodes.
 - Exact size-3 row-catalogue Stage A has one canonical MF-valid U and no non-involutive Stage B completion.
 - A small budgeted size-4 Stage A sample currently only hits an identity-type U; the known affine Type A table is added separately as a regression.
 

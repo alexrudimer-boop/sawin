@@ -10,6 +10,7 @@ Record the bucket-domain CSP precheck used before full Stage B backtracking: Hal
 - locally_consistent iff Hall succeeds and no Y2/Y3 triple is unsupported;
 - exact GAC value deletion using dynamic Y2/Y3 implication supports;
 - singleton GAC domains are extracted and directly verified against Y2/Y3;
+- GAC-assisted Stage B branching for column-singular non-involutive completions;
 
 ## Example Rows
 
@@ -32,6 +33,8 @@ Record the bucket-domain CSP precheck used before full Stage B backtracking: Hal
 - GAC all singleton: `False`;
 - GAC singleton Y2/Y3 verified: `None`;
 - GAC locally consistent: `True`.
+- GAC non-involutive search nodes / accepted: `12` / `0`;
+- GAC non-involutive search truncated: `False`.
 
 ### dihedral_rack_3
 
@@ -52,6 +55,8 @@ Record the bucket-domain CSP precheck used before full Stage B backtracking: Hal
 - GAC all singleton: `True`;
 - GAC singleton Y2/Y3 verified: `True`;
 - GAC locally consistent: `True`.
+- GAC non-involutive search nodes / accepted: `1` / `0`;
+- GAC non-involutive search truncated: `False`.
 
 ### size4_affine_type_a
 
@@ -72,10 +77,12 @@ Record the bucket-domain CSP precheck used before full Stage B backtracking: Hal
 - GAC all singleton: `False`;
 - GAC singleton Y2/Y3 verified: `None`;
 - GAC locally consistent: `True`.
+- GAC non-involutive search nodes / accepted: `3` / `1`;
+- GAC non-involutive search truncated: `False`.
 
 ## Conclusion
 
-The current examples all pass local bucket-CSP consistency.  The profile still distinguishes their domain geometry: identity has three 3-cell buckets, the dihedral rack has nine forced cells, and affine Type A has eight 2-cell buckets.  Exact GAC forces the dihedral rack table and preserves all values needed for the known affine Type A completion.  This is the next precheck layer before full d=5,6 Stage B search.
+The current examples all pass local bucket-CSP consistency.  The profile still distinguishes their domain geometry: identity has three 3-cell buckets, the dihedral rack has nine forced cells, and affine Type A has eight 2-cell buckets.  Exact GAC forces the dihedral rack table and preserves all values needed for the known affine Type A completion.  GAC-assisted branching recovers the unique non-involutive affine Type A completion in three search nodes.  This is the next precheck layer before full d=5,6 Stage B search.
 
 ## Next Prompt
 

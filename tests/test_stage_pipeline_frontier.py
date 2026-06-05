@@ -20,7 +20,9 @@ class StagePipelineFrontierTests(unittest.TestCase):
         self.assertFalse(frontiers["exact_size_3"]["truncated"])
         self.assertEqual(frontiers["exact_size_3"]["canonical_count"], 1)
         self.assertEqual(rows["row_exact_size3_u0"]["stage_b"]["accepted_count"], 0)
+        self.assertEqual(rows["row_exact_size3_u0"]["gac_stage_b"]["accepted_count"], 0)
         self.assertFalse(rows["row_exact_size3_u0"]["stage_b"]["truncated"])
+        self.assertFalse(rows["row_exact_size3_u0"]["gac_stage_b"]["truncated"])
 
     def test_budgeted_size_four_frontier_is_clearly_nonexhaustive(self):
         frontiers = self.report["stage_a_frontiers"]
@@ -29,6 +31,7 @@ class StagePipelineFrontierTests(unittest.TestCase):
         self.assertTrue(frontiers["budget_size_4"]["truncated"])
         self.assertEqual(frontiers["budget_size_4"]["emitted_count"], 1)
         self.assertEqual(rows["row_budget_size4_u0"]["stage_b"]["accepted_count"], 0)
+        self.assertEqual(rows["row_budget_size4_u0"]["gac_stage_b"]["accepted_count"], 0)
 
     def test_known_affine_type_a_pipeline_reaches_rigid_filter(self):
         rows = {row["name"]: row for row in self.report["rows"]}
@@ -36,6 +39,7 @@ class StagePipelineFrontierTests(unittest.TestCase):
 
         self.assertTrue(affine["bucket_csp"]["locally_consistent"])
         self.assertEqual(affine["stage_b"]["accepted_count"], 1)
+        self.assertEqual(affine["gac_stage_b"]["accepted_count"], 1)
         self.assertEqual(len(affine["solution_rows"]), 1)
         self.assertEqual(
             affine["solution_rows"][0]["rigid_pressure_core_row"]["first_failed_filter"],

@@ -103,6 +103,18 @@
         "unsupported_value_deletion_count": 0,
         "variable_count": 9
       },
+      "gac_stage_b": {
+        "accepted_count": 0,
+        "column_singular_count": 1,
+        "emitted_count": 0,
+        "exact_cover_count": 1,
+        "examples": [],
+        "node_count": 12,
+        "noninvolutive_count": 0,
+        "size": 3,
+        "truncated": false,
+        "y2_y3_count": 1
+      },
       "name": "row_exact_size3_u0",
       "require_noninvolutive": true,
       "size": 3,
@@ -274,6 +286,18 @@
         "unsupported_value_deletion_count": 0,
         "variable_count": 16
       },
+      "gac_stage_b": {
+        "accepted_count": 0,
+        "column_singular_count": 1,
+        "emitted_count": 0,
+        "exact_cover_count": 1,
+        "examples": [],
+        "node_count": 30,
+        "noninvolutive_count": 0,
+        "size": 4,
+        "truncated": false,
+        "y2_y3_count": 1
+      },
       "name": "row_budget_size4_u0",
       "require_noninvolutive": true,
       "size": 4,
@@ -412,6 +436,45 @@
         "unresolved_variable_count": 16,
         "unsupported_value_deletion_count": 0,
         "variable_count": 16
+      },
+      "gac_stage_b": {
+        "accepted_count": 1,
+        "column_singular_count": 2,
+        "emitted_count": 1,
+        "exact_cover_count": 2,
+        "examples": [
+          [
+            [
+              3,
+              1,
+              1,
+              3
+            ],
+            [
+              3,
+              1,
+              1,
+              3
+            ],
+            [
+              0,
+              2,
+              2,
+              0
+            ],
+            [
+              0,
+              2,
+              2,
+              0
+            ]
+          ]
+        ],
+        "node_count": 3,
+        "noninvolutive_count": 1,
+        "size": 4,
+        "truncated": false,
+        "y2_y3_count": 2
       },
       "name": "known_affine_type_a",
       "require_noninvolutive": true,

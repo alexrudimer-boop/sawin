@@ -19,6 +19,7 @@ from ybe_domination.stage_a_u_arrays import (  # noqa: E402
     solution_from_uv_arrays,
     stage_b_bucket_csp_profile,
     stage_b_gac_propagation_audit,
+    stage_b_gac_v_search_audit,
     stage_b_v_exact_cover_audit,
     uv_arrays_from_solution,
 )
@@ -70,6 +71,13 @@ def frontier_row(
         max_nodes=stage_b_max_nodes,
         max_examples=max_solution_rows,
     )
+    gac_stage_b = stage_b_gac_v_search_audit(
+        u_array,
+        require_column_singular=True,
+        require_noninvolutive=require_noninvolutive,
+        max_nodes=stage_b_max_nodes,
+        max_examples=max_solution_rows,
+    )
     return {
         "name": name,
         "size": len(u_array),
@@ -77,10 +85,11 @@ def frontier_row(
         "bucket_csp": asdict(csp),
         "gac": asdict(gac),
         "stage_b": asdict(stage_b),
+        "gac_stage_b": asdict(gac_stage_b),
         "solution_rows": _solution_rows_from_v_examples(
             name,
             u_array,
-            stage_b.examples,
+            gac_stage_b.examples,
             max_rows=max_solution_rows,
         ),
     }
@@ -169,6 +178,7 @@ def render_markdown(report: dict[str, object]) -> str:
         csp = row["bucket_csp"]
         gac = row["gac"]
         stage_b = row["stage_b"]
+        gac_stage_b = row["gac_stage_b"]
         first_failures = [
             solution_row["rigid_pressure_core_row"]["first_failed_filter"]
             for solution_row in row["solution_rows"]
@@ -189,6 +199,9 @@ def render_markdown(report: dict[str, object]) -> str:
                 f"- Stage B accepted completions: `{stage_b['accepted_count']}`;",
                 f"- Stage B emitted completions: `{stage_b['emitted_count']}`;",
                 f"- Stage B truncated: `{stage_b['truncated']}`;",
+                f"- GAC Stage B nodes: `{gac_stage_b['node_count']}`;",
+                f"- GAC Stage B accepted completions: `{gac_stage_b['accepted_count']}`;",
+                f"- GAC Stage B truncated: `{gac_stage_b['truncated']}`;",
                 f"- rigid first failed filters: `{tuple(first_failures)}`.",
                 "",
             ]

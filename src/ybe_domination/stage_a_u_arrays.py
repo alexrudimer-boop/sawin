@@ -389,6 +389,42 @@ def _domain_sets(
     return [[set(cell_domain) for cell_domain in row] for row in domains]
 
 
+def _normalize_domains(
+    domains: Sequence[Sequence[Sequence[int]]],
+    *,
+    size: int,
+) -> tuple[tuple[tuple[int, ...], ...], ...]:
+    if len(domains) != size:
+        raise ValueError("domain array must have one row per U row")
+    normalized_rows = []
+    allowed = set(range(size))
+    for row in domains:
+        if len(row) != size:
+            raise ValueError("domain array must be square")
+        normalized_row = []
+        for cell_domain in row:
+            values = tuple(sorted(set(cell_domain)))
+            if any(value not in allowed for value in values):
+                raise ValueError("domain values must lie in the U domain")
+            normalized_row.append(values)
+        normalized_rows.append(tuple(normalized_row))
+    return tuple(normalized_rows)
+
+
+def _intersect_domains(
+    left: Sequence[Sequence[Sequence[int]]],
+    right: Sequence[Sequence[Sequence[int]]],
+) -> tuple[tuple[tuple[int, ...], ...], ...]:
+    size = len(left)
+    rows = []
+    for x in range(size):
+        row = []
+        for y in range(size):
+            row.append(tuple(sorted(set(left[x][y]).intersection(right[x][y]))))
+        rows.append(tuple(row))
+    return tuple(rows)
+
+
 def stage_b_gac_dynamic_universe(
     array: Sequence[Sequence[int]],
     domains: Sequence[Sequence[Sequence[int]]],
@@ -560,6 +596,7 @@ def _domains_extract_v(
 
 def stage_b_gac_propagation_audit(
     array: Sequence[Sequence[int]],
+    initial_domains: Sequence[Sequence[Sequence[int]]] | None = None,
 ) -> StageBGACPropagationAudit:
     u_rows = normalize_u_array(array)
     size = len(u_rows)
@@ -592,9 +629,14 @@ def stage_b_gac_propagation_audit(
         )
 
     buckets = stage_a_factorization_buckets(u_rows)
-    initial_domains = stage_a_bucket_domains(u_rows)
-    domains = _domain_sets(initial_domains)
-    initial_mass = _domain_mass(initial_domains)
+    bucket_domains = stage_a_bucket_domains(u_rows)
+    if initial_domains is None:
+        starting_domains = bucket_domains
+    else:
+        normalized_initial_domains = _normalize_domains(initial_domains, size=size)
+        starting_domains = _intersect_domains(bucket_domains, normalized_initial_domains)
+    domains = _domain_sets(starting_domains)
+    initial_mass = _domain_mass(starting_domains)
     hall_deletions = 0
     unsupported_deletions = 0
     hall_contradiction = False
@@ -645,7 +687,7 @@ def stage_b_gac_propagation_audit(
         size=size,
         variable_count=variable_count,
         bucket_count=len(buckets),
-        initial_domain_size_counts=_domain_size_counts(initial_domains),
+        initial_domain_size_counts=_domain_size_counts(starting_domains),
         final_domain_size_counts=_domain_size_counts(final_domains),
         initial_domain_mass=initial_mass,
         final_domain_mass=_domain_mass(final_domains),
@@ -662,6 +704,153 @@ def stage_b_gac_propagation_audit(
         locally_consistent=locally_consistent,
         domains=final_domains,
         extracted_v=extracted_v,
+    )
+
+
+def _stage_b_branch_domains(
+    domains: Sequence[Sequence[Sequence[int]]],
+    buckets: Sequence[StageABucket],
+    cell: Cell,
+    value: int,
+) -> tuple[tuple[tuple[int, ...], ...], ...]:
+    domain_sets = _domain_sets(domains)
+    x, y = cell
+    domain_sets[x][y] = {value}
+    for bucket in buckets:
+        if cell not in bucket.cells:
+            continue
+        for other in bucket.cells:
+            if other == cell:
+                continue
+            domain_sets[other[0]][other[1]].discard(value)
+        break
+    return _frozen_domains(domain_sets)
+
+
+def _stage_b_choose_branch_cell(
+    domains: Sequence[Sequence[Sequence[int]]],
+) -> Cell | None:
+    best_cell = None
+    best_size = len(domains) + 1
+    for x, row in enumerate(domains):
+        for y, cell_domain in enumerate(row):
+            domain_size = len(cell_domain)
+            if 1 < domain_size < best_size:
+                best_cell = (x, y)
+                best_size = domain_size
+    return best_cell
+
+
+def stage_b_gac_v_search_audit(
+    u_array: Sequence[Sequence[int]],
+    *,
+    require_column_singular: bool = True,
+    require_noninvolutive: bool = False,
+    max_nodes: int | None = None,
+    max_examples: int | None = 20,
+) -> StageBVExactCoverAudit:
+    u_rows = normalize_u_array(u_array)
+    size = len(u_rows)
+    if max_nodes is not None and max_nodes < 0:
+        raise ValueError("max_nodes must be nonnegative")
+    if max_examples is not None and max_examples < 0:
+        raise ValueError("max_examples must be nonnegative")
+
+    if (
+        not balanced_symbol_counts(u_rows)
+        or not stage_a_feasibility_nonempty(u_rows)
+        or not stage_a_multiset_factorization_holds(u_rows)
+    ):
+        return StageBVExactCoverAudit(
+            size=size,
+            node_count=0,
+            exact_cover_count=0,
+            column_singular_count=0,
+            y2_y3_count=0,
+            noninvolutive_count=0,
+            accepted_count=0,
+            emitted_count=0,
+            truncated=False,
+            examples=tuple(),
+        )
+
+    buckets = stage_a_factorization_buckets(u_rows)
+    node_count = 0
+    exact_cover_count = 0
+    column_singular_count = 0
+    y2_y3_count = 0
+    noninvolutive_count = 0
+    accepted_count = 0
+    examples: list[VArray] = []
+    truncated = False
+
+    def record_if_complete(v_rows: VArray) -> None:
+        nonlocal exact_cover_count
+        nonlocal column_singular_count
+        nonlocal y2_y3_count
+        nonlocal noninvolutive_count
+        nonlocal accepted_count
+
+        if not uv_pair_orthogonal(u_rows, v_rows):
+            return
+        exact_cover_count += 1
+        column_singular = v_columns_singular(v_rows)
+        if column_singular:
+            column_singular_count += 1
+        if require_column_singular and not column_singular:
+            return
+        if not uv_y2_y3_hold(u_rows, v_rows):
+            return
+        y2_y3_count += 1
+        noninvolutive = not uv_is_involutive(u_rows, v_rows)
+        if noninvolutive:
+            noninvolutive_count += 1
+        if require_noninvolutive and not noninvolutive:
+            return
+        accepted_count += 1
+        if max_examples is None or len(examples) < max_examples:
+            examples.append(v_rows)
+
+    def search(domains: Sequence[Sequence[Sequence[int]]]) -> None:
+        nonlocal node_count
+        nonlocal truncated
+
+        if truncated:
+            return
+        if max_nodes is not None and node_count >= max_nodes:
+            truncated = True
+            return
+        node_count += 1
+
+        gac = stage_b_gac_propagation_audit(u_rows, domains)
+        if not gac.locally_consistent:
+            return
+        v_rows = gac.extracted_v
+        if v_rows is not None:
+            record_if_complete(v_rows)
+            return
+        cell = _stage_b_choose_branch_cell(gac.domains)
+        if cell is None:
+            return
+        x, y = cell
+        for value in gac.domains[x][y]:
+            branch_domains = _stage_b_branch_domains(gac.domains, buckets, cell, value)
+            search(branch_domains)
+            if truncated:
+                break
+
+    search(stage_a_bucket_domains(u_rows))
+    return StageBVExactCoverAudit(
+        size=size,
+        node_count=node_count,
+        exact_cover_count=exact_cover_count,
+        column_singular_count=column_singular_count,
+        y2_y3_count=y2_y3_count,
+        noninvolutive_count=noninvolutive_count,
+        accepted_count=accepted_count,
+        emitted_count=len(examples),
+        truncated=truncated,
+        examples=tuple(examples),
     )
 
 

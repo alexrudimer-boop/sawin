@@ -15,6 +15,7 @@ from ybe_domination.stage_a_u_arrays import (
     stage_b_bucket_triple_value_has_support,
     stage_b_gac_dynamic_universe,
     stage_b_gac_propagation_audit,
+    stage_b_gac_v_search_audit,
     stage_b_hall_all_different_ok,
     u_array_from_solution,
     uv_arrays_from_solution,
@@ -82,6 +83,18 @@ class StageBBucketCSPTests(unittest.TestCase):
             for y, value in enumerate(row):
                 self.assertIn(value, audit.domains[x][y])
 
+    def test_gac_search_recovers_known_affine_noninvolutive_completion(self):
+        u_array, v_array = uv_arrays_from_solution(affine_f2_type_a_solution())
+        audit = stage_b_gac_v_search_audit(
+            u_array,
+            require_column_singular=True,
+            require_noninvolutive=True,
+        )
+
+        self.assertEqual(audit.accepted_count, 1)
+        self.assertEqual(audit.examples, (v_array,))
+        self.assertFalse(audit.truncated)
+
     def test_dynamic_universe_and_value_support_are_exact_queries(self):
         u_array = u_array_from_solution(affine_f2_type_a_solution())
         domains = stage_a_bucket_domains(u_array)
@@ -111,6 +124,10 @@ class StageBBucketCSPTests(unittest.TestCase):
         self.assertEqual(
             rows["size4_affine_type_a"]["profile"]["maximum_domain_size"],
             2,
+        )
+        self.assertEqual(
+            rows["size4_affine_type_a"]["gac_noninvolutive_search"]["accepted_count"],
+            1,
         )
         self.assertTrue(report["next_prompt"].endswith("_ask_now.md"))
 

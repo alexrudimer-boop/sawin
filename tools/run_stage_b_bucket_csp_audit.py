@@ -17,6 +17,7 @@ from ybe_domination import identity_solution, rack_solution  # noqa: E402
 from ybe_domination.stage_a_u_arrays import (  # noqa: E402
     stage_b_bucket_csp_profile,
     stage_b_gac_propagation_audit,
+    stage_b_gac_v_search_audit,
     u_array_from_solution,
 )
 
@@ -40,6 +41,14 @@ def example_rows() -> tuple[dict[str, object], ...]:
                 "source_solution_ybe": solution.is_ybe(),
                 "profile": asdict(stage_b_bucket_csp_profile(u_array)),
                 "gac": asdict(stage_b_gac_propagation_audit(u_array)),
+                "gac_noninvolutive_search": asdict(
+                    stage_b_gac_v_search_audit(
+                        u_array,
+                        require_column_singular=True,
+                        require_noninvolutive=True,
+                        max_examples=3,
+                    )
+                ),
             }
         )
     return tuple(rows)
@@ -61,6 +70,7 @@ def build_report() -> dict[str, object]:
             "locally_consistent iff Hall succeeds and no Y2/Y3 triple is unsupported",
             "exact GAC value deletion using dynamic Y2/Y3 implication supports",
             "singleton GAC domains are extracted and directly verified against Y2/Y3",
+            "GAC-assisted Stage B branching for column-singular non-involutive completions",
         ],
         "rows": list(example_rows()),
         "conclusion": (
@@ -69,8 +79,10 @@ def build_report() -> dict[str, object]:
             "three 3-cell buckets, the dihedral rack has nine forced cells, "
             "and affine Type A has eight 2-cell buckets.  Exact GAC forces "
             "the dihedral rack table and preserves all values needed for the "
-            "known affine Type A completion.  This is the next precheck layer "
-            "before full d=5,6 Stage B search."
+            "known affine Type A completion.  GAC-assisted branching recovers "
+            "the unique non-involutive affine Type A completion in three "
+            "search nodes.  This is the next precheck layer before full d=5,6 "
+            "Stage B search."
         ),
         "next_prompt": "prompts/gpt55_pro/2026-06-04-gac-frontier-next-step_ask_now.md",
     }
@@ -91,6 +103,7 @@ def render_markdown(report: dict[str, object]) -> str:
     for row in report["rows"]:
         profile = row["profile"]
         gac = row["gac"]
+        gac_search = row["gac_noninvolutive_search"]
         lines.extend(
             [
                 f"### {row['name']}",
@@ -117,6 +130,9 @@ def render_markdown(report: dict[str, object]) -> str:
                 f"- GAC singleton Y2/Y3 verified: "
                 f"`{gac['singleton_y2_y3_verified']}`;",
                 f"- GAC locally consistent: `{gac['locally_consistent']}`.",
+                "- GAC non-involutive search nodes / accepted: "
+                f"`{gac_search['node_count']}` / `{gac_search['accepted_count']}`;",
+                f"- GAC non-involutive search truncated: `{gac_search['truncated']}`.",
                 "",
             ]
         )
