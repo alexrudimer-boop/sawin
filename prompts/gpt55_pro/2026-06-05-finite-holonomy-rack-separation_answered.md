@@ -1,6 +1,21 @@
 # Finite Holonomy-Rack Separation Prompt
 
-Status: ask_now / prepared for GPT-5.5 Pro on 2026-06-05.
+Status: answered on 2026-06-05.
+
+Follow-up status:
+
+GPT-5.5 Pro refined the obstruction from finite semigroup holonomy to a
+profinite subgroup-separability problem.  For `R=V_L(X)` and
+`G=As(R)`, finite-rack residual equivalence of prefix generators is controlled
+by profinite closures of stabilizers in `G`: if two prefix vertices are in the
+same `G`-orbit, then finite racks fail to separate them exactly when the
+transporting element lies in the profinite closure of the relevant stabilizer.
+
+Thus the residual branch now requires a profinite stabilizer-separation lemma:
+orbit-relevant stabilizer cosets in `As(V_L(X))` must be profinitely separated,
+unless the collapse yields a proper domination-reducing active factor.  The
+next active prompt asks whether that separability lemma can be proved,
+refuted, or reduced to a checkable structural class.
 
 Prompt:
 
@@ -135,4 +150,3 @@ Important:
 - A useful answer should either prove the lemma, refute it with a realizable
   obstruction, or turn it into a smaller finite checkable criterion.
 ```
-
