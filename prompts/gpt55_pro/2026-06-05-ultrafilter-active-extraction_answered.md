@@ -1,6 +1,45 @@
 # Ultrafilter Active Extraction Prompt
 
-Status: ask_now / prepared for GPT-5.5 Pro on 2026-06-05.
+Status: answered / GPT-5.5 Pro response recorded on 2026-06-05.
+
+Follow-up status:
+
+GPT-5.5 Pro concluded that the harmful ultrafilter canonically produces a
+limiting object, but not a finite active factor.  It gives:
+
+```text
+hyperfinite same-orbit bad pair of infinite arity
++ profinite contextual collapse R_U on
+   K=hat{L_X} x X x hat{L_X}
++ partial pro-YBE structure on the detector quotient
++ possibly profinite holonomy/stabilizer-coset data.
+```
+
+For every standard finite detector `D`, the hyperfinite pair is invisible to
+the nonstandard extension of `D`.  Equivalently, the closed relation `R_U`
+lies inside the detector-equivalence relation on profinite contextual letters.
+
+The key negative conclusion is that compactness and Los/ultraproduct reasoning
+produce profinite or internally finite objects, not a standard finite quotient.
+The missing finite-index step is exactly the obstruction:
+
+```text
+profinite/hyperfinite collapse
+does not imply
+finite-index contextual quotient.
+```
+
+The response also isolated a counterexample pattern at the rack/associated
+group level: the shift rack `R=Z` with `i triangleright j=i+1` and transporter
+family `T={h^{n!}}`.  Each fixed pair is separated by some finite rack quotient,
+but no single finite quotient separates the whole family because factorial
+powers accumulate at the stabilizer in finite quotients.
+
+This does not yet give a YBE-origin contextual counterexample.  The sharp next
+target is to prove a YBE-specific theorem ruling out the realization of this
+infinite-index/factorial holonomy pattern inside orbit-relevant contextual
+racks `C_M(X)`, or to show that such a realization produces a proper finite
+active factor with the correct kernel direction.
 
 Prompt:
 
@@ -153,4 +192,3 @@ Guardrails:
 - Do not assume a partial contextual crossing relation extends to a total
   bijective YBE solution.
 ```
-
