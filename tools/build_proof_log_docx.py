@@ -157,6 +157,7 @@ EXTRA_MD.append(ROOT / "proofs" / "associated_group_separability_counterexample.
 EXTRA_MD.append(ROOT / "proofs" / "finite_rack_sat_detector_plan.md")
 EXTRA_MD.append(ROOT / "proofs" / "size2_bounded_finite_rack_sat_experiment.md")
 EXTRA_MD.append(ROOT / "proofs" / "size2_unbounded_q2_schema_coverage.md")
+EXTRA_MD.append(ROOT / "proofs" / "perm3_permutation_form_endpoint_gate.md")
 EXTRA_MD.append(ROOT / "proofs" / "minimal_ideal_escape_rack_construction.md")
 EXTRA_MD.append(ROOT / "proofs" / "escape_rack_strand_separation_counterexample.md")
 EXTRA_MD.append(ROOT / "proofs" / "active_factor_observability_audit.md")

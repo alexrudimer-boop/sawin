@@ -1,0 +1,61 @@
+{
+  "type": "perm3_permutation_form_endpoint_gate",
+  "branch": "permutation_form",
+  "X_size": 3,
+  "solution_form": "r_sigma_tau(x,y)=(sigma(y),tau(x))",
+  "ybe_condition": "sigma*tau=tau*sigma",
+  "commuting_pair_count_in_S3": 18,
+  "high_arity_theorem": "Every principal bad endpoint pair in arity n>=4 is separated by D_sigma_tau.",
+  "detector_schema": {
+    "rho": "tau*sigma",
+    "monoid": "C_ord(tau), every generator maps to 1",
+    "rack": "Q_rho on X with a ▷ b = rho(b)",
+    "alpha": "alpha([p,x,s])=tau^{-p}(x)",
+    "endpoint_value": "D_sigma_tau(w,i)=tau^{-i}(w_i)"
+  },
+  "cycle_type_reduction": {
+    "rho_identity": "all arities closed by context multiset classification",
+    "rho_transposition": "n>=3 closed; invisible pairs only possible at n=2",
+    "rho_three_cycle": "n>=4 closed; invisible pairs only possible at n=2 or n=3"
+  },
+  "shortest_invisible_pair": {
+    "type": "perm3_delta_detector_invisible_bad_pair",
+    "sigma": [1, 2, 0],
+    "tau": [0, 1, 2],
+    "rho": [1, 2, 0],
+    "ybe_table": [3, 6, 0, 4, 7, 1, 5, 8, 2],
+    "partition": [0, 0, 0],
+    "arity": 2,
+    "paired_action_braid_word": [],
+    "start_word": [0, 0],
+    "end_word": [0, 0],
+    "start_position": 0,
+    "end_position": 1,
+    "endpoint_e": {"prefix": [], "letter": 0, "suffix": [0]},
+    "endpoint_eprime": {"prefix": [0], "letter": 0, "suffix": []},
+    "z_start_word": [0, 0],
+    "z_end_word": [0, 0],
+    "z_start_marked_value": 0,
+    "z_end_marked_value": 0,
+    "normalized_e": {"marked": 0, "context": [0], "context_class": ["single", 0]},
+    "normalized_eprime": {"marked": 0, "context": [2], "context_class": ["single", 2]},
+    "quotient_endpoint_equivalent": true,
+    "original_endpoint_equivalent": false,
+    "detector_tested": {
+      "name": "D_sigma_tau",
+      "monoid": {"size": 1, "mul": [[0]], "generator_images": [0, 0, 0]},
+      "rack": {"size": 3, "table": [[1, 2, 0], [1, 2, 0], [1, 2, 0]]},
+      "alpha_formula": "alpha([p,x,s])=x",
+      "endpoint_values": [0, 0],
+      "separates": false
+    },
+    "classification": "low_arity_invisible_to_delta_detector_not_residual"
+  },
+  "next_sat_target": {
+    "ybe_table": [3, 6, 0, 4, 7, 1, 5, 8, 2],
+    "endpoint_pair": {
+      "e": {"prefix": [], "letter": 0, "suffix": [0]},
+      "eprime": {"prefix": [0], "letter": 0, "suffix": []}
+    }
+  }
+}
