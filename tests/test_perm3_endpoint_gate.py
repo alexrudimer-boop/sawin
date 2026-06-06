@@ -88,6 +88,21 @@ def five_element_prefix_suffix_monoid():
     )
 
 
+def truncated_length_one_monoid():
+    return MonoidQuotient(
+        size=5,
+        identity=0,
+        mul=(
+            (0, 1, 2, 3, 4),
+            (1, 4, 4, 4, 4),
+            (2, 4, 4, 4, 4),
+            (3, 4, 4, 4, 4),
+            (4, 4, 4, 4, 4),
+        ),
+        gen=(1, 2, 3),
+    )
+
+
 def constant_action_rack(rho):
     return tuple(tuple(rho[value] for value in range(3)) for _ in range(3))
 
@@ -321,6 +336,46 @@ class Perm3EndpointGateTests(unittest.TestCase):
         self.assertTrue(verify_detector(presentation, detector))
         self.assertEqual(assignment[presentation.endpoint_class], 0)
         self.assertEqual(assignment[presentation.endpoint_prime_class], 1)
+
+    def test_finished_low_arity_table_common_monoid_and_racks(self):
+        monoid = truncated_length_one_monoid()
+        q2_identity = ((0, 1), (0, 1))
+        q3_rack = ((0, 1, 2), (0, 1, 2), (1, 0, 2))
+
+        self.assertTrue(is_rack_table(q2_identity))
+        self.assertTrue(is_rack_table(q3_rack))
+
+        for sigma in S3:
+            for tau in S3:
+                if compose(sigma, tau) != compose(tau, sigma):
+                    continue
+                with self.subTest(sigma=sigma, tau=tau):
+                    for x in range(3):
+                        for y in range(3):
+                            xp = sigma[y]
+                            yp = tau[x]
+                            left = monoid.mul[monoid.gen[x]][monoid.gen[y]]
+                            right = monoid.mul[monoid.gen[xp]][monoid.gen[yp]]
+                            self.assertEqual(left, right)
+
+    def test_finished_low_arity_table_sample_strong_collapse_witness(self):
+        solution = permutation_form_solution((1, 2, 0), (0, 1, 2))
+        dsu, node = endpoint_t_classes(solution, 3)
+
+        A = ((0, 0, 0), 0)
+        Aprime = ((0, 0, 2), 0)
+        C = ((1, 0, 0), 0)
+        Cprime = ((1, 0, 2), 0)
+        B = ((0, 0, 0), 1)
+        Bprime = ((0, 0, 2), 1)
+        e = ((0, 0, 0), 0)
+        eprime = ((0, 0, 0), 1)
+
+        self.assertEqual(solution.R[(0, 0)], (1, 0))
+        self.assertEqual(dsu.find(node(*A)), dsu.find(node(*Aprime)))
+        self.assertEqual(dsu.find(node(*C)), dsu.find(node(*Cprime)))
+        self.assertEqual(dsu.find(node(*B)), dsu.find(node(*eprime)))
+        self.assertEqual(dsu.find(node(*Bprime)), dsu.find(node(*e)))
 
 
 if __name__ == "__main__":

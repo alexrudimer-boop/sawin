@@ -1,0 +1,60 @@
+{
+  "type": "perm3_low_arity_endpoint_gate_finished",
+  "reported_sha256": "ecb66dc5461106b6a816ff9780424fd05c8ce78b36a577559eaa6891557c0b4e",
+  "reported_verifier_output": [
+    "OK perm3 low-arity endpoint gate certificate verified",
+    "sha256 ecb66dc5461106b6a816ff9780424fd05c8ce78b36a577559eaa6891557c0b4e",
+    "invisible_dedup_pairs 3132",
+    "positive_detectors 216",
+    "strong_collapse_witnesses 2916"
+  ],
+  "scope": {
+    "branch": "permutation_form",
+    "X_size": 3,
+    "arities": [2, 3],
+    "commuting_pairs_sigma_tau": 18
+  },
+  "classification": {
+    "invisible_dedup_pairs": 3132,
+    "positive_detectors": 216,
+    "strong_collapse_witnesses": 2916,
+    "unresolved": 0,
+    "bounded_negative_certificates": 0,
+    "residual_collapse_claim": false
+  },
+  "arity_split": {
+    "2": "every invisible bad endpoint pair is separated by a positive finite rack detector",
+    "3": "every invisible bad endpoint pair has a parametric strong left-cancellation collapse certificate"
+  },
+  "detector_side": {
+    "monoid": {
+      "size": 5,
+      "identity": 0,
+      "element_names": ["e", "a0", "a1", "a2", "z"],
+      "generator_images": [1, 2, 3],
+      "mul": [
+        [0, 1, 2, 3, 4],
+        [1, 4, 4, 4, 4],
+        [2, 4, 4, 4, 4],
+        [3, 4, 4, 4, 4],
+        [4, 4, 4, 4, 4]
+      ]
+    },
+    "rack_distribution": {
+      "q2_identity_action": 168,
+      "q3": 48
+    },
+    "q2_rack": [[0, 1], [0, 1]],
+    "q3_rack": [[0, 1, 2], [0, 1, 2], [1, 0, 2]]
+  },
+  "strong_collapse_pattern": {
+    "rule": "if A ▷ B = C and A ▷ B' = C, left-translation injectivity gives B=B'",
+    "verified_data": ["A ~T A'", "C ~T C'", "B ~T e", "B' ~T e'"]
+  },
+  "final_permutation_form_branch_status": {
+    "n_ge_4": "separated by D_sigma_tau",
+    "n_2": "finite rack detectors with |M|=5 and |Q|<=3",
+    "n_3": "strong left-cancellation collapse",
+    "unresolved": 0
+  }
+}
