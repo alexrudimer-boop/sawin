@@ -67,11 +67,66 @@ sandbox:/mnt/data/nonperm3_arity3_endpoint_gate_q4_verifier.py
 ```
 
 Those `sandbox:/mnt/data` files were not accessible from this Windows
-workspace at the time this note was added, so the full q=5 JSON certificate
-has not yet been imported into `proofs/`.  The SHA256 and batch counts above
-are therefore recorded as externally reported verifier output.  Once the JSON
-and verifier are available locally, they should be copied into `proofs/` and
-run directly.
+workspace at the time this note was added.  The original JSON bytes and
+canonicalization have still not been recovered, so the reported SHA256 remains
+external provenance.
+
+A deterministic local reconstruction has now generated the q=5-only schema
+certificate:
+
+```text
+proofs/nonperm3_arity3_q5_resolution_certificate.json
+```
+
+It is generated against the reconstructed q<=4 baseline:
+
+```text
+proofs/nonperm3_arity3_endpoint_gate_q4_full_schema_certificate.json
+```
+
+The reconstructed q=5 certificate has:
+
+```text
+new_positive_detector_coverages 216
+new_positive_detector_schemas 22
+combined_positive_detector_coverages 37692
+remaining_unresolved_candidates 0
+by_rack_size {'q5': 216}
+by_monoid {'truncated_structure_monoid_length_2': 216}
+reported_sha256 376e901839c978530ecd32893da56de5ff69b26dd3c407d1cb3eda365c63fc75
+reconstructed_sha256 2e62015a2a91853354206421e80be6035ba293127b2e5213b7bb02ccf1af72c9
+sha256_matches_reported False
+coverage_partition_verified True
+```
+
+It passes:
+
+```text
+python tools/verify_contextual_detector_schema_certificate.py \
+  proofs/nonperm3_arity3_q5_resolution_certificate.json \
+  --require-records
+
+OK contextual detector schema verification
+contextual_detector_records 22
+verified_contextual_detector_records 22
+failed_contextual_detector_records 0
+```
+
+It also passes:
+
+```text
+python tools/verify_nonperm3_endpoint_detector_basis.py \
+  proofs/nonperm3_arity3_q5_resolution_certificate.json \
+  --require-candidate-partition
+
+OK nonperm3 endpoint detector basis verification
+positive_detector_schemas 22
+positive_detector_coverages 216
+baseline_covered_candidate_count 37476
+combined_positive_detector_coverages 37692
+remaining_unresolved_candidates 0
+coverage_partition_verified True
+```
 
 The displayed first q=5 detector has now been copied into a standalone
 schema fixture:
@@ -95,12 +150,10 @@ verified_contextual_detector_records 1
 failed_contextual_detector_records 0
 ```
 
-The missing q=5 basis is now being addressed by deterministic local
-reconstruction rather than by waiting for the inaccessible sandbox artifact.
-The reconstructed endpoint-candidate and monoid input layer is recorded in
-`proofs/nonperm3_endpoint_detector_reconstruction.md`.  This is still only an
-input reconstruction step; the full q=5 detector schema certificate has not yet
-been regenerated locally.
+The local reconstruction is recorded in
+`proofs/nonperm3_endpoint_detector_reconstruction.md`.  It recovers the
+reported q=5 counts and schemas but not the original reported certificate
+hash.
 
 ## Displayed First Candidate
 

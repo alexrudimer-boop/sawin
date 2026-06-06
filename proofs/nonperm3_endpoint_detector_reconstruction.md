@@ -124,10 +124,10 @@ Verifier output:
 
 ```text
 OK nonperm3 endpoint detector basis reconstruction
-positive_detector_schemas 930
+positive_detector_schemas 456
 positive_detector_coverages 2064
 unresolved_obstruction_candidates 0
-reconstructed_sha256 313ef4f32ddfcef401af0b231da9fea445734a5b99c2df776f23d1318017df83
+reconstructed_sha256 a3b794bef765948e05f65aa0922551d583bd50f81abe25c6a1f586898026d9e6
 ```
 
 The generated full schema certificate also passes the contextual detector
@@ -139,25 +139,35 @@ python tools/verify_contextual_detector_schema_certificate.py \
   --require-records
 
 OK contextual detector schema verification
-contextual_detector_records 930
-verified_contextual_detector_records 930
+contextual_detector_records 456
+verified_contextual_detector_records 456
 failed_contextual_detector_records 0
+```
+
+It also passes the standalone detector-basis verifier:
+
+```text
+python tools/verify_nonperm3_endpoint_detector_basis.py \
+  proofs/nonperm3_arity2_endpoint_gate_full_schema_certificate.json \
+  --require-candidate-partition
+
+OK nonperm3 endpoint detector basis verification
+positive_detector_schemas 456
+positive_detector_coverages 2064
+unresolved_obstruction_candidates 0
+coverage_partition_verified True
 ```
 
 ## Remaining computational work
 
-The full arity-2 detector schema basis is reconstructed.  The remaining
-detector-basis targets are:
+The full arity-2 and arity-3 detector schema bases are reconstructed locally.
+The remaining computational target is:
 
-1. Generate and verify the full arity-3 q<=4 schema certificate.
-2. Generate and verify the arity-3 q=5-only schema certificate over the q<=4
-   unresolved baseline.
-3. Run the componentwise width-3 arity-4 cross-effect audit against the
+1. Run the componentwise width-3 arity-4 cross-effect audit against the
    resulting detector product index.
 
-Until the arity-3 certificates exist and the arity-4 audit runs, the local
-branch still does not have the full detector product needed for
-`C^{X,Y_X}_{3,4}`.
+Until the arity-4 audit runs, the local branch has a detector basis but not the
+finite cross-effect data needed for `C^{X,Y_X}_{3,4}`.
 
 ## Arity-3 q<=4 reconstruction probe
 
@@ -185,13 +195,119 @@ local endpoint-class-sensitive schema key: 1176
 local schema-level (X,M,Q,alpha) key: 600
 ```
 
-The current 600-schema basis should be treated as a valid reconstruction
-candidate only after every `covered_candidate_ids` entry is verified against
-the exported `(X,M,Q,alpha)` schema.  It is not byte/count-identical to the
-archived q<=4 checkpoint.  The next computational task is to either recover
-the historical 320-schema compression with proof-grade coverage verification,
-or explicitly record `archived_positive_detector_schemas = 320` and
+The current 600-schema basis has now been exported and verified with every
+`covered_candidate_ids` entry checked against the exported `(X,M,Q,alpha)`
+schema.  It is not byte/count-identical to the archived q<=4 checkpoint.  The
+certificate therefore records `archived_positive_detector_schemas = 320` and
 `reconstructed_positive_detector_schemas = 600` as distinct provenance fields.
+
+The generated q<=4 certificate is:
+
+```text
+proofs/nonperm3_arity3_endpoint_gate_q4_full_schema_certificate.json
+```
+
+Generation/verifier output:
+
+```text
+OK nonperm3 endpoint detector basis reconstruction
+positive_detector_schemas 600
+positive_detector_coverages 37476
+unresolved_obstruction_candidates 216
+reconstructed_sha256 ecd47d65f9c303cbc1cd7e826828f5b95b952d7bc271d503655e7ca23f4835cc
+```
+
+It passes the contextual detector schema verifier:
+
+```text
+python tools/verify_contextual_detector_schema_certificate.py \
+  proofs/nonperm3_arity3_endpoint_gate_q4_full_schema_certificate.json \
+  --require-records
+
+OK contextual detector schema verification
+contextual_detector_records 600
+verified_contextual_detector_records 600
+failed_contextual_detector_records 0
+```
+
+It also passes:
+
+```text
+python tools/verify_nonperm3_endpoint_detector_basis.py \
+  proofs/nonperm3_arity3_endpoint_gate_q4_full_schema_certificate.json \
+  --require-candidate-partition
+
+OK nonperm3 endpoint detector basis verification
+positive_detector_schemas 600
+positive_detector_coverages 37476
+unresolved_obstruction_candidates 216
+coverage_partition_verified True
+```
+
+## Arity-3 q=5-only reconstruction
+
+Using the q<=4 certificate as the baseline, the q=5-only reconstruction covers
+exactly the 216 q<=4-unresolved candidates:
+
+```text
+proofs/nonperm3_arity3_q5_resolution_certificate.json
+```
+
+Generation/verifier output:
+
+```text
+OK nonperm3 endpoint detector basis reconstruction
+positive_detector_schemas 22
+positive_detector_coverages 216
+unresolved_obstruction_candidates 0
+reconstructed_sha256 2e62015a2a91853354206421e80be6035ba293127b2e5213b7bb02ccf1af72c9
+```
+
+Summary fields:
+
+```text
+new_positive_detector_coverages 216
+new_positive_detector_schemas 22
+combined_positive_detector_coverages 37692
+remaining_unresolved_candidates 0
+by_rack_size {'q5': 216}
+by_monoid {'truncated_structure_monoid_length_2': 216}
+reported_sha256 376e901839c978530ecd32893da56de5ff69b26dd3c407d1cb3eda365c63fc75
+sha256_matches_reported False
+```
+
+The reconstructed SHA does not match the reported SHA because the original
+sandbox certificate bytes and canonicalization were not recovered.  The counts
+and schema verification do match the reported q=5 resolution.
+
+It passes the contextual detector schema verifier:
+
+```text
+python tools/verify_contextual_detector_schema_certificate.py \
+  proofs/nonperm3_arity3_q5_resolution_certificate.json \
+  --require-records
+
+OK contextual detector schema verification
+contextual_detector_records 22
+verified_contextual_detector_records 22
+failed_contextual_detector_records 0
+```
+
+It also passes:
+
+```text
+python tools/verify_nonperm3_endpoint_detector_basis.py \
+  proofs/nonperm3_arity3_q5_resolution_certificate.json \
+  --require-candidate-partition
+
+OK nonperm3 endpoint detector basis verification
+positive_detector_schemas 22
+positive_detector_coverages 216
+baseline_covered_candidate_count 37476
+combined_positive_detector_coverages 37692
+remaining_unresolved_candidates 0
+coverage_partition_verified True
+```
 
 ## Verification
 

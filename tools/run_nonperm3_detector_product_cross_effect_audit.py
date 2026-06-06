@@ -18,6 +18,7 @@ import argparse
 import json
 import sys
 from dataclasses import asdict
+from itertools import product
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -31,6 +32,11 @@ from ybe_domination.nonperm3_detector_products import (  # noqa: E402
     rack_from_table,
     solution_from_flat_table,
 )
+from ybe_domination.nonperm3_endpoint_detector_basis import (  # noqa: E402
+    principal_bad_endpoint_candidates,
+)
+
+NO_LOW_ARITY_CANDIDATES_REASON = "no_arity2_or_arity3_principal_bad_endpoint_pairs"
 
 
 def _load_json(path: Path):
@@ -41,6 +47,8 @@ def _audit_row(table, rack_tables, *, bound: int, arity: int, state_limit: int):
     solution = solution_from_flat_table(table)
     if not solution.is_ybe():
         raise ValueError(f"imported table is not a YBE solution: {table!r}")
+    if not rack_tables:
+        return _empty_detector_audit_row(solution, table, bound=bound, arity=arity)
     detectors = tuple(rack_from_table(rack_table) for rack_table in rack_tables)
     audit = componentwise_realized_parabolic_cross_effect_audit(
         solution,
@@ -57,6 +65,53 @@ def _audit_row(table, rack_tables, *, bound: int, arity: int, state_limit: int):
         "detector_component_sizes": [len(detector.elements) for detector in detectors],
         **audit_data,
     }
+
+
+def _solution_action_is_trivial(solution, arity: int) -> bool:
+    for word in product(solution.elements, repeat=arity):
+        for index in range(arity - 1):
+            if solution.apply_R_at(word, index) != word:
+                return False
+    return True
+
+
+def _empty_detector_audit_row(solution, table, *, bound: int, arity: int):
+    if not _solution_action_is_trivial(solution, arity):
+        raise ValueError(
+            "empty detector product is only supported when the X action is "
+            f"trivial in arity {arity}: {table!r}"
+        )
+    return {
+        "ybe_table": list(table),
+        "detector_component_count": 0,
+        "detector_component_sizes": [],
+        "bound": bound,
+        "n": arity,
+        "arity": arity,
+        "joint_image_size": 1,
+        "kernel_image_size": 1,
+        "parabolic_image_size": 1,
+        "quotient_size": 1,
+        "quotient_nontrivial": False,
+        "seed_count": 0,
+        "first_witness_word": None,
+        "first_moved_tuple": None,
+        "first_moved_tuple_image": None,
+        "truncated": False,
+    }
+
+
+def _has_no_low_arity_candidates(table) -> bool:
+    solution = solution_from_flat_table(table)
+    return not principal_bad_endpoint_candidates(
+        solution,
+        solution_index=0,
+        arity=2,
+    ) and not principal_bad_endpoint_candidates(
+        solution,
+        solution_index=0,
+        arity=3,
+    )
 
 
 def main() -> None:
@@ -86,6 +141,16 @@ def main() -> None:
         default=None,
         help="Optional cap on audited tables, for smoke checks only.",
     )
+    parser.add_argument(
+        "--row-output-jsonl",
+        default=None,
+        help="Optional JSONL file that receives each audit row as it completes.",
+    )
+    parser.add_argument(
+        "--resume-row-output-jsonl",
+        action="store_true",
+        help="Load existing rows from --row-output-jsonl and skip completed tables.",
+    )
     parser.add_argument("--output", default=None)
     args = parser.parse_args()
 
@@ -103,31 +168,58 @@ def main() -> None:
     }
     nonperm_tables = nonpermutation_size3_flat_tables()
     nonperm_table_set = set(nonperm_tables)
+    missing_tables = tuple(
+        table for table in nonperm_tables if table not in components_by_table
+    )
+    no_detector_tables = tuple(
+        table for table in missing_tables if _has_no_low_arity_candidates(table)
+    )
+    for table in no_detector_tables:
+        components_by_table[table] = tuple()
+    missing_tables = tuple(
+        table for table in nonperm_tables if table not in components_by_table
+    )
     imported_nonperm_tables = tuple(
         table for table in nonperm_tables if table in components_by_table
     )
     extra_tables = tuple(
         table for table in components_by_table if table not in nonperm_table_set
     )
-    missing_tables = tuple(
-        table for table in nonperm_tables if table not in components_by_table
-    )
 
     rows = []
+    completed_tables = set()
+    row_output_path = Path(args.row_output_jsonl) if args.row_output_jsonl else None
+    if row_output_path is not None:
+        row_output_path.parent.mkdir(parents=True, exist_ok=True)
+        if args.resume_row_output_jsonl and row_output_path.exists():
+            with row_output_path.open("r", encoding="utf-8") as handle:
+                for line in handle:
+                    if not line.strip():
+                        continue
+                    row = json.loads(line)
+                    rows.append(row)
+                    completed_tables.add(tuple(row["ybe_table"]))
+        else:
+            row_output_path.write_text("", encoding="utf-8")
     if args.run_audit:
         audited_tables = imported_nonperm_tables
         if args.max_tables is not None:
             audited_tables = audited_tables[: args.max_tables]
         for table in audited_tables:
-            rows.append(
-                _audit_row(
-                    table,
-                    components_by_table[table],
-                    bound=args.bound,
-                    arity=args.arity,
-                    state_limit=args.state_limit,
-                )
+            if table in completed_tables:
+                continue
+            row = _audit_row(
+                table,
+                components_by_table[table],
+                bound=args.bound,
+                arity=args.arity,
+                state_limit=args.state_limit,
             )
+            rows.append(row)
+            if row_output_path is not None:
+                with row_output_path.open("a", encoding="utf-8") as handle:
+                    handle.write(json.dumps(row, sort_keys=True) + "\n")
+                    handle.flush()
 
     detector_index = [
         {
@@ -138,7 +230,12 @@ def main() -> None:
                     "source_schema_ids": list(component.source_schema_ids),
                 }
                 for component in detector_index_by_table[table]
-            ],
+            ] if table in detector_index_by_table else [],
+            **(
+                {"no_detector_reason": NO_LOW_ARITY_CANDIDATES_REASON}
+                if table in no_detector_tables
+                else {}
+            ),
         }
         for table in imported_nonperm_tables
     ]

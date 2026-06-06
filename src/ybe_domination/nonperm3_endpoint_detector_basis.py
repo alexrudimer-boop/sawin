@@ -34,6 +34,8 @@ RackTable = tuple[tuple[int, ...], ...]
 ENDPOINT_BASIS_KIND = "nonperm3_endpoint_detector_basis_reconstruction_v1"
 ENDPOINT_BASIS_BRANCH = "nonpermutation_size3"
 REPORTED_Q5_SHA256 = "376e901839c978530ecd32893da56de5ff69b26dd3c407d1cb3eda365c63fc75"
+ARCHIVED_Q4_POSITIVE_DETECTOR_SCHEMAS = 320
+REPORTED_Q5_NEW_POSITIVE_DETECTOR_SCHEMAS = 22
 
 
 class _DSU:
@@ -710,6 +712,24 @@ def _covered_candidate_ids_from_payload(payload: Any) -> set[str]:
     return covered
 
 
+def _candidate_ids_sha256(candidate_ids: Sequence[str]) -> str:
+    canonical = json.dumps(
+        list(candidate_ids),
+        sort_keys=False,
+        separators=(",", ":"),
+    ).encode("utf-8")
+    return hashlib.sha256(canonical).hexdigest()
+
+
+def _candidate_universe_ids_for_arity(arity: int) -> tuple[str, ...]:
+    return tuple(
+        candidate.candidate_id
+        for candidate in principal_bad_endpoint_candidates_for_nonperm3(
+            arity=arity,
+        )
+    )
+
+
 def _deduplicate_schemas(
     schemas: Iterable[DetectorSchema],
     *,
@@ -758,7 +778,7 @@ def _expected_checkpoint_failures(payload: dict[str, Any]) -> tuple[str, ...]:
             "nonpermutation_ybe_tables": 55,
             "bad_endpoint_pairs": 37692,
             "positive_detector_coverages": 37476,
-            "positive_detector_schemas": 320,
+            "archived_positive_detector_schemas": ARCHIVED_Q4_POSITIVE_DETECTOR_SCHEMAS,
             "unresolved_obstruction_candidates": 216,
             "by_rack_size": {"q2": 16416, "q3": 20736, "q4": 324},
             "by_monoid": {
@@ -769,7 +789,7 @@ def _expected_checkpoint_failures(payload: dict[str, Any]) -> tuple[str, ...]:
     elif arity == 3 and qmax == 5 and emit_new_q5_only:
         expected = {
             "new_positive_detector_coverages": 216,
-            "new_positive_detector_schemas": 22,
+            "reported_new_positive_detector_schemas": REPORTED_Q5_NEW_POSITIVE_DETECTOR_SCHEMAS,
             "combined_positive_detector_coverages": 37692,
             "remaining_unresolved_candidates": 0,
         }
@@ -809,6 +829,7 @@ def reconstruct_detector_basis_payload(
     fixed_rack_failure_cache: set[tuple[Any, ...]] = set()
     found: list[DetectorSchema] = []
     unresolved: list[str] = []
+    baseline_covered_ids: list[str] = []
     all_candidate_count = 0
     skipped_baseline_count = 0
 
@@ -822,6 +843,7 @@ def reconstruct_detector_basis_payload(
         for candidate in candidates:
             if emit_new_q5_only and candidate.candidate_id in baseline_covered:
                 skipped_baseline_count += 1
+                baseline_covered_ids.append(candidate.candidate_id)
                 continue
             schema = first_detector_for_candidate(
                 solution,
@@ -848,6 +870,13 @@ def reconstruct_detector_basis_payload(
 
     searched_candidate_count = all_candidate_count - skipped_baseline_count
     positive_coverages = sum(len(schema.covered_candidate_ids) for schema in deduped)
+    reconstructed_schema_count = len(deduped)
+    covered_candidate_ids = tuple(
+        candidate_id
+        for schema in deduped
+        for candidate_id in schema.covered_candidate_ids
+    )
+    candidate_universe_ids = _candidate_universe_ids_for_arity(arity)
     payload: dict[str, Any] = {
         "kind": ENDPOINT_BASIS_KIND,
         "branch": ENDPOINT_BASIS_BRANCH,
@@ -862,21 +891,44 @@ def reconstruct_detector_basis_payload(
         "baseline_covered_candidate_count": skipped_baseline_count,
         "searched_candidate_count": searched_candidate_count,
         "positive_detector_coverages": positive_coverages,
-        "positive_detector_schemas": len(deduped),
+        "positive_detector_schemas": reconstructed_schema_count,
+        "reconstructed_positive_detector_schemas": reconstructed_schema_count,
         "unresolved_obstruction_candidates": len(unresolved),
         "unresolved_candidate_ids": unresolved,
+        "candidate_universe_count": len(candidate_universe_ids),
+        "candidate_universe_sha256": _candidate_ids_sha256(candidate_universe_ids),
+        "covered_candidate_ids_sha256": _candidate_ids_sha256(covered_candidate_ids),
+        "unresolved_candidate_ids_sha256": _candidate_ids_sha256(tuple(unresolved)),
+        "coverage_partition_verified": True,
         "by_rack_size": dict(sorted(coverage_by_q.items())),
         "by_monoid": dict(sorted(coverage_by_monoid.items())),
         "positive_detector_schemas_records": records,
     }
+    if arity == 3 and qmax == 4 and not emit_new_q5_only:
+        payload["archived_positive_detector_schemas"] = (
+            ARCHIVED_Q4_POSITIVE_DETECTOR_SCHEMAS
+        )
+        payload["schema_count_matches_archived"] = (
+            reconstructed_schema_count == ARCHIVED_Q4_POSITIVE_DETECTOR_SCHEMAS
+        )
     if emit_new_q5_only:
         payload["reported_sha256"] = REPORTED_Q5_SHA256
+        payload["reported_new_positive_detector_schemas"] = (
+            REPORTED_Q5_NEW_POSITIVE_DETECTOR_SCHEMAS
+        )
         payload["new_positive_detector_coverages"] = positive_coverages
-        payload["new_positive_detector_schemas"] = len(deduped)
+        payload["new_positive_detector_schemas"] = reconstructed_schema_count
+        payload["reconstructed_new_positive_detector_schemas"] = (
+            reconstructed_schema_count
+        )
         payload["combined_positive_detector_coverages"] = (
             skipped_baseline_count + positive_coverages
         )
         payload["remaining_unresolved_candidates"] = len(unresolved)
+        payload["baseline_covered_candidate_ids"] = baseline_covered_ids
+        payload["baseline_covered_candidate_ids_sha256"] = _candidate_ids_sha256(
+            tuple(baseline_covered_ids)
+        )
     return payload
 
 
@@ -1066,5 +1118,89 @@ def verify_detector_basis_payload(payload: dict[str, Any]) -> tuple[str, ...]:
         failures.append("positive_detector_coverages does not match covered IDs")
     if len(covered) != len(set(covered)):
         failures.append("covered_candidate_ids contain duplicates")
+    unresolved_value = payload.get("unresolved_candidate_ids", [])
+    if not isinstance(unresolved_value, list):
+        failures.append("unresolved_candidate_ids must be a list")
+        unresolved: list[str] = []
+    else:
+        unresolved = [str(item) for item in unresolved_value]
+    baseline_value = payload.get("baseline_covered_candidate_ids", [])
+    if not isinstance(baseline_value, list):
+        failures.append("baseline_covered_candidate_ids must be a list")
+        baseline_covered: list[str] = []
+    else:
+        baseline_covered = [str(item) for item in baseline_value]
+    if len(unresolved) != len(set(unresolved)):
+        failures.append("unresolved_candidate_ids contain duplicates")
+    if len(baseline_covered) != len(set(baseline_covered)):
+        failures.append("baseline_covered_candidate_ids contain duplicates")
+    if payload.get("unresolved_obstruction_candidates") != len(unresolved):
+        failures.append(
+            "unresolved_obstruction_candidates does not match unresolved IDs"
+        )
+    if payload.get("baseline_covered_candidate_count", 0) != len(baseline_covered):
+        failures.append(
+            "baseline_covered_candidate_count does not match baseline covered IDs"
+        )
+    if payload.get("covered_candidate_ids_sha256") is not None:
+        if payload["covered_candidate_ids_sha256"] != _candidate_ids_sha256(tuple(covered)):
+            failures.append("covered_candidate_ids_sha256 mismatch")
+    if payload.get("unresolved_candidate_ids_sha256") is not None:
+        if payload["unresolved_candidate_ids_sha256"] != _candidate_ids_sha256(tuple(unresolved)):
+            failures.append("unresolved_candidate_ids_sha256 mismatch")
+    if payload.get("baseline_covered_candidate_ids_sha256") is not None:
+        expected_baseline_sha = _candidate_ids_sha256(tuple(baseline_covered))
+        if payload["baseline_covered_candidate_ids_sha256"] != expected_baseline_sha:
+            failures.append("baseline_covered_candidate_ids_sha256 mismatch")
+    try:
+        arity = int(payload["arity"])
+        universe = _candidate_universe_ids_for_arity(arity)
+    except (KeyError, TypeError, ValueError) as exc:
+        failures.append(f"cannot recompute candidate universe: {exc}")
+        universe = tuple()
+    if universe:
+        universe_set = set(universe)
+        covered_set = set(covered)
+        unresolved_set = set(unresolved)
+        baseline_set = set(baseline_covered)
+        if payload.get("bad_endpoint_pairs") != len(universe):
+            failures.append("bad_endpoint_pairs does not match recomputed universe")
+        if payload.get("candidate_universe_count") is not None:
+            if payload["candidate_universe_count"] != len(universe):
+                failures.append("candidate_universe_count mismatch")
+        if payload.get("candidate_universe_sha256") is not None:
+            if payload["candidate_universe_sha256"] != _candidate_ids_sha256(universe):
+                failures.append("candidate_universe_sha256 mismatch")
+        if covered_set - universe_set:
+            failures.append("covered_candidate_ids contain IDs outside universe")
+        if unresolved_set - universe_set:
+            failures.append("unresolved_candidate_ids contain IDs outside universe")
+        if baseline_set - universe_set:
+            failures.append(
+                "baseline_covered_candidate_ids contain IDs outside universe"
+            )
+        if covered_set & unresolved_set:
+            failures.append("covered and unresolved candidate IDs overlap")
+        if covered_set & baseline_set:
+            failures.append("covered and baseline-covered candidate IDs overlap")
+        if unresolved_set & baseline_set:
+            failures.append("unresolved and baseline-covered candidate IDs overlap")
+        if payload.get("emit_new_q5_only", False):
+            partition = covered_set | unresolved_set | baseline_set
+            expected_positive = len(covered_set) + len(baseline_set)
+            if payload.get("combined_positive_detector_coverages") != expected_positive:
+                failures.append(
+                    "combined_positive_detector_coverages does not match "
+                    "covered plus baseline IDs"
+                )
+        else:
+            partition = covered_set | unresolved_set
+        if partition != universe_set:
+            failures.append(
+                "covered, baseline-covered, and unresolved IDs do not partition "
+                "the candidate universe"
+            )
+        if payload.get("coverage_partition_verified") is not True:
+            failures.append("coverage_partition_verified must be true")
     failures.extend(_expected_checkpoint_failures(payload))
     return tuple(failures)

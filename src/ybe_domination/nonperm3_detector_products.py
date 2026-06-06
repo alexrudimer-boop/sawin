@@ -766,9 +766,16 @@ def verify_width3_audit_payload(payload: dict[str, Any]) -> tuple[str, ...]:
             continue
         table = _normalize_ybe_table_for_audit(entry.get("ybe_table"), failures, context)
         detectors = entry.get("detectors")
-        if not isinstance(detectors, list) or not detectors:
-            failures.append(f"{context}: detectors must be a nonempty list")
+        no_detector_reason = entry.get("no_detector_reason")
+        if not isinstance(detectors, list):
+            failures.append(f"{context}: detectors must be a list")
             detectors = []
+        elif not detectors and no_detector_reason != "no_arity2_or_arity3_principal_bad_endpoint_pairs":
+            failures.append(
+                f"{context}: empty detectors require a no_detector_reason"
+            )
+        if no_detector_reason is not None and no_detector_reason != "no_arity2_or_arity3_principal_bad_endpoint_pairs":
+            failures.append(f"{context}: unrecognized no_detector_reason")
         if table is not None:
             if table in index_tables:
                 failures.append(f"{context}: duplicate detector_index ybe_table")

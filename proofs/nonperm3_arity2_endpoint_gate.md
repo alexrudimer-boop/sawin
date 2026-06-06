@@ -38,7 +38,7 @@ generated the full schema certificate:
 proofs/nonperm3_arity2_endpoint_gate_full_schema_certificate.json
 ```
 
-It contains 930 deduplicated contextual detector schema records covering all
+It contains 456 deduplicated contextual detector schema records covering all
 2064 arity-2 principal bad endpoint pairs.  It passes:
 
 ```text
@@ -47,15 +47,30 @@ python tools/verify_contextual_detector_schema_certificate.py \
   --require-records
 
 OK contextual detector schema verification
-contextual_detector_records 930
-verified_contextual_detector_records 930
+contextual_detector_records 456
+verified_contextual_detector_records 456
 failed_contextual_detector_records 0
 ```
 
 The reconstructed canonical SHA256 stored in that JSON is:
 
 ```text
-313ef4f32ddfcef401af0b231da9fea445734a5b99c2df776f23d1318017df83
+a3b794bef765948e05f65aa0922551d583bd50f81abe25c6a1f586898026d9e6
+```
+
+It also passes the standalone detector-basis verifier, which recomputes the
+candidate universe and checks that covered and unresolved IDs partition it:
+
+```text
+python tools/verify_nonperm3_endpoint_detector_basis.py \
+  proofs/nonperm3_arity2_endpoint_gate_full_schema_certificate.json \
+  --require-candidate-partition
+
+OK nonperm3 endpoint detector basis verification
+positive_detector_schemas 456
+positive_detector_coverages 2064
+unresolved_obstruction_candidates 0
+coverage_partition_verified True
 ```
 
 ## Exact bounded theorem

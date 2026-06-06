@@ -130,8 +130,17 @@ class NonPerm3EndpointDetectorBasisTests(unittest.TestCase):
 
         self.assertEqual(verify_detector_basis_payload(payload), tuple())
         self.assertEqual(payload["kind"], "nonperm3_endpoint_detector_basis_reconstruction_v1")
+        self.assertTrue(payload["coverage_partition_verified"])
         self.assertLess(payload["positive_detector_coverages"], 2064)
         self.assertGreater(payload["unresolved_obstruction_candidates"], 0)
+
+        corrupt = dict(payload)
+        corrupt["unresolved_candidate_ids"] = payload["unresolved_candidate_ids"][1:]
+        failures = verify_detector_basis_payload(corrupt)
+        self.assertTrue(
+            any("partition" in failure for failure in failures),
+            failures,
+        )
 
 
 if __name__ == "__main__":

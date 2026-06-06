@@ -202,9 +202,9 @@ The full-table importer/wrapper added for this target is:
 tools/run_nonperm3_detector_product_cross_effect_audit.py
 ```
 
-The current compact local certificates are not enough to reconstruct `Y_X`.
-The generated import audit
-`proofs/nonperm3_detector_product_import_gap.json` records:
+The original compact local certificates were not enough to reconstruct `Y_X`.
+At that stage, the generated import audit
+`proofs/nonperm3_detector_product_import_gap.json` recorded:
 
 ```text
 schema_like_detector_records: 1
@@ -213,9 +213,81 @@ missing_table_count: 54
 incomplete_detector_basis: true
 ```
 
-This is an artifact gap only.  It is not mathematical evidence against
-width-3 propagation.  The full q=5 and full arity-2/q<=4 schema certificates
-must be imported before the intended 55-row product audit can run.
+This was an artifact gap only.  It was not mathematical evidence against
+width-3 propagation.
+
+The detector-basis gap has now been closed by deterministic local
+reconstruction:
+
+```text
+proofs/nonperm3_arity2_endpoint_gate_full_schema_certificate.json
+proofs/nonperm3_arity3_endpoint_gate_q4_full_schema_certificate.json
+proofs/nonperm3_arity3_q5_resolution_certificate.json
+```
+
+The arity-2 certificate now contains 456 reconstructed exact schema records
+covering all 2064 arity-2 principal bad endpoint pairs.
+
+The arity-3 q<=4 certificate records the archived schema count and the
+reconstructed schema count separately:
+
+```text
+archived_positive_detector_schemas 320
+reconstructed_positive_detector_schemas 600
+positive_detector_coverages 37476
+unresolved_obstruction_candidates 216
+```
+
+The q=5-only certificate records:
+
+```text
+new_positive_detector_coverages 216
+new_positive_detector_schemas 22
+combined_positive_detector_coverages 37692
+remaining_unresolved_candidates 0
+```
+
+The complete detector-product import index is:
+
+```text
+proofs/nonperm3_detector_product_full_import_audit.json
+```
+
+It passes:
+
+```text
+python tools/verify_nonperm3_width3_cross_effect_audit.py \
+  proofs/nonperm3_detector_product_full_import_audit.json \
+  --require-complete-basis
+
+OK nonperm3 width-3 audit verification
+detector_index_rows 55
+audit_rows 0
+incomplete_detector_basis False
+```
+
+The identity table has no arity-2 or arity-3 principal bad endpoint pairs and
+is represented by an explicit empty detector product.  The product-index
+component-count distribution is:
+
+```text
+{0: 1, 1: 12, 2: 12, 3: 24, 4: 6}
+```
+
+The next computation is therefore the intended 55-row product audit, not
+additional detector import.  A first full run with `state_limit=1000000`
+timed out after approximately 904 seconds before producing a final JSON
+payload.  The audit wrapper now supports row-level JSONL progress:
+
+```text
+--row-output-jsonl proofs/nonperm3_width3_arity4_cross_effect_rows.jsonl
+--resume-row-output-jsonl
+```
+
+A two-row smoke run with row-level output checked the identity row and the
+first nontrivial row; both were untruncated with `quotient_size = 1`.  The next
+target is a resumable full 55-row run or stronger permutation-group
+compression for slow rows.
 
 The decision rule for the first full product audit is:
 

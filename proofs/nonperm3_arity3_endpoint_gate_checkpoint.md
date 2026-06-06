@@ -38,10 +38,29 @@ Reported certificate SHA256:
 bdd034c1c1fd665054818b58a76249bc009a0532dec33fea404063d61a82fee8
 ```
 
-The linked full checkpoint certificate/verifier are not present in the local
-workspace at this checkpoint. This note records the reported compact theorem,
-the detector families, and the first unresolved candidate. Repo tests verify
-the reusable finite mechanics and the displayed candidate directly.
+The original linked full checkpoint certificate/verifier were not present in
+the local workspace at this checkpoint.  A deterministic local reconstruction
+now provides a full exact schema certificate:
+
+```text
+proofs/nonperm3_arity3_endpoint_gate_q4_full_schema_certificate.json
+```
+
+It records the archived compact schema count and the reconstructed exact schema
+count separately:
+
+```text
+archived_positive_detector_schemas 320
+reconstructed_positive_detector_schemas 600
+positive_detector_coverages 37476
+unresolved_obstruction_candidates 216
+coverage_partition_verified True
+```
+
+The reconstructed exact schema count is not byte/count-identical to the
+historical compact count, but every exported `covered_candidate_ids` entry is
+verified against its exact `(X,M,Q,alpha)` schema and the covered/unresolved
+IDs are checked to partition the recomputed arity-3 candidate universe.
 
 ## Exact checkpoint
 
