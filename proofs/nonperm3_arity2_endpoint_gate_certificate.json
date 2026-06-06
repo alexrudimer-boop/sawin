@@ -1,0 +1,81 @@
+{
+  "type": "nonperm3_arity2_endpoint_gate",
+  "classification": "closed_by_positive_finite_rack_detectors",
+  "reported_sha256": "9bb0e62c6073d88410fb1b6d846992101aa1ffb396d95b92b00840b55d87c24c",
+  "reported_verifier_output": [
+    "OK nonperm3 arity-2 endpoint gate certificate verified",
+    "sha256 9bb0e62c6073d88410fb1b6d846992101aa1ffb396d95b92b00840b55d87c24c",
+    "nonpermutation_ybe_tables 55",
+    "arity2_bad_endpoint_pairs 2064",
+    "positive_detectors 2064",
+    "unresolved 0",
+    "by_rack_size {'q2': 1200, 'q3': 864}"
+  ],
+  "bounds": {
+    "X_size": 3,
+    "branch": "non-permutation-form tables only",
+    "arity": 2,
+    "M_size": 5,
+    "Q_size_max": 3
+  },
+  "enumeration": {
+    "all_bijective_ybe_tables": 73,
+    "permutation_form_tables": 18,
+    "non_permutation_form_tables": 55,
+    "deduplicated_arity2_bad_endpoint_pairs": 2064,
+    "positive_finite_rack_detectors": 2064,
+    "bounded_negatives": 0,
+    "unresolved": 0
+  },
+  "universal_monoid": {
+    "size": 5,
+    "identity": 0,
+    "element_names": ["e", "a0", "a1", "a2", "z"],
+    "generator_images": [1, 2, 3],
+    "mul": [
+      [0, 1, 2, 3, 4],
+      [1, 4, 4, 4, 4],
+      [2, 4, 4, 4, 4],
+      [3, 4, 4, 4, 4],
+      [4, 4, 4, 4, 4]
+    ]
+  },
+  "rack_distribution": {
+    "q2": 1200,
+    "q3": 864
+  },
+  "partition_distribution": {
+    "[0,0,0]": 1416,
+    "[0,0,1]": 216,
+    "[0,1,0]": 216,
+    "[0,1,1]": 216,
+    "[0,1,2]": 0
+  },
+  "example_detector": {
+    "type": "finite_rack_detector",
+    "ybe_table": [0, 1, 6, 3, 4, 7, 2, 5, 8],
+    "partition": [0, 0, 0],
+    "arity": 2,
+    "endpoint_pair": {
+      "e": {"word": [0, 2], "position": 0, "prefix": [], "letter": 0, "suffix": [2]},
+      "eprime": {"word": [0, 2], "position": 1, "prefix": [0], "letter": 2, "suffix": []}
+    },
+    "monoid_quotient": {
+      "size": 5,
+      "identity": 0,
+      "generator_images": [1, 2, 3],
+      "mul": [
+        [0, 1, 2, 3, 4],
+        [1, 4, 4, 4, 4],
+        [2, 4, 4, 4, 4],
+        [3, 4, 4, 4, 4],
+        [4, 4, 4, 4, 4]
+      ]
+    },
+    "rack": {"size": 2, "table": [[0, 1], [0, 1]]},
+    "alpha_support_value_1": [[0, 2, 1], [1, 2, 0]],
+    "alpha_default": 0,
+    "endpoint_values": [0, 1],
+    "separates": true
+  }
+}
