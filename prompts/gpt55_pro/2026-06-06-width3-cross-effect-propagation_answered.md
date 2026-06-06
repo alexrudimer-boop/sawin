@@ -1,5 +1,13 @@
 # GPT-5.5 Pro width-3 cross-effect prompt
 
+Status: answered on 2026-06-06.  The response returned outcome `C`: no
+proof-grade width-3 propagation theorem from current branch data, and the next
+required step is importing or reconstructing the full q=5 detector schema
+certificate before running the arity-4 componentwise cross-effect audit.
+
+Review note:
+`proofs/width3_cross_effect_propagation_response_review.md`
+
 Date: 2026-06-06
 
 Use this as the next focused prompt for ChatGPT 5.5 Pro / Extended Pro.  It is
@@ -67,11 +75,15 @@ Files to inspect first:
 
   proofs/nonperm3_arity3_q5_resolution.md
   proofs/nonperm3_size3_higher_arity_frontier.md
+  proofs/nonperm3_detector_product_import_gap.md
   proofs/parabolic_kernel_generation_bounded_width.md
   proofs/finite_endpoint_change_cover_theorem.md
   src/ybe_domination/rack_residual_tower.py
+  src/ybe_domination/nonperm3_detector_products.py
   tools/run_componentwise_cross_effect_audit.py
+  tools/run_nonperm3_detector_product_cross_effect_audit.py
   tests/test_rack_residual_tower.py
+  tests/test_nonperm3_detector_products.py
   tests/test_nonperm3_arity3_checkpoint.py
 
 Focused task:
@@ -114,6 +126,21 @@ Your job:
 
      ybe_domination.componentwise_realized_parabolic_cross_effect_audit
      tools/run_componentwise_cross_effect_audit.py
+
+   The importer/full-table wrapper added after the first prompt draft is:
+
+     tools/run_nonperm3_detector_product_cross_effect_audit.py
+
+   Current local compact-artifact import status:
+
+     schema_like_detector_records: 1
+     nonpermutation_ybe_tables: 55
+     tables_with_detector_components: 1
+     missing_table_count: 54
+     incomplete_detector_basis: true
+
+   This is an artifact gap only.  It is not evidence against width-3
+   propagation and not a Sawin counterexample.
 
    The intended first full audit is:
 

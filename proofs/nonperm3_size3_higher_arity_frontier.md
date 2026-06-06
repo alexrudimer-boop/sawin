@@ -196,6 +196,27 @@ It stores the detector side as a tuple of component rack permutation images,
 which is equivalent to the Cartesian product detector but avoids constructing
 the product rack state set.
 
+The full-table importer/wrapper added for this target is:
+
+```text
+tools/run_nonperm3_detector_product_cross_effect_audit.py
+```
+
+The current compact local certificates are not enough to reconstruct `Y_X`.
+The generated import audit
+`proofs/nonperm3_detector_product_import_gap.json` records:
+
+```text
+schema_like_detector_records: 1
+tables_with_detector_components: 1
+missing_table_count: 54
+incomplete_detector_basis: true
+```
+
+This is an artifact gap only.  It is not mathematical evidence against
+width-3 propagation.  The full q=5 and full arity-2/q<=4 schema certificates
+must be imported before the intended 55-row product audit can run.
+
 The decision rule for the first full product audit is:
 
 ```text

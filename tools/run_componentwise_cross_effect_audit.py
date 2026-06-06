@@ -76,11 +76,13 @@ def main() -> None:
         n=int(payload["arity"]),
         state_limit=int(payload.get("state_limit", 100_000)),
     )
+    audit_data = asdict(audit)
+    audit_data["arity"] = audit_data["n"]
     output = {
         "ybe_table": payload["ybe_table"],
         "detector_component_count": len(detectors),
         "detector_component_sizes": [len(detector.elements) for detector in detectors],
-        **asdict(audit),
+        **audit_data,
     }
     print(json.dumps(output, indent=2, sort_keys=True))
 
