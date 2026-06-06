@@ -147,3 +147,7 @@ The theorem is conditional.  The remaining positive obligation is a uniform
 bounded-deletion core theorem for every finite degenerate `X`.  The remaining
 negative obligation is an explicit finite degenerate `X` with the cofinal
 rack-prefix and unbounded deletion-support witnesses above.
+
+The later note `proofs/fully_brunnian_core_reduction.md` strengthens this
+criterion: any transparent rack detector failure can be chosen fully
+deletion-minimal, with every proper `X`-deletion shadow trivial.

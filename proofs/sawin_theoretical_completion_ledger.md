@@ -388,6 +388,75 @@ Thus the negative target is not merely a Brunnian braid missed by one
 detector.  It is a cofinal sequence of rack-prefix-invisible, `X`-visible
 pure braids with unbounded `X`-deletion support.
 
+## Fully Brunnian core reduction
+
+The response reviewed later on 2026-06-06 strengthened the bounded-deletion
+criterion to a minimal-arity Brunnian-core criterion, recorded in
+`proofs/fully_brunnian_core_reduction.md`.
+
+Let `Y` be a finite rack and set
+
+```text
+Q = Y^0 x T_2,
+```
+
+where `T_2` is the two-element trivial rack.  The transparent extension has an
+exact support formula.  If `iota_I:Y^I -> (Y^0)^n` colors strands in `I` by
+`Y` and all other strands by the transparent color, then for every braid
+`beta in B_n`,
+
+```text
+rho^{Y^0}_n(beta) iota_I(c)
+ =
+iota_{pi_beta(I)}(rho^Y_|I|(partial_I beta)c).
+```
+
+For pure `beta`, this gives the if-and-only-if
+
+```text
+beta in ker rho^{Y^0}_n
+  <=>
+partial_I beta in ker rho^Y_|I| for every I.
+```
+
+Define the fully deletion-minimal `X`-Brunnian `Q`-invisible core by
+
+```text
+B_{X,Y}(n) =
+{
+  beta in ker rho^Q_n :
+  rho^X_|I|(partial_I beta)=1
+  for every proper I subsetneq {1,...,n}
+}.
+```
+
+Theorem.  `Q` dominates `X` if and only if every element of `B_{X,Y}(n)` is
+`X`-trivial for every `n`.
+
+Proof.  If `Q` dominates `X`, this is immediate.  Conversely, if `Q` fails,
+choose a `Q`-invisible, `X`-visible witness of minimal arity.  Since `Q`
+contains `T_2`, the witness is pure.  The support formula makes every proper
+deletion `Q`-invisible, and minimality forces every proper deletion to be
+`X`-trivial.  Hence a failure is witnessed in `B_{X,Y}(n)`.
+
+Consequently, if no finite rack dominates `X`, then for every finite rack
+prefix `P_m`, with `Q_m=P_m^0 x T_2`, there is a witness
+
+```text
+beta_m in ker rho^{Q_m}_{n_m},
+rho^X_{n_m}(beta_m) != 1,
+rho^X_|I|(partial_I beta_m)=1
+  for every proper I subsetneq {1,...,n_m}.
+```
+
+The arities `n_m` must go to infinity by fixed-arity rack cofinality.
+
+Thus the exact global positive target can be sharpened to Brunnian-core
+annihilation: find one finite rack `Y_0` such that every fully
+deletion-minimal element of `ker rho^{Y_0^0 x T_2}_n` is `X`-trivial in every
+arity.  The exact global negative target is an explicit finite degenerate `X`
+with a cofinal prefix sequence of such fully deletion-minimal witnesses.
+
 ## Route-specific compactness gap
 
 Many partial approaches construct finite contextual rack detector schemas
@@ -599,8 +668,8 @@ different construction that produces one finite rack detector for every finite
 `X` in all arities.
 
 The exact missing global negative theorem is the cofinal prefix obstruction
-sequence from the criteria above, now strengthened to require unbounded
-`X`-deletion support after adding transparent rack colors and a `T_2` purity
+sequence from the criteria above, now sharpened to fully deletion-minimal
+`X`-Brunnian witnesses after adding transparent rack colors and a `T_2` purity
 factor.  A single high-arity miss against one detector product, even the
 current `Y_X`, is not enough.
 

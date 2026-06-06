@@ -2,7 +2,7 @@ theoretical_asknow
 
 This is a self-contained theoretical prompt.  Do not ask for code,
 repository access, or further computations.  Be aggressive: try to fully
-resolve Will Sawin's problem, not merely restate known partial routes.
+resolve Will Sawin's problem from the Brunnian-core reduction below.
 
 Problem, due to Will Sawin.
 
@@ -22,54 +22,36 @@ single finite rack Y, independent of n, such that
 
 for every n?
 
-Known closed cases and reductions.
+Known closed cases and guardrails.
 
-1. If X is finite one-sided nondegenerate, the derived rack/guitar
-   construction gives a finite rack with kernel equality in every arity.
-   Do not spend the answer reproving this case except as a sublemma.
+1. Finite one-sided nondegenerate solutions are closed by the derived
+   rack/guitar construction, with kernel equality in every arity.
 
-2. Involutive solutions, finite products of already dominated solutions, and
-   braided quotients of already dominated solutions are dominated.
+2. Involutive solutions, finite products of dominated solutions, and braided
+   quotients of dominated solutions are dominated.
 
-3. A genuinely degenerate solution cannot be solved by taking a finite
-   nondegenerate braided cover: if Z -> X is a finite surjective braided-set
-   morphism and Z is left-nondegenerate, then X is left-nondegenerate.
-   Similarly on the right.
+3. Genuinely degenerate X cannot be solved by a finite nondegenerate braided
+   cover: a finite surjective image of a left-nondegenerate solution is
+   left-nondegenerate.  Similarly on the right.
 
-4. A coordinatewise quotient from a rack switch R_Y(a,b)=(a*b,a) to a general
-   YBE solution forces the copied coordinate of X to be unchanged.  Thus a
-   proof for genuinely degenerate X must use contextual readouts,
-   finite-state decoders, or kernel-theoretic domination, not an ordinary
-   coordinatewise rack quotient.
+4. A coordinatewise quotient from a rack switch R_Y(a,b)=(a*b,a) is too
+   restrictive.  A proof for degenerate X must use contextual readouts,
+   finite-state decoders, or kernel-theoretic domination.
 
-5. No single braid is a universal rack-invisible witness.  For every
-   nontrivial beta in B_n, the faithful Artin action on F_n and residual
-   finiteness of F_n produce a finite quotient G such that the conjugation
-   rack of G detects beta.
+5. No single braid is invisible to all finite racks.  Artin faithfulness plus
+   residual finiteness of free groups gives a finite conjugation rack
+   detecting any fixed nontrivial braid.
 
-Uniform formulation.
+6. Fixed-arity rack cofinality is available: for each fixed k and each finite
+   quotient representation theta:B_k -> H, there exists a finite rack Z with
 
-For a fixed finite X and every X-visible braid beta in B_n, let d_X(n,beta)
-be the least size of a finite rack detecting beta.  Then X is dominated by
-one finite rack if and only if
+   ker rho^Z_k <= ker theta.
 
-  sup_{rho^X_n(beta) != 1} d_X(n,beta) < infinity.
+   Hence any counterexample must force failures at unbounded braid index.
 
-Equivalently, if no finite rack dominates X, then for an enumeration
-R_1,R_2,... of finite rack isomorphism classes and P_m=R_1 x ... x R_m,
-there must be cofinal witnesses:
+Transparent extension and exact support.
 
-  for every m there are n_m and beta_m in B_{n_m}
-  with rho^{P_m}_{n_m}(beta_m)=1 but rho^X_{n_m}(beta_m) != 1.
-
-Fixed-arity rack cofinality is available: for each fixed k and each finite
-quotient representation theta:B_k -> H, there exists a finite rack Z such
-that ker rho^Z_k <= ker theta.  Therefore a counterexample cannot live in
-bounded arity; it must force failures at unbounded braid index.
-
-Transparent deletion-core criterion.
-
-For a rack Y, define Y^0=Y sqcup {0} by
+For a rack Y define Y^0=Y sqcup {0} by
 
   a*b = old a*b  for a,b in Y,
   0*b = b,
@@ -77,68 +59,88 @@ For a rack Y, define Y^0=Y sqcup {0} by
   0*0 = 0.
 
 This is a rack.  Let T_2 be the two-element trivial rack, so ker rho^{T_2}_n
-is the pure braid group P_n.  For beta in P_n and I subset {1,...,n}, write
-partial_I beta for the braid obtained by deleting all strands outside I.
+is the pure braid group P_n.
 
-Deletion lemma: if beta in ker rho^{Y^0}_n, then
+For I subset {1,...,n}, let partial_I beta be the braid obtained by deleting
+all strands outside I.  If iota_I colors the strands in I by elements of Y
+and all other strands by 0, then for every beta in B_n,
 
-  partial_I beta in ker rho^Y_|I|
+  rho^{Y^0}_n(beta) iota_I(c)
+    =
+  iota_{pi_beta(I)}(rho^Y_|I|(partial_I beta)c),
 
-for every I.  Diagrammatically, strands outside I are colored by the
-transparent color and then deleted.
+where pi_beta is the braid permutation.  In particular, for pure beta,
 
-Relative bounded-deletion theorem: suppose there exist a finite rack Y_0 and
-an integer N such that, for every n and every
+  beta in ker rho^{Y^0}_n
+    iff
+  partial_I beta in ker rho^Y_|I| for every I.
 
-  beta in ker rho^{Y_0^0 x T_2}_n,
+Fully Brunnian-core reduction.
 
-the implication
+For a finite rack Y, set
 
-  rho^X_n(beta) != 1
-    =>
-  there is I with 2 <= |I| <= N and rho^X_|I|(partial_I beta) != 1
+  Q = Y^0 x T_2.
 
-holds.  Then X is dominated by a finite rack.  Indeed, choose finite racks
-Z_k for 2<=k<=N with ker rho^{Z_k}_k <= ker rho^X_k by fixed-arity
-cofinality; then
+For n>=2 define
 
-  Y = Y_0^0 x T_2 x prod_{k=2}^N Z_k^0
+  B_{X,Y}(n) =
+  {
+    beta in ker rho^Q_n :
+    rho^X_|I|(partial_I beta)=1
+    for every proper I subsetneq {1,...,n}
+  }.
 
-dominates X.
+Then Q dominates X if and only if
 
-Contrapositive target.  Therefore, if Sawin's statement is false for a
-finite degenerate X, then for every finite rack prefix P_m and every deletion
-cutoff N there must be a pure braid beta in some P_n such that
+  rho^X_n(beta)=1
 
-  rho^{P_m^0 x T_2}_n(beta)=1,
-  rho^X_n(beta) != 1,
+for every n and every beta in B_{X,Y}(n).
 
-but every bounded X-deletion shadow is trivial:
+Proof sketch: if Q fails to dominate X, choose a Q-invisible, X-visible
+witness of minimal arity.  The T_2 factor makes it pure.  Exact transparent
+support shows every proper deletion remains Q-invisible; minimality forces
+every proper deletion to be X-trivial.
 
-  rho^X_|I|(partial_I beta)=1
-  for every I with 2 <= |I| <= N.
+Cofinal negative target.
+
+Let R_1,R_2,... enumerate finite rack isomorphism classes, let
+
+  P_m = R_1 x ... x R_m,
+  Q_m = P_m^0 x T_2.
+
+If no finite rack dominates X, then for every m there are n_m and beta_m with
+
+  beta_m in ker rho^{Q_m}_{n_m},
+  rho^X_{n_m}(beta_m) != 1,
+  rho^X_|I|(partial_I beta_m)=1
+    for every proper I subsetneq {1,...,n_m}.
+
+Moreover n_m -> infinity by fixed-arity rack cofinality.
+
+Thus the remaining counterexample target is very sharp: one explicit finite
+degenerate X must have a cofinal sequence of rack-prefix-invisible,
+X-visible, fully deletion-minimal pure braids.
 
 Your task.
 
-Try to resolve the full problem from this point.  Do one of the following.
+Resolve the problem from this Brunnian-core boundary if possible.
 
-A. Prove Sawin's statement for every finite bijective degenerate X.  The
-   cleanest route would be to prove the bounded-deletion core criterion:
-   for every finite degenerate X there exist Y_0 and N as above.  But you may
-   use any other finite-state/contextual or kernel-theoretic construction of
-   one finite rack dominator.
+A. Prove Sawin's statement for every finite bijective degenerate X by proving
+   Brunnian-core annihilation: for each finite X, construct one finite rack
+   Y_0 such that every beta in B_{X,Y_0}(n) is X-trivial for all n.  You may
+   instead give any other construction of one finite rack dominator.
 
 B. Give an explicit finite degenerate bijective YBE table X and prove no
-   finite rack dominates it by constructing the cofinal rack-prefix,
-   unbounded-deletion-support obstruction sequence above.  It is not enough
-   to defeat one rack, one detector product, or one fixed deletion cutoff.
+   finite rack dominates it by constructing the cofinal sequence above.  It is
+   not enough to defeat one rack prefix, one detector product, bounded arity,
+   or bounded deletion depth.
 
 C. If neither A nor B can be proved, give only proof-grade progress: a
-   theorem that strictly narrows the remaining degenerate case, with a proof
-   and the exact remaining unproved implication.  Clearly separate theorem
-   and proof from finite evidence, heuristic, and unsupported claims.
+   theorem that strictly narrows the fully Brunnian-core case, with proof and
+   exact remaining implication.  Clearly separate theorem/proof from finite
+   evidence, heuristic, and unsupported claims.
 
-Avoid returning only the nondegenerate theorem, contextual equivariance, or
-"Brunnian braids might matter."  Those are already known.  The goal is to
-settle the bounded-deletion/core obstruction or replace it by a stronger
-complete route.
+Avoid returning only the nondegenerate theorem, contextual equivariance,
+bounded-deletion reduction, or the statement that Brunnian braids are
+plausible.  Those are already known.  The target is the fully
+deletion-minimal X-Brunnian core.

@@ -81,6 +81,32 @@ def flip_across_type_b_solution():
 
 
 class RackResidualTowerTests(unittest.TestCase):
+    @staticmethod
+    def deleted_supported_braid_word(n, word, retained):
+        retained = set(retained)
+        current_sources = list(range(1, n + 1))
+        deleted = []
+        for signed in word:
+            index = abs(signed) - 1
+            left = current_sources[index]
+            right = current_sources[index + 1]
+            if left in retained and right in retained:
+                retained_order = [
+                    source for source in current_sources if source in retained
+                ]
+                retained_index = retained_order.index(left) + 1
+                deleted.append(retained_index if signed > 0 else -retained_index)
+            current_sources[index], current_sources[index + 1] = (
+                current_sources[index + 1],
+                current_sources[index],
+            )
+        final_support = tuple(
+            index + 1
+            for index, source in enumerate(current_sources)
+            if source in retained
+        )
+        return tuple(deleted), final_support
+
     def test_detector_equal_to_solution_has_trivial_residual_kernel(self):
         cyclic = rack_solution((0, 1), lambda _left, right: 1 - right)
 
@@ -143,6 +169,40 @@ class RackResidualTowerTests(unittest.TestCase):
             (extended_out[0][1], extended_out[2][1]),
             deleted_out,
         )
+
+    def test_transparent_extension_tracks_deleted_supported_subbraid(self):
+        rack = rack_solution((0, 1, 2), lambda left, right: (2 * left - right) % 3)
+        extension = transparent_rack_extension(rack)
+        transparent = ("transparent", 0)
+        retained = (1, 3, 4)
+        retained_colors = (0, 1, 2)
+        word = (2, 1, -3, 2, 3, -1)
+        deleted_word, final_support = self.deleted_supported_braid_word(
+            4,
+            word,
+            retained,
+        )
+        retained_by_position = dict(zip(retained, retained_colors))
+        extended_input = tuple(
+            ("rack", retained_by_position[position])
+            if position in retained_by_position
+            else transparent
+            for position in range(1, 5)
+        )
+
+        extended_out = extension.braid_action(word, extended_input)
+        retained_out = tuple(
+            element[1] for element in extended_out if element[0] == "rack"
+        )
+        deleted_out = rack.braid_action(deleted_word, retained_colors)
+        observed_support = tuple(
+            index + 1
+            for index, element in enumerate(extended_out)
+            if element[0] == "rack"
+        )
+
+        self.assertEqual(observed_support, final_support)
+        self.assertEqual(retained_out, deleted_out)
 
     def test_product_prefix_containing_solution_has_no_cyclic_mover(self):
         solution = rack_solution((0, 1), lambda _left, right: 1 - right)
