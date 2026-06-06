@@ -224,3 +224,13 @@ rho^X_{n_m}(beta_m) != 1.
 By the uniformly nilpotent criterion, such an `X` must have last-strand pure
 images `rho^X_n(F_{n-1})` with unbounded nilpotent complexity capable of
 detecting elements in `gamma_{n-1}(F_{n-1})`.
+
+The later note `proofs/finite_image_symmetric_commutator_obstruction.md`
+sharpens this boundary again: after a detector `Q=Y^0 x T_2` is fixed, the
+remaining obstruction is exactly
+
+```text
+K_n cap [N_{1,n},...,N_{n-1,n}]_Sigma not <= L_n
+```
+
+inside the finite combined image of the last-strand free group.
