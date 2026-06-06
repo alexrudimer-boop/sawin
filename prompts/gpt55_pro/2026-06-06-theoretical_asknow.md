@@ -51,6 +51,31 @@ B. An explicit finite bijective set-theoretic YBE solution X for which no
      but
      rho^X_{n_m}(beta_m) != 1.
 
+Known theoretical reductions.
+
+1. No individual braid is invisible to all finite racks.  If beta in B_n is
+   nontrivial, the faithful Artin action B_n -> Aut(F_n) and residual
+   finiteness of F_n give a finite quotient G of F_n such that beta moves the
+   quotient generator tuple.  The conjugation rack of G then detects beta.
+
+2. Therefore Sawin's problem is equivalent to a uniform rack-size theorem.  For
+   fixed X and each X-visible braid beta in B_n, let d_X(n,beta) be the least
+   size of a finite rack detecting beta.  X is dominated by a finite rack iff
+
+     sup_{rho^X_n(beta) != 1} d_X(n,beta) < infinity.
+
+   If the supremum is finite, the product of all racks up to that size
+   dominates X.  If it is infinite, the cofinal prefix obstruction in B is the
+   resulting negative sequence.
+
+3. Fixed-arity rack cofinality is available as a theoretical input: for each
+   fixed n>=2 and each finite quotient theta:B_n -> H, some finite conjugation
+   rack Y has ker rho^Y_n <= ker theta.  This uses the Artin-form congruence
+   subgroup property for braid groups.  Hence a genuine counterexample cannot
+   be confined to bounded arity; for every finite rack prefix P_m and every
+   cutoff N, there must be an n>N and beta in B_n invisible to P_m but visible
+   to X.
+
 You may use the following finite evidence and reductions only as background.
 They are not a proof.
 

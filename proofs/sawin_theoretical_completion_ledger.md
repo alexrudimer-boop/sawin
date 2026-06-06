@@ -50,6 +50,154 @@ derived-rack construction gives a finite rack whose braid action is conjugate
 to the `X` braid action in every arity.  Thus the remaining difficulty is in
 degenerate finite bijective solutions.
 
+## Pointwise rack detection
+
+No individual braid can be a universal rack-invisible witness.
+
+Theorem.  Let `beta in B_n` be nontrivial.  Then there is a finite
+conjugation rack `Y` such that
+
+```text
+rho^Y_n(beta) != 1.
+```
+
+Proof.  Use the faithful Artin representation
+
+```text
+B_n -> Aut(F_n),        F_n=<x_1,...,x_n>,
+```
+
+with generator convention
+
+```text
+sigma_i:
+  x_i     -> x_i x_{i+1} x_i^{-1},
+  x_{i+1} -> x_i,
+  x_j     -> x_j        for j != i,i+1.
+```
+
+Since the Artin representation is faithful, `beta(x_j) != x_j` for some
+generator.  Free groups are residually finite, so there is a finite quotient
+`q:F_n -> G` with
+
+```text
+q(beta(x_j)) != q(x_j).
+```
+
+Let `Y` be the conjugation rack of `G`,
+
+```text
+a*b = a b a^{-1}.
+```
+
+The rack braid action on `G^n` is exactly the Artin/Hurwitz action on the
+tuple of quotient generators:
+
+```text
+sigma_i(g_1,...,g_n)
+  =
+(g_1,...,g_i g_{i+1} g_i^{-1},g_i,...,g_n).
+```
+
+Evaluating at `(q(x_1),...,q(x_n))`, the `j`-th coordinate after `beta` is
+`q(beta(x_j))`, not `q(x_j)`.  Hence `beta` is detected by the finite rack
+`Y`.
+
+Consequently, if `rho^X_n(beta) != 1` for a finite YBE solution `X`, then
+some finite rack detects the same braid in that same arity.  The obstruction
+to Sawin's problem cannot be a single braid invisible to all finite racks; it
+can only be failure of a uniform finite rack bound across all `X`-visible
+braids.
+
+## Uniform rack-size formulation
+
+For fixed finite `X`, define
+
+```text
+d_X(n,beta) =
+min { |Y| : Y is a finite rack and rho^Y_n(beta) != 1 }
+```
+
+for pairs with `rho^X_n(beta) != 1`.  The minimum is finite by pointwise rack
+detection.  Let
+
+```text
+s_X = sup d_X(n,beta),
+```
+
+where the supremum ranges over all `n` and all `beta` with
+`rho^X_n(beta) != 1`.
+
+Theorem.  `X` is dominated by a finite rack if and only if `s_X` is finite.
+
+Proof.  If a finite rack `Y` dominates `X`, then every `X`-visible braid is
+also `Y`-visible, so `d_X(n,beta) <= |Y|` and `s_X <= |Y|`.
+
+Conversely, if `s_X` is finite, take the finite product `Q_X` of one
+representative of every finite rack of size at most `s_X`.  If
+`rho^{Q_X}_n(beta)=1` but `rho^X_n(beta) != 1`, then the definition of `s_X`
+supplies a rack of size at most `s_X` detecting `beta`, contradicting
+triviality on the product.  Hence
+
+```text
+ker rho^{Q_X}_n <= ker rho^X_n
+```
+
+for every `n`.
+
+Thus Sawin's question is equivalent to the uniform rack-size theorem:
+
+```text
+For every finite bijective YBE solution X, s_X < infinity.
+```
+
+## Fixed-arity rack cofinality
+
+The following stronger fixed-arity theorem is recorded in
+`proofs/fixed_arity_rack_cofinality_audit.md`.  It uses the Artin-form
+congruence subgroup property for braid groups as an external literature input:
+for the Artin embedding `B_n -> Aut(F_n)`, every finite-index subgroup of
+`B_n` contains a principal congruence kernel
+
+```text
+ker(B_n -> Aut(F_n/K))
+```
+
+for some characteristic finite-index subgroup `K <= F_n`.
+
+Theorem.  Fix `n>=2`.  For every finite quotient representation
+
+```text
+theta:B_n -> H,
+```
+
+there is a finite rack `Y` such that
+
+```text
+ker rho^Y_n <= ker theta.
+```
+
+Proof.  Let `N=ker theta`.  By the Artin congruence subgroup theorem, choose
+a characteristic finite-index subgroup `K <= F_n` such that
+
+```text
+C_G = ker(B_n -> Aut(F_n/K)) <= N.
+```
+
+Set `G=F_n/K`, and let `Y` be the conjugation rack of `G`.  Under the standard
+Artin convention, the action of `B_n` on the tuple of quotient free generators
+in `G^n` is the rack braid action of `Y`.  If a braid is trivial on `Y^n`, it
+fixes every tuple in `G^n`, in particular the quotient generator tuple.
+Those generators generate `G`, so the braid acts trivially on `G`; hence it
+lies in `C_G <= N`.
+
+Consequence.  For every finite YBE solution `X` and every fixed arity `n`,
+some finite rack `Y_n` satisfies
+
+```text
+ker rho^{Y_n}_n <= ker rho^X_n.
+```
+
 ## Exact negative target
 
 Fix an enumeration `R_1,R_2,...` of one labelled representative of every
@@ -95,6 +243,23 @@ dominates `X`, every prefix `P_m` must admit a witness.
 
 This is why a miss against one chosen detector product is not a Sawin
 counterexample.  A genuine negative answer needs the cofinal prefix sequence.
+
+The pointwise rack-detection theorem sharpens the expected shape of such a
+sequence.  If a finite rack `P_m` dominates `X` in all arities above some
+cutoff `N_0`, fixed-arity cofinality supplies finitely many additional racks
+handling the bounded arities `2<=n<=N_0`; their product with `P_m` dominates
+`X` in all arities.  Therefore a genuine no-rack counterexample must have
+prefix failures arbitrarily far out:
+
+```text
+for every m and every N,
+there exist n>N and beta in B_n with
+rho^{P_m}_n(beta)=1 but rho^X_n(beta) != 1.
+```
+
+Equivalently, a negative solution must force the finite rack detector size
+needed for `X`-visible braids to grow without bound along an unbounded arity
+sequence.
 
 ## Route-specific compactness gap
 
