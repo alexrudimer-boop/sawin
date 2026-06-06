@@ -1,6 +1,23 @@
 # Prove Endpoint Associated-Group Separability Prompt
 
-Status: ask now / awaiting GPT-5.5 Pro response.
+Status: answered by GPT-5.5 Pro on 2026-06-05.
+
+Response summary:
+
+- The Endpoint Associated-Group Separability Theorem is false.
+- Fundamental obstruction: for any rack `R`,
+  `eta_R(u triangleright u)=eta_R(u)`, so associated groups impose idempotence
+  at the conjugation-rack level even when `R` is non-idempotent.
+- Explicit counterexample: `X={0,1}`, `r(i,j)=(tau(j),i)` with
+  `tau=(0 1)`, `M=1`, endpoint generators `c_0,c_1`.
+- In `C_1(X)`, `c_0 triangleright c_0=c_1`, and a finite rack quotient
+  separates `c_0` from `c_1`.
+- But in `As(C_1(X))`, the relation gives `g_{c_1}=g_{c_0}`, so no finite
+  group quotient can separate them.
+- Finite rack separation is strictly stronger than associated-group /
+  conjugation-rack separation.
+- The correct certificate route is full rack-valued SAT/enumeration, not
+  associated-group separation.
 
 Prompt:
 
