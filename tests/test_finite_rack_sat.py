@@ -10,6 +10,7 @@ from ybe_domination.finite_rack_sat import (
     build_context_presentation,
     find_rack_detector,
     is_rack_table,
+    q2_fast_detector,
     trivial_monoid,
     verify_detector,
 )
@@ -45,6 +46,26 @@ class FiniteRackSatTests(unittest.TestCase):
             detector.assignment[presentation.endpoint_prime_class],
         )
         self.assertEqual(detector.table, ((1, 0), (1, 0)))
+
+    def test_two_element_flip_solution_identity_detector(self):
+        solution = FiniteBraidedSet(
+            (0, 1),
+            {(i, j): (j, i) for i in (0, 1) for j in (0, 1)},
+        )
+        self.assertTrue(solution.is_ybe())
+        presentation = build_context_presentation(
+            solution,
+            trivial_monoid(generator_count=2),
+            Endpoint(prefix=(), letter=0, suffix=()),
+            Endpoint(prefix=(), letter=1, suffix=()),
+        )
+
+        detector = q2_fast_detector(presentation)
+
+        self.assertIsNotNone(detector)
+        assert detector is not None
+        self.assertTrue(verify_detector(presentation, detector))
+        self.assertEqual(detector.table, ((0, 1), (0, 1)))
 
     def test_rack_table_axioms_allow_non_idempotent_racks(self):
         self.assertTrue(is_rack_table(((1, 0), (1, 0))))

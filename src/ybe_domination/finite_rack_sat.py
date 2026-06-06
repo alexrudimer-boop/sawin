@@ -85,6 +85,36 @@ class _DSU:
         return True
 
 
+class _ParityDSU:
+    def __init__(self, size: int):
+        self.parent = list(range(size))
+        self.rank = [0] * size
+        self.xor_to_parent = [0] * size
+
+    def find(self, item: int) -> tuple[int, int]:
+        parent = self.parent[item]
+        if parent == item:
+            return item, 0
+        root, parity = self.find(parent)
+        self.parent[item] = root
+        self.xor_to_parent[item] ^= parity
+        return self.parent[item], self.xor_to_parent[item]
+
+    def union(self, left: int, right: int, parity: int) -> bool:
+        left_root, left_xor = self.find(left)
+        right_root, right_xor = self.find(right)
+        if left_root == right_root:
+            return (left_xor ^ right_xor) == parity
+        if self.rank[left_root] < self.rank[right_root]:
+            left_root, right_root = right_root, left_root
+            left_xor, right_xor = right_xor, left_xor
+        self.parent[right_root] = left_root
+        self.xor_to_parent[right_root] = left_xor ^ right_xor ^ parity
+        if self.rank[left_root] == self.rank[right_root]:
+            self.rank[left_root] += 1
+        return True
+
+
 def trivial_monoid(generator_count: int) -> MonoidQuotient:
     """Return the one-element quotient of L_X."""
 
@@ -305,6 +335,54 @@ def _assignment_for_fixed_rack(
     return search(base)
 
 
+def _q2_detector_with_right_parity(
+    presentation: ContextPresentation,
+    table: tuple[tuple[int, ...], tuple[int, ...]],
+    equation_parity: int,
+) -> RackDetector | None:
+    if presentation.endpoint_class == presentation.endpoint_prime_class:
+        return None
+    dsu = _ParityDSU(presentation.class_count)
+    for _left, right, out in presentation.equations:
+        if not dsu.union(right, out, equation_parity):
+            return None
+    if not dsu.union(presentation.endpoint_class, presentation.endpoint_prime_class, 1):
+        return None
+
+    endpoint_root, endpoint_value = dsu.find(presentation.endpoint_class)
+    assignment = []
+    root_values = {endpoint_root: endpoint_value}
+    for item in range(presentation.class_count):
+        root, parity = dsu.find(item)
+        if root not in root_values:
+            root_values[root] = 0
+        assignment.append(root_values[root] ^ parity)
+
+    detector = RackDetector(q=2, table=table, assignment=tuple(assignment))
+    if verify_detector(presentation, detector):
+        return detector
+    return None
+
+
+def q2_fast_detector(presentation: ContextPresentation) -> RackDetector | None:
+    """Use the two q=2 racks as parity-DSU detector tests.
+
+    The identity-action rack T[a,b]=b turns each equation a▷b=c into b=c.
+    The flip-action rack T[a,b]=1-b turns each equation into b xor c = 1.
+    """
+
+    identity_table = ((0, 1), (0, 1))
+    detector = _q2_detector_with_right_parity(
+        presentation, identity_table, equation_parity=0
+    )
+    if detector is not None:
+        return detector
+    flip_table = ((1, 0), (1, 0))
+    return _q2_detector_with_right_parity(
+        presentation, flip_table, equation_parity=1
+    )
+
+
 def verify_detector(
     presentation: ContextPresentation,
     detector: RackDetector,
@@ -337,6 +415,11 @@ def find_rack_detector(
     if presentation.endpoint_class == presentation.endpoint_prime_class:
         return None
     for q in range(2, qmax + 1):
+        if q == 2:
+            detector = q2_fast_detector(presentation)
+            if detector is not None:
+                return detector
+            continue
         for table in enumerate_rack_tables(q):
             assignment = _assignment_for_fixed_rack(presentation, table)
             if assignment is None:
