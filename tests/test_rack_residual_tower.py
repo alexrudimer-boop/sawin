@@ -16,6 +16,7 @@ from ybe_domination import (
     componentwise_stabilizer_realized_parabolic_cross_effect_audit,
     flip_disjoint_union_solution,
     identity_solution,
+    is_rack_solution,
     pure_braid_image_audit,
     product_solution,
     rack_product_prefixes,
@@ -24,6 +25,7 @@ from ybe_domination import (
     realized_parabolic_cross_effect_audit,
     small_rack_prefix_obstruction_rows,
     small_rack_representatives,
+    transparent_rack_extension,
     two_strand_rack_cutoff_audit,
 )
 
@@ -117,6 +119,29 @@ class RackResidualTowerTests(unittest.TestCase):
         self.assertEqual(
             [len(prefix.elements) for prefix in prefixes],
             [1, 2, 4, 12, 36, 108],
+        )
+
+    def test_transparent_extension_realizes_pure_braid_deletion(self):
+        rack = rack_solution((0, 1), lambda _left, right: 1 - right)
+        extension = transparent_rack_extension(rack)
+        rack_zero = ("rack", 0)
+        rack_one = ("rack", 1)
+        transparent = ("transparent", 0)
+
+        self.assertTrue(is_rack_solution(extension))
+        self.assertTrue(extension.is_ybe())
+
+        word = (2, 1, 1, -2)  # A_13 in B_3.
+        extended_out = extension.braid_action(
+            word,
+            (rack_zero, transparent, rack_one),
+        )
+        deleted_out = rack.braid_action((1, 1), (0, 1))
+
+        self.assertEqual(extended_out[1], transparent)
+        self.assertEqual(
+            (extended_out[0][1], extended_out[2][1]),
+            deleted_out,
         )
 
     def test_product_prefix_containing_solution_has_no_cyclic_mover(self):

@@ -11,6 +11,9 @@ from .finite_braided_set import (
     Element,
     FiniteBraidedSet,
     Word,
+    flip_disjoint_union_solution,
+    identity_solution,
+    is_rack_solution,
     product_solution,
     rack_solution,
 )
@@ -2491,6 +2494,30 @@ def rack_product_prefixes(
         prefixes.append(candidate)
         current = candidate
     return tuple(prefixes)
+
+
+def transparent_rack_extension(
+    rack: FiniteBraidedSet,
+    *,
+    rack_tag: Element = "rack",
+    transparent_tag: Element = "transparent",
+    transparent_value: Element = 0,
+) -> FiniteBraidedSet:
+    """Adjoin one transparent rack color.
+
+    The added color ``0`` satisfies ``0*y=y`` and ``y*0=0`` in rack notation.
+    Equivalently, mixed crossings with the added one-point rack are flips.
+    """
+
+    if not is_rack_solution(rack):
+        raise ValueError("transparent extension requires a rack-form solution")
+    dummy = identity_solution((transparent_value,))
+    return flip_disjoint_union_solution(
+        rack,
+        dummy,
+        left_tag=rack_tag,
+        right_tag=transparent_tag,
+    )
 
 
 def small_rack_prefix_obstruction_rows(

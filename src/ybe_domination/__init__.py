@@ -95,6 +95,7 @@ from .rack_residual_tower import (
     realized_parabolic_cross_effect_audit,
     small_rack_prefix_obstruction_rows,
     small_rack_representatives,
+    transparent_rack_extension,
     two_strand_rack_cutoff_audit,
 )
 from .finite_group import (
@@ -2098,6 +2099,7 @@ __all__ = [
     "substitute_free_word",
     "small_rack_prefix_obstruction_rows",
     "small_rack_representatives",
+    "transparent_rack_extension",
     "two_strand_rack_cutoff_audit",
     "right_coordinate_action_maps",
     "right_coordinate_action_relation_failures",

@@ -305,6 +305,89 @@ Equivalently, a negative solution must force the finite rack detector size
 needed for `X`-visible braids to grow without bound along an unbounded arity
 sequence.
 
+## Transparent deletion-core criterion
+
+The response reviewed on 2026-06-06 added a proof-grade conditional
+narrowing, recorded in `proofs/transparent_deletion_core_criterion.md`.
+
+For a rack `Y`, define the transparent extension
+
+```text
+Y^0 = Y sqcup {0}
+```
+
+by
+
+```text
+a*b = old a*b for a,b in Y,
+0*b = b,
+a*0 = 0,
+0*0 = 0.
+```
+
+This is a rack: left translations are bijective, and the rack
+self-distributivity identity follows by cases.  Equivalently, `Y^0` is the
+flip-across disjoint union of `Y` with the one-point trivial rack.
+
+Deletion lemma.  Let `beta in P_n` be pure and let `partial_I beta` be the
+braid obtained by deleting all strands outside `I`.  If all strands outside
+`I` are colored by the transparent color, the retained color history under
+`beta` is exactly the `Y`-rack action of `partial_I beta`.  Hence
+
+```text
+beta in ker rho^{Y^0}_n  =>  partial_I beta in ker rho^Y_|I|.
+```
+
+Relative bounded-deletion core theorem.  Suppose there are a finite rack
+`Y_0` and an integer `N` such that for every `n` and every
+
+```text
+beta in ker rho^{Y_0^0 x T_2}_n,
+```
+
+where `T_2` is the two-element trivial rack, the implication
+
+```text
+rho^X_n(beta) != 1
+  =>
+there is I with 2 <= |I| <= N and rho^X_|I|(partial_I beta) != 1
+```
+
+holds.  Then `X` is dominated by a finite rack.  Indeed, fixed-arity rack
+cofinality supplies finite racks `Z_k` for `2<=k<=N` with
+
+```text
+ker rho^{Z_k}_k <= ker rho^X_k,
+```
+
+and then
+
+```text
+Y = Y_0^0 x T_2 x prod_{k=2}^N Z_k^0
+```
+
+dominates `X`.
+
+Contrapositive.  If a finite degenerate `X` is not dominated by any finite
+rack, then for every rack prefix `P_m` and every deletion cutoff `N`, there
+must be some pure braid `beta in P_n` such that
+
+```text
+rho^{P_m^0 x T_2}_n(beta)=1,
+rho^X_n(beta) != 1,
+```
+
+while every bounded deletion shadow is already `X`-invisible:
+
+```text
+rho^X_|I|(partial_I beta)=1
+for every I with 2 <= |I| <= N.
+```
+
+Thus the negative target is not merely a Brunnian braid missed by one
+detector.  It is a cofinal sequence of rack-prefix-invisible, `X`-visible
+pure braids with unbounded `X`-deletion support.
+
 ## Route-specific compactness gap
 
 Many partial approaches construct finite contextual rack detector schemas
@@ -397,6 +480,19 @@ identities needed to match the rack crossing on those readout coordinates.
 Consequently, if finitely many contextual schemas separate every actual
 nontrivial detector-kernel motion of `X^n` in every arity, then the product of
 their finite rack targets dominates `X`.
+
+For a fixed finite monoid quotient `M`, one can package all contextual
+detectors over `M` into a universal presented rack `U_M(X)` with generators
+
+```text
+e_{a,x,b}        (a,b in M, x in X)
+```
+
+and with the contextual transport and rack-crossing relations imposed.  A
+finite contextual detector over `M` is exactly a finite rack quotient of this
+presented rack.  This formulation is proof-grade but not yet a solution: one
+still needs finitely many finite quotients whose product readout is
+orbit-separating in every arity.
 
 ## H3 sufficient theorem
 
@@ -498,12 +594,15 @@ Equivalently, Brunnian or high-context detector-kernel monodromy must be
 excluded.
 
 The exact missing global positive theorem is a finite endpoint-change cover,
-finite contextual rack absorption, or a different construction that produces
-one finite rack detector for every finite `X` in all arities.
+finite contextual rack absorption, a finite bounded-deletion core, or a
+different construction that produces one finite rack detector for every finite
+`X` in all arities.
 
 The exact missing global negative theorem is the cofinal prefix obstruction
-sequence from the criterion above.  A single high-arity miss against one
-detector product, even the current `Y_X`, is not enough.
+sequence from the criteria above, now strengthened to require unbounded
+`X`-deletion support after adding transparent rack colors and a `T_2` purity
+factor.  A single high-arity miss against one detector product, even the
+current `Y_X`, is not enough.
 
 ## Review rubric
 
