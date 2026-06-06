@@ -156,6 +156,7 @@ EXTRA_MD.append(ROOT / "proofs" / "finite_obstruction_search_and_associated_grou
 EXTRA_MD.append(ROOT / "proofs" / "associated_group_separability_counterexample.md")
 EXTRA_MD.append(ROOT / "proofs" / "finite_rack_sat_detector_plan.md")
 EXTRA_MD.append(ROOT / "proofs" / "size2_bounded_finite_rack_sat_experiment.md")
+EXTRA_MD.append(ROOT / "proofs" / "size2_unbounded_q2_schema_coverage.md")
 EXTRA_MD.append(ROOT / "proofs" / "minimal_ideal_escape_rack_construction.md")
 EXTRA_MD.append(ROOT / "proofs" / "active_factor_observability_audit.md")
 EXTRA_MD.append(ROOT / "proofs" / "sequential_primitivity_frontier_audit.md")
