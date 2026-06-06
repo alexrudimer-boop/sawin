@@ -154,16 +154,18 @@ For every finite bijective YBE solution X, s_X < infinity.
 ## Fixed-arity rack cofinality
 
 The following stronger fixed-arity theorem is recorded in
-`proofs/fixed_arity_rack_cofinality_audit.md`.  It uses the Artin-form
-congruence subgroup property for braid groups as an external literature input:
-for the Artin embedding `B_n -> Aut(F_n)`, every finite-index subgroup of
-`B_n` contains a principal congruence kernel
+`proofs/fixed_arity_rack_cofinality_audit.md`.  Its external literature input
+is the pure braid congruence subgroup property: for the Artin embedding
+`P_n -> Aut(F_n)`, every finite-index subgroup of the pure braid group `P_n`
+contains a principal congruence kernel
 
 ```text
-ker(B_n -> Aut(F_n/K))
+ker(P_n -> Aut(F_n/K))
 ```
 
-for some characteristic finite-index subgroup `K <= F_n`.
+for some characteristic finite-index subgroup `K <= F_n`.  The passage from
+`P_n` to full `B_n` is elementary: add the characteristic quotient
+`F_n/[F_n,F_n]F_n^2`, whose Artin action records the strand permutation.
 
 Theorem.  Fix `n>=2`.  For every finite quotient representation
 
@@ -177,19 +179,31 @@ there is a finite rack `Y` such that
 ker rho^Y_n <= ker theta.
 ```
 
-Proof.  Let `N=ker theta`.  By the Artin congruence subgroup theorem, choose
-a characteristic finite-index subgroup `K <= F_n` such that
+Proof.  Let `N=ker theta`, and put `N_P=N cap P_n`.  By the pure braid
+congruence subgroup theorem, choose a characteristic finite-index subgroup
+`K_1 <= F_n` such that
 
 ```text
-C_G = ker(B_n -> Aut(F_n/K)) <= N.
+ker(P_n -> Aut(F_n/K_1)) <= N_P.
 ```
 
-Set `G=F_n/K`, and let `Y` be the conjugation rack of `G`.  Under the standard
-Artin convention, the action of `B_n` on the tuple of quotient free generators
-in `G^n` is the rack braid action of `Y`.  If a braid is trivial on `Y^n`, it
-fixes every tuple in `G^n`, in particular the quotient generator tuple.
-Those generators generate `G`, so the braid acts trivially on `G`; hence it
-lies in `C_G <= N`.
+Let `K_0=[F_n,F_n]F_n^2`.  On `F_n/K_0=(Z/2)^n`, the Artin generators act by
+permuting the basis, so
+
+```text
+ker(B_n -> Aut(F_n/K_0)) <= P_n.
+```
+
+Set `K=K_0 cap K_1`, still characteristic and finite-index.  If a braid acts
+trivially on `F_n/K`, then it acts trivially on `F_n/K_0`, hence is pure, and
+then acts trivially on `F_n/K_1`, hence lies in `N_P <= N`.
+
+Now set `G=F_n/K`, and let `Y` be the conjugation rack of `G`.  Under the
+standard Artin convention, the action of `B_n` on the tuple of quotient free
+generators in `G^n` is the rack braid action of `Y`.  If a braid is trivial on
+`Y^n`, it fixes every tuple in `G^n`, in particular the quotient generator
+tuple.  Those generators generate `G`, so the braid acts trivially on `G`;
+hence it lies in `ker(B_n -> Aut(F_n/K)) <= N`.
 
 Consequence.  For every finite YBE solution `X` and every fixed arity `n`,
 some finite rack `Y_n` satisfies
@@ -197,6 +211,36 @@ some finite rack `Y_n` satisfies
 ```text
 ker rho^{Y_n}_n <= ker rho^X_n.
 ```
+
+## Closed reductions and failed shortcuts
+
+The GPT-5.5 Pro response received on 2026-06-06 correctly identified the
+following proof-grade but already-known reductions.
+
+Product closure.  If finite solutions `X_i` are dominated by finite racks
+`Y_i`, then the Cartesian product solution `prod_i X_i` is dominated by the
+product rack `prod_i Y_i`.  This is recorded in
+`proofs/product_domination_closure.md`.
+
+Quotient closure.  If `pi:X -> Z` is a surjective braided-set homomorphism and
+`X` is dominated by `Y`, then the same `Y` dominates `Z`.  This is recorded in
+`proofs/hereditary_domination_closure.md`.
+
+Nondegenerate cover obstruction.  If `p:Y -> X` is a surjective braided-set
+homomorphism of finite bijective solutions and `Y` is left nondegenerate, then
+`X` is left nondegenerate; similarly on the right.  Therefore genuinely
+degenerate `X` cannot be handled by first taking a finite nondegenerate
+braided cover and pushing the derived-rack domination down.  This is recorded
+in `proofs/nondegenerate_cover_obstruction.md`.
+
+Coordinatewise rack-quotient obstruction.  A coordinatewise quotient map from
+a rack switch `R_Y(a,b)=(a*b,a)` to a general YBE solution forces the copied
+coordinate of the target to be unchanged.  With the workspace convention this
+means `rho_y(x)=x` for all `x,y`; with the opposite convention it forces the
+left action to be trivial.  Thus a positive proof for genuinely degenerate
+solutions must use contextual readouts, finite-state decoders, or a
+kernel-theoretic detector, not an ordinary coordinatewise rack quotient.  This
+is recorded in `proofs/ybe_finite_state_rack_cover_criterion.md`.
 
 ## Exact negative target
 

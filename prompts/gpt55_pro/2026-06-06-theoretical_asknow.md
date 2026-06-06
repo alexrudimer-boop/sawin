@@ -1,197 +1,127 @@
 theoretical_asknow
 
-This is a self-contained theoretical prompt.  Do not answer by asking for
-code, repository access, or further computations.  Try to solve the
+This is a self-contained theoretical prompt.  Do not ask for code,
+repository access, or further computations.  Try to resolve the remaining
 mathematical problem.
 
 Problem, due to Will Sawin.
 
 Let X be a finite bijective set-theoretic solution of the Yang-Baxter
-equation.  Equivalently, X is a finite set with a bijection
-
-  R : X x X -> X x X
-
-satisfying the braid relation on X^3.  This gives, for every n, a braid-group
-action
+equation, with braid actions
 
   rho^X_n : B_n -> Sym(X^n).
 
-A finite rack is a finite set Y with bijective left translations and
-self-distributive operation, viewed as the set-theoretic Yang-Baxter solution
+A finite rack Y is viewed as the set-theoretic solution
 
   R_Y(a,b) = (a*b, a).
 
-Question.  Is it true that for every finite bijective set-theoretic
-Yang-Baxter solution X there exists a finite rack Y, independent of n, such
-that for every n:
+Question.  Does every finite bijective set-theoretic YBE solution X admit a
+finite rack Y, independent of n, such that
 
-  ker rho^Y_n <= ker rho^X_n ?
+  ker rho^Y_n <= ker rho^X_n
 
-Equivalently, does every finite bijective set-theoretic YBE solution X admit a
-finite rack detector Y whose braid action dominates the braid action of X in
-all arities?
+for every n?
 
-Your task is to try to fully resolve this problem, not merely to propose a
-next lemma.  First make a serious attempt at both directions: construct a
-finite rack detector for arbitrary finite X, or construct a genuine
-counterexample.  A satisfactory answer must be one of:
+Do not spend the answer reproving the standard nondegenerate case.  That case
+is closed: for every finite one-sided nondegenerate solution, the derived
+rack/guitar construction gives kernel equality in all arities.  Involutive
+solutions, product closures, and braided quotients of already dominated
+solutions are also closed.
 
-A. A complete proof that such a finite rack Y always exists for every finite
-   bijective set-theoretic YBE solution X.
+The remaining problem is genuinely degenerate finite bijective solutions.
 
-B. An explicit finite bijective set-theoretic YBE solution X for which no
-   finite rack Y can dominate X in all arities, together with a proof.  A proof
-   of non-domination must not merely show failure for one chosen finite rack.
-   Equivalently, fix an enumeration R_1,R_2,... of one representative of every
-   finite rack isomorphism class and set P_m=R_1 x ... x R_m.  It must give a
-   cofinal finite-rack obstruction: for every m, an arity n_m and braid beta_m
-   with
+Known failed shortcuts for degenerate X.
 
-     rho^{P_m}_{n_m}(beta_m)=1
-     but
-     rho^X_{n_m}(beta_m) != 1.
+1. Nondegenerate cover shortcut fails.
+   If p:Z -> X is a finite surjective braided-set morphism and Z is
+   left-nondegenerate, then X is left-nondegenerate; similarly on the right.
+   Hence a genuinely degenerate X cannot be solved by taking a finite
+   nondegenerate cover Z and pushing the derived-rack domination down.
 
-Known theoretical reductions.
+2. Coordinatewise rack quotient shortcut fails.
+   A coordinatewise quotient from a rack switch R_Y(a,b)=(a*b,a) to X forces
+   the copied coordinate in X to be unchanged.  With this convention it forces
+   rho_y(x)=x for all x,y; with the opposite convention it forces the left
+   action to be trivial.  Thus a proof for degenerate X must use contextual
+   readouts, finite-state decoders, or a kernel-theoretic detector, not an
+   ordinary coordinatewise rack quotient.
 
-1. No individual braid is invisible to all finite racks.  If beta in B_n is
-   nontrivial, the faithful Artin action B_n -> Aut(F_n) and residual
-   finiteness of F_n give a finite quotient G of F_n such that beta moves the
-   quotient generator tuple.  The conjugation rack of G then detects beta.
+3. One-braid obstruction fails.
+   No individual braid is invisible to all finite racks.  If beta in B_n is
+   nontrivial, the faithful Artin action on F_n and residual finiteness of
+   F_n produce a finite quotient G such that the conjugation rack of G detects
+   beta.
 
-2. Therefore Sawin's problem is equivalent to a uniform rack-size theorem.  For
-   fixed X and each X-visible braid beta in B_n, let d_X(n,beta) be the least
-   size of a finite rack detecting beta.  X is dominated by a finite rack iff
+Equivalent uniform formulation.
 
-     sup_{rho^X_n(beta) != 1} d_X(n,beta) < infinity.
+For fixed finite X and each X-visible braid beta in B_n, let d_X(n,beta) be
+the least size of a finite rack detecting beta.  Then X is dominated by a
+finite rack if and only if
 
-   If the supremum is finite, the product of all racks up to that size
-   dominates X.  If it is infinite, the cofinal prefix obstruction in B is the
-   resulting negative sequence.
+  sup_{rho^X_n(beta) != 1} d_X(n,beta) < infinity.
 
-3. Fixed-arity rack cofinality is available as a theoretical input: for each
-   fixed n>=2 and each finite quotient theta:B_n -> H, some finite conjugation
-   rack Y has ker rho^Y_n <= ker theta.  This uses the Artin-form congruence
-   subgroup property for braid groups.  Hence a genuine counterexample cannot
-   be confined to bounded arity; for every finite rack prefix P_m and every
-   cutoff N, there must be an n>N and beta in B_n invisible to P_m but visible
-   to X.
+If this supremum is infinite, then, for an enumeration R_1,R_2,... of finite
+rack isomorphism classes and P_m=R_1 x ... x R_m, there must be cofinal
+witnesses:
 
-You may use the following finite evidence and reductions only as background.
-They are not a proof.
+  for every m there exist n_m and beta_m in B_{n_m}
+  such that rho^{P_m}_{n_m}(beta_m)=1
+  but rho^X_{n_m}(beta_m) != 1.
 
-Background finite evidence in the size-three non-permutation case.
+Moreover fixed-arity rack cofinality means a genuine counterexample cannot be
+confined to bounded arity: for every m and every cutoff N, there must be such
+a witness with n_m>N.
 
-For the 55 non-permutation size-three YBE tables, a finite contextual detector
-basis has been reconstructed through endpoint arity 3:
+Possible positive route.
 
-1. Arity 2: all 2064 principal bad endpoint pairs are separated by verified
-   finite rack contextual detector schemas.
+A contextual rack detector schema has the form
 
-2. Arity 3: 37,476 principal bad endpoint pairs are separated by q<=4 rack
-   detectors; the remaining 216 are separated by q=5 rack detectors; hence all
-   37,692 arity-3 principal bad endpoint pairs are separated.
-
-Each contextual detector schema has the form
-
-  s = (M, Q, alpha),       alpha : M x X x M -> Q,
+  (M,Q,alpha),       alpha : M x X x M -> Q,
 
 where M is a finite quotient of the structure monoid and Q is a finite rack.
-The checked local T- and R-relations imply that for every n the readout
+The local contextual T- and R-relations imply all-arity braid-equivariant
+readouts
 
-  Phi^s_n(x_1,...,x_n)_i
-    =
-  alpha([x_1...x_{i-1}], x_i, [x_{i+1}...x_n])
+  Phi_n(x_1,...,x_n)_i =
+    alpha([x_1...x_{i-1}], x_i, [x_{i+1}...x_n]).
 
-is braid-equivariant:
+If finitely many such schemas separate every nontrivial detector-kernel
+motion of X^n in every arity, the product of their finite rack targets
+dominates X.
 
-  Phi^s_n : X^n -> Q^n.
+The missing bounded-core implication is:
 
-For each such size-three X, let Y_X be the product of the distinct finite rack
-targets Q appearing in the verified arity-2 and arity-3 schemas.  Write
-
-  K^Y_n = ker(B_n -> Sym(Y_X^n)).
-
-Let J^Y_{3,n} be the normal closure in B_n of the consecutive parabolic copies
-of K^Y_k for k<=3.  The tautological inclusion is
-
-  rho^X_n(J^Y_{3,n}) <= rho^X_n(K^Y_n).
-
-The missing direction is
-
-  rho^X_n(K^Y_n) <= rho^X_n(J^Y_{3,n}).
-
-The first possible finite obstruction is the realized cross-effect
-
-  C^{X,Y_X}_{3,4}
-    =
-  rho^X_4(K^{Y_X}_4) / rho^X_4(J^{Y_X}_{3,4}).
-
-This arity-4 cross-effect has been computed for all 55 non-permutation
-size-three X and is trivial in every row.  In fact the stronger statement was
-verified:
-
-  rho^X_4(K^{Y_X}_4) = 1
-
-for all 55 rows.  This is still only fixed-arity finite evidence.
-
-Known conditional route.
-
-For a fixed X and Y_X as above, the following hypothesis would prove direct
-domination:
-
-  H3.  3-coskeletal endpoint completeness.
-       For every n, every beta in K^{Y_X}_n, and every x in X^n with
-       rho^X_n(beta)x != x, the pair (x, rho^X_n(beta)x) contains a
-       transported principal endpoint obstruction whose core has arity at most
-       3 and is separated by one of the verified contextual detector schemas.
-
-If H3 holds, then K^{Y_X}_n <= ker rho^X_n for all n.  Indeed, beta fixes every
-Q^n component of Y_X^n; by equivariance it fixes every schema readout Phi^s_n;
-but H3 supplies a schema whose readout separates an endpoint core along the
-moved orbit, a contradiction.
-
-The first unproved implication is exactly:
-
-  beta in K^{Y_X}_n and rho^X_n(beta) != 1
+  beta in ker rho^Y_n and rho^X_n(beta) != 1
     =>
-  an arity <= 3 detector-separated endpoint core exists.
+  some moved orbit contains a bounded contextual endpoint core separated by a
+  finite rack detector.
 
-This is the bounded-core / Brunnian-exclusion step.  You should either prove
-this kind of statement, replace it by a stronger correct theorem, or construct
-a genuine counterexample.
+Potential negative route.
 
-Potential Brunnian obstruction template.
+Brunnian or high-context pure braid elements can have all bounded deletion
+shadows trivial while remaining nontrivial.  But a negative answer requires
+more than one Brunnian miss against one detector: it requires the cofinal
+rack-prefix obstruction sequence above for one explicit finite degenerate X.
 
-Let P_n be the pure braid group and A_ij the standard pure braid generators.
-For n>=4, consider the left-normed iterated commutator
+Your task.
 
-  c_n = [[...[ [A_{1n}, A_{2n}], A_{3n}], ...], A_{n-1,n}].
+Give the strongest rigorous answer you can for the genuinely degenerate case.
+Do one of the following:
 
-This is a Brunnian-type pure braid: deleting any strand sends it to the
-identity, while it is nontrivial in the free kernel of the forgetful map
-P_n -> P_{n-1}.  For any fixed finite rack Y, rho^Y_n(c_n) has finite order,
-so some power c_n^d lies in K^Y_n and has trivial lower deletion shadows.
+A. Prove Sawin's statement for all finite bijective degenerate X by giving a
+   finite-state/contextual rack detector theorem, a bounded-core theorem, or a
+   different construction of one finite rack Y independent of n.
 
-To turn this into a negative answer to Sawin's problem, it is not enough to
-find one fixed Y for which such a power moves X^n.  One needs a cofinal
-obstruction against every finite rack detector prefix/product.  Conversely, to
-prove a positive answer, one must rule out all such Brunnian or high-context
-kernel-fiber monodromy, or show that finite rack targets always detect it.
+B. Give an explicit finite degenerate bijective YBE table X and prove no finite
+   rack dominates it by constructing the cofinal rack-prefix obstruction
+   sequence.  It is not enough to defeat one chosen rack or one detector
+   product.
 
-What you must not do:
+C. If neither A nor B can be proved, give only proof-grade progress: a precise
+   theorem that strictly narrows the degenerate case, together with the exact
+   remaining unproved implication.  Clearly separate theorem/proof from finite
+   evidence, heuristic, and unsupported claims.
 
-- Do not claim the problem is solved from the finite arity-2, arity-3, or
-  arity-4 evidence above.
-- Do not treat q<=4 misses as negative evidence after the q=5 arity-3 closure.
-- Do not treat failure of one detector product Y_X as a counterexample to
-  Sawin's problem unless it is promoted to the cofinal rack-prefix obstruction
-  described in output B.
-- Do not give only a conditional theorem unless you clearly identify the exact
-  unproved condition and why it is the remaining obstacle.
-
-Give the strongest rigorous answer you can.  Prioritize a complete solution.
-If you cannot solve the problem, give a precise theorem/proof, finite evidence,
-heuristic, and unsupported-claim separation, and identify the first exact
-mathematical implication that remains unproved.  Do not return a C-style
-answer until you have explicitly tried to close A and explicitly tried to
-upgrade the Brunnian/cofinal-prefix obstruction route to B.
+Avoid returning only the nondegenerate/guitar theorem, the involutive theorem,
+or the fact that Brunnian elements are plausible.  Those are already known and
+do not resolve the degenerate case.

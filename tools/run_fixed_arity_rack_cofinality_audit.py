@@ -11,6 +11,7 @@ OUT_MD = ROOT / "proofs" / "fixed_arity_rack_cofinality_audit.md"
 
 
 SOURCE_URLS = {
+    "mcreynolds": "https://arxiv.org/abs/0901.4663",
     "stylianakis": "https://eprints.gla.ac.uk/159155/1/159155.pdf",
     "brendle_notes": "https://www.maths.gla.ac.uk/~tbrendle/papers/BraidCongruence.pdf",
 }
@@ -21,16 +22,18 @@ def build_report() -> dict[str, object]:
         "title": "Fixed-arity rack cofinality audit",
         "source_urls": SOURCE_URLS,
         "literature_input": {
-            "name": "Artin congruence subgroup property for braid groups",
+            "name": "pure braid congruence subgroup property",
             "statement": (
-                "For the Artin embedding B_n -> Aut(F_n), every finite-index "
-                "subgroup of B_n contains a principal congruence kernel "
-                "ker(B_n -> Aut(F_n/K)) for some characteristic finite-index "
+                "For the Artin embedding P_n -> Aut(F_n), every finite-index "
+                "subgroup of P_n contains a principal congruence kernel "
+                "ker(P_n -> Aut(F_n/K)) for some characteristic finite-index "
                 "subgroup K <= F_n."
             ),
             "status": (
-                "Used as external literature input; Stylianakis records this "
-                "form as Asada's theorem and notes Thurston's elementary proof."
+                "Used as external literature input.  McReynolds records "
+                "Thurston's proof for pure braid groups.  The full B_n "
+                "fixed-arity theorem below adds an elementary congruence "
+                "quotient detecting the strand permutation."
             ),
         },
         "fixed_arity_theorem": {
@@ -40,17 +43,21 @@ def build_report() -> dict[str, object]:
                 "ker rho^Y_n <= ker theta."
             ),
             "detector": (
-                "Y is the conjugation rack of G=F_n/K, where K is the "
-                "characteristic finite-index subgroup supplied by the Artin "
-                "congruence subgroup property."
+                "Y is the conjugation rack of G=F_n/K, where "
+                "K=K_0 cap K_1 combines the mod-2 permutation quotient with "
+                "the characteristic finite-index subgroup supplied by pure "
+                "braid CSP."
             ),
             "proof_steps": [
                 "Let N=ker theta. Since H is finite, N has finite index in B_n.",
-                "Choose characteristic finite-index K <= F_n with C_G=ker(B_n -> Aut(F_n/K)) <= N.",
+                "Let P_n be the pure braid group and N_P=N cap P_n.",
+                "By pure braid CSP, choose characteristic finite-index K_1 <= F_n with ker(P_n -> Aut(F_n/K_1)) <= N_P.",
+                "Let K_0=[F_n,F_n]F_n^2.  The induced action on F_n/K_0=(Z/2)^n records the strand permutation, so ker(B_n -> Aut(F_n/K_0)) <= P_n.",
+                "Set K=K_0 cap K_1, still characteristic and finite-index.  If beta acts trivially on F_n/K, then beta acts trivially on F_n/K_0 and F_n/K_1; hence beta in P_n and then beta in N_P <= N.",
                 "Set G=F_n/K and give G the conjugation rack operation a*b=aba^{-1}.",
                 "Under the standard Artin convention sigma_i sends (x_i,x_{i+1}) to (x_i x_{i+1} x_i^{-1}, x_i), which is exactly the conjugation rack crossing on the tuple of quotient generators.",
                 "If beta is trivial on the rack action on G^n, it fixes every tuple, in particular the tuple of quotient free generators.",
-                "Those quotient generators generate G, so beta is trivial in Aut(G), hence beta lies in C_G <= N.",
+                "Those quotient generators generate G, so beta is trivial in Aut(G), hence beta lies in ker(B_n -> Aut(F_n/K)) <= N.",
             ],
             "consequence_for_ybe": (
                 "For every finite YBE solution X and every fixed arity n, "
@@ -124,8 +131,9 @@ def render_markdown(report: dict[str, object]) -> str:
         "# Fixed-Arity Rack Cofinality Audit",
         "",
         "This generated audit records a sharpened endpoint for the finite-rack",
-        "domination problem.  It uses the Artin-form congruence subgroup",
-        "property for braid groups as an external theorem.",
+        "domination problem.  It uses the pure braid congruence subgroup",
+        "property as an external theorem, plus an elementary permutation",
+        "quotient to pass from pure braids to the full braid group.",
         "",
         "## Literature Input",
         "",

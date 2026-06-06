@@ -15,9 +15,17 @@ class FixedArityRackCofinalityTests(unittest.TestCase):
 
     def test_fixed_arity_theorem_uses_conjugation_rack_detector(self):
         theorem = self.report["fixed_arity_theorem"]
+        literature = self.report["literature_input"]
 
         self.assertIn("theta:B_n -> H", theorem["statement"])
+        self.assertIn("pure braid", literature["name"])
         self.assertIn("conjugation rack", theorem["detector"])
+        self.assertTrue(
+            any("N_P" in step and "P_n" in step for step in theorem["proof_steps"])
+        )
+        self.assertTrue(
+            any("strand permutation" in step for step in theorem["proof_steps"])
+        )
         self.assertTrue(
             any("Artin convention" in step for step in theorem["proof_steps"])
         )
