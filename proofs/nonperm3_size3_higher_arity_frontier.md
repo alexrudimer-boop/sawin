@@ -3,12 +3,14 @@
 Date: 2026-06-06
 
 This note records the post-q=5 frontier for the non-permutation
-\(|X|=3\) branch, following the reported closure of the arity-3 endpoint gate
-in `proofs/nonperm3_arity3_q5_resolution.md`.
+\(|X|=3\) branch.  It started from the reported closure of the arity-3
+endpoint gate in `proofs/nonperm3_arity3_q5_resolution.md`; the full local
+detector-basis reconstruction and later arity-4 stabilizer audit are recorded
+below.
 
 ## Status after q=5
 
-Reported finite endpoint-gate result:
+Finite endpoint-gate result:
 
 ```text
 non-permutation |X|=3, arity 3
@@ -17,12 +19,11 @@ finite rack separated:              37692
 remaining unresolved candidates:        0
 ```
 
-Together with the arity-2 checkpoint, this closes the known fixed-arity
+Together with the arity-2 checkpoint, this closes the fixed-arity
 endpoint-gate batches through arity 3 for non-permutation size-three
-solutions.  It does not, by itself, prove all-arity finite-rack domination.
-
-The q=5 certificate is still recorded as externally reported data until the
-full JSON certificate and verifier are available in the local workspace.
+solutions.  The local reconstruction now provides the full arity-2, arity-3
+q<=4, and q=5-only detector-basis certificates listed later in this note.
+This still does not, by itself, prove all-arity finite-rack domination.
 
 ## What arity 3 gives
 

@@ -31,8 +31,10 @@ Equivalently, does every finite bijective set-theoretic YBE solution X admit a
 finite rack detector Y whose braid action dominates the braid action of X in
 all arities?
 
-Your task is to try to fully resolve this problem.  A satisfactory answer must
-be one of:
+Your task is to try to fully resolve this problem, not merely to propose a
+next lemma.  First make a serious attempt at both directions: construct a
+finite rack detector for arbitrary finite X, or construct a genuine
+counterexample.  A satisfactory answer must be one of:
 
 A. A complete proof that such a finite rack Y always exists for every finite
    bijective set-theoretic YBE solution X.
@@ -163,4 +165,6 @@ What you must not do:
 Give the strongest rigorous answer you can.  Prioritize a complete solution.
 If you cannot solve the problem, give a precise theorem/proof, finite evidence,
 heuristic, and unsupported-claim separation, and identify the first exact
-mathematical implication that remains unproved.
+mathematical implication that remains unproved.  Do not return a C-style
+answer until you have explicitly tried to close A and explicitly tried to
+upgrade the Brunnian/cofinal-prefix obstruction route to B.
