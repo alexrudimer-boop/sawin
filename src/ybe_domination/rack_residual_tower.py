@@ -1334,6 +1334,12 @@ def componentwise_stabilizer_realized_parabolic_cross_effect_audit(
                     )
                 )
 
+    for seed in seeds:
+        if seed not in solution_image:
+            raise AssertionError("parabolic seed is not in the X-action image")
+        if seed not in kernel_image:
+            raise AssertionError("parabolic seed is not in the detector-kernel X image")
+
     parabolic_image, parabolic_truncated = _normal_closure_in_permutation_group(
         solution_identity,
         solution_image,

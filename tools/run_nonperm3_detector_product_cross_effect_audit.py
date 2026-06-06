@@ -17,6 +17,7 @@ from __future__ import annotations
 import argparse
 import json
 import sys
+import time
 from dataclasses import asdict
 from itertools import product
 from pathlib import Path
@@ -189,6 +190,23 @@ def main() -> None:
         help="Stop after writing this many newly computed rows.",
     )
     parser.add_argument(
+        "--component-count-max",
+        type=int,
+        default=None,
+        help="Audit only rows with at most this many detector components.",
+    )
+    parser.add_argument(
+        "--component-size-max",
+        type=int,
+        default=None,
+        help="Audit only rows whose detector components all have size at most this.",
+    )
+    parser.add_argument(
+        "--include-row-timing",
+        action="store_true",
+        help="Attach elapsed_seconds to newly computed rows for performance probes.",
+    )
+    parser.add_argument(
         "--row-output-jsonl",
         default=None,
         help="Optional JSONL file that receives each audit row as it completes.",
@@ -273,12 +291,32 @@ def main() -> None:
             if args.start_index < 0 or args.start_index > len(imported_nonperm_tables):
                 raise SystemExit(f"start index out of range: {args.start_index}")
             audited_tables = imported_nonperm_tables[args.start_index :]
+        if args.component_count_max is not None:
+            if args.component_count_max < 0:
+                raise SystemExit("component-count-max must be nonnegative")
+            audited_tables = tuple(
+                table
+                for table in audited_tables
+                if len(components_by_table[table]) <= args.component_count_max
+            )
+        if args.component_size_max is not None:
+            if args.component_size_max < 1:
+                raise SystemExit("component-size-max must be positive")
+            audited_tables = tuple(
+                table
+                for table in audited_tables
+                if all(
+                    len(rack_table) <= args.component_size_max
+                    for rack_table in components_by_table[table]
+                )
+            )
         if args.max_tables is not None:
             audited_tables = audited_tables[: args.max_tables]
         new_rows = 0
         for table in audited_tables:
             if table in completed_tables:
                 continue
+            started_at = time.perf_counter()
             row = _audit_row(
                 table,
                 components_by_table[table],
@@ -287,6 +325,8 @@ def main() -> None:
                 state_limit=args.state_limit,
                 method=args.method,
             )
+            if args.include_row_timing:
+                row["elapsed_seconds"] = round(time.perf_counter() - started_at, 6)
             completed_rows[table] = row
             completed_tables.add(table)
             new_rows += 1
@@ -332,6 +372,14 @@ def main() -> None:
         "arity": args.arity,
         "state_limit": args.state_limit,
         "audit_method": args.method,
+        "table_selection": {
+            "max_tables": args.max_tables,
+            "start_index": args.start_index,
+            "only_table_index": args.only_table_index,
+            "stop_after_new_rows": args.stop_after_new_rows,
+            "component_count_max": args.component_count_max,
+            "component_size_max": args.component_size_max,
+        },
         "schema_like_detector_records": len(records),
         "nonpermutation_ybe_tables": len(nonperm_tables),
         "tables_with_detector_components": len(imported_nonperm_tables),

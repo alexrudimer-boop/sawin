@@ -376,6 +376,75 @@ verifier recomputes that there are no arity-2 or arity-3 principal bad endpoint
 candidates for the table and verifies that the X-action in the audited arity
 is trivial with the expected all-one image sizes.
 
+The stabilizer row arithmetic is now also independently checkable in the
+trivial-kernel case:
+
+```text
+python tools/verify_nonperm3_stabilizer_rows.py \
+  proofs/nonperm3_width3_arity4_cross_effect_audit_stabilizer.json \
+  --arity 4 \
+  --require-complete-basis \
+  --require-run-audit \
+  --require-trivial-kernel-image
+```
+
+This verifier recomputes the detector pointwise stabilizer for each row,
+restricts stabilizer generators to the `X^4` block, closes the resulting
+kernel image in `Sym(X^4)`, and checks that the recomputed kernel image is
+trivial.  Since every arity-4 row has `kernel_image_size = 1`, this certifies
+the row arithmetic needed for the stronger finite conclusion
+`rho^X_4(K^{Y_X}_4)=1` without recomputing the parabolic normal closures.
+
+The stabilizer cross-effect helper now asserts that every embedded lower-width
+parabolic seed lies both in the full `X`-action image and in the recomputed
+detector-kernel `X` image before normal closure.  This is a defensive invariant
+for future higher-arity runs.
+
+## Arity-5 partial probes
+
+The arity-5 stabilizer computation has been probed but not completed.  The
+following partial certificates are finite evidence only:
+
+```text
+proofs/nonperm3_width3_arity5_component_count_le2_stabilizer_probe.json
+proofs/nonperm3_width3_arity5_component_count_le2_rows_stabilizer_probe.jsonl
+```
+
+This component-count <= 2 probe covers the identity row, the twelve one
+q=2-component rows, and the twelve `[3,4]` two-component rows:
+
+```text
+audit_rows 25
+truncated rows 0
+quotient_size distribution {1: 25}
+kernel_image_size distribution {1: 25}
+```
+
+A separate no-q5 component-count <= 3 probe covers the identity row, the
+twelve one q=2-component rows, and the twelve `[2,3,3]` three-component rows:
+
+```text
+proofs/nonperm3_width3_arity5_no_q5_component_count_le3_stabilizer_probe.json
+proofs/nonperm3_width3_arity5_no_q5_component_count_le3_rows_stabilizer_probe.jsonl
+
+audit_rows 25
+truncated rows 0
+quotient_size distribution {1: 25}
+kernel_image_size distribution {1: 25}
+```
+
+Together these partial probes cover 37 of the 55 arity-5 rows, all with
+trivial recomputed detector-kernel image.  The remaining rows are exactly:
+
+```text
+12 rows with detector component sizes [2,3,5]
+6 rows with detector component sizes [2,3,3,3]
+```
+
+A single q=5-component arity-5 row with detector sizes `[2,3,5]` timed out
+after about four minutes without producing a row.  No mathematical conclusion
+is drawn for the remaining 18 rows.
+
 The decision rule for future higher-arity product audits remains:
 
 ```text

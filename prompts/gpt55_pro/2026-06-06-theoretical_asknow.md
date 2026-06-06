@@ -1,155 +1,166 @@
 theoretical_asknow
 
-We are working on Will Sawin's MathOverflow problem:
+This is a self-contained theoretical prompt.  Do not answer by asking for
+code, repository access, or further computations.  Try to solve the
+mathematical problem.
 
-For every finite bijective set-theoretic Yang-Baxter solution X, prove or
-disprove the existence of a finite rack Y, independent of braid index n, such
-that for all n:
+Problem, due to Will Sawin.
 
-  ker rho_{Y,n} <= ker rho_{X,n}.
+Let X be a finite bijective set-theoretic solution of the Yang-Baxter
+equation.  Equivalently, X is a finite set with a bijection
 
-Assume you do not have access to my local workspace.  You do have the GitHub
-repository/branch and should download or inspect it before making repo-specific
-claims:
+  R : X x X -> X x X
 
-  https://github.com/alexrudimer-boop/sawin/tree/codex/atom-inner-row-lift
+satisfying the braid relation on X^3.  This gives, for every n, a braid-group
+action
 
-After checkout:
+  rho^X_n : B_n -> Sym(X^n).
 
-  git clone https://github.com/alexrudimer-boop/sawin.git
-  cd sawin
-  git checkout codex/atom-inner-row-lift
+A finite rack is a finite set Y with bijective left translations and
+self-distributive operation, viewed as the set-theoretic Yang-Baxter solution
 
-Current theoretical frontier:
+  R_Y(a,b) = (a*b, a).
 
-The non-permutation |X|=3 endpoint-detector basis through arity 3 is locally
-reconstructed and verified.  The branch has full arity-2, arity-3 q<=4, and
-q=5-only contextual detector schema certificates.  The q=5-only certificate
-covers the 216 q<=4-unresolved arity-3 endpoint candidates, giving 37,692
-combined arity-3 coverages and 0 remaining unresolved principal endpoint
-candidates.
+Question.  Is it true that for every finite bijective set-theoretic
+Yang-Baxter solution X there exists a finite rack Y, independent of n, such
+that for every n:
 
-This remains finite fixed-arity evidence only.  The missing all-arity bridge
-is not the q=5 endpoint count; it is a width-3 endpoint/rack-kernel propagation
-theorem.
+  ker rho^Y_n <= ker rho^X_n ?
 
-For a fixed non-permutation size-three solution X, let Y_X be the componentwise
-product of the distinct finite rack targets appearing in the verified arity-2
-and arity-3 endpoint detector schemas for X.  For braid index n, write:
+Equivalently, does every finite bijective set-theoretic YBE solution X admit a
+finite rack detector Y whose braid action dominates the braid action of X in
+all arities?
+
+Your task is to try to fully resolve this problem.  A satisfactory answer must
+be one of:
+
+A. A complete proof that such a finite rack Y always exists for every finite
+   bijective set-theoretic YBE solution X.
+
+B. An explicit finite bijective set-theoretic YBE solution X for which no
+   finite rack Y can dominate X in all arities, together with a proof.  A proof
+   of non-domination must not merely show failure for one chosen finite rack.
+   It must give a cofinal finite-rack obstruction: for every finite rack
+   detector prefix/product P, an arity n(P) and braid beta_P with
+
+     rho^P_{n(P)}(beta_P)=1
+     but
+     rho^X_{n(P)}(beta_P) != 1.
+
+You may use the following finite evidence and reductions only as background.
+They are not a proof.
+
+Background finite evidence in the size-three non-permutation case.
+
+For the 55 non-permutation size-three YBE tables, a finite contextual detector
+basis has been reconstructed through endpoint arity 3:
+
+1. Arity 2: all 2064 principal bad endpoint pairs are separated by verified
+   finite rack contextual detector schemas.
+
+2. Arity 3: 37,476 principal bad endpoint pairs are separated by q<=4 rack
+   detectors; the remaining 216 are separated by q=5 rack detectors; hence all
+   37,692 arity-3 principal bad endpoint pairs are separated.
+
+Each contextual detector schema has the form
+
+  s = (M, Q, alpha),       alpha : M x X x M -> Q,
+
+where M is a finite quotient of the structure monoid and Q is a finite rack.
+The checked local T- and R-relations imply that for every n the readout
+
+  Phi^s_n(x_1,...,x_n)_i
+    =
+  alpha([x_1...x_{i-1}], x_i, [x_{i+1}...x_n])
+
+is braid-equivariant:
+
+  Phi^s_n : X^n -> Q^n.
+
+For each such size-three X, let Y_X be the product of the distinct finite rack
+targets Q appearing in the verified arity-2 and arity-3 schemas.  Write
 
   K^Y_n = ker(B_n -> Sym(Y_X^n)).
 
-Let J^Y_{3,n} be the normal closure in B_n of all consecutive parabolic copies
-of K^Y_k for k<=3.  The tautological inclusion is:
+Let J^Y_{3,n} be the normal closure in B_n of the consecutive parabolic copies
+of K^Y_k for k<=3.  The tautological inclusion is
 
   rho^X_n(J^Y_{3,n}) <= rho^X_n(K^Y_n).
 
-The missing direction is:
+The missing direction is
 
   rho^X_n(K^Y_n) <= rho^X_n(J^Y_{3,n}).
 
-Equivalently, one tests finite realized cross-effects:
+The first possible finite obstruction is the realized cross-effect
 
-  C^{X,Y_X}_{3,n}
+  C^{X,Y_X}_{3,4}
     =
-  rho^X_n(K^{Y_X}_n) / rho^X_n(J^{Y_X}_{3,n}).
+  rho^X_4(K^{Y_X}_4) / rho^X_4(J^{Y_X}_{3,4}).
 
-New finite evidence:
+This arity-4 cross-effect has been computed for all 55 non-permutation
+size-three X and is trivial in every row.  In fact the stronger statement was
+verified:
 
-The arity-4 realized cross-effect has now been computed for all 55
-non-permutation size-three tables using a stabilizer method in
-`componentwise_stabilizer_realized_parabolic_cross_effect_audit`.
+  rho^X_4(K^{Y_X}_4) = 1
 
-Certificate:
+for all 55 rows.  This is still only fixed-arity finite evidence.
 
-  proofs/nonperm3_width3_arity4_cross_effect_audit_stabilizer.json
+Known conditional route.
 
-Verifier:
+For a fixed X and Y_X as above, the following hypothesis would prove direct
+domination:
 
-  python tools/verify_nonperm3_width3_cross_effect_audit.py \
-    proofs/nonperm3_width3_arity4_cross_effect_audit_stabilizer.json \
-    --require-complete-basis \
-    --require-run-audit \
-    --require-untruncated-trivial
+  H3.  3-coskeletal endpoint completeness.
+       For every n, every beta in K^{Y_X}_n, and every x in X^n with
+       rho^X_n(beta)x != x, the pair (x, rho^X_n(beta)x) contains a
+       transported principal endpoint obstruction whose core has arity at most
+       3 and is separated by one of the verified contextual detector schemas.
 
-Result:
-
-  detector_index_rows 55
-  audit_rows 55
-  truncated rows 0
-  quotient_nontrivial rows 0
-  quotient_size distribution {1: 55}
-  kernel_image_size distribution {1: 55}
-
-Thus the first possible finite obstruction, n=4, is absent for the current
-detector products Y_X.  In fact every arity-4 row has trivial realized
-detector-kernel image on X^4.  This still does not prove any all-n theorem.
-
-Most recent theoretical reduction:
-
-The useful conditional theorem is not width-3 propagation itself, but:
-
-  3-coskeletal endpoint completeness.
-  Every beta in K^{Y_X}_n with rho^X_n(beta) != 1 contains a transported
-  principal endpoint obstruction with an arity <= 3 core separated by one of
-  the verified contextual detector schemas.
-
-If this condition holds, then the verified contextual readouts
-Phi^s_n : X^n -> Q^n are braid-equivariant in every arity, and any
-Y_X-invisible beta moving X^n would contradict the schema that separates the
-corresponding endpoint core.  Thus K^{Y_X}_n <= H^X_n for every n.
+If H3 holds, then K^{Y_X}_n <= ker rho^X_n for all n.  Indeed, beta fixes every
+Q^n component of Y_X^n; by equivariance it fixes every schema readout Phi^s_n;
+but H3 supplies a schema whose readout separates an endpoint core along the
+moved orbit, a contradiction.
 
 The first unproved implication is exactly:
 
   beta in K^{Y_X}_n and rho^X_n(beta) != 1
-    => an arity <= 3 detector-separated endpoint core exists.
+    =>
+  an arity <= 3 detector-separated endpoint core exists.
 
-This is the bounded-core/Brunnian-exclusion step.
+This is the bounded-core / Brunnian-exclusion step.  You should either prove
+this kind of statement, replace it by a stronger correct theorem, or construct
+a genuine counterexample.
 
-Important guardrails:
+Potential Brunnian obstruction template.
 
-- Do not claim the problem is solved from fixed-arity finite evidence.
-- Do not treat q<=4 misses as negative evidence after the q=5 closure.
-- Do not treat a high-arity miss against one detector product as a Sawin
-  counterexample unless it is upgraded to a cofinal rack-prefix obstruction.
-- Do not treat the arity-4 trivial quotient as an induction step unless the
-  induction hypothesis and transition map are explicitly proved.
+Let P_n be the pure braid group and A_ij the standard pure braid generators.
+For n>=4, consider the left-normed iterated commutator
 
-Relevant branch files to inspect:
+  c_n = [[...[ [A_{1n}, A_{2n}], A_{3n}], ...], A_{n-1,n}].
 
-  proofs/nonperm3_endpoint_detector_reconstruction.md
-  proofs/nonperm3_size3_higher_arity_frontier.md
-  proofs/width3_cross_effect_propagation_response_review.md
-  proofs/parabolic_kernel_generation_bounded_width.md
-  proofs/rack_residual_obstruction_tower.md
-  proofs/nonperm3_width3_arity4_cross_effect_audit_stabilizer.json
-  src/ybe_domination/rack_residual_tower.py
-  src/ybe_domination/nonperm3_detector_products.py
-  src/ybe_domination/nonperm3_endpoint_detector_basis.py
+This is a Brunnian-type pure braid: deleting any strand sends it to the
+identity, while it is nontrivial in the free kernel of the forgetful map
+P_n -> P_{n-1}.  For any fixed finite rack Y, rho^Y_n(c_n) has finite order,
+so some power c_n^d lies in K^Y_n and has trivial lower deletion shadows.
 
-Task:
+To turn this into a negative answer to Sawin's problem, it is not enough to
+find one fixed Y for which such a power moves X^n.  One needs a cofinal
+obstruction against every finite rack detector prefix/product.  Conversely, to
+prove a positive answer, one must rule out all such Brunnian or high-context
+kernel-fiber monodromy, or show that finite rack targets always detect it.
 
-Try to prove or refute a genuine all-arity theorem behind the width-3 bridge.
-Do not use q<=5 endpoint closure or the arity-4 cross-effect computation as an
-all-arity proof.  Focus on one of these exact outputs:
+What you must not do:
 
-A. A rigorous theorem proving width-3 realized kernel propagation for every
-   non-permutation size-three X and every detector product Y_X built from the
-   arity-2 and arity-3 contextual endpoint detector basis.  The proof must
-   explain why Brunnian or high-context kernel-fiber monodromy cannot occur.
-   The new arity-4 data may be used only as finite evidence or as a base case
-   if an actual induction is supplied.
+- Do not claim the problem is solved from the finite arity-2, arity-3, or
+  arity-4 evidence above.
+- Do not treat q<=4 misses as negative evidence after the q=5 arity-3 closure.
+- Do not treat failure of one detector product Y_X as a counterexample to
+  Sawin's problem unless it is promoted to the cofinal rack-prefix obstruction
+  described in output B.
+- Do not give only a conditional theorem unless you clearly identify the exact
+  unproved condition and why it is the remaining obstacle.
 
-B. A rigorous obstruction mechanism showing how an element of K^Y_n, necessarily
-   with n>=5 after the current computation, can move X^n while all width-3
-   parabolic shadows are harmless.  This should be a normalized obstruction
-   sequence, not just a high-arity miss against one finite detector product.
-
-C. A precise no-go analysis of 3-coskeletal endpoint completeness: either
-   prove it under a clearly stated structural hypothesis that the current
-   detector basis satisfies, or explain why the hypothesis is not currently
-   verified and what concrete Brunnian/high-context obstruction remains.
-
-Return theorem/proof, finite evidence, heuristic, and unsupported claims in
-separate categories.  If a proof attempt fails, identify the exact first
-unproved implication in mathematical terms.
+Give the strongest rigorous answer you can.  Prioritize a complete solution.
+If you cannot solve the problem, give a precise theorem/proof, finite evidence,
+heuristic, and unsupported-claim separation, and identify the first exact
+mathematical implication that remains unproved.

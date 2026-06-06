@@ -1,4 +1,9 @@
-computational_asknow
+computational_superseded
+
+Superseded on 2026-06-06.  The active GPT-5.5 Pro workflow has been narrowed
+to a single self-contained theoretical prompt:
+
+  prompts/gpt55_pro/2026-06-06-theoretical_asknow.md
 
 We are working on Will Sawin's MathOverflow problem:
 
