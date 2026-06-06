@@ -159,6 +159,40 @@ Until the arity-3 certificates exist and the arity-4 audit runs, the local
 branch still does not have the full detector product needed for
 `C^{X,Y_X}_{3,4}`.
 
+## Arity-3 q<=4 reconstruction probe
+
+The detector search order was adjusted to try all rack sizes for
+`truncated_structure_monoid_length_1` before moving to
+`truncated_structure_monoid_length_2`.  With that monoid-family-first order,
+the arity-3 q<=4 reconstruction reproduces the archived checkpoint at the
+coverage level:
+
+```text
+positive_detector_coverages 37476
+unresolved_obstruction_candidates 216
+by_rack_size {'q2': 16416, 'q3': 20736, 'q4': 324}
+by_monoid {'truncated_structure_monoid_length_1': 15309,
+           'truncated_structure_monoid_length_2': 22167}
+```
+
+This is the mathematically important finite endpoint-gate frontier for q<=4.
+However, the current local schema deduplication does not yet reproduce the
+archived compact schema count:
+
+```text
+archived positive_detector_schemas: 320
+local endpoint-class-sensitive schema key: 1176
+local schema-level (X,M,Q,alpha) key: 600
+```
+
+The current 600-schema basis should be treated as a valid reconstruction
+candidate only after every `covered_candidate_ids` entry is verified against
+the exported `(X,M,Q,alpha)` schema.  It is not byte/count-identical to the
+archived q<=4 checkpoint.  The next computational task is to either recover
+the historical 320-schema compression with proof-grade coverage verification,
+or explicitly record `archived_positive_detector_schemas = 320` and
+`reconstructed_positive_detector_schemas = 600` as distinct provenance fields.
+
 ## Verification
 
 The focused local regression suite passes:

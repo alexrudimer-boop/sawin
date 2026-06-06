@@ -523,13 +523,11 @@ def schema_key(schema: DetectorSchema) -> tuple[Any, ...]:
     return (
         tuple(schema.ybe_table),
         schema.arity,
-        tuple(schema.partition),
         schema.monoid_family,
         tuple(tuple(row) for row in schema.monoid.mul),
+        tuple(schema.monoid.gen),
         tuple(tuple(row) for row in schema.rack_table),
         tuple(schema.assignment_by_class),
-        schema.endpoint_class,
-        schema.endpoint_prime_class,
     )
 
 
@@ -639,8 +637,8 @@ def first_detector_for_candidate(
         fixed_rack_failure_cache = set()
 
     monoids = monoids_for_solution(solution, monoid_family_names)
-    for q in range(2, qmax + 1):
-        for monoid_name, monoid in monoids:
+    for monoid_name, monoid in monoids:
+        for q in range(2, qmax + 1):
             cache_key = _presentation_cache_key(candidate, monoid_name, monoid)
             presentation = presentation_cache.get(cache_key)
             if presentation is None:
@@ -934,6 +932,20 @@ def _endpoint_from_endpoint_record(value: dict[str, Any]) -> Endpoint:
     )
 
 
+def _candidate_lookup_for_record(record: dict[str, Any]) -> dict[str, EndpointCandidate]:
+    solution = solution_from_flat_table(record["ybe_table"])
+    solution_index = int(record["solution_index"])
+    arity = int(record["arity"])
+    return {
+        candidate.candidate_id: candidate
+        for candidate in principal_bad_endpoint_candidates(
+            solution,
+            solution_index=solution_index,
+            arity=arity,
+        )
+    }
+
+
 def verify_detector_schema_record(record: dict[str, Any]) -> tuple[str, ...]:
     """Verify one exported detector schema without trusting stored classes."""
 
@@ -980,6 +992,28 @@ def verify_detector_schema_record(record: dict[str, Any]) -> tuple[str, ...]:
         )
         if alpha != expected_alpha:
             failures.append("alpha does not match assignment_by_class on raw classes")
+        covered_candidate_ids = record.get("covered_candidate_ids", [])
+        if not isinstance(covered_candidate_ids, list):
+            failures.append("covered_candidate_ids must be a list")
+        else:
+            candidate_lookup = _candidate_lookup_for_record(record)
+            for candidate_id in covered_candidate_ids:
+                candidate_id = str(candidate_id)
+                candidate = candidate_lookup.get(candidate_id)
+                if candidate is None:
+                    failures.append(f"unknown covered candidate ID {candidate_id}")
+                    continue
+                candidate_presentation = build_context_presentation(
+                    solution,
+                    monoid,
+                    candidate.endpoint,
+                    candidate.endpoint_prime,
+                )
+                if not verify_detector(candidate_presentation, detector):
+                    failures.append(
+                        f"covered candidate is not separated: {candidate_id}"
+                    )
+                    break
     except (KeyError, TypeError, ValueError, IndexError) as exc:
         failures.append(f"invalid detector schema record: {exc}")
     return tuple(failures)
