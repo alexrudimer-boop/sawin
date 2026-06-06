@@ -69,7 +69,8 @@ Verifier:
   python tools/verify_nonperm3_width3_cross_effect_audit.py \
     proofs/nonperm3_width3_arity4_cross_effect_audit_stabilizer.json \
     --require-complete-basis \
-    --require-run-audit
+    --require-run-audit \
+    --require-untruncated-trivial
 
 Result:
 
@@ -83,6 +84,27 @@ Result:
 Thus the first possible finite obstruction, n=4, is absent for the current
 detector products Y_X.  In fact every arity-4 row has trivial realized
 detector-kernel image on X^4.  This still does not prove any all-n theorem.
+
+Most recent theoretical reduction:
+
+The useful conditional theorem is not width-3 propagation itself, but:
+
+  3-coskeletal endpoint completeness.
+  Every beta in K^{Y_X}_n with rho^X_n(beta) != 1 contains a transported
+  principal endpoint obstruction with an arity <= 3 core separated by one of
+  the verified contextual detector schemas.
+
+If this condition holds, then the verified contextual readouts
+Phi^s_n : X^n -> Q^n are braid-equivariant in every arity, and any
+Y_X-invisible beta moving X^n would contradict the schema that separates the
+corresponding endpoint core.  Thus K^{Y_X}_n <= H^X_n for every n.
+
+The first unproved implication is exactly:
+
+  beta in K^{Y_X}_n and rho^X_n(beta) != 1
+    => an arity <= 3 detector-separated endpoint core exists.
+
+This is the bounded-core/Brunnian-exclusion step.
 
 Important guardrails:
 
@@ -123,10 +145,10 @@ B. A rigorous obstruction mechanism showing how an element of K^Y_n, necessarily
    parabolic shadows are harmless.  This should be a normalized obstruction
    sequence, not just a high-arity miss against one finite detector product.
 
-C. A precise no-go analysis showing which additional structural hypothesis
-   would make the width-3 theorem true, and whether the reconstructed
-   contextual detector basis or the new arity-4 trivial-kernel data suggests
-   that hypothesis.
+C. A precise no-go analysis of 3-coskeletal endpoint completeness: either
+   prove it under a clearly stated structural hypothesis that the current
+   detector basis satisfies, or explain why the hypothesis is not currently
+   verified and what concrete Brunnian/high-context obstruction remains.
 
 Return theorem/proof, finite evidence, heuristic, and unsupported claims in
 separate categories.  If a proof attempt fails, identify the exact first

@@ -6,12 +6,14 @@ from typing import Any, Iterable
 
 from .finite_braided_set import FiniteBraidedSet, rack_solution
 from .finite_rack_sat import MonoidQuotient, is_rack_table
+from .nonperm3_endpoint_detector_basis import principal_bad_endpoint_candidates
 from .small_search import all_bijection_solutions, is_permutation_solution_form
 
 FlatYbeTable = tuple[int, ...]
 RackTable = tuple[tuple[int, ...], ...]
 WIDTH3_AUDIT_KIND = "nonperm3_width3_componentwise_cross_effect_audit_v1"
 WIDTH3_AUDIT_BRANCH = "nonpermutation_size3"
+NO_LOW_ARITY_CANDIDATES_REASON = "no_arity2_or_arity3_principal_bad_endpoint_pairs"
 WIDTH3_AUDIT_ROW_FIELDS = (
     "ybe_table",
     "detector_component_count",
@@ -572,6 +574,66 @@ def contextual_detector_payload_failures(payload: Any) -> tuple[str, ...]:
     return tuple(failures)
 
 
+def width3_complete_audit_row_failures(payload: dict[str, Any]) -> tuple[str, ...]:
+    """Return failures for complete audit row coverage.
+
+    This is stricter than the structural verifier because smoke and partial
+    audit payloads may intentionally contain only a prefix of rows.  A final
+    proof-grade run must have exactly one row for each detector-index table.
+    """
+
+    detector_index = payload.get("detector_index")
+    rows = payload.get("rows")
+    if not isinstance(detector_index, list):
+        return ("complete audit rows require detector_index to be a list",)
+    if not isinstance(rows, list):
+        return ("complete audit rows require rows to be a list",)
+
+    failures: list[str] = []
+    index_tables = []
+    for index, entry in enumerate(detector_index):
+        if not isinstance(entry, dict):
+            failures.append(f"detector_index[{index}]: entry must be an object")
+            continue
+        try:
+            index_tables.append(normalize_flat_ybe_table(entry.get("ybe_table")))
+        except (TypeError, ValueError) as exc:
+            failures.append(f"detector_index[{index}]: invalid ybe_table: {exc}")
+
+    row_tables = []
+    for index, row in enumerate(rows):
+        if not isinstance(row, dict):
+            failures.append(f"rows[{index}]: row must be an object")
+            continue
+        try:
+            row_tables.append(normalize_flat_ybe_table(row.get("ybe_table")))
+        except (TypeError, ValueError) as exc:
+            failures.append(f"rows[{index}]: invalid ybe_table: {exc}")
+
+    duplicate_rows = sorted(
+        table for table in set(row_tables) if row_tables.count(table) > 1
+    )
+    if duplicate_rows:
+        failures.append(
+            "audit rows contain duplicate ybe_table entries: "
+            f"{[list(table) for table in duplicate_rows]}"
+        )
+    if len(rows) != len(detector_index):
+        failures.append("run audit required but row count differs from detector_index")
+
+    index_table_set = set(index_tables)
+    row_table_set = set(row_tables)
+    if row_table_set != index_table_set:
+        missing = sorted(index_table_set - row_table_set)
+        extra = sorted(row_table_set - index_table_set)
+        failures.append(
+            "run audit required but row tables do not match detector_index: "
+            f"missing={[list(table) for table in missing]}, "
+            f"extra={[list(table) for table in extra]}"
+        )
+    return tuple(failures)
+
+
 def contextual_detector_payload_summary(payload: Any) -> dict[str, int]:
     """Return basic counts for contextual detector verification."""
 
@@ -697,6 +759,27 @@ def _payload_int(payload: dict[str, Any], key: str, failures: list[str]) -> int 
     return value
 
 
+def _has_no_low_arity_candidates(table: FlatYbeTable) -> bool:
+    solution = solution_from_flat_table(table)
+    return not principal_bad_endpoint_candidates(
+        solution,
+        solution_index=0,
+        arity=2,
+    ) and not principal_bad_endpoint_candidates(
+        solution,
+        solution_index=0,
+        arity=3,
+    )
+
+
+def _solution_action_is_trivial(solution: FiniteBraidedSet, arity: int) -> bool:
+    for word in product(solution.elements, repeat=arity):
+        for index in range(arity - 1):
+            if solution.apply_R_at(word, index) != word:
+                return False
+    return True
+
+
 def _normalize_ybe_table_for_audit(
     value: Any,
     failures: list[str],
@@ -759,6 +842,7 @@ def verify_width3_audit_payload(payload: dict[str, Any]) -> tuple[str, ...]:
         failures.append("detector_index must be a list")
         detector_index = []
     index_tables: dict[FlatYbeTable, list[dict[str, Any]]] = {}
+    index_no_detector_reasons: dict[FlatYbeTable, str | None] = {}
     for index, entry in enumerate(detector_index):
         context = f"detector_index[{index}]"
         if not isinstance(entry, dict):
@@ -770,16 +854,25 @@ def verify_width3_audit_payload(payload: dict[str, Any]) -> tuple[str, ...]:
         if not isinstance(detectors, list):
             failures.append(f"{context}: detectors must be a list")
             detectors = []
-        elif not detectors and no_detector_reason != "no_arity2_or_arity3_principal_bad_endpoint_pairs":
+        elif not detectors and no_detector_reason != NO_LOW_ARITY_CANDIDATES_REASON:
             failures.append(
                 f"{context}: empty detectors require a no_detector_reason"
             )
-        if no_detector_reason is not None and no_detector_reason != "no_arity2_or_arity3_principal_bad_endpoint_pairs":
+        if no_detector_reason is not None and no_detector_reason != NO_LOW_ARITY_CANDIDATES_REASON:
             failures.append(f"{context}: unrecognized no_detector_reason")
         if table is not None:
             if table in index_tables:
                 failures.append(f"{context}: duplicate detector_index ybe_table")
             index_tables[table] = detectors
+            index_no_detector_reasons[table] = no_detector_reason
+            if (
+                not detectors
+                and no_detector_reason == NO_LOW_ARITY_CANDIDATES_REASON
+                and not _has_no_low_arity_candidates(table)
+            ):
+                failures.append(
+                    f"{context}: empty detector reason is false for this table"
+                )
         seen_racks = set()
         for detector_index_in_entry, detector in enumerate(detectors):
             detector_context = f"{context}.detectors[{detector_index_in_entry}]"
@@ -868,6 +961,7 @@ def verify_width3_audit_payload(payload: dict[str, Any]) -> tuple[str, ...]:
         rows = []
     if "row_count" in payload:
         _require(payload.get("row_count") == len(rows), failures, "row_count mismatch")
+    row_tables: set[FlatYbeTable] = set()
     for row_index, row in enumerate(rows):
         context = f"rows[{row_index}]"
         if not isinstance(row, dict):
@@ -879,6 +973,9 @@ def verify_width3_audit_payload(payload: dict[str, Any]) -> tuple[str, ...]:
         table = _normalize_ybe_table_for_audit(row.get("ybe_table"), failures, context)
         if table is None:
             continue
+        if table in row_tables:
+            failures.append(f"{context}: duplicate row ybe_table")
+        row_tables.add(table)
         detectors = index_tables.get(table)
         if detectors is None:
             failures.append(f"{context}: row ybe_table is absent from detector_index")
@@ -905,6 +1002,29 @@ def verify_width3_audit_payload(payload: dict[str, Any]) -> tuple[str, ...]:
             _require(row.get("bound") == bound, failures, f"{context}: bound mismatch")
         if arity is not None:
             _require(row.get("arity") == arity, failures, f"{context}: arity mismatch")
+        if not detectors:
+            if index_no_detector_reasons.get(table) != NO_LOW_ARITY_CANDIDATES_REASON:
+                failures.append(
+                    f"{context}: empty detector row lacks verified no_detector_reason"
+                )
+            solution = solution_from_flat_table(table)
+            if arity is not None and not _solution_action_is_trivial(solution, arity):
+                failures.append(f"{context}: empty detector row has nontrivial X action")
+            expected_empty_values = {
+                "joint_image_size": 1,
+                "kernel_image_size": 1,
+                "parabolic_image_size": 1,
+                "quotient_size": 1,
+                "quotient_nontrivial": False,
+                "seed_count": 0,
+                "truncated": False,
+            }
+            for field, expected in expected_empty_values.items():
+                if row.get(field) != expected:
+                    failures.append(
+                        f"{context}: empty detector row has {field}={row.get(field)!r}, "
+                        f"expected {expected!r}"
+                    )
         truncated = row.get("truncated")
         if not isinstance(truncated, bool):
             failures.append(f"{context}: truncated must be boolean")

@@ -12,6 +12,7 @@ sys.path.insert(0, str(ROOT / "src"))
 
 from ybe_domination.nonperm3_detector_products import (  # noqa: E402
     verify_width3_audit_payload,
+    width3_complete_audit_row_failures,
 )
 
 
@@ -47,11 +48,11 @@ def main() -> None:
             failures.append("complete basis required but missing_table_count is nonzero")
         if len(detector_index) != 55:
             failures.append("complete basis required but detector_index length is not 55")
-    if args.require_run_audit:
+    require_complete_rows = args.require_run_audit or args.require_untruncated_trivial
+    if require_complete_rows:
         if payload.get("run_audit") is not True:
             failures.append("run audit required but run_audit is not true")
-        if len(rows) != len(detector_index):
-            failures.append("run audit required but row count differs from detector_index")
+        failures.extend(width3_complete_audit_row_failures(payload))
     if args.require_untruncated_trivial:
         if not rows:
             failures.append("untruncated trivial rows required but no rows are present")

@@ -146,7 +146,8 @@ Current finite-computational status:
      python tools/verify_nonperm3_width3_cross_effect_audit.py \
        proofs/nonperm3_width3_arity4_cross_effect_audit_stabilizer.json \
        --require-complete-basis \
-       --require-run-audit
+       --require-run-audit \
+       --require-untruncated-trivial
 
    Result:
 
@@ -162,6 +163,19 @@ Current finite-computational status:
    Thus there is no four-strand width-3 cross-effect obstruction for this
    detector product.  This is still finite fixed-arity evidence only and not
    an all-arity proof.
+
+7. The audit verifier and row-resume path have been hardened:
+
+   - `--require-run-audit` requires exactly one row for each detector-index
+     table, not just the same row count;
+   - duplicate row tables and missing row tables are rejected;
+   - empty detector rows are independently checked by recomputing that the
+     table has no arity-2 or arity-3 principal bad endpoint candidates and
+     that the X-action in the audited arity is trivial;
+   - resumed JSONL rows are deduplicated by table, and conflicting duplicate
+     rows abort;
+   - the wrapper now supports `--start-index`, `--only-table-index`, and
+     `--stop-after-new-rows` for chunked higher-arity probes.
 
 Relevant files to inspect:
 
@@ -193,8 +207,9 @@ Specifically:
    pointwise stabilizer, restriction to the X block, and normal closure inside
    the X-action image.
 
-2. Audit whether the current verifier is strong enough.  If it is only
-   structural, specify the exact independent verifier needed to recheck the
+2. Audit whether the current hardened verifier is strong enough for a
+   proof-grade finite certificate.  If it remains only structural in an
+   important way, specify the exact independent verifier needed to recheck the
    stabilizer certificate without rerunning all row searches blindly.
 
 3. Decide the next finite computation after the absent arity-4 obstruction:
@@ -203,10 +218,12 @@ Specifically:
    extension scan at arity 4/5, or another sharper finite obstruction test.
    Give exact commands and expected certificate fields.
 
-4. If arity 5 is feasible, propose safe CLI additions such as per-row timing,
-   `--table-index`, `--start-index`, `--component-count-max`, and independent
-   row verification.  If it is not feasible, identify the precise bottleneck
-   and a stronger group-theoretic compression.
+4. If arity 5 is feasible, propose exact chunked commands using the existing
+   `--start-index`, `--only-table-index`, and `--stop-after-new-rows` controls,
+   plus any still-needed additions such as per-row timing,
+   `--component-count-max`, or independent row verification.  If it is not
+   feasible, identify the precise bottleneck and a stronger group-theoretic
+   compression.
 
 5. Interpret the current arity-4 result correctly:
 

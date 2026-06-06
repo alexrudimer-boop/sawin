@@ -286,10 +286,15 @@ The audit wrapper supports row-level JSONL progress:
 ```text
 --row-output-jsonl proofs/nonperm3_width3_arity4_cross_effect_rows.jsonl
 --resume-row-output-jsonl
+--start-index N
+--only-table-index N
+--stop-after-new-rows N
 ```
 
 A two-row smoke run with row-level output checked the identity row and the
 first nontrivial row; both were untruncated with `quotient_size = 1`.
+The resume path now deduplicates completed rows by table, rejects conflicting
+duplicate rows, and emits final rows in detector-index order.
 
 ## Arity-4 width-3 product audit
 
@@ -339,7 +344,8 @@ Verifier:
 python tools/verify_nonperm3_width3_cross_effect_audit.py \
   proofs/nonperm3_width3_arity4_cross_effect_audit_stabilizer.json \
   --require-complete-basis \
-  --require-run-audit
+  --require-run-audit \
+  --require-untruncated-trivial
 
 OK nonperm3 width-3 audit verification
 detector_index_rows 55
@@ -361,6 +367,14 @@ Thus the first possible finite cross-effect obstruction is absent for this
 detector product: every non-permutation size-three table has trivial realized
 detector-kernel image on `X^4`.  This is finite arity-4 evidence only.  It is
 not an all-arity theorem.
+
+The audit verifier has been hardened for final-result use.  With
+`--require-run-audit`, it now requires exactly one row for each detector-index
+table, rejects duplicate row tables, and checks that row tables match the
+detector index.  Empty detector rows are also independently checked: the
+verifier recomputes that there are no arity-2 or arity-3 principal bad endpoint
+candidates for the table and verifies that the X-action in the audited arity
+is trivial with the expected all-one image sizes.
 
 The decision rule for future higher-arity product audits remains:
 
@@ -409,3 +423,49 @@ kernel-fiber bad pair.
 The q=5 batch is positive finite evidence for this strategy in the
 non-permutation size-three arity-3 endpoint gate.  The all-arity bridge remains
 the unsolved part.
+
+## Conditional 3-coskeletal route
+
+The current theoretical C-output is the following conditional theorem, not an
+unconditional proof.
+
+For each verified contextual detector schema `s = (M,Q,alpha)`, define in
+every arity:
+
+```text
+Phi^s_n(x_1,...,x_n)_i =
+  alpha([x_1...x_{i-1}], x_i, [x_{i+1}...x_n]).
+```
+
+The contextual verifier checks the local `T` and `R` relations in
+`M x X x M`, so each verified schema gives a braid-equivariant readout
+`Phi^s_n : X^n -> Q^n` in every arity.  Hence, if every nontrivial
+`Y_X`-invisible motion of `X^n` contains a transported endpoint pair whose
+obstruction has an arity-2 or arity-3 principal endpoint core separated by one
+of the verified schemas, then `K^{Y_X}_n <= H^X_n` for every `n`.
+
+This additional hypothesis can be called:
+
+```text
+3-coskeletal endpoint completeness.
+Every beta in K^{Y_X}_n with rho^X_n(beta) != 1 contains a detector-separated
+principal endpoint core of arity at most 3.
+```
+
+Under that hypothesis, equivariance gives the contradiction: if
+`beta in K^{Y_X}_n`, then `beta` fixes every component `Q^n` of `Y_X^n`, so
+`Phi^s_n(beta.x) = beta.Phi^s_n(x) = Phi^s_n(x)` for every verified schema
+component.  A schema-separated endpoint pair along the moved orbit cannot then
+exist.  Thus `beta` fixes `X^n`.
+
+The first unproved implication is exactly the bounded-core assertion:
+
+```text
+beta in K^{Y_X}_n and rho^X_n(beta) != 1
+  => an arity <= 3 detector-separated endpoint core exists.
+```
+
+The arity-4 stabilizer audit supports this route only as finite evidence: in
+arity 4 the realized detector-kernel image on `X^4` is already trivial.  No
+transition lemma currently proves that this persists, nor that Brunnian or
+high-context kernel-fiber monodromy is impossible in higher arity.

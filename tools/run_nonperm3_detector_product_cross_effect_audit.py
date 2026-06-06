@@ -29,6 +29,7 @@ from ybe_domination import (  # noqa: E402
     componentwise_stabilizer_realized_parabolic_cross_effect_audit,
 )
 from ybe_domination.nonperm3_detector_products import (  # noqa: E402
+    NO_LOW_ARITY_CANDIDATES_REASON,
     detector_index_by_ybe_table,
     extract_detector_schema_records,
     nonpermutation_size3_flat_tables,
@@ -38,8 +39,6 @@ from ybe_domination.nonperm3_detector_products import (  # noqa: E402
 from ybe_domination.nonperm3_endpoint_detector_basis import (  # noqa: E402
     principal_bad_endpoint_candidates,
 )
-
-NO_LOW_ARITY_CANDIDATES_REASON = "no_arity2_or_arity3_principal_bad_endpoint_pairs"
 
 
 def _load_json(path: Path):
@@ -171,6 +170,25 @@ def main() -> None:
         help="Optional cap on audited tables, for smoke checks only.",
     )
     parser.add_argument(
+        "--start-index",
+        type=int,
+        default=0,
+        help="Start auditing at this detector-index row, unless --only-table-index is used.",
+    )
+    parser.add_argument(
+        "--only-table-index",
+        type=int,
+        action="append",
+        default=None,
+        help="Audit only the supplied detector-index row. May be supplied more than once.",
+    )
+    parser.add_argument(
+        "--stop-after-new-rows",
+        type=int,
+        default=None,
+        help="Stop after writing this many newly computed rows.",
+    )
+    parser.add_argument(
         "--row-output-jsonl",
         default=None,
         help="Optional JSONL file that receives each audit row as it completes.",
@@ -215,9 +233,10 @@ def main() -> None:
         table for table in components_by_table if table not in nonperm_table_set
     )
 
-    rows = []
+    completed_rows = {}
     completed_tables = set()
     row_output_path = Path(args.row_output_jsonl) if args.row_output_jsonl else None
+    imported_nonperm_table_set = set(imported_nonperm_tables)
     if row_output_path is not None:
         row_output_path.parent.mkdir(parents=True, exist_ok=True)
         if args.resume_row_output_jsonl and row_output_path.exists():
@@ -226,14 +245,37 @@ def main() -> None:
                     if not line.strip():
                         continue
                     row = json.loads(line)
-                    rows.append(row)
-                    completed_tables.add(tuple(row["ybe_table"]))
+                    table_key = tuple(row["ybe_table"])
+                    if table_key not in imported_nonperm_table_set:
+                        raise SystemExit(
+                            f"resume row is not in the current detector index: {table_key}"
+                        )
+                    if table_key in completed_rows:
+                        if completed_rows[table_key] != row:
+                            raise SystemExit(
+                                f"conflicting duplicate row in {row_output_path}: "
+                                f"{table_key}"
+                            )
+                        continue
+                    completed_rows[table_key] = row
+                    completed_tables.add(table_key)
         else:
             row_output_path.write_text("", encoding="utf-8")
     if args.run_audit:
-        audited_tables = imported_nonperm_tables
+        if args.only_table_index is not None:
+            audited_table_list = []
+            for table_index in args.only_table_index:
+                if table_index < 0 or table_index >= len(imported_nonperm_tables):
+                    raise SystemExit(f"table index out of range: {table_index}")
+                audited_table_list.append(imported_nonperm_tables[table_index])
+            audited_tables = tuple(audited_table_list)
+        else:
+            if args.start_index < 0 or args.start_index > len(imported_nonperm_tables):
+                raise SystemExit(f"start index out of range: {args.start_index}")
+            audited_tables = imported_nonperm_tables[args.start_index :]
         if args.max_tables is not None:
             audited_tables = audited_tables[: args.max_tables]
+        new_rows = 0
         for table in audited_tables:
             if table in completed_tables:
                 continue
@@ -245,11 +287,18 @@ def main() -> None:
                 state_limit=args.state_limit,
                 method=args.method,
             )
-            rows.append(row)
+            completed_rows[table] = row
+            completed_tables.add(table)
+            new_rows += 1
             if row_output_path is not None:
                 with row_output_path.open("a", encoding="utf-8") as handle:
                     handle.write(json.dumps(row, sort_keys=True) + "\n")
                     handle.flush()
+            if (
+                args.stop_after_new_rows is not None
+                and new_rows >= args.stop_after_new_rows
+            ):
+                break
 
     detector_index = [
         {
@@ -268,6 +317,11 @@ def main() -> None:
             ),
         }
         for table in imported_nonperm_tables
+    ]
+    rows = [
+        completed_rows[table]
+        for table in imported_nonperm_tables
+        if table in completed_rows
     ]
     output = {
         "kind": "nonperm3_width3_componentwise_cross_effect_audit_v1",

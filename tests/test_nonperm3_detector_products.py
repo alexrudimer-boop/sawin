@@ -16,6 +16,7 @@ from ybe_domination.nonperm3_detector_products import (
     normalize_rack_table,
     verify_contextual_detector_record,
     verify_width3_audit_payload,
+    width3_complete_audit_row_failures,
 )
 
 
@@ -178,6 +179,90 @@ class NonPerm3DetectorProductTests(unittest.TestCase):
         failures = verify_width3_audit_payload(bad_payload)
         self.assertTrue(
             any("quotient_size arithmetic mismatch" in failure for failure in failures)
+        )
+
+    def test_width3_complete_audit_rejects_duplicate_and_missing_rows(self):
+        root = Path(__file__).resolve().parents[1]
+        payload = json.loads(
+            (
+                root
+                / "proofs"
+                / "nonperm3_width3_arity4_cross_effect_audit_stabilizer.json"
+            ).read_text(encoding="utf-8")
+        )
+        bad_payload = deepcopy(payload)
+        bad_payload["rows"][1] = deepcopy(bad_payload["rows"][0])
+
+        structural_failures = verify_width3_audit_payload(bad_payload)
+        complete_failures = width3_complete_audit_row_failures(bad_payload)
+
+        self.assertTrue(
+            any("duplicate row ybe_table" in failure for failure in structural_failures)
+        )
+        self.assertTrue(
+            any("duplicate ybe_table entries" in failure for failure in complete_failures)
+        )
+        self.assertTrue(
+            any("row tables do not match detector_index" in failure for failure in complete_failures)
+        )
+
+    def test_width3_verifier_recomputes_empty_detector_reason(self):
+        root = Path(__file__).resolve().parents[1]
+        payload = json.loads(
+            (root / "proofs" / "nonperm3_detector_product_full_import_audit.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        bad_payload = deepcopy(payload)
+        bad_payload["detector_index"][1]["detectors"] = []
+        bad_payload["detector_index"][1][
+            "no_detector_reason"
+        ] = "no_arity2_or_arity3_principal_bad_endpoint_pairs"
+
+        failures = verify_width3_audit_payload(bad_payload)
+
+        self.assertTrue(
+            any("empty detector reason is false" in failure for failure in failures)
+        )
+
+    def test_width3_verifier_recomputes_empty_detector_row(self):
+        root = Path(__file__).resolve().parents[1]
+        payload = json.loads(
+            (root / "proofs" / "nonperm3_detector_product_full_import_audit.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        empty_table = payload["detector_index"][0]["ybe_table"]
+        payload["rows"] = [
+            {
+                "ybe_table": empty_table,
+                "detector_component_count": 0,
+                "detector_component_sizes": [],
+                "bound": 3,
+                "n": 4,
+                "arity": 4,
+                "joint_image_size": 1,
+                "kernel_image_size": 1,
+                "parabolic_image_size": 1,
+                "quotient_size": 1,
+                "quotient_nontrivial": False,
+                "seed_count": 0,
+                "first_witness_word": None,
+                "first_moved_tuple": None,
+                "first_moved_tuple_image": None,
+                "truncated": False,
+            }
+        ]
+        payload["row_count"] = 1
+        payload["run_audit"] = True
+
+        self.assertEqual(verify_width3_audit_payload(payload), tuple())
+
+        bad_payload = deepcopy(payload)
+        bad_payload["rows"][0]["joint_image_size"] = 2
+        failures = verify_width3_audit_payload(bad_payload)
+        self.assertTrue(
+            any("empty detector row has joint_image_size=2" in failure for failure in failures)
         )
 
 
