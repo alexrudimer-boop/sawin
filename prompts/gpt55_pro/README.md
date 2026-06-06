@@ -13,8 +13,10 @@ Workflow:
    Use `_answered.md` and `_partially_answered.md` once a response or local
    computation has settled that prompt.  Use `_superseded.md` for stale prompts
    that should not be answered now.
-4. Keep prompts self-contained: assume GPT-5.5 Pro has no access to this repo.
-5. After a Pro answer is acted on, record any resulting code/proof artifact in
+4. When the next handoff contains the two-track Pro workflow, label the two
+   prompt bodies exactly `computational_asknow` and `theoretical_asknow`.
+5. Keep prompts self-contained: assume GPT-5.5 Pro has no access to this repo.
+6. After a Pro answer is acted on, record any resulting code/proof artifact in
    the normal `proofs/`, `src/`, `tests/`, or `tools/` locations.
 
 These files are prompts only.  They are not proof artifacts unless separately

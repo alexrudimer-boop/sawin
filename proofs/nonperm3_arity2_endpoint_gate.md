@@ -30,9 +30,33 @@ Reported certificate SHA256:
 9bb0e62c6073d88410fb1b6d846992101aa1ffb396d95b92b00840b55d87c24c
 ```
 
-The linked full certificate/verifier are not present in the local workspace at
-this checkpoint. This note records the reported compact theorem and verifies
-representative certificate mechanics in repo tests.
+The original linked full certificate/verifier were not present in the local
+workspace at this checkpoint.  A deterministic local reconstruction has now
+generated the full schema certificate:
+
+```text
+proofs/nonperm3_arity2_endpoint_gate_full_schema_certificate.json
+```
+
+It contains 930 deduplicated contextual detector schema records covering all
+2064 arity-2 principal bad endpoint pairs.  It passes:
+
+```text
+python tools/verify_contextual_detector_schema_certificate.py \
+  proofs/nonperm3_arity2_endpoint_gate_full_schema_certificate.json \
+  --require-records
+
+OK contextual detector schema verification
+contextual_detector_records 930
+verified_contextual_detector_records 930
+failed_contextual_detector_records 0
+```
+
+The reconstructed canonical SHA256 stored in that JSON is:
+
+```text
+313ef4f32ddfcef401af0b231da9fea445734a5b99c2df776f23d1318017df83
+```
 
 ## Exact bounded theorem
 

@@ -7,14 +7,20 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from ybe_domination.nonperm3_endpoint_detector_basis import (
     canonical_partitions_3,
+    detector_schema_to_record,
+    first_detector_for_candidate,
     is_associative_monoid,
     nonpermutation_size3_solutions,
     principal_bad_endpoint_candidates,
     principal_bad_endpoint_candidates_for_nonperm3,
+    reconstruct_detector_basis_payload,
     solution_from_flat_table,
     truncated_structure_monoid_length_1,
     truncated_structure_monoid_length_2,
+    verify_detector_basis_payload,
+    verify_detector_schema_record,
 )
+from ybe_domination.nonperm3_detector_products import verify_contextual_detector_record
 from ybe_domination.small_search import all_bijection_solutions, is_permutation_solution_form
 
 
@@ -79,6 +85,53 @@ class NonPerm3EndpointDetectorBasisTests(unittest.TestCase):
                 for row in rows
             )
         )
+
+    def test_exports_and_verifies_first_found_detector_schema(self):
+        solution = solution_from_flat_table((0, 3, 6, 1, 4, 7, 5, 2, 8))
+        candidate = next(
+            row
+            for row in principal_bad_endpoint_candidates(
+                solution,
+                solution_index=5,
+                arity=3,
+            )
+            if row.partition == (0, 0, 0)
+            and row.e_word == (0, 0, 2)
+            and row.e_position == 2
+            and row.eprime_word == (2, 0, 0)
+            and row.eprime_position == 0
+        )
+
+        schema = first_detector_for_candidate(
+            solution,
+            candidate,
+            monoid_family_names=(
+                "truncated_structure_monoid_length_1",
+                "truncated_structure_monoid_length_2",
+            ),
+            qmax=5,
+            source_batch="test_batch",
+        )
+
+        self.assertIsNotNone(schema)
+        assert schema is not None
+        record = detector_schema_to_record(schema)
+        self.assertEqual(verify_detector_schema_record(record), tuple())
+        self.assertTrue(verify_contextual_detector_record(record).ok)
+        self.assertNotEqual(record["endpoint_values"][0], record["endpoint_values"][1])
+
+    def test_reconstruction_payload_verifier_accepts_development_probe(self):
+        payload = reconstruct_detector_basis_payload(
+            arity=2,
+            qmax=2,
+            monoid_family_names=("truncated_structure_monoid_length_1",),
+            enforce_checkpoint_counts=False,
+        )
+
+        self.assertEqual(verify_detector_basis_payload(payload), tuple())
+        self.assertEqual(payload["kind"], "nonperm3_endpoint_detector_basis_reconstruction_v1")
+        self.assertLess(payload["positive_detector_coverages"], 2064)
+        self.assertGreater(payload["unresolved_obstruction_candidates"], 0)
 
 
 if __name__ == "__main__":

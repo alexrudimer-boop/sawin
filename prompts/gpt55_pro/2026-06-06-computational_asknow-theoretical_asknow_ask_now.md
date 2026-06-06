@@ -1,4 +1,4 @@
-computational
+computational_asknow
 
 We are working on Will Sawin's MathOverflow problem:
 
@@ -70,6 +70,21 @@ Current finite-computational frontier:
        tests.test_nonperm3_arity3_checkpoint \
        tests.test_nonperm3_detector_products
 
+   The full arity-2 schema certificate has now been reconstructed locally:
+
+     proofs/nonperm3_arity2_endpoint_gate_full_schema_certificate.json
+
+   It contains 930 deduplicated contextual detector schema records covering
+   all 2064 arity-2 principal bad endpoint pairs.  It passes:
+
+     python tools/verify_contextual_detector_schema_certificate.py \
+       proofs/nonperm3_arity2_endpoint_gate_full_schema_certificate.json \
+       --require-records
+
+   The reconstructed canonical SHA256 is:
+
+     313ef4f32ddfcef401af0b231da9fea445734a5b99c2df776f23d1318017df83
+
 3. The branch also has detector-product import and contextual schema
    verification machinery:
 
@@ -86,29 +101,23 @@ Current finite-computational frontier:
 
 Next computational target:
 
-Complete the deterministic detector schema reconstruction/export layer without
-overclaiming its mathematical status.  Specifically, inspect the branch and
-give patch-level guidance or code for:
+Use the implemented deterministic detector schema reconstruction/export layer
+to finish the remaining arity-3 schema certificates, without overclaiming
+their mathematical status.  Specifically, inspect the branch and give
+patch-level guidance or code for:
 
 1. `src/ybe_domination/nonperm3_endpoint_detector_basis.py`
-   - dataclasses for exported detector schemas;
-   - deterministic candidate search over q, monoid family, and rack table;
-   - q=2 fast path reuse;
-   - MRV or another deterministic improvement to `_assignment_for_fixed_rack`
-     if needed;
-   - schema deduplication while retaining all covered candidate IDs.
+   - audit whether the current search/deduplication/export code is sound;
+   - identify any reason its deterministic first-found schema basis would fail
+     to reproduce the archived arity-3 q<=4 counts;
+   - propose concrete speedups if the arity-3 q<=4 or q=5-only runs are too
+     slow.
 
 2. `tools/reconstruct_nonperm3_endpoint_detector_basis.py`
-   - CLI arguments:
-       --arity
-       --qmax
-       --monoid-family
-       --baseline
-       --emit-new-q5-only
-       --output
-   - JSON export with full rack table, monoid quotient, assignment by class,
-     endpoint classes, endpoint values, example endpoint pair, covered
-     candidate IDs, and canonical reconstructed SHA.
+   - audit whether the CLI emits enough information for independent schema
+     verification and detector-product import;
+   - suggest any missing progress/resume controls needed for the arity-3
+     q<=4 run.
 
 3. Verification:
    - rebuild every contextual presentation from exported schema data;
@@ -116,10 +125,7 @@ give patch-level guidance or code for:
    - hard-fail if compact checkpoint counts do not match:
 
      arity 2:
-       bad endpoint pairs 2064
-       positive detector coverages 2064
-       by rack size q2=1200, q3=864
-       unresolved 0
+       already reconstructed locally; audit only for consistency
 
      arity 3 q<=4:
        bad endpoint pairs 37692
@@ -164,7 +170,7 @@ Decision rule:
 Return theorem/proof, finite evidence, heuristic, and unsupported claims in
 separate categories.
 
-theoretical
+theoretical_asknow
 
 We are working on Will Sawin's MathOverflow problem:
 

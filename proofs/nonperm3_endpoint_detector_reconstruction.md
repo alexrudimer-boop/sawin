@@ -84,26 +84,80 @@ The first q<=4 unresolved arity-3 pair for
 namely `(0,0,2)@2` versus `(2,0,0)@0` under partition `(0,0,0)`,
 is present in the reconstructed candidate basis.
 
+## Full arity-2 schema certificate
+
+The deterministic schema reconstruction/export layer is now implemented in:
+
+```text
+src/ybe_domination/nonperm3_endpoint_detector_basis.py
+tools/reconstruct_nonperm3_endpoint_detector_basis.py
+```
+
+It exports full contextual detector schema records with:
+
+- the target rack table;
+- the finite monoid quotient;
+- `assignment_by_class`;
+- raw `alpha` on `M x X x M`;
+- endpoint classes and endpoint values;
+- an example endpoint pair;
+- all covered candidate IDs for each deduplicated schema.
+
+The full non-permutation size-three arity-2 schema certificate has been
+regenerated locally:
+
+```text
+proofs/nonperm3_arity2_endpoint_gate_full_schema_certificate.json
+```
+
+Generation command:
+
+```text
+python tools/reconstruct_nonperm3_endpoint_detector_basis.py \
+  --arity 2 \
+  --qmax 3 \
+  --monoid-family truncated_structure_monoid_length_1 \
+  --output proofs/nonperm3_arity2_endpoint_gate_full_schema_certificate.json
+```
+
+Verifier output:
+
+```text
+OK nonperm3 endpoint detector basis reconstruction
+positive_detector_schemas 930
+positive_detector_coverages 2064
+unresolved_obstruction_candidates 0
+reconstructed_sha256 313ef4f32ddfcef401af0b231da9fea445734a5b99c2df776f23d1318017df83
+```
+
+The generated full schema certificate also passes the contextual detector
+schema verifier:
+
+```text
+python tools/verify_contextual_detector_schema_certificate.py \
+  proofs/nonperm3_arity2_endpoint_gate_full_schema_certificate.json \
+  --require-records
+
+OK contextual detector schema verification
+contextual_detector_records 930
+verified_contextual_detector_records 930
+failed_contextual_detector_records 0
+```
+
 ## Remaining computational work
 
-The full detector schema basis is not yet reconstructed.  The next
-implementation target is:
+The full arity-2 detector schema basis is reconstructed.  The remaining
+detector-basis targets are:
 
-1. Build deterministic schema search over reconstructed candidates, requested
-   monoid families, and labelled racks up to qmax.
-2. Export one deterministic first-found detector per covered candidate.
-3. Deduplicate identical contextual schemas while preserving all covered
-   candidate IDs.
-4. Verify exported schemas by rebuilding the contextual presentation and
-   checking the rack assignment and endpoint separation.
-5. Generate the full arity-2, arity-3 q<=4, and arity-3 q=5-only schema
-   certificates.
-6. Run the componentwise width-3 arity-4 cross-effect audit against the
+1. Generate and verify the full arity-3 q<=4 schema certificate.
+2. Generate and verify the arity-3 q=5-only schema certificate over the q<=4
+   unresolved baseline.
+3. Run the componentwise width-3 arity-4 cross-effect audit against the
    resulting detector product index.
 
-Until those certificates exist and the arity-4 audit runs, the local branch has
-only reconstructed the finite endpoint-candidate basis, not the detector
-product needed for `C^{X,Y_X}_{3,4}`.
+Until the arity-3 certificates exist and the arity-4 audit runs, the local
+branch still does not have the full detector product needed for
+`C^{X,Y_X}_{3,4}`.
 
 ## Verification
 
@@ -116,6 +170,6 @@ python -m unittest \
   tests.test_nonperm3_arity3_checkpoint \
   tests.test_nonperm3_detector_products
 
-Ran 24 tests in 39.310s
+Ran 26 tests in 49.219s
 OK
 ```

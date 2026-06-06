@@ -392,23 +392,42 @@ def _assignment_for_fixed_rack(
     if not _propagate_assignment(table, presentation.equations, base):
         return None
 
-    variables = []
-    seen = set()
-    for equation in presentation.equations:
+    variable_equations: list[list[int]] = [
+        [] for _item in range(presentation.class_count)
+    ]
+    for equation_index, equation in enumerate(presentation.equations):
         for variable in equation:
-            if variable not in seen:
-                seen.add(variable)
-                variables.append(variable)
-    for variable in range(presentation.class_count):
-        if variable not in seen:
-            variables.append(variable)
+            variable_equations[variable].append(equation_index)
+
+    def choose_unassigned_variable(current: list[int]) -> int | None:
+        best_variable = None
+        best_key = None
+        for variable in range(presentation.class_count):
+            if current[variable] >= 0:
+                continue
+            active_equations = sum(
+                1
+                for equation_index in variable_equations[variable]
+                if any(
+                    current[item] < 0
+                    for item in presentation.equations[equation_index]
+                )
+            )
+            key = (
+                active_equations,
+                len(variable_equations[variable]),
+                -variable,
+            )
+            if best_key is None or key > best_key:
+                best_key = key
+                best_variable = variable
+        return best_variable
 
     def search(current: list[int]) -> tuple[int, ...] | None:
         if not _propagate_assignment(table, presentation.equations, current):
             return None
-        try:
-            variable = next(item for item in variables if current[item] < 0)
-        except StopIteration:
+        variable = choose_unassigned_variable(current)
+        if variable is None:
             return tuple(current)
         for value in range(q):
             candidate = list(current)
