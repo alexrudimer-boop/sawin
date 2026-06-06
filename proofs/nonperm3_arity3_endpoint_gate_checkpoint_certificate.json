@@ -1,0 +1,204 @@
+{
+  "type": "nonperm3_arity3_q4_checkpoint",
+  "classification": "positive_detector_checkpoint_with_unresolved_obstruction_candidates",
+  "reported_sha256": "bdd034c1c1fd665054818b58a76249bc009a0532dec33fea404063d61a82fee8",
+  "bounds": {
+    "X_size": 3,
+    "branch": "non-permutation-form YBE tables only",
+    "arity": 3,
+    "rack_size_max_in_detector_catalog": 4,
+    "monoid_families": [
+      "truncated_structure_monoid_length_1",
+      "truncated_structure_monoid_length_2"
+    ]
+  },
+  "enumeration": {
+    "all_bijective_ybe_tables": 73,
+    "permutation_form_tables": 18,
+    "nonpermutation_ybe_tables": 55,
+    "arity3_bad_endpoint_pairs": 37692,
+    "positive_detector_coverages": 37476,
+    "positive_detector_schemas": 320,
+    "unresolved_obstruction_candidates": 216
+  },
+  "by_rack_size": {
+    "q2": 16416,
+    "q3": 20736,
+    "q4": 324
+  },
+  "by_monoid": {
+    "truncated_structure_monoid_length_1": 15309,
+    "truncated_structure_monoid_length_2": 22167
+  },
+  "monoid_families_detail": {
+    "truncated_structure_monoid_length_1": {
+      "size": 5,
+      "identity": 0,
+      "element_names": [
+        "e",
+        "a0",
+        "a1",
+        "a2",
+        "z"
+      ],
+      "generator_images": [
+        1,
+        2,
+        3
+      ],
+      "mul": [
+        [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        [
+          1,
+          4,
+          4,
+          4,
+          4
+        ],
+        [
+          2,
+          4,
+          4,
+          4,
+          4
+        ],
+        [
+          3,
+          4,
+          4,
+          4,
+          4
+        ],
+        [
+          4,
+          4,
+          4,
+          4,
+          4
+        ]
+      ]
+    },
+    "truncated_structure_monoid_length_2": {
+      "description": "For each YBE table, keep empty word, length-1 words, length-2 words modulo xy=x'y' when r(x,y)=(x',y'), and one absorbing element for words of length >=3.",
+      "reported_size_range": [
+        8,
+        14
+      ]
+    }
+  },
+  "rack_catalog": {
+    "q2": 2,
+    "q3": 13,
+    "q4": 114
+  },
+  "first_unresolved_candidate": {
+    "solution_index": 5,
+    "ybe_table": [
+      0,
+      3,
+      6,
+      1,
+      4,
+      7,
+      5,
+      2,
+      8
+    ],
+    "partition": [
+      0,
+      0,
+      0
+    ],
+    "arity": 3,
+    "braid_word": [
+      1,
+      0
+    ],
+    "endpoint_pair": {
+      "e": {
+        "word": [
+          0,
+          0,
+          2
+        ],
+        "position": 2,
+        "prefix": [
+          0,
+          0
+        ],
+        "letter": 2,
+        "suffix": []
+      },
+      "eprime": {
+        "word": [
+          2,
+          0,
+          0
+        ],
+        "position": 0,
+        "prefix": [],
+        "letter": 2,
+        "suffix": [
+          0,
+          0
+        ]
+      }
+    },
+    "known_detector_values": [
+      {
+        "detector_id": "D4",
+        "rack_size": 3,
+        "monoid": "truncated_structure_monoid_length_1",
+        "endpoint_values": [
+          2,
+          2
+        ]
+      },
+      {
+        "detector_id": "D5",
+        "rack_size": 2,
+        "monoid": "truncated_structure_monoid_length_1",
+        "endpoint_values": [
+          1,
+          1
+        ]
+      },
+      {
+        "detector_id": "D6",
+        "rack_size": 3,
+        "monoid": "truncated_structure_monoid_length_2",
+        "endpoint_values": [
+          0,
+          0
+        ]
+      },
+      {
+        "detector_id": "D7",
+        "rack_size": 3,
+        "monoid": "truncated_structure_monoid_length_2",
+        "endpoint_values": [
+          1,
+          1
+        ]
+      }
+    ],
+    "classification": "unresolved_candidate_not_bounded_negative_not_residual_collapse"
+  },
+  "unresolved_distribution": {
+    "tables": 12,
+    "unresolved_per_table": 18,
+    "by_partition": {
+      "[0,0,0]": 108,
+      "[0,0,1]": 36,
+      "[0,1,0]": 36,
+      "[0,1,1]": 36,
+      "[0,1,2]": 0
+    }
+  }
+}
