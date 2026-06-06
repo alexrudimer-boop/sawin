@@ -6,6 +6,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from ybe_domination.nonperm3_detector_products import (
     detector_components_by_ybe_table,
+    detector_index_by_ybe_table,
     extract_detector_schema_records,
     nonpermutation_size3_flat_tables,
     normalize_rack_table,
@@ -44,8 +45,12 @@ class NonPerm3DetectorProductTests(unittest.TestCase):
 
         records = extract_detector_schema_records(payload)
         grouped = detector_components_by_ybe_table((payload,))
+        detector_index = detector_index_by_ybe_table((payload,))
 
         self.assertEqual(len(records), 3)
+        self.assertEqual(records[0].source_schema_ids, ("D1",))
+        self.assertEqual(records[1].source_schema_ids, ("D1-duplicate-target",))
+        self.assertEqual(records[2].source_schema_ids, ("D2",))
         self.assertEqual(len(grouped), 1)
         self.assertEqual(
             grouped[(0, 1, 6, 3, 4, 7, 2, 5, 8)],
@@ -53,6 +58,13 @@ class NonPerm3DetectorProductTests(unittest.TestCase):
                 ((0, 1), (0, 1)),
                 ((0, 1, 2), (0, 1, 2), (0, 1, 2)),
             ),
+        )
+        self.assertEqual(
+            tuple(
+                component.source_schema_ids
+                for component in detector_index[(0, 1, 6, 3, 4, 7, 2, 5, 8)]
+            ),
+            (("D1", "D1-duplicate-target"), ("D2",)),
         )
 
     def test_normalize_flat_rack_table(self):

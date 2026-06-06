@@ -18,6 +18,15 @@ class DetectorSchemaRecord:
 
     ybe_table: FlatYbeTable
     rack_table: RackTable
+    source_schema_ids: tuple[str, ...] = tuple()
+
+
+@dataclass(frozen=True)
+class DetectorComponentRecord:
+    """One distinct detector rack component for a fixed YBE table."""
+
+    rack_table: RackTable
+    source_schema_ids: tuple[str, ...]
 
 
 def flat_table_from_solution(solution: FiniteBraidedSet) -> FlatYbeTable:
@@ -119,6 +128,27 @@ def _rack_table_from_detector_record(record: dict[str, Any]) -> RackTable | None
     return None
 
 
+def _schema_ids_from_detector_record(record: dict[str, Any]) -> tuple[str, ...]:
+    ids = []
+    for key in ("source_schema_ids", "schema_ids"):
+        value = record.get(key)
+        if isinstance(value, (list, tuple)):
+            ids.extend(str(entry) for entry in value)
+        elif value is not None:
+            ids.append(str(value))
+    for key in ("id", "schema_id", "detector_id", "name"):
+        if key in record:
+            ids.append(str(record[key]))
+    deduped = []
+    seen = set()
+    for schema_id in ids:
+        if schema_id in seen:
+            continue
+        seen.add(schema_id)
+        deduped.append(schema_id)
+    return tuple(deduped)
+
+
 def extract_detector_schema_records(payload: Any) -> tuple[DetectorSchemaRecord, ...]:
     """Extract schema-like records containing both a YBE table and rack table.
 
@@ -140,6 +170,7 @@ def extract_detector_schema_records(payload: Any) -> tuple[DetectorSchemaRecord,
                         DetectorSchemaRecord(
                             ybe_table=normalize_flat_ybe_table(value["ybe_table"]),
                             rack_table=rack_table,
+                            source_schema_ids=_schema_ids_from_detector_record(value),
                         )
                     )
             for child in value.values():
@@ -157,13 +188,32 @@ def detector_components_by_ybe_table(
 ) -> dict[FlatYbeTable, tuple[RackTable, ...]]:
     """Return distinct target rack components grouped by YBE table."""
 
-    grouped: dict[FlatYbeTable, list[RackTable]] = {}
-    seen: dict[FlatYbeTable, set[RackTable]] = {}
+    return {
+        table: tuple(component.rack_table for component in components)
+        for table, components in detector_index_by_ybe_table(payloads).items()
+    }
+
+
+def detector_index_by_ybe_table(
+    payloads: Iterable[Any],
+) -> dict[FlatYbeTable, tuple[DetectorComponentRecord, ...]]:
+    """Return distinct detector rack components plus source schema IDs."""
+
+    grouped: dict[FlatYbeTable, dict[RackTable, list[str]]] = {}
     for payload in payloads:
         for record in extract_detector_schema_records(payload):
-            table_seen = seen.setdefault(record.ybe_table, set())
-            if record.rack_table in table_seen:
-                continue
-            table_seen.add(record.rack_table)
-            grouped.setdefault(record.ybe_table, []).append(record.rack_table)
-    return {table: tuple(racks) for table, racks in grouped.items()}
+            table_group = grouped.setdefault(record.ybe_table, {})
+            source_ids = table_group.setdefault(record.rack_table, [])
+            for schema_id in record.source_schema_ids:
+                if schema_id not in source_ids:
+                    source_ids.append(schema_id)
+    return {
+        table: tuple(
+            DetectorComponentRecord(
+                rack_table=rack_table,
+                source_schema_ids=tuple(source_ids),
+            )
+            for rack_table, source_ids in components.items()
+        )
+        for table, components in grouped.items()
+    }

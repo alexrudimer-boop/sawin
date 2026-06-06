@@ -25,7 +25,7 @@ sys.path.insert(0, str(ROOT / "src"))
 
 from ybe_domination import componentwise_realized_parabolic_cross_effect_audit  # noqa: E402
 from ybe_domination.nonperm3_detector_products import (  # noqa: E402
-    detector_components_by_ybe_table,
+    detector_index_by_ybe_table,
     extract_detector_schema_records,
     nonpermutation_size3_flat_tables,
     rack_from_table,
@@ -96,7 +96,11 @@ def main() -> None:
         for payload in payloads
         for record in extract_detector_schema_records(payload)
     )
-    components_by_table = detector_components_by_ybe_table(payloads)
+    detector_index_by_table = detector_index_by_ybe_table(payloads)
+    components_by_table = {
+        table: tuple(component.rack_table for component in components)
+        for table, components in detector_index_by_table.items()
+    }
     nonperm_tables = nonpermutation_size3_flat_tables()
     nonperm_table_set = set(nonperm_tables)
     imported_nonperm_tables = tuple(
@@ -125,8 +129,23 @@ def main() -> None:
                 )
             )
 
+    detector_index = [
+        {
+            "ybe_table": list(table),
+            "detectors": [
+                {
+                    "rack_table": [list(row) for row in component.rack_table],
+                    "source_schema_ids": list(component.source_schema_ids),
+                }
+                for component in detector_index_by_table[table]
+            ],
+        }
+        for table in imported_nonperm_tables
+    ]
     output = {
+        "kind": "nonperm3_width3_componentwise_cross_effect_audit_v1",
         "type": "nonperm3_detector_product_cross_effect_audit",
+        "branch": "nonpermutation_size3",
         "certificate_paths": [str(path) for path in certificate_paths],
         "bound": args.bound,
         "arity": args.arity,
@@ -139,6 +158,7 @@ def main() -> None:
         "extra_imported_table_count": len(extra_tables),
         "extra_imported_ybe_tables": [list(table) for table in extra_tables],
         "incomplete_detector_basis": bool(missing_tables),
+        "detector_index": detector_index,
         "run_audit": args.run_audit,
         "rows": rows,
     }

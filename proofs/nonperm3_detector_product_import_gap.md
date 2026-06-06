@@ -70,9 +70,22 @@ rack
 rack_table
 ```
 
-The helper groups distinct target rack tables by YBE table.  With
-`--run-audit`, it converts those components into the componentwise product
-detector and calls:
+The helper groups distinct target rack tables by YBE table.  Duplicate target
+racks for the same table are merged, while any available schema IDs are
+retained in `source_schema_ids`.  The output includes:
+
+```text
+kind: nonperm3_width3_componentwise_cross_effect_audit_v1
+branch: nonpermutation_size3
+detector_index:
+  - ybe_table
+    detectors:
+      - rack_table
+        source_schema_ids
+```
+
+With `--run-audit`, it converts those components into the componentwise
+product detector and calls:
 
 ```text
 ybe_domination.componentwise_realized_parabolic_cross_effect_audit
@@ -97,6 +110,7 @@ python tools/run_nonperm3_detector_product_cross_effect_audit.py \
 produces:
 
 ```text
+kind: nonperm3_width3_componentwise_cross_effect_audit_v1
 schema_like_detector_records: 1
 nonpermutation_ybe_tables: 55
 tables_with_detector_components: 1

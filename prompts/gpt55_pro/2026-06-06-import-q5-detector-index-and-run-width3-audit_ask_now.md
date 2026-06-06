@@ -17,8 +17,17 @@ that for all n:
 
   ker rho_{Y,n} <= ker rho_{X,n}.
 
-Current workspace branch:
-  alexrudimer-boop/sawin, branch codex/atom-inner-row-lift
+You should assume you do not have access to my local workspace.  You do have
+the GitHub repository/branch and should download or inspect that branch before
+making repo-specific claims:
+
+  https://github.com/alexrudimer-boop/sawin/tree/codex/atom-inner-row-lift
+
+All file paths below are repo-relative after checking out:
+
+  git clone https://github.com/alexrudimer-boop/sawin.git
+  cd sawin
+  git checkout codex/atom-inner-row-lift
 
 Current local state:
 
@@ -54,7 +63,9 @@ Current local state:
 
      ybe_domination.componentwise_realized_parabolic_cross_effect_audit
 
-   on each imported detector product.
+   on each imported detector product.  It also emits a detector_index with
+   rack_table and source_schema_ids for each distinct target rack component,
+   so the detector product can be independently traced to imported schemas.
 
 4. Running the importer against the current compact local artifacts gives:
 

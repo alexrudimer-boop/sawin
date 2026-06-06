@@ -1,13 +1,45 @@
 {
   "arity": 4,
   "bound": 3,
+  "branch": "nonpermutation_size3",
   "certificate_paths": [
     "proofs\\nonperm3_arity2_endpoint_gate_certificate.json",
     "proofs\\nonperm3_arity3_endpoint_gate_checkpoint_certificate.json"
   ],
+  "detector_index": [
+    {
+      "detectors": [
+        {
+          "rack_table": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              1
+            ]
+          ],
+          "source_schema_ids": []
+        }
+      ],
+      "ybe_table": [
+        0,
+        1,
+        6,
+        3,
+        4,
+        7,
+        2,
+        5,
+        8
+      ]
+    }
+  ],
   "extra_imported_table_count": 0,
   "extra_imported_ybe_tables": [],
   "incomplete_detector_basis": true,
+  "kind": "nonperm3_width3_componentwise_cross_effect_audit_v1",
   "missing_table_count": 54,
   "missing_ybe_tables": [
     [
