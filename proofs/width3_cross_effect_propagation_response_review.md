@@ -95,7 +95,7 @@ The full-table wrapper
 
 ## Next prompt
 
-The next prompt is now:
+Historical next prompt at the time of this review:
 
 ```text
 prompts/gpt55_pro/2026-06-06-import-q5-detector-index-and-run-width3-audit_ask_now.md
@@ -104,3 +104,39 @@ prompts/gpt55_pro/2026-06-06-import-q5-detector-index-and-run-width3-audit_ask_n
 It asks for the exact import/reconstruction path for the full q=5 detector
 schema basis and the subsequent 55-row arity-4 componentwise cross-effect
 audit.
+
+## Later update
+
+The artifact/import gap identified in this review has since been closed by
+deterministic local reconstruction:
+
+```text
+proofs/nonperm3_arity2_endpoint_gate_full_schema_certificate.json
+proofs/nonperm3_arity3_endpoint_gate_q4_full_schema_certificate.json
+proofs/nonperm3_arity3_q5_resolution_certificate.json
+```
+
+The complete detector-product index is:
+
+```text
+proofs/nonperm3_detector_product_full_import_audit.json
+```
+
+The arity-4, bound-3 product audit has also been completed by the stabilizer
+method:
+
+```text
+proofs/nonperm3_width3_arity4_cross_effect_audit_stabilizer.json
+```
+
+All 55 rows are untruncated, all have `quotient_size = 1`, and all have
+`kernel_image_size = 1`.  Therefore the first finite obstruction
+`C^{X,Y_X}_{3,4}` is absent for the current detector products.  This later
+finite computation does not prove the all-arity width-3 propagation lemma.
+
+The active prompts are now:
+
+```text
+prompts/gpt55_pro/2026-06-06-computational_asknow.md
+prompts/gpt55_pro/2026-06-06-theoretical_asknow.md
+```

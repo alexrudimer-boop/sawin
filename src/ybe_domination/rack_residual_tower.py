@@ -950,6 +950,48 @@ def _normal_closure_in_componentwise_joint_image(
     )
 
 
+def _subgroup_generated_by_permutations(
+    identity: Permutation,
+    generators: Iterable[Permutation],
+    state_limit: int,
+) -> Tuple[set[Permutation], bool]:
+    generator_tuple = tuple(generator for generator in generators if generator != identity)
+    subgroup = {identity}
+    queue = deque((identity,))
+    while queue:
+        state = queue.popleft()
+        for generator in generator_tuple:
+            next_state = _compose_permutations(generator, state)
+            if next_state in subgroup:
+                continue
+            subgroup.add(next_state)
+            if len(subgroup) > state_limit:
+                return subgroup, True
+            queue.append(next_state)
+    return subgroup, False
+
+
+def _normal_closure_in_permutation_group(
+    identity: Permutation,
+    group_elements: Iterable[Permutation],
+    seeds: Iterable[Permutation],
+    state_limit: int,
+) -> Tuple[set[Permutation], bool]:
+    seed_tuple = tuple(seed for seed in seeds if seed != identity)
+    if not seed_tuple:
+        return {identity}, False
+    conjugates = []
+    for group_element in group_elements:
+        inverse = _invert_permutation(group_element)
+        for seed in seed_tuple:
+            conjugates.append(
+                _compose_permutations(_compose_permutations(group_element, seed), inverse)
+            )
+            if len(conjugates) > state_limit:
+                return set((identity,)), True
+    return _subgroup_generated_by_permutations(identity, conjugates, state_limit)
+
+
 def realized_parabolic_cross_effect_audit(
     solution: FiniteBraidedSet,
     detector: FiniteBraidedSet,
@@ -1090,6 +1132,257 @@ def realized_parabolic_cross_effect_audit(
         quotient_nontrivial=first_witness_pair is not None,
         seed_count=len(seeds),
         first_witness_word=first_witness_word,
+        first_moved_tuple=moved,
+        first_moved_tuple_image=moved_image,
+        truncated=False,
+    )
+
+
+def _componentwise_stabilizer_kernel_generators(
+    solution: FiniteBraidedSet,
+    detectors: Tuple[FiniteBraidedSet, ...],
+    n: int,
+) -> Tuple[int, int, Tuple[Permutation, ...]]:
+    """Return the X-restrictions of detector-kernel generators.
+
+    The generators are computed as a pointwise stabilizer in the disjoint-union
+    permutation action on all detector components and the X component.  Fixing
+    every detector point is exactly the kernel of the detector projection, and
+    restricting that stabilizer to the X block gives ``rho^X_n(K^Y_n)``.
+    """
+
+    try:
+        from sympy.combinatorics import Permutation as SympyPermutation
+        from sympy.combinatorics import PermutationGroup
+    except ImportError as exc:  # pragma: no cover - depends on environment
+        raise RuntimeError(
+            "componentwise stabilizer cross-effect audit requires sympy"
+        ) from exc
+
+    alphabet = tuple(i for generator in range(1, n) for i in (generator, -generator))
+    detector_degrees = tuple(len(detector.elements) ** n for detector in detectors)
+    solution_degree = len(solution.elements) ** n
+    component_degrees = detector_degrees + (solution_degree,)
+    offsets = []
+    total_degree = 0
+    for degree in component_degrees:
+        offsets.append(total_degree)
+        total_degree += degree
+    solution_offset = offsets[-1]
+    detector_total_degree = solution_offset
+
+    def embed_components(components: Tuple[Permutation, ...]):
+        if len(components) != len(component_degrees):
+            raise ValueError("component count mismatch")
+        array = list(range(total_degree))
+        for offset, component in zip(offsets, components):
+            for index, image in enumerate(component):
+                array[offset + index] = offset + image
+        return SympyPermutation(array)
+
+    if not alphabet:
+        return 1, 1, tuple()
+
+    generators = []
+    for signed in alphabet:
+        components = tuple(
+            action_permutation(detector, n, (signed,))
+            for detector in detectors
+        ) + (action_permutation(solution, n, (signed,)),)
+        generators.append(embed_components(components))
+
+    group = PermutationGroup(generators)
+    fixed_points = list(range(detector_total_degree))
+    stabilizer = group.pointwise_stabilizer(fixed_points)
+    solution_identity = tuple(range(solution_degree))
+    restrictions = []
+    for generator in stabilizer.generators:
+        array = generator.array_form
+        restriction = tuple(
+            array[solution_offset + index] - solution_offset
+            for index in range(solution_degree)
+        )
+        if restriction != solution_identity:
+            restrictions.append(restriction)
+    return int(group.order()), int(stabilizer.order()), tuple(restrictions)
+
+
+def componentwise_stabilizer_realized_parabolic_cross_effect_audit(
+    solution: FiniteBraidedSet,
+    detectors: Iterable[FiniteBraidedSet],
+    bound: int,
+    n: int,
+    state_limit: int = 100_000,
+) -> RealizedParabolicCrossEffectAudit:
+    """Compute the componentwise cross-effect using stabilizer kernels.
+
+    This is an exact alternative to
+    ``componentwise_realized_parabolic_cross_effect_audit``.  It replaces BFS
+    enumeration of the full joint image by a Schreier-Sims pointwise stabilizer
+    calculation on a disjoint-union permutation action.  The finite subgroup
+    closures that remain are only in the X-action image, so this is practical
+    when the detector image is large but the kernel image in X is small.
+
+    The stabilizer method does not retain braid words for nontrivial witnesses;
+    witness words are therefore reported as ``None``.
+    """
+
+    detector_tuple = tuple(detectors)
+    if not detector_tuple:
+        raise ValueError("at least one detector component is required")
+    if bound < 1:
+        raise ValueError("bound must be positive")
+    if n < 1:
+        raise ValueError("braid degree must be positive")
+
+    joint_image_size, _kernel_stabilizer_size, kernel_generators = (
+        _componentwise_stabilizer_kernel_generators(
+            solution,
+            detector_tuple,
+            n,
+        )
+    )
+    solution_identity = tuple(range(len(solution.elements) ** n))
+    kernel_image, kernel_truncated = _subgroup_generated_by_permutations(
+        solution_identity,
+        kernel_generators,
+        state_limit,
+    )
+    if kernel_truncated:
+        return RealizedParabolicCrossEffectAudit(
+            bound=bound,
+            n=n,
+            joint_image_size=joint_image_size,
+            kernel_image_size=None,
+            parabolic_image_size=None,
+            quotient_size=None,
+            quotient_nontrivial=None,
+            seed_count=0,
+            first_witness_word=None,
+            first_moved_tuple=None,
+            first_moved_tuple_image=None,
+            truncated=True,
+        )
+
+    alphabet = tuple(i for generator in range(1, n) for i in (generator, -generator))
+    solution_generators = tuple(
+        action_permutation(solution, n, (signed,))
+        for signed in alphabet
+    )
+    solution_image, solution_truncated = _subgroup_generated_by_permutations(
+        solution_identity,
+        solution_generators,
+        state_limit,
+    )
+    if solution_truncated:
+        return RealizedParabolicCrossEffectAudit(
+            bound=bound,
+            n=n,
+            joint_image_size=joint_image_size,
+            kernel_image_size=len(kernel_image),
+            parabolic_image_size=None,
+            quotient_size=None,
+            quotient_nontrivial=None,
+            seed_count=0,
+            first_witness_word=None,
+            first_moved_tuple=None,
+            first_moved_tuple_image=None,
+            truncated=True,
+        )
+
+    seeds: set[Permutation] = set()
+    for width in range(1, min(bound, n) + 1):
+        _lower_joint_size, _lower_stabilizer_size, lower_kernel_generators = (
+            _componentwise_stabilizer_kernel_generators(
+                solution,
+                detector_tuple,
+                width,
+            )
+        )
+        lower_identity = tuple(range(len(solution.elements) ** width))
+        lower_kernel_image, lower_truncated = _subgroup_generated_by_permutations(
+            lower_identity,
+            lower_kernel_generators,
+            state_limit,
+        )
+        if lower_truncated:
+            return RealizedParabolicCrossEffectAudit(
+                bound=bound,
+                n=n,
+                joint_image_size=joint_image_size,
+                kernel_image_size=len(kernel_image),
+                parabolic_image_size=None,
+                quotient_size=None,
+                quotient_nontrivial=None,
+                seed_count=len(seeds),
+                first_witness_word=None,
+                first_moved_tuple=None,
+                first_moved_tuple_image=None,
+                truncated=True,
+            )
+        for lower_permutation in lower_kernel_image:
+            if lower_permutation == lower_identity:
+                continue
+            for block_start in range(0, n - width + 1):
+                seeds.add(
+                    _block_embed_permutation(
+                        lower_permutation,
+                        len(solution.elements),
+                        width,
+                        n,
+                        block_start,
+                    )
+                )
+
+    parabolic_image, parabolic_truncated = _normal_closure_in_permutation_group(
+        solution_identity,
+        solution_image,
+        seeds,
+        state_limit,
+    )
+    if parabolic_truncated:
+        return RealizedParabolicCrossEffectAudit(
+            bound=bound,
+            n=n,
+            joint_image_size=joint_image_size,
+            kernel_image_size=len(kernel_image),
+            parabolic_image_size=None,
+            quotient_size=None,
+            quotient_nontrivial=None,
+            seed_count=len(seeds),
+            first_witness_word=None,
+            first_moved_tuple=None,
+            first_moved_tuple_image=None,
+            truncated=True,
+        )
+
+    if not parabolic_image <= kernel_image:
+        raise AssertionError("parabolic normal closure escaped the detector kernel")
+
+    first_witness_permutation = None
+    for generator in kernel_generators:
+        if generator not in parabolic_image:
+            first_witness_permutation = generator
+            break
+
+    moved, moved_image = (
+        (None, None)
+        if first_witness_permutation is None
+        else _first_moved_tuple(solution, n, first_witness_permutation)
+    )
+    if len(kernel_image) % len(parabolic_image) != 0:
+        raise AssertionError("parabolic image size does not divide kernel image size")
+    quotient_size = len(kernel_image) // len(parabolic_image)
+    return RealizedParabolicCrossEffectAudit(
+        bound=bound,
+        n=n,
+        joint_image_size=joint_image_size,
+        kernel_image_size=len(kernel_image),
+        parabolic_image_size=len(parabolic_image),
+        quotient_size=quotient_size,
+        quotient_nontrivial=first_witness_permutation is not None,
+        seed_count=len(seeds),
+        first_witness_word=None,
         first_moved_tuple=moved,
         first_moved_tuple_image=moved_image,
         truncated=False,

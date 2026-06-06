@@ -274,10 +274,14 @@ component-count distribution is:
 {0: 1, 1: 12, 2: 12, 3: 24, 4: 6}
 ```
 
-The next computation is therefore the intended 55-row product audit, not
-additional detector import.  A first full run with `state_limit=1000000`
-timed out after approximately 904 seconds before producing a final JSON
-payload.  The audit wrapper now supports row-level JSONL progress:
+The next computation was therefore the intended 55-row product audit, not
+additional detector import.  A first full run with the generic BFS
+componentwise closure and `state_limit=1000000` timed out after approximately
+904 seconds before producing a final JSON payload.  The bottleneck was the
+full joint-image enumeration for rows with q=5 detector components; a
+representative `[2,3,5]` detector row already exceeded 100,000 detector states.
+
+The audit wrapper supports row-level JSONL progress:
 
 ```text
 --row-output-jsonl proofs/nonperm3_width3_arity4_cross_effect_rows.jsonl
@@ -285,18 +289,87 @@ payload.  The audit wrapper now supports row-level JSONL progress:
 ```
 
 A two-row smoke run with row-level output checked the identity row and the
-first nontrivial row; both were untruncated with `quotient_size = 1`.  The next
-target is a resumable full 55-row run or stronger permutation-group
-compression for slow rows.
+first nontrivial row; both were untruncated with `quotient_size = 1`.
 
-The decision rule for the first full product audit is:
+## Arity-4 width-3 product audit
+
+The full arity-4, bound-3 product audit is now completed by a stabilizer
+method:
+
+```text
+ybe_domination.componentwise_stabilizer_realized_parabolic_cross_effect_audit
+tools/run_nonperm3_detector_product_cross_effect_audit.py --method stabilizer
+```
+
+The stabilizer method embeds all detector component actions and the X-action
+in one disjoint-union permutation action, computes the pointwise stabilizer of
+every detector point using SymPy Schreier-Sims, restricts stabilizer generators
+to the X block to obtain `rho^X_n(K^Y_n)`, and normal-closes the lower-width
+parabolic kernel images inside the finite X-action image.  It is an exact
+replacement for full joint-image enumeration when the detector image is too
+large to enumerate directly.
+
+Command:
+
+```text
+python tools/run_nonperm3_detector_product_cross_effect_audit.py \
+  --certificate proofs/nonperm3_arity2_endpoint_gate_full_schema_certificate.json \
+  --certificate proofs/nonperm3_arity3_endpoint_gate_q4_full_schema_certificate.json \
+  --certificate proofs/nonperm3_arity3_q5_resolution_certificate.json \
+  --bound 3 \
+  --arity 4 \
+  --state-limit 1000000 \
+  --method stabilizer \
+  --require-all-55 \
+  --run-audit \
+  --row-output-jsonl proofs/nonperm3_width3_arity4_cross_effect_rows_stabilizer.jsonl \
+  --output proofs/nonperm3_width3_arity4_cross_effect_audit_stabilizer.json
+```
+
+Certificate:
+
+```text
+proofs/nonperm3_width3_arity4_cross_effect_audit_stabilizer.json
+proofs/nonperm3_width3_arity4_cross_effect_rows_stabilizer.jsonl
+```
+
+Verifier:
+
+```text
+python tools/verify_nonperm3_width3_cross_effect_audit.py \
+  proofs/nonperm3_width3_arity4_cross_effect_audit_stabilizer.json \
+  --require-complete-basis \
+  --require-run-audit
+
+OK nonperm3 width-3 audit verification
+detector_index_rows 55
+audit_rows 55
+incomplete_detector_basis False
+```
+
+Summary:
+
+```text
+truncated rows:                  0
+quotient_nontrivial rows:        0
+quotient_size distribution:      {1: 55}
+kernel_image_size distribution:  {1: 55}
+max joint_image_size:            3454279995636458717184
+```
+
+Thus the first possible finite cross-effect obstruction is absent for this
+detector product: every non-permutation size-three table has trivial realized
+detector-kernel image on `X^4`.  This is finite arity-4 evidence only.  It is
+not an all-arity theorem.
+
+The decision rule for future higher-arity product audits remains:
 
 ```text
 if any non-permutation size-three table has quotient_nontrivial = True:
   the width-3 propagation lemma is false for that detector product;
 
 if all 55 rows are untruncated and quotient_size = 1:
-  there is no four-strand obstruction, but an all-n induction is still needed;
+  there is no obstruction in that arity, but an all-n induction is still needed;
 
 if any row truncates:
   the result is inconclusive, and the closure step needs stronger permutation

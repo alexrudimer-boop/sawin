@@ -28,12 +28,16 @@ The missing theorem direction is still
 rho^X_n(K^Y_n) <= rho^X_n(J^Y_{3,n}).
 ```
 
-The first finite obstruction remains
+The first finite obstruction target was
 
 ```text
 C^{X,Y_X}_{3,4}
   = rho^X_4(K^{Y_X}_4) / rho^X_4(J^{Y_X}_{3,4}).
 ```
+
+It has now been verified trivial for all 55 non-permutation size-three tables
+using the reconstructed detector products; see
+`proofs/nonperm3_width3_arity4_cross_effect_audit_stabilizer.json`.
 
 ## Locally implemented reconstruction inputs
 
@@ -158,16 +162,60 @@ unresolved_obstruction_candidates 0
 coverage_partition_verified True
 ```
 
-## Remaining computational work
+## Arity-4 product cross-effect audit
 
-The full arity-2 and arity-3 detector schema bases are reconstructed locally.
-The remaining computational target is:
+The full arity-2 and arity-3 detector schema bases are reconstructed locally,
+and the first finite cross-effect audit has now been run against the resulting
+detector product index.
 
-1. Run the componentwise width-3 arity-4 cross-effect audit against the
-   resulting detector product index.
+The generic componentwise BFS audit timed out on q=5-component rows, so the
+branch now also provides:
 
-Until the arity-4 audit runs, the local branch has a detector basis but not the
-finite cross-effect data needed for `C^{X,Y_X}_{3,4}`.
+```text
+ybe_domination.componentwise_stabilizer_realized_parabolic_cross_effect_audit
+tools/run_nonperm3_detector_product_cross_effect_audit.py --method stabilizer
+```
+
+This method computes the detector-kernel image by a pointwise stabilizer of the
+detector blocks in a disjoint-union permutation action, then restricts the
+stabilizer to the X block and compares it with the normal closure of lower
+width parabolic kernel images inside the X-action image.
+
+The completed arity-4 certificate is:
+
+```text
+proofs/nonperm3_width3_arity4_cross_effect_audit_stabilizer.json
+proofs/nonperm3_width3_arity4_cross_effect_rows_stabilizer.jsonl
+```
+
+Verifier output:
+
+```text
+python tools/verify_nonperm3_width3_cross_effect_audit.py \
+  proofs/nonperm3_width3_arity4_cross_effect_audit_stabilizer.json \
+  --require-complete-basis \
+  --require-run-audit
+
+OK nonperm3 width-3 audit verification
+detector_index_rows 55
+audit_rows 55
+incomplete_detector_basis False
+```
+
+Summary:
+
+```text
+truncated rows:                  0
+quotient_nontrivial rows:        0
+quotient_size distribution:      {1: 55}
+kernel_image_size distribution:  {1: 55}
+max joint_image_size:            3454279995636458717184
+```
+
+Therefore the first possible finite obstruction
+`C^{X,Y_X}_{3,4}` is trivial for all 55 non-permutation size-three tables and
+the current detector products.  This is finite arity-4 evidence only.  It does
+not prove the all-arity Sawin statement.
 
 ## Arity-3 q<=4 reconstruction probe
 

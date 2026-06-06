@@ -14,16 +14,16 @@ claims:
 
   https://github.com/alexrudimer-boop/sawin/tree/codex/atom-inner-row-lift
 
-All file paths below are repo-relative after checking out:
+After checkout:
 
   git clone https://github.com/alexrudimer-boop/sawin.git
   cd sawin
   git checkout codex/atom-inner-row-lift
 
-Current finite-computational frontier:
+Current finite-computational status:
 
-1. The branch locally reconstructs the non-permutation |X|=3 detector schema
-   basis needed to build the detector product Y_X.
+1. The branch locally reconstructs the non-permutation |X|=3 endpoint-detector
+   schema basis needed to define the detector product Y_X.
 
    Full schema certificates:
 
@@ -31,7 +31,7 @@ Current finite-computational frontier:
      proofs/nonperm3_arity3_endpoint_gate_q4_full_schema_certificate.json
      proofs/nonperm3_arity3_q5_resolution_certificate.json
 
-2. Verification status:
+2. Verified endpoint-gate counts:
 
    Arity 2:
 
@@ -46,10 +46,6 @@ Current finite-computational frontier:
      positive_detector_coverages 37476
      unresolved_obstruction_candidates 216
      by_rack_size {'q2': 16416, 'q3': 20736, 'q4': 324}
-     by_monoid {
-       'truncated_structure_monoid_length_1': 15309,
-       'truncated_structure_monoid_length_2': 22167
-     }
 
    Arity 3 q=5-only over the q<=4 unresolved baseline:
 
@@ -58,7 +54,6 @@ Current finite-computational frontier:
      combined_positive_detector_coverages 37692
      remaining_unresolved_candidates 0
      by_rack_size {'q5': 216}
-     by_monoid {'truncated_structure_monoid_length_2': 216}
      reported_sha256 376e901839c978530ecd32893da56de5ff69b26dd3c407d1cb3eda365c63fc75
      reconstructed_sha256 2e62015a2a91853354206421e80be6035ba293127b2e5213b7bb02ccf1af72c9
      sha256_matches_reported False
@@ -74,20 +69,17 @@ Current finite-computational frontier:
        <certificate> \
        --require-records
 
-   The arity-2, arity-3 q<=4, and q=5-only payloads also pass:
+   They also pass:
 
      python tools/verify_nonperm3_endpoint_detector_basis.py \
        <certificate> \
        --require-candidate-partition
 
-   This standalone verifier recomputes the candidate universe and checks that
+   The standalone verifier recomputes the candidate universe and checks that
    covered, baseline-covered, and unresolved candidate IDs form the expected
    partition.
 
-4. This is still finite fixed-arity evidence only.  Do not claim an all-arity
-   proof from the endpoint-gate certificates.
-
-5. The complete detector-product import index exists:
+4. The complete detector-product import index exists:
 
      proofs/nonperm3_detector_product_full_import_audit.json
 
@@ -109,97 +101,120 @@ Current finite-computational frontier:
    [0,1,2,3,4,5,6,7,8], which has no arity-2 or arity-3 principal bad endpoint
    pairs.
 
-6. A full arity-4 run with `state_limit=1000000` timed out after about 904
-   seconds before producing a final JSON payload.  A two-row smoke run checked
-   the identity row and first nontrivial row; both had quotient_size=1 and were
-   untruncated.
+5. The old BFS componentwise audit timed out on q=5-component rows.  The
+   branch now adds a stabilizer method:
 
-   The wrapper now supports row-level progress:
+     ybe_domination.componentwise_stabilizer_realized_parabolic_cross_effect_audit
+     tools/run_nonperm3_detector_product_cross_effect_audit.py --method stabilizer
 
-     --row-output-jsonl proofs/nonperm3_width3_arity4_cross_effect_rows.jsonl
-     --resume-row-output-jsonl
+   Method summary:
 
-   A two-row smoke run with `--row-output-jsonl` wrote both rows successfully.
+   - embed the detector component actions and X-action in one disjoint-union
+     permutation action;
+   - compute the pointwise stabilizer of every detector point using SymPy
+     Schreier-Sims;
+   - restrict stabilizer generators to the X block, giving
+     rho^X_n(K^Y_n);
+   - compute lower-width kernel images the same way;
+   - normal-close their parabolic embeddings inside the finite X-action image.
 
-Next decisive computation:
+   This should be equivalent to the componentwise product-rack quotient, but it
+   should be audited carefully.
 
-Run and audit the arity-4 width-3 componentwise cross-effect:
+6. The full arity-4, bound-3 non-permutation size-three audit now exists:
 
-  C^{X,Y_X}_{3,4}
-    =
-  rho^X_4(K^{Y_X}_4) / rho^X_4(J^{Y_X}_{3,4})
+     proofs/nonperm3_width3_arity4_cross_effect_audit_stabilizer.json
+     proofs/nonperm3_width3_arity4_cross_effect_rows_stabilizer.jsonl
 
-for every one of the 55 non-permutation |X|=3 tables, where Y_X is the
-componentwise product of the distinct finite rack targets appearing in the
-verified arity-2 and arity-3 endpoint detector basis for X.
+   Command used:
+
+     python tools/run_nonperm3_detector_product_cross_effect_audit.py \
+       --certificate proofs/nonperm3_arity2_endpoint_gate_full_schema_certificate.json \
+       --certificate proofs/nonperm3_arity3_endpoint_gate_q4_full_schema_certificate.json \
+       --certificate proofs/nonperm3_arity3_q5_resolution_certificate.json \
+       --bound 3 \
+       --arity 4 \
+       --state-limit 1000000 \
+       --method stabilizer \
+       --require-all-55 \
+       --run-audit \
+       --row-output-jsonl proofs/nonperm3_width3_arity4_cross_effect_rows_stabilizer.jsonl \
+       --output proofs/nonperm3_width3_arity4_cross_effect_audit_stabilizer.json
+
+   Verifier:
+
+     python tools/verify_nonperm3_width3_cross_effect_audit.py \
+       proofs/nonperm3_width3_arity4_cross_effect_audit_stabilizer.json \
+       --require-complete-basis \
+       --require-run-audit
+
+   Result:
+
+     detector_index_rows 55
+     audit_rows 55
+     incomplete_detector_basis False
+     truncated rows 0
+     quotient_nontrivial rows 0
+     quotient_size distribution {1: 55}
+     kernel_image_size distribution {1: 55}
+     max joint_image_size 3454279995636458717184
+
+   Thus there is no four-strand width-3 cross-effect obstruction for this
+   detector product.  This is still finite fixed-arity evidence only and not
+   an all-arity proof.
 
 Relevant files to inspect:
 
+  src/ybe_domination/rack_residual_tower.py
   src/ybe_domination/nonperm3_endpoint_detector_basis.py
   src/ybe_domination/nonperm3_detector_products.py
-  src/ybe_domination/rack_residual_tower.py
   tools/reconstruct_nonperm3_endpoint_detector_basis.py
   tools/verify_contextual_detector_schema_certificate.py
+  tools/verify_nonperm3_endpoint_detector_basis.py
   tools/run_nonperm3_detector_product_cross_effect_audit.py
   tools/verify_nonperm3_width3_cross_effect_audit.py
   proofs/nonperm3_endpoint_detector_reconstruction.md
   proofs/nonperm3_size3_higher_arity_frontier.md
-  proofs/nonperm3_arity2_endpoint_gate_full_schema_certificate.json
-  proofs/nonperm3_arity3_endpoint_gate_q4_full_schema_certificate.json
-  proofs/nonperm3_arity3_q5_resolution_certificate.json
-
-The intended command is:
-
-  python tools/run_nonperm3_detector_product_cross_effect_audit.py \
-    --certificate proofs/nonperm3_arity2_endpoint_gate_full_schema_certificate.json \
-    --certificate proofs/nonperm3_arity3_endpoint_gate_q4_full_schema_certificate.json \
-    --certificate proofs/nonperm3_arity3_q5_resolution_certificate.json \
-    --bound 3 \
-    --arity 4 \
-    --state-limit 1000000 \
-    --require-all-55 \
-    --run-audit \
-    --row-output-jsonl proofs/nonperm3_width3_arity4_cross_effect_rows.jsonl \
-    --resume-row-output-jsonl \
-    --output proofs/nonperm3_width3_arity4_cross_effect_audit.json
-
-Decision rule:
-
-- if any row has `quotient_nontrivial = true`, the width-3 propagation lemma is
-  false for that detector product only;
-- if all 55 rows are untruncated and `quotient_size = 1`, there is no arity-4
-  obstruction for this detector product, but still no all-n theorem;
-- if any row truncates, the result is inconclusive and needs stronger
-  permutation-group compression.
+  proofs/nonperm3_width3_arity4_cross_effect_audit_stabilizer.json
 
 Task:
 
-Give a rigorous computational audit and patch-level plan for the arity-4
-cross-effect step.
+Give a rigorous computational audit of the stabilizer arity-4 certificate and
+the next finite test.
 
 Specifically:
 
-1. Audit whether the current detector-product importer correctly deduplicates
-   by distinct target rack table per X and preserves enough schema provenance.
+1. Verify mathematically whether the stabilizer method computes exactly
 
-2. Audit whether `componentwise_realized_parabolic_cross_effect_audit` is
-   computing the intended quotient:
+     rho^X_n(K^{Y_X}_n) / rho^X_n(J^{Y_X}_{3,n})
 
-     rho^X_4(K^{Y_X}_4) / rho^X_4(J^{Y_X}_{3,4})
+   for the componentwise product detector, or identify the first incorrect
+   implication.  Pay attention to the disjoint-union embedding, detector
+   pointwise stabilizer, restriction to the X block, and normal closure inside
+   the X-action image.
 
-   using componentwise detector actions rather than explicitly constructing
-   the Cartesian product rack.
+2. Audit whether the current verifier is strong enough.  If it is only
+   structural, specify the exact independent verifier needed to recheck the
+   stabilizer certificate without rerunning all row searches blindly.
 
-3. Identify the likely runtime bottleneck for the 55-row audit and propose
-   safe resumable/per-row output and compression strategies.  The immediate
-   issue is timeout before final JSON output, not missing detector basis.
+3. Decide the next finite computation after the absent arity-4 obstruction:
+   arity 5 stabilizer cross-effect, a direct proof that the arity-4 trivial
+   kernel image pattern persists for the 55 tables, an endpoint-pattern
+   extension scan at arity 4/5, or another sharper finite obstruction test.
+   Give exact commands and expected certificate fields.
 
-4. If you see a flaw in the certificate/import/audit chain, give the exact
-   code or verifier change needed before running the command.
+4. If arity 5 is feasible, propose safe CLI additions such as per-row timing,
+   `--table-index`, `--start-index`, `--component-count-max`, and independent
+   row verification.  If it is not feasible, identify the precise bottleneck
+   and a stronger group-theoretic compression.
 
-5. If the command succeeds, specify exactly how to interpret each possible
-   output row without overclaiming a Sawin proof or counterexample.
+5. Interpret the current arity-4 result correctly:
+
+   - no nontrivial row means no four-strand obstruction for this detector
+     product;
+   - it does not prove Sawin's all-arity statement;
+   - a future high-arity miss against this product would not be a Sawin
+     counterexample unless promoted to a cofinal rack-prefix obstruction.
 
 Return theorem/proof, finite evidence, heuristic, and unsupported claims in
-separate categories.  Do not treat fixed-arity finite evidence as a proof of
-Sawin's all-arity statement.
+separate categories.

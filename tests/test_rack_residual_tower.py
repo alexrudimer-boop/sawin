@@ -13,6 +13,7 @@ from ybe_domination import (
     bounded_deletion_support_stabilizer_audit,
     FiniteBraidedSet,
     componentwise_realized_parabolic_cross_effect_audit,
+    componentwise_stabilizer_realized_parabolic_cross_effect_audit,
     flip_disjoint_union_solution,
     identity_solution,
     pure_braid_image_audit,
@@ -210,6 +211,30 @@ class RackResidualTowerTests(unittest.TestCase):
 
         self.assertEqual(componentwise, expanded)
 
+    def test_componentwise_stabilizer_cross_effect_matches_single_detector(self):
+        solution = affine_f2_type_a_solution()
+        detector = rack_solution((0, 1), lambda _left, right: right)
+
+        enumerated = componentwise_realized_parabolic_cross_effect_audit(
+            solution, (detector,), bound=2, n=3
+        )
+        stabilizer = componentwise_stabilizer_realized_parabolic_cross_effect_audit(
+            solution, (detector,), bound=2, n=3
+        )
+
+        self.assertFalse(stabilizer.truncated)
+        self.assertEqual(stabilizer.joint_image_size, enumerated.joint_image_size)
+        self.assertEqual(stabilizer.kernel_image_size, enumerated.kernel_image_size)
+        self.assertEqual(
+            stabilizer.parabolic_image_size,
+            enumerated.parabolic_image_size,
+        )
+        self.assertEqual(stabilizer.quotient_size, enumerated.quotient_size)
+        self.assertEqual(
+            stabilizer.quotient_nontrivial,
+            enumerated.quotient_nontrivial,
+        )
+
     def test_componentwise_cross_effect_matches_small_product_detector(self):
         solution = rack_solution((0, 1), lambda _left, right: 1 - right)
         detector_left = rack_solution((0, 1), lambda _left, right: right)
@@ -233,6 +258,31 @@ class RackResidualTowerTests(unittest.TestCase):
         self.assertEqual(
             componentwise.quotient_nontrivial,
             expanded.quotient_nontrivial,
+        )
+
+    def test_componentwise_stabilizer_cross_effect_matches_small_product_detector(self):
+        solution = rack_solution((0, 1), lambda _left, right: 1 - right)
+        detector_left = rack_solution((0, 1), lambda _left, right: right)
+        detector_right = rack_solution((0, 1), lambda _left, right: 1 - right)
+
+        enumerated = componentwise_realized_parabolic_cross_effect_audit(
+            solution, (detector_left, detector_right), bound=2, n=3
+        )
+        stabilizer = componentwise_stabilizer_realized_parabolic_cross_effect_audit(
+            solution, (detector_left, detector_right), bound=2, n=3
+        )
+
+        self.assertFalse(stabilizer.truncated)
+        self.assertEqual(stabilizer.joint_image_size, enumerated.joint_image_size)
+        self.assertEqual(stabilizer.kernel_image_size, enumerated.kernel_image_size)
+        self.assertEqual(
+            stabilizer.parabolic_image_size,
+            enumerated.parabolic_image_size,
+        )
+        self.assertEqual(stabilizer.quotient_size, enumerated.quotient_size)
+        self.assertEqual(
+            stabilizer.quotient_nontrivial,
+            enumerated.quotient_nontrivial,
         )
 
     def test_bounded_deletion_support_audit_vanishes_for_cyclic_rack(self):

@@ -24,7 +24,10 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
-from ybe_domination import componentwise_realized_parabolic_cross_effect_audit  # noqa: E402
+from ybe_domination import (  # noqa: E402
+    componentwise_realized_parabolic_cross_effect_audit,
+    componentwise_stabilizer_realized_parabolic_cross_effect_audit,
+)
 from ybe_domination.nonperm3_detector_products import (  # noqa: E402
     detector_index_by_ybe_table,
     extract_detector_schema_records,
@@ -43,14 +46,28 @@ def _load_json(path: Path):
     return json.loads(path.read_text(encoding="utf-8"))
 
 
-def _audit_row(table, rack_tables, *, bound: int, arity: int, state_limit: int):
+def _audit_row(
+    table,
+    rack_tables,
+    *,
+    bound: int,
+    arity: int,
+    state_limit: int,
+    method: str = "bfs",
+):
     solution = solution_from_flat_table(table)
     if not solution.is_ybe():
         raise ValueError(f"imported table is not a YBE solution: {table!r}")
     if not rack_tables:
         return _empty_detector_audit_row(solution, table, bound=bound, arity=arity)
     detectors = tuple(rack_from_table(rack_table) for rack_table in rack_tables)
-    audit = componentwise_realized_parabolic_cross_effect_audit(
+    if method == "bfs":
+        audit_function = componentwise_realized_parabolic_cross_effect_audit
+    elif method == "stabilizer":
+        audit_function = componentwise_stabilizer_realized_parabolic_cross_effect_audit
+    else:
+        raise ValueError(f"unknown audit method: {method}")
+    audit = audit_function(
         solution,
         detectors,
         bound=bound,
@@ -63,6 +80,7 @@ def _audit_row(table, rack_tables, *, bound: int, arity: int, state_limit: int):
         "ybe_table": list(table),
         "detector_component_count": len(detectors),
         "detector_component_sizes": [len(detector.elements) for detector in detectors],
+        "audit_method": method,
         **audit_data,
     }
 
@@ -98,6 +116,7 @@ def _empty_detector_audit_row(solution, table, *, bound: int, arity: int):
         "first_moved_tuple": None,
         "first_moved_tuple_image": None,
         "truncated": False,
+        "audit_method": "empty_detector",
     }
 
 
@@ -125,6 +144,16 @@ def main() -> None:
     parser.add_argument("--bound", type=int, default=3)
     parser.add_argument("--arity", type=int, default=4)
     parser.add_argument("--state-limit", type=int, default=100_000)
+    parser.add_argument(
+        "--method",
+        choices=("bfs", "stabilizer"),
+        default="bfs",
+        help=(
+            "Cross-effect audit method. 'bfs' enumerates the full componentwise "
+            "joint image; 'stabilizer' uses a SymPy pointwise stabilizer and "
+            "then closes only the X-action kernel image."
+        ),
+    )
     parser.add_argument(
         "--run-audit",
         action="store_true",
@@ -214,6 +243,7 @@ def main() -> None:
                 bound=args.bound,
                 arity=args.arity,
                 state_limit=args.state_limit,
+                method=args.method,
             )
             rows.append(row)
             if row_output_path is not None:
@@ -247,6 +277,7 @@ def main() -> None:
         "bound": args.bound,
         "arity": args.arity,
         "state_limit": args.state_limit,
+        "audit_method": args.method,
         "schema_like_detector_records": len(records),
         "nonpermutation_ybe_tables": len(nonperm_tables),
         "tables_with_detector_components": len(imported_nonperm_tables),
