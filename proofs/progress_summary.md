@@ -1197,7 +1197,7 @@ must actually be unit in the supplied section data before it can remove a K
 row or create a System M obligation.  The coordinate-unit routing ledger is
 also non-vacuous; an empty row tuple does not prove the route.
 The living handoff prompt
-`proofs/gpt55_pro_remaining_issues_prompt.md` records the current K/U/C/M
+`prompts/gpt55_pro/gpt55_pro_remaining_issues_prompt.md` records the current K/U/C/M
 remaining obligations as a model-independent, attachment-free prompt for a
 future proof pass.
 `proofs/symmetric_tower_counterexample_certificate.md` now records the

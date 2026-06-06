@@ -8,7 +8,7 @@ from docx.shared import Inches, Pt
 ROOT = Path(__file__).resolve().parents[1]
 STATUS_MD = ROOT / "proofs" / "sawin_status.md"
 EXTRA_MD = [ROOT / "proofs" / "progress_summary.md"]
-EXTRA_MD.append(ROOT / "proofs" / "gpt55_pro_remaining_issues_prompt.md")
+EXTRA_MD.append(ROOT / "prompts" / "gpt55_pro" / "gpt55_pro_remaining_issues_prompt.md")
 EXTRA_MD.append(ROOT / "proofs" / "semisplit_families.md")
 EXTRA_MD.append(ROOT / "proofs" / "local_minimality_gate.md")
 EXTRA_MD.append(ROOT / "proofs" / "finite_group_longitudes.md")
@@ -164,7 +164,7 @@ EXTRA_MD.append(ROOT / "proofs" / "nonperm3_arity2_endpoint_gate.md")
 EXTRA_MD.append(ROOT / "proofs" / "nonperm3_arity3_endpoint_gate_checkpoint.md")
 EXTRA_MD.append(ROOT / "proofs" / "nonperm3_arity3_q5_resolution.md")
 EXTRA_MD.append(ROOT / "proofs" / "nonperm3_size3_higher_arity_frontier.md")
-EXTRA_MD.append(ROOT / "proofs" / "gpt55_pro_width3_cross_effect_prompt.md")
+EXTRA_MD.append(ROOT / "prompts" / "gpt55_pro" / "2026-06-06-width3-cross-effect-propagation_ask_now.md")
 EXTRA_MD.append(ROOT / "proofs" / "minimal_ideal_escape_rack_construction.md")
 EXTRA_MD.append(ROOT / "proofs" / "escape_rack_strand_separation_counterexample.md")
 EXTRA_MD.append(ROOT / "proofs" / "active_factor_observability_audit.md")

@@ -34,8 +34,8 @@ First read:
 1. `proofs/progress_summary.md`
 2. `README.md`
 3. `proofs/sawin_status.md`
-4. `proofs/gpt55_pro_remaining_issues_prompt.md`
-5. `proofs/gpt55_pro_resolution_prompt.md`
+4. `prompts/gpt55_pro/gpt55_pro_remaining_issues_prompt.md`
+5. `prompts/gpt55_pro/gpt55_pro_resolution_prompt.md`
 6. `proofs/diagonal_normalized_obstruction.md`
 7. `proofs/normalized_law_sequence_gate.md`
 8. `proofs/longitude_subgroup_witness_calculus.md`
