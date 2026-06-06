@@ -1,6 +1,28 @@
 # Global Endpoint-Faithfulness Prompt
 
-Status: ask now / awaiting GPT-5.5 Pro response.
+Status: answered by GPT-5.5 Pro on 2026-06-05.
+
+Response summary:
+
+- The directed quotient family is central: if `N >= M`, then `D_M subset D_N`;
+  finite covers by quotients refine to one product quotient.
+- Pointwise endpoint-faithfulness is `B=union_M D_M`; uniform
+  endpoint-faithfulness is `exists M_* with B=D_{M_*}`.
+- Uniform iff there is no harmful ultrafilter, principal or nonprincipal.
+  Pointwise iff there is no principal harmful ultrafilter.
+- If pointwise holds, fixed arity is uniformly detected because the endpoint
+  transition set in arity `n` is finite.  Any remaining harmful ultrafilter
+  must escape to unbounded arity or support.
+- Pointwise itself is not formal: a principal endpoint-invisible bad triple
+  remains possible under current machinery.
+- Uniformity from pointwise would follow from a finite-index contextual
+  Myhill-Nerode condition: on orbit-relevant endpoint pairs, `R_infty` must be
+  relatively clopen or pulled back from one finite quotient.
+- Deletion/contraction and bounded-support routes require new global
+  visibility-reflecting minor theorems.
+- Failure of endpoint-faithfulness does not automatically produce Target B;
+  independent finite coordinatewise YBE data with orbit-injectivity is still
+  required.
 
 Prompt:
 
