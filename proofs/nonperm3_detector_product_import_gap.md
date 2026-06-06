@@ -94,6 +94,23 @@ ybe_domination.componentwise_realized_parabolic_cross_effect_audit
 This prepares the exact arity-4, bound-3 computation once the full arity-2 and
 arity-3 detector schema certificates are available locally.
 
+The structural verifier for generated audit JSON is:
+
+```text
+tools/verify_nonperm3_width3_cross_effect_audit.py
+```
+
+It checks the audit `kind`, branch, detector index, non-permutation table
+coverage counts, rack-table validity, row/index agreement, and quotient-size
+arithmetic for untruncated rows.  Optional flags enforce stronger gates after
+full q=5 import:
+
+```text
+--require-complete-basis
+--require-run-audit
+--require-untruncated-trivial
+```
+
 ## Current compact artifacts are insufficient
 
 Running the importer against the two local compact certificates:
@@ -117,6 +134,7 @@ tables_with_detector_components: 1
 missing_table_count: 54
 incomplete_detector_basis: true
 run_audit: false
+row_count: 0
 ```
 
 This is not mathematical evidence for or against width-3 propagation.  It only

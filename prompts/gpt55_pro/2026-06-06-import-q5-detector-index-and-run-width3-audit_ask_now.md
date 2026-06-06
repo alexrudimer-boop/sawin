@@ -94,6 +94,7 @@ Important files to inspect first:
   src/ybe_domination/nonperm3_detector_products.py
   tools/run_componentwise_cross_effect_audit.py
   tools/run_nonperm3_detector_product_cross_effect_audit.py
+  tools/verify_nonperm3_width3_cross_effect_audit.py
   tests/test_nonperm3_detector_products.py
   tests/test_nonperm3_arity3_checkpoint.py
 
@@ -148,6 +149,24 @@ After the detector basis exists, the first decisive computation is:
     C^{X,Y_X}_{3,4}
       =
     rho^X_4(K^{Y_X}_4) / rho^X_4(J^{Y_X}_{3,4})
+
+The generated audit JSON should pass structural verification:
+
+  python tools/verify_nonperm3_width3_cross_effect_audit.py AUDIT.json
+
+For a complete 55-row run, it should also pass:
+
+  python tools/verify_nonperm3_width3_cross_effect_audit.py AUDIT.json \
+    --require-complete-basis \
+    --require-run-audit
+
+Only if the intended no-four-strand-obstruction outcome is claimed should it
+also pass:
+
+  python tools/verify_nonperm3_width3_cross_effect_audit.py AUDIT.json \
+    --require-complete-basis \
+    --require-run-audit \
+    --require-untruncated-trivial
 
 Required audit row fields:
 

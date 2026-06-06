@@ -638,6 +638,7 @@
     ]
   ],
   "nonpermutation_ybe_tables": 55,
+  "row_count": 0,
   "rows": [],
   "run_audit": false,
   "schema_like_detector_records": 1,

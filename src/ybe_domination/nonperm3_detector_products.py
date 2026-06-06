@@ -10,6 +10,25 @@ from .small_search import all_bijection_solutions, is_permutation_solution_form
 
 FlatYbeTable = tuple[int, ...]
 RackTable = tuple[tuple[int, ...], ...]
+WIDTH3_AUDIT_KIND = "nonperm3_width3_componentwise_cross_effect_audit_v1"
+WIDTH3_AUDIT_BRANCH = "nonpermutation_size3"
+WIDTH3_AUDIT_ROW_FIELDS = (
+    "ybe_table",
+    "detector_component_count",
+    "detector_component_sizes",
+    "bound",
+    "arity",
+    "joint_image_size",
+    "kernel_image_size",
+    "parabolic_image_size",
+    "quotient_size",
+    "quotient_nontrivial",
+    "seed_count",
+    "first_witness_word",
+    "first_moved_tuple",
+    "first_moved_tuple_image",
+    "truncated",
+)
 
 
 @dataclass(frozen=True)
@@ -217,3 +236,258 @@ def detector_index_by_ybe_table(
         )
         for table, components in grouped.items()
     }
+
+
+def _require(condition: bool, failures: list[str], message: str) -> None:
+    if not condition:
+        failures.append(message)
+
+
+def _payload_int(payload: dict[str, Any], key: str, failures: list[str]) -> int | None:
+    value = payload.get(key)
+    if isinstance(value, bool) or not isinstance(value, int):
+        failures.append(f"{key} must be an integer")
+        return None
+    return value
+
+
+def _normalize_ybe_table_for_audit(
+    value: Any,
+    failures: list[str],
+    context: str,
+    *,
+    require_nonpermutation: bool = True,
+) -> FlatYbeTable | None:
+    try:
+        table = normalize_flat_ybe_table(value)
+    except (TypeError, ValueError) as exc:
+        failures.append(f"{context}: invalid ybe_table: {exc}")
+        return None
+    if len(table) != 9:
+        failures.append(f"{context}: expected a size-three flat table with 9 entries")
+        return None
+    solution = solution_from_flat_table(table)
+    if not solution.is_ybe():
+        failures.append(f"{context}: ybe_table is not a YBE solution")
+    if require_nonpermutation and is_permutation_solution_form(solution):
+        failures.append(f"{context}: ybe_table is permutation-form, not non-permutation")
+    return table
+
+
+def verify_width3_audit_payload(payload: dict[str, Any]) -> tuple[str, ...]:
+    """Return structural verification failures for a width-3 audit payload.
+
+    This verifier checks the certificate shape and finite consistency of the
+    detector index and rows.  It deliberately does not rerun the expensive
+    componentwise closure computation; the audit rows remain the source of the
+    reported finite cross-effect data.
+    """
+
+    failures: list[str] = []
+    if not isinstance(payload, dict):
+        return ("payload must be a JSON object",)
+    _require(
+        payload.get("kind") == WIDTH3_AUDIT_KIND,
+        failures,
+        f"kind must be {WIDTH3_AUDIT_KIND!r}",
+    )
+    _require(
+        payload.get("branch") == WIDTH3_AUDIT_BRANCH,
+        failures,
+        f"branch must be {WIDTH3_AUDIT_BRANCH!r}",
+    )
+    bound = _payload_int(payload, "bound", failures)
+    arity = _payload_int(payload, "arity", failures)
+    if bound is not None:
+        _require(bound >= 1, failures, "bound must be positive")
+    if arity is not None:
+        _require(arity >= 1, failures, "arity must be positive")
+
+    expected_tables = set(nonpermutation_size3_flat_tables())
+    nonperm_count = payload.get("nonpermutation_ybe_tables")
+    if nonperm_count is not None:
+        _require(nonperm_count == 55, failures, "nonpermutation_ybe_tables must be 55")
+
+    detector_index = payload.get("detector_index")
+    if not isinstance(detector_index, list):
+        failures.append("detector_index must be a list")
+        detector_index = []
+    index_tables: dict[FlatYbeTable, list[dict[str, Any]]] = {}
+    for index, entry in enumerate(detector_index):
+        context = f"detector_index[{index}]"
+        if not isinstance(entry, dict):
+            failures.append(f"{context}: entry must be an object")
+            continue
+        table = _normalize_ybe_table_for_audit(entry.get("ybe_table"), failures, context)
+        detectors = entry.get("detectors")
+        if not isinstance(detectors, list) or not detectors:
+            failures.append(f"{context}: detectors must be a nonempty list")
+            detectors = []
+        if table is not None:
+            if table in index_tables:
+                failures.append(f"{context}: duplicate detector_index ybe_table")
+            index_tables[table] = detectors
+        seen_racks = set()
+        for detector_index_in_entry, detector in enumerate(detectors):
+            detector_context = f"{context}.detectors[{detector_index_in_entry}]"
+            if not isinstance(detector, dict):
+                failures.append(f"{detector_context}: detector must be an object")
+                continue
+            try:
+                rack_table = normalize_rack_table(detector.get("rack_table"))
+            except (TypeError, ValueError) as exc:
+                failures.append(f"{detector_context}: invalid rack_table: {exc}")
+                continue
+            if not is_rack_table(rack_table):
+                failures.append(f"{detector_context}: rack_table is not a rack")
+            if rack_table in seen_racks:
+                failures.append(f"{detector_context}: duplicate rack_table for this ybe_table")
+            seen_racks.add(rack_table)
+            source_ids = detector.get("source_schema_ids")
+            if source_ids is not None:
+                if not isinstance(source_ids, list) or any(
+                    not isinstance(schema_id, str) for schema_id in source_ids
+                ):
+                    failures.append(
+                        f"{detector_context}: source_schema_ids must be a list of strings"
+                    )
+
+    imported_tables = set(index_tables)
+    missing_tables = expected_tables - imported_tables
+    extra_tables = imported_tables - expected_tables
+    _require(
+        payload.get("tables_with_detector_components") == len(imported_tables),
+        failures,
+        "tables_with_detector_components does not match detector_index",
+    )
+    _require(
+        payload.get("missing_table_count") == len(missing_tables),
+        failures,
+        "missing_table_count does not match detector_index complement",
+    )
+    _require(
+        payload.get("extra_imported_table_count") == len(extra_tables),
+        failures,
+        "extra_imported_table_count does not match detector_index",
+    )
+    _require(
+        payload.get("incomplete_detector_basis") == bool(missing_tables),
+        failures,
+        "incomplete_detector_basis does not match missing tables",
+    )
+    if "missing_ybe_tables" in payload:
+        supplied_missing = {
+            table
+            for table in (
+                _normalize_ybe_table_for_audit(item, failures, "missing_ybe_tables")
+                for item in payload["missing_ybe_tables"]
+            )
+            if table is not None
+        }
+        _require(
+            supplied_missing == missing_tables,
+            failures,
+            "missing_ybe_tables does not match detector_index complement",
+        )
+    if "extra_imported_ybe_tables" in payload:
+        supplied_extra = {
+            table
+            for table in (
+                _normalize_ybe_table_for_audit(
+                    item,
+                    failures,
+                    "extra_imported_ybe_tables",
+                    require_nonpermutation=False,
+                )
+                for item in payload["extra_imported_ybe_tables"]
+            )
+            if table is not None
+        }
+        _require(
+            supplied_extra == extra_tables,
+            failures,
+            "extra_imported_ybe_tables does not match detector_index extras",
+        )
+
+    rows = payload.get("rows")
+    if not isinstance(rows, list):
+        failures.append("rows must be a list")
+        rows = []
+    if "row_count" in payload:
+        _require(payload.get("row_count") == len(rows), failures, "row_count mismatch")
+    for row_index, row in enumerate(rows):
+        context = f"rows[{row_index}]"
+        if not isinstance(row, dict):
+            failures.append(f"{context}: row must be an object")
+            continue
+        for field in WIDTH3_AUDIT_ROW_FIELDS:
+            if field not in row:
+                failures.append(f"{context}: missing field {field}")
+        table = _normalize_ybe_table_for_audit(row.get("ybe_table"), failures, context)
+        if table is None:
+            continue
+        detectors = index_tables.get(table)
+        if detectors is None:
+            failures.append(f"{context}: row ybe_table is absent from detector_index")
+            detectors = []
+        detector_sizes = []
+        for detector in detectors:
+            if not isinstance(detector, dict) or "rack_table" not in detector:
+                continue
+            try:
+                detector_sizes.append(len(normalize_rack_table(detector["rack_table"])))
+            except (TypeError, ValueError):
+                pass
+        _require(
+            row.get("detector_component_count") == len(detectors),
+            failures,
+            f"{context}: detector_component_count mismatch",
+        )
+        _require(
+            row.get("detector_component_sizes") == detector_sizes,
+            failures,
+            f"{context}: detector_component_sizes mismatch",
+        )
+        if bound is not None:
+            _require(row.get("bound") == bound, failures, f"{context}: bound mismatch")
+        if arity is not None:
+            _require(row.get("arity") == arity, failures, f"{context}: arity mismatch")
+        truncated = row.get("truncated")
+        if not isinstance(truncated, bool):
+            failures.append(f"{context}: truncated must be boolean")
+            continue
+        seed_count = row.get("seed_count")
+        if isinstance(seed_count, bool) or not isinstance(seed_count, int) or seed_count < 0:
+            failures.append(f"{context}: seed_count must be a nonnegative integer")
+        if not truncated:
+            for field in (
+                "joint_image_size",
+                "kernel_image_size",
+                "parabolic_image_size",
+                "quotient_size",
+            ):
+                value = row.get(field)
+                if isinstance(value, bool) or not isinstance(value, int) or value < 1:
+                    failures.append(f"{context}: {field} must be a positive integer")
+            if isinstance(row.get("kernel_image_size"), int) and isinstance(
+                row.get("parabolic_image_size"), int
+            ) and isinstance(row.get("quotient_size"), int):
+                kernel_size = row["kernel_image_size"]
+                parabolic_size = row["parabolic_image_size"]
+                quotient_size = row["quotient_size"]
+                if parabolic_size and kernel_size % parabolic_size:
+                    failures.append(
+                        f"{context}: parabolic_image_size does not divide kernel_image_size"
+                    )
+                elif parabolic_size and kernel_size // parabolic_size != quotient_size:
+                    failures.append(f"{context}: quotient_size arithmetic mismatch")
+            quotient_nontrivial = row.get("quotient_nontrivial")
+            if not isinstance(quotient_nontrivial, bool):
+                failures.append(f"{context}: quotient_nontrivial must be boolean")
+            elif isinstance(row.get("quotient_size"), int):
+                _require(
+                    quotient_nontrivial == (row["quotient_size"] != 1),
+                    failures,
+                    f"{context}: quotient_nontrivial disagrees with quotient_size",
+                )
+    return tuple(failures)

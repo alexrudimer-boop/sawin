@@ -160,6 +160,7 @@ def main() -> None:
         "incomplete_detector_basis": bool(missing_tables),
         "detector_index": detector_index,
         "run_audit": args.run_audit,
+        "row_count": len(rows),
         "rows": rows,
     }
     text = json.dumps(output, indent=2, sort_keys=True)
