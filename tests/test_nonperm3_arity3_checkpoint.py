@@ -6,7 +6,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from ybe_domination.finite_braided_set import FiniteBraidedSet
-from ybe_domination.finite_rack_sat import MonoidQuotient
+from ybe_domination.finite_rack_sat import MonoidQuotient, is_rack_table
 from ybe_domination.small_search import all_bijection_solutions
 
 
@@ -200,6 +200,66 @@ class NonPerm3Arity3CheckpointTests(unittest.TestCase):
 
         self.assertEqual(len(certificate), 4)
         self.assertTrue(all(values[0] == values[1] for _q, _monoid, values in certificate.values()))
+
+    def test_displayed_q5_detector_separates_first_unresolved_candidate(self):
+        solution = solution_from_flat_table((0, 3, 6, 1, 4, 7, 5, 2, 8))
+        monoid = truncated_length_two_monoid(solution)
+        rack = (
+            (0, 1, 3, 4, 2),
+            (0, 1, 4, 2, 3),
+            (1, 0, 2, 4, 3),
+            (1, 0, 4, 3, 2),
+            (1, 0, 3, 2, 4),
+        )
+        support = {
+            (0, 0, 6): 1,
+            (0, 2, 4): 3,
+            (0, 2, 5): 4,
+            (0, 2, 7): 2,
+            (1, 0, 3): 1,
+            (1, 2, 1): 4,
+            (1, 2, 2): 2,
+            (2, 0, 3): 1,
+            (2, 2, 1): 3,
+            (2, 2, 2): 4,
+            (3, 0, 1): 1,
+            (3, 0, 2): 1,
+            (4, 2, 0): 2,
+            (5, 2, 0): 4,
+            (6, 0, 0): 1,
+            (7, 2, 0): 3,
+        }
+
+        def alpha(prefix, letter, suffix):
+            return support.get((prefix, letter, suffix), 0)
+
+        self.assertEqual(monoid.size, 10)
+        self.assertEqual(monoid.gen, (1, 2, 3))
+        self.assertTrue(is_rack_table(rack))
+
+        for prefix in range(monoid.size):
+            for suffix in range(monoid.size):
+                for x in range(3):
+                    for y in range(3):
+                        x_prime, y_prime = solution.R[(x, y)]
+
+                        # T relation:
+                        # [p,x,y s] = [p x',y',s].
+                        self.assertEqual(
+                            alpha(prefix, x, monoid.mul[monoid.gen[y]][suffix]),
+                            alpha(monoid.mul[prefix][monoid.gen[x_prime]], y_prime, suffix),
+                        )
+
+                        # R relation:
+                        # [p,x,y s] acts on [p x,y,s] to give [p,x',y' s].
+                        left = alpha(prefix, x, monoid.mul[monoid.gen[y]][suffix])
+                        right = alpha(monoid.mul[prefix][monoid.gen[x]], y, suffix)
+                        out = alpha(prefix, x_prime, monoid.mul[monoid.gen[y_prime]][suffix])
+                        self.assertEqual(rack[left][right], out)
+
+        self.assertEqual(alpha(4, 2, 0), 2)
+        self.assertEqual(alpha(0, 2, 4), 3)
+        self.assertNotEqual(alpha(4, 2, 0), alpha(0, 2, 4))
 
 
 if __name__ == "__main__":

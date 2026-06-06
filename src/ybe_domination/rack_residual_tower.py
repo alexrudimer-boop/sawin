@@ -17,6 +17,7 @@ from .finite_braided_set import (
 from .residual import action_permutation
 
 Permutation = Tuple[int, ...]
+DetectorState = Tuple[Permutation, ...]
 
 
 @dataclass(frozen=True)
@@ -187,6 +188,7 @@ def _invert_permutation(permutation: Permutation) -> Permutation:
 
 
 PairPermutation = Tuple[Permutation, Permutation]
+ComponentwisePairPermutation = Tuple[DetectorState, Permutation]
 MultiPermutation = Tuple[Permutation, ...]
 MatrixFlat = Tuple[int, ...]
 AffineMapFlat = Tuple[MatrixFlat, Tuple[int, ...]]
@@ -202,6 +204,30 @@ def _compose_pair(left: PairPermutation, right: PairPermutation) -> PairPermutat
 
 def _invert_pair(pair: PairPermutation) -> PairPermutation:
     return (_invert_permutation(pair[0]), _invert_permutation(pair[1]))
+
+
+def _compose_componentwise_pair(
+    left: ComponentwisePairPermutation,
+    right: ComponentwisePairPermutation,
+) -> ComponentwisePairPermutation:
+    if len(left[0]) != len(right[0]):
+        raise ValueError("componentwise detector states have different lengths")
+    return (
+        tuple(
+            _compose_permutations(left_part, right_part)
+            for left_part, right_part in zip(left[0], right[0])
+        ),
+        _compose_permutations(left[1], right[1]),
+    )
+
+
+def _invert_componentwise_pair(
+    pair: ComponentwisePairPermutation,
+) -> ComponentwisePairPermutation:
+    return (
+        tuple(_invert_permutation(part) for part in pair[0]),
+        _invert_permutation(pair[1]),
+    )
 
 
 def _compose_multi(left: MultiPermutation, right: MultiPermutation) -> MultiPermutation:
@@ -626,6 +652,59 @@ def _joint_image_with_words(
     return seen, generators, False
 
 
+def _componentwise_joint_generators(
+    solution: FiniteBraidedSet,
+    detectors: Tuple[FiniteBraidedSet, ...],
+    n: int,
+) -> Tuple[Tuple[int, ComponentwisePairPermutation], ...]:
+    alphabet = tuple(i for generator in range(1, n) for i in (generator, -generator))
+    return tuple(
+        (
+            signed,
+            (
+                tuple(
+                    action_permutation(detector, n, (signed,))
+                    for detector in detectors
+                ),
+                action_permutation(solution, n, (signed,)),
+            ),
+        )
+        for signed in alphabet
+    )
+
+
+def _componentwise_joint_image_with_words(
+    solution: FiniteBraidedSet,
+    detectors: Tuple[FiniteBraidedSet, ...],
+    n: int,
+    state_limit: int,
+) -> Tuple[
+    dict[ComponentwisePairPermutation, Word],
+    Tuple[Tuple[int, ComponentwisePairPermutation], ...],
+    bool,
+]:
+    detector_identity = tuple(
+        tuple(range(len(detector.elements) ** n)) for detector in detectors
+    )
+    solution_identity = tuple(range(len(solution.elements) ** n))
+    identity = (detector_identity, solution_identity)
+    generators = _componentwise_joint_generators(solution, detectors, n)
+    seen: dict[ComponentwisePairPermutation, Word] = {identity: tuple()}
+    queue = deque((identity,))
+    while queue:
+        state = queue.popleft()
+        word = seen[state]
+        for signed, generator in generators:
+            next_state = _compose_componentwise_pair(generator, state)
+            if next_state in seen:
+                continue
+            seen[next_state] = word + (signed,)
+            if len(seen) > state_limit:
+                return seen, generators, True
+            queue.append(next_state)
+    return seen, generators, False
+
+
 def rack_residual_obstruction_audit(
     solution: FiniteBraidedSet,
     detector: FiniteBraidedSet,
@@ -824,6 +903,53 @@ def _normal_closure_in_joint_image(
     return _subgroup_generated_by_pairs(identity, conjugates, state_limit)
 
 
+def _subgroup_generated_by_componentwise_pairs(
+    identity: ComponentwisePairPermutation,
+    generators: Iterable[ComponentwisePairPermutation],
+    state_limit: int,
+) -> Tuple[set[ComponentwisePairPermutation], bool]:
+    generator_tuple = tuple(generator for generator in generators if generator != identity)
+    subgroup = {identity}
+    queue = deque((identity,))
+    while queue:
+        state = queue.popleft()
+        for generator in generator_tuple:
+            next_state = _compose_componentwise_pair(generator, state)
+            if next_state in subgroup:
+                continue
+            subgroup.add(next_state)
+            if len(subgroup) > state_limit:
+                return subgroup, True
+            queue.append(next_state)
+    return subgroup, False
+
+
+def _normal_closure_in_componentwise_joint_image(
+    identity: ComponentwisePairPermutation,
+    group_elements: Iterable[ComponentwisePairPermutation],
+    seeds: Iterable[ComponentwisePairPermutation],
+    state_limit: int,
+) -> Tuple[set[ComponentwisePairPermutation], bool]:
+    seed_tuple = tuple(seed for seed in seeds if seed != identity)
+    if not seed_tuple:
+        return {identity}, False
+    conjugates = []
+    for group_element in group_elements:
+        inverse = _invert_componentwise_pair(group_element)
+        for seed in seed_tuple:
+            conjugates.append(
+                _compose_componentwise_pair(
+                    _compose_componentwise_pair(group_element, seed),
+                    inverse,
+                )
+            )
+            if len(conjugates) > state_limit:
+                return set((identity,)), True
+    return _subgroup_generated_by_componentwise_pairs(
+        identity, conjugates, state_limit
+    )
+
+
 def realized_parabolic_cross_effect_audit(
     solution: FiniteBraidedSet,
     detector: FiniteBraidedSet,
@@ -916,6 +1042,167 @@ def realized_parabolic_cross_effect_audit(
         full_seen.keys(),
         seeds,
         state_limit,
+    )
+    if parabolic_truncated:
+        return RealizedParabolicCrossEffectAudit(
+            bound=bound,
+            n=n,
+            joint_image_size=len(full_seen),
+            kernel_image_size=len(kernel_image),
+            parabolic_image_size=None,
+            quotient_size=None,
+            quotient_nontrivial=None,
+            seed_count=len(seeds),
+            first_witness_word=None,
+            first_moved_tuple=None,
+            first_moved_tuple_image=None,
+            truncated=True,
+        )
+
+    if not parabolic_image <= kernel_image:
+        raise AssertionError("parabolic normal closure escaped the detector kernel")
+
+    first_witness_pair = None
+    first_witness_word = None
+    for pair, word in full_seen.items():
+        if pair in kernel_image and pair not in parabolic_image:
+            first_witness_pair = pair
+            first_witness_word = word
+            break
+
+    moved, moved_image = (
+        (None, None)
+        if first_witness_pair is None
+        else _first_moved_tuple(solution, n, first_witness_pair[1])
+    )
+    quotient_size = None
+    if parabolic_image:
+        if len(kernel_image) % len(parabolic_image) != 0:
+            raise AssertionError("parabolic image size does not divide kernel image size")
+        quotient_size = len(kernel_image) // len(parabolic_image)
+    return RealizedParabolicCrossEffectAudit(
+        bound=bound,
+        n=n,
+        joint_image_size=len(full_seen),
+        kernel_image_size=len(kernel_image),
+        parabolic_image_size=len(parabolic_image),
+        quotient_size=quotient_size,
+        quotient_nontrivial=first_witness_pair is not None,
+        seed_count=len(seeds),
+        first_witness_word=first_witness_word,
+        first_moved_tuple=moved,
+        first_moved_tuple_image=moved_image,
+        truncated=False,
+    )
+
+
+def componentwise_realized_parabolic_cross_effect_audit(
+    solution: FiniteBraidedSet,
+    detectors: Iterable[FiniteBraidedSet],
+    bound: int,
+    n: int,
+    state_limit: int = 100_000,
+) -> RealizedParabolicCrossEffectAudit:
+    """Compute the realized cross-effect for a product detector by components.
+
+    This is equivalent to running ``realized_parabolic_cross_effect_audit`` on
+    the Cartesian product rack of all detector components, but the detector
+    coordinate is stored as a tuple of component permutation images.  That
+    avoids constructing the product rack state set.
+    """
+
+    detector_tuple = tuple(detectors)
+    if not detector_tuple:
+        raise ValueError("at least one detector component is required")
+    if bound < 1:
+        raise ValueError("bound must be positive")
+    if n < 1:
+        raise ValueError("braid degree must be positive")
+
+    full_seen, _full_generators, full_truncated = (
+        _componentwise_joint_image_with_words(
+            solution, detector_tuple, n, state_limit
+        )
+    )
+    detector_identity = tuple(
+        tuple(range(len(detector.elements) ** n)) for detector in detector_tuple
+    )
+    solution_identity = tuple(range(len(solution.elements) ** n))
+    identity = (detector_identity, solution_identity)
+    if full_truncated:
+        return RealizedParabolicCrossEffectAudit(
+            bound=bound,
+            n=n,
+            joint_image_size=None,
+            kernel_image_size=None,
+            parabolic_image_size=None,
+            quotient_size=None,
+            quotient_nontrivial=None,
+            seed_count=0,
+            first_witness_word=None,
+            first_moved_tuple=None,
+            first_moved_tuple_image=None,
+            truncated=True,
+        )
+
+    kernel_image = {
+        pair for pair in full_seen if pair[0] == detector_identity
+    }
+    seeds: set[ComponentwisePairPermutation] = set()
+    for width in range(1, min(bound, n) + 1):
+        lower_seen, _lower_generators, lower_truncated = (
+            _componentwise_joint_image_with_words(
+                solution, detector_tuple, width, state_limit
+            )
+        )
+        if lower_truncated:
+            return RealizedParabolicCrossEffectAudit(
+                bound=bound,
+                n=n,
+                joint_image_size=len(full_seen),
+                kernel_image_size=len(kernel_image),
+                parabolic_image_size=None,
+                quotient_size=None,
+                quotient_nontrivial=None,
+                seed_count=len(seeds),
+                first_witness_word=None,
+                first_moved_tuple=None,
+                first_moved_tuple_image=None,
+                truncated=True,
+            )
+        lower_detector_identity = tuple(
+            tuple(range(len(detector.elements) ** width))
+            for detector in detector_tuple
+        )
+        lower_solution_identity = tuple(range(len(solution.elements) ** width))
+        for lower_pair in lower_seen:
+            if (
+                lower_pair[0] != lower_detector_identity
+                or lower_pair[1] == lower_solution_identity
+            ):
+                continue
+            for block_start in range(0, n - width + 1):
+                seed = (
+                    detector_identity,
+                    _block_embed_permutation(
+                        lower_pair[1],
+                        len(solution.elements),
+                        width,
+                        n,
+                        block_start,
+                    ),
+                )
+                if seed not in full_seen:
+                    raise AssertionError("parabolic seed is not in the joint image")
+                seeds.add(seed)
+
+    parabolic_image, parabolic_truncated = (
+        _normal_closure_in_componentwise_joint_image(
+            identity,
+            full_seen.keys(),
+            seeds,
+            state_limit,
+        )
     )
     if parabolic_truncated:
         return RealizedParabolicCrossEffectAudit(

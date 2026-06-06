@@ -2,6 +2,10 @@
 
 ## Result
 
+Update: this q<=4 checkpoint is now superseded by the reported q=5 resolution
+recorded in `proofs/nonperm3_arity3_q5_resolution.md`, which resolves the
+216 candidates left open here.  This file remains the q<=4 checkpoint record.
+
 The non-permutation-form \(|X|=3\), arity-3 endpoint gate is not closed yet,
 but the q<=4 detector pass resolves almost all of it and extracts a finite
 frontier of obstruction candidates.
