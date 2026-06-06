@@ -96,6 +96,64 @@ dominates `X`, every prefix `P_m` must admit a witness.
 This is why a miss against one chosen detector product is not a Sawin
 counterexample.  A genuine negative answer needs the cofinal prefix sequence.
 
+## Route-specific compactness gap
+
+Many partial approaches construct finite contextual rack detector schemas
+rather than arbitrary finite rack dominators.  The following compactness
+statement records the exact uniformity gap for that route.
+
+Let `B_X` be the class of actual bad arrows for a chosen base detector `P_X`:
+
+```text
+B_X = {
+  (n, beta, x) :
+  beta in ker rho^{P_X}_n,
+  rho^X_n(beta)x != x
+}.
+```
+
+For a finite contextual rack detector `D`, let `S_D subset B_X` be the bad
+arrows separated by `D`, and `U_D = B_X \ S_D`.  Products of detectors satisfy
+
+```text
+S_{D_1 x D_2} = S_{D_1} union S_{D_2},
+U_{D_1 x D_2} = U_{D_1} intersection U_{D_2}.
+```
+
+Theorem.  The following are equivalent for the chosen contextual detector
+route.
+
+```text
+1. Some finite product of contextual rack detectors separates every bad arrow
+   in B_X.
+
+2. There is no ultrafilter U on B_X such that U_D belongs to U for every
+   finite contextual rack detector D.
+```
+
+Proof.  If a finite product `D` separates every bad arrow, then `U_D` is
+empty, so no ultrafilter can contain all `U_D`.
+
+Conversely, if no finite product separates every bad arrow, then every finite
+intersection of sets `U_D` is nonempty, because that intersection is the
+unseparated set for the finite product of those detectors.  Hence the family
+`{U_D}` has the finite intersection property.  By the ultrafilter lemma it
+extends to an ultrafilter on `B_X` containing every `U_D`.
+
+Thus pointwise detector separation
+
+```text
+for every bad arrow h, exists D_h separating h
+```
+
+is not enough.  One must rule out a harmful ultrafilter of bad arrows escaping
+every fixed finite detector, or else construct a finite product detector that
+separates all bad arrows uniformly.
+
+This compactness theorem is route-specific.  It does not itself prove or
+disprove Sawin's problem for arbitrary finite rack dominators; it explains the
+uniformity obligation inside the contextual endpoint strategy.
+
 ## Contextual detector theorem
 
 A contextual rack detector schema consists of a finite quotient `M` of the

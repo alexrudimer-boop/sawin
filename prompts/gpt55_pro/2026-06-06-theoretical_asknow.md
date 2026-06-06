@@ -42,12 +42,14 @@ A. A complete proof that such a finite rack Y always exists for every finite
 B. An explicit finite bijective set-theoretic YBE solution X for which no
    finite rack Y can dominate X in all arities, together with a proof.  A proof
    of non-domination must not merely show failure for one chosen finite rack.
-   It must give a cofinal finite-rack obstruction: for every finite rack
-   detector prefix/product P, an arity n(P) and braid beta_P with
+   Equivalently, fix an enumeration R_1,R_2,... of one representative of every
+   finite rack isomorphism class and set P_m=R_1 x ... x R_m.  It must give a
+   cofinal finite-rack obstruction: for every m, an arity n_m and braid beta_m
+   with
 
-     rho^P_{n(P)}(beta_P)=1
+     rho^{P_m}_{n_m}(beta_m)=1
      but
-     rho^X_{n(P)}(beta_P) != 1.
+     rho^X_{n_m}(beta_m) != 1.
 
 You may use the following finite evidence and reductions only as background.
 They are not a proof.
