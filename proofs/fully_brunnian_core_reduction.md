@@ -159,3 +159,7 @@ the `T_2` factor preserves domination and gives such a `Y_0`.
 The remaining theoretical obligation is therefore Brunnian-core annihilation
 for degenerate finite YBE solutions, or an explicit finite solution with a
 cofinal prefix sequence of fully deletion-minimal witnesses.
+
+The later note `proofs/ordinary_brunnian_sharpening.md` strengthens this
+again: the fully deletion-minimal witness can be normalized to an ordinary
+Brunnian braid without changing its `X`- or detector action.
