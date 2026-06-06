@@ -1,6 +1,25 @@
 # Contextual Endpoint Residuality Prompt
 
-Status: ask now / awaiting GPT-5.5 Pro response.
+Status: answered by GPT-5.5 Pro on 2026-06-05.
+
+Response summary:
+
+- Pointwise endpoint-faithfulness is not a formal consequence of the
+  definitions of `P_X`, `L_X`, and `C_M(X)`.
+- It is exactly finite-residual injectivity of contextual endpoint profiles on
+  `K_n(P_X)`-fiber monodromy.
+- Local YBE identities prove braid coherence and contextual endpoint transport,
+  but not finite rack residual separation of endpoint generators.
+- A principal endpoint-invisible bad triple remains possible under current
+  Target A machinery: closed in `P_X`, nonclosed in `X`, and closed in every
+  finite residual contextual endpoint rack.
+- Assuming pointwise, fixed arity is uniform because the transition set
+  `T_n={(a,c): c!=a, c=beta a for some beta in K_n(P_X)}` is finite and
+  `D_M` depends only on `(a,c)`.
+- Failure of pointwise kills the current endpoint-detector Target A route, but
+  it does not disprove Sawin or produce Target B.
+- The next missing theorem is a no-principal-holonomy / contextual endpoint
+  residuality theorem.
 
 Prompt:
 
