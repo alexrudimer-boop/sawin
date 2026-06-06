@@ -9,9 +9,12 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 from ybe_domination.nonperm3_detector_products import (
     detector_components_by_ybe_table,
     detector_index_by_ybe_table,
+    contextual_detector_payload_failures,
+    contextual_detector_payload_summary,
     extract_detector_schema_records,
     nonpermutation_size3_flat_tables,
     normalize_rack_table,
+    verify_contextual_detector_record,
     verify_width3_audit_payload,
 )
 
@@ -74,6 +77,40 @@ class NonPerm3DetectorProductTests(unittest.TestCase):
         self.assertEqual(
             normalize_rack_table([0, 1, 0, 1]),
             ((0, 1), (0, 1)),
+        )
+
+    def test_verifies_contextual_detector_schema_record(self):
+        root = Path(__file__).resolve().parents[1]
+        payload = json.loads(
+            (root / "proofs" / "nonperm3_arity2_endpoint_gate_certificate.json").read_text(
+                encoding="utf-8"
+            )
+        )
+
+        result = verify_contextual_detector_record(payload["example_detector"])
+        summary = contextual_detector_payload_summary(payload)
+
+        self.assertTrue(result.ok, result.failures)
+        self.assertEqual(summary["contextual_detector_records"], 1)
+        self.assertEqual(summary["verified_contextual_detector_records"], 1)
+        self.assertEqual(contextual_detector_payload_failures(payload), tuple())
+
+    def test_contextual_detector_schema_rejects_corrupt_alpha(self):
+        root = Path(__file__).resolve().parents[1]
+        payload = json.loads(
+            (root / "proofs" / "nonperm3_arity2_endpoint_gate_certificate.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        record = deepcopy(payload["example_detector"])
+        record["alpha_support_value_1"] = [[0, 0, 0]]
+
+        result = verify_contextual_detector_record(record)
+
+        self.assertFalse(result.ok)
+        self.assertTrue(
+            any("relation failed" in failure for failure in result.failures)
+            or any("endpoint values are equal" in failure for failure in result.failures)
         )
 
     def test_current_import_gap_artifact_verifies_structurally(self):

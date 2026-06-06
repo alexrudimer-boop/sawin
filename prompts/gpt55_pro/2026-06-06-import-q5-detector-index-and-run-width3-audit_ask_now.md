@@ -67,6 +67,15 @@ Current local state:
    rack_table and source_schema_ids for each distinct target rack component,
    so the detector product can be independently traced to imported schemas.
 
+   The schema-level verifier is:
+
+     tools/verify_contextual_detector_schema_certificate.py
+
+   It verifies full contextual detector schema records by checking the finite
+   monoid quotient, target rack table, alpha assignment on M x X x M, all
+   contextual T/R relations, and endpoint separation when endpoint data is
+   present.
+
 4. Running the importer against the current compact local artifacts gives:
 
    schema_like_detector_records: 1
@@ -93,6 +102,7 @@ Important files to inspect first:
   src/ybe_domination/rack_residual_tower.py
   src/ybe_domination/nonperm3_detector_products.py
   tools/run_componentwise_cross_effect_audit.py
+  tools/verify_contextual_detector_schema_certificate.py
   tools/run_nonperm3_detector_product_cross_effect_audit.py
   tools/verify_nonperm3_width3_cross_effect_audit.py
   tests/test_nonperm3_detector_products.py
@@ -116,6 +126,12 @@ A. If you can provide the missing full q=5 schema artifact or a complete
    enough q<=4 / arity-2 schema data, or references to separate full schema
    certificates, to build the detector-product index Y_X for each of the 55
    non-permutation |X|=3 tables.
+
+   The returned schema certificate should pass:
+
+     python tools/verify_contextual_detector_schema_certificate.py \
+       proofs/nonperm3_arity3_q5_resolution_certificate.json \
+       --require-records
 
 B. If the q=5 artifact cannot be supplied directly, give a proof-grade local
    reconstruction plan with concrete code changes.  The plan must specify:

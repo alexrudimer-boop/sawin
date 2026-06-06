@@ -111,6 +111,35 @@ full q=5 import:
 --require-untruncated-trivial
 ```
 
+The schema-level verifier for full detector records is:
+
+```text
+tools/verify_contextual_detector_schema_certificate.py
+```
+
+It walks a certificate JSON, extracts records with `ybe_table`,
+`monoid_quotient`, a rack table, and alpha data, then checks:
+
+- the monoid identity/associativity and structure relations for `X`;
+- the target rack axioms;
+- the alpha assignment on `M x X x M`;
+- every contextual `T` relation;
+- every contextual `R` relation;
+- endpoint separation when endpoint data is present.
+
+The local arity-2 compact certificate has one example detector, and it passes:
+
+```text
+python tools/verify_contextual_detector_schema_certificate.py \
+  proofs/nonperm3_arity2_endpoint_gate_certificate.json \
+  --require-records
+
+OK contextual detector schema verification
+contextual_detector_records 1
+verified_contextual_detector_records 1
+failed_contextual_detector_records 0
+```
+
 ## Current compact artifacts are insufficient
 
 Running the importer against the two local compact certificates:
