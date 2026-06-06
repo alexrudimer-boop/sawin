@@ -10,7 +10,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from functools import lru_cache
-from itertools import permutations, product
+from itertools import permutations
 from typing import Sequence
 
 from .finite_braided_set import FiniteBraidedSet
@@ -235,17 +235,103 @@ def is_rack_table(table: Sequence[Sequence[int]]) -> bool:
     return True
 
 
+def _compose_perm(
+    left: tuple[int, ...],
+    right: tuple[int, ...],
+) -> tuple[int, ...]:
+    return tuple(left[right[i]] for i in range(len(left)))
+
+
+def _invert_perm(perm: tuple[int, ...]) -> tuple[int, ...]:
+    inverse = [0] * len(perm)
+    for source, target in enumerate(perm):
+        inverse[target] = source
+    return tuple(inverse)
+
+
+def _enumerate_rack_tables_by_left_translations(
+    q: int,
+) -> tuple[tuple[tuple[int, ...], ...], ...]:
+    perms = tuple(permutations(range(q)))
+    inverses = {perm: _invert_perm(perm) for perm in perms}
+    rows: list[tuple[int, ...] | None] = [None] * q
+    out: list[tuple[tuple[int, ...], ...]] = []
+    seen: set[tuple[tuple[int, ...], ...]] = set()
+
+    def propagate(
+        state: list[tuple[int, ...] | None],
+    ) -> list[tuple[int, ...] | None] | None:
+        state = list(state)
+        changed = True
+        while changed:
+            changed = False
+            for a, left_translation in enumerate(state):
+                if left_translation is None:
+                    continue
+                inverse_left_translation = inverses[left_translation]
+                for b, right_translation in enumerate(state):
+                    if right_translation is None:
+                        continue
+                    image = left_translation[b]
+                    forced = _compose_perm(
+                        _compose_perm(left_translation, right_translation),
+                        inverse_left_translation,
+                    )
+                    if state[image] is None:
+                        state[image] = forced
+                        changed = True
+                    elif state[image] != forced:
+                        return None
+
+            for a, left_translation in enumerate(state):
+                if left_translation is None:
+                    continue
+                inverse_left_translation = inverses[left_translation]
+                for image, image_translation in enumerate(state):
+                    if image_translation is None:
+                        continue
+                    b = inverse_left_translation[image]
+                    forced = _compose_perm(
+                        _compose_perm(
+                            inverse_left_translation,
+                            image_translation,
+                        ),
+                        left_translation,
+                    )
+                    if state[b] is None:
+                        state[b] = forced
+                        changed = True
+                    elif state[b] != forced:
+                        return None
+        return state
+
+    def search(state: list[tuple[int, ...] | None]) -> None:
+        state = propagate(state)
+        if state is None:
+            return
+        if all(row is not None for row in state):
+            table = tuple(tuple(row) for row in state)
+            if table not in seen and is_rack_table(table):
+                seen.add(table)
+                out.append(table)
+            return
+        index = next(pos for pos, row in enumerate(state) if row is None)
+        for perm in perms:
+            candidate = list(state)
+            candidate[index] = perm
+            search(candidate)
+
+    search(rows)
+    return tuple(out)
+
+
 @lru_cache(maxsize=None)
 def enumerate_rack_tables(q: int) -> tuple[tuple[tuple[int, ...], ...], ...]:
     """Enumerate all labelled rack operation tables on q elements."""
 
-    rows = tuple(permutations(range(q)))
-    out = []
-    for table in product(rows, repeat=q):
-        candidate = tuple(tuple(row) for row in table)
-        if is_rack_table(candidate):
-            out.append(candidate)
-    return tuple(out)
+    if q <= 0:
+        return tuple()
+    return _enumerate_rack_tables_by_left_translations(q)
 
 
 def _propagate_assignment(

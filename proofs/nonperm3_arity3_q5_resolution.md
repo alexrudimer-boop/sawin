@@ -73,6 +73,35 @@ are therefore recorded as externally reported verifier output.  Once the JSON
 and verifier are available locally, they should be copied into `proofs/` and
 run directly.
 
+The displayed first q=5 detector has now been copied into a standalone
+schema fixture:
+
+```text
+proofs/nonperm3_displayed_q5_detector_schema.json
+```
+
+This fixture is not the full q=5 certificate.  It records only the displayed
+detector for the first q<=4 unresolved candidate.  It passes the schema-level
+contextual verifier:
+
+```text
+python tools/verify_contextual_detector_schema_certificate.py \
+  proofs/nonperm3_displayed_q5_detector_schema.json \
+  --require-records
+
+OK contextual detector schema verification
+contextual_detector_records 1
+verified_contextual_detector_records 1
+failed_contextual_detector_records 0
+```
+
+The missing q=5 basis is now being addressed by deterministic local
+reconstruction rather than by waiting for the inaccessible sandbox artifact.
+The reconstructed endpoint-candidate and monoid input layer is recorded in
+`proofs/nonperm3_endpoint_detector_reconstruction.md`.  This is still only an
+input reconstruction step; the full q=5 detector schema certificate has not yet
+been regenerated locally.
+
 ## Displayed First Candidate
 
 The first q<=4 unresolved candidate was:

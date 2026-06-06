@@ -8,6 +8,7 @@ from ybe_domination.finite_braided_set import FiniteBraidedSet
 from ybe_domination.finite_rack_sat import (
     Endpoint,
     build_context_presentation,
+    enumerate_rack_tables,
     find_rack_detector,
     is_rack_table,
     q2_fast_detector,
@@ -135,6 +136,12 @@ class FiniteRackSatTests(unittest.TestCase):
     def test_rack_table_axioms_allow_non_idempotent_racks(self):
         self.assertTrue(is_rack_table(((1, 0), (1, 0))))
         self.assertFalse(is_rack_table(((0, 0), (1, 1))))
+
+    def test_labelled_rack_catalog_counts_through_q5(self):
+        self.assertEqual(len(enumerate_rack_tables(2)), 2)
+        self.assertEqual(len(enumerate_rack_tables(3)), 13)
+        self.assertEqual(len(enumerate_rack_tables(4)), 114)
+        self.assertEqual(len(enumerate_rack_tables(5)), 1708)
 
     def test_size_two_ybe_smoke_count(self):
         self.assertEqual(sum(1 for _ in all_bijection_solutions(2)), 5)

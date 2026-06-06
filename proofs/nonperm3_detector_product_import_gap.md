@@ -140,6 +140,17 @@ verified_contextual_detector_records 1
 failed_contextual_detector_records 0
 ```
 
+The displayed first q=5 detector is also stored as a checked schema fixture:
+
+```text
+proofs/nonperm3_displayed_q5_detector_schema.json
+```
+
+It passes the same contextual verifier.  This fixture is useful for testing
+q=5-style sparse support records and detector-index import, but it is only one
+displayed detector.  It does not replace the missing full q=5 schema
+certificate.
+
 ## Current compact artifacts are insufficient
 
 Running the importer against the two local compact certificates:

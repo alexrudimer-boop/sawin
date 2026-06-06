@@ -44,6 +44,17 @@ Current local state:
    combined_positive_detector_coverages 37692
    remaining_unresolved_candidates 0
 
+   The displayed first q=5 detector has been copied into:
+
+     proofs/nonperm3_displayed_q5_detector_schema.json
+
+   This is a single checked schema fixture, not the full q=5 certificate.
+   It passes:
+
+     python tools/verify_contextual_detector_schema_certificate.py \
+       proofs/nonperm3_displayed_q5_detector_schema.json \
+       --require-records
+
 2. The previous q<=4 compact checkpoint is local but does not contain the 320
    positive detector schema records.  The arity-2 compact certificate is local
    but contains only one example detector, not all 2064 positive schemas.
@@ -95,6 +106,7 @@ Current local state:
 Important files to inspect first:
 
   proofs/nonperm3_arity3_q5_resolution.md
+  proofs/nonperm3_displayed_q5_detector_schema.json
   proofs/nonperm3_size3_higher_arity_frontier.md
   proofs/nonperm3_detector_product_import_gap.md
   proofs/nonperm3_detector_product_import_gap.json

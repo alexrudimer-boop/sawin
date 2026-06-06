@@ -1,0 +1,75 @@
+{
+  "type": "finite_rack_detector_schema",
+  "id": "displayed_q5_first_unresolved",
+  "source": "proofs/nonperm3_arity3_q5_resolution.md displayed first q=5 detector",
+  "status": "single_displayed_schema_not_full_q5_certificate",
+  "ybe_table": [0, 3, 6, 1, 4, 7, 5, 2, 8],
+  "partition": [0, 0, 0],
+  "arity": 3,
+  "braid_word": [1, 0],
+  "endpoint_pair": {
+    "e": {
+      "word": [0, 0, 2],
+      "position": 2,
+      "prefix": [0, 0],
+      "letter": 2,
+      "suffix": []
+    },
+    "eprime": {
+      "word": [2, 0, 0],
+      "position": 0,
+      "prefix": [],
+      "letter": 2,
+      "suffix": [0, 0]
+    }
+  },
+  "monoid_quotient": {
+    "construction": "truncated_structure_monoid_length_2",
+    "size": 10,
+    "identity": 0,
+    "generator_images": [1, 2, 3],
+    "mul": [
+      [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+      [1, 4, 5, 6, 9, 9, 9, 9, 9, 9],
+      [2, 5, 7, 6, 9, 9, 9, 9, 9, 9],
+      [3, 6, 6, 8, 9, 9, 9, 9, 9, 9],
+      [4, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+      [5, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+      [6, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+      [7, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+      [8, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+      [9, 9, 9, 9, 9, 9, 9, 9, 9, 9]
+    ]
+  },
+  "rack": {
+    "size": 5,
+    "table": [
+      [0, 1, 3, 4, 2],
+      [0, 1, 4, 2, 3],
+      [1, 0, 2, 4, 3],
+      [1, 0, 4, 3, 2],
+      [1, 0, 3, 2, 4]
+    ]
+  },
+  "alpha_default": 0,
+  "alpha_support": [
+    [0, 0, 6, 1],
+    [0, 2, 4, 3],
+    [0, 2, 5, 4],
+    [0, 2, 7, 2],
+    [1, 0, 3, 1],
+    [1, 2, 1, 4],
+    [1, 2, 2, 2],
+    [2, 0, 3, 1],
+    [2, 2, 1, 3],
+    [2, 2, 2, 4],
+    [3, 0, 1, 1],
+    [3, 0, 2, 1],
+    [4, 2, 0, 2],
+    [5, 2, 0, 4],
+    [6, 0, 0, 1],
+    [7, 2, 0, 3]
+  ],
+  "endpoint_values": [2, 3],
+  "separates": true
+}

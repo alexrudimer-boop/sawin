@@ -95,6 +95,25 @@ class NonPerm3DetectorProductTests(unittest.TestCase):
         self.assertEqual(summary["verified_contextual_detector_records"], 1)
         self.assertEqual(contextual_detector_payload_failures(payload), tuple())
 
+    def test_verifies_displayed_q5_contextual_detector_schema(self):
+        root = Path(__file__).resolve().parents[1]
+        payload = json.loads(
+            (root / "proofs" / "nonperm3_displayed_q5_detector_schema.json").read_text(
+                encoding="utf-8"
+            )
+        )
+
+        result = verify_contextual_detector_record(payload)
+        grouped = detector_index_by_ybe_table((payload,))
+
+        self.assertTrue(result.ok, result.failures)
+        self.assertEqual(result.source_schema_ids, ("displayed_q5_first_unresolved",))
+        self.assertEqual(len(grouped), 1)
+        self.assertEqual(
+            grouped[(0, 3, 6, 1, 4, 7, 5, 2, 8)][0].source_schema_ids,
+            ("displayed_q5_first_unresolved",),
+        )
+
     def test_contextual_detector_schema_rejects_corrupt_alpha(self):
         root = Path(__file__).resolve().parents[1]
         payload = json.loads(
