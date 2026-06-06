@@ -10,8 +10,10 @@ from ybe_domination.finite_braided_set import FiniteBraidedSet
 from ybe_domination.finite_rack_sat import (
     Endpoint,
     MonoidQuotient,
+    RackDetector,
     build_context_presentation,
     is_rack_table,
+    verify_detector,
 )
 
 
@@ -71,6 +73,21 @@ def cyclic_monoid(order):
     )
 
 
+def five_element_prefix_suffix_monoid():
+    return MonoidQuotient(
+        size=5,
+        identity=0,
+        mul=(
+            (0, 1, 2, 3, 4),
+            (1, 1, 1, 1, 1),
+            (2, 1, 1, 1, 1),
+            (3, 1, 1, 1, 1),
+            (4, 1, 1, 1, 1),
+        ),
+        gen=(2, 3, 4),
+    )
+
+
 def constant_action_rack(rho):
     return tuple(tuple(rho[value] for value in range(3)) for _ in range(3))
 
@@ -81,6 +98,18 @@ def detector_alpha(tau, p, x, _s):
     for _ in range(p):
         value = tau_inv[value]
     return value
+
+
+def low_arity_alpha(p, x, s):
+    support = {
+        (0, 0, 4),
+        (0, 1, 2),
+        (0, 2, 3),
+        (2, 0, 0),
+        (3, 1, 0),
+        (4, 2, 0),
+    }
+    return 1 if (p, x, s) in support else 0
 
 
 def schema_satisfies_contextual_relations(solution, monoid, rack_table, alpha):
@@ -99,6 +128,21 @@ def schema_satisfies_contextual_relations(solution, monoid, rack_table, alpha):
                     if rack_table[first][second] != out:
                         return False
     return True
+
+
+def assignment_from_raw_alpha(presentation, monoid, alpha):
+    assignment = [None] * presentation.class_count
+    for p in range(monoid.size):
+        for x in range(3):
+            for s in range(monoid.size):
+                raw = (p * 3 + x) * monoid.size + s
+                cls = presentation.raw_to_class[raw]
+                value = alpha(p, x, s)
+                if assignment[cls] is None:
+                    assignment[cls] = value
+                elif assignment[cls] != value:
+                    raise AssertionError("alpha is not constant on T-classes")
+    return tuple(0 if value is None else value for value in assignment)
 
 
 def context_orbit(rho, word):
@@ -251,6 +295,32 @@ class Perm3EndpointGateTests(unittest.TestCase):
             Endpoint(prefix=(0,), letter=0, suffix=()),
         )
         self.assertEqual(presentation.endpoint_class, presentation.endpoint_prime_class)
+
+    def test_low_arity_target_positive_q2_detector_certificate(self):
+        solution = permutation_form_solution((1, 2, 0), (0, 1, 2))
+        monoid = five_element_prefix_suffix_monoid()
+        rack_table = ((0, 1), (0, 1))
+
+        self.assertEqual(flat_table(solution), (3, 6, 0, 4, 7, 1, 5, 8, 2))
+        self.assertTrue(is_rack_table(rack_table))
+        self.assertTrue(
+            schema_satisfies_contextual_relations(
+                solution, monoid, rack_table, low_arity_alpha
+            )
+        )
+
+        presentation = build_context_presentation(
+            solution,
+            monoid,
+            Endpoint(prefix=(), letter=0, suffix=(0,)),
+            Endpoint(prefix=(0,), letter=0, suffix=()),
+        )
+        assignment = assignment_from_raw_alpha(presentation, monoid, low_arity_alpha)
+        detector = RackDetector(q=2, table=rack_table, assignment=assignment)
+
+        self.assertTrue(verify_detector(presentation, detector))
+        self.assertEqual(assignment[presentation.endpoint_class], 0)
+        self.assertEqual(assignment[presentation.endpoint_prime_class], 1)
 
 
 if __name__ == "__main__":

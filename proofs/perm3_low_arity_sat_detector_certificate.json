@@ -1,0 +1,46 @@
+{
+  "type": "finite_rack_detector",
+  "classification": "resolved_by_positive_finite_rack_detector",
+  "reported_sha256": "f92cd18f73fad0e75c25e54034390f7170ec12aeb37a60a8fda9ad957e092bea",
+  "reported_verifier_output": "OK finite rack detector certificate verified",
+  "ybe_table": [3, 6, 0, 4, 7, 1, 5, 8, 2],
+  "partition": [0, 0, 0],
+  "arity": 2,
+  "start_word": [0, 0],
+  "end_word": [0, 0],
+  "start_position": 0,
+  "end_position": 1,
+  "endpoint_pair": {
+    "e": {"prefix": [], "letter": 0, "suffix": [0]},
+    "eprime": {"prefix": [0], "letter": 0, "suffix": []}
+  },
+  "monoid_quotient": {
+    "size": 5,
+    "identity": 0,
+    "element_names": ["e", "z", "a0", "a1", "a2"],
+    "mul": [
+      [0, 1, 2, 3, 4],
+      [1, 1, 1, 1, 1],
+      [2, 1, 1, 1, 1],
+      [3, 1, 1, 1, 1],
+      [4, 1, 1, 1, 1]
+    ],
+    "generator_images": [2, 3, 4]
+  },
+  "rack": {
+    "size": 2,
+    "type": "identity_action_rack",
+    "table": [[0, 1], [0, 1]]
+  },
+  "alpha_support_value_1": [
+    [0, 0, 4],
+    [0, 1, 2],
+    [0, 2, 3],
+    [2, 0, 0],
+    [3, 1, 0],
+    [4, 2, 0]
+  ],
+  "alpha_default": 0,
+  "endpoint_values": [0, 1],
+  "separates": true
+}
