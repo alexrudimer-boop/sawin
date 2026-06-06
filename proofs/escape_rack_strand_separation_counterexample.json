@@ -1,0 +1,43 @@
+{
+  "type": "escape_rack_strand_separation_counterexample",
+  "claim_refuted": "w' in B_n w and Psi_n(w') = Psi_n(w) implies w'=w for the minimal-ideal escape-rack labels",
+  "not_a_sawin_counterexample": true,
+  "field": "F2",
+  "X": ["00", "01", "10", "11"],
+  "encoding": {"00": 0, "01": 1, "10": 2, "11": 3},
+  "r_formula": "r((a,b),(c,d)) = ((d, a+b+d), (a+c+d+1, a+1)) over F2",
+  "ybe_expanded_triple_output": [
+    "c+d+f",
+    "a+b+c+d+f",
+    "c+1",
+    "d+1",
+    "a+c+d+e+f",
+    "a+c+d"
+  ],
+  "singularity": {
+    "left_image_size": 2,
+    "right_image_size": 2,
+    "left_minimal_image_objects": [[0, 3], [1, 2]],
+    "right_minimal_image_objects": [[0, 3], [1, 2]]
+  },
+  "escape_label_edges": [
+    [[0, 0, 0], [0, 0, 1]],
+    [[0, 0, 0], [0, 1, 0]],
+    [[0, 1, 0], [1, 1, 0]],
+    [[0, 0, 1], [1, 0, 0]],
+    [[1, 0, 0], [0, 1, 1]],
+    [[0, 1, 1], [1, 0, 1]],
+    [[1, 0, 1], [1, 1, 1]]
+  ],
+  "escape_label_conclusion": "all elementary escape labels e_{pij} have the same image in Y_esc, so Psi_n is constant for every n",
+  "orbit_collision": {
+    "arity": 2,
+    "w": [0, 1],
+    "w_prime": [0, 2],
+    "braid_word": [1, 1, 1],
+    "orbit_path": [[0, 1], [3, 1], [3, 2], [0, 2], [0, 1]],
+    "psi_equal": true,
+    "words_distinct": true
+  },
+  "conclusion": "The minimal-ideal escape-rack construction remains equivariant, but the proposed orbit-separation lemma is false without additional state or hypotheses."
+}
