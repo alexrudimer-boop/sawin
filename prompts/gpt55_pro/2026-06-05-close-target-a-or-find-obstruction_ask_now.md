@@ -1,0 +1,189 @@
+# Close Target A Or Find Obstruction Prompt
+
+Status: ask now / awaiting GPT-5.5 Pro response.
+
+Prompt:
+
+```text
+Please answer self-containedly and mathematically, but do not merely audit the
+known obstruction again.  The goal of this prompt is to close the current
+Target A route or to produce a genuinely concrete obstruction program.
+
+We are working on Sawin's finite rack-domination problem:
+
+    For every finite bijective set-theoretic YBE solution X, does there exist
+    a finite rack Y with ker rho_n^Y <= ker rho_n^X for every n?
+
+Current Target A pointwise gate:
+
+We have reduced pointwise endpoint-faithfulness to excluding principal
+endpoint-invisible bad triples.  A principal bad triple is:
+
+    (n,a,beta),
+    beta in K_n(P_X),
+    c=beta a != a.
+
+It is endpoint-invisible if for every finite quotient M of L_X and every
+coordinate i<=n,
+
+    epsilon_i^M(a) equiv_M epsilon_i^M(c),
+
+where equiv_M is equality in every finite rack quotient of C_M(X).
+
+The no-principal theorem decomposes into two possible issues:
+
+    Strong endpoint separation:
+       every nontrivial principal transition has some M,i with
+       epsilon_i^M(a) != epsilon_i^M(c) in C_M(X).
+
+    Orbit-relevant finite residuality:
+       whenever such endpoint elements are distinct in C_M(X), some finite
+       rack quotient of C_M(X) separates them.
+
+Your task is not to restate that this is missing.  Pick the strongest route
+below that can be made to work, and carry it as far as possible with actual
+lemmas, proofs, or a finite counterexample search specification.
+
+Route A: prove no principal endpoint-invisible bad triple.
+
+1. Try to prove strong endpoint separation:
+
+       beta in K_n(P_X), c=beta a != a.
+
+   Must there exist M,i such that
+
+       epsilon_i^M(a) != epsilon_i^M(c)
+
+   as elements of C_M(X)?
+
+   Do not stop at "not formal."  Either give a proof, or isolate a finite,
+   checkable obstruction certificate for strong collapse.
+
+2. If strong endpoint separation holds, try to prove orbit-relevant finite
+   residuality:
+
+       e != e' in E_M^rel
+       => exists finite rack quotient q:C_M(X)->Q with q(e)!=q(e').
+
+   Use any available rack/quandle representation method: associated group
+   actions, permutation representations, finite quotients of the associated
+   group, Cayley graph quotients, enveloping rack constructions, or residual
+   finiteness of special rack presentations.  Either prove the needed
+   residuality on E_M^rel, or give a finite obstruction certificate.
+
+3. If both steps cannot be proved generally, formulate the strongest theorem
+   that is actually provable and sufficient for pointwise endpoint-faithfulness.
+   It must be stronger than "assume endpoint residual faithfulness"; provide a
+   mechanism or a decidable criterion.
+
+Route B: construct a concrete obstruction program.
+
+4. Give an explicit finite-table search plan for a principal endpoint-invisible
+   bad triple.  The plan must be precise enough to implement:
+
+       input size |X|;
+       variables for r(x,y)=(L_x(y),R_y(x));
+       bijectivity constraints;
+       YBE constraints;
+       construction of P_X;
+       finite search over n,a,beta in K_n(P_X);
+       tests for strong endpoint collapse in C_M(X);
+       tests or approximations for finite residual collapse in C_M(X).
+
+   If exact residual collapse is undecidable in this search, give a sound
+   finite obstruction certificate that would imply it, or a sound finite
+   detector certificate that would refute it.
+
+5. Separate the two obstruction types:
+
+       strong collapse: epsilon_i^M(a)=epsilon_i^M(c) for all M,i;
+       residual collapse: endpoint elements differ but lie in Rad_fin(C_M(X)).
+
+   For each type, specify what finite data would prove it or refute it.
+
+Route C: close by special structural reduction.
+
+6. Try to prove that every minimal principal bad triple falls into a known
+   positive branch:
+
+       rack,
+       left-nondegenerate / derived-rack / guitar-map recoverable,
+       involutive/symmetric,
+       constant-action/permutation,
+       product/padding,
+       or proper active descent.
+
+   This must be an actual reduction theorem, not a list of branches.  If the
+   reduction fails, identify a finite local pattern that avoids all branches.
+
+Route D: produce a decisive Target B bridge.
+
+7. If endpoint invisibility persists, try to construct independent finite
+   active data:
+
+       Z, r_Z:Z^2->Z^2, pi or pi_{a,b}:X->Z
+
+   with total bijective YBE, braid equivariance, and global orbit-injectivity.
+   Either build the data from the principal invisible transition, or prove why
+   no such construction follows.
+
+Required output.
+
+8. End with one of the following, explicitly:
+
+   (I) A proof of pointwise endpoint-faithfulness.
+
+   (II) A proof under a new named hypothesis, where the hypothesis is concrete
+        and checkable enough to be attacked next.
+
+   (III) A finite counterexample/obstruction search program with exact
+         constraints and certificates.
+
+   (IV) A proof that Target A cannot be closed without a theorem at least as
+        strong as a specified residual-finiteness or active-extraction
+        assertion.
+
+9. If you choose (IV), you must state a next theorem that is not just another
+   audit.  It should be a theorem one can try to prove or disprove by finite
+   computation or a known algebraic method.
+
+Useful definitions.
+
+Strong endpoint collapse means:
+
+       epsilon_i^M(a)=epsilon_i^M(c) for all M,i.
+
+Residual endpoint collapse means:
+
+       epsilon_i^M(a), epsilon_i^M(c) may differ in C_M(X),
+       but every finite rack quotient identifies them.
+
+For fixed M, let E_M^rel be the subset of C_M(X) consisting of endpoint
+elements that occur in principal transitions.  Orbit-relevant finite
+residuality is:
+
+       Rad_fin(C_M(X)) cap (E_M^rel x E_M^rel) = diagonal.
+
+The residual endpoint quotient E_M=S_M/equiv_M is only an endpoint detector;
+it is not an active factor.
+
+Guardrails.
+
+- Do not assume C_M(X) is residually finite unless justified.
+- Do not confuse equality in C_M(X) with equality in all finite rack quotients.
+- Do not use E_M as an active factor; it is only a finite residual endpoint
+  detector.
+- Do not count path-dependent holonomy unless it becomes word-defined rack
+  endpoint data.
+- Do not give another answer whose main conclusion is merely "this is open."
+  If it is open, produce a concrete theorem, computation, or obstruction
+  certificate that advances the problem.
+- Do not jump to uniform Target A; this prompt is about closing or concretely
+  obstructing the pointwise gate.
+
+Goal.
+
+Close the pointwise Target A gate if possible.  If not, produce a concrete
+finite obstruction program or a named, checkable theorem that is the next
+thing to prove, rather than another boundary audit.
+```

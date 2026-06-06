@@ -1,6 +1,26 @@
 # No Principal Endpoint-Invisible Holonomy Prompt
 
-Status: ask now / awaiting GPT-5.5 Pro response.
+Status: answered by GPT-5.5 Pro on 2026-06-05.
+
+Response summary:
+
+- No principal endpoint-invisible holonomy is equivalent to pointwise
+  endpoint-faithfulness only with the exact nonuniform quantifiers:
+  for every bad triple, there exist `M`, `i<=n`, and a finite rack quotient
+  `q:C_M(X)->Q` separating the two endpoint labels.
+- "Closed in `P_X`" must mean `beta in K_n(P_X)`, not merely fixing the
+  chosen `P_X`-labelled tuple.
+- The witness `M` may depend on the triple, and the coordinate is existential.
+- The universal property of `P_X` controls context-free finite rack shadows of
+  `X`, not higher-arity contextual endpoint tests.
+- Contextual endpoint tests can see more than `P_X`, but they may still miss
+  fiber monodromy if endpoint elements are equal in `C_M(X)` or equal in every
+  finite rack quotient.
+- The missing theorem decomposes into strong endpoint separation plus
+  orbit-relevant finite residuality of endpoint elements in `C_M(X)`.
+- Minimal arity, deletion, and braid-word changes do not formally rule out
+  principal invisibility.
+- A principal invisible triple does not automatically produce Target B.
 
 Prompt:
 
