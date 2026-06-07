@@ -4728,7 +4728,7 @@
   "failures": [],
   "kind": "nonperm3_subproduct_trivial_kernel_audit_v1",
   "nonpermutation_ybe_tables": 55,
-  "row_count": 7,
+  "row_count": 8,
   "rows": [
     {
       "arity": 8,
@@ -5066,6 +5066,52 @@
         4,
         7,
         2,
+        3,
+        8
+      ]
+    },
+    {
+      "arity": 8,
+      "audited_detector_component_count": 1,
+      "audited_detector_component_indices": [
+        0
+      ],
+      "audited_detector_component_sizes": [
+        3
+      ],
+      "bound": 3,
+      "conclusion": "full_product_detector_kernel_x_image_trivial_by_subproduct",
+      "elapsed_seconds": 345.917985,
+      "full_detector_component_count": 2,
+      "full_detector_component_sizes": [
+        3,
+        4
+      ],
+      "full_product_kernel_image_size": 1,
+      "full_product_parabolic_image_size": 1,
+      "full_product_quotient_nontrivial": false,
+      "full_product_quotient_size": 1,
+      "omitted_detector_component_indices": [
+        1
+      ],
+      "omitted_detector_component_sizes": [
+        4
+      ],
+      "subproduct_joint_image_size": 20056328248320,
+      "subproduct_kernel_image_size": 1,
+      "subproduct_parabolic_image_size": 1,
+      "subproduct_quotient_nontrivial": false,
+      "subproduct_quotient_size": 1,
+      "subproduct_seed_count": 0,
+      "subproduct_truncated": false,
+      "ybe_table": [
+        0,
+        5,
+        7,
+        2,
+        4,
+        6,
+        1,
         3,
         8
       ]
