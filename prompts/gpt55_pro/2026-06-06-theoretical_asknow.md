@@ -3,7 +3,7 @@ theoretical_asknow
 This is a self-contained theoretical prompt.  Do not ask for code,
 repository access, local files, or further computations.  Be aggressive: try
 to fully resolve Will Sawin's finite-rack domination problem from the
-same-image deletion ghost boundary below.
+detector-specific same-image deletion ghost boundary below.
 
 Problem, due to Will Sawin.
 
@@ -32,11 +32,12 @@ B. An explicit finite bijective set-theoretic YBE solution X and a rigorous
    cofinal obstruction proving no finite rack dominates X.
 
 C. If A and B are still out of reach, give a theorem that directly attacks the
-   same-image deletion ghost quotient below.  Acceptable C-output must be a
-   collapse theorem, no-go theorem, equivalence theorem, or explicit cofinal
-   survival mechanism for the ghost quotient.  Do not introduce another named
-   filtration unless it immediately proves A, proves B, or proves such a
-   theorem.
+   detector-specific same-image deletion ghost obstruction below.  Acceptable
+   C-output must be a detector-specific annihilation theorem, a
+   detector-specific survival theorem, a collapse/no-go theorem beyond the
+   detector-independent fixed-depth results below, or an explicit cofinal
+   rack-prefix mechanism.  Do not introduce another named filtration unless it
+   immediately proves A, proves B, or proves such a theorem.
 
 Known closed cases and guardrails.
 
@@ -187,6 +188,58 @@ Therefore
     iff
   A_a(phi) <= D_S R.
 
+Current sharp detector-independent boundary.
+
+Let r=|S|.  Full deletion depth collapses the quotient:
+
+  M_{S,r-1}(phi)=C_S
+
+for every surjection phi:F_S -> G.  Equivalently,
+
+  A_{r-1}(phi) <= D_S ker(phi).
+
+Thus same-image deletion ghosts vanish if all proper deletions are imposed.
+
+For bounded depth a, there is only face confinement.  If w in A_a(phi), then
+for every U subset S with |U|<=a,
+
+  w in D_U ker(phi),
+
+so
+
+  phi(w) in [N_i | i in U]_Sigma.
+
+Hence
+
+  M_{S,a}(phi)
+    <=
+  intersection_{U subset S, 1 <= |U| <= a}
+  [N_i | i in U]_Sigma.
+
+But fixed-depth ghosts do not collapse detector-independently.  For every
+fixed a>=1 there are arbitrarily large finite sets S, finite p-groups G, and
+surjections phi:F_S -> G such that
+
+  M_{S,a}(phi) != C_S.
+
+Indeed one can arrange C_S=1 while M_{S,a}(phi) contains a nontrivial element
+of order p.  The construction takes k=a+1, a prime p>k, r=p+k, and
+
+  w = product_{A subset S, |A|=k} c_A,
+
+where c_A is the left-normed commutator on the k generators indexed by A.
+In the class-k exponent-p nilpotent quotient, kill all deletion products
+e_U(w) with 1<=|U|<=a.  Lucas' theorem shows those killed products have zero
+total support functional while w has nonzero functional, so w survives.
+Since r>k, the full all-meridian commutator maps trivially.
+
+Therefore no positive proof can come from a uniform bounded-deletion collapse
+
+  A_a(Phi_n) <= D_S ker(Phi_n).
+
+The next theorem must use the rack detector Q in an essential way, or give a
+cofinal rack-prefix construction where detector-specific ghosts survive.
+
 Now include the detector obstruction.  Let
 
   H = phi^{-1}(K cap Sk_{S,q}^{(d)}).
@@ -259,8 +312,10 @@ Equivalently,
   K_n cap MSk_{n,q,a}^{(d)} = 1.
 
 You must use the detector Q in an essential way.  A proof that only uses
-Moore coherence, finite image, or bounded skeletal depth is insufficient
-because of the A_5 conjugation rack survival example.
+Moore coherence, finite image, bounded skeletal depth, exact small-support
+face confinement, or bounded deletion depth is insufficient because fixed-
+depth ghosts survive cofinally in finite p-group images, and the A_5
+conjugation rack gives point-pushing survival against the weak detector T_2.
 
 Relative positive route:
 
@@ -293,10 +348,12 @@ Required discipline.
 1. First check the ghost quotient formulas above.  If a formula is wrong,
    repair it precisely.
 
-2. Do not answer merely by defining a smaller subgroup.  The next useful C is
-   a detector-specific annihilation theorem, a detector-specific survival
-   theorem, a collapse/no-go theorem for the ghost quotient, or an explicit
-   cofinal counterexample mechanism.
+2. Do not answer merely by defining a smaller subgroup.  Do not re-present
+   the full-deletion collapse or the fixed-depth finite p-group survival
+   theorem as new progress.  The next useful C is a detector-specific
+   annihilation theorem, a detector-specific survival theorem, a
+   collapse/no-go theorem beyond the known ghost quotient boundary, or an
+   explicit cofinal counterexample mechanism.
 
 3. Separate theorem-level claims from heuristics and unsupported claims.
 

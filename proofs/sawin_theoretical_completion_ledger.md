@@ -1605,17 +1605,17 @@ Arity-8 partial certified trivial-kernel certificate:
 ```text
 proofs/nonperm3_width3_arity8_partial_certified_trivial_kernel_combined.json
 
-23 non-permutation size-three rows certified
+24 non-permutation size-three rows certified
 13 direct full-product stabilizer rows
-10 subproduct-trivial rows
-full_product_kernel_image_size distribution {1: 23}
-full_product_quotient_size distribution {1: 23}
+11 subproduct-trivial rows
+full_product_kernel_image_size distribution {1: 24}
+full_product_quotient_size distribution {1: 24}
 ```
 
 The direct rows cover the identity row and all q=2 one-component rows.  The
-subproduct partial covers two `(3,4)` rows by their q=3 subproduct and eight
+subproduct partial covers three `(3,4)` rows by their q=3 subproduct and eight
 `(2,3,5)` rows by their `(2,3)` subproducts.  This is partial arity-8
-evidence: 32 of the 55 arity-8 rows remain uncertified by this probe, and the
+evidence: 31 of the 55 arity-8 rows remain uncertified by this probe, and the
 full q=4/q=5 subproduct batch is now a multi-hour computation.
 
 ## Exact open implications
@@ -1668,8 +1668,38 @@ and Moore-coherent root-core noise: the obstruction must be in the exact
 all-meridian subgroup and must have a single lift whose deletion evaluations
 vanish in the same finite image.
 
-The active theoretical prompt now asks for a direct attack on the exact
-same-image deletion ghost quotient reviewed in
+The next theoretical response gave a sharp detector-independent boundary for
+the exact same-image deletion ghost quotient; the detailed review is recorded
+in
+`proofs/2026_06_07_theoretical_full_deletion_ghost_response_review.md`.
+The full-deletion collapse is:
+
+```text
+M_{S,|S|-1}(phi)=C_S
+```
+
+for every surjection `phi:F_S -> G`, equivalently
+
+```text
+A_{|S|-1}(phi) <= D_S ker(phi).
+```
+
+For bounded deletion depth `a`, one only gets face confinement:
+
+```text
+M_{S,a}(phi)
+  <=
+intersection_{U subset S, 1 <= |U| <= a}
+[N_i | i in U]_Sigma.
+```
+
+The same response proves that this bounded-depth confinement does not collapse
+detector-independently: for every fixed `a`, finite p-group images exist
+cofinally with `C_S=1` but `M_{S,a}(phi) != 1`.
+
+The active theoretical prompt now asks for a direct detector-specific attack
+on the exact same-image deletion ghost quotient.  The previous Moore-coherent
+review is
 `proofs/2026_06_07_theoretical_moore_coherent_response_review.md`.
 For `phi:F_S -> G`, with `R=ker phi`,
 `epsilon_T=iota_T d_T`, and
@@ -1697,10 +1727,12 @@ but w notin ker Phi_n.
 ```
 
 The prompt now asks for detector-specific annihilation of these ghosts, or a
-cofinal rack-prefix construction where such ghosts survive.  Moore coherence
-alone is known to be insufficient: the conjugation rack `A_5` has cofinal
-perfect point-pushing ghosts against the weak detector `T_2`, although it is
-not a Sawin counterexample because it dominates itself as a rack.
+cofinal rack-prefix construction where such ghosts survive.  Moore coherence,
+finite image, bounded skeletal depth, exact small-support face confinement,
+and bounded deletion depth are known to be insufficient.  The conjugation rack
+`A_5` also has cofinal perfect point-pushing ghosts against the weak detector
+`T_2`, although it is not a Sawin counterexample because it dominates itself
+as a rack.
 
 ## Review rubric
 

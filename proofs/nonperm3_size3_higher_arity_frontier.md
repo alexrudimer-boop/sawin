@@ -874,13 +874,13 @@ A resumable q=4/q=5 subproduct partial also closes:
 proofs/nonperm3_width3_arity8_q4_q5_subproduct_size_le3_rows.jsonl
 proofs/nonperm3_width3_arity8_q4_q5_subproduct_size_le3_trivial_kernel_audit.partial.json
 
-row_count 10
-full component size distribution {[2, 3, 5]: 8, [3, 4]: 2}
-audited subproduct size distribution {[2, 3]: 8, [3]: 2}
-omitted component size distribution {[5]: 8, [4]: 2}
-subproduct_kernel_image_size distribution {1: 10}
-full_product_kernel_image_size distribution {1: 10}
-elapsed_seconds total 3235.719531
+row_count 11
+full component size distribution {[2, 3, 5]: 8, [3, 4]: 3}
+audited subproduct size distribution {[2, 3]: 8, [3]: 3}
+omitted component size distribution {[5]: 8, [4]: 3}
+subproduct_kernel_image_size distribution {1: 11}
+full_product_kernel_image_size distribution {1: 11}
+elapsed_seconds total 3574.368784
 ```
 
 Verifier:
@@ -893,8 +893,8 @@ python tools/verify_nonperm3_subproduct_trivial_kernel_audit.py \
 
 OK nonperm3 subproduct trivial-kernel audit verification
 arity 8
-recomputed_rows 10
-trivial_subproduct_rows 10
+recomputed_rows 11
+trivial_subproduct_rows 11
 ```
 
 The partial arity-8 combined certificate is:
@@ -902,13 +902,13 @@ The partial arity-8 combined certificate is:
 ```text
 proofs/nonperm3_width3_arity8_partial_certified_trivial_kernel_combined.json
 
-row_count 23
+row_count 24
 certification_method_counts {
   "direct_full_product_stabilizer": 13,
-  "subproduct_trivial_kernel": 10
+  "subproduct_trivial_kernel": 11
 }
-full_product_kernel_image_size_distribution {"1": 23}
-full_product_quotient_size_distribution {"1": 23}
+full_product_kernel_image_size_distribution {"1": 24}
+full_product_quotient_size_distribution {"1": 24}
 ```
 
 Verifier:
@@ -921,11 +921,11 @@ python tools/verify_nonperm3_certified_trivial_kernel_audit.py \
 
 OK nonperm3 combined trivial-kernel audit verification
 arity 8
-rows 23
-methods {'direct_full_product_stabilizer': 13, 'subproduct_trivial_kernel': 10}
+rows 24
+methods {'direct_full_product_stabilizer': 13, 'subproduct_trivial_kernel': 11}
 ```
 
-This is proof-grade fixed-arity evidence for only 23 of the 55 arity-8 rows.
+This is proof-grade fixed-arity evidence for only 24 of the 55 arity-8 rows.
 The q=4/q=5 partial indicates that the subproduct strategy still works at
 arity 8, but completing the 24-row q=4/q=5 subproduct batch is now a
 multi-hour computation.  The remaining arity-8 rows are not certified by this
