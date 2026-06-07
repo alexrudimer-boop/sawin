@@ -1574,6 +1574,32 @@ rho^X_6(K^{Y_X}_6)=1
 for the current detector product `Y_X` and every non-permutation size-three
 table `X`.  It is still not an all-arity theorem.
 
+Arity-7 complete certified trivial-kernel certificate:
+
+```text
+proofs/nonperm3_width3_arity7_certified_trivial_kernel_combined.json
+
+55 non-permutation size-three rows certified
+31 direct full-product stabilizer rows
+24 subproduct-trivial rows
+full_product_kernel_image_size distribution {1: 55}
+full_product_quotient_size distribution {1: 55}
+```
+
+The direct rows again cover the identity row, all q=2 one-component rows, all
+q=2/q=3/q=3 rows, and all q=2/q=3/q=3/q=3 rows.  The q=4/q=5 profiles are
+certified by q<=3 subproducts.  The combined verifier checks all 55 rows with
+`--require-trivial-full-product`.
+
+This proves the fixed-arity statement
+
+```text
+rho^X_7(K^{Y_X}_7)=1
+```
+
+for the current detector product `Y_X` and every non-permutation size-three
+table `X`.  It is still not an all-arity theorem.
+
 ## Exact open implications
 
 The current material does not prove Sawin's problem and does not provide a
@@ -1624,16 +1650,39 @@ and Moore-coherent root-core noise: the obstruction must be in the exact
 all-meridian subgroup and must have a single lift whose deletion evaluations
 vanish in the same finite image.
 
-The active theoretical prompt now asks for a direct attack on the
-Moore-coherent target recorded in
-`proofs/moore_coherent_skeletal_root_core_obstruction.md`: find a finite rack
-detector `Q=Y^0 x T_2` and fixed `q,d,a` with
+The active theoretical prompt now asks for a direct attack on the exact
+same-image deletion ghost quotient reviewed in
+`proofs/2026_06_07_theoretical_moore_coherent_response_review.md`.
+For `phi:F_S -> G`, with `R=ker phi`,
+`epsilon_T=iota_T d_T`, and
 
 ```text
-K_n cap MSk_{n,q,a}^{(d)} = 1
+A_a(phi)
+  =
+intersection_{T proper subset S, 1 <= |S\T| <= a}
+epsilon_T^{-1}(R),
 ```
 
-eventually, or construct a cofinal counterexample surviving this condition.
+the detector target is:
+
+```text
+K cap MSk_{S,q,a}^{(d)}=1
+  iff
+A_a(phi) cap phi^{-1}(K cap Sk_{S,q}^{(d)}) <= R.
+```
+
+So a positive proof must exclude nontrivial same-image deletion ghosts
+
+```text
+w in A_a(Phi_n) cap Phi_n^{-1}(K_n cap Sk_{n,q}^{(d)})
+but w notin ker Phi_n.
+```
+
+The prompt now asks for detector-specific annihilation of these ghosts, or a
+cofinal rack-prefix construction where such ghosts survive.  Moore coherence
+alone is known to be insufficient: the conjugation rack `A_5` has cofinal
+perfect point-pushing ghosts against the weak detector `T_2`, although it is
+not a Sawin counterexample because it dominates itself as a rack.
 
 ## Review rubric
 

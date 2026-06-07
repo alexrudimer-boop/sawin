@@ -3,7 +3,7 @@ theoretical_asknow
 This is a self-contained theoretical prompt.  Do not ask for code,
 repository access, local files, or further computations.  Be aggressive: try
 to fully resolve Will Sawin's finite-rack domination problem from the
-Moore-coherent finite-image boundary below.
+same-image deletion ghost boundary below.
 
 Problem, due to Will Sawin.
 
@@ -32,11 +32,11 @@ B. An explicit finite bijective set-theoretic YBE solution X and a rigorous
    cofinal obstruction proving no finite rack dominates X.
 
 C. If A and B are still out of reach, give a theorem that directly attacks the
-   Moore-coherent target below: either collapse it, prove it vanishes under a
-   natural finite-YBE hypothesis, or show a concrete mechanism by which it can
-   survive cofinally.  Do not introduce a new named filtration unless it
-   immediately proves A, proves B, or proves an equivalence/no-go theorem for
-   the Moore-coherent condition.
+   same-image deletion ghost quotient below.  Acceptable C-output must be a
+   collapse theorem, no-go theorem, equivalence theorem, or explicit cofinal
+   survival mechanism for the ghost quotient.  Do not introduce another named
+   filtration unless it immediately proves A, proves B, or proves such a
+   theorem.
 
 Known closed cases and guardrails.
 
@@ -65,7 +65,7 @@ Known closed cases and guardrails.
 
      Brun_n cap ker rho^Q_n <= ker rho^X_n
 
-   for every n, where Brun_n is the ordinary Brunnian subgroup of P_n.
+   for every n.
 
 Finite-image setup.
 
@@ -118,158 +118,187 @@ K_n and L_n intersect trivially.  Therefore Q dominates X if and only if
 
 for every n.
 
-Q-skeletal root-core boundary.
+Skeletal and Moore-coherent boundary.
 
-For every nonempty S subset {1,...,r}, define
+For every nonempty S, write
 
-  C_S=[N_i | i in S]_Sigma,
-  C_{ {i} }=N_i.
+  C_S=[N_i | i in S]_Sigma.
 
-Root-split factorization:
+The q-skeletal recursive root-core Sk_{S,q}^{(d)} is a subgroup-level
+supergroup of C_S, with
 
-  C_S =
-  product_{ {A,B} in Bip(S) } [C_A,C_B],
+  C_S <= Sk_{S,q}^{(d)}
 
-where Bip(S) is the set of unordered bipartitions S=A sqcup B.
+and equality once d >= max(0, |S|-q).  You may treat its detailed recursive
+definition as already proved; it combines exact support tests C_S<=C_T with
+weighted block tests and recursive binary root splitting.
 
-Exact support monotonicity:
+Now let phi:F_S -> G be a surjection from the free group F_S=<x_i | i in S>,
+with N_i=<<phi(x_i)>>_G.  For T subset S, define
 
-  empty != T subset S  =>  C_S <= C_T.
+  epsilon_T = iota_T d_T : F_S -> F_S,
 
-For q>=3, define the q-skeletal recursive root-core Sk_{S,q}^{(d)} by
+where d_T deletes generators outside T and iota_T reinserts the result.
 
-  J_{S,q} =
-    intersection_{empty != T subset S, |T|<=q} C_T,
+Let R=ker phi.  For a>=1 define
 
-  Sk_{S,q}^{(0)} = R_S^(0) cap J_{S,q},
-
-  Sk_{S,q}^{(d+1)}
+  A_a(phi)
     =
-  Sk_{S,q}^{(d)}
-    cap
-  product_{ {A,B} in Bip(S) }
-    [Sk_{A,q}^{(d)}, Sk_{B,q}^{(d)}],
+  intersection_{T proper subset S, 1 <= |S\T| <= a}
+  epsilon_T^{-1}(R).
 
-where R_S^(0) is the weighted two-plus-three block-core approximation from the
-previous boundary.  The needed facts are:
+Equivalently, w in A_a(phi) means every relevant deletion of w evaluates
+trivially in the same finite image G.
 
-  C_S <= Sk_{S,q}^{(d)} <= R_S^(d),
+Define
 
-and
+  M_{S,a}(phi)=phi(A_a(phi)).
 
-  Sk_{S,q}^{(d)} = C_S
-  once d >= max(0, |S|-q).
+Then
 
-Moore-coherent strengthening.
+  C_S <= M_{S,a}(phi).
 
-Let S={1,...,r} and let
-
-  phi:F_S -> G
-
-be a surjection from the free group F_S=<x_i | i in S>.  Put
-
-  N_i = << phi(x_i) >>_G.
-
-For T subset S, let
-
-  d_T:F_S -> F_T
-
-delete the generators outside T, and let
-
-  iota_T:F_T -> F_S
-
-be the natural inclusion.  Define the same-image deletion evaluation
-
-  partial_T^phi = phi iota_T d_T : F_S -> G.
-
-For a>=1, define the a-deletion Moore image
-
-  M_{S,a}(phi)
-    =
-  phi(
-    intersection_{T proper subset S, 1 <= |S\T| <= a}
-    ker partial_T^phi
-  ).
-
-This says that an element has a single lift to the free meridian group whose
-deleted evaluations vanish in the same finite image.  The case a=1 is already
-important:
-
-  M_{S,1}(phi)
-    =
-  phi(
-    intersection_{i in S}
-    ker partial_{S\{i}}^phi
-  ).
-
-Define the Moore-coherent q-skeletal root-core
+The Moore-coherent target is
 
   MSk_{S,q,a}^{(d)}(phi)
     =
   Sk_{S,q}^{(d)}(G;N_i) cap M_{S,a}(phi).
 
-Known Moore-coherent containment:
+Thus
 
-  C_S <= MSk_{S,q,a}^{(d)}(phi) <= Sk_{S,q}^{(d)}(G;N_i),
+  C_S <= MSk_{S,q,a}^{(d)}(phi) <= Sk_{S,q}^{(d)}(G;N_i).
 
-and if a' >= a then
+Exact ghost quotient.
 
-  MSk_{S,q,a'}^{(d)}(phi) <= MSk_{S,q,a}^{(d)}(phi).
+Let
 
-In the finite-image setup, take S={1,...,n-1}, phi=Phi_n, and write
+  R_i=<<x_i>>_{F_S},
+  D_S=[R_i | i in S]_Sigma.
 
-  MSk_{n,q,a}^{(d)} = MSk_{S,q,a}^{(d)}(Phi_n).
+Then C_S=phi(D_S), D_S<=A_a(phi), and
 
-Sufficient positive target.
+  M_{S,a}(phi)/C_S
+    ~= A_a(phi)R / D_S R
+    ~= A_a(phi)/(A_a(phi) cap D_S R).
 
-It is enough to prove that for every finite bijective X there exist a finite
-rack detector Q=Y^0 x T_2 and fixed integers q>=3, d>=0, a>=1 such that
+Therefore
+
+  M_{S,a}(phi)=C_S
+    iff
+  A_a(phi) <= D_S R.
+
+Now include the detector obstruction.  Let
+
+  H = phi^{-1}(K cap Sk_{S,q}^{(d)}).
+
+Then
+
+  K cap MSk_{S,q,a}^{(d)}
+    =
+  phi(A_a(phi) cap H),
+
+and hence
+
+  K cap MSk_{S,q,a}^{(d)} = 1
+    iff
+  A_a(phi) cap H <= R.
+
+In the Sawin finite-image setup, this becomes:
 
   K_n cap MSk_{n,q,a}^{(d)} = 1
+    iff
+  A_a(Phi_n) cap Phi_n^{-1}(K_n cap Sk_{n,q}^{(d)})
+    <=
+  ker Phi_n.
 
-for all sufficiently large n.  Fixed-arity rack cofinality then handles the
-remaining finitely many arities.
+So the exact obstruction is a nontrivial word w in F_{n-1} satisfying:
 
-Relative quotient version.
+  epsilon_T(w) in ker Phi_n
+    for all relevant deletions T,
 
-Let Z be a braided quotient of X already dominated by a finite rack.  Let
+  Phi_n(w) in K_n cap Sk_{n,q}^{(d)},
 
-  G_n^X = rho_n^X(F_{n-1}),
-  E_n = ker(G_n^X -> G_n^Z),
+  Phi_n(w) != 1.
 
-and let psi_n:F_{n-1}->G_n^X be the natural map.  Define
+Call such a w a same-image deletion ghost.
 
-  MSk_{n,q,a}^{X,(d)} = MSk_{S,q,a}^{(d)}(psi_n).
+Important warning.
 
-It is enough to find a dominated braided quotient Z and fixed q,d,a such that
+Moore coherence alone does not force vanishing.  For the conjugation rack
+X=A_5 with a*b=aba^{-1}, and the weak detector Q=T_2, left-normed
+last-strand commutators
+
+  c_r=[[[x_1,x_2],x_3],...,x_r]
+
+are ordinary Brunnian and Q-invisible, but act nontrivially on X^n by
+point-pushing/Artin conjugation.  Since A_5 is centerless and perfect, one can
+choose inputs making c_r nontrivial in A_5 for all r.  Thus
+
+  K_n cap MSk_{n,q,a}^{(d)} != 1
+
+cofinally for the weak detector Q=T_2.  This is not a Sawin counterexample,
+because X itself is a rack and dominates itself.  It proves that any positive
+proof must use detector-specific structure, not Moore coherence alone.
+
+Main task.
+
+Try to prove A or B.  If neither is possible, attack the exact ghost quotient
+directly.
+
+Positive route to A:
+
+Construct, for every finite bijective X, a finite rack detector Q=Y^0 x T_2
+and fixed q,d,a such that, for all sufficiently large n,
+
+  A_a(Phi_n) cap Phi_n^{-1}(K_n cap Sk_{n,q}^{(d)})
+    <=
+  ker Phi_n.
+
+Equivalently,
+
+  K_n cap MSk_{n,q,a}^{(d)} = 1.
+
+You must use the detector Q in an essential way.  A proof that only uses
+Moore coherence, finite image, or bounded skeletal depth is insufficient
+because of the A_5 conjugation rack survival example.
+
+Relative positive route:
+
+Find a dominated braided quotient Z of X and fixed q,d,a such that, with
+G_n^X=rho_n^X(F_{n-1}) and E_n=ker(G_n^X -> G_n^Z),
 
   E_n cap MSk_{n,q,a}^{X,(d)} = 1
 
-for all sufficiently large n.
+eventually.
 
-Main tasks.
+Negative route to B:
 
-1. First verify the Moore-coherent containment.  If there is a flaw, identify
-   it precisely and repair the boundary.
+Construct an explicit finite degenerate bijective YBE solution X such that
+for every finite rack prefix P_m there are unbounded n_m and same-image
+deletion ghosts w_m for the detector Q_m=P_m^0 x T_2 with
 
-2. Then try to prove A by proving the sufficient positive target above.  A
-   plausible route is a finite-state contextual endpoint theorem implying that
-   every Q-invisible X-visible Brunnian motion has a bounded exact-support
-   Moore-coherent endpoint core.
+  Phi_{m,n_m}(w_m) in K_{m,n_m} cap Sk_{n_m,q}^{(d)}
 
-3. If A fails, try to prove B by constructing an explicit finite degenerate
-   bijective YBE solution X with a cofinal sequence of ordinary Brunnian
-   braids beta_m invisible to every finite rack prefix P_m^0 x T_2 but visible
-   to X.  The construction must verify YBE, bijectivity, and cofinal
-   rack-prefix invisibility.
+and
 
-4. If you give C, it must be a collapse theorem, no-go theorem, equivalence
-   theorem, or explicit survival mechanism for
+  Phi_{m,n_m}(w_m) != 1
 
-     K_n cap MSk_{n,q,a}^{(d)}.
+for every fixed q,d,a once m,n_m are large enough.
 
-   A further subgroup hierarchy without such a theorem is not enough.
+The construction must verify YBE, bijectivity, and cofinal rack-prefix
+invisibility.  A survival example against one weak detector is not enough.
 
-5. Be explicit about theorem-level claims, heuristic claims, and unsupported
-   claims.  Do not cite the public status of the MathOverflow page as
-   mathematical evidence.
+Required discipline.
+
+1. First check the ghost quotient formulas above.  If a formula is wrong,
+   repair it precisely.
+
+2. Do not answer merely by defining a smaller subgroup.  The next useful C is
+   a detector-specific annihilation theorem, a detector-specific survival
+   theorem, a collapse/no-go theorem for the ghost quotient, or an explicit
+   cofinal counterexample mechanism.
+
+3. Separate theorem-level claims from heuristics and unsupported claims.
+
+4. Do not cite the public status of the MathOverflow page as mathematical
+   evidence.
