@@ -214,6 +214,50 @@ large-arity finite-image obstruction.  Fixed-arity rack cofinality supplies
 finitely many racks for the remaining small arities; their product with `Q`
 dominates `X`.
 
+## Abelianization-Visible Relative Kernel
+
+The condition
+
+```text
+E_n cap gamma_2(G^X_n)=1
+```
+
+has an equivalent group-theoretic form: the relative last-strand kernel `E_n`
+injects into the abelianization of `G^X_n`.
+
+Indeed, the kernel of the abelianization map
+
+```text
+G^X_n -> (G^X_n)_ab
+```
+
+is `gamma_2(G^X_n)`.  Therefore the restriction
+
+```text
+E_n -> (G^X_n)_ab
+```
+
+is injective if and only if `E_n cap gamma_2(G^X_n)=1`.
+
+In particular, this condition forces `E_n` to be central in `G^X_n`.  Since
+`E_n` is normal,
+
+```text
+[E_n,G^X_n] <= E_n cap gamma_2(G^X_n),
+```
+
+so trivial intersection gives
+
+```text
+E_n <= Z(G^X_n).
+```
+
+Thus the quotient route can be restated as follows: find a dominated braided
+quotient `Z` such that the relative last-strand kernel is visible in the
+abelianization of the `X` last-strand image in all sufficiently large arities.
+Equivalently, no nontrivial relative-kernel element is a commutator in
+`G^X_n`.
+
 ## Remaining Boundary
 
 To prove Sawin's statement by this finite-image route, it is now enough to

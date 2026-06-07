@@ -876,6 +876,23 @@ to the quotient detector, and it projects to `gamma_2(G^X_n)` because it lies
 in every pairwise commutator.  Hence its `X`-projection is trivial; since
 `K_n cap L_n=1`, the element itself is trivial.
 
+This relative `gamma_2` condition is equivalently abelianization-injectivity
+of the relative last-strand kernel:
+
+```text
+E_n -> (G^X_n)_ab
+```
+
+is injective.  It also forces `E_n` to be central in `G^X_n`, because
+
+```text
+[E_n,G^X_n] <= E_n cap gamma_2(G^X_n).
+```
+
+So the quotient route asks for a dominated braided quotient whose relative
+last-strand kernel is abelianization-visible, or equivalently contains no
+nontrivial element that is a commutator in the `X` last-strand image.
+
 Thus the current global positive target can be phrased as:
 
 ```text
