@@ -1600,6 +1600,24 @@ rho^X_7(K^{Y_X}_7)=1
 for the current detector product `Y_X` and every non-permutation size-three
 table `X`.  It is still not an all-arity theorem.
 
+Arity-8 partial certified trivial-kernel certificate:
+
+```text
+proofs/nonperm3_width3_arity8_partial_certified_trivial_kernel_combined.json
+
+15 non-permutation size-three rows certified
+13 direct full-product stabilizer rows
+2 subproduct-trivial rows
+full_product_kernel_image_size distribution {1: 15}
+full_product_quotient_size distribution {1: 15}
+```
+
+The direct rows cover the identity row and all q=2 one-component rows.  The
+subproduct smoke covers one `(3,4)` row by its q=3 subproduct and one
+`(2,3,5)` row by its `(2,3)` subproduct.  This is partial arity-8 evidence:
+40 of the 55 arity-8 rows remain uncertified by this probe, and the full
+q=4/q=5 subproduct batch is now a multi-hour computation.
+
 ## Exact open implications
 
 The current material does not prove Sawin's problem and does not provide a

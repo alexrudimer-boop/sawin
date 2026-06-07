@@ -827,6 +827,108 @@ rho^X_7(K^{Y_X}_7)=1
 for all 55 non-permutation size-three tables.  This is still proof-grade
 fixed-arity evidence only, not an all-arity theorem.
 
+### Arity 8 initial probe
+
+The first arity-8 direct stabilizer probe covers the identity row and the
+twelve q=2 one-component rows:
+
+```text
+proofs/nonperm3_width3_arity8_component_count_le1_stabilizer_probe.json
+proofs/nonperm3_width3_arity8_component_count_le1_rows_stabilizer_probe.jsonl
+
+audit_rows 13
+detector component size distribution {[]: 1, [2]: 12}
+truncated rows 0
+kernel_image_size distribution {1: 13}
+quotient_size distribution {1: 13}
+elapsed_seconds total 14.055528
+```
+
+Verifier output:
+
+```text
+python tools/verify_nonperm3_width3_cross_effect_audit.py \
+  proofs/nonperm3_width3_arity8_component_count_le1_stabilizer_probe.json \
+  --require-complete-basis
+
+OK nonperm3 width-3 audit verification
+detector_index_rows 55
+audit_rows 13
+incomplete_detector_basis False
+
+python tools/verify_nonperm3_stabilizer_rows.py \
+  proofs/nonperm3_width3_arity8_component_count_le1_stabilizer_probe.json \
+  --arity 8 \
+  --require-complete-basis \
+  --require-trivial-kernel-image
+
+OK independent stabilizer-row verification
+arity 8
+recomputed_stabilizer_rows 12
+trivial_kernel_rows 12
+```
+
+A two-row q=4/q=5 subproduct smoke also closes:
+
+```text
+proofs/nonperm3_width3_arity8_q4_q5_subproduct_size_le3_smoke.json
+
+row_count 2
+full component size distribution {[2, 3, 5]: 1, [3, 4]: 1}
+audited subproduct size distribution {[2, 3]: 1, [3]: 1}
+omitted component size distribution {[5]: 1, [4]: 1}
+subproduct_kernel_image_size distribution {1: 2}
+full_product_kernel_image_size distribution {1: 2}
+elapsed_seconds total 702.626296
+```
+
+Verifier:
+
+```text
+python tools/verify_nonperm3_subproduct_trivial_kernel_audit.py \
+  proofs/nonperm3_width3_arity8_q4_q5_subproduct_size_le3_smoke.json \
+  --arity 8 \
+  --require-trivial-full-product
+
+OK nonperm3 subproduct trivial-kernel audit verification
+arity 8
+recomputed_rows 2
+trivial_subproduct_rows 2
+```
+
+The partial arity-8 combined certificate is:
+
+```text
+proofs/nonperm3_width3_arity8_partial_certified_trivial_kernel_combined.json
+
+row_count 15
+certification_method_counts {
+  "direct_full_product_stabilizer": 13,
+  "subproduct_trivial_kernel": 2
+}
+full_product_kernel_image_size_distribution {"1": 15}
+full_product_quotient_size_distribution {"1": 15}
+```
+
+Verifier:
+
+```text
+python tools/verify_nonperm3_certified_trivial_kernel_audit.py \
+  proofs/nonperm3_width3_arity8_partial_certified_trivial_kernel_combined.json \
+  --arity 8 \
+  --require-trivial-full-product
+
+OK nonperm3 combined trivial-kernel audit verification
+arity 8
+rows 15
+methods {'direct_full_product_stabilizer': 13, 'subproduct_trivial_kernel': 2}
+```
+
+This is proof-grade fixed-arity evidence for only 15 of the 55 arity-8 rows.
+The q=4/q=5 smoke indicates that the subproduct strategy still works at
+arity 8, but a full 24-row q=4/q=5 subproduct batch is now a multi-hour
+computation.  The remaining arity-8 rows are not certified by this probe.
+
 The decision rule for future higher-arity product audits remains:
 
 ```text
