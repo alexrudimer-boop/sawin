@@ -10,6 +10,14 @@ case.  Solving all degenerate solutions would solve the full problem.
 This is still a C-type result.  It does not prove Sawin's statement and does
 not construct a counterexample.
 
+Update.  The subsequent note
+`proofs/pairwise_or_central_finite_image_obstruction.md` sharpens this
+chief-factor boundary: when the meridian normal closures generate the finite
+image, every nonabelian chief-factor obstruction and every noncentral abelian
+chief-factor obstruction is already detected by a two-meridian commutator.
+Only central elementary abelian chief factors can genuinely require the full
+all-meridian symmetric commutator.
+
 ## Degenerate Solutions Are Not A Smaller Case
 
 Let `D` be a finite set with `|D|>1`, and let
