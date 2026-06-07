@@ -1,9 +1,22 @@
-theoretical_asknow
+theoretical_answered
+
+Status: answered by the 2026-06-06 block-core response.  The response did
+not prove A or B, but it gave a proof-grade C-output: the all-meridian
+symmetric commutator lies in every fixed-depth block commutator core, so the
+large-arity pairwise-core target can be sharpened to triple/block-core
+vanishing.  See:
+
+  proofs/2026_06_06_theoretical_block_core_response_review.md
+  proofs/block_core_finite_image_obstruction.md
+
+Superseded ask-now prompt:
+
+  prompts/gpt55_pro/2026-06-06-theoretical_asknow.md
 
 This is a self-contained theoretical prompt.  Do not ask for code,
-repository access, local files, or further computations.  Be aggressive: try
-to fully resolve Will Sawin's finite-rack domination problem from the
-block-core finite-image boundary below.
+repository access, or further computations.  Be aggressive: try to fully
+resolve Will Sawin's problem from the pairwise-core finite-image boundary
+below.
 
 Problem, due to Will Sawin.
 
@@ -103,127 +116,99 @@ K_n and L_n intersect trivially.  Therefore Q dominates X if and only if
 
 for every n.
 
-Block-core boundary.
+Pairwise-core boundary.
 
-For a nonempty subset S of {1,...,r}, write
+The following group-theoretic lemma is known.  If N_1,...,N_r are normal in
+G and r>=2, then
 
-  N_S = product_{i in S} N_i.
+  [N_1,...,N_r]_Sigma <= [N_a,N_b]
 
-For 3<=s<=r, define
+for every distinct pair a,b.  Therefore, with
 
-  Theta_s(G;N_1,...,N_r)
-    =
-  intersection_{P={S_1,...,S_s}}
-    [N_{S_1},...,N_{S_s}]_Sigma,
+  D_n = intersection_{1<=i<j<=n-1} [N_{i,n},N_{j,n}],
 
-where the intersection ranges over all partitions of {1,...,r} into s
-nonempty blocks.
+we have
 
-Known theorem:
+  C_n <= D_n.
 
-  [N_1,...,N_r]_Sigma
-    =
-  Theta_r <= Theta_{r-1} <= ... <= Theta_3
-    <=
-  intersection_{i<j}[N_i,N_j].
+Thus a sufficient large-arity condition is
 
-The proof uses the standard fat-commutator theorem: all fully parenthesized
-commutators in normal subgroups with every block appearing at least once
-generate the same subgroup as the symmetric commutator with one input from
-each block.
+  K_n cap D_n = 1.
 
-The inclusion Theta_3 <= intersection_{i<j}[N_i,N_j] can be strict.  Class-two
-pairwise commutator noise need not be an all-meridian Brunnian obstruction.
+This is weaker than requiring K_n cap [N_{i,n},N_{j,n}]=1 for every pair:
+only elements lying in all pairwise commutator subgroups simultaneously must
+be killed.  A cofinal counterexample must produce nontrivial elements in
 
-In the finite-image boundary, define
+  K_n cap C_n <= K_n cap D_n,
 
-  Theta_{n,s}
-    =
-  Theta_s(Gamma_n;N_{1,n},...,N_{n-1,n}).
+not just in one pairwise commutator.
 
-Then
+Central chief-factor note.
 
-  C_n <= Theta_{n,s} <= Theta_{n,3}
+If a central Type C chief factor A/B is covered by C_n, then it is covered by
+every pairwise commutator [N_{i,n},N_{j,n}], since C_n lies in every one of
+them.  Because A/B is central and chief, it is cyclic of prime order.  Thus a
+central high-Brunnian obstruction is a prime-order central factor that is
+simultaneously pairwise-deep for every pair.
 
-for every 3<=s<=n-1.  Hence a sufficient large-arity condition is the
-triple-block vanishing
+Useful conditional criterion.
 
-  K_n cap Theta_{n,3} = 1
-
-for all sufficiently large n, plus fixed-arity rack cofinality for the
-remaining small n.
-
-Relative quotient version.
-
-Let Z be a braided quotient of X already dominated by a finite rack.  Put
-Q=Y_Z^0 x T_2, where Y_Z dominates Z.  Let
+Let Z be a braided quotient of X already dominated by a finite rack Y_Z.  Set
+Q=Y_Z^0 x T_2.  Let
 
   G^X_n = rho^X_n(F_{n-1}),
   G^Z_n = rho^Z_n(F_{n-1}),
-  E_n = ker(G^X_n -> G^Z_n),
-  M_{i,n} = << rho^X_n(x_i) >>_{G^X_n}.
+  E_n = ker(G^X_n -> G^Z_n).
 
-Define
+If
 
-  Theta^X_{n,s}
-    =
-  Theta_s(G^X_n;M_{1,n},...,M_{n-1,n}).
+  E_n cap gamma_2(G^X_n)=1
 
-Known criterion.  If there is a fixed integer s>=3 such that
-
-  E_n cap Theta^X_{n,s} = 1
-
-for all sufficiently large n, then one finite rack dominates X.  In
-particular, the triple-block condition
-
-  E_n cap Theta^X_{n,3} = 1
-
-suffices.  This is weaker than the previous relative gamma_2 criterion,
-because
-
-  Theta^X_{n,3} <= gamma_3(G^X_n) <= gamma_2(G^X_n).
+for all sufficiently large n, then X is dominated by one finite rack.  The
+reason is that K_n cap D_n projects into E_n and into gamma_2(G^X_n), so its
+X-projection is trivial; since K_n cap L_n=1, the element itself is trivial.
+Then fixed-arity rack cofinality handles the small arities.
 
 Your task.
 
-Try to resolve the full problem from this sharper boundary.
+Try to resolve the full problem from this boundary.
 
 A. Prove Sawin's statement for every finite bijective X.  A clean route would
    be to construct, or prove the existence of, a finite rack detector
    Q=Y^0 x T_2 such that for all sufficiently large n:
 
-     K_n cap Theta_{n,3} = 1.
+     K_n cap D_n = 1,
+     D_n = intersection_{i<j}[N_{i,n},N_{j,n}].
 
    You may instead prove the quotient criterion: for every finite X, find a
-   dominated braided quotient Z and a fixed s>=3 such that
+   dominated braided quotient Z such that
 
-     E_n cap Theta^X_{n,s} = 1
+     E_n cap gamma_2(G^X_n)=1
 
    for all sufficiently large n.  Or prove any stronger all-arity theorem
-   implying block-core vanishing.
+   implying pairwise-core vanishing.
 
 B. Give an explicit finite bijective YBE table X and prove no finite rack
    dominates it.  The proof must be cofinal: for every finite rack prefix
    P_m, with Q_m=P_m^0 x T_2, construct unbounded arities n_m and nontrivial
    elements
 
-     1 != gamma_m in K_{n_m} cap C_{n_m}.
+     1 != gamma_m in K_{n_m} cap C_{n_m}
+                  <= K_{n_m} cap D_{n_m}.
 
-   Such elements automatically lie in K_{n_m} cap Theta_{n_m,s} for every
-   fixed 3<=s<=n_m-1.  It is not enough to defeat one rack prefix, one
-   detector product, bounded arity, bounded deletion depth, one Brunnian
-   template, one pairwise commutator subgroup, or the whole triple core
-   without proving membership in the all-meridian C_n.
+   It is not enough to defeat one rack prefix, one detector product, bounded
+   arity, bounded deletion depth, one Brunnian template, or one pairwise
+   commutator subgroup without the cofinal all-meridian proof.
 
 C. If neither A nor B can be proved, give only proof-grade progress: a
-   theorem that strictly narrows the block-core target or the relative
-   block-core quotient criterion, with proof and the exact remaining
+   theorem that strictly narrows pairwise-core vanishing or the relative
+   gamma_2 quotient criterion, with proof and the exact remaining
    implication.  Clearly separate theorem/proof from finite evidence,
    heuristic, and unsupported claims.
 
 Avoid returning only the nondegenerate theorem, contextual equivariance,
 ordinary-Brunnian reduction, finite-image formula, chief-factor dichotomy,
-pairwise-or-central compression, C_n<=D_n, or the block-core interpolation
-Theta_r<=...<=Theta_3<=D_n itself.  Those are now known.  The target is to
-prove all-arity block-core vanishing, prove the relative block-core quotient
-criterion for all finite X, or construct a cofinal all-meridian
-block-core counterexample.
+pairwise-or-central compression, or the lemma C_n<=D_n itself.  Those are now
+known.  The target is to prove pairwise-core vanishing in all sufficiently
+large arities, prove the relative gamma_2 quotient criterion for all finite
+X, or construct a cofinal pairwise-core counterexample.

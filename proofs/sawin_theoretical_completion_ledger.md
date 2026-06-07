@@ -893,7 +893,11 @@ So the quotient route asks for a dominated braided quotient whose relative
 last-strand kernel is abelianization-visible, or equivalently contains no
 nontrivial element that is a commutator in the `X` last-strand image.
 
-Thus the current global positive target can be phrased as:
+This pairwise-core target is useful but has now been sharpened by the
+block-core hierarchy below.  It remains a valid sufficient condition, but it
+is no longer the narrowest known formulation.
+
+The pairwise-core positive target is:
 
 ```text
 Find one finite detector Q=Y^0 x T_2 such that
@@ -913,6 +917,107 @@ K_n cap intersection_{i<j}[N_{i,n},N_{j,n}].
 A single nontrivial intersection `K_n cap [N_{i,n},N_{j,n}]` for one pair is
 not enough; a genuine obstruction must be simultaneously pairwise-deep and
 all-meridian.
+
+## Block-core finite-image obstruction
+
+The next theoretical response sharpened the pairwise-core target; the detailed
+note is `proofs/block_core_finite_image_obstruction.md`.
+
+For normal subgroups `N_1,...,N_r triangleleft G` and a nonempty subset
+`S subset {1,...,r}`, write
+
+```text
+N_S = product_{i in S} N_i.
+```
+
+For `3<=s<=r`, define
+
+```text
+Theta_s(G;N_1,...,N_r)
+  =
+intersection_{P={S_1,...,S_s}}
+  [N_{S_1},...,N_{S_s}]_Sigma,
+```
+
+where the intersection ranges over partitions of `{1,...,r}` into `s`
+nonempty blocks.  The all-meridian commutator is `Theta_r`, while the
+pairwise core is `D=intersection_{i<j}[N_i,N_j]`.
+
+Block-core interpolation theorem:
+
+```text
+[N_1,...,N_r]_Sigma
+  = Theta_r
+  <= Theta_{r-1} <= ... <= Theta_3
+  <= intersection_{i<j}[N_i,N_j].
+```
+
+The proof uses the standard fat-commutator theorem: fully parenthesized
+commutators in normal subgroups where every block appears at least once
+generate the same subgroup as the symmetric commutator with one input from
+each block.  Therefore every all-meridian commutator is a fat commutator for
+every block partition.
+
+The inclusion `Theta_3<=D` can be strict.  A class-two `p`-group with
+`[a,b]=[a,c]=[b,c]=z` has nontrivial pairwise core `<z>` for
+`N_1=<a,z>`, `N_2=<b,z>`, `N_3=<c,z>`, but its triple commutator core is
+trivial.  Thus the pairwise core contains class-two noise that is not an
+all-meridian Brunnian obstruction.
+
+In the finite-image boundary, set
+
+```text
+Theta_{n,s}
+  =
+Theta_s(Gamma_n;N_{1,n},...,N_{n-1,n}).
+```
+
+Then
+
+```text
+C_n <= Theta_{n,s} <= Theta_{n,3} <= D_n.
+```
+
+So the sharper current global positive target is:
+
+```text
+Find one finite detector Q=Y^0 x T_2 such that
+K_n cap Theta_{n,3} = 1
+for all sufficiently large n.
+```
+
+There is also a sharper quotient criterion.  Let `Z` be a braided quotient of
+`X` already dominated by a finite rack, and write
+
+```text
+G^X_n = rho^X_n(F_{n-1}),
+E_n = ker(G^X_n -> G^Z_n),
+M_{i,n}=<<rho^X_n(x_i)>>_{G^X_n}.
+```
+
+If, for one fixed `s>=3`,
+
+```text
+E_n cap Theta_s(G^X_n;M_{1,n},...,M_{n-1,n}) = 1
+```
+
+for all sufficiently large `n`, then `X` is dominated by one finite rack.
+In particular, triple-block vanishing suffices:
+
+```text
+E_n cap Theta^X_{n,3}=1.
+```
+
+This is weaker than the previous relative `gamma_2` criterion because
+
+```text
+Theta^X_{n,3} <= gamma_3(G^X_n) <= gamma_2(G^X_n).
+```
+
+The current global negative target is therefore cofinal production of
+nontrivial elements in `K_n cap C_n`.  Such elements automatically lie in
+`K_n cap Theta_{n,s}` for every fixed block depth `3<=s<=n-1`; producing
+pairwise commutator noise outside the all-meridian subgroup is insufficient.
 
 ## Route-specific compactness gap
 
@@ -1099,10 +1204,13 @@ rho^X_4(ker rho^{Y_X}_4) = 1
 for every one of the 55 non-permutation size-three tables.  It does not prove
 the same statement for `n>=5`.
 
-Arity-5 has only partial probes so far.  The current two partial stabilizer
-certificates cover 37 of the 55 rows, all with trivial detector-kernel image.
-The remaining 18 rows, including all `[2,3,5]` q=5-component rows, are
-unresolved.  A timeout on one q=5-component row is not negative evidence.
+Arity-5 has only partial probes so far.  The current three partial stabilizer
+certificates cover 43 of the 55 rows, all with trivial detector-kernel image.
+The newly added no-q5 component-count 4 probe covers the six `[2,3,3,3]`
+rows and was independently recomputed by
+`tools/verify_nonperm3_stabilizer_rows.py`.  The remaining 12 rows all have
+detector component sizes `[2,3,5]` and are unresolved.  A timeout on one q=5
+component row is not negative evidence.
 
 ## Exact open implications
 
@@ -1126,17 +1234,22 @@ different construction that produces one finite rack detector for every finite
 
 The exact missing global negative theorem is the cofinal prefix obstruction
 sequence from the criteria above, now sharpened to nontrivial elements in the
-pairwise-core finite-image intersection
+all-meridian finite-image intersection, which automatically lies in every
+fixed-depth block core:
 
 ```text
 K_n cap [N_{1,n},...,N_{n-1,n}]_Sigma
   <=
-K_n cap intersection_{i<j}[N_{i,n},N_{j,n}]
+K_n cap Theta_{n,3}
+  <=
+K_n cap intersection_{i<j}[N_{i,n},N_{j,n}].
 ```
 
 after adding transparent rack colors and a `T_2` purity factor.  A single
 high-arity miss against one detector product, even the current `Y_X`, is not
-enough.
+enough.  Pairwise commutator noise is also not enough unless it comes from the
+all-meridian symmetric commutator, equivalently from the whole block-core
+hierarchy.
 
 ## Review rubric
 

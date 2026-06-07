@@ -11,6 +11,20 @@ pairwise-core vanishing condition.
 This is still a C-type result.  It does not prove Sawin's statement and does
 not construct a cofinal counterexample.
 
+Update.  The pairwise core recorded here is no longer the sharpest current
+boundary.  The follow-up block-core note proves
+
+```text
+[N_1,...,N_r]_Sigma
+  <= Theta_3(G;N_1,...,N_r)
+  <= intersection_{i<j}[N_i,N_j],
+```
+
+where `Theta_3` is the intersection over all three-block partition
+commutators.  Thus the large-arity target can be sharpened from
+`K_n cap D_n=1` to `K_n cap Theta_{n,3}=1`.  See
+`proofs/block_core_finite_image_obstruction.md`.
+
 ## The All-Meridian Commutator Is Pairwise-Deep
 
 Let `G` be a group and let

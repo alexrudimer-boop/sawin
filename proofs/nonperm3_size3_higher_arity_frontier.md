@@ -434,17 +434,43 @@ quotient_size distribution {1: 25}
 kernel_image_size distribution {1: 25}
 ```
 
-Together these partial probes cover 37 of the 55 arity-5 rows, all with
-trivial recomputed detector-kernel image.  The remaining rows are exactly:
+A third no-q5 component-count 4 probe covers the six `[2,3,3,3]`
+four-component rows:
+
+```text
+proofs/nonperm3_width3_arity5_component_count4_no_q5_stabilizer_probe.json
+proofs/nonperm3_width3_arity5_component_count4_no_q5_rows_stabilizer_probe.jsonl
+
+audit_rows 6
+truncated rows 0
+quotient_size distribution {1: 6}
+kernel_image_size distribution {1: 6}
+```
+
+The independent stabilizer-row verifier recomputes these six row kernels:
+
+```text
+python tools/verify_nonperm3_stabilizer_rows.py \
+  proofs/nonperm3_width3_arity5_component_count4_no_q5_stabilizer_probe.json \
+  --arity 5 \
+  --require-complete-basis \
+  --require-trivial-kernel-image
+
+OK independent stabilizer-row verification
+recomputed_stabilizer_rows 6
+trivial_kernel_rows 6
+```
+
+Together these partial probes cover 43 of the 55 arity-5 rows, all with
+trivial detector-kernel image.  The remaining rows are exactly:
 
 ```text
 12 rows with detector component sizes [2,3,5]
-6 rows with detector component sizes [2,3,3,3]
 ```
 
 A single q=5-component arity-5 row with detector sizes `[2,3,5]` timed out
 after about four minutes without producing a row.  No mathematical conclusion
-is drawn for the remaining 18 rows.
+is drawn for the remaining 12 rows.
 
 The decision rule for future higher-arity product audits remains:
 
