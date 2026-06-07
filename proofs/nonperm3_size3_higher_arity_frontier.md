@@ -468,9 +468,11 @@ trivial detector-kernel image.  The remaining rows are exactly:
 12 rows with detector component sizes [2,3,5]
 ```
 
-A single q=5-component arity-5 row with detector sizes `[2,3,5]` timed out
-after about four minutes without producing a row.  No mathematical conclusion
-is drawn for the remaining 12 rows.
+Q=5-component arity-5 rows remain the runtime bottleneck.  One earlier
+`[2,3,5]` attempt timed out after about four minutes, and a later targeted
+run of detector-index row 5 with the stabilizer method timed out after ten
+minutes without emitting a completed JSONL row.  No mathematical conclusion is
+drawn for the remaining 12 rows.
 
 The decision rule for future higher-arity product audits remains:
 

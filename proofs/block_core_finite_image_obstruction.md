@@ -9,6 +9,20 @@ cofinal counterexample.  Its contribution is to replace the previous
 pairwise-core sufficient target by a strictly sharper triple/block-core
 target.
 
+Update.  The unweighted block-core target recorded here has now been sharpened
+again by multiplicity-preserving weighted block cores.  The weighted note
+proves
+
+```text
+[N_1,...,N_r]_Sigma <= Omega_3(G;N_1,...,N_r)
+  <= Theta_3(G;N_1,...,N_r) cap gamma_r(G).
+```
+
+Thus the large-arity target can be sharpened from
+`K_n cap Theta_{n,3}=1` to `K_n cap Omega_{n,3}^wt=1`, or even the
+intersection with the weighted two-block core.  See
+`proofs/weighted_block_core_finite_image_obstruction.md`.
+
 ## Setup
 
 Let `G` be a group and let
