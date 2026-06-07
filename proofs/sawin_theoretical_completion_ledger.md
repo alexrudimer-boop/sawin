@@ -47,8 +47,12 @@ this unless they are tied to an all-arity theorem.
 
 Known positive theorem: if `X` is one-sided nondegenerate, the guitar or
 derived-rack construction gives a finite rack whose braid action is conjugate
-to the `X` braid action in every arity.  Thus the remaining difficulty is in
-degenerate finite bijective solutions.
+to the `X` braid action in every arity.  The examples not covered by this
+theorem are genuinely degenerate, but the class of degenerate finite
+bijective solutions is not a smaller problem: if `D` is a finite identity
+solution with `|D|>1`, then `D x Z` is degenerate and has the same braid
+kernels as any finite bijective solution `Z`.  Hence a theorem for all
+degenerate finite bijective solutions is equivalent to the full Sawin problem.
 
 ## Pointwise rack detection
 
@@ -615,6 +619,95 @@ deep lower central subgroup.  It is a genuinely all-meridian symmetric
 commutator in the finite combined image, lying in the detector kernel and
 surviving modulo the `X`-kernel.
 
+## Chief-factor finite-image obstruction
+
+The next theoretical response refined the finite-image obstruction by chief
+factors; the detailed note is
+`proofs/chief_factor_finite_image_obstruction.md`.
+
+First, it corrected the global framing.  Let `D` be a finite identity
+solution with `|D|>1`:
+
+```text
+R_D(a,b)=(a,b).
+```
+
+For any finite bijective solution `Z`, the product `X=D x Z` is degenerate
+and satisfies
+
+```text
+ker rho^X_n = ker rho^Z_n
+```
+
+for every `n`.  Therefore proving domination for all finite degenerate
+solutions would prove the full problem.
+
+Now fix `Q=Y^0 x T_2` and keep the finite-image notation
+
+```text
+Gamma_n <= Sym(Q^n) x Sym(X^n),
+K_n = ker(Gamma_n -> rho^Q_n(F_{n-1})),
+L_n = ker(Gamma_n -> rho^X_n(F_{n-1})),
+N_{i,n}=<<Phi_n(A_{in})>>_{Gamma_n},
+C_n=[N_{1,n},...,N_{n-1,n}]_Sigma.
+```
+
+Since `Gamma_n` is a subgroup of a direct product of permutation groups, the
+two projection kernels intersect trivially:
+
+```text
+K_n cap L_n = 1.
+```
+
+Thus the containment from the symmetric-commutator boundary,
+
+```text
+K_n cap C_n <= L_n,
+```
+
+is equivalent to
+
+```text
+K_n cap C_n = 1.
+```
+
+Chief-factor theorem.  Let `G` be finite, `K,N_1,...,N_r` normal in `G`, and
+`C=[N_1,...,N_r]_Sigma`.  Then
+
+```text
+K cap C != 1
+```
+
+if and only if some chief factor `A/B` lying inside `K` is covered by `C`,
+where `U` covers `A/B` means `A<=UB`.
+
+For nonabelian chief factors, `C` covers `A/B` if and only if every `N_i`
+covers `A/B`.  For abelian chief factors, coverage by `C` implies coverage by
+every `N_i` and by `gamma_r(G)`.
+
+Applied to `Gamma_n`, every finite-image failure is therefore one of two
+types:
+
+```text
+Type I:
+  a nonabelian chief factor inside K_n covered by every meridian normal
+  closure N_{i,n};
+
+Type II:
+  an abelian chief factor inside K_n covered by C_n, hence necessarily by
+  every N_{i,n} and by gamma_{n-1}(Gamma_n).
+```
+
+Sufficient criterion.  If one finite rack detector `Q=Y^0 x T_2` can be
+chosen so that neither Type I nor Type II occurs in all sufficiently large
+arities, then fixed-arity rack cofinality handles the finitely many small
+arities and a finite rack dominates `X`.
+
+Thus the remaining all-arity obstruction has been narrowed again: it must
+survive as a chief factor inside the detector-invisible finite image.  The
+semisimple part is a common-chief-factor obstruction; the abelian part is a
+common-coverage obstruction at unbounded lower-central depth.
+
 ## Route-specific compactness gap
 
 Many partial approaches construct finite contextual rack detector schemas
@@ -826,10 +919,10 @@ different construction that produces one finite rack detector for every finite
 `X` in all arities.
 
 The exact missing global negative theorem is the cofinal prefix obstruction
-sequence from the criteria above, now sharpened to all-meridian finite-image
-symmetric commutator witnesses after adding transparent rack colors and a
-`T_2` purity factor.  A single high-arity miss against one detector product,
-even the current `Y_X`, is not enough.
+sequence from the criteria above, now sharpened to chief-factor witnesses in
+the all-meridian finite-image symmetric commutator after adding transparent
+rack colors and a `T_2` purity factor.  A single high-arity miss against one
+detector product, even the current `Y_X`, is not enough.
 
 ## Review rubric
 

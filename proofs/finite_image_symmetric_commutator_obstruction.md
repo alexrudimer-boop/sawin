@@ -10,6 +10,13 @@ image of the last-strand free group.
 This is still a C-type result.  It does not prove Sawin's statement for all
 finite degenerate solutions and does not construct a no-rack counterexample.
 
+Update.  The subsequent note
+`proofs/chief_factor_finite_image_obstruction.md` refines this finite-image
+criterion further: since the combined image lies in
+`Sym(Q^n) x Sym(X^n)`, the two projection kernels intersect trivially, and
+the remaining obstruction can be analyzed by chief factors inside the
+detector-invisible kernel.
+
 ## Setup
 
 Let `X` be a finite bijective YBE solution.  Let `Y` be a finite rack and set
