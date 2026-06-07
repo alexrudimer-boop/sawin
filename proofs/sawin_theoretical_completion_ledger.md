@@ -1424,6 +1424,27 @@ proof-grade fixed-arity evidence that there is no arity-5 realized
 cross-effect obstruction for the current detector product.  It is not an
 all-arity theorem.
 
+The consolidated arity-5 certificate
+
+```text
+proofs/nonperm3_width3_arity5_certified_trivial_kernel_combined.json
+```
+
+packages the fixed-arity conclusion as:
+
+```text
+row_count 55
+certification_method_counts {
+  "direct_full_product_stabilizer": 43,
+  "subproduct_trivial_kernel": 12
+}
+full_product_kernel_image_size_distribution {"1": 55}
+full_product_quotient_size_distribution {"1": 55}
+```
+
+and is checked by
+`tools/verify_nonperm3_certified_trivial_kernel_audit.py`.
+
 ## Exact open implications
 
 The current material does not prove Sawin's problem and does not provide a

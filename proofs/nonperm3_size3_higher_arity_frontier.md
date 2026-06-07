@@ -514,6 +514,35 @@ This is proof-grade fixed-arity evidence that there is no arity-5 realized
 cross-effect obstruction for the current detector product.  It is not an
 all-arity theorem.
 
+A consolidated certificate packages the 43 direct rows and the 12 subproduct
+rows into one auditable fixed-arity conclusion:
+
+```text
+proofs/nonperm3_width3_arity5_certified_trivial_kernel_combined.json
+
+row_count 55
+certification_method_counts {
+  "direct_full_product_stabilizer": 43,
+  "subproduct_trivial_kernel": 12
+}
+full_product_kernel_image_size_distribution {"1": 55}
+full_product_quotient_size_distribution {"1": 55}
+```
+
+Verifier:
+
+```text
+python tools/verify_nonperm3_certified_trivial_kernel_audit.py \
+  proofs/nonperm3_width3_arity5_certified_trivial_kernel_combined.json \
+  --arity 5 \
+  --require-all-55 \
+  --require-trivial-full-product
+
+OK nonperm3 combined trivial-kernel audit verification
+rows 55
+methods {'direct_full_product_stabilizer': 43, 'subproduct_trivial_kernel': 12}
+```
+
 The decision rule for future higher-arity product audits remains:
 
 ```text
