@@ -1605,17 +1605,17 @@ Arity-8 partial certified trivial-kernel certificate:
 ```text
 proofs/nonperm3_width3_arity8_partial_certified_trivial_kernel_combined.json
 
-27 non-permutation size-three rows certified
+28 non-permutation size-three rows certified
 13 direct full-product stabilizer rows
-14 subproduct-trivial rows
-full_product_kernel_image_size distribution {1: 27}
-full_product_quotient_size distribution {1: 27}
+15 subproduct-trivial rows
+full_product_kernel_image_size distribution {1: 28}
+full_product_quotient_size distribution {1: 28}
 ```
 
 The direct rows cover the identity row and all q=2 one-component rows.  The
-subproduct partial covers five `(3,4)` rows by their q=3 subproduct and nine
+subproduct partial covers five `(3,4)` rows by their q=3 subproduct and ten
 `(2,3,5)` rows by their `(2,3)` subproducts.  This is partial arity-8
-evidence: 28 of the 55 arity-8 rows remain uncertified by this probe, and the
+evidence: 27 of the 55 arity-8 rows remain uncertified by this probe, and the
 full q=4/q=5 subproduct batch is now a multi-hour computation.
 
 ## Exact open implications
