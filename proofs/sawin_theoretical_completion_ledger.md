@@ -1127,6 +1127,90 @@ lower-central `gamma_{n-1}` target.  A genuine cofinal obstruction must still
 produce elements in the all-meridian subgroup `K_n cap C_n`; membership in a
 weighted core alone is not enough unless the all-meridian source is proved.
 
+## Recursive root-core finite-image obstruction
+
+The next theoretical response sharpened the weighted block-core target again;
+the detailed note is `proofs/recursive_root_core_finite_image_obstruction.md`.
+
+For every nonempty `S subset {1,...,r}`, define
+
+```text
+C_S=[N_i | i in S]_Sigma,
+C_{ {i} }=N_i.
+```
+
+Let `Bip(S)` be the set of unordered bipartitions `S=A sqcup B` with both
+parts nonempty.  The root-split factorization theorem says:
+
+```text
+C_S =
+product_{ {A,B} in Bip(S) } [C_A,C_B].
+```
+
+Thus a true all-meridian commutator has a coherent binary root split into
+smaller all-support commutators.
+
+Define recursive root cores by:
+
+```text
+R_S^(0)=Omega_2(G;(N_i)_{i in S}) cap Omega_3(G;(N_i)_{i in S})
+```
+
+for `|S|>=3`, with the exact conventions `R_{ {i} }^(d)=N_i` and
+`R_{ {i,j} }^(0)=[N_i,N_j]`.  For `d>=0`,
+
+```text
+R_S^(d+1)
+  =
+R_S^(d) cap
+product_{ {A,B} in Bip(S) } [R_A^(d),R_B^(d)].
+```
+
+Then:
+
+```text
+C_S <= R_S^(d+1) <= R_S^(d),
+R_S^(d)=C_S whenever d>=|S|-3.
+```
+
+In the finite-image boundary, with `R_n={1,...,n-1}`, write
+
+```text
+R_n^(d)=R_{R_n}^(d)(Gamma_n;(N_{i,n})_{i in R_n}).
+```
+
+Then
+
+```text
+C_n <= R_n^(d)
+  <= Omega_{n,2}^wt cap Omega_{n,3}^wt,
+R_n^(d)=C_n for d>=n-4.
+```
+
+The sharper current positive target is therefore:
+
+```text
+Find one finite detector Q=Y^0 x T_2 and one fixed d>=0 such that
+K_n cap R_n^(d)=1
+for all sufficiently large n.
+```
+
+The quotient target is similarly sharpened.  Define `R_n^{X,(d)}` by applying
+the same recursive construction inside `G^X_n` to the normal closures
+`M_{i,n}=<<rho^X_n(x_i)>>`.  If there is a dominated quotient `Z` and fixed
+`d` such that
+
+```text
+E_n cap R_n^{X,(d)}=1
+```
+
+for all sufficiently large `n`, then `X` is dominated by one finite rack.
+
+A cofinal counterexample must still produce elements in `K_n cap C_n`.  Such
+elements survive every fixed-depth recursive root core, but membership in a
+root-core approximation alone is not enough unless exact all-meridian
+membership is also proved.
+
 ## Route-specific compactness gap
 
 Many partial approaches construct finite contextual rack detector schemas
@@ -1312,15 +1396,33 @@ rho^X_4(ker rho^{Y_X}_4) = 1
 for every one of the 55 non-permutation size-three tables.  It does not prove
 the same statement for `n>=5`.
 
-Arity-5 has only partial probes so far.  The current three partial stabilizer
-certificates cover 43 of the 55 rows, all with trivial detector-kernel image.
-The newly added no-q5 component-count 4 probe covers the six `[2,3,3,3]`
-rows and was independently recomputed by
-`tools/verify_nonperm3_stabilizer_rows.py`.  The remaining 12 rows all have
-detector component sizes `[2,3,5]` and are unresolved.  A targeted stabilizer
-run on detector-index row 5 timed out after ten minutes without emitting a
-completed JSONL row.  This is runtime bottleneck evidence only, not negative
-mathematical evidence.
+Arity-5 product audit for the detector product `Y_X`:
+
+```text
+55 non-permutation size-three rows certified
+43 direct full-product stabilizer rows
+12 q=5 rows certified by [2,3] detector subproducts
+0 truncated rows
+full_product_kernel_image_size distribution {1: 55}
+full_product_quotient_size distribution {1: 55}
+```
+
+The twelve q=5 rows have full detector component sizes `[2,3,5]`.  The full
+stabilizer calculation for detector-index row 5 timed out after ten minutes,
+but the `[2,3]` detector subproduct alone has trivial realized kernel image on
+`X^5` for all twelve such rows.  This proves the full-product conclusion by
+the inclusion
+
+```text
+K^{Y' x Y''}_5 <= K^{Y'}_5.
+```
+
+The independent verifier
+`tools/verify_nonperm3_subproduct_trivial_kernel_audit.py` recomputes all
+twelve subproduct kernels and checks the full-product conclusion.  This is
+proof-grade fixed-arity evidence that there is no arity-5 realized
+cross-effect obstruction for the current detector product.  It is not an
+all-arity theorem.
 
 ## Exact open implications
 
@@ -1345,10 +1447,12 @@ different construction that produces one finite rack detector for every finite
 The exact missing global negative theorem is the cofinal prefix obstruction
 sequence from the criteria above, now sharpened to nontrivial elements in the
 all-meridian finite-image intersection, which automatically lies in every
-multiplicity-preserving weighted block core:
+fixed-depth recursive root core:
 
 ```text
 K_n cap [N_{1,n},...,N_{n-1,n}]_Sigma
+  <=
+K_n cap R_n^(d)       for every fixed d
   <=
 K_n cap Omega_{n,3}^wt
   <=
@@ -1359,8 +1463,9 @@ K_n cap intersection_{i<j}[N_{i,n},N_{j,n}].
 
 after adding transparent rack colors and a `T_2` purity factor.  A single
 high-arity miss against one detector product, even the current `Y_X`, is not
-enough.  Pairwise, unweighted triple-block, or weighted block-core noise is
-also not enough unless it comes from the all-meridian symmetric commutator.
+enough.  Pairwise, unweighted triple-block, weighted block-core, or
+fixed-depth root-core noise is also not enough unless it comes from the
+all-meridian symmetric commutator.
 
 ## Review rubric
 

@@ -8,6 +8,25 @@ statement and does not provide a cofinal counterexample.  Its contribution is
 to preserve the multiplicities of the original meridians after collapsing
 them into blocks.
 
+Update.  The weighted block-core target recorded here has now been sharpened
+again by recursive root cores.  The recursive note proves a root-split
+factorization
+
+```text
+C_S = product_{ {A,B} in Bip(S) } [C_A,C_B]
+```
+
+and defines descending fixed-depth root cores `R_S^(d)` with
+
+```text
+C_S <= R_S^(d+1) <= R_S^(d),
+R_S^(d)=C_S for d>=|S|-3.
+```
+
+Thus the large-arity target can be sharpened from
+`K_n cap Omega_{n,3}^wt=1` to `K_n cap R_n^(d)=1` for one fixed depth `d`.
+See `proofs/recursive_root_core_finite_image_obstruction.md`.
+
 The previous block-core note used the fat-commutator theorem, which forgets
 how many original meridians were in each collapsed block.  A genuine
 all-meridian obstruction has total commutator length `r=n-1`, not merely

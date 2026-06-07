@@ -468,11 +468,51 @@ trivial detector-kernel image.  The remaining rows are exactly:
 12 rows with detector component sizes [2,3,5]
 ```
 
-Q=5-component arity-5 rows remain the runtime bottleneck.  One earlier
-`[2,3,5]` attempt timed out after about four minutes, and a later targeted
-run of detector-index row 5 with the stabilizer method timed out after ten
-minutes without emitting a completed JSONL row.  No mathematical conclusion is
-drawn for the remaining 12 rows.
+The q=5-component arity-5 rows were then closed by a subproduct certificate:
+
+```text
+proofs/nonperm3_width3_arity5_q5_subproduct_trivial_kernel_audit.json
+
+selected rows 12
+full detector component sizes [2,3,5]
+audited subproduct component sizes [2,3]
+subproduct_kernel_image_size distribution {1: 12}
+full_product_kernel_image_size distribution {1: 12}
+```
+
+The independent verifier recomputes these twelve `[2,3]` subproduct kernels:
+
+```text
+python tools/verify_nonperm3_subproduct_trivial_kernel_audit.py \
+  proofs/nonperm3_width3_arity5_q5_subproduct_trivial_kernel_audit.json \
+  --arity 5 \
+  --state-limit 1000000 \
+  --require-trivial-full-product
+
+OK nonperm3 subproduct trivial-kernel audit verification
+recomputed_rows 12
+trivial_subproduct_rows 12
+```
+
+This proves the full-product conclusion because if a detector subproduct
+`Y'` already has `rho^X_5(K^{Y'}_5)=1`, then any larger detector product
+`Y=Y' x Y''` satisfies `K^Y_5 <= K^{Y'}_5`, hence also has trivial realized
+kernel image on `X^5`.
+
+Combining the direct stabilizer rows and the subproduct certificate gives:
+
+```text
+arity 5 rows certified 55 / 55
+direct full-product stabilizer rows 43
+subproduct-certified q=5 rows 12
+truncated rows 0
+full_product_kernel_image_size distribution {1: 55}
+full_product_quotient_size distribution {1: 55}
+```
+
+This is proof-grade fixed-arity evidence that there is no arity-5 realized
+cross-effect obstruction for the current detector product.  It is not an
+all-arity theorem.
 
 The decision rule for future higher-arity product audits remains:
 
