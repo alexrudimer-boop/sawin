@@ -1605,17 +1605,17 @@ Arity-8 partial certified trivial-kernel certificate:
 ```text
 proofs/nonperm3_width3_arity8_partial_certified_trivial_kernel_combined.json
 
-24 non-permutation size-three rows certified
+25 non-permutation size-three rows certified
 13 direct full-product stabilizer rows
-11 subproduct-trivial rows
-full_product_kernel_image_size distribution {1: 24}
-full_product_quotient_size distribution {1: 24}
+12 subproduct-trivial rows
+full_product_kernel_image_size distribution {1: 25}
+full_product_quotient_size distribution {1: 25}
 ```
 
 The direct rows cover the identity row and all q=2 one-component rows.  The
-subproduct partial covers three `(3,4)` rows by their q=3 subproduct and eight
+subproduct partial covers four `(3,4)` rows by their q=3 subproduct and eight
 `(2,3,5)` rows by their `(2,3)` subproducts.  This is partial arity-8
-evidence: 31 of the 55 arity-8 rows remain uncertified by this probe, and the
+evidence: 30 of the 55 arity-8 rows remain uncertified by this probe, and the
 full q=4/q=5 subproduct batch is now a multi-hour computation.
 
 ## Exact open implications
@@ -1733,6 +1733,63 @@ and bounded deletion depth are known to be insufficient.  The conjugation rack
 `A_5` also has cofinal perfect point-pushing ghosts against the weak detector
 `T_2`, although it is not a Sawin counterexample because it dominates itself
 as a rack.
+
+The next theoretical response gave a stronger varying-target detector-specific
+survival theorem; the detailed review is recorded in
+`proofs/2026_06_07_theoretical_detector_specific_survival_response_review.md`.
+For every finite rack detector `Q`, if
+
+```text
+e(Q)=ord(rho^Q_2(sigma_1^2)),
+```
+
+then choosing an odd prime `ell` not dividing `e(Q)` and
+
+```text
+X_Q=Conj(A_ell)
+```
+
+gives unbounded-index powered Brunnian words
+
+```text
+w_r=[...[ [x_1^{e(Q)},x_2^{e(Q)}],x_3^{e(Q)}],...,x_r^{e(Q)}]
+```
+
+with
+
+```text
+rho^Q_{r+1}(w_r)=1,
+rho^{X_Q}_{r+1}(w_r) != 1.
+```
+
+Every proper deletion of `w_r` is already trivial in the free group, so the
+combined image lies nontrivially in `K_n cap C_n`, the full symmetric
+commutator layer.  This proves that no fixed finite rack detector annihilates
+full-Brunnian ghosts for all finite rack targets.
+
+This is still not a Sawin counterexample.  The target varies with the detector
+or rack prefix, and each `X_Q` is itself a rack.  The remaining negative route
+still requires one fixed finite YBE solution `X` missed cofinally by every
+finite rack prefix.  The remaining positive route still allows the detector
+to depend on the fixed target `X`.
+
+The latest strict A/B attempt is recorded in
+`proofs/2026_06_07_theoretical_strict_ab_attempt_review.md`.  It did not prove
+either side.  It identified the two active fatal blockers:
+
+```text
+Positive blocker:
+prove an all-arity non-coordinatewise contextual/guitar endpoint encoding
+theorem for arbitrary finite degenerate X.  The coordinatewise
+left-nondegenerate-cover shortcut cannot work except when X is already
+left-nondegenerate, because finite fiber-weight preservation forces the
+target first-coordinate maps to be surjective.
+
+Negative blocker:
+replace the varying Conj(A_ell) rack targets in the detector-survival theorem
+by one fixed finite bijective YBE target X missed cofinally by every finite
+rack prefix.
+```
 
 ## Review rubric
 

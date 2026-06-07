@@ -4,18 +4,18 @@
   "branch": "nonpermutation_size3",
   "certification_method_counts": {
     "direct_full_product_stabilizer": 13,
-    "subproduct_trivial_kernel": 11
+    "subproduct_trivial_kernel": 12
   },
   "extra_table_count": 0,
   "extra_ybe_tables": [],
   "full_product_kernel_image_size_distribution": {
-    "1": 24
+    "1": 25
   },
   "full_product_quotient_size_distribution": {
-    "1": 24
+    "1": 25
   },
   "kind": "nonperm3_combined_trivial_kernel_audit_v1",
-  "missing_table_count": 31,
+  "missing_table_count": 30,
   "missing_ybe_tables": [
     [
       0,
@@ -82,17 +82,6 @@
       1,
       8,
       5
-    ],
-    [
-      0,
-      8,
-      4,
-      1,
-      6,
-      5,
-      2,
-      7,
-      3
     ],
     [
       1,
@@ -360,7 +349,7 @@
     ]
   ],
   "nonpermutation_ybe_tables": 55,
-  "row_count": 24,
+  "row_count": 25,
   "rows": [
     {
       "certification_method": "direct_full_product_stabilizer",
@@ -1141,6 +1130,49 @@
         5,
         2,
         8
+      ]
+    },
+    {
+      "audited_detector_component_indices": [
+        0
+      ],
+      "audited_detector_component_sizes": [
+        3
+      ],
+      "certification_method": "subproduct_trivial_kernel",
+      "detector_component_count": 2,
+      "detector_component_sizes": [
+        3,
+        4
+      ],
+      "full_product_kernel_image_size": 1,
+      "full_product_parabolic_image_size": 1,
+      "full_product_quotient_nontrivial": false,
+      "full_product_quotient_size": 1,
+      "omitted_detector_component_indices": [
+        1
+      ],
+      "omitted_detector_component_sizes": [
+        4
+      ],
+      "seed_count": 0,
+      "source_audit": "proofs\\nonperm3_width3_arity8_q4_q5_subproduct_size_le3_trivial_kernel_audit.partial.json",
+      "subproduct_joint_image_size": 20056328248320,
+      "subproduct_kernel_image_size": 1,
+      "subproduct_parabolic_image_size": 1,
+      "subproduct_quotient_nontrivial": false,
+      "subproduct_quotient_size": 1,
+      "truncated": false,
+      "ybe_table": [
+        0,
+        8,
+        4,
+        1,
+        6,
+        5,
+        2,
+        7,
+        3
       ]
     },
     {

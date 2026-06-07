@@ -1,361 +1,373 @@
 theoretical_asknow
 
 This is a self-contained theoretical prompt.  Do not ask for code,
-repository access, local files, or further computations.  Be aggressive: try
-to fully resolve Will Sawin's finite-rack domination problem from the
-detector-specific same-image deletion ghost boundary below.
+repository access, local files, or further computations.  Work as a research
+mathematician.  Your task is to resolve Will Sawin's finite-rack domination
+problem.
 
-Problem, due to Will Sawin.
+Do not give another C-output reduction, filtration, hierarchy, boundary
+theorem, diagnostic theorem, or partial no-go result as your main answer.  The
+goal is to solve the problem, not to refine the obstruction language.  Your
+answer must attempt one of only two outcomes:
+
+A. A complete proof that every finite bijective set-theoretic YBE solution is
+   dominated by one finite rack.
+
+B. A complete explicit counterexample: one fixed finite bijective
+   set-theoretic YBE solution X such that no finite rack dominates X.
+
+If you cannot honestly prove A or B, say so briefly at the end and give only
+the exact fatal obstruction in the attempted proof.  Do not develop another
+long C-output.
+
+Problem.
 
 Let X be a finite bijective set-theoretic solution of the Yang-Baxter
-equation, with braid actions
+equation.  Thus X is finite and R_X:X x X -> X x X is a bijection satisfying
+the Yang-Baxter equation.  For each n, let
 
-  rho^X_n : B_n -> Sym(X^n).
+  rho^X_n : B_n -> Sym(X^n)
 
-A finite rack Y is viewed as the set-theoretic solution
+be the induced braid-group action.
 
-  R_Y(a,b) = (a*b, a).
+A finite rack Y is viewed as the set-theoretic YBE solution
+
+  R_Y(a,b) = (a*b, a),
+
+where every left translation b -> a*b is bijective and
+
+  a*(b*c) = (a*b)*(a*c).
 
 Question.  Does every finite bijective set-theoretic YBE solution X admit a
 single finite rack Y, independent of n, such that
 
   ker rho^Y_n <= ker rho^X_n
 
-for every n?
+for every n >= 2?
 
-Your task is to try to fully resolve the problem, not merely refine an
-obstruction hierarchy.  Give one of:
+Known facts and reductions you may use.
 
-A. A complete proof that such a finite rack Y always exists.
+1. Nondegenerate case is solved.
 
-B. An explicit finite bijective set-theoretic YBE solution X and a rigorous
-   cofinal obstruction proving no finite rack dominates X.
+If X is finite left-nondegenerate, then X is dominated by a finite rack, in
+fact by its derived rack, with
 
-C. If A and B are still out of reach, give a theorem that directly attacks the
-   detector-specific same-image deletion ghost obstruction below.  Acceptable
-   C-output must be a detector-specific annihilation theorem, a
-   detector-specific survival theorem, a collapse/no-go theorem beyond the
-   detector-independent fixed-depth results below, or an explicit cofinal
-   rack-prefix mechanism.  Do not introduce another named filtration unless it
-   immediately proves A, proves B, or proves such a theorem.
+  ker rho^Y_n = ker rho^X_n
 
-Known closed cases and guardrails.
+for every n.  Therefore the hard part is genuinely degenerate behavior.
 
-1. Finite one-sided nondegenerate solutions are closed by the derived
-   rack/guitar construction, with kernel equality in every arity.
+But beware: the degenerate case is not a smaller independent problem.  If D
+is a nontrivial identity solution R_D(a,b)=(a,b), then D x Z is degenerate
+and has the same braid kernels as Z.  Thus proving all degenerate solutions
+are dominated proves the full problem.
 
-2. The degenerate case is not a smaller residual problem.  If D is a finite
-   identity solution with |D|>1 and Z is any finite bijective solution, then
-   X=D x Z is finite, bijective, and degenerate, and
+2. Products and quotients.
 
-     ker rho^X_n = ker rho^Z_n
+Products of dominated solutions are dominated.  Braided quotients of dominated
+solutions are dominated.
 
-   for every n.  Therefore proving domination for all finite degenerate
-   solutions is equivalent to proving the full problem.
+3. Fixed arity is not enough.
 
-3. Products of dominated solutions and braided quotients of dominated
-   solutions are dominated.
+For each fixed n, finite rack detectors are cofinal enough to dominate the
+n-strand action of a fixed finite X.  Therefore a counterexample must force
+failures at unbounded braid indices against every finite rack prefix.
 
-4. No single braid is invisible to all finite racks, and fixed-arity rack
-   cofinality is available.  Any counterexample must force failures at
-   unbounded braid index against every finite rack prefix.
+4. Transparent extension and Brunnian reduction.
 
-5. Ordinary Brunnian reduction.  For a rack Y, put Q=Y^0 x T_2, where Y^0 is
-   the transparent extension and T_2 is the two-element trivial rack.  Then Q
-   dominates X if and only if
+For a rack Y, let Y^0 be its transparent extension with a new color 0
+satisfying
 
-     Brun_n cap ker rho^Q_n <= ker rho^X_n
+  0*y = y,
+  y*0 = 0,
 
-   for every n.
+and the old operation on Y.  Let T_2 be the two-element trivial rack.  Put
 
-Finite-image setup.
+  Q = Y^0 x T_2.
 
-Fix a finite rack detector Y and set Q=Y^0 x T_2.  Let
+Then Q forces purity and deletion compatibility.  Domination by Q is
+equivalent to killing ordinary Brunnian detector-kernel elements:
+
+  Q dominates X
+    iff
+  Brun_n cap ker rho^Q_n <= ker rho^X_n
+
+for every n.
+
+5. Last-strand finite-image formulation.
+
+Let
 
   F_{n-1}=ker(d_n:P_n -> P_{n-1})
 
 be the last-strand free group with free generators
 
-  x_i = A_{i,n},       1 <= i <= n-1.
+  x_i = A_{i,n}, 1 <= i <= n-1.
 
-Let
+For a fixed detector Q and target X, define
 
-  Phi_n:F_{n-1} -> Gamma_n <= Sym(Q^n) x Sym(X^n)
-
-be the combined finite image
+  Phi_n:F_{n-1} -> Gamma_n <= Sym(Q^n) x Sym(X^n),
 
   Phi_n(beta) = (rho^Q_n(beta), rho^X_n(beta)).
 
-Let p_Q and p_X be the two projections from Gamma_n, and set
+Let p_Q and p_X be the coordinate projections from Gamma_n, and define
 
   K_n = ker p_Q,
   L_n = ker p_X.
 
 For 1<=i<=n-1, set
 
-  N_{i,n} = << Phi_n(x_i) >>_{Gamma_n}.
+  N_{i,n} = <<Phi_n(x_i)>>_{Gamma_n}.
 
-For normal subgroups N_i of a group G, write
+Let
 
-  [N_i | i in S]_Sigma
+  C_n = [N_{1,n},...,N_{n-1,n}]_Sigma
 
-for the symmetric commutator subgroup generated by all fully parenthesized
-iterated commutators with one input from each N_i, i in S, in arbitrary order.
+be the symmetric all-meridian commutator subgroup generated by all fully
+parenthesized iterated commutators using one input from each N_{i,n}, in
+arbitrary order.
 
-Known finite-image theorem:
+The finite-image Brunnian theorem says
 
-  Phi_n(Brun_n cap ker rho^Q_n)
-    =
-  K_n cap C_n,
+  Phi_n(Brun_n cap ker rho^Q_n) = K_n cap C_n.
 
-where
+Since Gamma_n <= Sym(Q^n) x Sym(X^n), the projection kernels K_n and L_n
+intersect trivially.  Therefore
 
-  C_n=[N_{1,n},...,N_{n-1,n}]_Sigma.
-
-Since Gamma_n is a subgroup of Sym(Q^n) x Sym(X^n), the projection kernels
-K_n and L_n intersect trivially.  Therefore Q dominates X if and only if
-
+  Q dominates X
+    iff
   K_n cap C_n = 1
 
 for every n.
 
-Skeletal and Moore-coherent boundary.
+6. Same-image deletion ghosts.
 
-For every nonempty S, write
+For a surjection
 
-  C_S=[N_i | i in S]_Sigma.
+  phi:F_S -> G
 
-The q-skeletal recursive root-core Sk_{S,q}^{(d)} is a subgroup-level
-supergroup of C_S, with
-
-  C_S <= Sk_{S,q}^{(d)}
-
-and equality once d >= max(0, |S|-q).  You may treat its detailed recursive
-definition as already proved; it combines exact support tests C_S<=C_T with
-weighted block tests and recursive binary root splitting.
-
-Now let phi:F_S -> G be a surjection from the free group F_S=<x_i | i in S>,
-with N_i=<<phi(x_i)>>_G.  For T subset S, define
+from a free group F_S=<x_i | i in S>, let R=ker phi.  For T subset S, define
 
   epsilon_T = iota_T d_T : F_S -> F_S,
 
-where d_T deletes generators outside T and iota_T reinserts the result.
+where d_T deletes generators outside T and iota_T reinserts the remaining
+word.
 
-Let R=ker phi.  For a>=1 define
+For a>=1, define
 
   A_a(phi)
     =
   intersection_{T proper subset S, 1 <= |S\T| <= a}
   epsilon_T^{-1}(R).
 
-Equivalently, w in A_a(phi) means every relevant deletion of w evaluates
-trivially in the same finite image G.
-
-Define
-
-  M_{S,a}(phi)=phi(A_a(phi)).
-
-Then
-
-  C_S <= M_{S,a}(phi).
-
-The Moore-coherent target is
-
-  MSk_{S,q,a}^{(d)}(phi)
-    =
-  Sk_{S,q}^{(d)}(G;N_i) cap M_{S,a}(phi).
-
-Thus
-
-  C_S <= MSk_{S,q,a}^{(d)}(phi) <= Sk_{S,q}^{(d)}(G;N_i).
-
-Exact ghost quotient.
+Thus w in A_a(phi) means every relevant deletion of w evaluates trivially in
+the same finite image G.
 
 Let
 
-  R_i=<<x_i>>_{F_S},
-  D_S=[R_i | i in S]_Sigma.
+  R_i = <<x_i>>_{F_S},
+  D_S = [R_i | i in S]_Sigma.
 
-Then C_S=phi(D_S), D_S<=A_a(phi), and
+Then
+
+  C_S = [<<phi(x_i)>> | i in S]_Sigma = phi(D_S),
+
+and
+
+  D_S <= A_a(phi).
+
+The exact same-image deletion ghost quotient is
 
   M_{S,a}(phi)/C_S
     ~= A_a(phi)R / D_S R
-    ~= A_a(phi)/(A_a(phi) cap D_S R).
+    ~= A_a(phi)/(A_a(phi) cap D_S R),
 
-Therefore
+where M_{S,a}(phi)=phi(A_a(phi)).  Hence
 
   M_{S,a}(phi)=C_S
     iff
   A_a(phi) <= D_S R.
 
-Current sharp detector-independent boundary.
+In the detector setting, a ghost is a word
 
-Let r=|S|.  Full deletion depth collapses the quotient:
+  w in A_a(Phi_n)
 
-  M_{S,r-1}(phi)=C_S
+such that
 
-for every surjection phi:F_S -> G.  Equivalently,
-
-  A_{r-1}(phi) <= D_S ker(phi).
-
-Thus same-image deletion ghosts vanish if all proper deletions are imposed.
-
-For bounded depth a, there is only face confinement.  If w in A_a(phi), then
-for every U subset S with |U|<=a,
-
-  w in D_U ker(phi),
-
-so
-
-  phi(w) in [N_i | i in U]_Sigma.
-
-Hence
-
-  M_{S,a}(phi)
-    <=
-  intersection_{U subset S, 1 <= |U| <= a}
-  [N_i | i in U]_Sigma.
-
-But fixed-depth ghosts do not collapse detector-independently.  For every
-fixed a>=1 there are arbitrarily large finite sets S, finite p-groups G, and
-surjections phi:F_S -> G such that
-
-  M_{S,a}(phi) != C_S.
-
-Indeed one can arrange C_S=1 while M_{S,a}(phi) contains a nontrivial element
-of order p.  The construction takes k=a+1, a prime p>k, r=p+k, and
-
-  w = product_{A subset S, |A|=k} c_A,
-
-where c_A is the left-normed commutator on the k generators indexed by A.
-In the class-k exponent-p nilpotent quotient, kill all deletion products
-e_U(w) with 1<=|U|<=a.  Lucas' theorem shows those killed products have zero
-total support functional while w has nonzero functional, so w survives.
-Since r>k, the full all-meridian commutator maps trivially.
-
-Therefore no positive proof can come from a uniform bounded-deletion collapse
-
-  A_a(Phi_n) <= D_S ker(Phi_n).
-
-The next theorem must use the rack detector Q in an essential way, or give a
-cofinal rack-prefix construction where detector-specific ghosts survive.
-
-Now include the detector obstruction.  Let
-
-  H = phi^{-1}(K cap Sk_{S,q}^{(d)}).
-
-Then
-
-  K cap MSk_{S,q,a}^{(d)}
-    =
-  phi(A_a(phi) cap H),
-
-and hence
-
-  K cap MSk_{S,q,a}^{(d)} = 1
-    iff
-  A_a(phi) cap H <= R.
-
-In the Sawin finite-image setup, this becomes:
-
-  K_n cap MSk_{n,q,a}^{(d)} = 1
-    iff
-  A_a(Phi_n) cap Phi_n^{-1}(K_n cap Sk_{n,q}^{(d)})
-    <=
-  ker Phi_n.
-
-So the exact obstruction is a nontrivial word w in F_{n-1} satisfying:
-
-  epsilon_T(w) in ker Phi_n
-    for all relevant deletions T,
-
-  Phi_n(w) in K_n cap Sk_{n,q}^{(d)},
-
+  Phi_n(w) in K_n,
   Phi_n(w) != 1.
 
-Call such a w a same-image deletion ghost.
+If w also lies in the all-meridian layer D_S, then Phi_n(w) lies in K_n cap
+C_n and is a genuine Brunnian obstruction.
 
-Important warning.
+7. Known ghost-boundary theorems.
 
-Moore coherence alone does not force vanishing.  For the conjugation rack
-X=A_5 with a*b=aba^{-1}, and the weak detector Q=T_2, left-normed
-last-strand commutators
+Full deletion depth collapses:
 
-  c_r=[[[x_1,x_2],x_3],...,x_r]
+If r=|S|, then for every surjection phi:F_S -> G,
 
-are ordinary Brunnian and Q-invisible, but act nontrivially on X^n by
-point-pushing/Artin conjugation.  Since A_5 is centerless and perfect, one can
-choose inputs making c_r nontrivial in A_5 for all r.  Thus
-
-  K_n cap MSk_{n,q,a}^{(d)} != 1
-
-cofinally for the weak detector Q=T_2.  This is not a Sawin counterexample,
-because X itself is a rack and dominates itself.  It proves that any positive
-proof must use detector-specific structure, not Moore coherence alone.
-
-Main task.
-
-Try to prove A or B.  If neither is possible, attack the exact ghost quotient
-directly.
-
-Positive route to A:
-
-Construct, for every finite bijective X, a finite rack detector Q=Y^0 x T_2
-and fixed q,d,a such that, for all sufficiently large n,
-
-  A_a(Phi_n) cap Phi_n^{-1}(K_n cap Sk_{n,q}^{(d)})
-    <=
-  ker Phi_n.
+  M_{S,r-1}(phi)=C_S.
 
 Equivalently,
 
-  K_n cap MSk_{n,q,a}^{(d)} = 1.
+  A_{r-1}(phi) <= D_S ker(phi).
 
-You must use the detector Q in an essential way.  A proof that only uses
-Moore coherence, finite image, bounded skeletal depth, exact small-support
-face confinement, or bounded deletion depth is insufficient because fixed-
-depth ghosts survive cofinally in finite p-group images, and the A_5
-conjugation rack gives point-pushing survival against the weak detector T_2.
+So same-image ghosts vanish if all proper deletions are imposed.
 
-Relative positive route:
+But bounded deletion depth does not collapse detector-independently.  For
+every fixed a>=1, there are arbitrarily large finite sets S, finite p-groups
+G, and surjections phi:F_S -> G such that
 
-Find a dominated braided quotient Z of X and fixed q,d,a such that, with
-G_n^X=rho_n^X(F_{n-1}) and E_n=ker(G_n^X -> G_n^Z),
+  C_S=1
+  but
+  M_{S,a}(phi) != 1.
 
-  E_n cap MSk_{n,q,a}^{X,(d)} = 1
+Thus no proof of A can come from a uniform bounded-deletion collapse.
 
-eventually.
+8. Known varying-target detector survival theorem.
 
-Negative route to B:
+For every fixed finite rack detector Q, define
 
-Construct an explicit finite degenerate bijective YBE solution X such that
-for every finite rack prefix P_m there are unbounded n_m and same-image
-deletion ghosts w_m for the detector Q_m=P_m^0 x T_2 with
+  e(Q)=ord(rho^Q_2(sigma_1^2)).
 
-  Phi_{m,n_m}(w_m) in K_{m,n_m} cap Sk_{n_m,q}^{(d)}
+Choose an odd prime ell>=5 not dividing e(Q), and let
 
-and
+  X_Q = Conj(A_ell)
 
-  Phi_{m,n_m}(w_m) != 1
+be the conjugation rack of A_ell.
 
-for every fixed q,d,a once m,n_m are large enough.
+For every r>=2, with n=r+1 and F_r=<x_1,...,x_r> the last-strand free group,
+define
 
-The construction must verify YBE, bijectivity, and cofinal rack-prefix
-invisibility.  A survival example against one weak detector is not enough.
+  w_r=[...[ [x_1^{e(Q)},x_2^{e(Q)}],x_3^{e(Q)}],...,x_r^{e(Q)}].
 
-Required discipline.
+Then
 
-1. First check the ghost quotient formulas above.  If a formula is wrong,
-   repair it precisely.
+  rho^Q_n(w_r)=1,
+  rho^{X_Q}_n(w_r) != 1,
 
-2. Do not answer merely by defining a smaller subgroup.  Do not re-present
-   the full-deletion collapse or the fixed-depth finite p-group survival
-   theorem as new progress.  The next useful C is a detector-specific
-   annihilation theorem, a detector-specific survival theorem, a
-   collapse/no-go theorem beyond the known ghost quotient boundary, or an
-   explicit cofinal counterexample mechanism.
+and every proper deletion of w_r is already trivial in the free group.  Thus
 
-3. Separate theorem-level claims from heuristics and unsupported claims.
+  Phi_n(w_r) in K_n cap C_n
 
-4. Do not cite the public status of the MathOverflow page as mathematical
-   evidence.
+is nontrivial.
+
+For a finite rack prefix P_m, taking Q_m=P_m^0 x T_2 gives a rack target
+X_m=Conj(A_{ell_m}) outside the prefix and unbounded-index ghosts invisible
+to Q_m.
+
+This is not a Sawin counterexample because X_m varies with m and each X_m is
+itself a rack.  Do not present this as B.  A true counterexample requires one
+fixed finite X missed cofinally by every finite rack prefix.
+
+9. The last strict A/B attempt failed at two precise points.
+
+Positive failure.  The coordinatewise finite left-nondegenerate-cover shortcut
+cannot solve the genuinely degenerate case.  If
+
+  pi:X_tilde -> X
+
+were a finite coordinatewise braided quotient from a finite
+left-nondegenerate solution, then for each x in X the first-coordinate map
+
+  y -> pr_1 R_X(x,y)
+
+would preserve positive fiber weights, hence would be surjective and therefore
+bijective.  Thus this method only works when X was already
+left-nondegenerate.  The remaining positive route must be non-coordinatewise:
+a contextual, guitar, endpoint, or finite-state rack readout whose product
+readout is orbit-separating for every arity.
+
+Negative failure.  The varying-target theorem cannot be frozen into a
+counterexample as stated.  For each detector Q it chooses a new rack target
+Conj(A_ell), with ell depending on Q.  A Sawin counterexample needs one fixed
+finite bijective YBE solution X, not a sequence of rack targets that change
+with the detector prefix.
+
+Your task.
+
+Do not give another C-style reduction.  Try to prove A or B.
+
+You must directly attack one of the two fatal blockers above.  Either prove
+the non-coordinatewise all-arity contextual/guitar endpoint encoding theorem
+for arbitrary finite degenerate X, or construct one fixed finite target X that
+replaces the varying Conj(A_ell) rack targets in the detector-survival
+argument.  If you do neither, the answer has not advanced the problem.
+
+Positive route A: target-specific detector construction.
+
+For a fixed finite bijective YBE solution X, construct or prove existence of
+one finite rack Y_X such that
+
+  ker rho^{Y_X}_n <= ker rho^X_n
+
+for every n.
+
+You may use contextual detector ideas, monoid quotients, endpoint readouts,
+derived racks, rack products, transparent extensions, or any other
+construction.  But you must prove the all-arity statement.  In particular, if
+you use contextual endpoint detectors, you must prove the all-arity
+orbit-separation theorem, not just arity 2/3/4 evidence.
+
+The key positive target is:
+
+Find Q_X=Y_X^0 x T_2 such that for every n,
+
+  K_n cap C_n = 1
+
+in the combined image for Q_X and X.
+
+Equivalently, prove that every Q_X-invisible Brunnian braid acts trivially on
+X^n.
+
+You must explain why the known detector-specific survival theorem does not
+contradict your proof: that theorem varies the target X_Q with Q, while here
+Q_X may depend on the fixed X.
+
+Negative route B: fixed-target cofinal obstruction.
+
+Construct one explicit fixed finite bijective YBE solution X such that for
+every finite rack prefix P_m, with
+
+  Q_m=P_m^0 x T_2,
+
+there exist unbounded n_m and braids beta_m such that
+
+  rho^{Q_m}_{n_m}(beta_m)=1,
+  rho^X_{n_m}(beta_m) != 1.
+
+It is not enough to let X vary with m.  It is not enough to use Conj(A_ell)
+targets that are themselves racks and eventually appear in rack prefixes.  It
+is not enough to beat one detector.
+
+If you attempt B, you must give:
+
+1. the finite set X and the bijective YBE map R_X explicitly or by a finite
+   algebraic construction;
+2. a proof that R_X satisfies the Yang-Baxter equation and is bijective;
+3. a proof that for every finite rack prefix P_m there are unbounded n_m and
+   Q_m-invisible, X-visible braids;
+4. a proof that this is cofinal against all finite racks, not just a chosen
+   detector.
+
+Forbidden main-answer moves.
+
+Do not answer by:
+
+- re-proving the nondegenerate derived-rack theorem;
+- re-stating the Brunnian reduction;
+- defining a smaller obstruction subgroup or another filtration;
+- re-proving the same-image ghost quotient formula;
+- re-proving full-deletion collapse;
+- re-proving fixed-depth p-group ghost survival;
+- re-proving the varying-target theorem "for every detector Q there exists a
+  rack target X_Q with ghosts";
+- citing computational finite-arity evidence as an all-arity theorem;
+- citing the public status of the MathOverflow page.
+
+If you genuinely cannot prove A or B, say "I cannot prove A or B" and then
+give only a short list of the exact fatal obstruction in the attempted proof.
+Do not develop another long C-output.
+
+Now solve the problem.  Try A first.  If A fails, try B.  Only after both fail
+should you briefly explain the precise fatal obstruction, without introducing
+a new reduction hierarchy.
