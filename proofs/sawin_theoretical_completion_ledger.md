@@ -1547,6 +1547,33 @@ The independent stabilizer-row verifier recomputes the 24 non-empty rows and
 finds trivial kernel image in each.  This is still a partial arity-6 result:
 rows with q=4 or q=5 detector components are not certified by this probe.
 
+Arity-6 complete certified trivial-kernel certificate:
+
+```text
+proofs/nonperm3_width3_arity6_certified_trivial_kernel_combined.json
+
+55 non-permutation size-three rows certified
+31 direct full-product stabilizer rows
+24 subproduct-trivial rows
+full_product_kernel_image_size distribution {1: 55}
+full_product_quotient_size distribution {1: 55}
+```
+
+The 31 direct rows cover the identity row, all q=2 one-component rows, all
+q=2/q=3/q=3 rows, and all q=2/q=3/q=3/q=3 rows.  The 24 subproduct rows cover
+the q=4/q=5 profiles: `(3,4)` is certified by the q=3 subproduct, and
+`(2,3,5)` is certified by the `(2,3)` subproduct.  The combined verifier
+checks all 55 rows with `--require-trivial-full-product`.
+
+This proves the fixed-arity statement
+
+```text
+rho^X_6(K^{Y_X}_6)=1
+```
+
+for the current detector product `Y_X` and every non-permutation size-three
+table `X`.  It is still not an all-arity theorem.
+
 ## Exact open implications
 
 The current material does not prove Sawin's problem and does not provide a
@@ -1575,6 +1602,8 @@ fixed `q,d` q-skeletal recursive root core:
 ```text
 K_n cap [N_{1,n},...,N_{n-1,n}]_Sigma
   <=
+K_n cap MSk_{n,q,a}^{(d)}    for every fixed q>=3,d>=0,a>=1
+  <=
 K_n cap Sk_{n,q}^{(d)}       for every fixed q>=3,d>=0
   <=
 K_n cap R_n^(d)       for every fixed d
@@ -1591,7 +1620,20 @@ high-arity miss against one detector product, even the current `Y_X`, is not
 enough.  Pairwise, unweighted triple-block, weighted block-core, or
 fixed-depth root-core noise is also not enough unless it comes from the
 all-meridian symmetric commutator.  The same warning applies to q-skeletal
-root-core noise: the obstruction must be in the exact all-meridian subgroup.
+and Moore-coherent root-core noise: the obstruction must be in the exact
+all-meridian subgroup and must have a single lift whose deletion evaluations
+vanish in the same finite image.
+
+The active theoretical prompt now asks for a direct attack on the
+Moore-coherent target recorded in
+`proofs/moore_coherent_skeletal_root_core_obstruction.md`: find a finite rack
+detector `Q=Y^0 x T_2` and fixed `q,d,a` with
+
+```text
+K_n cap MSk_{n,q,a}^{(d)} = 1
+```
+
+eventually, or construct a cofinal counterexample surviving this condition.
 
 ## Review rubric
 

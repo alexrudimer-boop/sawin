@@ -624,6 +624,104 @@ This remains partial arity-6 evidence.  It certifies the identity, q=2
 one-component, and q=2/q=3/q=3 component rows.  It does not certify rows with
 q=4 or q=5 detector components.
 
+The expanded no-q5 full-product stabilizer probe certifies the remaining
+q<=3 component rows:
+
+```text
+proofs/nonperm3_width3_arity6_no_q5_component_count_le4_stabilizer_probe.json
+proofs/nonperm3_width3_arity6_no_q5_component_count_le4_rows_stabilizer_probe.jsonl
+
+audit_rows 31
+detector component size distribution {[]: 1, [2]: 12, [2, 3, 3]: 12, [2, 3, 3, 3]: 6}
+truncated rows 0
+kernel_image_size distribution {1: 31}
+quotient_size distribution {1: 31}
+```
+
+The structural and independent stabilizer-row verifiers report:
+
+```text
+OK nonperm3 width-3 audit verification
+detector_index_rows 55
+audit_rows 31
+incomplete_detector_basis False
+
+OK independent stabilizer-row verification
+arity 6
+recomputed_stabilizer_rows 30
+trivial_kernel_rows 30
+```
+
+The q=4/q=5 rows are certified by subproduct triviality.  For each `(3,4)`
+row the q=3 component alone has trivial realized detector-kernel image; for
+each `(2,3,5)` row the `(2,3)` subproduct has trivial realized
+detector-kernel image.  Since the full product kernel is a subgroup of the
+subproduct kernel, the full product also has trivial X-image:
+
+```text
+proofs/nonperm3_width3_arity6_q4_q5_subproduct_size_le3_trivial_kernel_audit.json
+
+row_count 24
+full component size distribution {[3, 4]: 12, [2, 3, 5]: 12}
+audited subproduct size distribution {[3]: 12, [2, 3]: 12}
+omitted component size distribution {[4]: 12, [5]: 12}
+subproduct_kernel_image_size distribution {1: 24}
+full_product_kernel_image_size distribution {1: 24}
+```
+
+Verifier:
+
+```text
+python tools/verify_nonperm3_subproduct_trivial_kernel_audit.py \
+  proofs/nonperm3_width3_arity6_q4_q5_subproduct_size_le3_trivial_kernel_audit.json \
+  --arity 6 \
+  --require-trivial-full-product
+
+OK nonperm3 subproduct trivial-kernel audit verification
+arity 6
+recomputed_rows 24
+trivial_subproduct_rows 24
+```
+
+The consolidated arity-6 certificate is:
+
+```text
+proofs/nonperm3_width3_arity6_certified_trivial_kernel_combined.json
+
+row_count 55
+certification_method_counts {
+  "direct_full_product_stabilizer": 31,
+  "subproduct_trivial_kernel": 24
+}
+full_product_kernel_image_size_distribution {"1": 55}
+full_product_quotient_size_distribution {"1": 55}
+```
+
+Verifier:
+
+```text
+python tools/verify_nonperm3_certified_trivial_kernel_audit.py \
+  proofs/nonperm3_width3_arity6_certified_trivial_kernel_combined.json \
+  --arity 6 \
+  --require-all-55 \
+  --require-trivial-full-product
+
+OK nonperm3 combined trivial-kernel audit verification
+arity 6
+rows 55
+methods {'direct_full_product_stabilizer': 31, 'subproduct_trivial_kernel': 24}
+```
+
+Thus arity 6, like arities 4 and 5, has no realized detector-kernel X-action
+for the current detector products:
+
+```text
+rho^X_6(K^{Y_X}_6)=1
+```
+
+for all 55 non-permutation size-three tables.  This is proof-grade
+fixed-arity evidence only; it is not an all-arity theorem.
+
 The decision rule for future higher-arity product audits remains:
 
 ```text

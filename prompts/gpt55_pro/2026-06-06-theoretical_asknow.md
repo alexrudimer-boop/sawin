@@ -3,7 +3,7 @@ theoretical_asknow
 This is a self-contained theoretical prompt.  Do not ask for code,
 repository access, local files, or further computations.  Be aggressive: try
 to fully resolve Will Sawin's finite-rack domination problem from the
-q-skeletal recursive root-core finite-image boundary below.
+Moore-coherent finite-image boundary below.
 
 Problem, due to Will Sawin.
 
@@ -22,6 +22,21 @@ single finite rack Y, independent of n, such that
   ker rho^Y_n <= ker rho^X_n
 
 for every n?
+
+Your task is to try to fully resolve the problem, not merely refine an
+obstruction hierarchy.  Give one of:
+
+A. A complete proof that such a finite rack Y always exists.
+
+B. An explicit finite bijective set-theoretic YBE solution X and a rigorous
+   cofinal obstruction proving no finite rack dominates X.
+
+C. If A and B are still out of reach, give a theorem that directly attacks the
+   Moore-coherent target below: either collapse it, prove it vanishes under a
+   natural finite-YBE hypothesis, or show a concrete mechanism by which it can
+   survive cofinally.  Do not introduce a new named filtration unless it
+   immediately proves A, proves B, or proves an equivalence/no-go theorem for
+   the Moore-coherent condition.
 
 Known closed cases and guardrails.
 
@@ -44,9 +59,9 @@ Known closed cases and guardrails.
    cofinality is available.  Any counterexample must force failures at
    unbounded braid index against every finite rack prefix.
 
-5. The ordinary Brunnian reduction is known.  For a rack Y, put
-   Q=Y^0 x T_2, where Y^0 is the transparent extension and T_2 is the
-   two-element trivial rack.  Then Q dominates X if and only if
+5. Ordinary Brunnian reduction.  For a rack Y, put Q=Y^0 x T_2, where Y^0 is
+   the transparent extension and T_2 is the two-element trivial rack.  Then Q
+   dominates X if and only if
 
      Brun_n cap ker rho^Q_n <= ker rho^X_n
 
@@ -60,7 +75,7 @@ Fix a finite rack detector Y and set Q=Y^0 x T_2.  Let
 
 be the last-strand free group with free generators
 
-  x_i = A_{in},       1 <= i <= n-1.
+  x_i = A_{i,n},       1 <= i <= n-1.
 
 Let
 
@@ -103,148 +118,158 @@ K_n and L_n intersect trivially.  Therefore Q dominates X if and only if
 
 for every n.
 
-Known recursive root-core boundary.
+Q-skeletal root-core boundary.
 
 For every nonempty S subset {1,...,r}, define
 
   C_S=[N_i | i in S]_Sigma,
   C_{ {i} }=N_i.
 
-Let Bip(S) be the unordered bipartitions S=A sqcup B with A,B nonempty.
-
-Known root-split factorization:
+Root-split factorization:
 
   C_S =
-  product_{ {A,B} in Bip(S) } [C_A,C_B].
+  product_{ {A,B} in Bip(S) } [C_A,C_B],
 
-Known recursive root cores R_S^(d) satisfy
+where Bip(S) is the set of unordered bipartitions S=A sqcup B.
 
-  C_S <= R_S^(d+1) <= R_S^(d),
-  R_S^(d)=C_S whenever d>=|S|-3.
+Exact support monotonicity:
 
-Therefore a previous sufficient target was:
+  empty != T subset S  =>  C_S <= C_T.
 
-  exists fixed d>=0 such that K_n cap R_n^(d)=1
-  for all sufficiently large n.
+For q>=3, define the q-skeletal recursive root-core Sk_{S,q}^{(d)} by
 
-Q-skeletal sharpening.
-
-Known exact support monotonicity:
-
-  if empty != T subset S, then C_S <= C_T.
-
-For fixed q>=3, define
-
-  J_{S,q}
-    =
-  intersection_{empty != T subset S, |T|<=q} C_T.
-
-Define q-skeletal recursive root cores Sk_{S,q}^{(d)} by
+  J_{S,q} =
+    intersection_{empty != T subset S, |T|<=q} C_T,
 
   Sk_{S,q}^{(0)} = R_S^(0) cap J_{S,q},
 
-and
-
   Sk_{S,q}^{(d+1)}
     =
-  Sk_{S,q}^{(d)} cap
-  product_{ {A,B} in Bip(S) } [Sk_{A,q}^{(d)},Sk_{B,q}^{(d)}].
+  Sk_{S,q}^{(d)}
+    cap
+  product_{ {A,B} in Bip(S) }
+    [Sk_{A,q}^{(d)}, Sk_{B,q}^{(d)}],
 
-Known theorem:
+where R_S^(0) is the weighted two-plus-three block-core approximation from the
+previous boundary.  The needed facts are:
 
-  C_S <= Sk_{S,q}^{(d+1)} <= Sk_{S,q}^{(d)} <= R_S^(d),
+  C_S <= Sk_{S,q}^{(d)} <= R_S^(d),
 
-  if q' >= q then Sk_{S,q'}^{(d)} <= Sk_{S,q}^{(d)},
+and
 
-  Sk_{S,q}^{(d)} = C_S whenever d>=max(0, |S|-q).
+  Sk_{S,q}^{(d)} = C_S
+  once d >= max(0, |S|-q).
 
-In the finite-image setup, with R_n={1,...,n-1}, write
+Moore-coherent strengthening.
 
-  Sk_{n,q}^{(d)}
+Let S={1,...,r} and let
+
+  phi:F_S -> G
+
+be a surjection from the free group F_S=<x_i | i in S>.  Put
+
+  N_i = << phi(x_i) >>_G.
+
+For T subset S, let
+
+  d_T:F_S -> F_T
+
+delete the generators outside T, and let
+
+  iota_T:F_T -> F_S
+
+be the natural inclusion.  Define the same-image deletion evaluation
+
+  partial_T^phi = phi iota_T d_T : F_S -> G.
+
+For a>=1, define the a-deletion Moore image
+
+  M_{S,a}(phi)
     =
-  Sk_{R_n,q}^{(d)}(Gamma_n;(N_{i,n})_{i in R_n}).
+  phi(
+    intersection_{T proper subset S, 1 <= |S\T| <= a}
+    ker partial_T^phi
+  ).
 
-Then
+This says that an element has a single lift to the free meridian group whose
+deleted evaluations vanish in the same finite image.  The case a=1 is already
+important:
 
-  C_n <= Sk_{n,q}^{(d)} <= R_n^(d).
+  M_{S,1}(phi)
+    =
+  phi(
+    intersection_{i in S}
+    ker partial_{S\{i}}^phi
+  ).
 
-Therefore the sharpest current sufficient large-arity condition is:
+Define the Moore-coherent q-skeletal root-core
 
-  exists fixed q>=3 and fixed d>=0 such that
-  K_n cap Sk_{n,q}^{(d)} = 1
-  for all sufficiently large n.
+  MSk_{S,q,a}^{(d)}(phi)
+    =
+  Sk_{S,q}^{(d)}(G;N_i) cap M_{S,a}(phi).
+
+Known Moore-coherent containment:
+
+  C_S <= MSk_{S,q,a}^{(d)}(phi) <= Sk_{S,q}^{(d)}(G;N_i),
+
+and if a' >= a then
+
+  MSk_{S,q,a'}^{(d)}(phi) <= MSk_{S,q,a}^{(d)}(phi).
+
+In the finite-image setup, take S={1,...,n-1}, phi=Phi_n, and write
+
+  MSk_{n,q,a}^{(d)} = MSk_{S,q,a}^{(d)}(Phi_n).
+
+Sufficient positive target.
+
+It is enough to prove that for every finite bijective X there exist a finite
+rack detector Q=Y^0 x T_2 and fixed integers q>=3, d>=0, a>=1 such that
+
+  K_n cap MSk_{n,q,a}^{(d)} = 1
+
+for all sufficiently large n.  Fixed-arity rack cofinality then handles the
+remaining finitely many arities.
 
 Relative quotient version.
 
-Let Z be a braided quotient of X already dominated by a finite rack.  Put
-Q=Y_Z^0 x T_2, where Y_Z dominates Z.  Let
+Let Z be a braided quotient of X already dominated by a finite rack.  Let
 
-  G^X_n = rho^X_n(F_{n-1}),
-  G^Z_n = rho^Z_n(F_{n-1}),
-  E_n = ker(G^X_n -> G^Z_n),
-  M_{i,n} = << rho^X_n(x_i) >>_{G^X_n}.
+  G_n^X = rho_n^X(F_{n-1}),
+  E_n = ker(G_n^X -> G_n^Z),
 
-Define Sk_{n,q}^{X,(d)} by applying the q-skeletal recursive root-core
-construction inside G^X_n to the normal subgroups M_{i,n}.  Known criterion:
+and let psi_n:F_{n-1}->G_n^X be the natural map.  Define
 
-  if there is a dominated quotient Z and fixed q>=3,d>=0 such that
-  E_n cap Sk_{n,q}^{X,(d)}=1
-  for all sufficiently large n,
-  then one finite rack dominates X.
+  MSk_{n,q,a}^{X,(d)} = MSk_{S,q,a}^{(d)}(psi_n).
 
-Finite evidence context, not an all-arity theorem.
+It is enough to find a dominated braided quotient Z and fixed q,d,a such that
 
-For the non-permutation size-three detector product built from complete
-arity-2 and arity-3 endpoint detectors, the arity-4 and arity-5 realized
-detector-kernel images on X^4 and X^5 are trivial for all 55 non-permutation
-size-three tables.  This is proof-grade fixed-arity evidence only.  Do not
-claim the all-arity problem is solved from it.
+  E_n cap MSk_{n,q,a}^{X,(d)} = 1
 
-Your task.
+for all sufficiently large n.
 
-Try to resolve the full problem from this sharper boundary.
+Main tasks.
 
-A. Prove Sawin's statement for every finite bijective X.  A clean route would
-   be to construct, or prove the existence of, a finite rack detector
-   Q=Y^0 x T_2 and fixed q>=3,d>=0 such that for all sufficiently large n:
+1. First verify the Moore-coherent containment.  If there is a flaw, identify
+   it precisely and repair the boundary.
 
-     K_n cap Sk_{n,q}^{(d)} = 1.
+2. Then try to prove A by proving the sufficient positive target above.  A
+   plausible route is a finite-state contextual endpoint theorem implying that
+   every Q-invisible X-visible Brunnian motion has a bounded exact-support
+   Moore-coherent endpoint core.
 
-   You may instead prove the quotient criterion: for every finite X, find a
-   dominated braided quotient Z and fixed q>=3,d>=0 such that
+3. If A fails, try to prove B by constructing an explicit finite degenerate
+   bijective YBE solution X with a cofinal sequence of ordinary Brunnian
+   braids beta_m invisible to every finite rack prefix P_m^0 x T_2 but visible
+   to X.  The construction must verify YBE, bijectivity, and cofinal
+   rack-prefix invisibility.
 
-     E_n cap Sk_{n,q}^{X,(d)} = 1
+4. If you give C, it must be a collapse theorem, no-go theorem, equivalence
+   theorem, or explicit survival mechanism for
 
-   for all sufficiently large n.  Any stronger all-arity theorem implying
-   q-skeletal root-core vanishing is acceptable.
+     K_n cap MSk_{n,q,a}^{(d)}.
 
-B. Give an explicit finite bijective YBE table X and prove no finite rack
-   dominates it.  The proof must be cofinal: for every finite rack prefix
-   P_m, with Q_m=P_m^0 x T_2, construct unbounded arities n_m and nontrivial
-   elements
+   A further subgroup hierarchy without such a theorem is not enough.
 
-     1 != gamma_m in K_{n_m} cap C_{n_m}.
-
-   Such elements automatically lie in every fixed q,d subgroup
-   Sk_{n_m,q}^{(d)} once n_m is large enough, but membership in
-   Sk_{n_m,q}^{(d)}, R_{n_m}^{(d)}, Omega_{n_m,s}^wt, or any unweighted block
-   core is not enough unless membership in the exact all-meridian C_{n_m} is
-   proved.  It is not enough to defeat one rack prefix, one detector product,
-   bounded arity, bounded deletion depth, one Brunnian template, one pairwise
-   commutator subgroup, or any fixed q,d approximation without the cofinal
-   all-meridian proof.
-
-C. If neither A nor B can be proved, give only proof-grade progress: a
-   theorem that strictly narrows the fixed q,d q-skeletal root-core target or
-   the relative q-skeletal quotient criterion, with proof and the exact
-   remaining implication.  Clearly separate theorem/proof from finite
-   evidence, heuristic, and unsupported claims.
-
-Avoid returning only the nondegenerate theorem, contextual equivariance,
-ordinary-Brunnian reduction, finite-image formula, chief-factor dichotomy,
-pairwise-or-central compression, C_n<=D_n, unweighted block-core
-interpolation, weighted block-core containment, root-split factorization,
-recursive root-core hierarchy, or exact support monotonicity itself.  Those
-are now known.  The target is to prove all-arity q-skeletal root-core
-vanishing, prove the relative q-skeletal quotient criterion for all finite X,
-or construct a cofinal all-meridian counterexample.
+5. Be explicit about theorem-level claims, heuristic claims, and unsupported
+   claims.  Do not cite the public status of the MathOverflow page as
+   mathematical evidence.
