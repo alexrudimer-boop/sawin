@@ -868,32 +868,33 @@ recomputed_stabilizer_rows 12
 trivial_kernel_rows 12
 ```
 
-A two-row q=4/q=5 subproduct smoke also closes:
+A resumable q=4/q=5 subproduct partial also closes:
 
 ```text
-proofs/nonperm3_width3_arity8_q4_q5_subproduct_size_le3_smoke.json
+proofs/nonperm3_width3_arity8_q4_q5_subproduct_size_le3_rows.jsonl
+proofs/nonperm3_width3_arity8_q4_q5_subproduct_size_le3_trivial_kernel_audit.partial.json
 
-row_count 2
-full component size distribution {[2, 3, 5]: 1, [3, 4]: 1}
-audited subproduct size distribution {[2, 3]: 1, [3]: 1}
-omitted component size distribution {[5]: 1, [4]: 1}
-subproduct_kernel_image_size distribution {1: 2}
-full_product_kernel_image_size distribution {1: 2}
-elapsed_seconds total 702.626296
+row_count 3
+full component size distribution {[2, 3, 5]: 2, [3, 4]: 1}
+audited subproduct size distribution {[2, 3]: 2, [3]: 1}
+omitted component size distribution {[5]: 2, [4]: 1}
+subproduct_kernel_image_size distribution {1: 3}
+full_product_kernel_image_size distribution {1: 3}
+elapsed_seconds total 1028.756746
 ```
 
 Verifier:
 
 ```text
 python tools/verify_nonperm3_subproduct_trivial_kernel_audit.py \
-  proofs/nonperm3_width3_arity8_q4_q5_subproduct_size_le3_smoke.json \
+  proofs/nonperm3_width3_arity8_q4_q5_subproduct_size_le3_trivial_kernel_audit.partial.json \
   --arity 8 \
   --require-trivial-full-product
 
 OK nonperm3 subproduct trivial-kernel audit verification
 arity 8
-recomputed_rows 2
-trivial_subproduct_rows 2
+recomputed_rows 3
+trivial_subproduct_rows 3
 ```
 
 The partial arity-8 combined certificate is:
@@ -901,13 +902,13 @@ The partial arity-8 combined certificate is:
 ```text
 proofs/nonperm3_width3_arity8_partial_certified_trivial_kernel_combined.json
 
-row_count 15
+row_count 16
 certification_method_counts {
   "direct_full_product_stabilizer": 13,
-  "subproduct_trivial_kernel": 2
+  "subproduct_trivial_kernel": 3
 }
-full_product_kernel_image_size_distribution {"1": 15}
-full_product_quotient_size_distribution {"1": 15}
+full_product_kernel_image_size_distribution {"1": 16}
+full_product_quotient_size_distribution {"1": 16}
 ```
 
 Verifier:
@@ -920,14 +921,15 @@ python tools/verify_nonperm3_certified_trivial_kernel_audit.py \
 
 OK nonperm3 combined trivial-kernel audit verification
 arity 8
-rows 15
-methods {'direct_full_product_stabilizer': 13, 'subproduct_trivial_kernel': 2}
+rows 16
+methods {'direct_full_product_stabilizer': 13, 'subproduct_trivial_kernel': 3}
 ```
 
-This is proof-grade fixed-arity evidence for only 15 of the 55 arity-8 rows.
-The q=4/q=5 smoke indicates that the subproduct strategy still works at
-arity 8, but a full 24-row q=4/q=5 subproduct batch is now a multi-hour
-computation.  The remaining arity-8 rows are not certified by this probe.
+This is proof-grade fixed-arity evidence for only 16 of the 55 arity-8 rows.
+The q=4/q=5 partial indicates that the subproduct strategy still works at
+arity 8, but completing the 24-row q=4/q=5 subproduct batch is now a
+multi-hour computation.  The remaining arity-8 rows are not certified by this
+probe.
 
 The subproduct audit tool now supports durable row-level progress for that
 long batch:
