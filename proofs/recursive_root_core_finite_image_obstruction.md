@@ -7,6 +7,19 @@ for Sawin's finite-rack domination problem.  It does not prove Sawin's
 statement and does not provide a cofinal counterexample.  Its contribution is
 to retain the binary root-split structure of genuine all-meridian commutators.
 
+Update.  The recursive root-core target recorded here has now been sharpened
+again by exact small-support, or q-skeletal, root cores.  The q-skeletal note
+proves
+
+```text
+C_S <= Sk_{S,q}^{(d)} <= R_S^(d),
+Sk_{S,q}^{(d)}=C_S for d>=max(0, |S|-q).
+```
+
+Thus the large-arity target can be sharpened from `K_n cap R_n^(d)=1` to
+`K_n cap Sk_{n,q}^{(d)}=1` for fixed `q>=3` and fixed `d>=0`.  See
+`proofs/q_skeletal_root_core_finite_image_obstruction.md`.
+
 The weighted block core records all-meridian multiplicity after collapsing
 labels into blocks.  A genuine all-meridian commutator has more structure:
 the root of its binary commutator tree splits the support into two nonempty

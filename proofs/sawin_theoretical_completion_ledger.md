@@ -1211,6 +1211,77 @@ elements survive every fixed-depth recursive root core, but membership in a
 root-core approximation alone is not enough unless exact all-meridian
 membership is also proved.
 
+## Q-skeletal root-core finite-image obstruction
+
+The next theoretical response sharpened the recursive root-core target by
+adding exact small-support tests; the detailed note is
+`proofs/q_skeletal_root_core_finite_image_obstruction.md`.
+
+Exact support monotonicity says that if `empty != T subset S`, then
+
+```text
+C_S <= C_T.
+```
+
+One proof is by induction on the commutator tree: if all selected labels lie
+on one child, normality keeps upper commutators inside `C_T`; if selected
+labels split across the two children, the root-split/fat-commutator
+containment sends `[C_{T_a},C_{T_b}]` into `C_T`.
+
+For fixed `q>=3`, define
+
+```text
+J_{S,q}
+  =
+intersection_{empty != T subset S, |T|<=q} C_T.
+```
+
+Then `C_S<=J_{S,q}`.  Define q-skeletal recursive root cores by
+
+```text
+Sk_{S,q}^{(0)} = R_S^(0) cap J_{S,q},
+Sk_{S,q}^{(d+1)}
+  =
+Sk_{S,q}^{(d)} cap
+product_{ {A,B} in Bip(S) } [Sk_{A,q}^{(d)},Sk_{B,q}^{(d)}].
+```
+
+They satisfy:
+
+```text
+C_S <= Sk_{S,q}^{(d+1)} <= Sk_{S,q}^{(d)} <= R_S^(d),
+Sk_{S,q'}^{(d)} <= Sk_{S,q}^{(d)} for q' >= q,
+Sk_{S,q}^{(d)}=C_S whenever d>=max(0, |S|-q).
+```
+
+In the finite-image boundary, with full support `R_n={1,...,n-1}`, write
+
+```text
+Sk_{n,q}^{(d)}
+  =
+Sk_{R_n,q}^{(d)}(Gamma_n;(N_{i,n})_{i in R_n}).
+```
+
+The sharper current positive target is now:
+
+```text
+Find one finite detector Q=Y^0 x T_2 and fixed q>=3,d>=0 such that
+K_n cap Sk_{n,q}^{(d)}=1
+for all sufficiently large n.
+```
+
+The quotient target is similarly:
+
+```text
+Find a dominated quotient Z and fixed q>=3,d>=0 such that
+E_n cap Sk_{n,q}^{X,(d)}=1
+for all sufficiently large n.
+```
+
+A cofinal counterexample must still produce exact all-meridian elements in
+`K_n cap C_n`.  Such elements lie in every fixed `q,d` skeletal root core for
+large enough `n`; membership in `Sk_{n,q}^{(d)}` alone is not enough.
+
 ## Route-specific compactness gap
 
 Many partial approaches construct finite contextual rack detector schemas
@@ -1445,6 +1516,21 @@ full_product_quotient_size_distribution {"1": 55}
 and is checked by
 `tools/verify_nonperm3_certified_trivial_kernel_audit.py`.
 
+Arity-6 initial probe for the detector product `Y_X`:
+
+```text
+13 non-permutation size-three rows certified
+1 identity/no-detector row
+12 one-component q=2 rows
+0 truncated rows
+kernel_image_size distribution {1: 13}
+quotient_size distribution {1: 13}
+```
+
+The independent stabilizer-row verifier recomputes the twelve non-empty rows.
+This is fixed-arity evidence for only the low-component arity-6 slice; the
+remaining arity-6 rows are not certified.
+
 ## Exact open implications
 
 The current material does not prove Sawin's problem and does not provide a
@@ -1468,10 +1554,12 @@ different construction that produces one finite rack detector for every finite
 The exact missing global negative theorem is the cofinal prefix obstruction
 sequence from the criteria above, now sharpened to nontrivial elements in the
 all-meridian finite-image intersection, which automatically lies in every
-fixed-depth recursive root core:
+fixed `q,d` q-skeletal recursive root core:
 
 ```text
 K_n cap [N_{1,n},...,N_{n-1,n}]_Sigma
+  <=
+K_n cap Sk_{n,q}^{(d)}       for every fixed q>=3,d>=0
   <=
 K_n cap R_n^(d)       for every fixed d
   <=
@@ -1486,7 +1574,8 @@ after adding transparent rack colors and a `T_2` purity factor.  A single
 high-arity miss against one detector product, even the current `Y_X`, is not
 enough.  Pairwise, unweighted triple-block, weighted block-core, or
 fixed-depth root-core noise is also not enough unless it comes from the
-all-meridian symmetric commutator.
+all-meridian symmetric commutator.  The same warning applies to q-skeletal
+root-core noise: the obstruction must be in the exact all-meridian subgroup.
 
 ## Review rubric
 

@@ -543,6 +543,40 @@ rows 55
 methods {'direct_full_product_stabilizer': 43, 'subproduct_trivial_kernel': 12}
 ```
 
+### Arity 6 initial probe
+
+The first arity-6 stabilizer probe covers the identity row and the twelve
+one-component q=2 detector rows:
+
+```text
+proofs/nonperm3_width3_arity6_component_count_le1_stabilizer_probe.json
+proofs/nonperm3_width3_arity6_component_count_le1_rows_stabilizer_probe.jsonl
+
+audit_rows 13
+detector component size distribution {[]: 1, [2]: 12}
+truncated rows 0
+kernel_image_size distribution {1: 13}
+quotient_size distribution {1: 13}
+```
+
+The independent stabilizer-row verifier recomputes the twelve non-empty
+detector rows:
+
+```text
+python tools/verify_nonperm3_stabilizer_rows.py \
+  proofs/nonperm3_width3_arity6_component_count_le1_stabilizer_probe.json \
+  --arity 6 \
+  --require-complete-basis \
+  --require-trivial-kernel-image
+
+OK independent stabilizer-row verification
+recomputed_stabilizer_rows 12
+trivial_kernel_rows 12
+```
+
+This is proof-grade fixed-arity evidence only for this low-component slice.
+It does not imply anything for the remaining arity-6 rows or for all arities.
+
 The decision rule for future higher-arity product audits remains:
 
 ```text
