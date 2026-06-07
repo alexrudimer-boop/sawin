@@ -929,6 +929,30 @@ The q=4/q=5 smoke indicates that the subproduct strategy still works at
 arity 8, but a full 24-row q=4/q=5 subproduct batch is now a multi-hour
 computation.  The remaining arity-8 rows are not certified by this probe.
 
+The subproduct audit tool now supports durable row-level progress for that
+long batch:
+
+```text
+python tools/run_nonperm3_subproduct_trivial_kernel_audit.py \
+  --certificate proofs/nonperm3_arity2_endpoint_gate_full_schema_certificate.json \
+  --certificate proofs/nonperm3_arity3_endpoint_gate_q4_full_schema_certificate.json \
+  --certificate proofs/nonperm3_arity3_q5_resolution_certificate.json \
+  --arity 8 \
+  --bound 3 \
+  --state-limit 1000000 \
+  --component-size-max 3 \
+  --require-all-selected-trivial \
+  --include-row-timing \
+  --stop-after-new-rows 1 \
+  --row-output-jsonl proofs/nonperm3_width3_arity8_q4_q5_subproduct_size_le3_rows.jsonl \
+  --resume-row-output-jsonl \
+  --output proofs/nonperm3_width3_arity8_q4_q5_subproduct_size_le3_trivial_kernel_audit.partial.json
+```
+
+Repeating the same command skips rows already present in the JSONL file and
+appends one newly certified row.  Once all 24 rows are present, rerun without
+`--stop-after-new-rows` to assemble the complete q=4/q=5 subproduct JSON.
+
 The decision rule for future higher-arity product audits remains:
 
 ```text

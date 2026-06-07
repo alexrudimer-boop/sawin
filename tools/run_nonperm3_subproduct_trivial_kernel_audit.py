@@ -153,6 +153,22 @@ def main() -> None:
         help="Fail if any selected row cannot be certified by the subproduct.",
     )
     parser.add_argument("--include-row-timing", action="store_true")
+    parser.add_argument(
+        "--stop-after-new-rows",
+        type=int,
+        default=None,
+        help="Stop after writing this many newly computed rows.",
+    )
+    parser.add_argument(
+        "--row-output-jsonl",
+        default=None,
+        help="Optional JSONL file that receives each completed subproduct row.",
+    )
+    parser.add_argument(
+        "--resume-row-output-jsonl",
+        action="store_true",
+        help="Load existing rows from --row-output-jsonl and skip completed tables.",
+    )
     parser.add_argument("--output", required=True)
     args = parser.parse_args()
 
@@ -162,6 +178,10 @@ def main() -> None:
         raise SystemExit("bound must be positive")
     if args.component_size_max < 1:
         raise SystemExit("component-size-max must be positive")
+    if args.stop_after_new_rows is not None and args.stop_after_new_rows < 1:
+        raise SystemExit("stop-after-new-rows must be positive")
+    if args.resume_row_output_jsonl and not args.row_output_jsonl:
+        raise SystemExit("--resume-row-output-jsonl requires --row-output-jsonl")
 
     certificate_paths = tuple(Path(path) for path in args.certificate)
     payloads = tuple(_load_json(path) for path in certificate_paths)
@@ -210,24 +230,66 @@ def main() -> None:
             selected.append(imported_tables[index])
         selected_tables = tuple(selected)
 
-    rows = []
+    completed_rows = {}
+    completed_tables = set()
     failures = []
+    row_output_path = Path(args.row_output_jsonl) if args.row_output_jsonl else None
+    selected_table_set = set(selected_tables)
+    if row_output_path is not None:
+        row_output_path.parent.mkdir(parents=True, exist_ok=True)
+        if args.resume_row_output_jsonl and row_output_path.exists():
+            with row_output_path.open("r", encoding="utf-8") as handle:
+                for line in handle:
+                    if not line.strip():
+                        continue
+                    row = json.loads(line)
+                    table_key = tuple(row["ybe_table"])
+                    if table_key not in selected_table_set:
+                        raise SystemExit(
+                            f"resume row is not in the current selected table set: "
+                            f"{table_key}"
+                        )
+                    if table_key in completed_rows:
+                        if completed_rows[table_key] != row:
+                            raise SystemExit(
+                                f"conflicting duplicate row in {row_output_path}: "
+                                f"{table_key}"
+                            )
+                        continue
+                    completed_rows[table_key] = row
+                    completed_tables.add(table_key)
+        else:
+            row_output_path.write_text("", encoding="utf-8")
+
+    new_rows = 0
     for table in selected_tables:
+        if table in completed_tables:
+            continue
         rack_tables = tuple(
             component.rack_table for component in detector_index_by_table[table]
         )
         try:
-            rows.append(
-                _row_for_table(
-                    table,
-                    rack_tables,
-                    arity=args.arity,
-                    bound=args.bound,
-                    state_limit=args.state_limit,
-                    component_size_max=args.component_size_max,
-                    include_timing=args.include_row_timing,
-                )
+            row = _row_for_table(
+                table,
+                rack_tables,
+                arity=args.arity,
+                bound=args.bound,
+                state_limit=args.state_limit,
+                component_size_max=args.component_size_max,
+                include_timing=args.include_row_timing,
             )
+            completed_rows[table] = row
+            completed_tables.add(table)
+            new_rows += 1
+            if row_output_path is not None:
+                with row_output_path.open("a", encoding="utf-8") as handle:
+                    handle.write(json.dumps(row, sort_keys=True) + "\n")
+                    handle.flush()
+            if (
+                args.stop_after_new_rows is not None
+                and new_rows >= args.stop_after_new_rows
+            ):
+                break
         except Exception as exc:  # pragma: no cover - CLI diagnostic path
             message = f"{list(table)}: {exc}"
             failures.append(message)
@@ -247,6 +309,11 @@ def main() -> None:
         }
         for table in imported_tables
     ]
+    rows = [
+        completed_rows[table]
+        for table in selected_tables
+        if table in completed_rows
+    ]
     output = {
         "kind": KIND,
         "branch": BRANCH,
@@ -256,6 +323,11 @@ def main() -> None:
         "state_limit": args.state_limit,
         "audit_method": "stabilizer_subproduct_trivial_kernel",
         "component_size_max": args.component_size_max,
+        "table_selection": {
+            "only_table_index": args.only_table_index,
+            "only_ybe_table": args.only_ybe_table,
+            "stop_after_new_rows": args.stop_after_new_rows,
+        },
         "schema_like_detector_records": len(records),
         "nonpermutation_ybe_tables": len(nonperm_tables),
         "tables_with_detector_components": len(imported_tables),
