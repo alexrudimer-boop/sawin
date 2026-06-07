@@ -1605,17 +1605,17 @@ Arity-8 partial certified trivial-kernel certificate:
 ```text
 proofs/nonperm3_width3_arity8_partial_certified_trivial_kernel_combined.json
 
-25 non-permutation size-three rows certified
+26 non-permutation size-three rows certified
 13 direct full-product stabilizer rows
-12 subproduct-trivial rows
-full_product_kernel_image_size distribution {1: 25}
-full_product_quotient_size distribution {1: 25}
+13 subproduct-trivial rows
+full_product_kernel_image_size distribution {1: 26}
+full_product_quotient_size distribution {1: 26}
 ```
 
 The direct rows cover the identity row and all q=2 one-component rows.  The
-subproduct partial covers four `(3,4)` rows by their q=3 subproduct and eight
+subproduct partial covers four `(3,4)` rows by their q=3 subproduct and nine
 `(2,3,5)` rows by their `(2,3)` subproducts.  This is partial arity-8
-evidence: 30 of the 55 arity-8 rows remain uncertified by this probe, and the
+evidence: 29 of the 55 arity-8 rows remain uncertified by this probe, and the
 full q=4/q=5 subproduct batch is now a multi-hour computation.
 
 ## Exact open implications
@@ -1790,6 +1790,64 @@ replace the varying Conj(A_ell) rack targets in the detector-survival theorem
 by one fixed finite bijective YBE target X missed cofinally by every finite
 rack prefix.
 ```
+
+The following strict A/B attempt is recorded in
+`proofs/2026_06_07_theoretical_strict_ab_context_depth_failure_review.md`.
+It also did not prove either side.  It restated the same gap in sharper
+language:
+
+```text
+Positive restatement:
+the non-coordinatewise contextual/endpoint readout appears to require history
+depth growing with arity, but no proof of unavoidable growth and no
+target-specific finite invariant bounding that depth was given.
+
+Negative restatement:
+racks self-dominate, identity padding preserves braid kernels, and the known
+powered-Brunnian alternating-group engine varies the target with the detector;
+no fixed finite coupled degenerate target was constructed.
+```
+
+The active prompt now forbids merely repeating those two blockers.  A future
+answer must either produce a concrete finite complexity bound/readout for
+fixed `X` or give one explicit fixed finite degenerate target with cofinal
+prefix-invisible witnesses.
+
+The latest strict A/B attempt is recorded in
+`proofs/2026_06_07_theoretical_endpoint_rackification_failure_review.md`.
+It gave a more concrete formulation of the positive endpoint-rackification
+blocker.  For `R_X(x,y)=(u,v)` and suffix `w`, a desired endpoint readout
+would satisfy
+
+```text
+c(x,yw)=c(v,w),
+c(u,vw)=c(v,w)*c(y,w).
+```
+
+After quotienting endpoint profiles, the induced operation must be a finite
+rack operation and the readouts
+
+```text
+J_n(x_1,...,x_n)=(c(x_1,x_2...x_n),...,c(x_n,empty))
+```
+
+must be orbit-separating in every arity.  The response did not prove that such
+a finite quotient exists; the obstruction is that the identifications needed
+for well-definedness, bijective translations, and self-distributivity may
+collapse points in a braid orbit.
+
+The same response sharpened the negative failure: once one fixed target `X` is
+chosen, the two-strand pure order
+
+```text
+d=ord(rho^X_2(sigma_1^2))
+```
+
+is fixed, so the powered-commutator family from the varying `Conj(A_ell)`
+construction cannot be reused without a new mechanism.  A rack prefix can
+include detectors whose relevant pure orders are divisible by `d`.  No fixed
+finite degenerate target with a replacement cofinal witness family was
+constructed.
 
 ## Review rubric
 

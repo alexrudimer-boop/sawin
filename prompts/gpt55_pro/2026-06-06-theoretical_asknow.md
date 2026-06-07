@@ -283,6 +283,53 @@ Conj(A_ell), with ell depending on Q.  A Sawin counterexample needs one fixed
 finite bijective YBE solution X, not a sequence of rack targets that change
 with the detector prefix.
 
+10. The next strict A/B attempt also failed by restating these blockers.
+
+It said the positive route appears to need contextual or endpoint history depth
+growing with arity, and that no target-specific invariant is known that
+truncates this to one finite rack.  It said the negative route cannot use
+racks, identity padding, or varying alternating-group targets, and that no
+fixed finite coupled degenerate target is known.
+
+Do not repeat that as your answer.  To advance A, you must either construct
+the finite target-specific invariant/readout or prove an all-arity bounded
+complexity theorem for fixed X.  To advance B, you must name one fixed finite
+degenerate YBE solution and prove the cofinal witness sequence.  A paragraph
+stating that context depth grows, or that the alternating-group target cannot
+be frozen, is not progress unless it is turned into a proof of A or B.
+
+11. The latest strict A/B attempt sharpened the endpoint-rackification
+blocker but still did not solve it.
+
+For an endpoint readout `c`, with `R_X(x,y)=(u,v)` and a right suffix `w`, the
+desired equations are
+
+  c(x,yw)=c(v,w),
+  c(u,vw)=c(v,w)*c(y,w).
+
+Thus after quotienting endpoint profiles, the operation must be well-defined,
+have bijective left translations, satisfy self-distributivity, and the product
+readouts
+
+  J_n(x_1,...,x_n)=(c(x_1,x_2...x_n),...,c(x_n,empty))
+
+must remain injective on every `B_n`-orbit of `X^n`, uniformly in `n`.
+
+Do not merely say that the identifications needed to make this operation a
+rack may collapse braid-orbit points.  Either prove a finite quotient avoids
+that collapse for every finite X, or turn such a collapse into a fixed finite
+counterexample.
+
+For the negative route, do not merely reuse powered commutators from the
+varying `Conj(A_ell)` construction.  Once X is fixed, the two-strand pure
+order
+
+  d=ord(rho^X_2(sigma_1^2))
+
+is fixed, and a rack prefix can include detectors whose relevant pure orders
+are divisible by `d`.  A negative proof needs a new fixed-target witness
+family not neutralized by this finite-order issue.
+
 Your task.
 
 Do not give another C-style reduction.  Try to prove A or B.
@@ -361,6 +408,13 @@ Do not answer by:
 - re-proving fixed-depth p-group ghost survival;
 - re-proving the varying-target theorem "for every detector Q there exists a
   rack target X_Q with ghosts";
+- saying only that contextual depth grows with arity, without proving a
+  target-specific finite bound or a counterexample;
+- saying only that the varying alternating-group rack target cannot be frozen;
+- saying only that endpoint-profile quotienting may collapse braid-orbit
+  points, without proving A or using the collapse to prove B;
+- reusing powered commutators from the varying Conj(A_ell) construction
+  without handling the fixed two-strand pure order of one fixed X;
 - citing computational finite-arity evidence as an all-arity theorem;
 - citing the public status of the MathOverflow page.
 
