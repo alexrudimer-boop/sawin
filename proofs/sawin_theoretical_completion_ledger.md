@@ -1605,17 +1605,17 @@ Arity-8 partial certified trivial-kernel certificate:
 ```text
 proofs/nonperm3_width3_arity8_partial_certified_trivial_kernel_combined.json
 
-28 non-permutation size-three rows certified
+29 non-permutation size-three rows certified
 13 direct full-product stabilizer rows
-15 subproduct-trivial rows
-full_product_kernel_image_size distribution {1: 28}
-full_product_quotient_size distribution {1: 28}
+16 subproduct-trivial rows
+full_product_kernel_image_size distribution {1: 29}
+full_product_quotient_size distribution {1: 29}
 ```
 
 The direct rows cover the identity row and all q=2 one-component rows.  The
-subproduct partial covers five `(3,4)` rows by their q=3 subproduct and ten
+subproduct partial covers six `(3,4)` rows by their q=3 subproduct and ten
 `(2,3,5)` rows by their `(2,3)` subproducts.  This is partial arity-8
-evidence: 27 of the 55 arity-8 rows remain uncertified by this probe, and the
+evidence: 26 of the 55 arity-8 rows remain uncertified by this probe, and the
 full q=4/q=5 subproduct batch is now a multi-hour computation.
 
 ## Exact open implications
@@ -1848,6 +1848,131 @@ construction cannot be reused without a new mechanism.  A rack prefix can
 include detectors whose relevant pure orders are divisible by `d`.  No fixed
 finite degenerate target with a replacement cofinal witness family was
 constructed.
+
+The next response is recorded in
+`proofs/2026_06_07_theoretical_fiber_monodromy_quotient_failure_review.md`.
+It did not prove A or B, but it gave a locally checked four-point example
+showing that a nondegenerate quotient can lose fiber pure-braid monodromy.
+For
+
+```text
+X={0,1} x {0,1}
+```
+
+and
+
+```text
+R((a,i),(b,j))=((b,I),(a,J)),
+```
+
+where
+
+```text
+(I,J)=(i,j)     if (a,b)=(0,0),
+(I,J)=(j,i)     if (a,b)=(0,1) or (1,0),
+(I,J)=(j,1-i)   if (a,b)=(1,1),
+```
+
+the workspace check found:
+
+```text
+bijective True
+YBE True
+sigma1sq_moved_count 4
+```
+
+The projection to the first coordinate is the two-point flip solution, but
+`sigma_1^2` moves every point in the fiber over base pair `(1,1)`.  Thus a
+positive proof cannot simply pass to a nondegenerate quotient and use the
+derived rack unless it also records degenerate fiber monodromy uniformly.
+
+The latest response is recorded in
+`proofs/2026_06_07_theoretical_two_sided_contextual_blocker_review.md`.
+It proposed the strongest finite target-specific construction so far.  For
+`R(x,y)=(u,v)`, define
+
+```text
+r_y(x)=pr_2 R(x,y),
+m_u(v)=pr_1 R^{-1}(u,v),
+M_R=<r_y:y in X>,
+M_L=<m_u:u in X>.
+```
+
+The finite two-sided contextual state is
+
+```text
+(A,x,B) in M_L x X x M_R.
+```
+
+Same-strand transport forces
+
+```text
+(A,x,B r_y) ~ (A m_u,v,B),
+```
+
+and the proposed rack operation is
+
+```text
+[(A,x,B r_y)] * [(A m_x,y,B)] = [(A,u,B r_v)].
+```
+
+The proof fails exactly at representative independence: the response did not
+prove that if the two inputs are replaced by equivalent representatives, then
+the output representatives are equivalent.  Adding this as a congruence may
+collapse orbit-separating contextual states.  The active prompt now asks the
+next theoretical pass to prove this implication from YBE and bijectivity,
+find a finite counterexample to it, or replace the construction with a working
+finite rackification.
+
+The next response is recorded in
+`proofs/2026_06_07_theoretical_partial_rack_totalization_blocker_review.md`.
+It claims the representative-independence implication is true by the
+diagrammatic Yang-Baxter move: representative changes are marked-strand slides,
+and changing before crossing versus crossing before changing is exactly
+
+```text
+R_12 R_23 R_12 = R_23 R_12 R_23.
+```
+
+The fatal positive obstruction is therefore shifted to the next step.  The
+two-sided contextual construction gives a finite compatible-pair partial rack,
+not a total finite rack.  A positive proof now needs a finite completion of
+this partial operation that preserves all forced compatible translations,
+makes all left translations bijective, satisfies global self-distributivity
+
+```text
+L_{a*b} L_a = L_a L_b
+```
+
+for all class pairs, and keeps the all-arity readout orbit-separating.  YBE
+only proves the identities on jointly realizable contextual triples.  The
+active prompt now asks for a finite rack completion theorem or an explicit
+finite YBE solution whose contextual partial rack cannot be completed without
+breaking the forced operation or collapsing orbit separation.
+
+The next response is recorded in
+`proofs/2026_06_07_theoretical_augmented_rack_completion_blocker_review.md`.
+It sharpened the totalization problem to finite augmented-rack completion.
+The desired finite data are
+
+```text
+G, Omega, iota:P -> Omega, ell:P -> G,
+```
+
+with `G` acting on `Omega`, such that every forced compatible product satisfies
+
+```text
+iota(a*b) = ell(a) iota(b),
+ell(a*b)  = ell(a) ell(b) ell(a)^(-1).
+```
+
+The response notes that YBE gives these identities only on realizable
+compatible triples.  It does not supply a finite global `G`-action extending
+all partial translations, nor prove that any quotient required by completion
+preserves the all-arity orbit-separating readout.  The active prompt now asks
+for a proof that such finite augmented-rack completions always exist, or for
+an explicit finite YBE solution whose partial augmented rack has no finite
+completion with those properties.
 
 ## Review rubric
 

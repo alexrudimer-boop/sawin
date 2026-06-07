@@ -330,6 +330,134 @@ is fixed, and a rack prefix can include detectors whose relevant pure orders
 are divisible by `d`.  A negative proof needs a new fixed-target witness
 family not neutralized by this finite-order issue.
 
+12. Use the local finite evidence and checked examples as context.
+
+Finite detector-product evidence for non-permutation size-three solutions:
+
+  arity 4: 55 of 55 rows certified, kernel image size 1 in every row;
+  arity 5: 55 of 55 rows certified, kernel image size 1 in every row;
+  arity 6: 55 of 55 rows certified, kernel image size 1 in every row;
+  arity 7: 55 of 55 rows certified, kernel image size 1 in every row;
+  arity 8: partial certificate, currently 28 of 55 rows certified before the
+           next local audit updates, all certified rows have kernel image
+           size 1.
+
+This is fixed-arity evidence only.  Do not cite it as an all-arity theorem.
+But use it as context: the small size-three detector product has shown no
+realized detector-kernel action through complete arities 4,5,6,7 and a growing
+arity-8 slice.
+
+Also use this locally checked 4-point example showing quotient/fiber monodromy
+failure.  Let `X={0,1} x {0,1}` and define
+
+  R((a,i),(b,j))=((b,I),(a,J)),
+
+where
+
+  (I,J)=(i,j)     if (a,b)=(0,0),
+  (I,J)=(j,i)     if (a,b)=(0,1) or (1,0),
+  (I,J)=(j,1-i)   if (a,b)=(1,1).
+
+This was locally checked to be bijective and to satisfy YBE.  It is
+left-degenerate, projects to the two-point flip solution on the first
+coordinate, and `sigma_1^2` is nontrivial on the fiber over base pair `(1,1)`.
+Thus a nondegenerate quotient can lose pure-braid monodromy in degenerate
+fibers.  Do not propose quotient-to-nondegenerate plus derived-rack domination
+unless your construction also records this fiber monodromy uniformly.
+
+13. The strongest finite positive construction attempted so far is the
+two-sided contextual one.  You should directly attack it.
+
+Write `R(x,y)=(u,v)`.  Define
+
+  r_y(x)=pr_2 R(x,y),
+  m_u(v)=pr_1 R^{-1}(u,v),
+
+and finite transformation monoids
+
+  M_R=<r_y:y in X> <= X^X,
+  M_L=<m_u:u in X> <= X^X.
+
+A two-sided contextual strand state is
+
+  (A,x,B) in M_L x X x M_R.
+
+For `R(x,y)=(u,v)`, same-strand transport forces
+
+  (A,x,B r_y) ~ (A m_u,v,B).
+
+The proposed rack operation is
+
+  [(A,x,B r_y)] * [(A m_x,y,B)] = [(A,u,B r_v)].
+
+The exact proof obligation is representative independence:
+
+  (A,x,B r_y) ~ (A',x',B' r_{y'})
+  and
+  (A m_x,y,B) ~ (A' m_{x'},y',B')
+
+must imply
+
+  (A,u,B r_v) ~ (A',u',B' r_{v'}),
+
+where `R(x,y)=(u,v)` and `R(x',y')=(u',v')`.
+
+Do not merely say this is the obstruction.  Either prove this implication from
+bijectivity plus YBE, produce an explicit finite YBE solution where it fails
+and the forced congruence collapses orbit separation, or replace this with a
+finite rackification that records the same two-sided fiber monodromy and
+proves all-arity orbit separation.
+
+14. The latest theoretical response claims representative independence is
+true.  Do not spend the next answer merely restating it.  The claimed proof is
+diagrammatic: the representative change
+
+  (A,x,B r_y) ~ (A m_u,v,B),   R(x,y)=(u,v),
+
+is sliding the marked strand through one neighboring `X`-colored crossing.
+Comparing “change representatives first, then cross” with “cross first, then
+change representatives” is exactly one Yang-Baxter move
+
+  R_12 R_23 R_12 = R_23 R_12 R_23.
+
+The new positive blocker is totalization.  The construction gives a finite
+compatible-pair partial rack, not automatically a total finite rack.  To prove
+A by this route, one must extend the forced operation to all quotient classes
+so that:
+
+  every forced compatible translation is preserved;
+  all left translations are bijections;
+  self-distributivity holds globally, i.e. L_{a*b} L_a = L_a L_b for all a,b;
+  the readouts J_n remain orbit-separating in every arity.
+
+YBE proves the rack identities only on jointly realizable contextual triples.
+The next answer should prove a finite rack completion theorem for this partial
+rack, or give an explicit finite YBE solution whose partial rack cannot be
+completed without breaking the forced operation or collapsing orbit separation.
+
+15. The latest response sharpened this to finite augmented-rack completion.
+
+The two-sided contextual construction gives a finite partial augmented rack.
+A finite completion would require finite data
+
+  G, Omega, iota:P -> Omega, ell:P -> G,
+
+where G acts on Omega, such that every forced compatible product `a*b`
+satisfies
+
+  iota(a*b) = ell(a) iota(b),
+  ell(a*b)  = ell(a) ell(b) ell(a)^(-1).
+
+YBE proves these identities only on realizable compatible triples.  It does
+not automatically give a finite global G-action extending the partial
+translations, and it does not prove that the quotient induced by such an
+extension preserves the all-arity readout needed to recover the X-action.
+
+The next answer should directly prove this finite augmented-rack completion
+theorem, or give an explicit finite YBE solution whose partial augmented rack
+cannot be completed while preserving the forced products and orbit-separating
+readout.
+
 Your task.
 
 Do not give another C-style reduction.  Try to prove A or B.
@@ -415,6 +543,17 @@ Do not answer by:
   points, without proving A or using the collapse to prove B;
 - reusing powered commutators from the varying Conj(A_ell) construction
   without handling the fixed two-strand pure order of one fixed X;
+- using a nondegenerate quotient detector while ignoring fiber monodromy, such
+  as the checked 4-point example where `sigma_1^2` acts nontrivially in a
+  degenerate fiber over a flip quotient;
+- restating the two-sided contextual construction without proving
+  representative independence, finding a genuine failure, or replacing it with
+  a working finite rackification;
+- stopping after representative independence for the two-sided construction;
+  the current blocker is finite total rack completion of the compatible-pair
+  partial rack;
+- restating augmented-rack completion as the missing step without proving it
+  or giving a finite obstruction to it;
 - citing computational finite-arity evidence as an all-arity theorem;
 - citing the public status of the MathOverflow page.
 
