@@ -1266,6 +1266,21 @@ def componentwise_stabilizer_realized_parabolic_cross_effect_audit(
             first_moved_tuple_image=None,
             truncated=True,
         )
+    if len(kernel_image) == 1:
+        return RealizedParabolicCrossEffectAudit(
+            bound=bound,
+            n=n,
+            joint_image_size=joint_image_size,
+            kernel_image_size=1,
+            parabolic_image_size=1,
+            quotient_size=1,
+            quotient_nontrivial=False,
+            seed_count=0,
+            first_witness_word=None,
+            first_moved_tuple=None,
+            first_moved_tuple_image=None,
+            truncated=False,
+        )
 
     alphabet = tuple(i for generator in range(1, n) for i in (generator, -generator))
     solution_generators = tuple(

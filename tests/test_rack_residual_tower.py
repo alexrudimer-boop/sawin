@@ -2,8 +2,11 @@ import sys
 import unittest
 from itertools import product
 from pathlib import Path
+from unittest.mock import patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
+
+import ybe_domination.rack_residual_tower as residual_tower
 
 from ybe_domination import (
     bounded_deletion_search_triage,
@@ -319,6 +322,29 @@ class RackResidualTowerTests(unittest.TestCase):
             stabilizer.quotient_nontrivial,
             enumerated.quotient_nontrivial,
         )
+
+    def test_componentwise_stabilizer_stops_when_kernel_image_is_trivial(self):
+        solution = rack_solution((0, 1), lambda _left, right: right)
+
+        with patch.object(
+            residual_tower,
+            "_subgroup_generated_by_permutations",
+            wraps=residual_tower._subgroup_generated_by_permutations,
+        ) as subgroup_closure:
+            audit = componentwise_stabilizer_realized_parabolic_cross_effect_audit(
+                solution,
+                (solution,),
+                bound=3,
+                n=4,
+            )
+
+        self.assertFalse(audit.truncated)
+        self.assertEqual(audit.kernel_image_size, 1)
+        self.assertEqual(audit.parabolic_image_size, 1)
+        self.assertEqual(audit.quotient_size, 1)
+        self.assertFalse(audit.quotient_nontrivial)
+        self.assertEqual(audit.seed_count, 0)
+        self.assertEqual(subgroup_closure.call_count, 1)
 
     def test_componentwise_cross_effect_matches_small_product_detector(self):
         solution = rack_solution((0, 1), lambda _left, right: 1 - right)

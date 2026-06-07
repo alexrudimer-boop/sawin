@@ -1531,6 +1531,22 @@ The independent stabilizer-row verifier recomputes the twelve non-empty rows.
 This is fixed-arity evidence for only the low-component arity-6 slice; the
 remaining arity-6 rows are not certified.
 
+Arity-6 no-q5 component-count <= 3 stabilizer probe:
+
+```text
+25 non-permutation size-three rows certified
+1 identity/no-detector row
+12 one-component q=2 rows
+12 q=2/q=3/q=3 component rows
+0 truncated rows
+kernel_image_size distribution {1: 25}
+quotient_size distribution {1: 25}
+```
+
+The independent stabilizer-row verifier recomputes the 24 non-empty rows and
+finds trivial kernel image in each.  This is still a partial arity-6 result:
+rows with q=4 or q=5 detector components are not certified by this probe.
+
 ## Exact open implications
 
 The current material does not prove Sawin's problem and does not provide a

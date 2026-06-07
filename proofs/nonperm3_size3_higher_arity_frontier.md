@@ -577,6 +577,53 @@ trivial_kernel_rows 12
 This is proof-grade fixed-arity evidence only for this low-component slice.
 It does not imply anything for the remaining arity-6 rows or for all arities.
 
+After the trivial-kernel early return in the stabilizer cross-effect audit,
+the no-q5 component-count <= 3 slice also closes:
+
+```text
+proofs/nonperm3_width3_arity6_no_q5_component_count_le3_stabilizer_probe.json
+proofs/nonperm3_width3_arity6_no_q5_component_count_le3_rows_stabilizer_probe.jsonl
+
+audit_rows 25
+detector component size distribution {[]: 1, [2]: 12, [2, 3, 3]: 12}
+truncated rows 0
+kernel_image_size distribution {1: 25}
+quotient_size distribution {1: 25}
+elapsed_seconds total 66.362072
+```
+
+The structural verifier checks the complete 55-table detector index and the
+25 audited rows:
+
+```text
+python tools/verify_nonperm3_width3_cross_effect_audit.py \
+  proofs/nonperm3_width3_arity6_no_q5_component_count_le3_stabilizer_probe.json \
+  --require-complete-basis
+
+OK nonperm3 width-3 audit verification
+detector_index_rows 55
+audit_rows 25
+incomplete_detector_basis False
+```
+
+The independent stabilizer-row verifier recomputes the 24 non-empty rows:
+
+```text
+python tools/verify_nonperm3_stabilizer_rows.py \
+  proofs/nonperm3_width3_arity6_no_q5_component_count_le3_stabilizer_probe.json \
+  --arity 6 \
+  --require-complete-basis \
+  --require-trivial-kernel-image
+
+OK independent stabilizer-row verification
+recomputed_stabilizer_rows 24
+trivial_kernel_rows 24
+```
+
+This remains partial arity-6 evidence.  It certifies the identity, q=2
+one-component, and q=2/q=3/q=3 component rows.  It does not certify rows with
+q=4 or q=5 detector components.
+
 The decision rule for future higher-arity product audits remains:
 
 ```text
