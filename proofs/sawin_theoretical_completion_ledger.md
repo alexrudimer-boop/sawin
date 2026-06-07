@@ -797,6 +797,106 @@ or
 central elementary abelian high-Brunnian chief factors.
 ```
 
+## Pairwise-core finite-image obstruction
+
+The next theoretical response sharpened the previous pairwise-or-central
+boundary; the detailed note is
+`proofs/pairwise_core_finite_image_obstruction.md`.
+
+Let `G` be a group and let
+
+```text
+N_1,...,N_r triangleleft G,        r>=2.
+```
+
+Put
+
+```text
+C=[N_1,...,N_r]_Sigma.
+```
+
+Then, for every distinct pair `a,b`,
+
+```text
+C <= [N_a,N_b].
+```
+
+Proof idea.  In a fully parenthesized all-variable commutator, fix `a,b` and
+look at the lowest binary-tree vertex whose descendant leaves contain both
+labels.  At that vertex the two child subcommutators lie in `N_a` and `N_b`;
+their commutator lies in `[N_a,N_b]`, and normality keeps all further upper
+commutators there.
+
+In the finite-image boundary, set
+
+```text
+D_n = intersection_{1<=i<j<=n-1} [N_{i,n},N_{j,n}].
+```
+
+Then
+
+```text
+C_n <= D_n.
+```
+
+Thus a sufficient large-arity condition is the pairwise-core vanishing
+
+```text
+K_n cap D_n = 1.
+```
+
+This is weaker than requiring `K_n cap [N_{i,n},N_{j,n}]=1` for every pair:
+only elements lying in all pairwise commutator subgroups simultaneously must
+be killed.
+
+Consequently, the central elementary abelian Type C obstruction is not
+separate from pairwise commutators.  If a central chief factor is covered by
+`C_n`, then it is covered by every pairwise commutator subgroup.  Since a
+central chief factor has no proper nontrivial subgroup, it is cyclic of prime
+order.
+
+Relative commutator-injectivity criterion.  Let `Z` be a braided quotient of
+`X` already dominated by a finite rack `Y_Z`, and set `Q=Y_Z^0 x T_2`.  With
+
+```text
+G^X_n = rho^X_n(F_{n-1}),
+G^Z_n = rho^Z_n(F_{n-1}),
+E_n = ker(G^X_n -> G^Z_n),
+```
+
+if
+
+```text
+E_n cap gamma_2(G^X_n)=1
+```
+
+for all sufficiently large `n`, then `X` is dominated by one finite rack.
+Indeed, an element of `K_n cap D_n` projects to `E_n` because it is invisible
+to the quotient detector, and it projects to `gamma_2(G^X_n)` because it lies
+in every pairwise commutator.  Hence its `X`-projection is trivial; since
+`K_n cap L_n=1`, the element itself is trivial.
+
+Thus the current global positive target can be phrased as:
+
+```text
+Find one finite detector Q=Y^0 x T_2 such that
+K_n cap intersection_{i<j}[N_{i,n},N_{j,n}] = 1
+for all sufficiently large n.
+```
+
+The current global negative target is a cofinal sequence of nontrivial
+elements in
+
+```text
+K_n cap C_n
+  <=
+K_n cap intersection_{i<j}[N_{i,n},N_{j,n}].
+```
+
+A single nontrivial intersection `K_n cap [N_{i,n},N_{j,n}]` for one pair is
+not enough; a genuine obstruction must be simultaneously pairwise-deep and
+all-meridian.
+
 ## Route-specific compactness gap
 
 Many partial approaches construct finite contextual rack detector schemas
@@ -1008,11 +1108,18 @@ different construction that produces one finite rack detector for every finite
 `X` in all arities.
 
 The exact missing global negative theorem is the cofinal prefix obstruction
-sequence from the criteria above, now sharpened to either pairwise
-finite-image chief-factor witnesses or central elementary abelian
-high-Brunnian chief-factor witnesses after adding transparent rack colors and
-a `T_2` purity factor.  A single high-arity miss against one detector product,
-even the current `Y_X`, is not enough.
+sequence from the criteria above, now sharpened to nontrivial elements in the
+pairwise-core finite-image intersection
+
+```text
+K_n cap [N_{1,n},...,N_{n-1,n}]_Sigma
+  <=
+K_n cap intersection_{i<j}[N_{i,n},N_{j,n}]
+```
+
+after adding transparent rack colors and a `T_2` purity factor.  A single
+high-arity miss against one detector product, even the current `Y_X`, is not
+enough.
 
 ## Review rubric
 
