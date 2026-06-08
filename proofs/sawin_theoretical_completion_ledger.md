@@ -3651,6 +3651,29 @@ unbounded `r(beta)` in `W_n^mu(t_*)`; in the simple branch take `E=nabla`.
 Under the Artin representation, such a sequence has displacement words that
 eventually become laws on every fixed finite group.
 
+The powered-meridian no-freezing theorem is recorded in
+`proofs/powered_meridian_no_freezing.md`.  For a fixed finite target `X`, let
+
+```text
+d_X=ord(rho^X_2(sigma_1^2)).
+```
+
+If `P_m` is a rack prefix and
+
+```text
+e_m=ord(rho^{P_m}_2(sigma_1^2)),
+```
+
+then eventually `d_X` divides `e_m`.  Indeed, for every `d` the rack
+`Y_d=Z/dZ` with `a*b=b+1` has `R^2(a,b)=(a+1,b+1)` and hence two-strand pure
+order `d`, so the prefix eventually contains a factor whose pure order is
+`d_X`.  Since every pure meridian `A_{ij}` is conjugate to `sigma_1^2`, every
+`A_{ij}^{e_m}` acts trivially on `X^n` for large `m`, and so does the normal
+subgroup they generate.  Therefore the standard powered-meridian Brunnian
+words cannot give a fixed-target counterexample.  A negative construction must
+use genuinely global finite-rack laws, not detector-invisibility coming from
+individual powered meridians.
+
 ## Review rubric
 
 A future response should be classified as follows.
