@@ -1,0 +1,8821 @@
+{
+  "all_claimed_checks_passed": true,
+  "certified_row_count": 80,
+  "distribution": [
+    {
+      "active_factor_finite_conditions_hold": true,
+      "case_count": 20,
+      "certified": true,
+      "known_factor_count": 9,
+      "point_reconstruction_holds": true,
+      "quotient_sizes": [
+        2,
+        2,
+        2,
+        3,
+        3,
+        4,
+        4,
+        4,
+        5
+      ]
+    },
+    {
+      "active_factor_finite_conditions_hold": true,
+      "case_count": 20,
+      "certified": true,
+      "known_factor_count": 13,
+      "point_reconstruction_holds": true,
+      "quotient_sizes": [
+        2,
+        2,
+        2,
+        3,
+        3,
+        3,
+        3,
+        4,
+        4,
+        4,
+        4,
+        4,
+        5
+      ]
+    },
+    {
+      "active_factor_finite_conditions_hold": true,
+      "case_count": 16,
+      "certified": true,
+      "known_factor_count": 4,
+      "point_reconstruction_holds": true,
+      "quotient_sizes": [
+        2,
+        3,
+        4,
+        4
+      ]
+    },
+    {
+      "active_factor_finite_conditions_hold": true,
+      "case_count": 16,
+      "certified": true,
+      "known_factor_count": 6,
+      "point_reconstruction_holds": true,
+      "quotient_sizes": [
+        2,
+        3,
+        3,
+        3,
+        4,
+        4
+      ]
+    },
+    {
+      "active_factor_finite_conditions_hold": true,
+      "case_count": 4,
+      "certified": true,
+      "known_factor_count": 10,
+      "point_reconstruction_holds": true,
+      "quotient_sizes": [
+        2,
+        2,
+        2,
+        3,
+        3,
+        3,
+        4,
+        4,
+        4,
+        5
+      ]
+    },
+    {
+      "active_factor_finite_conditions_hold": true,
+      "case_count": 4,
+      "certified": true,
+      "known_factor_count": 14,
+      "point_reconstruction_holds": true,
+      "quotient_sizes": [
+        2,
+        2,
+        2,
+        3,
+        3,
+        3,
+        3,
+        3,
+        4,
+        4,
+        4,
+        4,
+        4,
+        5
+      ]
+    }
+  ],
+  "failure_count": 0,
+  "failures": [],
+  "family": "linear_f3_skew_over_flip_nonsubdirect_rows",
+  "known_quotient_reason_distribution": [
+    {
+      "count": 176,
+      "quotient_size": 2,
+      "reason": "rack"
+    },
+    {
+      "count": 160,
+      "quotient_size": 3,
+      "reason": "involutive"
+    },
+    {
+      "count": 4,
+      "quotient_size": 3,
+      "reason": "nondegenerate"
+    },
+    {
+      "count": 52,
+      "quotient_size": 3,
+      "reason": "rack"
+    },
+    {
+      "count": 176,
+      "quotient_size": 4,
+      "reason": "involutive"
+    },
+    {
+      "count": 64,
+      "quotient_size": 4,
+      "reason": "nondegenerate"
+    },
+    {
+      "count": 16,
+      "quotient_size": 4,
+      "reason": "rack"
+    },
+    {
+      "count": 48,
+      "quotient_size": 5,
+      "reason": "involutive"
+    }
+  ],
+  "nonsubdirect_row_count": 80,
+  "rows": [
+    {
+      "active_factor_finite_conditions_hold": true,
+      "certified_by_known_quotient_factor_product": true,
+      "congruence_count": 18,
+      "known_dominated_factor_count": 13,
+      "known_dominated_quotient_sizes": [
+        2,
+        2,
+        2,
+        3,
+        3,
+        3,
+        3,
+        4,
+        4,
+        4,
+        4,
+        4,
+        5
+      ],
+      "known_dominated_quotients": [
+        {
+          "block_sizes": [
+            1,
+            5
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            3,
+            3
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            2,
+            4
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "rack",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "rack",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            1,
+            2
+          ],
+          "reason": "involutive",
+          "size": 5
+        }
+      ],
+      "matrix_indices": [
+        0,
+        0,
+        6,
+        12
+      ],
+      "point_reconstruction_holds": true,
+      "rejected_unknown_factor_count": 3,
+      "row_index": 0
+    },
+    {
+      "active_factor_finite_conditions_hold": true,
+      "certified_by_known_quotient_factor_product": true,
+      "congruence_count": 18,
+      "known_dominated_factor_count": 13,
+      "known_dominated_quotient_sizes": [
+        2,
+        2,
+        2,
+        3,
+        3,
+        3,
+        3,
+        4,
+        4,
+        4,
+        4,
+        4,
+        5
+      ],
+      "known_dominated_quotients": [
+        {
+          "block_sizes": [
+            1,
+            5
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            3,
+            3
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            2,
+            4
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "rack",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "nondegenerate",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            1,
+            2
+          ],
+          "reason": "involutive",
+          "size": 5
+        }
+      ],
+      "matrix_indices": [
+        0,
+        3,
+        0,
+        12
+      ],
+      "point_reconstruction_holds": true,
+      "rejected_unknown_factor_count": 3,
+      "row_index": 1
+    },
+    {
+      "active_factor_finite_conditions_hold": true,
+      "certified_by_known_quotient_factor_product": true,
+      "congruence_count": 12,
+      "known_dominated_factor_count": 9,
+      "known_dominated_quotient_sizes": [
+        2,
+        2,
+        2,
+        3,
+        3,
+        4,
+        4,
+        4,
+        5
+      ],
+      "known_dominated_quotients": [
+        {
+          "block_sizes": [
+            1,
+            5
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            3,
+            3
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            2,
+            4
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "rack",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "rack",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            1,
+            2
+          ],
+          "reason": "involutive",
+          "size": 5
+        }
+      ],
+      "matrix_indices": [
+        0,
+        6,
+        9,
+        12
+      ],
+      "point_reconstruction_holds": true,
+      "rejected_unknown_factor_count": 1,
+      "row_index": 2
+    },
+    {
+      "active_factor_finite_conditions_hold": true,
+      "certified_by_known_quotient_factor_product": true,
+      "congruence_count": 12,
+      "known_dominated_factor_count": 9,
+      "known_dominated_quotient_sizes": [
+        2,
+        2,
+        2,
+        3,
+        3,
+        4,
+        4,
+        4,
+        5
+      ],
+      "known_dominated_quotients": [
+        {
+          "block_sizes": [
+            1,
+            5
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            3,
+            3
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            2,
+            4
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "rack",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "nondegenerate",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            1,
+            2
+          ],
+          "reason": "involutive",
+          "size": 5
+        }
+      ],
+      "matrix_indices": [
+        0,
+        9,
+        3,
+        12
+      ],
+      "point_reconstruction_holds": true,
+      "rejected_unknown_factor_count": 1,
+      "row_index": 3
+    },
+    {
+      "active_factor_finite_conditions_hold": true,
+      "certified_by_known_quotient_factor_product": true,
+      "congruence_count": 18,
+      "known_dominated_factor_count": 13,
+      "known_dominated_quotient_sizes": [
+        2,
+        2,
+        2,
+        3,
+        3,
+        3,
+        3,
+        4,
+        4,
+        4,
+        4,
+        4,
+        5
+      ],
+      "known_dominated_quotients": [
+        {
+          "block_sizes": [
+            1,
+            5
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            3,
+            3
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            2,
+            4
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "rack",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "nondegenerate",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            1,
+            2
+          ],
+          "reason": "involutive",
+          "size": 5
+        }
+      ],
+      "matrix_indices": [
+        3,
+        0,
+        0,
+        12
+      ],
+      "point_reconstruction_holds": true,
+      "rejected_unknown_factor_count": 3,
+      "row_index": 4
+    },
+    {
+      "active_factor_finite_conditions_hold": true,
+      "certified_by_known_quotient_factor_product": true,
+      "congruence_count": 18,
+      "known_dominated_factor_count": 13,
+      "known_dominated_quotient_sizes": [
+        2,
+        2,
+        2,
+        3,
+        3,
+        3,
+        3,
+        4,
+        4,
+        4,
+        4,
+        4,
+        5
+      ],
+      "known_dominated_quotients": [
+        {
+          "block_sizes": [
+            1,
+            5
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            3,
+            3
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            2,
+            4
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "rack",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "nondegenerate",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            1,
+            2
+          ],
+          "reason": "involutive",
+          "size": 5
+        }
+      ],
+      "matrix_indices": [
+        3,
+        0,
+        6,
+        12
+      ],
+      "point_reconstruction_holds": true,
+      "rejected_unknown_factor_count": 3,
+      "row_index": 5
+    },
+    {
+      "active_factor_finite_conditions_hold": true,
+      "certified_by_known_quotient_factor_product": true,
+      "congruence_count": 19,
+      "known_dominated_factor_count": 14,
+      "known_dominated_quotient_sizes": [
+        2,
+        2,
+        2,
+        3,
+        3,
+        3,
+        3,
+        3,
+        4,
+        4,
+        4,
+        4,
+        4,
+        5
+      ],
+      "known_dominated_quotients": [
+        {
+          "block_sizes": [
+            1,
+            5
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            3,
+            3
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            2,
+            4
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "rack",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            4
+          ],
+          "reason": "nondegenerate",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "nondegenerate",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            1,
+            2
+          ],
+          "reason": "involutive",
+          "size": 5
+        }
+      ],
+      "matrix_indices": [
+        3,
+        3,
+        0,
+        12
+      ],
+      "point_reconstruction_holds": true,
+      "rejected_unknown_factor_count": 3,
+      "row_index": 6
+    },
+    {
+      "active_factor_finite_conditions_hold": true,
+      "certified_by_known_quotient_factor_product": true,
+      "congruence_count": 18,
+      "known_dominated_factor_count": 13,
+      "known_dominated_quotient_sizes": [
+        2,
+        2,
+        2,
+        3,
+        3,
+        3,
+        3,
+        4,
+        4,
+        4,
+        4,
+        4,
+        5
+      ],
+      "known_dominated_quotients": [
+        {
+          "block_sizes": [
+            1,
+            5
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            3,
+            3
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            2,
+            4
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "rack",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "nondegenerate",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            1,
+            2
+          ],
+          "reason": "involutive",
+          "size": 5
+        }
+      ],
+      "matrix_indices": [
+        3,
+        3,
+        6,
+        12
+      ],
+      "point_reconstruction_holds": true,
+      "rejected_unknown_factor_count": 3,
+      "row_index": 7
+    },
+    {
+      "active_factor_finite_conditions_hold": true,
+      "certified_by_known_quotient_factor_product": true,
+      "congruence_count": 12,
+      "known_dominated_factor_count": 9,
+      "known_dominated_quotient_sizes": [
+        2,
+        2,
+        2,
+        3,
+        3,
+        4,
+        4,
+        4,
+        5
+      ],
+      "known_dominated_quotients": [
+        {
+          "block_sizes": [
+            1,
+            5
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            3,
+            3
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            2,
+            4
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "rack",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "nondegenerate",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            1,
+            2
+          ],
+          "reason": "involutive",
+          "size": 5
+        }
+      ],
+      "matrix_indices": [
+        3,
+        6,
+        3,
+        12
+      ],
+      "point_reconstruction_holds": true,
+      "rejected_unknown_factor_count": 1,
+      "row_index": 8
+    },
+    {
+      "active_factor_finite_conditions_hold": true,
+      "certified_by_known_quotient_factor_product": true,
+      "congruence_count": 12,
+      "known_dominated_factor_count": 9,
+      "known_dominated_quotient_sizes": [
+        2,
+        2,
+        2,
+        3,
+        3,
+        4,
+        4,
+        4,
+        5
+      ],
+      "known_dominated_quotients": [
+        {
+          "block_sizes": [
+            1,
+            5
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            3,
+            3
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            2,
+            4
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "rack",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "nondegenerate",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            1,
+            2
+          ],
+          "reason": "involutive",
+          "size": 5
+        }
+      ],
+      "matrix_indices": [
+        3,
+        6,
+        9,
+        12
+      ],
+      "point_reconstruction_holds": true,
+      "rejected_unknown_factor_count": 1,
+      "row_index": 9
+    },
+    {
+      "active_factor_finite_conditions_hold": true,
+      "certified_by_known_quotient_factor_product": true,
+      "congruence_count": 13,
+      "known_dominated_factor_count": 10,
+      "known_dominated_quotient_sizes": [
+        2,
+        2,
+        2,
+        3,
+        3,
+        3,
+        4,
+        4,
+        4,
+        5
+      ],
+      "known_dominated_quotients": [
+        {
+          "block_sizes": [
+            1,
+            5
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            3,
+            3
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            2,
+            4
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "rack",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            4
+          ],
+          "reason": "nondegenerate",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "nondegenerate",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            1,
+            2
+          ],
+          "reason": "involutive",
+          "size": 5
+        }
+      ],
+      "matrix_indices": [
+        3,
+        9,
+        3,
+        12
+      ],
+      "point_reconstruction_holds": true,
+      "rejected_unknown_factor_count": 1,
+      "row_index": 10
+    },
+    {
+      "active_factor_finite_conditions_hold": true,
+      "certified_by_known_quotient_factor_product": true,
+      "congruence_count": 12,
+      "known_dominated_factor_count": 9,
+      "known_dominated_quotient_sizes": [
+        2,
+        2,
+        2,
+        3,
+        3,
+        4,
+        4,
+        4,
+        5
+      ],
+      "known_dominated_quotients": [
+        {
+          "block_sizes": [
+            1,
+            5
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            3,
+            3
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            2,
+            4
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "rack",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "nondegenerate",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            1,
+            2
+          ],
+          "reason": "involutive",
+          "size": 5
+        }
+      ],
+      "matrix_indices": [
+        3,
+        9,
+        9,
+        12
+      ],
+      "point_reconstruction_holds": true,
+      "rejected_unknown_factor_count": 1,
+      "row_index": 11
+    },
+    {
+      "active_factor_finite_conditions_hold": true,
+      "certified_by_known_quotient_factor_product": true,
+      "congruence_count": 11,
+      "known_dominated_factor_count": 6,
+      "known_dominated_quotient_sizes": [
+        2,
+        3,
+        3,
+        3,
+        4,
+        4
+      ],
+      "known_dominated_quotients": [
+        {
+          "block_sizes": [
+            3,
+            3
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "nondegenerate",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "involutive",
+          "size": 4
+        }
+      ],
+      "matrix_indices": [
+        5,
+        0,
+        0,
+        12
+      ],
+      "point_reconstruction_holds": true,
+      "rejected_unknown_factor_count": 3,
+      "row_index": 12
+    },
+    {
+      "active_factor_finite_conditions_hold": true,
+      "certified_by_known_quotient_factor_product": true,
+      "congruence_count": 11,
+      "known_dominated_factor_count": 6,
+      "known_dominated_quotient_sizes": [
+        2,
+        3,
+        3,
+        3,
+        4,
+        4
+      ],
+      "known_dominated_quotients": [
+        {
+          "block_sizes": [
+            3,
+            3
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "nondegenerate",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "involutive",
+          "size": 4
+        }
+      ],
+      "matrix_indices": [
+        5,
+        3,
+        6,
+        12
+      ],
+      "point_reconstruction_holds": true,
+      "rejected_unknown_factor_count": 3,
+      "row_index": 15
+    },
+    {
+      "active_factor_finite_conditions_hold": true,
+      "certified_by_known_quotient_factor_product": true,
+      "congruence_count": 7,
+      "known_dominated_factor_count": 4,
+      "known_dominated_quotient_sizes": [
+        2,
+        3,
+        4,
+        4
+      ],
+      "known_dominated_quotients": [
+        {
+          "block_sizes": [
+            3,
+            3
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "nondegenerate",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "involutive",
+          "size": 4
+        }
+      ],
+      "matrix_indices": [
+        5,
+        6,
+        3,
+        12
+      ],
+      "point_reconstruction_holds": true,
+      "rejected_unknown_factor_count": 1,
+      "row_index": 18
+    },
+    {
+      "active_factor_finite_conditions_hold": true,
+      "certified_by_known_quotient_factor_product": true,
+      "congruence_count": 7,
+      "known_dominated_factor_count": 4,
+      "known_dominated_quotient_sizes": [
+        2,
+        3,
+        4,
+        4
+      ],
+      "known_dominated_quotients": [
+        {
+          "block_sizes": [
+            3,
+            3
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "nondegenerate",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "involutive",
+          "size": 4
+        }
+      ],
+      "matrix_indices": [
+        5,
+        9,
+        9,
+        12
+      ],
+      "point_reconstruction_holds": true,
+      "rejected_unknown_factor_count": 1,
+      "row_index": 19
+    },
+    {
+      "active_factor_finite_conditions_hold": true,
+      "certified_by_known_quotient_factor_product": true,
+      "congruence_count": 18,
+      "known_dominated_factor_count": 13,
+      "known_dominated_quotient_sizes": [
+        2,
+        2,
+        2,
+        3,
+        3,
+        3,
+        3,
+        4,
+        4,
+        4,
+        4,
+        4,
+        5
+      ],
+      "known_dominated_quotients": [
+        {
+          "block_sizes": [
+            1,
+            5
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            3,
+            3
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            2,
+            4
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "rack",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "rack",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            1,
+            2
+          ],
+          "reason": "involutive",
+          "size": 5
+        }
+      ],
+      "matrix_indices": [
+        6,
+        0,
+        0,
+        12
+      ],
+      "point_reconstruction_holds": true,
+      "rejected_unknown_factor_count": 3,
+      "row_index": 24
+    },
+    {
+      "active_factor_finite_conditions_hold": true,
+      "certified_by_known_quotient_factor_product": true,
+      "congruence_count": 19,
+      "known_dominated_factor_count": 14,
+      "known_dominated_quotient_sizes": [
+        2,
+        2,
+        2,
+        3,
+        3,
+        3,
+        3,
+        3,
+        4,
+        4,
+        4,
+        4,
+        4,
+        5
+      ],
+      "known_dominated_quotients": [
+        {
+          "block_sizes": [
+            1,
+            5
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            3,
+            3
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            2,
+            4
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "rack",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            4
+          ],
+          "reason": "rack",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "rack",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            1,
+            2
+          ],
+          "reason": "involutive",
+          "size": 5
+        }
+      ],
+      "matrix_indices": [
+        6,
+        0,
+        6,
+        12
+      ],
+      "point_reconstruction_holds": true,
+      "rejected_unknown_factor_count": 3,
+      "row_index": 25
+    },
+    {
+      "active_factor_finite_conditions_hold": true,
+      "certified_by_known_quotient_factor_product": true,
+      "congruence_count": 18,
+      "known_dominated_factor_count": 13,
+      "known_dominated_quotient_sizes": [
+        2,
+        2,
+        2,
+        3,
+        3,
+        3,
+        3,
+        4,
+        4,
+        4,
+        4,
+        4,
+        5
+      ],
+      "known_dominated_quotients": [
+        {
+          "block_sizes": [
+            1,
+            5
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            3,
+            3
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            2,
+            4
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "rack",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "nondegenerate",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            1,
+            2
+          ],
+          "reason": "involutive",
+          "size": 5
+        }
+      ],
+      "matrix_indices": [
+        6,
+        3,
+        0,
+        12
+      ],
+      "point_reconstruction_holds": true,
+      "rejected_unknown_factor_count": 3,
+      "row_index": 26
+    },
+    {
+      "active_factor_finite_conditions_hold": true,
+      "certified_by_known_quotient_factor_product": true,
+      "congruence_count": 18,
+      "known_dominated_factor_count": 13,
+      "known_dominated_quotient_sizes": [
+        2,
+        2,
+        2,
+        3,
+        3,
+        3,
+        3,
+        4,
+        4,
+        4,
+        4,
+        4,
+        5
+      ],
+      "known_dominated_quotients": [
+        {
+          "block_sizes": [
+            1,
+            5
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            3,
+            3
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            2,
+            4
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "rack",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "nondegenerate",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            1,
+            2
+          ],
+          "reason": "involutive",
+          "size": 5
+        }
+      ],
+      "matrix_indices": [
+        6,
+        3,
+        6,
+        12
+      ],
+      "point_reconstruction_holds": true,
+      "rejected_unknown_factor_count": 3,
+      "row_index": 27
+    },
+    {
+      "active_factor_finite_conditions_hold": true,
+      "certified_by_known_quotient_factor_product": true,
+      "congruence_count": 12,
+      "known_dominated_factor_count": 9,
+      "known_dominated_quotient_sizes": [
+        2,
+        2,
+        2,
+        3,
+        3,
+        4,
+        4,
+        4,
+        5
+      ],
+      "known_dominated_quotients": [
+        {
+          "block_sizes": [
+            1,
+            5
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            3,
+            3
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            2,
+            4
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "rack",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "rack",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            1,
+            2
+          ],
+          "reason": "involutive",
+          "size": 5
+        }
+      ],
+      "matrix_indices": [
+        6,
+        6,
+        3,
+        12
+      ],
+      "point_reconstruction_holds": true,
+      "rejected_unknown_factor_count": 1,
+      "row_index": 28
+    },
+    {
+      "active_factor_finite_conditions_hold": true,
+      "certified_by_known_quotient_factor_product": true,
+      "congruence_count": 13,
+      "known_dominated_factor_count": 10,
+      "known_dominated_quotient_sizes": [
+        2,
+        2,
+        2,
+        3,
+        3,
+        3,
+        4,
+        4,
+        4,
+        5
+      ],
+      "known_dominated_quotients": [
+        {
+          "block_sizes": [
+            1,
+            5
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            3,
+            3
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            2,
+            4
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "rack",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            4
+          ],
+          "reason": "rack",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "rack",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            1,
+            2
+          ],
+          "reason": "involutive",
+          "size": 5
+        }
+      ],
+      "matrix_indices": [
+        6,
+        6,
+        9,
+        12
+      ],
+      "point_reconstruction_holds": true,
+      "rejected_unknown_factor_count": 1,
+      "row_index": 29
+    },
+    {
+      "active_factor_finite_conditions_hold": true,
+      "certified_by_known_quotient_factor_product": true,
+      "congruence_count": 12,
+      "known_dominated_factor_count": 9,
+      "known_dominated_quotient_sizes": [
+        2,
+        2,
+        2,
+        3,
+        3,
+        4,
+        4,
+        4,
+        5
+      ],
+      "known_dominated_quotients": [
+        {
+          "block_sizes": [
+            1,
+            5
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            3,
+            3
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            2,
+            4
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "rack",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "nondegenerate",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            1,
+            2
+          ],
+          "reason": "involutive",
+          "size": 5
+        }
+      ],
+      "matrix_indices": [
+        6,
+        9,
+        3,
+        12
+      ],
+      "point_reconstruction_holds": true,
+      "rejected_unknown_factor_count": 1,
+      "row_index": 30
+    },
+    {
+      "active_factor_finite_conditions_hold": true,
+      "certified_by_known_quotient_factor_product": true,
+      "congruence_count": 12,
+      "known_dominated_factor_count": 9,
+      "known_dominated_quotient_sizes": [
+        2,
+        2,
+        2,
+        3,
+        3,
+        4,
+        4,
+        4,
+        5
+      ],
+      "known_dominated_quotients": [
+        {
+          "block_sizes": [
+            1,
+            5
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            3,
+            3
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            2,
+            4
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "rack",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "nondegenerate",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            1,
+            2
+          ],
+          "reason": "involutive",
+          "size": 5
+        }
+      ],
+      "matrix_indices": [
+        6,
+        9,
+        9,
+        12
+      ],
+      "point_reconstruction_holds": true,
+      "rejected_unknown_factor_count": 1,
+      "row_index": 31
+    },
+    {
+      "active_factor_finite_conditions_hold": true,
+      "certified_by_known_quotient_factor_product": true,
+      "congruence_count": 11,
+      "known_dominated_factor_count": 6,
+      "known_dominated_quotient_sizes": [
+        2,
+        3,
+        3,
+        3,
+        4,
+        4
+      ],
+      "known_dominated_quotients": [
+        {
+          "block_sizes": [
+            3,
+            3
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "nondegenerate",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "involutive",
+          "size": 4
+        }
+      ],
+      "matrix_indices": [
+        8,
+        0,
+        0,
+        12
+      ],
+      "point_reconstruction_holds": true,
+      "rejected_unknown_factor_count": 3,
+      "row_index": 32
+    },
+    {
+      "active_factor_finite_conditions_hold": true,
+      "certified_by_known_quotient_factor_product": true,
+      "congruence_count": 11,
+      "known_dominated_factor_count": 6,
+      "known_dominated_quotient_sizes": [
+        2,
+        3,
+        3,
+        3,
+        4,
+        4
+      ],
+      "known_dominated_quotients": [
+        {
+          "block_sizes": [
+            3,
+            3
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "nondegenerate",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "involutive",
+          "size": 4
+        }
+      ],
+      "matrix_indices": [
+        8,
+        3,
+        6,
+        12
+      ],
+      "point_reconstruction_holds": true,
+      "rejected_unknown_factor_count": 3,
+      "row_index": 33
+    },
+    {
+      "active_factor_finite_conditions_hold": true,
+      "certified_by_known_quotient_factor_product": true,
+      "congruence_count": 7,
+      "known_dominated_factor_count": 4,
+      "known_dominated_quotient_sizes": [
+        2,
+        3,
+        4,
+        4
+      ],
+      "known_dominated_quotients": [
+        {
+          "block_sizes": [
+            3,
+            3
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "nondegenerate",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "involutive",
+          "size": 4
+        }
+      ],
+      "matrix_indices": [
+        8,
+        6,
+        3,
+        12
+      ],
+      "point_reconstruction_holds": true,
+      "rejected_unknown_factor_count": 1,
+      "row_index": 34
+    },
+    {
+      "active_factor_finite_conditions_hold": true,
+      "certified_by_known_quotient_factor_product": true,
+      "congruence_count": 7,
+      "known_dominated_factor_count": 4,
+      "known_dominated_quotient_sizes": [
+        2,
+        3,
+        4,
+        4
+      ],
+      "known_dominated_quotients": [
+        {
+          "block_sizes": [
+            3,
+            3
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "nondegenerate",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "involutive",
+          "size": 4
+        }
+      ],
+      "matrix_indices": [
+        8,
+        9,
+        9,
+        12
+      ],
+      "point_reconstruction_holds": true,
+      "rejected_unknown_factor_count": 1,
+      "row_index": 37
+    },
+    {
+      "active_factor_finite_conditions_hold": true,
+      "certified_by_known_quotient_factor_product": true,
+      "congruence_count": 18,
+      "known_dominated_factor_count": 13,
+      "known_dominated_quotient_sizes": [
+        2,
+        2,
+        2,
+        3,
+        3,
+        3,
+        3,
+        4,
+        4,
+        4,
+        4,
+        4,
+        5
+      ],
+      "known_dominated_quotients": [
+        {
+          "block_sizes": [
+            1,
+            5
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            3,
+            3
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            2,
+            4
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "rack",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "nondegenerate",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            1,
+            2
+          ],
+          "reason": "involutive",
+          "size": 5
+        }
+      ],
+      "matrix_indices": [
+        9,
+        0,
+        6,
+        12
+      ],
+      "point_reconstruction_holds": true,
+      "rejected_unknown_factor_count": 3,
+      "row_index": 44
+    },
+    {
+      "active_factor_finite_conditions_hold": true,
+      "certified_by_known_quotient_factor_product": true,
+      "congruence_count": 18,
+      "known_dominated_factor_count": 13,
+      "known_dominated_quotient_sizes": [
+        2,
+        2,
+        2,
+        3,
+        3,
+        3,
+        3,
+        4,
+        4,
+        4,
+        4,
+        4,
+        5
+      ],
+      "known_dominated_quotients": [
+        {
+          "block_sizes": [
+            1,
+            5
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            3,
+            3
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            2,
+            4
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "rack",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "nondegenerate",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            1,
+            2
+          ],
+          "reason": "involutive",
+          "size": 5
+        }
+      ],
+      "matrix_indices": [
+        9,
+        3,
+        0,
+        12
+      ],
+      "point_reconstruction_holds": true,
+      "rejected_unknown_factor_count": 3,
+      "row_index": 45
+    },
+    {
+      "active_factor_finite_conditions_hold": true,
+      "certified_by_known_quotient_factor_product": true,
+      "congruence_count": 12,
+      "known_dominated_factor_count": 9,
+      "known_dominated_quotient_sizes": [
+        2,
+        2,
+        2,
+        3,
+        3,
+        4,
+        4,
+        4,
+        5
+      ],
+      "known_dominated_quotients": [
+        {
+          "block_sizes": [
+            1,
+            5
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            3,
+            3
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            2,
+            4
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "rack",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "nondegenerate",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            1,
+            2
+          ],
+          "reason": "involutive",
+          "size": 5
+        }
+      ],
+      "matrix_indices": [
+        9,
+        6,
+        9,
+        12
+      ],
+      "point_reconstruction_holds": true,
+      "rejected_unknown_factor_count": 1,
+      "row_index": 46
+    },
+    {
+      "active_factor_finite_conditions_hold": true,
+      "certified_by_known_quotient_factor_product": true,
+      "congruence_count": 12,
+      "known_dominated_factor_count": 9,
+      "known_dominated_quotient_sizes": [
+        2,
+        2,
+        2,
+        3,
+        3,
+        4,
+        4,
+        4,
+        5
+      ],
+      "known_dominated_quotients": [
+        {
+          "block_sizes": [
+            1,
+            5
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            3,
+            3
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            2,
+            4
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "rack",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "nondegenerate",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            1,
+            2
+          ],
+          "reason": "involutive",
+          "size": 5
+        }
+      ],
+      "matrix_indices": [
+        9,
+        9,
+        3,
+        12
+      ],
+      "point_reconstruction_holds": true,
+      "rejected_unknown_factor_count": 1,
+      "row_index": 47
+    },
+    {
+      "active_factor_finite_conditions_hold": true,
+      "certified_by_known_quotient_factor_product": true,
+      "congruence_count": 18,
+      "known_dominated_factor_count": 13,
+      "known_dominated_quotient_sizes": [
+        2,
+        2,
+        2,
+        3,
+        3,
+        3,
+        3,
+        4,
+        4,
+        4,
+        4,
+        4,
+        5
+      ],
+      "known_dominated_quotients": [
+        {
+          "block_sizes": [
+            3,
+            3
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            1,
+            5
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            2,
+            4
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "rack",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "nondegenerate",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            1,
+            2
+          ],
+          "reason": "involutive",
+          "size": 5
+        }
+      ],
+      "matrix_indices": [
+        12,
+        0,
+        0,
+        3
+      ],
+      "point_reconstruction_holds": true,
+      "rejected_unknown_factor_count": 3,
+      "row_index": 48
+    },
+    {
+      "active_factor_finite_conditions_hold": true,
+      "certified_by_known_quotient_factor_product": true,
+      "congruence_count": 11,
+      "known_dominated_factor_count": 6,
+      "known_dominated_quotient_sizes": [
+        2,
+        3,
+        3,
+        3,
+        4,
+        4
+      ],
+      "known_dominated_quotients": [
+        {
+          "block_sizes": [
+            3,
+            3
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "nondegenerate",
+          "size": 4
+        }
+      ],
+      "matrix_indices": [
+        12,
+        0,
+        0,
+        5
+      ],
+      "point_reconstruction_holds": true,
+      "rejected_unknown_factor_count": 3,
+      "row_index": 49
+    },
+    {
+      "active_factor_finite_conditions_hold": true,
+      "certified_by_known_quotient_factor_product": true,
+      "congruence_count": 18,
+      "known_dominated_factor_count": 13,
+      "known_dominated_quotient_sizes": [
+        2,
+        2,
+        2,
+        3,
+        3,
+        3,
+        3,
+        4,
+        4,
+        4,
+        4,
+        4,
+        5
+      ],
+      "known_dominated_quotients": [
+        {
+          "block_sizes": [
+            3,
+            3
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            1,
+            5
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            2,
+            4
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "rack",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "rack",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            1,
+            2
+          ],
+          "reason": "involutive",
+          "size": 5
+        }
+      ],
+      "matrix_indices": [
+        12,
+        0,
+        0,
+        6
+      ],
+      "point_reconstruction_holds": true,
+      "rejected_unknown_factor_count": 3,
+      "row_index": 50
+    },
+    {
+      "active_factor_finite_conditions_hold": true,
+      "certified_by_known_quotient_factor_product": true,
+      "congruence_count": 11,
+      "known_dominated_factor_count": 6,
+      "known_dominated_quotient_sizes": [
+        2,
+        3,
+        3,
+        3,
+        4,
+        4
+      ],
+      "known_dominated_quotients": [
+        {
+          "block_sizes": [
+            3,
+            3
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "nondegenerate",
+          "size": 4
+        }
+      ],
+      "matrix_indices": [
+        12,
+        0,
+        0,
+        8
+      ],
+      "point_reconstruction_holds": true,
+      "rejected_unknown_factor_count": 3,
+      "row_index": 51
+    },
+    {
+      "active_factor_finite_conditions_hold": true,
+      "certified_by_known_quotient_factor_product": true,
+      "congruence_count": 11,
+      "known_dominated_factor_count": 6,
+      "known_dominated_quotient_sizes": [
+        2,
+        3,
+        3,
+        3,
+        4,
+        4
+      ],
+      "known_dominated_quotients": [
+        {
+          "block_sizes": [
+            3,
+            3
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "nondegenerate",
+          "size": 4
+        }
+      ],
+      "matrix_indices": [
+        12,
+        0,
+        0,
+        40
+      ],
+      "point_reconstruction_holds": true,
+      "rejected_unknown_factor_count": 3,
+      "row_index": 52
+    },
+    {
+      "active_factor_finite_conditions_hold": true,
+      "certified_by_known_quotient_factor_product": true,
+      "congruence_count": 11,
+      "known_dominated_factor_count": 6,
+      "known_dominated_quotient_sizes": [
+        2,
+        3,
+        3,
+        3,
+        4,
+        4
+      ],
+      "known_dominated_quotients": [
+        {
+          "block_sizes": [
+            3,
+            3
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "rack",
+          "size": 4
+        }
+      ],
+      "matrix_indices": [
+        12,
+        0,
+        0,
+        44
+      ],
+      "point_reconstruction_holds": true,
+      "rejected_unknown_factor_count": 3,
+      "row_index": 53
+    },
+    {
+      "active_factor_finite_conditions_hold": true,
+      "certified_by_known_quotient_factor_product": true,
+      "congruence_count": 18,
+      "known_dominated_factor_count": 13,
+      "known_dominated_quotient_sizes": [
+        2,
+        2,
+        2,
+        3,
+        3,
+        3,
+        3,
+        4,
+        4,
+        4,
+        4,
+        4,
+        5
+      ],
+      "known_dominated_quotients": [
+        {
+          "block_sizes": [
+            3,
+            3
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            1,
+            5
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            2,
+            4
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "rack",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "nondegenerate",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            1,
+            2
+          ],
+          "reason": "involutive",
+          "size": 5
+        }
+      ],
+      "matrix_indices": [
+        12,
+        0,
+        3,
+        0
+      ],
+      "point_reconstruction_holds": true,
+      "rejected_unknown_factor_count": 3,
+      "row_index": 54
+    },
+    {
+      "active_factor_finite_conditions_hold": true,
+      "certified_by_known_quotient_factor_product": true,
+      "congruence_count": 19,
+      "known_dominated_factor_count": 14,
+      "known_dominated_quotient_sizes": [
+        2,
+        2,
+        2,
+        3,
+        3,
+        3,
+        3,
+        3,
+        4,
+        4,
+        4,
+        4,
+        4,
+        5
+      ],
+      "known_dominated_quotients": [
+        {
+          "block_sizes": [
+            3,
+            3
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            1,
+            5
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            2,
+            4
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "rack",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            4
+          ],
+          "reason": "nondegenerate",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "nondegenerate",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            1,
+            2
+          ],
+          "reason": "involutive",
+          "size": 5
+        }
+      ],
+      "matrix_indices": [
+        12,
+        0,
+        3,
+        3
+      ],
+      "point_reconstruction_holds": true,
+      "rejected_unknown_factor_count": 3,
+      "row_index": 55
+    },
+    {
+      "active_factor_finite_conditions_hold": true,
+      "certified_by_known_quotient_factor_product": true,
+      "congruence_count": 18,
+      "known_dominated_factor_count": 13,
+      "known_dominated_quotient_sizes": [
+        2,
+        2,
+        2,
+        3,
+        3,
+        3,
+        3,
+        4,
+        4,
+        4,
+        4,
+        4,
+        5
+      ],
+      "known_dominated_quotients": [
+        {
+          "block_sizes": [
+            3,
+            3
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            1,
+            5
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            2,
+            4
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "rack",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "nondegenerate",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            1,
+            2
+          ],
+          "reason": "involutive",
+          "size": 5
+        }
+      ],
+      "matrix_indices": [
+        12,
+        0,
+        3,
+        6
+      ],
+      "point_reconstruction_holds": true,
+      "rejected_unknown_factor_count": 3,
+      "row_index": 56
+    },
+    {
+      "active_factor_finite_conditions_hold": true,
+      "certified_by_known_quotient_factor_product": true,
+      "congruence_count": 18,
+      "known_dominated_factor_count": 13,
+      "known_dominated_quotient_sizes": [
+        2,
+        2,
+        2,
+        3,
+        3,
+        3,
+        3,
+        4,
+        4,
+        4,
+        4,
+        4,
+        5
+      ],
+      "known_dominated_quotients": [
+        {
+          "block_sizes": [
+            3,
+            3
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            1,
+            5
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            2,
+            4
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "rack",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "nondegenerate",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            1,
+            2
+          ],
+          "reason": "involutive",
+          "size": 5
+        }
+      ],
+      "matrix_indices": [
+        12,
+        0,
+        3,
+        9
+      ],
+      "point_reconstruction_holds": true,
+      "rejected_unknown_factor_count": 3,
+      "row_index": 57
+    },
+    {
+      "active_factor_finite_conditions_hold": true,
+      "certified_by_known_quotient_factor_product": true,
+      "congruence_count": 12,
+      "known_dominated_factor_count": 9,
+      "known_dominated_quotient_sizes": [
+        2,
+        2,
+        2,
+        3,
+        3,
+        4,
+        4,
+        4,
+        5
+      ],
+      "known_dominated_quotients": [
+        {
+          "block_sizes": [
+            3,
+            3
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            1,
+            5
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            2,
+            4
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "rack",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "nondegenerate",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            1,
+            2
+          ],
+          "reason": "involutive",
+          "size": 5
+        }
+      ],
+      "matrix_indices": [
+        12,
+        3,
+        6,
+        3
+      ],
+      "point_reconstruction_holds": true,
+      "rejected_unknown_factor_count": 1,
+      "row_index": 62
+    },
+    {
+      "active_factor_finite_conditions_hold": true,
+      "certified_by_known_quotient_factor_product": true,
+      "congruence_count": 7,
+      "known_dominated_factor_count": 4,
+      "known_dominated_quotient_sizes": [
+        2,
+        3,
+        4,
+        4
+      ],
+      "known_dominated_quotients": [
+        {
+          "block_sizes": [
+            3,
+            3
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "nondegenerate",
+          "size": 4
+        }
+      ],
+      "matrix_indices": [
+        12,
+        3,
+        6,
+        5
+      ],
+      "point_reconstruction_holds": true,
+      "rejected_unknown_factor_count": 1,
+      "row_index": 63
+    },
+    {
+      "active_factor_finite_conditions_hold": true,
+      "certified_by_known_quotient_factor_product": true,
+      "congruence_count": 12,
+      "known_dominated_factor_count": 9,
+      "known_dominated_quotient_sizes": [
+        2,
+        2,
+        2,
+        3,
+        3,
+        4,
+        4,
+        4,
+        5
+      ],
+      "known_dominated_quotients": [
+        {
+          "block_sizes": [
+            3,
+            3
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            1,
+            5
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            2,
+            4
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "rack",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "rack",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            1,
+            2
+          ],
+          "reason": "involutive",
+          "size": 5
+        }
+      ],
+      "matrix_indices": [
+        12,
+        3,
+        6,
+        6
+      ],
+      "point_reconstruction_holds": true,
+      "rejected_unknown_factor_count": 1,
+      "row_index": 64
+    },
+    {
+      "active_factor_finite_conditions_hold": true,
+      "certified_by_known_quotient_factor_product": true,
+      "congruence_count": 7,
+      "known_dominated_factor_count": 4,
+      "known_dominated_quotient_sizes": [
+        2,
+        3,
+        4,
+        4
+      ],
+      "known_dominated_quotients": [
+        {
+          "block_sizes": [
+            3,
+            3
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "nondegenerate",
+          "size": 4
+        }
+      ],
+      "matrix_indices": [
+        12,
+        3,
+        6,
+        8
+      ],
+      "point_reconstruction_holds": true,
+      "rejected_unknown_factor_count": 1,
+      "row_index": 65
+    },
+    {
+      "active_factor_finite_conditions_hold": true,
+      "certified_by_known_quotient_factor_product": true,
+      "congruence_count": 7,
+      "known_dominated_factor_count": 4,
+      "known_dominated_quotient_sizes": [
+        2,
+        3,
+        4,
+        4
+      ],
+      "known_dominated_quotients": [
+        {
+          "block_sizes": [
+            3,
+            3
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "nondegenerate",
+          "size": 4
+        }
+      ],
+      "matrix_indices": [
+        12,
+        3,
+        6,
+        40
+      ],
+      "point_reconstruction_holds": true,
+      "rejected_unknown_factor_count": 1,
+      "row_index": 66
+    },
+    {
+      "active_factor_finite_conditions_hold": true,
+      "certified_by_known_quotient_factor_product": true,
+      "congruence_count": 7,
+      "known_dominated_factor_count": 4,
+      "known_dominated_quotient_sizes": [
+        2,
+        3,
+        4,
+        4
+      ],
+      "known_dominated_quotients": [
+        {
+          "block_sizes": [
+            3,
+            3
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "rack",
+          "size": 4
+        }
+      ],
+      "matrix_indices": [
+        12,
+        3,
+        6,
+        44
+      ],
+      "point_reconstruction_holds": true,
+      "rejected_unknown_factor_count": 1,
+      "row_index": 67
+    },
+    {
+      "active_factor_finite_conditions_hold": true,
+      "certified_by_known_quotient_factor_product": true,
+      "congruence_count": 12,
+      "known_dominated_factor_count": 9,
+      "known_dominated_quotient_sizes": [
+        2,
+        2,
+        2,
+        3,
+        3,
+        4,
+        4,
+        4,
+        5
+      ],
+      "known_dominated_quotients": [
+        {
+          "block_sizes": [
+            3,
+            3
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            1,
+            5
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            2,
+            4
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "rack",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "nondegenerate",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            1,
+            2
+          ],
+          "reason": "involutive",
+          "size": 5
+        }
+      ],
+      "matrix_indices": [
+        12,
+        3,
+        9,
+        0
+      ],
+      "point_reconstruction_holds": true,
+      "rejected_unknown_factor_count": 1,
+      "row_index": 68
+    },
+    {
+      "active_factor_finite_conditions_hold": true,
+      "certified_by_known_quotient_factor_product": true,
+      "congruence_count": 13,
+      "known_dominated_factor_count": 10,
+      "known_dominated_quotient_sizes": [
+        2,
+        2,
+        2,
+        3,
+        3,
+        3,
+        4,
+        4,
+        4,
+        5
+      ],
+      "known_dominated_quotients": [
+        {
+          "block_sizes": [
+            3,
+            3
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            1,
+            5
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            2,
+            4
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "rack",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            4
+          ],
+          "reason": "nondegenerate",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "nondegenerate",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            1,
+            2
+          ],
+          "reason": "involutive",
+          "size": 5
+        }
+      ],
+      "matrix_indices": [
+        12,
+        3,
+        9,
+        3
+      ],
+      "point_reconstruction_holds": true,
+      "rejected_unknown_factor_count": 1,
+      "row_index": 69
+    },
+    {
+      "active_factor_finite_conditions_hold": true,
+      "certified_by_known_quotient_factor_product": true,
+      "congruence_count": 12,
+      "known_dominated_factor_count": 9,
+      "known_dominated_quotient_sizes": [
+        2,
+        2,
+        2,
+        3,
+        3,
+        4,
+        4,
+        4,
+        5
+      ],
+      "known_dominated_quotients": [
+        {
+          "block_sizes": [
+            3,
+            3
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            1,
+            5
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            2,
+            4
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "rack",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "nondegenerate",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            1,
+            2
+          ],
+          "reason": "involutive",
+          "size": 5
+        }
+      ],
+      "matrix_indices": [
+        12,
+        3,
+        9,
+        6
+      ],
+      "point_reconstruction_holds": true,
+      "rejected_unknown_factor_count": 1,
+      "row_index": 70
+    },
+    {
+      "active_factor_finite_conditions_hold": true,
+      "certified_by_known_quotient_factor_product": true,
+      "congruence_count": 12,
+      "known_dominated_factor_count": 9,
+      "known_dominated_quotient_sizes": [
+        2,
+        2,
+        2,
+        3,
+        3,
+        4,
+        4,
+        4,
+        5
+      ],
+      "known_dominated_quotients": [
+        {
+          "block_sizes": [
+            3,
+            3
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            1,
+            5
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            2,
+            4
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "rack",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "nondegenerate",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            1,
+            2
+          ],
+          "reason": "involutive",
+          "size": 5
+        }
+      ],
+      "matrix_indices": [
+        12,
+        3,
+        9,
+        9
+      ],
+      "point_reconstruction_holds": true,
+      "rejected_unknown_factor_count": 1,
+      "row_index": 71
+    },
+    {
+      "active_factor_finite_conditions_hold": true,
+      "certified_by_known_quotient_factor_product": true,
+      "congruence_count": 18,
+      "known_dominated_factor_count": 13,
+      "known_dominated_quotient_sizes": [
+        2,
+        2,
+        2,
+        3,
+        3,
+        3,
+        3,
+        4,
+        4,
+        4,
+        4,
+        4,
+        5
+      ],
+      "known_dominated_quotients": [
+        {
+          "block_sizes": [
+            3,
+            3
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            1,
+            5
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            2,
+            4
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "rack",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "rack",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            1,
+            2
+          ],
+          "reason": "involutive",
+          "size": 5
+        }
+      ],
+      "matrix_indices": [
+        12,
+        6,
+        0,
+        0
+      ],
+      "point_reconstruction_holds": true,
+      "rejected_unknown_factor_count": 3,
+      "row_index": 76
+    },
+    {
+      "active_factor_finite_conditions_hold": true,
+      "certified_by_known_quotient_factor_product": true,
+      "congruence_count": 18,
+      "known_dominated_factor_count": 13,
+      "known_dominated_quotient_sizes": [
+        2,
+        2,
+        2,
+        3,
+        3,
+        3,
+        3,
+        4,
+        4,
+        4,
+        4,
+        4,
+        5
+      ],
+      "known_dominated_quotients": [
+        {
+          "block_sizes": [
+            3,
+            3
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            1,
+            5
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            2,
+            4
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "rack",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "nondegenerate",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            1,
+            2
+          ],
+          "reason": "involutive",
+          "size": 5
+        }
+      ],
+      "matrix_indices": [
+        12,
+        6,
+        0,
+        3
+      ],
+      "point_reconstruction_holds": true,
+      "rejected_unknown_factor_count": 3,
+      "row_index": 77
+    },
+    {
+      "active_factor_finite_conditions_hold": true,
+      "certified_by_known_quotient_factor_product": true,
+      "congruence_count": 19,
+      "known_dominated_factor_count": 14,
+      "known_dominated_quotient_sizes": [
+        2,
+        2,
+        2,
+        3,
+        3,
+        3,
+        3,
+        3,
+        4,
+        4,
+        4,
+        4,
+        4,
+        5
+      ],
+      "known_dominated_quotients": [
+        {
+          "block_sizes": [
+            3,
+            3
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            1,
+            5
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            2,
+            4
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "rack",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            4
+          ],
+          "reason": "rack",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "rack",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            1,
+            2
+          ],
+          "reason": "involutive",
+          "size": 5
+        }
+      ],
+      "matrix_indices": [
+        12,
+        6,
+        0,
+        6
+      ],
+      "point_reconstruction_holds": true,
+      "rejected_unknown_factor_count": 3,
+      "row_index": 78
+    },
+    {
+      "active_factor_finite_conditions_hold": true,
+      "certified_by_known_quotient_factor_product": true,
+      "congruence_count": 18,
+      "known_dominated_factor_count": 13,
+      "known_dominated_quotient_sizes": [
+        2,
+        2,
+        2,
+        3,
+        3,
+        3,
+        3,
+        4,
+        4,
+        4,
+        4,
+        4,
+        5
+      ],
+      "known_dominated_quotients": [
+        {
+          "block_sizes": [
+            3,
+            3
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            1,
+            5
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            2,
+            4
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "rack",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "nondegenerate",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            1,
+            2
+          ],
+          "reason": "involutive",
+          "size": 5
+        }
+      ],
+      "matrix_indices": [
+        12,
+        6,
+        0,
+        9
+      ],
+      "point_reconstruction_holds": true,
+      "rejected_unknown_factor_count": 3,
+      "row_index": 79
+    },
+    {
+      "active_factor_finite_conditions_hold": true,
+      "certified_by_known_quotient_factor_product": true,
+      "congruence_count": 18,
+      "known_dominated_factor_count": 13,
+      "known_dominated_quotient_sizes": [
+        2,
+        2,
+        2,
+        3,
+        3,
+        3,
+        3,
+        4,
+        4,
+        4,
+        4,
+        4,
+        5
+      ],
+      "known_dominated_quotients": [
+        {
+          "block_sizes": [
+            3,
+            3
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            1,
+            5
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            2,
+            4
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "rack",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "nondegenerate",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            1,
+            2
+          ],
+          "reason": "involutive",
+          "size": 5
+        }
+      ],
+      "matrix_indices": [
+        12,
+        6,
+        3,
+        3
+      ],
+      "point_reconstruction_holds": true,
+      "rejected_unknown_factor_count": 3,
+      "row_index": 80
+    },
+    {
+      "active_factor_finite_conditions_hold": true,
+      "certified_by_known_quotient_factor_product": true,
+      "congruence_count": 11,
+      "known_dominated_factor_count": 6,
+      "known_dominated_quotient_sizes": [
+        2,
+        3,
+        3,
+        3,
+        4,
+        4
+      ],
+      "known_dominated_quotients": [
+        {
+          "block_sizes": [
+            3,
+            3
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "nondegenerate",
+          "size": 4
+        }
+      ],
+      "matrix_indices": [
+        12,
+        6,
+        3,
+        5
+      ],
+      "point_reconstruction_holds": true,
+      "rejected_unknown_factor_count": 3,
+      "row_index": 81
+    },
+    {
+      "active_factor_finite_conditions_hold": true,
+      "certified_by_known_quotient_factor_product": true,
+      "congruence_count": 18,
+      "known_dominated_factor_count": 13,
+      "known_dominated_quotient_sizes": [
+        2,
+        2,
+        2,
+        3,
+        3,
+        3,
+        3,
+        4,
+        4,
+        4,
+        4,
+        4,
+        5
+      ],
+      "known_dominated_quotients": [
+        {
+          "block_sizes": [
+            3,
+            3
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            1,
+            5
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            2,
+            4
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "rack",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "nondegenerate",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            1,
+            2
+          ],
+          "reason": "involutive",
+          "size": 5
+        }
+      ],
+      "matrix_indices": [
+        12,
+        6,
+        3,
+        6
+      ],
+      "point_reconstruction_holds": true,
+      "rejected_unknown_factor_count": 3,
+      "row_index": 82
+    },
+    {
+      "active_factor_finite_conditions_hold": true,
+      "certified_by_known_quotient_factor_product": true,
+      "congruence_count": 11,
+      "known_dominated_factor_count": 6,
+      "known_dominated_quotient_sizes": [
+        2,
+        3,
+        3,
+        3,
+        4,
+        4
+      ],
+      "known_dominated_quotients": [
+        {
+          "block_sizes": [
+            3,
+            3
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "nondegenerate",
+          "size": 4
+        }
+      ],
+      "matrix_indices": [
+        12,
+        6,
+        3,
+        8
+      ],
+      "point_reconstruction_holds": true,
+      "rejected_unknown_factor_count": 3,
+      "row_index": 83
+    },
+    {
+      "active_factor_finite_conditions_hold": true,
+      "certified_by_known_quotient_factor_product": true,
+      "congruence_count": 11,
+      "known_dominated_factor_count": 6,
+      "known_dominated_quotient_sizes": [
+        2,
+        3,
+        3,
+        3,
+        4,
+        4
+      ],
+      "known_dominated_quotients": [
+        {
+          "block_sizes": [
+            3,
+            3
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "nondegenerate",
+          "size": 4
+        }
+      ],
+      "matrix_indices": [
+        12,
+        6,
+        3,
+        40
+      ],
+      "point_reconstruction_holds": true,
+      "rejected_unknown_factor_count": 3,
+      "row_index": 84
+    },
+    {
+      "active_factor_finite_conditions_hold": true,
+      "certified_by_known_quotient_factor_product": true,
+      "congruence_count": 11,
+      "known_dominated_factor_count": 6,
+      "known_dominated_quotient_sizes": [
+        2,
+        3,
+        3,
+        3,
+        4,
+        4
+      ],
+      "known_dominated_quotients": [
+        {
+          "block_sizes": [
+            3,
+            3
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "nondegenerate",
+          "size": 4
+        }
+      ],
+      "matrix_indices": [
+        12,
+        6,
+        3,
+        44
+      ],
+      "point_reconstruction_holds": true,
+      "rejected_unknown_factor_count": 3,
+      "row_index": 85
+    },
+    {
+      "active_factor_finite_conditions_hold": true,
+      "certified_by_known_quotient_factor_product": true,
+      "congruence_count": 12,
+      "known_dominated_factor_count": 9,
+      "known_dominated_quotient_sizes": [
+        2,
+        2,
+        2,
+        3,
+        3,
+        4,
+        4,
+        4,
+        5
+      ],
+      "known_dominated_quotients": [
+        {
+          "block_sizes": [
+            3,
+            3
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            1,
+            5
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            2,
+            4
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "rack",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "rack",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            1,
+            2
+          ],
+          "reason": "involutive",
+          "size": 5
+        }
+      ],
+      "matrix_indices": [
+        12,
+        9,
+        6,
+        0
+      ],
+      "point_reconstruction_holds": true,
+      "rejected_unknown_factor_count": 1,
+      "row_index": 90
+    },
+    {
+      "active_factor_finite_conditions_hold": true,
+      "certified_by_known_quotient_factor_product": true,
+      "congruence_count": 12,
+      "known_dominated_factor_count": 9,
+      "known_dominated_quotient_sizes": [
+        2,
+        2,
+        2,
+        3,
+        3,
+        4,
+        4,
+        4,
+        5
+      ],
+      "known_dominated_quotients": [
+        {
+          "block_sizes": [
+            3,
+            3
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            1,
+            5
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            2,
+            4
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "rack",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "nondegenerate",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            1,
+            2
+          ],
+          "reason": "involutive",
+          "size": 5
+        }
+      ],
+      "matrix_indices": [
+        12,
+        9,
+        6,
+        3
+      ],
+      "point_reconstruction_holds": true,
+      "rejected_unknown_factor_count": 1,
+      "row_index": 91
+    },
+    {
+      "active_factor_finite_conditions_hold": true,
+      "certified_by_known_quotient_factor_product": true,
+      "congruence_count": 13,
+      "known_dominated_factor_count": 10,
+      "known_dominated_quotient_sizes": [
+        2,
+        2,
+        2,
+        3,
+        3,
+        3,
+        4,
+        4,
+        4,
+        5
+      ],
+      "known_dominated_quotients": [
+        {
+          "block_sizes": [
+            3,
+            3
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            1,
+            5
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            2,
+            4
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "rack",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            4
+          ],
+          "reason": "rack",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "rack",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            1,
+            2
+          ],
+          "reason": "involutive",
+          "size": 5
+        }
+      ],
+      "matrix_indices": [
+        12,
+        9,
+        6,
+        6
+      ],
+      "point_reconstruction_holds": true,
+      "rejected_unknown_factor_count": 1,
+      "row_index": 92
+    },
+    {
+      "active_factor_finite_conditions_hold": true,
+      "certified_by_known_quotient_factor_product": true,
+      "congruence_count": 12,
+      "known_dominated_factor_count": 9,
+      "known_dominated_quotient_sizes": [
+        2,
+        2,
+        2,
+        3,
+        3,
+        4,
+        4,
+        4,
+        5
+      ],
+      "known_dominated_quotients": [
+        {
+          "block_sizes": [
+            3,
+            3
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            1,
+            5
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            2,
+            4
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "rack",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "nondegenerate",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            1,
+            2
+          ],
+          "reason": "involutive",
+          "size": 5
+        }
+      ],
+      "matrix_indices": [
+        12,
+        9,
+        6,
+        9
+      ],
+      "point_reconstruction_holds": true,
+      "rejected_unknown_factor_count": 1,
+      "row_index": 93
+    },
+    {
+      "active_factor_finite_conditions_hold": true,
+      "certified_by_known_quotient_factor_product": true,
+      "congruence_count": 12,
+      "known_dominated_factor_count": 9,
+      "known_dominated_quotient_sizes": [
+        2,
+        2,
+        2,
+        3,
+        3,
+        4,
+        4,
+        4,
+        5
+      ],
+      "known_dominated_quotients": [
+        {
+          "block_sizes": [
+            3,
+            3
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            1,
+            5
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            2,
+            4
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "rack",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "nondegenerate",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            1,
+            2
+          ],
+          "reason": "involutive",
+          "size": 5
+        }
+      ],
+      "matrix_indices": [
+        12,
+        9,
+        9,
+        3
+      ],
+      "point_reconstruction_holds": true,
+      "rejected_unknown_factor_count": 1,
+      "row_index": 94
+    },
+    {
+      "active_factor_finite_conditions_hold": true,
+      "certified_by_known_quotient_factor_product": true,
+      "congruence_count": 7,
+      "known_dominated_factor_count": 4,
+      "known_dominated_quotient_sizes": [
+        2,
+        3,
+        4,
+        4
+      ],
+      "known_dominated_quotients": [
+        {
+          "block_sizes": [
+            3,
+            3
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "nondegenerate",
+          "size": 4
+        }
+      ],
+      "matrix_indices": [
+        12,
+        9,
+        9,
+        5
+      ],
+      "point_reconstruction_holds": true,
+      "rejected_unknown_factor_count": 1,
+      "row_index": 95
+    },
+    {
+      "active_factor_finite_conditions_hold": true,
+      "certified_by_known_quotient_factor_product": true,
+      "congruence_count": 12,
+      "known_dominated_factor_count": 9,
+      "known_dominated_quotient_sizes": [
+        2,
+        2,
+        2,
+        3,
+        3,
+        4,
+        4,
+        4,
+        5
+      ],
+      "known_dominated_quotients": [
+        {
+          "block_sizes": [
+            3,
+            3
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            1,
+            5
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            2,
+            4
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "rack",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            2,
+            2
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "nondegenerate",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            1,
+            2
+          ],
+          "reason": "involutive",
+          "size": 5
+        }
+      ],
+      "matrix_indices": [
+        12,
+        9,
+        9,
+        6
+      ],
+      "point_reconstruction_holds": true,
+      "rejected_unknown_factor_count": 1,
+      "row_index": 96
+    },
+    {
+      "active_factor_finite_conditions_hold": true,
+      "certified_by_known_quotient_factor_product": true,
+      "congruence_count": 7,
+      "known_dominated_factor_count": 4,
+      "known_dominated_quotient_sizes": [
+        2,
+        3,
+        4,
+        4
+      ],
+      "known_dominated_quotients": [
+        {
+          "block_sizes": [
+            3,
+            3
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "nondegenerate",
+          "size": 4
+        }
+      ],
+      "matrix_indices": [
+        12,
+        9,
+        9,
+        8
+      ],
+      "point_reconstruction_holds": true,
+      "rejected_unknown_factor_count": 1,
+      "row_index": 97
+    },
+    {
+      "active_factor_finite_conditions_hold": true,
+      "certified_by_known_quotient_factor_product": true,
+      "congruence_count": 7,
+      "known_dominated_factor_count": 4,
+      "known_dominated_quotient_sizes": [
+        2,
+        3,
+        4,
+        4
+      ],
+      "known_dominated_quotients": [
+        {
+          "block_sizes": [
+            3,
+            3
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "nondegenerate",
+          "size": 4
+        }
+      ],
+      "matrix_indices": [
+        12,
+        9,
+        9,
+        40
+      ],
+      "point_reconstruction_holds": true,
+      "rejected_unknown_factor_count": 1,
+      "row_index": 98
+    },
+    {
+      "active_factor_finite_conditions_hold": true,
+      "certified_by_known_quotient_factor_product": true,
+      "congruence_count": 7,
+      "known_dominated_factor_count": 4,
+      "known_dominated_quotient_sizes": [
+        2,
+        3,
+        4,
+        4
+      ],
+      "known_dominated_quotients": [
+        {
+          "block_sizes": [
+            3,
+            3
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "involutive",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "nondegenerate",
+          "size": 4
+        }
+      ],
+      "matrix_indices": [
+        12,
+        9,
+        9,
+        44
+      ],
+      "point_reconstruction_holds": true,
+      "rejected_unknown_factor_count": 1,
+      "row_index": 99
+    },
+    {
+      "active_factor_finite_conditions_hold": true,
+      "certified_by_known_quotient_factor_product": true,
+      "congruence_count": 11,
+      "known_dominated_factor_count": 6,
+      "known_dominated_quotient_sizes": [
+        2,
+        3,
+        3,
+        3,
+        4,
+        4
+      ],
+      "known_dominated_quotients": [
+        {
+          "block_sizes": [
+            3,
+            3
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "nondegenerate",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "involutive",
+          "size": 4
+        }
+      ],
+      "matrix_indices": [
+        40,
+        0,
+        0,
+        12
+      ],
+      "point_reconstruction_holds": true,
+      "rejected_unknown_factor_count": 3,
+      "row_index": 120
+    },
+    {
+      "active_factor_finite_conditions_hold": true,
+      "certified_by_known_quotient_factor_product": true,
+      "congruence_count": 11,
+      "known_dominated_factor_count": 6,
+      "known_dominated_quotient_sizes": [
+        2,
+        3,
+        3,
+        3,
+        4,
+        4
+      ],
+      "known_dominated_quotients": [
+        {
+          "block_sizes": [
+            3,
+            3
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "nondegenerate",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "involutive",
+          "size": 4
+        }
+      ],
+      "matrix_indices": [
+        40,
+        3,
+        6,
+        12
+      ],
+      "point_reconstruction_holds": true,
+      "rejected_unknown_factor_count": 3,
+      "row_index": 121
+    },
+    {
+      "active_factor_finite_conditions_hold": true,
+      "certified_by_known_quotient_factor_product": true,
+      "congruence_count": 7,
+      "known_dominated_factor_count": 4,
+      "known_dominated_quotient_sizes": [
+        2,
+        3,
+        4,
+        4
+      ],
+      "known_dominated_quotients": [
+        {
+          "block_sizes": [
+            3,
+            3
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "nondegenerate",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "involutive",
+          "size": 4
+        }
+      ],
+      "matrix_indices": [
+        40,
+        6,
+        3,
+        12
+      ],
+      "point_reconstruction_holds": true,
+      "rejected_unknown_factor_count": 1,
+      "row_index": 122
+    },
+    {
+      "active_factor_finite_conditions_hold": true,
+      "certified_by_known_quotient_factor_product": true,
+      "congruence_count": 7,
+      "known_dominated_factor_count": 4,
+      "known_dominated_quotient_sizes": [
+        2,
+        3,
+        4,
+        4
+      ],
+      "known_dominated_quotients": [
+        {
+          "block_sizes": [
+            3,
+            3
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "nondegenerate",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "involutive",
+          "size": 4
+        }
+      ],
+      "matrix_indices": [
+        40,
+        9,
+        9,
+        12
+      ],
+      "point_reconstruction_holds": true,
+      "rejected_unknown_factor_count": 1,
+      "row_index": 125
+    },
+    {
+      "active_factor_finite_conditions_hold": true,
+      "certified_by_known_quotient_factor_product": true,
+      "congruence_count": 11,
+      "known_dominated_factor_count": 6,
+      "known_dominated_quotient_sizes": [
+        2,
+        3,
+        3,
+        3,
+        4,
+        4
+      ],
+      "known_dominated_quotients": [
+        {
+          "block_sizes": [
+            3,
+            3
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "rack",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "involutive",
+          "size": 4
+        }
+      ],
+      "matrix_indices": [
+        44,
+        0,
+        0,
+        12
+      ],
+      "point_reconstruction_holds": true,
+      "rejected_unknown_factor_count": 3,
+      "row_index": 132
+    },
+    {
+      "active_factor_finite_conditions_hold": true,
+      "certified_by_known_quotient_factor_product": true,
+      "congruence_count": 11,
+      "known_dominated_factor_count": 6,
+      "known_dominated_quotient_sizes": [
+        2,
+        3,
+        3,
+        3,
+        4,
+        4
+      ],
+      "known_dominated_quotients": [
+        {
+          "block_sizes": [
+            3,
+            3
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "nondegenerate",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "involutive",
+          "size": 4
+        }
+      ],
+      "matrix_indices": [
+        44,
+        3,
+        6,
+        12
+      ],
+      "point_reconstruction_holds": true,
+      "rejected_unknown_factor_count": 3,
+      "row_index": 135
+    },
+    {
+      "active_factor_finite_conditions_hold": true,
+      "certified_by_known_quotient_factor_product": true,
+      "congruence_count": 7,
+      "known_dominated_factor_count": 4,
+      "known_dominated_quotient_sizes": [
+        2,
+        3,
+        4,
+        4
+      ],
+      "known_dominated_quotients": [
+        {
+          "block_sizes": [
+            3,
+            3
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "rack",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "involutive",
+          "size": 4
+        }
+      ],
+      "matrix_indices": [
+        44,
+        6,
+        3,
+        12
+      ],
+      "point_reconstruction_holds": true,
+      "rejected_unknown_factor_count": 1,
+      "row_index": 138
+    },
+    {
+      "active_factor_finite_conditions_hold": true,
+      "certified_by_known_quotient_factor_product": true,
+      "congruence_count": 7,
+      "known_dominated_factor_count": 4,
+      "known_dominated_quotient_sizes": [
+        2,
+        3,
+        4,
+        4
+      ],
+      "known_dominated_quotients": [
+        {
+          "block_sizes": [
+            3,
+            3
+          ],
+          "reason": "rack",
+          "size": 2
+        },
+        {
+          "block_sizes": [
+            1,
+            2,
+            3
+          ],
+          "reason": "involutive",
+          "size": 3
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "nondegenerate",
+          "size": 4
+        },
+        {
+          "block_sizes": [
+            1,
+            1,
+            1,
+            3
+          ],
+          "reason": "involutive",
+          "size": 4
+        }
+      ],
+      "matrix_indices": [
+        44,
+        9,
+        9,
+        12
+      ],
+      "point_reconstruction_holds": true,
+      "rejected_unknown_factor_count": 1,
+      "row_index": 139
+    }
+  ],
+  "source_artifact": "proofs\\linear_f3_skew_flip_monolith_audit.json"
+}

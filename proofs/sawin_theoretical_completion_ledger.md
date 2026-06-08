@@ -2811,6 +2811,74 @@ linear `F_3` branch is therefore closed; future searches in this family must
 focus on the monolith `J`-separating side or leave the linear skew-over-flip
 family.
 
+The monolith `J`-separating half of the subdirect six-point linear `F_3`
+branch is now closed in `proofs/linear_f3_separating_quotient_closure.md`,
+with executable checks in
+`proofs/linear_f3_separating_quotient_closure_audit.md`.  For each of the
+`32` separating rows, the audit verifies:
+
+```text
+|X/mu| = 4,
+X/mu is involutive,
+P_X has the identity-extension contextual rack completion,
+(pi_mu^n,J_n) is injective for all n by the finite relative graph.
+```
+
+Since involutive finite solutions are dominated by finite racks, the relative
+contextual extension theorem gives
+
+```text
+ker rho^{Y_mu x Y_ctx x T_2}_n <= ker rho^X_n
+```
+
+for every `n`, where `Y_mu` dominates the involutive quotient and `Y_ctx` is
+the contextual rack completion.  Thus all `32` monolith `J`-separating
+subdirect rows are finite-rack dominated.
+
+Combining this with the gap-corrected invariant closure for the `32`
+monolith-collision rows closes all `64` subdirectly irreducible
+degenerate non-involutive rows in the six-point linear `F_3`
+skew-over-flip family.
+
+The remaining `80` non-subdirect degenerate non-involutive rows in the same
+family are closed in
+`proofs/linear_f3_nonsubdirect_quotient_factor_closure.md`, with executable
+checks in
+`proofs/linear_f3_nonsubdirect_quotient_factor_closure_audit.md`.  For each
+non-subdirect row, the audit selects only proper quotient factors that are
+already known finite-rack dominated:
+
+```text
+rack-form quotients,
+nondegenerate quotients,
+involutive quotients.
+```
+
+Those selected quotient factors still reconstruct the original point and pass
+the active-factor finite certificate.  Thus the product of their rack
+detectors dominates the original six-point row.  The audit verifies:
+
+```text
+non-subdirect rows = 80,
+certified rows = 80,
+failures = 0.
+```
+
+The whole degenerate non-involutive linear `F_3` skew-over-flip family is now
+closed in `proofs/linear_f3_degenerate_noninvolutive_family_closure.md`.
+Combining:
+
+```text
+80 non-subdirect rows: known quotient-factor closure,
+32 monolith J-separating rows: relative involutive quotient closure,
+32 formal monolith J-collision rows: gap-corrected quotient invariant,
+```
+
+all `144` degenerate non-involutive rows are finite-rack dominated.  Together
+with the known nondegenerate and involutive theorems, every six-point linear
+skew-over-flip solution over `F_3` is finite-rack dominated.  Future B
+searches should leave this family.
+
 ## Review rubric
 
 A future response should be classified as follows.

@@ -1642,6 +1642,30 @@ Do not answer by:
   tagged invariant through arity 5.  The proof gives
   `ker rho^Z_n <= ker rho^X_n` for all arities, with `Z` the nondegenerate
   four-point monolith quotient;
+- using any of the 32 monolith `J`-separating subdirect rows in the same
+  six-point linear `F_3` family as a counterexample candidate without
+  defeating the relative quotient closure in
+  `proofs/linear_f3_separating_quotient_closure.md`.  The generated audit
+  `proofs/linear_f3_separating_quotient_closure_audit.md` verifies that their
+  four-point monolith quotients are involutive, that the contextual
+  identity-extension rack completion exists, and that `(pi_mu^n,J_n)` is
+  injective for all arities by the finite relative graph.  Hence these rows
+  are dominated by the product of a rack dominating the involutive quotient,
+  the contextual rack, and `T_2`;
+- using any non-subdirect row in the six-point linear `F_3` skew-over-flip
+  degenerate non-involutive family as a counterexample candidate without
+  defeating the quotient-factor closure in
+  `proofs/linear_f3_nonsubdirect_quotient_factor_closure.md`.  The generated
+  audit `proofs/linear_f3_nonsubdirect_quotient_factor_closure_audit.md`
+  verifies that all 80 non-subdirect rows are reconstructed by products of
+  proper quotient factors already known dominated: rack-form, nondegenerate,
+  or involutive quotients;
+- using the six-point linear `F_3` skew-over-flip family as a B source at all
+  without defeating the combined closure in
+  `proofs/linear_f3_degenerate_noninvolutive_family_closure.md`.  The current
+  local status is: all 144 degenerate non-involutive rows are finite-rack
+  dominated, and the other rows in the family are handled by the known
+  nondegenerate or involutive theorems;
 - using Brunnian-only monodromy to define a congruence under strand addition;
   Brunnian braids are not stable under adding an idle strand.  Use pure
   detector-kernel monodromy for congruence closure, and Brunnian reduction
