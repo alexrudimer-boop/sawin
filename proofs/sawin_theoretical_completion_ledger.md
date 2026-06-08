@@ -3324,6 +3324,50 @@ meridian support.  Central elementary abelian high-Brunnian `p`-module
 mechanisms, if they survive, are also not represented by bounded-support
 detector-kernel elements once `B_s(X)` is included.
 
+The parabolic-disjoint chief obstruction is recorded in
+`proofs/parabolic_disjoint_chief_obstruction.md`.  With the strengthened
+detector
+
+```text
+Q_{m,s}=(P_m x Y_mu)^0 x T_2 x B_s(X),
+```
+
+let `Phi_n:F_{n-1}->Gamma_n`, `K_n`, `L_n`, `N_{i,n}`, and `C_n` be the
+usual combined finite-image objects, and for
+`T subset {1,...,n-1}` set
+
+```text
+F_T=<x_i:i in T>,
+H_T=Phi_n(F_T).
+```
+
+For every `m,s,N`, some `n>N` has a chief factor `A/B` of `Gamma_n` with
+
+```text
+B < A <= K_n cap C_n,
+```
+
+whose `X`-projection is nontrivial and generates the monolith `mu`, and which
+is disjoint from every bounded parabolic image:
+
+```text
+A cap H_T B = B        whenever |T|<=s.
+```
+
+Indeed, choose `A/B` inside the nontrivial normal subgroup `K_n cap C_n`.
+The `Y_mu^0` factor forces its `X`-motion to stay inside `mu`-fibres, and the
+projection-kernel identity `K_n cap L_n=1` makes the motion nontrivial, hence
+monolith-generating.  For parabolic disjointness, bounded-support
+annihilation gives `K_n cap H_T=1`; if `a=hb in A cap H_TB` with `h in H_T`
+and `b in B`, then `h=ab^{-1} in K_n cap H_T=1`, so `a in B`.  Thus a
+surviving obstruction is not merely large-support.  No bounded parabolic
+subgroup even meets the obstruction chief factor nontrivially modulo `B`.
+Pairwise obstructions, if present, must be global conjugation ghosts: normal
+closures of meridians cover the factor only after conjugation by unboundedly
+many other meridians.  Central elementary abelian obstructions must be
+high-Brunnian module classes whose every bounded parabolic restriction
+vanishes.
+
 ## Review rubric
 
 A future response should be classified as follows.
