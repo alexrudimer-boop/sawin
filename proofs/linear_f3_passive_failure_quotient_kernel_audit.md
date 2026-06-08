@@ -4,6 +4,9 @@ This generated audit checks whether the `16` passive-failure rows
 from the quotient-invariant audit already have small-arity motion
 inside the kernel of their nondegenerate four-point monolith quotient.
 
+These rows are subsequently closed by the stronger gap-corrected
+invariant in `proofs/linear_f3_gap_corrected_invariant_audit.md`.
+
 ## Summary
 
 - source artifact: `proofs\linear_f3_collision_quotient_invariant_audit.json`;

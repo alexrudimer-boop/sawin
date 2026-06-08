@@ -2769,9 +2769,47 @@ arities checked = 2..3,
 quotient-kernel X-motion rows = 0.
 ```
 
-This is finite evidence only.  It shows the passive transport failure is not
-itself an immediate small-arity B witness; those rows remain candidates for a
-stronger multi-fibre invariant or for a higher-arity quotient-kernel witness.
+This was finite evidence only.  At that stage it showed the passive transport
+failure was not itself an immediate small-arity B witness; the rows still
+needed either a stronger multi-fibre invariant or a higher-arity
+quotient-kernel witness.
+
+The stronger multi-fibre invariant has now been found and recorded in
+`proofs/linear_f3_gap_corrected_invariant_closure.md`, with executable checks
+in `proofs/linear_f3_gap_corrected_invariant_audit.md`.  The corrected
+invariant closes all `32` formal monolith-collision rows, including the `16`
+passive-failure rows.  If a visible label `z` lies to the left of a tracked
+collapsed-fibre strand and there are `g` other collapsed-fibre strands between
+them, the invariant uses
+
+```text
+S_{alpha^g(z)}
+```
+
+rather than `S_z`.  The audit verifies, for all `32` rows,
+
+```text
+beta = alpha^{-1},
+S_{alpha^g(z)} S_{alpha^g(w)}
+  = S_{alpha^g(u)} S_{alpha^g(v)}
+  whenever R_Z(z,w)=(u,v),
+S_{beta(z)} T_z = id,
+R(F_i,F_j)=(F_i,F_j).
+```
+
+It also directly checks the tagged-strand invariant through arity `5`.
+The all-arity proof shows that every braid trivial on the nondegenerate
+four-point monolith quotient `Z` is trivial on the six-point lift:
+
+```text
+ker rho^Z_n <= ker rho^X_n
+```
+
+for every `n`.  Hence all `32` formal collision rows are dominated by the
+derived rack of `Z`.  The formal collision half of the subdirect six-point
+linear `F_3` branch is therefore closed; future searches in this family must
+focus on the monolith `J`-separating side or leave the linear skew-over-flip
+family.
 
 ## Review rubric
 

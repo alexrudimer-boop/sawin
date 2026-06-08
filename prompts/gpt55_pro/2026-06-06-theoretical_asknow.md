@@ -1629,20 +1629,19 @@ Do not answer by:
   dominated by its four-point left-nondegenerate quotient via the
   alternating-sum invariant in
   `proofs/linear_f3_residual_representative_quotient_closure.md`;
-- using any of the 16 passive-certified formal monolith `J`-collision rows in
-  the six-point linear `F_3` skew-over-flip family as a counterexample
-  candidate without defeating the passive-fibre quotient certificate in
-  `proofs/linear_f3_collision_quotient_invariant_closure.md`.  The generated
-  audit `proofs/linear_f3_collision_quotient_invariant_audit.md` verifies
-  that the 32 collision rows all have a nondegenerate four-point monolith
-  quotient, but only 16 satisfy the passive transport condition
-  `S_{alpha z}=S_z` and `S_{beta z}=S_z`; for those 16 rows the all-arity
-  affine hidden-fibre invariant proves `ker rho^Z_n <= ker rho^X_n`.  The
-  other 16 rows remain sharper candidates for a stronger multi-fibre
-  invariant or an actual quotient-kernel braid witness.  A finite audit
-  `proofs/linear_f3_passive_failure_quotient_kernel_audit.md` finds no
-  quotient-kernel `X`-motion for those 16 passive-failure rows in arity 2 or
-  3, so do not claim B from the passive failure alone;
+- using any of the 32 formal monolith `J`-collision rows in the six-point
+  linear `F_3` skew-over-flip family as a counterexample candidate without
+  defeating the gap-corrected quotient certificate in
+  `proofs/linear_f3_gap_corrected_invariant_closure.md`.  The earlier
+  passive-only invariant closed 16 rows and failed passive transport on 16;
+  the corrected invariant uses `S_{alpha^g z}`, where `g` is the number of
+  collapsed-fibre strands between a visible label and the tracked collapsed
+  strand.  The generated audit
+  `proofs/linear_f3_gap_corrected_invariant_audit.md` verifies the required
+  local identities for all 32 formal collision rows and directly checks the
+  tagged invariant through arity 5.  The proof gives
+  `ker rho^Z_n <= ker rho^X_n` for all arities, with `Z` the nondegenerate
+  four-point monolith quotient;
 - using Brunnian-only monodromy to define a congruence under strand addition;
   Brunnian braids are not stable under adding an idle strand.  Use pure
   detector-kernel monodromy for congruence closure, and Brunnian reduction

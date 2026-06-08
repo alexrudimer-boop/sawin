@@ -4,6 +4,10 @@ This generated audit checks the all-arity quotient-invariant
 certificate for the formal monolith-collision rows in the
 six-point linear skew-over-flip degenerate non-involutive family.
 
+This passive-only audit is superseded for the `16` passive-failure rows by
+`proofs/linear_f3_gap_corrected_invariant_audit.md`, which verifies the
+gap-corrected invariant for all `32` formal collision rows.
+
 ## Summary
 
 - rows checked: `144`;

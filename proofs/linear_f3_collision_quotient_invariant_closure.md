@@ -12,9 +12,16 @@ R((a,i),(b,j))=((b,I),(a,J)),
 (I,J)^T=M_ab(i,j)^T.
 ```
 
-It does not prove Sawin domination for all finite YBE solutions.  It removes
-the passive-certified part of the first serious residual branch found in this
-structured six-point family.
+This note is now superseded for the passive-failure rows by
+
+```text
+proofs/linear_f3_gap_corrected_invariant_closure.md
+```
+
+which repairs the passive-left-list defect by using a gap-corrected
+multi-fibre invariant and closes all `32` formal monolith-collision rows.
+The passive-only invariant below remains useful as the intermediate
+certificate for the `16` rows where no gap correction is needed.
 
 The generated audit is
 
