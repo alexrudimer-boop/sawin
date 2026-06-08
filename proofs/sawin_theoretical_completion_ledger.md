@@ -1605,17 +1605,17 @@ Arity-8 partial certified trivial-kernel certificate:
 ```text
 proofs/nonperm3_width3_arity8_partial_certified_trivial_kernel_combined.json
 
-29 non-permutation size-three rows certified
+30 non-permutation size-three rows certified
 13 direct full-product stabilizer rows
-16 subproduct-trivial rows
-full_product_kernel_image_size distribution {1: 29}
-full_product_quotient_size distribution {1: 29}
+17 subproduct-trivial rows
+full_product_kernel_image_size distribution {1: 30}
+full_product_quotient_size distribution {1: 30}
 ```
 
 The direct rows cover the identity row and all q=2 one-component rows.  The
-subproduct partial covers six `(3,4)` rows by their q=3 subproduct and ten
+subproduct partial covers seven `(3,4)` rows by their q=3 subproduct and ten
 `(2,3,5)` rows by their `(2,3)` subproducts.  This is partial arity-8
-evidence: 26 of the 55 arity-8 rows remain uncertified by this probe, and the
+evidence: 25 of the 55 arity-8 rows remain uncertified by this probe, and the
 full q=4/q=5 subproduct batch is now a multi-hour computation.
 
 ## Exact open implications
@@ -1973,6 +1973,123 @@ preserves the all-arity orbit-separating readout.  The active prompt now asks
 for a proof that such finite augmented-rack completions always exist, or for
 an explicit finite YBE solution whose partial augmented rack has no finite
 completion with those properties.
+
+The next response is recorded in
+`proofs/2026_06_07_theoretical_contextual_wirtinger_separability_blocker_review.md`.
+It sharpened finite augmented-rack completion into a contextual Wirtinger
+separability problem.  For the two-sided contextual partial rack `P_X`, define
+
+```text
+G_X =
+< g_p (p in P_X) |
+  g_{p*q}=g_p g_q g_p^(-1) for every forced compatible product p*q >.
+```
+
+A finite rack completion preserving forced products and the all-arity readout
+would require a finite quotient
+
+```text
+G_X -> Gbar_X
+```
+
+whose induced conjugation rack does not identify two contextual readout tuples
+lying in the same braid orbit unless they already represent the same `X`-state.
+Thus the missing theorem is a residual-finiteness or separability statement
+for this contextual Wirtinger group, with preservation of the contextual
+readout.  The active prompt now asks for this separability theorem or for a
+finite `X` where separability fails and yields a fixed-target counterexample.
+
+The next response is recorded in
+`proofs/2026_06_07_theoretical_general_completion_false_review.md`.  It
+clarified that a general finite augmented-rack completion theorem is false.
+An arbitrary finite partial augmented rack can encode a finitely presented
+group
+
+```text
+G=<s_i | r_j>
+```
+
+and a word `w`, with partial translations forcing a composite to send a
+marked point `p` to a marked point `q`.  Any finite rack completion separating
+`p != q` would give a finite quotient of `G` where `w != 1`.  A finitely
+presented non-residually finite group with a nontrivial element killed in
+every finite quotient therefore gives a finite partial augmented rack with no
+finite separating completion.
+
+Thus the remaining positive route cannot be a general completion theorem.  It
+must prove a special contextual Wirtinger separability theorem for the partial
+augmented racks that actually arise from finite bijective YBE solutions, or
+else find a finite YBE solution whose contextual Wirtinger group realizes the
+non-residual-finiteness obstruction and yields a fixed-target counterexample.
+
+The next response is recorded in
+`proofs/2026_06_07_theoretical_virtual_context_state_blocker_review.md`.  It
+identified the current obstruction inside the special YBE-origin separability
+route.  A contextual generator can be realized as a finite braid-image
+monodromy operator for every realizable compatible product, because YBE
+identifies the corresponding local braid diagrams.  But an arbitrary word in
+the contextual Wirtinger generators may pass through virtual intermediate
+contextual states that do not occur simultaneously in any single `X`-colored
+word with one common left and right context.  Hence the natural map from
+`G_X` to finite braid-image monodromies is not automatically a well-defined
+separating representation of the whole group.  The active prompt now asks for
+a proof that virtual contextual states can always be represented or eliminated
+without losing all-arity readout distinctions, or for a finite `X` where such
+virtual states force nonseparability and produce a fixed-target obstruction.
+
+The next response is recorded in
+`proofs/2026_06_07_theoretical_joint_fillability_gap_review.md`.  It gave a
+concrete claimed joint-fillability gap in the checked four-point YBE example.
+With elements ordered as `00,01,10,11`, the contextual monoids contain
+
+```text
+alpha=(01,01,10,11),
+beta =(00,00,10,11).
+```
+
+In the two-sided contextual quotient, the classes represented by
+
+```text
+p=(alpha,00,alpha),
+q=(alpha,00,beta)
+```
+
+are claimed to be individually realizable but not jointly fillable: no
+representatives can be put into adjacent compatible form
+
+```text
+(A,x,B r_y), (A m_x,y,B)
+```
+
+with common `A,B,x,y`.  This blocks the simple realization strategy for
+virtual contextual states.  A positive proof must either show that non-fillable
+products can be assigned harmlessly in a finite completion while preserving
+the all-arity readout, or avoid the completion problem by a different
+target-specific rack construction.
+
+The next response is recorded in
+`proofs/2026_06_07_theoretical_nonfillable_closure_blocker_review.md`.  It
+corrected the interpretation of the non-fillable contextual pair.  Since
+
+```text
+p=(alpha,00,alpha),  q=(alpha,00,beta)
+```
+
+are not jointly fillable, YBE imposes no local value for `p*q`; this alone is
+not a contradiction.  A finite completion could introduce a new value for
+`p*q` with left translation
+
+```text
+L_{p*q}=L_p L_q L_p^(-1).
+```
+
+The unresolved positive step is to prove that iterating this closure process
+has a finite quotient preserving injectivity of the realizable contextual
+readout, or else to prove that it must become infinite or collapse two
+`X`-distinct realizable states.  The unresolved negative step is stronger:
+even a closure/readout obstruction must be converted into an actual Brunnian
+detector-kernel braid witness.  A non-fillable contextual pair is not itself
+such a witness.
 
 ## Review rubric
 
