@@ -2118,6 +2118,59 @@ The next exact B target is:
   cofinally by such chief factors, yielding rack-prefix-invisible Brunnian
   witnesses.
 
+54. Monolith-chief pairwise-core visibility correction.
+
+The repo now records the corrected pairwise visibility theorem in
+
+  proofs/monolith_chief_pairwise_core_visibility.md
+
+You may use it as established context.
+
+Do not split the monolith-chief obstruction into a pairwise-visible branch
+and a central elementary abelian branch invisible to pairwise commutators.
+That split is false for the exact all-meridian subgroup used here.
+
+For normal meridian closures,
+
+  C_{m,n}=[N_{1,m,n},...,N_{n-1,m,n}]_Sigma
+    <= [N_{i,m,n},N_{j,m,n}]
+
+for every pair i!=j.  Therefore
+
+  C_{m,n} <= D_{m,n}
+    := intersection_{i<j}[N_{i,m,n},N_{j,m,n}].
+
+By item 53, for every finite rack prefix P_m and every cutoff, some larger
+arity has a chief factor A/1 with
+
+  A <= K_{m,n} cap C_{m,n}.
+
+Hence actually
+
+  A <= K_{m,n} cap D_{m,n}.
+
+For every pair i!=j, every nontrivial element of A lies in
+
+  K_{m,n} cap [N_{i,m,n},N_{j,m,n}].
+
+Since K_{m,n} cap L_{m,n}=1, the X-projection of A is nontrivial.  Since
+A<=K_{m,n} and Q_m contains Y_mu^0, its X-projection acts trivially on
+(X/mu)^n, so all coordinate mismatches lie inside mu.  Because mu is the
+global monolith, those mismatches generate mu.
+
+Thus even a central elementary abelian all-meridian monolith-chief factor is
+pairwise-core visible.  It may still be a central p-module/high-Brunnian
+mechanism, but it is not invisible to pairwise commutator tests.
+
+The next exact A target is:
+
+  rule out cofinal detector-invisible pairwise-core monolith motion.
+
+The next exact B target is:
+
+  construct one finite X whose unique first-fold monolith is generated
+  cofinally by detector-invisible pairwise-core chief factors.
+
 Your task.
 
 Do not give another C-style reduction.  Try to prove A or B.
