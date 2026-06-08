@@ -1322,6 +1322,52 @@ To prove A on this branch, prove pure Q-invisible monodromy is trivial on
 monolith fibres.  To prove B, construct one fixed finite X where this pure
 kernel monodromy congruence is nontrivial and equals the monolith.
 
+41. Local pure-kernel monodromy audit for the six-point linear F_3
+skew-over-flip degenerate family.
+
+The repo now includes:
+
+  tools/run_linear_f3_skew_flip_pure_kernel_monodromy_audit.py
+  proofs/linear_f3_skew_flip_pure_kernel_monodromy_audit.json
+  proofs/linear_f3_skew_flip_pure_kernel_monodromy_audit.md
+
+This audit tests the corrected pure-kernel monolith obstruction against the
+same 144 degenerate non-involutive six-point linear skew-over-flip rows.
+
+For the 64 subdirectly irreducible rows with nontrivial proper monolith, it
+uses the monolith quotient action itself plus the identity-extension
+contextual rack as the detector.  This detector is stronger than the abstract
+rack detector Y_mu x Y_ctx in the minimal-counterexample theorem: triviality
+against the quotient action plus contextual rack rules out pure kernel motion
+for any rack detector whose kernel is contained in the quotient kernel.
+
+The audit verifies:
+
+  two-strand pure detector-kernel X-motion count = 0 on all 64 subdirect rows,
+  three-strand exact joint closures checked for all four minimal contextual
+  quotients with |P_X|=42,
+  each checked three-strand joint image has size 216,
+  three-strand pure detector-kernel X-motion count = 0,
+  three-strand truncations = 0.
+
+Thus the formal monolith J-collisions found earlier are not automatically
+realized by small-arity pure detector-kernel monodromy in this six-point
+family.  This is not a proof of A: larger arities and larger contextual
+quotients remain unchecked.  It is also not B: it found no actual witness.
+
+The current most concrete A-side target is now:
+
+  prove, for a smallest nonsimple counterexample and
+  Q=(Y_mu x Y_ctx)^0 x T_2, that
+  P_n cap ker rho^Q_n acts trivially on every mu-fibre.
+
+The current most concrete B-side target is:
+
+  construct one fixed finite degenerate X for which the pure-kernel monodromy
+  congruence E_Q is nontrivial and equals the monolith, and then extract
+  Brunnian Q-invisible X-visible witnesses cofinally against every finite
+  rack prefix.
+
 Your task.
 
 Do not give another C-style reduction.  Try to prove A or B.
@@ -1489,6 +1535,12 @@ Do not answer by:
 - treating a formal monolith J-collision as a counterexample; the current
   obstruction requires actual pure detector-kernel monodromy generating the
   monolith;
+- treating formal monolith J-collision in the six-point linear F_3
+  skew-over-flip family as likely B without defeating the local audit above:
+  all 64 subdirect rows have trivial two-strand pure kernel against monolith
+  quotient plus contextual rack, and the four minimal contextual quotients
+  have exact three-strand joint image size 216 with no detector-kernel
+  X-motion;
 - using Brunnian-only monodromy to define a congruence under strand addition;
   Brunnian braids are not stable under adding an idle strand.  Use pure
   detector-kernel monodromy for congruence closure, and Brunnian reduction

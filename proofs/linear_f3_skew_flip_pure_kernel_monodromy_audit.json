@@ -1,0 +1,289 @@
+{
+  "all_claimed_checks_passed": true,
+  "detector_model": "monolith quotient action plus identity-extension contextual rack",
+  "family": "linear_f3_skew_over_flip_degenerate_noninvolutive",
+  "row_count": 144,
+  "skipped_context_count": 0,
+  "skipped_contexts": [],
+  "subdirect_distribution": [
+    {
+      "case_count": 4,
+      "contextual_class_count": 42,
+      "monolith_block_sizes": [
+        1,
+        1,
+        1,
+        3
+      ]
+    },
+    {
+      "case_count": 4,
+      "contextual_class_count": 48,
+      "monolith_block_sizes": [
+        1,
+        1,
+        1,
+        3
+      ]
+    },
+    {
+      "case_count": 4,
+      "contextual_class_count": 54,
+      "monolith_block_sizes": [
+        1,
+        1,
+        1,
+        3
+      ]
+    },
+    {
+      "case_count": 12,
+      "contextual_class_count": 60,
+      "monolith_block_sizes": [
+        1,
+        1,
+        1,
+        3
+      ]
+    },
+    {
+      "case_count": 4,
+      "contextual_class_count": 72,
+      "monolith_block_sizes": [
+        1,
+        1,
+        1,
+        3
+      ]
+    },
+    {
+      "case_count": 4,
+      "contextual_class_count": 78,
+      "monolith_block_sizes": [
+        1,
+        1,
+        1,
+        3
+      ]
+    },
+    {
+      "case_count": 8,
+      "contextual_class_count": 84,
+      "monolith_block_sizes": [
+        1,
+        1,
+        1,
+        3
+      ]
+    },
+    {
+      "case_count": 4,
+      "contextual_class_count": 90,
+      "monolith_block_sizes": [
+        1,
+        1,
+        1,
+        3
+      ]
+    },
+    {
+      "case_count": 20,
+      "contextual_class_count": 108,
+      "monolith_block_sizes": [
+        1,
+        1,
+        1,
+        3
+      ]
+    }
+  ],
+  "subdirectly_irreducible_proper_quotient_rows": 64,
+  "three_strand": {
+    "audited_rows": 4,
+    "detector_kernel_x_nontrivial_count": 0,
+    "minimal_contextual_class_count": 42,
+    "nontrivial_examples": [],
+    "rows": [
+      {
+        "arity": 3,
+        "contextual_class_count": 42,
+        "detector_kernel_x_nontrivial": false,
+        "first_kernel_witness_word": null,
+        "joint_image_size": 216,
+        "matrix_indices": [
+          12,
+          20,
+          2,
+          44
+        ],
+        "max_image_size": 10000,
+        "monolith_block_sizes": [
+          1,
+          1,
+          1,
+          3
+        ],
+        "pure_generator_orders": [
+          {
+            "contextual_rack_order": 3,
+            "label": "A_1_2",
+            "quotient_order": 1,
+            "x_order": 3
+          },
+          {
+            "contextual_rack_order": 3,
+            "label": "A_1_3",
+            "quotient_order": 1,
+            "x_order": 3
+          },
+          {
+            "contextual_rack_order": 3,
+            "label": "A_2_3",
+            "quotient_order": 1,
+            "x_order": 3
+          }
+        ],
+        "quotient_class_count": 4,
+        "row_index": 105,
+        "truncated": false
+      },
+      {
+        "arity": 3,
+        "contextual_class_count": 42,
+        "detector_kernel_x_nontrivial": false,
+        "first_kernel_witness_word": null,
+        "joint_image_size": 216,
+        "matrix_indices": [
+          12,
+          38,
+          1,
+          44
+        ],
+        "max_image_size": 10000,
+        "monolith_block_sizes": [
+          1,
+          1,
+          1,
+          3
+        ],
+        "pure_generator_orders": [
+          {
+            "contextual_rack_order": 3,
+            "label": "A_1_2",
+            "quotient_order": 1,
+            "x_order": 3
+          },
+          {
+            "contextual_rack_order": 3,
+            "label": "A_1_3",
+            "quotient_order": 1,
+            "x_order": 3
+          },
+          {
+            "contextual_rack_order": 3,
+            "label": "A_2_3",
+            "quotient_order": 1,
+            "x_order": 3
+          }
+        ],
+        "quotient_class_count": 4,
+        "row_index": 113,
+        "truncated": false
+      },
+      {
+        "arity": 3,
+        "contextual_class_count": 42,
+        "detector_kernel_x_nontrivial": false,
+        "first_kernel_witness_word": null,
+        "joint_image_size": 216,
+        "matrix_indices": [
+          44,
+          1,
+          38,
+          12
+        ],
+        "max_image_size": 10000,
+        "monolith_block_sizes": [
+          1,
+          1,
+          1,
+          3
+        ],
+        "pure_generator_orders": [
+          {
+            "contextual_rack_order": 3,
+            "label": "A_1_2",
+            "quotient_order": 1,
+            "x_order": 3
+          },
+          {
+            "contextual_rack_order": 3,
+            "label": "A_1_3",
+            "quotient_order": 1,
+            "x_order": 3
+          },
+          {
+            "contextual_rack_order": 3,
+            "label": "A_2_3",
+            "quotient_order": 1,
+            "x_order": 3
+          }
+        ],
+        "quotient_class_count": 4,
+        "row_index": 133,
+        "truncated": false
+      },
+      {
+        "arity": 3,
+        "contextual_class_count": 42,
+        "detector_kernel_x_nontrivial": false,
+        "first_kernel_witness_word": null,
+        "joint_image_size": 216,
+        "matrix_indices": [
+          44,
+          2,
+          20,
+          12
+        ],
+        "max_image_size": 10000,
+        "monolith_block_sizes": [
+          1,
+          1,
+          1,
+          3
+        ],
+        "pure_generator_orders": [
+          {
+            "contextual_rack_order": 3,
+            "label": "A_1_2",
+            "quotient_order": 1,
+            "x_order": 3
+          },
+          {
+            "contextual_rack_order": 3,
+            "label": "A_1_3",
+            "quotient_order": 1,
+            "x_order": 3
+          },
+          {
+            "contextual_rack_order": 3,
+            "label": "A_2_3",
+            "quotient_order": 1,
+            "x_order": 3
+          }
+        ],
+        "quotient_class_count": 4,
+        "row_index": 134,
+        "truncated": false
+      }
+    ],
+    "selection_rule": "all rows with minimal contextual_class_count",
+    "truncated_count": 0,
+    "truncated_examples": []
+  },
+  "two_strand": {
+    "audited_rows": 64,
+    "detector_kernel_x_nontrivial_count": 0,
+    "nontrivial_examples": []
+  }
+}
