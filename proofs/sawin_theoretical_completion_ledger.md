@@ -3672,6 +3672,36 @@ unbounded residual complexity itself.  If the `T_2` condition is omitted, every
 non-pure braid is detected by the two-element trivial rack, so `r(beta)<=2`;
 therefore any unbounded-residual sequence is eventually pure.
 
+The deterministic actual-transition quotient audit for the three-point
+example is recorded in `proofs/f3_pdet_dihedral_harmless_audit.md`.  For
+
+```text
+X=F_3,        R_X(x,y)=(-y,x-y),
+```
+
+the context monoids are both the translation group `C_3`, so raw contexts are
+triples `(i,a,j)`.  The deterministic quotient `P_det` is exactly
+
+```text
+P_det={C_0,C_1,C_2},        C_s={(i,a,j): i+a+j=s}.
+```
+
+It collapses the genuine pure Brunnian transition
+
+```text
+(0,1,2) -> (2,0,1)
+```
+
+realized by `[sigma_2^2,sigma_1^2] in B_3`.  This shows that `P_det`-collapse
+can be a real failure of one-strand deterministic contextual rack detection,
+not a virtual-path artifact.  But this example is harmless for residual
+complexity: the whole `X` action is conjugate via
+`J_n(x_1,...,x_n)=(x_1,-x_2,x_3,-x_4,...)` to the three-element dihedral rack
+`s ▷ t=-s-t`.  Hence every `X`-visible braid, including every pure
+color-changing witness in this example, has `r(beta)<=3`.  A future negative
+construction cannot stop at deterministic contextual collapse; it must produce
+unbounded residual-complexity witnesses.
+
 The powered-meridian no-freezing theorem is recorded in
 `proofs/powered_meridian_no_freezing.md`.  For a fixed finite target `X`, let
 

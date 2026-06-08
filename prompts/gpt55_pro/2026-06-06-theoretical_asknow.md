@@ -3084,6 +3084,48 @@ Consequently, for U_M equal to the product of all racks of size at most M,
 there are Brunnian beta_r with r(beta_r)>M even after excluding the
 powered-meridian normal subgroup.
 
+68. Deterministic context quotient collapse in the three-point F_3 example is
+harmless.
+
+The deterministic actual-transition quotient audit is recorded in:
+
+  proofs/f3_pdet_dihedral_harmless_audit.md
+
+For
+
+  X=F_3,     R_X(x,y)=(-y,x-y),
+
+the raw context set is F_3^3, written `(i,a,j)`, and the least deterministic
+actual-transition quotient is
+
+  P_det={C_0,C_1,C_2},     C_s={(i,a,j): i+a+j=s}.
+
+Thus the pure Brunnian transition
+
+  (0,1,2) -> (2,0,1)
+
+realized by
+
+  [sigma_2^2, sigma_1^2] in B_3
+
+collapses in P_det.  This is a genuine failure of the one-strand
+deterministic contextual detector, not a virtual-path artifact.
+
+However the collapse is harmless for residual complexity.  The whole X braid
+action is conjugate to the action of the three-element dihedral rack
+
+  s ▷ t = -s-t
+
+through
+
+  J_n(x_1,...,x_n)=(x_1,-x_2,x_3,-x_4,...).
+
+Therefore every X-visible braid in this example is detected by a rack of size
+3, and every pure color-changing witness has r(beta)<=3.  Do not use this
+F_3 deterministic-collapse example as a negative residual-complexity source.
+It shows only that one-strand deterministic contextual rack detectors can
+collapse real Brunnian transitions.
+
 So a true negative construction must use genuinely global finite-rack laws,
 not powered-meridian laws.  It must construct one fixed finite X, one
 dominated congruence E, one fixed contextual transition p_*->p'_*, and a
