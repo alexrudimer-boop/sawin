@@ -3194,6 +3194,28 @@ killing the bounded witnesses, giving a finite rack dominating `X`.  Thus a
 minimal counterexample must have a first-fold atom generated cofinally by
 actual Brunnian rack-prefix-invisible coordinate mismatches.
 
+The unique first-fold atom monolith theorem is recorded in
+`proofs/unique_first_fold_atom_monolith.md`.  If a smallest counterexample had
+two distinct first-fold atoms `mu_1,mu_2 <= F_1(X)`, then
+`mu_1 cap mu_2=Delta_X` by atom-minimality.  The diagonal map
+
+```text
+X -> X/mu_1 x X/mu_2
+```
+
+would be injective and braided.  Both quotients are proper and therefore
+rack-dominated by minimality of `X`; product closure and injectivity would
+pull domination back to `X`, contradiction.  Hence `F_1(X)` has a unique
+atom `mu`.  For any nontrivial braided congruence `nu`, if
+`mu cap nu=Delta_X` and `nu` is proper, the same diagonal-product argument
+using `X/mu x X/nu` gives a contradiction; if `nu` is universal, containment
+is automatic.  Therefore `mu cap nu` is nontrivial for every nontrivial `nu`,
+and atom-minimality gives `mu <= nu`.  Thus the unique first-fold atom is the
+global monolith `mu_X`.  A minimal counterexample is therefore either
+braided-simple degeneracy-perfect, or subdirectly irreducible with monolith
+`mu_X <= F_1(X)` generated cofinally by actual Brunnian detector-kernel
+mismatches.
+
 ## Review rubric
 
 A future response should be classified as follows.

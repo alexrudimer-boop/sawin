@@ -1986,6 +1986,65 @@ The next exact B target is:
   find one finite X and one first-fold atom mu <= F_1(X)
   satisfying the cofinal Brunnian mismatch condition.
 
+52. Unique first-fold atom and monolith theorem.
+
+The repo now records the monolith refinement in
+
+  proofs/unique_first_fold_atom_monolith.md
+
+You may use it as established context.
+
+If X is a smallest finite counterexample, then F_1(X) has exactly one
+first-fold atom.
+
+Proof idea: if F_1(X) had two distinct atoms mu_1 and mu_2, then
+
+  mu_1 cap mu_2 = Delta_X
+
+by atom-minimality.  Therefore the diagonal quotient map
+
+  X -> X/mu_1 x X/mu_2
+
+is injective and braided.  Both quotients are proper, hence dominated by
+finite racks by minimality of X.  Product closure of domination and the
+injective diagonal embedding would then dominate X, contradiction.
+
+The unique first-fold atom mu is the global monolith.  For any nontrivial
+braided congruence nu, if mu cap nu were trivial and nu proper, the same
+diagonal-product argument with
+
+  X -> X/mu x X/nu
+
+would dominate X.  Therefore mu cap nu is nontrivial for every nontrivial
+nu; atom-minimality forces mu <= nu.  Hence
+
+  mu = mu_X.
+
+Consequences:
+
+- Simple branch:
+
+    the unique first-fold atom is universal, so X is braided-simple and
+    degeneracy-perfect.
+
+- Monolithic branch:
+
+    the unique first-fold atom is proper and equals the global monolith
+    mu_X <= F_1(X).
+
+By item 51, in the monolithic branch this monolith must be generated
+cofinally by actual Brunnian rack-prefix-invisible coordinate mismatches.
+
+So a minimal counterexample cannot have two independent immediate degeneracy
+directions.  The next search target is only:
+
+  braided-simple degeneracy-perfect solutions,
+
+or
+
+  subdirectly irreducible solutions whose monolith is the unique first-fold
+  atom and is generated cofinally by Brunnian detector-kernel monodromy.
+
 Your task.
 
 Do not give another C-style reduction.  Try to prove A or B.
