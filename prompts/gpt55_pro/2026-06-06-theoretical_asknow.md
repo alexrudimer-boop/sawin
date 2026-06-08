@@ -1698,6 +1698,56 @@ remaining counterexample must evade quotient-controlled injective species
 gauges, for instance by having hidden fibre transport depend essentially on
 hidden fibre context inside one strand species.
 
+47. Stratified decoder-tower theorem.
+
+The repo now records the iterated decoder theorem in
+
+  proofs/stratified_decoder_tower_theorem.md
+
+You may use it as established context.
+
+Let
+
+  X=X^(r) -> X^(r-1) -> ... -> X^(0)
+
+be a finite tower of braided quotients, with X^(0) already dominated by a
+finite rack Y_0.  At each layer k, let S_k=Sp(X^(k-1)).  For each
+s in S_k, let W_{k,s} be dominated by Y_{k,s}, and suppose there are
+transparent species readouts
+
+  Gamma^{k,s}_n:(X^(k))^n -> (W_{k,s}^0)^n
+
+that are braid-equivariant and supported only on coordinates whose lower
+species is s.  If the layer decoder
+
+  D_n^(k)=(pi_k^n, (Gamma^{k,s}_n)_{s in S_k})
+
+is injective for every n and every k, then
+
+  Y_0 x product_k product_{s in S_k} Y_{k,s}^0
+
+dominates X.
+
+For a layer, a finite local certificate uses context monoids L_k,R_k over the
+lower layer X^(k-1), context updates lambda_k,rho_k preserved by lower-layer
+crossings, and local readouts
+
+  gamma_{k,s}:L_k x X^(k) x R_k -> W_{k,s}^0
+
+satisfying the local crossing identities.  Layer injectivity is automatic if
+for every lower color a and lower context A,B the map
+
+  x in pi_k^{-1}(a)
+    ->
+  (gamma_{k,s}(A,x,B))_{s in S_k}
+
+is injective.
+
+This tower theorem strictly extends one-layer quotient-controlled gauges: it
+allows hidden transport that becomes quotient-controlled only after additional
+lower quotient layers.  A remaining counterexample must evade every finite
+stratified decoder tower, not merely a single quotient-controlled decoder.
+
 Your task.
 
 Do not give another C-style reduction.  Try to prove A or B.

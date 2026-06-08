@@ -3041,6 +3041,49 @@ searches must avoid quotient-controlled injective species gauges and force
 hidden monodromy depending essentially on hidden fibre context inside a
 single strand species.
 
+The iterated version is recorded in
+`proofs/stratified_decoder_tower_theorem.md`.  Given a finite tower of
+braided quotients
+
+```text
+X=X^(r) -> X^(r-1) -> ... -> X^(0),
+```
+
+with `X^(0)` already rack-dominated, suppose each layer `pi_k:X^(k)->X^(k-1)`
+has transparent species readouts
+
+```text
+Gamma^{k,s}_n:(X^(k))^n -> (W_{k,s}^0)^n
+```
+
+indexed by `s in Sp(X^(k-1))`, where each `W_{k,s}` is already dominated.
+If every layer decoder
+
+```text
+D_n^(k)=(pi_k^n, (Gamma^{k,s}_n)_s)
+```
+
+is injective in all arities, then
+
+```text
+Y_0 x product_k product_{s in Sp(X^(k-1))} Y_{k,s}^0
+```
+
+dominates `X`.  The proof is induction up the tower.  Each layer can be
+certified by finite lower-layer context monoids and local crossing identities,
+and each layer's all-arity injectivity is automatic if the combined local
+readout
+
+```text
+x in pi_k^{-1}(a) -> (gamma_{k,s}(A,x,B))_s
+```
+
+is injective for every lower context `A,B` and lower colour `a`.  This tower
+absorbs hidden-fibre dependence that becomes quotient-controlled only after
+additional lower layers.  A remaining counterexample must therefore evade
+all finite stratified decoder towers, rather than merely evade one-layer
+quotient-controlled gauges.
+
 ## Review rubric
 
 A future response should be classified as follows.
