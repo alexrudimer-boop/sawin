@@ -2702,6 +2702,77 @@ for all `n`, and this row is dominated by the derived rack of `Z`.  Its formal
 monolith `J`-collision is not braid-realized.  Future candidate searches in
 this family must avoid this alternating-sum lift invariant.
 
+The passive-certified part of the formal monolith-collision half of the
+six-point linear `F_3` skew-over-flip residual branch is now closed in
+`proofs/linear_f3_collision_quotient_invariant_closure.md`, with executable
+bookkeeping in
+`proofs/linear_f3_collision_quotient_invariant_audit.md`.  The audit checks
+all `144` degenerate non-involutive rows, identifies the `64` subdirect rows,
+and verifies the split
+
+```text
+32 rows: monolith J-separating, quotient degenerate,
+32 rows: monolith J-collision, quotient nondegenerate.
+```
+
+For each of the `32` formal collision rows, the monolith has one collapsed
+three-point fibre and three singleton quotient colours.  The quotient is a
+four-point nondegenerate braided set `Z`.  The hidden fibre is controlled by
+affine maps `S_a` over `F_3`.  A corrected passive-fibre invariant additionally
+requires that visible-label transport across a different collapsed-fibre
+strand does not change the relevant `S`-map:
+
+```text
+S_{alpha(a)} = S_a,
+S_{sigma(a)} = S_a.
+```
+
+The audit verifies this passive transport condition in exactly `16` of the
+`32` formal collision rows and records `16` passive failures.  For the `16`
+certified rows, the audit also verifies
+
+```text
+S_a S_b = S_{I(a,b)} S_{J(a,b)},
+S_{\sigma(a)} T_a = id,
+R(F_i,F_j)=(F_i,F_j).
+```
+
+Thus the all-arity invariant
+
+```text
+H_s = S_{a_1} S_{a_2} ... S_{a_k}(i)
+```
+
+is preserved for each tracked collapsed-fibre strand.  Consequently every
+braid trivial on the quotient `Z^n` is trivial on `X^n`, so
+
+```text
+ker rho^Z_n <= ker rho^X_n
+```
+
+for all `n`.  Since `Z` is nondegenerate, its derived rack dominates `Z`,
+and hence dominates each of these `16` six-point lifts.  The displayed
+residual row is one instance of this passive-certified quotient-invariant
+certificate.  The remaining `16` passive-failure rows are not closed by this
+one-strand invariant; they need either a stronger multi-fibre invariant or an
+actual quotient-kernel braid witness.
+
+The passive-failure rows are audited further in
+`proofs/linear_f3_passive_failure_quotient_kernel_audit.md`.  This finite
+probe checks the `16` passive-failure rows through arity `3` against the
+kernel of their nondegenerate four-point monolith quotient.  It finds no
+quotient-kernel `X`-motion and no truncation:
+
+```text
+passive-failure rows = 16,
+arities checked = 2..3,
+quotient-kernel X-motion rows = 0.
+```
+
+This is finite evidence only.  It shows the passive transport failure is not
+itself an immediate small-arity B witness; those rows remain candidates for a
+stronger multi-fibre invariant or for a higher-arity quotient-kernel witness.
+
 ## Review rubric
 
 A future response should be classified as follows.

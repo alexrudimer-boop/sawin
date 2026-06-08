@@ -1629,6 +1629,20 @@ Do not answer by:
   dominated by its four-point left-nondegenerate quotient via the
   alternating-sum invariant in
   `proofs/linear_f3_residual_representative_quotient_closure.md`;
+- using any of the 16 passive-certified formal monolith `J`-collision rows in
+  the six-point linear `F_3` skew-over-flip family as a counterexample
+  candidate without defeating the passive-fibre quotient certificate in
+  `proofs/linear_f3_collision_quotient_invariant_closure.md`.  The generated
+  audit `proofs/linear_f3_collision_quotient_invariant_audit.md` verifies
+  that the 32 collision rows all have a nondegenerate four-point monolith
+  quotient, but only 16 satisfy the passive transport condition
+  `S_{alpha z}=S_z` and `S_{beta z}=S_z`; for those 16 rows the all-arity
+  affine hidden-fibre invariant proves `ker rho^Z_n <= ker rho^X_n`.  The
+  other 16 rows remain sharper candidates for a stronger multi-fibre
+  invariant or an actual quotient-kernel braid witness.  A finite audit
+  `proofs/linear_f3_passive_failure_quotient_kernel_audit.md` finds no
+  quotient-kernel `X`-motion for those 16 passive-failure rows in arity 2 or
+  3, so do not claim B from the passive failure alone;
 - using Brunnian-only monodromy to define a congruence under strand addition;
   Brunnian braids are not stable under adding an idle strand.  Use pure
   detector-kernel monodromy for congruence closure, and Brunnian reduction
