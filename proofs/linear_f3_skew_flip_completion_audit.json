@@ -1,0 +1,269 @@
+{
+  "all_claimed_checks_passed": true,
+  "classification_counts": {
+    "degenerate_involutive": 96,
+    "degenerate_noninvolutive": 144,
+    "nondegenerate_involutive": 32,
+    "nondegenerate_noninvolutive": 816
+  },
+  "contextual_failure_count": 0,
+  "contextual_failures": [],
+  "degenerate_noninvolutive_contextual_summary": [
+    {
+      "case_count": 32,
+      "domain_sizes": [
+        3,
+        4,
+        15
+      ],
+      "forced_product_count": 198,
+      "left_monoid_size": 8,
+      "quotient_class_count": 36,
+      "right_monoid_size": 8
+    },
+    {
+      "case_count": 24,
+      "domain_sizes": [
+        3,
+        4,
+        15
+      ],
+      "forced_product_count": 594,
+      "left_monoid_size": 24,
+      "quotient_class_count": 108,
+      "right_monoid_size": 24
+    },
+    {
+      "case_count": 8,
+      "domain_sizes": [
+        3,
+        4,
+        15
+      ],
+      "forced_product_count": 99,
+      "left_monoid_size": 4,
+      "quotient_class_count": 18,
+      "right_monoid_size": 4
+    },
+    {
+      "case_count": 8,
+      "domain_sizes": [
+        3,
+        4,
+        18
+      ],
+      "forced_product_count": 126,
+      "left_monoid_size": 5,
+      "quotient_class_count": 24,
+      "right_monoid_size": 5
+    },
+    {
+      "case_count": 8,
+      "domain_sizes": [
+        3,
+        4,
+        12,
+        15
+      ],
+      "forced_product_count": 171,
+      "left_monoid_size": 7,
+      "quotient_class_count": 30,
+      "right_monoid_size": 7
+    },
+    {
+      "case_count": 8,
+      "domain_sizes": [
+        3,
+        4,
+        12,
+        18
+      ],
+      "forced_product_count": 198,
+      "left_monoid_size": 8,
+      "quotient_class_count": 36,
+      "right_monoid_size": 8
+    },
+    {
+      "case_count": 8,
+      "domain_sizes": [
+        3,
+        4,
+        21
+      ],
+      "forced_product_count": 306,
+      "left_monoid_size": 12,
+      "quotient_class_count": 60,
+      "right_monoid_size": 12
+    },
+    {
+      "case_count": 8,
+      "domain_sizes": [
+        3,
+        4,
+        13
+      ],
+      "forced_product_count": 486,
+      "left_monoid_size": 20,
+      "quotient_class_count": 84,
+      "right_monoid_size": 20
+    },
+    {
+      "case_count": 6,
+      "domain_sizes": [
+        3,
+        4,
+        15
+      ],
+      "forced_product_count": 297,
+      "left_monoid_size": 12,
+      "quotient_class_count": 54,
+      "right_monoid_size": 12
+    },
+    {
+      "case_count": 6,
+      "domain_sizes": [
+        3,
+        4,
+        18
+      ],
+      "forced_product_count": 378,
+      "left_monoid_size": 15,
+      "quotient_class_count": 72,
+      "right_monoid_size": 15
+    },
+    {
+      "case_count": 6,
+      "domain_sizes": [
+        3,
+        4,
+        12,
+        15
+      ],
+      "forced_product_count": 513,
+      "left_monoid_size": 21,
+      "quotient_class_count": 90,
+      "right_monoid_size": 21
+    },
+    {
+      "case_count": 6,
+      "domain_sizes": [
+        3,
+        4,
+        12,
+        18
+      ],
+      "forced_product_count": 594,
+      "left_monoid_size": 24,
+      "quotient_class_count": 108,
+      "right_monoid_size": 24
+    },
+    {
+      "case_count": 4,
+      "domain_sizes": [
+        3,
+        4,
+        30
+      ],
+      "forced_product_count": 234,
+      "left_monoid_size": 9,
+      "quotient_class_count": 48,
+      "right_monoid_size": 9
+    },
+    {
+      "case_count": 4,
+      "domain_sizes": [
+        3,
+        4,
+        13
+      ],
+      "forced_product_count": 243,
+      "left_monoid_size": 10,
+      "quotient_class_count": 42,
+      "right_monoid_size": 10
+    },
+    {
+      "case_count": 4,
+      "domain_sizes": [
+        3,
+        4,
+        12,
+        30
+      ],
+      "forced_product_count": 306,
+      "left_monoid_size": 12,
+      "quotient_class_count": 60,
+      "right_monoid_size": 12
+    },
+    {
+      "case_count": 4,
+      "domain_sizes": [
+        3,
+        4,
+        12,
+        13
+      ],
+      "forced_product_count": 459,
+      "left_monoid_size": 19,
+      "quotient_class_count": 78,
+      "right_monoid_size": 19
+    }
+  ],
+  "expected_total_tables": 5308416,
+  "family": "linear_f3_skew_over_flip",
+  "first_noninvolutive_contextual_translation_example": {
+    "contextual_stats": {
+      "balanced_domains": true,
+      "conflict_count": 0,
+      "domain_sizes": [
+        6
+      ],
+      "forced_product_count": 108,
+      "identity_extension_commuting": true,
+      "identity_extension_conjugacy_covariance": true,
+      "identity_extension_involutions": false,
+      "identity_extension_total_permutations": true,
+      "left_monoid_size": 3,
+      "left_right_monoids_equal": true,
+      "nontrivial_left_translation_count": 6,
+      "partial_translations_injective": true,
+      "quotient_class_count": 18,
+      "right_monoid_size": 3
+    },
+    "matrices": [
+      [
+        0,
+        1,
+        1,
+        0
+      ],
+      [
+        0,
+        1,
+        1,
+        0
+      ],
+      [
+        0,
+        1,
+        1,
+        1
+      ],
+      [
+        0,
+        1,
+        1,
+        0
+      ]
+    ],
+    "matrix_indices": [
+      0,
+      0,
+      1,
+      0
+    ]
+  },
+  "gl2_f3_count": 48,
+  "left_right_monoids_unequal_count": 8,
+  "total_tables_checked": 5308416,
+  "ybe_solution_count": 1088
+}

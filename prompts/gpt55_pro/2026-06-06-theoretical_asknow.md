@@ -793,6 +793,114 @@ YBE solutions.  If that fails, try to construct an explicit finite YBE
 solution failing (i), failing (ii), or passing (i)-(ii) but failing (iii) in a
 way that yields an actual B-style Brunnian detector-kernel braid witness.
 
+27. Local six-point evidence now extends the finite-completion tests beyond
+the four-point binary family.
+
+Family:
+
+  X={0,1} x F_3,
+  R((a,i),(b,j))=((b,I),(a,J)),
+  (I,J)^T = M_ab (i,j)^T with M_ab in GL_2(F_3).
+
+Local audit:
+
+  tools/run_linear_f3_skew_flip_completion_audit.py
+  proofs/linear_f3_skew_flip_completion_audit.json
+  proofs/linear_f3_skew_flip_completion_audit.md
+
+The audit checks all `48^4=5308416` choices and verifies:
+
+  YBE solutions = 1088,
+  nondegenerate non-involutive = 816,
+  degenerate non-involutive = 144,
+  degenerate involutive = 96,
+  nondegenerate involutive = 32.
+
+For all 144 degenerate non-involutive rows:
+
+  forced products have no conflicts,
+  forced partial translations are injective,
+  lambda_p(D_p)=D_p for every p,
+  identity-outside L_p are total permutations,
+  L_{L_p(q)}=L_p L_q L_p^(-1) for every p,q.
+
+There are 8 rows where `M_L` and `M_R` differ as sets of maps; this is not a
+completion failure.  The finite identity-extension completion still works.
+This audit does not prove all-arity orbit separation.
+
+28. The latest theoretical response removes one-copy finite completion as the
+final algebraic blocker by allowing multiple copies.
+
+For any finite contextual quotient `P=P_X`, define
+
+  Y_X = P x Sym(P),
+  (p,g)*(q,h) = (g(q), g h g^(-1)).
+
+This is always a finite rack.  It locally realizes every forced contextual
+crossing because a permutation `g` can be chosen to extend any injective
+forced partial map `lambda_p:D_p -> I_p`.
+
+Therefore the remaining positive problem is not algebraic rack totalization.
+It is coherent lift separation:
+
+  For every n, construct a braid-equivariant relation
+  Pi_n subseteq Y_X^n x X^n
+  such that every x in X^n has a lift y, the relation is B_n-invariant, and
+  y determines x.
+
+If such Pi_n exists for every n, then
+
+  ker rho^{Y_X}_n <= ker rho^X_n
+
+for every n, so A follows with the finite rack `Y_X`.
+
+The next answer should attack this exact lift theorem.  Either construct
+these coherent single-valued lift relations for arbitrary finite bijective X,
+or find one explicit finite X where they cannot exist and convert that failure
+into an actual B-style Brunnian detector-kernel witness.
+
+29. The latest response sharpens the multi-copy rack target.
+
+The rack
+
+  Y_X=P_X x Sym(P_X)
+
+is always finite, but arbitrary copies `(p,g)` are too loose.  For a forced
+partial translation
+
+  lambda_p:D_p -> P_X,
+
+a legitimate lift over `p` must use a permutation extending `lambda_p`.
+
+The correct finite datum is a nonempty set
+
+  E_p subseteq Sym(P_X)
+
+for every contextual class `p`, satisfying:
+
+  Extension:
+    g(q)=lambda_p(q) for every g in E_p and q in D_p.
+
+  Transport:
+    if q in D_p and r=lambda_p(q), then
+    g E_q g^(-1) = E_r for every g in E_p.
+
+If such `E_p` exist, define `Pi_n subseteq Y_X^n x X^n` by lifting
+`J_n(x)=(p_1,...,p_n)` to arbitrary `(p_i,g_i)` with `g_i in E_{p_i}`.
+The extension and transport conditions make `Pi_n` braid-equivariant.
+
+Thus the current positive theorem is:
+
+  For every finite bijective YBE solution X, construct nonempty
+  transport-stable extension fibers E_p over P_X, and prove J_n is
+  braid-orbit-injective for every n.
+
+The current negative target is:
+
+  find one explicit finite X with no such E_p, or with such E_p but failed
+  all-arity orbit separation that yields actual Brunnian detector-kernel
+  witnesses.
+
 Your task.
 
 Do not give another C-style reduction.  Try to prove A or B.
@@ -923,6 +1031,17 @@ Do not answer by:
   `L_{L_p(q)}=L_p L_q L_p^{-1}`;
 - proving the identity-extension lemma alone; it is now recorded, and the next
   step is proving its hypotheses for all X or finding a genuine failure;
+- treating algebraic finite rack totalization as the blocker without handling
+  the canonical multi-copy rack `P_X x Sym(P_X)`;
+- constructing `P_X x Sym(P_X)` alone; the rack is now recorded, and the next
+  step is proving coherent B_n-equivariant single-valued lift relations
+  `Pi_n subseteq Y_X^n x X^n` for all n, or deriving B from their failure;
+- allowing arbitrary `(p,g) in P_X x Sym(P_X)` as legitimate lifts without
+  constructing nonempty transport-stable extension fibers
+  `E_p subseteq Sym(P_X)`;
+- proving local forced crossings can be represented in `P_X x Sym(P_X)`
+  without proving the global transport condition
+  `g E_q g^{-1}=E_{lambda_p(q)}`;
 - citing computational finite-arity evidence as an all-arity theorem;
 - citing the public status of the MathOverflow page.
 

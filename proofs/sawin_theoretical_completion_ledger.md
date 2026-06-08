@@ -2299,6 +2299,117 @@ all arities.  A negative obstruction should now explicitly fail one of the two
 finite identities, or pass them but fail all-arity orbit separation in a way
 that yields an actual Brunnian detector-kernel braid witness.
 
+The next response is recorded in
+`proofs/2026_06_07_theoretical_linear_f3_skew_flip_completion_review.md`.
+It moves the finite-completion tests beyond the four-point binary family to
+the six-point linear skew-over-flip family:
+
+```text
+X={0,1} x F_3,
+R((a,i),(b,j))=((b,I),(a,J)),
+(I,J)^T=M_ab(i,j)^T,  M_ab in GL_2(F_3).
+```
+
+The local audit is:
+
+```text
+tools/run_linear_f3_skew_flip_completion_audit.py
+proofs/linear_f3_skew_flip_completion_audit.json
+proofs/linear_f3_skew_flip_completion_audit.md
+```
+
+It checks all `48^4=5308416` choices and verifies:
+
+```text
+YBE solutions: 1088
+nondegenerate non-involutive: 816
+degenerate non-involutive: 144
+degenerate involutive: 96
+nondegenerate involutive: 32
+```
+
+For all 144 degenerate non-involutive rows:
+
+```text
+forced products have no conflicts;
+forced partial translations are injective;
+lambda_p(D_p)=D_p for every p;
+identity-outside L_p are total permutations;
+L_{L_p(q)}=L_p L_q L_p^(-1) for every p,q.
+```
+
+There are 8 rows where `M_L` and `M_R` differ as sets of maps.  This is
+diagnostic only, not a completion failure.  The finite identity-extension
+completion still succeeds.  This audit does not check all-arity orbit
+separation.
+
+The next response is recorded in
+`proofs/2026_06_07_theoretical_multicopy_augmented_rack_lift_reduction_review.md`.
+It removes algebraic finite rack totalization as the final blocker by allowing
+multiple copies.  For any finite contextual quotient `P=P_X`, define:
+
+```text
+Y_X = P x Sym(P),
+(p,g)*(q,h) = (g(q), g h g^(-1)).
+```
+
+This is always a finite rack and locally realizes forced contextual crossings
+because any injective forced partial map `lambda_p:D_p -> I_p` can be extended
+to a permutation of `P`.
+
+The remaining positive theorem is coherent lift separation:
+
+```text
+For every n, construct a braid-equivariant relation
+Pi_n subseteq Y_X^n x X^n
+such that every x has a lift y, Pi_n is B_n-invariant, and y determines x.
+```
+
+If such `Pi_n` exists for every `n`, then `Y_X` dominates `X`.  A negative
+route should now find a fixed finite `X` where no such coherent single-valued
+lift relation can exist and convert that failure into an actual Brunnian
+detector-kernel braid witness.
+
+The next response is recorded in
+`proofs/2026_06_07_theoretical_transport_stable_lift_fibers_review.md`.
+It corrects the multi-copy rack reduction: `P x Sym(P)` is always a rack, but
+not every copy `(p,g)` should be considered a legitimate contextual lift.
+
+For each contextual class `p`, the required finite datum is a nonempty set
+
+```text
+E_p subseteq Sym(P)
+```
+
+such that:
+
+```text
+Extension:
+g(q)=lambda_p(q) for every g in E_p and q in D_p.
+
+Transport:
+if q in D_p and r=lambda_p(q), then
+g E_q g^(-1)=E_r for every g in E_p.
+```
+
+Given such `E_p`, define `Pi_n subseteq (P x Sym(P))^n x X^n` by allowing
+exactly lifts `(p_i,g_i)` with `g_i in E_{p_i}` over the contextual readout
+`J_n(x)=(p_i)`.  The extension and transport conditions make `Pi_n`
+braid-equivariant.  If `J_n` is also injective on every braid orbit, then
+`P x Sym(P)` dominates `X`.
+
+The current positive theorem is therefore:
+
+```text
+For every finite bijective YBE solution X, construct nonempty
+transport-stable extension fibres E_p over P_X, and prove all-arity
+orbit-injectivity of J_n.
+```
+
+The current negative target is a fixed finite `X` with no such `E_p`, or with
+such `E_p` but an all-arity orbit-separation failure that can be converted into
+actual Brunnian detector-kernel witnesses.
+
 ## Review rubric
 
 A future response should be classified as follows.
