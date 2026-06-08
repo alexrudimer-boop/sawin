@@ -2879,6 +2879,17 @@ with the known nondegenerate and involutive theorems, every six-point linear
 skew-over-flip solution over `F_3` is finite-rack dominated.  Future B
 searches should leave this family.
 
+The signed-affine active-fibre gauge proposed later is reviewed in
+`proofs/2026_06_08_signed_affine_active_fiber_gauge_review.md`.  Under its
+listed hypotheses, the gauge is coherent: the effective label
+`(-1)^d a` is the `alpha^g(z)` gap correction in the special case
+`alpha(a)=-a`, and the gauged active fibre evolves by the internal
+three-point nondegenerate solution.  This gives useful intuition for an
+active non-automorphic subfamily, but it is not a new dependency in the
+canonical closure: the audited proof ledger already closes all six-point
+linear `F_3` rows by the three branches above.  The active frontier therefore
+remains outside the linear `F_3` skew-over-flip family.
+
 ## Review rubric
 
 A future response should be classified as follows.
