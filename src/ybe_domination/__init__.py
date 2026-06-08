@@ -372,6 +372,15 @@ from .context_retraction import (
     two_sided_coretraction_profile_family,
     two_sided_context_profile_family,
 )
+from .contextual_completion import (
+    ContextualCompletionData,
+    IdentityExtensionSummary,
+    close_transformation_monoid,
+    compose_transformations,
+    contextual_completion_data,
+    identity_extension_summary,
+    invert_permutation,
+)
 from .product_permutation import (
     ProductCoboundaryAudit,
     ProductCoboundaryFailure,

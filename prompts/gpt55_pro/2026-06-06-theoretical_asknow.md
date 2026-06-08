@@ -1007,6 +1007,40 @@ The next answer should attack this exact language-theoretic target:
   namely contextual patterns locally compatible at every bounded level but not
   globally realizable, and turn that into B.
 
+33. Local generic contextual-completion code now covers the complete
+size-three YBE corpus.
+
+Local audit:
+
+  tools/run_size3_contextual_completion_audit.py
+  proofs/size3_contextual_completion_audit.json
+  proofs/size3_contextual_completion_audit.md
+
+The audit enumerates every bijective YBE table on a three-point set and
+verifies:
+
+  YBE solutions = 73,
+  nondegenerate = 66,
+  degenerate involutive = 7,
+  degenerate non-involutive = 0,
+  maximum contextual quotient size = 18.
+
+For every row in the complete size-three corpus, the generic two-sided
+contextual helper finds:
+
+  forced products have no representative-independence conflicts;
+  forced partial translations are injective;
+  lambda_p(D_p)=D_p for every contextual class p;
+  identity-outside extensions are total permutations;
+  L_{L_p(q)}=L_p L_q L_p^(-1) for every p,q;
+  the full forced graph has no local covariance failures.
+
+This is not hard-case evidence because size three has no degenerate
+non-involutive row.  Its purpose is narrower: the generic contextual code now
+matches the smallest complete classification and finds no active-lift or
+identity-extension obstruction in the first exhaustive corpus.  Do not cite it
+as an all-arity theorem or as evidence against possible larger hard cases.
+
 Your task.
 
 Do not give another C-style reduction.  Try to prove A or B.
