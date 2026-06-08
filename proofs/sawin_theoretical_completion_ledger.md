@@ -3473,6 +3473,54 @@ infinite derivative-propagating deletion-null monolith-chief towers, and prove
 fixed finite `X` whose first-fold monolith survives cofinally in one of those
 two exact forms.
 
+The probe-central branch has been sharpened to the conjugated-probe core in
+`proofs/conjugated_probe_core_obstruction.md`.  The one-probe centralizer
+tests only half-twists between the added strand and the original old
+positions.  Instead, for `h in G^X_n`, choose a last-strand braid `eta` with
+`rho^X_n(eta)=h` and define
+
+```text
+T_{i,h}=rho^X_{n+1}(iota(eta) tau_i iota(eta)^{-1}).
+```
+
+Then
+
+```text
+CPC_n(X)
+  =
+{g in G^X_n : [iota_n(g),T_{i,h}]=1
+              for every i and every h in G^X_n}
+  =
+cap_{h in G^X_n} h Z^pr_n(X) h^{-1}.
+```
+
+This is the normal core of the one-probe centralizer, and its pullback
+
+```text
+CPC^Gamma_n=p_X^{-1}(CPC_n(X))
+```
+
+is normal in the combined image.  Conjugated derivatives
+
+```text
+D_{i,eta} beta=[iota(beta),iota(eta)tau_i iota(eta)^{-1}]
+```
+
+remain Brunnian and `Q`-invisible.  Therefore, if some commutator
+`[iota_n(p_X(a)),T_{i,h}]` is nontrivial, it produces a new
+monolith-generating element of `K_{n+1} cap C_{n+1}`.  If all such conjugated
+derivatives vanish cofinally, then the obstruction chief factors lie in
+
+```text
+B < A <= K_n cap C_n cap CPC^Gamma_n,
+```
+
+with `X`-projection acting nontrivially inside `mu`-fibres and generating the
+first-fold monolith.  The current positive target is therefore sharper:
+prove `K_n cap C_n cap CPC^Gamma_n=1` eventually, or rule out infinite
+conjugated-derivative towers.  A negative proof must realize one of these two
+exact behaviours for a fixed finite `X`.
+
 ## Review rubric
 
 A future response should be classified as follows.

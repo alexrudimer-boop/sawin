@@ -2536,6 +2536,76 @@ The next exact B target is:
   construct one fixed finite X whose first-fold monolith survives cofinally
   in one of those two exact ways against every finite rack prefix.
 
+60. Conjugated-probe core obstruction.
+
+The repo now records the stronger conjugated-probe core condition in
+
+  proofs/conjugated_probe_core_obstruction.md
+
+You may use it as established context.
+
+The previous probe-centralizer tests only the elementary probes T_{i,n}.
+The corrected centralizer tests every conjugated probe.
+
+Let h in G^X_n.  Choose eta in F_{n-1} with rho^X_n(eta)=h, and define
+
+  T_{i,h}=rho^X_{n+1}(iota(eta) tau_i iota(eta)^{-1}).
+
+This is well-defined in the finite X-image.  Define
+
+  CPC_n(X)
+    =
+  { g in G^X_n : [iota_n(g),T_{i,h}]=1
+                  for every i and every h in G^X_n }.
+
+Equivalently,
+
+  CPC_n(X)=cap_{h in G^X_n} h Z^pr_n(X) h^{-1},
+
+the normal core of the one-probe centralizer.  For a combined detector image
+Gamma_n, set
+
+  CPC^Gamma_n=p_X^{-1}(CPC_n(X)).
+
+Conjugated Brunnian derivatives are
+
+  D_{i,eta} beta=[iota(beta),iota(eta)tau_i iota(eta)^{-1}].
+
+If beta is Brunnian and Q-invisible, then D_{i,eta} beta is also Brunnian
+and Q-invisible.  Its X-projection is
+
+  [iota_n(p_X(a)),T_{i,h}]
+
+when Phi_n(beta)=a.
+
+Thus the remaining obstruction split is sharper:
+
+- conjugated-derivative visible branch:
+
+    some [iota_n(p_X(a)),T_{i,h}] is nontrivial, producing a new nontrivial
+    monolith-generating element in K_{n+1} cap C_{n+1};
+
+- conjugated-probe core branch:
+
+    if all conjugated derivatives vanish cofinally, then for every detector
+    prefix and support cutoff there are unbounded arities with a chief factor
+
+      B < A <= K_n cap C_n cap CPC^Gamma_n,
+
+    whose X-projection acts nontrivially inside the first-fold monolith mu
+    and generates mu.
+
+The next exact A target is:
+
+  prove K_n cap C_n cap CPC^Gamma_n=1 eventually for an appropriate detector,
+  or rule out infinite conjugated-derivative towers.
+
+The next exact B target is:
+
+  construct one fixed finite X whose first-fold monolith supports either an
+  infinite conjugated-derivative tower or cofinal chief factors inside
+  K_n cap C_n cap CPC^Gamma_n.
+
 Your task.
 
 Do not give another C-style reduction.  Try to prove A or B.
