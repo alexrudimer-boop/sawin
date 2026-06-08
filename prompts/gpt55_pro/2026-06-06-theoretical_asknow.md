@@ -1652,6 +1652,52 @@ quotients Z with interacting nonsingleton fibers inside one strand species,
 or else defeat all finite nontransparent dominated decoder systems and
 produce cofinal Brunnian rack-prefix witnesses.
 
+46. Quotient-controlled species-gauge theorem.
+
+The repo now records the automatic-injectivity subcase in
+
+  proofs/quotient_controlled_species_gauge_theorem.md
+
+You may use it as established context.
+
+Let pi:X -> Z be a braided quotient dominated by Y_Z, and let
+sigma:Z -> Sp(Z) be the strand-species quotient.  For each species
+s in Sp(Z), let W_s be a finite bijective YBE solution dominated by Y_s.
+For each z in Z, write X_z=pi^{-1}(z).
+
+Suppose there are finite quotient-context monoids L,R and updates
+
+  lambda:Z -> L,
+  rho:Z -> R
+
+preserved by quotient crossings:
+
+  R_Z(z,w)=(u,v)
+    =>
+  lambda(z)lambda(w)=lambda(u)lambda(v),
+  rho(w)rho(z)=rho(v)rho(u).
+
+For each species s, each z with sigma(z)=s, and each A in L, B in R, suppose
+there is an injective gauge
+
+  G^s_{A,z,B}:X_z -> W_s.
+
+Define gamma_s(A,x,B) to be this gauge value when sigma(pi(x))=s and the
+transparent color otherwise.  If the local crossing identities into each
+W_s^0 hold for all A,B and all R_X(x,y)=(x',y'), then
+
+  Y_Z x product_{s in Sp(Z)} Y_s^0
+
+dominates X.
+
+This theorem removes the finite injectivity graph in the quotient-controlled
+case.  If a detector-kernel braid fixes the quotient word, the quotient
+contexts A_i,B_i are unchanged; equality of the species readouts and
+injectivity of G^s_{A_i,z_i,B_i} recover each hidden coordinate.  Thus a
+remaining counterexample must evade quotient-controlled injective species
+gauges, for instance by having hidden fibre transport depend essentially on
+hidden fibre context inside one strand species.
+
 Your task.
 
 Do not give another C-style reduction.  Try to prove A or B.

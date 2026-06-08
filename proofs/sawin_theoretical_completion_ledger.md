@@ -3004,6 +3004,43 @@ convenient sufficient certificate; the literal necessary condition only holds
 on reachable context pairs.  The earlier quotient-colour-indexed formulation
 is valid only in the special case `Sp(Z)=Z`.
 
+The quotient-controlled injective-gauge subcase is recorded in
+`proofs/quotient_controlled_species_gauge_theorem.md`.  It removes the
+finite all-arity injectivity graph when the hidden gauges depend only on the
+quotient context and are fibrewise injective.  Let `pi:X->Z` be a braided
+quotient dominated by `Y_Z`, let `sigma:Z->Sp(Z)` be the strand-species
+quotient, and let each species `s` have a dominated finite fibre solution
+`W_s` with detector `Y_s`.  Suppose finite quotient-context monoids `L,R` and
+updates
+
+```text
+lambda:Z->L,
+rho:Z->R
+```
+
+are preserved by quotient crossings.  If, for every species `s`, quotient
+colour `z` with `sigma(z)=s`, and quotient contexts `A,B`, there is an
+injective gauge
+
+```text
+G^s_{A,z,B}: pi^{-1}(z) -> W_s,
+```
+
+and the induced transparent local crossing identities into each `W_s^0`
+hold, then
+
+```text
+Y_Z x product_{s in Sp(Z)} Y_s^0
+```
+
+dominates `X`.  The proof is immediate once a detector-kernel braid fixes the
+quotient word: the quotient-controlled contexts `A_i,B_i` are unchanged, so
+equality of the transparent species readout and injectivity of
+`G^s_{A_i,z_i,B_i}` recover each hidden coordinate.  Thus future obstruction
+searches must avoid quotient-controlled injective species gauges and force
+hidden monodromy depending essentially on hidden fibre context inside a
+single strand species.
+
 ## Review rubric
 
 A future response should be classified as follows.
