@@ -3283,6 +3283,47 @@ pairwise-core monolith motion; the negative target is a fixed finite `X`
 whose unique first-fold monolith is generated cofinally by such pairwise-core
 chief factors.
 
+The bounded-support pairwise obstruction elimination is recorded in
+`proofs/bounded_support_pairwise_obstruction_elimination.md`.  For a fixed
+finite solution `X` and support bound `s`, choose fixed-arity racks
+`Z_k`, `2<=k<=s+1`, with `ker rho^{Z_k}_k <= ker rho^X_k`, and set
+
+```text
+B_s(X)=product_{k=2}^{s+1} Z_k^0.
+```
+
+If a detector `Q` contains `B_s(X)` and `w in F_T` with `|T|<=s`, then
+`rho^Q_n(w)=1` implies `rho^X_n(w)=1`: color only the active strands
+`T union {n}` nontransparent in the `Z_{|T|+1}^0` factor and use the
+transparent deletion formula, reducing to the fixed-arity detector
+`Z_{|T|+1}`.  In finite-image terms, with
+
+```text
+Phi_n:F_{n-1}->Gamma_n<=Sym(Q^n)xSym(X^n),
+iw(g)=min{|T|:g in Phi_n(F_T)},
+```
+
+one has
+
+```text
+g in K_n and iw(g)<=s  ==>  g=1.
+```
+
+because such a `g` is also in the `X`-kernel `L_n`, and `K_n cap L_n=1`.
+Thus, after strengthening a prefix detector to
+
+```text
+Q_{m,s}=(P_m x Y_mu)^0 x T_2 x B_s(X),
+```
+
+every nontrivial monolith-generating detector-kernel obstruction has image
+support width greater than `s`.  In particular, pairwise or pairwise-core
+monolith obstructions cannot be disguised two-meridian or bounded-subset
+phenomena; they must be same-image support ghosts requiring unbounded
+meridian support.  Central elementary abelian high-Brunnian `p`-module
+mechanisms, if they survive, are also not represented by bounded-support
+detector-kernel elements once `B_s(X)` is included.
+
 ## Review rubric
 
 A future response should be classified as follows.

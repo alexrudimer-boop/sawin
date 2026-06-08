@@ -2171,6 +2171,84 @@ The next exact B target is:
   construct one finite X whose unique first-fold monolith is generated
   cofinally by detector-invisible pairwise-core chief factors.
 
+55. Bounded-support pairwise obstruction elimination.
+
+The repo now records the bounded-support guardrail in
+
+  proofs/bounded_support_pairwise_obstruction_elimination.md
+
+You may use it as established context.
+
+Fix X and a support bound s>=1.  For each arity 2<=k<=s+1, fixed-arity rack
+cofinality gives a finite rack Z_k with
+
+  ker rho^{Z_k}_k <= ker rho^X_k.
+
+Define
+
+  B_s(X)=product_{k=2}^{s+1} Z_k^0.
+
+Let F_{n-1}=ker(d_n:P_n->P_{n-1}) with meridians x_i=A_{i,n}.  For
+T subset {1,...,n-1}, let F_T=<x_i:i in T>.
+
+Bounded-support annihilation theorem:
+
+  If Q contains B_s(X), w in F_T, |T|<=s, and rho^Q_n(w)=1,
+  then rho^X_n(w)=1.
+
+Proof: use the transparent factor Z_{|T|+1}^0, color only the active strands
+T union {n} nontransparent, and reduce to the fixed-arity detector
+Z_{|T|+1}.
+
+Finite-image form: for
+
+  Phi_n:F_{n-1}->Gamma_n<=Sym(Q^n)xSym(X^n),
+
+define image support width
+
+  iw(g)=min{|T|:g in Phi_n(F_T)}.
+
+If Q contains B_s(X), then
+
+  g in K_n and iw(g)<=s  ==>  g=1,
+
+because bounded-support annihilation puts g in the X-kernel L_n, and
+K_n cap L_n=1.
+
+For a smallest counterexample with monolith mu, strengthen every prefix
+detector to
+
+  Q_{m,s}=(P_m x Y_mu)^0 x T_2 x B_s(X).
+
+Since X is still a counterexample, Brunnian finite-image obstruction survives
+cofinally.  But every nontrivial detector-kernel obstruction now has
+
+  iw(g)>s.
+
+Thus bounded-support pairwise noise is not a candidate.  A genuine pairwise
+or pairwise-core monolith obstruction must be a same-image support ghost:
+it lies in a pairwise commutator or pairwise-core subgroup in the finite
+image, but every bounded-support representative is detector-visible or
+X-trivial.
+
+The remaining high-complexity branches are:
+
+  unbounded-support pairwise/pairwise-core monolith ghosts;
+
+or
+
+  central elementary abelian high-Brunnian p-module ghosts,
+  also with unbounded detector-kernel image support after B_s(X) is included.
+
+The next exact A target is:
+
+  rule out unbounded-support detector-invisible pairwise-core monolith ghosts.
+
+The next exact B target is:
+
+  construct one finite X whose monolith is generated cofinally by such
+  unbounded-support ghosts.
+
 Your task.
 
 Do not give another C-style reduction.  Try to prove A or B.
