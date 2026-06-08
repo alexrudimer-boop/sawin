@@ -1,0 +1,1498 @@
+{
+  "all_claimed_checks_passed": true,
+  "contextual_failure_count": 0,
+  "contextual_failures": [],
+  "corpus": "cached_two_colour_fibre2_all_base_representatives",
+  "max_arity": 6,
+  "orbit_failure_count": 0,
+  "orbit_failures": [],
+  "profile_count": 14,
+  "profiles": [
+    {
+      "case_count": 2,
+      "contextual_class_count": 8,
+      "coretraction": "equality",
+      "domain_sizes": [
+        4
+      ],
+      "forced_product_count": 32,
+      "identity_extension_witnesses_active_lifts": true,
+      "left_monoid_size": 2,
+      "nontrivial_left_translation_count": 8,
+      "retraction": "universal",
+      "right_monoid_size": 2,
+      "tags": "permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate"
+    },
+    {
+      "case_count": 1,
+      "contextual_class_count": 12,
+      "coretraction": "universal",
+      "domain_sizes": [
+        0,
+        2
+      ],
+      "forced_product_count": 16,
+      "identity_extension_witnesses_active_lifts": true,
+      "left_monoid_size": 3,
+      "nontrivial_left_translation_count": 8,
+      "retraction": "equality",
+      "right_monoid_size": 3,
+      "tags": "(untagged)"
+    },
+    {
+      "case_count": 1,
+      "contextual_class_count": 20,
+      "coretraction": "universal",
+      "domain_sizes": [
+        0,
+        2
+      ],
+      "forced_product_count": 32,
+      "identity_extension_witnesses_active_lifts": true,
+      "left_monoid_size": 5,
+      "nontrivial_left_translation_count": 16,
+      "retraction": "equality",
+      "right_monoid_size": 5,
+      "tags": "(untagged)"
+    },
+    {
+      "case_count": 1,
+      "contextual_class_count": 20,
+      "coretraction": "equality",
+      "domain_sizes": [
+        0,
+        2
+      ],
+      "forced_product_count": 32,
+      "identity_extension_witnesses_active_lifts": true,
+      "left_monoid_size": 5,
+      "nontrivial_left_translation_count": 16,
+      "retraction": "universal",
+      "right_monoid_size": 5,
+      "tags": "(untagged)"
+    },
+    {
+      "case_count": 1,
+      "contextual_class_count": 12,
+      "coretraction": "equality",
+      "domain_sizes": [
+        0,
+        3
+      ],
+      "forced_product_count": 24,
+      "identity_extension_witnesses_active_lifts": true,
+      "left_monoid_size": 3,
+      "nontrivial_left_translation_count": 0,
+      "retraction": "equality",
+      "right_monoid_size": 13,
+      "tags": "involutive"
+    },
+    {
+      "case_count": 1,
+      "contextual_class_count": 20,
+      "coretraction": "equality",
+      "domain_sizes": [
+        0,
+        3
+      ],
+      "forced_product_count": 48,
+      "identity_extension_witnesses_active_lifts": true,
+      "left_monoid_size": 5,
+      "nontrivial_left_translation_count": 0,
+      "retraction": "equality",
+      "right_monoid_size": 25,
+      "tags": "involutive"
+    },
+    {
+      "case_count": 1,
+      "contextual_class_count": 12,
+      "coretraction": "universal",
+      "domain_sizes": [
+        0,
+        2
+      ],
+      "forced_product_count": 16,
+      "identity_extension_witnesses_active_lifts": true,
+      "left_monoid_size": 3,
+      "nontrivial_left_translation_count": 0,
+      "retraction": "equality",
+      "right_monoid_size": 3,
+      "tags": "involutive"
+    },
+    {
+      "case_count": 1,
+      "contextual_class_count": 20,
+      "coretraction": "universal",
+      "domain_sizes": [
+        0,
+        2
+      ],
+      "forced_product_count": 32,
+      "identity_extension_witnesses_active_lifts": true,
+      "left_monoid_size": 5,
+      "nontrivial_left_translation_count": 0,
+      "retraction": "equality",
+      "right_monoid_size": 5,
+      "tags": "involutive"
+    },
+    {
+      "case_count": 1,
+      "contextual_class_count": 12,
+      "coretraction": "equality",
+      "domain_sizes": [
+        0,
+        2
+      ],
+      "forced_product_count": 16,
+      "identity_extension_witnesses_active_lifts": true,
+      "left_monoid_size": 3,
+      "nontrivial_left_translation_count": 0,
+      "retraction": "universal",
+      "right_monoid_size": 3,
+      "tags": "involutive"
+    },
+    {
+      "case_count": 1,
+      "contextual_class_count": 16,
+      "coretraction": "equality",
+      "domain_sizes": [
+        4
+      ],
+      "forced_product_count": 64,
+      "identity_extension_witnesses_active_lifts": true,
+      "left_monoid_size": 4,
+      "nontrivial_left_translation_count": 0,
+      "retraction": "universal",
+      "right_monoid_size": 4,
+      "tags": "involutive+left_nondegenerate+right_nondegenerate+nondegenerate"
+    },
+    {
+      "case_count": 1,
+      "contextual_class_count": 8,
+      "coretraction": "equality",
+      "domain_sizes": [
+        4
+      ],
+      "forced_product_count": 32,
+      "identity_extension_witnesses_active_lifts": true,
+      "left_monoid_size": 2,
+      "nontrivial_left_translation_count": 0,
+      "retraction": "universal",
+      "right_monoid_size": 2,
+      "tags": "involutive+permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate"
+    },
+    {
+      "case_count": 1,
+      "contextual_class_count": 16,
+      "coretraction": "equality",
+      "domain_sizes": [
+        4
+      ],
+      "forced_product_count": 64,
+      "identity_extension_witnesses_active_lifts": true,
+      "left_monoid_size": 4,
+      "nontrivial_left_translation_count": 16,
+      "retraction": "universal",
+      "right_monoid_size": 4,
+      "tags": "left_nondegenerate+right_nondegenerate+nondegenerate"
+    },
+    {
+      "case_count": 1,
+      "contextual_class_count": 16,
+      "coretraction": "equality",
+      "domain_sizes": [
+        4
+      ],
+      "forced_product_count": 64,
+      "identity_extension_witnesses_active_lifts": true,
+      "left_monoid_size": 4,
+      "nontrivial_left_translation_count": 16,
+      "retraction": "universal",
+      "right_monoid_size": 4,
+      "tags": "permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate"
+    },
+    {
+      "case_count": 1,
+      "contextual_class_count": 4,
+      "coretraction": "equality",
+      "domain_sizes": [
+        4
+      ],
+      "forced_product_count": 16,
+      "identity_extension_witnesses_active_lifts": true,
+      "left_monoid_size": 1,
+      "nontrivial_left_translation_count": 4,
+      "retraction": "universal",
+      "right_monoid_size": 1,
+      "tags": "rack_type+permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate"
+    }
+  ],
+  "representative_count": 15,
+  "rows": [
+    {
+      "base_name": "base_0",
+      "contextual_summary": {
+        "balanced_domains": true,
+        "class_count": 20,
+        "conflict_count": 0,
+        "domain_sizes": [
+          0,
+          2
+        ],
+        "forced_product_count": 32,
+        "full_forced_graph_local_covariance_failures": 0,
+        "identity_extension_conjugacy_covariance": true,
+        "identity_extension_total_permutations": true,
+        "identity_extension_witnesses_active_lifts": true,
+        "left_monoid_size": 5,
+        "left_right_monoids_equal": true,
+        "nontrivial_left_translation_count": 16,
+        "partial_translations_injective": true,
+        "right_monoid_size": 5
+      },
+      "orbit_arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 4
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 4,
+          "orbit_count": 4
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 8,
+          "orbit_count": 8
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 16,
+          "orbit_count": 16
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 32,
+          "orbit_count": 32
+        },
+        {
+          "arity": 6,
+          "collision": null,
+          "max_orbit_size": 64,
+          "orbit_count": 64
+        }
+      ],
+      "representative_index": 0,
+      "source_key": "retraction=universal|coretraction=equality|output=equality|depth=0|tags=(untagged)|product=True|direct=False",
+      "source_row": {
+        "all_coordinate_kernel_depth": 0,
+        "all_coordinate_kernel_kind": "universal",
+        "all_coordinate_kernel_seed_count": 4,
+        "coretraction": "equality",
+        "has_direct_witness": false,
+        "has_product_witness": true,
+        "output_kernel_depth": 0,
+        "output_kernel_kind": "equality",
+        "output_kernel_seed_count": 0,
+        "retraction": "universal",
+        "tags": []
+      },
+      "tags": [],
+      "tags_text": "(untagged)"
+    },
+    {
+      "base_name": "base_0",
+      "contextual_summary": {
+        "balanced_domains": true,
+        "class_count": 12,
+        "conflict_count": 0,
+        "domain_sizes": [
+          0,
+          2
+        ],
+        "forced_product_count": 16,
+        "full_forced_graph_local_covariance_failures": 0,
+        "identity_extension_conjugacy_covariance": true,
+        "identity_extension_total_permutations": true,
+        "identity_extension_witnesses_active_lifts": true,
+        "left_monoid_size": 3,
+        "left_right_monoids_equal": true,
+        "nontrivial_left_translation_count": 0,
+        "partial_translations_injective": true,
+        "right_monoid_size": 3
+      },
+      "orbit_arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 4
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 2,
+          "orbit_count": 12
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 3,
+          "orbit_count": 32
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 6,
+          "orbit_count": 80
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 10,
+          "orbit_count": 192
+        },
+        {
+          "arity": 6,
+          "collision": null,
+          "max_orbit_size": 20,
+          "orbit_count": 448
+        }
+      ],
+      "representative_index": 1,
+      "source_key": "retraction=universal|coretraction=equality|output=equality|depth=0|tags=involutive|product=True|direct=False",
+      "source_row": {
+        "all_coordinate_kernel_depth": 0,
+        "all_coordinate_kernel_kind": "universal",
+        "all_coordinate_kernel_seed_count": 4,
+        "coretraction": "equality",
+        "has_direct_witness": false,
+        "has_product_witness": true,
+        "output_kernel_depth": 0,
+        "output_kernel_kind": "equality",
+        "output_kernel_seed_count": 0,
+        "retraction": "universal",
+        "tags": [
+          "involutive"
+        ]
+      },
+      "tags": [
+        "involutive"
+      ],
+      "tags_text": "involutive"
+    },
+    {
+      "base_name": "base_1",
+      "contextual_summary": {
+        "balanced_domains": true,
+        "class_count": 12,
+        "conflict_count": 0,
+        "domain_sizes": [
+          0,
+          3
+        ],
+        "forced_product_count": 24,
+        "full_forced_graph_local_covariance_failures": 0,
+        "identity_extension_conjugacy_covariance": true,
+        "identity_extension_total_permutations": true,
+        "identity_extension_witnesses_active_lifts": true,
+        "left_monoid_size": 3,
+        "left_right_monoids_equal": false,
+        "nontrivial_left_translation_count": 0,
+        "partial_translations_injective": true,
+        "right_monoid_size": 13
+      },
+      "orbit_arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 4
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 2,
+          "orbit_count": 12
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 3,
+          "orbit_count": 32
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 6,
+          "orbit_count": 80
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 10,
+          "orbit_count": 192
+        },
+        {
+          "arity": 6,
+          "collision": null,
+          "max_orbit_size": 20,
+          "orbit_count": 448
+        }
+      ],
+      "representative_index": 2,
+      "source_key": "retraction=equality|coretraction=equality|output=universal|depth=0|tags=involutive|product=False|direct=False",
+      "source_row": {
+        "all_coordinate_kernel_depth": 0,
+        "all_coordinate_kernel_kind": "universal",
+        "all_coordinate_kernel_seed_count": 4,
+        "coretraction": "equality",
+        "has_direct_witness": false,
+        "has_product_witness": false,
+        "output_kernel_depth": 0,
+        "output_kernel_kind": "universal",
+        "output_kernel_seed_count": 4,
+        "retraction": "equality",
+        "tags": [
+          "involutive"
+        ]
+      },
+      "tags": [
+        "involutive"
+      ],
+      "tags_text": "involutive"
+    },
+    {
+      "base_name": "base_1",
+      "contextual_summary": {
+        "balanced_domains": true,
+        "class_count": 12,
+        "conflict_count": 0,
+        "domain_sizes": [
+          0,
+          2
+        ],
+        "forced_product_count": 16,
+        "full_forced_graph_local_covariance_failures": 0,
+        "identity_extension_conjugacy_covariance": true,
+        "identity_extension_total_permutations": true,
+        "identity_extension_witnesses_active_lifts": true,
+        "left_monoid_size": 3,
+        "left_right_monoids_equal": true,
+        "nontrivial_left_translation_count": 0,
+        "partial_translations_injective": true,
+        "right_monoid_size": 3
+      },
+      "orbit_arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 4
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 2,
+          "orbit_count": 12
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 3,
+          "orbit_count": 32
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 6,
+          "orbit_count": 80
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 10,
+          "orbit_count": 192
+        },
+        {
+          "arity": 6,
+          "collision": null,
+          "max_orbit_size": 20,
+          "orbit_count": 448
+        }
+      ],
+      "representative_index": 3,
+      "source_key": "retraction=equality|coretraction=universal|output=universal|depth=0|tags=involutive|product=False|direct=True",
+      "source_row": {
+        "all_coordinate_kernel_depth": 0,
+        "all_coordinate_kernel_kind": "universal",
+        "all_coordinate_kernel_seed_count": 4,
+        "coretraction": "universal",
+        "has_direct_witness": true,
+        "has_product_witness": false,
+        "output_kernel_depth": 0,
+        "output_kernel_kind": "universal",
+        "output_kernel_seed_count": 4,
+        "retraction": "equality",
+        "tags": [
+          "involutive"
+        ]
+      },
+      "tags": [
+        "involutive"
+      ],
+      "tags_text": "involutive"
+    },
+    {
+      "base_name": "base_2",
+      "contextual_summary": {
+        "balanced_domains": true,
+        "class_count": 20,
+        "conflict_count": 0,
+        "domain_sizes": [
+          0,
+          2
+        ],
+        "forced_product_count": 32,
+        "full_forced_graph_local_covariance_failures": 0,
+        "identity_extension_conjugacy_covariance": true,
+        "identity_extension_total_permutations": true,
+        "identity_extension_witnesses_active_lifts": true,
+        "left_monoid_size": 5,
+        "left_right_monoids_equal": true,
+        "nontrivial_left_translation_count": 16,
+        "partial_translations_injective": true,
+        "right_monoid_size": 5
+      },
+      "orbit_arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 4
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 4,
+          "orbit_count": 4
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 8,
+          "orbit_count": 8
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 16,
+          "orbit_count": 16
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 32,
+          "orbit_count": 32
+        },
+        {
+          "arity": 6,
+          "collision": null,
+          "max_orbit_size": 64,
+          "orbit_count": 64
+        }
+      ],
+      "representative_index": 4,
+      "source_key": "retraction=equality|coretraction=universal|output=universal|depth=0|tags=(untagged)|product=False|direct=True",
+      "source_row": {
+        "all_coordinate_kernel_depth": 0,
+        "all_coordinate_kernel_kind": "universal",
+        "all_coordinate_kernel_seed_count": 4,
+        "coretraction": "universal",
+        "has_direct_witness": true,
+        "has_product_witness": false,
+        "output_kernel_depth": 0,
+        "output_kernel_kind": "universal",
+        "output_kernel_seed_count": 4,
+        "retraction": "equality",
+        "tags": []
+      },
+      "tags": [],
+      "tags_text": "(untagged)"
+    },
+    {
+      "base_name": "base_2",
+      "contextual_summary": {
+        "balanced_domains": true,
+        "class_count": 8,
+        "conflict_count": 0,
+        "domain_sizes": [
+          4
+        ],
+        "forced_product_count": 32,
+        "full_forced_graph_local_covariance_failures": 0,
+        "identity_extension_conjugacy_covariance": true,
+        "identity_extension_total_permutations": true,
+        "identity_extension_witnesses_active_lifts": true,
+        "left_monoid_size": 2,
+        "left_right_monoids_equal": true,
+        "nontrivial_left_translation_count": 8,
+        "partial_translations_injective": true,
+        "right_monoid_size": 2
+      },
+      "orbit_arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 4
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 4,
+          "orbit_count": 4
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 24,
+          "orbit_count": 4
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 96,
+          "orbit_count": 5
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 320,
+          "orbit_count": 6
+        },
+        {
+          "arity": 6,
+          "collision": null,
+          "max_orbit_size": 1280,
+          "orbit_count": 7
+        }
+      ],
+      "representative_index": 5,
+      "source_key": "retraction=universal|coretraction=equality|output=equality|depth=0|tags=permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate|product=True|direct=False",
+      "source_row": {
+        "all_coordinate_kernel_depth": 0,
+        "all_coordinate_kernel_kind": "universal",
+        "all_coordinate_kernel_seed_count": 4,
+        "coretraction": "equality",
+        "has_direct_witness": false,
+        "has_product_witness": true,
+        "output_kernel_depth": 0,
+        "output_kernel_kind": "equality",
+        "output_kernel_seed_count": 0,
+        "retraction": "universal",
+        "tags": [
+          "permutation_form",
+          "left_nondegenerate",
+          "right_nondegenerate",
+          "nondegenerate"
+        ]
+      },
+      "tags": [
+        "permutation_form",
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate"
+      ],
+      "tags_text": "permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate"
+    },
+    {
+      "base_name": "base_3",
+      "contextual_summary": {
+        "balanced_domains": true,
+        "class_count": 12,
+        "conflict_count": 0,
+        "domain_sizes": [
+          0,
+          2
+        ],
+        "forced_product_count": 16,
+        "full_forced_graph_local_covariance_failures": 0,
+        "identity_extension_conjugacy_covariance": true,
+        "identity_extension_total_permutations": true,
+        "identity_extension_witnesses_active_lifts": true,
+        "left_monoid_size": 3,
+        "left_right_monoids_equal": true,
+        "nontrivial_left_translation_count": 8,
+        "partial_translations_injective": true,
+        "right_monoid_size": 3
+      },
+      "orbit_arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 4
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 4,
+          "orbit_count": 4
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 8,
+          "orbit_count": 8
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 16,
+          "orbit_count": 16
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 32,
+          "orbit_count": 32
+        },
+        {
+          "arity": 6,
+          "collision": null,
+          "max_orbit_size": 64,
+          "orbit_count": 64
+        }
+      ],
+      "representative_index": 6,
+      "source_key": "retraction=equality|coretraction=universal|output=universal|depth=0|tags=(untagged)|product=False|direct=True",
+      "source_row": {
+        "all_coordinate_kernel_depth": 0,
+        "all_coordinate_kernel_kind": "universal",
+        "all_coordinate_kernel_seed_count": 4,
+        "coretraction": "universal",
+        "has_direct_witness": true,
+        "has_product_witness": false,
+        "output_kernel_depth": 0,
+        "output_kernel_kind": "universal",
+        "output_kernel_seed_count": 4,
+        "retraction": "equality",
+        "tags": []
+      },
+      "tags": [],
+      "tags_text": "(untagged)"
+    },
+    {
+      "base_name": "base_3",
+      "contextual_summary": {
+        "balanced_domains": true,
+        "class_count": 8,
+        "conflict_count": 0,
+        "domain_sizes": [
+          4
+        ],
+        "forced_product_count": 32,
+        "full_forced_graph_local_covariance_failures": 0,
+        "identity_extension_conjugacy_covariance": true,
+        "identity_extension_total_permutations": true,
+        "identity_extension_witnesses_active_lifts": true,
+        "left_monoid_size": 2,
+        "left_right_monoids_equal": true,
+        "nontrivial_left_translation_count": 8,
+        "partial_translations_injective": true,
+        "right_monoid_size": 2
+      },
+      "orbit_arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 4
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 4,
+          "orbit_count": 4
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 24,
+          "orbit_count": 4
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 96,
+          "orbit_count": 5
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 320,
+          "orbit_count": 6
+        },
+        {
+          "arity": 6,
+          "collision": null,
+          "max_orbit_size": 1280,
+          "orbit_count": 7
+        }
+      ],
+      "representative_index": 7,
+      "source_key": "retraction=universal|coretraction=equality|output=equality|depth=0|tags=permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate|product=True|direct=False",
+      "source_row": {
+        "all_coordinate_kernel_depth": 0,
+        "all_coordinate_kernel_kind": "universal",
+        "all_coordinate_kernel_seed_count": 4,
+        "coretraction": "equality",
+        "has_direct_witness": false,
+        "has_product_witness": true,
+        "output_kernel_depth": 0,
+        "output_kernel_kind": "equality",
+        "output_kernel_seed_count": 0,
+        "retraction": "universal",
+        "tags": [
+          "permutation_form",
+          "left_nondegenerate",
+          "right_nondegenerate",
+          "nondegenerate"
+        ]
+      },
+      "tags": [
+        "permutation_form",
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate"
+      ],
+      "tags_text": "permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate"
+    },
+    {
+      "base_name": "base_3",
+      "contextual_summary": {
+        "balanced_domains": true,
+        "class_count": 4,
+        "conflict_count": 0,
+        "domain_sizes": [
+          4
+        ],
+        "forced_product_count": 16,
+        "full_forced_graph_local_covariance_failures": 0,
+        "identity_extension_conjugacy_covariance": true,
+        "identity_extension_total_permutations": true,
+        "identity_extension_witnesses_active_lifts": true,
+        "left_monoid_size": 1,
+        "left_right_monoids_equal": true,
+        "nontrivial_left_translation_count": 4,
+        "partial_translations_injective": true,
+        "right_monoid_size": 1
+      },
+      "orbit_arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 4
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 4,
+          "orbit_count": 4
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 24,
+          "orbit_count": 4
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 96,
+          "orbit_count": 5
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 320,
+          "orbit_count": 6
+        },
+        {
+          "arity": 6,
+          "collision": null,
+          "max_orbit_size": 1280,
+          "orbit_count": 7
+        }
+      ],
+      "representative_index": 8,
+      "source_key": "retraction=universal|coretraction=equality|output=equality|depth=0|tags=rack_type+permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate|product=True|direct=False",
+      "source_row": {
+        "all_coordinate_kernel_depth": 0,
+        "all_coordinate_kernel_kind": "universal",
+        "all_coordinate_kernel_seed_count": 4,
+        "coretraction": "equality",
+        "has_direct_witness": false,
+        "has_product_witness": true,
+        "output_kernel_depth": 0,
+        "output_kernel_kind": "equality",
+        "output_kernel_seed_count": 0,
+        "retraction": "universal",
+        "tags": [
+          "rack_type",
+          "permutation_form",
+          "left_nondegenerate",
+          "right_nondegenerate",
+          "nondegenerate"
+        ]
+      },
+      "tags": [
+        "rack_type",
+        "permutation_form",
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate"
+      ],
+      "tags_text": "rack_type+permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate"
+    },
+    {
+      "base_name": "base_4",
+      "contextual_summary": {
+        "balanced_domains": true,
+        "class_count": 20,
+        "conflict_count": 0,
+        "domain_sizes": [
+          0,
+          3
+        ],
+        "forced_product_count": 48,
+        "full_forced_graph_local_covariance_failures": 0,
+        "identity_extension_conjugacy_covariance": true,
+        "identity_extension_total_permutations": true,
+        "identity_extension_witnesses_active_lifts": true,
+        "left_monoid_size": 5,
+        "left_right_monoids_equal": false,
+        "nontrivial_left_translation_count": 0,
+        "partial_translations_injective": true,
+        "right_monoid_size": 25
+      },
+      "orbit_arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 4
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 2,
+          "orbit_count": 12
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 3,
+          "orbit_count": 32
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 6,
+          "orbit_count": 80
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 10,
+          "orbit_count": 192
+        },
+        {
+          "arity": 6,
+          "collision": null,
+          "max_orbit_size": 20,
+          "orbit_count": 448
+        }
+      ],
+      "representative_index": 9,
+      "source_key": "retraction=equality|coretraction=equality|output=universal|depth=0|tags=involutive|product=False|direct=False",
+      "source_row": {
+        "all_coordinate_kernel_depth": 0,
+        "all_coordinate_kernel_kind": "universal",
+        "all_coordinate_kernel_seed_count": 4,
+        "coretraction": "equality",
+        "has_direct_witness": false,
+        "has_product_witness": false,
+        "output_kernel_depth": 0,
+        "output_kernel_kind": "universal",
+        "output_kernel_seed_count": 4,
+        "retraction": "equality",
+        "tags": [
+          "involutive"
+        ]
+      },
+      "tags": [
+        "involutive"
+      ],
+      "tags_text": "involutive"
+    },
+    {
+      "base_name": "base_4",
+      "contextual_summary": {
+        "balanced_domains": true,
+        "class_count": 20,
+        "conflict_count": 0,
+        "domain_sizes": [
+          0,
+          2
+        ],
+        "forced_product_count": 32,
+        "full_forced_graph_local_covariance_failures": 0,
+        "identity_extension_conjugacy_covariance": true,
+        "identity_extension_total_permutations": true,
+        "identity_extension_witnesses_active_lifts": true,
+        "left_monoid_size": 5,
+        "left_right_monoids_equal": true,
+        "nontrivial_left_translation_count": 0,
+        "partial_translations_injective": true,
+        "right_monoid_size": 5
+      },
+      "orbit_arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 4
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 2,
+          "orbit_count": 12
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 3,
+          "orbit_count": 32
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 6,
+          "orbit_count": 80
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 10,
+          "orbit_count": 192
+        },
+        {
+          "arity": 6,
+          "collision": null,
+          "max_orbit_size": 20,
+          "orbit_count": 448
+        }
+      ],
+      "representative_index": 10,
+      "source_key": "retraction=equality|coretraction=universal|output=universal|depth=0|tags=involutive|product=False|direct=True",
+      "source_row": {
+        "all_coordinate_kernel_depth": 0,
+        "all_coordinate_kernel_kind": "universal",
+        "all_coordinate_kernel_seed_count": 4,
+        "coretraction": "universal",
+        "has_direct_witness": true,
+        "has_product_witness": false,
+        "output_kernel_depth": 0,
+        "output_kernel_kind": "universal",
+        "output_kernel_seed_count": 4,
+        "retraction": "equality",
+        "tags": [
+          "involutive"
+        ]
+      },
+      "tags": [
+        "involutive"
+      ],
+      "tags_text": "involutive"
+    },
+    {
+      "base_name": "base_4",
+      "contextual_summary": {
+        "balanced_domains": true,
+        "class_count": 16,
+        "conflict_count": 0,
+        "domain_sizes": [
+          4
+        ],
+        "forced_product_count": 64,
+        "full_forced_graph_local_covariance_failures": 0,
+        "identity_extension_conjugacy_covariance": true,
+        "identity_extension_total_permutations": true,
+        "identity_extension_witnesses_active_lifts": true,
+        "left_monoid_size": 4,
+        "left_right_monoids_equal": true,
+        "nontrivial_left_translation_count": 0,
+        "partial_translations_injective": true,
+        "right_monoid_size": 4
+      },
+      "orbit_arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 4
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 2,
+          "orbit_count": 10
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 6,
+          "orbit_count": 20
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 24,
+          "orbit_count": 35
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 60,
+          "orbit_count": 56
+        },
+        {
+          "arity": 6,
+          "collision": null,
+          "max_orbit_size": 180,
+          "orbit_count": 84
+        }
+      ],
+      "representative_index": 11,
+      "source_key": "retraction=universal|coretraction=equality|output=equality|depth=0|tags=involutive+left_nondegenerate+right_nondegenerate+nondegenerate|product=True|direct=False",
+      "source_row": {
+        "all_coordinate_kernel_depth": 0,
+        "all_coordinate_kernel_kind": "universal",
+        "all_coordinate_kernel_seed_count": 4,
+        "coretraction": "equality",
+        "has_direct_witness": false,
+        "has_product_witness": true,
+        "output_kernel_depth": 0,
+        "output_kernel_kind": "equality",
+        "output_kernel_seed_count": 0,
+        "retraction": "universal",
+        "tags": [
+          "involutive",
+          "left_nondegenerate",
+          "right_nondegenerate",
+          "nondegenerate"
+        ]
+      },
+      "tags": [
+        "involutive",
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate"
+      ],
+      "tags_text": "involutive+left_nondegenerate+right_nondegenerate+nondegenerate"
+    },
+    {
+      "base_name": "base_4",
+      "contextual_summary": {
+        "balanced_domains": true,
+        "class_count": 8,
+        "conflict_count": 0,
+        "domain_sizes": [
+          4
+        ],
+        "forced_product_count": 32,
+        "full_forced_graph_local_covariance_failures": 0,
+        "identity_extension_conjugacy_covariance": true,
+        "identity_extension_total_permutations": true,
+        "identity_extension_witnesses_active_lifts": true,
+        "left_monoid_size": 2,
+        "left_right_monoids_equal": true,
+        "nontrivial_left_translation_count": 0,
+        "partial_translations_injective": true,
+        "right_monoid_size": 2
+      },
+      "orbit_arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 4
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 2,
+          "orbit_count": 10
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 6,
+          "orbit_count": 20
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 24,
+          "orbit_count": 35
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 60,
+          "orbit_count": 56
+        },
+        {
+          "arity": 6,
+          "collision": null,
+          "max_orbit_size": 180,
+          "orbit_count": 84
+        }
+      ],
+      "representative_index": 12,
+      "source_key": "retraction=universal|coretraction=equality|output=equality|depth=0|tags=involutive+permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate|product=True|direct=False",
+      "source_row": {
+        "all_coordinate_kernel_depth": 0,
+        "all_coordinate_kernel_kind": "universal",
+        "all_coordinate_kernel_seed_count": 4,
+        "coretraction": "equality",
+        "has_direct_witness": false,
+        "has_product_witness": true,
+        "output_kernel_depth": 0,
+        "output_kernel_kind": "equality",
+        "output_kernel_seed_count": 0,
+        "retraction": "universal",
+        "tags": [
+          "involutive",
+          "permutation_form",
+          "left_nondegenerate",
+          "right_nondegenerate",
+          "nondegenerate"
+        ]
+      },
+      "tags": [
+        "involutive",
+        "permutation_form",
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate"
+      ],
+      "tags_text": "involutive+permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate"
+    },
+    {
+      "base_name": "base_4",
+      "contextual_summary": {
+        "balanced_domains": true,
+        "class_count": 16,
+        "conflict_count": 0,
+        "domain_sizes": [
+          4
+        ],
+        "forced_product_count": 64,
+        "full_forced_graph_local_covariance_failures": 0,
+        "identity_extension_conjugacy_covariance": true,
+        "identity_extension_total_permutations": true,
+        "identity_extension_witnesses_active_lifts": true,
+        "left_monoid_size": 4,
+        "left_right_monoids_equal": true,
+        "nontrivial_left_translation_count": 16,
+        "partial_translations_injective": true,
+        "right_monoid_size": 4
+      },
+      "orbit_arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 4
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 4,
+          "orbit_count": 8
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 12,
+          "orbit_count": 12
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 48,
+          "orbit_count": 16
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 160,
+          "orbit_count": 20
+        },
+        {
+          "arity": 6,
+          "collision": null,
+          "max_orbit_size": 640,
+          "orbit_count": 24
+        }
+      ],
+      "representative_index": 13,
+      "source_key": "retraction=universal|coretraction=equality|output=equality|depth=0|tags=left_nondegenerate+right_nondegenerate+nondegenerate|product=True|direct=False",
+      "source_row": {
+        "all_coordinate_kernel_depth": 0,
+        "all_coordinate_kernel_kind": "universal",
+        "all_coordinate_kernel_seed_count": 4,
+        "coretraction": "equality",
+        "has_direct_witness": false,
+        "has_product_witness": true,
+        "output_kernel_depth": 0,
+        "output_kernel_kind": "equality",
+        "output_kernel_seed_count": 0,
+        "retraction": "universal",
+        "tags": [
+          "left_nondegenerate",
+          "right_nondegenerate",
+          "nondegenerate"
+        ]
+      },
+      "tags": [
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate"
+      ],
+      "tags_text": "left_nondegenerate+right_nondegenerate+nondegenerate"
+    },
+    {
+      "base_name": "base_4",
+      "contextual_summary": {
+        "balanced_domains": true,
+        "class_count": 16,
+        "conflict_count": 0,
+        "domain_sizes": [
+          4
+        ],
+        "forced_product_count": 64,
+        "full_forced_graph_local_covariance_failures": 0,
+        "identity_extension_conjugacy_covariance": true,
+        "identity_extension_total_permutations": true,
+        "identity_extension_witnesses_active_lifts": true,
+        "left_monoid_size": 4,
+        "left_right_monoids_equal": true,
+        "nontrivial_left_translation_count": 16,
+        "partial_translations_injective": true,
+        "right_monoid_size": 4
+      },
+      "orbit_arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 4
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 4,
+          "orbit_count": 4
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 24,
+          "orbit_count": 4
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 96,
+          "orbit_count": 5
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 320,
+          "orbit_count": 6
+        },
+        {
+          "arity": 6,
+          "collision": null,
+          "max_orbit_size": 1280,
+          "orbit_count": 7
+        }
+      ],
+      "representative_index": 14,
+      "source_key": "retraction=universal|coretraction=equality|output=equality|depth=0|tags=permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate|product=True|direct=False",
+      "source_row": {
+        "all_coordinate_kernel_depth": 0,
+        "all_coordinate_kernel_kind": "universal",
+        "all_coordinate_kernel_seed_count": 4,
+        "coretraction": "equality",
+        "has_direct_witness": false,
+        "has_product_witness": true,
+        "output_kernel_depth": 0,
+        "output_kernel_kind": "equality",
+        "output_kernel_seed_count": 0,
+        "retraction": "universal",
+        "tags": [
+          "permutation_form",
+          "left_nondegenerate",
+          "right_nondegenerate",
+          "nondegenerate"
+        ]
+      },
+      "tags": [
+        "permutation_form",
+        "left_nondegenerate",
+        "right_nondegenerate",
+        "nondegenerate"
+      ],
+      "tags_text": "permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate"
+    }
+  ],
+  "source_audit": "proofs\\two_colour_fibre2_all_bases_audit.json",
+  "source_totals": {
+    "base_count": 5,
+    "checked_table_count": 1658880,
+    "colored_ybe_count": 629,
+    "local_minimal_count": 120,
+    "output_kernel_counts": {
+      "equality": 80,
+      "universal": 40
+    },
+    "output_universal_depth_counts": {
+      "0": 40
+    },
+    "semisplit_leak_count": 0,
+    "unknown_universal_output_example_count": 0
+  },
+  "tag_counts": {
+    "(untagged)": 3,
+    "involutive": 5,
+    "involutive+left_nondegenerate+right_nondegenerate+nondegenerate": 1,
+    "involutive+permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate": 1,
+    "left_nondegenerate+right_nondegenerate+nondegenerate": 1,
+    "permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate": 3,
+    "rack_type+permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate": 1
+  }
+}

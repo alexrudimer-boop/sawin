@@ -152,6 +152,8 @@ EXTRA_MD.append(ROOT / "proofs" / "corrected_no_brunnian_ultrafilter_theorem.md"
 EXTRA_MD.append(ROOT / "proofs" / "global_endpoint_faithfulness_audit.md")
 EXTRA_MD.append(ROOT / "proofs" / "contextual_endpoint_residuality_audit.md")
 EXTRA_MD.append(ROOT / "proofs" / "size3_contextual_completion_audit.md")
+EXTRA_MD.append(ROOT / "proofs" / "two_colour_fibre2_contextual_audit.md")
+EXTRA_MD.append(ROOT / "proofs" / "2026_06_07_theoretical_universal_local_rack_readout_review.md")
 EXTRA_MD.append(ROOT / "proofs" / "no_principal_endpoint_invisible_holonomy_audit.md")
 EXTRA_MD.append(ROOT / "proofs" / "finite_obstruction_search_and_associated_group_route.md")
 EXTRA_MD.append(ROOT / "proofs" / "associated_group_separability_counterexample.md")

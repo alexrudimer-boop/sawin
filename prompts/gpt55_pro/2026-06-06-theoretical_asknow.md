@@ -1041,6 +1041,99 @@ matches the smallest complete classification and finds no active-lift or
 identity-extension obstruction in the first exhaustive corpus.  Do not cite it
 as an all-arity theorem or as evidence against possible larger hard cases.
 
+34. Local generic contextual-completion code now also tests representatives
+from the two-colour/fibre-2 all-base corpus.
+
+Source corpus audit:
+
+  proofs/two_colour_fibre2_all_bases_audit.json
+
+The source audit enumerates arbitrary local bijection tables with two quotient
+colours and two-point fibres over every two-point YBE quotient base:
+
+  local tables checked = 1,658,880,
+  coloured-YBE local tables = 629,
+  local-minimal four-point totals = 120,
+  retained first_examples representatives = 15.
+
+New contextual representative audit:
+
+  tools/run_two_colour_fibre2_contextual_audit.py
+  proofs/two_colour_fibre2_contextual_audit.json
+  proofs/two_colour_fibre2_contextual_audit.md
+
+This audit consumes the 15 cached representative interval tables retained by
+the source audit, including the untagged representatives.  It does not
+re-check every one of the 120 local-minimal totals.
+
+For these 15 representative four-point totals it verifies:
+
+  contextual profile count = 14,
+  contextual completion failure count = 0,
+  orbit-injectivity failure count = 0 through arity 6.
+
+The representative tag counts are:
+
+  untagged = 3,
+  involutive = 5,
+  nondegenerate/permutation/rack known-branch representatives = 7.
+
+For every representative, the generic two-sided contextual helper finds:
+
+  forced products have no representative-independence conflicts;
+  forced partial translations are injective;
+  lambda_p(D_p)=D_p for every contextual class p;
+  identity-outside extensions are total permutations;
+  L_{L_p(q)}=L_p L_q L_p^(-1) for every p,q;
+  the full forced graph has no local covariance failures.
+
+This is finite representative evidence only.  It supports the current
+active-lift/contextual route by checking untagged four-point representatives
+outside the tiny size-three corpus, but it is not an all-arity theorem and not
+a full-row contextual audit of all 120 local-minimal totals.
+
+35. The latest response proves that P_X is universal among local one-strand
+rack readouts.
+
+Let `R_X(x,y)=(u,v)`.  A local one-strand contextual readout is a map
+
+  c:M_L x X x M_R -> C
+
+assigning a detector color to an X-strand of color `x` with left context `A`
+and right context `B`.  If this readout can be used by a rack detector while
+following the same physical strand through crossings, then it must satisfy
+
+  c(A,x,B r_y)=c(A m_u,v,B).
+
+Reason: before crossing, the old left strand has contextual state
+`(A,x,B r_y)`.  After the crossing it is the right output strand with
+contextual state `(A m_u,v,B)`.  In a rack crossing
+
+  R_Y(a,b)=(a*b,a),
+
+the second output color is exactly the old first input color.  Hence any such
+same-strand local rack readout must identify these two contextual states.
+
+These are exactly the generating relations defining
+
+  P_X=(M_L x X x M_R)/~.
+
+Therefore every local one-strand rack readout factors through `P_X`.  The
+obvious move "add a richer finite one-strand local context profile" does not
+escape the suffix-action cancellation problem: if it remains a local
+same-strand rack color, it descends to `P_X`.
+
+The remaining positive options are therefore only:
+
+  (i) prove pure-loop faithfulness/all-arity orbit separation for `P_X`
+      itself, possibly using the active-lift/multi-copy rack machinery; or
+  (ii) leave purely local one-strand rack readouts and build a genuinely
+       multi-strand or stateful finite rack detector.
+
+The negative route still must produce actual Brunnian detector-kernel braid
+witnesses for one fixed finite `X`; a failure of local one-strand readouts is
+not by itself B.
+
 Your task.
 
 Do not give another C-style reduction.  Try to prove A or B.
@@ -1193,6 +1286,12 @@ Do not answer by:
 - ignoring the realizable contextual language
   `W_X = union_n J_n(X^n) subseteq P^*`, which is the object where YBE
   actually supplies the local identities;
+- proposing a richer one-strand local contextual rack readout as an escape
+  from `P_X`; any same-strand local rack readout factors through `P_X` by the
+  universal local readout theorem above;
+- treating suffix-action cancellation in `P_X` as repairable by adding more
+  one-strand local context data, unless you leave the local same-strand rack
+  readout framework entirely;
 - citing computational finite-arity evidence as an all-arity theorem;
 - citing the public status of the MathOverflow page.
 

@@ -65,6 +65,8 @@ class ContextualCompletionData:
     """Two-sided contextual quotient and forced partial translations."""
 
     elements: Tuple[Hashable, ...]
+    r_maps: Tuple[Transformation, ...]
+    m_maps: Tuple[Transformation, ...]
     left_monoid: Tuple[Transformation, ...]
     right_monoid: Tuple[Transformation, ...]
     class_of_triple: Mapping[Tuple[int, int, int], int]
@@ -84,6 +86,10 @@ class ContextualCompletionData:
     @property
     def domain_sizes(self) -> Tuple[int, ...]:
         return tuple(sorted({len(row) for row in self.partial_translations.values()}))
+
+    @property
+    def element_index(self) -> Mapping[Hashable, int]:
+        return {element: index for index, element in enumerate(self.elements)}
 
 
 @dataclass(frozen=True)
@@ -208,12 +214,112 @@ def contextual_completion_data(solution: FiniteBraidedSet) -> ContextualCompleti
 
     return ContextualCompletionData(
         elements=elements,
+        r_maps=tuple(r_maps[index] for index in range(size)),
+        m_maps=tuple(m_maps[index] for index in range(size)),
         left_monoid=left_monoid,
         right_monoid=right_monoid,
         class_of_triple=class_of_triple,
         partial_translations=partial,
         conflict_count=conflict_count,
     )
+
+
+def identity_extension_left_translations(
+    data: ContextualCompletionData,
+) -> Tuple[Transformation, ...]:
+    class_count = data.class_count
+    identity = tuple(range(class_count))
+    rows = []
+    for p in range(class_count):
+        row = list(identity)
+        for source, target in data.partial_translations[p].items():
+            row[source] = target
+        rows.append(tuple(row))
+    return tuple(rows)
+
+
+def contextual_readout(
+    data: ContextualCompletionData,
+    word: Tuple[Hashable, ...],
+) -> Tuple[int, ...]:
+    element_index = data.element_index
+    indexed_word = tuple(element_index[element] for element in word)
+    size = len(data.elements)
+    identity = tuple(range(size))
+    left_index = {mapping: index for index, mapping in enumerate(data.left_monoid)}
+    right_index = {mapping: index for index, mapping in enumerate(data.right_monoid)}
+
+    left_contexts = []
+    current = identity
+    for x in indexed_word:
+        left_contexts.append(current)
+        current = compose_transformations(current, data.m_maps[x])
+
+    right_contexts = [identity for _ in indexed_word]
+    current = identity
+    for index in range(len(indexed_word) - 1, -1, -1):
+        right_contexts[index] = current
+        current = compose_transformations(current, data.r_maps[indexed_word[index]])
+
+    return tuple(
+        data.class_of_triple[
+            (
+                left_index[left_contexts[index]],
+                indexed_word[index],
+                right_index[right_contexts[index]],
+            )
+        ]
+        for index in range(len(indexed_word))
+    )
+
+
+def orbit_readout_collision(
+    solution: FiniteBraidedSet,
+    data: ContextualCompletionData,
+    arity: int,
+) -> dict[str, object] | None:
+    """Return a first same-orbit contextual-readout collision, if one exists."""
+
+    all_words = tuple(product(solution.elements, repeat=arity))
+    seen = set()
+    orbit_count = 0
+    max_orbit_size = 0
+
+    for start in all_words:
+        if start in seen:
+            continue
+        orbit_count += 1
+        queue = deque([start])
+        seen.add(start)
+        readout_owner = {contextual_readout(data, tuple(start)): start}
+        orbit_size = 0
+        while queue:
+            current = queue.popleft()
+            orbit_size += 1
+            for generator in range(1, arity):
+                for signed in (generator, -generator):
+                    image = solution.braid_action((signed,), current)
+                    image_readout = contextual_readout(data, tuple(image))
+                    owner = readout_owner.get(image_readout)
+                    if owner is not None and owner != image:
+                        return {
+                            "arity": arity,
+                            "collision_readout": list(image_readout),
+                            "first_word": [repr(element) for element in owner],
+                            "second_word": [repr(element) for element in image],
+                        }
+                    readout_owner[image_readout] = image
+                    if image not in seen:
+                        seen.add(image)
+                        queue.append(image)
+        max_orbit_size = max(max_orbit_size, orbit_size)
+
+    return {
+        "arity": arity,
+        "orbit_count": orbit_count,
+        "max_orbit_size": max_orbit_size,
+        "collision": None,
+    }
 
 
 def identity_extension_summary(
