@@ -3084,6 +3084,34 @@ additional lower layers.  A remaining counterexample must therefore evade
 all finite stratified decoder towers, rather than merely evade one-layer
 quotient-controlled gauges.
 
+The nondegenerate-reflection congruence is recorded in
+`proofs/nondegenerate_reflection_congruence.md`.  For a finite bijective
+solution `X` with
+
+```text
+R_X(x,y)=(lambda_x(y),rho_y(x)),
+```
+
+start with `E_0=Delta_X` and repeatedly add the pullback pairs
+
+```text
+y ~ y'  if lambda_x(y) E_k lambda_x(y') for some x,
+x ~ x'  if rho_y(x) E_k rho_y(x') for some y,
+```
+
+then close under braided congruence for `R_X` and `R_X^{-1}`.  The stable
+congruence `E_nd` has two key properties.  First, `X/E_nd` is two-sided
+nondegenerate, hence rack-dominated by the known derived-rack/guitar theorem.
+Second, if `F` is any braided congruence such that `X/F` is two-sided
+nondegenerate, then `E_nd <= F`.  Thus `X/E_nd` is the largest nondegenerate
+quotient of `X`.  If `E_nd` is proper, the canonical next positive attempt is
+to decode the hidden layer over `X -> X/E_nd` by the relative contextual,
+species-gauge, or stratified decoder-tower machinery.  If `E_nd` is
+universal, `X` is degeneracy-perfect: it has no nontrivial nondegenerate
+quotient.  In particular, any braided-simple degenerate candidate is
+degeneracy-perfect, because degeneracy adds a nontrivial pullback pair at the
+first stage and simplicity then forces `E_nd=X x X`.
+
 ## Review rubric
 
 A future response should be classified as follows.
