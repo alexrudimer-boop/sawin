@@ -3591,7 +3591,8 @@ failure is genuinely nonabelian subgroup nonseparability:
 `tau in closure_prof(Lambda_p) \ Lambda_p` while already abelianly
 indistinguishable from a loop.
 
-The realization-aware contextual boundary is recorded in
+The realization-aware contextual boundary, corrected to include the `T_2`
+purity condition, is recorded in
 `proofs/brunnian_realizable_contextual_separability.md`.  The full contextual
 transporter
 
@@ -3600,12 +3601,15 @@ T(v,w)=tau_0 Lambda_v
 ```
 
 is too broad: most paths in the contextual action graph may be virtual and
-never fillable by one `X`-word and one braid trajectory.  For a braided
-congruence `E`, define `T_Br^E(p,p')` to be the subset of transporter labels
-actually traced by a physical strand along some
-`beta in Brun_n cap ker rho^{X/E}_n`.  If `X/E` is dominated and, for every
-color-changing pair `p=(A,a,B)`, `p'=(A',b,B')` with `a E b` and `a != b`,
-there is a finite quotient `q:G_X->H` such that either
+never fillable by one `X`-word and one braid trajectory.  Also, Brunnian
+realizability must include `ker rho^{T_2}_n`; otherwise the two-point
+constant-action solution with `r(x,y)=(s(y),s(x))` and the braid `sigma_1 in
+B_2` gives a false color-changing transporter that the `T_2` factor is
+designed to kill.  For a braided congruence `E`, define `T_Br0^E(p,p')` to be
+the subset of transporter labels actually traced by a physical strand along
+some `beta in Brun_n cap ker rho^{X/E}_n cap ker rho^{T_2}_n`.  If `X/E` is
+dominated and, for every color-changing pair `p=(A,a,B)`, `p'=(A',b,B')` with
+`a E b` and `a != b`, there is a finite quotient `q:G_X->H` such that either
 
 ```text
 q(g_p) != q(g_{p'})
@@ -3614,19 +3618,19 @@ q(g_p) != q(g_{p'})
 or
 
 ```text
-q(T_Br^E(p,p')) cap q(Lambda_[p])=emptyset,
+q(T_Br0^E(p,p')) cap q(Lambda_[p])=emptyset,
 ```
 
 then `X` is dominated by `Y_E^0 x Y_ctx^0 x T_2`.  Conversely, a smallest
 nonsimple counterexample with monolith `mu` has a fixed color-changing pair
 `p_*,p'_*` such that every finite quotient satisfies
 `q(g_{p_*})=q(g_{p'_*})` and
-`q(T_Br^mu(p_*,p'_*)) cap q(Lambda_[p_*]) != emptyset`.  Equivalently,
+`q(T_Br0^mu(p_*,p'_*)) cap q(Lambda_[p_*]) != emptyset`.  Equivalently,
 `g_{p_*}^{-1}g_{p'_*}` lies in the finite residual of `G_X`, and the profinite
 closures of the Brunnian-realizable transporter subset and the loop subgroup
 meet.  Thus the contextual separability target is not full subgroup
 separability against every transporter element; it is separation of the
-Brunnian-realizable transporter language.
+`T_2`-invisible Brunnian-realizable transporter language.
 
 The quantitative fixed-transition endpoint is recorded in
 `proofs/fixed_transition_residual_complexity.md`.  For a nontrivial braid
@@ -3638,7 +3642,8 @@ r(beta)=min{|Y| : Y is a finite rack and rho^Y(beta) != 1}.
 
 For a fixed color-changing contextual transition `t=(p->p')` and a braided
 congruence `E` with `a E b`, let `W_n^E(t)` be the Brunnian
-`X/E`-trivial braids realizing that fixed raw contextual transition.  The
+`X/E`-trivial and `T_2`-invisible braids realizing that fixed raw contextual
+transition.  The
 transition survives every finite rack detector iff, for every `M,N`, some
 `beta in W_n^E(t)` with `n>N` has `r(beta)>M`.  Equivalently, survival is
 unbounded rack residual complexity in every arity tail.  If `X/E` is dominated
@@ -3673,6 +3678,33 @@ subgroup they generate.  Therefore the standard powered-meridian Brunnian
 words cannot give a fixed-target counterexample.  A negative construction must
 use genuinely global finite-rack laws, not detector-invisibility coming from
 individual powered meridians.
+
+Non-powered global Brunnian rack laws are recorded in
+`proofs/non_powered_global_brunnian_rack_laws.md`.  Let `U` be a finite rack
+with
+
+```text
+e=ord(rho^U_2(sigma_1^2))>=2.
+```
+
+For every `r>=2`, with `n=r+1` and
+`F_r=<x_1,...,x_r>` the last-strand free group, the kernel `R` of the
+`U`-action contains `P_e=<<x_1^e,...,x_r^e>>`.  In
+
+```text
+F_r/P_e ~= C_e * ... * C_e,
+```
+
+the left-normed commutator `c_r=[...[ [x_1,x_2],x_3],...,x_r]` is Brunnian
+and has infinite order.  Since the `U`-image is finite, some power `c_r^t`
+lies in `R` while remaining nontrivial modulo `P_e`.  Thus there are
+nontrivial Brunnian braids invisible to `U` but not in the powered-meridian
+normal subgroup.  These braids lie in the last-strand pure group, so they are
+also `T_2`-invisible.  For `U_M`, the product of all racks of size at most
+`M`, this gives Brunnian braids with rack residual complexity `>M` even after
+excluding powered-meridian constructions.  A fixed-target counterexample must
+make one fixed finite `X` see such genuinely global laws in one fixed
+contextual transition cofinally; a positive proof must rule this out.
 
 ## Review rubric
 

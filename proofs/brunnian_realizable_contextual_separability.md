@@ -5,6 +5,13 @@ action from actual Brunnian realizability.  A nonseparable contextual
 transporter is harmless unless it is realized by quotient-trivial Brunnian
 braid motion.
 
+Correction: the realizability condition must include the `T_2` factor used in
+the domination argument.  Equivalently, the braid must be pure.  Without this
+condition the statement is false: for the two-point constant-action solution
+`r(x,y)=(s(y),s(x))`, the braid `sigma_1 in B_2` is Brunnian under the full
+`Brun_2=B_2` convention and is trivial on the one-point quotient, but it is
+exactly the non-pure one-crossing motion killed by the `T_2` factor.
+
 ## Universal Contextual Transporter
 
 Let
@@ -55,21 +62,21 @@ Lambda_v=Stab_{G_X}(omega_v)
 
 is the loop subgroup at `v`.
 
-## Brunnian-Realizable Transporter Subset
+## Brunnian-Realizable Pure Transporter Subset
 
 Fix a braided congruence `E` on `X`.  Define
 
 ```text
-T_Br^E(p,p') subset T([p],[p'])
+T_Br0^E(p,p') subset T([p],[p'])
 ```
 
 as follows.
 
-An element `tau` lies in `T_Br^E(p,p')` iff there exist:
+An element `tau` lies in `T_Br0^E(p,p')` iff there exist:
 
 ```text
 n>=2,
-beta in Brun_n cap ker rho^{X/E}_n,
+beta in Brun_n cap ker rho^{X/E}_n cap ker rho^{T_2}_n,
 xword in X^n,
 j in {1,...,n},
 ```
@@ -84,11 +91,12 @@ hat c_j(rho^X_n(beta)xword)=p',
 and the same physical strand, followed through a braid word for `beta`, traces
 a path in `C_X` with label `tau`.
 
-Thus `T_Br^E(p,p')` is the subset of the contextual transporter consisting of
-paths actually realized by quotient-trivial Brunnian braid trajectories.  It
-can be strictly smaller than the full transporter `T([p],[p'])`: the full
-contextual graph includes locally forced edges whose paths need not be
-globally fillable by one `X`-word and one braid trajectory.
+Thus `T_Br0^E(p,p')` is the subset of the contextual transporter consisting of
+paths actually realized by quotient-trivial, `T_2`-invisible Brunnian braid
+trajectories.  It can be strictly smaller than the full transporter
+`T([p],[p'])`: the full contextual graph includes locally forced edges whose
+paths need not be globally fillable by one `X`-word and one braid trajectory,
+and non-pure low-arity Brunnian motions are excluded by `ker rho^{T_2}`.
 
 ## Finite Quotient Obstruction For A Fixed Transition
 
@@ -109,7 +117,7 @@ be the associated finite augmented contextual rack.
 Suppose a Brunnian trajectory realizes `p->p'` with transporter label
 
 ```text
-tau in T_Br^E(p,p').
+tau in T_Br0^E(p,p').
 ```
 
 Then this trajectory is invisible to `Y_H` only if both
@@ -142,10 +150,10 @@ q(g_p) != q(g_{p'}),
 or
 
 ```text
-q(T_Br^E(p,p')) cap q(Lambda_v)=emptyset.
+q(T_Br0^E(p,p')) cap q(Lambda_v)=emptyset.
 ```
 
-If `T_Br^E(p,p')` is empty, the second condition holds automatically.
+If `T_Br0^E(p,p')` is empty, the second condition holds automatically.
 
 ## Exact Brunnian-Realizable Separability Criterion
 
@@ -178,7 +186,7 @@ q(g_p) != q(g_{p'}),
 or
 
 ```text
-q(T_Br^E(p,p')) cap q(Lambda_[p])=emptyset.
+q(T_Br0^E(p,p')) cap q(Lambda_[p])=emptyset.
 ```
 
 Then `X` is finite-rack dominated.
@@ -228,7 +236,7 @@ a E b,        a != b.
 Let
 
 ```text
-tau in T_Br^E(p,p')
+tau in T_Br0^E(p,p')
 ```
 
 be the actual contextual path label followed by that strand.  Since
@@ -284,7 +292,7 @@ q(g_{p_*})=q(g_{p'_*}),
 and
 
 ```text
-q(T_Br^mu(p_*,p'_*)) cap q(Lambda_[p_*]) != emptyset.
+q(T_Br0^mu(p_*,p'_*)) cap q(Lambda_[p_*]) != emptyset.
 ```
 
 Equivalently,
@@ -296,7 +304,7 @@ g_{p_*}^{-1}g_{p'_*} in Res(G_X),
 where `Res(G_X)` is the finite residual of `G_X`, and
 
 ```text
-closure_prof(T_Br^mu(p_*,p'_*))
+closure_prof(T_Br0^mu(p_*,p'_*))
   cap
 closure_prof(Lambda_[p_*])
   != emptyset
@@ -322,7 +330,7 @@ The positive contextual target is now:
 For every finite X, every dominated congruence E, and every color-changing
 contextual pair p,p' with a E b and a != b, find a finite quotient q:G_X->H
 such that either q(g_p) != q(g_{p'}) or
-q(T_Br^E(p,p')) cap q(Lambda_[p])=emptyset.
+q(T_Br0^E(p,p')) cap q(Lambda_[p])=emptyset.
 ```
 
 The negative target is:
@@ -331,9 +339,9 @@ The negative target is:
 Construct one fixed finite X, one dominated congruence E, and one fixed
 color-changing contextual transition p->p' such that
 g_p^{-1}g_{p'} in Res(G_X) and
-closure_prof(T_Br^E(p,p')) cap closure_prof(Lambda_[p]) is nonempty,
+closure_prof(T_Br0^E(p,p')) cap closure_prof(Lambda_[p]) is nonempty,
 with the intersection realized cofinally by actual quotient-trivial Brunnian
-motions invisible to every finite rack detector.
+motions invisible to `T_2` and every finite rack detector.
 ```
 
 This is the realization-aware contextual separability boundary.

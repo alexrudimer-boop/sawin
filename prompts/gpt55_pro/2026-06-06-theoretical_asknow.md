@@ -2784,7 +2784,7 @@ The next negative target is:
   corresponding to a color-changing contextual transition realized by cofinal
   quotient-trivial Brunnian motions.
 
-64. Brunnian-realizable contextual separability.
+64. Brunnian-realizable contextual separability, corrected by T_2.
 
 The repo now records the realization-aware contextual boundary in
 
@@ -2799,11 +2799,17 @@ The full contextual transporter
 is too broad: many transporter elements may be virtual contextual paths and
 need not be realized by one global X-word and one braid trajectory.
 
-For a braided congruence E, define T_Br^E(p,p') to be the subset of
+There is also a necessary T_2/purity correction.  Without it, the two-point
+constant-action solution r(x,y)=(s(y),s(x)) and beta=sigma_1 in B_2 gives a
+false color-changing transporter: sigma_1 is Brunnian under the full
+Brun_2=B_2 convention and is trivial on the one-point quotient, but it is
+exactly the non-pure motion killed by the T_2 factor.
+
+For a braided congruence E, define T_Br0^E(p,p') to be the subset of
 T([p],[p']) consisting of transporter labels actually traced by a physical
 strand along some
 
-  beta in Brun_n cap ker rho^{X/E}_n.
+  beta in Brun_n cap ker rho^{X/E}_n cap ker rho^{T_2}_n.
 
 If X/E is dominated and, for every color-changing contextual pair
 
@@ -2815,7 +2821,7 @@ there is a finite quotient q:G_X->H such that either
 
 or
 
-  q(T_Br^E(p,p')) cap q(Lambda_[p]) = emptyset,
+  q(T_Br0^E(p,p')) cap q(Lambda_[p]) = emptyset,
 
 then X is finite-rack dominated.
 
@@ -2823,8 +2829,8 @@ Proof idea: take the product of the finite quotients for all color-changing
 pairs and form the finite contextual augmented rack Y_ctx.  If
 Q=Y_E^0 x Y_ctx^0 x T_2 failed to dominate X, the Brunnian reduction gives a
 Brunnian beta invisible to Q but moving X.  The Y_E factor makes beta
-X/E-trivial, so some coordinate realizes a color-changing p->p' with actual
-label tau in T_Br^E(p,p').  The Y_ctx factor being invisible forces
+X/E-trivial and T_2-invisible, so some coordinate realizes a color-changing
+p->p' with actual label tau in T_Br0^E(p,p').  The Y_ctx factor being invisible forces
 q(g_p)=q(g_{p'}) and q(tau) in q(Lambda_[p]), contradicting the chosen
 quotient.
 
@@ -2835,25 +2841,26 @@ color-changing pair p_*,p'_* such that for every finite quotient q:G_X->H,
 
 and
 
-  q(T_Br^mu(p_*,p'_*)) cap q(Lambda_[p_*]) != emptyset.
+  q(T_Br0^mu(p_*,p'_*)) cap q(Lambda_[p_*]) != emptyset.
 
 Equivalently,
 
   g_{p_*}^{-1}g_{p'_*} in Res(G_X),
 
-and the profinite closures of T_Br^mu(p_*,p'_*) and Lambda_[p_*] meet.
+and the profinite closures of T_Br0^mu(p_*,p'_*) and Lambda_[p_*] meet.
 
 The positive contextual target is now:
 
-  separate the Brunnian-realizable transporter subset T_Br^E(p,p') from the
+  separate the T_2-invisible Brunnian-realizable transporter subset
+  T_Br0^E(p,p') from the
   loop subgroup by a finite quotient, not the entire virtual transporter.
 
 The negative contextual target is:
 
   construct one fixed finite X with a fixed color-changing contextual
-  transition whose Brunnian-realizable transporter subset has profinite
+  transition whose T_2-invisible Brunnian-realizable transporter subset has profinite
   closure meeting the loop subgroup closure, realized cofinally by actual
-  quotient-trivial Brunnian motions.
+  quotient-trivial T_2-invisible Brunnian motions.
 
 65. Fixed-transition rack residual complexity.
 
@@ -2878,7 +2885,7 @@ For a fixed raw contextual transition
 and a braided congruence E with a E b, define W_n^E(t) to be the set of
 braids
 
-  beta in Brun_n cap ker rho^{X/E}_n
+  beta in Brun_n cap ker rho^{X/E}_n cap ker rho^{T_2}_n
 
 that realize the fixed transition t at some coordinate.
 
@@ -3001,6 +3008,73 @@ while still satisfying
 
   rho^{P_m^0 x T_2}_{n_m}(beta_m)=1,
   rho^X_{n_m}(beta_m)!=1.
+
+67. Non-powered global Brunnian rack laws.
+
+The repo now records the non-powered global-law theorem in
+
+  proofs/non_powered_global_brunnian_rack_laws.md
+
+You may use it as established context.
+
+The powered-meridian no-freezing theorem rules out one negative construction,
+but it does not kill all high-complexity rack-invisible Brunnian laws.
+
+Let U be a finite rack and put
+
+  e=ord(rho^U_2(sigma_1^2)).
+
+Assume e>=2.  For every r>=2, set n=r+1 and let
+
+  F_r=ker(d_n:P_n->P_{n-1})=<x_1,...,x_r>,
+  x_i=A_{i,n}.
+
+Let
+
+  R=ker(F_r -> rho^U_n(F_r)).
+
+Since each x_i has U-order dividing e,
+
+  P_e=<<x_1^e,...,x_r^e>> <= R.
+
+Now
+
+  F_r/P_e ~= C_e * ... * C_e.
+
+The left-normed commutator
+
+  c_r=[...[ [x_1,x_2],x_3],...,x_r]
+
+is Brunnian, and its image in C_e * ... * C_e is nontrivial of infinite
+order.  Since F_r/R is finite, some power c_r^t lies in R but remains
+nontrivial modulo P_e.
+
+Thus
+
+  beta_r=c_r^t
+
+is Brunnian, U-invisible, and
+
+  beta_r notin << A_{1,n}^e,...,A_{r,n}^e >>.
+
+Moreover beta_r lies in the last-strand pure group F_r, so it is T_2-invisible.
+
+Consequently, for U_M equal to the product of all racks of size at most M,
+there are Brunnian beta_r with r(beta_r)>M even after excluding the
+powered-meridian normal subgroup.
+
+So a true negative construction must use genuinely global finite-rack laws,
+not powered-meridian laws.  It must construct one fixed finite X, one
+dominated congruence E, one fixed contextual transition p_*->p'_*, and a
+sequence beta_m such that
+
+  rho^{P_m^0 x T_2}_{n_m}(beta_m)=1,
+  rho^{X/E}_{n_m}(beta_m)=1,
+  rho^X_{n_m}(beta_m) realizes p_*->p'_*,
+  beta_m notin << A_{i,n_m}^{e_m} >>.
+
+A positive proof must show no fixed finite X can see these non-powered global
+Brunnian rack laws in one fixed contextual transition cofinally.
 
 Your task.
 

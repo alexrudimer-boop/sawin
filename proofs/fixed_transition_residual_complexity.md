@@ -56,7 +56,7 @@ For a braided congruence `E` with `a E b`, define `W_n^E(t)` to be the set of
 braids
 
 ```text
-beta in Brun_n cap ker rho^{X/E}_n
+beta in Brun_n cap ker rho^{X/E}_n cap ker rho^{T_2}_n
 ```
 
 such that there exist
@@ -73,9 +73,9 @@ hat c_j(xword)=p,
 hat c_j(rho^X_n(beta)xword)=p'.
 ```
 
-Thus `W_n^E(t)` is the set of quotient-trivial Brunnian braids realizing the
-fixed contextual transition `t`.  Since `a != b`, every element of
-`W_n^E(t)` is `X`-visible.
+Thus `W_n^E(t)` is the set of quotient-trivial, `T_2`-invisible Brunnian
+braids realizing the fixed contextual transition `t`.  Since `a != b`, every
+element of `W_n^E(t)` is `X`-visible.
 
 ## Fixed-Transition Survival Equals Unbounded Residual Complexity
 
@@ -96,7 +96,7 @@ such that
 rho^{Y^0 x T_2}_n(beta)=1.
 ```
 
-Since `beta` is Brunnian, this is equivalent to
+For `beta in W_n^E(t)`, this is equivalent to
 
 ```text
 rho^Y_n(beta)=1.
@@ -105,7 +105,7 @@ rho^Y_n(beta)=1.
 The equivalence uses the transparent-extension deletion formula: all proper
 deletions of a Brunnian braid are trivial, so the only transparent coloring
 case left to check is the all-nontransparent `Y^n` coloring.  The `T_2` factor
-is trivial because Brunnian braids are pure.
+is trivial by the explicit condition `beta in ker rho^{T_2}_n`.
 
 ### Condition B: Witness Residual Complexity Is Unbounded In Every Tail
 
@@ -174,7 +174,7 @@ with `r(beta)>M`.  Since `Y` has size `M`, it cannot detect `beta`.  Hence
 rho^Y_n(beta)=1.
 ```
 
-Because `beta` is Brunnian, this is equivalent to
+Because `beta in W_n^E(t)`, this is equivalent to
 
 ```text
 rho^{Y^0 x T_2}_n(beta)=1.
