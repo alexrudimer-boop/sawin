@@ -22,6 +22,12 @@ It is a representative audit, not a full-row contextual pass over all
 - tag counts: `{'(untagged)': 3, 'involutive': 5, 'involutive+left_nondegenerate+right_nondegenerate+nondegenerate': 1, 'involutive+permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate': 1, 'left_nondegenerate+right_nondegenerate+nondegenerate': 1, 'permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate': 3, 'rack_type+permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate': 1}`;
 - contextual profile count: `14`;
 - contextual completion failure count: `0`;
+- active-lift existence certificate failure count: `0`;
+- context-signature quotient congruence failure count: `0`;
+- context-signature core verification failure count: `0`;
+- raw-context relative separation failure count: `0`;
+- raw-context relative separation skip count: `0`;
+- proper-congruence relative separation skip count: `0`;
 - identity-extension equivariance checked through arity: `6`;
 - equivariance failure count: `0`;
 - orbit-injectivity checked through arity: `6`;
@@ -52,6 +58,11 @@ It is a representative audit, not a full-row contextual pass over all
 The cached representatives include the untagged rows retained by the
 older two-colour/fibre-2 corridor audit.  None of these
 representatives exhibits an identity-extension, active-lift, or
+active-lift singleton closure,
+context-signature quotient congruence,
+context-signature core verification,
+raw-context relative all-arity separation,
+proper-congruence relative all-arity separation reachability,
 checked-arity equivariance or contextual readout obstruction.  This is finite
 candidate-search evidence only; it does not prove all-arity
 orbit separation or cover every one of the 120 local-minimal rows.

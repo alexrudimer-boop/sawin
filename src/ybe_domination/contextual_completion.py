@@ -121,6 +121,76 @@ class IdentityExtensionSummary:
         )
 
 
+@dataclass(frozen=True)
+class ActiveLiftExistenceSummary:
+    """Evidence for a coherent active-lift system."""
+
+    class_count: int
+    identity_extension_singleton_witness: bool
+    identity_extension_forced_pair_closure_failures: int
+
+    @property
+    def proves_active_lift_system_exists(self) -> bool:
+        return self.identity_extension_singleton_witness
+
+
+@dataclass(frozen=True)
+class ContextSignatureQuotientSummary:
+    """Check whether equal `(m_x,r_x)` signatures define a braided quotient."""
+
+    element_count: int
+    quotient_class_count: int
+    block_sizes: Tuple[int, ...]
+    is_braided_congruence: bool
+    failure: Mapping[str, object] | None
+
+    @property
+    def is_strict_quotient(self) -> bool:
+        return self.quotient_class_count < self.element_count
+
+
+@dataclass(frozen=True)
+class ContextSignatureCoreSummary:
+    """Largest checked braided-congruence core inside context signatures."""
+
+    element_count: int
+    raw_quotient_class_count: int
+    core_class_count: int
+    raw_block_sizes: Tuple[int, ...]
+    core_block_sizes: Tuple[int, ...]
+    refinement_iterations: int
+    is_braided_congruence: bool
+    verification_failure: Mapping[str, object] | None
+
+    @property
+    def core_is_equality(self) -> bool:
+        return self.core_class_count == self.element_count
+
+    @property
+    def core_equals_raw_context_quotient(self) -> bool:
+        return self.core_class_count == self.raw_quotient_class_count
+
+
+@dataclass(frozen=True)
+class RelativeContextualSeparationSummary:
+    """Finite automaton check for injectivity of `(pi^n,J_n)` in all arities."""
+
+    element_count: int
+    quotient_class_count: int
+    left_monoid_size: int
+    right_monoid_size: int
+    valid_vertex_count: int | None
+    checked: bool
+    skipped_reason: str | None
+    collision_found: bool
+    collision_length: int | None
+    collision_path: Tuple[Tuple[str, str], ...]
+
+    @property
+    def proves_all_arity_injective(self) -> bool:
+        return self.checked and not self.collision_found
+
+
 def contextual_completion_data(solution: FiniteBraidedSet) -> ContextualCompletionData:
     elements = tuple(solution.elements)
     element_index = {element: index for index, element in enumerate(elements)}
@@ -224,6 +294,420 @@ def contextual_completion_data(solution: FiniteBraidedSet) -> ContextualCompleti
     )
 
 
+def context_signature_quotient_summary(
+    solution: FiniteBraidedSet,
+    data: ContextualCompletionData | None = None,
+) -> ContextSignatureQuotientSummary:
+    """Return whether `x -> (m_x,r_x)` is a braided congruence quotient."""
+
+    if data is None:
+        data = contextual_completion_data(solution)
+    elements = tuple(solution.elements)
+    element_index = data.element_index
+    indexed_table = {
+        (element_index[x], element_index[y]): (
+            element_index[solution.R[(x, y)][0]],
+            element_index[solution.R[(x, y)][1]],
+        )
+        for x, y in product(elements, repeat=2)
+    }
+    signature_to_class: Dict[Tuple[Transformation, Transformation], int] = {}
+    class_of_index = []
+    for index in range(len(elements)):
+        signature = (data.m_maps[index], data.r_maps[index])
+        if signature not in signature_to_class:
+            signature_to_class[signature] = len(signature_to_class)
+        class_of_index.append(signature_to_class[signature])
+    block_counter = {
+        class_id: class_of_index.count(class_id)
+        for class_id in range(len(signature_to_class))
+    }
+
+    for x, x_prime, y, y_prime in product(range(len(elements)), repeat=4):
+        if class_of_index[x] != class_of_index[x_prime]:
+            continue
+        if class_of_index[y] != class_of_index[y_prime]:
+            continue
+        u, v = indexed_table[(x, y)]
+        u_prime, v_prime = indexed_table[(x_prime, y_prime)]
+        if (
+            class_of_index[u] != class_of_index[u_prime]
+            or class_of_index[v] != class_of_index[v_prime]
+        ):
+            return ContextSignatureQuotientSummary(
+                element_count=len(elements),
+                quotient_class_count=len(signature_to_class),
+                block_sizes=tuple(sorted(block_counter.values())),
+                is_braided_congruence=False,
+                failure={
+                    "x": repr(elements[x]),
+                    "x_prime": repr(elements[x_prime]),
+                    "y": repr(elements[y]),
+                    "y_prime": repr(elements[y_prime]),
+                    "R_x_y": [repr(elements[u]), repr(elements[v])],
+                    "R_x_prime_y_prime": [
+                        repr(elements[u_prime]),
+                        repr(elements[v_prime]),
+                    ],
+                    "input_classes": [
+                        class_of_index[x],
+                        class_of_index[y],
+                    ],
+                    "output_classes": [
+                        class_of_index[u],
+                        class_of_index[v],
+                    ],
+                    "output_prime_classes": [
+                        class_of_index[u_prime],
+                        class_of_index[v_prime],
+                    ],
+                },
+            )
+
+    return ContextSignatureQuotientSummary(
+        element_count=len(elements),
+        quotient_class_count=len(signature_to_class),
+        block_sizes=tuple(sorted(block_counter.values())),
+        is_braided_congruence=True,
+        failure=None,
+    )
+
+
+def _normalize_partition(keys: Tuple[Hashable, ...]) -> Tuple[int, ...]:
+    key_to_class: Dict[Hashable, int] = {}
+    classes = []
+    for key in keys:
+        if key not in key_to_class:
+            key_to_class[key] = len(key_to_class)
+        classes.append(key_to_class[key])
+    return tuple(classes)
+
+
+def context_signature_labels(data: ContextualCompletionData) -> Mapping[Hashable, int]:
+    """Return labels for the raw `(m_x,r_x)` context-signature partition."""
+
+    classes = _normalize_partition(
+        tuple((data.m_maps[index], data.r_maps[index]) for index in range(len(data.elements)))
+    )
+    return {
+        element: classes[index]
+        for index, element in enumerate(data.elements)
+    }
+
+
+def _partition_block_sizes(classes: Tuple[int, ...]) -> Tuple[int, ...]:
+    return tuple(
+        sorted(classes.count(class_id) for class_id in sorted(set(classes)))
+    )
+
+
+def _congruence_failure_for_classes(
+    solution: FiniteBraidedSet,
+    classes: Tuple[int, ...],
+) -> Mapping[str, object] | None:
+    elements = tuple(solution.elements)
+    element_index = {element: index for index, element in enumerate(elements)}
+    indexed_table = {
+        (element_index[x], element_index[y]): (
+            element_index[solution.R[(x, y)][0]],
+            element_index[solution.R[(x, y)][1]],
+        )
+        for x, y in product(elements, repeat=2)
+    }
+    indexed_inverse = {value: key for key, value in indexed_table.items()}
+    operations = (
+        ("R_1", lambda x, y: indexed_table[(x, y)][0]),
+        ("R_2", lambda x, y: indexed_table[(x, y)][1]),
+        ("Rinv_1", lambda x, y: indexed_inverse[(x, y)][0]),
+        ("Rinv_2", lambda x, y: indexed_inverse[(x, y)][1]),
+    )
+    for op_name, operation in operations:
+        for x, x_prime, y, y_prime in product(range(len(elements)), repeat=4):
+            if classes[x] != classes[x_prime] or classes[y] != classes[y_prime]:
+                continue
+            output = operation(x, y)
+            output_prime = operation(x_prime, y_prime)
+            if classes[output] != classes[output_prime]:
+                return {
+                    "operation": op_name,
+                    "x": repr(elements[x]),
+                    "x_prime": repr(elements[x_prime]),
+                    "y": repr(elements[y]),
+                    "y_prime": repr(elements[y_prime]),
+                    "output": repr(elements[output]),
+                    "output_prime": repr(elements[output_prime]),
+                    "input_classes": [classes[x], classes[y]],
+                    "output_classes": [
+                        classes[output],
+                        classes[output_prime],
+                    ],
+                }
+    return None
+
+
+def context_signature_core_summary(
+    solution: FiniteBraidedSet,
+    data: ContextualCompletionData | None = None,
+) -> ContextSignatureCoreSummary:
+    """Refine context signatures to a braided congruence core."""
+
+    if data is None:
+        data = contextual_completion_data(solution)
+    elements = tuple(solution.elements)
+    element_index = data.element_index
+    indexed_table = {
+        (element_index[x], element_index[y]): (
+            element_index[solution.R[(x, y)][0]],
+            element_index[solution.R[(x, y)][1]],
+        )
+        for x, y in product(elements, repeat=2)
+    }
+    indexed_inverse = {value: key for key, value in indexed_table.items()}
+    operations = (
+        lambda x, y: indexed_table[(x, y)][0],
+        lambda x, y: indexed_table[(x, y)][1],
+        lambda x, y: indexed_inverse[(x, y)][0],
+        lambda x, y: indexed_inverse[(x, y)][1],
+    )
+    raw_classes = _normalize_partition(
+        tuple((data.m_maps[index], data.r_maps[index]) for index in range(len(elements)))
+    )
+    classes = raw_classes
+    iterations = 0
+    while True:
+        block_ids = tuple(sorted(set(classes)))
+        blocks = {
+            block_id: tuple(index for index, cls in enumerate(classes) if cls == block_id)
+            for block_id in block_ids
+        }
+        keys = []
+        for x in range(len(elements)):
+            profile = [classes[x]]
+            for operation in operations:
+                for block_id in block_ids:
+                    block = blocks[block_id]
+                    profile.append(tuple(classes[operation(x, y)] for y in block))
+                    profile.append(tuple(classes[operation(y, x)] for y in block))
+            keys.append(tuple(profile))
+        refined = _normalize_partition(tuple(keys))
+        if refined == classes:
+            break
+        classes = refined
+        iterations += 1
+
+    failure = _congruence_failure_for_classes(solution, classes)
+    return ContextSignatureCoreSummary(
+        element_count=len(elements),
+        raw_quotient_class_count=len(set(raw_classes)),
+        core_class_count=len(set(classes)),
+        raw_block_sizes=_partition_block_sizes(raw_classes),
+        core_block_sizes=_partition_block_sizes(classes),
+        refinement_iterations=iterations,
+        is_braided_congruence=failure is None,
+        verification_failure=failure,
+    )
+
+
+def context_signature_core_labels(
+    solution: FiniteBraidedSet,
+    data: ContextualCompletionData | None = None,
+) -> Mapping[Hashable, int]:
+    """Return labels for the refined context-signature congruence core."""
+
+    if data is None:
+        data = contextual_completion_data(solution)
+    elements = tuple(solution.elements)
+    element_index = data.element_index
+    indexed_table = {
+        (element_index[x], element_index[y]): (
+            element_index[solution.R[(x, y)][0]],
+            element_index[solution.R[(x, y)][1]],
+        )
+        for x, y in product(elements, repeat=2)
+    }
+    indexed_inverse = {value: key for key, value in indexed_table.items()}
+    operations = (
+        lambda x, y: indexed_table[(x, y)][0],
+        lambda x, y: indexed_table[(x, y)][1],
+        lambda x, y: indexed_inverse[(x, y)][0],
+        lambda x, y: indexed_inverse[(x, y)][1],
+    )
+    classes = _normalize_partition(
+        tuple((data.m_maps[index], data.r_maps[index]) for index in range(len(elements)))
+    )
+    while True:
+        block_ids = tuple(sorted(set(classes)))
+        blocks = {
+            block_id: tuple(index for index, cls in enumerate(classes) if cls == block_id)
+            for block_id in block_ids
+        }
+        keys = []
+        for x in range(len(elements)):
+            profile = [classes[x]]
+            for operation in operations:
+                for block_id in block_ids:
+                    block = blocks[block_id]
+                    profile.append(tuple(classes[operation(x, y)] for y in block))
+                    profile.append(tuple(classes[operation(y, x)] for y in block))
+            keys.append(tuple(profile))
+        refined = _normalize_partition(tuple(keys))
+        if refined == classes:
+            break
+        classes = refined
+    return {
+        element: classes[index]
+        for index, element in enumerate(elements)
+    }
+
+
+def relative_contextual_separation_summary(
+    data: ContextualCompletionData,
+    quotient_labels: Mapping[Hashable, Hashable],
+    *,
+    max_vertices: int = 2_000_000,
+) -> RelativeContextualSeparationSummary:
+    """Check all-arity injectivity of `(pi^n,J_n)` by finite reachability."""
+
+    elements = tuple(data.elements)
+    element_index = data.element_index
+    labels = tuple(quotient_labels[element] for element in elements)
+    quotient_class_count = len(set(labels))
+    size = len(elements)
+    identity = tuple(range(size))
+    left_identity = data.left_monoid.index(identity)
+    right_identity = data.right_monoid.index(identity)
+    left_index = {mapping: index for index, mapping in enumerate(data.left_monoid)}
+    right_predecessors: Dict[Tuple[int, int], Tuple[int, ...]] = {}
+    for target_right_id, target_right in enumerate(data.right_monoid):
+        for y in range(size):
+            predecessors = [
+                source_id
+                for source_id, source_right in enumerate(data.right_monoid)
+                if compose_transformations(source_right, data.r_maps[y])
+                == target_right
+            ]
+            right_predecessors[(target_right_id, y)] = tuple(predecessors)
+
+    valid_vertices = set()
+    for left, left_prime, right, right_prime, x, x_prime in product(
+        range(len(data.left_monoid)),
+        range(len(data.left_monoid)),
+        range(len(data.right_monoid)),
+        range(len(data.right_monoid)),
+        range(size),
+        range(size),
+    ):
+        if labels[x] != labels[x_prime]:
+            continue
+        if (
+            data.class_of_triple[(left, x, right)]
+            != data.class_of_triple[(left_prime, x_prime, right_prime)]
+        ):
+            continue
+        valid_vertices.add((left, left_prime, right, right_prime, x, x_prime))
+        if len(valid_vertices) > max_vertices:
+            return RelativeContextualSeparationSummary(
+                element_count=size,
+                quotient_class_count=quotient_class_count,
+                left_monoid_size=len(data.left_monoid),
+                right_monoid_size=len(data.right_monoid),
+                valid_vertex_count=None,
+                checked=False,
+                skipped_reason=f"valid vertex count exceeds {max_vertices}",
+                collision_found=False,
+                collision_length=None,
+                collision_path=(),
+            )
+
+    queue = deque()
+    seen = set()
+    parent: Dict[Tuple[Tuple[int, ...], bool], Tuple[Tuple[int, ...], bool] | None] = {}
+    for vertex in valid_vertices:
+        left, left_prime, right, right_prime, x, x_prime = vertex
+        if left != left_identity or left_prime != left_identity:
+            continue
+        state = (vertex, x != x_prime)
+        queue.append(state)
+        seen.add(state)
+        parent[state] = None
+
+    terminal_state = None
+    while queue:
+        vertex, mismatch = queue.popleft()
+        left, left_prime, right, right_prime, x, x_prime = vertex
+        if right == right_identity and right_prime == right_identity and mismatch:
+            terminal_state = (vertex, mismatch)
+            break
+        next_left = left_index[
+            compose_transformations(data.left_monoid[left], data.m_maps[x])
+        ]
+        next_left_prime = left_index[
+            compose_transformations(
+                data.left_monoid[left_prime],
+                data.m_maps[x_prime],
+            )
+        ]
+        for y, y_prime in product(range(size), repeat=2):
+            if labels[y] != labels[y_prime]:
+                continue
+            for next_right in right_predecessors[(right, y)]:
+                for next_right_prime in right_predecessors[(right_prime, y_prime)]:
+                    next_vertex = (
+                        next_left,
+                        next_left_prime,
+                        next_right,
+                        next_right_prime,
+                        y,
+                        y_prime,
+                    )
+                    if next_vertex not in valid_vertices:
+                        continue
+                    next_state = (next_vertex, mismatch or y != y_prime)
+                    if next_state in seen:
+                        continue
+                    seen.add(next_state)
+                    parent[next_state] = (vertex, mismatch)
+                    queue.append(next_state)
+
+    if terminal_state is None:
+        return RelativeContextualSeparationSummary(
+            element_count=size,
+            quotient_class_count=quotient_class_count,
+            left_monoid_size=len(data.left_monoid),
+            right_monoid_size=len(data.right_monoid),
+            valid_vertex_count=len(valid_vertices),
+            checked=True,
+            skipped_reason=None,
+            collision_found=False,
+            collision_length=None,
+            collision_path=(),
+        )
+
+    reversed_path = []
+    current = terminal_state
+    while current is not None:
+        vertex, _ = current
+        reversed_path.append(vertex)
+        current = parent[current]
+    path = tuple(reversed(reversed_path))
+    collision_path = tuple(
+        (repr(elements[vertex[4]]), repr(elements[vertex[5]]))
+        for vertex in path
+    )
+    return RelativeContextualSeparationSummary(
+        element_count=size,
+        quotient_class_count=quotient_class_count,
+        left_monoid_size=len(data.left_monoid),
+        right_monoid_size=len(data.right_monoid),
+        valid_vertex_count=len(valid_vertices),
+        checked=True,
+        skipped_reason=None,
+        collision_found=True,
+        collision_length=len(path),
+        collision_path=collision_path,
+    )
+
+
 def identity_extension_left_translations(
     data: ContextualCompletionData,
 ) -> Tuple[Transformation, ...]:
@@ -236,6 +720,53 @@ def identity_extension_left_translations(
             row[source] = target
         rows.append(tuple(row))
     return tuple(rows)
+
+
+def _identity_extension_forced_pair_closure_failures(
+    data: ContextualCompletionData,
+) -> int:
+    rows = identity_extension_left_translations(data)
+    if not all(len(set(row)) == data.class_count for row in rows):
+        return data.forced_product_count
+    inverses = tuple(invert_permutation(row) for row in rows)
+    failures = 0
+    for p, partial_row in data.partial_translations.items():
+        for q, out in partial_row.items():
+            conjugate = compose_transformations(
+                compose_transformations(rows[p], rows[q]),
+                inverses[p],
+            )
+            if rows[out] != conjugate:
+                failures += 1
+    return failures
+
+
+def active_lift_existence_summary(
+    data: ContextualCompletionData,
+) -> ActiveLiftExistenceSummary:
+    """Return finite evidence for coherent active-lift sets.
+
+    The identity-extension rows give a concrete singleton active-lift system
+    when they are total permutations and satisfy the forced-pair conjugacy
+    rule.  This proves existence of active lift sets, but it does not rely on
+    the previously proposed pruning operator, which is not monotone in
+    general.
+    """
+
+    class_count = data.class_count
+    summary = identity_extension_summary(data)
+    forced_pair_failures = _identity_extension_forced_pair_closure_failures(data)
+    identity_witness = (
+        summary.conflict_count == 0
+        and summary.partial_translations_injective
+        and summary.identity_extension_total_permutations
+        and forced_pair_failures == 0
+    )
+    return ActiveLiftExistenceSummary(
+        class_count=class_count,
+        identity_extension_singleton_witness=identity_witness,
+        identity_extension_forced_pair_closure_failures=forced_pair_failures,
+    )
 
 
 def contextual_readout(

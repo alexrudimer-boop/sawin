@@ -16,11 +16,17 @@ sys.path.insert(0, str(ROOT / "src"))
 from ybe_domination import (  # noqa: E402
     FiniteBraidedSet,
     LocalInterval,
+    active_lift_existence_summary,
     branch_tags,
+    congruences,
+    context_signature_core_summary,
+    context_signature_labels,
+    context_signature_quotient_summary,
     contextual_completion_data,
     contextual_readout_equivariance_failure,
     identity_extension_summary,
     orbit_readout_collision,
+    relative_contextual_separation_summary,
     solution_from_local_interval,
 )
 
@@ -91,6 +97,48 @@ def _profile_payload(key: tuple, count: int) -> dict:
     }
 
 
+def _proper_congruence_separation_summary(solution, data) -> dict:
+    partitions = congruences(solution, max_size=7)
+    proper_rows = []
+    for partition in partitions:
+        if len(partition) in (1, len(solution.elements)):
+            continue
+        labels = {
+            element: block_index
+            for block_index, block in enumerate(partition)
+            for element in block
+        }
+        separation = relative_contextual_separation_summary(data, labels)
+        proper_rows.append(
+            {
+                "block_sizes": sorted(len(block) for block in partition),
+                "quotient_class_count": len(partition),
+                "separation": {
+                    **asdict(separation),
+                    "proves_all_arity_injective": (
+                        separation.proves_all_arity_injective
+                    ),
+                },
+            }
+        )
+    return {
+        "congruence_count": len(partitions),
+        "nontrivial_proper_congruence_count": len(proper_rows),
+        "j_separating_nontrivial_proper_count": sum(
+            1
+            for row in proper_rows
+            if row["separation"]["proves_all_arity_injective"]
+        ),
+        "skipped_nontrivial_proper_count": sum(
+            1 for row in proper_rows if not row["separation"]["checked"]
+        ),
+        "collision_nontrivial_proper_count": sum(
+            1 for row in proper_rows if row["separation"]["collision_found"]
+        ),
+        "rows": proper_rows,
+    }
+
+
 def iter_cached_representatives(source_payload: dict):
     for base_name, scan in source_payload["bases"].items():
         for source_key, payload in scan["first_examples"].items():
@@ -110,6 +158,13 @@ def run_audit(max_arity: int) -> dict:
     source = json.loads(SOURCE_JSON.read_text(encoding="utf-8"))
     rows = []
     failures = []
+    active_lift_failures = []
+    context_signature_failures = []
+    context_core_failures = []
+    relative_separation_failures = []
+    relative_separation_skips = []
+    congruence_separation_failures = []
+    context_core_counts = Counter()
     equivariance_failures = []
     orbit_failures = []
     profile_counts = Counter()
@@ -126,10 +181,30 @@ def run_audit(max_arity: int) -> dict:
         tag_counts[_tag_text(tags)] += 1
         data = contextual_completion_data(total)
         summary = identity_extension_summary(data)
+        active_summary = active_lift_existence_summary(data)
         contextual_summary = asdict(summary)
         contextual_summary[
             "identity_extension_witnesses_active_lifts"
         ] = summary.identity_extension_witnesses_active_lifts
+        active_payload = asdict(active_summary)
+        active_payload[
+            "proves_active_lift_system_exists"
+        ] = active_summary.proves_active_lift_system_exists
+        context_signature_summary = context_signature_quotient_summary(total, data)
+        context_core_summary = context_signature_core_summary(total, data)
+        context_core_payload = asdict(context_core_summary)
+        context_core_payload["core_is_equality"] = context_core_summary.core_is_equality
+        context_core_payload[
+            "core_equals_raw_context_quotient"
+        ] = context_core_summary.core_equals_raw_context_quotient
+        context_core_counts[
+            (
+                context_core_summary.raw_quotient_class_count,
+                context_core_summary.core_class_count,
+                context_core_summary.core_is_equality,
+                context_core_summary.core_equals_raw_context_quotient,
+            )
+        ] += 1
         row = {
             "representative_index": index,
             "base_name": representative["base_name"],
@@ -138,11 +213,23 @@ def run_audit(max_arity: int) -> dict:
             "tags": list(tags),
             "tags_text": _tag_text(tags),
             "contextual_summary": contextual_summary,
+            "active_lift_existence_summary": active_payload,
+            "context_signature_quotient_summary": asdict(
+                context_signature_summary
+            ),
+            "context_signature_core_summary": context_core_payload,
+            "proper_congruence_relative_separation_summary": (
+                _proper_congruence_separation_summary(total, data)
+            ),
             "equivariance_checks": [],
             "orbit_arity_checks": [],
         }
         key = _profile_key(row)
         profile_counts[key] += 1
+        if row["proper_congruence_relative_separation_summary"][
+            "skipped_nontrivial_proper_count"
+        ]:
+            congruence_separation_failures.append(row)
         contextual_ok = (
             summary.conflict_count == 0
             and summary.partial_translations_injective
@@ -153,6 +240,35 @@ def run_audit(max_arity: int) -> dict:
         )
         if not contextual_ok:
             failures.append(row)
+            rows.append(row)
+            continue
+        if not active_summary.proves_active_lift_system_exists:
+            active_lift_failures.append(row)
+            rows.append(row)
+            continue
+        if not context_signature_summary.is_braided_congruence:
+            context_signature_failures.append(row)
+            rows.append(row)
+            continue
+        if not context_core_summary.is_braided_congruence:
+            context_core_failures.append(row)
+            rows.append(row)
+            continue
+        relative_summary = relative_contextual_separation_summary(
+            data,
+            context_signature_labels(data),
+        )
+        relative_payload = asdict(relative_summary)
+        relative_payload[
+            "proves_all_arity_injective"
+        ] = relative_summary.proves_all_arity_injective
+        row["raw_context_relative_separation_summary"] = relative_payload
+        if not relative_summary.checked:
+            relative_separation_skips.append(row)
+            rows.append(row)
+            continue
+        if relative_summary.collision_found:
+            relative_separation_failures.append(row)
             rows.append(row)
             continue
 
@@ -197,6 +313,36 @@ def run_audit(max_arity: int) -> dict:
         "profiles": profiles,
         "contextual_failure_count": len(failures),
         "contextual_failures": failures[:8],
+        "active_lift_existence_failure_count": len(active_lift_failures),
+        "active_lift_existence_failures": active_lift_failures[:8],
+        "context_signature_congruence_failure_count": len(context_signature_failures),
+        "context_signature_congruence_failures": context_signature_failures[:8],
+        "context_signature_core_failure_count": len(context_core_failures),
+        "context_signature_core_failures": context_core_failures[:8],
+        "raw_context_relative_separation_failure_count": len(
+            relative_separation_failures
+        ),
+        "raw_context_relative_separation_failures": (
+            relative_separation_failures[:8]
+        ),
+        "raw_context_relative_separation_skip_count": len(relative_separation_skips),
+        "raw_context_relative_separation_skips": relative_separation_skips[:8],
+        "proper_congruence_relative_separation_skip_count": len(
+            congruence_separation_failures
+        ),
+        "proper_congruence_relative_separation_skips": (
+            congruence_separation_failures[:8]
+        ),
+        "context_signature_core_profiles": [
+            {
+                "case_count": count,
+                "raw_quotient_class_count": key[0],
+                "core_class_count": key[1],
+                "core_is_equality": key[2],
+                "core_equals_raw_context_quotient": key[3],
+            }
+            for key, count in sorted(context_core_counts.items())
+        ],
         "equivariance_failure_count": len(equivariance_failures),
         "equivariance_failures": equivariance_failures[:8],
         "orbit_failure_count": len(orbit_failures),
@@ -208,6 +354,12 @@ def run_audit(max_arity: int) -> dict:
             and source_totals["local_minimal_count"] == 120
             and len(rows) == 15
             and not failures
+            and not active_lift_failures
+            and not context_signature_failures
+            and not context_core_failures
+            and not relative_separation_failures
+            and not relative_separation_skips
+            and not congruence_separation_failures
             and not equivariance_failures
             and not orbit_failures
         ),
@@ -242,6 +394,18 @@ def write_markdown(report: dict) -> str:
         f"- tag counts: `{report['tag_counts']}`;",
         f"- contextual profile count: `{report['profile_count']}`;",
         f"- contextual completion failure count: `{report['contextual_failure_count']}`;",
+        "- active-lift existence certificate failure count: "
+        f"`{report['active_lift_existence_failure_count']}`;",
+        "- context-signature quotient congruence failure count: "
+        f"`{report['context_signature_congruence_failure_count']}`;",
+        "- context-signature core verification failure count: "
+        f"`{report['context_signature_core_failure_count']}`;",
+        "- raw-context relative separation failure count: "
+        f"`{report['raw_context_relative_separation_failure_count']}`;",
+        "- raw-context relative separation skip count: "
+        f"`{report['raw_context_relative_separation_skip_count']}`;",
+        "- proper-congruence relative separation skip count: "
+        f"`{report['proper_congruence_relative_separation_skip_count']}`;",
         f"- identity-extension equivariance checked through arity: `{report['max_arity']}`;",
         f"- equivariance failure count: `{report['equivariance_failure_count']}`;",
         f"- orbit-injectivity checked through arity: `{report['max_arity']}`;",
@@ -268,6 +432,11 @@ def write_markdown(report: dict) -> str:
             "The cached representatives include the untagged rows retained by the",
             "older two-colour/fibre-2 corridor audit.  None of these",
             "representatives exhibits an identity-extension, active-lift, or",
+            "active-lift singleton closure,",
+            "context-signature quotient congruence,",
+            "context-signature core verification,",
+            "raw-context relative all-arity separation,",
+            "proper-congruence relative all-arity separation reachability,",
             "checked-arity equivariance or contextual readout obstruction.  This is finite",
             "candidate-search evidence only; it does not prove all-arity",
             "orbit separation or cover every one of the 120 local-minimal rows.",
@@ -276,6 +445,12 @@ def write_markdown(report: dict) -> str:
     if (
         report["contextual_failures"]
         or report["equivariance_failures"]
+        or report["active_lift_existence_failures"]
+        or report["context_signature_congruence_failures"]
+        or report["context_signature_core_failures"]
+        or report["raw_context_relative_separation_failures"]
+        or report["raw_context_relative_separation_skips"]
+        or report["proper_congruence_relative_separation_skips"]
         or report["orbit_failures"]
     ):
         lines.extend(["", "## Failures", "", "```json"])
@@ -283,6 +458,20 @@ def write_markdown(report: dict) -> str:
             json.dumps(
                 {
                     "contextual": report["contextual_failures"],
+                    "active_lift": report["active_lift_existence_failures"],
+                    "context_signature": report[
+                        "context_signature_congruence_failures"
+                    ],
+                    "context_core": report["context_signature_core_failures"],
+                    "relative_separation": report[
+                        "raw_context_relative_separation_failures"
+                    ],
+                    "relative_separation_skips": report[
+                        "raw_context_relative_separation_skips"
+                    ],
+                    "proper_congruence_skips": report[
+                        "proper_congruence_relative_separation_skips"
+                    ],
                     "equivariance": report["equivariance_failures"],
                     "orbit": report["orbit_failures"],
                 },

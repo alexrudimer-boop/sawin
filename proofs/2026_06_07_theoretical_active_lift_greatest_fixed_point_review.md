@@ -4,9 +4,25 @@ Date: 2026-06-07.
 
 ## Verdict
 
-This is theorem-level progress.  It makes the active-lift existence problem
-canonical: there is a greatest active lift system obtained by monotone pruning.
-There is no arbitrary choice of active sets left.
+Superseded correction, 2026-06-08: the "greatest fixed point" claim in this
+note is not valid as stated.  The operator below is not monotone with respect
+to inclusion of active-lift families: enlarging neighbour fibres adds
+compatibility obligations, while shrinking them can remove obligations.
+Therefore iterating from all extensions can delete a lift that would be valid
+inside a smaller active system.
+
+The active-lift problem remains a finite constraint problem.  In the audited
+families it is solved by a stronger explicit certificate: identity-extension
+translations form singleton active sets closed under every forced compatible
+pair.  See
+`proofs/2026_06_08_theoretical_context_signature_quotient_failure_review.md`
+for the correction.
+
+Original verdict below is retained only as historical context and should not
+be used as a theorem.
+
+This was claimed as theorem-level progress.  It attempted to make the
+active-lift existence problem canonical by monotone pruning.
 
 It does not prove A, because it still must be shown that the fixed point is
 nonempty for every finite bijective YBE solution, and all-arity orbit

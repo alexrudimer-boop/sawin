@@ -12,6 +12,12 @@ completion helper.
 - identity-extension equivariance checked through arity: `5`;
 - contextual profile count: `14`;
 - failure count: `0`;
+- active-lift existence certificate failure count: `0`;
+- context-signature quotient congruence failure count: `0`;
+- context-signature core verification failure count: `0`;
+- raw-context relative separation failure count: `0`;
+- raw-context relative separation skip count: `0`;
+- proper-congruence relative separation skip count: `0`;
 - equivariance failure count: `0`;
 - all claimed checks passed: `True`.
 
@@ -31,6 +37,11 @@ lambda_p(D_p)=D_p for every contextual class p;
 identity-outside extensions are total permutations;
 L_{L_p(q)}=L_p L_q L_p^{-1} for every p,q;
 the full forced graph has no local covariance failures;
+the identity-extension singleton active-lift system is closed under every forced compatible pair;
+the context-signature relation x~x' iff (m_x,r_x)=(m_x',r_x') is a braided congruence;
+the refined context-signature core is a braided congruence;
+when the raw context quotient is braided, (pi^n,J_n) is all-arity injective by finite graph reachability;
+every nontrivial proper braided congruence is tested for relative J-separation by the same finite graph;
 J_n rho^X = rho^P J_n in every checked arity.
 ```
 

@@ -1,0 +1,101 @@
+{
+  "R_e0_e1": [
+    "e_1",
+    "e_2"
+  ],
+  "R_f0_e1": [
+    "e_2",
+    "f_0"
+  ],
+  "all_claimed_checks_passed": true,
+  "claimed_equal_signature_pair": [
+    "e_0",
+    "f_0"
+  ],
+  "claimed_equal_signature_pair_verified": true,
+  "comparison_input": [
+    "f_0",
+    "e_1"
+  ],
+  "context_signature_core_summary": {
+    "core_block_sizes": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "core_class_count": 6,
+    "core_equals_raw_context_quotient": false,
+    "core_is_equality": true,
+    "element_count": 6,
+    "is_braided_congruence": true,
+    "raw_block_sizes": [
+      1,
+      1,
+      1,
+      1,
+      2
+    ],
+    "raw_quotient_class_count": 5,
+    "refinement_iterations": 1,
+    "verification_failure": null
+  },
+  "context_signature_summary": {
+    "block_sizes": [
+      1,
+      1,
+      1,
+      1,
+      2
+    ],
+    "element_count": 6,
+    "failure": {
+      "R_x_prime_y_prime": [
+        "(0, 2)",
+        "(1, 0)"
+      ],
+      "R_x_y": [
+        "(0, 1)",
+        "(0, 2)"
+      ],
+      "input_classes": [
+        0,
+        1
+      ],
+      "output_classes": [
+        1,
+        2
+      ],
+      "output_prime_classes": [
+        2,
+        0
+      ],
+      "x": "(0, 0)",
+      "x_prime": "(1, 0)",
+      "y": "(0, 1)",
+      "y_prime": "(0, 1)"
+    },
+    "is_braided_congruence": false,
+    "quotient_class_count": 5
+  },
+  "corpus": "six_point_linear_skew_over_flip_context_signature_failure",
+  "distinguished_input": [
+    "e_0",
+    "e_1"
+  ],
+  "e1_e2_context_signatures_equal": false,
+  "elements": [
+    "e_0",
+    "e_1",
+    "e_2",
+    "f_0",
+    "f_1",
+    "f_2"
+  ],
+  "is_ybe": true,
+  "left_nondegenerate": true,
+  "nondegenerate": true,
+  "right_nondegenerate": true
+}

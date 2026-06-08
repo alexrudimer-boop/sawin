@@ -930,35 +930,38 @@ the audit verifies:
 
 This is finite evidence only, not an all-arity theorem.
 
-31. The latest theoretical response makes the active-lift problem canonical.
+31. Correction: the active-lift problem is a finite CSP, not a canonical
+greatest-fixed-point theorem.
 
 For each contextual class p, let
 
   V_p={g in Sym(P_X): g extends lambda_p}.
 
-For a family C=(C_p), define the monotone pruning operator
+The earlier proposed pruning operator
 
   T(C)_p =
     { g in C_p :
         for every q in D_p and every h in C_q,
         g h g^(-1) in C_{lambda_p(q)} }.
 
-Start with C^(0)=V and iterate C^(k+1)=T(C^(k)).  Since everything is finite,
-this stabilizes to C^(infty).
+is not monotone with respect to inclusion of families `C_p`: enlarging
+neighbour fibres adds compatibility obligations and can delete elements, while
+shrinking fibres can make obligations disappear.  Therefore iterating from all
+extensions can delete a lift that would be valid inside a smaller active
+system.
 
-There exists an active lift system iff
+The active-lift problem remains a finite constraint problem:
 
-  C^(infty)_p is nonempty for every p.
+  choose nonempty C_p subseteq V_p
+  such that for every forced compatible pair q in D_p,
+  g C_q g^(-1) subseteq C_{lambda_p(q)}.
 
-Thus active-lift existence is no longer an arbitrary SAT choice; it has a
-canonical greatest fixed point.  A failure is a finite pruning certificate.
+In the audited families, this CSP is solved by a stronger explicit
+certificate: the identity-extension translations form singleton active sets.
+The current theoretical target is not "prove C^(infty) nonempty"; it is:
 
-The next answer should attack exactly this:
-
-  Prove C^(infty)_p is nonempty for every p and every finite bijective YBE X,
-  and prove all-arity orbit-injectivity of J_n; or find one explicit finite X
-  where the canonical fixed point empties somewhere, or where it survives but
-  orbit-injectivity fails in a way that yields B.
+  prove active-lift CSP satisfiability for every finite bijective YBE X, or
+  find one explicit finite X where no active-lift system exists.
 
 32. The latest response tests a known finite-extension mechanism and locates
 the virtual-context obstruction more precisely.
@@ -1024,6 +1027,12 @@ verifies:
   degenerate involutive = 7,
   degenerate non-involutive = 0,
   maximum contextual quotient size = 18,
+  active-lift existence certificate failure count = 0,
+  context-signature quotient congruence failure count = 0,
+  context-signature core verification failure count = 0,
+  raw-context relative separation failure count = 0,
+  raw-context relative separation skip count = 0,
+  proper-congruence relative separation skip count = 0,
   identity-extension equivariance checked through arity 5.
 
 For every row in the complete size-three corpus, the generic two-sided
@@ -1035,6 +1044,14 @@ contextual helper finds:
   identity-outside extensions are total permutations;
   L_{L_p(q)}=L_p L_q L_p^(-1) for every p,q;
   the full forced graph has no local covariance failures;
+  the identity-extension singleton active-lift system is closed under every
+    forced compatible pair;
+  the context-signature relation is a braided congruence in this corpus;
+  the refined context-signature core is a braided congruence;
+  when the raw context quotient is braided, (pi^n,J_n) is all-arity injective
+    by finite graph reachability;
+  every nontrivial proper braided congruence is tested for relative
+    J-separation by the same finite graph;
   J_n rho^X = rho^P J_n in every checked arity.
 
 This is not hard-case evidence because size three has no degenerate
@@ -1072,6 +1089,12 @@ For these 15 representative four-point totals it verifies:
 
   contextual profile count = 14,
   contextual completion failure count = 0,
+  active-lift existence certificate failure count = 0,
+  context-signature quotient congruence failure count = 0,
+  context-signature core verification failure count = 0,
+  raw-context relative separation failure count = 0,
+  raw-context relative separation skip count = 0,
+  proper-congruence relative separation skip count = 0,
   identity-extension equivariance failure count = 0 through arity 6,
   orbit-injectivity failure count = 0 through arity 6.
 
@@ -1089,6 +1112,15 @@ For every representative, the generic two-sided contextual helper finds:
   identity-outside extensions are total permutations;
   L_{L_p(q)}=L_p L_q L_p^(-1) for every p,q;
   the full forced graph has no local covariance failures;
+  the identity-extension singleton active-lift system is closed under every
+    forced compatible pair;
+  the context-signature relation is a braided congruence in these
+    representatives;
+  the refined context-signature core is a braided congruence;
+  when the raw context quotient is braided, (pi^n,J_n) is all-arity injective
+    by finite graph reachability;
+  every nontrivial proper braided congruence is tested for relative
+    J-separation by the same finite graph;
   J_n rho^X = rho^P J_n in every checked arity.
 
 This is finite representative evidence only.  It supports the current
@@ -1160,16 +1192,16 @@ Writing `r0=lambda_p(q)`, this extension check requires, for every
 These are precisely the joint-fillability/domain conditions for the virtual
 third contextual state.  YBE proves the needed identity on actual jointly
 realizable triples, but this alone does not prove those domain conditions for
-virtual contextual states.  Therefore the direct proof of
-`C^(infty)_p != empty` is still missing.
+virtual contextual states.  This explains why a direct extension-closure proof
+of active-lift CSP satisfiability is still missing.
 
 This is now a guardrail, not a destination.  The next response must not merely
 repeat that YBE only controls jointly realizable triples.  It must either:
 
-  - prove a structural invariant keeping the pruning fixed point
-    `C^(infty)_p` nonempty for every finite bijective `X`;
-  - give an explicit finite `X` and a finite pruning-stage certificate where
-    some `C^(infty)_p` becomes empty;
+  - prove a structural invariant giving nonempty active-lift sets `C_p` for
+    every finite bijective `X`;
+  - give an explicit finite `X` and a finite certificate that the active-lift
+    CSP is unsatisfiable;
   - bypass one-strand contextual readouts with a genuinely multi-strand finite
     rack detector and prove all-arity domination; or
   - construct one fixed finite `X` with actual cofinal Brunnian
@@ -1178,6 +1210,62 @@ repeat that YBE only controls jointly realizable triples.  It must either:
 The negative-route failure is unchanged: varying `Conj(A_l)` targets do not
 prove B, and powered-meridian witnesses cannot be frozen to one fixed finite
 `X` without overcoming the fixed two-strand pure order obstruction.
+
+37. The raw context-signature quotient is not automatically braided.
+
+The attempted quotient
+
+  x ~ctx x' iff (m_x,r_x)=(m_x',r_x')
+
+fails in a verified six-point nondegenerate linear skew-over-flip example.
+The repo records the certificate:
+
+  tools/run_context_signature_quotient_failure_certificate.py
+  proofs/context_signature_quotient_failure_certificate.json
+  proofs/context_signature_quotient_failure_certificate.md
+
+The example has `YBE=True`, `nondegenerate=True`, and
+`context-signature braided congruence=False`.  It proves that the quotient
+`X/~ctx` cannot be used as a universal induction quotient.  Because the
+example is nondegenerate, it is not a Sawin counterexample.
+
+The refined context-signature core inside `~ctx` is computable and verified as
+a braided congruence in the helper, but it can be equality and is not by
+itself a solution of A.
+
+38. The current quotient route is relative, not canonical.
+
+Given any dominated braided quotient `pi:X->Z`, define
+
+  K_n(x)=(pi^n(x),J_n(x)).
+
+If `P_X` has a finite rack completion preserving forced products and `K_n` is
+injective for every n, then `Y_0 x P_X x T_2` dominates `X`, where `Y_0`
+dominates `Z`.
+
+The all-arity injectivity of `(pi^n,J_n)` is finite-checkable.  For a braided
+congruence E, build the graph with vertices
+
+  (A,A',B,B',x,x') in M_L^2 x M_R^2 x X^2
+
+satisfying `x E x'` and `[A,x,B]=[A',x',B']`, with edges encoding the left and
+right context recursions.  A collision exists in some arity iff this graph has
+an initial-to-terminal path whose mismatch flag is true.
+
+This is implemented locally as:
+
+  relative_contextual_separation_summary(...)
+
+The current audits enumerate nontrivial proper congruences in the size-three
+corpus and the two-colour/fibre-2 representatives and apply this finite
+reachability test with zero skips.
+
+Therefore a smallest counterexample must now be:
+
+  - a contextual rack-completion/active-lift CSP failure; or
+  - braided-simple; or
+  - quotient-rigid: every nontrivial proper quotient has a finite contextual
+    collision in the relative separation graph.
 
 Your task.
 
@@ -1322,16 +1410,27 @@ Do not answer by:
 - imposing the too-strong equality condition
   `g E_q g^{-1}=E_{lambda_p(q)}` on non-fillable or virtual products without
   explaining why actual braid-equivariant lifts require it;
-- presenting active-lift existence as an arbitrary SAT choice without using
-  the canonical greatest fixed point C^(infty);
-- stopping after defining C^(infty); the next step is proving it is nonempty
-  for all finite X or finding an explicit X where it empties;
+- presenting the earlier active-lift pruning operator as a canonical greatest
+  fixed point; it is not monotone in the needed sense;
+- stopping after saying active-lift existence is a finite CSP; prove it for
+  YBE-origin contextual quotients or give an explicit unsatisfiable instance;
 - repeating the active-lift domain obstruction
   `g,h => g h g^{-1}` requires joint-fillability conditions for virtual
-  triples, unless you prove fixed-point nonemptiness or give an explicit
-  empty-pruning certificate;
+  triples, unless you prove active-lift CSP satisfiability or give an
+  explicit unsatisfiable finite certificate;
 - saying only that YBE controls jointly realizable triples but not virtual
   contextual states;
+- trying to prove that the raw context-signature quotient
+  `x -> (m_x,r_x)` is always braided; this is refuted by the checked six-point
+  nondegenerate certificate;
+- replacing the failed raw context quotient by the context core alone without
+  proving it gives a proper useful dominated quotient or relative
+  J-separation;
+- restating the relative contextual extension theorem or minimal-counterexample
+  criterion without using it to prove A or construct B;
+- saying only that a minimal counterexample must be braided-simple or
+  quotient-rigid; use that to finish A or produce an explicit fixed X with
+  braid witnesses;
 - proving partial automorphism extension on the naive full graph
   `G(ell_p,q,r)` without handling non-fillable virtual triples;
 - ignoring the realizable contextual language
