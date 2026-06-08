@@ -22,6 +22,8 @@ It is a representative audit, not a full-row contextual pass over all
 - tag counts: `{'(untagged)': 3, 'involutive': 5, 'involutive+left_nondegenerate+right_nondegenerate+nondegenerate': 1, 'involutive+permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate': 1, 'left_nondegenerate+right_nondegenerate+nondegenerate': 1, 'permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate': 3, 'rack_type+permutation_form+left_nondegenerate+right_nondegenerate+nondegenerate': 1}`;
 - contextual profile count: `14`;
 - contextual completion failure count: `0`;
+- identity-extension equivariance checked through arity: `6`;
+- equivariance failure count: `0`;
 - orbit-injectivity checked through arity: `6`;
 - orbit-injectivity failure count: `0`;
 - all claimed checks passed: `True`.
@@ -50,6 +52,6 @@ It is a representative audit, not a full-row contextual pass over all
 The cached representatives include the untagged rows retained by the
 older two-colour/fibre-2 corridor audit.  None of these
 representatives exhibits an identity-extension, active-lift, or
-checked-arity contextual readout obstruction.  This is finite
+checked-arity equivariance or contextual readout obstruction.  This is finite
 candidate-search evidence only; it does not prove all-arity
 orbit separation or cover every one of the 120 local-minimal rows.

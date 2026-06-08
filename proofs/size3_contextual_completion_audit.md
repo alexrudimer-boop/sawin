@@ -9,8 +9,10 @@ completion helper.
 - YBE solutions: `73`;
 - classification counts: `{'degenerate_involutive': 7, 'nondegenerate': 66}`;
 - maximum contextual quotient size: `18`;
+- identity-extension equivariance checked through arity: `5`;
 - contextual profile count: `14`;
 - failure count: `0`;
+- equivariance failure count: `0`;
 - all claimed checks passed: `True`.
 
 The corpus has no degenerate non-involutive rows.  It is therefore not
@@ -28,7 +30,8 @@ forced partial translations are injective;
 lambda_p(D_p)=D_p for every contextual class p;
 identity-outside extensions are total permutations;
 L_{L_p(q)}=L_p L_q L_p^{-1} for every p,q;
-the full forced graph has no local covariance failures.
+the full forced graph has no local covariance failures;
+J_n rho^X = rho^P J_n in every checked arity.
 ```
 
 ## Profiles

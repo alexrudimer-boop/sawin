@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import sys
+import argparse
 from collections import Counter
 from dataclasses import asdict
 from pathlib import Path
@@ -14,6 +15,7 @@ sys.path.insert(0, str(ROOT / "src"))
 from ybe_domination import (  # noqa: E402
     branch_tags,
     contextual_completion_data,
+    contextual_readout_equivariance_failure,
     identity_extension_summary,
     is_involutive_solution,
     is_nondegenerate,
@@ -33,10 +35,11 @@ def _classification(solution) -> str:
     return "degenerate_noninvolutive"
 
 
-def run_audit() -> dict:
+def run_audit(max_equivariance_arity: int) -> dict:
     classification_counts = Counter()
     profile_counts = Counter()
     failure_rows = []
+    equivariance_failures = []
     sample_rows = []
     solution_count = 0
     max_contextual_class_count = 0
@@ -85,6 +88,20 @@ def run_audit() -> dict:
             and summary.full_forced_graph_local_covariance_failures == 0
         ):
             failure_rows.append(row)
+        else:
+            equivariance_checks = []
+            for arity in range(1, max_equivariance_arity + 1):
+                result = contextual_readout_equivariance_failure(solution, data, arity)
+                equivariance_checks.append(result)
+                if result.get("failure") is not None:
+                    equivariance_failures.append(
+                        {
+                            "row": row,
+                            "result": result,
+                        }
+                    )
+                    break
+            row["equivariance_checks"] = equivariance_checks
 
     profiles = [
         {
@@ -116,8 +133,11 @@ def run_audit() -> dict:
         "profile_count": len(profiles),
         "profiles": profiles,
         "max_contextual_class_count": max_contextual_class_count,
+        "max_equivariance_arity": max_equivariance_arity,
         "failure_count": len(failure_rows),
         "failures": failure_rows[:8],
+        "equivariance_failure_count": len(equivariance_failures),
+        "equivariance_failures": equivariance_failures[:8],
         "sample_rows": sample_rows,
         "all_claimed_checks_passed": (
             solution_count == 73
@@ -125,6 +145,7 @@ def run_audit() -> dict:
             and classification_counts["degenerate_involutive"] == 7
             and classification_counts["degenerate_noninvolutive"] == 0
             and not failure_rows
+            and not equivariance_failures
         ),
     }
     return report
@@ -144,8 +165,11 @@ def write_markdown(report: dict) -> str:
         f"- classification counts: `{report['classification_counts']}`;",
         "- maximum contextual quotient size: "
         f"`{report['max_contextual_class_count']}`;",
+        "- identity-extension equivariance checked through arity: "
+        f"`{report['max_equivariance_arity']}`;",
         f"- contextual profile count: `{report['profile_count']}`;",
         f"- failure count: `{report['failure_count']}`;",
+        f"- equivariance failure count: `{report['equivariance_failure_count']}`;",
         f"- all claimed checks passed: `{report['all_claimed_checks_passed']}`.",
         "",
         "The corpus has no degenerate non-involutive rows.  It is therefore not",
@@ -163,7 +187,8 @@ def write_markdown(report: dict) -> str:
         "lambda_p(D_p)=D_p for every contextual class p;",
         "identity-outside extensions are total permutations;",
         "L_{L_p(q)}=L_p L_q L_p^{-1} for every p,q;",
-        "the full forced graph has no local covariance failures.",
+        "the full forced graph has no local covariance failures;",
+        "J_n rho^X = rho^P J_n in every checked arity.",
         "```",
         "",
         "## Profiles",
@@ -178,15 +203,26 @@ def write_markdown(report: dict) -> str:
             "{forced_product_count} | {domain_sizes} | "
             "{nontrivial_left_translation_count} |".format(**row)
         )
-    if report["failures"]:
+    if report["failures"] or report["equivariance_failures"]:
         lines.extend(["", "## Failures", "", "```json"])
-        lines.append(json.dumps(report["failures"], indent=2))
+        lines.append(
+            json.dumps(
+                {
+                    "contextual": report["failures"],
+                    "equivariance": report["equivariance_failures"],
+                },
+                indent=2,
+            )
+        )
         lines.append("```")
     return "\n".join(lines) + "\n"
 
 
 def main() -> None:
-    report = run_audit()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--max-equivariance-arity", type=int, default=5)
+    args = parser.parse_args()
+    report = run_audit(args.max_equivariance_arity)
     OUT_JSON.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n")
     OUT_MD.write_text(write_markdown(report), encoding="utf-8")
     if not report["all_claimed_checks_passed"]:
@@ -195,6 +231,7 @@ def main() -> None:
     print(f"YBE solutions {report['solution_count']}")
     print(f"classification {report['classification_counts']}")
     print(f"max contextual quotient {report['max_contextual_class_count']}")
+    print(f"equivariance through arity {report['max_equivariance_arity']}")
 
 
 if __name__ == "__main__":

@@ -1023,7 +1023,8 @@ verifies:
   nondegenerate = 66,
   degenerate involutive = 7,
   degenerate non-involutive = 0,
-  maximum contextual quotient size = 18.
+  maximum contextual quotient size = 18,
+  identity-extension equivariance checked through arity 5.
 
 For every row in the complete size-three corpus, the generic two-sided
 contextual helper finds:
@@ -1033,7 +1034,8 @@ contextual helper finds:
   lambda_p(D_p)=D_p for every contextual class p;
   identity-outside extensions are total permutations;
   L_{L_p(q)}=L_p L_q L_p^(-1) for every p,q;
-  the full forced graph has no local covariance failures.
+  the full forced graph has no local covariance failures;
+  J_n rho^X = rho^P J_n in every checked arity.
 
 This is not hard-case evidence because size three has no degenerate
 non-involutive row.  Its purpose is narrower: the generic contextual code now
@@ -1070,6 +1072,7 @@ For these 15 representative four-point totals it verifies:
 
   contextual profile count = 14,
   contextual completion failure count = 0,
+  identity-extension equivariance failure count = 0 through arity 6,
   orbit-injectivity failure count = 0 through arity 6.
 
 The representative tag counts are:
@@ -1085,7 +1088,8 @@ For every representative, the generic two-sided contextual helper finds:
   lambda_p(D_p)=D_p for every contextual class p;
   identity-outside extensions are total permutations;
   L_{L_p(q)}=L_p L_q L_p^(-1) for every p,q;
-  the full forced graph has no local covariance failures.
+  the full forced graph has no local covariance failures;
+  J_n rho^X = rho^P J_n in every checked arity.
 
 This is finite representative evidence only.  It supports the current
 active-lift/contextual route by checking untagged four-point representatives

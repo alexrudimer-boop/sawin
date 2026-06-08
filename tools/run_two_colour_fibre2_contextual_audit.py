@@ -18,6 +18,7 @@ from ybe_domination import (  # noqa: E402
     LocalInterval,
     branch_tags,
     contextual_completion_data,
+    contextual_readout_equivariance_failure,
     identity_extension_summary,
     orbit_readout_collision,
     solution_from_local_interval,
@@ -109,6 +110,7 @@ def run_audit(max_arity: int) -> dict:
     source = json.loads(SOURCE_JSON.read_text(encoding="utf-8"))
     rows = []
     failures = []
+    equivariance_failures = []
     orbit_failures = []
     profile_counts = Counter()
     tag_counts = Counter()
@@ -136,21 +138,39 @@ def run_audit(max_arity: int) -> dict:
             "tags": list(tags),
             "tags_text": _tag_text(tags),
             "contextual_summary": contextual_summary,
+            "equivariance_checks": [],
             "orbit_arity_checks": [],
         }
         key = _profile_key(row)
         profile_counts[key] += 1
-        if not (
+        contextual_ok = (
             summary.conflict_count == 0
             and summary.partial_translations_injective
             and summary.balanced_domains
             and summary.identity_extension_total_permutations
             and summary.identity_extension_conjugacy_covariance
             and summary.full_forced_graph_local_covariance_failures == 0
-        ):
+        )
+        if not contextual_ok:
             failures.append(row)
+            rows.append(row)
+            continue
 
         for arity in range(1, max_arity + 1):
+            equivariance_result = contextual_readout_equivariance_failure(
+                total,
+                data,
+                arity,
+            )
+            row["equivariance_checks"].append(equivariance_result)
+            if equivariance_result.get("failure") is not None:
+                equivariance_failures.append(
+                    {
+                        "row": row,
+                        "result": equivariance_result,
+                    }
+                )
+                break
             result = orbit_readout_collision(total, data, arity)
             row["orbit_arity_checks"].append(result)
             if result.get("collision") is not None:
@@ -177,6 +197,8 @@ def run_audit(max_arity: int) -> dict:
         "profiles": profiles,
         "contextual_failure_count": len(failures),
         "contextual_failures": failures[:8],
+        "equivariance_failure_count": len(equivariance_failures),
+        "equivariance_failures": equivariance_failures[:8],
         "orbit_failure_count": len(orbit_failures),
         "orbit_failures": orbit_failures[:8],
         "rows": rows,
@@ -186,6 +208,7 @@ def run_audit(max_arity: int) -> dict:
             and source_totals["local_minimal_count"] == 120
             and len(rows) == 15
             and not failures
+            and not equivariance_failures
             and not orbit_failures
         ),
     }
@@ -219,6 +242,8 @@ def write_markdown(report: dict) -> str:
         f"- tag counts: `{report['tag_counts']}`;",
         f"- contextual profile count: `{report['profile_count']}`;",
         f"- contextual completion failure count: `{report['contextual_failure_count']}`;",
+        f"- identity-extension equivariance checked through arity: `{report['max_arity']}`;",
+        f"- equivariance failure count: `{report['equivariance_failure_count']}`;",
         f"- orbit-injectivity checked through arity: `{report['max_arity']}`;",
         f"- orbit-injectivity failure count: `{report['orbit_failure_count']}`;",
         f"- all claimed checks passed: `{report['all_claimed_checks_passed']}`.",
@@ -243,17 +268,22 @@ def write_markdown(report: dict) -> str:
             "The cached representatives include the untagged rows retained by the",
             "older two-colour/fibre-2 corridor audit.  None of these",
             "representatives exhibits an identity-extension, active-lift, or",
-            "checked-arity contextual readout obstruction.  This is finite",
+            "checked-arity equivariance or contextual readout obstruction.  This is finite",
             "candidate-search evidence only; it does not prove all-arity",
             "orbit separation or cover every one of the 120 local-minimal rows.",
         ]
     )
-    if report["contextual_failures"] or report["orbit_failures"]:
+    if (
+        report["contextual_failures"]
+        or report["equivariance_failures"]
+        or report["orbit_failures"]
+    ):
         lines.extend(["", "## Failures", "", "```json"])
         lines.append(
             json.dumps(
                 {
                     "contextual": report["contextual_failures"],
+                    "equivariance": report["equivariance_failures"],
                     "orbit": report["orbit_failures"],
                 },
                 indent=2,

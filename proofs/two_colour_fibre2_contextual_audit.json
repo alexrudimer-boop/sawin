@@ -3,6 +3,8 @@
   "contextual_failure_count": 0,
   "contextual_failures": [],
   "corpus": "cached_two_colour_fibre2_all_base_representatives",
+  "equivariance_failure_count": 0,
+  "equivariance_failures": [],
   "max_arity": 6,
   "orbit_failure_count": 0,
   "orbit_failures": [],
@@ -250,6 +252,32 @@
         "partial_translations_injective": true,
         "right_monoid_size": 5
       },
+      "equivariance_checks": [
+        {
+          "arity": 1,
+          "failure": null
+        },
+        {
+          "arity": 2,
+          "failure": null
+        },
+        {
+          "arity": 3,
+          "failure": null
+        },
+        {
+          "arity": 4,
+          "failure": null
+        },
+        {
+          "arity": 5,
+          "failure": null
+        },
+        {
+          "arity": 6,
+          "failure": null
+        }
+      ],
       "orbit_arity_checks": [
         {
           "arity": 1,
@@ -327,6 +355,32 @@
         "partial_translations_injective": true,
         "right_monoid_size": 3
       },
+      "equivariance_checks": [
+        {
+          "arity": 1,
+          "failure": null
+        },
+        {
+          "arity": 2,
+          "failure": null
+        },
+        {
+          "arity": 3,
+          "failure": null
+        },
+        {
+          "arity": 4,
+          "failure": null
+        },
+        {
+          "arity": 5,
+          "failure": null
+        },
+        {
+          "arity": 6,
+          "failure": null
+        }
+      ],
       "orbit_arity_checks": [
         {
           "arity": 1,
@@ -408,6 +462,32 @@
         "partial_translations_injective": true,
         "right_monoid_size": 13
       },
+      "equivariance_checks": [
+        {
+          "arity": 1,
+          "failure": null
+        },
+        {
+          "arity": 2,
+          "failure": null
+        },
+        {
+          "arity": 3,
+          "failure": null
+        },
+        {
+          "arity": 4,
+          "failure": null
+        },
+        {
+          "arity": 5,
+          "failure": null
+        },
+        {
+          "arity": 6,
+          "failure": null
+        }
+      ],
       "orbit_arity_checks": [
         {
           "arity": 1,
@@ -489,6 +569,32 @@
         "partial_translations_injective": true,
         "right_monoid_size": 3
       },
+      "equivariance_checks": [
+        {
+          "arity": 1,
+          "failure": null
+        },
+        {
+          "arity": 2,
+          "failure": null
+        },
+        {
+          "arity": 3,
+          "failure": null
+        },
+        {
+          "arity": 4,
+          "failure": null
+        },
+        {
+          "arity": 5,
+          "failure": null
+        },
+        {
+          "arity": 6,
+          "failure": null
+        }
+      ],
       "orbit_arity_checks": [
         {
           "arity": 1,
@@ -570,6 +676,32 @@
         "partial_translations_injective": true,
         "right_monoid_size": 5
       },
+      "equivariance_checks": [
+        {
+          "arity": 1,
+          "failure": null
+        },
+        {
+          "arity": 2,
+          "failure": null
+        },
+        {
+          "arity": 3,
+          "failure": null
+        },
+        {
+          "arity": 4,
+          "failure": null
+        },
+        {
+          "arity": 5,
+          "failure": null
+        },
+        {
+          "arity": 6,
+          "failure": null
+        }
+      ],
       "orbit_arity_checks": [
         {
           "arity": 1,
@@ -646,6 +778,32 @@
         "partial_translations_injective": true,
         "right_monoid_size": 2
       },
+      "equivariance_checks": [
+        {
+          "arity": 1,
+          "failure": null
+        },
+        {
+          "arity": 2,
+          "failure": null
+        },
+        {
+          "arity": 3,
+          "failure": null
+        },
+        {
+          "arity": 4,
+          "failure": null
+        },
+        {
+          "arity": 5,
+          "failure": null
+        },
+        {
+          "arity": 6,
+          "failure": null
+        }
+      ],
       "orbit_arity_checks": [
         {
           "arity": 1,
@@ -733,6 +891,32 @@
         "partial_translations_injective": true,
         "right_monoid_size": 3
       },
+      "equivariance_checks": [
+        {
+          "arity": 1,
+          "failure": null
+        },
+        {
+          "arity": 2,
+          "failure": null
+        },
+        {
+          "arity": 3,
+          "failure": null
+        },
+        {
+          "arity": 4,
+          "failure": null
+        },
+        {
+          "arity": 5,
+          "failure": null
+        },
+        {
+          "arity": 6,
+          "failure": null
+        }
+      ],
       "orbit_arity_checks": [
         {
           "arity": 1,
@@ -809,6 +993,32 @@
         "partial_translations_injective": true,
         "right_monoid_size": 2
       },
+      "equivariance_checks": [
+        {
+          "arity": 1,
+          "failure": null
+        },
+        {
+          "arity": 2,
+          "failure": null
+        },
+        {
+          "arity": 3,
+          "failure": null
+        },
+        {
+          "arity": 4,
+          "failure": null
+        },
+        {
+          "arity": 5,
+          "failure": null
+        },
+        {
+          "arity": 6,
+          "failure": null
+        }
+      ],
       "orbit_arity_checks": [
         {
           "arity": 1,
@@ -895,6 +1105,32 @@
         "partial_translations_injective": true,
         "right_monoid_size": 1
       },
+      "equivariance_checks": [
+        {
+          "arity": 1,
+          "failure": null
+        },
+        {
+          "arity": 2,
+          "failure": null
+        },
+        {
+          "arity": 3,
+          "failure": null
+        },
+        {
+          "arity": 4,
+          "failure": null
+        },
+        {
+          "arity": 5,
+          "failure": null
+        },
+        {
+          "arity": 6,
+          "failure": null
+        }
+      ],
       "orbit_arity_checks": [
         {
           "arity": 1,
@@ -984,6 +1220,32 @@
         "partial_translations_injective": true,
         "right_monoid_size": 25
       },
+      "equivariance_checks": [
+        {
+          "arity": 1,
+          "failure": null
+        },
+        {
+          "arity": 2,
+          "failure": null
+        },
+        {
+          "arity": 3,
+          "failure": null
+        },
+        {
+          "arity": 4,
+          "failure": null
+        },
+        {
+          "arity": 5,
+          "failure": null
+        },
+        {
+          "arity": 6,
+          "failure": null
+        }
+      ],
       "orbit_arity_checks": [
         {
           "arity": 1,
@@ -1065,6 +1327,32 @@
         "partial_translations_injective": true,
         "right_monoid_size": 5
       },
+      "equivariance_checks": [
+        {
+          "arity": 1,
+          "failure": null
+        },
+        {
+          "arity": 2,
+          "failure": null
+        },
+        {
+          "arity": 3,
+          "failure": null
+        },
+        {
+          "arity": 4,
+          "failure": null
+        },
+        {
+          "arity": 5,
+          "failure": null
+        },
+        {
+          "arity": 6,
+          "failure": null
+        }
+      ],
       "orbit_arity_checks": [
         {
           "arity": 1,
@@ -1145,6 +1433,32 @@
         "partial_translations_injective": true,
         "right_monoid_size": 4
       },
+      "equivariance_checks": [
+        {
+          "arity": 1,
+          "failure": null
+        },
+        {
+          "arity": 2,
+          "failure": null
+        },
+        {
+          "arity": 3,
+          "failure": null
+        },
+        {
+          "arity": 4,
+          "failure": null
+        },
+        {
+          "arity": 5,
+          "failure": null
+        },
+        {
+          "arity": 6,
+          "failure": null
+        }
+      ],
       "orbit_arity_checks": [
         {
           "arity": 1,
@@ -1231,6 +1545,32 @@
         "partial_translations_injective": true,
         "right_monoid_size": 2
       },
+      "equivariance_checks": [
+        {
+          "arity": 1,
+          "failure": null
+        },
+        {
+          "arity": 2,
+          "failure": null
+        },
+        {
+          "arity": 3,
+          "failure": null
+        },
+        {
+          "arity": 4,
+          "failure": null
+        },
+        {
+          "arity": 5,
+          "failure": null
+        },
+        {
+          "arity": 6,
+          "failure": null
+        }
+      ],
       "orbit_arity_checks": [
         {
           "arity": 1,
@@ -1319,6 +1659,32 @@
         "partial_translations_injective": true,
         "right_monoid_size": 4
       },
+      "equivariance_checks": [
+        {
+          "arity": 1,
+          "failure": null
+        },
+        {
+          "arity": 2,
+          "failure": null
+        },
+        {
+          "arity": 3,
+          "failure": null
+        },
+        {
+          "arity": 4,
+          "failure": null
+        },
+        {
+          "arity": 5,
+          "failure": null
+        },
+        {
+          "arity": 6,
+          "failure": null
+        }
+      ],
       "orbit_arity_checks": [
         {
           "arity": 1,
@@ -1403,6 +1769,32 @@
         "partial_translations_injective": true,
         "right_monoid_size": 4
       },
+      "equivariance_checks": [
+        {
+          "arity": 1,
+          "failure": null
+        },
+        {
+          "arity": 2,
+          "failure": null
+        },
+        {
+          "arity": 3,
+          "failure": null
+        },
+        {
+          "arity": 4,
+          "failure": null
+        },
+        {
+          "arity": 5,
+          "failure": null
+        },
+        {
+          "arity": 6,
+          "failure": null
+        }
+      ],
       "orbit_arity_checks": [
         {
           "arity": 1,

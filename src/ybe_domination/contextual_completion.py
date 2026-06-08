@@ -5,7 +5,7 @@ from dataclasses import dataclass
 from itertools import product
 from typing import Dict, Hashable, Mapping, Tuple
 
-from .finite_braided_set import FiniteBraidedSet
+from .finite_braided_set import FiniteBraidedSet, rack_solution
 
 Transformation = Tuple[int, ...]
 
@@ -319,6 +319,47 @@ def orbit_readout_collision(
         "orbit_count": orbit_count,
         "max_orbit_size": max_orbit_size,
         "collision": None,
+    }
+
+
+def identity_extension_rack_solution(data: ContextualCompletionData) -> FiniteBraidedSet:
+    left_translations = identity_extension_left_translations(data)
+    if not all(len(set(row)) == data.class_count for row in left_translations):
+        raise ValueError("identity extension rows are not total permutations")
+    return rack_solution(
+        tuple(range(data.class_count)),
+        lambda left, right: left_translations[left][right],
+    )
+
+
+def contextual_readout_equivariance_failure(
+    solution: FiniteBraidedSet,
+    data: ContextualCompletionData,
+    arity: int,
+) -> dict[str, object] | None:
+    """Return a first identity-extension rack equivariance failure."""
+
+    rack = identity_extension_rack_solution(data)
+    for word in product(solution.elements, repeat=arity):
+        readout = contextual_readout(data, tuple(word))
+        for generator in range(1, arity):
+            for signed in (generator, -generator):
+                x_image = solution.braid_action((signed,), word)
+                y_image = rack.braid_action((signed,), readout)
+                expected = contextual_readout(data, tuple(x_image))
+                if y_image != expected:
+                    return {
+                        "arity": arity,
+                        "generator": signed,
+                        "word": [repr(element) for element in word],
+                        "x_image": [repr(element) for element in x_image],
+                        "readout": list(readout),
+                        "rack_image": list(y_image),
+                        "expected_readout": list(expected),
+                    }
+    return {
+        "arity": arity,
+        "failure": None,
     }
 
 
