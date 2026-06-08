@@ -2461,6 +2461,81 @@ The next exact B target is:
   construct one fixed finite X whose first-fold monolith supports one of
   these two cofinal behaviours against every finite rack prefix.
 
+59. Probe-centralizer finite centralizer condition.
+
+The repo now records the finite probe-central condition in
+
+  proofs/probe_centralizer_chief_obstruction.md
+
+You may use it as established context.
+
+For arity n, set
+
+  G^X_n=rho^X_n(F_{n-1}).
+
+Embed B_n into B_{n+1} by adding a new idle strand.  This induces a
+well-defined embedding of X-images
+
+  iota_n:G^X_n -> Sym(X^{n+1}).
+
+For each old strand i, let tau_i be the half-twist exchanging strand i with
+the new strand, and set
+
+  T_{i,n}=rho^X_{n+1}(tau_i).
+
+Define the finite probe-centralizer subgroup
+
+  Z^pr_n(X)
+    =
+  { g in G^X_n : [iota_n(g),T_{i,n}]=1 for every i=1,...,n }.
+
+For a combined detector image
+
+  Phi_n:F_{n-1}->Gamma_n <= Sym(Q^n) x Sym(X^n),
+
+let p_X:Gamma_n->G^X_n be the X-projection and define
+
+  PC_n=p_X^{-1}(Z^pr_n(X)).
+
+Keep the usual notation
+
+  K_n=ker(Gamma_n->rho^Q_n(F_{n-1})),
+  C_n=[N_{1,n},...,N_{n-1,n}]_Sigma.
+
+If the derivative-visible branch fails cofinally, then for every detector
+prefix and support cutoff there are unbounded arities with a chief factor
+
+  B < A <= K_n cap C_n cap PC_n,
+
+and the X-projection of A acts nontrivially inside the first-fold monolith
+mu and generates mu by coordinate mismatches.
+
+Equivalently, the probe-central branch is exactly cofinal nontriviality of
+
+  K_n cap C_n cap PC_n.
+
+The obstruction split is now exact:
+
+- derivative-propagating branch:
+
+    deletion-null monolith chief factors keep producing nontrivial Brunnian
+    derivatives in higher arity;
+
+- probe-central branch:
+
+    detector-invisible all-meridian chief factors survive inside the finite
+    centralizer intersection K_n cap C_n cap PC_n.
+
+The next exact A target is:
+
+  rule out infinite derivative-propagating deletion-null monolith-chief
+  towers and prove K_n cap C_n cap PC_n=1 eventually.
+
+The next exact B target is:
+
+  construct one fixed finite X whose first-fold monolith survives cofinally
+  in one of those two exact ways against every finite rack prefix.
+
 Your task.
 
 Do not give another C-style reduction.  Try to prove A or B.

@@ -3433,6 +3433,46 @@ counterexample must support either an infinite derivative-propagating tower
 of monolith chief obstructions or cofinally many probe-central deletion-null
 monolith chief factors.
 
+The probe-central branch has been converted into a finite centralizer
+condition in `proofs/probe_centralizer_chief_obstruction.md`.  For
+`G^X_n=rho^X_n(F_{n-1})`, embed the `X`-image into arity `n+1` by adding an
+idle strand,
+
+```text
+iota_n:G^X_n->Sym(X^{n+1}),
+```
+
+and let `T_{i,n}=rho^X_{n+1}(tau_i)`, where `tau_i` exchanges old strand `i`
+with the new strand.  Define
+
+```text
+Z^pr_n(X)
+  =
+{g in G^X_n : [iota_n(g),T_{i,n}]=1 for every i=1,...,n}.
+```
+
+For the combined detector image `Gamma_n`, set
+
+```text
+PC_n=p_X^{-1}(Z^pr_n(X)).
+```
+
+If the derivative-visible branch fails cofinally, then for every detector
+prefix and support cutoff there are unbounded arities with a chief factor
+
+```text
+B < A <= K_n cap C_n cap PC_n,
+```
+
+and the `X`-projection of `A` acts nontrivially inside `mu`-fibres and
+generates the first-fold monolith.  Thus the probe-central obstruction is
+exactly cofinal nontriviality of the finite subgroup intersection
+`K_n cap C_n cap PC_n`.  The two remaining positive targets are now: rule out
+infinite derivative-propagating deletion-null monolith-chief towers, and prove
+`K_n cap C_n cap PC_n=1` eventually.  A negative proof must construct one
+fixed finite `X` whose first-fold monolith survives cofinally in one of those
+two exact forms.
+
 ## Review rubric
 
 A future response should be classified as follows.
