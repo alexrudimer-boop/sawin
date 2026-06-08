@@ -2383,6 +2383,84 @@ The next exact B target is:
   cofinally by deletion-null monolith-generating chief factors against every
   finite rack prefix.
 
+58. Brunnian derivative chief dichotomy.
+
+The repo now records the derivative dichotomy in
+
+  proofs/brunnian_derivative_chief_dichotomy.md
+
+You may use it as established context.
+
+Let A/B <= K_n cap C_n be a deletion-null monolith chief factor.  For each
+a in A choose
+
+  beta_a in Brun_n cap ker rho^Q_n
+
+with Phi_n(beta_a)=a.  Embed beta_a into B_{n+1} by adding a new last strand:
+
+  iota(beta_a).
+
+For each old strand i, let tau_i be the half-twist exchanging strand i with
+the new strand.  Define
+
+  D_i beta_a=[iota(beta_a),tau_i].
+
+Then
+
+  D_i beta_a in Brun_{n+1} cap ker rho^Q_{n+1}.
+
+Deleting the new strand gives [beta_a,1]; deleting an old strand gives
+[1,d_j(tau_i)] because beta_a is Brunnian; and Q-invisibility follows from
+[1,rho^Q(tau_i)].
+
+Define
+
+  partial_i(a)=Phi_{n+1}(D_i beta_a).
+
+This is independent of the chosen Brunnian representative beta_a, because
+equal combined Q x X images in arity n remain equal after adding an idle
+strand and commuting with the same probe tau_i.  It is a set map, not
+necessarily a homomorphism, and
+
+  partial_i(a) in K_{n+1} cap C_{n+1}.
+
+Derivative dichotomy:
+
+- Derivative-visible branch:
+
+    some partial_i(a) is nontrivial.  Then K_{n+1} cap C_{n+1} is nontrivial,
+    and partial_i(a) gives a new deletion-null monolith-generating Brunnian
+    obstruction in arity n+1.  A chief factor can then be selected inside
+    this new nontrivial finite-image obstruction.
+
+- Probe-central branch:
+
+    partial_i(a)=1 for every a in A and every old strand i.  Equivalently,
+    after adding one new strand,
+
+      [rho^X_{n+1}(iota beta_a), rho^X_{n+1}(tau_i)] = 1
+
+    for every a and i.  Since the embedded X-image depends only on p_X(a),
+    this means p_X(A) centralizes every one-strand probe half-twist.
+
+Thus a smallest counterexample must support one of two cofinal behaviours:
+
+  infinite derivative-propagating monolith chief towers;
+
+or
+
+  probe-central deletion-null monolith chief factors.
+
+The next exact A target is:
+
+  rule out both derivative-propagating monolith chief towers and
+  probe-central deletion-null monolith chief factors.
+
+The next exact B target is:
+
+  construct one fixed finite X whose first-fold monolith supports one of
+  these two cofinal behaviours against every finite rack prefix.
+
 Your task.
 
 Do not give another C-style reduction.  Try to prove A or B.

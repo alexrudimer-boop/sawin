@@ -3402,6 +3402,37 @@ deletion-null detector-invisible chief factors; the negative target is one
 fixed finite `X` whose first-fold monolith is generated cofinally by such
 chief factors against every finite rack prefix.
 
+The Brunnian derivative chief dichotomy is recorded in
+`proofs/brunnian_derivative_chief_dichotomy.md`.  For a deletion-null chief
+factor `A/B <= K_n cap C_n`, choose for each `a in A` a Brunnian
+`Q`-invisible representative `beta_a` with `Phi_n(beta_a)=a`.  Embed
+`beta_a` into arity `n+1` by adding a new last strand, let `tau_i` be the
+half-twist exchanging old strand `i` with the new strand, and define
+
+```text
+D_i beta_a=[iota(beta_a),tau_i].
+```
+
+Then `D_i beta_a` is Brunnian and `Q`-invisible: deleting the new strand
+gives `[beta_a,1]`, deleting an old strand gives `[1,d_j(tau_i)]`, and the
+`Q`-image is `[1,rho^Q(tau_i)]`.  Hence
+
+```text
+partial_i(a):=Phi_{n+1}(D_i beta_a)
+```
+
+is a well-defined set map `A->Gamma_{n+1}` landing in
+`K_{n+1} cap C_{n+1}`.  The definition is independent of the chosen
+Brunnian representative because equal combined `Q x X` images in arity `n`
+remain equal after adding an idle strand and commuting with the same probe.
+The resulting dichotomy is: either some `partial_i(a)` is nontrivial, giving
+a new deletion-null monolith-generating Brunnian obstruction in arity `n+1`;
+or all derivatives vanish, equivalently `p_X(A)` centralizes every
+one-strand probe half-twist after adding a new strand.  Thus a minimal
+counterexample must support either an infinite derivative-propagating tower
+of monolith chief obstructions or cofinally many probe-central deletion-null
+monolith chief factors.
+
 ## Review rubric
 
 A future response should be classified as follows.
