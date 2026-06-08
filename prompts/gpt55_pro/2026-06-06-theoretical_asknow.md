@@ -1801,6 +1801,68 @@ It is:
 or hidden layers over a proper E_nd quotient that evade every finite
 stratified decoder tower.
 
+49. Nondegenerate-reflection Brunnian obstruction.
+
+The repo now records the canonical relative Brunnian obstruction in
+
+  proofs/nondegenerate_reflection_brunnian_obstruction.md
+
+You may use it as established context.
+
+Let Z=X/E_nd be the nontrivial nondegenerate-reflection quotient.  For the
+last-strand free group
+
+  F_{n-1}=ker(d_n:P_n->P_{n-1}),
+
+with meridians x_i=A_{i,n}, define
+
+  G^X_n=rho^X_n(F_{n-1}),
+  G^Z_n=rho^Z_n(F_{n-1}),
+  E_n=ker(G^X_n -> G^Z_n).
+
+For each meridian image set
+
+  M_{i,n}=<<rho^X_n(x_i)>>_{G^X_n},
+
+and define the all-meridian symmetric commutator layer
+
+  C^X_n=[M_{1,n},...,M_{n-1,n}]_Sigma.
+
+The theorem is:
+
+  If E_n cap C^X_n=1 for all sufficiently large n,
+  then X is finite-rack dominated.
+
+The proof uses the rack detector Y_Z for the nondegenerate quotient Z,
+transparent fixed-arity racks for finitely many small n, T_2, and the
+standard transparent Brunnian reduction.  For large n, a Brunnian braid
+invisible to this product detector is in the last-strand free group, is
+trivial on Z, and has X-image in C^X_n.  Thus its image lies in
+E_n cap C^X_n, so eventual triviality kills every large-arity Brunnian
+obstruction.
+
+Therefore, if X is not dominated and E_nd is proper, then
+
+  E_n cap C^X_n != 1
+
+for unbounded n.
+
+This sharpens the canonical split:
+
+- Degeneracy-perfect branch:
+
+    E_nd = X x X.
+
+- Proper-reflection branch:
+
+    E_nd != X x X, but E_n cap C^X_n survives for unbounded n.
+
+The next A route in the proper-reflection branch is to prove eventual
+vanishing of this relative all-meridian kernel over X -> X/E_nd, possibly by
+a stratified decoder tower.  The next B route is to construct one fixed
+finite X with proper E_nd where these intersections survive cofinally and
+lift to rack-prefix-invisible Brunnian witnesses.
+
 Your task.
 
 Do not give another C-style reduction.  Try to prove A or B.

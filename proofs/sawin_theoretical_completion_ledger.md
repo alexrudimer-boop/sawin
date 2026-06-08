@@ -3112,6 +3112,33 @@ quotient.  In particular, any braided-simple degenerate candidate is
 degeneracy-perfect, because degeneracy adds a nontrivial pullback pair at the
 first stage and simplicity then forces `E_nd=X x X`.
 
+The nondegenerate-reflection Brunnian obstruction is recorded in
+`proofs/nondegenerate_reflection_brunnian_obstruction.md`.  Let
+`Z=X/E_nd` be the nontrivial nondegenerate reflection quotient, and let
+`F_{n-1}=ker(d_n:P_n->P_{n-1})` be the last-strand free group with meridian
+generators `x_i=A_{i,n}`.  Put
+
+```text
+G^X_n=rho^X_n(F_{n-1}),
+G^Z_n=rho^Z_n(F_{n-1}),
+E_n=ker(G^X_n -> G^Z_n),
+M_{i,n}=<<rho^X_n(x_i)>>_{G^X_n},
+C^X_n=[M_{1,n},...,M_{n-1,n}]_Sigma.
+```
+
+If `E_n cap C^X_n=1` for all sufficiently large `n`, then `X` is
+finite-rack dominated.  The proof combines a rack detector `Y_Z` for the
+nondegenerate quotient, transparent fixed-arity racks for the finitely many
+small arities, `T_2`, and the standard transparent Brunnian reduction.  For
+large `n`, any Brunnian braid invisible to this product detector lies in
+`F_{n-1}`, is trivial on `Z`, and has `X`-image in the all-meridian symmetric
+commutator layer `C^X_n`; hence its image lies in `E_n cap C^X_n`, which is
+trivial by assumption.  Therefore, if `X` is not dominated and `E_nd` is
+proper, the relative intersections `E_n cap C^X_n` must be nontrivial for
+unbounded `n`.  The proper-reflection branch is now reduced to eventual
+vanishing of this canonical relative last-strand obstruction; the other
+primitive branch is `E_nd=X x X`, the degeneracy-perfect case.
+
 ## Review rubric
 
 A future response should be classified as follows.
