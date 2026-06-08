@@ -1863,6 +1863,69 @@ a stratified decoder tower.  The next B route is to construct one fixed
 finite X with proper E_nd where these intersections survive cofinally and
 lift to rack-prefix-invisible Brunnian witnesses.
 
+50. Nondegenerate-reflection filtration obstruction.
+
+The repo now records the layer-localized refinement in
+
+  proofs/nondegenerate_reflection_filtration_obstruction.md
+
+You may use it as established context.
+
+Keep the full finite construction chain of E_nd:
+
+  Delta_X=E_0 <= E_1 <= ... <= E_t=E_nd,
+  X_i=X/E_i,
+  q_i:X_i -> X_{i+1}.
+
+For the last-strand free group F_{n-1}, define
+
+  G^{(i)}_n=rho^{X_i}_n(F_{n-1}),
+  K^{(i)}_n=ker(G^{(i)}_n -> G^{(i+1)}_n),
+
+and, for meridians x_j=A_{j,n},
+
+  M^{(i)}_{j,n}=<<rho^{X_i}_n(x_j)>>_{G^{(i)}_n},
+  C^{(i)}_n=[M^{(i)}_{1,n},...,M^{(i)}_{n-1,n}]_Sigma.
+
+Layer-lifting theorem:
+
+  If X_{i+1} is finite-rack dominated and
+  K^{(i)}_n cap C^{(i)}_n=1 for all sufficiently large n,
+  then X_i is finite-rack dominated.
+
+The proof is the transparent Brunnian argument applied to the single layer
+X_i -> X_{i+1}, with fixed-arity rack factors for the finitely many small
+arities.
+
+Reflection-filtration theorem:
+
+  Since X_t=X/E_nd is nondegenerate, if every layer satisfies
+  eventual relative all-meridian triviality, then X is finite-rack dominated
+  by downward induction.
+
+Therefore any finite counterexample has a fixed bad layer:
+
+  there exists i such that
+  K^{(i)}_n cap C^{(i)}_n != 1
+  for unbounded n.
+
+This includes the degeneracy-perfect case E_nd=X x X.  Even if the only
+nondegenerate quotient is the one-point solution, the finite reflection
+filtration still exists, and a counterexample must have a bad elementary
+degeneracy-pullback layer.
+
+So do not return to the coarser full-kernel obstruction over X -> X/E_nd.
+The next exact A target is:
+
+  prove every elementary nondegenerate-reflection layer has eventually
+  trivial relative all-meridian kernel.
+
+The next exact B target is:
+
+  construct one finite X and one layer X_i -> X_{i+1}
+  where K^{(i)}_n cap C^{(i)}_n survives cofinally
+  and lifts to rack-prefix-invisible Brunnian witnesses.
+
 Your task.
 
 Do not give another C-style reduction.  Try to prove A or B.

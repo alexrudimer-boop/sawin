@@ -3139,6 +3139,38 @@ unbounded `n`.  The proper-reflection branch is now reduced to eventual
 vanishing of this canonical relative last-strand obstruction; the other
 primitive branch is `E_nd=X x X`, the degeneracy-perfect case.
 
+The nondegenerate-reflection filtration obstruction is recorded in
+`proofs/nondegenerate_reflection_filtration_obstruction.md`.  Instead of
+collapsing directly from `X` to `X/E_nd`, keep the finite construction chain
+
+```text
+Delta_X=E_0 <= E_1 <= ... <= E_t=E_nd,
+X_i=X/E_i,
+q_i:X_i->X_{i+1}.
+```
+
+For the last-strand free group define
+
+```text
+G^{(i)}_n=rho^{X_i}_n(F_{n-1}),
+K^{(i)}_n=ker(G^{(i)}_n -> G^{(i+1)}_n),
+M^{(i)}_{j,n}=<<rho^{X_i}_n(A_{j,n})>>_{G^{(i)}_n},
+C^{(i)}_n=[M^{(i)}_{1,n},...,M^{(i)}_{n-1,n}]_Sigma.
+```
+
+The layer-lifting theorem says: if `X_{i+1}` is rack-dominated and
+`K^{(i)}_n cap C^{(i)}_n=1` for all sufficiently large `n`, then `X_i` is
+rack-dominated.  The proof is the same transparent Brunnian argument as the
+single-quotient obstruction, applied to the one layer `X_i->X_{i+1}` with
+fixed-arity rack factors for small `n`.  Since the top quotient `X_t` is
+nondegenerate, downward induction gives: if every reflection layer has
+eventually trivial relative all-meridian kernel, then `X` is rack-dominated.
+Consequently any finite counterexample has one fixed bad layer with
+`K^{(i)}_n cap C^{(i)}_n != 1` for unbounded `n`.  This also covers the
+degeneracy-perfect case `E_nd=X x X`: even if the top nondegenerate quotient
+is one point, the finite filtration still localizes any obstruction to an
+elementary degeneracy-pullback layer.
+
 ## Review rubric
 
 A future response should be classified as follows.
