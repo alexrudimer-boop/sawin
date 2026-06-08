@@ -2784,6 +2784,77 @@ The next negative target is:
   corresponding to a color-changing contextual transition realized by cofinal
   quotient-trivial Brunnian motions.
 
+64. Brunnian-realizable contextual separability.
+
+The repo now records the realization-aware contextual boundary in
+
+  proofs/brunnian_realizable_contextual_separability.md
+
+You may use it as established context.
+
+The full contextual transporter
+
+  T(v,w)=tau_0 Lambda_v
+
+is too broad: many transporter elements may be virtual contextual paths and
+need not be realized by one global X-word and one braid trajectory.
+
+For a braided congruence E, define T_Br^E(p,p') to be the subset of
+T([p],[p']) consisting of transporter labels actually traced by a physical
+strand along some
+
+  beta in Brun_n cap ker rho^{X/E}_n.
+
+If X/E is dominated and, for every color-changing contextual pair
+
+  p=(A,a,B),     p'=(A',b,B'),     a E b,     a != b,
+
+there is a finite quotient q:G_X->H such that either
+
+  q(g_p) != q(g_{p'}),
+
+or
+
+  q(T_Br^E(p,p')) cap q(Lambda_[p]) = emptyset,
+
+then X is finite-rack dominated.
+
+Proof idea: take the product of the finite quotients for all color-changing
+pairs and form the finite contextual augmented rack Y_ctx.  If
+Q=Y_E^0 x Y_ctx^0 x T_2 failed to dominate X, the Brunnian reduction gives a
+Brunnian beta invisible to Q but moving X.  The Y_E factor makes beta
+X/E-trivial, so some coordinate realizes a color-changing p->p' with actual
+label tau in T_Br^E(p,p').  The Y_ctx factor being invisible forces
+q(g_p)=q(g_{p'}) and q(tau) in q(Lambda_[p]), contradicting the chosen
+quotient.
+
+Thus a smallest nonsimple counterexample with monolith mu has a fixed
+color-changing pair p_*,p'_* such that for every finite quotient q:G_X->H,
+
+  q(g_{p_*})=q(g_{p'_*}),
+
+and
+
+  q(T_Br^mu(p_*,p'_*)) cap q(Lambda_[p_*]) != emptyset.
+
+Equivalently,
+
+  g_{p_*}^{-1}g_{p'_*} in Res(G_X),
+
+and the profinite closures of T_Br^mu(p_*,p'_*) and Lambda_[p_*] meet.
+
+The positive contextual target is now:
+
+  separate the Brunnian-realizable transporter subset T_Br^E(p,p') from the
+  loop subgroup by a finite quotient, not the entire virtual transporter.
+
+The negative contextual target is:
+
+  construct one fixed finite X with a fixed color-changing contextual
+  transition whose Brunnian-realizable transporter subset has profinite
+  closure meeting the loop subgroup closure, realized cofinally by actual
+  quotient-trivial Brunnian motions.
+
 Your task.
 
 Do not give another C-style reduction.  Try to prove A or B.

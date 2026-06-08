@@ -3591,6 +3591,43 @@ failure is genuinely nonabelian subgroup nonseparability:
 `tau in closure_prof(Lambda_p) \ Lambda_p` while already abelianly
 indistinguishable from a loop.
 
+The realization-aware contextual boundary is recorded in
+`proofs/brunnian_realizable_contextual_separability.md`.  The full contextual
+transporter
+
+```text
+T(v,w)=tau_0 Lambda_v
+```
+
+is too broad: most paths in the contextual action graph may be virtual and
+never fillable by one `X`-word and one braid trajectory.  For a braided
+congruence `E`, define `T_Br^E(p,p')` to be the subset of transporter labels
+actually traced by a physical strand along some
+`beta in Brun_n cap ker rho^{X/E}_n`.  If `X/E` is dominated and, for every
+color-changing pair `p=(A,a,B)`, `p'=(A',b,B')` with `a E b` and `a != b`,
+there is a finite quotient `q:G_X->H` such that either
+
+```text
+q(g_p) != q(g_{p'})
+```
+
+or
+
+```text
+q(T_Br^E(p,p')) cap q(Lambda_[p])=emptyset,
+```
+
+then `X` is dominated by `Y_E^0 x Y_ctx^0 x T_2`.  Conversely, a smallest
+nonsimple counterexample with monolith `mu` has a fixed color-changing pair
+`p_*,p'_*` such that every finite quotient satisfies
+`q(g_{p_*})=q(g_{p'_*})` and
+`q(T_Br^mu(p_*,p'_*)) cap q(Lambda_[p_*]) != emptyset`.  Equivalently,
+`g_{p_*}^{-1}g_{p'_*}` lies in the finite residual of `G_X`, and the profinite
+closures of the Brunnian-realizable transporter subset and the loop subgroup
+meet.  Thus the contextual separability target is not full subgroup
+separability against every transporter element; it is separation of the
+Brunnian-realizable transporter language.
+
 ## Review rubric
 
 A future response should be classified as follows.
