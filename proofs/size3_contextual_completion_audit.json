@@ -404,6 +404,20 @@
                   "2"
                 ]
               ],
+              "collision_path_indices": [
+                [
+                  2,
+                  2
+                ],
+                [
+                  1,
+                  2
+                ],
+                [
+                  2,
+                  2
+                ]
+              ],
               "element_count": 3,
               "left_monoid_size": 4,
               "proves_all_arity_injective": false,
@@ -435,6 +449,20 @@
                 [
                   "2",
                   "2"
+                ]
+              ],
+              "collision_path_indices": [
+                [
+                  2,
+                  2
+                ],
+                [
+                  0,
+                  2
+                ],
+                [
+                  2,
+                  2
                 ]
               ],
               "element_count": 3,
@@ -470,6 +498,20 @@
                   "2"
                 ]
               ],
+              "collision_path_indices": [
+                [
+                  2,
+                  2
+                ],
+                [
+                  0,
+                  1
+                ],
+                [
+                  2,
+                  2
+                ]
+              ],
               "element_count": 3,
               "left_monoid_size": 4,
               "proves_all_arity_injective": false,
@@ -487,6 +529,7 @@
         "collision_found": false,
         "collision_length": null,
         "collision_path": [],
+        "collision_path_indices": [],
         "element_count": 3,
         "left_monoid_size": 4,
         "proves_all_arity_injective": true,
@@ -647,6 +690,20 @@
                   "0"
                 ]
               ],
+              "collision_path_indices": [
+                [
+                  1,
+                  1
+                ],
+                [
+                  0,
+                  1
+                ],
+                [
+                  0,
+                  0
+                ]
+              ],
               "element_count": 3,
               "left_monoid_size": 3,
               "proves_all_arity_injective": false,
@@ -664,6 +721,7 @@
         "collision_found": false,
         "collision_length": null,
         "collision_path": [],
+        "collision_path_indices": [],
         "element_count": 3,
         "left_monoid_size": 3,
         "proves_all_arity_injective": true,
@@ -825,6 +883,20 @@
                   "1"
                 ]
               ],
+              "collision_path_indices": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  1
+                ],
+                [
+                  1,
+                  1
+                ]
+              ],
               "element_count": 3,
               "left_monoid_size": 4,
               "proves_all_arity_injective": false,
@@ -842,6 +914,7 @@
         "collision_found": false,
         "collision_length": null,
         "collision_path": [],
+        "collision_path_indices": [],
         "element_count": 3,
         "left_monoid_size": 4,
         "proves_all_arity_injective": true,
@@ -1003,6 +1076,20 @@
                   "0"
                 ]
               ],
+              "collision_path_indices": [
+                [
+                  2,
+                  2
+                ],
+                [
+                  0,
+                  2
+                ],
+                [
+                  0,
+                  0
+                ]
+              ],
               "element_count": 3,
               "left_monoid_size": 3,
               "proves_all_arity_injective": false,
@@ -1020,6 +1107,7 @@
         "collision_found": false,
         "collision_length": null,
         "collision_path": [],
+        "collision_path_indices": [],
         "element_count": 3,
         "left_monoid_size": 3,
         "proves_all_arity_injective": true,
@@ -1181,6 +1269,20 @@
                   "1"
                 ]
               ],
+              "collision_path_indices": [
+                [
+                  1,
+                  1
+                ],
+                [
+                  1,
+                  2
+                ],
+                [
+                  1,
+                  1
+                ]
+              ],
               "element_count": 3,
               "left_monoid_size": 3,
               "proves_all_arity_injective": false,
@@ -1198,6 +1300,7 @@
         "collision_found": false,
         "collision_length": null,
         "collision_path": [],
+        "collision_path_indices": [],
         "element_count": 3,
         "left_monoid_size": 3,
         "proves_all_arity_injective": true,
@@ -1346,6 +1449,7 @@
               "collision_found": false,
               "collision_length": null,
               "collision_path": [],
+              "collision_path_indices": [],
               "element_count": 3,
               "left_monoid_size": 1,
               "proves_all_arity_injective": true,
@@ -1366,6 +1470,7 @@
               "collision_found": false,
               "collision_length": null,
               "collision_path": [],
+              "collision_path_indices": [],
               "element_count": 3,
               "left_monoid_size": 1,
               "proves_all_arity_injective": true,
@@ -1386,6 +1491,7 @@
               "collision_found": false,
               "collision_length": null,
               "collision_path": [],
+              "collision_path_indices": [],
               "element_count": 3,
               "left_monoid_size": 1,
               "proves_all_arity_injective": true,
@@ -1403,6 +1509,7 @@
         "collision_found": false,
         "collision_length": null,
         "collision_path": [],
+        "collision_path_indices": [],
         "element_count": 3,
         "left_monoid_size": 1,
         "proves_all_arity_injective": true,
@@ -1546,6 +1653,7 @@
               "collision_found": false,
               "collision_length": null,
               "collision_path": [],
+              "collision_path_indices": [],
               "element_count": 3,
               "left_monoid_size": 1,
               "proves_all_arity_injective": true,
@@ -1563,6 +1671,7 @@
         "collision_found": false,
         "collision_length": null,
         "collision_path": [],
+        "collision_path_indices": [],
         "element_count": 3,
         "left_monoid_size": 1,
         "proves_all_arity_injective": true,
@@ -1708,6 +1817,7 @@
               "collision_found": false,
               "collision_length": null,
               "collision_path": [],
+              "collision_path_indices": [],
               "element_count": 3,
               "left_monoid_size": 2,
               "proves_all_arity_injective": true,
@@ -1725,6 +1835,7 @@
         "collision_found": false,
         "collision_length": null,
         "collision_path": [],
+        "collision_path_indices": [],
         "element_count": 3,
         "left_monoid_size": 2,
         "proves_all_arity_injective": true,
@@ -1868,6 +1979,7 @@
               "collision_found": false,
               "collision_length": null,
               "collision_path": [],
+              "collision_path_indices": [],
               "element_count": 3,
               "left_monoid_size": 1,
               "proves_all_arity_injective": true,
@@ -1885,6 +1997,7 @@
         "collision_found": false,
         "collision_length": null,
         "collision_path": [],
+        "collision_path_indices": [],
         "element_count": 3,
         "left_monoid_size": 1,
         "proves_all_arity_injective": true,
@@ -2031,6 +2144,7 @@
               "collision_found": false,
               "collision_length": null,
               "collision_path": [],
+              "collision_path_indices": [],
               "element_count": 3,
               "left_monoid_size": 2,
               "proves_all_arity_injective": true,
@@ -2048,6 +2162,7 @@
         "collision_found": false,
         "collision_length": null,
         "collision_path": [],
+        "collision_path_indices": [],
         "element_count": 3,
         "left_monoid_size": 2,
         "proves_all_arity_injective": true,

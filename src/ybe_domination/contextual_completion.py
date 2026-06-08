@@ -184,6 +184,7 @@ class RelativeContextualSeparationSummary:
     skipped_reason: str | None
     collision_found: bool
     collision_length: int | None
+    collision_path_indices: Tuple[Tuple[int, int], ...]
     collision_path: Tuple[Tuple[str, str], ...]
 
     @property
@@ -616,6 +617,7 @@ def relative_contextual_separation_summary(
                 skipped_reason=f"valid vertex count exceeds {max_vertices}",
                 collision_found=False,
                 collision_length=None,
+                collision_path_indices=(),
                 collision_path=(),
             )
 
@@ -680,6 +682,7 @@ def relative_contextual_separation_summary(
             skipped_reason=None,
             collision_found=False,
             collision_length=None,
+            collision_path_indices=(),
             collision_path=(),
         )
 
@@ -694,6 +697,10 @@ def relative_contextual_separation_summary(
         (repr(elements[vertex[4]]), repr(elements[vertex[5]]))
         for vertex in path
     )
+    collision_path_indices = tuple(
+        (vertex[4], vertex[5])
+        for vertex in path
+    )
     return RelativeContextualSeparationSummary(
         element_count=size,
         quotient_class_count=quotient_class_count,
@@ -704,6 +711,7 @@ def relative_contextual_separation_summary(
         skipped_reason=None,
         collision_found=True,
         collision_length=len(path),
+        collision_path_indices=collision_path_indices,
         collision_path=collision_path,
     )
 

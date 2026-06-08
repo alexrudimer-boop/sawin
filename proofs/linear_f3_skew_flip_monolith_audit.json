@@ -1,0 +1,8498 @@
+{
+  "all_claimed_checks_passed": true,
+  "braided_simple_count": 0,
+  "collision_mismatch_generation_failure_count": 0,
+  "collision_mismatch_generation_failures": [],
+  "distribution": [
+    {
+      "case_count": 32,
+      "monolith_block_sizes": [
+        1,
+        1,
+        1,
+        3
+      ],
+      "monolith_check_skipped": false,
+      "monolith_collision_found": true,
+      "monolith_is_nontrivial": true,
+      "nontrivial_proper_congruence_count": 2
+    },
+    {
+      "case_count": 20,
+      "monolith_block_sizes": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "monolith_check_skipped": null,
+      "monolith_collision_found": null,
+      "monolith_is_nontrivial": false,
+      "nontrivial_proper_congruence_count": 10
+    },
+    {
+      "case_count": 20,
+      "monolith_block_sizes": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "monolith_check_skipped": null,
+      "monolith_collision_found": null,
+      "monolith_is_nontrivial": false,
+      "nontrivial_proper_congruence_count": 16
+    },
+    {
+      "case_count": 16,
+      "monolith_block_sizes": [
+        1,
+        1,
+        1,
+        3
+      ],
+      "monolith_check_skipped": false,
+      "monolith_collision_found": false,
+      "monolith_is_nontrivial": true,
+      "nontrivial_proper_congruence_count": 3
+    },
+    {
+      "case_count": 16,
+      "monolith_block_sizes": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "monolith_check_skipped": null,
+      "monolith_collision_found": null,
+      "monolith_is_nontrivial": false,
+      "nontrivial_proper_congruence_count": 5
+    },
+    {
+      "case_count": 16,
+      "monolith_block_sizes": [
+        1,
+        1,
+        1,
+        3
+      ],
+      "monolith_check_skipped": false,
+      "monolith_collision_found": false,
+      "monolith_is_nontrivial": true,
+      "nontrivial_proper_congruence_count": 5
+    },
+    {
+      "case_count": 16,
+      "monolith_block_sizes": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "monolith_check_skipped": null,
+      "monolith_collision_found": null,
+      "monolith_is_nontrivial": false,
+      "nontrivial_proper_congruence_count": 9
+    },
+    {
+      "case_count": 4,
+      "monolith_block_sizes": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "monolith_check_skipped": null,
+      "monolith_collision_found": null,
+      "monolith_is_nontrivial": false,
+      "nontrivial_proper_congruence_count": 11
+    },
+    {
+      "case_count": 4,
+      "monolith_block_sizes": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "monolith_check_skipped": null,
+      "monolith_collision_found": null,
+      "monolith_is_nontrivial": false,
+      "nontrivial_proper_congruence_count": 17
+    }
+  ],
+  "family": "linear_f3_skew_over_flip_degenerate_noninvolutive",
+  "max_vertices": 2000000,
+  "monolith_collision_count": 32,
+  "monolith_separating_count": 32,
+  "monolith_skip_count": 0,
+  "row_count": 144,
+  "rows": [
+    {
+      "congruence_count": 18,
+      "contextual_class_count": 18,
+      "left_monoid_size": 4,
+      "matrices": [
+        [
+          0,
+          1,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          1,
+          0
+        ],
+        [
+          0,
+          2,
+          1,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          1
+        ]
+      ],
+      "matrix_indices": [
+        0,
+        0,
+        6,
+        12
+      ],
+      "monolith": null,
+      "monolith_is_nontrivial": false,
+      "nontrivial_proper_congruence_count": 16,
+      "right_monoid_size": 4,
+      "row_index": 0
+    },
+    {
+      "congruence_count": 18,
+      "contextual_class_count": 30,
+      "left_monoid_size": 7,
+      "matrices": [
+        [
+          0,
+          1,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          2,
+          0
+        ],
+        [
+          0,
+          1,
+          1,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          1
+        ]
+      ],
+      "matrix_indices": [
+        0,
+        3,
+        0,
+        12
+      ],
+      "monolith": null,
+      "monolith_is_nontrivial": false,
+      "nontrivial_proper_congruence_count": 16,
+      "right_monoid_size": 7,
+      "row_index": 1
+    },
+    {
+      "congruence_count": 12,
+      "contextual_class_count": 24,
+      "left_monoid_size": 5,
+      "matrices": [
+        [
+          0,
+          1,
+          1,
+          0
+        ],
+        [
+          0,
+          2,
+          1,
+          0
+        ],
+        [
+          0,
+          2,
+          2,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          1
+        ]
+      ],
+      "matrix_indices": [
+        0,
+        6,
+        9,
+        12
+      ],
+      "monolith": null,
+      "monolith_is_nontrivial": false,
+      "nontrivial_proper_congruence_count": 10,
+      "right_monoid_size": 5,
+      "row_index": 2
+    },
+    {
+      "congruence_count": 12,
+      "contextual_class_count": 36,
+      "left_monoid_size": 8,
+      "matrices": [
+        [
+          0,
+          1,
+          1,
+          0
+        ],
+        [
+          0,
+          2,
+          2,
+          0
+        ],
+        [
+          0,
+          1,
+          2,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          1
+        ]
+      ],
+      "matrix_indices": [
+        0,
+        9,
+        3,
+        12
+      ],
+      "monolith": null,
+      "monolith_is_nontrivial": false,
+      "nontrivial_proper_congruence_count": 10,
+      "right_monoid_size": 8,
+      "row_index": 3
+    },
+    {
+      "congruence_count": 18,
+      "contextual_class_count": 36,
+      "left_monoid_size": 8,
+      "matrices": [
+        [
+          0,
+          1,
+          2,
+          0
+        ],
+        [
+          0,
+          1,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          1,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          1
+        ]
+      ],
+      "matrix_indices": [
+        3,
+        0,
+        0,
+        12
+      ],
+      "monolith": null,
+      "monolith_is_nontrivial": false,
+      "nontrivial_proper_congruence_count": 16,
+      "right_monoid_size": 8,
+      "row_index": 4
+    },
+    {
+      "congruence_count": 18,
+      "contextual_class_count": 36,
+      "left_monoid_size": 8,
+      "matrices": [
+        [
+          0,
+          1,
+          2,
+          0
+        ],
+        [
+          0,
+          1,
+          1,
+          0
+        ],
+        [
+          0,
+          2,
+          1,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          1
+        ]
+      ],
+      "matrix_indices": [
+        3,
+        0,
+        6,
+        12
+      ],
+      "monolith": null,
+      "monolith_is_nontrivial": false,
+      "nontrivial_proper_congruence_count": 16,
+      "right_monoid_size": 8,
+      "row_index": 5
+    },
+    {
+      "congruence_count": 19,
+      "contextual_class_count": 36,
+      "left_monoid_size": 8,
+      "matrices": [
+        [
+          0,
+          1,
+          2,
+          0
+        ],
+        [
+          0,
+          1,
+          2,
+          0
+        ],
+        [
+          0,
+          1,
+          1,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          1
+        ]
+      ],
+      "matrix_indices": [
+        3,
+        3,
+        0,
+        12
+      ],
+      "monolith": null,
+      "monolith_is_nontrivial": false,
+      "nontrivial_proper_congruence_count": 17,
+      "right_monoid_size": 8,
+      "row_index": 6
+    },
+    {
+      "congruence_count": 18,
+      "contextual_class_count": 36,
+      "left_monoid_size": 8,
+      "matrices": [
+        [
+          0,
+          1,
+          2,
+          0
+        ],
+        [
+          0,
+          1,
+          2,
+          0
+        ],
+        [
+          0,
+          2,
+          1,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          1
+        ]
+      ],
+      "matrix_indices": [
+        3,
+        3,
+        6,
+        12
+      ],
+      "monolith": null,
+      "monolith_is_nontrivial": false,
+      "nontrivial_proper_congruence_count": 16,
+      "right_monoid_size": 8,
+      "row_index": 7
+    },
+    {
+      "congruence_count": 12,
+      "contextual_class_count": 36,
+      "left_monoid_size": 8,
+      "matrices": [
+        [
+          0,
+          1,
+          2,
+          0
+        ],
+        [
+          0,
+          2,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          2,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          1
+        ]
+      ],
+      "matrix_indices": [
+        3,
+        6,
+        3,
+        12
+      ],
+      "monolith": null,
+      "monolith_is_nontrivial": false,
+      "nontrivial_proper_congruence_count": 10,
+      "right_monoid_size": 8,
+      "row_index": 8
+    },
+    {
+      "congruence_count": 12,
+      "contextual_class_count": 36,
+      "left_monoid_size": 8,
+      "matrices": [
+        [
+          0,
+          1,
+          2,
+          0
+        ],
+        [
+          0,
+          2,
+          1,
+          0
+        ],
+        [
+          0,
+          2,
+          2,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          1
+        ]
+      ],
+      "matrix_indices": [
+        3,
+        6,
+        9,
+        12
+      ],
+      "monolith": null,
+      "monolith_is_nontrivial": false,
+      "nontrivial_proper_congruence_count": 10,
+      "right_monoid_size": 8,
+      "row_index": 9
+    },
+    {
+      "congruence_count": 13,
+      "contextual_class_count": 36,
+      "left_monoid_size": 8,
+      "matrices": [
+        [
+          0,
+          1,
+          2,
+          0
+        ],
+        [
+          0,
+          2,
+          2,
+          0
+        ],
+        [
+          0,
+          1,
+          2,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          1
+        ]
+      ],
+      "matrix_indices": [
+        3,
+        9,
+        3,
+        12
+      ],
+      "monolith": null,
+      "monolith_is_nontrivial": false,
+      "nontrivial_proper_congruence_count": 11,
+      "right_monoid_size": 8,
+      "row_index": 10
+    },
+    {
+      "congruence_count": 12,
+      "contextual_class_count": 36,
+      "left_monoid_size": 8,
+      "matrices": [
+        [
+          0,
+          1,
+          2,
+          0
+        ],
+        [
+          0,
+          2,
+          2,
+          0
+        ],
+        [
+          0,
+          2,
+          2,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          1
+        ]
+      ],
+      "matrix_indices": [
+        3,
+        9,
+        9,
+        12
+      ],
+      "monolith": null,
+      "monolith_is_nontrivial": false,
+      "nontrivial_proper_congruence_count": 10,
+      "right_monoid_size": 8,
+      "row_index": 11
+    },
+    {
+      "congruence_count": 11,
+      "contextual_class_count": 108,
+      "left_monoid_size": 24,
+      "matrices": [
+        [
+          0,
+          1,
+          2,
+          2
+        ],
+        [
+          0,
+          1,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          1,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          1
+        ]
+      ],
+      "matrix_indices": [
+        5,
+        0,
+        0,
+        12
+      ],
+      "monolith": null,
+      "monolith_is_nontrivial": false,
+      "nontrivial_proper_congruence_count": 9,
+      "right_monoid_size": 24,
+      "row_index": 12
+    },
+    {
+      "congruence_count": 7,
+      "contextual_class_count": 108,
+      "left_monoid_size": 24,
+      "matrices": [
+        [
+          0,
+          1,
+          2,
+          2
+        ],
+        [
+          0,
+          1,
+          1,
+          1
+        ],
+        [
+          2,
+          1,
+          1,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          1
+        ]
+      ],
+      "matrix_indices": [
+        5,
+        1,
+        38,
+        12
+      ],
+      "monolith": {
+        "block_sizes": [
+          1,
+          1,
+          1,
+          3
+        ],
+        "collision_mismatches_generate_monolith": null,
+        "quotient_class_count": 4,
+        "relative_separation": {
+          "checked": true,
+          "collision_found": false,
+          "collision_length": null,
+          "collision_path": [],
+          "collision_path_indices": [],
+          "element_count": 6,
+          "left_monoid_size": 24,
+          "proves_all_arity_injective": true,
+          "quotient_class_count": 4,
+          "right_monoid_size": 24,
+          "skipped_reason": null,
+          "valid_vertex_count": 165888
+        }
+      },
+      "monolith_is_nontrivial": true,
+      "nontrivial_proper_congruence_count": 5,
+      "right_monoid_size": 24,
+      "row_index": 13
+    },
+    {
+      "congruence_count": 7,
+      "contextual_class_count": 108,
+      "left_monoid_size": 24,
+      "matrices": [
+        [
+          0,
+          1,
+          2,
+          2
+        ],
+        [
+          0,
+          1,
+          1,
+          2
+        ],
+        [
+          1,
+          1,
+          1,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          1
+        ]
+      ],
+      "matrix_indices": [
+        5,
+        2,
+        20,
+        12
+      ],
+      "monolith": {
+        "block_sizes": [
+          1,
+          1,
+          1,
+          3
+        ],
+        "collision_mismatches_generate_monolith": null,
+        "quotient_class_count": 4,
+        "relative_separation": {
+          "checked": true,
+          "collision_found": false,
+          "collision_length": null,
+          "collision_path": [],
+          "collision_path_indices": [],
+          "element_count": 6,
+          "left_monoid_size": 24,
+          "proves_all_arity_injective": true,
+          "quotient_class_count": 4,
+          "right_monoid_size": 24,
+          "skipped_reason": null,
+          "valid_vertex_count": 165888
+        }
+      },
+      "monolith_is_nontrivial": true,
+      "nontrivial_proper_congruence_count": 5,
+      "right_monoid_size": 24,
+      "row_index": 14
+    },
+    {
+      "congruence_count": 11,
+      "contextual_class_count": 108,
+      "left_monoid_size": 24,
+      "matrices": [
+        [
+          0,
+          1,
+          2,
+          2
+        ],
+        [
+          0,
+          1,
+          2,
+          0
+        ],
+        [
+          0,
+          2,
+          1,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          1
+        ]
+      ],
+      "matrix_indices": [
+        5,
+        3,
+        6,
+        12
+      ],
+      "monolith": null,
+      "monolith_is_nontrivial": false,
+      "nontrivial_proper_congruence_count": 9,
+      "right_monoid_size": 24,
+      "row_index": 15
+    },
+    {
+      "congruence_count": 7,
+      "contextual_class_count": 108,
+      "left_monoid_size": 24,
+      "matrices": [
+        [
+          0,
+          1,
+          2,
+          2
+        ],
+        [
+          0,
+          1,
+          2,
+          1
+        ],
+        [
+          1,
+          2,
+          1,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          1
+        ]
+      ],
+      "matrix_indices": [
+        5,
+        4,
+        26,
+        12
+      ],
+      "monolith": {
+        "block_sizes": [
+          1,
+          1,
+          1,
+          3
+        ],
+        "collision_mismatches_generate_monolith": null,
+        "quotient_class_count": 4,
+        "relative_separation": {
+          "checked": true,
+          "collision_found": false,
+          "collision_length": null,
+          "collision_path": [],
+          "collision_path_indices": [],
+          "element_count": 6,
+          "left_monoid_size": 24,
+          "proves_all_arity_injective": true,
+          "quotient_class_count": 4,
+          "right_monoid_size": 24,
+          "skipped_reason": null,
+          "valid_vertex_count": 165888
+        }
+      },
+      "monolith_is_nontrivial": true,
+      "nontrivial_proper_congruence_count": 5,
+      "right_monoid_size": 24,
+      "row_index": 16
+    },
+    {
+      "congruence_count": 7,
+      "contextual_class_count": 108,
+      "left_monoid_size": 24,
+      "matrices": [
+        [
+          0,
+          1,
+          2,
+          2
+        ],
+        [
+          0,
+          1,
+          2,
+          2
+        ],
+        [
+          2,
+          2,
+          1,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          1
+        ]
+      ],
+      "matrix_indices": [
+        5,
+        5,
+        44,
+        12
+      ],
+      "monolith": {
+        "block_sizes": [
+          1,
+          1,
+          1,
+          3
+        ],
+        "collision_mismatches_generate_monolith": null,
+        "quotient_class_count": 4,
+        "relative_separation": {
+          "checked": true,
+          "collision_found": false,
+          "collision_length": null,
+          "collision_path": [],
+          "collision_path_indices": [],
+          "element_count": 6,
+          "left_monoid_size": 24,
+          "proves_all_arity_injective": true,
+          "quotient_class_count": 4,
+          "right_monoid_size": 24,
+          "skipped_reason": null,
+          "valid_vertex_count": 165888
+        }
+      },
+      "monolith_is_nontrivial": true,
+      "nontrivial_proper_congruence_count": 5,
+      "right_monoid_size": 24,
+      "row_index": 17
+    },
+    {
+      "congruence_count": 7,
+      "contextual_class_count": 108,
+      "left_monoid_size": 24,
+      "matrices": [
+        [
+          0,
+          1,
+          2,
+          2
+        ],
+        [
+          0,
+          2,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          2,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          1
+        ]
+      ],
+      "matrix_indices": [
+        5,
+        6,
+        3,
+        12
+      ],
+      "monolith": null,
+      "monolith_is_nontrivial": false,
+      "nontrivial_proper_congruence_count": 5,
+      "right_monoid_size": 24,
+      "row_index": 18
+    },
+    {
+      "congruence_count": 7,
+      "contextual_class_count": 108,
+      "left_monoid_size": 24,
+      "matrices": [
+        [
+          0,
+          1,
+          2,
+          2
+        ],
+        [
+          0,
+          2,
+          2,
+          0
+        ],
+        [
+          0,
+          2,
+          2,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          1
+        ]
+      ],
+      "matrix_indices": [
+        5,
+        9,
+        9,
+        12
+      ],
+      "monolith": null,
+      "monolith_is_nontrivial": false,
+      "nontrivial_proper_congruence_count": 5,
+      "right_monoid_size": 24,
+      "row_index": 19
+    },
+    {
+      "congruence_count": 4,
+      "contextual_class_count": 108,
+      "left_monoid_size": 24,
+      "matrices": [
+        [
+          0,
+          1,
+          2,
+          2
+        ],
+        [
+          1,
+          2,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          2,
+          1
+        ],
+        [
+          1,
+          0,
+          0,
+          1
+        ]
+      ],
+      "matrix_indices": [
+        5,
+        26,
+        4,
+        12
+      ],
+      "monolith": {
+        "block_sizes": [
+          1,
+          1,
+          1,
+          3
+        ],
+        "collision_mismatches_generate_monolith": true,
+        "quotient_class_count": 4,
+        "relative_separation": {
+          "checked": true,
+          "collision_found": true,
+          "collision_length": 3,
+          "collision_path": [
+            [
+              "4",
+              "4"
+            ],
+            [
+              "3",
+              "4"
+            ],
+            [
+              "3",
+              "3"
+            ]
+          ],
+          "collision_path_indices": [
+            [
+              4,
+              4
+            ],
+            [
+              3,
+              4
+            ],
+            [
+              3,
+              3
+            ]
+          ],
+          "element_count": 6,
+          "left_monoid_size": 24,
+          "proves_all_arity_injective": false,
+          "quotient_class_count": 4,
+          "right_monoid_size": 24,
+          "skipped_reason": null,
+          "valid_vertex_count": 98064
+        }
+      },
+      "monolith_is_nontrivial": true,
+      "nontrivial_proper_congruence_count": 2,
+      "right_monoid_size": 24,
+      "row_index": 20
+    },
+    {
+      "congruence_count": 4,
+      "contextual_class_count": 108,
+      "left_monoid_size": 24,
+      "matrices": [
+        [
+          0,
+          1,
+          2,
+          2
+        ],
+        [
+          1,
+          2,
+          2,
+          0
+        ],
+        [
+          0,
+          2,
+          2,
+          2
+        ],
+        [
+          1,
+          0,
+          0,
+          1
+        ]
+      ],
+      "matrix_indices": [
+        5,
+        28,
+        11,
+        12
+      ],
+      "monolith": {
+        "block_sizes": [
+          1,
+          1,
+          1,
+          3
+        ],
+        "collision_mismatches_generate_monolith": true,
+        "quotient_class_count": 4,
+        "relative_separation": {
+          "checked": true,
+          "collision_found": true,
+          "collision_length": 3,
+          "collision_path": [
+            [
+              "4",
+              "4"
+            ],
+            [
+              "3",
+              "4"
+            ],
+            [
+              "3",
+              "3"
+            ]
+          ],
+          "collision_path_indices": [
+            [
+              4,
+              4
+            ],
+            [
+              3,
+              4
+            ],
+            [
+              3,
+              3
+            ]
+          ],
+          "element_count": 6,
+          "left_monoid_size": 24,
+          "proves_all_arity_injective": false,
+          "quotient_class_count": 4,
+          "right_monoid_size": 24,
+          "skipped_reason": null,
+          "valid_vertex_count": 98064
+        }
+      },
+      "monolith_is_nontrivial": true,
+      "nontrivial_proper_congruence_count": 2,
+      "right_monoid_size": 24,
+      "row_index": 21
+    },
+    {
+      "congruence_count": 4,
+      "contextual_class_count": 108,
+      "left_monoid_size": 24,
+      "matrices": [
+        [
+          0,
+          1,
+          2,
+          2
+        ],
+        [
+          2,
+          2,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          2,
+          2
+        ],
+        [
+          1,
+          0,
+          0,
+          1
+        ]
+      ],
+      "matrix_indices": [
+        5,
+        44,
+        5,
+        12
+      ],
+      "monolith": {
+        "block_sizes": [
+          1,
+          1,
+          1,
+          3
+        ],
+        "collision_mismatches_generate_monolith": true,
+        "quotient_class_count": 4,
+        "relative_separation": {
+          "checked": true,
+          "collision_found": true,
+          "collision_length": 3,
+          "collision_path": [
+            [
+              "4",
+              "4"
+            ],
+            [
+              "3",
+              "4"
+            ],
+            [
+              "3",
+              "3"
+            ]
+          ],
+          "collision_path_indices": [
+            [
+              4,
+              4
+            ],
+            [
+              3,
+              4
+            ],
+            [
+              3,
+              3
+            ]
+          ],
+          "element_count": 6,
+          "left_monoid_size": 24,
+          "proves_all_arity_injective": false,
+          "quotient_class_count": 4,
+          "right_monoid_size": 24,
+          "skipped_reason": null,
+          "valid_vertex_count": 98064
+        }
+      },
+      "monolith_is_nontrivial": true,
+      "nontrivial_proper_congruence_count": 2,
+      "right_monoid_size": 24,
+      "row_index": 22
+    },
+    {
+      "congruence_count": 4,
+      "contextual_class_count": 108,
+      "left_monoid_size": 24,
+      "matrices": [
+        [
+          0,
+          1,
+          2,
+          2
+        ],
+        [
+          2,
+          2,
+          2,
+          0
+        ],
+        [
+          0,
+          2,
+          2,
+          1
+        ],
+        [
+          1,
+          0,
+          0,
+          1
+        ]
+      ],
+      "matrix_indices": [
+        5,
+        46,
+        10,
+        12
+      ],
+      "monolith": {
+        "block_sizes": [
+          1,
+          1,
+          1,
+          3
+        ],
+        "collision_mismatches_generate_monolith": true,
+        "quotient_class_count": 4,
+        "relative_separation": {
+          "checked": true,
+          "collision_found": true,
+          "collision_length": 3,
+          "collision_path": [
+            [
+              "4",
+              "4"
+            ],
+            [
+              "3",
+              "4"
+            ],
+            [
+              "3",
+              "3"
+            ]
+          ],
+          "collision_path_indices": [
+            [
+              4,
+              4
+            ],
+            [
+              3,
+              4
+            ],
+            [
+              3,
+              3
+            ]
+          ],
+          "element_count": 6,
+          "left_monoid_size": 24,
+          "proves_all_arity_injective": false,
+          "quotient_class_count": 4,
+          "right_monoid_size": 24,
+          "skipped_reason": null,
+          "valid_vertex_count": 98064
+        }
+      },
+      "monolith_is_nontrivial": true,
+      "nontrivial_proper_congruence_count": 2,
+      "right_monoid_size": 24,
+      "row_index": 23
+    },
+    {
+      "congruence_count": 18,
+      "contextual_class_count": 18,
+      "left_monoid_size": 4,
+      "matrices": [
+        [
+          0,
+          2,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          1,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          1
+        ]
+      ],
+      "matrix_indices": [
+        6,
+        0,
+        0,
+        12
+      ],
+      "monolith": null,
+      "monolith_is_nontrivial": false,
+      "nontrivial_proper_congruence_count": 16,
+      "right_monoid_size": 4,
+      "row_index": 24
+    },
+    {
+      "congruence_count": 19,
+      "contextual_class_count": 18,
+      "left_monoid_size": 4,
+      "matrices": [
+        [
+          0,
+          2,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          1,
+          0
+        ],
+        [
+          0,
+          2,
+          1,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          1
+        ]
+      ],
+      "matrix_indices": [
+        6,
+        0,
+        6,
+        12
+      ],
+      "monolith": null,
+      "monolith_is_nontrivial": false,
+      "nontrivial_proper_congruence_count": 17,
+      "right_monoid_size": 4,
+      "row_index": 25
+    },
+    {
+      "congruence_count": 18,
+      "contextual_class_count": 30,
+      "left_monoid_size": 7,
+      "matrices": [
+        [
+          0,
+          2,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          2,
+          0
+        ],
+        [
+          0,
+          1,
+          1,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          1
+        ]
+      ],
+      "matrix_indices": [
+        6,
+        3,
+        0,
+        12
+      ],
+      "monolith": null,
+      "monolith_is_nontrivial": false,
+      "nontrivial_proper_congruence_count": 16,
+      "right_monoid_size": 7,
+      "row_index": 26
+    },
+    {
+      "congruence_count": 18,
+      "contextual_class_count": 30,
+      "left_monoid_size": 7,
+      "matrices": [
+        [
+          0,
+          2,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          2,
+          0
+        ],
+        [
+          0,
+          2,
+          1,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          1
+        ]
+      ],
+      "matrix_indices": [
+        6,
+        3,
+        6,
+        12
+      ],
+      "monolith": null,
+      "monolith_is_nontrivial": false,
+      "nontrivial_proper_congruence_count": 16,
+      "right_monoid_size": 7,
+      "row_index": 27
+    },
+    {
+      "congruence_count": 12,
+      "contextual_class_count": 24,
+      "left_monoid_size": 5,
+      "matrices": [
+        [
+          0,
+          2,
+          1,
+          0
+        ],
+        [
+          0,
+          2,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          2,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          1
+        ]
+      ],
+      "matrix_indices": [
+        6,
+        6,
+        3,
+        12
+      ],
+      "monolith": null,
+      "monolith_is_nontrivial": false,
+      "nontrivial_proper_congruence_count": 10,
+      "right_monoid_size": 5,
+      "row_index": 28
+    },
+    {
+      "congruence_count": 13,
+      "contextual_class_count": 24,
+      "left_monoid_size": 5,
+      "matrices": [
+        [
+          0,
+          2,
+          1,
+          0
+        ],
+        [
+          0,
+          2,
+          1,
+          0
+        ],
+        [
+          0,
+          2,
+          2,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          1
+        ]
+      ],
+      "matrix_indices": [
+        6,
+        6,
+        9,
+        12
+      ],
+      "monolith": null,
+      "monolith_is_nontrivial": false,
+      "nontrivial_proper_congruence_count": 11,
+      "right_monoid_size": 5,
+      "row_index": 29
+    },
+    {
+      "congruence_count": 12,
+      "contextual_class_count": 36,
+      "left_monoid_size": 8,
+      "matrices": [
+        [
+          0,
+          2,
+          1,
+          0
+        ],
+        [
+          0,
+          2,
+          2,
+          0
+        ],
+        [
+          0,
+          1,
+          2,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          1
+        ]
+      ],
+      "matrix_indices": [
+        6,
+        9,
+        3,
+        12
+      ],
+      "monolith": null,
+      "monolith_is_nontrivial": false,
+      "nontrivial_proper_congruence_count": 10,
+      "right_monoid_size": 8,
+      "row_index": 30
+    },
+    {
+      "congruence_count": 12,
+      "contextual_class_count": 36,
+      "left_monoid_size": 8,
+      "matrices": [
+        [
+          0,
+          2,
+          1,
+          0
+        ],
+        [
+          0,
+          2,
+          2,
+          0
+        ],
+        [
+          0,
+          2,
+          2,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          1
+        ]
+      ],
+      "matrix_indices": [
+        6,
+        9,
+        9,
+        12
+      ],
+      "monolith": null,
+      "monolith_is_nontrivial": false,
+      "nontrivial_proper_congruence_count": 10,
+      "right_monoid_size": 8,
+      "row_index": 31
+    },
+    {
+      "congruence_count": 11,
+      "contextual_class_count": 54,
+      "left_monoid_size": 12,
+      "matrices": [
+        [
+          0,
+          2,
+          1,
+          2
+        ],
+        [
+          0,
+          1,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          1,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          1
+        ]
+      ],
+      "matrix_indices": [
+        8,
+        0,
+        0,
+        12
+      ],
+      "monolith": null,
+      "monolith_is_nontrivial": false,
+      "nontrivial_proper_congruence_count": 9,
+      "right_monoid_size": 12,
+      "row_index": 32
+    },
+    {
+      "congruence_count": 11,
+      "contextual_class_count": 90,
+      "left_monoid_size": 21,
+      "matrices": [
+        [
+          0,
+          2,
+          1,
+          2
+        ],
+        [
+          0,
+          1,
+          2,
+          0
+        ],
+        [
+          0,
+          2,
+          1,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          1
+        ]
+      ],
+      "matrix_indices": [
+        8,
+        3,
+        6,
+        12
+      ],
+      "monolith": null,
+      "monolith_is_nontrivial": false,
+      "nontrivial_proper_congruence_count": 9,
+      "right_monoid_size": 21,
+      "row_index": 33
+    },
+    {
+      "congruence_count": 7,
+      "contextual_class_count": 72,
+      "left_monoid_size": 15,
+      "matrices": [
+        [
+          0,
+          2,
+          1,
+          2
+        ],
+        [
+          0,
+          2,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          2,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          1
+        ]
+      ],
+      "matrix_indices": [
+        8,
+        6,
+        3,
+        12
+      ],
+      "monolith": null,
+      "monolith_is_nontrivial": false,
+      "nontrivial_proper_congruence_count": 5,
+      "right_monoid_size": 15,
+      "row_index": 34
+    },
+    {
+      "congruence_count": 5,
+      "contextual_class_count": 72,
+      "left_monoid_size": 15,
+      "matrices": [
+        [
+          0,
+          2,
+          1,
+          2
+        ],
+        [
+          0,
+          2,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          2,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          1
+        ]
+      ],
+      "matrix_indices": [
+        8,
+        7,
+        22,
+        12
+      ],
+      "monolith": {
+        "block_sizes": [
+          1,
+          1,
+          1,
+          3
+        ],
+        "collision_mismatches_generate_monolith": null,
+        "quotient_class_count": 4,
+        "relative_separation": {
+          "checked": true,
+          "collision_found": false,
+          "collision_length": null,
+          "collision_path": [],
+          "collision_path_indices": [],
+          "element_count": 6,
+          "left_monoid_size": 15,
+          "proves_all_arity_injective": true,
+          "quotient_class_count": 4,
+          "right_monoid_size": 15,
+          "skipped_reason": null,
+          "valid_vertex_count": 41418
+        }
+      },
+      "monolith_is_nontrivial": true,
+      "nontrivial_proper_congruence_count": 3,
+      "right_monoid_size": 15,
+      "row_index": 35
+    },
+    {
+      "congruence_count": 5,
+      "contextual_class_count": 72,
+      "left_monoid_size": 15,
+      "matrices": [
+        [
+          0,
+          2,
+          1,
+          2
+        ],
+        [
+          0,
+          2,
+          1,
+          2
+        ],
+        [
+          2,
+          1,
+          2,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          1
+        ]
+      ],
+      "matrix_indices": [
+        8,
+        8,
+        40,
+        12
+      ],
+      "monolith": {
+        "block_sizes": [
+          1,
+          1,
+          1,
+          3
+        ],
+        "collision_mismatches_generate_monolith": null,
+        "quotient_class_count": 4,
+        "relative_separation": {
+          "checked": true,
+          "collision_found": false,
+          "collision_length": null,
+          "collision_path": [],
+          "collision_path_indices": [],
+          "element_count": 6,
+          "left_monoid_size": 15,
+          "proves_all_arity_injective": true,
+          "quotient_class_count": 4,
+          "right_monoid_size": 15,
+          "skipped_reason": null,
+          "valid_vertex_count": 41418
+        }
+      },
+      "monolith_is_nontrivial": true,
+      "nontrivial_proper_congruence_count": 3,
+      "right_monoid_size": 15,
+      "row_index": 36
+    },
+    {
+      "congruence_count": 7,
+      "contextual_class_count": 108,
+      "left_monoid_size": 24,
+      "matrices": [
+        [
+          0,
+          2,
+          1,
+          2
+        ],
+        [
+          0,
+          2,
+          2,
+          0
+        ],
+        [
+          0,
+          2,
+          2,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          1
+        ]
+      ],
+      "matrix_indices": [
+        8,
+        9,
+        9,
+        12
+      ],
+      "monolith": null,
+      "monolith_is_nontrivial": false,
+      "nontrivial_proper_congruence_count": 5,
+      "right_monoid_size": 24,
+      "row_index": 37
+    },
+    {
+      "congruence_count": 5,
+      "contextual_class_count": 108,
+      "left_monoid_size": 24,
+      "matrices": [
+        [
+          0,
+          2,
+          1,
+          2
+        ],
+        [
+          0,
+          2,
+          2,
+          1
+        ],
+        [
+          2,
+          2,
+          2,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          1
+        ]
+      ],
+      "matrix_indices": [
+        8,
+        10,
+        46,
+        12
+      ],
+      "monolith": {
+        "block_sizes": [
+          1,
+          1,
+          1,
+          3
+        ],
+        "collision_mismatches_generate_monolith": null,
+        "quotient_class_count": 4,
+        "relative_separation": {
+          "checked": true,
+          "collision_found": false,
+          "collision_length": null,
+          "collision_path": [],
+          "collision_path_indices": [],
+          "element_count": 6,
+          "left_monoid_size": 24,
+          "proves_all_arity_injective": true,
+          "quotient_class_count": 4,
+          "right_monoid_size": 24,
+          "skipped_reason": null,
+          "valid_vertex_count": 164376
+        }
+      },
+      "monolith_is_nontrivial": true,
+      "nontrivial_proper_congruence_count": 3,
+      "right_monoid_size": 24,
+      "row_index": 38
+    },
+    {
+      "congruence_count": 5,
+      "contextual_class_count": 108,
+      "left_monoid_size": 24,
+      "matrices": [
+        [
+          0,
+          2,
+          1,
+          2
+        ],
+        [
+          0,
+          2,
+          2,
+          2
+        ],
+        [
+          1,
+          2,
+          2,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          1
+        ]
+      ],
+      "matrix_indices": [
+        8,
+        11,
+        28,
+        12
+      ],
+      "monolith": {
+        "block_sizes": [
+          1,
+          1,
+          1,
+          3
+        ],
+        "collision_mismatches_generate_monolith": null,
+        "quotient_class_count": 4,
+        "relative_separation": {
+          "checked": true,
+          "collision_found": false,
+          "collision_length": null,
+          "collision_path": [],
+          "collision_path_indices": [],
+          "element_count": 6,
+          "left_monoid_size": 24,
+          "proves_all_arity_injective": true,
+          "quotient_class_count": 4,
+          "right_monoid_size": 24,
+          "skipped_reason": null,
+          "valid_vertex_count": 164376
+        }
+      },
+      "monolith_is_nontrivial": true,
+      "nontrivial_proper_congruence_count": 3,
+      "right_monoid_size": 24,
+      "row_index": 39
+    },
+    {
+      "congruence_count": 4,
+      "contextual_class_count": 54,
+      "left_monoid_size": 12,
+      "matrices": [
+        [
+          0,
+          2,
+          1,
+          2
+        ],
+        [
+          1,
+          1,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          1,
+          2
+        ],
+        [
+          1,
+          0,
+          0,
+          1
+        ]
+      ],
+      "matrix_indices": [
+        8,
+        20,
+        2,
+        12
+      ],
+      "monolith": {
+        "block_sizes": [
+          1,
+          1,
+          1,
+          3
+        ],
+        "collision_mismatches_generate_monolith": true,
+        "quotient_class_count": 4,
+        "relative_separation": {
+          "checked": true,
+          "collision_found": true,
+          "collision_length": 3,
+          "collision_path": [
+            [
+              "3",
+              "3"
+            ],
+            [
+              "3",
+              "4"
+            ],
+            [
+              "4",
+              "4"
+            ]
+          ],
+          "collision_path_indices": [
+            [
+              3,
+              3
+            ],
+            [
+              3,
+              4
+            ],
+            [
+              4,
+              4
+            ]
+          ],
+          "element_count": 6,
+          "left_monoid_size": 12,
+          "proves_all_arity_injective": false,
+          "quotient_class_count": 4,
+          "right_monoid_size": 12,
+          "skipped_reason": null,
+          "valid_vertex_count": 12258
+        }
+      },
+      "monolith_is_nontrivial": true,
+      "nontrivial_proper_congruence_count": 2,
+      "right_monoid_size": 12,
+      "row_index": 40
+    },
+    {
+      "congruence_count": 4,
+      "contextual_class_count": 90,
+      "left_monoid_size": 21,
+      "matrices": [
+        [
+          0,
+          2,
+          1,
+          2
+        ],
+        [
+          1,
+          1,
+          2,
+          0
+        ],
+        [
+          0,
+          2,
+          1,
+          1
+        ],
+        [
+          1,
+          0,
+          0,
+          1
+        ]
+      ],
+      "matrix_indices": [
+        8,
+        22,
+        7,
+        12
+      ],
+      "monolith": {
+        "block_sizes": [
+          1,
+          1,
+          1,
+          3
+        ],
+        "collision_mismatches_generate_monolith": true,
+        "quotient_class_count": 4,
+        "relative_separation": {
+          "checked": true,
+          "collision_found": true,
+          "collision_length": 3,
+          "collision_path": [
+            [
+              "4",
+              "4"
+            ],
+            [
+              "3",
+              "4"
+            ],
+            [
+              "4",
+              "4"
+            ]
+          ],
+          "collision_path_indices": [
+            [
+              4,
+              4
+            ],
+            [
+              3,
+              4
+            ],
+            [
+              4,
+              4
+            ]
+          ],
+          "element_count": 6,
+          "left_monoid_size": 21,
+          "proves_all_arity_injective": false,
+          "quotient_class_count": 4,
+          "right_monoid_size": 21,
+          "skipped_reason": null,
+          "valid_vertex_count": 62316
+        }
+      },
+      "monolith_is_nontrivial": true,
+      "nontrivial_proper_congruence_count": 2,
+      "right_monoid_size": 21,
+      "row_index": 41
+    },
+    {
+      "congruence_count": 4,
+      "contextual_class_count": 54,
+      "left_monoid_size": 12,
+      "matrices": [
+        [
+          0,
+          2,
+          1,
+          2
+        ],
+        [
+          2,
+          1,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          0,
+          0,
+          1
+        ]
+      ],
+      "matrix_indices": [
+        8,
+        38,
+        1,
+        12
+      ],
+      "monolith": {
+        "block_sizes": [
+          1,
+          1,
+          1,
+          3
+        ],
+        "collision_mismatches_generate_monolith": true,
+        "quotient_class_count": 4,
+        "relative_separation": {
+          "checked": true,
+          "collision_found": true,
+          "collision_length": 3,
+          "collision_path": [
+            [
+              "3",
+              "3"
+            ],
+            [
+              "3",
+              "4"
+            ],
+            [
+              "4",
+              "4"
+            ]
+          ],
+          "collision_path_indices": [
+            [
+              3,
+              3
+            ],
+            [
+              3,
+              4
+            ],
+            [
+              4,
+              4
+            ]
+          ],
+          "element_count": 6,
+          "left_monoid_size": 12,
+          "proves_all_arity_injective": false,
+          "quotient_class_count": 4,
+          "right_monoid_size": 12,
+          "skipped_reason": null,
+          "valid_vertex_count": 12258
+        }
+      },
+      "monolith_is_nontrivial": true,
+      "nontrivial_proper_congruence_count": 2,
+      "right_monoid_size": 12,
+      "row_index": 42
+    },
+    {
+      "congruence_count": 4,
+      "contextual_class_count": 90,
+      "left_monoid_size": 21,
+      "matrices": [
+        [
+          0,
+          2,
+          1,
+          2
+        ],
+        [
+          2,
+          1,
+          2,
+          0
+        ],
+        [
+          0,
+          2,
+          1,
+          2
+        ],
+        [
+          1,
+          0,
+          0,
+          1
+        ]
+      ],
+      "matrix_indices": [
+        8,
+        40,
+        8,
+        12
+      ],
+      "monolith": {
+        "block_sizes": [
+          1,
+          1,
+          1,
+          3
+        ],
+        "collision_mismatches_generate_monolith": true,
+        "quotient_class_count": 4,
+        "relative_separation": {
+          "checked": true,
+          "collision_found": true,
+          "collision_length": 3,
+          "collision_path": [
+            [
+              "4",
+              "4"
+            ],
+            [
+              "3",
+              "4"
+            ],
+            [
+              "4",
+              "4"
+            ]
+          ],
+          "collision_path_indices": [
+            [
+              4,
+              4
+            ],
+            [
+              3,
+              4
+            ],
+            [
+              4,
+              4
+            ]
+          ],
+          "element_count": 6,
+          "left_monoid_size": 21,
+          "proves_all_arity_injective": false,
+          "quotient_class_count": 4,
+          "right_monoid_size": 21,
+          "skipped_reason": null,
+          "valid_vertex_count": 62316
+        }
+      },
+      "monolith_is_nontrivial": true,
+      "nontrivial_proper_congruence_count": 2,
+      "right_monoid_size": 21,
+      "row_index": 43
+    },
+    {
+      "congruence_count": 18,
+      "contextual_class_count": 36,
+      "left_monoid_size": 8,
+      "matrices": [
+        [
+          0,
+          2,
+          2,
+          0
+        ],
+        [
+          0,
+          1,
+          1,
+          0
+        ],
+        [
+          0,
+          2,
+          1,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          1
+        ]
+      ],
+      "matrix_indices": [
+        9,
+        0,
+        6,
+        12
+      ],
+      "monolith": null,
+      "monolith_is_nontrivial": false,
+      "nontrivial_proper_congruence_count": 16,
+      "right_monoid_size": 8,
+      "row_index": 44
+    },
+    {
+      "congruence_count": 18,
+      "contextual_class_count": 36,
+      "left_monoid_size": 8,
+      "matrices": [
+        [
+          0,
+          2,
+          2,
+          0
+        ],
+        [
+          0,
+          1,
+          2,
+          0
+        ],
+        [
+          0,
+          1,
+          1,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          1
+        ]
+      ],
+      "matrix_indices": [
+        9,
+        3,
+        0,
+        12
+      ],
+      "monolith": null,
+      "monolith_is_nontrivial": false,
+      "nontrivial_proper_congruence_count": 16,
+      "right_monoid_size": 8,
+      "row_index": 45
+    },
+    {
+      "congruence_count": 12,
+      "contextual_class_count": 36,
+      "left_monoid_size": 8,
+      "matrices": [
+        [
+          0,
+          2,
+          2,
+          0
+        ],
+        [
+          0,
+          2,
+          1,
+          0
+        ],
+        [
+          0,
+          2,
+          2,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          1
+        ]
+      ],
+      "matrix_indices": [
+        9,
+        6,
+        9,
+        12
+      ],
+      "monolith": null,
+      "monolith_is_nontrivial": false,
+      "nontrivial_proper_congruence_count": 10,
+      "right_monoid_size": 8,
+      "row_index": 46
+    },
+    {
+      "congruence_count": 12,
+      "contextual_class_count": 36,
+      "left_monoid_size": 8,
+      "matrices": [
+        [
+          0,
+          2,
+          2,
+          0
+        ],
+        [
+          0,
+          2,
+          2,
+          0
+        ],
+        [
+          0,
+          1,
+          2,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          1
+        ]
+      ],
+      "matrix_indices": [
+        9,
+        9,
+        3,
+        12
+      ],
+      "monolith": null,
+      "monolith_is_nontrivial": false,
+      "nontrivial_proper_congruence_count": 10,
+      "right_monoid_size": 8,
+      "row_index": 47
+    },
+    {
+      "congruence_count": 18,
+      "contextual_class_count": 36,
+      "left_monoid_size": 8,
+      "matrices": [
+        [
+          1,
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          1,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          2,
+          0
+        ]
+      ],
+      "matrix_indices": [
+        12,
+        0,
+        0,
+        3
+      ],
+      "monolith": null,
+      "monolith_is_nontrivial": false,
+      "nontrivial_proper_congruence_count": 16,
+      "right_monoid_size": 8,
+      "row_index": 48
+    },
+    {
+      "congruence_count": 11,
+      "contextual_class_count": 108,
+      "left_monoid_size": 24,
+      "matrices": [
+        [
+          1,
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          1,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          2,
+          2
+        ]
+      ],
+      "matrix_indices": [
+        12,
+        0,
+        0,
+        5
+      ],
+      "monolith": null,
+      "monolith_is_nontrivial": false,
+      "nontrivial_proper_congruence_count": 9,
+      "right_monoid_size": 24,
+      "row_index": 49
+    },
+    {
+      "congruence_count": 18,
+      "contextual_class_count": 18,
+      "left_monoid_size": 4,
+      "matrices": [
+        [
+          1,
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          1,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          1,
+          0
+        ],
+        [
+          0,
+          2,
+          1,
+          0
+        ]
+      ],
+      "matrix_indices": [
+        12,
+        0,
+        0,
+        6
+      ],
+      "monolith": null,
+      "monolith_is_nontrivial": false,
+      "nontrivial_proper_congruence_count": 16,
+      "right_monoid_size": 4,
+      "row_index": 50
+    },
+    {
+      "congruence_count": 11,
+      "contextual_class_count": 54,
+      "left_monoid_size": 12,
+      "matrices": [
+        [
+          1,
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          1,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          1,
+          0
+        ],
+        [
+          0,
+          2,
+          1,
+          2
+        ]
+      ],
+      "matrix_indices": [
+        12,
+        0,
+        0,
+        8
+      ],
+      "monolith": null,
+      "monolith_is_nontrivial": false,
+      "nontrivial_proper_congruence_count": 9,
+      "right_monoid_size": 12,
+      "row_index": 51
+    },
+    {
+      "congruence_count": 11,
+      "contextual_class_count": 36,
+      "left_monoid_size": 8,
+      "matrices": [
+        [
+          1,
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          1,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          1,
+          0
+        ],
+        [
+          2,
+          1,
+          2,
+          0
+        ]
+      ],
+      "matrix_indices": [
+        12,
+        0,
+        0,
+        40
+      ],
+      "monolith": null,
+      "monolith_is_nontrivial": false,
+      "nontrivial_proper_congruence_count": 9,
+      "right_monoid_size": 8,
+      "row_index": 52
+    },
+    {
+      "congruence_count": 11,
+      "contextual_class_count": 18,
+      "left_monoid_size": 4,
+      "matrices": [
+        [
+          1,
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          1,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          1,
+          0
+        ],
+        [
+          2,
+          2,
+          1,
+          0
+        ]
+      ],
+      "matrix_indices": [
+        12,
+        0,
+        0,
+        44
+      ],
+      "monolith": null,
+      "monolith_is_nontrivial": false,
+      "nontrivial_proper_congruence_count": 9,
+      "right_monoid_size": 4,
+      "row_index": 53
+    },
+    {
+      "congruence_count": 18,
+      "contextual_class_count": 30,
+      "left_monoid_size": 7,
+      "matrices": [
+        [
+          1,
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          1,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          2,
+          0
+        ],
+        [
+          0,
+          1,
+          1,
+          0
+        ]
+      ],
+      "matrix_indices": [
+        12,
+        0,
+        3,
+        0
+      ],
+      "monolith": null,
+      "monolith_is_nontrivial": false,
+      "nontrivial_proper_congruence_count": 16,
+      "right_monoid_size": 7,
+      "row_index": 54
+    },
+    {
+      "congruence_count": 19,
+      "contextual_class_count": 36,
+      "left_monoid_size": 8,
+      "matrices": [
+        [
+          1,
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          1,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          2,
+          0
+        ],
+        [
+          0,
+          1,
+          2,
+          0
+        ]
+      ],
+      "matrix_indices": [
+        12,
+        0,
+        3,
+        3
+      ],
+      "monolith": null,
+      "monolith_is_nontrivial": false,
+      "nontrivial_proper_congruence_count": 17,
+      "right_monoid_size": 8,
+      "row_index": 55
+    },
+    {
+      "congruence_count": 18,
+      "contextual_class_count": 30,
+      "left_monoid_size": 7,
+      "matrices": [
+        [
+          1,
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          1,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          2,
+          0
+        ],
+        [
+          0,
+          2,
+          1,
+          0
+        ]
+      ],
+      "matrix_indices": [
+        12,
+        0,
+        3,
+        6
+      ],
+      "monolith": null,
+      "monolith_is_nontrivial": false,
+      "nontrivial_proper_congruence_count": 16,
+      "right_monoid_size": 7,
+      "row_index": 56
+    },
+    {
+      "congruence_count": 18,
+      "contextual_class_count": 36,
+      "left_monoid_size": 8,
+      "matrices": [
+        [
+          1,
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          1,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          2,
+          0
+        ],
+        [
+          0,
+          2,
+          2,
+          0
+        ]
+      ],
+      "matrix_indices": [
+        12,
+        0,
+        3,
+        9
+      ],
+      "monolith": null,
+      "monolith_is_nontrivial": false,
+      "nontrivial_proper_congruence_count": 16,
+      "right_monoid_size": 8,
+      "row_index": 57
+    },
+    {
+      "congruence_count": 4,
+      "contextual_class_count": 54,
+      "left_monoid_size": 12,
+      "matrices": [
+        [
+          1,
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          1,
+          1,
+          1
+        ],
+        [
+          2,
+          1,
+          1,
+          0
+        ],
+        [
+          0,
+          2,
+          1,
+          2
+        ]
+      ],
+      "matrix_indices": [
+        12,
+        1,
+        38,
+        8
+      ],
+      "monolith": {
+        "block_sizes": [
+          1,
+          1,
+          1,
+          3
+        ],
+        "collision_mismatches_generate_monolith": true,
+        "quotient_class_count": 4,
+        "relative_separation": {
+          "checked": true,
+          "collision_found": true,
+          "collision_length": 3,
+          "collision_path": [
+            [
+              "0",
+              "0"
+            ],
+            [
+              "0",
+              "1"
+            ],
+            [
+              "0",
+              "0"
+            ]
+          ],
+          "collision_path_indices": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              0
+            ]
+          ],
+          "element_count": 6,
+          "left_monoid_size": 12,
+          "proves_all_arity_injective": false,
+          "quotient_class_count": 4,
+          "right_monoid_size": 12,
+          "skipped_reason": null,
+          "valid_vertex_count": 12258
+        }
+      },
+      "monolith_is_nontrivial": true,
+      "nontrivial_proper_congruence_count": 2,
+      "right_monoid_size": 12,
+      "row_index": 58
+    },
+    {
+      "congruence_count": 4,
+      "contextual_class_count": 60,
+      "left_monoid_size": 12,
+      "matrices": [
+        [
+          1,
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          1,
+          1,
+          1
+        ],
+        [
+          2,
+          1,
+          1,
+          0
+        ],
+        [
+          2,
+          1,
+          2,
+          0
+        ]
+      ],
+      "matrix_indices": [
+        12,
+        1,
+        38,
+        40
+      ],
+      "monolith": {
+        "block_sizes": [
+          1,
+          1,
+          1,
+          3
+        ],
+        "collision_mismatches_generate_monolith": true,
+        "quotient_class_count": 4,
+        "relative_separation": {
+          "checked": true,
+          "collision_found": true,
+          "collision_length": 3,
+          "collision_path": [
+            [
+              "2",
+              "2"
+            ],
+            [
+              "0",
+              "1"
+            ],
+            [
+              "0",
+              "0"
+            ]
+          ],
+          "collision_path_indices": [
+            [
+              2,
+              2
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              0
+            ]
+          ],
+          "element_count": 6,
+          "left_monoid_size": 12,
+          "proves_all_arity_injective": false,
+          "quotient_class_count": 4,
+          "right_monoid_size": 12,
+          "skipped_reason": null,
+          "valid_vertex_count": 18576
+        }
+      },
+      "monolith_is_nontrivial": true,
+      "nontrivial_proper_congruence_count": 2,
+      "right_monoid_size": 12,
+      "row_index": 59
+    },
+    {
+      "congruence_count": 4,
+      "contextual_class_count": 54,
+      "left_monoid_size": 12,
+      "matrices": [
+        [
+          1,
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          1,
+          1,
+          2
+        ],
+        [
+          1,
+          1,
+          1,
+          0
+        ],
+        [
+          0,
+          2,
+          1,
+          2
+        ]
+      ],
+      "matrix_indices": [
+        12,
+        2,
+        20,
+        8
+      ],
+      "monolith": {
+        "block_sizes": [
+          1,
+          1,
+          1,
+          3
+        ],
+        "collision_mismatches_generate_monolith": true,
+        "quotient_class_count": 4,
+        "relative_separation": {
+          "checked": true,
+          "collision_found": true,
+          "collision_length": 3,
+          "collision_path": [
+            [
+              "0",
+              "0"
+            ],
+            [
+              "0",
+              "1"
+            ],
+            [
+              "0",
+              "0"
+            ]
+          ],
+          "collision_path_indices": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              0
+            ]
+          ],
+          "element_count": 6,
+          "left_monoid_size": 12,
+          "proves_all_arity_injective": false,
+          "quotient_class_count": 4,
+          "right_monoid_size": 12,
+          "skipped_reason": null,
+          "valid_vertex_count": 12258
+        }
+      },
+      "monolith_is_nontrivial": true,
+      "nontrivial_proper_congruence_count": 2,
+      "right_monoid_size": 12,
+      "row_index": 60
+    },
+    {
+      "congruence_count": 4,
+      "contextual_class_count": 60,
+      "left_monoid_size": 12,
+      "matrices": [
+        [
+          1,
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          1,
+          1,
+          2
+        ],
+        [
+          1,
+          1,
+          1,
+          0
+        ],
+        [
+          2,
+          1,
+          2,
+          0
+        ]
+      ],
+      "matrix_indices": [
+        12,
+        2,
+        20,
+        40
+      ],
+      "monolith": {
+        "block_sizes": [
+          1,
+          1,
+          1,
+          3
+        ],
+        "collision_mismatches_generate_monolith": true,
+        "quotient_class_count": 4,
+        "relative_separation": {
+          "checked": true,
+          "collision_found": true,
+          "collision_length": 3,
+          "collision_path": [
+            [
+              "2",
+              "2"
+            ],
+            [
+              "0",
+              "1"
+            ],
+            [
+              "0",
+              "0"
+            ]
+          ],
+          "collision_path_indices": [
+            [
+              2,
+              2
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              0
+            ]
+          ],
+          "element_count": 6,
+          "left_monoid_size": 12,
+          "proves_all_arity_injective": false,
+          "quotient_class_count": 4,
+          "right_monoid_size": 12,
+          "skipped_reason": null,
+          "valid_vertex_count": 18576
+        }
+      },
+      "monolith_is_nontrivial": true,
+      "nontrivial_proper_congruence_count": 2,
+      "right_monoid_size": 12,
+      "row_index": 61
+    },
+    {
+      "congruence_count": 12,
+      "contextual_class_count": 36,
+      "left_monoid_size": 8,
+      "matrices": [
+        [
+          1,
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          1,
+          2,
+          0
+        ],
+        [
+          0,
+          2,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          2,
+          0
+        ]
+      ],
+      "matrix_indices": [
+        12,
+        3,
+        6,
+        3
+      ],
+      "monolith": null,
+      "monolith_is_nontrivial": false,
+      "nontrivial_proper_congruence_count": 10,
+      "right_monoid_size": 8,
+      "row_index": 62
+    },
+    {
+      "congruence_count": 7,
+      "contextual_class_count": 108,
+      "left_monoid_size": 24,
+      "matrices": [
+        [
+          1,
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          1,
+          2,
+          0
+        ],
+        [
+          0,
+          2,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          2,
+          2
+        ]
+      ],
+      "matrix_indices": [
+        12,
+        3,
+        6,
+        5
+      ],
+      "monolith": null,
+      "monolith_is_nontrivial": false,
+      "nontrivial_proper_congruence_count": 5,
+      "right_monoid_size": 24,
+      "row_index": 63
+    },
+    {
+      "congruence_count": 12,
+      "contextual_class_count": 24,
+      "left_monoid_size": 5,
+      "matrices": [
+        [
+          1,
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          1,
+          2,
+          0
+        ],
+        [
+          0,
+          2,
+          1,
+          0
+        ],
+        [
+          0,
+          2,
+          1,
+          0
+        ]
+      ],
+      "matrix_indices": [
+        12,
+        3,
+        6,
+        6
+      ],
+      "monolith": null,
+      "monolith_is_nontrivial": false,
+      "nontrivial_proper_congruence_count": 10,
+      "right_monoid_size": 5,
+      "row_index": 64
+    },
+    {
+      "congruence_count": 7,
+      "contextual_class_count": 72,
+      "left_monoid_size": 15,
+      "matrices": [
+        [
+          1,
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          1,
+          2,
+          0
+        ],
+        [
+          0,
+          2,
+          1,
+          0
+        ],
+        [
+          0,
+          2,
+          1,
+          2
+        ]
+      ],
+      "matrix_indices": [
+        12,
+        3,
+        6,
+        8
+      ],
+      "monolith": null,
+      "monolith_is_nontrivial": false,
+      "nontrivial_proper_congruence_count": 5,
+      "right_monoid_size": 15,
+      "row_index": 65
+    },
+    {
+      "congruence_count": 7,
+      "contextual_class_count": 36,
+      "left_monoid_size": 8,
+      "matrices": [
+        [
+          1,
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          1,
+          2,
+          0
+        ],
+        [
+          0,
+          2,
+          1,
+          0
+        ],
+        [
+          2,
+          1,
+          2,
+          0
+        ]
+      ],
+      "matrix_indices": [
+        12,
+        3,
+        6,
+        40
+      ],
+      "monolith": null,
+      "monolith_is_nontrivial": false,
+      "nontrivial_proper_congruence_count": 5,
+      "right_monoid_size": 8,
+      "row_index": 66
+    },
+    {
+      "congruence_count": 7,
+      "contextual_class_count": 24,
+      "left_monoid_size": 5,
+      "matrices": [
+        [
+          1,
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          1,
+          2,
+          0
+        ],
+        [
+          0,
+          2,
+          1,
+          0
+        ],
+        [
+          2,
+          2,
+          1,
+          0
+        ]
+      ],
+      "matrix_indices": [
+        12,
+        3,
+        6,
+        44
+      ],
+      "monolith": null,
+      "monolith_is_nontrivial": false,
+      "nontrivial_proper_congruence_count": 5,
+      "right_monoid_size": 5,
+      "row_index": 67
+    },
+    {
+      "congruence_count": 12,
+      "contextual_class_count": 36,
+      "left_monoid_size": 8,
+      "matrices": [
+        [
+          1,
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          1,
+          2,
+          0
+        ],
+        [
+          0,
+          2,
+          2,
+          0
+        ],
+        [
+          0,
+          1,
+          1,
+          0
+        ]
+      ],
+      "matrix_indices": [
+        12,
+        3,
+        9,
+        0
+      ],
+      "monolith": null,
+      "monolith_is_nontrivial": false,
+      "nontrivial_proper_congruence_count": 10,
+      "right_monoid_size": 8,
+      "row_index": 68
+    },
+    {
+      "congruence_count": 13,
+      "contextual_class_count": 36,
+      "left_monoid_size": 8,
+      "matrices": [
+        [
+          1,
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          1,
+          2,
+          0
+        ],
+        [
+          0,
+          2,
+          2,
+          0
+        ],
+        [
+          0,
+          1,
+          2,
+          0
+        ]
+      ],
+      "matrix_indices": [
+        12,
+        3,
+        9,
+        3
+      ],
+      "monolith": null,
+      "monolith_is_nontrivial": false,
+      "nontrivial_proper_congruence_count": 11,
+      "right_monoid_size": 8,
+      "row_index": 69
+    },
+    {
+      "congruence_count": 12,
+      "contextual_class_count": 36,
+      "left_monoid_size": 8,
+      "matrices": [
+        [
+          1,
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          1,
+          2,
+          0
+        ],
+        [
+          0,
+          2,
+          2,
+          0
+        ],
+        [
+          0,
+          2,
+          1,
+          0
+        ]
+      ],
+      "matrix_indices": [
+        12,
+        3,
+        9,
+        6
+      ],
+      "monolith": null,
+      "monolith_is_nontrivial": false,
+      "nontrivial_proper_congruence_count": 10,
+      "right_monoid_size": 8,
+      "row_index": 70
+    },
+    {
+      "congruence_count": 12,
+      "contextual_class_count": 36,
+      "left_monoid_size": 8,
+      "matrices": [
+        [
+          1,
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          1,
+          2,
+          0
+        ],
+        [
+          0,
+          2,
+          2,
+          0
+        ],
+        [
+          0,
+          2,
+          2,
+          0
+        ]
+      ],
+      "matrix_indices": [
+        12,
+        3,
+        9,
+        9
+      ],
+      "monolith": null,
+      "monolith_is_nontrivial": false,
+      "nontrivial_proper_congruence_count": 10,
+      "right_monoid_size": 8,
+      "row_index": 71
+    },
+    {
+      "congruence_count": 4,
+      "contextual_class_count": 108,
+      "left_monoid_size": 24,
+      "matrices": [
+        [
+          1,
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          1,
+          2,
+          1
+        ],
+        [
+          1,
+          2,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          2,
+          2
+        ]
+      ],
+      "matrix_indices": [
+        12,
+        4,
+        26,
+        5
+      ],
+      "monolith": {
+        "block_sizes": [
+          1,
+          1,
+          1,
+          3
+        ],
+        "collision_mismatches_generate_monolith": true,
+        "quotient_class_count": 4,
+        "relative_separation": {
+          "checked": true,
+          "collision_found": true,
+          "collision_length": 3,
+          "collision_path": [
+            [
+              "0",
+              "0"
+            ],
+            [
+              "0",
+              "1"
+            ],
+            [
+              "2",
+              "2"
+            ]
+          ],
+          "collision_path_indices": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              2,
+              2
+            ]
+          ],
+          "element_count": 6,
+          "left_monoid_size": 24,
+          "proves_all_arity_injective": false,
+          "quotient_class_count": 4,
+          "right_monoid_size": 24,
+          "skipped_reason": null,
+          "valid_vertex_count": 98064
+        }
+      },
+      "monolith_is_nontrivial": true,
+      "nontrivial_proper_congruence_count": 2,
+      "right_monoid_size": 24,
+      "row_index": 72
+    },
+    {
+      "congruence_count": 4,
+      "contextual_class_count": 48,
+      "left_monoid_size": 9,
+      "matrices": [
+        [
+          1,
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          1,
+          2,
+          1
+        ],
+        [
+          1,
+          2,
+          1,
+          0
+        ],
+        [
+          2,
+          2,
+          1,
+          0
+        ]
+      ],
+      "matrix_indices": [
+        12,
+        4,
+        26,
+        44
+      ],
+      "monolith": {
+        "block_sizes": [
+          1,
+          1,
+          1,
+          3
+        ],
+        "collision_mismatches_generate_monolith": true,
+        "quotient_class_count": 4,
+        "relative_separation": {
+          "checked": true,
+          "collision_found": true,
+          "collision_length": 3,
+          "collision_path": [
+            [
+              "0",
+              "0"
+            ],
+            [
+              "0",
+              "1"
+            ],
+            [
+              "0",
+              "0"
+            ]
+          ],
+          "collision_path_indices": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              0
+            ]
+          ],
+          "element_count": 6,
+          "left_monoid_size": 9,
+          "proves_all_arity_injective": false,
+          "quotient_class_count": 4,
+          "right_monoid_size": 9,
+          "skipped_reason": null,
+          "valid_vertex_count": 9396
+        }
+      },
+      "monolith_is_nontrivial": true,
+      "nontrivial_proper_congruence_count": 2,
+      "right_monoid_size": 9,
+      "row_index": 73
+    },
+    {
+      "congruence_count": 4,
+      "contextual_class_count": 108,
+      "left_monoid_size": 24,
+      "matrices": [
+        [
+          1,
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          1,
+          2,
+          2
+        ],
+        [
+          2,
+          2,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          2,
+          2
+        ]
+      ],
+      "matrix_indices": [
+        12,
+        5,
+        44,
+        5
+      ],
+      "monolith": {
+        "block_sizes": [
+          1,
+          1,
+          1,
+          3
+        ],
+        "collision_mismatches_generate_monolith": true,
+        "quotient_class_count": 4,
+        "relative_separation": {
+          "checked": true,
+          "collision_found": true,
+          "collision_length": 3,
+          "collision_path": [
+            [
+              "0",
+              "0"
+            ],
+            [
+              "0",
+              "1"
+            ],
+            [
+              "2",
+              "2"
+            ]
+          ],
+          "collision_path_indices": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              2,
+              2
+            ]
+          ],
+          "element_count": 6,
+          "left_monoid_size": 24,
+          "proves_all_arity_injective": false,
+          "quotient_class_count": 4,
+          "right_monoid_size": 24,
+          "skipped_reason": null,
+          "valid_vertex_count": 98064
+        }
+      },
+      "monolith_is_nontrivial": true,
+      "nontrivial_proper_congruence_count": 2,
+      "right_monoid_size": 24,
+      "row_index": 74
+    },
+    {
+      "congruence_count": 4,
+      "contextual_class_count": 48,
+      "left_monoid_size": 9,
+      "matrices": [
+        [
+          1,
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          1,
+          2,
+          2
+        ],
+        [
+          2,
+          2,
+          1,
+          0
+        ],
+        [
+          2,
+          2,
+          1,
+          0
+        ]
+      ],
+      "matrix_indices": [
+        12,
+        5,
+        44,
+        44
+      ],
+      "monolith": {
+        "block_sizes": [
+          1,
+          1,
+          1,
+          3
+        ],
+        "collision_mismatches_generate_monolith": true,
+        "quotient_class_count": 4,
+        "relative_separation": {
+          "checked": true,
+          "collision_found": true,
+          "collision_length": 3,
+          "collision_path": [
+            [
+              "0",
+              "0"
+            ],
+            [
+              "0",
+              "1"
+            ],
+            [
+              "0",
+              "0"
+            ]
+          ],
+          "collision_path_indices": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              0
+            ]
+          ],
+          "element_count": 6,
+          "left_monoid_size": 9,
+          "proves_all_arity_injective": false,
+          "quotient_class_count": 4,
+          "right_monoid_size": 9,
+          "skipped_reason": null,
+          "valid_vertex_count": 9396
+        }
+      },
+      "monolith_is_nontrivial": true,
+      "nontrivial_proper_congruence_count": 2,
+      "right_monoid_size": 9,
+      "row_index": 75
+    },
+    {
+      "congruence_count": 18,
+      "contextual_class_count": 18,
+      "left_monoid_size": 4,
+      "matrices": [
+        [
+          1,
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          2,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          1,
+          0
+        ]
+      ],
+      "matrix_indices": [
+        12,
+        6,
+        0,
+        0
+      ],
+      "monolith": null,
+      "monolith_is_nontrivial": false,
+      "nontrivial_proper_congruence_count": 16,
+      "right_monoid_size": 4,
+      "row_index": 76
+    },
+    {
+      "congruence_count": 18,
+      "contextual_class_count": 36,
+      "left_monoid_size": 8,
+      "matrices": [
+        [
+          1,
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          2,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          2,
+          0
+        ]
+      ],
+      "matrix_indices": [
+        12,
+        6,
+        0,
+        3
+      ],
+      "monolith": null,
+      "monolith_is_nontrivial": false,
+      "nontrivial_proper_congruence_count": 16,
+      "right_monoid_size": 8,
+      "row_index": 77
+    },
+    {
+      "congruence_count": 19,
+      "contextual_class_count": 18,
+      "left_monoid_size": 4,
+      "matrices": [
+        [
+          1,
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          2,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          1,
+          0
+        ],
+        [
+          0,
+          2,
+          1,
+          0
+        ]
+      ],
+      "matrix_indices": [
+        12,
+        6,
+        0,
+        6
+      ],
+      "monolith": null,
+      "monolith_is_nontrivial": false,
+      "nontrivial_proper_congruence_count": 17,
+      "right_monoid_size": 4,
+      "row_index": 78
+    },
+    {
+      "congruence_count": 18,
+      "contextual_class_count": 36,
+      "left_monoid_size": 8,
+      "matrices": [
+        [
+          1,
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          2,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          1,
+          0
+        ],
+        [
+          0,
+          2,
+          2,
+          0
+        ]
+      ],
+      "matrix_indices": [
+        12,
+        6,
+        0,
+        9
+      ],
+      "monolith": null,
+      "monolith_is_nontrivial": false,
+      "nontrivial_proper_congruence_count": 16,
+      "right_monoid_size": 8,
+      "row_index": 79
+    },
+    {
+      "congruence_count": 18,
+      "contextual_class_count": 36,
+      "left_monoid_size": 8,
+      "matrices": [
+        [
+          1,
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          2,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          2,
+          0
+        ],
+        [
+          0,
+          1,
+          2,
+          0
+        ]
+      ],
+      "matrix_indices": [
+        12,
+        6,
+        3,
+        3
+      ],
+      "monolith": null,
+      "monolith_is_nontrivial": false,
+      "nontrivial_proper_congruence_count": 16,
+      "right_monoid_size": 8,
+      "row_index": 80
+    },
+    {
+      "congruence_count": 11,
+      "contextual_class_count": 108,
+      "left_monoid_size": 24,
+      "matrices": [
+        [
+          1,
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          2,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          2,
+          0
+        ],
+        [
+          0,
+          1,
+          2,
+          2
+        ]
+      ],
+      "matrix_indices": [
+        12,
+        6,
+        3,
+        5
+      ],
+      "monolith": null,
+      "monolith_is_nontrivial": false,
+      "nontrivial_proper_congruence_count": 9,
+      "right_monoid_size": 24,
+      "row_index": 81
+    },
+    {
+      "congruence_count": 18,
+      "contextual_class_count": 30,
+      "left_monoid_size": 7,
+      "matrices": [
+        [
+          1,
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          2,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          2,
+          0
+        ],
+        [
+          0,
+          2,
+          1,
+          0
+        ]
+      ],
+      "matrix_indices": [
+        12,
+        6,
+        3,
+        6
+      ],
+      "monolith": null,
+      "monolith_is_nontrivial": false,
+      "nontrivial_proper_congruence_count": 16,
+      "right_monoid_size": 7,
+      "row_index": 82
+    },
+    {
+      "congruence_count": 11,
+      "contextual_class_count": 90,
+      "left_monoid_size": 21,
+      "matrices": [
+        [
+          1,
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          2,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          2,
+          0
+        ],
+        [
+          0,
+          2,
+          1,
+          2
+        ]
+      ],
+      "matrix_indices": [
+        12,
+        6,
+        3,
+        8
+      ],
+      "monolith": null,
+      "monolith_is_nontrivial": false,
+      "nontrivial_proper_congruence_count": 9,
+      "right_monoid_size": 21,
+      "row_index": 83
+    },
+    {
+      "congruence_count": 11,
+      "contextual_class_count": 36,
+      "left_monoid_size": 8,
+      "matrices": [
+        [
+          1,
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          2,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          2,
+          0
+        ],
+        [
+          2,
+          1,
+          2,
+          0
+        ]
+      ],
+      "matrix_indices": [
+        12,
+        6,
+        3,
+        40
+      ],
+      "monolith": null,
+      "monolith_is_nontrivial": false,
+      "nontrivial_proper_congruence_count": 9,
+      "right_monoid_size": 8,
+      "row_index": 84
+    },
+    {
+      "congruence_count": 11,
+      "contextual_class_count": 30,
+      "left_monoid_size": 7,
+      "matrices": [
+        [
+          1,
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          2,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          2,
+          0
+        ],
+        [
+          2,
+          2,
+          1,
+          0
+        ]
+      ],
+      "matrix_indices": [
+        12,
+        6,
+        3,
+        44
+      ],
+      "monolith": null,
+      "monolith_is_nontrivial": false,
+      "nontrivial_proper_congruence_count": 9,
+      "right_monoid_size": 7,
+      "row_index": 85
+    },
+    {
+      "congruence_count": 4,
+      "contextual_class_count": 90,
+      "left_monoid_size": 21,
+      "matrices": [
+        [
+          1,
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          2,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          2,
+          0
+        ],
+        [
+          0,
+          2,
+          1,
+          2
+        ]
+      ],
+      "matrix_indices": [
+        12,
+        7,
+        22,
+        8
+      ],
+      "monolith": {
+        "block_sizes": [
+          1,
+          1,
+          1,
+          3
+        ],
+        "collision_mismatches_generate_monolith": true,
+        "quotient_class_count": 4,
+        "relative_separation": {
+          "checked": true,
+          "collision_found": true,
+          "collision_length": 3,
+          "collision_path": [
+            [
+              "1",
+              "1"
+            ],
+            [
+              "0",
+              "1"
+            ],
+            [
+              "2",
+              "2"
+            ]
+          ],
+          "collision_path_indices": [
+            [
+              1,
+              1
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              2,
+              2
+            ]
+          ],
+          "element_count": 6,
+          "left_monoid_size": 21,
+          "proves_all_arity_injective": false,
+          "quotient_class_count": 4,
+          "right_monoid_size": 21,
+          "skipped_reason": null,
+          "valid_vertex_count": 62316
+        }
+      },
+      "monolith_is_nontrivial": true,
+      "nontrivial_proper_congruence_count": 2,
+      "right_monoid_size": 21,
+      "row_index": 86
+    },
+    {
+      "congruence_count": 4,
+      "contextual_class_count": 60,
+      "left_monoid_size": 12,
+      "matrices": [
+        [
+          1,
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          2,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          2,
+          0
+        ],
+        [
+          2,
+          1,
+          2,
+          0
+        ]
+      ],
+      "matrix_indices": [
+        12,
+        7,
+        22,
+        40
+      ],
+      "monolith": {
+        "block_sizes": [
+          1,
+          1,
+          1,
+          3
+        ],
+        "collision_mismatches_generate_monolith": true,
+        "quotient_class_count": 4,
+        "relative_separation": {
+          "checked": true,
+          "collision_found": true,
+          "collision_length": 3,
+          "collision_path": [
+            [
+              "2",
+              "2"
+            ],
+            [
+              "0",
+              "1"
+            ],
+            [
+              "0",
+              "0"
+            ]
+          ],
+          "collision_path_indices": [
+            [
+              2,
+              2
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              0
+            ]
+          ],
+          "element_count": 6,
+          "left_monoid_size": 12,
+          "proves_all_arity_injective": false,
+          "quotient_class_count": 4,
+          "right_monoid_size": 12,
+          "skipped_reason": null,
+          "valid_vertex_count": 18576
+        }
+      },
+      "monolith_is_nontrivial": true,
+      "nontrivial_proper_congruence_count": 2,
+      "right_monoid_size": 12,
+      "row_index": 87
+    },
+    {
+      "congruence_count": 4,
+      "contextual_class_count": 90,
+      "left_monoid_size": 21,
+      "matrices": [
+        [
+          1,
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          2,
+          1,
+          2
+        ],
+        [
+          2,
+          1,
+          2,
+          0
+        ],
+        [
+          0,
+          2,
+          1,
+          2
+        ]
+      ],
+      "matrix_indices": [
+        12,
+        8,
+        40,
+        8
+      ],
+      "monolith": {
+        "block_sizes": [
+          1,
+          1,
+          1,
+          3
+        ],
+        "collision_mismatches_generate_monolith": true,
+        "quotient_class_count": 4,
+        "relative_separation": {
+          "checked": true,
+          "collision_found": true,
+          "collision_length": 3,
+          "collision_path": [
+            [
+              "1",
+              "1"
+            ],
+            [
+              "0",
+              "1"
+            ],
+            [
+              "2",
+              "2"
+            ]
+          ],
+          "collision_path_indices": [
+            [
+              1,
+              1
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              2,
+              2
+            ]
+          ],
+          "element_count": 6,
+          "left_monoid_size": 21,
+          "proves_all_arity_injective": false,
+          "quotient_class_count": 4,
+          "right_monoid_size": 21,
+          "skipped_reason": null,
+          "valid_vertex_count": 62316
+        }
+      },
+      "monolith_is_nontrivial": true,
+      "nontrivial_proper_congruence_count": 2,
+      "right_monoid_size": 21,
+      "row_index": 88
+    },
+    {
+      "congruence_count": 4,
+      "contextual_class_count": 60,
+      "left_monoid_size": 12,
+      "matrices": [
+        [
+          1,
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          2,
+          1,
+          2
+        ],
+        [
+          2,
+          1,
+          2,
+          0
+        ],
+        [
+          2,
+          1,
+          2,
+          0
+        ]
+      ],
+      "matrix_indices": [
+        12,
+        8,
+        40,
+        40
+      ],
+      "monolith": {
+        "block_sizes": [
+          1,
+          1,
+          1,
+          3
+        ],
+        "collision_mismatches_generate_monolith": true,
+        "quotient_class_count": 4,
+        "relative_separation": {
+          "checked": true,
+          "collision_found": true,
+          "collision_length": 3,
+          "collision_path": [
+            [
+              "2",
+              "2"
+            ],
+            [
+              "0",
+              "1"
+            ],
+            [
+              "0",
+              "0"
+            ]
+          ],
+          "collision_path_indices": [
+            [
+              2,
+              2
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              0
+            ]
+          ],
+          "element_count": 6,
+          "left_monoid_size": 12,
+          "proves_all_arity_injective": false,
+          "quotient_class_count": 4,
+          "right_monoid_size": 12,
+          "skipped_reason": null,
+          "valid_vertex_count": 18576
+        }
+      },
+      "monolith_is_nontrivial": true,
+      "nontrivial_proper_congruence_count": 2,
+      "right_monoid_size": 12,
+      "row_index": 89
+    },
+    {
+      "congruence_count": 12,
+      "contextual_class_count": 24,
+      "left_monoid_size": 5,
+      "matrices": [
+        [
+          1,
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          2,
+          2,
+          0
+        ],
+        [
+          0,
+          2,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          1,
+          0
+        ]
+      ],
+      "matrix_indices": [
+        12,
+        9,
+        6,
+        0
+      ],
+      "monolith": null,
+      "monolith_is_nontrivial": false,
+      "nontrivial_proper_congruence_count": 10,
+      "right_monoid_size": 5,
+      "row_index": 90
+    },
+    {
+      "congruence_count": 12,
+      "contextual_class_count": 36,
+      "left_monoid_size": 8,
+      "matrices": [
+        [
+          1,
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          2,
+          2,
+          0
+        ],
+        [
+          0,
+          2,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          2,
+          0
+        ]
+      ],
+      "matrix_indices": [
+        12,
+        9,
+        6,
+        3
+      ],
+      "monolith": null,
+      "monolith_is_nontrivial": false,
+      "nontrivial_proper_congruence_count": 10,
+      "right_monoid_size": 8,
+      "row_index": 91
+    },
+    {
+      "congruence_count": 13,
+      "contextual_class_count": 24,
+      "left_monoid_size": 5,
+      "matrices": [
+        [
+          1,
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          2,
+          2,
+          0
+        ],
+        [
+          0,
+          2,
+          1,
+          0
+        ],
+        [
+          0,
+          2,
+          1,
+          0
+        ]
+      ],
+      "matrix_indices": [
+        12,
+        9,
+        6,
+        6
+      ],
+      "monolith": null,
+      "monolith_is_nontrivial": false,
+      "nontrivial_proper_congruence_count": 11,
+      "right_monoid_size": 5,
+      "row_index": 92
+    },
+    {
+      "congruence_count": 12,
+      "contextual_class_count": 36,
+      "left_monoid_size": 8,
+      "matrices": [
+        [
+          1,
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          2,
+          2,
+          0
+        ],
+        [
+          0,
+          2,
+          1,
+          0
+        ],
+        [
+          0,
+          2,
+          2,
+          0
+        ]
+      ],
+      "matrix_indices": [
+        12,
+        9,
+        6,
+        9
+      ],
+      "monolith": null,
+      "monolith_is_nontrivial": false,
+      "nontrivial_proper_congruence_count": 10,
+      "right_monoid_size": 8,
+      "row_index": 93
+    },
+    {
+      "congruence_count": 12,
+      "contextual_class_count": 36,
+      "left_monoid_size": 8,
+      "matrices": [
+        [
+          1,
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          2,
+          2,
+          0
+        ],
+        [
+          0,
+          2,
+          2,
+          0
+        ],
+        [
+          0,
+          1,
+          2,
+          0
+        ]
+      ],
+      "matrix_indices": [
+        12,
+        9,
+        9,
+        3
+      ],
+      "monolith": null,
+      "monolith_is_nontrivial": false,
+      "nontrivial_proper_congruence_count": 10,
+      "right_monoid_size": 8,
+      "row_index": 94
+    },
+    {
+      "congruence_count": 7,
+      "contextual_class_count": 108,
+      "left_monoid_size": 24,
+      "matrices": [
+        [
+          1,
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          2,
+          2,
+          0
+        ],
+        [
+          0,
+          2,
+          2,
+          0
+        ],
+        [
+          0,
+          1,
+          2,
+          2
+        ]
+      ],
+      "matrix_indices": [
+        12,
+        9,
+        9,
+        5
+      ],
+      "monolith": null,
+      "monolith_is_nontrivial": false,
+      "nontrivial_proper_congruence_count": 5,
+      "right_monoid_size": 24,
+      "row_index": 95
+    },
+    {
+      "congruence_count": 12,
+      "contextual_class_count": 36,
+      "left_monoid_size": 8,
+      "matrices": [
+        [
+          1,
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          2,
+          2,
+          0
+        ],
+        [
+          0,
+          2,
+          2,
+          0
+        ],
+        [
+          0,
+          2,
+          1,
+          0
+        ]
+      ],
+      "matrix_indices": [
+        12,
+        9,
+        9,
+        6
+      ],
+      "monolith": null,
+      "monolith_is_nontrivial": false,
+      "nontrivial_proper_congruence_count": 10,
+      "right_monoid_size": 8,
+      "row_index": 96
+    },
+    {
+      "congruence_count": 7,
+      "contextual_class_count": 108,
+      "left_monoid_size": 24,
+      "matrices": [
+        [
+          1,
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          2,
+          2,
+          0
+        ],
+        [
+          0,
+          2,
+          2,
+          0
+        ],
+        [
+          0,
+          2,
+          1,
+          2
+        ]
+      ],
+      "matrix_indices": [
+        12,
+        9,
+        9,
+        8
+      ],
+      "monolith": null,
+      "monolith_is_nontrivial": false,
+      "nontrivial_proper_congruence_count": 5,
+      "right_monoid_size": 24,
+      "row_index": 97
+    },
+    {
+      "congruence_count": 7,
+      "contextual_class_count": 36,
+      "left_monoid_size": 8,
+      "matrices": [
+        [
+          1,
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          2,
+          2,
+          0
+        ],
+        [
+          0,
+          2,
+          2,
+          0
+        ],
+        [
+          2,
+          1,
+          2,
+          0
+        ]
+      ],
+      "matrix_indices": [
+        12,
+        9,
+        9,
+        40
+      ],
+      "monolith": null,
+      "monolith_is_nontrivial": false,
+      "nontrivial_proper_congruence_count": 5,
+      "right_monoid_size": 8,
+      "row_index": 98
+    },
+    {
+      "congruence_count": 7,
+      "contextual_class_count": 36,
+      "left_monoid_size": 8,
+      "matrices": [
+        [
+          1,
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          2,
+          2,
+          0
+        ],
+        [
+          0,
+          2,
+          2,
+          0
+        ],
+        [
+          2,
+          2,
+          1,
+          0
+        ]
+      ],
+      "matrix_indices": [
+        12,
+        9,
+        9,
+        44
+      ],
+      "monolith": null,
+      "monolith_is_nontrivial": false,
+      "nontrivial_proper_congruence_count": 5,
+      "right_monoid_size": 8,
+      "row_index": 99
+    },
+    {
+      "congruence_count": 4,
+      "contextual_class_count": 108,
+      "left_monoid_size": 24,
+      "matrices": [
+        [
+          1,
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          2,
+          2,
+          1
+        ],
+        [
+          2,
+          2,
+          2,
+          0
+        ],
+        [
+          0,
+          1,
+          2,
+          2
+        ]
+      ],
+      "matrix_indices": [
+        12,
+        10,
+        46,
+        5
+      ],
+      "monolith": {
+        "block_sizes": [
+          1,
+          1,
+          1,
+          3
+        ],
+        "collision_mismatches_generate_monolith": true,
+        "quotient_class_count": 4,
+        "relative_separation": {
+          "checked": true,
+          "collision_found": true,
+          "collision_length": 3,
+          "collision_path": [
+            [
+              "0",
+              "0"
+            ],
+            [
+              "0",
+              "1"
+            ],
+            [
+              "2",
+              "2"
+            ]
+          ],
+          "collision_path_indices": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              2,
+              2
+            ]
+          ],
+          "element_count": 6,
+          "left_monoid_size": 24,
+          "proves_all_arity_injective": false,
+          "quotient_class_count": 4,
+          "right_monoid_size": 24,
+          "skipped_reason": null,
+          "valid_vertex_count": 98064
+        }
+      },
+      "monolith_is_nontrivial": true,
+      "nontrivial_proper_congruence_count": 2,
+      "right_monoid_size": 24,
+      "row_index": 100
+    },
+    {
+      "congruence_count": 4,
+      "contextual_class_count": 60,
+      "left_monoid_size": 12,
+      "matrices": [
+        [
+          1,
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          2,
+          2,
+          1
+        ],
+        [
+          2,
+          2,
+          2,
+          0
+        ],
+        [
+          2,
+          2,
+          1,
+          0
+        ]
+      ],
+      "matrix_indices": [
+        12,
+        10,
+        46,
+        44
+      ],
+      "monolith": {
+        "block_sizes": [
+          1,
+          1,
+          1,
+          3
+        ],
+        "collision_mismatches_generate_monolith": true,
+        "quotient_class_count": 4,
+        "relative_separation": {
+          "checked": true,
+          "collision_found": true,
+          "collision_length": 3,
+          "collision_path": [
+            [
+              "2",
+              "2"
+            ],
+            [
+              "0",
+              "1"
+            ],
+            [
+              "1",
+              "1"
+            ]
+          ],
+          "collision_path_indices": [
+            [
+              2,
+              2
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "element_count": 6,
+          "left_monoid_size": 12,
+          "proves_all_arity_injective": false,
+          "quotient_class_count": 4,
+          "right_monoid_size": 12,
+          "skipped_reason": null,
+          "valid_vertex_count": 20088
+        }
+      },
+      "monolith_is_nontrivial": true,
+      "nontrivial_proper_congruence_count": 2,
+      "right_monoid_size": 12,
+      "row_index": 101
+    },
+    {
+      "congruence_count": 4,
+      "contextual_class_count": 108,
+      "left_monoid_size": 24,
+      "matrices": [
+        [
+          1,
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          2,
+          2,
+          2
+        ],
+        [
+          1,
+          2,
+          2,
+          0
+        ],
+        [
+          0,
+          1,
+          2,
+          2
+        ]
+      ],
+      "matrix_indices": [
+        12,
+        11,
+        28,
+        5
+      ],
+      "monolith": {
+        "block_sizes": [
+          1,
+          1,
+          1,
+          3
+        ],
+        "collision_mismatches_generate_monolith": true,
+        "quotient_class_count": 4,
+        "relative_separation": {
+          "checked": true,
+          "collision_found": true,
+          "collision_length": 3,
+          "collision_path": [
+            [
+              "0",
+              "0"
+            ],
+            [
+              "0",
+              "1"
+            ],
+            [
+              "2",
+              "2"
+            ]
+          ],
+          "collision_path_indices": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              2,
+              2
+            ]
+          ],
+          "element_count": 6,
+          "left_monoid_size": 24,
+          "proves_all_arity_injective": false,
+          "quotient_class_count": 4,
+          "right_monoid_size": 24,
+          "skipped_reason": null,
+          "valid_vertex_count": 98064
+        }
+      },
+      "monolith_is_nontrivial": true,
+      "nontrivial_proper_congruence_count": 2,
+      "right_monoid_size": 24,
+      "row_index": 102
+    },
+    {
+      "congruence_count": 4,
+      "contextual_class_count": 60,
+      "left_monoid_size": 12,
+      "matrices": [
+        [
+          1,
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          2,
+          2,
+          2
+        ],
+        [
+          1,
+          2,
+          2,
+          0
+        ],
+        [
+          2,
+          2,
+          1,
+          0
+        ]
+      ],
+      "matrix_indices": [
+        12,
+        11,
+        28,
+        44
+      ],
+      "monolith": {
+        "block_sizes": [
+          1,
+          1,
+          1,
+          3
+        ],
+        "collision_mismatches_generate_monolith": true,
+        "quotient_class_count": 4,
+        "relative_separation": {
+          "checked": true,
+          "collision_found": true,
+          "collision_length": 3,
+          "collision_path": [
+            [
+              "2",
+              "2"
+            ],
+            [
+              "0",
+              "1"
+            ],
+            [
+              "1",
+              "1"
+            ]
+          ],
+          "collision_path_indices": [
+            [
+              2,
+              2
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "element_count": 6,
+          "left_monoid_size": 12,
+          "proves_all_arity_injective": false,
+          "quotient_class_count": 4,
+          "right_monoid_size": 12,
+          "skipped_reason": null,
+          "valid_vertex_count": 20088
+        }
+      },
+      "monolith_is_nontrivial": true,
+      "nontrivial_proper_congruence_count": 2,
+      "right_monoid_size": 12,
+      "row_index": 103
+    },
+    {
+      "congruence_count": 7,
+      "contextual_class_count": 108,
+      "left_monoid_size": 24,
+      "matrices": [
+        [
+          1,
+          0,
+          0,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          1,
+          2
+        ],
+        [
+          0,
+          1,
+          2,
+          2
+        ]
+      ],
+      "matrix_indices": [
+        12,
+        20,
+        2,
+        5
+      ],
+      "monolith": {
+        "block_sizes": [
+          1,
+          1,
+          1,
+          3
+        ],
+        "collision_mismatches_generate_monolith": null,
+        "quotient_class_count": 4,
+        "relative_separation": {
+          "checked": true,
+          "collision_found": false,
+          "collision_length": null,
+          "collision_path": [],
+          "collision_path_indices": [],
+          "element_count": 6,
+          "left_monoid_size": 24,
+          "proves_all_arity_injective": true,
+          "quotient_class_count": 4,
+          "right_monoid_size": 24,
+          "skipped_reason": null,
+          "valid_vertex_count": 165888
+        }
+      },
+      "monolith_is_nontrivial": true,
+      "nontrivial_proper_congruence_count": 5,
+      "right_monoid_size": 24,
+      "row_index": 104
+    },
+    {
+      "congruence_count": 7,
+      "contextual_class_count": 42,
+      "left_monoid_size": 10,
+      "matrices": [
+        [
+          1,
+          0,
+          0,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          1,
+          2
+        ],
+        [
+          2,
+          2,
+          1,
+          0
+        ]
+      ],
+      "matrix_indices": [
+        12,
+        20,
+        2,
+        44
+      ],
+      "monolith": {
+        "block_sizes": [
+          1,
+          1,
+          1,
+          3
+        ],
+        "collision_mismatches_generate_monolith": null,
+        "quotient_class_count": 4,
+        "relative_separation": {
+          "checked": true,
+          "collision_found": false,
+          "collision_length": null,
+          "collision_path": [],
+          "collision_path_indices": [],
+          "element_count": 6,
+          "left_monoid_size": 10,
+          "proves_all_arity_injective": true,
+          "quotient_class_count": 4,
+          "right_monoid_size": 10,
+          "skipped_reason": null,
+          "valid_vertex_count": 10932
+        }
+      },
+      "monolith_is_nontrivial": true,
+      "nontrivial_proper_congruence_count": 5,
+      "right_monoid_size": 10,
+      "row_index": 105
+    },
+    {
+      "congruence_count": 5,
+      "contextual_class_count": 72,
+      "left_monoid_size": 15,
+      "matrices": [
+        [
+          1,
+          0,
+          0,
+          1
+        ],
+        [
+          1,
+          1,
+          2,
+          0
+        ],
+        [
+          0,
+          2,
+          1,
+          1
+        ],
+        [
+          0,
+          2,
+          1,
+          2
+        ]
+      ],
+      "matrix_indices": [
+        12,
+        22,
+        7,
+        8
+      ],
+      "monolith": {
+        "block_sizes": [
+          1,
+          1,
+          1,
+          3
+        ],
+        "collision_mismatches_generate_monolith": null,
+        "quotient_class_count": 4,
+        "relative_separation": {
+          "checked": true,
+          "collision_found": false,
+          "collision_length": null,
+          "collision_path": [],
+          "collision_path_indices": [],
+          "element_count": 6,
+          "left_monoid_size": 15,
+          "proves_all_arity_injective": true,
+          "quotient_class_count": 4,
+          "right_monoid_size": 15,
+          "skipped_reason": null,
+          "valid_vertex_count": 41418
+        }
+      },
+      "monolith_is_nontrivial": true,
+      "nontrivial_proper_congruence_count": 3,
+      "right_monoid_size": 15,
+      "row_index": 106
+    },
+    {
+      "congruence_count": 5,
+      "contextual_class_count": 84,
+      "left_monoid_size": 20,
+      "matrices": [
+        [
+          1,
+          0,
+          0,
+          1
+        ],
+        [
+          1,
+          1,
+          2,
+          0
+        ],
+        [
+          0,
+          2,
+          1,
+          1
+        ],
+        [
+          2,
+          1,
+          2,
+          0
+        ]
+      ],
+      "matrix_indices": [
+        12,
+        22,
+        7,
+        40
+      ],
+      "monolith": {
+        "block_sizes": [
+          1,
+          1,
+          1,
+          3
+        ],
+        "collision_mismatches_generate_monolith": null,
+        "quotient_class_count": 4,
+        "relative_separation": {
+          "checked": true,
+          "collision_found": false,
+          "collision_length": null,
+          "collision_path": [],
+          "collision_path_indices": [],
+          "element_count": 6,
+          "left_monoid_size": 20,
+          "proves_all_arity_injective": true,
+          "quotient_class_count": 4,
+          "right_monoid_size": 20,
+          "skipped_reason": null,
+          "valid_vertex_count": 87304
+        }
+      },
+      "monolith_is_nontrivial": true,
+      "nontrivial_proper_congruence_count": 3,
+      "right_monoid_size": 20,
+      "row_index": 107
+    },
+    {
+      "congruence_count": 7,
+      "contextual_class_count": 108,
+      "left_monoid_size": 24,
+      "matrices": [
+        [
+          1,
+          0,
+          0,
+          1
+        ],
+        [
+          1,
+          2,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          2,
+          1
+        ],
+        [
+          0,
+          1,
+          2,
+          2
+        ]
+      ],
+      "matrix_indices": [
+        12,
+        26,
+        4,
+        5
+      ],
+      "monolith": {
+        "block_sizes": [
+          1,
+          1,
+          1,
+          3
+        ],
+        "collision_mismatches_generate_monolith": null,
+        "quotient_class_count": 4,
+        "relative_separation": {
+          "checked": true,
+          "collision_found": false,
+          "collision_length": null,
+          "collision_path": [],
+          "collision_path_indices": [],
+          "element_count": 6,
+          "left_monoid_size": 24,
+          "proves_all_arity_injective": true,
+          "quotient_class_count": 4,
+          "right_monoid_size": 24,
+          "skipped_reason": null,
+          "valid_vertex_count": 165888
+        }
+      },
+      "monolith_is_nontrivial": true,
+      "nontrivial_proper_congruence_count": 5,
+      "right_monoid_size": 24,
+      "row_index": 108
+    },
+    {
+      "congruence_count": 7,
+      "contextual_class_count": 78,
+      "left_monoid_size": 19,
+      "matrices": [
+        [
+          1,
+          0,
+          0,
+          1
+        ],
+        [
+          1,
+          2,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          2,
+          1
+        ],
+        [
+          2,
+          2,
+          1,
+          0
+        ]
+      ],
+      "matrix_indices": [
+        12,
+        26,
+        4,
+        44
+      ],
+      "monolith": {
+        "block_sizes": [
+          1,
+          1,
+          1,
+          3
+        ],
+        "collision_mismatches_generate_monolith": null,
+        "quotient_class_count": 4,
+        "relative_separation": {
+          "checked": true,
+          "collision_found": false,
+          "collision_length": null,
+          "collision_path": [],
+          "collision_path_indices": [],
+          "element_count": 6,
+          "left_monoid_size": 19,
+          "proves_all_arity_injective": true,
+          "quotient_class_count": 4,
+          "right_monoid_size": 19,
+          "skipped_reason": null,
+          "valid_vertex_count": 72078
+        }
+      },
+      "monolith_is_nontrivial": true,
+      "nontrivial_proper_congruence_count": 5,
+      "right_monoid_size": 19,
+      "row_index": 109
+    },
+    {
+      "congruence_count": 5,
+      "contextual_class_count": 108,
+      "left_monoid_size": 24,
+      "matrices": [
+        [
+          1,
+          0,
+          0,
+          1
+        ],
+        [
+          1,
+          2,
+          2,
+          0
+        ],
+        [
+          0,
+          2,
+          2,
+          2
+        ],
+        [
+          0,
+          2,
+          1,
+          2
+        ]
+      ],
+      "matrix_indices": [
+        12,
+        28,
+        11,
+        8
+      ],
+      "monolith": {
+        "block_sizes": [
+          1,
+          1,
+          1,
+          3
+        ],
+        "collision_mismatches_generate_monolith": null,
+        "quotient_class_count": 4,
+        "relative_separation": {
+          "checked": true,
+          "collision_found": false,
+          "collision_length": null,
+          "collision_path": [],
+          "collision_path_indices": [],
+          "element_count": 6,
+          "left_monoid_size": 24,
+          "proves_all_arity_injective": true,
+          "quotient_class_count": 4,
+          "right_monoid_size": 24,
+          "skipped_reason": null,
+          "valid_vertex_count": 164376
+        }
+      },
+      "monolith_is_nontrivial": true,
+      "nontrivial_proper_congruence_count": 3,
+      "right_monoid_size": 24,
+      "row_index": 110
+    },
+    {
+      "congruence_count": 5,
+      "contextual_class_count": 84,
+      "left_monoid_size": 20,
+      "matrices": [
+        [
+          1,
+          0,
+          0,
+          1
+        ],
+        [
+          1,
+          2,
+          2,
+          0
+        ],
+        [
+          0,
+          2,
+          2,
+          2
+        ],
+        [
+          2,
+          1,
+          2,
+          0
+        ]
+      ],
+      "matrix_indices": [
+        12,
+        28,
+        11,
+        40
+      ],
+      "monolith": {
+        "block_sizes": [
+          1,
+          1,
+          1,
+          3
+        ],
+        "collision_mismatches_generate_monolith": null,
+        "quotient_class_count": 4,
+        "relative_separation": {
+          "checked": true,
+          "collision_found": false,
+          "collision_length": null,
+          "collision_path": [],
+          "collision_path_indices": [],
+          "element_count": 6,
+          "left_monoid_size": 20,
+          "proves_all_arity_injective": true,
+          "quotient_class_count": 4,
+          "right_monoid_size": 20,
+          "skipped_reason": null,
+          "valid_vertex_count": 87304
+        }
+      },
+      "monolith_is_nontrivial": true,
+      "nontrivial_proper_congruence_count": 3,
+      "right_monoid_size": 20,
+      "row_index": 111
+    },
+    {
+      "congruence_count": 7,
+      "contextual_class_count": 108,
+      "left_monoid_size": 24,
+      "matrices": [
+        [
+          1,
+          0,
+          0,
+          1
+        ],
+        [
+          2,
+          1,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          1,
+          1
+        ],
+        [
+          0,
+          1,
+          2,
+          2
+        ]
+      ],
+      "matrix_indices": [
+        12,
+        38,
+        1,
+        5
+      ],
+      "monolith": {
+        "block_sizes": [
+          1,
+          1,
+          1,
+          3
+        ],
+        "collision_mismatches_generate_monolith": null,
+        "quotient_class_count": 4,
+        "relative_separation": {
+          "checked": true,
+          "collision_found": false,
+          "collision_length": null,
+          "collision_path": [],
+          "collision_path_indices": [],
+          "element_count": 6,
+          "left_monoid_size": 24,
+          "proves_all_arity_injective": true,
+          "quotient_class_count": 4,
+          "right_monoid_size": 24,
+          "skipped_reason": null,
+          "valid_vertex_count": 165888
+        }
+      },
+      "monolith_is_nontrivial": true,
+      "nontrivial_proper_congruence_count": 5,
+      "right_monoid_size": 24,
+      "row_index": 112
+    },
+    {
+      "congruence_count": 7,
+      "contextual_class_count": 42,
+      "left_monoid_size": 10,
+      "matrices": [
+        [
+          1,
+          0,
+          0,
+          1
+        ],
+        [
+          2,
+          1,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          1,
+          1
+        ],
+        [
+          2,
+          2,
+          1,
+          0
+        ]
+      ],
+      "matrix_indices": [
+        12,
+        38,
+        1,
+        44
+      ],
+      "monolith": {
+        "block_sizes": [
+          1,
+          1,
+          1,
+          3
+        ],
+        "collision_mismatches_generate_monolith": null,
+        "quotient_class_count": 4,
+        "relative_separation": {
+          "checked": true,
+          "collision_found": false,
+          "collision_length": null,
+          "collision_path": [],
+          "collision_path_indices": [],
+          "element_count": 6,
+          "left_monoid_size": 10,
+          "proves_all_arity_injective": true,
+          "quotient_class_count": 4,
+          "right_monoid_size": 10,
+          "skipped_reason": null,
+          "valid_vertex_count": 10932
+        }
+      },
+      "monolith_is_nontrivial": true,
+      "nontrivial_proper_congruence_count": 5,
+      "right_monoid_size": 10,
+      "row_index": 113
+    },
+    {
+      "congruence_count": 5,
+      "contextual_class_count": 72,
+      "left_monoid_size": 15,
+      "matrices": [
+        [
+          1,
+          0,
+          0,
+          1
+        ],
+        [
+          2,
+          1,
+          2,
+          0
+        ],
+        [
+          0,
+          2,
+          1,
+          2
+        ],
+        [
+          0,
+          2,
+          1,
+          2
+        ]
+      ],
+      "matrix_indices": [
+        12,
+        40,
+        8,
+        8
+      ],
+      "monolith": {
+        "block_sizes": [
+          1,
+          1,
+          1,
+          3
+        ],
+        "collision_mismatches_generate_monolith": null,
+        "quotient_class_count": 4,
+        "relative_separation": {
+          "checked": true,
+          "collision_found": false,
+          "collision_length": null,
+          "collision_path": [],
+          "collision_path_indices": [],
+          "element_count": 6,
+          "left_monoid_size": 15,
+          "proves_all_arity_injective": true,
+          "quotient_class_count": 4,
+          "right_monoid_size": 15,
+          "skipped_reason": null,
+          "valid_vertex_count": 41418
+        }
+      },
+      "monolith_is_nontrivial": true,
+      "nontrivial_proper_congruence_count": 3,
+      "right_monoid_size": 15,
+      "row_index": 114
+    },
+    {
+      "congruence_count": 5,
+      "contextual_class_count": 84,
+      "left_monoid_size": 20,
+      "matrices": [
+        [
+          1,
+          0,
+          0,
+          1
+        ],
+        [
+          2,
+          1,
+          2,
+          0
+        ],
+        [
+          0,
+          2,
+          1,
+          2
+        ],
+        [
+          2,
+          1,
+          2,
+          0
+        ]
+      ],
+      "matrix_indices": [
+        12,
+        40,
+        8,
+        40
+      ],
+      "monolith": {
+        "block_sizes": [
+          1,
+          1,
+          1,
+          3
+        ],
+        "collision_mismatches_generate_monolith": null,
+        "quotient_class_count": 4,
+        "relative_separation": {
+          "checked": true,
+          "collision_found": false,
+          "collision_length": null,
+          "collision_path": [],
+          "collision_path_indices": [],
+          "element_count": 6,
+          "left_monoid_size": 20,
+          "proves_all_arity_injective": true,
+          "quotient_class_count": 4,
+          "right_monoid_size": 20,
+          "skipped_reason": null,
+          "valid_vertex_count": 87304
+        }
+      },
+      "monolith_is_nontrivial": true,
+      "nontrivial_proper_congruence_count": 3,
+      "right_monoid_size": 20,
+      "row_index": 115
+    },
+    {
+      "congruence_count": 7,
+      "contextual_class_count": 108,
+      "left_monoid_size": 24,
+      "matrices": [
+        [
+          1,
+          0,
+          0,
+          1
+        ],
+        [
+          2,
+          2,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          2,
+          2
+        ],
+        [
+          0,
+          1,
+          2,
+          2
+        ]
+      ],
+      "matrix_indices": [
+        12,
+        44,
+        5,
+        5
+      ],
+      "monolith": {
+        "block_sizes": [
+          1,
+          1,
+          1,
+          3
+        ],
+        "collision_mismatches_generate_monolith": null,
+        "quotient_class_count": 4,
+        "relative_separation": {
+          "checked": true,
+          "collision_found": false,
+          "collision_length": null,
+          "collision_path": [],
+          "collision_path_indices": [],
+          "element_count": 6,
+          "left_monoid_size": 24,
+          "proves_all_arity_injective": true,
+          "quotient_class_count": 4,
+          "right_monoid_size": 24,
+          "skipped_reason": null,
+          "valid_vertex_count": 165888
+        }
+      },
+      "monolith_is_nontrivial": true,
+      "nontrivial_proper_congruence_count": 5,
+      "right_monoid_size": 24,
+      "row_index": 116
+    },
+    {
+      "congruence_count": 7,
+      "contextual_class_count": 78,
+      "left_monoid_size": 19,
+      "matrices": [
+        [
+          1,
+          0,
+          0,
+          1
+        ],
+        [
+          2,
+          2,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          2,
+          2
+        ],
+        [
+          2,
+          2,
+          1,
+          0
+        ]
+      ],
+      "matrix_indices": [
+        12,
+        44,
+        5,
+        44
+      ],
+      "monolith": {
+        "block_sizes": [
+          1,
+          1,
+          1,
+          3
+        ],
+        "collision_mismatches_generate_monolith": null,
+        "quotient_class_count": 4,
+        "relative_separation": {
+          "checked": true,
+          "collision_found": false,
+          "collision_length": null,
+          "collision_path": [],
+          "collision_path_indices": [],
+          "element_count": 6,
+          "left_monoid_size": 19,
+          "proves_all_arity_injective": true,
+          "quotient_class_count": 4,
+          "right_monoid_size": 19,
+          "skipped_reason": null,
+          "valid_vertex_count": 72078
+        }
+      },
+      "monolith_is_nontrivial": true,
+      "nontrivial_proper_congruence_count": 5,
+      "right_monoid_size": 19,
+      "row_index": 117
+    },
+    {
+      "congruence_count": 5,
+      "contextual_class_count": 108,
+      "left_monoid_size": 24,
+      "matrices": [
+        [
+          1,
+          0,
+          0,
+          1
+        ],
+        [
+          2,
+          2,
+          2,
+          0
+        ],
+        [
+          0,
+          2,
+          2,
+          1
+        ],
+        [
+          0,
+          2,
+          1,
+          2
+        ]
+      ],
+      "matrix_indices": [
+        12,
+        46,
+        10,
+        8
+      ],
+      "monolith": {
+        "block_sizes": [
+          1,
+          1,
+          1,
+          3
+        ],
+        "collision_mismatches_generate_monolith": null,
+        "quotient_class_count": 4,
+        "relative_separation": {
+          "checked": true,
+          "collision_found": false,
+          "collision_length": null,
+          "collision_path": [],
+          "collision_path_indices": [],
+          "element_count": 6,
+          "left_monoid_size": 24,
+          "proves_all_arity_injective": true,
+          "quotient_class_count": 4,
+          "right_monoid_size": 24,
+          "skipped_reason": null,
+          "valid_vertex_count": 164376
+        }
+      },
+      "monolith_is_nontrivial": true,
+      "nontrivial_proper_congruence_count": 3,
+      "right_monoid_size": 24,
+      "row_index": 118
+    },
+    {
+      "congruence_count": 5,
+      "contextual_class_count": 84,
+      "left_monoid_size": 20,
+      "matrices": [
+        [
+          1,
+          0,
+          0,
+          1
+        ],
+        [
+          2,
+          2,
+          2,
+          0
+        ],
+        [
+          0,
+          2,
+          2,
+          1
+        ],
+        [
+          2,
+          1,
+          2,
+          0
+        ]
+      ],
+      "matrix_indices": [
+        12,
+        46,
+        10,
+        40
+      ],
+      "monolith": {
+        "block_sizes": [
+          1,
+          1,
+          1,
+          3
+        ],
+        "collision_mismatches_generate_monolith": null,
+        "quotient_class_count": 4,
+        "relative_separation": {
+          "checked": true,
+          "collision_found": false,
+          "collision_length": null,
+          "collision_path": [],
+          "collision_path_indices": [],
+          "element_count": 6,
+          "left_monoid_size": 20,
+          "proves_all_arity_injective": true,
+          "quotient_class_count": 4,
+          "right_monoid_size": 20,
+          "skipped_reason": null,
+          "valid_vertex_count": 87304
+        }
+      },
+      "monolith_is_nontrivial": true,
+      "nontrivial_proper_congruence_count": 3,
+      "right_monoid_size": 20,
+      "row_index": 119
+    },
+    {
+      "congruence_count": 11,
+      "contextual_class_count": 36,
+      "left_monoid_size": 8,
+      "matrices": [
+        [
+          2,
+          1,
+          2,
+          0
+        ],
+        [
+          0,
+          1,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          1,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          1
+        ]
+      ],
+      "matrix_indices": [
+        40,
+        0,
+        0,
+        12
+      ],
+      "monolith": null,
+      "monolith_is_nontrivial": false,
+      "nontrivial_proper_congruence_count": 9,
+      "right_monoid_size": 8,
+      "row_index": 120
+    },
+    {
+      "congruence_count": 11,
+      "contextual_class_count": 36,
+      "left_monoid_size": 8,
+      "matrices": [
+        [
+          2,
+          1,
+          2,
+          0
+        ],
+        [
+          0,
+          1,
+          2,
+          0
+        ],
+        [
+          0,
+          2,
+          1,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          1
+        ]
+      ],
+      "matrix_indices": [
+        40,
+        3,
+        6,
+        12
+      ],
+      "monolith": null,
+      "monolith_is_nontrivial": false,
+      "nontrivial_proper_congruence_count": 9,
+      "right_monoid_size": 8,
+      "row_index": 121
+    },
+    {
+      "congruence_count": 7,
+      "contextual_class_count": 36,
+      "left_monoid_size": 8,
+      "matrices": [
+        [
+          2,
+          1,
+          2,
+          0
+        ],
+        [
+          0,
+          2,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          2,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          1
+        ]
+      ],
+      "matrix_indices": [
+        40,
+        6,
+        3,
+        12
+      ],
+      "monolith": null,
+      "monolith_is_nontrivial": false,
+      "nontrivial_proper_congruence_count": 5,
+      "right_monoid_size": 8,
+      "row_index": 122
+    },
+    {
+      "congruence_count": 5,
+      "contextual_class_count": 84,
+      "left_monoid_size": 20,
+      "matrices": [
+        [
+          2,
+          1,
+          2,
+          0
+        ],
+        [
+          0,
+          2,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          2,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          1
+        ]
+      ],
+      "matrix_indices": [
+        40,
+        7,
+        22,
+        12
+      ],
+      "monolith": {
+        "block_sizes": [
+          1,
+          1,
+          1,
+          3
+        ],
+        "collision_mismatches_generate_monolith": null,
+        "quotient_class_count": 4,
+        "relative_separation": {
+          "checked": true,
+          "collision_found": false,
+          "collision_length": null,
+          "collision_path": [],
+          "collision_path_indices": [],
+          "element_count": 6,
+          "left_monoid_size": 20,
+          "proves_all_arity_injective": true,
+          "quotient_class_count": 4,
+          "right_monoid_size": 20,
+          "skipped_reason": null,
+          "valid_vertex_count": 87304
+        }
+      },
+      "monolith_is_nontrivial": true,
+      "nontrivial_proper_congruence_count": 3,
+      "right_monoid_size": 20,
+      "row_index": 123
+    },
+    {
+      "congruence_count": 5,
+      "contextual_class_count": 84,
+      "left_monoid_size": 20,
+      "matrices": [
+        [
+          2,
+          1,
+          2,
+          0
+        ],
+        [
+          0,
+          2,
+          1,
+          2
+        ],
+        [
+          2,
+          1,
+          2,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          1
+        ]
+      ],
+      "matrix_indices": [
+        40,
+        8,
+        40,
+        12
+      ],
+      "monolith": {
+        "block_sizes": [
+          1,
+          1,
+          1,
+          3
+        ],
+        "collision_mismatches_generate_monolith": null,
+        "quotient_class_count": 4,
+        "relative_separation": {
+          "checked": true,
+          "collision_found": false,
+          "collision_length": null,
+          "collision_path": [],
+          "collision_path_indices": [],
+          "element_count": 6,
+          "left_monoid_size": 20,
+          "proves_all_arity_injective": true,
+          "quotient_class_count": 4,
+          "right_monoid_size": 20,
+          "skipped_reason": null,
+          "valid_vertex_count": 87304
+        }
+      },
+      "monolith_is_nontrivial": true,
+      "nontrivial_proper_congruence_count": 3,
+      "right_monoid_size": 20,
+      "row_index": 124
+    },
+    {
+      "congruence_count": 7,
+      "contextual_class_count": 36,
+      "left_monoid_size": 8,
+      "matrices": [
+        [
+          2,
+          1,
+          2,
+          0
+        ],
+        [
+          0,
+          2,
+          2,
+          0
+        ],
+        [
+          0,
+          2,
+          2,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          1
+        ]
+      ],
+      "matrix_indices": [
+        40,
+        9,
+        9,
+        12
+      ],
+      "monolith": null,
+      "monolith_is_nontrivial": false,
+      "nontrivial_proper_congruence_count": 5,
+      "right_monoid_size": 8,
+      "row_index": 125
+    },
+    {
+      "congruence_count": 5,
+      "contextual_class_count": 84,
+      "left_monoid_size": 20,
+      "matrices": [
+        [
+          2,
+          1,
+          2,
+          0
+        ],
+        [
+          0,
+          2,
+          2,
+          1
+        ],
+        [
+          2,
+          2,
+          2,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          1
+        ]
+      ],
+      "matrix_indices": [
+        40,
+        10,
+        46,
+        12
+      ],
+      "monolith": {
+        "block_sizes": [
+          1,
+          1,
+          1,
+          3
+        ],
+        "collision_mismatches_generate_monolith": null,
+        "quotient_class_count": 4,
+        "relative_separation": {
+          "checked": true,
+          "collision_found": false,
+          "collision_length": null,
+          "collision_path": [],
+          "collision_path_indices": [],
+          "element_count": 6,
+          "left_monoid_size": 20,
+          "proves_all_arity_injective": true,
+          "quotient_class_count": 4,
+          "right_monoid_size": 20,
+          "skipped_reason": null,
+          "valid_vertex_count": 87304
+        }
+      },
+      "monolith_is_nontrivial": true,
+      "nontrivial_proper_congruence_count": 3,
+      "right_monoid_size": 20,
+      "row_index": 126
+    },
+    {
+      "congruence_count": 5,
+      "contextual_class_count": 84,
+      "left_monoid_size": 20,
+      "matrices": [
+        [
+          2,
+          1,
+          2,
+          0
+        ],
+        [
+          0,
+          2,
+          2,
+          2
+        ],
+        [
+          1,
+          2,
+          2,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          1
+        ]
+      ],
+      "matrix_indices": [
+        40,
+        11,
+        28,
+        12
+      ],
+      "monolith": {
+        "block_sizes": [
+          1,
+          1,
+          1,
+          3
+        ],
+        "collision_mismatches_generate_monolith": null,
+        "quotient_class_count": 4,
+        "relative_separation": {
+          "checked": true,
+          "collision_found": false,
+          "collision_length": null,
+          "collision_path": [],
+          "collision_path_indices": [],
+          "element_count": 6,
+          "left_monoid_size": 20,
+          "proves_all_arity_injective": true,
+          "quotient_class_count": 4,
+          "right_monoid_size": 20,
+          "skipped_reason": null,
+          "valid_vertex_count": 87304
+        }
+      },
+      "monolith_is_nontrivial": true,
+      "nontrivial_proper_congruence_count": 3,
+      "right_monoid_size": 20,
+      "row_index": 127
+    },
+    {
+      "congruence_count": 4,
+      "contextual_class_count": 60,
+      "left_monoid_size": 12,
+      "matrices": [
+        [
+          2,
+          1,
+          2,
+          0
+        ],
+        [
+          1,
+          1,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          1,
+          2
+        ],
+        [
+          1,
+          0,
+          0,
+          1
+        ]
+      ],
+      "matrix_indices": [
+        40,
+        20,
+        2,
+        12
+      ],
+      "monolith": {
+        "block_sizes": [
+          1,
+          1,
+          1,
+          3
+        ],
+        "collision_mismatches_generate_monolith": true,
+        "quotient_class_count": 4,
+        "relative_separation": {
+          "checked": true,
+          "collision_found": true,
+          "collision_length": 3,
+          "collision_path": [
+            [
+              "4",
+              "4"
+            ],
+            [
+              "3",
+              "4"
+            ],
+            [
+              "5",
+              "5"
+            ]
+          ],
+          "collision_path_indices": [
+            [
+              4,
+              4
+            ],
+            [
+              3,
+              4
+            ],
+            [
+              5,
+              5
+            ]
+          ],
+          "element_count": 6,
+          "left_monoid_size": 12,
+          "proves_all_arity_injective": false,
+          "quotient_class_count": 4,
+          "right_monoid_size": 12,
+          "skipped_reason": null,
+          "valid_vertex_count": 18576
+        }
+      },
+      "monolith_is_nontrivial": true,
+      "nontrivial_proper_congruence_count": 2,
+      "right_monoid_size": 12,
+      "row_index": 128
+    },
+    {
+      "congruence_count": 4,
+      "contextual_class_count": 60,
+      "left_monoid_size": 12,
+      "matrices": [
+        [
+          2,
+          1,
+          2,
+          0
+        ],
+        [
+          1,
+          1,
+          2,
+          0
+        ],
+        [
+          0,
+          2,
+          1,
+          1
+        ],
+        [
+          1,
+          0,
+          0,
+          1
+        ]
+      ],
+      "matrix_indices": [
+        40,
+        22,
+        7,
+        12
+      ],
+      "monolith": {
+        "block_sizes": [
+          1,
+          1,
+          1,
+          3
+        ],
+        "collision_mismatches_generate_monolith": true,
+        "quotient_class_count": 4,
+        "relative_separation": {
+          "checked": true,
+          "collision_found": true,
+          "collision_length": 3,
+          "collision_path": [
+            [
+              "4",
+              "4"
+            ],
+            [
+              "3",
+              "4"
+            ],
+            [
+              "5",
+              "5"
+            ]
+          ],
+          "collision_path_indices": [
+            [
+              4,
+              4
+            ],
+            [
+              3,
+              4
+            ],
+            [
+              5,
+              5
+            ]
+          ],
+          "element_count": 6,
+          "left_monoid_size": 12,
+          "proves_all_arity_injective": false,
+          "quotient_class_count": 4,
+          "right_monoid_size": 12,
+          "skipped_reason": null,
+          "valid_vertex_count": 18576
+        }
+      },
+      "monolith_is_nontrivial": true,
+      "nontrivial_proper_congruence_count": 2,
+      "right_monoid_size": 12,
+      "row_index": 129
+    },
+    {
+      "congruence_count": 4,
+      "contextual_class_count": 60,
+      "left_monoid_size": 12,
+      "matrices": [
+        [
+          2,
+          1,
+          2,
+          0
+        ],
+        [
+          2,
+          1,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          0,
+          0,
+          1
+        ]
+      ],
+      "matrix_indices": [
+        40,
+        38,
+        1,
+        12
+      ],
+      "monolith": {
+        "block_sizes": [
+          1,
+          1,
+          1,
+          3
+        ],
+        "collision_mismatches_generate_monolith": true,
+        "quotient_class_count": 4,
+        "relative_separation": {
+          "checked": true,
+          "collision_found": true,
+          "collision_length": 3,
+          "collision_path": [
+            [
+              "4",
+              "4"
+            ],
+            [
+              "3",
+              "4"
+            ],
+            [
+              "5",
+              "5"
+            ]
+          ],
+          "collision_path_indices": [
+            [
+              4,
+              4
+            ],
+            [
+              3,
+              4
+            ],
+            [
+              5,
+              5
+            ]
+          ],
+          "element_count": 6,
+          "left_monoid_size": 12,
+          "proves_all_arity_injective": false,
+          "quotient_class_count": 4,
+          "right_monoid_size": 12,
+          "skipped_reason": null,
+          "valid_vertex_count": 18576
+        }
+      },
+      "monolith_is_nontrivial": true,
+      "nontrivial_proper_congruence_count": 2,
+      "right_monoid_size": 12,
+      "row_index": 130
+    },
+    {
+      "congruence_count": 4,
+      "contextual_class_count": 60,
+      "left_monoid_size": 12,
+      "matrices": [
+        [
+          2,
+          1,
+          2,
+          0
+        ],
+        [
+          2,
+          1,
+          2,
+          0
+        ],
+        [
+          0,
+          2,
+          1,
+          2
+        ],
+        [
+          1,
+          0,
+          0,
+          1
+        ]
+      ],
+      "matrix_indices": [
+        40,
+        40,
+        8,
+        12
+      ],
+      "monolith": {
+        "block_sizes": [
+          1,
+          1,
+          1,
+          3
+        ],
+        "collision_mismatches_generate_monolith": true,
+        "quotient_class_count": 4,
+        "relative_separation": {
+          "checked": true,
+          "collision_found": true,
+          "collision_length": 3,
+          "collision_path": [
+            [
+              "4",
+              "4"
+            ],
+            [
+              "3",
+              "4"
+            ],
+            [
+              "5",
+              "5"
+            ]
+          ],
+          "collision_path_indices": [
+            [
+              4,
+              4
+            ],
+            [
+              3,
+              4
+            ],
+            [
+              5,
+              5
+            ]
+          ],
+          "element_count": 6,
+          "left_monoid_size": 12,
+          "proves_all_arity_injective": false,
+          "quotient_class_count": 4,
+          "right_monoid_size": 12,
+          "skipped_reason": null,
+          "valid_vertex_count": 18576
+        }
+      },
+      "monolith_is_nontrivial": true,
+      "nontrivial_proper_congruence_count": 2,
+      "right_monoid_size": 12,
+      "row_index": 131
+    },
+    {
+      "congruence_count": 11,
+      "contextual_class_count": 18,
+      "left_monoid_size": 4,
+      "matrices": [
+        [
+          2,
+          2,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          1,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          1
+        ]
+      ],
+      "matrix_indices": [
+        44,
+        0,
+        0,
+        12
+      ],
+      "monolith": null,
+      "monolith_is_nontrivial": false,
+      "nontrivial_proper_congruence_count": 9,
+      "right_monoid_size": 4,
+      "row_index": 132
+    },
+    {
+      "congruence_count": 7,
+      "contextual_class_count": 42,
+      "left_monoid_size": 10,
+      "matrices": [
+        [
+          2,
+          2,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          1,
+          1
+        ],
+        [
+          2,
+          1,
+          1,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          1
+        ]
+      ],
+      "matrix_indices": [
+        44,
+        1,
+        38,
+        12
+      ],
+      "monolith": {
+        "block_sizes": [
+          1,
+          1,
+          1,
+          3
+        ],
+        "collision_mismatches_generate_monolith": null,
+        "quotient_class_count": 4,
+        "relative_separation": {
+          "checked": true,
+          "collision_found": false,
+          "collision_length": null,
+          "collision_path": [],
+          "collision_path_indices": [],
+          "element_count": 6,
+          "left_monoid_size": 10,
+          "proves_all_arity_injective": true,
+          "quotient_class_count": 4,
+          "right_monoid_size": 10,
+          "skipped_reason": null,
+          "valid_vertex_count": 10932
+        }
+      },
+      "monolith_is_nontrivial": true,
+      "nontrivial_proper_congruence_count": 5,
+      "right_monoid_size": 10,
+      "row_index": 133
+    },
+    {
+      "congruence_count": 7,
+      "contextual_class_count": 42,
+      "left_monoid_size": 10,
+      "matrices": [
+        [
+          2,
+          2,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          1,
+          2
+        ],
+        [
+          1,
+          1,
+          1,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          1
+        ]
+      ],
+      "matrix_indices": [
+        44,
+        2,
+        20,
+        12
+      ],
+      "monolith": {
+        "block_sizes": [
+          1,
+          1,
+          1,
+          3
+        ],
+        "collision_mismatches_generate_monolith": null,
+        "quotient_class_count": 4,
+        "relative_separation": {
+          "checked": true,
+          "collision_found": false,
+          "collision_length": null,
+          "collision_path": [],
+          "collision_path_indices": [],
+          "element_count": 6,
+          "left_monoid_size": 10,
+          "proves_all_arity_injective": true,
+          "quotient_class_count": 4,
+          "right_monoid_size": 10,
+          "skipped_reason": null,
+          "valid_vertex_count": 10932
+        }
+      },
+      "monolith_is_nontrivial": true,
+      "nontrivial_proper_congruence_count": 5,
+      "right_monoid_size": 10,
+      "row_index": 134
+    },
+    {
+      "congruence_count": 11,
+      "contextual_class_count": 30,
+      "left_monoid_size": 7,
+      "matrices": [
+        [
+          2,
+          2,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          2,
+          0
+        ],
+        [
+          0,
+          2,
+          1,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          1
+        ]
+      ],
+      "matrix_indices": [
+        44,
+        3,
+        6,
+        12
+      ],
+      "monolith": null,
+      "monolith_is_nontrivial": false,
+      "nontrivial_proper_congruence_count": 9,
+      "right_monoid_size": 7,
+      "row_index": 135
+    },
+    {
+      "congruence_count": 7,
+      "contextual_class_count": 78,
+      "left_monoid_size": 19,
+      "matrices": [
+        [
+          2,
+          2,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          2,
+          1
+        ],
+        [
+          1,
+          2,
+          1,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          1
+        ]
+      ],
+      "matrix_indices": [
+        44,
+        4,
+        26,
+        12
+      ],
+      "monolith": {
+        "block_sizes": [
+          1,
+          1,
+          1,
+          3
+        ],
+        "collision_mismatches_generate_monolith": null,
+        "quotient_class_count": 4,
+        "relative_separation": {
+          "checked": true,
+          "collision_found": false,
+          "collision_length": null,
+          "collision_path": [],
+          "collision_path_indices": [],
+          "element_count": 6,
+          "left_monoid_size": 19,
+          "proves_all_arity_injective": true,
+          "quotient_class_count": 4,
+          "right_monoid_size": 19,
+          "skipped_reason": null,
+          "valid_vertex_count": 72078
+        }
+      },
+      "monolith_is_nontrivial": true,
+      "nontrivial_proper_congruence_count": 5,
+      "right_monoid_size": 19,
+      "row_index": 136
+    },
+    {
+      "congruence_count": 7,
+      "contextual_class_count": 78,
+      "left_monoid_size": 19,
+      "matrices": [
+        [
+          2,
+          2,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          2,
+          2
+        ],
+        [
+          2,
+          2,
+          1,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          1
+        ]
+      ],
+      "matrix_indices": [
+        44,
+        5,
+        44,
+        12
+      ],
+      "monolith": {
+        "block_sizes": [
+          1,
+          1,
+          1,
+          3
+        ],
+        "collision_mismatches_generate_monolith": null,
+        "quotient_class_count": 4,
+        "relative_separation": {
+          "checked": true,
+          "collision_found": false,
+          "collision_length": null,
+          "collision_path": [],
+          "collision_path_indices": [],
+          "element_count": 6,
+          "left_monoid_size": 19,
+          "proves_all_arity_injective": true,
+          "quotient_class_count": 4,
+          "right_monoid_size": 19,
+          "skipped_reason": null,
+          "valid_vertex_count": 72078
+        }
+      },
+      "monolith_is_nontrivial": true,
+      "nontrivial_proper_congruence_count": 5,
+      "right_monoid_size": 19,
+      "row_index": 137
+    },
+    {
+      "congruence_count": 7,
+      "contextual_class_count": 24,
+      "left_monoid_size": 5,
+      "matrices": [
+        [
+          2,
+          2,
+          1,
+          0
+        ],
+        [
+          0,
+          2,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          2,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          1
+        ]
+      ],
+      "matrix_indices": [
+        44,
+        6,
+        3,
+        12
+      ],
+      "monolith": null,
+      "monolith_is_nontrivial": false,
+      "nontrivial_proper_congruence_count": 5,
+      "right_monoid_size": 5,
+      "row_index": 138
+    },
+    {
+      "congruence_count": 7,
+      "contextual_class_count": 36,
+      "left_monoid_size": 8,
+      "matrices": [
+        [
+          2,
+          2,
+          1,
+          0
+        ],
+        [
+          0,
+          2,
+          2,
+          0
+        ],
+        [
+          0,
+          2,
+          2,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          1
+        ]
+      ],
+      "matrix_indices": [
+        44,
+        9,
+        9,
+        12
+      ],
+      "monolith": null,
+      "monolith_is_nontrivial": false,
+      "nontrivial_proper_congruence_count": 5,
+      "right_monoid_size": 8,
+      "row_index": 139
+    },
+    {
+      "congruence_count": 4,
+      "contextual_class_count": 48,
+      "left_monoid_size": 9,
+      "matrices": [
+        [
+          2,
+          2,
+          1,
+          0
+        ],
+        [
+          1,
+          2,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          2,
+          1
+        ],
+        [
+          1,
+          0,
+          0,
+          1
+        ]
+      ],
+      "matrix_indices": [
+        44,
+        26,
+        4,
+        12
+      ],
+      "monolith": {
+        "block_sizes": [
+          1,
+          1,
+          1,
+          3
+        ],
+        "collision_mismatches_generate_monolith": true,
+        "quotient_class_count": 4,
+        "relative_separation": {
+          "checked": true,
+          "collision_found": true,
+          "collision_length": 3,
+          "collision_path": [
+            [
+              "3",
+              "3"
+            ],
+            [
+              "3",
+              "4"
+            ],
+            [
+              "3",
+              "3"
+            ]
+          ],
+          "collision_path_indices": [
+            [
+              3,
+              3
+            ],
+            [
+              3,
+              4
+            ],
+            [
+              3,
+              3
+            ]
+          ],
+          "element_count": 6,
+          "left_monoid_size": 9,
+          "proves_all_arity_injective": false,
+          "quotient_class_count": 4,
+          "right_monoid_size": 9,
+          "skipped_reason": null,
+          "valid_vertex_count": 9396
+        }
+      },
+      "monolith_is_nontrivial": true,
+      "nontrivial_proper_congruence_count": 2,
+      "right_monoid_size": 9,
+      "row_index": 140
+    },
+    {
+      "congruence_count": 4,
+      "contextual_class_count": 60,
+      "left_monoid_size": 12,
+      "matrices": [
+        [
+          2,
+          2,
+          1,
+          0
+        ],
+        [
+          1,
+          2,
+          2,
+          0
+        ],
+        [
+          0,
+          2,
+          2,
+          2
+        ],
+        [
+          1,
+          0,
+          0,
+          1
+        ]
+      ],
+      "matrix_indices": [
+        44,
+        28,
+        11,
+        12
+      ],
+      "monolith": {
+        "block_sizes": [
+          1,
+          1,
+          1,
+          3
+        ],
+        "collision_mismatches_generate_monolith": true,
+        "quotient_class_count": 4,
+        "relative_separation": {
+          "checked": true,
+          "collision_found": true,
+          "collision_length": 3,
+          "collision_path": [
+            [
+              "4",
+              "4"
+            ],
+            [
+              "3",
+              "4"
+            ],
+            [
+              "3",
+              "3"
+            ]
+          ],
+          "collision_path_indices": [
+            [
+              4,
+              4
+            ],
+            [
+              3,
+              4
+            ],
+            [
+              3,
+              3
+            ]
+          ],
+          "element_count": 6,
+          "left_monoid_size": 12,
+          "proves_all_arity_injective": false,
+          "quotient_class_count": 4,
+          "right_monoid_size": 12,
+          "skipped_reason": null,
+          "valid_vertex_count": 20088
+        }
+      },
+      "monolith_is_nontrivial": true,
+      "nontrivial_proper_congruence_count": 2,
+      "right_monoid_size": 12,
+      "row_index": 141
+    },
+    {
+      "congruence_count": 4,
+      "contextual_class_count": 48,
+      "left_monoid_size": 9,
+      "matrices": [
+        [
+          2,
+          2,
+          1,
+          0
+        ],
+        [
+          2,
+          2,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          2,
+          2
+        ],
+        [
+          1,
+          0,
+          0,
+          1
+        ]
+      ],
+      "matrix_indices": [
+        44,
+        44,
+        5,
+        12
+      ],
+      "monolith": {
+        "block_sizes": [
+          1,
+          1,
+          1,
+          3
+        ],
+        "collision_mismatches_generate_monolith": true,
+        "quotient_class_count": 4,
+        "relative_separation": {
+          "checked": true,
+          "collision_found": true,
+          "collision_length": 3,
+          "collision_path": [
+            [
+              "3",
+              "3"
+            ],
+            [
+              "3",
+              "4"
+            ],
+            [
+              "3",
+              "3"
+            ]
+          ],
+          "collision_path_indices": [
+            [
+              3,
+              3
+            ],
+            [
+              3,
+              4
+            ],
+            [
+              3,
+              3
+            ]
+          ],
+          "element_count": 6,
+          "left_monoid_size": 9,
+          "proves_all_arity_injective": false,
+          "quotient_class_count": 4,
+          "right_monoid_size": 9,
+          "skipped_reason": null,
+          "valid_vertex_count": 9396
+        }
+      },
+      "monolith_is_nontrivial": true,
+      "nontrivial_proper_congruence_count": 2,
+      "right_monoid_size": 9,
+      "row_index": 142
+    },
+    {
+      "congruence_count": 4,
+      "contextual_class_count": 60,
+      "left_monoid_size": 12,
+      "matrices": [
+        [
+          2,
+          2,
+          1,
+          0
+        ],
+        [
+          2,
+          2,
+          2,
+          0
+        ],
+        [
+          0,
+          2,
+          2,
+          1
+        ],
+        [
+          1,
+          0,
+          0,
+          1
+        ]
+      ],
+      "matrix_indices": [
+        44,
+        46,
+        10,
+        12
+      ],
+      "monolith": {
+        "block_sizes": [
+          1,
+          1,
+          1,
+          3
+        ],
+        "collision_mismatches_generate_monolith": true,
+        "quotient_class_count": 4,
+        "relative_separation": {
+          "checked": true,
+          "collision_found": true,
+          "collision_length": 3,
+          "collision_path": [
+            [
+              "4",
+              "4"
+            ],
+            [
+              "3",
+              "4"
+            ],
+            [
+              "3",
+              "3"
+            ]
+          ],
+          "collision_path_indices": [
+            [
+              4,
+              4
+            ],
+            [
+              3,
+              4
+            ],
+            [
+              3,
+              3
+            ]
+          ],
+          "element_count": 6,
+          "left_monoid_size": 12,
+          "proves_all_arity_injective": false,
+          "quotient_class_count": 4,
+          "right_monoid_size": 12,
+          "skipped_reason": null,
+          "valid_vertex_count": 20088
+        }
+      },
+      "monolith_is_nontrivial": true,
+      "nontrivial_proper_congruence_count": 2,
+      "right_monoid_size": 12,
+      "row_index": 143
+    }
+  ],
+  "subdirectly_irreducible_count": 64
+}
