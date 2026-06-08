@@ -872,34 +872,140 @@ partial translation
 
 a legitimate lift over `p` must use a permutation extending `lambda_p`.
 
-The correct finite datum is a nonempty set
+The previous transport condition
 
-  E_p subseteq Sym(P_X)
+  g E_q g^(-1) = E_{lambda_p(q)}
+
+was too strong because it controlled non-fillable or virtual products.  Actual
+braid trajectories only use forced compatible adjacent contextual pairs.
+
+The correct finite datum is a nonempty active set
+
+  C_p subseteq Sym(P_X)
 
 for every contextual class `p`, satisfying:
 
-  Extension:
-    g(q)=lambda_p(q) for every g in E_p and q in D_p.
+  Forced extension:
+    g(q)=lambda_p(q) for every g in C_p and q in D_p.
 
-  Transport:
-    if q in D_p and r=lambda_p(q), then
-    g E_q g^(-1) = E_r for every g in E_p.
+  Forced-pair closure only:
+    if q in D_p, r=lambda_p(q), g in C_p, and h in C_q, then
+    g h g^(-1) in C_r.
 
-If such `E_p` exist, define `Pi_n subseteq Y_X^n x X^n` by lifting
-`J_n(x)=(p_1,...,p_n)` to arbitrary `(p_i,g_i)` with `g_i in E_{p_i}`.
-The extension and transport conditions make `Pi_n` braid-equivariant.
+No condition is imposed when `q notin D_p`.  If such `C_p` exist, define
+`Pi_n subseteq Y_X^n x X^n` by lifting `J_n(x)=(p_1,...,p_n)` to arbitrary
+`(p_i,g_i)` with `g_i in C_{p_i}`.  Forced extension and forced-pair closure
+make `Pi_n` braid-equivariant.
 
 Thus the current positive theorem is:
 
   For every finite bijective YBE solution X, construct nonempty
-  transport-stable extension fibers E_p over P_X, and prove J_n is
-  braid-orbit-injective for every n.
+  active lift sets C_p over P_X satisfying forced extension and forced-pair
+  closure, and prove J_n is braid-orbit-injective for every n.
 
 The current negative target is:
 
-  find one explicit finite X with no such E_p, or with such E_p but failed
+  find one explicit finite X with no such C_p, or with such C_p but failed
   all-arity orbit separation that yields actual Brunnian detector-kernel
   witnesses.
+
+30. Local orbit-separation evidence now covers the six-point linear
+skew-over-flip family in finite arities.
+
+Local audit:
+
+  tools/run_linear_f3_skew_flip_orbit_audit.py
+  proofs/linear_f3_skew_flip_orbit_audit.json
+  proofs/linear_f3_skew_flip_orbit_audit.md
+
+For the 144 degenerate non-involutive rows in the family
+
+  X={0,1} x F_3,
+
+the audit verifies:
+
+  all 144 rows checked through arity 5,
+  16 representative contextual types checked through arity 6,
+  orbit-injectivity failure count = 0.
+
+This is finite evidence only, not an all-arity theorem.
+
+31. The latest theoretical response makes the active-lift problem canonical.
+
+For each contextual class p, let
+
+  V_p={g in Sym(P_X): g extends lambda_p}.
+
+For a family C=(C_p), define the monotone pruning operator
+
+  T(C)_p =
+    { g in C_p :
+        for every q in D_p and every h in C_q,
+        g h g^(-1) in C_{lambda_p(q)} }.
+
+Start with C^(0)=V and iterate C^(k+1)=T(C^(k)).  Since everything is finite,
+this stabilizes to C^(infty).
+
+There exists an active lift system iff
+
+  C^(infty)_p is nonempty for every p.
+
+Thus active-lift existence is no longer an arbitrary SAT choice; it has a
+canonical greatest fixed point.  A failure is a finite pruning certificate.
+
+The next answer should attack exactly this:
+
+  Prove C^(infty)_p is nonempty for every p and every finite bijective YBE X,
+  and prove all-arity orbit-injectivity of J_n; or find one explicit finite X
+  where the canonical fixed point empties somewhere, or where it survives but
+  orbit-injectivity fails in a way that yields B.
+
+32. The latest response tests a known finite-extension mechanism and locates
+the virtual-context obstruction more precisely.
+
+Naive finite structure:
+
+  A_X = P union {ell_p:p in P},
+  G(ell_p,q,r) iff q in D_p and lambda_p(q)=r.
+
+Define partial maps
+
+  theta_p(q)=lambda_p(q),
+  theta_p(ell_q)=ell_{lambda_p(q)}
+
+on their forced domains.  If theta_p were partial automorphisms of this finite
+structure, finite partial-automorphism extension could feed an augmented-rack
+completion.
+
+YBE proves the required preservation identity
+
+  lambda_p(lambda_q(a)) =
+  lambda_{lambda_p(q)}(lambda_p(a))
+
+only on jointly realizable contextual triples.  The full graph G contains
+pairwise forced but non-fillable virtual triples, so theta_p need not be a
+partial automorphism of the naive finite structure.
+
+The correct object is the realizable contextual language
+
+  W_X = union_n J_n(X^n) subseteq P^*.
+
+This language is regular/finite-state because realization is witnessed by the
+finite left/right context monoids:
+
+  A_{i+1}=A_i m_{x_i},
+  B_i=B_{i+1} r_{x_{i+1}},
+  p_i=[A_i,x_i,B_i].
+
+On W_X, the local theta_p identities are actual YBE diagrams.
+
+The next answer should attack this exact language-theoretic target:
+
+  compress W_X to a finite relational structure whose partial automorphisms
+  theta_p encode all braid-relevant contexts and yield finite active lifts; or
+  construct an explicit finite X with an unbounded realizability obstruction,
+  namely contextual patterns locally compatible at every bounded level but not
+  globally realizable, and turn that into B.
 
 Your task.
 
@@ -1037,11 +1143,22 @@ Do not answer by:
   step is proving coherent B_n-equivariant single-valued lift relations
   `Pi_n subseteq Y_X^n x X^n` for all n, or deriving B from their failure;
 - allowing arbitrary `(p,g) in P_X x Sym(P_X)` as legitimate lifts without
-  constructing nonempty transport-stable extension fibers
-  `E_p subseteq Sym(P_X)`;
+  constructing nonempty active lift sets `C_p subseteq Sym(P_X)`;
 - proving local forced crossings can be represented in `P_X x Sym(P_X)`
-  without proving the global transport condition
-  `g E_q g^{-1}=E_{lambda_p(q)}`;
+  without proving forced-pair closure
+  `g C_q g^{-1} subseteq C_{lambda_p(q)}` for compatible pairs;
+- imposing the too-strong equality condition
+  `g E_q g^{-1}=E_{lambda_p(q)}` on non-fillable or virtual products without
+  explaining why actual braid-equivariant lifts require it;
+- presenting active-lift existence as an arbitrary SAT choice without using
+  the canonical greatest fixed point C^(infty);
+- stopping after defining C^(infty); the next step is proving it is nonempty
+  for all finite X or finding an explicit X where it empties;
+- proving partial automorphism extension on the naive full graph
+  `G(ell_p,q,r)` without handling non-fillable virtual triples;
+- ignoring the realizable contextual language
+  `W_X = union_n J_n(X^n) subseteq P^*`, which is the object where YBE
+  actually supplies the local identities;
 - citing computational finite-arity evidence as an all-arity theorem;
 - citing the public status of the MathOverflow page.
 

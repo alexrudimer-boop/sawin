@@ -1,0 +1,8152 @@
+{
+  "all_case_max_arity": 5,
+  "all_case_summaries": [
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 4,
+          "orbit_count": 21
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 12,
+          "orbit_count": 64
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 48,
+          "orbit_count": 189
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 160,
+          "orbit_count": 558
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          15
+        ],
+        "forced_product_count": 99,
+        "left_monoid_size": 4,
+        "quotient_class_count": 18,
+        "right_monoid_size": 4
+      },
+      "matrix_indices": [
+        0,
+        0,
+        6,
+        12
+      ],
+      "readout_class_count": 18,
+      "row_index": 0
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 4,
+          "orbit_count": 21
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 12,
+          "orbit_count": 64
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 48,
+          "orbit_count": 189
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 160,
+          "orbit_count": 558
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          12,
+          15
+        ],
+        "forced_product_count": 171,
+        "left_monoid_size": 7,
+        "quotient_class_count": 30,
+        "right_monoid_size": 7
+      },
+      "matrix_indices": [
+        0,
+        3,
+        0,
+        12
+      ],
+      "readout_class_count": 30,
+      "row_index": 1
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 4,
+          "orbit_count": 21
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 12,
+          "orbit_count": 64
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 48,
+          "orbit_count": 189
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 160,
+          "orbit_count": 558
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          18
+        ],
+        "forced_product_count": 126,
+        "left_monoid_size": 5,
+        "quotient_class_count": 24,
+        "right_monoid_size": 5
+      },
+      "matrix_indices": [
+        0,
+        6,
+        9,
+        12
+      ],
+      "readout_class_count": 24,
+      "row_index": 2
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 4,
+          "orbit_count": 21
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 12,
+          "orbit_count": 64
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 48,
+          "orbit_count": 189
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 160,
+          "orbit_count": 558
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          12,
+          18
+        ],
+        "forced_product_count": 198,
+        "left_monoid_size": 8,
+        "quotient_class_count": 36,
+        "right_monoid_size": 8
+      },
+      "matrix_indices": [
+        0,
+        9,
+        3,
+        12
+      ],
+      "readout_class_count": 36,
+      "row_index": 3
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 4,
+          "orbit_count": 21
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 12,
+          "orbit_count": 67
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 48,
+          "orbit_count": 206
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 160,
+          "orbit_count": 624
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          15
+        ],
+        "forced_product_count": 198,
+        "left_monoid_size": 8,
+        "quotient_class_count": 36,
+        "right_monoid_size": 8
+      },
+      "matrix_indices": [
+        3,
+        0,
+        0,
+        12
+      ],
+      "readout_class_count": 36,
+      "row_index": 4
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 4,
+          "orbit_count": 18
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 12,
+          "orbit_count": 58
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 48,
+          "orbit_count": 179
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 160,
+          "orbit_count": 543
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          15
+        ],
+        "forced_product_count": 198,
+        "left_monoid_size": 8,
+        "quotient_class_count": 36,
+        "right_monoid_size": 8
+      },
+      "matrix_indices": [
+        3,
+        0,
+        6,
+        12
+      ],
+      "readout_class_count": 36,
+      "row_index": 5
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 4,
+          "orbit_count": 18
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 12,
+          "orbit_count": 58
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 48,
+          "orbit_count": 179
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 160,
+          "orbit_count": 543
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          15
+        ],
+        "forced_product_count": 198,
+        "left_monoid_size": 8,
+        "quotient_class_count": 36,
+        "right_monoid_size": 8
+      },
+      "matrix_indices": [
+        3,
+        3,
+        0,
+        12
+      ],
+      "readout_class_count": 36,
+      "row_index": 6
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 4,
+          "orbit_count": 21
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 12,
+          "orbit_count": 67
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 48,
+          "orbit_count": 206
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 160,
+          "orbit_count": 624
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          15
+        ],
+        "forced_product_count": 198,
+        "left_monoid_size": 8,
+        "quotient_class_count": 36,
+        "right_monoid_size": 8
+      },
+      "matrix_indices": [
+        3,
+        3,
+        6,
+        12
+      ],
+      "readout_class_count": 36,
+      "row_index": 7
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 4,
+          "orbit_count": 21
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 12,
+          "orbit_count": 67
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 48,
+          "orbit_count": 206
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 160,
+          "orbit_count": 624
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          15
+        ],
+        "forced_product_count": 198,
+        "left_monoid_size": 8,
+        "quotient_class_count": 36,
+        "right_monoid_size": 8
+      },
+      "matrix_indices": [
+        3,
+        6,
+        3,
+        12
+      ],
+      "readout_class_count": 36,
+      "row_index": 8
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 4,
+          "orbit_count": 18
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 12,
+          "orbit_count": 58
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 48,
+          "orbit_count": 179
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 160,
+          "orbit_count": 543
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          15
+        ],
+        "forced_product_count": 198,
+        "left_monoid_size": 8,
+        "quotient_class_count": 36,
+        "right_monoid_size": 8
+      },
+      "matrix_indices": [
+        3,
+        6,
+        9,
+        12
+      ],
+      "readout_class_count": 36,
+      "row_index": 9
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 4,
+          "orbit_count": 18
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 12,
+          "orbit_count": 58
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 48,
+          "orbit_count": 179
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 160,
+          "orbit_count": 543
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          15
+        ],
+        "forced_product_count": 198,
+        "left_monoid_size": 8,
+        "quotient_class_count": 36,
+        "right_monoid_size": 8
+      },
+      "matrix_indices": [
+        3,
+        9,
+        3,
+        12
+      ],
+      "readout_class_count": 36,
+      "row_index": 10
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 4,
+          "orbit_count": 21
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 12,
+          "orbit_count": 67
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 48,
+          "orbit_count": 206
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 160,
+          "orbit_count": 624
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          15
+        ],
+        "forced_product_count": 198,
+        "left_monoid_size": 8,
+        "quotient_class_count": 36,
+        "right_monoid_size": 8
+      },
+      "matrix_indices": [
+        3,
+        9,
+        9,
+        12
+      ],
+      "readout_class_count": 36,
+      "row_index": 11
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 3,
+          "orbit_count": 23
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 9,
+          "orbit_count": 75
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 32,
+          "orbit_count": 231
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 135,
+          "orbit_count": 699
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          15
+        ],
+        "forced_product_count": 594,
+        "left_monoid_size": 24,
+        "quotient_class_count": 108,
+        "right_monoid_size": 24
+      },
+      "matrix_indices": [
+        5,
+        0,
+        0,
+        12
+      ],
+      "readout_class_count": 108,
+      "row_index": 12
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 3,
+          "orbit_count": 23
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 9,
+          "orbit_count": 75
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 32,
+          "orbit_count": 231
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 135,
+          "orbit_count": 699
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          15
+        ],
+        "forced_product_count": 594,
+        "left_monoid_size": 24,
+        "quotient_class_count": 108,
+        "right_monoid_size": 24
+      },
+      "matrix_indices": [
+        5,
+        1,
+        38,
+        12
+      ],
+      "readout_class_count": 108,
+      "row_index": 13
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 3,
+          "orbit_count": 23
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 9,
+          "orbit_count": 75
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 32,
+          "orbit_count": 231
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 135,
+          "orbit_count": 699
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          15
+        ],
+        "forced_product_count": 594,
+        "left_monoid_size": 24,
+        "quotient_class_count": 108,
+        "right_monoid_size": 24
+      },
+      "matrix_indices": [
+        5,
+        2,
+        20,
+        12
+      ],
+      "readout_class_count": 108,
+      "row_index": 14
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 3,
+          "orbit_count": 23
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 9,
+          "orbit_count": 75
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 32,
+          "orbit_count": 231
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 135,
+          "orbit_count": 699
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          15
+        ],
+        "forced_product_count": 594,
+        "left_monoid_size": 24,
+        "quotient_class_count": 108,
+        "right_monoid_size": 24
+      },
+      "matrix_indices": [
+        5,
+        3,
+        6,
+        12
+      ],
+      "readout_class_count": 108,
+      "row_index": 15
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 3,
+          "orbit_count": 23
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 9,
+          "orbit_count": 75
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 32,
+          "orbit_count": 231
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 135,
+          "orbit_count": 699
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          15
+        ],
+        "forced_product_count": 594,
+        "left_monoid_size": 24,
+        "quotient_class_count": 108,
+        "right_monoid_size": 24
+      },
+      "matrix_indices": [
+        5,
+        4,
+        26,
+        12
+      ],
+      "readout_class_count": 108,
+      "row_index": 16
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 3,
+          "orbit_count": 23
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 9,
+          "orbit_count": 75
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 32,
+          "orbit_count": 231
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 135,
+          "orbit_count": 699
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          15
+        ],
+        "forced_product_count": 594,
+        "left_monoid_size": 24,
+        "quotient_class_count": 108,
+        "right_monoid_size": 24
+      },
+      "matrix_indices": [
+        5,
+        5,
+        44,
+        12
+      ],
+      "readout_class_count": 108,
+      "row_index": 17
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 3,
+          "orbit_count": 23
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 9,
+          "orbit_count": 75
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 32,
+          "orbit_count": 231
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 135,
+          "orbit_count": 699
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          15
+        ],
+        "forced_product_count": 594,
+        "left_monoid_size": 24,
+        "quotient_class_count": 108,
+        "right_monoid_size": 24
+      },
+      "matrix_indices": [
+        5,
+        6,
+        3,
+        12
+      ],
+      "readout_class_count": 108,
+      "row_index": 18
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 3,
+          "orbit_count": 23
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 9,
+          "orbit_count": 75
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 32,
+          "orbit_count": 231
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 135,
+          "orbit_count": 699
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          15
+        ],
+        "forced_product_count": 594,
+        "left_monoid_size": 24,
+        "quotient_class_count": 108,
+        "right_monoid_size": 24
+      },
+      "matrix_indices": [
+        5,
+        9,
+        9,
+        12
+      ],
+      "readout_class_count": 108,
+      "row_index": 19
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 3,
+          "orbit_count": 23
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 9,
+          "orbit_count": 75
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 32,
+          "orbit_count": 231
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 135,
+          "orbit_count": 699
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          15
+        ],
+        "forced_product_count": 594,
+        "left_monoid_size": 24,
+        "quotient_class_count": 108,
+        "right_monoid_size": 24
+      },
+      "matrix_indices": [
+        5,
+        26,
+        4,
+        12
+      ],
+      "readout_class_count": 108,
+      "row_index": 20
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 3,
+          "orbit_count": 23
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 9,
+          "orbit_count": 75
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 32,
+          "orbit_count": 231
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 135,
+          "orbit_count": 699
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          15
+        ],
+        "forced_product_count": 594,
+        "left_monoid_size": 24,
+        "quotient_class_count": 108,
+        "right_monoid_size": 24
+      },
+      "matrix_indices": [
+        5,
+        28,
+        11,
+        12
+      ],
+      "readout_class_count": 108,
+      "row_index": 21
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 3,
+          "orbit_count": 23
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 9,
+          "orbit_count": 75
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 32,
+          "orbit_count": 231
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 135,
+          "orbit_count": 699
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          15
+        ],
+        "forced_product_count": 594,
+        "left_monoid_size": 24,
+        "quotient_class_count": 108,
+        "right_monoid_size": 24
+      },
+      "matrix_indices": [
+        5,
+        44,
+        5,
+        12
+      ],
+      "readout_class_count": 108,
+      "row_index": 22
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 3,
+          "orbit_count": 23
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 9,
+          "orbit_count": 75
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 32,
+          "orbit_count": 231
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 135,
+          "orbit_count": 699
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          15
+        ],
+        "forced_product_count": 594,
+        "left_monoid_size": 24,
+        "quotient_class_count": 108,
+        "right_monoid_size": 24
+      },
+      "matrix_indices": [
+        5,
+        46,
+        10,
+        12
+      ],
+      "readout_class_count": 108,
+      "row_index": 23
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 4,
+          "orbit_count": 21
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 12,
+          "orbit_count": 67
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 48,
+          "orbit_count": 206
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 160,
+          "orbit_count": 624
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          15
+        ],
+        "forced_product_count": 99,
+        "left_monoid_size": 4,
+        "quotient_class_count": 18,
+        "right_monoid_size": 4
+      },
+      "matrix_indices": [
+        6,
+        0,
+        0,
+        12
+      ],
+      "readout_class_count": 18,
+      "row_index": 24
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 4,
+          "orbit_count": 18
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 12,
+          "orbit_count": 58
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 48,
+          "orbit_count": 179
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 160,
+          "orbit_count": 543
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          15
+        ],
+        "forced_product_count": 99,
+        "left_monoid_size": 4,
+        "quotient_class_count": 18,
+        "right_monoid_size": 4
+      },
+      "matrix_indices": [
+        6,
+        0,
+        6,
+        12
+      ],
+      "readout_class_count": 18,
+      "row_index": 25
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 4,
+          "orbit_count": 18
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 12,
+          "orbit_count": 58
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 48,
+          "orbit_count": 179
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 160,
+          "orbit_count": 543
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          12,
+          15
+        ],
+        "forced_product_count": 171,
+        "left_monoid_size": 7,
+        "quotient_class_count": 30,
+        "right_monoid_size": 7
+      },
+      "matrix_indices": [
+        6,
+        3,
+        0,
+        12
+      ],
+      "readout_class_count": 30,
+      "row_index": 26
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 4,
+          "orbit_count": 21
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 12,
+          "orbit_count": 67
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 48,
+          "orbit_count": 206
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 160,
+          "orbit_count": 624
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          12,
+          15
+        ],
+        "forced_product_count": 171,
+        "left_monoid_size": 7,
+        "quotient_class_count": 30,
+        "right_monoid_size": 7
+      },
+      "matrix_indices": [
+        6,
+        3,
+        6,
+        12
+      ],
+      "readout_class_count": 30,
+      "row_index": 27
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 4,
+          "orbit_count": 21
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 12,
+          "orbit_count": 67
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 48,
+          "orbit_count": 206
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 160,
+          "orbit_count": 624
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          18
+        ],
+        "forced_product_count": 126,
+        "left_monoid_size": 5,
+        "quotient_class_count": 24,
+        "right_monoid_size": 5
+      },
+      "matrix_indices": [
+        6,
+        6,
+        3,
+        12
+      ],
+      "readout_class_count": 24,
+      "row_index": 28
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 4,
+          "orbit_count": 18
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 12,
+          "orbit_count": 58
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 48,
+          "orbit_count": 179
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 160,
+          "orbit_count": 543
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          18
+        ],
+        "forced_product_count": 126,
+        "left_monoid_size": 5,
+        "quotient_class_count": 24,
+        "right_monoid_size": 5
+      },
+      "matrix_indices": [
+        6,
+        6,
+        9,
+        12
+      ],
+      "readout_class_count": 24,
+      "row_index": 29
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 4,
+          "orbit_count": 18
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 12,
+          "orbit_count": 58
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 48,
+          "orbit_count": 179
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 160,
+          "orbit_count": 543
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          12,
+          18
+        ],
+        "forced_product_count": 198,
+        "left_monoid_size": 8,
+        "quotient_class_count": 36,
+        "right_monoid_size": 8
+      },
+      "matrix_indices": [
+        6,
+        9,
+        3,
+        12
+      ],
+      "readout_class_count": 36,
+      "row_index": 30
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 4,
+          "orbit_count": 21
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 12,
+          "orbit_count": 67
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 48,
+          "orbit_count": 206
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 160,
+          "orbit_count": 624
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          12,
+          18
+        ],
+        "forced_product_count": 198,
+        "left_monoid_size": 8,
+        "quotient_class_count": 36,
+        "right_monoid_size": 8
+      },
+      "matrix_indices": [
+        6,
+        9,
+        9,
+        12
+      ],
+      "readout_class_count": 36,
+      "row_index": 31
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 3,
+          "orbit_count": 23
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 9,
+          "orbit_count": 75
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 32,
+          "orbit_count": 231
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 135,
+          "orbit_count": 699
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          15
+        ],
+        "forced_product_count": 297,
+        "left_monoid_size": 12,
+        "quotient_class_count": 54,
+        "right_monoid_size": 12
+      },
+      "matrix_indices": [
+        8,
+        0,
+        0,
+        12
+      ],
+      "readout_class_count": 54,
+      "row_index": 32
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 3,
+          "orbit_count": 23
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 9,
+          "orbit_count": 75
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 32,
+          "orbit_count": 231
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 135,
+          "orbit_count": 699
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          12,
+          15
+        ],
+        "forced_product_count": 513,
+        "left_monoid_size": 21,
+        "quotient_class_count": 90,
+        "right_monoid_size": 21
+      },
+      "matrix_indices": [
+        8,
+        3,
+        6,
+        12
+      ],
+      "readout_class_count": 90,
+      "row_index": 33
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 3,
+          "orbit_count": 23
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 9,
+          "orbit_count": 75
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 32,
+          "orbit_count": 231
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 135,
+          "orbit_count": 699
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          18
+        ],
+        "forced_product_count": 378,
+        "left_monoid_size": 15,
+        "quotient_class_count": 72,
+        "right_monoid_size": 15
+      },
+      "matrix_indices": [
+        8,
+        6,
+        3,
+        12
+      ],
+      "readout_class_count": 72,
+      "row_index": 34
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 3,
+          "orbit_count": 23
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 9,
+          "orbit_count": 75
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 32,
+          "orbit_count": 231
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 135,
+          "orbit_count": 699
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          18
+        ],
+        "forced_product_count": 378,
+        "left_monoid_size": 15,
+        "quotient_class_count": 72,
+        "right_monoid_size": 15
+      },
+      "matrix_indices": [
+        8,
+        7,
+        22,
+        12
+      ],
+      "readout_class_count": 72,
+      "row_index": 35
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 3,
+          "orbit_count": 23
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 9,
+          "orbit_count": 75
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 32,
+          "orbit_count": 231
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 135,
+          "orbit_count": 699
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          18
+        ],
+        "forced_product_count": 378,
+        "left_monoid_size": 15,
+        "quotient_class_count": 72,
+        "right_monoid_size": 15
+      },
+      "matrix_indices": [
+        8,
+        8,
+        40,
+        12
+      ],
+      "readout_class_count": 72,
+      "row_index": 36
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 3,
+          "orbit_count": 23
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 9,
+          "orbit_count": 75
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 32,
+          "orbit_count": 231
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 135,
+          "orbit_count": 699
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          12,
+          18
+        ],
+        "forced_product_count": 594,
+        "left_monoid_size": 24,
+        "quotient_class_count": 108,
+        "right_monoid_size": 24
+      },
+      "matrix_indices": [
+        8,
+        9,
+        9,
+        12
+      ],
+      "readout_class_count": 108,
+      "row_index": 37
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 3,
+          "orbit_count": 23
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 9,
+          "orbit_count": 75
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 32,
+          "orbit_count": 231
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 135,
+          "orbit_count": 699
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          12,
+          18
+        ],
+        "forced_product_count": 594,
+        "left_monoid_size": 24,
+        "quotient_class_count": 108,
+        "right_monoid_size": 24
+      },
+      "matrix_indices": [
+        8,
+        10,
+        46,
+        12
+      ],
+      "readout_class_count": 108,
+      "row_index": 38
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 3,
+          "orbit_count": 23
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 9,
+          "orbit_count": 75
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 32,
+          "orbit_count": 231
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 135,
+          "orbit_count": 699
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          12,
+          18
+        ],
+        "forced_product_count": 594,
+        "left_monoid_size": 24,
+        "quotient_class_count": 108,
+        "right_monoid_size": 24
+      },
+      "matrix_indices": [
+        8,
+        11,
+        28,
+        12
+      ],
+      "readout_class_count": 108,
+      "row_index": 39
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 3,
+          "orbit_count": 23
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 9,
+          "orbit_count": 75
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 32,
+          "orbit_count": 231
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 135,
+          "orbit_count": 699
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          15
+        ],
+        "forced_product_count": 297,
+        "left_monoid_size": 12,
+        "quotient_class_count": 54,
+        "right_monoid_size": 12
+      },
+      "matrix_indices": [
+        8,
+        20,
+        2,
+        12
+      ],
+      "readout_class_count": 54,
+      "row_index": 40
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 3,
+          "orbit_count": 23
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 9,
+          "orbit_count": 75
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 32,
+          "orbit_count": 231
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 135,
+          "orbit_count": 699
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          12,
+          15
+        ],
+        "forced_product_count": 513,
+        "left_monoid_size": 21,
+        "quotient_class_count": 90,
+        "right_monoid_size": 21
+      },
+      "matrix_indices": [
+        8,
+        22,
+        7,
+        12
+      ],
+      "readout_class_count": 90,
+      "row_index": 41
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 3,
+          "orbit_count": 23
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 9,
+          "orbit_count": 75
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 32,
+          "orbit_count": 231
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 135,
+          "orbit_count": 699
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          15
+        ],
+        "forced_product_count": 297,
+        "left_monoid_size": 12,
+        "quotient_class_count": 54,
+        "right_monoid_size": 12
+      },
+      "matrix_indices": [
+        8,
+        38,
+        1,
+        12
+      ],
+      "readout_class_count": 54,
+      "row_index": 42
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 3,
+          "orbit_count": 23
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 9,
+          "orbit_count": 75
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 32,
+          "orbit_count": 231
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 135,
+          "orbit_count": 699
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          12,
+          15
+        ],
+        "forced_product_count": 513,
+        "left_monoid_size": 21,
+        "quotient_class_count": 90,
+        "right_monoid_size": 21
+      },
+      "matrix_indices": [
+        8,
+        40,
+        8,
+        12
+      ],
+      "readout_class_count": 90,
+      "row_index": 43
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 4,
+          "orbit_count": 21
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 12,
+          "orbit_count": 64
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 48,
+          "orbit_count": 189
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 160,
+          "orbit_count": 558
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          15
+        ],
+        "forced_product_count": 198,
+        "left_monoid_size": 8,
+        "quotient_class_count": 36,
+        "right_monoid_size": 8
+      },
+      "matrix_indices": [
+        9,
+        0,
+        6,
+        12
+      ],
+      "readout_class_count": 36,
+      "row_index": 44
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 4,
+          "orbit_count": 21
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 12,
+          "orbit_count": 64
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 48,
+          "orbit_count": 189
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 160,
+          "orbit_count": 558
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          15
+        ],
+        "forced_product_count": 198,
+        "left_monoid_size": 8,
+        "quotient_class_count": 36,
+        "right_monoid_size": 8
+      },
+      "matrix_indices": [
+        9,
+        3,
+        0,
+        12
+      ],
+      "readout_class_count": 36,
+      "row_index": 45
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 4,
+          "orbit_count": 21
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 12,
+          "orbit_count": 64
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 48,
+          "orbit_count": 189
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 160,
+          "orbit_count": 558
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          15
+        ],
+        "forced_product_count": 198,
+        "left_monoid_size": 8,
+        "quotient_class_count": 36,
+        "right_monoid_size": 8
+      },
+      "matrix_indices": [
+        9,
+        6,
+        9,
+        12
+      ],
+      "readout_class_count": 36,
+      "row_index": 46
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 4,
+          "orbit_count": 21
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 12,
+          "orbit_count": 64
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 48,
+          "orbit_count": 189
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 160,
+          "orbit_count": 558
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          15
+        ],
+        "forced_product_count": 198,
+        "left_monoid_size": 8,
+        "quotient_class_count": 36,
+        "right_monoid_size": 8
+      },
+      "matrix_indices": [
+        9,
+        9,
+        3,
+        12
+      ],
+      "readout_class_count": 36,
+      "row_index": 47
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 4,
+          "orbit_count": 21
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 12,
+          "orbit_count": 67
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 48,
+          "orbit_count": 206
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 160,
+          "orbit_count": 624
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          15
+        ],
+        "forced_product_count": 198,
+        "left_monoid_size": 8,
+        "quotient_class_count": 36,
+        "right_monoid_size": 8
+      },
+      "matrix_indices": [
+        12,
+        0,
+        0,
+        3
+      ],
+      "readout_class_count": 36,
+      "row_index": 48
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 3,
+          "orbit_count": 23
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 9,
+          "orbit_count": 75
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 32,
+          "orbit_count": 231
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 135,
+          "orbit_count": 699
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          15
+        ],
+        "forced_product_count": 594,
+        "left_monoid_size": 24,
+        "quotient_class_count": 108,
+        "right_monoid_size": 24
+      },
+      "matrix_indices": [
+        12,
+        0,
+        0,
+        5
+      ],
+      "readout_class_count": 108,
+      "row_index": 49
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 4,
+          "orbit_count": 21
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 12,
+          "orbit_count": 67
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 48,
+          "orbit_count": 206
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 160,
+          "orbit_count": 624
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          15
+        ],
+        "forced_product_count": 99,
+        "left_monoid_size": 4,
+        "quotient_class_count": 18,
+        "right_monoid_size": 4
+      },
+      "matrix_indices": [
+        12,
+        0,
+        0,
+        6
+      ],
+      "readout_class_count": 18,
+      "row_index": 50
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 3,
+          "orbit_count": 23
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 9,
+          "orbit_count": 75
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 32,
+          "orbit_count": 231
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 135,
+          "orbit_count": 699
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          15
+        ],
+        "forced_product_count": 297,
+        "left_monoid_size": 12,
+        "quotient_class_count": 54,
+        "right_monoid_size": 12
+      },
+      "matrix_indices": [
+        12,
+        0,
+        0,
+        8
+      ],
+      "readout_class_count": 54,
+      "row_index": 51
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 3,
+          "orbit_count": 23
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 9,
+          "orbit_count": 75
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 32,
+          "orbit_count": 231
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 135,
+          "orbit_count": 699
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          15
+        ],
+        "forced_product_count": 198,
+        "left_monoid_size": 8,
+        "quotient_class_count": 36,
+        "right_monoid_size": 8
+      },
+      "matrix_indices": [
+        12,
+        0,
+        0,
+        40
+      ],
+      "readout_class_count": 36,
+      "row_index": 52
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 3,
+          "orbit_count": 23
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 9,
+          "orbit_count": 75
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 32,
+          "orbit_count": 231
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 135,
+          "orbit_count": 699
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          15
+        ],
+        "forced_product_count": 99,
+        "left_monoid_size": 4,
+        "quotient_class_count": 18,
+        "right_monoid_size": 4
+      },
+      "matrix_indices": [
+        12,
+        0,
+        0,
+        44
+      ],
+      "readout_class_count": 18,
+      "row_index": 53
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 4,
+          "orbit_count": 21
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 12,
+          "orbit_count": 64
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 48,
+          "orbit_count": 189
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 160,
+          "orbit_count": 558
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          12,
+          15
+        ],
+        "forced_product_count": 171,
+        "left_monoid_size": 7,
+        "quotient_class_count": 30,
+        "right_monoid_size": 7
+      },
+      "matrix_indices": [
+        12,
+        0,
+        3,
+        0
+      ],
+      "readout_class_count": 30,
+      "row_index": 54
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 4,
+          "orbit_count": 18
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 12,
+          "orbit_count": 58
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 48,
+          "orbit_count": 179
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 160,
+          "orbit_count": 543
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          15
+        ],
+        "forced_product_count": 198,
+        "left_monoid_size": 8,
+        "quotient_class_count": 36,
+        "right_monoid_size": 8
+      },
+      "matrix_indices": [
+        12,
+        0,
+        3,
+        3
+      ],
+      "readout_class_count": 36,
+      "row_index": 55
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 4,
+          "orbit_count": 18
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 12,
+          "orbit_count": 58
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 48,
+          "orbit_count": 179
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 160,
+          "orbit_count": 543
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          12,
+          15
+        ],
+        "forced_product_count": 171,
+        "left_monoid_size": 7,
+        "quotient_class_count": 30,
+        "right_monoid_size": 7
+      },
+      "matrix_indices": [
+        12,
+        0,
+        3,
+        6
+      ],
+      "readout_class_count": 30,
+      "row_index": 56
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 4,
+          "orbit_count": 21
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 12,
+          "orbit_count": 64
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 48,
+          "orbit_count": 189
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 160,
+          "orbit_count": 558
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          15
+        ],
+        "forced_product_count": 198,
+        "left_monoid_size": 8,
+        "quotient_class_count": 36,
+        "right_monoid_size": 8
+      },
+      "matrix_indices": [
+        12,
+        0,
+        3,
+        9
+      ],
+      "readout_class_count": 36,
+      "row_index": 57
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 3,
+          "orbit_count": 23
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 9,
+          "orbit_count": 75
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 32,
+          "orbit_count": 231
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 135,
+          "orbit_count": 699
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          15
+        ],
+        "forced_product_count": 297,
+        "left_monoid_size": 12,
+        "quotient_class_count": 54,
+        "right_monoid_size": 12
+      },
+      "matrix_indices": [
+        12,
+        1,
+        38,
+        8
+      ],
+      "readout_class_count": 54,
+      "row_index": 58
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 3,
+          "orbit_count": 23
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 9,
+          "orbit_count": 75
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 32,
+          "orbit_count": 231
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 135,
+          "orbit_count": 699
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          21
+        ],
+        "forced_product_count": 306,
+        "left_monoid_size": 12,
+        "quotient_class_count": 60,
+        "right_monoid_size": 12
+      },
+      "matrix_indices": [
+        12,
+        1,
+        38,
+        40
+      ],
+      "readout_class_count": 60,
+      "row_index": 59
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 3,
+          "orbit_count": 23
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 9,
+          "orbit_count": 75
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 32,
+          "orbit_count": 231
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 135,
+          "orbit_count": 699
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          15
+        ],
+        "forced_product_count": 297,
+        "left_monoid_size": 12,
+        "quotient_class_count": 54,
+        "right_monoid_size": 12
+      },
+      "matrix_indices": [
+        12,
+        2,
+        20,
+        8
+      ],
+      "readout_class_count": 54,
+      "row_index": 60
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 3,
+          "orbit_count": 23
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 9,
+          "orbit_count": 75
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 32,
+          "orbit_count": 231
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 135,
+          "orbit_count": 699
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          21
+        ],
+        "forced_product_count": 306,
+        "left_monoid_size": 12,
+        "quotient_class_count": 60,
+        "right_monoid_size": 12
+      },
+      "matrix_indices": [
+        12,
+        2,
+        20,
+        40
+      ],
+      "readout_class_count": 60,
+      "row_index": 61
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 4,
+          "orbit_count": 21
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 12,
+          "orbit_count": 67
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 48,
+          "orbit_count": 206
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 160,
+          "orbit_count": 624
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          15
+        ],
+        "forced_product_count": 198,
+        "left_monoid_size": 8,
+        "quotient_class_count": 36,
+        "right_monoid_size": 8
+      },
+      "matrix_indices": [
+        12,
+        3,
+        6,
+        3
+      ],
+      "readout_class_count": 36,
+      "row_index": 62
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 3,
+          "orbit_count": 23
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 9,
+          "orbit_count": 75
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 32,
+          "orbit_count": 231
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 135,
+          "orbit_count": 699
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          15
+        ],
+        "forced_product_count": 594,
+        "left_monoid_size": 24,
+        "quotient_class_count": 108,
+        "right_monoid_size": 24
+      },
+      "matrix_indices": [
+        12,
+        3,
+        6,
+        5
+      ],
+      "readout_class_count": 108,
+      "row_index": 63
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 4,
+          "orbit_count": 21
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 12,
+          "orbit_count": 67
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 48,
+          "orbit_count": 206
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 160,
+          "orbit_count": 624
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          18
+        ],
+        "forced_product_count": 126,
+        "left_monoid_size": 5,
+        "quotient_class_count": 24,
+        "right_monoid_size": 5
+      },
+      "matrix_indices": [
+        12,
+        3,
+        6,
+        6
+      ],
+      "readout_class_count": 24,
+      "row_index": 64
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 3,
+          "orbit_count": 23
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 9,
+          "orbit_count": 75
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 32,
+          "orbit_count": 231
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 135,
+          "orbit_count": 699
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          18
+        ],
+        "forced_product_count": 378,
+        "left_monoid_size": 15,
+        "quotient_class_count": 72,
+        "right_monoid_size": 15
+      },
+      "matrix_indices": [
+        12,
+        3,
+        6,
+        8
+      ],
+      "readout_class_count": 72,
+      "row_index": 65
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 3,
+          "orbit_count": 23
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 9,
+          "orbit_count": 75
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 32,
+          "orbit_count": 231
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 135,
+          "orbit_count": 699
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          15
+        ],
+        "forced_product_count": 198,
+        "left_monoid_size": 8,
+        "quotient_class_count": 36,
+        "right_monoid_size": 8
+      },
+      "matrix_indices": [
+        12,
+        3,
+        6,
+        40
+      ],
+      "readout_class_count": 36,
+      "row_index": 66
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 3,
+          "orbit_count": 23
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 9,
+          "orbit_count": 75
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 32,
+          "orbit_count": 231
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 135,
+          "orbit_count": 699
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          18
+        ],
+        "forced_product_count": 126,
+        "left_monoid_size": 5,
+        "quotient_class_count": 24,
+        "right_monoid_size": 5
+      },
+      "matrix_indices": [
+        12,
+        3,
+        6,
+        44
+      ],
+      "readout_class_count": 24,
+      "row_index": 67
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 4,
+          "orbit_count": 21
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 12,
+          "orbit_count": 64
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 48,
+          "orbit_count": 189
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 160,
+          "orbit_count": 558
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          12,
+          18
+        ],
+        "forced_product_count": 198,
+        "left_monoid_size": 8,
+        "quotient_class_count": 36,
+        "right_monoid_size": 8
+      },
+      "matrix_indices": [
+        12,
+        3,
+        9,
+        0
+      ],
+      "readout_class_count": 36,
+      "row_index": 68
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 4,
+          "orbit_count": 18
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 12,
+          "orbit_count": 58
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 48,
+          "orbit_count": 179
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 160,
+          "orbit_count": 543
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          15
+        ],
+        "forced_product_count": 198,
+        "left_monoid_size": 8,
+        "quotient_class_count": 36,
+        "right_monoid_size": 8
+      },
+      "matrix_indices": [
+        12,
+        3,
+        9,
+        3
+      ],
+      "readout_class_count": 36,
+      "row_index": 69
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 4,
+          "orbit_count": 18
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 12,
+          "orbit_count": 58
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 48,
+          "orbit_count": 179
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 160,
+          "orbit_count": 543
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          12,
+          18
+        ],
+        "forced_product_count": 198,
+        "left_monoid_size": 8,
+        "quotient_class_count": 36,
+        "right_monoid_size": 8
+      },
+      "matrix_indices": [
+        12,
+        3,
+        9,
+        6
+      ],
+      "readout_class_count": 36,
+      "row_index": 70
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 4,
+          "orbit_count": 21
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 12,
+          "orbit_count": 64
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 48,
+          "orbit_count": 189
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 160,
+          "orbit_count": 558
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          15
+        ],
+        "forced_product_count": 198,
+        "left_monoid_size": 8,
+        "quotient_class_count": 36,
+        "right_monoid_size": 8
+      },
+      "matrix_indices": [
+        12,
+        3,
+        9,
+        9
+      ],
+      "readout_class_count": 36,
+      "row_index": 71
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 3,
+          "orbit_count": 23
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 9,
+          "orbit_count": 75
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 32,
+          "orbit_count": 231
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 135,
+          "orbit_count": 699
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          15
+        ],
+        "forced_product_count": 594,
+        "left_monoid_size": 24,
+        "quotient_class_count": 108,
+        "right_monoid_size": 24
+      },
+      "matrix_indices": [
+        12,
+        4,
+        26,
+        5
+      ],
+      "readout_class_count": 108,
+      "row_index": 72
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 3,
+          "orbit_count": 23
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 9,
+          "orbit_count": 75
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 32,
+          "orbit_count": 231
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 135,
+          "orbit_count": 699
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          30
+        ],
+        "forced_product_count": 234,
+        "left_monoid_size": 9,
+        "quotient_class_count": 48,
+        "right_monoid_size": 9
+      },
+      "matrix_indices": [
+        12,
+        4,
+        26,
+        44
+      ],
+      "readout_class_count": 48,
+      "row_index": 73
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 3,
+          "orbit_count": 23
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 9,
+          "orbit_count": 75
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 32,
+          "orbit_count": 231
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 135,
+          "orbit_count": 699
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          15
+        ],
+        "forced_product_count": 594,
+        "left_monoid_size": 24,
+        "quotient_class_count": 108,
+        "right_monoid_size": 24
+      },
+      "matrix_indices": [
+        12,
+        5,
+        44,
+        5
+      ],
+      "readout_class_count": 108,
+      "row_index": 74
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 3,
+          "orbit_count": 23
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 9,
+          "orbit_count": 75
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 32,
+          "orbit_count": 231
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 135,
+          "orbit_count": 699
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          30
+        ],
+        "forced_product_count": 234,
+        "left_monoid_size": 9,
+        "quotient_class_count": 48,
+        "right_monoid_size": 9
+      },
+      "matrix_indices": [
+        12,
+        5,
+        44,
+        44
+      ],
+      "readout_class_count": 48,
+      "row_index": 75
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 4,
+          "orbit_count": 21
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 12,
+          "orbit_count": 64
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 48,
+          "orbit_count": 189
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 160,
+          "orbit_count": 558
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          15
+        ],
+        "forced_product_count": 99,
+        "left_monoid_size": 4,
+        "quotient_class_count": 18,
+        "right_monoid_size": 4
+      },
+      "matrix_indices": [
+        12,
+        6,
+        0,
+        0
+      ],
+      "readout_class_count": 18,
+      "row_index": 76
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 4,
+          "orbit_count": 18
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 12,
+          "orbit_count": 58
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 48,
+          "orbit_count": 179
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 160,
+          "orbit_count": 543
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          15
+        ],
+        "forced_product_count": 198,
+        "left_monoid_size": 8,
+        "quotient_class_count": 36,
+        "right_monoid_size": 8
+      },
+      "matrix_indices": [
+        12,
+        6,
+        0,
+        3
+      ],
+      "readout_class_count": 36,
+      "row_index": 77
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 4,
+          "orbit_count": 18
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 12,
+          "orbit_count": 58
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 48,
+          "orbit_count": 179
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 160,
+          "orbit_count": 543
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          15
+        ],
+        "forced_product_count": 99,
+        "left_monoid_size": 4,
+        "quotient_class_count": 18,
+        "right_monoid_size": 4
+      },
+      "matrix_indices": [
+        12,
+        6,
+        0,
+        6
+      ],
+      "readout_class_count": 18,
+      "row_index": 78
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 4,
+          "orbit_count": 21
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 12,
+          "orbit_count": 64
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 48,
+          "orbit_count": 189
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 160,
+          "orbit_count": 558
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          15
+        ],
+        "forced_product_count": 198,
+        "left_monoid_size": 8,
+        "quotient_class_count": 36,
+        "right_monoid_size": 8
+      },
+      "matrix_indices": [
+        12,
+        6,
+        0,
+        9
+      ],
+      "readout_class_count": 36,
+      "row_index": 79
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 4,
+          "orbit_count": 21
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 12,
+          "orbit_count": 67
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 48,
+          "orbit_count": 206
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 160,
+          "orbit_count": 624
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          15
+        ],
+        "forced_product_count": 198,
+        "left_monoid_size": 8,
+        "quotient_class_count": 36,
+        "right_monoid_size": 8
+      },
+      "matrix_indices": [
+        12,
+        6,
+        3,
+        3
+      ],
+      "readout_class_count": 36,
+      "row_index": 80
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 3,
+          "orbit_count": 23
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 9,
+          "orbit_count": 75
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 32,
+          "orbit_count": 231
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 135,
+          "orbit_count": 699
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          15
+        ],
+        "forced_product_count": 594,
+        "left_monoid_size": 24,
+        "quotient_class_count": 108,
+        "right_monoid_size": 24
+      },
+      "matrix_indices": [
+        12,
+        6,
+        3,
+        5
+      ],
+      "readout_class_count": 108,
+      "row_index": 81
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 4,
+          "orbit_count": 21
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 12,
+          "orbit_count": 67
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 48,
+          "orbit_count": 206
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 160,
+          "orbit_count": 624
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          12,
+          15
+        ],
+        "forced_product_count": 171,
+        "left_monoid_size": 7,
+        "quotient_class_count": 30,
+        "right_monoid_size": 7
+      },
+      "matrix_indices": [
+        12,
+        6,
+        3,
+        6
+      ],
+      "readout_class_count": 30,
+      "row_index": 82
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 3,
+          "orbit_count": 23
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 9,
+          "orbit_count": 75
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 32,
+          "orbit_count": 231
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 135,
+          "orbit_count": 699
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          12,
+          15
+        ],
+        "forced_product_count": 513,
+        "left_monoid_size": 21,
+        "quotient_class_count": 90,
+        "right_monoid_size": 21
+      },
+      "matrix_indices": [
+        12,
+        6,
+        3,
+        8
+      ],
+      "readout_class_count": 90,
+      "row_index": 83
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 3,
+          "orbit_count": 23
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 9,
+          "orbit_count": 75
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 32,
+          "orbit_count": 231
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 135,
+          "orbit_count": 699
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          15
+        ],
+        "forced_product_count": 198,
+        "left_monoid_size": 8,
+        "quotient_class_count": 36,
+        "right_monoid_size": 8
+      },
+      "matrix_indices": [
+        12,
+        6,
+        3,
+        40
+      ],
+      "readout_class_count": 36,
+      "row_index": 84
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 3,
+          "orbit_count": 23
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 9,
+          "orbit_count": 75
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 32,
+          "orbit_count": 231
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 135,
+          "orbit_count": 699
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          12,
+          15
+        ],
+        "forced_product_count": 171,
+        "left_monoid_size": 7,
+        "quotient_class_count": 30,
+        "right_monoid_size": 7
+      },
+      "matrix_indices": [
+        12,
+        6,
+        3,
+        44
+      ],
+      "readout_class_count": 30,
+      "row_index": 85
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 3,
+          "orbit_count": 23
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 9,
+          "orbit_count": 75
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 32,
+          "orbit_count": 231
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 135,
+          "orbit_count": 699
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          12,
+          15
+        ],
+        "forced_product_count": 513,
+        "left_monoid_size": 21,
+        "quotient_class_count": 90,
+        "right_monoid_size": 21
+      },
+      "matrix_indices": [
+        12,
+        7,
+        22,
+        8
+      ],
+      "readout_class_count": 90,
+      "row_index": 86
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 3,
+          "orbit_count": 23
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 9,
+          "orbit_count": 75
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 32,
+          "orbit_count": 231
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 135,
+          "orbit_count": 699
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          21
+        ],
+        "forced_product_count": 306,
+        "left_monoid_size": 12,
+        "quotient_class_count": 60,
+        "right_monoid_size": 12
+      },
+      "matrix_indices": [
+        12,
+        7,
+        22,
+        40
+      ],
+      "readout_class_count": 60,
+      "row_index": 87
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 3,
+          "orbit_count": 23
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 9,
+          "orbit_count": 75
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 32,
+          "orbit_count": 231
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 135,
+          "orbit_count": 699
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          12,
+          15
+        ],
+        "forced_product_count": 513,
+        "left_monoid_size": 21,
+        "quotient_class_count": 90,
+        "right_monoid_size": 21
+      },
+      "matrix_indices": [
+        12,
+        8,
+        40,
+        8
+      ],
+      "readout_class_count": 90,
+      "row_index": 88
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 3,
+          "orbit_count": 23
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 9,
+          "orbit_count": 75
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 32,
+          "orbit_count": 231
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 135,
+          "orbit_count": 699
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          21
+        ],
+        "forced_product_count": 306,
+        "left_monoid_size": 12,
+        "quotient_class_count": 60,
+        "right_monoid_size": 12
+      },
+      "matrix_indices": [
+        12,
+        8,
+        40,
+        40
+      ],
+      "readout_class_count": 60,
+      "row_index": 89
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 4,
+          "orbit_count": 21
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 12,
+          "orbit_count": 64
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 48,
+          "orbit_count": 189
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 160,
+          "orbit_count": 558
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          18
+        ],
+        "forced_product_count": 126,
+        "left_monoid_size": 5,
+        "quotient_class_count": 24,
+        "right_monoid_size": 5
+      },
+      "matrix_indices": [
+        12,
+        9,
+        6,
+        0
+      ],
+      "readout_class_count": 24,
+      "row_index": 90
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 4,
+          "orbit_count": 18
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 12,
+          "orbit_count": 58
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 48,
+          "orbit_count": 179
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 160,
+          "orbit_count": 543
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          15
+        ],
+        "forced_product_count": 198,
+        "left_monoid_size": 8,
+        "quotient_class_count": 36,
+        "right_monoid_size": 8
+      },
+      "matrix_indices": [
+        12,
+        9,
+        6,
+        3
+      ],
+      "readout_class_count": 36,
+      "row_index": 91
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 4,
+          "orbit_count": 18
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 12,
+          "orbit_count": 58
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 48,
+          "orbit_count": 179
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 160,
+          "orbit_count": 543
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          18
+        ],
+        "forced_product_count": 126,
+        "left_monoid_size": 5,
+        "quotient_class_count": 24,
+        "right_monoid_size": 5
+      },
+      "matrix_indices": [
+        12,
+        9,
+        6,
+        6
+      ],
+      "readout_class_count": 24,
+      "row_index": 92
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 4,
+          "orbit_count": 21
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 12,
+          "orbit_count": 64
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 48,
+          "orbit_count": 189
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 160,
+          "orbit_count": 558
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          15
+        ],
+        "forced_product_count": 198,
+        "left_monoid_size": 8,
+        "quotient_class_count": 36,
+        "right_monoid_size": 8
+      },
+      "matrix_indices": [
+        12,
+        9,
+        6,
+        9
+      ],
+      "readout_class_count": 36,
+      "row_index": 93
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 4,
+          "orbit_count": 21
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 12,
+          "orbit_count": 67
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 48,
+          "orbit_count": 206
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 160,
+          "orbit_count": 624
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          15
+        ],
+        "forced_product_count": 198,
+        "left_monoid_size": 8,
+        "quotient_class_count": 36,
+        "right_monoid_size": 8
+      },
+      "matrix_indices": [
+        12,
+        9,
+        9,
+        3
+      ],
+      "readout_class_count": 36,
+      "row_index": 94
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 3,
+          "orbit_count": 23
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 9,
+          "orbit_count": 75
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 32,
+          "orbit_count": 231
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 135,
+          "orbit_count": 699
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          15
+        ],
+        "forced_product_count": 594,
+        "left_monoid_size": 24,
+        "quotient_class_count": 108,
+        "right_monoid_size": 24
+      },
+      "matrix_indices": [
+        12,
+        9,
+        9,
+        5
+      ],
+      "readout_class_count": 108,
+      "row_index": 95
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 4,
+          "orbit_count": 21
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 12,
+          "orbit_count": 67
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 48,
+          "orbit_count": 206
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 160,
+          "orbit_count": 624
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          12,
+          18
+        ],
+        "forced_product_count": 198,
+        "left_monoid_size": 8,
+        "quotient_class_count": 36,
+        "right_monoid_size": 8
+      },
+      "matrix_indices": [
+        12,
+        9,
+        9,
+        6
+      ],
+      "readout_class_count": 36,
+      "row_index": 96
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 3,
+          "orbit_count": 23
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 9,
+          "orbit_count": 75
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 32,
+          "orbit_count": 231
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 135,
+          "orbit_count": 699
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          12,
+          18
+        ],
+        "forced_product_count": 594,
+        "left_monoid_size": 24,
+        "quotient_class_count": 108,
+        "right_monoid_size": 24
+      },
+      "matrix_indices": [
+        12,
+        9,
+        9,
+        8
+      ],
+      "readout_class_count": 108,
+      "row_index": 97
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 3,
+          "orbit_count": 23
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 9,
+          "orbit_count": 75
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 32,
+          "orbit_count": 231
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 135,
+          "orbit_count": 699
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          15
+        ],
+        "forced_product_count": 198,
+        "left_monoid_size": 8,
+        "quotient_class_count": 36,
+        "right_monoid_size": 8
+      },
+      "matrix_indices": [
+        12,
+        9,
+        9,
+        40
+      ],
+      "readout_class_count": 36,
+      "row_index": 98
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 3,
+          "orbit_count": 23
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 9,
+          "orbit_count": 75
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 32,
+          "orbit_count": 231
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 135,
+          "orbit_count": 699
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          12,
+          18
+        ],
+        "forced_product_count": 198,
+        "left_monoid_size": 8,
+        "quotient_class_count": 36,
+        "right_monoid_size": 8
+      },
+      "matrix_indices": [
+        12,
+        9,
+        9,
+        44
+      ],
+      "readout_class_count": 36,
+      "row_index": 99
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 3,
+          "orbit_count": 23
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 9,
+          "orbit_count": 75
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 32,
+          "orbit_count": 231
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 135,
+          "orbit_count": 699
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          15
+        ],
+        "forced_product_count": 594,
+        "left_monoid_size": 24,
+        "quotient_class_count": 108,
+        "right_monoid_size": 24
+      },
+      "matrix_indices": [
+        12,
+        10,
+        46,
+        5
+      ],
+      "readout_class_count": 108,
+      "row_index": 100
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 3,
+          "orbit_count": 23
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 9,
+          "orbit_count": 75
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 32,
+          "orbit_count": 231
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 135,
+          "orbit_count": 699
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          12,
+          30
+        ],
+        "forced_product_count": 306,
+        "left_monoid_size": 12,
+        "quotient_class_count": 60,
+        "right_monoid_size": 12
+      },
+      "matrix_indices": [
+        12,
+        10,
+        46,
+        44
+      ],
+      "readout_class_count": 60,
+      "row_index": 101
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 3,
+          "orbit_count": 23
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 9,
+          "orbit_count": 75
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 32,
+          "orbit_count": 231
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 135,
+          "orbit_count": 699
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          15
+        ],
+        "forced_product_count": 594,
+        "left_monoid_size": 24,
+        "quotient_class_count": 108,
+        "right_monoid_size": 24
+      },
+      "matrix_indices": [
+        12,
+        11,
+        28,
+        5
+      ],
+      "readout_class_count": 108,
+      "row_index": 102
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 3,
+          "orbit_count": 23
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 9,
+          "orbit_count": 75
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 32,
+          "orbit_count": 231
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 135,
+          "orbit_count": 699
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          12,
+          30
+        ],
+        "forced_product_count": 306,
+        "left_monoid_size": 12,
+        "quotient_class_count": 60,
+        "right_monoid_size": 12
+      },
+      "matrix_indices": [
+        12,
+        11,
+        28,
+        44
+      ],
+      "readout_class_count": 60,
+      "row_index": 103
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 3,
+          "orbit_count": 23
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 9,
+          "orbit_count": 75
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 32,
+          "orbit_count": 231
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 135,
+          "orbit_count": 699
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          15
+        ],
+        "forced_product_count": 594,
+        "left_monoid_size": 24,
+        "quotient_class_count": 108,
+        "right_monoid_size": 24
+      },
+      "matrix_indices": [
+        12,
+        20,
+        2,
+        5
+      ],
+      "readout_class_count": 108,
+      "row_index": 104
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 3,
+          "orbit_count": 23
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 9,
+          "orbit_count": 75
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 32,
+          "orbit_count": 231
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 135,
+          "orbit_count": 699
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          13
+        ],
+        "forced_product_count": 243,
+        "left_monoid_size": 10,
+        "quotient_class_count": 42,
+        "right_monoid_size": 10
+      },
+      "matrix_indices": [
+        12,
+        20,
+        2,
+        44
+      ],
+      "readout_class_count": 42,
+      "row_index": 105
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 3,
+          "orbit_count": 23
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 9,
+          "orbit_count": 75
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 32,
+          "orbit_count": 231
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 135,
+          "orbit_count": 699
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          18
+        ],
+        "forced_product_count": 378,
+        "left_monoid_size": 15,
+        "quotient_class_count": 72,
+        "right_monoid_size": 15
+      },
+      "matrix_indices": [
+        12,
+        22,
+        7,
+        8
+      ],
+      "readout_class_count": 72,
+      "row_index": 106
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 3,
+          "orbit_count": 23
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 9,
+          "orbit_count": 75
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 32,
+          "orbit_count": 231
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 135,
+          "orbit_count": 699
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          13
+        ],
+        "forced_product_count": 486,
+        "left_monoid_size": 20,
+        "quotient_class_count": 84,
+        "right_monoid_size": 20
+      },
+      "matrix_indices": [
+        12,
+        22,
+        7,
+        40
+      ],
+      "readout_class_count": 84,
+      "row_index": 107
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 3,
+          "orbit_count": 23
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 9,
+          "orbit_count": 75
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 32,
+          "orbit_count": 231
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 135,
+          "orbit_count": 699
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          15
+        ],
+        "forced_product_count": 594,
+        "left_monoid_size": 24,
+        "quotient_class_count": 108,
+        "right_monoid_size": 24
+      },
+      "matrix_indices": [
+        12,
+        26,
+        4,
+        5
+      ],
+      "readout_class_count": 108,
+      "row_index": 108
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 3,
+          "orbit_count": 23
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 9,
+          "orbit_count": 75
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 32,
+          "orbit_count": 231
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 135,
+          "orbit_count": 699
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          12,
+          13
+        ],
+        "forced_product_count": 459,
+        "left_monoid_size": 19,
+        "quotient_class_count": 78,
+        "right_monoid_size": 19
+      },
+      "matrix_indices": [
+        12,
+        26,
+        4,
+        44
+      ],
+      "readout_class_count": 78,
+      "row_index": 109
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 3,
+          "orbit_count": 23
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 9,
+          "orbit_count": 75
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 32,
+          "orbit_count": 231
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 135,
+          "orbit_count": 699
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          12,
+          18
+        ],
+        "forced_product_count": 594,
+        "left_monoid_size": 24,
+        "quotient_class_count": 108,
+        "right_monoid_size": 24
+      },
+      "matrix_indices": [
+        12,
+        28,
+        11,
+        8
+      ],
+      "readout_class_count": 108,
+      "row_index": 110
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 3,
+          "orbit_count": 23
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 9,
+          "orbit_count": 75
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 32,
+          "orbit_count": 231
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 135,
+          "orbit_count": 699
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          13
+        ],
+        "forced_product_count": 486,
+        "left_monoid_size": 20,
+        "quotient_class_count": 84,
+        "right_monoid_size": 20
+      },
+      "matrix_indices": [
+        12,
+        28,
+        11,
+        40
+      ],
+      "readout_class_count": 84,
+      "row_index": 111
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 3,
+          "orbit_count": 23
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 9,
+          "orbit_count": 75
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 32,
+          "orbit_count": 231
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 135,
+          "orbit_count": 699
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          15
+        ],
+        "forced_product_count": 594,
+        "left_monoid_size": 24,
+        "quotient_class_count": 108,
+        "right_monoid_size": 24
+      },
+      "matrix_indices": [
+        12,
+        38,
+        1,
+        5
+      ],
+      "readout_class_count": 108,
+      "row_index": 112
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 3,
+          "orbit_count": 23
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 9,
+          "orbit_count": 75
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 32,
+          "orbit_count": 231
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 135,
+          "orbit_count": 699
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          13
+        ],
+        "forced_product_count": 243,
+        "left_monoid_size": 10,
+        "quotient_class_count": 42,
+        "right_monoid_size": 10
+      },
+      "matrix_indices": [
+        12,
+        38,
+        1,
+        44
+      ],
+      "readout_class_count": 42,
+      "row_index": 113
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 3,
+          "orbit_count": 23
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 9,
+          "orbit_count": 75
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 32,
+          "orbit_count": 231
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 135,
+          "orbit_count": 699
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          18
+        ],
+        "forced_product_count": 378,
+        "left_monoid_size": 15,
+        "quotient_class_count": 72,
+        "right_monoid_size": 15
+      },
+      "matrix_indices": [
+        12,
+        40,
+        8,
+        8
+      ],
+      "readout_class_count": 72,
+      "row_index": 114
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 3,
+          "orbit_count": 23
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 9,
+          "orbit_count": 75
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 32,
+          "orbit_count": 231
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 135,
+          "orbit_count": 699
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          13
+        ],
+        "forced_product_count": 486,
+        "left_monoid_size": 20,
+        "quotient_class_count": 84,
+        "right_monoid_size": 20
+      },
+      "matrix_indices": [
+        12,
+        40,
+        8,
+        40
+      ],
+      "readout_class_count": 84,
+      "row_index": 115
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 3,
+          "orbit_count": 23
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 9,
+          "orbit_count": 75
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 32,
+          "orbit_count": 231
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 135,
+          "orbit_count": 699
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          15
+        ],
+        "forced_product_count": 594,
+        "left_monoid_size": 24,
+        "quotient_class_count": 108,
+        "right_monoid_size": 24
+      },
+      "matrix_indices": [
+        12,
+        44,
+        5,
+        5
+      ],
+      "readout_class_count": 108,
+      "row_index": 116
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 3,
+          "orbit_count": 23
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 9,
+          "orbit_count": 75
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 32,
+          "orbit_count": 231
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 135,
+          "orbit_count": 699
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          12,
+          13
+        ],
+        "forced_product_count": 459,
+        "left_monoid_size": 19,
+        "quotient_class_count": 78,
+        "right_monoid_size": 19
+      },
+      "matrix_indices": [
+        12,
+        44,
+        5,
+        44
+      ],
+      "readout_class_count": 78,
+      "row_index": 117
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 3,
+          "orbit_count": 23
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 9,
+          "orbit_count": 75
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 32,
+          "orbit_count": 231
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 135,
+          "orbit_count": 699
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          12,
+          18
+        ],
+        "forced_product_count": 594,
+        "left_monoid_size": 24,
+        "quotient_class_count": 108,
+        "right_monoid_size": 24
+      },
+      "matrix_indices": [
+        12,
+        46,
+        10,
+        8
+      ],
+      "readout_class_count": 108,
+      "row_index": 118
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 3,
+          "orbit_count": 23
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 9,
+          "orbit_count": 75
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 32,
+          "orbit_count": 231
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 135,
+          "orbit_count": 699
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          13
+        ],
+        "forced_product_count": 486,
+        "left_monoid_size": 20,
+        "quotient_class_count": 84,
+        "right_monoid_size": 20
+      },
+      "matrix_indices": [
+        12,
+        46,
+        10,
+        40
+      ],
+      "readout_class_count": 84,
+      "row_index": 119
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 3,
+          "orbit_count": 23
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 9,
+          "orbit_count": 75
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 32,
+          "orbit_count": 231
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 135,
+          "orbit_count": 699
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          15
+        ],
+        "forced_product_count": 198,
+        "left_monoid_size": 8,
+        "quotient_class_count": 36,
+        "right_monoid_size": 8
+      },
+      "matrix_indices": [
+        40,
+        0,
+        0,
+        12
+      ],
+      "readout_class_count": 36,
+      "row_index": 120
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 3,
+          "orbit_count": 23
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 9,
+          "orbit_count": 75
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 32,
+          "orbit_count": 231
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 135,
+          "orbit_count": 699
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          15
+        ],
+        "forced_product_count": 198,
+        "left_monoid_size": 8,
+        "quotient_class_count": 36,
+        "right_monoid_size": 8
+      },
+      "matrix_indices": [
+        40,
+        3,
+        6,
+        12
+      ],
+      "readout_class_count": 36,
+      "row_index": 121
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 3,
+          "orbit_count": 23
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 9,
+          "orbit_count": 75
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 32,
+          "orbit_count": 231
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 135,
+          "orbit_count": 699
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          15
+        ],
+        "forced_product_count": 198,
+        "left_monoid_size": 8,
+        "quotient_class_count": 36,
+        "right_monoid_size": 8
+      },
+      "matrix_indices": [
+        40,
+        6,
+        3,
+        12
+      ],
+      "readout_class_count": 36,
+      "row_index": 122
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 3,
+          "orbit_count": 23
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 9,
+          "orbit_count": 75
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 32,
+          "orbit_count": 231
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 135,
+          "orbit_count": 699
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          13
+        ],
+        "forced_product_count": 486,
+        "left_monoid_size": 20,
+        "quotient_class_count": 84,
+        "right_monoid_size": 20
+      },
+      "matrix_indices": [
+        40,
+        7,
+        22,
+        12
+      ],
+      "readout_class_count": 84,
+      "row_index": 123
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 3,
+          "orbit_count": 23
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 9,
+          "orbit_count": 75
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 32,
+          "orbit_count": 231
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 135,
+          "orbit_count": 699
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          13
+        ],
+        "forced_product_count": 486,
+        "left_monoid_size": 20,
+        "quotient_class_count": 84,
+        "right_monoid_size": 20
+      },
+      "matrix_indices": [
+        40,
+        8,
+        40,
+        12
+      ],
+      "readout_class_count": 84,
+      "row_index": 124
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 3,
+          "orbit_count": 23
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 9,
+          "orbit_count": 75
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 32,
+          "orbit_count": 231
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 135,
+          "orbit_count": 699
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          15
+        ],
+        "forced_product_count": 198,
+        "left_monoid_size": 8,
+        "quotient_class_count": 36,
+        "right_monoid_size": 8
+      },
+      "matrix_indices": [
+        40,
+        9,
+        9,
+        12
+      ],
+      "readout_class_count": 36,
+      "row_index": 125
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 3,
+          "orbit_count": 23
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 9,
+          "orbit_count": 75
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 32,
+          "orbit_count": 231
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 135,
+          "orbit_count": 699
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          13
+        ],
+        "forced_product_count": 486,
+        "left_monoid_size": 20,
+        "quotient_class_count": 84,
+        "right_monoid_size": 20
+      },
+      "matrix_indices": [
+        40,
+        10,
+        46,
+        12
+      ],
+      "readout_class_count": 84,
+      "row_index": 126
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 3,
+          "orbit_count": 23
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 9,
+          "orbit_count": 75
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 32,
+          "orbit_count": 231
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 135,
+          "orbit_count": 699
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          13
+        ],
+        "forced_product_count": 486,
+        "left_monoid_size": 20,
+        "quotient_class_count": 84,
+        "right_monoid_size": 20
+      },
+      "matrix_indices": [
+        40,
+        11,
+        28,
+        12
+      ],
+      "readout_class_count": 84,
+      "row_index": 127
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 3,
+          "orbit_count": 23
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 9,
+          "orbit_count": 75
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 32,
+          "orbit_count": 231
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 135,
+          "orbit_count": 699
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          21
+        ],
+        "forced_product_count": 306,
+        "left_monoid_size": 12,
+        "quotient_class_count": 60,
+        "right_monoid_size": 12
+      },
+      "matrix_indices": [
+        40,
+        20,
+        2,
+        12
+      ],
+      "readout_class_count": 60,
+      "row_index": 128
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 3,
+          "orbit_count": 23
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 9,
+          "orbit_count": 75
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 32,
+          "orbit_count": 231
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 135,
+          "orbit_count": 699
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          21
+        ],
+        "forced_product_count": 306,
+        "left_monoid_size": 12,
+        "quotient_class_count": 60,
+        "right_monoid_size": 12
+      },
+      "matrix_indices": [
+        40,
+        22,
+        7,
+        12
+      ],
+      "readout_class_count": 60,
+      "row_index": 129
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 3,
+          "orbit_count": 23
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 9,
+          "orbit_count": 75
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 32,
+          "orbit_count": 231
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 135,
+          "orbit_count": 699
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          21
+        ],
+        "forced_product_count": 306,
+        "left_monoid_size": 12,
+        "quotient_class_count": 60,
+        "right_monoid_size": 12
+      },
+      "matrix_indices": [
+        40,
+        38,
+        1,
+        12
+      ],
+      "readout_class_count": 60,
+      "row_index": 130
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 3,
+          "orbit_count": 23
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 9,
+          "orbit_count": 75
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 32,
+          "orbit_count": 231
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 135,
+          "orbit_count": 699
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          21
+        ],
+        "forced_product_count": 306,
+        "left_monoid_size": 12,
+        "quotient_class_count": 60,
+        "right_monoid_size": 12
+      },
+      "matrix_indices": [
+        40,
+        40,
+        8,
+        12
+      ],
+      "readout_class_count": 60,
+      "row_index": 131
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 3,
+          "orbit_count": 23
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 9,
+          "orbit_count": 75
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 32,
+          "orbit_count": 231
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 135,
+          "orbit_count": 699
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          15
+        ],
+        "forced_product_count": 99,
+        "left_monoid_size": 4,
+        "quotient_class_count": 18,
+        "right_monoid_size": 4
+      },
+      "matrix_indices": [
+        44,
+        0,
+        0,
+        12
+      ],
+      "readout_class_count": 18,
+      "row_index": 132
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 3,
+          "orbit_count": 23
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 9,
+          "orbit_count": 75
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 32,
+          "orbit_count": 231
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 135,
+          "orbit_count": 699
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          13
+        ],
+        "forced_product_count": 243,
+        "left_monoid_size": 10,
+        "quotient_class_count": 42,
+        "right_monoid_size": 10
+      },
+      "matrix_indices": [
+        44,
+        1,
+        38,
+        12
+      ],
+      "readout_class_count": 42,
+      "row_index": 133
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 3,
+          "orbit_count": 23
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 9,
+          "orbit_count": 75
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 32,
+          "orbit_count": 231
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 135,
+          "orbit_count": 699
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          13
+        ],
+        "forced_product_count": 243,
+        "left_monoid_size": 10,
+        "quotient_class_count": 42,
+        "right_monoid_size": 10
+      },
+      "matrix_indices": [
+        44,
+        2,
+        20,
+        12
+      ],
+      "readout_class_count": 42,
+      "row_index": 134
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 3,
+          "orbit_count": 23
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 9,
+          "orbit_count": 75
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 32,
+          "orbit_count": 231
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 135,
+          "orbit_count": 699
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          12,
+          15
+        ],
+        "forced_product_count": 171,
+        "left_monoid_size": 7,
+        "quotient_class_count": 30,
+        "right_monoid_size": 7
+      },
+      "matrix_indices": [
+        44,
+        3,
+        6,
+        12
+      ],
+      "readout_class_count": 30,
+      "row_index": 135
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 3,
+          "orbit_count": 23
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 9,
+          "orbit_count": 75
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 32,
+          "orbit_count": 231
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 135,
+          "orbit_count": 699
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          12,
+          13
+        ],
+        "forced_product_count": 459,
+        "left_monoid_size": 19,
+        "quotient_class_count": 78,
+        "right_monoid_size": 19
+      },
+      "matrix_indices": [
+        44,
+        4,
+        26,
+        12
+      ],
+      "readout_class_count": 78,
+      "row_index": 136
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 3,
+          "orbit_count": 23
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 9,
+          "orbit_count": 75
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 32,
+          "orbit_count": 231
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 135,
+          "orbit_count": 699
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          12,
+          13
+        ],
+        "forced_product_count": 459,
+        "left_monoid_size": 19,
+        "quotient_class_count": 78,
+        "right_monoid_size": 19
+      },
+      "matrix_indices": [
+        44,
+        5,
+        44,
+        12
+      ],
+      "readout_class_count": 78,
+      "row_index": 137
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 3,
+          "orbit_count": 23
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 9,
+          "orbit_count": 75
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 32,
+          "orbit_count": 231
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 135,
+          "orbit_count": 699
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          18
+        ],
+        "forced_product_count": 126,
+        "left_monoid_size": 5,
+        "quotient_class_count": 24,
+        "right_monoid_size": 5
+      },
+      "matrix_indices": [
+        44,
+        6,
+        3,
+        12
+      ],
+      "readout_class_count": 24,
+      "row_index": 138
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 3,
+          "orbit_count": 23
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 9,
+          "orbit_count": 75
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 32,
+          "orbit_count": 231
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 135,
+          "orbit_count": 699
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          12,
+          18
+        ],
+        "forced_product_count": 198,
+        "left_monoid_size": 8,
+        "quotient_class_count": 36,
+        "right_monoid_size": 8
+      },
+      "matrix_indices": [
+        44,
+        9,
+        9,
+        12
+      ],
+      "readout_class_count": 36,
+      "row_index": 139
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 3,
+          "orbit_count": 23
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 9,
+          "orbit_count": 75
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 32,
+          "orbit_count": 231
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 135,
+          "orbit_count": 699
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          30
+        ],
+        "forced_product_count": 234,
+        "left_monoid_size": 9,
+        "quotient_class_count": 48,
+        "right_monoid_size": 9
+      },
+      "matrix_indices": [
+        44,
+        26,
+        4,
+        12
+      ],
+      "readout_class_count": 48,
+      "row_index": 140
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 3,
+          "orbit_count": 23
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 9,
+          "orbit_count": 75
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 32,
+          "orbit_count": 231
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 135,
+          "orbit_count": 699
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          12,
+          30
+        ],
+        "forced_product_count": 306,
+        "left_monoid_size": 12,
+        "quotient_class_count": 60,
+        "right_monoid_size": 12
+      },
+      "matrix_indices": [
+        44,
+        28,
+        11,
+        12
+      ],
+      "readout_class_count": 60,
+      "row_index": 141
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 3,
+          "orbit_count": 23
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 9,
+          "orbit_count": 75
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 32,
+          "orbit_count": 231
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 135,
+          "orbit_count": 699
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          30
+        ],
+        "forced_product_count": 234,
+        "left_monoid_size": 9,
+        "quotient_class_count": 48,
+        "right_monoid_size": 9
+      },
+      "matrix_indices": [
+        44,
+        44,
+        5,
+        12
+      ],
+      "readout_class_count": 48,
+      "row_index": 142
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 1,
+          "collision": null,
+          "max_orbit_size": 1,
+          "orbit_count": 6
+        },
+        {
+          "arity": 2,
+          "collision": null,
+          "max_orbit_size": 3,
+          "orbit_count": 23
+        },
+        {
+          "arity": 3,
+          "collision": null,
+          "max_orbit_size": 9,
+          "orbit_count": 75
+        },
+        {
+          "arity": 4,
+          "collision": null,
+          "max_orbit_size": 32,
+          "orbit_count": 231
+        },
+        {
+          "arity": 5,
+          "collision": null,
+          "max_orbit_size": 135,
+          "orbit_count": 699
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          12,
+          30
+        ],
+        "forced_product_count": 306,
+        "left_monoid_size": 12,
+        "quotient_class_count": 60,
+        "right_monoid_size": 12
+      },
+      "matrix_indices": [
+        44,
+        46,
+        10,
+        12
+      ],
+      "readout_class_count": 60,
+      "row_index": 143
+    }
+  ],
+  "all_claimed_checks_passed": true,
+  "degenerate_noninvolutive_rows": 144,
+  "failure_count": 0,
+  "failures": [],
+  "family": "linear_f3_skew_over_flip",
+  "representative_context_type_count": 16,
+  "representative_max_arity": 6,
+  "representative_summaries": [
+    {
+      "arity_checks": [
+        {
+          "arity": 6,
+          "collision": null,
+          "max_orbit_size": 480,
+          "orbit_count": 1657
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          15
+        ],
+        "forced_product_count": 99,
+        "left_monoid_size": 4,
+        "quotient_class_count": 18,
+        "right_monoid_size": 4
+      },
+      "matrix_indices": [
+        0,
+        0,
+        6,
+        12
+      ],
+      "readout_class_count": 18,
+      "row_index": 0
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 6,
+          "collision": null,
+          "max_orbit_size": 480,
+          "orbit_count": 1657
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          18
+        ],
+        "forced_product_count": 126,
+        "left_monoid_size": 5,
+        "quotient_class_count": 24,
+        "right_monoid_size": 5
+      },
+      "matrix_indices": [
+        0,
+        6,
+        9,
+        12
+      ],
+      "readout_class_count": 24,
+      "row_index": 2
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 6,
+          "collision": null,
+          "max_orbit_size": 480,
+          "orbit_count": 1657
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          12,
+          15
+        ],
+        "forced_product_count": 171,
+        "left_monoid_size": 7,
+        "quotient_class_count": 30,
+        "right_monoid_size": 7
+      },
+      "matrix_indices": [
+        0,
+        3,
+        0,
+        12
+      ],
+      "readout_class_count": 30,
+      "row_index": 1
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 6,
+          "collision": null,
+          "max_orbit_size": 480,
+          "orbit_count": 1657
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          12,
+          18
+        ],
+        "forced_product_count": 198,
+        "left_monoid_size": 8,
+        "quotient_class_count": 36,
+        "right_monoid_size": 8
+      },
+      "matrix_indices": [
+        0,
+        9,
+        3,
+        12
+      ],
+      "readout_class_count": 36,
+      "row_index": 3
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 6,
+          "collision": null,
+          "max_orbit_size": 480,
+          "orbit_count": 1879
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          15
+        ],
+        "forced_product_count": 198,
+        "left_monoid_size": 8,
+        "quotient_class_count": 36,
+        "right_monoid_size": 8
+      },
+      "matrix_indices": [
+        3,
+        0,
+        0,
+        12
+      ],
+      "readout_class_count": 36,
+      "row_index": 4
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 6,
+          "collision": null,
+          "max_orbit_size": 480,
+          "orbit_count": 2103
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          30
+        ],
+        "forced_product_count": 234,
+        "left_monoid_size": 9,
+        "quotient_class_count": 48,
+        "right_monoid_size": 9
+      },
+      "matrix_indices": [
+        12,
+        4,
+        26,
+        44
+      ],
+      "readout_class_count": 48,
+      "row_index": 73
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 6,
+          "collision": null,
+          "max_orbit_size": 480,
+          "orbit_count": 2103
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          13
+        ],
+        "forced_product_count": 243,
+        "left_monoid_size": 10,
+        "quotient_class_count": 42,
+        "right_monoid_size": 10
+      },
+      "matrix_indices": [
+        12,
+        20,
+        2,
+        44
+      ],
+      "readout_class_count": 42,
+      "row_index": 105
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 6,
+          "collision": null,
+          "max_orbit_size": 480,
+          "orbit_count": 2103
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          15
+        ],
+        "forced_product_count": 297,
+        "left_monoid_size": 12,
+        "quotient_class_count": 54,
+        "right_monoid_size": 12
+      },
+      "matrix_indices": [
+        8,
+        0,
+        0,
+        12
+      ],
+      "readout_class_count": 54,
+      "row_index": 32
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 6,
+          "collision": null,
+          "max_orbit_size": 480,
+          "orbit_count": 2103
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          12,
+          30
+        ],
+        "forced_product_count": 306,
+        "left_monoid_size": 12,
+        "quotient_class_count": 60,
+        "right_monoid_size": 12
+      },
+      "matrix_indices": [
+        12,
+        10,
+        46,
+        44
+      ],
+      "readout_class_count": 60,
+      "row_index": 101
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 6,
+          "collision": null,
+          "max_orbit_size": 480,
+          "orbit_count": 2103
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          21
+        ],
+        "forced_product_count": 306,
+        "left_monoid_size": 12,
+        "quotient_class_count": 60,
+        "right_monoid_size": 12
+      },
+      "matrix_indices": [
+        12,
+        1,
+        38,
+        40
+      ],
+      "readout_class_count": 60,
+      "row_index": 59
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 6,
+          "collision": null,
+          "max_orbit_size": 480,
+          "orbit_count": 2103
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          18
+        ],
+        "forced_product_count": 378,
+        "left_monoid_size": 15,
+        "quotient_class_count": 72,
+        "right_monoid_size": 15
+      },
+      "matrix_indices": [
+        8,
+        6,
+        3,
+        12
+      ],
+      "readout_class_count": 72,
+      "row_index": 34
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 6,
+          "collision": null,
+          "max_orbit_size": 480,
+          "orbit_count": 2103
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          12,
+          13
+        ],
+        "forced_product_count": 459,
+        "left_monoid_size": 19,
+        "quotient_class_count": 78,
+        "right_monoid_size": 19
+      },
+      "matrix_indices": [
+        12,
+        26,
+        4,
+        44
+      ],
+      "readout_class_count": 78,
+      "row_index": 109
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 6,
+          "collision": null,
+          "max_orbit_size": 480,
+          "orbit_count": 2103
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          13
+        ],
+        "forced_product_count": 486,
+        "left_monoid_size": 20,
+        "quotient_class_count": 84,
+        "right_monoid_size": 20
+      },
+      "matrix_indices": [
+        12,
+        22,
+        7,
+        40
+      ],
+      "readout_class_count": 84,
+      "row_index": 107
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 6,
+          "collision": null,
+          "max_orbit_size": 480,
+          "orbit_count": 2103
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          12,
+          15
+        ],
+        "forced_product_count": 513,
+        "left_monoid_size": 21,
+        "quotient_class_count": 90,
+        "right_monoid_size": 21
+      },
+      "matrix_indices": [
+        8,
+        3,
+        6,
+        12
+      ],
+      "readout_class_count": 90,
+      "row_index": 33
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 6,
+          "collision": null,
+          "max_orbit_size": 480,
+          "orbit_count": 2103
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          12,
+          18
+        ],
+        "forced_product_count": 594,
+        "left_monoid_size": 24,
+        "quotient_class_count": 108,
+        "right_monoid_size": 24
+      },
+      "matrix_indices": [
+        8,
+        9,
+        9,
+        12
+      ],
+      "readout_class_count": 108,
+      "row_index": 37
+    },
+    {
+      "arity_checks": [
+        {
+          "arity": 6,
+          "collision": null,
+          "max_orbit_size": 480,
+          "orbit_count": 2103
+        }
+      ],
+      "context_key": {
+        "domain_sizes": [
+          3,
+          4,
+          15
+        ],
+        "forced_product_count": 594,
+        "left_monoid_size": 24,
+        "quotient_class_count": 108,
+        "right_monoid_size": 24
+      },
+      "matrix_indices": [
+        5,
+        0,
+        0,
+        12
+      ],
+      "readout_class_count": 108,
+      "row_index": 12
+    }
+  ]
+}

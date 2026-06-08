@@ -2410,6 +2410,171 @@ The current negative target is a fixed finite `X` with no such `E_p`, or with
 such `E_p` but an all-arity orbit-separation failure that can be converted into
 actual Brunnian detector-kernel witnesses.
 
+The next response is recorded in
+`proofs/2026_06_07_theoretical_active_lift_forced_pair_criterion_review.md`.
+It weakens the lift-fibre condition to the actual condition needed along
+real braid trajectories.  The equality condition
+
+```text
+g E_q g^(-1)=E_{lambda_p(q)}
+```
+
+controls non-fillable and virtual products that do not appear in actual
+adjacent contextual braid moves.  The correct finite datum is a nonempty
+active set
+
+```text
+C_p subseteq Sym(P)
+```
+
+for each contextual class `p`, satisfying:
+
+```text
+Forced extension:
+g(q)=lambda_p(q) for every g in C_p and q in D_p.
+
+Forced-pair closure only:
+if q in D_p, r=lambda_p(q), g in C_p, and h in C_q,
+then g h g^(-1) in C_r.
+```
+
+No condition is imposed for `q notin D_p`.  These conditions make the lift
+relation `Pi_n subseteq (P x Sym(P))^n x X^n` braid-equivariant for every `n`.
+If the contextual readout `J_n` is braid-orbit-injective for every `n`, then
+`P x Sym(P)` dominates `X`.
+
+The current positive theorem is therefore:
+
+```text
+For every finite bijective YBE solution X, construct nonempty active lift sets
+C_p satisfying forced extension and forced-pair closure, and prove all-arity
+orbit-injectivity of J_n.
+```
+
+The current negative target is a fixed finite `X` with no such `C_p`, or with
+such `C_p` but an orbit-separation failure that yields actual Brunnian
+detector-kernel witnesses.
+
+The next local audit is recorded in
+`proofs/2026_06_07_theoretical_linear_f3_skew_flip_orbit_review.md`.
+It checks orbit separation for the same six-point linear skew-over-flip family
+where completion was verified.  The generated audit is:
+
+```text
+tools/run_linear_f3_skew_flip_orbit_audit.py
+proofs/linear_f3_skew_flip_orbit_audit.json
+proofs/linear_f3_skew_flip_orbit_audit.md
+```
+
+It verifies:
+
+```text
+degenerate non-involutive rows: 144
+all rows checked through arity: 5
+representative contextual types checked through arity: 6
+representative contextual type count: 16
+orbit-injectivity failure count: 0
+```
+
+This is finite evidence only.  It supports the orbit-separation side of the
+positive route but does not prove all-arity orbit-injectivity.
+
+The next response is recorded in
+`proofs/2026_06_07_theoretical_active_lift_greatest_fixed_point_review.md`.
+It makes active-lift existence canonical.  For each `p`, let
+
+```text
+V_p={g in Sym(P): g extends lambda_p}.
+```
+
+Define the monotone pruning operator
+
+```text
+T(C)_p =
+  { g in C_p :
+      for every q in D_p and every h in C_q,
+      g h g^(-1) in C_{lambda_p(q)}
+  }.
+```
+
+Starting from `C^(0)=V`, iterate `C^(k+1)=T(C^(k))`.  Since everything is
+finite, this stabilizes to a greatest fixed point `C^(infty)`.  There exists
+an active lift system iff
+
+```text
+C^(infty)_p != empty
+```
+
+for every `p`.
+
+The current positive theorem is therefore reduced to:
+
+```text
+prove C^(infty)_p is nonempty for every finite bijective YBE solution X and
+every p in P_X;
+prove all-arity orbit-injectivity of J_n.
+```
+
+A finite negative search can now target the canonical obstruction:
+
+```text
+find X and p with C^(infty)_p empty,
+```
+
+or find an orbit-injectivity failure after the fixed point survives.
+
+The next response is recorded in
+`proofs/2026_06_07_theoretical_realizable_language_partial_automorphism_review.md`.
+It tries to use finite partial-automorphism extension.  The naive finite
+structure is
+
+```text
+A_X = P union {ell_p:p in P},
+G(ell_p,q,r) iff q in D_p and lambda_p(q)=r.
+```
+
+Define
+
+```text
+theta_p(q)=lambda_p(q),
+theta_p(ell_q)=ell_{lambda_p(q)}.
+```
+
+Preservation of `G` asks for
+
+```text
+lambda_p(lambda_q(a)) =
+lambda_{lambda_p(q)}(lambda_p(a)).
+```
+
+YBE proves this identity only on jointly realizable contextual triples.  The
+full relation `G` includes virtual triples that are pairwise forced but not
+jointly fillable in an actual `X`-word.  Therefore `theta_p` is not proved to
+be a partial automorphism of the naive finite graph.
+
+The correct object is the realizable contextual language
+
+```text
+W_X = union_n J_n(X^n) subseteq P^*.
+```
+
+This language is regular because realization is witnessed by finite monoid
+contexts:
+
+```text
+A_{i+1}=A_i m_{x_i},
+B_i=B_{i+1} r_{x_{i+1}},
+p_i=[A_i,x_i,B_i].
+```
+
+On `W_X`, local identities are actual YBE diagrams.  The current positive
+target is to compress `W_X` into a finite relational structure whose partial
+automorphisms encode all braid-relevant contexts and yield finite active
+lifts.  The current negative target is an unbounded realizability obstruction:
+a virtual contextual pattern locally compatible at every bounded level but not
+globally realizable, eventually producing actual Brunnian detector-kernel
+witnesses.
+
 ## Review rubric
 
 A future response should be classified as follows.
