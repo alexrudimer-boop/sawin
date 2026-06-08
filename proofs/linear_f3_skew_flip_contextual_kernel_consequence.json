@@ -1,0 +1,23 @@
+{
+  "all_claimed_checks_passed": true,
+  "completion_audit_passed": true,
+  "contextual_orbit_injectivity_all_rows_through_arity": 5,
+  "degenerate_noninvolutive_rows": 144,
+  "derived_contextual_kernel_x_motion_excluded_through_arity": 5,
+  "explicit_pure_kernel_three_strand_checked_rows": 4,
+  "explicit_pure_kernel_three_strand_nontrivial_count": 0,
+  "explicit_pure_kernel_two_strand_nontrivial_count": 0,
+  "family": "linear_f3_skew_over_flip_degenerate_noninvolutive",
+  "monolith_audit_passed": true,
+  "orbit_audit_passed": true,
+  "pure_kernel_audit_passed": true,
+  "source_artifacts": [
+    "proofs\\linear_f3_skew_flip_completion_audit.json",
+    "proofs\\linear_f3_skew_flip_orbit_audit.json",
+    "proofs\\linear_f3_skew_flip_monolith_audit.json",
+    "proofs\\linear_f3_skew_flip_pure_kernel_monodromy_audit.json"
+  ],
+  "subdirect_orbit_injectivity_failures": [],
+  "subdirect_row_count": 64,
+  "subdirect_rows_missing_from_orbit_audit": []
+}

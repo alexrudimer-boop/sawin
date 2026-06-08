@@ -2647,6 +2647,18 @@ has no detector-kernel X-motion.  This does not prove domination, but it shows
 that the earlier formal monolith `J`-collisions are not automatically realized
 by small-arity pure detector-kernel monodromy in this family.
 
+The artifact
+`proofs/linear_f3_skew_flip_contextual_kernel_consequence.md` connects this
+with the older orbit-injectivity audit.  Since the six-point linear F3 orbit
+audit checks contextual readout orbit-injectivity through arity `5` for all
+144 degenerate non-involutive rows, and since the identity-extension
+contextual rack completion is verified in the same family, the contextual
+rack kernel acts trivially on `X^n` for `n<=5`.  Therefore the pure
+detector-kernel monodromy obstruction is excluded through arity `5` for all
+64 subdirectly irreducible proper-monolith rows.  This is finite evidence
+only; the remaining theorem target is still all-arity contextual pure-loop
+faithfulness or a replacement finite detector.
+
 The next GPT-5.5 Pro response is reviewed in
 `proofs/2026_06_08_theoretical_active_lift_pure_loop_blocker_review.md`.  It
 does not prove A or B.  It restates the contextual active-lift obstruction

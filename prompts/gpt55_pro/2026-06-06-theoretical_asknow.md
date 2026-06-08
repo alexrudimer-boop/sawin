@@ -1355,6 +1355,19 @@ realized by small-arity pure detector-kernel monodromy in this six-point
 family.  This is not a proof of A: larger arities and larger contextual
 quotients remain unchecked.  It is also not B: it found no actual witness.
 
+The repo also includes a derived contextual-kernel verifier:
+
+  tools/run_linear_f3_skew_flip_contextual_kernel_consequence.py
+  proofs/linear_f3_skew_flip_contextual_kernel_consequence.json
+  proofs/linear_f3_skew_flip_contextual_kernel_consequence.md
+
+It cross-checks the contextual completion, orbit-injectivity, monolith, and
+pure-kernel artifacts.  Since the orbit audit proves contextual readout
+orbit-injectivity through arity 5 for all 144 rows, the contextual rack kernel
+acts trivially on X^n for n<=5.  Consequently, for all 64 subdirect rows, the
+pure detector-kernel monodromy obstruction is excluded through arity 5, not
+merely for the explicitly closed n=2 and minimal n=3 cases.
+
 The current most concrete A-side target is now:
 
   prove, for a smallest nonsimple counterexample and
