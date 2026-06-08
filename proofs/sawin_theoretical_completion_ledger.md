@@ -2914,6 +2914,47 @@ composition convention is important: the nearest visible label acts first.
 This theorem packages the passive, twisted-passive, active-automorphic, and
 signed-affine six-point `F_3` gauges into one all-arity positive mechanism.
 
+The more general finite-state decoder abstraction is recorded in
+`proofs/finite_state_dominated_decoder_theorem.md`.  Let `pi:X->Z` be a
+braided quotient and let `U` be another finite bijective YBE solution, with
+both `Z` and `U` already finite-rack dominated.  If there are braid-equivariant
+maps
+
+```text
+Gamma_n:X^n -> U^n
+```
+
+such that
+
+```text
+D_n(x)=(pi^n(x), Gamma_n(x))
+```
+
+is injective for every `n`, then the product of rack detectors for `Z` and
+`U` dominates `X`.  A finite local certificate for `Gamma_n` consists of
+finite context monoids `L,R`, updates `lambda:X->L`, `rho:X->R`, and a readout
+`gamma:L x X x R -> U` satisfying the context product identities
+
+```text
+lambda(x)lambda(y)=lambda(u)lambda(v),
+rho(y)rho(x)=rho(v)rho(u)
+```
+
+and the local crossing identity into `U` whenever `R_X(x,y)=(u,v)`.  The
+all-arity injectivity of `(pi^n,Gamma_n)` is checked by a finite graph on
+`L^2 x R^2 x X^2`, with a collision bound
+
+```text
+n <= 2 |L|^2 |R|^2 |X|^2.
+```
+
+This theorem subsumes the contextual readout route when the contextual
+readout lands in an already dominated finite YBE solution, and it subsumes the
+gap-gauged one-fibre theorem by taking `U` to be a transparent extension of
+the internal fibre solution.  The next positive target can therefore be stated
+as construction of finite dominated decoder data `Z,U,L,R,gamma` for arbitrary
+finite `X`, rather than direct rackification of `P_X`.
+
 ## Review rubric
 
 A future response should be classified as follows.

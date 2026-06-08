@@ -1490,6 +1490,96 @@ where one of these finite gap-gauge identities fails.  The next broader
 extension cases are multiple interacting nonsingleton fibers where no single
 gap gauge controls all hidden monodromy.
 
+44. Finite-state dominated-decoder theorem.
+
+The repo now records a more general positive mechanism in
+
+  proofs/finite_state_dominated_decoder_theorem.md
+
+You may use it as established context.
+
+Let pi:X -> Z be a braided quotient and let U be another finite bijective YBE
+solution.  Suppose Z and U are already dominated by finite racks Y_Z and Y_U.
+If there are braid-equivariant maps
+
+  Gamma_n:X^n -> U^n
+
+for all n, and the combined decoder
+
+  D_n(x)=(pi^n(x), Gamma_n(x)) in Z^n x U^n
+
+is injective for every n, then Y_Z x Y_U dominates X.
+
+A finite local certificate for Gamma_n consists of finite monoids L,R, context
+updates
+
+  lambda:X -> L,
+  rho:X -> R,
+
+and a readout
+
+  gamma:L x X x R -> U.
+
+For a word x=(x_1,...,x_n), define
+
+  A_1=1_L,
+  A_{i+1}=A_i lambda(x_i),
+  B_n=1_R,
+  B_i=B_{i+1} rho(x_{i+1}),
+
+and
+
+  Gamma_n(x)_i = gamma(A_i,x_i,B_i).
+
+If R_X(x,y)=(u,v), require
+
+  lambda(x)lambda(y)=lambda(u)lambda(v),
+  rho(y)rho(x)=rho(v)rho(u),
+
+and the local crossing identity
+
+  R_U(
+    gamma(A,x,B rho(y)),
+    gamma(A lambda(x),y,B)
+  )
+   =
+  (
+    gamma(A,u,B rho(v)),
+    gamma(A lambda(u),v,B)
+  )
+
+for all A,B,x,y.  Then Gamma_n is braid-equivariant in every arity.  Positive
+generator equivariance is enough, because X and U have bijective braid
+generators and the inverse-generator identities follow by rearranging.
+
+The all-arity injectivity of D_n is a finite graph test on vertices
+
+  (A,A',B,B',x,x') in L^2 x R^2 x X^2
+
+satisfying pi(x)=pi(x') and
+
+  gamma(A,x,B)=gamma(A',x',B').
+
+Edges encode
+
+  bar A=A lambda(x),
+  bar A'=A' lambda(x'),
+  B=bar B rho(y),
+  B'=bar B' rho(y').
+
+Initial vertices have A=A'=1_L; terminal vertices have B=B'=1_R.  D_n fails
+for some n iff this graph has an initial-to-terminal path with some mismatch
+x_i != x_i'.  If a collision exists, one exists with
+
+  n <= 2 |L|^2 |R|^2 |X|^2.
+
+This theorem subsumes the contextual readout route when the contextual readout
+lands in an already dominated finite YBE solution, and subsumes the
+gap-gauged one-fiber theorem by taking U to be a transparent extension of the
+internal fiber solution.  Therefore a positive proof of A may now aim to
+construct finite dominated decoder data Z,U,L,R,gamma for arbitrary finite X;
+it need not directly rackify P_X.
+
 Your task.
 
 Do not give another C-style reduction.  Try to prove A or B.
