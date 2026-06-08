@@ -3628,6 +3628,29 @@ meet.  Thus the contextual separability target is not full subgroup
 separability against every transporter element; it is separation of the
 Brunnian-realizable transporter language.
 
+The quantitative fixed-transition endpoint is recorded in
+`proofs/fixed_transition_residual_complexity.md`.  For a nontrivial braid
+`beta`, define the rack residual complexity
+
+```text
+r(beta)=min{|Y| : Y is a finite rack and rho^Y(beta) != 1}.
+```
+
+For a fixed color-changing contextual transition `t=(p->p')` and a braided
+congruence `E` with `a E b`, let `W_n^E(t)` be the Brunnian
+`X/E`-trivial braids realizing that fixed raw contextual transition.  The
+transition survives every finite rack detector iff, for every `M,N`, some
+`beta in W_n^E(t)` with `n>N` has `r(beta)>M`.  Equivalently, survival is
+unbounded rack residual complexity in every arity tail.  If `X/E` is dominated
+and there are common `M,N` bounding `r(beta)` for all high-arity
+color-changing `W_n^E(t)` witnesses, then `X` is dominated by
+`Y_E^0 x U_M^0 x T_2 x prod_{k<=N} Z_k^0`, where `U_M` is the product of all
+racks of size at most `M` and the `Z_k` handle bounded arities.  Therefore a
+smallest nonsimple counterexample has one fixed transition `t_*` with
+unbounded `r(beta)` in `W_n^mu(t_*)`; in the simple branch take `E=nabla`.
+Under the Artin representation, such a sequence has displacement words that
+eventually become laws on every fixed finite group.
+
 ## Review rubric
 
 A future response should be classified as follows.

@@ -2855,6 +2855,85 @@ The negative contextual target is:
   closure meeting the loop subgroup closure, realized cofinally by actual
   quotient-trivial Brunnian motions.
 
+65. Fixed-transition rack residual complexity.
+
+The repo now records the quantitative fixed-transition criterion in
+
+  proofs/fixed_transition_residual_complexity.md
+
+You may use it as established context.
+
+For a nontrivial braid beta, define
+
+  r(beta)=min{|Y| : Y is a finite rack and rho^Y(beta) != 1}.
+
+Set r(1)=infinity.  For nontrivial beta this is finite by Artin
+faithfulness plus residual finiteness of free groups, using finite
+conjugation racks.
+
+For a fixed raw contextual transition
+
+  t=(p->p'),     p=(A,a,B),     p'=(A',b,B'),     a != b,
+
+and a braided congruence E with a E b, define W_n^E(t) to be the set of
+braids
+
+  beta in Brun_n cap ker rho^{X/E}_n
+
+that realize the fixed transition t at some coordinate.
+
+Then t survives every finite rack detector iff witness residual complexity is
+unbounded in every tail:
+
+  for every M,N, there exist n>N and beta in W_n^E(t) with r(beta)>M.
+
+Reason: let U_M be the finite product of all racks of size at most M.  A
+Brunnian beta is invisible to Y^0 x T_2 iff rho^Y(beta)=1.  Thus invisibility
+to U_M is exactly non-detection by every rack of size at most M.
+
+Relative domination criterion:
+
+If X/E is dominated and there exist M,N such that every high-arity
+color-changing beta in every W_n^E(t) satisfies r(beta)<=M, then X is
+finite-rack dominated.
+
+Proof idea: use
+
+  Q=Y_E^0 x U_M^0 x T_2 x prod_{k=2}^N Z_k^0,
+
+where U_M is the product of all racks of size at most M and Z_k are
+fixed-arity cofinal rack detectors for X.  Any Brunnian Q-invisible
+X-visible braid in arity n>N realizes some t and has r(beta)<=M, so U_M
+detects it, contradiction.  Bounded arities are handled by Z_k.
+
+Therefore, if X is a smallest nonsimple counterexample with monolith mu, then
+there is one fixed color-changing contextual transition t_* such that
+
+  for every M,N, there exist n>N and beta in W_n^mu(t_*) with r(beta)>M.
+
+In the braided-simple branch, use E=nabla.
+
+Artin/free-group corollary:
+
+If r(beta_m)->infinity, then the Artin displacement words
+
+  delta_j(beta_m)=alpha_{beta_m}(x_j)x_j^{-1}
+
+eventually become laws on every fixed finite group.  Otherwise a bounded
+finite group detecting a displacement word would give a bounded finite
+conjugation rack detecting beta_m.
+
+The current exact positive target is:
+
+  prove that for every finite X and every fixed color-changing contextual
+  transition t, the values r(beta) are bounded on all sufficiently high
+  Brunnian witnesses beta realizing t.
+
+The current exact negative target is:
+
+  construct one fixed finite X, one fixed transition t_*, and a sequence
+  beta_m in W_{n_m}^E(t_*) with n_m->infinity and r(beta_m)->infinity.
+
 Your task.
 
 Do not give another C-style reduction.  Try to prove A or B.

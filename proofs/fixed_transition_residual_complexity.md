@@ -1,0 +1,375 @@
+# Fixed-Transition Rack Residual Complexity
+
+This note turns fixed contextual survival into an exact residual-complexity
+criterion.  The remaining obstruction can be phrased as unbounded finite-rack
+residual complexity for Brunnian witnesses realizing one fixed contextual
+transition.
+
+## Rack Residual Complexity
+
+For a nontrivial braid
+
+```text
+beta in B_n,
+```
+
+define
+
+```text
+r(beta)=min{|Y| : Y is a finite rack and rho^Y_n(beta) != 1}.
+```
+
+Set
+
+```text
+r(1)=infinity.
+```
+
+For nontrivial `beta`, the number `r(beta)` is finite.  Indeed, the Artin
+representation detects nontrivial braids in `Aut(F_n)`, and residual finiteness
+of free groups gives a finite group quotient detecting a nontrivial Artin
+displacement.  The corresponding finite conjugation rack detects `beta`.
+
+## Fixed Contextual-Transition Witness Classes
+
+Let
+
+```text
+hat P=M_L x X x M_R
+```
+
+be the raw two-sided contextual state set.  Let
+
+```text
+t=(p->p')
+```
+
+be a raw contextual transition, where
+
+```text
+p=(A,a,B),
+p'=(A',b,B'),
+a != b.
+```
+
+For a braided congruence `E` with `a E b`, define `W_n^E(t)` to be the set of
+braids
+
+```text
+beta in Brun_n cap ker rho^{X/E}_n
+```
+
+such that there exist
+
+```text
+xword in X^n,
+j in {1,...,n},
+```
+
+with
+
+```text
+hat c_j(xword)=p,
+hat c_j(rho^X_n(beta)xword)=p'.
+```
+
+Thus `W_n^E(t)` is the set of quotient-trivial Brunnian braids realizing the
+fixed contextual transition `t`.  Since `a != b`, every element of
+`W_n^E(t)` is `X`-visible.
+
+## Fixed-Transition Survival Equals Unbounded Residual Complexity
+
+For a fixed transition `t`, the following are equivalent.
+
+### Condition A: t Survives Every Finite Rack Detector
+
+For every finite rack `Y` and every arity cutoff `N`, there exist
+
+```text
+n>N,
+beta in W_n^E(t),
+```
+
+such that
+
+```text
+rho^{Y^0 x T_2}_n(beta)=1.
+```
+
+Since `beta` is Brunnian, this is equivalent to
+
+```text
+rho^Y_n(beta)=1.
+```
+
+The equivalence uses the transparent-extension deletion formula: all proper
+deletions of a Brunnian braid are trivial, so the only transparent coloring
+case left to check is the all-nontransparent `Y^n` coloring.  The `T_2` factor
+is trivial because Brunnian braids are pure.
+
+### Condition B: Witness Residual Complexity Is Unbounded In Every Tail
+
+For every rack-size bound `M` and every arity cutoff `N`, there exist
+
+```text
+n>N,
+beta in W_n^E(t),
+```
+
+such that
+
+```text
+r(beta)>M.
+```
+
+### Proof
+
+Assume Condition A.  Fix `M,N`.  Let
+
+```text
+U_M=prod_{|Y|<=M} Y,
+```
+
+where the product ranges over one representative of every finite rack
+isomorphism class of size at most `M`.  This is finite, since there are only
+finitely many rack operations on sets of size at most `M`.
+
+By Condition A, there exist
+
+```text
+n>N,
+beta in W_n^E(t),
+```
+
+with
+
+```text
+rho^{U_M}_n(beta)=1.
+```
+
+If some rack of size at most `M` detected `beta`, then the product rack `U_M`
+would detect `beta`.  Therefore no rack of size at most `M` detects `beta`, so
+
+```text
+r(beta)>M.
+```
+
+Conversely, assume Condition B.  Let `Y` be any finite rack and let `N` be an
+arity cutoff.  Put
+
+```text
+M=|Y|.
+```
+
+By Condition B, there exist
+
+```text
+n>N,
+beta in W_n^E(t),
+```
+
+with `r(beta)>M`.  Since `Y` has size `M`, it cannot detect `beta`.  Hence
+
+```text
+rho^Y_n(beta)=1.
+```
+
+Because `beta` is Brunnian, this is equivalent to
+
+```text
+rho^{Y^0 x T_2}_n(beta)=1.
+```
+
+This proves the equivalence.
+
+## Relative Bounded-Complexity Domination Criterion
+
+Let `E` be a braided congruence on finite `X`, and suppose `X/E` is dominated
+by a finite rack `Y_E`.
+
+Assume there exist constants `M,N` such that for every color-changing raw
+contextual transition
+
+```text
+t=(p->p'),        p=(A,a,B),        p'=(A',b,B'),        a E b, a != b,
+```
+
+and every
+
+```text
+n>N,
+beta in W_n^E(t),
+```
+
+one has
+
+```text
+r(beta)<=M.
+```
+
+Then `X` is finite-rack dominated.
+
+### Proof
+
+Let
+
+```text
+U_M=prod_{|Y|<=M}Y
+```
+
+be the finite product of all racks of size at most `M`.  For each
+
+```text
+2<=k<=N,
+```
+
+fixed-arity rack cofinality supplies a finite rack `Z_k` such that
+
+```text
+ker rho^{Z_k}_k <= ker rho^X_k.
+```
+
+Define
+
+```text
+Q=Y_E^0 x U_M^0 x T_2 x prod_{k=2}^N Z_k^0.
+```
+
+By the Brunnian reduction, it is enough to show that every
+
+```text
+beta in Brun_n cap ker rho^Q_n
+```
+
+is `X`-trivial.
+
+If `n<=N`, then the `Z_n^0` factor gives `beta in ker rho^{Z_n}_n`, hence
+`beta in ker rho^X_n`.
+
+Now suppose `n>N`.  The `Y_E^0` factor gives
+
+```text
+beta in ker rho^{X/E}_n.
+```
+
+If `beta` were `X`-visible, some coordinate would change color.  Let its
+before/after raw contextual transition be
+
+```text
+t=(p->p').
+```
+
+Then
+
+```text
+beta in W_n^E(t).
+```
+
+By the bounded residual-complexity assumption,
+
+```text
+r(beta)<=M.
+```
+
+So some rack of size at most `M` detects `beta`, hence the product rack `U_M`
+detects `beta`.  But `beta in ker rho^Q_n` implies `beta in ker rho^{U_M^0}_n`,
+and because `beta` is Brunnian this implies `rho^{U_M}_n(beta)=1`, a
+contradiction.
+
+Therefore `beta` is `X`-trivial.  Hence `Q` dominates `X`.
+
+## Absolute Criterion
+
+Taking `E=nabla=X x X`, the quotient `X/E` is the one-point solution and is
+dominated.  Thus finite `X` is dominated iff there exist constants `M,N` such
+that for every color-changing raw contextual transition `t` and every
+
+```text
+n>N,
+beta in W_n^nabla(t),
+```
+
+one has
+
+```text
+r(beta)<=M.
+```
+
+The forward implication is immediate: if `Y_X` dominates `X`, then every
+`X`-visible braid is detected by `Y_X`, so `r(beta)<=|Y_X|` for every
+color-changing witness `beta`.
+
+The reverse implication is the relative criterion with `E=nabla`.
+
+## Minimal-Counterexample Consequence
+
+If `X` is a smallest nonsimple counterexample with first-fold monolith `mu`,
+then `X/mu` is dominated.  Therefore, by the relative criterion, there is one
+fixed color-changing contextual transition
+
+```text
+t_*=(p_*->p'_*),        a_* mu b_*,        a_* != b_*,
+```
+
+such that
+
+```text
+for all M,N, exists n>N and beta in W_n^mu(t_*) with r(beta)>M.
+```
+
+Indeed, if every such transition had bounded residual complexity in some
+tail, then finitely many transitions would allow a common `M,N`, and the
+relative criterion would dominate `X`.
+
+In the braided-simple branch, the same statement holds with `E=nabla`.
+
+Thus a counterexample must force unbounded finite-rack residual complexity
+inside one fixed contextual transition.
+
+## Artin/Free-Group Corollary
+
+Let
+
+```text
+delta_j(beta)=alpha_beta(x_j)x_j^{-1}
+```
+
+be the Artin displacement words.  If
+
+```text
+r(beta_m)->infinity,
+```
+
+then the finite-group residual complexity of the displacement tuple also tends
+to infinity.  Equivalently, for every fixed finite group `G`, every
+displacement word of `beta_m` is eventually a law on `G`.
+
+Otherwise a bounded finite group detecting some displacement word would give a
+bounded finite conjugation rack detecting `beta_m`, contradicting
+`r(beta_m)->infinity`.
+
+## Current Exact Targets
+
+To prove Sawin domination, it is enough to prove:
+
+```text
+For every finite X and every fixed color-changing contextual transition t,
+the values r(beta) are bounded on all sufficiently high Brunnian witnesses
+realizing t.
+```
+
+Equivalently, fixed contextual transitions cannot require racks of unbounded
+size to detect their realizing Brunnian braids.
+
+To disprove Sawin domination, one must construct one fixed finite `X`, one
+fixed contextual transition `t_*`, and a sequence
+
+```text
+beta_m in W_{n_m}^E(t_*),        n_m->infinity,
+```
+
+such that
+
+```text
+r(beta_m)->infinity.
+```
