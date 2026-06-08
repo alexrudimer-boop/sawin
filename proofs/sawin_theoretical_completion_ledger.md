@@ -2647,6 +2647,17 @@ has no detector-kernel X-motion.  This does not prove domination, but it shows
 that the earlier formal monolith `J`-collisions are not automatically realized
 by small-arity pure detector-kernel monodromy in this family.
 
+The next GPT-5.5 Pro response is reviewed in
+`proofs/2026_06_08_theoretical_active_lift_pure_loop_blocker_review.md`.  It
+does not prove A or B.  It restates the contextual active-lift obstruction
+for virtual triples and the contextual pure-loop/suffix-cancellation
+obstruction, and it repeats the fixed-target B obstruction that the powered
+Brunnian alternating-rack construction cannot be frozen.  These should now be
+treated as known blockers, not as new reductions: a future A proof must prove
+active-lift existence plus pure-loop faithfulness or supply a different
+finite rack detector, and a future B proof must give one fixed finite target
+with actual cofinal detector-kernel braid witnesses.
+
 ## Review rubric
 
 A future response should be classified as follows.
