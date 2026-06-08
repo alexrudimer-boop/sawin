@@ -1138,6 +1138,47 @@ The negative route still must produce actual Brunnian detector-kernel braid
 witnesses for one fixed finite `X`; a failure of local one-strand readouts is
 not by itself B.
 
+36. The latest response again does not prove A or B.  Its useful content is
+the exact active-lift domain gap:
+
+To prove the canonical multi-copy rack route by direct extension closure, one
+would need
+
+  g extends lambda_p,
+  h extends lambda_q,
+  q in D_p
+  =>
+  g h g^{-1} extends lambda_{lambda_p(q)}.
+
+Writing `r0=lambda_p(q)`, this extension check requires, for every
+`r in D_{r0}`,
+
+  g^{-1}(r) in D_q
+  and
+  h g^{-1}(r) in D_p.
+
+These are precisely the joint-fillability/domain conditions for the virtual
+third contextual state.  YBE proves the needed identity on actual jointly
+realizable triples, but this alone does not prove those domain conditions for
+virtual contextual states.  Therefore the direct proof of
+`C^(infty)_p != empty` is still missing.
+
+This is now a guardrail, not a destination.  The next response must not merely
+repeat that YBE only controls jointly realizable triples.  It must either:
+
+  - prove a structural invariant keeping the pruning fixed point
+    `C^(infty)_p` nonempty for every finite bijective `X`;
+  - give an explicit finite `X` and a finite pruning-stage certificate where
+    some `C^(infty)_p` becomes empty;
+  - bypass one-strand contextual readouts with a genuinely multi-strand finite
+    rack detector and prove all-arity domination; or
+  - construct one fixed finite `X` with actual cofinal Brunnian
+    detector-kernel witnesses.
+
+The negative-route failure is unchanged: varying `Conj(A_l)` targets do not
+prove B, and powered-meridian witnesses cannot be frozen to one fixed finite
+`X` without overcoming the fixed two-strand pure order obstruction.
+
 Your task.
 
 Do not give another C-style reduction.  Try to prove A or B.
@@ -1285,6 +1326,12 @@ Do not answer by:
   the canonical greatest fixed point C^(infty);
 - stopping after defining C^(infty); the next step is proving it is nonempty
   for all finite X or finding an explicit X where it empties;
+- repeating the active-lift domain obstruction
+  `g,h => g h g^{-1}` requires joint-fillability conditions for virtual
+  triples, unless you prove fixed-point nonemptiness or give an explicit
+  empty-pruning certificate;
+- saying only that YBE controls jointly realizable triples but not virtual
+  contextual states;
 - proving partial automorphism extension on the naive full graph
   `G(ell_p,q,r)` without handling non-fillable virtual triples;
 - ignoring the realizable contextual language
