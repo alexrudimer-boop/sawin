@@ -2890,6 +2890,30 @@ canonical closure: the audited proof ledger already closes all six-point
 linear `F_3` rows by the three branches above.  The active frontier therefore
 remains outside the linear `F_3` skew-over-flip family.
 
+The reusable abstraction is recorded in
+`proofs/gap_gauged_one_fiber_extension_theorem.md`.  It applies to a braided
+quotient `pi:X->Z` with exactly one nonsingleton fibre `W` over a distinguished
+quotient point `*`, singleton visible fibres, quotient visible transport
+`alpha,beta=alpha^{-1}`, and hidden transport permutations `S_z,T_z`.  If:
+
+```text
+S_{beta z} T_z = id,
+S_{alpha^d z} S_{alpha^d w}
+  = S_{alpha^d u} S_{alpha^d v}
+  whenever R_Z(z,w)=(u,v),
+and the gauge pairs
+  (S_{alpha^d z}, S_{alpha^{d+1} z})
+generate two-sided symmetries of W,
+```
+
+then domination of `Z` and domination of `W` imply domination of `X` by
+`Y_Z x Y_W^0`.  The proof uses the gap-gauged hidden value obtained by listing
+visible labels to the left of a tracked `*`-slot and replacing each label `z`
+by `alpha^g(z)`, where `g` is the number of intervening `*`-slots.  The
+composition convention is important: the nearest visible label acts first.
+This theorem packages the passive, twisted-passive, active-automorphic, and
+signed-affine six-point `F_3` gauges into one all-arity positive mechanism.
+
 ## Review rubric
 
 A future response should be classified as follows.
