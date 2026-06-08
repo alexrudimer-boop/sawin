@@ -582,6 +582,217 @@ requires, for every finite rack detector Q, an actual
 
 with `rho^X_n(beta) != 1`.
 
+21. The latest response sharpened this to inverse-semigroup totalization.
+
+The forced contextual partial translations have a finite inverse-semigroup
+closure.  The problem is not finiteness of that partial object.  The problem
+is replacing partial conjugation by total permutations or genuine group
+conjugation while preserving forced products on realizable states and enforcing
+
+  L_{a*b}=L_a L_b L_a^(-1)
+
+for newly created non-fillable products.  The domain/idempotent data carried by
+non-fillable contextual states may force a collapse when passing from partial
+bijections to total permutations.
+
+The next answer should prove finite totalization of this YBE-origin contextual
+inverse semigroup into total permutations/group conjugations while preserving
+the all-arity readout, or prove that totalization failure yields an actual
+Brunnian detector-kernel braid witness.
+
+22. The latest response explains why ordinary finite globalization of partial
+bijections is not enough.
+
+One can extend finite partial bijections to total permutations on a finite
+enlargement, and then form an augmented rack
+
+  (omega,g) * (eta,h) = (g eta, g h g^(-1)).
+
+But partial-bijection globalization preserves coherent partial compositions;
+it does not automatically preserve arbitrary quotient-group relations from the
+contextual Wirtinger group, especially relations involving non-fillable states
+where the relation words were only partially defined.  Passing to total
+permutations erases the domain idempotents that recorded where those words
+were valid.
+
+The next answer should prove that YBE-origin contextual relations survive some
+finite totalization without collapsing realizable readouts, or produce a
+finite YBE-origin obstruction and turn it into a genuine Brunnian
+detector-kernel braid witness.
+
+23. The latest response isolates the exact failed implication in the natural
+augmented-rack workaround.
+
+The workaround would take total extensions of the contextual partial
+translations in a finite permutation group `G <= Sym(Omega)` and use the
+augmented rack
+
+  Y = Omega x G,
+  (omega,g) * (eta,h) = (g eta, g h g^(-1)).
+
+This avoids explicitly assigning values for non-fillable products.  But the
+contextual induction across a forced compatible crossing requires the
+following implication:
+
+  h extends L_p,  k extends L_q
+    =>  h k h^(-1) extends L_{p*q}.
+
+For `r in dom(L_{p*q})`, this requires
+
+  h^(-1)(r) in dom(L_q),
+  k h^(-1)(r) in dom(L_p).
+
+Those are exactly the missing joint-fillability conditions.  They say that
+`r` comes from a realizable triple behind the crossing, not merely that `p*q`
+and `r` are separately compatible.  YBE proves the identity on jointly
+realizable triples; it does not force these domain conditions for
+virtual/non-fillable contextual states.  Arbitrary finite total extensions can
+therefore break the next crossing.
+
+The next answer should either prove that the YBE-origin contextual partial
+translations admit finite total extensions satisfying this domain implication
+for every forced crossing while preserving realizable readouts, or prove that
+failure of the implication yields an actual Brunnian detector-kernel braid
+witness for one fixed finite X.
+
+24. The latest response resolves the four-point test case positively.
+
+For the four-point degenerate solution on `00,01,10,11`, the two-sided
+contextual monoid is
+
+  M={I,T,C_0,C_0T,C_1,C_1T}.
+
+The quotient `(M x X x M)/~` has 20 classes, and the forced compatible
+products extend to a total 20-element rack.  In the labeling used by the
+response, the only nontrivial left translations are paired transpositions:
+
+  L_4=L_5=(4 5),
+  L_16=L_19=(16 19),
+  L_14=L_17=(14 17),
+  L_15=L_18=(15 18),
+
+with all other `L_i` trivial.  The deterministic labels in the local audit
+differ, but the same structure appears: a 20-class quotient, no forced-product
+conflicts, and only paired transposition translations.
+
+Local audit:
+
+  tools/run_four_point_contextual_completion_audit.py
+  proofs/four_point_contextual_completion_audit.json
+  proofs/four_point_contextual_completion_audit.md
+
+The audit verifies:
+
+  source YBE = true,
+  contextual monoid size = 6,
+  contextual quotient class count = 20,
+  forced product conflict count = 0,
+  rack size = 20,
+  rack YBE = true,
+  forced partial translations extend to permutations = true,
+  equivariance checked in arities 1..8,
+  orbit-injectivity checked in arities 1..8.
+
+The response also gives an all-arity orbit-separation proof for this specific
+example by classifying braid orbits by the base-1 count and ordered
+zero-fibre string.  Therefore this four-point degenerate example is not a
+counterexample and no longer supports the non-fillable-state obstruction.
+
+The next answer should now try to generalize the 20-class completion
+mechanism: prove that every finite YBE-origin two-sided contextual partial
+rack admits a finite total rack completion preserving the all-arity
+orbit-injective readout, or find a new explicit finite YBE-origin contextual
+partial rack where such completion fails and convert that failure into B.
+
+25. The latest response stress-tests the four-point result against the whole
+binary skew-over-flip family, and local computation confirms it.
+
+Family:
+
+  X={0,1} x {0,1},
+  R((a,i),(b,j))=((b,I_ab(i,j)),(a,J_ab(i,j))),
+
+where for each base pair `(a,b)`, the fibre map
+`(i,j)->(I_ab(i,j),J_ab(i,j))` is an arbitrary permutation of `{0,1}^2`.
+There are `24^4=331776` such maps.
+
+Local audit:
+
+  tools/run_binary_skew_flip_contextual_family_audit.py
+  proofs/binary_skew_flip_contextual_family_audit.json
+  proofs/binary_skew_flip_contextual_family_audit.md
+
+The exhaustive audit verifies:
+
+  YBE solutions = 520,
+  nondegenerate = 384,
+  degenerate involutive = 64,
+  degenerate non-involutive = 72.
+
+For all 72 degenerate non-involutive cases:
+
+  M_L and M_R have the same underlying maps,
+  |M| in {3,4,5,6},
+  |P| in {10,14,16,20},
+  forced products have no conflicts,
+  every forced partial left translation is injective,
+  the identity fill is a rack.
+
+More specifically, extending each forced partial translation by closing its
+nontrivial partial two-cycles and fixing all other points gives total
+permutations `L_p` satisfying
+
+  L_p^2=1,
+  L_p L_q = L_q L_p,
+  L_{L_p(q)}=L_q.
+
+Therefore `p*q=L_p(q)` is a finite rack on the same contextual quotient `P`,
+with no extra points needed, throughout the whole degenerate non-involutive
+binary skew-over-flip family.
+
+The next answer should attack this now-sharper positive theorem:
+
+  Prove that YBE-origin two-sided contextual partial translations always have
+  this commuting-involution finite completion, or identify the first possible
+  structural reason this property can fail in larger finite YBE solutions and
+  turn that failure into an actual B-style braid witness.
+
+26. The latest response abstracts the completion step into a precise finite
+identity-extension lemma.
+
+Let `P` be the two-sided contextual quotient and let
+
+  lambda_p : D_p -> P
+
+be the forced partial left translation.  Define
+
+  L_p(q)=lambda_p(q) if q in D_p,
+  L_p(q)=q otherwise.
+
+If the following two finite conditions hold:
+
+  lambda_p : D_p -> D_p is a bijection for every p,
+  L_{L_p(q)} = L_p L_q L_p^(-1) for every p,q,
+
+then `p*q=L_p(q)` is a finite rack on `P`, extending all forced contextual
+products.  The proof is direct: the first condition makes each `L_p` a
+permutation, and the second condition is exactly the rack left-translation
+identity `L_{p*q} L_p = L_p L_q`.
+
+Thus the positive route is no longer a vague finite-totalization problem.
+For a fixed finite X, it is enough to prove:
+
+  (i) balanced domains: lambda_p(D_p)=D_p for every p;
+  (ii) conjugacy covariance: L_{L_p(q)}=L_p L_q L_p^(-1) for every p,q;
+  (iii) all-arity orbit separation of J_n:X^n -> P^n.
+
+If (i)-(iii) hold, then the rack `P` dominates X in every arity.
+
+The next answer should try to prove (i)-(iii) for arbitrary finite bijective
+YBE solutions.  If that fails, try to construct an explicit finite YBE
+solution failing (i), failing (ii), or passing (i)-(ii) but failing (iii) in a
+way that yields an actual B-style Brunnian detector-kernel braid witness.
+
 Your task.
 
 Do not give another C-style reduction.  Try to prove A or B.
@@ -691,7 +902,27 @@ Do not answer by:
   handled;
 - treating a non-fillable contextual pair as a counterexample without
   producing an actual Brunnian detector-kernel braid witness;
+- using the checked four-point non-fillable pair as a negative obstruction;
+  this example now has a locally audited 20-element rack completion and is
+  dominated by that rack;
+- using any binary skew-over-flip four-point degenerate non-involutive example
+  as a negative obstruction without defeating the audited commuting-involution
+  contextual rack completion for all 72 such rows;
 - ignoring the closure rule L_{a*b}=L_a L_b L_a^{-1} for non-fillable pairs;
+- treating the finite inverse-semigroup closure of partial contextual
+  translations as a rack completion without totalizing the partial bijections
+  to total permutations/group conjugations;
+- citing finite globalization of partial bijections without proving the
+  contextual Wirtinger relations survive the totalization;
+- using the augmented rack `Omega x G` from total extensions without proving
+  the domain implication
+  `h extends L_p, k extends L_q => h k h^{-1} extends L_{p*q}`;
+- saying only "finite totalization remains open" without attacking the finite
+  identity-extension conditions
+  `lambda_p(D_p)=D_p` and
+  `L_{L_p(q)}=L_p L_q L_p^{-1}`;
+- proving the identity-extension lemma alone; it is now recorded, and the next
+  step is proving its hypotheses for all X or finding a genuine failure;
 - citing computational finite-arity evidence as an all-arity theorem;
 - citing the public status of the MathOverflow page.
 
