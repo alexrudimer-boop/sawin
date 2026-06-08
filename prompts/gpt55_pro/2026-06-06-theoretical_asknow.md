@@ -1580,6 +1580,51 @@ internal fiber solution.  Therefore a positive proof of A may now aim to
 construct finite dominated decoder data Z,U,L,R,gamma for arbitrary finite X;
 it need not directly rackify P_X.
 
+45. Multi-fiber transparent decoder corollary.
+
+The repo now records the product form of the finite-state decoder theorem in
+
+  proofs/multi_fiber_transparent_decoder_corollary.md
+
+You may use it as established context.
+
+Let pi:X -> Z be a braided quotient dominated by Y_Z.  For each quotient
+color a in Z, let W_a be a finite bijective YBE solution dominated by a rack
+Y_a, and let W_a^0 be its transparent YBE extension.  Suppose there are
+braid-equivariant transparent readouts
+
+  Gamma^a_n:X^n -> (W_a^0)^n
+
+such that Gamma^a_n(x)_i=0 whenever pi(x_i) != a.  If the combined decoder
+
+  D_n(x)=(pi^n(x), (Gamma^a_n(x))_{a in Z})
+
+is injective for every n, then
+
+  Y_Z x product_{a in Z} Y_a^0
+
+dominates X.
+
+This follows from the finite-state decoder theorem by taking
+
+  U = product_{a in Z} W_a^0.
+
+With shared finite context monoids L,R, updates lambda,rho, and local readouts
+
+  gamma_a:L x X x R -> W_a^0,
+
+the usual context product identities plus the local crossing identities into
+each W_a^0 give a finite sufficient certificate for braid equivariance.  The
+all-arity injectivity test is the same finite graph test, with vertex
+condition requiring equality of all gamma_a channels.  Note the precision:
+the all-A,B local crossing identities are a convenient sufficient certificate;
+they are literally necessary only on reachable context pairs.
+
+This corollary is the natural positive branch for several interacting
+nonsingleton quotient fibers.  A remaining obstruction must either defeat all
+such finite transparent decoder families or produce cofinal Brunnian
+rack-prefix witnesses.
+
 Your task.
 
 Do not give another C-style reduction.  Try to prove A or B.

@@ -2955,6 +2955,38 @@ the internal fibre solution.  The next positive target can therefore be stated
 as construction of finite dominated decoder data `Z,U,L,R,gamma` for arbitrary
 finite `X`, rather than direct rackification of `P_X`.
 
+The multi-fibre transparent decoder corollary is recorded in
+`proofs/multi_fiber_transparent_decoder_corollary.md`.  It is the product
+form of the finite-state decoder theorem.  Given a quotient `pi:X->Z`
+dominated by `Y_Z`, and for each quotient colour `a` a finite dominated fibre
+readout solution `W_a` with rack detector `Y_a`, suppose there are
+braid-equivariant transparent readouts
+
+```text
+Gamma^a_n:X^n -> (W_a^0)^n
+```
+
+supported only on coordinates with quotient colour `a`.  If
+
+```text
+D_n(x)=(pi^n(x), (Gamma^a_n(x))_{a in Z})
+```
+
+is injective for every `n`, then
+
+```text
+Y_Z x product_{a in Z} Y_a^0
+```
+
+dominates `X`.  With shared context monoids `L,R`, local readouts
+`gamma_a:L x X x R -> W_a^0`, and the same context product identities, the
+local crossing identities into each `W_a^0` give a finite sufficient
+certificate for equivariance.  The all-arity injectivity test is the same
+finite graph test, replacing the single readout equality by equality of all
+`gamma_a` channels.  The global all-`A,B` local crossing identities are a
+convenient sufficient certificate; the literal necessary condition only holds
+on reachable context pairs.
+
 ## Review rubric
 
 A future response should be classified as follows.
