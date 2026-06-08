@@ -2670,6 +2670,38 @@ active-lift existence plus pure-loop faithfulness or supply a different
 finite rack detector, and a future B proof must give one fixed finite target
 with actual cofinal detector-kernel braid witnesses.
 
+The displayed six-point residual representative is now closed in
+`proofs/linear_f3_residual_representative_quotient_closure.md`, with finite
+bookkeeping audited by
+`proofs/linear_f3_residual_representative_closure_audit.md`.  The row has
+matrices
+
+```text
+M_00=[0 1;2 2], M_01=[1 2;1 0],
+M_10=[0 1;2 1], M_11=I,
+```
+
+and is row `20` in the degenerate non-involutive linear F3 audit.  Its
+monolith collapses `f_0,f_1,f_2` and keeps `e_0,e_1,e_2` separate.  The
+four-point quotient `Z={e_0,e_1,e_2,F}` is left-nondegenerate.  The lift
+fibres are controlled by the all-arity invariant
+
+```text
+H_s=(-1)^k i + sum_{r=1}^k (-1)^{r-1} a_r in F_3,
+```
+
+where the tracked `F`-strand is lifted to `f_i` and has left `e`-list
+`e_{a_1},...,e_{a_k}`.  Local crossings preserve `H_s`, so every braid
+trivial on `Z^n` is trivial on `X^n`.  Thus
+
+```text
+ker rho^Z_n <= ker rho^X_n
+```
+
+for all `n`, and this row is dominated by the derived rack of `Z`.  Its formal
+monolith `J`-collision is not braid-realized.  Future candidate searches in
+this family must avoid this alternating-sum lift invariant.
+
 ## Review rubric
 
 A future response should be classified as follows.

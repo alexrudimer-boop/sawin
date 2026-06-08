@@ -1408,6 +1408,42 @@ one-strand contextual detector by a working finite multi-strand/stateful rack
 detector with an all-arity proof.  To advance B, give a fixed finite X and
 actual cofinal Brunnian detector-kernel witnesses.
 
+43. Displayed six-point residual representative is closed.
+
+The repo now includes:
+
+  tools/run_linear_f3_residual_representative_closure_audit.py
+  proofs/linear_f3_residual_representative_closure_audit.json
+  proofs/linear_f3_residual_representative_closure_audit.md
+  proofs/linear_f3_residual_representative_quotient_closure.md
+
+This closes the concrete six-point residual row with matrices
+
+  M_00=[0 1;2 2], M_01=[1 2;1 0],
+  M_10=[0 1;2 1], M_11=I.
+
+In local indexing this is degenerate non-involutive row 20, with matrix
+indices `(5,26,4,12)`.  Its monolith collapses `f_0,f_1,f_2` and keeps
+`e_0,e_1,e_2` separate.  The quotient `Z={e_0,e_1,e_2,F}` is
+left-nondegenerate, hence dominated by its derived rack.
+
+The proof note gives an all-arity invariant.  For the s-th F-strand from the
+left, lifted to `f_i`, with left e-list `e_{a_1},...,e_{a_k}`, define
+
+  H_s=(-1)^k i + sum_{r=1}^k (-1)^{r-1} a_r in F_3.
+
+This invariant is preserved under all local crossings.  Therefore any braid
+trivial on the quotient `Z^n` is already trivial on `X^n`, so
+
+  ker rho^Z_n <= ker rho^X_n
+
+for all n.  This residual representative is finite-rack dominated by the
+derived rack of `Z`.
+
+Do not use this displayed row, or its formal monolith J-collision, as B.  Any
+next counterexample candidate in this family must avoid this alternating-sum
+lift invariant.
+
 Your task.
 
 Do not give another C-style reduction.  Try to prove A or B.
@@ -1588,6 +1624,11 @@ Do not answer by:
   quotient plus contextual rack, and the four minimal contextual quotients
   have exact three-strand joint image size 216 with no detector-kernel
   X-motion;
+- using the displayed six-point residual row with matrices
+  `([0 1;2 2],[1 2;1 0],[0 1;2 1],I)` as a counterexample candidate; it is
+  dominated by its four-point left-nondegenerate quotient via the
+  alternating-sum invariant in
+  `proofs/linear_f3_residual_representative_quotient_closure.md`;
 - using Brunnian-only monodromy to define a congruence under strand addition;
   Brunnian braids are not stable under adding an idle strand.  Use pure
   detector-kernel monodromy for congruence closure, and Brunnian reduction
