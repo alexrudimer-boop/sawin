@@ -301,6 +301,62 @@ color-changing witness `beta`.
 
 The reverse implication is the relative criterion with `E=nabla`.
 
+## Status Of The Fixed-Transition Bound
+
+The fixed-transition bound is immediate under the stronger hypothesis that
+`X` itself is already finite-rack dominated.  If a finite rack `Y_X` satisfies
+
+```text
+ker rho^{Y_X}_n <= ker rho^X_n        for all n,
+```
+
+then every `beta in W_n^E(t)` is `X`-visible because `t` is color-changing.
+Therefore `rho^{Y_X}_n(beta) != 1`, and
+
+```text
+r(beta) <= |Y_X|.
+```
+
+So one may take `M=|Y_X|` and `N=0`.  This includes the standard already
+handled branches such as the finite left-nondegenerate case, where the guitar
+map identifies the braid action with the action of the associated finite rack.
+
+The quotient hypothesis alone does not supply this bound.  Every
+`beta in W_n^E(t)` is already killed on `X/E`, so a rack dominating `X/E`
+detects none of the relevant fiber motion.  The missing ingredient is a
+bounded finite rack or finite group witness for the actual contextual motion
+inside the `E`-class:
+
+```text
+a -> b,        a E b,        a != b.
+```
+
+Equivalently, one would need a bounded rack completion or bounded quotient
+witness for the physical-strand contextual monodromy realizing the fixed
+transition.  The known contextual partial-rack constructions do not provide
+this automatically, because YBE controls jointly realizable local triples,
+whereas finite rack completion has to satisfy the identities on all triples
+in the completed object.
+
+There is also a useful purity nuance.  The `T_2` condition is essential when
+matching the Brunnian reduction with detectors of the form `Y^0 x T_2`, and it
+is essential for the realization-aware contextual separability statement.  It
+is not essential for unbounded residual complexity itself.  If `W'_n^E(t)` is
+defined by omitting `ker rho^{T_2}_n`, then every non-pure `beta in W'_n^E(t)`
+is detected by the two-element trivial rack:
+
+```text
+rho^{T_2}_n(beta) != 1,
+```
+
+because `T_2` records the Artin strand permutation.  Hence `r(beta) <= 2` for
+non-pure `beta`.  Any sequence with `r(beta_m)->infinity` is therefore
+eventually pure.  Thus the bounded-residual theorem with the explicit `T_2`
+condition is equivalent to the same theorem without it after replacing `M` by
+`max(M,2)`.  We keep the `T_2` condition in `W_n^E(t)` because the domination
+criterion uses `Y^0 x T_2` and because it removes the low-arity non-pure
+transporter artifacts from the contextual language.
+
 ## Minimal-Counterexample Consequence
 
 If `X` is a smallest nonsimple counterexample with first-fold monolith `mu`,
@@ -353,13 +409,16 @@ bounded finite conjugation rack detecting `beta_m`, contradicting
 To prove Sawin domination, it is enough to prove:
 
 ```text
-For every finite X and every fixed color-changing contextual transition t,
-the values r(beta) are bounded on all sufficiently high Brunnian witnesses
+For every finite X, every dominated quotient X/E, and every fixed
+color-changing contextual transition t inside an E-class, the values r(beta)
+are bounded on all sufficiently high quotient-trivial Brunnian witnesses
 realizing t.
 ```
 
 Equivalently, fixed contextual transitions cannot require racks of unbounded
-size to detect their realizing Brunnian braids.
+size to detect their realizing Brunnian braids.  By the purity nuance above,
+one may state this with or without the explicit `T_2` condition when only
+unbounded residual complexity is at issue.
 
 To disprove Sawin domination, one must construct one fixed finite `X`, one
 fixed contextual transition `t_*`, and a sequence

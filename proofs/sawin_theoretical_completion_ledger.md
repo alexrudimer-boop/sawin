@@ -3656,6 +3656,22 @@ unbounded `r(beta)` in `W_n^mu(t_*)`; in the simple branch take `E=nabla`.
 Under the Artin representation, such a sequence has displacement words that
 eventually become laws on every fixed finite group.
 
+The attempted direct proof of this fixed-transition boundedness is audited in
+`proofs/fixed_transition_bound_attempt_audit.md`.  It only reaches the
+tautological dominated case.  If `X` itself is dominated by a finite rack
+`Y_X`, then every color-changing witness is `X`-visible and hence
+`Y_X`-visible, so `r(beta)<=|Y_X|` with `N=0`.  This includes the standard
+left-nondegenerate/guitar-map branch.  Under only the weaker hypothesis that
+`X/E` is dominated, the quotient detector gives no information about
+`beta in W_n^E(t)`, because such braids are already `X/E`-trivial.  The
+missing theorem is precisely a bounded finite rack or finite group witness for
+the actual contextual fiber monodromy inside one `E`-class.  The same audit
+also corrects the role of purity: `T_2` is essential for the contextual
+separability and Brunnian-reduction detector statements, but not for
+unbounded residual complexity itself.  If the `T_2` condition is omitted, every
+non-pure braid is detected by the two-element trivial rack, so `r(beta)<=2`;
+therefore any unbounded-residual sequence is eventually pure.
+
 The powered-meridian no-freezing theorem is recorded in
 `proofs/powered_meridian_no_freezing.md`.  For a fixed finite target `X`, let
 

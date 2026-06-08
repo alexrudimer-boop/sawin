@@ -2913,6 +2913,27 @@ fixed-arity cofinal rack detectors for X.  Any Brunnian Q-invisible
 X-visible braid in arity n>N realizes some t and has r(beta)<=M, so U_M
 detects it, contradiction.  Bounded arities are handled by Z_k.
 
+Status audit for the missing fixed-transition bound:
+
+- If X itself is already finite-rack dominated by Y_X, the bound is immediate:
+  every color-changing witness is X-visible, hence Y_X-visible, so
+  r(beta)<=|Y_X| and N=0.  This covers the already-known left-nondegenerate
+  / guitar-map branch.
+
+- The weaker hypothesis that X/E is dominated does not prove the bound.  Every
+  beta in W_n^E(t) is already X/E-trivial, so the quotient detector sees none
+  of the fiber transition a->b inside the E-class.  The missing theorem is a
+  bounded finite rack or finite group witness for that actual contextual fiber
+  monodromy.
+
+- The T_2 condition is essential for the contextual separability theorem and
+  for matching the Brunnian-reduction detector Q=Y^0 x T_2.  It is not
+  essential for unbounded residual complexity itself: if a witness is non-pure,
+  the two-element trivial rack detects its strand permutation, so r(beta)<=2.
+  Thus any sequence with r(beta)->infinity is eventually pure.  Keep T_2 in
+  W_n^E(t) for detector compatibility, but do not claim residual boundedness
+  is false without it.
+
 Therefore, if X is a smallest nonsimple counterexample with monolith mu, then
 there is one fixed color-changing contextual transition t_* such that
 
