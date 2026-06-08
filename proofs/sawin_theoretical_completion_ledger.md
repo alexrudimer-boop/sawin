@@ -3216,6 +3216,38 @@ braided-simple degeneracy-perfect, or subdirectly irreducible with monolith
 `mu_X <= F_1(X)` generated cofinally by actual Brunnian detector-kernel
 mismatches.
 
+The cofinal monolith chief-factor obstruction is recorded in
+`proofs/cofinal_monolith_chief_factor_obstruction.md`.  For a finite rack
+prefix `P_m`, choose `Y_mu` dominating `X/mu` and put
+`Q_m=(P_m x Y_mu)^0 x T_2`.  For the last-strand free group define the
+combined finite image
+
+```text
+Phi_{m,n}:F_{n-1}->Gamma_{m,n}
+  <= Sym(Q_m^n) x Sym(X^n),
+K_{m,n}=ker(Gamma_{m,n}->rho^{Q_m}_n(F_{n-1})),
+L_{m,n}=ker(Gamma_{m,n}->rho^X_n(F_{n-1})),
+C_{m,n}=[N_{1,m,n},...,N_{n-1,m,n}]_Sigma.
+```
+
+For every prefix `P_m` and every `N`, there is `n>N` with
+`K_{m,n} cap C_{m,n} != 1`.  Otherwise fixed-arity rack cofinality plus the
+transparent Brunnian reduction would make `Q_m` dominate `X`.  Let
+`H=K_{m,n} cap C_{m,n}`.  Since `H` is a nontrivial normal subgroup of the
+finite group `Gamma_{m,n}`, choose a minimal nontrivial normal subgroup
+`A <= H`; then `A/1` is a chief factor inside the detector kernel and inside
+the exact all-meridian layer.  The projection kernels satisfy
+`K_{m,n} cap L_{m,n}=1`, so `p_X(A)` is nontrivial.  Because `A <= K_{m,n}`
+and `Q_m` contains `Y_mu^0`, the `X`-projection of `A` acts trivially on
+`(X/mu)^n`; all coordinate mismatches lie inside `mu`.  The mismatch
+congruence is nontrivial and contained in `mu`, and because `mu` is the
+global monolith it equals `mu`.  Thus every finite rack prefix has unbounded
+arities with a detector-invisible all-meridian chief factor whose
+`X`-projection generates the unique first-fold monolith.  Applying the
+chief-factor dichotomy gives either a nonabelian monolith-chief factor
+covered by every meridian normal closure, or an elementary abelian
+monolith-chief factor covered by the exact all-meridian subgroup.
+
 ## Review rubric
 
 A future response should be classified as follows.

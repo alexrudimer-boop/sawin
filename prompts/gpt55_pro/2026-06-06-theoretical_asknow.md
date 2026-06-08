@@ -2045,6 +2045,79 @@ or
   subdirectly irreducible solutions whose monolith is the unique first-fold
   atom and is generated cofinally by Brunnian detector-kernel monodromy.
 
+53. Cofinal monolith chief-factor obstruction.
+
+The repo now records the finite-image chief-factor refinement in
+
+  proofs/cofinal_monolith_chief_factor_obstruction.md
+
+You may use it as established context.
+
+Let X be a smallest finite counterexample, and let
+
+  mu = mu_X <= F_1(X)
+
+be the unique first-fold atom and global monolith.  For a finite rack prefix
+P_m, choose Y_mu dominating X/mu and set
+
+  Q_m=(P_m x Y_mu)^0 x T_2.
+
+For the last-strand free group define the combined image
+
+  Phi_{m,n}:F_{n-1}->Gamma_{m,n}
+    <= Sym(Q_m^n) x Sym(X^n).
+
+Let
+
+  K_{m,n}=ker(Gamma_{m,n}->rho^{Q_m}_n(F_{n-1})),
+  L_{m,n}=ker(Gamma_{m,n}->rho^X_n(F_{n-1})).
+
+For meridians x_i=A_{i,n}, define
+
+  N_{i,m,n}=<<Phi_{m,n}(x_i)>>_{Gamma_{m,n}},
+  C_{m,n}=[N_{1,m,n},...,N_{n-1,m,n}]_Sigma.
+
+Then for every prefix P_m and every N, there is n>N with
+
+  K_{m,n} cap C_{m,n} != 1.
+
+Moreover, because H=K_{m,n} cap C_{m,n} is a nontrivial normal subgroup of
+the finite group Gamma_{m,n}, one may choose a minimal nontrivial normal
+subgroup A<=H.  Then A/1 is a chief factor of Gamma_{m,n} satisfying
+
+  A <= K_{m,n} cap C_{m,n}.
+
+Thus the factor lies inside the detector kernel and inside the exact
+all-meridian layer.
+
+Since K_{m,n} cap L_{m,n}=1, the X-projection p_X(A) is nontrivial.  Since
+A<=K_{m,n} and Q_m contains Y_mu^0, p_X(A) acts trivially on (X/mu)^n, so
+all coordinate mismatches lie inside mu.  The mismatch congruence generated
+by p_X(A) is nontrivial and contained in mu; because mu is the global
+monolith, it equals mu.
+
+Therefore every finite rack prefix has unbounded arities containing a
+detector-invisible all-meridian chief factor whose X-projection generates the
+unique first-fold monolith.
+
+By the ledger's finite chief-factor dichotomy, the obstruction is either:
+
+- nonabelian: a monolith-chief factor in the detector kernel covered by every
+  meridian normal closure N_{i,m,n};
+- abelian: an elementary abelian monolith-chief factor in the detector kernel
+  covered by the exact all-meridian subgroup C_{m,n}.
+
+So the next exact A target is:
+
+  prove no first-fold monolith can be generated cofinally by
+  detector-invisible all-meridian chief factors.
+
+The next exact B target is:
+
+  construct one finite X whose unique first-fold monolith is generated
+  cofinally by such chief factors, yielding rack-prefix-invisible Brunnian
+  witnesses.
+
 Your task.
 
 Do not give another C-style reduction.  Try to prove A or B.
