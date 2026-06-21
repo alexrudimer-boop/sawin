@@ -1,0 +1,76 @@
+{
+  "arity": 5,
+  "conclusion": "The first rank-4 representative probe closes the row-15 hard fan image at order 51840.  The sampled easy representatives remain trivial or elementary abelian.  This is not a full rank-4 corpus classification; it identifies the first concrete higher-rank hard fan-image group that a uniform marked-variety proof must control.",
+  "max_group_size": 200000,
+  "rank": 4,
+  "representative_rows": {
+    "abelian_representative": 6,
+    "hard_representative": 15,
+    "trivial_representative": 0
+  },
+  "rows": {
+    "abelian_representative": {
+      "exponent": 2,
+      "generator_orders": [
+        2,
+        2,
+        2,
+        2
+      ],
+      "generator_pair_product_orders": [
+        2,
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "is_abelian": true,
+      "order": 16,
+      "solution_index": 6
+    },
+    "hard_representative": {
+      "exponent": 360,
+      "generator_orders": [
+        3,
+        3,
+        3,
+        3
+      ],
+      "generator_pair_product_orders": [
+        6,
+        6,
+        6,
+        6,
+        6,
+        6
+      ],
+      "is_abelian": false,
+      "order": 51840,
+      "solution_index": 15
+    },
+    "trivial_representative": {
+      "exponent": 1,
+      "generator_orders": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "generator_pair_product_orders": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "is_abelian": true,
+      "order": 1,
+      "solution_index": 0
+    }
+  },
+  "solution_family": "55 nonpermutation size-3 bijective YBE solutions",
+  "state_count": 243,
+  "title": "Nonpermutation size-3 rank-4 fan-image representative probe"
+}

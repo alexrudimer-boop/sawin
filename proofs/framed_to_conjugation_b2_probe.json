@@ -1,0 +1,46 @@
+{
+  "conclusion": "The framed route is compatible with the familiar S3 bridge in the smallest arity, but a separate framed-to-conjugation cover lemma is still needed for the finite-group detector route.",
+  "conjugation_rows": [
+    {
+      "b2_kernel_subset_framed_c2_kernel": false,
+      "name": "C2^conj",
+      "rack_size": 2,
+      "sigma_order": 2,
+      "sigma_squared_order": 1
+    },
+    {
+      "b2_kernel_subset_framed_c2_kernel": true,
+      "name": "S3^conj",
+      "rack_size": 6,
+      "sigma_order": 12,
+      "sigma_squared_order": 6
+    },
+    {
+      "b2_kernel_subset_framed_c2_kernel": true,
+      "name": "S4^conj",
+      "rack_size": 24,
+      "sigma_order": 24,
+      "sigma_squared_order": 12
+    }
+  ],
+  "framed_rows": [
+    {
+      "include_trivial_two": false,
+      "name": "A_C2",
+      "rack_size": 4,
+      "sigma_order": 4,
+      "sigma_squared_order": 2
+    },
+    {
+      "include_trivial_two": true,
+      "name": "T2 x A_C2",
+      "rack_size": 8,
+      "sigma_order": 4,
+      "sigma_squared_order": 2
+    }
+  ],
+  "proof_summary": "For B_2, a rack action is determined by the order of sigma_1. The framed C2 detector A_C2 has sigma_1 order 4.  S3^conj has sigma_1 order 12, so K_2(S3^conj) is contained in K_2(A_C2). This is only a two-strand compatibility check; it does not prove that framed detector racks are dominated by finite conjugation racks in all arities.",
+  "proves_higher_arity_conjugation_cover": false,
+  "s3_b2_kernel_covers_framed_c2": true,
+  "title": "Framed-to-conjugation two-strand probe"
+}

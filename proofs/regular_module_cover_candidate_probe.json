@@ -1,0 +1,80 @@
+{
+  "all_residual_rows_certified": true,
+  "candidate": "C_reg(G)=F_2[G] semidirect G",
+  "conclusion": "The regular-module candidate passes the feasible residual checks for C2 and C3 and the B2 order check for S3.  This is evidence for the candidate only; the regular-module Artin longitude Fox separation lemma remains the proof obligation.",
+  "frontier_artifact": "proofs/regular_module_framed_to_conjugation_cover_theorem.md",
+  "proves_regular_module_fox_separation": false,
+  "rows": [
+    {
+      "arity": 2,
+      "audit": {
+        "detector_image_size": 4,
+        "first_moved_tuple": null,
+        "first_moved_tuple_image": null,
+        "first_witness_word": null,
+        "joint_image_size": 4,
+        "kernel_containment_certified": true,
+        "kernel_contains_nonidentity": false,
+        "kernel_size": 1,
+        "n": 2,
+        "solution_image_size": 4,
+        "truncated": false
+      },
+      "detector_group_order": 8,
+      "group": "C2",
+      "group_order": 2,
+      "kind": "residual"
+    },
+    {
+      "arity": 3,
+      "audit": {
+        "detector_image_size": 48,
+        "first_moved_tuple": null,
+        "first_moved_tuple_image": null,
+        "first_witness_word": null,
+        "joint_image_size": 48,
+        "kernel_containment_certified": true,
+        "kernel_contains_nonidentity": false,
+        "kernel_size": 1,
+        "n": 3,
+        "solution_image_size": 48,
+        "truncated": false
+      },
+      "detector_group_order": 8,
+      "group": "C2",
+      "group_order": 2,
+      "kind": "residual"
+    },
+    {
+      "arity": 2,
+      "audit": {
+        "detector_image_size": 12,
+        "first_moved_tuple": null,
+        "first_moved_tuple_image": null,
+        "first_witness_word": null,
+        "joint_image_size": 12,
+        "kernel_containment_certified": true,
+        "kernel_contains_nonidentity": false,
+        "kernel_size": 1,
+        "n": 2,
+        "solution_image_size": 6,
+        "truncated": false
+      },
+      "detector_group_order": 24,
+      "group": "C3",
+      "group_order": 3,
+      "kind": "residual"
+    },
+    {
+      "arity": 2,
+      "b2_kernel_containment_by_order": true,
+      "detector_group_order": 384,
+      "detector_sigma_order": 24,
+      "group": "S3",
+      "group_order": 6,
+      "kind": "b2_order",
+      "solution_sigma_order": 12
+    }
+  ],
+  "title": "Regular-module cover candidate probe"
+}
